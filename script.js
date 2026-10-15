@@ -4,13 +4,14 @@
 
    ⚠️ ไฟล์นี้ไม่ต้องแก้เพื่อเพิ่มกฎ
    กฎทั้งหมดอยู่ที่ rules.js (ดูวิธีเพิ่มใน README.md)
+   ⚠️ rules.js กับ script.js ต้องอัปเดตคู่กันเสมอ
 
    โครงสร้างไฟล์
    1. CONFIG      ค่าที่ปรับได้ (ข้อความ, ระดับความเสี่ยง, ระยะตัวอย่าง)
    2. HELPERS     ฟังก์ชันช่วยเหลือ
    3. VALIDATION  ตรวจรูปแบบกฎก่อนใช้ กฎที่ผิดจะถูกข้ามและแจ้งใน console
-   4. DETECTION   ค้นหาจุดที่พบจากกฎ (keys และ pattern)
-   5. RENDERING   สร้าง HTML ของผลลัพธ์
+   4. DETECTION   ค้นหาจุดที่พบจากกฎ (keys และ pattern) และตัดจุดซ้อนทับ
+   5. RENDERING   สร้าง HTML ของผลลัพธ์ (แสดงทุกจุดที่พบ)
    6. ACTIONS     การทำงานของปุ่มตรวจ / ล้าง
    7. INIT        เริ่มต้นและผูกปุ่มเข้ากับฟังก์ชัน
    ===================================================== */
@@ -138,10 +139,28 @@ function findHits(text) {
   return found;
 }
 
+// ตัดจุดที่ซ้อนทับกัน: ให้ความสำคัญระดับสูงก่อน แล้วค่อยเลือกคำที่ยาวกว่า
+// ผลคือข้อความแต่ละตำแหน่งจะถูกนับเพียงครั้งเดียว
+function removeOverlaps(hits) {
+  const ranked = [...hits].sort((a, b) =>
+    CONFIG.levelOrder[a.rule.level] - CONFIG.levelOrder[b.rule.level]
+    || b.len - a.len
+    || a.idx - b.idx
+  );
+
+  const kept = [];
+  ranked.forEach(hit => {
+    const overlaps = kept.some(k => hit.idx < k.idx + k.len && k.idx < hit.idx + hit.len);
+    if (!overlaps) kept.push(hit);
+  });
+
+  return kept.sort((a, b) => a.idx - b.idx);
+}
+
 // จัดกลุ่มผลตามชื่อหมวด
-function groupByRule(found) {
+function groupByRule(hits) {
   const groups = {};
-  found.forEach(hit => {
+  hits.forEach(hit => {
     const key = hit.rule.label;
     if (!groups[key]) groups[key] = { rule: hit.rule, hits: [] };
     groups[key].hits.push(hit);
@@ -166,34 +185,39 @@ function renderSummary(counts) {
   </div>`;
 }
 
-// การ์ดของแต่ละหมวดที่พบ
-function renderGroup(group, text) {
-  const first = group.hits[0];
-  const snip = esc(snippetOf(text, first.idx, first.len));
-  const keywordHtml = esc(first.keyword);
-  const snipHtml = snip.replace(
+// ตัวอย่างข้อความของจุดที่พบ 1 จุด พร้อมไฮไลต์คำ
+function renderSnippet(hit, text) {
+  const snip = esc(snippetOf(text, hit.idx, hit.len));
+  const keywordHtml = esc(hit.keyword);
+  const highlighted = snip.replace(
     new RegExp(escRe(keywordHtml), 'g'),
     m => `<mark>${m}</mark>`
   );
+  return `<div class="snippet">${highlighted}</div>`;
+}
+
+// การ์ดของแต่ละหมวด แสดงทุกจุดที่พบ
+function renderGroup(group, text) {
+  const snippets = group.hits.map(hit => renderSnippet(hit, text)).join('');
 
   return `<div class="item ${group.rule.level}">
     <div class="tag">${CONFIG.levelLabel[group.rule.level]} · พบ ${group.hits.length} จุด</div>
     <h3>${esc(group.rule.label)}</h3>
     <div>${esc(group.rule.tip)}</div>
-    <div class="snippet">${snipHtml}</div>
+    ${snippets}
   </div>`;
 }
 
 // แสดงผลทั้งหมดลงในกล่องผลลัพธ์
 function renderResult(text, box) {
-  const found = findHits(text);
+  const hits = removeOverlaps(findHits(text));
 
-  if (found.length === 0) {
+  if (hits.length === 0) {
     renderEmpty(box, CONFIG.messages.noHit);
     return;
   }
 
-  const groups = groupByRule(found);
+  const groups = groupByRule(hits);
 
   const counts = { high: 0, mid: 0, low: 0 };
   Object.values(groups).forEach(g => counts[g.rule.level]++);
@@ -271,4 +295,3 @@ function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
-
