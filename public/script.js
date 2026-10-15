@@ -1,292 +1,232 @@
-
 /* =====================================================
-   เช็กสัญญา — script.js
-   ทำงานฝั่งหน้าเว็บล้วน: จับคู่คำ/รูปแบบจาก rules.js แล้วแสดงผล
-   ไฟล์นี้ไม่เรียก AI และไม่มี API key
+   เช็กสัญญา — script.js (เวอร์ชันเรียกเซิร์ฟเวอร์)
+   ส่งข้อความสัญญาไปที่ /api/check แล้วแสดงผลที่ได้
 
-   ⚠️ ไม่ต้องแก้ไฟล์นี้เพื่อเพิ่มกฎ ให้แก้ที่ rules.js
-   ⚠️ rules.js กับ script.js ต้องอัปเดตคู่กันเสมอ (ดู PROJECT_NOTES.md)
+   ⚠️ ไฟล์นี้ไม่มี API key และไม่ตัดเครดิต ทั้งหมดอยู่ที่ server/
+   ⚠️ rules.js ไม่ได้ใช้ในเวอร์ชันนี้แล้ว (ยังโหลดไว้ได้ ไม่มีผลกระทบ)
 
-   โครงสร้างไฟล์
-   1. CONFIG      ค่าที่ปรับได้ (ข้อความ, ระดับความเสี่ยง, ระยะตัวอย่าง)
-   2. HELPERS     ฟังก์ชันช่วยเหลือ
-   3. VALIDATION  ตรวจรูปแบบกฎ กฎที่ผิดจะถูกข้ามและแจ้งใน console
-   4. DETECTION   หาจุดที่พบจากกฎ และตัดจุดที่ซ้อนทับกัน
-   5. RENDERING   สร้าง HTML ของผลลัพธ์
-   6. ACTIONS     การทำงานของปุ่มตรวจ / ล้าง
-   7. INIT        เริ่มต้นและผูกปุ่มเข้ากับฟังก์ชัน
+   โครงสร้าง
+   1. CONFIG     ค่าและข้อความ
+   2. HELPERS    ฟังก์ชันช่วยเหลือ
+   3. RENDERING  แสดงผลจาก JSON ของเซิร์ฟเวอร์
+   4. ACTIONS    ปุ่มตรวจ / ล้าง / โหลดเครดิต
+   5. INIT       เริ่มต้นและผูกปุ่ม
    ===================================================== */
 
 
 /* ---------- 1. CONFIG ---------- */
 const CONFIG = {
-  levelLabel: { high: 'ควรระวังมาก', mid: 'ควรพิจารณา', low: 'ควรสังเกต' },
-  levelOrder: { high: 0, mid: 1, low: 2 },
-
+  apiCheck: '/api/check',
+  apiMe: '/api/me',
+  levelLabel: {
+    check_detail: 'ควรตรวจละเอียด',
+    caution: 'ควรระวัง',
+    low: 'เสี่ยงต่ำ',
+  },
   messages: {
     empty:        'ยังไม่มีผลการตรวจ',
     noInput:      'กรุณาวางข้อความสัญญาก่อน',
-    noHit:        '✅ ไม่พบคำสำคัญที่ระบบตรวจไว้ ลองอ่านทั้งฉบับอีกครั้งเพื่อความมั่นใจ',
-    error:        'เกิดข้อผิดพลาดระหว่างตรวจสัญญา ลองใหม่อีกครั้ง',
+    loading:      'กำลังตรวจสัญญา รอสักครู่...',
+    network:      'เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ ลองใหม่อีกครั้ง',
+    noHit:        '✅ AI ไม่พบจุดที่ควรตรวจ ลองอ่านทั้งฉบับอีกครั้งเพื่อความมั่นใจ',
     clearConfirm: 'ล้างข้อความสัญญาทั้งหมดใช่ไหม?',
+    disclaimer:   'ผลนี้เป็นการคัดกรองเบื้องต้นเท่านั้น ไม่ใช่คำปรึกษาทางกฎหมาย ควรให้ทนายตรวจก่อนลงนาม',
   },
-
-  // ความยาวข้อความที่แสดงรอบคำที่พบ (ตัวอักษรก่อน / หลัง)
-  snippetRange: { before: 60, after: 80 },
 };
+
+// เก็บ element ที่ใช้บ่อยไว้ตรงนี้ ตั้งค่าใน init()
+const els = {};
 
 
 /* ---------- 2. HELPERS ---------- */
 
-// กัน HTML แปลกปลอมจากข้อความสัญญา
+// กัน HTML แปลกปลอมจากข้อความสัญญาหรือจาก AI
 function esc(s) {
-  return s.replace(/[&<>"']/g, c => ({
+  return String(s ?? '').replace(/[&<>"']/g, c => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   }[c]));
 }
 
-// แยกข้อความรอบตำแหน่งที่พบเป็น 3 ส่วน: ก่อนคำ / คำที่พบ / หลังคำ
-// ส่วนที่เป็นข้อความดิบ ยังไม่ escape จะ escape ตอนสร้าง HTML
-function snippetParts(text, idx, len) {
-  const { before, after } = CONFIG.snippetRange;
-  const start = Math.max(0, idx - before);
-  const end = Math.min(text.length, idx + len + after);
-
-  return {
-    before: (start > 0 ? '...' : '') + text.slice(start, idx).trimStart(),
-    hit:    text.slice(idx, idx + len),
-    after:  text.slice(idx + len, end).trimEnd() + (end < text.length ? '...' : ''),
-  };
-}
-
-
-/* ---------- 3. VALIDATION ---------- */
-
-// ตรวจว่ากฎมีรูปแบบถูกต้อง ถ้าไม่ถูกจะคืน false และแจ้งเหตุผลใน console
-function isValidRule(rule, index) {
-  const problems = [];
-
-  if (!rule || typeof rule !== 'object') {
-    problems.push('ไม่ใช่ object');
-  } else {
-    if (!rule.label) problems.push('ไม่มี label');
-    if (!rule.tip) problems.push('ไม่มี tip');
-    if (!(rule.level in CONFIG.levelOrder)) problems.push("level ต้องเป็น 'high', 'mid' หรือ 'low'");
-
-    const hasKeys = rule.keys !== undefined;
-    const hasPattern = rule.pattern !== undefined;
-
-    if (!hasKeys && !hasPattern) {
-      problems.push('ต้องมี keys หรือ pattern อย่างน้อยหนึ่งอย่าง');
+// รหัสเครื่องของผู้ใช้ เก็บไว้ในเบราว์เซอร์ ใช้ระบุตัวตนเพื่อเช็กเครดิตที่ server
+// (ไม่ใช่รหัสผ่านและไม่ใช่ความลับ)
+function getDeviceId() {
+  try {
+    let id = localStorage.getItem('vc_device_id');
+    if (!id) {
+      id = crypto.randomUUID
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      localStorage.setItem('vc_device_id', id);
     }
-    if (hasKeys && !(Array.isArray(rule.keys) && rule.keys.length > 0
-        && rule.keys.every(k => typeof k === 'string' && k.length > 0))) {
-      problems.push('keys ต้องเป็นรายการข้อความที่ไม่ว่าง');
-    }
-    if (hasPattern && !(rule.pattern instanceof RegExp)) {
-      problems.push('pattern ต้องเป็น RegExp เช่น /ตัวอย่าง/');
-    }
-    if (rule.check !== undefined && typeof rule.check !== 'function') {
-      problems.push('check ต้องเป็นฟังก์ชัน');
-    }
-  }
-
-  if (problems.length) {
-    const name = (rule && rule.label) || 'ไม่มีชื่อ';
-    console.warn(`[เช็กสัญญา] ข้ามกฎลำดับที่ ${index + 1} (${name}): ${problems.join(', ')}`);
-    return false;
-  }
-  return true;
-}
-
-// กฎที่ผ่านการตรวจแล้ว ใช้ในการค้นหาจริง (ตั้งค่าตอนเริ่มต้นใน init)
-let ACTIVE_RULES = [];
-
-
-/* ---------- 4. DETECTION ---------- */
-
-// กฎแบบคำสำคัญ: หาทุกตำแหน่งที่คำปรากฏ
-function findKeywordHits(rule, text, found) {
-  rule.keys.forEach(keyword => {
-    let pos = 0, idx;
-    while ((idx = text.indexOf(keyword, pos)) !== -1) {
-      found.push({ rule, keyword, idx, len: keyword.length });
-      pos = idx + keyword.length;
-    }
-  });
-}
-
-// กฎแบบรูปแบบ (pattern): ใช้ regex หาข้อความ แล้วให้ check() ตัดสินว่าจะแจ้งหรือไม่
-function findPatternHits(rule, text, found) {
-  const flags = rule.pattern.flags.includes('g') ? rule.pattern.flags : rule.pattern.flags + 'g';
-  const re = new RegExp(rule.pattern.source, flags);
-
-  for (const m of text.matchAll(re)) {
-    if (m[0].length === 0) continue;
-    if (!rule.check || rule.check(m)) {
-      found.push({ rule, keyword: m[0], idx: m.index, len: m[0].length });
-    }
+    return id;
+  } catch {
+    // ถ้าเบราว์เซอร์ไม่ให้ใช้ localStorage ใช้ค่าชั่วคราวแทน
+    return `tmp-${Date.now()}-${Math.random().toString(36).slice(2)}`;
   }
 }
 
-// หาทุกจุดที่พบจากกฎทั้งหมด
-function findHits(text) {
-  const found = [];
-  ACTIVE_RULES.forEach(rule => {
-    if (rule.keys) findKeywordHits(rule, text, found);
-    if (rule.pattern) findPatternHits(rule, text, found);
-  });
-  return found;
+
+/* ---------- 3. RENDERING ---------- */
+
+function renderEmpty(message = CONFIG.messages.empty) {
+  els.result.innerHTML = `<p class="empty">${esc(message)}</p>`;
 }
 
-// ตัดจุดที่ซ้อนทับกัน: ให้ความสำคัญระดับสูงก่อน แล้วเลือกคำที่ยาวกว่า
-// ผลคือข้อความแต่ละตำแหน่งจะถูกนับเพียงครั้งเดียว
-function removeOverlaps(hits) {
-  const ranked = [...hits].sort((a, b) =>
-    CONFIG.levelOrder[a.rule.level] - CONFIG.levelOrder[b.rule.level]
-    || b.len - a.len
-    || a.idx - b.idx
-  );
-
-  const kept = [];
-  ranked.forEach(hit => {
-    const overlaps = kept.some(k => hit.idx < k.idx + k.len && k.idx < hit.idx + hit.len);
-    if (!overlaps) kept.push(hit);
-  });
-
-  return kept.sort((a, b) => a.idx - b.idx);
-}
-
-// จัดกลุ่มผลตามชื่อหมวด
-function groupByRule(hits) {
-  const groups = {};
-  hits.forEach(hit => {
-    const key = hit.rule.label;
-    if (!groups[key]) groups[key] = { rule: hit.rule, hits: [] };
-    groups[key].hits.push(hit);
-  });
-  return groups;
-}
-
-
-/* ---------- 5. RENDERING ---------- */
-
-// แสดงข้อความว่าง หรือข้อความแจ้งเตือนสั้น ๆ
-function renderEmpty(box, message = CONFIG.messages.empty) {
-  box.innerHTML = `<p class="empty">${esc(message)}</p>`;
-}
-
-// แถบสรุปจำนวนหมวดในแต่ละระดับ
 function renderSummary(counts) {
   return `<div class="summary">
-    <span class="badge" style="background:var(--high);color:var(--highText)">ระดับสูง ${counts.high}</span>
-    <span class="badge" style="background:var(--mid);color:var(--midText)">ระดับกลาง ${counts.mid}</span>
-    <span class="badge" style="background:var(--low);color:var(--lowText)">ระดับต่ำ ${counts.low}</span>
+    <span class="badge high">${CONFIG.levelLabel.check_detail} ${counts.check_detail}</span>
+    <span class="badge mid">${CONFIG.levelLabel.caution} ${counts.caution}</span>
+    <span class="badge low">${CONFIG.levelLabel.low} ${counts.low}</span>
   </div>`;
 }
 
-// ตัวอย่างข้อความของจุดที่พบ 1 จุด พร้อมไฮไลต์คำ
-function renderSnippet(hit, text) {
-  const p = snippetParts(text, hit.idx, hit.len);
-  return `<div class="snippet">${esc(p.before)}<mark>${esc(p.hit)}</mark>${esc(p.after)}</div>`;
-}
-
-// การ์ดของแต่ละหมวด แสดงทุกจุดที่พบ
-function renderGroup(group, text) {
-  const snippets = group.hits.map(hit => renderSnippet(hit, text)).join('');
-
-  return `<div class="item ${group.rule.level}">
-    <div class="tag">${CONFIG.levelLabel[group.rule.level]} · พบ ${group.hits.length} จุด</div>
-    <h3>${esc(group.rule.label)}</h3>
-    <div>${esc(group.rule.tip)}</div>
-    ${snippets}
+function renderBrief(summary) {
+  return `<div class="brief">
+    <p>📋 <b>งาน:</b> ${esc(summary.job) || '—'}</p>
+    <p>💰 <b>เงิน:</b> ${esc(summary.money) || '—'}</p>
+    <p>⏰ <b>เวลา:</b> ${esc(summary.time) || '—'}</p>
   </div>`;
 }
 
-// แสดงผลทั้งหมดลงในกล่องผลลัพธ์
-function renderResult(text, box) {
-  const hits = removeOverlaps(findHits(text));
-
-  if (hits.length === 0) {
-    renderEmpty(box, CONFIG.messages.noHit);
-    return;
+// ข้อความต้นฉบับ: ถ้า AI อ้างถูกต้องให้แสดง ถ้าไม่พบให้เตือน
+function renderQuote(item) {
+  if (item.missing) {
+    return `<p class="notfound">⚠️ ไม่พบข้อความนี้ในสัญญาต้นฉบับ AI อาจอ้างผิด โปรดตรวจเอง</p>`;
   }
+  return `<p class="found">✅ พบข้อความนี้ในสัญญาต้นฉบับ</p>
+    <blockquote>${esc(item.quote)}</blockquote>`;
+}
 
-  const groups = groupByRule(hits);
+function renderItem(item) {
+  return `<details class="item ${esc(item.level)}" open>
+    <summary>
+      <span class="tag">${esc(CONFIG.levelLabel[item.level] || '')}</span>
+      <b>${esc(item.title)}</b>
+    </summary>
+    ${renderQuote(item)}
+    ${item.explanation ? `<p>${esc(item.explanation)}</p>` : ''}
+    ${item.reference ? `<p>📚 แนวทางตรวจ: ${esc(item.reference)}</p>` : ''}
+    ${item.suggested_fix ? `<p><b>เสนอแก้เป็น:</b> ${esc(item.suggested_fix)}</p>` : ''}
+    ${item.how_to_negotiate ? `<p><b>วิธีรับมือ:</b> ${esc(item.how_to_negotiate)}</p>` : ''}
+  </details>`;
+}
 
-  const counts = { high: 0, mid: 0, low: 0 };
-  Object.values(groups).forEach(g => counts[g.rule.level]++);
+function renderMissing(list) {
+  if (!list.length) return '';
+  return `<h3>สิ่งที่สัญญายังไม่ได้ระบุ</h3>
+    <ul>${list.map(m => `<li>${esc(m)}</li>`).join('')}</ul>`;
+}
 
-  const cards = Object.values(groups)
-    .sort((a, b) => CONFIG.levelOrder[a.rule.level] - CONFIG.levelOrder[b.rule.level])
-    .map(g => renderGroup(g, text))
-    .join('');
+// แสดงผลทั้งหมดจาก result ของเซิร์ฟเวอร์
+function renderResult(result) {
+  const items = Array.isArray(result.items) ? result.items : [];
 
-  box.innerHTML = renderSummary(counts) + cards;
+  const body = items.length
+    ? items.map(renderItem).join('')
+    : `<p class="empty">${esc(CONFIG.messages.noHit)}</p>`;
+
+  els.result.innerHTML = `
+    ${renderSummary(result.risk_counts || { check_detail: 0, caution: 0, low: 0 })}
+    ${renderBrief(result.summary || {})}
+    ${body}
+    ${renderMissing(result.missing_info || [])}
+    <p class="disclaimer">${esc(CONFIG.messages.disclaimer)}</p>`;
 }
 
 
-/* ---------- 6. ACTIONS ---------- */
+/* ---------- 4. ACTIONS ---------- */
 
-// เลื่อนหน้าจอไปที่การ์ดผลการตรวจทั้งใบ
-function scrollToResult(box) {
-  const target = box.closest('.card') || box;
-  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+function showCredits(n) {
+  if (els.credits) els.credits.textContent = `เครดิตคงเหลือ ${n}`;
 }
 
-// กดปุ่ม "ตรวจสัญญา"
-function runCheck(input, box) {
-  const text = input.value.trim();
+// ปิดปุ่มระหว่างประมวลผล กันการกดซ้ำ
+function setBusy(busy) {
+  els.checkBtn.disabled = busy;
+  els.clearBtn.disabled = busy;
+  els.checkBtn.textContent = busy ? 'กำลังตรวจ...' : 'ตรวจสัญญา';
+}
 
+async function loadCredits() {
+  try {
+    const res = await fetch(CONFIG.apiMe, {
+      headers: { 'X-Device-Id': getDeviceId() },
+    });
+    const data = await res.json();
+    if (typeof data.credits === 'number') showCredits(data.credits);
+  } catch {
+    // ไม่ต้องแจ้งผู้ใช้ตอนโหลดเครดิตไม่ได้ จะแสดงอีกครั้งเมื่อกดตรวจ
+  }
+}
+
+async function runCheck() {
+  const text = els.input.value.trim();
   if (!text) {
-    renderEmpty(box, CONFIG.messages.noInput);
+    renderEmpty(CONFIG.messages.noInput);
     return;
   }
+
+  setBusy(true);
+  renderEmpty(CONFIG.messages.loading);
 
   try {
-    renderResult(text, box);
-    scrollToResult(box);
+    const res = await fetch(CONFIG.apiCheck, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Device-Id': getDeviceId(),
+      },
+      body: JSON.stringify({ text }),
+    });
+
+    const data = await res.json().catch(() => ({}));
+    if (typeof data.credits === 'number') showCredits(data.credits);
+
+    if (!res.ok) {
+      // เช่น เครดิตหมด หรือ AI ล้มเหลว (server คืนเครดิตให้แล้ว)
+      renderEmpty(data.error || CONFIG.messages.network);
+      return;
+    }
+
+    renderResult(data.result);
+    els.result.scrollIntoView({ behavior: 'smooth', block: 'start' });
   } catch (err) {
-    // ถ้ามีอะไรผิดพลาด ผู้ใช้จะเห็นข้อความแทนหน้าว่าง
-    console.error('[เช็กสัญญา] ตรวจไม่สำเร็จ:', err);
-    renderEmpty(box, CONFIG.messages.error);
+    console.error('[เช็กสัญญา] เรียก API ไม่สำเร็จ:', err);
+    renderEmpty(CONFIG.messages.network);
+  } finally {
+    setBusy(false);
   }
 }
 
-// กดปุ่ม "ล้าง" (ถามยืนยันก่อนถ้ามีข้อความอยู่)
-function clearAll(input, box) {
-  const hasText = input.value.trim() !== '';
+function clearAll() {
+  const hasText = els.input.value.trim() !== '';
   if (hasText && !confirm(CONFIG.messages.clearConfirm)) return;
-
-  input.value = '';
-  renderEmpty(box);
+  els.input.value = '';
+  renderEmpty();
 }
 
 
-/* ---------- 7. INIT ---------- */
+/* ---------- 5. INIT ---------- */
 function init() {
-  if (typeof RULES === 'undefined' || !Array.isArray(RULES)) {
-    console.error('[เช็กสัญญา] ไม่พบ RULES หรือไม่ใช่รายการ — ตรวจว่า rules.js โหลดก่อน script.js และมี const RULES = [...]');
-    return;
-  }
+  els.input    = document.getElementById('input');
+  els.result   = document.getElementById('result');
+  els.checkBtn = document.getElementById('checkBtn');
+  els.clearBtn = document.getElementById('clearBtn');
 
-  ACTIVE_RULES = RULES.filter(isValidRule);
-  if (ACTIVE_RULES.length === 0) {
-    console.error('[เช็กสัญญา] ไม่มีกฎที่ใช้งานได้เลย — ดูคำเตือนด้านบนเพื่อหาสาเหตุ');
-  }
-
-  const input    = document.getElementById('input');
-  const box      = document.getElementById('result');
-  const checkBtn = document.getElementById('checkBtn');
-  const clearBtn = document.getElementById('clearBtn');
-
-  if (!input || !box || !checkBtn || !clearBtn) {
+  if (!els.input || !els.result || !els.checkBtn || !els.clearBtn) {
     console.error('[เช็กสัญญา] ไม่พบ element ที่ต้องใช้ — ตรวจ id ใน index.html ให้ตรงกับ script.js');
     return;
   }
 
-  checkBtn.addEventListener('click', () => runCheck(input, box));
-  clearBtn.addEventListener('click', () => clearAll(input, box));
+  // สร้างช่องแสดงเครดิตไว้เหนือผลลัพธ์ โดยไม่ต้องแก้ index.html
+  els.credits = document.createElement('p');
+  els.credits.className = 'credits';
+  els.result.parentElement.insertBefore(els.credits, els.result);
+
+  els.checkBtn.addEventListener('click', runCheck);
+  els.clearBtn.addEventListener('click', clearAll);
+
+  loadCredits();
 }
 
 document.addEventListener('DOMContentLoaded', init);
