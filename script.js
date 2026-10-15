@@ -1,17 +1,17 @@
 /* =====================================================
    เช็กสัญญา — script.js
-   ควบคุมการทำงานของหน้าเว็บ (ปุ่ม และการแสดงผล)
+   ทำงานฝั่งหน้าเว็บล้วน: จับคู่คำ/รูปแบบจาก rules.js แล้วแสดงผล
+   ไฟล์นี้ไม่เรียก AI และไม่มี API key
 
-   ⚠️ ไฟล์นี้ไม่ต้องแก้เพื่อเพิ่มกฎ
-   กฎทั้งหมดอยู่ที่ rules.js (ดูวิธีเพิ่มใน README.md)
-   ⚠️ rules.js กับ script.js ต้องอัปเดตคู่กันเสมอ
+   ⚠️ ไม่ต้องแก้ไฟล์นี้เพื่อเพิ่มกฎ ให้แก้ที่ rules.js
+   ⚠️ rules.js กับ script.js ต้องอัปเดตคู่กันเสมอ (ดู PROJECT_NOTES.md)
 
    โครงสร้างไฟล์
    1. CONFIG      ค่าที่ปรับได้ (ข้อความ, ระดับความเสี่ยง, ระยะตัวอย่าง)
    2. HELPERS     ฟังก์ชันช่วยเหลือ
-   3. VALIDATION  ตรวจรูปแบบกฎก่อนใช้ กฎที่ผิดจะถูกข้ามและแจ้งใน console
-   4. DETECTION   ค้นหาจุดที่พบจากกฎ (keys และ pattern) และตัดจุดซ้อนทับ
-   5. RENDERING   สร้าง HTML ของผลลัพธ์ (แสดงทุกจุดที่พบ)
+   3. VALIDATION  ตรวจรูปแบบกฎ กฎที่ผิดจะถูกข้ามและแจ้งใน console
+   4. DETECTION   หาจุดที่พบจากกฎ และตัดจุดที่ซ้อนทับกัน
+   5. RENDERING   สร้าง HTML ของผลลัพธ์
    6. ACTIONS     การทำงานของปุ่มตรวจ / ล้าง
    7. INIT        เริ่มต้นและผูกปุ่มเข้ากับฟังก์ชัน
    ===================================================== */
@@ -44,19 +44,18 @@ function esc(s) {
   }[c]));
 }
 
-// escape อักขระพิเศษของ regex
-function escRe(s) {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-// ตัดข้อความรอบตำแหน่งที่พบ
-function snippetOf(text, idx, len) {
+// แยกข้อความรอบตำแหน่งที่พบเป็น 3 ส่วน: ก่อนคำ / คำที่พบ / หลังคำ
+// ส่วนที่เป็นข้อความดิบ ยังไม่ escape จะ escape ตอนสร้าง HTML
+function snippetParts(text, idx, len) {
   const { before, after } = CONFIG.snippetRange;
   const start = Math.max(0, idx - before);
   const end = Math.min(text.length, idx + len + after);
-  return (start > 0 ? '...' : '')
-    + text.slice(start, end).trim()
-    + (end < text.length ? '...' : '');
+
+  return {
+    before: (start > 0 ? '...' : '') + text.slice(start, idx).trimStart(),
+    hit:    text.slice(idx, idx + len),
+    after:  text.slice(idx + len, end).trimEnd() + (end < text.length ? '...' : ''),
+  };
 }
 
 
@@ -139,7 +138,7 @@ function findHits(text) {
   return found;
 }
 
-// ตัดจุดที่ซ้อนทับกัน: ให้ความสำคัญระดับสูงก่อน แล้วค่อยเลือกคำที่ยาวกว่า
+// ตัดจุดที่ซ้อนทับกัน: ให้ความสำคัญระดับสูงก่อน แล้วเลือกคำที่ยาวกว่า
 // ผลคือข้อความแต่ละตำแหน่งจะถูกนับเพียงครั้งเดียว
 function removeOverlaps(hits) {
   const ranked = [...hits].sort((a, b) =>
@@ -171,7 +170,7 @@ function groupByRule(hits) {
 
 /* ---------- 5. RENDERING ---------- */
 
-// แสดงข้อความว่าง / ข้อความแจ้งเตือนสั้น ๆ
+// แสดงข้อความว่าง หรือข้อความแจ้งเตือนสั้น ๆ
 function renderEmpty(box, message = CONFIG.messages.empty) {
   box.innerHTML = `<p class="empty">${esc(message)}</p>`;
 }
@@ -187,13 +186,8 @@ function renderSummary(counts) {
 
 // ตัวอย่างข้อความของจุดที่พบ 1 จุด พร้อมไฮไลต์คำ
 function renderSnippet(hit, text) {
-  const snip = esc(snippetOf(text, hit.idx, hit.len));
-  const keywordHtml = esc(hit.keyword);
-  const highlighted = snip.replace(
-    new RegExp(escRe(keywordHtml), 'g'),
-    m => `<mark>${m}</mark>`
-  );
-  return `<div class="snippet">${highlighted}</div>`;
+  const p = snippetParts(text, hit.idx, hit.len);
+  return `<div class="snippet">${esc(p.before)}<mark>${esc(p.hit)}</mark>${esc(p.after)}</div>`;
 }
 
 // การ์ดของแต่ละหมวด แสดงทุกจุดที่พบ
@@ -286,7 +280,7 @@ function init() {
   const clearBtn = document.getElementById('clearBtn');
 
   if (!input || !box || !checkBtn || !clearBtn) {
-    console.error('[เช็กสัญญา] ไม่พบ element ที่ต้องใช้ — ตรวจ id ใน index.html ว่าตรงกับ script.js');
+    console.error('[เช็กสัญญา] ไม่พบ element ที่ต้องใช้ — ตรวจ id ใน index.html ให้ตรงกับ script.js');
     return;
   }
 
