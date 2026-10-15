@@ -1,1 +1,36 @@
 
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เช็กสัญญา</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>🔍 เช็กสัญญา</h1>
+  <p>วางข้อความสัญญา ระบบจะไฮไลต์จุดที่ควรระวัง</p>
+</header>
+<main>
+  <section class="card">
+    <h2>1. วางข้อความสัญญา</h2>
+    <textarea id="input" placeholder="วางข้อความสัญญาที่นี่..."></textarea>
+    <div class="btns">
+      <button class="primary" id="checkBtn">ตรวจสัญญา</button>
+      <button class="ghost" id="clearBtn">ล้าง</button>
+    </div>
+    <p class="disclaimer">* เครื่องมือนี้ช่วยคัดกรองเบื้องต้นเท่านั้น ไม่ใช่คำปรึกษาทางกฎหมาย ควรให้ทนายตรวจก่อนลงนามในสัญญาสำคัญ</p>
+  </section>
+  <section class="card" id="resultCard">
+    <h2>2. ผลการตรวจ</h2>
+    <div id="result"><p class="empty">ยังไม่มีผลการตรวจ</p></div>
+  </section>
+</main>
+<footer>เครื่องมือช่วยคัดกรองเบื้องต้น</footer>
+
+<script src="rules.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
