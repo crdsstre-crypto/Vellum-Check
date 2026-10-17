@@ -13,6 +13,23 @@
   <p>วางข้อความสัญญา ระบบจะไฮไลต์จุดที่ควรระวัง</p>
 </header>
 <main>
+  <section class="card" id="authCard">
+    <h2>0. บัญชีผู้ใช้</h2>
+    <div id="authLoggedOut">
+      <input id="email" type="email" placeholder="อีเมล" autocomplete="email">
+      <input id="password" type="password" placeholder="รหัสผ่าน (อย่างน้อย 8 ตัว)" autocomplete="current-password">
+      <div class="btns">
+        <button class="primary" id="loginBtn">เข้าสู่ระบบ</button>
+        <button class="ghost" id="signupBtn">สมัครใหม่</button>
+      </div>
+    </div>
+    <div id="authLoggedIn" hidden>
+      <p>เข้าสู่ระบบแล้ว: <b id="userEmail"></b></p>
+      <p id="creditsLine"></p>
+      <button class="ghost" id="logoutBtn">ออกจากระบบ</button>
+    </div>
+    <p class="disclaimer" id="authMsg"></p>
+  </section>
   <section class="card">
     <h2>1. วางข้อความสัญญา</h2>
     <textarea id="input" placeholder="วางข้อความสัญญาที่นี่..."></textarea>
