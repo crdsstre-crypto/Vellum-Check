@@ -1,1 +1,29 @@
+/* หน้าจอใหญ่: ไอแพดและโน้ตบุ๊ค
+   ทุกกฎอยู่ใน @media จึงไม่ทำงานบนมือถือ
+   - 768px ขึ้นไป (ไอแพด): จำกัดความกว้างให้อ่านง่าย
+   - 1024px ขึ้นไป (โน้ตบุ๊ค): วางช่องวางสัญญาซ้าย ผลลัพธ์ขวา */
+
+@media (min-width:768px){
+  main{max-width:720px}
+  header h1{font-size:1.9rem}
+}
+
+@media (min-width:1024px){
+  main{
+    max-width:1200px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+    align-items:start;
+  }
+  #authCard{grid-column:1 / -1}
+  #resultCard{
+    position:sticky;
+    top:16px;
+    max-height:calc(100vh - 32px);
+    overflow:auto;
+    margin-bottom:0;
+  }
+  main > .card:not(#resultCard){margin-bottom:0}
+}
 
