@@ -8,15 +8,16 @@
 
 ## โครงสร้าง
 - `public/` หน้าเว็บ
-- `server/` API, การเรียก AI, ระบบเครดิต
+- `server/` API, บัญชีผู้ใช้, ระบบเครดิต, การเรียก AI, ฐานข้อมูล
 - `package.json` ใช้โดย Render
 
 ## รันบนเครื่อง
+ต้องมี Postgres ที่เข้าถึงได้ก่อน
 ```bash
 npm install
-ANTHROPIC_API_KEY=sk-ant-... npm start
+DATABASE_URL=postgres://... ANTHROPIC_API_KEY=sk-ant-... npm start
 ```
-ไม่ตั้ง `DATABASE_URL` ระบบจะใช้หน่วยความจำ เปิดได้ที่ http://localhost:3000
+เปิดได้ที่ http://localhost:3000
 
 ## ตั้งค่าบน Render
 - Build Command: `npm install`
@@ -25,5 +26,5 @@ ANTHROPIC_API_KEY=sk-ant-... npm start
 - ใช้ **Internal Database URL** ของ Render Postgres ที่อยู่ region เดียวกับ service
 
 ## ข้อควรระวัง
-- ห้ามใส่ API key ในไฟล์ใด ๆ ให้ใส่ใน Environment Variables เท่านั้น
+- ห้ามใส่ API key หรือรหัสผ่านฐานข้อมูลในไฟล์ใด ๆ ให้ใส่ใน Environment Variables เท่านั้น
 - Render Postgres แบบ Free หมดอายุหลัง 30 วัน
