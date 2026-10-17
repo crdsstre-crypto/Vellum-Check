@@ -1,0 +1,36 @@
+/* สีและธีมทั้งหมดอยู่ที่นี่ที่เดียว
+   - ค่าเริ่มต้นคือธีมสว่าง (light)
+   - ธีมมืด: ตั้ง data-theme="dark" ที่ <html>
+   - เพิ่มธีมใหม่: เพิ่มบล็อก :root[data-theme="ชื่อธีม"] แล้วกำหนดตัวแปรครบชุด */
+
+:root{
+  --bg:#f4f6fb;
+  --card:#ffffff;
+  --text:#1f2937;
+  --muted:#6b7280;
+  --primary:#2563eb;
+  --border:#d1d5db;
+  --ghost:#e5e7eb;
+  --item:#fafafa;
+  --high:#fee2e2;   --highText:#991b1b;
+  --mid:#fef3c7;    --midText:#92400e;
+  --low:#e0f2fe;    --lowText:#075985;
+  --ok:#15803d;
+  --warn:#b45309;
+}
+
+:root[data-theme="dark"]{
+  --bg:#0f172a;
+  --card:#1e293b;
+  --text:#e2e8f0;
+  --muted:#94a3b8;
+  --primary:#3b82f6;
+  --border:#334155;
+  --ghost:#334155;
+  --item:#0f172a;
+  --high:#4c1d1d;   --highText:#fecaca;
+  --mid:#4a3b12;    --midText:#fde68a;
+  --low:#0c3650;    --lowText:#bae6fd;
+  --ok:#86efac;
+  --warn:#fcd34d;
+}
