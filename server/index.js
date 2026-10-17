@@ -1,38 +1,30 @@
 // เซิร์ฟเวอร์เช็กสัญญา
-// หน้าที่ของไฟล์นี้: รับคำขอ ตรวจเครดิต เรียก AI ตรวจ quote แล้วส่งผลกลับ
-// เครดิตอยู่ใน credits.js และการเรียก AI อยู่ใน ai.js
+// หน้าที่: ล็อกอินผู้ใช้ ตัดเครดิตตามบัญชี เรียก AI ตรวจ quote แล้วส่งผลกลับ
+// ไฟล์ที่เกี่ยวข้อง: db.js (ฐานข้อมูล), auth.js (บัญชี), credits.js (เครดิต), ai.js (AI)
 
 import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { analyzeContract, MAX_ITEMS_LIMIT } from './ai.js';
-import { initCredits, getBalance, reserveCredit, refundCredit } from './credits.js';
+import { initDb } from './db.js';
+import {
+  validateCredentials,
+  registerUser,
+  loginUser,
+  startSession,
+  endSession,
+  getUserFromRequest,
+} from './auth.js';
+import { getCredits, reserveCredit, refundCredit } from './credits.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
-
 const PORT = process.env.PORT || 3000;
 const MAX_CHARS = 20000;
 
+// อยู่หลัง proxy ของ Render จึงต้องบอก Express ให้รู้ว่าเป็น https (ใช้ตั้งคุกกี้แบบ Secure)
+app.set('trust proxy', 1);
 app.use(express.json({ limit: '200kb' }));
-
-// ---------- CORS: ใช้เมื่อเรียกจากโดเมนอื่น ปกติหน้าเว็บอยู่โดเมนเดียวกันจึงไม่ต้องตั้ง ----------
-app.use((req, res, next) => {
-  const allowed = process.env.ALLOWED_ORIGIN;
-  if (allowed) {
-    res.setHeader('Access-Control-Allow-Origin', allowed);
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Device-Id');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-    if (req.method === 'OPTIONS') return res.sendStatus(204);
-  }
-  next();
-});
-
-// รหัสเครื่องต้องเป็นตัวอักษร ตัวเลข _ หรือ - ยาว 8–100 ตัว
-function getDeviceId(req) {
-  const id = req.get('X-Device-Id') || '';
-  return /^[A-Za-z0-9_-]{8,100}$/.test(id) ? id : null;
-}
 
 // ---------- ตรวจผลจาก AI ----------
 const LEVELS = new Set(['check_detail', 'caution', 'low']);
@@ -80,23 +72,75 @@ function cleanResult(raw, sourceText) {
   };
 }
 
-// ---------- API ----------
+// ---------- บัญชีผู้ใช้ ----------
 
+// ผู้ใช้ที่ล็อกอินอยู่ (หรือ 401 ถ้ายังไม่ได้ล็อกอิน)
 app.get('/api/me', async (req, res) => {
-  const id = getDeviceId(req);
-  if (!id) return res.status(400).json({ error: 'missing or invalid device id' });
-
   try {
-    res.json({ credits: await getBalance(id) });
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'ยังไม่ได้เข้าสู่ระบบ' });
+    res.json({ email: user.email, credits: user.credits });
   } catch (err) {
     console.error('[me] failed:', err.message);
-    res.status(500).json({ error: 'อ่านข้อมูลเครดิตไม่ได้ ลองใหม่อีกครั้ง' });
+    res.status(500).json({ error: 'ระบบมีปัญหา ลองใหม่อีกครั้ง' });
   }
 });
 
+app.post('/api/signup', async (req, res) => {
+  try {
+    const { email, password } = req.body ?? {};
+    const problem = validateCredentials(email, password);
+    if (problem) return res.status(400).json({ error: problem });
+
+    const user = await registerUser(email, password);
+    if (!user) return res.status(409).json({ error: 'อีเมลนี้มีบัญชีอยู่แล้ว' });
+
+    await startSession(req, res, user.id);
+    res.status(201).json({ email: user.email, credits: user.credits });
+  } catch (err) {
+    console.error('[signup] failed:', err.message);
+    res.status(500).json({ error: 'สมัครไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+
+app.post('/api/login', async (req, res) => {
+  try {
+    const { email, password } = req.body ?? {};
+    if (typeof email !== 'string' || typeof password !== 'string') {
+      return res.status(400).json({ error: 'กรุณากรอกอีเมลและรหัสผ่าน' });
+    }
+
+    const user = await loginUser(email, password);
+    if (!user) return res.status(401).json({ error: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' });
+
+    await startSession(req, res, user.id);
+    res.json({ email: user.email, credits: user.credits });
+  } catch (err) {
+    console.error('[login] failed:', err.message);
+    res.status(500).json({ error: 'เข้าสู่ระบบไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+
+app.post('/api/logout', async (req, res) => {
+  try {
+    await endSession(req, res);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('[logout] failed:', err.message);
+    res.status(500).json({ error: 'ออกจากระบบไม่สำเร็จ' });
+  }
+});
+
+// ---------- ตรวจสัญญา (ต้องล็อกอิน) ----------
 app.post('/api/check', async (req, res) => {
-  const id = getDeviceId(req);
-  if (!id) return res.status(400).json({ error: 'missing or invalid device id' });
+  let user;
+  try {
+    user = await getUserFromRequest(req);
+  } catch (err) {
+    console.error('[check] session lookup failed:', err.message);
+    return res.status(500).json({ error: 'ระบบมีปัญหา ลองใหม่อีกครั้ง' });
+  }
+  if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อนตรวจสัญญา' });
 
   const text = typeof req.body?.text === 'string' ? req.body.text.trim() : '';
   if (!text) return res.status(400).json({ error: 'กรุณาวางข้อความสัญญาก่อน' });
@@ -107,54 +151,48 @@ app.post('/api/check', async (req, res) => {
   // ตัดเครดิตก่อนเรียก AI
   let reserved;
   try {
-    reserved = await reserveCredit(id);
+    reserved = await reserveCredit(user.id);
   } catch (err) {
     console.error('[credits] reserve failed:', err.message);
     return res.status(500).json({ error: 'ระบบเครดิตมีปัญหา ลองใหม่อีกครั้ง' });
   }
-  if (!reserved) {
-    return res.status(402).json({ error: 'เครดิตหมดแล้ว', credits: 0 });
-  }
+  if (!reserved) return res.status(402).json({ error: 'เครดิตหมดแล้ว', credits: 0 });
 
+  // เรียก AI และแปลงผล ถ้าขั้นนี้ล้มเหลวให้คืนเครดิต
+  let result;
   try {
     const raw = await analyzeContract(text);
-    const result = cleanResult(raw, text);
-    const credits = await getBalance(id);
-    res.json({ ok: true, result, credits });
+    result = cleanResult(raw, text);
   } catch (err) {
-    // AI ล้มเหลว หรือ JSON ผิดรูปแบบ หรือคำตอบถูกตัด: คืนเครดิตให้ผู้ใช้
     console.error('[check] failed:', err.message);
     try {
-      await refundCredit(id);
+      await refundCredit(user.id);
     } catch (refundErr) {
       console.error('[credits] refund failed:', refundErr.message);
     }
-
-    let credits = null;
-    try {
-      credits = await getBalance(id);
-    } catch {
-      // ไม่ต้องทำอะไร ส่ง credits เป็น null ไป
-    }
-
-    res.status(502).json({
+    const credits = await getCredits(user.id).catch(() => null);
+    return res.status(502).json({
       error: 'เกิดข้อผิดพลาดระหว่างตรวจสัญญา เครดิตถูกคืนแล้ว ลองใหม่อีกครั้ง',
       credits,
     });
   }
+
+  // ออกมาถึงตรงนี้แปลว่าตรวจสำเร็จ จึงไม่คืนเครดิตแม้การอ่านยอดจะพลาด
+  const credits = await getCredits(user.id).catch(() => null);
+  res.json({ ok: true, result, credits });
 });
 
 // ---------- หน้าเว็บ ----------
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
-// เริ่มรับคำขอหลังเชื่อมฐานข้อมูลสำเร็จเท่านั้น ถ้าเชื่อมไม่ได้ให้หยุดและแสดง error ใน Logs
-initCredits()
+// เริ่มรับคำขอหลังเชื่อมฐานข้อมูลและสร้างตารางสำเร็จเท่านั้น
+initDb()
   .then(() => {
     app.listen(PORT, () => {
       console.log(`[เช็กสัญญา] server running on port ${PORT}`);
     });
   })
   .catch(err => {
-    console.error('[startup] เริ่มระบบเครดิตไม่สำเร็จ:', err.message);
+    console.error('[startup] เริ่มฐานข้อมูลไม่สำเร็จ:', err.message);
     process.exit(1);
   });
