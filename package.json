@@ -1,6 +1,6 @@
 {
   "name": "vellum-check",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "main": "server/index.js",
@@ -11,6 +11,7 @@
     "node": ">=18"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "express": "^4.21.2",
     "pg": "^8.13.1"
   }
