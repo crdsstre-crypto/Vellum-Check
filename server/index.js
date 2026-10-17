@@ -1,18 +1,22 @@
+// เซิร์ฟเวอร์เช็กสัญญา
+// หน้าที่ของไฟล์นี้: รับคำขอ ตรวจเครดิต เรียก AI ตรวจ quote แล้วส่งผลกลับ
+// เครดิตอยู่ใน credits.js และการเรียก AI อยู่ใน ai.js
+
 import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { analyzeContract } from './ai.js';
+import { analyzeContract, MAX_ITEMS_LIMIT } from './ai.js';
+import { initCredits, getBalance, reserveCredit, refundCredit } from './credits.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 
 const PORT = process.env.PORT || 3000;
-const FREE_CREDITS = Number(process.env.FREE_CREDITS ?? 3);
 const MAX_CHARS = 20000;
 
 app.use(express.json({ limit: '200kb' }));
 
-// ---------- CORS (ใช้เมื่อเรียกจากโดเมนอื่น ปกติหน้าเว็บอยู่โดเมนเดียวกันจึงไม่ต้องใช้) ----------
+// ---------- CORS: ใช้เมื่อเรียกจากโดเมนอื่น ปกติหน้าเว็บอยู่โดเมนเดียวกันจึงไม่ต้องตั้ง ----------
 app.use((req, res, next) => {
   const allowed = process.env.ALLOWED_ORIGIN;
   if (allowed) {
@@ -24,29 +28,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// ---------- เครดิต ----------
-// ⚠️ เก็บในหน่วยความจำ: รีสตาร์ตแล้วหาย และ Render free tier รีสตาร์ตบ่อย
-// ⚠️ ระบุตัวผู้ใช้ด้วย X-Device-Id ซึ่งผู้ใช้แก้ได้ จึงยังไม่ปลอดภัยสำหรับเงินจริง
-// ต้องเปลี่ยนเป็น Postgres และระบบล็อกอินก่อนเปิดให้ใช้จริง
-const balances = new Map();
-
-function getBalance(id) {
-  if (!balances.has(id)) balances.set(id, FREE_CREDITS);
-  return balances.get(id);
-}
-
-// การอ่านและเขียนใน Node เป็นแบบ synchronous ภายในโปรเซสเดียว จึงไม่แทรกกลางได้
-function reserveCredit(id) {
-  const b = getBalance(id);
-  if (b < 1) return false;
-  balances.set(id, b - 1);
-  return true;
-}
-
-function refundCredit(id) {
-  balances.set(id, getBalance(id) + 1);
-}
-
+// รหัสเครื่องต้องเป็นตัวอักษร ตัวเลข _ หรือ - ยาว 8–100 ตัว
 function getDeviceId(req) {
   const id = req.get('X-Device-Id') || '';
   return /^[A-Za-z0-9_-]{8,100}$/.test(id) ? id : null;
@@ -61,7 +43,7 @@ const str = v => (typeof v === 'string' ? v.slice(0, 1000) : '');
 
 function cleanResult(raw, sourceText) {
   const normSource = squash(sourceText);
-  const rawItems = Array.isArray(raw?.items) ? raw.items.slice(0, 20) : [];
+  const rawItems = Array.isArray(raw?.items) ? raw.items.slice(0, MAX_ITEMS_LIMIT) : [];
 
   const items = rawItems.map((it, i) => {
     const quote = str(it?.quote).trim();
@@ -99,10 +81,17 @@ function cleanResult(raw, sourceText) {
 }
 
 // ---------- API ----------
-app.get('/api/me', (req, res) => {
+
+app.get('/api/me', async (req, res) => {
   const id = getDeviceId(req);
   if (!id) return res.status(400).json({ error: 'missing or invalid device id' });
-  res.json({ credits: getBalance(id) });
+
+  try {
+    res.json({ credits: await getBalance(id) });
+  } catch (err) {
+    console.error('[me] failed:', err.message);
+    res.status(500).json({ error: 'อ่านข้อมูลเครดิตไม่ได้ ลองใหม่อีกครั้ง' });
+  }
 });
 
 app.post('/api/check', async (req, res) => {
@@ -116,29 +105,56 @@ app.post('/api/check', async (req, res) => {
   }
 
   // ตัดเครดิตก่อนเรียก AI
-  if (!reserveCredit(id)) {
+  let reserved;
+  try {
+    reserved = await reserveCredit(id);
+  } catch (err) {
+    console.error('[credits] reserve failed:', err.message);
+    return res.status(500).json({ error: 'ระบบเครดิตมีปัญหา ลองใหม่อีกครั้ง' });
+  }
+  if (!reserved) {
     return res.status(402).json({ error: 'เครดิตหมดแล้ว', credits: 0 });
   }
 
   try {
     const raw = await analyzeContract(text);
     const result = cleanResult(raw, text);
-    res.json({ ok: true, result, credits: getBalance(id) });
+    const credits = await getBalance(id);
+    res.json({ ok: true, result, credits });
   } catch (err) {
-    // AI ล้มเหลวหรือ JSON ผิดรูปแบบ คืนเครดิตให้ผู้ใช้
-    refundCredit(id);
+    // AI ล้มเหลว หรือ JSON ผิดรูปแบบ หรือคำตอบถูกตัด: คืนเครดิตให้ผู้ใช้
     console.error('[check] failed:', err.message);
+    try {
+      await refundCredit(id);
+    } catch (refundErr) {
+      console.error('[credits] refund failed:', refundErr.message);
+    }
+
+    let credits = null;
+    try {
+      credits = await getBalance(id);
+    } catch {
+      // ไม่ต้องทำอะไร ส่ง credits เป็น null ไป
+    }
+
     res.status(502).json({
       error: 'เกิดข้อผิดพลาดระหว่างตรวจสัญญา เครดิตถูกคืนแล้ว ลองใหม่อีกครั้ง',
-      credits: getBalance(id),
+      credits,
     });
   }
 });
 
 // ---------- หน้าเว็บ ----------
-// หลังย้ายไฟล์เข้า public/ แล้วเท่านั้น
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
-app.listen(PORT, () => {
-  console.log(`[เช็กสัญญา] server running on port ${PORT}`);
-});
+// เริ่มรับคำขอหลังเชื่อมฐานข้อมูลสำเร็จเท่านั้น ถ้าเชื่อมไม่ได้ให้หยุดและแสดง error ใน Logs
+initCredits()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`[เช็กสัญญา] server running on port ${PORT}`);
+    });
+  })
+  .catch(err => {
+    console.error('[startup] เริ่มระบบเครดิตไม่สำเร็จ:', err.message);
+    process.exit(1);
+  });
