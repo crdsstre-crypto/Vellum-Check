@@ -19,7 +19,9 @@
 - **Service บน Render:** `content-checker` (Web Service, Free plan, Auto-Deploy: On Commit)
 - **Repo:** `crdsstre-crypto/Vellum-Check` (V ตัวใหญ่), branch `main`
 - **ทดสอบจริงผ่านแล้ว (ฉบับ 1):** ตรวจได้ 5 ข้อ quote พบทุกข้อ เครดิตลด 3 → 2
-- **ฉบับ 2 (เครดิตถาวร + ความครอบคลุม):** เขียนแล้ว รอทดสอบบน Render
+- **ฉบับ 2 (เครดิตถาวร + ความครอบคลุม):** ใช้งานได้แล้ว Live บน Render
+- **ฐานข้อมูล:** `vellum-check-db` (Postgres, Free, Oregon) สร้างเมื่อ 17 ต.ค. 2026 เชื่อมได้แล้ว Logs ขึ้น `[credits] Postgres พร้อมใช้งาน`
+- **หมดอายุ Free Postgres:** ประมาณ 16 พ.ย. 2026 ตั้งเตือนในแอป Reminders วันที่ 13 พ.ย. 2026 เวลา 09:00
 - **ข้อจำกัดที่ยังอยู่:** รหัสเครื่องเปลี่ยนได้ทางเบราว์เซอร์ ยังไม่ควรเปิดให้จ่ายเงิน
 
 ## 3. โครงสร้างโปรเจกต์
@@ -95,15 +97,23 @@ vellum-check/                    ← root ของ repo บน GitHub
 - **ฉบับ 2:** แยก `credits.js` เก็บเครดิตใน Postgres (ตัดเครดิตแบบอะตอมิก) และ `ai.js` ปรับจำนวนข้อตามความยาวสัญญา พร้อมแจ้งชัดเมื่อคำตอบถูกตัด
 
 ## 9. รายการค้าง (เรียงตามลำดับ)
-- [ ] สร้าง Render Postgres แล้วตั้ง `DATABASE_URL` ใน content-checker
-- [ ] อัปโหลดไฟล์ฉบับ 2 ขึ้น GitHub แล้วรอให้ Render เป็น Live
-- [ ] ทดสอบ: Logs ขึ้น `Postgres พร้อมใช้งาน` และเครดิตยังอยู่หลังรีเฟรชหรือรีสตาร์ต
+- [x] สร้าง Render Postgres แล้วตั้ง `DATABASE_URL` ใน content-checker
+- [x] อัปโหลดไฟล์ฉบับ 2 ขึ้น GitHub แล้วรอให้ Render เป็น Live
+- [x] ทดสอบ: Logs ขึ้น `Postgres พร้อมใช้งาน`
+- [ ] ทดสอบ: เครดิตยังอยู่หลังรีเฟรชและหลัง Manual Deploy (ตรวจ 1 ครั้ง ลดเป็น 2 แล้วรีสตาร์ต)
 - [ ] ทดสอบสัญญายาว: ได้ข้อมากกว่า 5 ข้อและยังไม่ถูกตัด
+- [ ] ต่ออายุ Render Postgres ก่อน 16 พ.ย. 2026 (มีเตือนในแอป Reminders วันที่ 13 พ.ย.)
 - [ ] ตรวจ `public/style.css` และ `public/rules.js` ใน GitHub ครบ
 - [ ] ลบ Static Site เก่า `Vellum Check` และ repo ซ้ำ `vellum-che...`
 - [ ] ตรวจป้ายอ้างอิงมาตรากับ krisdika.go.th
 - [ ] ก่อนเปิดให้จ่ายเงิน: ทำระบบล็อกอินแทนรหัสเครื่อง
 - [ ] ปรับหน้าตาให้ตรงภาพตัวอย่าง และไฮไลต์ข้อความในกล่องสัญญา (ทำสุดท้าย)
+
+## 9.1 บันทึกเรื่องฐานข้อมูล
+- ชื่อ: `vellum-check-db` · Region: Oregon · Plan: Free
+- ใช้ **Internal Database URL** ตั้งเป็น `DATABASE_URL` ใน content-checker
+- ถ้าต้องการใช้จากภายนอก Render ให้ใช้ External URL และตั้ง `DATABASE_SSL=true`
+- ก่อนหมดอายุ: อัปเกรดแผนฐานข้อมูลเป็นแบบชำระเงิน หรือสร้างใหม่แล้วตั้ง `DATABASE_URL` ใหม่
 
 ## 10. วิธีเริ่มแชทใหม่ให้แก้ตรงจุด
 1. อัปโหลด `PROJECT_NOTES.md`
