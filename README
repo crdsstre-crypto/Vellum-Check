@@ -1,0 +1,28 @@
+# เช็กสัญญา (Vellum-Check)
+
+เครื่องมือคัดกรองความเสี่ยงเบื้องต้นของสัญญาภาษาไทย ใช้ AI วิเคราะห์และแสดงจุดที่ควรตรวจ
+
+> ⚠️ ไม่ใช่คำปรึกษาทางกฎหมาย ควรให้ทนายตรวจก่อนลงนามในสัญญาสำคัญ
+
+ดูรายละเอียดโปรเจกต์ที่ `PROJECT_NOTES.md`
+
+## โครงสร้าง
+- `public/` หน้าเว็บ
+- `server/` API และการเรียก AI
+- `package.json` ใช้โดย Render
+
+## รันบนเครื่อง
+```bash
+npm install
+ANTHROPIC_API_KEY=sk-ant-... npm start
+```
+เปิด http://localhost:3000
+
+## ตั้งค่าบน Render
+- Build Command: `npm install`
+- Start Command: `npm start`
+- Environment Variables: ดูหัวข้อ 5 ใน `PROJECT_NOTES.md`
+
+## ข้อควรระวัง
+- ห้ามใส่ API key ในไฟล์ใด ๆ ให้ใส่ใน Environment Variables เท่านั้น
+- เครดิตปัจจุบันเก็บในหน่วยความจำ รีสตาร์ตแล้วจะหาย
