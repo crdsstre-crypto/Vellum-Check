@@ -5,10 +5,21 @@
 const API_URL = 'https://api.anthropic.com/v1/messages';
 const MODEL = process.env.AI_MODEL || 'claude-haiku-5-5';
 
-// ขีดจำกัดโทเคนของคำตอบ ภาษาไทยใช้โทเคนมาก จึงตั้งไว้สูงพอให้ JSON ไม่ถูกตัดกลางคัน
+// เพดานโทเคนของคำตอบ ภาษาไทยใช้โทเคนมาก จึงตั้งสูง
 const MAX_TOKENS = 8000;
 
-const SYSTEM_PROMPT = `คุณช่วยคัดกรองความเสี่ยงเบื้องต้นของสัญญาภาษาไทย คุณไม่ใช่ทนายและไม่ให้คำปรึกษาทางกฎหมาย
+// จำนวนข้อ: อย่างน้อย MIN_ITEMS และไม่เกิน MAX_ITEMS_LIMIT
+// สัญญายาวขึ้น ประมาณทุก CHARS_PER_ITEM ตัวอักษรจะเพิ่มได้ 1 ข้อ
+export const MAX_ITEMS_LIMIT = 10;
+const MIN_ITEMS = 5;
+const CHARS_PER_ITEM = 400;
+
+export function itemsFor(textLength) {
+  return Math.min(MAX_ITEMS_LIMIT, Math.max(MIN_ITEMS, Math.ceil(textLength / CHARS_PER_ITEM)));
+}
+
+function buildSystemPrompt(maxItems) {
+  return `คุณช่วยคัดกรองความเสี่ยงเบื้องต้นของสัญญาภาษาไทย คุณไม่ใช่ทนายและไม่ให้คำปรึกษาทางกฎหมาย
 
 กติกา:
 - ตอบเป็น JSON อย่างเดียว ไม่มีข้อความอื่น ไม่ใช้ markdown ไม่ใส่ backtick
@@ -18,7 +29,7 @@ const SYSTEM_PROMPT = `คุณช่วยคัดกรองความเ
 - level ใช้ได้เพียงค่าเหล่านี้: "check_detail" (ควรตรวจละเอียด), "caution" (ควรระวัง), "low" (เสี่ยงต่ำ)
 - "reference" ใส่มาตราที่เกี่ยวข้องเฉพาะที่มั่นใจ ถ้าไม่แน่ใจให้ใส่ ""
 - ทุกข้อความเป็นภาษาไทย กระชับ ไม่เกินสองประโยค
-- ไม่เกิน 5 รายการใน items เรียงจากความเสี่ยงสูงสุดก่อน
+- ไม่เกิน ${maxItems} รายการใน items เรียงจากความเสี่ยงสูงสุดก่อน
 - แต่ละฟิลด์ยาวไม่เกิน 2 ประโยค quote สั้นที่สุดที่ยังระบุจุดนั้นได้ชัด
 - ตอบให้จบ JSON เสมอ แม้ต้องตัดรายละเอียดลง
 
@@ -38,6 +49,7 @@ const SYSTEM_PROMPT = `คุณช่วยคัดกรองความเ
   ],
   "missing_info": []
 }`;
+}
 
 // ดึงเฉพาะส่วนที่เป็น JSON ออกจากข้อความ แม้ AI จะใส่คำนำหรือ backtick มาด้วย
 function extractJson(raw) {
@@ -66,7 +78,7 @@ export async function analyzeContract(text) {
     body: JSON.stringify({
       model: MODEL,
       max_tokens: MAX_TOKENS,
-      system: SYSTEM_PROMPT,
+      system: buildSystemPrompt(itemsFor(text.length)),
       messages: [{ role: 'user', content: text }],
     }),
   });
@@ -77,9 +89,9 @@ export async function analyzeContract(text) {
 
   const data = await res.json();
 
-  // ถ้าคำตอบถูกตัดเพราะยาวเกิน จะแจ้งใน Logs ให้เห็นชัด
+  // คำตอบถูกตัดกลางคัน ให้แจ้งชัดเจน แล้ว index.js จะคืนเครดิต
   if (data.stop_reason === 'max_tokens') {
-    console.warn('[ai] response was cut off by max_tokens');
+    throw new Error('AI response was cut off by max_tokens');
   }
 
   const raw = (data.content || [])
@@ -87,6 +99,5 @@ export async function analyzeContract(text) {
     .map(block => block.text)
     .join('');
 
-  // ถ้า JSON ผิดรูปแบบจะโยน error และ index.js จะคืนเครดิตให้
   return extractJson(raw);
 }
