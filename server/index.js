@@ -16,6 +16,7 @@ import {
   getUserFromRequest,
 } from './auth.js';
 import { getCredits, reserveCredit, refundCredit } from './credits.js';
+import { isBlocked, recordFailure, clearFailures } from './rateLimit.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -110,9 +111,23 @@ app.post('/api/login', async (req, res) => {
       return res.status(400).json({ error: 'กรุณากรอกอีเมลและรหัสผ่าน' });
     }
 
-    const user = await loginUser(email, password);
-    if (!user) return res.status(401).json({ error: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' });
+    // นับตามทั้งอีเมลและ IP ตรวจก่อนเทียบรหัสผ่าน เพื่อไม่ต้องเสียเวลา hash ตอนถูกบล็อก
+    const emailKey = `email:${email.trim().toLowerCase().slice(0, 254)}`;
+    const keys = [emailKey, `ip:${req.ip}`];
+    if (isBlocked(keys)) {
+      return res.status(429).json({
+        error: 'ล็อกอินผิดหลายครั้ง กรุณารอ 15 นาทีแล้วลองใหม่',
+      });
+    }
 
+    const user = await loginUser(email, password);
+    if (!user) {
+      recordFailure(keys);
+      return res.status(401).json({ error: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' });
+    }
+
+    // ล็อกอินสำเร็จ ล้างการนับของอีเมลนี้ (การนับของ IP ยังคงอยู่)
+    clearFailures([emailKey]);
     await startSession(req, res, user.id);
     res.json({ email: user.email, credits: user.credits });
   } catch (err) {
