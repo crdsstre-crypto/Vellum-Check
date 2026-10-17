@@ -1,23 +1,27 @@
 /* =====================================================
-   เช็กสัญญา — script.js (เวอร์ชันเรียกเซิร์ฟเวอร์)
-   ส่งข้อความสัญญาไปที่ /api/check แล้วแสดงผลที่ได้
-
+   เช็กสัญญา — script.js (ฉบับมีล็อกอิน)
+   ล็อกอินด้วยอีเมลและรหัสผ่าน เครดิตผูกกับบัญชี
    ⚠️ ไฟล์นี้ไม่มี API key และไม่ตัดเครดิต ทั้งหมดอยู่ที่ server/
-   ⚠️ rules.js ไม่ได้ใช้ในเวอร์ชันนี้แล้ว (ยังโหลดไว้ได้ ไม่มีผลกระทบ)
 
    โครงสร้าง
    1. CONFIG     ค่าและข้อความ
    2. HELPERS    ฟังก์ชันช่วยเหลือ
-   3. RENDERING  แสดงผลจาก JSON ของเซิร์ฟเวอร์
-   4. ACTIONS    ปุ่มตรวจ / ล้าง / โหลดเครดิต
-   5. INIT       เริ่มต้นและผูกปุ่ม
+   3. AUTH       สมัคร ล็อกอิน ออกจากระบบ และสถานะการล็อกอิน
+   4. RENDERING  แสดงผลจาก JSON ของเซิร์ฟเวอร์
+   5. ACTIONS    ปุ่มตรวจ / ล้าง
+   6. INIT       เริ่มต้นและผูกปุ่ม
    ===================================================== */
 
 
 /* ---------- 1. CONFIG ---------- */
 const CONFIG = {
-  apiCheck: '/api/check',
-  apiMe: '/api/me',
+  api: {
+    me: '/api/me',
+    signup: '/api/signup',
+    login: '/api/login',
+    logout: '/api/logout',
+    check: '/api/check',
+  },
   levelLabel: {
     check_detail: 'ควรตรวจละเอียด',
     caution: 'ควรระวัง',
@@ -25,10 +29,15 @@ const CONFIG = {
   },
   messages: {
     empty:        'ยังไม่มีผลการตรวจ',
+    loginFirst:   'กรุณาเข้าสู่ระบบก่อนตรวจสัญญา',
+    needCreds:    'กรุณากรอกอีเมลและรหัสผ่าน',
     noInput:      'กรุณาวางข้อความสัญญาก่อน',
     loading:      'กำลังตรวจสัญญา รอสักครู่...',
     network:      'เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ ลองใหม่อีกครั้ง',
     noHit:        '✅ AI ไม่พบจุดที่ควรตรวจ ลองอ่านทั้งฉบับอีกครั้งเพื่อความมั่นใจ',
+    noCredit:     'เครดิตหมดแล้ว',
+    sessionEnded: 'หมดเวลาการเข้าสู่ระบบ กรุณาเข้าสู่ระบบใหม่',
+    loggedOut:    'ออกจากระบบแล้ว',
     clearConfirm: 'ล้างข้อความสัญญาทั้งหมดใช่ไหม?',
     disclaimer:   'ผลนี้เป็นการคัดกรองเบื้องต้นเท่านั้น ไม่ใช่คำปรึกษาทางกฎหมาย ควรให้ทนายตรวจก่อนลงนาม',
   },
@@ -36,6 +45,9 @@ const CONFIG = {
 
 // เก็บ element ที่ใช้บ่อยไว้ตรงนี้ ตั้งค่าใน init()
 const els = {};
+
+// ผู้ใช้ที่ล็อกอินอยู่ หรือ null
+let currentUser = null;
 
 
 /* ---------- 2. HELPERS ---------- */
@@ -47,26 +59,87 @@ function esc(s) {
   }[c]));
 }
 
-// รหัสเครื่องของผู้ใช้ เก็บไว้ในเบราว์เซอร์ ใช้ระบุตัวตนเพื่อเช็กเครดิตที่ server
-// (ไม่ใช่รหัสผ่านและไม่ใช่ความลับ)
-function getDeviceId() {
+// เรียก API ของเซิร์ฟเวอร์ ส่งคุกกี้ไปด้วยอัตโนมัติ
+async function api(path, method = 'GET', body) {
+  const opts = { method, credentials: 'same-origin', headers: {} };
+  if (body !== undefined) {
+    opts.headers['Content-Type'] = 'application/json';
+    opts.body = JSON.stringify(body);
+  }
   try {
-    let id = localStorage.getItem('vc_device_id');
-    if (!id) {
-      id = crypto.randomUUID
-        ? crypto.randomUUID()
-        : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-      localStorage.setItem('vc_device_id', id);
-    }
-    return id;
+    const res = await fetch(path, opts);
+    const data = await res.json().catch(() => ({}));
+    return { ok: res.ok, status: res.status, data };
   } catch {
-    // ถ้าเบราว์เซอร์ไม่ให้ใช้ localStorage ใช้ค่าชั่วคราวแทน
-    return `tmp-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    return { ok: false, status: 0, data: { error: CONFIG.messages.network } };
   }
 }
 
 
-/* ---------- 3. RENDERING ---------- */
+/* ---------- 3. AUTH ---------- */
+
+function showCredits(n) {
+  els.creditsLine.textContent = `เครดิตคงเหลือ ${n}`;
+}
+
+function showLoggedIn(user) {
+  currentUser = user;
+  els.loggedOut.hidden = true;
+  els.loggedIn.hidden = false;
+  els.userEmail.textContent = user.email;
+  showCredits(user.credits);
+  els.authMsg.textContent = '';
+  setBusy(false);
+}
+
+function showLoggedOut(message = '') {
+  currentUser = null;
+  els.loggedOut.hidden = false;
+  els.loggedIn.hidden = true;
+  els.authMsg.textContent = message;
+  setBusy(false);
+}
+
+// ตรวจตอนเปิดหน้า ถ้ามี session อยู่แล้วจะเข้าสู่ระบบให้อัตโนมัติ
+async function restoreSession() {
+  const r = await api(CONFIG.api.me);
+  if (r.ok) showLoggedIn(r.data);
+  else showLoggedOut();
+}
+
+function readCredentials() {
+  const email = els.email.value.trim();
+  const password = els.password.value;
+  if (!email || !password) {
+    els.authMsg.textContent = CONFIG.messages.needCreds;
+    return null;
+  }
+  return { email, password };
+}
+
+// kind คือ 'login' หรือ 'signup'
+async function submitAuth(kind) {
+  const creds = readCredentials();
+  if (!creds) return;
+
+  const r = await api(CONFIG.api[kind], 'POST', creds);
+  if (r.ok) {
+    els.password.value = '';
+    showLoggedIn(r.data);
+    return;
+  }
+  els.authMsg.textContent = r.data.error || CONFIG.messages.network;
+}
+
+async function logout() {
+  await api(CONFIG.api.logout, 'POST', {});
+  els.password.value = '';
+  els.result.innerHTML = `<p class="empty">${esc(CONFIG.messages.empty)}</p>`;
+  showLoggedOut(CONFIG.messages.loggedOut);
+}
+
+
+/* ---------- 4. RENDERING ---------- */
 
 function renderEmpty(message = CONFIG.messages.empty) {
   els.result.innerHTML = `<p class="empty">${esc(message)}</p>`;
@@ -117,7 +190,6 @@ function renderMissing(list) {
     <ul>${list.map(m => `<li>${esc(m)}</li>`).join('')}</ul>`;
 }
 
-// แสดงผลทั้งหมดจาก result ของเซิร์ฟเวอร์
 function renderResult(result) {
   const items = Array.isArray(result.items) ? result.items : [];
 
@@ -134,32 +206,21 @@ function renderResult(result) {
 }
 
 
-/* ---------- 4. ACTIONS ---------- */
+/* ---------- 5. ACTIONS ---------- */
 
-function showCredits(n) {
-  if (els.credits) els.credits.textContent = `เครดิตคงเหลือ ${n}`;
-}
-
-// ปิดปุ่มระหว่างประมวลผล กันการกดซ้ำ
+// ปิดปุ่มระหว่างประมวลผล และปิดทั้งหมดถ้ายังไม่ได้ล็อกอิน
 function setBusy(busy) {
-  els.checkBtn.disabled = busy;
+  els.checkBtn.disabled = busy || !currentUser;
   els.clearBtn.disabled = busy;
   els.checkBtn.textContent = busy ? 'กำลังตรวจ...' : 'ตรวจสัญญา';
 }
 
-async function loadCredits() {
-  try {
-    const res = await fetch(CONFIG.apiMe, {
-      headers: { 'X-Device-Id': getDeviceId() },
-    });
-    const data = await res.json();
-    if (typeof data.credits === 'number') showCredits(data.credits);
-  } catch {
-    // ไม่ต้องแจ้งผู้ใช้ตอนโหลดเครดิตไม่ได้ จะแสดงอีกครั้งเมื่อกดตรวจ
-  }
-}
-
 async function runCheck() {
+  if (!currentUser) {
+    renderEmpty(CONFIG.messages.loginFirst);
+    return;
+  }
+
   const text = els.input.value.trim();
   if (!text) {
     renderEmpty(CONFIG.messages.noInput);
@@ -170,29 +231,22 @@ async function runCheck() {
   renderEmpty(CONFIG.messages.loading);
 
   try {
-    const res = await fetch(CONFIG.apiCheck, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Device-Id': getDeviceId(),
-      },
-      body: JSON.stringify({ text }),
-    });
+    const r = await api(CONFIG.api.check, 'POST', { text });
 
-    const data = await res.json().catch(() => ({}));
-    if (typeof data.credits === 'number') showCredits(data.credits);
+    if (typeof r.data.credits === 'number') showCredits(r.data.credits);
 
-    if (!res.ok) {
-      // เช่น เครดิตหมด หรือ AI ล้มเหลว (server คืนเครดิตให้แล้ว)
-      renderEmpty(data.error || CONFIG.messages.network);
+    if (r.status === 401) {
+      showLoggedOut(CONFIG.messages.sessionEnded);
+      renderEmpty(CONFIG.messages.loginFirst);
+      return;
+    }
+    if (!r.ok) {
+      renderEmpty(r.status === 402 ? CONFIG.messages.noCredit : (r.data.error || CONFIG.messages.network));
       return;
     }
 
-    renderResult(data.result);
+    renderResult(r.data.result);
     els.result.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  } catch (err) {
-    console.error('[เช็กสัญญา] เรียก API ไม่สำเร็จ:', err);
-    renderEmpty(CONFIG.messages.network);
   } finally {
     setBusy(false);
   }
@@ -206,27 +260,32 @@ function clearAll() {
 }
 
 
-/* ---------- 5. INIT ---------- */
+/* ---------- 6. INIT ---------- */
 function init() {
-  els.input    = document.getElementById('input');
-  els.result   = document.getElementById('result');
-  els.checkBtn = document.getElementById('checkBtn');
-  els.clearBtn = document.getElementById('clearBtn');
+  const ids = {
+    input: 'input', result: 'result', checkBtn: 'checkBtn', clearBtn: 'clearBtn',
+    loggedOut: 'authLoggedOut', loggedIn: 'authLoggedIn',
+    email: 'email', password: 'password',
+    loginBtn: 'loginBtn', signupBtn: 'signupBtn', logoutBtn: 'logoutBtn',
+    userEmail: 'userEmail', creditsLine: 'creditsLine', authMsg: 'authMsg',
+  };
 
-  if (!els.input || !els.result || !els.checkBtn || !els.clearBtn) {
-    console.error('[เช็กสัญญา] ไม่พบ element ที่ต้องใช้ — ตรวจ id ใน index.html ให้ตรงกับ script.js');
-    return;
+  for (const [key, id] of Object.entries(ids)) {
+    els[key] = document.getElementById(id);
+    if (!els[key]) {
+      console.error(`[เช็กสัญญา] ไม่พบ element id="${id}" ใน index.html`);
+      return;
+    }
   }
 
-  // สร้างช่องแสดงเครดิตไว้เหนือผลลัพธ์ โดยไม่ต้องแก้ index.html
-  els.credits = document.createElement('p');
-  els.credits.className = 'credits';
-  els.result.parentElement.insertBefore(els.credits, els.result);
-
+  els.loginBtn.addEventListener('click', () => submitAuth('login'));
+  els.signupBtn.addEventListener('click', () => submitAuth('signup'));
+  els.logoutBtn.addEventListener('click', logout);
   els.checkBtn.addEventListener('click', runCheck);
   els.clearBtn.addEventListener('click', clearAll);
 
-  loadCredits();
+  showLoggedOut();
+  restoreSession();
 }
 
 document.addEventListener('DOMContentLoaded', init);
