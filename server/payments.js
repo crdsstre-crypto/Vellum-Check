@@ -1,9 +1,9 @@
 // ระบบเติมเครดิตผ่าน PromptPay
 // หลักการ: ราคาและจำนวนเครดิตกำหนดที่เซิร์ฟเวอร์เท่านั้น หน้าเว็บส่งได้แค่รหัสแพ็กเกจ
-// การเติมเครดิตจริงจะทำหลังยืนยันกับ Omise แล้วเท่านั้น (ทำในขั้นตอนถัดไป)
+// การเติมเครดิตทำเฉพาะหลังยืนยันกับ Omise แล้วเท่านั้น (ดู confirmAndCredit ด้านล่าง)
 
 import { pool } from './db.js';
-import { omisePost } from './omise.js';
+import { omisePost, omiseGet } from './omise.js';
 
 // ราคาเป็นค่าเริ่มต้นสำหรับทดสอบ ปรับได้ตามที่ตกลงกัน หน่วยเป็นสตางค์ (99 บาท = 9900)
 export const PACKAGES = {
@@ -45,4 +45,44 @@ export async function createPromptPayPayment(userId, packageId) {
     qrImageUrl: charge.source?.scannable_code?.image?.download_uri ?? null,
     expiresAt: charge.expires_at ?? null,
   };
+}
+
+
+/* ---------- ยืนยันการจ่ายและเติมเครดิต (ขั้นที่ 3) ---------- */
+
+// เรียกจาก webhook ของ Omise
+// หลักการ: ไม่เชื่อข้อมูลใน webhook แต่ดึงสถานะจาก Omise ด้วยคีย์ลับอีกครั้ง
+// คืนค่า result เป็น 'credited' | 'already' | 'not_paid' | 'unknown'
+export async function confirmAndCredit(chargeId) {
+  const { rows } = await pool.query(
+    'SELECT user_id, amount_satang, status FROM payments WHERE charge_id = $1',
+    [chargeId]
+  );
+  const row = rows[0];
+  if (!row) return { result: 'unknown' }; // ไม่ใช่รายการที่ระบบนี้สร้าง
+  if (row.status === 'credited') return { result: 'already' };
+
+  const charge = await omiseGet(`/charges/${encodeURIComponent(chargeId)}`);
+  if (charge.status !== 'successful') return { result: 'not_paid' };
+
+  // ยอดและสกุลเงินต้องตรงกับที่บันทึกไว้ตอนสร้างรายการ
+  if (charge.amount !== row.amount_satang || charge.currency !== 'thb') {
+    throw new Error(`ยอดหรือสกุลเงินไม่ตรงกับรายการ ${chargeId}`);
+  }
+
+  // เปลี่ยนสถานะและเติมเครดิตในคำสั่งเดียว
+  // ถ้า webhook ส่งซ้ำพร้อมกัน จะมีเพียงคำสั่งเดียวที่เปลี่ยนจาก pending ได้
+  const { rowCount } = await pool.query(
+    `WITH claimed AS (
+       UPDATE payments SET status = 'credited', credited_at = now()
+        WHERE charge_id = $1 AND status = 'pending'
+        RETURNING user_id, credits
+     )
+     UPDATE users SET credits = users.credits + claimed.credits
+       FROM claimed
+      WHERE users.id = claimed.user_id`,
+    [chargeId]
+  );
+
+  return { result: rowCount === 1 ? 'credited' : 'already' };
 }
