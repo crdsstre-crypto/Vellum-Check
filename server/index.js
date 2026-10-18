@@ -17,7 +17,7 @@ import {
 } from './auth.js';
 import { getCredits, reserveCredit, refundCredit } from './credits.js';
 import { isBlocked, recordFailure, clearFailures } from './rateLimit.js';
-import { createPromptPayPayment, PACKAGES } from './payments.js';
+import { createPromptPayPayment, confirmAndCredit, PACKAGES } from './payments.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -154,6 +154,27 @@ app.post('/api/payments/promptpay', async (req, res) => {
     // บันทึกเฉพาะข้อความผิดพลาด ห้ามบันทึกคีย์หรือข้อมูลการชำระ
     console.error('[payment] สร้างรายการ PromptPay ไม่สำเร็จ:', err.message);
     res.status(500).json({ error: 'สร้างรายการชำระเงินไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+
+// รับการแจ้งเหตุการณ์จาก Omise (ไม่ต้องล็อกอิน เพราะ Omise เป็นผู้เรียก)
+// ความปลอดภัย: เราดึงสถานะการชำระจาก Omise ด้วยคีย์ลับเองทุกครั้ง จึงไม่เชื่อข้อมูลในคำขอนี้
+app.post('/api/omise/webhook', async (req, res) => {
+  const event = req.body ?? {};
+
+  // สนใจเฉพาะเหตุการณ์ charge.complete ที่เกี่ยวกับ charge เท่านั้น เหตุการณ์อื่นตอบ 200 เพื่อไม่ให้ Omise ส่งซ้ำ
+  if (event.key !== 'charge.complete' || event.data?.object !== 'charge' || typeof event.data?.id !== 'string') {
+    return res.sendStatus(200);
+  }
+
+  try {
+    const { result } = await confirmAndCredit(event.data.id);
+    console.log(`[payment] webhook ${event.data.id}: ${result}`);
+    res.sendStatus(200);
+  } catch (err) {
+    // ตอบ 500 เพื่อให้ Omise ลองส่งอีกครั้ง
+    console.error('[payment] webhook ผิดพลาด:', err.message);
+    res.sendStatus(500);
   }
 });
 
