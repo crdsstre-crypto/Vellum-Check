@@ -1,119 +1,48 @@
-/* =====================================================
-   เติมเครดิตด้วย PromptPay — payments.js (ขั้นที่ 2)
-   หน้าที่: แสดงแพ็กเกจ ขอ QR จากเซิร์ฟเวอร์ และแสดง QR ให้สแกน
-   ไม่มีราคาหรือการเติมเครดิตในหน้านี้ ทั้งหมดอยู่ที่ server/payments.js
-   ใช้ api() และ esc() จาก script.js จึงต้องโหลดไฟล์นี้หลัง script.js
+// ระบบเติมเครดิตผ่าน PromptPay
+// หลักการ: ราคาและจำนวนเครดิตกำหนดที่เซิร์ฟเวอร์เท่านั้น หน้าเว็บส่งได้แค่รหัสแพ็กเกจ
+// การเติมเครดิตจริงจะทำหลังยืนยันกับ Omise แล้วเท่านั้น (ทำในขั้นตอนถัดไป)
 
-   โครงสร้าง
-   1. CONFIG    ค่าและข้อความ
-   2. VIEW      แสดงแพ็กเกจและผล QR
-   3. ACTIONS   กดซื้อแพ็กเกจ
-   4. INIT      เริ่มต้นและผูกปุ่ม
-   ===================================================== */
+import { pool } from './db.js';
+import { omisePost } from './omise.js';
 
-
-/* ---------- 1. CONFIG ---------- */
-const PAYMENT_CONFIG = {
-  // id ต้องตรงกับ PACKAGES ใน server/payments.js เสมอ
-  packages: [
-    { id: 'pack10', label: '10 ครั้ง · 99 บาท' },
-  ],
-  messages: {
-    creating:  'กำลังสร้าง QR กรุณารอสักครู่...',
-    failed:    'สร้างรายการชำระเงินไม่สำเร็จ ลองใหม่อีกครั้ง',
-    noQr:      'ไม่พบรูป QR กรุณาลองใหม่หรือติดต่อผู้ดูแลระบบ',
-    loginFirst:'กรุณาเข้าสู่ระบบก่อนเติมเครดิต',
-    testNote:  'โหมดทดสอบ ยังไม่มีการเรียกเก็บเงินจริง และเครดิตจะยังไม่เพิ่มอัตโนมัติ จนกว่าจะทำขั้นตอนยืนยันการชำระ',
-  },
+// ราคาเป็นค่าเริ่มต้นสำหรับทดสอบ ปรับได้ตามที่ตกลงกัน หน่วยเป็นสตางค์ (99 บาท = 9900)
+export const PACKAGES = {
+  pack10: { credits: 10, amountSatang: 9900, label: '10 ครั้ง ราคา 99 บาท' },
 };
 
-// element ที่ใช้บ่อย ตั้งค่าใน initPayments()
-const payEls = {};
+// สร้างรายการ PromptPay แล้วคืน QR สำหรับให้ผู้ใช้สแกน
+export async function createPromptPayPayment(userId, packageId) {
+  const pkg = PACKAGES[packageId];
+  if (!pkg) throw new Error('ไม่พบแพ็กเกจ');
 
+  // 1) สร้างแหล่งชำระเงินชนิด PromptPay
+  const source = await omisePost('/sources', {
+    type: 'promptpay',
+    amount: pkg.amountSatang,
+    currency: 'thb',
+  });
 
-/* ---------- 2. VIEW ---------- */
+  // 2) สร้างรายการเรียกเก็บเงินจากแหล่งนั้น
+  const charge = await omisePost('/charges', {
+    amount: pkg.amountSatang,
+    currency: 'thb',
+    source: source.id,
+    description: `เติมเครดิต ${pkg.credits} ครั้ง (user ${userId})`,
+  });
 
-function showPaymentCard(visible) {
-  payEls.card.hidden = !visible;
+  // 3) บันทึกเป็นรายการรอชำระ เครดิตยังไม่ถูกเพิ่มจนกว่าจะยืนยันว่าจ่ายแล้ว
+  await pool.query(
+    `INSERT INTO payments (charge_id, user_id, package_id, credits, amount_satang, status)
+     VALUES ($1, $2, $3, $4, $5, 'pending')`,
+    [charge.id, userId, packageId, pkg.credits, pkg.amountSatang]
+  );
+
+  return {
+    chargeId: charge.id,
+    status: charge.status,
+    label: pkg.label,
+    // ลิงก์รูป QR ที่ Omise สร้างให้ ถ้าไม่มีให้ตรวจโครงสร้างตอบกลับตอนทดสอบ
+    qrImageUrl: charge.source?.scannable_code?.image?.download_uri ?? null,
+    expiresAt: charge.expires_at ?? null,
+  };
 }
-
-function renderPackageButtons() {
-  payEls.buttons.innerHTML = PAYMENT_CONFIG.packages
-    .map(p => `<button class="primary" data-package="${esc(p.id)}">${esc(p.label)}</button>`)
-    .join('');
-}
-
-function renderPaymentMessage(message) {
-  payEls.result.innerHTML = `<p class="empty">${esc(message)}</p>`;
-}
-
-// รูป QR ต้องเป็น https เท่านั้น กันค่าที่ไม่ปลอดภัยจากเซิร์ฟเวอร์
-function isSafeImageUrl(url) {
-  try {
-    return new URL(url).protocol === 'https:';
-  } catch {
-    return false;
-  }
-}
-
-function renderQr(payment) {
-  const qr = payment.qrImageUrl && isSafeImageUrl(payment.qrImageUrl)
-    ? `<img src="${esc(payment.qrImageUrl)}" alt="QR PromptPay"
-            style="display:block;max-width:240px;width:100%;margin:12px auto;">`
-    : `<p class="notfound">${esc(PAYMENT_CONFIG.messages.noQr)}</p>`;
-
-  payEls.result.innerHTML = `
-    <p><b>${esc(payment.label)}</b></p>
-    ${qr}
-    <p class="disclaimer">${esc(PAYMENT_CONFIG.messages.testNote)}</p>`;
-}
-
-
-/* ---------- 3. ACTIONS ---------- */
-
-async function buyPackage(packageId) {
-  renderPaymentMessage(PAYMENT_CONFIG.messages.creating);
-  const r = await api('/api/payments/promptpay', 'POST', { packageId });
-
-  if (r.status === 401) {
-    renderPaymentMessage(PAYMENT_CONFIG.messages.loginFirst);
-    return;
-  }
-  if (!r.ok) {
-    renderPaymentMessage(r.data.error || PAYMENT_CONFIG.messages.failed);
-    return;
-  }
-  renderQr(r.data);
-}
-
-function onPackageClick(event) {
-  const btn = event.target.closest('button[data-package]');
-  if (btn) buyPackage(btn.dataset.package);
-}
-
-// script.js เรียกฟังก์ชันนี้ทุกครั้งที่สถานะการล็อกอินเปลี่ยน
-function onAuthChange(user) {
-  if (!payEls.card) return;
-  showPaymentCard(Boolean(user));
-  if (!user) payEls.result.innerHTML = '';
-}
-
-
-/* ---------- 4. INIT ---------- */
-
-function initPayments() {
-  payEls.card = document.getElementById('paymentCard');
-  payEls.buttons = document.getElementById('packageButtons');
-  payEls.result = document.getElementById('paymentResult');
-
-  if (!payEls.card || !payEls.buttons || !payEls.result) {
-    console.error('[เติมเครดิต] ไม่พบ element ใน index.html');
-    return;
-  }
-
-  renderPackageButtons();
-  payEls.buttons.addEventListener('click', onPackageClick);
-  showPaymentCard(false);
-}
-
-document.addEventListener('DOMContentLoaded', initPayments);
