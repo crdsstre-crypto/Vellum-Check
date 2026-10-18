@@ -66,8 +66,13 @@ export async function confirmAndCredit(chargeId) {
   if (charge.status !== 'successful') return { result: 'not_paid' };
 
   // ยอดและสกุลเงินต้องตรงกับที่บันทึกไว้ตอนสร้างรายการ
-  if (charge.amount !== row.amount_satang || charge.currency !== 'thb') {
-    throw new Error(`ยอดหรือสกุลเงินไม่ตรงกับรายการ ${chargeId}`);
+  // เทียบแบบแปลงชนิดก่อน และแสดงค่าจริงในข้อความ error เพื่อให้ดูจาก Logs ได้
+  const sameAmount = Number(charge.amount) === Number(row.amount_satang);
+  const sameCurrency = String(charge.currency).toLowerCase() === 'thb';
+  if (!sameAmount || !sameCurrency) {
+    throw new Error(
+      `ยอดหรือสกุลเงินไม่ตรง ${chargeId}: จาก Omise=${charge.amount} ${charge.currency}, ที่บันทึก=${row.amount_satang}`
+    );
   }
 
   // เปลี่ยนสถานะและเติมเครดิตในคำสั่งเดียว
