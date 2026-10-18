@@ -237,7 +237,7 @@ async function runCheck() {
   renderEmpty(CONFIG.messages.loading);
 
   try {
-    const r = await api(CONFIG.api.check, 'POST', { text, voice: els.voiceOpt.checked });
+    const r = await api(CONFIG.api.check, 'POST', { text, voice: els.voiceOpt?.checked === true });
 
     if (typeof r.data.credits === 'number') showCredits(r.data.credits);
 
@@ -277,11 +277,14 @@ function clearAll() {
 function init() {
   const ids = {
     input: 'input', result: 'result', checkBtn: 'checkBtn', clearBtn: 'clearBtn',
-    loggedOut: 'authLoggedOut', loggedIn: 'authLoggedIn', voiceOpt: 'voiceOpt',
+    loggedOut: 'authLoggedOut', loggedIn: 'authLoggedIn',
     email: 'email', password: 'password',
     loginBtn: 'loginBtn', signupBtn: 'signupBtn', logoutBtn: 'logoutBtn',
     userEmail: 'userEmail', creditsLine: 'creditsLine', authMsg: 'authMsg',
   };
+
+  // ช่องเสียงเป็นตัวเลือกเสริม ถ้าไม่มีในหน้าก็ไม่ควรหยุดการผูกปุ่มอื่น
+  els.voiceOpt = document.getElementById('voiceOpt');
 
   for (const [key, id] of Object.entries(ids)) {
     els[key] = document.getElementById(id);
