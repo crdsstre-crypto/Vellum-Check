@@ -35,5 +35,18 @@ export async function initDb() {
     )
   `);
 
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS payments (
+      charge_id      TEXT PRIMARY KEY,
+      user_id        INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      package_id     TEXT NOT NULL,
+      credits        INTEGER NOT NULL CHECK (credits > 0),
+      amount_satang  INTEGER NOT NULL CHECK (amount_satang > 0),
+      status         TEXT NOT NULL DEFAULT 'pending',
+      created_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
+      credited_at    TIMESTAMPTZ
+    )
+  `);
+
   console.log('[db] ตารางผู้ใช้และ session พร้อมใช้งาน');
 }
