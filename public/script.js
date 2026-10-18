@@ -237,7 +237,7 @@ async function runCheck() {
   renderEmpty(CONFIG.messages.loading);
 
   try {
-    const r = await api(CONFIG.api.check, 'POST', { text });
+    const r = await api(CONFIG.api.check, 'POST', { text, voice: els.voiceOpt.checked });
 
     if (typeof r.data.credits === 'number') showCredits(r.data.credits);
 
@@ -252,6 +252,13 @@ async function runCheck() {
     }
 
     renderResult(r.data.result);
+    if (r.data.audio) {
+      els.result.insertAdjacentHTML('afterbegin',
+        `<audio controls src="data:audio/mpeg;base64,${r.data.audio}" style="width:100%;margin-bottom:12px"></audio>`);
+    }
+    if (r.data.voiceError) {
+      els.result.insertAdjacentHTML('afterbegin', `<p class="notfound">${esc(r.data.voiceError)}</p>`);
+    }
     els.result.scrollIntoView({ behavior: 'smooth', block: 'start' });
   } finally {
     setBusy(false);
@@ -270,7 +277,7 @@ function clearAll() {
 function init() {
   const ids = {
     input: 'input', result: 'result', checkBtn: 'checkBtn', clearBtn: 'clearBtn',
-    loggedOut: 'authLoggedOut', loggedIn: 'authLoggedIn',
+    loggedOut: 'authLoggedOut', loggedIn: 'authLoggedIn', voiceOpt: 'voiceOpt',
     email: 'email', password: 'password',
     loginBtn: 'loginBtn', signupBtn: 'signupBtn', logoutBtn: 'logoutBtn',
     userEmail: 'userEmail', creditsLine: 'creditsLine', authMsg: 'authMsg',
