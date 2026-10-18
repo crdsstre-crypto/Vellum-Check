@@ -82,8 +82,13 @@ function showCredits(n) {
   els.creditsLine.textContent = `เครดิตคงเหลือ ${n}`;
 }
 
+function notifyAuthChange(user) {
+  if (typeof onAuthChange === 'function') onAuthChange(user);
+}
+
 function showLoggedIn(user) {
   currentUser = user;
+  notifyAuthChange(user);
   els.loggedOut.hidden = true;
   els.loggedIn.hidden = false;
   els.userEmail.textContent = user.email;
@@ -94,6 +99,7 @@ function showLoggedIn(user) {
 
 function showLoggedOut(message = '') {
   currentUser = null;
+  notifyAuthChange(null);
   els.loggedOut.hidden = false;
   els.loggedIn.hidden = true;
   els.authMsg.textContent = message;
