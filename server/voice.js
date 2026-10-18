@@ -27,11 +27,14 @@ export async function synthesizeSpeech(text) {
   const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voiceId)}`, {
     method: 'POST',
     headers: { 'xi-api-key': apiKey, 'Content-Type': 'application/json', Accept: 'audio/mpeg' },
-    body: JSON.stringify({ text, model_id: 'eleven_multilingual_v2' }),
+    // ต้องใช้โมเดลที่รองรับภาษาไทยจริง (eleven_multilingual_v2 ไม่มีภาษาไทยในรายการ)
+    body: JSON.stringify({ text, model_id: 'eleven_v3' }),
   });
   if (!res.ok) {
-    // ไม่บันทึกเนื้อหาตอบกลับ เพื่อไม่ให้ข้อมูลส่วนตัวหรือคีย์หลุดไปใน log
-    throw new Error(`ElevenLabs ตอบกลับสถานะ ${res.status}`);
+    // บันทึกเฉพาะข้อความสั้น ๆ จากผู้ให้บริการ ไม่บันทึกข้อความสัญญาหรือคีย์
+    const body = await res.json().catch(() => ({}));
+    const reason = String(body?.detail?.message ?? body?.detail?.status ?? '').slice(0, 150);
+    throw new Error(`ElevenLabs ตอบกลับสถานะ ${res.status}${reason ? ` (${reason})` : ''}`);
   }
   return Buffer.from(await res.arrayBuffer()).toString('base64');
 }
