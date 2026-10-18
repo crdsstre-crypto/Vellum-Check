@@ -15,8 +15,9 @@ import {
   endSession,
   getUserFromRequest,
 } from './auth.js';
-import { getCredits, reserveCredit, refundCredit } from './credits.js';
+import { getCredits, reserveCredits, refundCredits } from './credits.js';
 import { isBlocked, recordFailure, clearFailures } from './rateLimit.js';
+import { buildSpokenSummary, synthesizeSpeech, VOICE_CREDIT_COST } from './voice.js';
 import { createPromptPayPayment, confirmAndCredit, PACKAGES } from './payments.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -205,28 +206,34 @@ app.post('/api/check', async (req, res) => {
     return res.status(413).json({ error: `ข้อความยาวเกิน ${MAX_CHARS} ตัวอักษร` });
   }
 
+  // ค่าใช้จ่ายรวม: ตรวจสัญญา 1 เครดิต และถ้าขอเสียงสรุปเพิ่มอีก VOICE_CREDIT_COST
+  const wantVoice = req.body?.voice === true;
+  const totalCost = 1 + (wantVoice ? VOICE_CREDIT_COST : 0);
+
   // ตัดเครดิตก่อนเรียก AI
   let reserved;
   try {
-    reserved = await reserveCredit(user.id);
+    reserved = await reserveCredits(user.id, totalCost);
   } catch (err) {
     console.error('[credits] reserve failed:', err.message);
     return res.status(500).json({ error: 'ระบบเครดิตมีปัญหา ลองใหม่อีกครั้ง' });
   }
-  if (!reserved) return res.status(402).json({ error: 'เครดิตหมดแล้ว', credits: 0 });
+  if (!reserved) {
+    const credits = await getCredits(user.id).catch(() => 0);
+    const error = wantVoice
+      ? `เครดิตไม่พอ การสรุปเป็นเสียงใช้ ${totalCost} เครดิต`
+      : 'เครดิตหมดแล้ว';
+    return res.status(402).json({ error, credits });
+  }
 
-  // เรียก AI และแปลงผล ถ้าขั้นนี้ล้มเหลวให้คืนเครดิต
+  // เรียก AI ถ้าล้มเหลวให้คืนเครดิตทั้งหมด
   let result;
   try {
     const raw = await analyzeContract(text);
     result = cleanResult(raw, text);
   } catch (err) {
     console.error('[check] failed:', err.message);
-    try {
-      await refundCredit(user.id);
-    } catch (refundErr) {
-      console.error('[credits] refund failed:', refundErr.message);
-    }
+    await refundCredits(user.id, totalCost).catch(e => console.error('[credits] refund failed:', e.message));
     const credits = await getCredits(user.id).catch(() => null);
     return res.status(502).json({
       error: 'เกิดข้อผิดพลาดระหว่างตรวจสัญญา เครดิตถูกคืนแล้ว ลองใหม่อีกครั้ง',
@@ -234,9 +241,23 @@ app.post('/api/check', async (req, res) => {
     });
   }
 
+  // สร้างเสียงสรุป ถ้าล้มเหลวคืนเฉพาะเครดิตของเสียง ผลการตรวจยังส่งให้ตามปกติ
+  let audio = null;
+  let voiceError = null;
+  if (wantVoice) {
+    try {
+      audio = await synthesizeSpeech(buildSpokenSummary(result));
+    } catch (err) {
+      console.error('[voice] failed:', err.message);
+      await refundCredits(user.id, VOICE_CREDIT_COST)
+        .catch(e => console.error('[credits] voice refund failed:', e.message));
+      voiceError = 'สร้างเสียงสรุปไม่สำเร็จ เครดิตเสียงถูกคืนแล้ว';
+    }
+  }
+
   // ออกมาถึงตรงนี้แปลว่าตรวจสำเร็จ จึงไม่คืนเครดิตแม้การอ่านยอดจะพลาด
   const credits = await getCredits(user.id).catch(() => null);
-  res.json({ ok: true, result, credits });
+  res.json({ ok: true, result, credits, audio, voiceError });
 });
 
 // ---------- หน้าเว็บ ----------
