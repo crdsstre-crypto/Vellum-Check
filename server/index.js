@@ -17,6 +17,7 @@ import {
 } from './auth.js';
 import { getCredits, reserveCredit, refundCredit } from './credits.js';
 import { isBlocked, recordFailure, clearFailures } from './rateLimit.js';
+import { createPromptPayPayment, PACKAGES } from './payments.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -133,6 +134,26 @@ app.post('/api/login', async (req, res) => {
   } catch (err) {
     console.error('[login] failed:', err.message);
     res.status(500).json({ error: 'เข้าสู่ระบบไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+
+// สร้างรายการชำระเงิน PromptPay สำหรับเติมเครดิต (ต้องล็อกอินก่อน)
+app.post('/api/payments/promptpay', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน' });
+
+    const packageId = req.body?.packageId;
+    if (typeof packageId !== 'string' || !PACKAGES[packageId]) {
+      return res.status(400).json({ error: 'แพ็กเกจไม่ถูกต้อง' });
+    }
+
+    const payment = await createPromptPayPayment(user.id, packageId);
+    res.json(payment);
+  } catch (err) {
+    // บันทึกเฉพาะข้อความผิดพลาด ห้ามบันทึกคีย์หรือข้อมูลการชำระ
+    console.error('[payment] สร้างรายการ PromptPay ไม่สำเร็จ:', err.message);
+    res.status(500).json({ error: 'สร้างรายการชำระเงินไม่สำเร็จ ลองใหม่อีกครั้ง' });
   }
 });
 
