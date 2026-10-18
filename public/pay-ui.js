@@ -1,0 +1,119 @@
+/* =====================================================
+   เติมเครดิตด้วย PromptPay — payments.js (ขั้นที่ 2)
+   หน้าที่: แสดงแพ็กเกจ ขอ QR จากเซิร์ฟเวอร์ และแสดง QR ให้สแกน
+   ไม่มีราคาหรือการเติมเครดิตในหน้านี้ ทั้งหมดอยู่ที่ server/payments.js
+   ใช้ api() และ esc() จาก script.js จึงต้องโหลดไฟล์นี้หลัง script.js
+
+   โครงสร้าง
+   1. CONFIG    ค่าและข้อความ
+   2. VIEW      แสดงแพ็กเกจและผล QR
+   3. ACTIONS   กดซื้อแพ็กเกจ
+   4. INIT      เริ่มต้นและผูกปุ่ม
+   ===================================================== */
+
+
+/* ---------- 1. CONFIG ---------- */
+const PAYMENT_CONFIG = {
+  // id ต้องตรงกับ PACKAGES ใน server/payments.js เสมอ
+  packages: [
+    { id: 'pack10', label: '10 ครั้ง · 99 บาท' },
+  ],
+  messages: {
+    creating:  'กำลังสร้าง QR กรุณารอสักครู่...',
+    failed:    'สร้างรายการชำระเงินไม่สำเร็จ ลองใหม่อีกครั้ง',
+    noQr:      'ไม่พบรูป QR กรุณาลองใหม่หรือติดต่อผู้ดูแลระบบ',
+    loginFirst:'กรุณาเข้าสู่ระบบก่อนเติมเครดิต',
+    testNote:  'โหมดทดสอบ ยังไม่มีการเรียกเก็บเงินจริง และเครดิตจะยังไม่เพิ่มอัตโนมัติ จนกว่าจะทำขั้นตอนยืนยันการชำระ',
+  },
+};
+
+// element ที่ใช้บ่อย ตั้งค่าใน initPayments()
+const payEls = {};
+
+
+/* ---------- 2. VIEW ---------- */
+
+function showPaymentCard(visible) {
+  payEls.card.hidden = !visible;
+}
+
+function renderPackageButtons() {
+  payEls.buttons.innerHTML = PAYMENT_CONFIG.packages
+    .map(p => `<button class="primary" data-package="${esc(p.id)}">${esc(p.label)}</button>`)
+    .join('');
+}
+
+function renderPaymentMessage(message) {
+  payEls.result.innerHTML = `<p class="empty">${esc(message)}</p>`;
+}
+
+// รูป QR ต้องเป็น https เท่านั้น กันค่าที่ไม่ปลอดภัยจากเซิร์ฟเวอร์
+function isSafeImageUrl(url) {
+  try {
+    return new URL(url).protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
+function renderQr(payment) {
+  const qr = payment.qrImageUrl && isSafeImageUrl(payment.qrImageUrl)
+    ? `<img src="${esc(payment.qrImageUrl)}" alt="QR PromptPay"
+            style="display:block;max-width:240px;width:100%;margin:12px auto;">`
+    : `<p class="notfound">${esc(PAYMENT_CONFIG.messages.noQr)}</p>`;
+
+  payEls.result.innerHTML = `
+    <p><b>${esc(payment.label)}</b></p>
+    ${qr}
+    <p class="disclaimer">${esc(PAYMENT_CONFIG.messages.testNote)}</p>`;
+}
+
+
+/* ---------- 3. ACTIONS ---------- */
+
+async function buyPackage(packageId) {
+  renderPaymentMessage(PAYMENT_CONFIG.messages.creating);
+  const r = await api('/api/payments/promptpay', 'POST', { packageId });
+
+  if (r.status === 401) {
+    renderPaymentMessage(PAYMENT_CONFIG.messages.loginFirst);
+    return;
+  }
+  if (!r.ok) {
+    renderPaymentMessage(r.data.error || PAYMENT_CONFIG.messages.failed);
+    return;
+  }
+  renderQr(r.data);
+}
+
+function onPackageClick(event) {
+  const btn = event.target.closest('button[data-package]');
+  if (btn) buyPackage(btn.dataset.package);
+}
+
+// script.js เรียกฟังก์ชันนี้ทุกครั้งที่สถานะการล็อกอินเปลี่ยน
+function onAuthChange(user) {
+  if (!payEls.card) return;
+  showPaymentCard(Boolean(user));
+  if (!user) payEls.result.innerHTML = '';
+}
+
+
+/* ---------- 4. INIT ---------- */
+
+function initPayments() {
+  payEls.card = document.getElementById('paymentCard');
+  payEls.buttons = document.getElementById('packageButtons');
+  payEls.result = document.getElementById('paymentResult');
+
+  if (!payEls.card || !payEls.buttons || !payEls.result) {
+    console.error('[เติมเครดิต] ไม่พบ element ใน index.html');
+    return;
+  }
+
+  renderPackageButtons();
+  payEls.buttons.addEventListener('click', onPackageClick);
+  showPaymentCard(false);
+}
+
+document.addEventListener('DOMContentLoaded', initPayments);
