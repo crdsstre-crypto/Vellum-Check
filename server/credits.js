@@ -10,14 +10,24 @@ export async function getCredits(userId) {
 
 // ตัดเครดิต 1 ครั้ง คืน true ถ้าตัดได้ false ถ้าเครดิตไม่พอ
 export async function reserveCredit(userId) {
+  return reserveCredits(userId, 1);
+}
+
+// ตัดเครดิตหลายหน่วยพร้อมกัน คืน true ถ้าตัดได้ทั้งหมด false ถ้าไม่พอ (ไม่ตัดเลยถ้าไม่พอ)
+export async function reserveCredits(userId, n) {
   const { rowCount } = await pool.query(
-    'UPDATE users SET credits = credits - 1 WHERE id = $1 AND credits >= 1',
-    [userId]
+    'UPDATE users SET credits = credits - $2 WHERE id = $1 AND credits >= $2',
+    [userId, n]
   );
   return rowCount === 1;
 }
 
 // คืนเครดิต 1 ครั้ง ใช้เมื่อ AI ล้มเหลว
 export async function refundCredit(userId) {
-  await pool.query('UPDATE users SET credits = credits + 1 WHERE id = $1', [userId]);
+  return refundCredits(userId, 1);
+}
+
+// คืนเครดิตหลายหน่วย
+export async function refundCredits(userId, n) {
+  await pool.query('UPDATE users SET credits = credits + $2 WHERE id = $1', [userId, n]);
 }
