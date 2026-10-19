@@ -115,7 +115,7 @@ vellum-check/                    ← root ของ repo บน GitHub
 - **เริ่มระบบเติมเครดิต PromptPay (17 ต.ค. 2026, ขั้นที่ 1):** เพิ่ม `server/omise.js`, `server/payments.js`, ตาราง `payments` ใน `db.js` และเส้นทาง `/api/payments/promptpay` ใน `index.js` ตั้งค่า `OMISE_PUBLIC_KEY` และ `OMISE_SECRET_KEY` (test mode) ใน Render แล้ว · **รอ deploy และทดสอบ** ยังไม่มีปุ่มบนหน้าเว็บ
 - **ปัญหา deploy (17 ต.ค. 2026, 01:18):** commit `9fb6d5f` (payments.js) และ `3e6f139` (PROJECT_NOTES) ล้มเหลว ส่วน `script.js`, `index.html` สำเร็จ · **สาเหตุ:** `server/payments.js` ถูกแทนที่ด้วยไฟล์ฝั่งหน้าเว็บโดยไม่ตั้งใจ · **แก้แล้ว 17 ต.ค. 2026 เวลา 01:22** เซิร์ฟเวอร์เริ่มทำงานปกติ (บทเรียน: ไฟล์ชื่อ `payments.js` สองตัว ต้องตรวจหัวไฟล์ก่อน commit ทุกครั้ง)
 
-- **เสียงสรุปเสริม (17 ต.ค. 2026):** เพิ่ม `server/voice.js` (ElevenLabs), เพิ่ม `reserveCredits`/`refundCredits` ใน `server/credits.js`, ตัวเลือก "สรุปเป็นเสียง" ใน `public/index.html` และ `public/script.js` · คิด 2 เครดิต (≈10 บาท) · ถ้าสร้างเสียงไม่สำเร็จจะคืนเฉพาะเครดิตเสียง · **รอตั้งค่า `ELEVENLABS_API_KEY` และ `ELEVENLABS_VOICE_ID` ใน Render แล้วทดสอบ** (ต้องตรวจว่าเสียงภาษาไทยอ่านได้ถูกต้อง)
+- **เสียงสรุปเสริม (17 ต.ค. 2026):** เพิ่ม `server/voice.js` (ElevenLabs), เพิ่ม `reserveCredits`/`refundCredits` ใน `server/credits.js`, ตัวเลือก "สรุปเป็นเสียง" ใน `public/index.html` และ `public/script.js` · คิด 2 เครดิต (≈10 บาท) · ถ้าสร้างเสียงไม่สำเร็จจะคืนเฉพาะเครดิตเสียง · **ทดสอบ 17 ต.ค. 2026 02:32:** ElevenLabs ตอบ 400 เพราะใช้ `eleven_multilingual_v2` ซึ่งไม่รองรับภาษาไทย · เปลี่ยนเป็น `eleven_v3` (รองรับไทย) แล้ว · รอทดสอบซ้ำ · **ลดเครดิตเสียง (17 ต.ค. 2026 03:05):** `buildSpokenSummary` อ่านเฉพาะจำนวนประเด็นและหัวข้อ 3 ข้อแรก และเพดาน `MAX_SPEECH_CHARS` = 400 · **ทดสอบ 02:42:** คีย์ที่ใช้ยังไม่มีสิทธิ์ text_to_speech (ตอบ 401) ต้องสร้างคีย์ใหม่โดยเลือก Access ที่หัวข้อ Text to Speech ให้เป็นสีขาว แล้วอัปเดต ELEVENLABS_API_KEY ใน Render
 
 ## 9. รายการค้าง (เรียงตามลำดับ)
 - [x] deploy ฉบับ 3 แล้วทดสอบ: สมัคร → ตรวจ → ออกจากระบบ → ล็อกอินใหม่ → เครดิตยังอยู่
@@ -159,3 +159,50 @@ vellum-check/                    ← root ของ repo บน GitHub
 - **id ใน index.html ห้ามเปลี่ยน** เพราะ script.js ผูกกับ id เหล่านี้
 - **ทดสอบทุกครั้ง** บนมือถือก่อน แล้วค่อยดูจอใหญ่ใน Device Toolbar และเครื่องจริง
 - **ไฟล์ที่ใช้:** `themes.css`, `style.css`, `desktop.css` แยกแล้ว แก้หน้าจอใหญ่ใน desktop.css และสีใน themes.css
+
+## 12. คู่มือแก้ปัญหาเร็ว (เปิดส่วนนี้ก่อนเสมอเมื่อมีปัญหา)
+
+### 10.1 ดูจากอาการ ไปไฟล์ไหน
+| อาการที่เห็น | ดูไฟล์ | ดู log ป้าย |
+|---|---|---|
+| ล็อกอิน/สมัครไม่ได้ ขึ้น error | `server/auth.js`, `server/index.js` | `[login]`, `[signup]` |
+| ล็อกอินผิดหลายครั้ง ถูกบล็อก | `server/rateLimit.js` | - |
+| กดปุ่มแล้วไม่มีอะไรเกิดขึ้น | `public/script.js` (ดูว่า init โหลดครบไหม) | เปิดคอนโซลเบราว์เซอร์ |
+| ตรวจสัญญาแล้วผลไม่ขึ้น | `server/ai.js`, `server/index.js` (เส้นทาง /api/check) | `[check]` |
+| เครดิตไม่ลด/หายผิดปกติ | `server/credits.js` | `[credits]` |
+| ปุ่มเติมเครดิต/QR ไม่ขึ้น | `public/pay-ui.js`, `server/payments.js` | `[payment]` |
+| เติมเครดิตหลังจ่ายแล้วไม่เข้า | `server/payments.js` (confirmAndCredit) | `[payment] webhook ...` |
+| เสียงสรุปไม่ขึ้น | `server/voice.js` | `[voice]` |
+| ฐานข้อมูลต่อไม่ได้ | `server/db.js`, Environment ใน Render | `[db]` |
+
+### 10.2 ความหมายของป้าย log
+- `[db] ตารางผู้ใช้และ session พร้อมใช้งาน` เซิร์ฟเวอร์เริ่มทำงานปกติ
+- `[payment] webhook chrg_...: credited` เติมเครดิตสำเร็จ
+- `[payment] webhook chrg_...: already` เคยเติมแล้ว ไม่เติมซ้ำ (ถูกต้อง)
+- `[payment] webhook chrg_...: not_paid` ยังไม่จ่ายจริง
+- `[payment] webhook chrg_...: unknown` ไม่ใช่รายการที่ระบบสร้าง
+- `[payment] webhook ผิดพลาด: ยอดหรือสกุลเงินไม่ตรง` ตรวจยอดไม่ผ่าน ไม่เติมเครดิต
+- `[voice] failed: ... 400` ใช้โมเดลหรือข้อความไม่รองรับ
+- `[voice] failed: ... 401` คีย์ไม่มีสิทธิ์ text_to_speech
+- `[voice] failed: ... 402` รหัสเสียงเป็นของคลังที่ผู้ใช้ฟรีเรียกผ่าน API ไม่ได้
+- `[voice] ตัวอักษรที่คิดเงิน: ...` จำนวนตัวอักษรที่ถูกหักเครดิตจริง
+
+### 10.3 ตรวจก่อน commit ทุกครั้ง
+1. ไฟล์ฝั่งเซิร์ฟเวอร์อยู่ใน `server/` ฝั่งหน้าเว็บอยู่ใน `public/` ห้ามสลับ
+2. ชื่อไฟล์ตัวพิมพ์เล็กทั้งหมด เช่น `payments.js` ไม่ใช่ `Payments.js`
+3. ไม่มี `payments.js` ซ้ำใน `public/` (ฝั่งหน้าเว็บใช้ `pay-ui.js`)
+4. ห้ามมีคีย์หรือ URL ฐานข้อมูลในไฟล์ใด ๆ ให้เก็บใน Environment ของ Render เท่านั้น
+5. ถ้าแก้ทั้งฝั่งเซิร์ฟเวอร์และหน้าเว็บ ให้ push ไปพร้อมกันในรอบเดียว เพราะถ้าฝั่งหน้าเว็บไม่ตรงกับเซิร์ฟเวอร์ ปุ่มทั้งหมดอาจใช้ไม่ได้
+
+### 10.4 ตัวแปรสภาพแวดล้อมใน Render (ค่าจริงไม่เก็บในเอกสารนี้)
+- `DATABASE_URL` ฐานข้อมูล
+- `OMISE_PUBLIC_KEY`, `OMISE_SECRET_KEY` ระบบชำระเงิน (test)
+- `ELEVENLABS_API_KEY`, `ELEVENLABS_VOICE_ID` เสียงสรุป
+- ตัวแปรของ AI ที่ `server/ai.js` ใช้ (ดูในไฟล์นั้น)
+
+### 10.5 ลำดับการ deploy เมื่อแก้หลายไฟล์
+1. แก้และตรวจไวยากรณ์ทั้งหมดก่อน
+2. push ทั้งชุดในรอบเดียว
+3. รอ Live แล้วดู Logs ต้องมี `[db]` และไม่มี error สีแดง
+4. ทดสอบตามลำดับ: ล็อกอิน → ตรวจสัญญา → เติมเครดิต → เสียง
+5. ถ้าพัง ให้ดูจากตาราง 10.1 และป้ายใน 10.2 ก่อนเดาสาเหตุ
