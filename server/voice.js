@@ -1,7 +1,7 @@
 // เสียงสรุปผลการตรวจด้วย ElevenLabs (เรียกจากเซิร์ฟเวอร์เท่านั้น คีย์อยู่ใน Environment)
 // ตั้งค่าใน Render: ELEVENLABS_API_KEY และ ELEVENLABS_VOICE_ID
 
-export const VOICE_CREDIT_COST = 2; // 1 เครดิต ≈ 5 บาท จึงเท่ากับประมาณ 10 บาทต่อการสรุปเสียง
+export const VOICE_CREDIT_COST = 1; // 1 เครดิตเสียง = 1 การสรุปเสียง (แพ็ก 1 ครั้ง 9 บาท)
 const MAX_SPEECH_CHARS = 400;       // เพดานความยาวต่อการสรุปหนึ่งครั้ง กันเครดิตหมดโดยไม่ตั้งใจ
 
 // สร้างข้อความสั้นสำหรับอ่านจากผลตรวจ
