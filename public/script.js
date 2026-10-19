@@ -78,8 +78,8 @@ async function api(path, method = 'GET', body) {
 
 /* ---------- 3. AUTH ---------- */
 
-function showCredits(n) {
-  els.creditsLine.textContent = `เครดิตคงเหลือ ${n}`;
+function showCredits(n, voice) {
+  els.creditsLine.textContent = `เครดิตตรวจคงเหลือ ${n} · เครดิตเสียงคงเหลือ ${voice ?? 0}`;
 }
 
 function notifyAuthChange(user) {
@@ -92,7 +92,7 @@ function showLoggedIn(user) {
   els.loggedOut.hidden = true;
   els.loggedIn.hidden = false;
   els.userEmail.textContent = user.email;
-  showCredits(user.credits);
+  showCredits(user.credits, user.voice_credits);
   els.authMsg.textContent = '';
   setBusy(false);
 }
@@ -239,7 +239,7 @@ async function runCheck() {
   try {
     const r = await api(CONFIG.api.check, 'POST', { text, voice: els.voiceOpt?.checked === true });
 
-    if (typeof r.data.credits === 'number') showCredits(r.data.credits);
+    if (typeof r.data.credits === 'number') showCredits(r.data.credits, r.data.voiceCredits);
 
     if (r.status === 401) {
       showLoggedOut(CONFIG.messages.sessionEnded);
