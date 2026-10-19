@@ -13,7 +13,11 @@ export function buildSpokenSummary(result) {
 
   const titles = (result?.items ?? []).map(i => i.title).filter(Boolean).slice(0, 3);
   const head = `พบ ${total} ประเด็นที่ควรตรวจ`;
-  const tail = titles.length ? `ได้แก่ ${titles.join(' และ ')}` : '';
+  // เรียงเป็นรายการด้วยจุลภาค และใช้ 'และ' เฉพาะก่อนข้อสุดท้าย ฟังเป็นธรรมชาติกว่า
+  const listed = titles.length > 1
+    ? `${titles.slice(0, -1).join(', ')} และ ${titles[titles.length - 1]}`
+    : titles[0] ?? '';
+  const tail = listed ? `ได้แก่ ${listed}` : '';
   return `${head} ${tail}`.trim().slice(0, MAX_SPEECH_CHARS);
 }
 
@@ -37,5 +41,7 @@ export async function synthesizeSpeech(text) {
     const reason = String(body?.detail?.message ?? body?.detail?.status ?? '').slice(0, 150);
     throw new Error(`ElevenLabs ตอบกลับสถานะ ${res.status}${reason ? ` (${reason})` : ''}`);
   }
+  // ElevenLabs ส่งจำนวนตัวอักษรที่คิดเงินมาในหัวข้อ character-cost ใช้ตรวจว่าเครดิตลดจริงเท่าไร
+  console.log(`[voice] ตัวอักษรที่คิดเงิน: ${res.headers.get('character-cost') ?? 'ไม่ทราบ'} จากข้อความ ${text.length} ตัวอักษร`);
   return Buffer.from(await res.arrayBuffer()).toString('base64');
 }
