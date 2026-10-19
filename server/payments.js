@@ -5,9 +5,11 @@
 import { pool } from './db.js';
 import { omisePost, omiseGet } from './omise.js';
 
-// ราคาเป็นค่าเริ่มต้นสำหรับทดสอบ ปรับได้ตามที่ตกลงกัน หน่วยเป็นสตางค์ (99 บาท = 9900)
+// ราคาปัจจุบัน 50 บาทต่อ 10 ครั้ง หน่วยเป็นสตางค์ (50 บาท = 5000) ปรับได้ที่นี่ที่เดียว
 export const PACKAGES = {
-  pack10: { credits: 10, amountSatang: 9900, label: '10 ครั้ง ราคา 99 บาท' },
+  check3: { kind: 'check', credits: 3, amountSatang: 4900, label: 'ตรวจสัญญา 3 ครั้ง ราคา 49 บาท' },
+  voice1: { kind: 'voice', credits: 1, amountSatang: 900,  label: 'สรุปเสียง 1 ครั้ง ราคา 9 บาท' },
+  voice5: { kind: 'voice', credits: 5, amountSatang: 3900, label: 'สรุปเสียง 5 ครั้ง ราคา 39 บาท' },
 };
 
 // สร้างรายการ PromptPay แล้วคืน QR สำหรับให้ผู้ใช้สแกน
@@ -32,9 +34,9 @@ export async function createPromptPayPayment(userId, packageId) {
 
   // 3) บันทึกเป็นรายการรอชำระ เครดิตยังไม่ถูกเพิ่มจนกว่าจะยืนยันว่าจ่ายแล้ว
   await pool.query(
-    `INSERT INTO payments (charge_id, user_id, package_id, credits, amount_satang, status)
-     VALUES ($1, $2, $3, $4, $5, 'pending')`,
-    [charge.id, userId, packageId, pkg.credits, pkg.amountSatang]
+    `INSERT INTO payments (charge_id, user_id, package_id, credits, amount_satang, status, kind)
+     VALUES ($1, $2, $3, $4, $5, 'pending', $6)`,
+    [charge.id, userId, packageId, pkg.credits, pkg.amountSatang, pkg.kind]
   );
 
   return {
@@ -81,9 +83,11 @@ export async function confirmAndCredit(chargeId) {
     `WITH claimed AS (
        UPDATE payments SET status = 'credited', credited_at = now()
         WHERE charge_id = $1 AND status = 'pending'
-        RETURNING user_id, credits
+        RETURNING user_id, credits, kind
      )
-     UPDATE users SET credits = users.credits + claimed.credits
+     UPDATE users SET
+       credits       = users.credits       + CASE WHEN claimed.kind = 'check' THEN claimed.credits ELSE 0 END,
+       voice_credits = users.voice_credits + CASE WHEN claimed.kind = 'voice' THEN claimed.credits ELSE 0 END
        FROM claimed
       WHERE users.id = claimed.user_id`,
     [chargeId]
