@@ -31,3 +31,23 @@ export async function refundCredit(userId) {
 export async function refundCredits(userId, n) {
   await pool.query('UPDATE users SET credits = credits + $2 WHERE id = $1', [userId, n]);
 }
+
+// ---------- ยอดเสียงสรุป (แยกจากยอดตรวจสัญญา) ----------
+
+export async function getVoiceCredits(userId) {
+  const { rows } = await pool.query('SELECT voice_credits FROM users WHERE id = $1', [userId]);
+  return rows[0]?.voice_credits ?? 0;
+}
+
+// ตัดยอดเสียง n ครั้ง คืน true ถ้าพอ และตัดให้ทั้งหมดในคำสั่งเดียว
+export async function reserveVoiceCredits(userId, n) {
+  const { rowCount } = await pool.query(
+    'UPDATE users SET voice_credits = voice_credits - $2 WHERE id = $1 AND voice_credits >= $2',
+    [userId, n]
+  );
+  return rowCount === 1;
+}
+
+export async function refundVoiceCredits(userId, n) {
+  await pool.query('UPDATE users SET voice_credits = voice_credits + $2 WHERE id = $1', [userId, n]);
+}
