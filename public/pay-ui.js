@@ -16,14 +16,16 @@
 const PAYMENT_CONFIG = {
   // id ต้องตรงกับ PACKAGES ใน server/payments.js เสมอ
   packages: [
-    { id: 'pack10', label: '10 ครั้ง · 99 บาท' },
+    { id: 'check3', label: 'ตรวจสัญญา 3 ครั้ง · 49 บาท', note: '≈ 16.3 บาทต่อครั้ง' },
+    { id: 'voice1', label: 'สรุปเสียง 1 ครั้ง · 9 บาท' },
+    { id: 'voice5', label: 'สรุปเสียง 5 ครั้ง · 39 บาท', note: '≈ 7.8 บาทต่อครั้ง' },
   ],
   messages: {
     creating:  'กำลังสร้าง QR กรุณารอสักครู่...',
     failed:    'สร้างรายการชำระเงินไม่สำเร็จ ลองใหม่อีกครั้ง',
     noQr:      'ไม่พบรูป QR กรุณาลองใหม่หรือติดต่อผู้ดูแลระบบ',
     loginFirst:'กรุณาเข้าสู่ระบบก่อนเติมเครดิต',
-    testNote:  'โหมดทดสอบ ยังไม่มีการเรียกเก็บเงินจริง และเครดิตจะยังไม่เพิ่มอัตโนมัติ จนกว่าจะทำขั้นตอนยืนยันการชำระ',
+    testNote:  'โหมดทดสอบ ยังไม่มีการเรียกเก็บเงินจริง',
   },
 };
 
@@ -39,7 +41,7 @@ function showPaymentCard(visible) {
 
 function renderPackageButtons() {
   payEls.buttons.innerHTML = PAYMENT_CONFIG.packages
-    .map(p => `<button class="primary" data-package="${esc(p.id)}">${esc(p.label)}</button>`)
+    .map(p => `<button class="primary" data-package="${esc(p.id)}">${esc(p.label)}${p.note ? `<br><small>${esc(p.note)}</small>` : ''}</button>`)
     .join('');
 }
 
