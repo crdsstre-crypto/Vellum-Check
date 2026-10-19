@@ -15,7 +15,10 @@ import {
   endSession,
   getUserFromRequest,
 } from './auth.js';
-import { getCredits, reserveCredits, refundCredits } from './credits.js';
+import {
+  getCredits, reserveCredits, refundCredits,
+  getVoiceCredits, reserveVoiceCredits, refundVoiceCredits,
+} from './credits.js';
 import { isBlocked, recordFailure, clearFailures } from './rateLimit.js';
 import { buildSpokenSummary, synthesizeSpeech, VOICE_CREDIT_COST } from './voice.js';
 import { createPromptPayPayment, confirmAndCredit, PACKAGES } from './payments.js';
@@ -82,7 +85,11 @@ app.get('/api/me', async (req, res) => {
   try {
     const user = await getUserFromRequest(req);
     if (!user) return res.status(401).json({ error: 'ยังไม่ได้เข้าสู่ระบบ' });
-    res.json({ email: user.email, credits: user.credits });
+    res.json({
+      email: user.email,
+      credits: user.credits,
+      voice_credits: await getVoiceCredits(user.id),
+    });
   } catch (err) {
     console.error('[me] failed:', err.message);
     res.status(500).json({ error: 'ระบบมีปัญหา ลองใหม่อีกครั้ง' });
@@ -206,42 +213,61 @@ app.post('/api/check', async (req, res) => {
     return res.status(413).json({ error: `ข้อความยาวเกิน ${MAX_CHARS} ตัวอักษร` });
   }
 
-  // ค่าใช้จ่ายรวม: ตรวจสัญญา 1 เครดิต และถ้าขอเสียงสรุปเพิ่มอีก VOICE_CREDIT_COST
+  // ยอดแยกกัน: ตรวจ 1 ครั้งหักจากยอดตรวจ และถ้าขอเสียงหักจากยอดเสียงเพิ่ม
   const wantVoice = req.body?.voice === true;
-  const totalCost = 1 + (wantVoice ? VOICE_CREDIT_COST : 0);
 
-  // ตัดเครดิตก่อนเรียก AI
+  // 1) หักยอดตรวจก่อนเรียก AI
   let reserved;
   try {
-    reserved = await reserveCredits(user.id, totalCost);
+    reserved = await reserveCredits(user.id, 1);
   } catch (err) {
     console.error('[credits] reserve failed:', err.message);
     return res.status(500).json({ error: 'ระบบเครดิตมีปัญหา ลองใหม่อีกครั้ง' });
   }
   if (!reserved) {
     const credits = await getCredits(user.id).catch(() => 0);
-    const error = wantVoice
-      ? `เครดิตไม่พอ การสรุปเป็นเสียงใช้ ${totalCost} เครดิต`
-      : 'เครดิตหมดแล้ว';
-    return res.status(402).json({ error, credits });
+    return res.status(402).json({ error: 'เครดิตตรวจสัญญาหมดแล้ว กรุณาซื้อแพ็กตรวจสัญญา', credits });
   }
 
-  // เรียก AI ถ้าล้มเหลวให้คืนเครดิตทั้งหมด
+  // 2) ถ้าขอเสียง หักยอดเสียง ถ้าไม่พอให้คืนยอดตรวจที่หักไปแล้ว
+  if (wantVoice) {
+    let voiceOk;
+    try {
+      voiceOk = await reserveVoiceCredits(user.id, VOICE_CREDIT_COST);
+    } catch (err) {
+      console.error('[credits] voice reserve failed:', err.message);
+      await refundCredits(user.id, 1).catch(() => {});
+      return res.status(500).json({ error: 'ระบบเครดิตมีปัญหา ลองใหม่อีกครั้ง' });
+    }
+    if (!voiceOk) {
+      await refundCredits(user.id, 1).catch(() => {});
+      const credits = await getCredits(user.id).catch(() => null);
+      const voiceCredits = await getVoiceCredits(user.id).catch(() => null);
+      return res.status(402).json({ error: 'เครดิตเสียงสรุปไม่พอ กรุณาซื้อแพ็กสรุปเสียง', credits, voiceCredits });
+    }
+  }
+
+  // 3) เรียก AI ถ้าล้มเหลวคืนยอดทั้งหมดที่หักไป
   let result;
   try {
     const raw = await analyzeContract(text);
     result = cleanResult(raw, text);
   } catch (err) {
     console.error('[check] failed:', err.message);
-    await refundCredits(user.id, totalCost).catch(e => console.error('[credits] refund failed:', e.message));
+    await refundCredits(user.id, 1).catch(e => console.error('[credits] refund failed:', e.message));
+    if (wantVoice) {
+      await refundVoiceCredits(user.id, VOICE_CREDIT_COST).catch(e => console.error('[credits] voice refund failed:', e.message));
+    }
     const credits = await getCredits(user.id).catch(() => null);
+    const voiceCredits = await getVoiceCredits(user.id).catch(() => null);
     return res.status(502).json({
-      error: 'เกิดข้อผิดพลาดระหว่างตรวจสัญญา เครดิตถูกคืนแล้ว ลองใหม่อีกครั้ง',
+      error: 'เกิดข้อผิดพลาดระหว่างตรวจสัญญา ยอดถูกคืนแล้ว ลองใหม่อีกครั้ง',
       credits,
+      voiceCredits,
     });
   }
 
-  // สร้างเสียงสรุป ถ้าล้มเหลวคืนเฉพาะเครดิตของเสียง ผลการตรวจยังส่งให้ตามปกติ
+  // 4) สร้างเสียงสรุป ถ้าล้มเหลวคืนเฉพาะยอดเสียง ผลการตรวจยังส่งให้ตามปกติ
   let audio = null;
   let voiceError = null;
   if (wantVoice) {
@@ -249,15 +275,15 @@ app.post('/api/check', async (req, res) => {
       audio = await synthesizeSpeech(buildSpokenSummary(result));
     } catch (err) {
       console.error('[voice] failed:', err.message);
-      await refundCredits(user.id, VOICE_CREDIT_COST)
+      await refundVoiceCredits(user.id, VOICE_CREDIT_COST)
         .catch(e => console.error('[credits] voice refund failed:', e.message));
-      voiceError = 'สร้างเสียงสรุปไม่สำเร็จ เครดิตเสียงถูกคืนแล้ว';
+      voiceError = 'สร้างเสียงสรุปไม่สำเร็จ ยอดเสียงถูกคืนแล้ว';
     }
   }
 
-  // ออกมาถึงตรงนี้แปลว่าตรวจสำเร็จ จึงไม่คืนเครดิตแม้การอ่านยอดจะพลาด
   const credits = await getCredits(user.id).catch(() => null);
-  res.json({ ok: true, result, credits, audio, voiceError });
+  const voiceCredits = await getVoiceCredits(user.id).catch(() => null);
+  res.json({ ok: true, result, credits, voiceCredits, audio, voiceError });
 });
 
 // ---------- หน้าเว็บ ----------
