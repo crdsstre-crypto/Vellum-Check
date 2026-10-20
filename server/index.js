@@ -347,9 +347,15 @@ app.post('/api/extract', async (req, res) => {
   }
 
   text = String(text || '').replace(/\r\n/g, '\n').trim();
+  console.log(`[extract] ext=${ext} bytes=${buffer.length} chars=${text.length}`);
   if (!text) {
     if (reserved) await refundCredits(user.id, 1).catch(() => {});
-    return res.status(422).json({ error: 'ไม่พบข้อความในไฟล์ ถ้าเป็นไฟล์สแกนที่ไม่ชัด ลองถ่ายใหม่ให้ชัดขึ้น' });
+    const hint = isPdf
+      ? 'ไฟล์ PDF นี้ไม่มีข้อความให้อ่าน (อาจเป็นไฟล์สแกนเป็นภาพ) ลองใช้ไฟล์ที่พิมพ์จากระบบ หรือถ่ายรูปแทน'
+      : isDocx
+        ? 'ไฟล์ Word นี้ไม่มีข้อความให้อ่าน ลองบันทึกใหม่เป็น .docx หรือคัดลอกข้อความมาวางแทน'
+        : 'AI อ่านข้อความจากรูปนี้ไม่ได้ ลองถ่ายใหม่ให้ชัดและเห็นเนื้อหาครบทั้งหน้า';
+    return res.status(422).json({ error: hint });
   }
   if (text.length > MAX_CHARS) {
     if (reserved) await refundCredits(user.id, 1).catch(() => {});
