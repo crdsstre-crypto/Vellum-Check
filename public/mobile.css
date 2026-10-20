@@ -779,6 +779,18 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
   .voice-switch,.voice-switch::after{transition:none}
 }
 
+/* ---------- 5i. ปุ่มตรวจ: ล็อกเมื่อยังไม่มีข้อความ, ซ่อนปุ่มล้างใหญ่ (รอบ 14) ---------- */
+/* ปุ่มล้างใหญ่ซ่อนไว้ มี ✕ มุมกล่องข้อความแทน (ยังเรียก click ได้จาก script) */
+#clearBtn{display:none}
+.primary:disabled{
+  opacity:.4;
+  box-shadow:none;
+  cursor:not-allowed;
+}
+.ta-meta{flex-wrap:wrap}
+.ta-actions{display:flex;align-items:center;gap:4px}
+.file-pick{display:inline-flex;align-items:center;cursor:pointer}
+
 /* ---------- 6. ผลการตรวจ ---------- */
 #result{min-height:72px}
 .empty{padding:12px 8px 2px;font-size:.92rem}
