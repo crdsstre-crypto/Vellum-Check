@@ -232,8 +232,16 @@ function renderResult(result) {
 /* ---------- 5. ACTIONS ---------- */
 
 // ปิดปุ่มระหว่างประมวลผล และปิดทั้งหมดถ้ายังไม่ได้ล็อกอิน
+let busyNow = false;
+
+// ปุ่มตรวจกดได้เมื่อล็อกอินแล้ว มีข้อความ และไม่ได้กำลังตรวจอยู่
+function updateCheckState() {
+  els.checkBtn.disabled = busyNow || !currentUser || !els.input.value.trim();
+}
+
 function setBusy(busy) {
-  els.checkBtn.disabled = busy || !currentUser;
+  busyNow = busy;
+  updateCheckState();
   els.clearBtn.disabled = busy;
   els.checkBtn.textContent = busy ? 'กำลังตรวจ...' : 'ตรวจสัญญา';
 }
@@ -324,6 +332,7 @@ function init() {
   els.signupBtn.addEventListener('click', () => submitAuth('signup'));
   els.logoutBtn.addEventListener('click', logout);
   els.checkBtn.addEventListener('click', runCheck);
+  els.input.addEventListener('input', updateCheckState);
   els.clearBtn.addEventListener('click', clearAll);
 
   showLoggedOut();
