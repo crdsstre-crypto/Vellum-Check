@@ -12,7 +12,7 @@
 <!-- ลำดับการโหลด CSS: themes (สี) → style (ทุกจอ) → mobile (เฉพาะจอต่ำกว่า 768px) -->
 <link rel="stylesheet" href="themes.css">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="mobile.css?v=9k" media="(max-width: 767px)">
+<link rel="stylesheet" href="mobile.css?v=9l" media="(max-width: 767px)">
 </head>
 <body>
 
@@ -137,8 +137,12 @@
       <textarea id="input" placeholder="วางข้อความสัญญาที่นี่..."></textarea>
       <button type="button" class="ta-clear" id="taClear" aria-label="ล้างข้อความ" hidden>✕</button>
     </div>
+    <div class="ta-meta">
+      <p class="ta-count" id="taCount" aria-live="polite">0 / 20,000 ตัวอักษร</p>
+      <button type="button" class="sample-btn" id="sampleBtn">ลองใช้ข้อความตัวอย่าง</button>
+    </div>
     <p class="hint">แนะนำ: วางเฉพาะข้อความสัญญาที่ต้องการตรวจ ไม่ต้องใส่ข้อมูลส่วนตัวที่ไม่จำเป็น</p>
-    <label class="voice-opt"><input type="checkbox" id="voiceOpt"> สรุปเป็นเสียง (ใช้เครดิตเสียง 1 ครั้ง)</label>
+    <label class="voice-opt"><span class="voice-text">สรุปเป็นเสียง <small>(ใช้เครดิตเสียง 1 ครั้ง)</small></span><input type="checkbox" id="voiceOpt" role="switch" aria-label="สรุปเป็นเสียง"><span class="voice-switch" aria-hidden="true"></span></label>
     <div class="btns">
       <button class="primary" id="checkBtn">ตรวจสัญญา</button>
       <button class="ghost" id="clearBtn">ล้างข้อความ</button>
@@ -431,6 +435,28 @@
       setTimeout(function () { checkBtnEl.classList.remove('is-ready'); }, 2500);
     }, 50);
   });
+  // ตัวนับจำนวนตัวอักษร (ต้องตรงกับ MAX_CHARS ฝั่งเซิร์ฟเวอร์)
+  var MAX_CHARS = 20000;
+  var taCount = document.getElementById('taCount');
+  var sampleBtn = document.getElementById('sampleBtn');
+  var SAMPLE_TEXT = 'สัญญาเช่าห้องพัก\n' +
+    'ข้อ 1 ผู้ให้เช่าตกลงให้ผู้เช่าเช่าห้องพักเป็นระยะเวลา 1 ปี เริ่มวันที่ 1 มกราคม 2569 ถึงวันที่ 31 ธันวาคม 2569\n' +
+    'ข้อ 2 ค่าเช่าเดือนละ 8,000 บาท ชำระภายในวันที่ 5 ของทุกเดือน ผู้ให้เช่าอาจปรับค่าเช่าขึ้นได้เมื่อครบกำหนดสัญญาโดยไม่ต้องแจ้งล่วงหน้า\n' +
+    'ข้อ 3 ผู้เช่าวางเงินประกัน 16,000 บาท ซึ่งจะคืนให้เมื่อสัญญาสิ้นสุด โดยหักค่าเสียหายที่เกิดขึ้นจริงเท่านั้น\n' +
+    'ข้อ 4 หากผู้เช่าประสงค์จะยกเลิกสัญญาก่อนครบกำหนด ต้องแจ้งล่วงหน้าไม่น้อยกว่า 30 วัน และผู้เช่าไม่มีสิทธิ์รับเงินประกันคืน\n' +
+    'ข้อ 5 ผู้เช่าต้องรับผิดชอบค่าซ่อมแซมความเสียหายทุกกรณี แม้จะเกิดจากการใช้งานตามปกติ';
+  function syncCount() {
+    var n = input.value.length;
+    taCount.textContent = n.toLocaleString('th-TH') + ' / ' + MAX_CHARS.toLocaleString('th-TH') + ' ตัวอักษร';
+    taCount.classList.toggle('is-over', n > MAX_CHARS);
+  }
+  input.addEventListener('input', syncCount);
+  sampleBtn.addEventListener('click', function () {
+    input.value = SAMPLE_TEXT;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  syncCount();
+
   taClear.addEventListener('click', function () {
     document.getElementById('clearBtn').click();
     syncTaClear();
