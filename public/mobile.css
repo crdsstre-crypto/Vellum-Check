@@ -575,7 +575,7 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
 .ct-list li{
   width:calc((100% - 8px) / 2);
   height:auto;
-  min-height:136px; /* การ์ดทุกใบสูงเท่ากัน */
+  min-height:150px; /* การ์ดทุกใบสูงเท่ากัน */
   overflow:visible;
   flex:0 0 auto;
   flex-direction:column;
@@ -585,8 +585,14 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
 .ct-list li .ct-ico{flex:none;width:36px;height:36px;border-radius:10px}
 .ct-list li .ct-ico svg{width:20px;height:20px}
 .ct-list li .ct-txt{flex:none;width:100%;padding-right:22px}
-.ct-list li .ct-txt b{line-height:1.3}
-.ct-list li .ct-txt small{font-size:.74rem;line-height:1.35}
+.ct-list li .ct-txt b{font-size:1.02rem;line-height:1.3}
+.ct-list li .ct-txt small{font-size:.86rem;line-height:1.4}
+/* ไม่แน่ใจ: แถบเดียวเต็มความกว้าง ไม่ต้องสูงเท่าการ์ด และตัวอักษรใหญ่ขึ้น */
+.ct-list li[data-value="unsure"]{min-height:0;padding:14px 16px 14px 14px}
+.ct-list li[data-value="unsure"] .ct-ico{width:44px;height:44px;border-radius:12px}
+.ct-list li[data-value="unsure"] .ct-ico svg{width:24px;height:24px}
+.ct-list li[data-value="unsure"] .ct-txt b{font-size:1.15rem}
+.ct-list li[data-value="unsure"] .ct-txt small{font-size:.94rem}
 .ct-list .ct-none{width:100%}
 .ct-list li:focus-within{outline:none}
 
