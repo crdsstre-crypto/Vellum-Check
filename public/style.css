@@ -2,17 +2,18 @@
    style.css: สไตล์หลัก (ใช้ทุกจอ)
    - สีทั้งหมดดึงจาก themes.css ห้ามใส่สี hex ในไฟล์นี้
    - ชื่อคลาสและ id ต้องตรงกับ index.html และ script.js
-   - ส่วนที่มี "(มือถือ)" ซ่อนไว้ที่นี่ แล้วเปิดใน mobile.css
+   - ส่วนที่เป็น "มือถือ" ซ่อนไว้ที่นี่ แล้วเปิดใน mobile.css
 
    ดัชนีแก้ปัญหาเร็ว:
    1. พื้นฐานหน้า                       → "1. พื้นฐาน"
    2. Header และปุ่มบัญชี                 → "2. Header"
-   3. การ์ดและหัวข้อ h2                  → "3. การ์ด"
-   4. ปุ่ม (primary, ghost, btns)        → "4. ปุ่ม"
-   5. ช่องกรอก อีเมล รหัสผ่าน สัญญา       → "5. ช่องกรอก"
-   6. ผลการตรวจ (badge, item, ไฮไลต์)     → "6. ผลการตรวจ"
-   7. ข้อความทั่วไป                       → "7. ข้อความ"
-   8. Footer                            → "8. Footer"
+   3. ส่วนนำ (hero)                      → "3. ส่วนนำ"
+   4. การ์ดและหัวข้อ h2                  → "4. การ์ด"
+   5. ปุ่ม (primary, ghost, btns)        → "5. ปุ่ม"
+   6. ช่องกรอก อีเมล รหัสผ่าน สัญญา       → "6. ช่องกรอก"
+   7. ผลการตรวจ (badge, item, ไฮไลต์)     → "7. ผลการตรวจ"
+   8. ข้อความทั่วไป                       → "8. ข้อความ"
+   9. Footer                            → "9. Footer"
    ========================================================= */
 
 /* ---------- 1. พื้นฐาน ---------- */
@@ -32,32 +33,34 @@ main{max-width:800px;margin:0 auto;padding:20px 16px 8px}
 
 /* ---------- 2. Header และปุ่มบัญชี ---------- */
 header{
-  padding:32px 20px 26px;
+  padding:18px 20px;
   text-align:center;
-  background:
-    radial-gradient(ellipse 70% 100% at 50% 0%, rgba(229,196,119,.14), transparent 70%),
-    var(--bg);
+  background:var(--bg);
   border-bottom:1px solid rgba(229,196,119,.3);
 }
 .topbar{display:flex;align-items:center;justify-content:center}
-.brand{display:flex;flex-direction:column;align-items:center;gap:6px}
-.brand-logo{width:44px;height:44px;color:var(--gold)}
+.brand{display:flex;flex-direction:row;align-items:center;gap:10px}
+.brand-logo{width:30px;height:30px;color:var(--gold)}
 .brand-name{
-  font-size:.78rem;
+  font-size:.74rem;
   font-weight:600;
-  letter-spacing:.32em;
+  letter-spacing:.3em;
   color:var(--muted);
   text-transform:uppercase;
 }
-.hero h1{margin:8px 0 0;font-size:1.5rem;font-weight:700;color:var(--gold-soft);letter-spacing:.01em}
-.hero p{margin:6px 0 0;color:var(--muted);font-size:.92rem}
 
 /* ปุ่มบัญชีและแผนบัญชี: ซ่อนบนจอใหญ่ (เปิดใน mobile.css) */
 .auth-toggle,
 .sheet-close,
 .sheet-backdrop{display:none}
 
-/* ---------- 3. การ์ดและหัวข้อ ---------- */
+/* ---------- 3. ส่วนนำ ---------- */
+.hero{text-align:center;padding:8px 0 18px}
+.hero h1{margin:4px 0 0;font-size:1.5rem;font-weight:700;color:var(--gold-soft);letter-spacing:.01em}
+.hero p{margin:6px 0 0;color:var(--muted);font-size:.92rem}
+.hero-art{display:none}
+
+/* ---------- 4. การ์ดและหัวข้อ ---------- */
 .card{
   position:relative;
   background:linear-gradient(180deg,rgba(255,255,255,.03),transparent 60%), var(--card);
@@ -85,7 +88,7 @@ h2::before{
   flex:none;
 }
 
-/* ---------- 4. ปุ่ม ---------- */
+/* ---------- 5. ปุ่ม ---------- */
 .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
 button{
   font:inherit;
@@ -113,7 +116,7 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
 }
 .ghost:hover{border-color:var(--gold-deep);color:var(--gold-soft)}
 
-/* ---------- 5. ช่องกรอก ---------- */
+/* ---------- 6. ช่องกรอก ---------- */
 input[type="email"],
 input[type="password"],
 textarea{
@@ -148,7 +151,7 @@ textarea:focus{
 }
 .voice-opt input{accent-color:var(--gold);width:18px;height:18px}
 
-/* ---------- 6. ผลการตรวจ ---------- */
+/* ---------- 7. ผลการตรวจ ---------- */
 .summary{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
 .badge{
   padding:6px 14px;
@@ -193,11 +196,13 @@ mark{
   border-radius:4px;
 }
 .empty{color:var(--muted);text-align:center;padding:28px 12px}
+.empty-art{display:none}
 
-/* ---------- 7. ข้อความทั่วไป ---------- */
+/* ---------- 8. ข้อความทั่วไป ---------- */
 .disclaimer{font-size:.84rem;color:var(--muted);margin-top:10px;line-height:1.6}
+.hint{display:none}
 
-/* ---------- 8. Footer ---------- */
+/* ---------- 9. Footer ---------- */
 footer{
   text-align:center;
   color:var(--muted);
