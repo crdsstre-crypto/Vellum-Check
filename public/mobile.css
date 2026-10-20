@@ -318,3 +318,54 @@ footer{
   border-top:1px solid var(--card-edge);
 }
 .disclaimer{font-size:.8rem;line-height:1.6}
+
+/* ---------- 10. เมนูบัญชี (ตอนล็อกอินแล้ว) ----------
+   แก้หัวบัญชี ป้ายเครดิต และปุ่มออกจากระบบได้ที่นี่ */
+#authLoggedIn .acct-head{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:4px 0 16px;
+  margin-bottom:14px;
+  border-bottom:1px solid var(--card-edge);
+}
+.acct-avatar{
+  flex:none;
+  display:grid;
+  place-items:center;
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  font-size:22px;
+  background:linear-gradient(145deg,#2b2513,#15130c);
+  border:1px solid rgba(229,196,119,.55);
+  box-shadow:0 0 18px rgba(229,196,119,.18);
+}
+.acct-info{min-width:0;display:flex;flex-direction:column}
+.acct-label{font-size:.78rem;color:var(--muted)}
+.acct-mail{
+  font-size:1rem;
+  color:var(--text);
+  overflow-wrap:anywhere;
+}
+#authLoggedIn #creditsLine{
+  display:inline-flex;
+  align-items:center;
+  margin:0 0 16px;
+  padding:8px 14px;
+  border-radius:999px;
+  background:var(--ghost);
+  border:1px solid rgba(229,196,119,.3);
+  color:var(--gold-soft);
+  font-size:.9rem;
+  font-weight:600;
+}
+#logoutBtn{
+  width:100%;
+  min-height:50px;
+  border-radius:16px;
+  font-size:1rem;
+  color:var(--muted);
+  border:1px solid var(--border);
+  background:transparent;
+}
