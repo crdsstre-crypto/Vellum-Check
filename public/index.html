@@ -12,7 +12,7 @@
 <!-- ลำดับการโหลด CSS: themes (สี) → style (ทุกจอ) → mobile (เฉพาะจอต่ำกว่า 768px) -->
 <link rel="stylesheet" href="themes.css">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="mobile.css?v=9i" media="(max-width: 767px)">
+<link rel="stylesheet" href="mobile.css?v=9j" media="(max-width: 767px)">
 </head>
 <body>
 
@@ -118,6 +118,12 @@
         <span class="ct-chev" aria-hidden="true"></span>
       </button>
       <button type="button" class="ct-reset" id="ctReset" hidden>ล้างการเลือก</button>
+      <div class="ct-quick" id="ctQuick" role="group" aria-label="ประเภทที่ใช้บ่อย" hidden>
+        <button type="button" class="ct-chip" data-v="rent">สัญญาเช่า</button>
+        <button type="button" class="ct-chip" data-v="sale">สัญญาซื้อขาย</button>
+        <button type="button" class="ct-chip" data-v="employment">สัญญาจ้างงาน</button>
+        <button type="button" class="ct-chip" data-v="loan">สัญญากู้ยืม</button>
+      </div>
       <div class="select-wrap">
         <select id="contractType" name="contractType">
           <option value="unsure" selected>ไม่แน่ใจ (ระบบจะดูจากข้อความให้เอง)</option>
@@ -209,6 +215,7 @@
   var clearBtn = document.getElementById('ctSearchClear');
   var recentBox = document.getElementById('ctRecent');
   var resetBtn = document.getElementById('ctReset');
+  var quick = document.getElementById('ctQuick');
   var RECENT_KEY = 'vc_recent_ct';
   var noneItem = null;
   var backdrop = document.getElementById('authBackdrop');
@@ -320,6 +327,9 @@
   // ทำให้ปุ่มและรายการตรงกับค่าปัจจุบันของ select เสมอ
   function refresh() {
     resetBtn.hidden = select.value === 'unsure';
+    Array.prototype.forEach.call(quick.querySelectorAll('.ct-chip'), function (b) {
+      b.classList.toggle('is-on', b.dataset.v === select.value);
+    });
     var cur = select.options[select.selectedIndex];
     var p = parse(cur ? cur.textContent : '');
     trigger.querySelector('.ct-ico').innerHTML = icon(select.value);
@@ -365,10 +375,12 @@
       root.classList.add('ct-ready');
       trigger.hidden = false;
       sheet.hidden = false;
+      quick.hidden = false;
     } else {
       root.classList.remove('ct-ready');
       trigger.hidden = true;
       sheet.hidden = true;
+      quick.hidden = true;
       setOpen(false);
     }
   }
@@ -376,6 +388,14 @@
   clearBtn.addEventListener('click', function () {
     search.value = '';
     filter();
+  });
+  // ปุ่มประเภทที่ใช้บ่อย: เลือกจากหน้าหลักได้เลย ไม่ต้องเปิดแผน
+  Array.prototype.forEach.call(quick.querySelectorAll('.ct-chip'), function (b) {
+    b.addEventListener('click', function () {
+      select.value = b.dataset.v;
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+      refresh();
+    });
   });
   resetBtn.addEventListener('click', function () {
     select.value = 'unsure';
