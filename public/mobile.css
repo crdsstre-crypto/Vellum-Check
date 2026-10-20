@@ -538,6 +538,48 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
   .ct-list li.is-on .ct-tick{animation:none}
 }
 
+/* ---------- 5d. ตารางสองคอลัมน์ของแผนประเภทสัญญา (รอบ 9) ----------
+   เห็นตัวเลือกได้มากขึ้นโดยไม่ต้องเลื่อน · "ไม่แน่ใจ" เต็มความกว้างเป็นทางลัดด้านบน
+   ปรับจำนวนคอลัมน์ได้ที่ --ct-cols (ตั้งเป็น 1 เพื่อกลับไปแบบรายการยาว) */
+:root{--ct-cols:2}
+.ct-list{
+  grid-template-columns:repeat(var(--ct-cols),minmax(0,1fr));
+  gap:8px;
+}
+.ct-list li{
+  position:relative;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:8px;
+  min-height:0;
+  padding:12px;
+}
+.ct-list li[data-value="unsure"]{
+  grid-column:1 / -1;
+  flex-direction:row;
+  align-items:center;
+  gap:10px;
+  padding:8px 12px 8px 8px;
+}
+.ct-list li .ct-tick{
+  position:absolute;
+  top:10px;
+  right:10px;
+  margin:0;
+}
+.ct-list li[data-value="unsure"] .ct-tick{position:static;margin-left:auto}
+.ct-list li .ct-ico{width:36px;height:36px;border-radius:10px}
+.ct-list li .ct-ico svg{width:20px;height:20px}
+.ct-list li .ct-txt small{
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+  font-size:.74rem;
+}
+.ct-list .ct-none{grid-column:1 / -1}
+.ct-list li:focus-within{outline:none}
+
 /* ---------- 6. ผลการตรวจ ---------- */
 #result{min-height:72px}
 .empty{padding:12px 8px 2px;font-size:.92rem}
