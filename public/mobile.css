@@ -436,6 +436,13 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
   padding:0 var(--m-page-x);
   margin-bottom:10px;
 }
+.ct-hint{
+  flex:none;
+  margin:-4px var(--m-page-x) 12px;
+  font-size:.8rem;
+  line-height:1.5;
+  color:var(--muted);
+}
 .ct-head h3{
   margin:0;
   font-family:'Noto Serif Thai',Georgia,serif;
@@ -481,10 +488,10 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
 }
 .ct-list li:active{transform:scale(.99)}
 .ct-list li:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-/* รายการที่เลือก: พื้นทองเข้มจาง ขอบทอง และเครื่องหมายถูก */
+/* รายการที่เลือก: ไฮไลต์เหลืองอ่อนแบบไม่แสบตา ขอบทองจาง และเครื่องหมายถูก */
 .ct-list li.is-on{
-  border-color:var(--gold);
-  background:linear-gradient(145deg,#2b2513,#15130c);
+  border-color:var(--gold-deep);
+  background:rgba(229,196,119,.08);
 }
 .ct-list li.is-on .ct-txt b{color:var(--gold-soft)}
 .ct-tick{
@@ -498,7 +505,7 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
 .ct-list li.is-on .ct-tick{
   background:var(--gold);
   border-color:var(--gold);
-  box-shadow:inset 0 0 0 5px #15130c;
+  box-shadow:inset 0 0 0 5px var(--item);
   animation:ctTick .25s ease both; /* เล่นครั้งเดียวตอนเลือก ไม่วนซ้ำ */
 }
 @keyframes ctTick{from{transform:scale(.6);opacity:.4}to{transform:none;opacity:1}}
