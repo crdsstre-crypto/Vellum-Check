@@ -603,6 +603,61 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
 .ct-list .ct-none{width:100%}
 .ct-list li:focus-within{outline:none}
 
+/* ---------- 5e. ล้างค่า, ใช้ล่าสุด, ลากลงเพื่อปิด (รอบ 10) ---------- */
+.ct-search{padding-right:46px}
+.ct-search-clear{
+  position:absolute;
+  right:calc(var(--m-page-x) + 8px);
+  top:23px;
+  transform:translateY(-50%);
+  width:32px;
+  height:32px;
+  padding:0;
+  border:none;
+  border-radius:50%;
+  background:var(--ghost);
+  color:var(--text);
+  font-size:.8rem;
+  line-height:1;
+  display:grid;
+  place-items:center;
+}
+.ct-recent{
+  flex:none;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px;
+  padding:0 var(--m-page-x) 12px;
+}
+.ct-recent-label{font-size:.78rem;color:var(--muted);margin-right:2px}
+.ct-chip{
+  min-height:36px;
+  padding:6px 14px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  background:var(--item);
+  color:var(--text);
+  font-family:inherit;
+  font-size:.86rem;
+}
+.ct-chip:active{border-color:var(--gold-deep);background:rgba(229,196,119,.06)}
+.ct-reset{
+  display:block;
+  margin:2px 0 10px auto;
+  padding:6px 4px;
+  min-height:36px;
+  border:none;
+  background:none;
+  color:var(--gold-soft);
+  font-family:inherit;
+  font-size:.84rem;
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+.ct-grip{cursor:grab}
+.ct-head{touch-action:none}
+
 /* ---------- 6. ผลการตรวจ ---------- */
 #result{min-height:72px}
 .empty{padding:12px 8px 2px;font-size:.92rem}
