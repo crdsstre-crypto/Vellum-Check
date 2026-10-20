@@ -296,6 +296,50 @@ textarea{
 
 .voice-opt{padding:10px 0 0;font-size:.9rem;min-height:44px}
 
+/* ---------- 5b. ประเภทสัญญา (ดรอปดาวน์) ----------
+   ใช้ช่องเลือกแบบดรอปดาวน์เพื่อไม่ให้หน้ายาว ค่าสีทั้งหมดดึงจาก themes.css */
+.field-wrap{margin:0 0 14px}
+.field-label{
+  display:block;
+  font-size:.88rem;
+  font-weight:600;
+  color:var(--text);
+  margin:0 0 8px;
+}
+.select-wrap{position:relative}
+.select-wrap::after{
+  content:"";
+  position:absolute;
+  right:20px;
+  top:50%;
+  width:8px;
+  height:8px;
+  border-right:2px solid var(--gold);
+  border-bottom:2px solid var(--gold);
+  transform:translateY(-70%) rotate(45deg);
+  pointer-events:none;
+}
+.select-wrap select{
+  width:100%;
+  min-height:50px;
+  appearance:none;
+  -webkit-appearance:none;
+  background:var(--field);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:12px 44px 12px 14px;
+  font:inherit;
+  font-size:16px; /* ป้องกัน iOS ซูมอัตโนมัติ */
+  transition:border-color .2s, box-shadow .2s;
+}
+.select-wrap select:focus{
+  outline:none;
+  border-color:var(--gold-deep);
+  box-shadow:0 0 0 3px var(--focus);
+}
+.select-wrap option{background:var(--card);color:var(--text)}
+
 /* ---------- 6. ผลการตรวจ ---------- */
 #result{min-height:72px}
 .empty{padding:12px 8px 2px;font-size:.92rem}
