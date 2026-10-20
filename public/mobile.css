@@ -23,14 +23,16 @@
 /* ---------- 0. ตัวปรับเร็ว (แก้ค่าตรงนี้ได้ทันที) ----------
    --m-page-x     ระยะซ้ายขวาของหน้า (ค่าเดิม 18px)
    --m-hero-y     ระยะบนล่างของส่วนนำ (ค่าน้อย = หน้ากระชับ)
-   --m-icon       ขนาดไอคอนตราชั่งในส่วนนำ (48–60px ตามคำแนะนำ)
+   --m-icon       ขนาดกล่องไอคอนในส่วนนำ (88–96px)
+   --m-icon-pad   ระยะขอบภายในกล่อง ยิ่งน้อยตัวตราชั่งยิ่งใหญ่ (ประมาณ 8px ให้ตัวตราชั่งราว 48–56px)
    --m-card-y     ระยะบนล่างของแต่ละหมวด
    --m-h2-gap     ระยะระหว่างหัวข้อกับเนื้อหา
    --m-textarea-h ความสูงช่องวางสัญญาเริ่มต้น (ยังเลื่อนอ่านได้เมื่อพิมพ์ยาว) */
 :root{
   --m-page-x:18px;
   --m-hero-y:14px;
-  --m-icon:60px;
+  --m-icon:92px;
+  --m-icon-pad:8px;
   --m-card-y:22px;
   --m-h2-gap:12px;
   --m-textarea-h:140px;
@@ -117,7 +119,7 @@ main{padding:0}
   width:var(--m-icon);
   height:var(--m-icon);
   box-sizing:border-box;
-  padding:12px;
+  padding:var(--m-icon-pad);
   margin:0;
   border-radius:16px;
   background:var(--item);
@@ -125,7 +127,7 @@ main{padding:0}
   overflow:visible;
 }
 /* วาดเส้นให้หนาขึ้นตามขนาดที่ย่อลง จะได้ไม่บางจนมองไม่เห็น */
-.hero-art g{stroke-width:9}
+.hero-art g{stroke-width:5}
 .hero-art .draw{
   stroke-dasharray:1;
   stroke-dashoffset:1;
