@@ -16,7 +16,7 @@
 </head>
 <body>
 
-<!-- ============ HEADER ============ -->
+<!-- ============ HEADER (ติดด้านบน) ============ -->
 <header class="site-header">
   <div class="topbar">
     <div class="brand">
@@ -33,17 +33,37 @@
       <span class="auth-toggle-in">บัญชีของฉัน</span>
     </button>
   </div>
-
-  <div class="hero">
-    <h1>เช็กสัญญา</h1>
-    <p>ตรวจสัญญาอย่างมั่นใจ · วางข้อความสัญญา ระบบจะไฮไลต์จุดที่ควรระวัง</p>
-  </div>
 </header>
 
 <!-- พื้นหลังมืดของแผนบัญชี (มือถือ) -->
 <div class="sheet-backdrop" id="authBackdrop"></div>
 
 <main>
+
+  <!-- ============ ส่วนนำ ============ -->
+  <section class="hero">
+    <!-- ภาพวาดตราชั่งเส้นทอง (SVG ในหน้า ไม่ต้องโหลดไฟล์เพิ่ม) -->
+    <svg class="hero-art" viewBox="0 0 240 150" aria-hidden="true">
+      <defs>
+        <linearGradient id="goldLine" x1="0" y1="0" x2="240" y2="150" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#f3dca0"/>
+          <stop offset="1" stop-color="#b8924a"/>
+        </linearGradient>
+      </defs>
+      <g fill="none" stroke="url(#goldLine)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line class="draw" pathLength="1" x1="120" y1="22" x2="120" y2="128"/>
+        <path class="draw" pathLength="1" d="M70 36 H170"/>
+        <circle class="draw" pathLength="1" cx="120" cy="22" r="5"/>
+        <path class="draw" pathLength="1" d="M70 36 L50 82 M70 36 L90 82"/>
+        <path class="draw" pathLength="1" d="M50 82 Q70 98 90 82"/>
+        <path class="draw" pathLength="1" d="M170 36 L150 82 M170 36 L190 82"/>
+        <path class="draw" pathLength="1" d="M150 82 Q170 98 190 82"/>
+        <path class="draw" pathLength="1" d="M96 128 H144"/>
+      </g>
+    </svg>
+    <h1>เช็กสัญญา</h1>
+    <p>ตรวจสัญญาอย่างมั่นใจ · วางข้อความสัญญา ระบบจะไฮไลต์จุดที่ควรระวัง</p>
+  </section>
 
   <!-- 0. บัญชีผู้ใช้: บนมือถือเป็นแผนจากด้านล่าง บนจอใหญ่เป็นการ์ดปกติ -->
   <section class="card" id="authCard">
@@ -81,7 +101,23 @@
   <!-- 2. ผลการตรวจ -->
   <section class="card" id="resultCard">
     <h2>2. ผลการตรวจ</h2>
-    <div id="result"><p class="empty">ยังไม่มีผลการตรวจ</p></div>
+    <div id="result">
+      <div class="empty-art" aria-hidden="true">
+        <svg viewBox="0 0 120 90" fill="none" stroke="url(#goldLineSm)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <defs>
+            <linearGradient id="goldLineSm" x1="0" y1="0" x2="120" y2="90" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#f3dca0"/>
+              <stop offset="1" stop-color="#b8924a"/>
+            </linearGradient>
+          </defs>
+          <rect x="30" y="10" width="46" height="60" rx="5"/>
+          <path d="M40 26 H66 M40 36 H66 M40 46 H58"/>
+          <circle cx="82" cy="58" r="14"/>
+          <path d="M92 68 L104 80"/>
+        </svg>
+      </div>
+      <p class="empty">ยังไม่มีผลการตรวจ</p>
+    </div>
   </section>
 
   <!-- 3. เติมเครดิต (ซ่อนจนกว่าจะล็อกอิน) -->
