@@ -1,15 +1,16 @@
 /* =========================================================
-   mobile.css: ใช้เฉพาะจอต่ำกว่า 768px (รอบ 7: ปรับความนิ่งและลำดับตัวอักษร)
+   mobile.css: ใช้เฉพาะจอต่ำกว่า 768px (รอบ 8: กระชับหน้าและจัดระเบียบ)
    โหลดจาก index.html ด้วย media="(max-width: 767px)"
    - ไม่เปลี่ยนสี (สีอยู่ที่ themes.css)
-   - จัดวาง ขนาด ระยะ ฟอนต์หัวข้อ และเอฟเฟกต์บนมือถือ
+   - ระยะและขนาดหลักอยู่ที่ "0. ตัวปรับเร็ว" ด้านล่าง แก้ที่เดียวจบ
    - อนิเมชันมีเฉพาะตอนโหลดหน้าและตอนผลลัพธ์ขึ้น ไม่มีอนิเมชันวนซ้ำ
 
    ซ่อมด่วน: หาหัวข้อตามอาการ แล้วแก้เฉพาะส่วนนั้น
    | อาการ                                 | ไปที่หัวข้อ                 |
    |---------------------------------------|----------------------------|
+   | ระยะห่าง/ขนาดโดยรวมไม่พอดี             | "0. ตัวปรับเร็ว"            |
    | หัวเว็บ/ปุ่มบัญชีมุมขวาบนผิด           | "1. Header"                |
-   | ภาพตราชั่ง/ส่วนนำผิดหรือไม่ขึ้น         | "2. ส่วนนำและภาพ"          |
+   | ไอคอนหรือหัวเรื่องส่วนนำผิด            | "2. ส่วนนำ"                |
    | แผนบัญชีไม่เลื่อนขึ้น/ปิดไม่ได้         | "3. แผนบัญชี"              |
    | การ์ดชิดหรือห่างเกินไป                 | "4. การ์ดและหมวด"           |
    | ช่องกรอก/ปุ่มเล็กเกินแตะ               | "5. ช่องกรอกและปุ่ม"        |
@@ -19,11 +20,26 @@
    | ด้านล่างชนขอบจอ iPhone                 | "9. Footer และ safe area"  |
    ========================================================= */
 
+/* ---------- 0. ตัวปรับเร็ว (แก้ค่าตรงนี้ได้ทันที) ----------
+   --m-page-x     ระยะซ้ายขวาของหน้า (ค่าเดิม 18px)
+   --m-hero-y     ระยะบนล่างของส่วนนำ (ค่าน้อย = หน้ากระชับ)
+   --m-icon       ขนาดไอคอนตราชั่งในส่วนนำ (48–60px ตามคำแนะนำ)
+   --m-card-y     ระยะบนล่างของแต่ละหมวด
+   --m-h2-gap     ระยะระหว่างหัวข้อกับเนื้อหา
+   --m-textarea-h ความสูงช่องวางสัญญาเริ่มต้น (ยังเลื่อนอ่านได้เมื่อพิมพ์ยาว) */
+:root{
+  --m-page-x:18px;
+  --m-hero-y:14px;
+  --m-icon:60px;
+  --m-card-y:22px;
+  --m-h2-gap:12px;
+  --m-textarea-h:140px;
+}
+
 /* ---------- ตั้งค่าทั่วไป ---------- */
 html,body{overflow-x:hidden}
 button{-webkit-tap-highlight-color:transparent}
 svg{max-width:100%}
-/* กรอบโฟกัสสำหรับการใช้คีย์บอร์ดหรือสวิตช์ช่วยเหลือ */
 button:focus-visible,
 input:focus-visible,
 textarea:focus-visible{
@@ -44,7 +60,7 @@ header{
   backdrop-filter:blur(14px);
   border-bottom:1px solid var(--card-edge);
 }
-.topbar{justify-content:space-between;padding:12px 16px}
+.topbar{justify-content:space-between;padding:10px var(--m-page-x)}
 .brand{gap:10px}
 .brand-logo{width:26px;height:26px;color:var(--gold)}
 .brand-name{
@@ -74,59 +90,77 @@ header{
 body:has(#authLoggedIn:not([hidden])) .auth-toggle-out{display:none}
 body:has(#authLoggedIn:not([hidden])) .auth-toggle-in{display:inline}
 
-/* ---------- 2. ส่วนนำและภาพ ---------- */
-/* แสงพื้นหลังคงที่ ไม่เคลื่อนไหว เพื่อประหยัดแบตและให้ตัวหนังสือนิ่ง */
+/* ---------- 2. ส่วนนำ ----------
+   ไอคอนอยู่ซ้าย หัวเรื่องอยู่ขวา กินพื้นที่แนวตั้งน้อยที่สุด */
 body::before{
   content:"";
   position:fixed;
   inset:0;
   z-index:0;
   pointer-events:none;
-  background:
-    radial-gradient(circle at 50% 0%, rgba(229,196,119,.09), transparent 50%);
+  background:radial-gradient(circle at 50% 0%, rgba(229,196,119,.09), transparent 50%);
 }
 main,footer{position:relative;z-index:1}
 
-main{padding:4px 0 0}
-.hero{padding:22px 20px 26px;text-align:center}
+main{padding:0}
+.hero{
+  display:grid;
+  grid-template-columns:var(--m-icon) 1fr;
+  column-gap:14px;
+  align-items:center;
+  text-align:left;
+  padding:var(--m-hero-y) var(--m-page-x);
+}
 .hero-art{
-  display:block;
-  width:min(220px,64vw);
-  height:auto;
-  margin:0 auto 12px;
+  grid-column:1;
+  grid-row:1 / span 2;
+  width:var(--m-icon);
+  height:var(--m-icon);
+  box-sizing:border-box;
+  padding:12px;
+  margin:0;
+  border-radius:16px;
+  background:var(--item);
+  border:1px solid var(--card-edge);
   overflow:visible;
 }
+/* วาดเส้นให้หนาขึ้นตามขนาดที่ย่อลง จะได้ไม่บางจนมองไม่เห็น */
+.hero-art g{stroke-width:9}
 .hero-art .draw{
   stroke-dasharray:1;
   stroke-dashoffset:1;
-  animation:drawLine 1.4s cubic-bezier(.4,0,.2,1) forwards;
+  animation:drawLine 1.2s cubic-bezier(.4,0,.2,1) forwards;
 }
-.hero-art .draw:nth-child(2){animation-delay:.2s}
-.hero-art .draw:nth-child(3){animation-delay:.35s}
-.hero-art .draw:nth-child(4){animation-delay:.5s}
-.hero-art .draw:nth-child(5){animation-delay:.6s}
-.hero-art .draw:nth-child(6){animation-delay:.7s}
-.hero-art .draw:nth-child(7){animation-delay:.8s}
-.hero-art .draw:nth-child(8){animation-delay:.9s}
+.hero-art .draw:nth-child(2){animation-delay:.15s}
+.hero-art .draw:nth-child(3){animation-delay:.25s}
+.hero-art .draw:nth-child(4){animation-delay:.35s}
+.hero-art .draw:nth-child(5){animation-delay:.42s}
+.hero-art .draw:nth-child(6){animation-delay:.5s}
+.hero-art .draw:nth-child(7){animation-delay:.58s}
+.hero-art .draw:nth-child(8){animation-delay:.66s}
 
 /* หัวเรื่องใช้ตัวอักษรไทยแบบมีหัว ให้ความรู้สึกเป็นงานกฎหมาย */
 .hero h1,
-h2{
-  font-family:'Noto Serif Thai',Georgia,serif;
-}
+h2{font-family:'Noto Serif Thai',Georgia,serif}
 .hero h1{
-  font-size:1.6rem;
+  grid-column:2;
+  grid-row:1;
+  align-self:end;
+  font-size:1.3rem;
   font-weight:700;
-  margin:4px 0 0;
+  line-height:1.3;
+  margin:0;
   color:var(--text);
   letter-spacing:0;
 }
 .hero p{
-  font-size:.9rem;
+  grid-column:2;
+  grid-row:2;
+  align-self:start;
+  font-size:.84rem;
+  line-height:1.5;
   color:var(--muted);
-  margin:10px auto 0;
-  max-width:28ch;
-  line-height:1.7;
+  margin:4px 0 0;
 }
 
 /* ---------- 3. แผนบัญชีจากด้านล่าง ---------- */
@@ -162,7 +196,7 @@ body.auth-open .sheet-backdrop{opacity:1;pointer-events:auto}
   border:1px solid var(--card-edge);
   border-bottom:none;
   border-radius:24px 24px 0 0;
-  padding:10px 20px calc(24px + env(safe-area-inset-bottom));
+  padding:10px calc(var(--m-page-x) + 2px) calc(24px + env(safe-area-inset-bottom));
   box-shadow:0 -16px 40px rgba(0,0,0,.5);
   transform:translateY(102%);
   visibility:hidden;
@@ -175,7 +209,7 @@ body.auth-open .sheet-backdrop{opacity:1;pointer-events:auto}
   height:4px;
   border-radius:2px;
   background:var(--border);
-  margin:0 auto 16px;
+  margin:0 auto 14px;
 }
 body.auth-open #authCard{transform:none;visibility:visible}
 
@@ -184,8 +218,8 @@ body.auth-open #authCard{transform:none;visibility:visible}
   align-items:center;
   justify-content:center;
   position:absolute;
-  top:14px;
-  right:14px;
+  top:12px;
+  right:12px;
   width:44px;
   height:44px;
   padding:0;
@@ -204,50 +238,50 @@ body.auth-open #authCard{transform:none;visibility:visible}
   box-shadow:none;
   background:transparent;
   border-top:1px solid var(--card-edge);
-  padding:30px 20px;
+  padding:var(--m-card-y) var(--m-page-x);
   margin:0;
-  animation:fadeUp .7s cubic-bezier(.2,.8,.2,1) both;
+  animation:fadeUp .6s cubic-bezier(.2,.8,.2,1) both;
 }
-.card:nth-of-type(2){animation-delay:.15s}
-.card:nth-of-type(3){animation-delay:.25s}
-.card:nth-of-type(4){animation-delay:.35s}
+.card:nth-of-type(2){animation-delay:.12s}
+.card:nth-of-type(3){animation-delay:.2s}
+.card:nth-of-type(4){animation-delay:.28s}
 h2{
-  font-size:1.08rem;
+  font-size:1.05rem;
   font-weight:700;
-  margin-bottom:18px;
-  gap:12px;
+  margin-bottom:var(--m-h2-gap);
+  gap:10px;
 }
-h2::before{width:3px;height:18px}
+h2::before{width:3px;height:16px}
 
 /* ---------- 5. ช่องกรอกและปุ่ม ---------- */
 input[type="email"],
 input[type="password"],
 textarea{
   font-size:16px; /* ป้องกัน iOS ซูมอัตโนมัติเมื่อแตะ */
-  padding:14px 16px;
+  padding:12px 14px;
 }
 input[type="email"],
-input[type="password"]{min-height:52px;border-radius:14px}
+input[type="password"]{min-height:50px;border-radius:14px}
 textarea{
-  min-height:190px;
+  min-height:var(--m-textarea-h);
   border-radius:16px;
-  line-height:1.75;
+  line-height:1.7;
   background:linear-gradient(180deg,rgba(255,255,255,.025),transparent 70%), var(--field);
 }
 
 .hint{
   display:block;
-  margin:12px 2px 0;
+  margin:10px 2px 0;
   font-size:.8rem;
   color:var(--muted);
-  line-height:1.6;
+  line-height:1.5;
 }
 .hint::before{content:"🔒 "}
 
-.btns{flex-direction:column;gap:12px;margin-top:18px}
+.btns{flex-direction:column;gap:10px;margin-top:14px}
 .btns button{
   width:100%;
-  min-height:52px;
+  min-height:50px;
   font-size:1rem;
   border-radius:16px;
 }
@@ -258,19 +292,19 @@ textarea{
 }
 .ghost{border-radius:16px}
 
-.voice-opt{padding:12px 0 0;font-size:.9rem;min-height:44px}
+.voice-opt{padding:10px 0 0;font-size:.9rem;min-height:44px}
 
 /* ---------- 6. ผลการตรวจ ---------- */
-#result{min-height:80px}
-.empty{padding:16px 8px 4px;font-size:.92rem}
+#result{min-height:72px}
+.empty{padding:12px 8px 2px;font-size:.92rem}
 .empty-art{display:block;text-align:center}
-.empty-art svg{width:100px;height:auto;margin:6px auto 0;overflow:visible}
-.summary{gap:8px;margin-bottom:14px}
+.empty-art svg{width:96px;height:auto;margin:4px auto 0;overflow:visible}
+.summary{gap:8px;margin-bottom:12px}
 .badge{padding:5px 12px;font-size:.8rem}
 .item{
-  padding:16px 16px;
+  padding:14px 15px;
   border-radius:12px;
-  margin-bottom:12px;
+  margin-bottom:10px;
   animation:itemIn .45s cubic-bezier(.2,.8,.2,1) both;
 }
 .item:nth-child(2){animation-delay:.05s}
@@ -281,13 +315,13 @@ textarea{
 .item .snippet{font-size:.88rem;line-height:1.65}
 
 /* ---------- 7. เติมเครดิต ---------- */
-#packageButtons{flex-direction:column;gap:12px}
+#packageButtons{flex-direction:column;gap:10px}
 #packageButtons button,
 #packageButtons .primary{
   position:relative;
   width:100%;
-  min-height:62px;
-  padding:14px 18px;
+  min-height:58px;
+  padding:12px 16px;
   text-align:left;
   font-size:.98rem;
   color:var(--text);
@@ -305,9 +339,9 @@ textarea{
 #packageButtons button:active{transform:scale(.985)}
 
 /* ---------- 8. เอฟเฟกต์ (ปิดได้ที่นี่) ----------
-   มีอนิเมชันเพียง 3 จุด: ภาพตราชั่งวาดเส้นตอนเปิดหน้า การ์ดขึ้นตอนโหลด และผลตรวจขึ้นทีละรายการ
+   มีอนิเมชันเพียง 3 จุด: ไอคอนวาดเส้นตอนเปิดหน้า การ์ดขึ้นตอนโหลด และผลตรวจขึ้นทีละรายการ
    ถ้าอยากให้เว็บนิ่งขึ้น ลบบล็อก @keyframes หรือบล็อก .card/.item ด้านบน */
-@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 @keyframes itemIn{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
 @keyframes drawLine{to{stroke-dashoffset:0}}
 
@@ -319,11 +353,11 @@ textarea{
 
 /* ---------- 9. Footer และ safe area ---------- */
 footer{
-  padding:20px 20px calc(28px + env(safe-area-inset-bottom));
+  padding:18px var(--m-page-x) calc(26px + env(safe-area-inset-bottom));
   font-size:.8rem;
   border-top:1px solid var(--card-edge);
 }
-.disclaimer{font-size:.8rem;line-height:1.65}
+.disclaimer{font-size:.8rem;line-height:1.6}
 
 /* ---------- 10. เมนูบัญชี (ตอนล็อกอินแล้ว) ----------
    แก้หัวบัญชี ป้ายเครดิต และปุ่มออกจากระบบได้ที่นี่ */
@@ -331,18 +365,18 @@ footer{
   display:flex;
   align-items:center;
   gap:14px;
-  padding:4px 0 16px;
-  margin-bottom:14px;
+  padding:4px 0 14px;
+  margin-bottom:12px;
   border-bottom:1px solid var(--card-edge);
 }
 .acct-avatar{
   flex:none;
   display:grid;
   place-items:center;
-  width:48px;
-  height:48px;
+  width:46px;
+  height:46px;
   border-radius:50%;
-  font-size:22px;
+  font-size:21px;
   background:linear-gradient(145deg,#2b2513,#15130c);
   border:1px solid rgba(229,196,119,.45);
 }
@@ -356,7 +390,7 @@ footer{
 #authLoggedIn #creditsLine{
   display:inline-flex;
   align-items:center;
-  margin:0 0 16px;
+  margin:0 0 14px;
   padding:8px 14px;
   border-radius:999px;
   background:var(--ghost);
@@ -367,7 +401,7 @@ footer{
 }
 #logoutBtn{
   width:100%;
-  min-height:52px;
+  min-height:50px;
   border-radius:16px;
   font-size:1rem;
   color:var(--muted);
