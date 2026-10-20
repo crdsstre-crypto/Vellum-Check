@@ -1,0 +1,109 @@
+/* =====================================================
+   mobile.css — ปรับหน้าจอสำหรับมือถือ (ความกว้างต่ำกว่า 768px)
+   ไฟล์นี้โหลดหลัง style.css และถูกจำกัดด้วย media query ใน index.html
+   ปิดได้ทันทีด้วยการลบบรรทัด <link href="mobile.css"> บรรทัดเดียว
+   ไม่เปลี่ยนสี และไม่ซ่อน/แสดงองค์ประกอบ (กันชนกับ [hidden] และ script.js)
+   ===================================================== */
+
+/* 1) พื้นที่ปลอดภัยของ iPhone (รอยบาก/ขอบล่าง) */
+body {
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* 2) กันข้อความล้นจอแนวนอน */
+main, .card, .item, blockquote, p {
+  overflow-wrap: anywhere;
+}
+img, audio, video {
+  max-width: 100%;
+}
+
+/* 3) ขนาดตัวอักษรและระยะห่างที่อ่านสบายบนจอเล็ก */
+body {
+  font-size: 16px;
+  line-height: 1.6;
+}
+h2 {
+  font-size: 1.15rem;
+  margin-bottom: 12px;
+}
+.card {
+  padding: 16px;
+  margin-bottom: 14px;
+  border-radius: 16px;
+}
+
+/* 4) ช่องกรอกต้องไม่ทำให้ iPhone ซูมเข้า (ต้อง 16px ขึ้นไป) */
+input[type=password],
+input[type=email],
+input[type=text],
+textarea {
+  font-size: 16px;
+  min-height: 44px;
+}
+textarea {
+  min-height: 160px;
+}
+
+/* 5) ปุ่มกดง่ายด้วยนิ้ว: สูงอย่างน้อย 44px และเต็มความกว้าง */
+button {
+  min-height: 44px;
+  padding: 10px 16px;
+}
+.btns {
+  flex-direction: column;
+  gap: 10px;
+}
+.btns button {
+  width: 100%;
+}
+
+/* 6) ช่องติ๊กเสียงสรุปต้องกดง่าย */
+.voice-opt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 6px 0;
+}
+.voice-opt input[type=checkbox] {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+/* 7) ยอดคงเหลือให้ตัดบรรทัดได้โดยไม่ทับกัน */
+.credits {
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+/* 8) ผลตรวจ: เครื่องเล่นเสียงเต็มความกว้าง และหัวข้อแต่ละประเด็นอ่านง่าย */
+audio {
+  width: 100%;
+  margin-bottom: 12px;
+}
+.item summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+.item {
+  padding: 12px 0;
+}
+blockquote {
+  margin: 10px 0;
+  padding: 10px 12px;
+}
+
+/* 9) ส่วนเติมเครดิต: ปุ่มแพ็กเกจเรียงเป็นคอลัมน์ เต็มความกว้าง */
+#packageButtons button {
+  width: 100%;
+  text-align: left;
+  padding: 12px 16px;
+}
+#paymentResult img {
+  max-width: 260px;
+}
