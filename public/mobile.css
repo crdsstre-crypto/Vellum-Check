@@ -545,7 +545,7 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
 .ct-list{
   display:flex;
   flex-wrap:wrap;
-  align-items:flex-start;
+  align-items:stretch;
   align-content:flex-start;
   gap:8px;
 }
@@ -575,7 +575,7 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
 .ct-list li{
   width:calc((100% - 8px) / 2);
   height:auto;
-  min-height:0;
+  min-height:136px; /* การ์ดทุกใบสูงเท่ากัน */
   overflow:visible;
   flex:0 0 auto;
   flex-direction:column;
