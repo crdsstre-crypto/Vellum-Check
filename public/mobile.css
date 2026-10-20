@@ -479,8 +479,6 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
   display:flex;
   align-items:center;
   gap:10px;
-  position:relative;
-  overflow:hidden;
   padding:8px 12px 8px 8px;
   border:1px solid var(--card-edge);
   border-radius:14px;
@@ -496,18 +494,6 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
   background:rgba(229,196,119,.08);
 }
 .ct-list li.is-on .ct-txt b{color:var(--gold-soft)}
-.ct-list li.is-on .ct-ico{border-color:var(--gold-deep);color:var(--gold-soft)}
-/* ประกายทองวิ่งผ่านครั้งเดียวตอนเลือก ไม่วนซ้ำ */
-.ct-list li.is-on::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:linear-gradient(105deg,transparent 35%,rgba(243,220,160,.14) 50%,transparent 65%);
-  transform:translateX(-100%);
-  animation:ctSheen .7s ease .05s both;
-}
-@keyframes ctSheen{to{transform:translateX(100%)}}
 .ct-tick{
   flex:none;
   margin-left:auto;
@@ -526,7 +512,6 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
 @media (prefers-reduced-motion: reduce){
   .ct-sheet{transition:none}
   .ct-list li.is-on .ct-tick{animation:none}
-  .ct-list li.is-on::after{display:none}
 }
 
 /* ---------- 6. ผลการตรวจ ---------- */
