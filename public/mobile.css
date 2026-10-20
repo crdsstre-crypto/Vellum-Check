@@ -463,6 +463,30 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
   font-size:.95rem;
   line-height:1;
 }
+/* ช่องค้นหาประเภท (รอบ 9) */
+.ct-search-wrap{flex:none;padding:0 var(--m-page-x) 10px}
+.ct-search{
+  width:100%;
+  min-height:46px;
+  padding:10px 14px;
+  font-size:16px; /* ป้องกัน iOS ซูมอัตโนมัติ */
+  border-radius:14px;
+  border:1px solid var(--border);
+  background:var(--field);
+  color:var(--text);
+  -webkit-appearance:none;
+  appearance:none;
+}
+.ct-search::placeholder{color:var(--muted)}
+.ct-search::-webkit-search-cancel-button{filter:invert(.7)}
+.ct-list li[hidden],.ct-list .ct-none[hidden]{display:none}
+.ct-none{
+  padding:14px 4px;
+  font-size:.88rem;
+  color:var(--muted);
+  text-align:center;
+  list-style:none;
+}
 .ct-list{
   flex:1 1 auto;
   min-height:0;
