@@ -2,15 +2,16 @@
    style.css: สไตล์หลัก (ใช้ทุกจอ)
    - สีทั้งหมดดึงจาก themes.css ห้ามใส่สี hex ในไฟล์นี้
    - ชื่อคลาสและ id ต้องตรงกับ index.html และ script.js
+   - ส่วนที่มี "(มือถือ)" ซ่อนไว้ที่นี่ แล้วเปิดใน mobile.css
 
-   ดัชนีแก้ปัญหาเร็ว (ค้นหาหมายเลขส่วนได้ทันที):
+   ดัชนีแก้ปัญหาเร็ว:
    1. พื้นฐานหน้า                       → "1. พื้นฐาน"
-   2. Header และโลโก้                    → "2. Header"
+   2. Header และปุ่มบัญชี                 → "2. Header"
    3. การ์ดและหัวข้อ h2                  → "3. การ์ด"
    4. ปุ่ม (primary, ghost, btns)        → "4. ปุ่ม"
    5. ช่องกรอก อีเมล รหัสผ่าน สัญญา       → "5. ช่องกรอก"
    6. ผลการตรวจ (badge, item, ไฮไลต์)     → "6. ผลการตรวจ"
-   7. ข้อความทั่วไปและเติมเครดิต          → "7. ข้อความและเครดิต"
+   7. ข้อความทั่วไป                       → "7. ข้อความ"
    8. Footer                            → "8. Footer"
    ========================================================= */
 
@@ -29,9 +30,8 @@ body{
 }
 main{max-width:800px;margin:0 auto;padding:20px 16px 8px}
 
-/* ---------- 2. Header และโลโก้ ---------- */
+/* ---------- 2. Header และปุ่มบัญชี ---------- */
 header{
-  position:relative;
   padding:32px 20px 26px;
   text-align:center;
   background:
@@ -39,6 +39,7 @@ header{
     var(--bg);
   border-bottom:1px solid rgba(229,196,119,.3);
 }
+.topbar{display:flex;align-items:center;justify-content:center}
 .brand{display:flex;flex-direction:column;align-items:center;gap:6px}
 .brand-logo{width:44px;height:44px;color:var(--gold)}
 .brand-name{
@@ -48,11 +49,17 @@ header{
   color:var(--muted);
   text-transform:uppercase;
 }
-header h1{margin:8px 0 0;font-size:1.5rem;font-weight:700;color:var(--gold-soft);letter-spacing:.01em}
-header p{margin:6px 0 0;color:var(--muted);font-size:.92rem}
+.hero h1{margin:8px 0 0;font-size:1.5rem;font-weight:700;color:var(--gold-soft);letter-spacing:.01em}
+.hero p{margin:6px 0 0;color:var(--muted);font-size:.92rem}
+
+/* ปุ่มบัญชีและแผนบัญชี: ซ่อนบนจอใหญ่ (เปิดใน mobile.css) */
+.auth-toggle,
+.sheet-close,
+.sheet-backdrop{display:none}
 
 /* ---------- 3. การ์ดและหัวข้อ ---------- */
 .card{
+  position:relative;
   background:linear-gradient(180deg,rgba(255,255,255,.03),transparent 60%), var(--card);
   border:1px solid var(--card-edge);
   border-radius:var(--radius-card);
@@ -187,7 +194,7 @@ mark{
 }
 .empty{color:var(--muted);text-align:center;padding:28px 12px}
 
-/* ---------- 7. ข้อความทั่วไปและเติมเครดิต ---------- */
+/* ---------- 7. ข้อความทั่วไป ---------- */
 .disclaimer{font-size:.84rem;color:var(--muted);margin-top:10px;line-height:1.6}
 
 /* ---------- 8. Footer ---------- */
