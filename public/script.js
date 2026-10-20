@@ -293,6 +293,8 @@ function clearAll() {
   const hasText = els.input.value.trim() !== '';
   if (hasText && !confirm(CONFIG.messages.clearConfirm)) return;
   els.input.value = '';
+  // แจ้งให้ช่องอื่นที่ฟังการพิมพ์ (ตัวนับตัวอักษร ปุ่มล้าง) อัปเดตตาม
+  els.input.dispatchEvent(new Event('input', { bubbles: true }));
   renderEmpty();
 }
 
