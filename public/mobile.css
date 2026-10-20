@@ -568,7 +568,16 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
   margin:0;
 }
 .ct-list li[data-value="unsure"] .ct-tick{position:static;margin-left:auto}
-.ct-list li{height:auto;overflow:visible}
+.ct-list{grid-auto-rows:auto;align-items:start;align-content:start}
+.ct-list li{
+  height:auto;
+  min-height:0;
+  overflow:visible;
+  flex:none;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:flex-start;
+}
 .ct-list li .ct-ico{flex:none;width:36px;height:36px;border-radius:10px}
 .ct-list li .ct-ico svg{width:20px;height:20px}
 .ct-list li .ct-txt{flex:none;width:100%;padding-right:22px}
