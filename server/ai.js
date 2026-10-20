@@ -51,6 +51,7 @@ function buildSystemPrompt(maxItems, contractType = 'unsure') {
 - ห้ามฟันธงว่าสัญญาเป็นธรรมหรือไม่เป็นธรรม ห้ามบอกว่าฝ่ายใดชนะหรือแพ้
 - "quote" ต้องคัดลอกจากสัญญาตามตัวอักษรเท่านั้น ถ้าสัญญาไม่มีข้อความนั้นให้ใส่ ""
 - ถ้าสัญญาไม่ได้ระบุเรื่องใด ให้ใส่ไว้ใน missing_info ห้ามเดาเอง
+- detected_type ให้ระบุประเภทที่เห็นจากข้อความ ใช้ได้เพียงค่าเหล่านี้: "rent" (เช่า), "sale" (ซื้อขาย), "employment" (จ้างงาน), "service" (จ้างบริการ), "loan" (กู้ยืม), "shareholder" (หุ้นส่วน), "nda" (รักษาความลับ), "other" (อื่น ๆ) ถ้าดูไม่ออกให้ใส่ "unsure" ห้ามเดา
 - level ใช้ได้เพียงค่าเหล่านี้: "check_detail" (ควรตรวจละเอียด), "caution" (ควรระวัง), "low" (เสี่ยงต่ำ)
 - "reference" ใส่มาตราที่เกี่ยวข้องเฉพาะที่มั่นใจ ถ้าไม่แน่ใจให้ใส่ ""
 - ทุกข้อความเป็นภาษาไทย กระชับ ไม่เกินสองประโยค
@@ -72,7 +73,8 @@ function buildSystemPrompt(maxItems, contractType = 'unsure') {
       "how_to_negotiate": ""
     }
   ],
-  "missing_info": []
+  "missing_info": [],
+  "detected_type": "unsure"
 }`;
 }
 
