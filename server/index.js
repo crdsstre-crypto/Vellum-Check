@@ -5,7 +5,7 @@
 import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { analyzeContract, MAX_ITEMS_LIMIT } from './ai.js';
+import { analyzeContract, MAX_ITEMS_LIMIT, CONTRACT_TYPES } from './ai.js';
 import { initDb } from './db.js';
 import {
   validateCredentials,
@@ -216,6 +216,9 @@ app.post('/api/check', async (req, res) => {
   // ยอดแยกกัน: ตรวจ 1 ครั้งหักจากยอดตรวจ และถ้าขอเสียงหักจากยอดเสียงเพิ่ม
   const wantVoice = req.body?.voice === true;
 
+  // ประเภทสัญญา: ค่าที่ไม่รู้จักหรือไม่ได้ส่งมาจะถือว่า "unsure" ไม่ทำให้คำขอล้มเหลว
+  const contractType = CONTRACT_TYPES.has(req.body?.contractType) ? req.body.contractType : 'unsure';
+
   // 1) หักยอดตรวจก่อนเรียก AI
   let reserved;
   try {
@@ -250,7 +253,7 @@ app.post('/api/check', async (req, res) => {
   // 3) เรียก AI ถ้าล้มเหลวคืนยอดทั้งหมดที่หักไป
   let result;
   try {
-    const raw = await analyzeContract(text);
+    const raw = await analyzeContract(text, contractType);
     result = cleanResult(raw, text);
   } catch (err) {
     console.error('[check] failed:', err.message);
