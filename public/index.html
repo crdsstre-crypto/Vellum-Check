@@ -250,14 +250,14 @@
     try {
       var a = getRecent().filter(function (x) { return x !== v; });
       a.unshift(v);
-      localStorage.setItem(RECENT_KEY, JSON.stringify(a.slice(0, 3)));
+      localStorage.setItem(RECENT_KEY, JSON.stringify(a.slice(0, 2)));
     } catch (e) { /* ปิดการเก็บในเครื่องได้ ไม่กระทบการใช้งาน */ }
   }
   function renderRecent() {
     recentBox.innerHTML = '';
     var items = search.value.trim() ? [] : getRecent().filter(function (v) {
       return select.querySelector('option[value="' + v + '"]');
-    }).slice(0, 3);
+    }).slice(0, 2);
     if (!items.length) { recentBox.hidden = true; return; }
     var lab = document.createElement('span');
     lab.className = 'ct-recent-label';
