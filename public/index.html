@@ -46,6 +46,9 @@
     <button type="button" class="ct-close" id="ctClose" aria-label="ปิด">✕</button>
   </div>
   <p class="ct-hint">ไม่รู้ประเภทก็เลือก "ไม่แน่ใจ" ได้</p>
+  <div class="ct-search-wrap">
+    <input type="search" id="ctSearch" class="ct-search" placeholder="ค้นหา เช่น เช่า จ้าง กู้" aria-label="ค้นหาประเภทสัญญา" autocomplete="off" enterkeyhint="search">
+  </div>
   <ul class="ct-list" id="ctList" role="listbox" aria-label="ประเภทสัญญา"></ul>
 </div>
 
@@ -199,6 +202,8 @@
   var sheet = document.getElementById('ctSheet');
   var list = document.getElementById('ctList');
   var closeBtn = document.getElementById('ctClose');
+  var search = document.getElementById('ctSearch');
+  var noneItem = null;
   var backdrop = document.getElementById('authBackdrop');
   var built = false;
 
@@ -225,6 +230,18 @@
     return m ? { name: m[1], sub: m[2] } : { name: text, sub: '' };
   }
 
+  // กรองรายการตามคำค้น (ค้นจากชื่อและคำอธิบาย)
+  function filter() {
+    var q = search.value.trim().toLowerCase();
+    var shown = 0;
+    Array.prototype.forEach.call(list.querySelectorAll('li[data-value]'), function (li) {
+      var hit = !q || li.dataset.search.indexOf(q) !== -1;
+      li.hidden = !hit;
+      if (hit) shown++;
+    });
+    noneItem.hidden = shown > 0;
+  }
+
   function build() {
     list.innerHTML = '';
     Array.prototype.forEach.call(select.options, function (opt) {
@@ -233,6 +250,7 @@
       li.setAttribute('role', 'option');
       li.tabIndex = 0;
       li.dataset.value = opt.value;
+      li.dataset.search = (opt.textContent || '').toLowerCase();
       li.innerHTML = '<span class="ct-ico" aria-hidden="true"></span>' +
         '<span class="ct-txt"><b></b><small></small></span>' +
         '<span class="ct-tick" aria-hidden="true"></span>';
@@ -245,6 +263,11 @@
       });
       list.appendChild(li);
     });
+    noneItem = document.createElement('li');
+    noneItem.className = 'ct-none';
+    noneItem.hidden = true;
+    noneItem.textContent = 'ไม่พบประเภทที่ตรง ลองคำอื่น หรือเลือก "ไม่แน่ใจ"';
+    list.appendChild(noneItem);
     built = true;
   }
 
@@ -266,6 +289,8 @@
     body.classList.toggle('ct-open', open);
     trigger.setAttribute('aria-expanded', String(open));
     if (open) {
+      search.value = '';
+      filter();
       var target = list.querySelector('.is-on') || list.firstChild;
       list.scrollTop = 0;
       if (target) target.focus({ preventScroll: true });
@@ -300,6 +325,7 @@
     setOpen(!body.classList.contains('ct-open'));
   });
   closeBtn.addEventListener('click', function () { setOpen(false); });
+  search.addEventListener('input', filter);
   backdrop.addEventListener('click', function () { setOpen(false); });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') setOpen(false);
