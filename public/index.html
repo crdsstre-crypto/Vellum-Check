@@ -12,7 +12,7 @@
 <!-- ลำดับการโหลด CSS: themes (สี) → style (ทุกจอ) → mobile (เฉพาะจอต่ำกว่า 768px) -->
 <link rel="stylesheet" href="themes.css">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="mobile.css?v=9g" media="(max-width: 767px)">
+<link rel="stylesheet" href="mobile.css?v=9h" media="(max-width: 767px)">
 </head>
 <body>
 
@@ -297,12 +297,16 @@
     }
   }
 
+  // เลือกแล้ว: สั่นเบา ๆ (เฉพาะอุปกรณ์ที่รองรับ เช่น Android) แสดงตัวเลือกที่เลือกแป๊บหนึ่งแล้วปิดแผนเอง
   function choose(v) {
     select.value = v;
     select.dispatchEvent(new Event('change', { bubbles: true }));
     refresh();
-    setOpen(false);
-    trigger.focus();
+    if (navigator.vibrate) navigator.vibrate(10);
+    setTimeout(function () {
+      setOpen(false);
+      trigger.focus();
+    }, 150);
   }
 
   // มือถือ: แสดงปุ่มและแผน ซ่อน select เดิม (ยังอ่านค่าได้) / จอใหญ่: คงของเดิมไว้
