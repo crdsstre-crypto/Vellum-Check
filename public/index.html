@@ -12,7 +12,7 @@
 <!-- ลำดับการโหลด CSS: themes (สี) → style (ทุกจอ) → mobile (เฉพาะจอต่ำกว่า 768px) -->
 <link rel="stylesheet" href="themes.css">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="mobile.css?v=9h" media="(max-width: 767px)">
+<link rel="stylesheet" href="mobile.css?v=9i" media="(max-width: 767px)">
 </head>
 <body>
 
@@ -48,7 +48,9 @@
   <p class="ct-hint">ไม่รู้ประเภทก็เลือก "ไม่แน่ใจ" ได้</p>
   <div class="ct-search-wrap">
     <input type="search" id="ctSearch" class="ct-search" placeholder="ค้นหา เช่น เช่า จ้าง กู้" aria-label="ค้นหาประเภทสัญญา" autocomplete="off" enterkeyhint="search">
+    <button type="button" class="ct-search-clear" id="ctSearchClear" aria-label="ล้างคำค้นหา" hidden>✕</button>
   </div>
+  <div class="ct-recent" id="ctRecent" hidden></div>
   <ul class="ct-list" id="ctList" role="listbox" aria-label="ประเภทสัญญา"></ul>
 </div>
 
@@ -115,6 +117,7 @@
         <span class="ct-txt"><b class="ct-name">ไม่แน่ใจ</b><small class="ct-sub">ให้ระบบพิจารณาเอง</small></span>
         <span class="ct-chev" aria-hidden="true"></span>
       </button>
+      <button type="button" class="ct-reset" id="ctReset" hidden>ล้างการเลือก</button>
       <div class="select-wrap">
         <select id="contractType" name="contractType">
           <option value="unsure" selected>ไม่แน่ใจ (ระบบจะดูจากข้อความให้เอง)</option>
@@ -203,6 +206,10 @@
   var list = document.getElementById('ctList');
   var closeBtn = document.getElementById('ctClose');
   var search = document.getElementById('ctSearch');
+  var clearBtn = document.getElementById('ctSearchClear');
+  var recentBox = document.getElementById('ctRecent');
+  var resetBtn = document.getElementById('ctReset');
+  var RECENT_KEY = 'vc_recent_ct';
   var noneItem = null;
   var backdrop = document.getElementById('authBackdrop');
   var built = false;
@@ -231,6 +238,43 @@
   }
 
   // กรองรายการตามคำค้น (ค้นจากชื่อและคำอธิบาย)
+  // ประเภทที่เลือกล่าสุด (เก็บในเครื่องผู้ใช้เท่านั้น ไม่ส่งไปที่เซิร์ฟเวอร์)
+  function getRecent() {
+    try {
+      var a = JSON.parse(localStorage.getItem(RECENT_KEY) || '[]');
+      return Array.isArray(a) ? a : [];
+    } catch (e) { return []; }
+  }
+  function pushRecent(v) {
+    if (v === 'unsure') return;
+    try {
+      var a = getRecent().filter(function (x) { return x !== v; });
+      a.unshift(v);
+      localStorage.setItem(RECENT_KEY, JSON.stringify(a.slice(0, 3)));
+    } catch (e) { /* ปิดการเก็บในเครื่องได้ ไม่กระทบการใช้งาน */ }
+  }
+  function renderRecent() {
+    recentBox.innerHTML = '';
+    var items = search.value.trim() ? [] : getRecent().filter(function (v) {
+      return select.querySelector('option[value="' + v + '"]');
+    }).slice(0, 3);
+    if (!items.length) { recentBox.hidden = true; return; }
+    var lab = document.createElement('span');
+    lab.className = 'ct-recent-label';
+    lab.textContent = 'ใช้ล่าสุด';
+    recentBox.appendChild(lab);
+    items.forEach(function (v) {
+      var opt = select.querySelector('option[value="' + v + '"]');
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ct-chip';
+      b.textContent = parse(opt.textContent).name;
+      b.addEventListener('click', function () { choose(v); });
+      recentBox.appendChild(b);
+    });
+    recentBox.hidden = false;
+  }
+
   function filter() {
     var q = search.value.trim().toLowerCase();
     var shown = 0;
@@ -240,6 +284,8 @@
       if (hit) shown++;
     });
     noneItem.hidden = shown > 0;
+    clearBtn.hidden = !search.value;
+    renderRecent();
   }
 
   function build() {
@@ -273,6 +319,7 @@
 
   // ทำให้ปุ่มและรายการตรงกับค่าปัจจุบันของ select เสมอ
   function refresh() {
+    resetBtn.hidden = select.value === 'unsure';
     var cur = select.options[select.selectedIndex];
     var p = parse(cur ? cur.textContent : '');
     trigger.querySelector('.ct-ico').innerHTML = icon(select.value);
@@ -299,6 +346,7 @@
 
   // เลือกแล้ว: สั่นเบา ๆ (เฉพาะอุปกรณ์ที่รองรับ เช่น Android) แสดงตัวเลือกที่เลือกแป๊บหนึ่งแล้วปิดแผนเอง
   function choose(v) {
+    pushRecent(v);
     select.value = v;
     select.dispatchEvent(new Event('change', { bubbles: true }));
     refresh();
@@ -324,6 +372,45 @@
       setOpen(false);
     }
   }
+
+  clearBtn.addEventListener('click', function () {
+    search.value = '';
+    filter();
+  });
+  resetBtn.addEventListener('click', function () {
+    select.value = 'unsure';
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+    refresh();
+  });
+
+  // ลากลงจากหัวแผน (ที่จับและหัวเรื่อง) เพื่อปิด ไม่รบกวนการเลื่อนรายการ
+  var drag = null;
+  function dragStart(e) {
+    if (!body.classList.contains('ct-open')) return;
+    drag = { y: e.touches[0].clientY, dy: 0 };
+    sheet.style.transition = 'none';
+  }
+  function dragMove(e) {
+    if (!drag) return;
+    var dy = Math.max(0, e.touches[0].clientY - drag.y);
+    drag.dy = dy;
+    sheet.style.transform = 'translateY(' + dy + 'px)';
+  }
+  function dragEnd() {
+    if (!drag) return;
+    var dy = drag.dy;
+    drag = null;
+    sheet.style.transition = '';
+    sheet.style.transform = '';
+    if (dy > 90) setOpen(false);
+  }
+  [sheet.querySelector('.ct-grip'), sheet.querySelector('.ct-head')].forEach(function (el) {
+    if (!el) return;
+    el.addEventListener('touchstart', dragStart, { passive: true });
+    el.addEventListener('touchmove', dragMove, { passive: true });
+    el.addEventListener('touchend', dragEnd);
+    el.addEventListener('touchcancel', dragEnd);
+  });
 
   trigger.addEventListener('click', function () {
     setOpen(!body.classList.contains('ct-open'));
