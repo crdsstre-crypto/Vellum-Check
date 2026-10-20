@@ -12,7 +12,7 @@
 <!-- ลำดับการโหลด CSS: themes (สี) → style (ทุกจอ) → mobile (เฉพาะจอต่ำกว่า 768px) -->
 <link rel="stylesheet" href="themes.css">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="mobile.css?v=9l" media="(max-width: 767px)">
+<link rel="stylesheet" href="mobile.css?v=9m" media="(max-width: 767px)">
 </head>
 <body>
 
@@ -139,7 +139,11 @@
     </div>
     <div class="ta-meta">
       <p class="ta-count" id="taCount" aria-live="polite">0 / 20,000 ตัวอักษร</p>
-      <button type="button" class="sample-btn" id="sampleBtn">ลองใช้ข้อความตัวอย่าง</button>
+      <div class="ta-actions">
+        <label class="sample-btn file-pick" for="fileIn">อัปโหลดไฟล์ .txt</label>
+        <input type="file" id="fileIn" accept=".txt,text/plain" hidden>
+        <button type="button" class="sample-btn" id="sampleBtn">ลองใช้ข้อความตัวอย่าง</button>
+      </div>
     </div>
     <p class="hint">แนะนำ: วางเฉพาะข้อความสัญญาที่ต้องการตรวจ ไม่ต้องใส่ข้อมูลส่วนตัวที่ไม่จำเป็น</p>
     <label class="voice-opt"><span class="voice-text">สรุปเป็นเสียง <small>(ใช้เครดิตเสียง 1 ครั้ง)</small></span><input type="checkbox" id="voiceOpt" role="switch" aria-label="สรุปเป็นเสียง"><span class="voice-switch" aria-hidden="true"></span></label>
@@ -451,6 +455,23 @@
     taCount.classList.toggle('is-over', n > MAX_CHARS);
   }
   input.addEventListener('input', syncCount);
+  // อัปโหลดไฟล์ข้อความธรรมดา (.txt) อ่านในเครื่องแล้วใส่ลงกล่อง ไม่ส่งไฟล์ไปเซิร์ฟเวอร์
+  var fileIn = document.getElementById('fileIn');
+  fileIn.addEventListener('change', function () {
+    var f = fileIn.files && fileIn.files[0];
+    fileIn.value = '';
+    if (!f) return;
+    if (f.size > 300 * 1024) {
+      alert('ไฟล์ใหญ่เกินไป (ไม่เกิน 300 KB)');
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function () {
+      input.value = String(reader.result || '');
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    };
+    reader.readAsText(f, 'utf-8');
+  });
   sampleBtn.addEventListener('click', function () {
     input.value = SAMPLE_TEXT;
     input.dispatchEvent(new Event('input', { bubbles: true }));
