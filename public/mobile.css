@@ -568,15 +568,12 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
   margin:0;
 }
 .ct-list li[data-value="unsure"] .ct-tick{position:static;margin-left:auto}
-.ct-list li .ct-ico{width:36px;height:36px;border-radius:10px}
+.ct-list li{height:auto;overflow:visible}
+.ct-list li .ct-ico{flex:none;width:36px;height:36px;border-radius:10px}
 .ct-list li .ct-ico svg{width:20px;height:20px}
-.ct-list li .ct-txt small{
-  display:-webkit-box;
-  -webkit-line-clamp:2;
-  -webkit-box-orient:vertical;
-  overflow:hidden;
-  font-size:.74rem;
-}
+.ct-list li .ct-txt{flex:none;width:100%;padding-right:22px}
+.ct-list li .ct-txt b{line-height:1.3}
+.ct-list li .ct-txt small{font-size:.74rem;line-height:1.35}
 .ct-list .ct-none{grid-column:1 / -1}
 .ct-list li:focus-within{outline:none}
 
