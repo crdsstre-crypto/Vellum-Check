@@ -5,7 +5,8 @@
 import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { analyzeContract, MAX_ITEMS_LIMIT, CONTRACT_TYPES } from './ai.js';
+import { analyzeContract, transcribeImage, MAX_ITEMS_LIMIT, CONTRACT_TYPES } from './ai.js';
+import { extractPdfText, extractDocxText } from './extract.js';
 import { initDb } from './db.js';
 import {
   validateCredentials,
@@ -30,7 +31,10 @@ const MAX_CHARS = 20000;
 
 // อยู่หลัง proxy ของ Render จึงต้องบอก Express ให้รู้ว่าเป็น https (ใช้ตั้งคุกกี้แบบ Secure)
 app.set('trust proxy', 1);
-app.use(express.json({ limit: '200kb' }));
+// ไฟล์อัปโหลดส่งเป็น base64 ใน JSON จึงให้ /api/extract รับขนาดใหญ่กว่าเส้นทางอื่น
+app.use((req, res, next) => (
+  req.path === '/api/extract' ? express.json({ limit: '8mb' }) : express.json({ limit: '200kb' })
+)(req, res, next));
 
 // ---------- ตรวจผลจาก AI ----------
 const LEVELS = new Set(['check_detail', 'caution', 'low']);
@@ -288,6 +292,73 @@ app.post('/api/check', async (req, res) => {
   const credits = await getCredits(user.id).catch(() => null);
   const voiceCredits = await getVoiceCredits(user.id).catch(() => null);
   res.json({ ok: true, result, credits, voiceCredits, audio, voiceError });
+});
+
+// ---------- อัปโหลดไฟล์ ----------
+const EXTRACT_MAX_BYTES = 5 * 1024 * 1024;
+const IMAGE_TYPES = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp' };
+
+app.post('/api/extract', async (req, res) => {
+  let user;
+  try {
+    user = await getUserFromRequest(req);
+  } catch (err) {
+    console.error('[extract] session lookup failed:', err.message);
+    return res.status(500).json({ error: 'ระบบมีปัญหา ลองใหม่อีกครั้ง' });
+  }
+  if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อนอัปโหลดไฟล์' });
+
+  const name = typeof req.body?.name === 'string' ? req.body.name : '';
+  const ext = name.includes('.') ? name.split('.').pop().toLowerCase() : '';
+  const isPdf = ext === 'pdf';
+  const isDocx = ext === 'docx';
+  const imageType = IMAGE_TYPES[ext];
+  if (!isPdf && !isDocx && !imageType) {
+    return res.status(400).json({ error: 'รองรับไฟล์ PDF, Word (.docx) และรูปภาพ JPG, PNG, WEBP' });
+  }
+
+  const data = typeof req.body?.data === 'string' ? req.body.data.replace(/^data:[^,]*,/, '') : '';
+  const buffer = Buffer.from(data, 'base64');
+  if (buffer.length === 0) return res.status(400).json({ error: 'ไม่พบไฟล์' });
+  if (buffer.length > EXTRACT_MAX_BYTES) {
+    return res.status(413).json({ error: 'ไฟล์ต้องมีขนาดไม่เกิน 5 MB' });
+  }
+
+  // รูปภาพใช้ AI อ่าน จึงหักเครดิตตรวจ 1 ครั้ง และคืนถ้าอ่านไม่สำเร็จ
+  let reserved = false;
+  let text = '';
+  try {
+    if (isPdf) {
+      text = await extractPdfText(buffer);
+    } else if (isDocx) {
+      text = await extractDocxText(buffer);
+    } else {
+      reserved = await reserveCredits(user.id, 1);
+      if (!reserved) {
+        const credits = await getCredits(user.id).catch(() => 0);
+        return res.status(402).json({ error: 'เครดิตตรวจสัญญาหมดแล้ว กรุณาซื้อแพ็กตรวจสัญญา', credits });
+      }
+      text = await transcribeImage(buffer.toString('base64'), imageType);
+    }
+  } catch (err) {
+    console.error('[extract] failed:', err.message);
+    if (reserved) await refundCredits(user.id, 1).catch(e => console.error('[credits] refund failed:', e.message));
+    return res.status(502).json({ error: 'อ่านไฟล์ไม่สำเร็จ ลองใหม่อีกครั้ง หรือใช้ไฟล์อื่น' });
+  }
+
+  text = String(text || '').replace(/\r\n/g, '\n').trim();
+  if (!text) {
+    if (reserved) await refundCredits(user.id, 1).catch(() => {});
+    return res.status(422).json({ error: 'ไม่พบข้อความในไฟล์ ถ้าเป็นไฟล์สแกนที่ไม่ชัด ลองถ่ายใหม่ให้ชัดขึ้น' });
+  }
+  if (text.length > MAX_CHARS) {
+    if (reserved) await refundCredits(user.id, 1).catch(() => {});
+    return res.status(413).json({ error: `ข้อความในไฟล์ยาวเกิน ${MAX_CHARS} ตัวอักษร` });
+  }
+
+  const credits = await getCredits(user.id).catch(() => null);
+  const voiceCredits = await getVoiceCredits(user.id).catch(() => null);
+  res.json({ ok: true, text, credits, voiceCredits });
 });
 
 // ---------- หน้าเว็บ ----------
