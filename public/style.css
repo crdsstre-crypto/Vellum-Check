@@ -1,30 +1,163 @@
+/* =========================================================
+   style.css: สไตล์หลัก (ใช้ทุกจอ)
+   - สีทั้งหมดดึงจาก themes.css ห้ามใส่สี hex ในไฟล์นี้
+   - ชื่อคลาสและ id ต้องตรงกับ index.html และ script.js
 
-:root{--bg:#f4f6fb;--card:#fff;--text:#1f2937;--muted:#6b7280;--primary:#2563eb;--high:#fee2e2;--highText:#991b1b;--mid:#fef3c7;--midText:#92400e;--low:#e0f2fe;--lowText:#075985;}
+   ดัชนีแก้ปัญหาเร็ว (ค้นหาหมายเลขส่วนได้ทันที):
+   1. พื้นฐานหน้า, main                → "1. พื้นฐาน"
+   2. Header หัวเว็บ                   → "2. Header"
+   3. การ์ดและหัวข้อ h2                → "3. การ์ด"
+   4. ปุ่ม (primary, ghost, btns)      → "4. ปุ่ม"
+   5. ช่องกรอก อีเมล รหัสผ่าน สัญญา     → "5. ช่องกรอก"
+   6. ผลการตรวจ (badge, item, ไฮไลต์)   → "6. ผลการตรวจ"
+   7. ข้อความทั่วไป, เติมเครดิต        → "7. ข้อความและเครดิต"
+   8. Footer                            → "8. Footer"
+   ========================================================= */
+
+/* ---------- 1. พื้นฐาน ---------- */
+[hidden]{display:none !important}
 *{box-sizing:border-box}
-body{margin:0;font-family:'Sarabun',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
-header{background:var(--primary);color:#fff;padding:20px;text-align:center}
-header h1{margin:0;font-size:1.6rem}
-header p{margin:4px 0 0;opacity:.9;font-size:.95rem}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  font-family:'Sarabun',system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  min-height:100vh;
+  overflow-x:hidden;
+}
 main{max-width:800px;margin:0 auto;padding:16px}
-.card{background:var(--card);border-radius:14px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.06);margin-bottom:16px}
-textarea{width:100%;min-height:200px;border:1px solid #d1d5db;border-radius:10px;padding:12px;font:inherit;resize:vertical}
-textarea:focus{outline:2px solid var(--primary);border-color:transparent}
+
+/* ---------- 2. Header ---------- */
+header{
+  background:linear-gradient(180deg,#171717,var(--bg));
+  color:var(--text);
+  padding:24px 20px;
+  text-align:center;
+  border-bottom:1px solid var(--gold);
+}
+header h1{margin:0;font-size:1.6rem;color:var(--gold-soft);letter-spacing:.02em}
+header p{margin:4px 0 0;color:var(--muted);font-size:.95rem}
+
+/* ---------- 3. การ์ดและหัวข้อ ---------- */
+.card{
+  background:var(--card);
+  border:1px solid var(--card-edge);
+  border-radius:var(--radius-card);
+  padding:20px;
+  box-shadow:var(--shadow);
+  margin-bottom:16px;
+}
+h2{font-size:1.15rem;margin:0 0 12px;color:var(--gold-soft)}
+
+/* ---------- 4. ปุ่ม ---------- */
 .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-button{font:inherit;border:none;border-radius:10px;padding:10px 18px;cursor:pointer;font-weight:600}
-.primary{background:var(--primary);color:#fff}
-.ghost{background:#e5e7eb;color:var(--text)}
+button{
+  font:inherit;
+  font-weight:600;
+  border:1px solid transparent;
+  border-radius:var(--radius-btn);
+  padding:10px 18px;
+  cursor:pointer;
+  transition:opacity .15s, transform .05s;
+}
 button:hover{opacity:.9}
-h2{font-size:1.15rem;margin:0 0 12px}
+button:active{transform:scale(.98)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.primary{
+  background:linear-gradient(135deg,var(--gold-soft),var(--gold));
+  color:var(--on-gold);
+  box-shadow:0 2px 10px rgba(212,175,55,.25);
+}
+.ghost{
+  background:transparent;
+  color:var(--gold-soft);
+  border-color:var(--gold);
+}
+
+/* ---------- 5. ช่องกรอก ---------- */
+input[type="email"],
+input[type="password"],
+textarea{
+  width:100%;
+  background:var(--item);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:var(--radius-btn);
+  padding:12px;
+  font:inherit;
+}
+input[type="email"],
+input[type="password"]{margin-bottom:10px}
+textarea{min-height:200px;resize:vertical}
+input::placeholder,
+textarea::placeholder{color:var(--muted)}
+input:focus,
+textarea:focus{outline:2px solid var(--focus);outline-offset:0;border-color:transparent}
+.voice-opt{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:12px;
+  color:var(--muted);
+  font-size:.95rem;
+}
+.voice-opt input{accent-color:var(--gold)}
+
+/* ---------- 6. ผลการตรวจ ---------- */
 .summary{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-.badge{padding:6px 12px;border-radius:999px;font-size:.9rem;font-weight:600}
-.item{border-left:4px solid;padding:12px 14px;border-radius:8px;margin-bottom:10px;background:#fafafa}
-.item.high{border-color:#dc2626;background:var(--high)}
-.item.mid{border-color:#f59e0b;background:var(--mid)}
-.item.low{border-color:#0284c7;background:var(--low)}
-.item h3{margin:0 0 4px;font-size:1rem}
+.badge{
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:.9rem;
+  font-weight:600;
+  background:var(--ghost);
+  color:var(--text);
+}
+.badge.high{background:var(--high);color:var(--highText)}
+.badge.mid{background:var(--mid);color:var(--midText)}
+.badge.low{background:var(--low);color:var(--lowText)}
+
+.item{
+  background:var(--item);
+  border:1px solid var(--card-edge);
+  border-left:4px solid var(--border);
+  border-radius:8px;
+  padding:12px 14px;
+  margin-bottom:10px;
+  overflow-wrap:anywhere;
+}
+.item.high{border-left-color:var(--highBorder);background:var(--high)}
+.item.mid{border-left-color:var(--midBorder);background:var(--mid)}
+.item.low{border-left-color:var(--lowBorder);background:var(--low)}
+.item h3{margin:0 0 4px;font-size:1rem;color:var(--text)}
 .item .tag{font-size:.8rem;font-weight:600;margin-bottom:4px}
-.item .snippet{font-size:.9rem;color:var(--muted);margin-top:6px;white-space:pre-wrap}
-mark{background:#fde047;padding:0 2px;border-radius:3px}
+.item.high .tag{color:var(--highText)}
+.item.mid .tag{color:var(--midText)}
+.item.low .tag{color:var(--lowText)}
+.item .snippet{
+  font-size:.9rem;
+  color:var(--muted);
+  margin-top:6px;
+  white-space:pre-wrap;
+}
+mark{
+  background:var(--mark);
+  color:var(--markText);
+  padding:0 2px;
+  border-radius:3px;
+}
 .empty{color:var(--muted);text-align:center;padding:24px 0}
+
+/* ---------- 7. ข้อความทั่วไปและเครดิต ---------- */
 .disclaimer{font-size:.85rem;color:var(--muted);margin-top:8px}
-footer{text-align:center;color:var(--muted);font-size:.85rem;padding:20px}
+
+/* ---------- 8. Footer ---------- */
+footer{
+  text-align:center;
+  color:var(--muted);
+  font-size:.85rem;
+  padding:20px;
+  border-top:1px solid var(--card-edge);
+}
