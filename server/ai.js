@@ -18,8 +18,33 @@ export function itemsFor(textLength) {
   return Math.min(MAX_ITEMS_LIMIT, Math.max(MIN_ITEMS, Math.ceil(textLength / CHARS_PER_ITEM)));
 }
 
-function buildSystemPrompt(maxItems) {
+// ประเภทสัญญาที่ผู้ใช้เลือกได้ ค่าอื่นทั้งหมดจะถูกแปลงเป็น "unsure"
+// ต้องตรงกับ value ใน <select id="contractType"> ของ index.html
+export const CONTRACT_TYPES = new Set([
+  'unsure', 'rent', 'sale', 'employment', 'service',
+  'loan', 'shareholder', 'nda', 'other',
+]);
+
+// คำแนะนำว่าควรให้น้ำหนักหัวข้อใดเป็นพิเศษ เป็นแค่การเลือกจุดที่ควรดู ไม่ใช่การตัดสิน
+const TYPE_FOCUS = {
+  rent: 'ค่าเช่าและการขึ้นค่าเช่า เงินประกันและการคืนเงิน การบอกเลิกสัญญาและการคืนมัดจำ การซ่อมแซมและความรับผิดชอบเมื่อเกิดความเสียหาย',
+  sale: 'ราคาและวิธีชำระ การส่งมอบและความเสี่ยงระหว่างส่งมอบ การรับประกันความชำรุด เงื่อนไขการคืนสินค้าหรือการยกเลิก',
+  employment: 'ค่าจ้างและการจ่ายตรงเวลา ชั่วโมงหรือระยะเวลาทำงาน โบนัสและสวัสดิการ การเลิกจ้างและการแจ้งล่วงหน้า สิทธิในทรัพย์สินทางปัญญาที่สร้างขณะทำงาน',
+  service: 'ขอบเขตงานและการส่งมอบ กำหนดเวลาและค่าปรับ การแก้ไขงานและจำนวนครั้งที่แก้ได้ ลิขสิทธิ์ของงานที่ส่งมอบ การชำระเงินเมื่อยกเลิกกลางคัน',
+  loan: 'ดอกเบี้ยและค่าธรรมเนียม กำหนดคืนเงินและงวดชำระ เงื่อนไขการผิดนัดและค่าปรับ หลักประกันที่ให้ไว้',
+  shareholder: 'สัดส่วนการลงทุนและการแบ่งกำไร หน้าที่และการตัดสินใจของแต่ละฝ่าย เงื่อนไขการถอนตัวและการโอนหุ้น การระงับข้อพิพาท',
+  nda: 'ขอบเขตของข้อมูลลับ ข้อยกเว้นการเปิดเผย ระยะเวลาคุ้มครอง ค่าเสียหายและการบังคับใช้',
+  other: 'เงื่อนไขการชำระเงิน ระยะเวลาและการยกเลิก ความรับผิดและค่าเสียหาย การระงับข้อพิพาท',
+  unsure: 'ให้พิจารณาจากข้อความสัญญาเอง ถ้าไม่แน่ใจว่าเป็นสัญญาประเภทใด ให้ระบุไว้ใน missing_info แทนการเดา',
+};
+
+function buildSystemPrompt(maxItems, contractType = 'unsure') {
+  const focus = TYPE_FOCUS[contractType] || TYPE_FOCUS.unsure;
   return `คุณช่วยคัดกรองความเสี่ยงเบื้องต้นของสัญญาภาษาไทย คุณไม่ใช่ทนายและไม่ให้คำปรึกษาทางกฎหมาย
+
+ประเภทสัญญาที่ผู้ใช้ระบุ: ${contractType}
+หัวข้อที่ควรให้ความสำคัญเป็นพิเศษ: ${focus}
+(ประเภทนี้ช่วยเลือกหัวข้อที่ควรดูเท่านั้น ห้ามใช้เป็นเหตุผลในการฟันธงว่าสัญญาเป็นธรรมหรือไม่เป็นธรรม และถ้าข้อความไม่ตรงกับประเภทที่ระบุ ให้ใส่ไว้ใน missing_info)
 
 กติกา:
 - ตอบเป็น JSON อย่างเดียว ไม่มีข้อความอื่น ไม่ใช้ markdown ไม่ใส่ backtick
@@ -62,8 +87,10 @@ function extractJson(raw) {
   return JSON.parse(cleaned.slice(start, end + 1));
 }
 
-export async function analyzeContract(text) {
+export async function analyzeContract(text, contractType = 'unsure') {
   const apiKey = process.env.ANTHROPIC_API_KEY;
+  // รับเฉพาะค่าที่รู้จัก ค่าอื่นให้ถือว่าไม่แน่ใจ
+  const type = CONTRACT_TYPES.has(contractType) ? contractType : 'unsure';
   if (!apiKey) {
     throw new Error('ANTHROPIC_API_KEY is not set');
   }
@@ -78,7 +105,7 @@ export async function analyzeContract(text) {
     body: JSON.stringify({
       model: MODEL,
       max_tokens: MAX_TOKENS,
-      system: buildSystemPrompt(itemsFor(text.length)),
+      system: buildSystemPrompt(itemsFor(text.length), type),
       messages: [{ role: 'user', content: text }],
     }),
   });
