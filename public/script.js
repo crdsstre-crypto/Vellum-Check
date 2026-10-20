@@ -21,6 +21,7 @@ const CONFIG = {
     login: '/api/login',
     logout: '/api/logout',
     check: '/api/check',
+    extract: '/api/extract',
   },
   levelLabel: {
     check_detail: 'ควรตรวจละเอียด',
@@ -297,6 +298,61 @@ async function runCheck() {
   }
 }
 
+/* ---------- 5b. อัปโหลดไฟล์ ---------- */
+const UPLOAD_MAX_BYTES = 5 * 1024 * 1024;
+const UPLOAD_EXT = ['txt', 'pdf', 'docx', 'jpg', 'jpeg', 'png', 'webp'];
+
+// ไฟล์ .txt อ่านในเครื่อง ส่วน PDF, Word และรูปภาพส่งไปให้เซิร์ฟเวอร์อ่าน
+async function handleUpload(file) {
+  const ext = file.name.includes('.') ? file.name.split('.').pop().toLowerCase() : '';
+  if (!UPLOAD_EXT.includes(ext)) {
+    alert('รองรับไฟล์ .txt, .pdf, .docx, JPG, PNG และ WEBP');
+    return;
+  }
+  if (file.size > UPLOAD_MAX_BYTES) {
+    alert('ไฟล์ต้องมีขนาดไม่เกิน 5 MB');
+    return;
+  }
+
+  if (ext === 'txt') {
+    const reader = new FileReader();
+    reader.onload = function () {
+      els.input.value = String(reader.result || '');
+      els.input.dispatchEvent(new Event('input', { bubbles: true }));
+    };
+    reader.readAsText(file, 'utf-8');
+    return;
+  }
+
+  if (!currentUser) {
+    alert('กรุณาเข้าสู่ระบบก่อนอัปโหลดไฟล์');
+    return;
+  }
+
+  const countEl = document.getElementById('taCount');
+  if (countEl) countEl.textContent = 'กำลังอ่านไฟล์...';
+  try {
+    const base64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result).split(',')[1] || '');
+      reader.onerror = () => reject(new Error('read failed'));
+      reader.readAsDataURL(file);
+    });
+    const r = await api(CONFIG.api.extract, 'POST', { name: file.name, data: base64 });
+    if (typeof r.data.credits === 'number') showCredits(r.data.credits, r.data.voiceCredits);
+    if (!r.ok) {
+      alert(r.data.error || 'อ่านไฟล์ไม่สำเร็จ');
+      return;
+    }
+    els.input.value = r.data.text;
+  } catch (err) {
+    alert('อ่านไฟล์ไม่สำเร็จ ลองใหม่อีกครั้ง');
+  } finally {
+    // อัปเดตตัวนับและปุ่มตรวจให้ตรงกับข้อความที่อยู่ในกล่องจริง
+    els.input.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+}
+
 function clearAll() {
   const hasText = els.input.value.trim() !== '';
   if (hasText && !confirm(CONFIG.messages.clearConfirm)) return;
@@ -333,6 +389,14 @@ function init() {
   els.logoutBtn.addEventListener('click', logout);
   els.checkBtn.addEventListener('click', runCheck);
   els.input.addEventListener('input', updateCheckState);
+  const fileIn = document.getElementById('fileIn');
+  if (fileIn) {
+    fileIn.addEventListener('change', function () {
+      const f = fileIn.files && fileIn.files[0];
+      fileIn.value = '';
+      if (f) handleUpload(f);
+    });
+  }
   els.clearBtn.addEventListener('click', clearAll);
 
   showLoggedOut();
