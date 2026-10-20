@@ -266,7 +266,7 @@
     trigger.setAttribute('aria-expanded', String(open));
     if (open) {
       var target = list.querySelector('.is-on') || list.firstChild;
-      sheet.scrollTop = 0;
+      list.scrollTop = 0;
       if (target) target.focus({ preventScroll: true });
     }
   }
