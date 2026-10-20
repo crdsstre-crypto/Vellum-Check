@@ -78,7 +78,13 @@
       </div>
     </div>
     <div id="authLoggedIn" hidden>
-      <p>เข้าสู่ระบบแล้ว: <b id="userEmail"></b></p>
+      <div class="acct-head">
+        <span class="acct-avatar" aria-hidden="true">👤</span>
+        <div class="acct-info">
+          <span class="acct-label">เข้าสู่ระบบแล้ว</span>
+          <b id="userEmail" class="acct-mail"></b>
+        </div>
+      </div>
       <p id="creditsLine"></p>
       <button class="ghost" id="logoutBtn">ออกจากระบบ</button>
     </div>
