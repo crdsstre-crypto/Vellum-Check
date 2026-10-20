@@ -127,7 +127,7 @@ main{padding:0}
   border:1px solid var(--card-edge);
   overflow:visible;
 }
-/* วาดเส้นให้หนาขึ้นตามขนาดที่ย่อลง จะได้ไม่บางจนมองไม่เห็น */
+/* เส้นหนาขึ้นตามขนาดที่ย่อลง ภาพใช้ viewBox ที่ตัดขอบแล้วจึงเต็มกรอบ */
 .hero-art g{stroke-width:7}
 .hero-art .draw{
   stroke-dasharray:1;
