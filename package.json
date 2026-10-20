@@ -1,6 +1,6 @@
 {
   "name": "vellum-check",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "main": "server/index.js",
@@ -13,6 +13,8 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "express": "^4.21.2",
-    "pg": "^8.13.1"
+    "pg": "^8.13.1",
+    "pdf-parse": "^1.1.1",
+    "mammoth": "^1.8.0"
   }
 }
