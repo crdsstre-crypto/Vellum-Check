@@ -676,6 +676,30 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
   color:var(--gold-soft);
 }
 
+/* ---------- 5g. ช่องวางข้อความ: ปุ่มล้าง และปุ่มตรวจเมื่อวางข้อความ (รอบ 12) ---------- */
+.ta-wrap{position:relative}
+.ta-wrap textarea{padding-right:52px}
+.ta-clear{
+  position:absolute;
+  top:10px;
+  right:10px;
+  width:34px;
+  height:34px;
+  padding:0;
+  border:none;
+  border-radius:50%;
+  background:var(--ghost);
+  color:var(--text);
+  font-size:.82rem;
+  line-height:1;
+  display:grid;
+  place-items:center;
+}
+.primary.is-ready{
+  outline:2px solid var(--gold);
+  outline-offset:3px;
+}
+
 /* ---------- 6. ผลการตรวจ ---------- */
 #result{min-height:72px}
 .empty{padding:12px 8px 2px;font-size:.92rem}
