@@ -14,6 +14,7 @@
    | แผนบัญชีไม่เลื่อนขึ้น/ปิดไม่ได้         | "3. แผนบัญชี"              |
    | การ์ดชิดหรือห่างเกินไป                 | "4. การ์ดและหมวด"           |
    | ช่องกรอก/ปุ่มเล็กเกินแตะ               | "5. ช่องกรอกและปุ่ม"        |
+   | เลือกประเภทสัญญาไม่ขึ้น/แผนไม่เปิด      | "5c. ตัวเลือกประเภทสัญญา"   |
    | ผลการตรวจอ่านยาก/อนิเมชันผลลัพธ์        | "6. ผลการตรวจ"             |
    | ปุ่มเติมเครดิตแน่นหรือสีไม่เข้ากัน       | "7. เติมเครดิต"            |
    | เอฟเฟกต์รบกวนการอ่าน/อยากปิด            | "8. เอฟเฟกต์ (ปิดได้ที่นี่)" |
@@ -339,6 +340,150 @@ textarea{
   box-shadow:0 0 0 3px var(--focus);
 }
 .select-wrap option{background:var(--card);color:var(--text)}
+
+/* ---------- 5c. ตัวเลือกประเภทสัญญา (ปุ่มและแผนจากด้านล่าง, มือถือเท่านั้น) ----------
+   ค่าจริงยังอยู่ที่ <select id="contractType"> ซึ่งซ่อนเมื่อ JS เปิดใช้ (html.ct-ready)
+   ถ้าอยากกลับไปใช้ select มาตรฐาน ลบ JS ของตัวเลือกใน index.html ได้ */
+[hidden]{display:none !important}
+html.ct-ready .select-wrap{display:none}
+
+.ct-ico{
+  display:grid;
+  place-items:center;
+  flex:none;
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  background:var(--ghost);
+  border:1px solid var(--card-edge);
+  color:var(--gold);
+}
+.ct-ico svg{width:22px;height:22px}
+.ct-txt{display:flex;flex-direction:column;min-width:0;gap:2px}
+.ct-txt b{font-size:.95rem;font-weight:600;color:var(--text)}
+.ct-txt small{font-size:.78rem;line-height:1.4;color:var(--muted)}
+
+.ct-trigger{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  min-height:64px;
+  padding:10px 16px 10px 12px;
+  text-align:left;
+  font:inherit;
+  color:var(--text);
+  background:var(--item);
+  border:1px solid var(--gold-deep);
+  border-radius:16px;
+  box-shadow:0 8px 22px rgba(229,196,119,.1);
+  cursor:pointer;
+}
+.ct-trigger .ct-ico{border-color:var(--gold-deep)}
+.ct-trigger .ct-txt{flex:1}
+.ct-trigger:active{transform:scale(.99)}
+.ct-chev{
+  flex:none;
+  width:8px;
+  height:8px;
+  margin-right:6px;
+  border-right:2px solid var(--gold);
+  border-bottom:2px solid var(--gold);
+  transform:rotate(45deg);
+}
+
+/* แผนจากด้านล่าง ใช้แบบเดียวกับแผนบัญชี */
+.ct-sheet{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:50;
+  max-height:82vh;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  background:var(--card);
+  border:1px solid var(--card-edge);
+  border-bottom:none;
+  border-radius:24px 24px 0 0;
+  padding:10px var(--m-page-x) calc(22px + env(safe-area-inset-bottom));
+  box-shadow:0 -16px 40px rgba(0,0,0,.5);
+  transform:translateY(102%);
+  visibility:hidden;
+  transition:transform .4s cubic-bezier(.2,.8,.2,1), visibility .4s;
+}
+body.ct-open{overflow:hidden}
+body.ct-open .ct-sheet{transform:none;visibility:visible}
+body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
+.ct-grip{
+  width:44px;
+  height:4px;
+  border-radius:2px;
+  background:var(--border);
+  margin:0 auto 12px;
+}
+.ct-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+}
+.ct-head h3{
+  margin:0;
+  font-family:'Noto Serif Thai',Georgia,serif;
+  font-size:1.05rem;
+  font-weight:700;
+  color:var(--text);
+}
+.ct-close{
+  display:grid;
+  place-items:center;
+  width:44px;
+  height:44px;
+  padding:0;
+  border:none;
+  border-radius:50%;
+  background:var(--ghost);
+  color:var(--text);
+  font-size:.95rem;
+  line-height:1;
+}
+.ct-list{list-style:none;margin:0;padding:0 0 4px;display:grid;gap:8px}
+.ct-list li{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-height:64px;
+  padding:10px 14px 10px 10px;
+  border:1px solid var(--card-edge);
+  border-radius:16px;
+  background:var(--item);
+  cursor:pointer;
+  transition:border-color .2s, box-shadow .2s;
+}
+.ct-list li:active{transform:scale(.99)}
+.ct-list li:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.ct-list li.is-on{
+  border-color:var(--gold);
+  box-shadow:0 0 0 1px var(--gold-deep) inset;
+}
+.ct-tick{
+  flex:none;
+  margin-left:auto;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  border:1px solid var(--border);
+}
+.ct-list li.is-on .ct-tick{
+  background:var(--gold);
+  border-color:var(--gold);
+  box-shadow:inset 0 0 0 5px var(--card);
+}
+@media (prefers-reduced-motion: reduce){
+  .ct-sheet{transition:none}
+}
 
 /* ---------- 6. ผลการตรวจ ---------- */
 #result{min-height:72px}
