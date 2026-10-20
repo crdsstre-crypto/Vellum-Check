@@ -1,109 +1,172 @@
-/* =====================================================
-   mobile.css — ปรับหน้าจอสำหรับมือถือ (ความกว้างต่ำกว่า 768px)
-   ไฟล์นี้โหลดหลัง style.css และถูกจำกัดด้วย media query ใน index.html
-   ปิดได้ทันทีด้วยการลบบรรทัด <link href="mobile.css"> บรรทัดเดียว
-   ไม่เปลี่ยนสี และไม่ซ่อน/แสดงองค์ประกอบ (กันชนกับ [hidden] และ script.js)
-   ===================================================== */
+/* =========================================================
+   mobile.css: ใช้เฉพาะจอต่ำกว่า 768px
+   โหลดจาก index.html ด้วย media="(max-width: 767px)"
+   - ไม่เปลี่ยนสี (สีอยู่ที่ themes.css)
+   - แก้เฉพาะการจัดวาง ขนาด และระยะบนมือถือ
 
-/* 1) พื้นที่ปลอดภัยของ iPhone (รอยบาก/ขอบล่าง) */
-body {
-  padding-left: env(safe-area-inset-left, 0px);
-  padding-right: env(safe-area-inset-right, 0px);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+   ดัชนีแก้ปัญหาเร็ว:
+   1. Header และปุ่มบัญชีมุมขวาบน          → "1. Header"
+   2. แผนบัญชีจากด้านล่าง (ตอนกดปุ่มบัญชี)   → "2. แผนบัญชี"
+   3. การ์ดและระยะห่าง                      → "3. การ์ด"
+   4. ช่องกรอกและปุ่ม (ขนาดแตะได้)           → "4. ช่องกรอกและปุ่ม"
+   5. ผลการตรวจ                            → "5. ผลการตรวจ"
+   6. ส่วนเติมเครดิต                        → "6. เติมเครดิต"
+   7. Footer                              → "7. Footer"
+   ========================================================= */
+
+/* ---------- ตั้งค่าทั่วไป ---------- */
+html,body{overflow-x:hidden}
+button{-webkit-tap-highlight-color:transparent}
+svg{max-width:100%}
+
+/* ---------- 1. Header และปุ่มบัญชี ---------- */
+header{
+  position:sticky;
+  top:0;
+  z-index:40;
+  padding:0;
+  text-align:left;
+  background:rgba(8,9,11,.94);
+  -webkit-backdrop-filter:blur(12px);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(229,196,119,.28);
+}
+.topbar{
+  justify-content:space-between;
+  padding:12px 16px;
+}
+.brand{flex-direction:row;gap:10px}
+.brand-logo{width:32px;height:32px}
+.brand-name{font-size:.7rem;letter-spacing:.24em}
+
+/* ปุ่มบัญชีมุมขวาบน */
+.auth-toggle{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  min-height:40px;
+  padding:8px 16px;
+  border-radius:999px;
+  background:transparent;
+  border:1px solid var(--gold-deep);
+  color:var(--gold-soft);
+  font-size:.88rem;
+  font-weight:600;
+  white-space:nowrap;
+}
+.auth-toggle:active{background:rgba(229,196,119,.12)}
+.auth-toggle-in{display:none}
+body:has(#authLoggedIn:not([hidden])) .auth-toggle-out{display:none}
+body:has(#authLoggedIn:not([hidden])) .auth-toggle-in{display:inline}
+
+.hero{padding:6px 16px 18px}
+.hero h1{font-size:1.4rem;margin:0}
+.hero p{font-size:.86rem;margin-top:4px}
+
+/* ---------- 2. แผนบัญชีจากด้านล่าง ---------- */
+body.auth-open{overflow:hidden}
+
+.sheet-backdrop{
+  display:block;
+  position:fixed;
+  inset:0;
+  z-index:45;
+  background:rgba(0,0,0,.6);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .3s ease;
+}
+body.auth-open .sheet-backdrop{opacity:1;pointer-events:auto}
+
+#authCard{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:50;
+  margin:0;
+  max-height:88vh;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  border-radius:22px 22px 0 0;
+  border-bottom:none;
+  padding:10px 18px calc(22px + env(safe-area-inset-bottom));
+  transform:translateY(102%);
+  visibility:hidden;
+  transition:transform .32s cubic-bezier(.2,.8,.2,1), visibility .32s;
+}
+#authCard::before{
+  content:"";
+  display:block;
+  width:44px;
+  height:4px;
+  border-radius:2px;
+  background:var(--border);
+  margin:0 auto 14px;
+}
+body.auth-open #authCard{transform:none;visibility:visible}
+
+.sheet-close{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:absolute;
+  top:14px;
+  right:14px;
+  width:36px;
+  height:36px;
+  padding:0;
+  border-radius:50%;
+  background:var(--ghost);
+  color:var(--text);
+  font-size:.95rem;
+  line-height:1;
 }
 
-/* 2) กันข้อความล้นจอแนวนอน */
-main, .card, .item, blockquote, p {
-  overflow-wrap: anywhere;
+/* ---------- 3. การ์ดและระยะห่าง ---------- */
+main{padding:14px 14px 8px}
+.card{
+  padding:18px 16px;
+  border-radius:14px;
+  margin-bottom:12px;
 }
-img, audio, video {
-  max-width: 100%;
+h2{font-size:1rem;margin-bottom:12px}
+
+/* ---------- 4. ช่องกรอกและปุ่ม ---------- */
+input[type="email"],
+input[type="password"],
+textarea{
+  font-size:16px; /* ป้องกัน iOS ซูมอัตโนมัติเมื่อแตะ */
+  padding:13px 14px;
+}
+input[type="email"],
+input[type="password"]{min-height:48px}
+textarea{min-height:180px}
+
+.btns{flex-direction:column;gap:10px;margin-top:14px}
+.btns button{
+  width:100%;
+  min-height:48px;
+  font-size:1rem;
 }
 
-/* 3) ขนาดตัวอักษรและระยะห่างที่อ่านสบายบนจอเล็ก */
-body {
-  font-size: 16px;
-  line-height: 1.6;
-}
-h2 {
-  font-size: 1.15rem;
-  margin-bottom: 12px;
-}
-.card {
-  padding: 16px;
-  margin-bottom: 14px;
-  border-radius: 16px;
-}
+.voice-opt{padding:6px 0;font-size:.9rem}
 
-/* 4) ช่องกรอกต้องไม่ทำให้ iPhone ซูมเข้า (ต้อง 16px ขึ้นไป) */
-input[type=password],
-input[type=email],
-input[type=text],
-textarea {
-  font-size: 16px;
-  min-height: 44px;
-}
-textarea {
-  min-height: 160px;
-}
+/* ---------- 5. ผลการตรวจ ---------- */
+.summary{gap:8px;margin-bottom:12px}
+.badge{padding:5px 12px;font-size:.8rem}
+.item{padding:13px 14px;border-radius:10px}
+.item h3{font-size:.98rem}
+.item .snippet{font-size:.86rem}
+.empty{padding:22px 8px}
 
-/* 5) ปุ่มกดง่ายด้วยนิ้ว: สูงอย่างน้อย 44px และเต็มความกว้าง */
-button {
-  min-height: 44px;
-  padding: 10px 16px;
-}
-.btns {
-  flex-direction: column;
-  gap: 10px;
-}
-.btns button {
-  width: 100%;
-}
+/* ---------- 6. เติมเครดิต ---------- */
+#packageButtons{flex-direction:column}
+#packageButtons button{width:100%;min-height:48px}
 
-/* 6) ช่องติ๊กเสียงสรุปต้องกดง่าย */
-.voice-opt {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 44px;
-  padding: 6px 0;
+/* ---------- 7. Footer ---------- */
+footer{
+  padding:18px 16px calc(28px + env(safe-area-inset-bottom));
+  font-size:.8rem;
 }
-.voice-opt input[type=checkbox] {
-  width: 22px;
-  height: 22px;
-  flex-shrink: 0;
-}
-
-/* 7) ยอดคงเหลือให้ตัดบรรทัดได้โดยไม่ทับกัน */
-.credits {
-  font-size: 0.95rem;
-  line-height: 1.7;
-}
-
-/* 8) ผลตรวจ: เครื่องเล่นเสียงเต็มความกว้าง และหัวข้อแต่ละประเด็นอ่านง่าย */
-audio {
-  width: 100%;
-  margin-bottom: 12px;
-}
-.item summary {
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-}
-.item {
-  padding: 12px 0;
-}
-blockquote {
-  margin: 10px 0;
-  padding: 10px 12px;
-}
-
-/* 9) ส่วนเติมเครดิต: ปุ่มแพ็กเกจเรียงเป็นคอลัมน์ เต็มความกว้าง */
-#packageButtons button {
-  width: 100%;
-  text-align: left;
-  padding: 12px 16px;
-}
-#paymentResult img {
-  max-width: 260px;
-}
+.disclaimer{font-size:.8rem}
