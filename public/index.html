@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0a0a0a">
-<title>เช็กสัญญา</title>
+<meta name="theme-color" content="#08090b">
+<title>เช็กสัญญา | Vellum Check</title>
 
 <!-- ฟอนต์ -->
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
@@ -15,12 +15,22 @@
 <link rel="stylesheet" href="mobile.css" media="(max-width: 767px)">
 </head>
 <body>
+
 <header>
-  <h1>🔍 เช็กสัญญา</h1>
-  <p>วางข้อความสัญญา ระบบจะไฮไลต์จุดที่ควรระวัง</p>
+  <div class="brand">
+    <svg class="brand-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 3l7 3v5c0 4.5-3 8.2-7 9.5C8 19.2 5 15.5 5 11V6l7-3z"/>
+      <path d="M9 12l2 2 4-4"/>
+    </svg>
+    <span class="brand-name">Vellum Check</span>
+  </div>
+  <h1>เช็กสัญญา</h1>
+  <p>ตรวจสัญญาอย่างมั่นใจ · วางข้อความสัญญา ระบบจะไฮไลต์จุดที่ควรระวัง</p>
 </header>
 
 <main>
+
+  <!-- 0. บัญชีผู้ใช้ -->
   <section class="card" id="authCard">
     <h2>0. บัญชีผู้ใช้</h2>
     <div id="authLoggedOut">
@@ -39,6 +49,7 @@
     <p class="disclaimer" id="authMsg"></p>
   </section>
 
+  <!-- 1. วางข้อความสัญญา -->
   <section class="card">
     <h2>1. วางข้อความสัญญา</h2>
     <textarea id="input" placeholder="วางข้อความสัญญาที่นี่..."></textarea>
@@ -50,19 +61,22 @@
     <p class="disclaimer">* เครื่องมือนี้ช่วยคัดกรองเบื้องต้นเท่านั้น ไม่ใช่คำปรึกษาทางกฎหมาย ควรให้ทนายตรวจก่อนลงนามในสัญญาสำคัญ</p>
   </section>
 
+  <!-- 2. ผลการตรวจ -->
   <section class="card" id="resultCard">
     <h2>2. ผลการตรวจ</h2>
     <div id="result"><p class="empty">ยังไม่มีผลการตรวจ</p></div>
   </section>
 
+  <!-- 3. เติมเครดิต (ซ่อนจนกว่าจะล็อกอิน) -->
   <section class="card" id="paymentCard" hidden>
     <h2>3. เติมเครดิต (PromptPay)</h2>
     <div id="packageButtons" class="btns"></div>
     <div id="paymentResult"></div>
   </section>
+
 </main>
 
-<footer>เครื่องมือช่วยคัดกรองเบื้องต้น</footer>
+<footer>เครื่องมือช่วยคัดกรองเบื้องต้น · Vellum Check</footer>
 
 <script src="script.js"></script>
 <script src="pay-ui.js"></script>
