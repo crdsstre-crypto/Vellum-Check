@@ -1,54 +1,58 @@
 /* =========================================================
    themes.css: สีและธีมทั้งหมดอยู่ที่นี่ที่เดียว
-   ธีมปัจจุบัน: Black Label (ดำ + ทอง) ใช้ทุกจอ
+   ธีมปัจจุบัน: Vellum Black Label (Obsidian + Champagne Gold) ใช้ทุกจอ
 
-   วิธีแก้สีอย่างรวดเร็ว:
-   - เปลี่ยนโทนทอง            → แก้ --gold และ --gold-soft
-   - เปลี่ยนพื้นหลัง            → แก้ --bg, --card, --item
-   - เปลี่ยนสีระดับความเสี่ยง    → แก้กลุ่ม "ระดับความเสี่ยง"
-   - กลับไปธีมสว่าง             → ตั้ง data-theme="light" ที่ <html>
+   แก้สีที่พบบ่อย:
+   - โทนทองทั้งหมด                 → --gold, --gold-soft, --gold-deep
+   - พื้นหลังหน้า                    → --bg
+   - พื้นการ์ด                       → --card
+   - ช่องกรอกข้อความ                 → --field
+   - ระดับความเสี่ยงในผลตรวจ         → กลุ่ม "ระดับความเสี่ยง"
+   - กลับไปธีมสว่าง                  → ตั้ง data-theme="light" ที่ <html>
    ========================================================= */
 
-/* ---------- 1. ธีมหลัก (Black Label) ---------- */
+/* ---------- 1. ธีมหลัก (Vellum Black Label) ---------- */
 :root{
   color-scheme:dark;
 
   /* พื้นหลังและการ์ด */
-  --bg:#0a0a0a;
-  --card:#141414;
-  --card-edge:#262626;
-  --item:#1a1a1a;
-  --border:#333333;
-  --ghost:#262626;
-  --shadow:0 4px 18px rgba(0,0,0,.55);
+  --bg:#08090b;
+  --card:#15171c;
+  --card-edge:rgba(255,255,255,.07);
+  --item:#1b1d23;
+  --field:#101216;
+  --border:#2b2e36;
+  --ghost:#202126;
+  --shadow:0 12px 32px rgba(0,0,0,.55);
 
   /* ตัวอักษร */
-  --text:#f5f5f4;
-  --muted:#a3a3a3;
+  --text:#f2f2f3;
+  --muted:#8b8e98;
 
-  /* สีหลัก (ทอง) */
-  --gold:#d4af37;
-  --gold-soft:#f1d98a;
-  --on-gold:#0a0a0a;
-  --focus:#d4af37;
+  /* สีเน้น (Champagne Gold) ใช้เฉพาะจุดสำคัญเท่านั้น ประมาณ 5% ของหน้า */
+  --gold:#e5c477;
+  --gold-soft:#f3dca0;
+  --gold-deep:#b8924a;
+  --on-gold:#08090b;
+  --focus:rgba(229,196,119,.55);
 
   /* ระดับความเสี่ยง (ค่าใน JSON: high = ควรตรวจละเอียด, mid = ควรระวัง, low = เสี่ยงต่ำ) */
-  --high:#2a1111;  --highText:#fca5a5;  --highBorder:#dc2626;
-  --mid:#2a2210;   --midText:#fcd34d;   --midBorder:#d4af37;
-  --low:#0f1f2b;   --lowText:#93c5fd;   --lowBorder:#3b82f6;
+  --high:#2a1417;  --highText:#f7a6ab;  --highBorder:#e5484d;
+  --mid:#2a2312;   --midText:#f5d68a;   --midBorder:#e0a526;
+  --low:#11202a;   --lowText:#9fd3ee;   --lowBorder:#4a9fd0;
 
   /* สถานะและไฮไลต์ */
-  --ok:#86efac;
-  --warn:#fcd34d;
-  --mark:rgba(212,175,55,.35);
-  --markText:#fff7d6;
+  --ok:#7ee2a8;
+  --warn:#f5d68a;
+  --mark:rgba(229,196,119,.28);
+  --markText:#fff6dc;
 
   /* รูปทรง */
-  --radius-card:14px;
-  --radius-btn:10px;
+  --radius-card:16px;
+  --radius-btn:12px;
 }
 
-/* ---------- 2. ธีมสว่างเดิม (ใช้เมื่อตั้ง data-theme="light") ---------- */
+/* ---------- 2. ธีมสว่าง (ใช้เมื่อตั้ง data-theme="light") ---------- */
 :root[data-theme="light"]{
   color-scheme:light;
 
@@ -56,6 +60,7 @@
   --card:#ffffff;
   --card-edge:#e5e7eb;
   --item:#fafafa;
+  --field:#ffffff;
   --border:#d1d5db;
   --ghost:#e5e7eb;
   --shadow:0 2px 8px rgba(0,0,0,.06);
@@ -65,8 +70,9 @@
 
   --gold:#2563eb;
   --gold-soft:#3b82f6;
+  --gold-deep:#1d4ed8;
   --on-gold:#ffffff;
-  --focus:#2563eb;
+  --focus:rgba(37,99,235,.45);
 
   --high:#fee2e2;  --highText:#991b1b;  --highBorder:#dc2626;
   --mid:#fef3c7;   --midText:#92400e;   --midBorder:#f59e0b;
