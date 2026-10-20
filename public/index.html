@@ -1,18 +1,25 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="th" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0a0a">
 <title>เช็กสัญญา</title>
+
+<!-- ฟอนต์ -->
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+
+<!-- ลำดับการโหลด CSS สำคัญ: themes (สี) → style (ทุกจอ) → mobile (เฉพาะมือถือ) -->
+<link rel="stylesheet" href="themes.css">
 <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="mobile.css" media="(max-width: 767px)">
+<link rel="stylesheet" href="mobile.css" media="(max-width: 767px)">
 </head>
 <body>
 <header>
   <h1>🔍 เช็กสัญญา</h1>
   <p>วางข้อความสัญญา ระบบจะไฮไลต์จุดที่ควรระวัง</p>
 </header>
+
 <main>
   <section class="card" id="authCard">
     <h2>0. บัญชีผู้ใช้</h2>
@@ -31,6 +38,7 @@
     </div>
     <p class="disclaimer" id="authMsg"></p>
   </section>
+
   <section class="card">
     <h2>1. วางข้อความสัญญา</h2>
     <textarea id="input" placeholder="วางข้อความสัญญาที่นี่..."></textarea>
@@ -41,16 +49,19 @@
     </div>
     <p class="disclaimer">* เครื่องมือนี้ช่วยคัดกรองเบื้องต้นเท่านั้น ไม่ใช่คำปรึกษาทางกฎหมาย ควรให้ทนายตรวจก่อนลงนามในสัญญาสำคัญ</p>
   </section>
+
   <section class="card" id="resultCard">
     <h2>2. ผลการตรวจ</h2>
     <div id="result"><p class="empty">ยังไม่มีผลการตรวจ</p></div>
   </section>
+
   <section class="card" id="paymentCard" hidden>
     <h2>3. เติมเครดิต (PromptPay)</h2>
     <div id="packageButtons" class="btns"></div>
     <div id="paymentResult"></div>
   </section>
 </main>
+
 <footer>เครื่องมือช่วยคัดกรองเบื้องต้น</footer>
 
 <script src="script.js"></script>
