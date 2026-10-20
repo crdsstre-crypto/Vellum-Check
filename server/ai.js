@@ -130,3 +130,48 @@ export async function analyzeContract(text, contractType = 'unsure') {
 
   return extractJson(raw);
 }
+
+// ถอดข้อความจากรูปภาพเอกสารสัญญา (ใช้กับไฟล์ JPG, PNG, WEBP)
+export async function transcribeImage(base64, mediaType) {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    throw new Error('ANTHROPIC_API_KEY is not set');
+  }
+
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+    },
+    body: JSON.stringify({
+      model: MODEL,
+      max_tokens: MAX_TOKENS,
+      system: 'คุณถอดข้อความจากภาพเอกสารสัญญา ตอบเฉพาะข้อความที่เห็นในภาพตามตัวอักษรและลำดับเดิม ห้ามสรุป ห้ามแปล ห้ามใส่คำอธิบายหรือคำนำ ถ้าอ่านไม่ออกหรือไม่ใช่เอกสาร ให้ตอบเป็นค่าว่าง',
+      messages: [{
+        role: 'user',
+        content: [
+          { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64 } },
+          { type: 'text', text: 'ถอดข้อความจากภาพนี้' },
+        ],
+      }],
+    }),
+  });
+
+  if (!res.ok) {
+    throw new Error(`AI image request failed with status ${res.status}`);
+  }
+
+  const data = await res.json();
+  if (data.stop_reason === 'max_tokens') {
+    throw new Error('AI image transcription was cut off by max_tokens');
+  }
+
+  return (data.content || [])
+    .filter(block => block.type === 'text')
+    .map(block => block.text)
+    .join('')
+    .trim();
+}
+
