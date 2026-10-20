@@ -342,8 +342,9 @@ textarea{
 .select-wrap option{background:var(--card);color:var(--text)}
 
 /* ---------- 5c. ตัวเลือกประเภทสัญญา (ปุ่มและแผนจากด้านล่าง, มือถือเท่านั้น) ----------
-   ค่าจริงยังอยู่ที่ <select id="contractType"> ซึ่งซ่อนเมื่อ JS เปิดใช้ (html.ct-ready)
-   ถ้าอยากกลับไปใช้ select มาตรฐาน ลบ JS ของตัวเลือกใน index.html ได้ */
+   ค่าจริงอยู่ที่ <select id="contractType"> ซึ่งซ่อนเมื่อ JS เปิดใช้ (html.ct-ready)
+   หัวแผนกับปุ่มปิดอยู่กับที่ มีเพียงรายการที่เลื่อนได้
+   ปิดการใช้: ลบ class ct-ready ออกจาก <html> หรือลบ JS ของตัวเลือกใน index.html */
 [hidden]{display:none !important}
 html.ct-ready .select-wrap{display:none}
 
@@ -363,6 +364,7 @@ html.ct-ready .select-wrap{display:none}
 .ct-txt b{font-size:.95rem;font-weight:600;color:var(--text)}
 .ct-txt small{font-size:.78rem;line-height:1.4;color:var(--muted)}
 
+/* ปุ่มบนหน้าหลัก */
 .ct-trigger{
   display:flex;
   align-items:center;
@@ -392,21 +394,23 @@ html.ct-ready .select-wrap{display:none}
   transform:rotate(45deg);
 }
 
-/* แผนจากด้านล่าง ใช้แบบเดียวกับแผนบัญชี */
+/* แผน: หัวอยู่กับที่ รายการเลื่อนได้ */
 .ct-sheet{
   position:fixed;
   left:0;
   right:0;
   bottom:0;
   z-index:50;
-  max-height:82vh;
-  overflow-y:auto;
-  -webkit-overflow-scrolling:touch;
+  display:flex;
+  flex-direction:column;
+  max-height:80vh;
+  max-height:80dvh;
+  overflow:hidden;
+  padding-top:10px;
   background:var(--card);
   border:1px solid var(--card-edge);
   border-bottom:none;
   border-radius:24px 24px 0 0;
-  padding:10px var(--m-page-x) calc(22px + env(safe-area-inset-bottom));
   box-shadow:0 -16px 40px rgba(0,0,0,.5);
   transform:translateY(102%);
   visibility:hidden;
@@ -416,18 +420,21 @@ body.ct-open{overflow:hidden}
 body.ct-open .ct-sheet{transform:none;visibility:visible}
 body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
 .ct-grip{
+  flex:none;
   width:44px;
   height:4px;
   border-radius:2px;
   background:var(--border);
-  margin:0 auto 12px;
+  margin:0 auto 10px;
 }
 .ct-head{
+  flex:none;
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:12px;
-  margin-bottom:12px;
+  padding:0 var(--m-page-x);
+  margin-bottom:10px;
 }
 .ct-head h3{
   margin:0;
@@ -449,25 +456,37 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
   font-size:.95rem;
   line-height:1;
 }
-.ct-list{list-style:none;margin:0;padding:0 0 4px;display:grid;gap:8px}
+.ct-list{
+  flex:1 1 auto;
+  min-height:0;
+  list-style:none;
+  margin:0;
+  padding:0 var(--m-page-x) calc(16px + env(safe-area-inset-bottom));
+  display:grid;
+  gap:6px;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+}
 .ct-list li{
   display:flex;
   align-items:center;
-  gap:12px;
-  min-height:64px;
-  padding:10px 14px 10px 10px;
+  gap:10px;
+  padding:8px 12px 8px 8px;
   border:1px solid var(--card-edge);
-  border-radius:16px;
+  border-radius:14px;
   background:var(--item);
   cursor:pointer;
-  transition:border-color .2s, box-shadow .2s;
+  transition:border-color .2s, background .2s;
 }
 .ct-list li:active{transform:scale(.99)}
 .ct-list li:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+/* รายการที่เลือก: พื้นทองเข้มจาง ขอบทอง และเครื่องหมายถูก */
 .ct-list li.is-on{
   border-color:var(--gold);
-  box-shadow:0 0 0 1px var(--gold-deep) inset;
+  background:linear-gradient(145deg,#2b2513,#15130c);
 }
+.ct-list li.is-on .ct-txt b{color:var(--gold-soft)}
 .ct-tick{
   flex:none;
   margin-left:auto;
@@ -479,10 +498,13 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
 .ct-list li.is-on .ct-tick{
   background:var(--gold);
   border-color:var(--gold);
-  box-shadow:inset 0 0 0 5px var(--card);
+  box-shadow:inset 0 0 0 5px #15130c;
+  animation:ctTick .25s ease both; /* เล่นครั้งเดียวตอนเลือก ไม่วนซ้ำ */
 }
+@keyframes ctTick{from{transform:scale(.6);opacity:.4}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion: reduce){
   .ct-sheet{transition:none}
+  .ct-list li.is-on .ct-tick{animation:none}
 }
 
 /* ---------- 6. ผลการตรวจ ---------- */
