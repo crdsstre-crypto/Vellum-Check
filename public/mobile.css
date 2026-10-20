@@ -658,6 +658,24 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
 .ct-grip{cursor:grab}
 .ct-head{touch-action:none}
 
+/* ---------- 5f. ปุ่มประเภทที่ใช้บ่อยบนหน้าหลัก (รอบ 11) ---------- */
+.ct-quick{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  margin:10px 0 0;
+  padding:2px 0 4px;
+}
+.ct-quick::-webkit-scrollbar{display:none}
+.ct-quick .ct-chip{flex:none}
+.ct-chip.is-on{
+  border-color:var(--gold-deep);
+  background:rgba(229,196,119,.1);
+  color:var(--gold-soft);
+}
+
 /* ---------- 6. ผลการตรวจ ---------- */
 #result{min-height:72px}
 .empty{padding:12px 8px 2px;font-size:.92rem}
