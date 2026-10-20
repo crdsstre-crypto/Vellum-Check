@@ -510,7 +510,11 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
   cursor:pointer;
   transition:border-color .2s, background .2s;
 }
-.ct-list li:active{transform:scale(.99)}
+.ct-list li:active{
+  transform:scale(.98);
+  border-color:var(--gold-deep);
+  background:rgba(229,196,119,.06);
+}
 .ct-list li:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 /* รายการที่เลือก: ไฮไลต์เหลืองอ่อนแบบไม่แสบตา ขอบทองจาง และเครื่องหมายถูก */
 .ct-list li.is-on{
