@@ -237,7 +237,13 @@ async function runCheck() {
   renderEmpty(CONFIG.messages.loading);
 
   try {
-    const r = await api(CONFIG.api.check, 'POST', { text, voice: els.voiceOpt?.checked === true });
+    // ประเภทสัญญาเป็นตัวเลือกเสริม ถ้าไม่มีในหน้าให้ส่ง "unsure" (ระบบพิจารณาเอง)
+    const contractType = document.getElementById('contractType')?.value || 'unsure';
+    const r = await api(CONFIG.api.check, 'POST', {
+      text,
+      voice: els.voiceOpt?.checked === true,
+      contractType,
+    });
 
     if (typeof r.data.credits === 'number') showCredits(r.data.credits, r.data.voiceCredits);
 
