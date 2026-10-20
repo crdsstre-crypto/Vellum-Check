@@ -72,6 +72,7 @@ function cleanResult(raw, sourceText) {
     },
     risk_counts: counts,
     items,
+    detected_type: typeof raw?.detected_type === 'string' && CONTRACT_TYPES.has(raw.detected_type) ? raw.detected_type : 'unsure',
     missing_info: Array.isArray(raw?.missing_info)
       ? raw.missing_info.filter(x => typeof x === 'string').slice(0, 20)
       : [],
