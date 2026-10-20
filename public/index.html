@@ -12,7 +12,7 @@
 <!-- ลำดับการโหลด CSS: themes (สี) → style (ทุกจอ) → mobile (เฉพาะจอต่ำกว่า 768px) -->
 <link rel="stylesheet" href="themes.css">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="mobile.css?v=9j" media="(max-width: 767px)">
+<link rel="stylesheet" href="mobile.css?v=9k" media="(max-width: 767px)">
 </head>
 <body>
 
@@ -118,12 +118,7 @@
         <span class="ct-chev" aria-hidden="true"></span>
       </button>
       <button type="button" class="ct-reset" id="ctReset" hidden>ล้างการเลือก</button>
-      <div class="ct-quick" id="ctQuick" role="group" aria-label="ประเภทที่ใช้บ่อย" hidden>
-        <button type="button" class="ct-chip" data-v="rent">สัญญาเช่า</button>
-        <button type="button" class="ct-chip" data-v="sale">สัญญาซื้อขาย</button>
-        <button type="button" class="ct-chip" data-v="employment">สัญญาจ้างงาน</button>
-        <button type="button" class="ct-chip" data-v="loan">สัญญากู้ยืม</button>
-      </div>
+      <div class="ct-quick" id="ctQuick" role="group" aria-label="ประเภทที่ใช้บ่อย" hidden></div>
       <div class="select-wrap">
         <select id="contractType" name="contractType">
           <option value="unsure" selected>ไม่แน่ใจ (ระบบจะดูจากข้อความให้เอง)</option>
@@ -138,7 +133,10 @@
         </select>
       </div>
     </div>
-    <textarea id="input" placeholder="วางข้อความสัญญาที่นี่..."></textarea>
+    <div class="ta-wrap">
+      <textarea id="input" placeholder="วางข้อความสัญญาที่นี่..."></textarea>
+      <button type="button" class="ta-clear" id="taClear" aria-label="ล้างข้อความ" hidden>✕</button>
+    </div>
     <p class="hint">แนะนำ: วางเฉพาะข้อความสัญญาที่ต้องการตรวจ ไม่ต้องใส่ข้อมูลส่วนตัวที่ไม่จำเป็น</p>
     <label class="voice-opt"><input type="checkbox" id="voiceOpt"> สรุปเป็นเสียง (ใช้เครดิตเสียง 1 ครั้ง)</label>
     <div class="btns">
@@ -357,6 +355,7 @@
   // เลือกแล้ว: สั่นเบา ๆ (เฉพาะอุปกรณ์ที่รองรับ เช่น Android) แสดงตัวเลือกที่เลือกแป๊บหนึ่งแล้วปิดแผนเอง
   function choose(v) {
     pushRecent(v);
+    if (typeof renderQuick === 'function' && quick) renderQuick();
     select.value = v;
     select.dispatchEvent(new Event('change', { bubbles: true }));
     refresh();
@@ -372,6 +371,8 @@
     if (mq.matches) {
       if (!built) build();
       refresh();
+      renderQuick();
+      syncTaClear();
       root.classList.add('ct-ready');
       trigger.hidden = false;
       sheet.hidden = false;
@@ -389,13 +390,50 @@
     search.value = '';
     filter();
   });
-  // ปุ่มประเภทที่ใช้บ่อย: เลือกจากหน้าหลักได้เลย ไม่ต้องเปิดแผน
-  Array.prototype.forEach.call(quick.querySelectorAll('.ct-chip'), function (b) {
-    b.addEventListener('click', function () {
-      select.value = b.dataset.v;
-      select.dispatchEvent(new Event('change', { bubbles: true }));
-      refresh();
+  // ปุ่มประเภทที่ใช้บ่อยบนหน้าหลัก: ประเภทที่ใช้ล่าสุดขึ้นก่อน แล้วเติมด้วยประเภทยอดนิยม รวมไม่เกิน 4 ปุ่ม
+  var QUICK_DEFAULT = ['rent', 'sale', 'employment', 'loan'];
+  function renderQuick() {
+    var valid = function (v) { return v !== 'unsure' && select.querySelector('option[value="' + v + '"]'); };
+    var list = [];
+    getRecent().forEach(function (v) { if (valid(v) && list.indexOf(v) === -1) list.push(v); });
+    QUICK_DEFAULT.forEach(function (v) { if (valid(v) && list.indexOf(v) === -1) list.push(v); });
+    list = list.slice(0, 4);
+    quick.innerHTML = '';
+    list.forEach(function (v) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ct-chip';
+      b.dataset.v = v;
+      b.textContent = parse(select.querySelector('option[value="' + v + '"]').textContent).name;
+      quick.appendChild(b);
     });
+    quick.hidden = !mq.matches || list.length === 0;
+    refresh();
+  }
+  quick.addEventListener('click', function (e) {
+    var b = e.target.closest('.ct-chip');
+    if (!b) return;
+    choose(b.dataset.v);
+  });
+
+  // ช่องวางข้อความ: ปุ่มล้างมุมขวาบน และเมื่อวางข้อความ ให้ปุ่มตรวจสว่างขึ้นและเลื่อนลงไปหา
+  var taClear = document.getElementById('taClear');
+  var input = document.getElementById('input');
+  var checkBtnEl = document.getElementById('checkBtn');
+  function syncTaClear() { taClear.hidden = !(mq.matches && input.value.trim()); }
+  input.addEventListener('input', syncTaClear);
+  input.addEventListener('paste', function () {
+    setTimeout(function () {
+      syncTaClear();
+      if (!mq.matches || !input.value.trim()) return;
+      checkBtnEl.classList.add('is-ready');
+      checkBtnEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(function () { checkBtnEl.classList.remove('is-ready'); }, 2500);
+    }, 50);
+  });
+  taClear.addEventListener('click', function () {
+    document.getElementById('clearBtn').click();
+    syncTaClear();
   });
   resetBtn.addEventListener('click', function () {
     select.value = 'unsure';
