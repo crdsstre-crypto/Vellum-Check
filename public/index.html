@@ -2,36 +2,52 @@
 <html lang="th" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#08090b">
 <title>เช็กสัญญา | Vellum Check</title>
 
 <!-- ฟอนต์ -->
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
 
-<!-- ลำดับการโหลด CSS สำคัญ: themes (สี) → style (ทุกจอ) → mobile (เฉพาะมือถือ) -->
+<!-- ลำดับการโหลด CSS: themes (สี) → style (ทุกจอ) → mobile (เฉพาะจอต่ำกว่า 768px) -->
 <link rel="stylesheet" href="themes.css">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="mobile.css" media="(max-width: 767px)">
 </head>
 <body>
 
-<header>
-  <div class="brand">
-    <svg class="brand-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true">
-      <path d="M12 3l7 3v5c0 4.5-3 8.2-7 9.5C8 19.2 5 15.5 5 11V6l7-3z"/>
-      <path d="M9 12l2 2 4-4"/>
-    </svg>
-    <span class="brand-name">Vellum Check</span>
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="topbar">
+    <div class="brand">
+      <svg class="brand-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 3l7 3v5c0 4.5-3 8.2-7 9.5C8 19.2 5 15.5 5 11V6l7-3z"/>
+        <path d="M9 12l2 2 4-4"/>
+      </svg>
+      <span class="brand-name">Vellum Check</span>
+    </div>
+
+    <!-- ปุ่มบัญชี: แสดงเฉพาะมือถือ กดแล้วเปิดแผนบัญชีจากด้านล่าง -->
+    <button type="button" class="auth-toggle" id="authToggle" aria-controls="authCard" aria-expanded="false">
+      <span class="auth-toggle-out">เข้าสู่ระบบ</span>
+      <span class="auth-toggle-in">บัญชีของฉัน</span>
+    </button>
   </div>
-  <h1>เช็กสัญญา</h1>
-  <p>ตรวจสัญญาอย่างมั่นใจ · วางข้อความสัญญา ระบบจะไฮไลต์จุดที่ควรระวัง</p>
+
+  <div class="hero">
+    <h1>เช็กสัญญา</h1>
+    <p>ตรวจสัญญาอย่างมั่นใจ · วางข้อความสัญญา ระบบจะไฮไลต์จุดที่ควรระวัง</p>
+  </div>
 </header>
+
+<!-- พื้นหลังมืดของแผนบัญชี (มือถือ) -->
+<div class="sheet-backdrop" id="authBackdrop"></div>
 
 <main>
 
-  <!-- 0. บัญชีผู้ใช้ -->
+  <!-- 0. บัญชีผู้ใช้: บนมือถือเป็นแผนจากด้านล่าง บนจอใหญ่เป็นการ์ดปกติ -->
   <section class="card" id="authCard">
+    <button type="button" class="sheet-close" id="authClose" aria-label="ปิด">✕</button>
     <h2>0. บัญชีผู้ใช้</h2>
     <div id="authLoggedOut">
       <input id="email" type="email" placeholder="อีเมล" autocomplete="email">
@@ -78,6 +94,24 @@
 
 <footer>เครื่องมือช่วยคัดกรองเบื้องต้น · Vellum Check</footer>
 
+<script>
+/* เปิด/ปิดแผนบัญชี (มือถือ) ไม่แตะ script.js */
+(function () {
+  var body = document.body;
+  var toggle = document.getElementById('authToggle');
+  var backdrop = document.getElementById('authBackdrop');
+  var close = document.getElementById('authClose');
+  function setOpen(open) {
+    body.classList.toggle('auth-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+  }
+  toggle.addEventListener('click', function () {
+    setOpen(!body.classList.contains('auth-open'));
+  });
+  backdrop.addEventListener('click', function () { setOpen(false); });
+  close.addEventListener('click', function () { setOpen(false); });
+})();
+</script>
 <script src="script.js"></script>
 <script src="pay-ui.js"></script>
 </body>
