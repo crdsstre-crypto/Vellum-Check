@@ -7,7 +7,7 @@
 <title>เช็กสัญญา | Vellum Check</title>
 
 <!-- ฟอนต์ -->
-<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@600;700&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
 
 <!-- ลำดับการโหลด CSS: themes (สี) → style (ทุกจอ) → mobile (เฉพาะจอต่ำกว่า 768px) -->
 <link rel="stylesheet" href="themes.css">
@@ -94,6 +94,22 @@
   <!-- 1. วางข้อความสัญญา -->
   <section class="card">
     <h2>1. วางข้อความสัญญา</h2>
+    <div class="field-wrap">
+      <label class="field-label" for="contractType">ประเภทสัญญา</label>
+      <div class="select-wrap">
+        <select id="contractType" name="contractType">
+          <option value="unsure" selected>ไม่แน่ใจ (ให้ระบบพิจารณาเอง)</option>
+          <option value="rent">สัญญาเช่า (บ้าน คอนโด ที่ดิน อาคาร)</option>
+          <option value="sale">สัญญาซื้อขาย (สินค้า รถยนต์ ทรัพย์สิน)</option>
+          <option value="employment">สัญญาจ้างงาน (เงินเดือน โบนัส การเลิกจ้าง)</option>
+          <option value="service">สัญญาจ้างบริการ (ฟรีแลนซ์ รับเหมา จ้างทำงาน)</option>
+          <option value="loan">สัญญากู้ยืมเงิน (ดอกเบี้ย กำหนดคืนเงิน)</option>
+          <option value="shareholder">สัญญาหุ้นส่วน (แบ่งกำไร หน้าที่ การถอนตัว)</option>
+          <option value="nda">สัญญารักษาความลับ (NDA)</option>
+          <option value="other">สัญญาอื่น ๆ</option>
+        </select>
+      </div>
+    </div>
     <textarea id="input" placeholder="วางข้อความสัญญาที่นี่..."></textarea>
     <p class="hint">แนะนำ: วางเฉพาะข้อความสัญญาที่ต้องการตรวจ ไม่ต้องใส่ข้อมูลส่วนตัวที่ไม่จำเป็น</p>
     <label class="voice-opt"><input type="checkbox" id="voiceOpt"> สรุปเป็นเสียง (ใช้เครดิตเสียง 1 ครั้ง)</label>
