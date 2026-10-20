@@ -96,11 +96,10 @@ body::before{
   content:"";
   position:fixed;
   inset:0;
-  z-index:0;
+  z-index:-1; /* อยู่ล่างสุดเสมอ ไม่ไปสร้างชั้นซ้อนให้ main */
   pointer-events:none;
   background:radial-gradient(circle at 50% 0%, rgba(229,196,119,.09), transparent 50%);
 }
-main,footer{position:relative;z-index:1}
 
 main{padding:0}
 .hero{
@@ -112,6 +111,7 @@ main{padding:0}
   padding:var(--m-hero-y) var(--m-page-x);
 }
 .hero-art{
+  display:block;
   grid-column:1;
   grid-row:1 / span 2;
   width:var(--m-icon);
