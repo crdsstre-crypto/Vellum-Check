@@ -1,8 +1,9 @@
 /* =========================================================
-   mobile.css: ใช้เฉพาะจอต่ำกว่า 768px
+   mobile.css: ใช้เฉพาะจอต่ำกว่า 768px (รอบ 7: ปรับความนิ่งและลำดับตัวอักษร)
    โหลดจาก index.html ด้วย media="(max-width: 767px)"
    - ไม่เปลี่ยนสี (สีอยู่ที่ themes.css)
-   - จัดวาง ขนาด ระยะ และเอฟเฟกต์/อนิเมชันบนมือถือ
+   - จัดวาง ขนาด ระยะ ฟอนต์หัวข้อ และเอฟเฟกต์บนมือถือ
+   - อนิเมชันมีเฉพาะตอนโหลดหน้าและตอนผลลัพธ์ขึ้น ไม่มีอนิเมชันวนซ้ำ
 
    ซ่อมด่วน: หาหัวข้อตามอาการ แล้วแก้เฉพาะส่วนนั้น
    | อาการ                                 | ไปที่หัวข้อ                 |
@@ -22,6 +23,13 @@
 html,body{overflow-x:hidden}
 button{-webkit-tap-highlight-color:transparent}
 svg{max-width:100%}
+/* กรอบโฟกัสสำหรับการใช้คีย์บอร์ดหรือสวิตช์ช่วยเหลือ */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible{
+  outline:2px solid var(--focus);
+  outline-offset:2px;
+}
 
 /* ---------- 1. Header ---------- */
 header{
@@ -34,19 +42,25 @@ header{
   background:rgba(8,9,11,.92);
   -webkit-backdrop-filter:blur(14px);
   backdrop-filter:blur(14px);
-  border-bottom:1px solid rgba(229,196,119,.25);
+  border-bottom:1px solid var(--card-edge);
 }
 .topbar{justify-content:space-between;padding:12px 16px}
 .brand{gap:10px}
-.brand-logo{width:28px;height:28px;animation:logoGlow 3.6s ease-in-out infinite}
-.brand-name{font-size:.7rem;letter-spacing:.24em}
+.brand-logo{width:26px;height:26px;color:var(--gold)}
+.brand-name{
+  font-size:.92rem;
+  font-weight:600;
+  letter-spacing:.02em;
+  text-transform:none;
+  color:var(--text);
+}
 
 .auth-toggle{
   display:inline-flex;
   align-items:center;
   gap:6px;
-  min-height:40px;
-  padding:8px 16px;
+  min-height:44px;
+  padding:8px 18px;
   border-radius:999px;
   background:transparent;
   border:1px solid var(--gold-deep);
@@ -54,7 +68,6 @@ header{
   font-size:.88rem;
   font-weight:600;
   white-space:nowrap;
-  animation:ringPulse 3.2s ease-in-out infinite;
 }
 .auth-toggle:active{background:rgba(229,196,119,.12)}
 .auth-toggle-in{display:none}
@@ -62,52 +75,59 @@ body:has(#authLoggedIn:not([hidden])) .auth-toggle-out{display:none}
 body:has(#authLoggedIn:not([hidden])) .auth-toggle-in{display:inline}
 
 /* ---------- 2. ส่วนนำและภาพ ---------- */
+/* แสงพื้นหลังคงที่ ไม่เคลื่อนไหว เพื่อประหยัดแบตและให้ตัวหนังสือนิ่ง */
 body::before{
   content:"";
   position:fixed;
-  inset:-25%;
+  inset:0;
   z-index:0;
   pointer-events:none;
   background:
-    radial-gradient(circle at 30% 18%, rgba(229,196,119,.12), transparent 42%),
-    radial-gradient(circle at 78% 72%, rgba(229,196,119,.07), transparent 46%);
-  animation:drift 22s ease-in-out infinite alternate;
+    radial-gradient(circle at 50% 0%, rgba(229,196,119,.09), transparent 50%);
 }
 main,footer{position:relative;z-index:1}
 
-main{padding:10px 0 4px}
-.hero{padding:18px 16px 24px}
+main{padding:4px 0 0}
+.hero{padding:22px 20px 26px;text-align:center}
 .hero-art{
   display:block;
-  width:min(250px,70vw);
+  width:min(220px,64vw);
   height:auto;
-  margin:0 auto 8px;
+  margin:0 auto 12px;
   overflow:visible;
-  filter:drop-shadow(0 0 14px rgba(229,196,119,.28));
 }
 .hero-art .draw{
   stroke-dasharray:1;
   stroke-dashoffset:1;
-  animation:drawLine 1.6s cubic-bezier(.4,0,.2,1) forwards;
+  animation:drawLine 1.4s cubic-bezier(.4,0,.2,1) forwards;
 }
-.hero-art .draw:nth-child(2){animation-delay:.25s}
-.hero-art .draw:nth-child(3){animation-delay:.45s}
-.hero-art .draw:nth-child(4){animation-delay:.6s}
-.hero-art .draw:nth-child(5){animation-delay:.75s}
-.hero-art .draw:nth-child(6){animation-delay:.85s}
-.hero-art .draw:nth-child(7){animation-delay:.95s}
-.hero-art .draw:nth-child(8){animation-delay:1.05s}
+.hero-art .draw:nth-child(2){animation-delay:.2s}
+.hero-art .draw:nth-child(3){animation-delay:.35s}
+.hero-art .draw:nth-child(4){animation-delay:.5s}
+.hero-art .draw:nth-child(5){animation-delay:.6s}
+.hero-art .draw:nth-child(6){animation-delay:.7s}
+.hero-art .draw:nth-child(7){animation-delay:.8s}
+.hero-art .draw:nth-child(8){animation-delay:.9s}
+
+/* หัวเรื่องใช้ตัวอักษรไทยแบบมีหัว ให้ความรู้สึกเป็นงานกฎหมาย */
+.hero h1,
+h2{
+  font-family:'Noto Serif Thai',Georgia,serif;
+}
 .hero h1{
   font-size:1.6rem;
-  margin:6px 0 0;
-  background:linear-gradient(90deg,#b8924a,#f3dca0,#e5c477,#b8924a);
-  background-size:220% auto;
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-  animation:goldSheen 6s linear infinite;
+  font-weight:700;
+  margin:4px 0 0;
+  color:var(--text);
+  letter-spacing:0;
 }
-.hero p{font-size:.86rem;margin-top:6px;max-width:30ch;margin-inline:auto}
+.hero p{
+  font-size:.9rem;
+  color:var(--muted);
+  margin:10px auto 0;
+  max-width:28ch;
+  line-height:1.7;
+}
 
 /* ---------- 3. แผนบัญชีจากด้านล่าง ---------- */
 body.auth-open{overflow:hidden}
@@ -127,6 +147,8 @@ body.auth-open{overflow:hidden}
 body.auth-open .sheet-backdrop{opacity:1;pointer-events:auto}
 
 #authCard{
+  /* ปิดอนิเมชันการ์ดทั่วไป ไม่เช่นนั้น fadeUp จะทับ transform ของแผนและทำให้แผนไม่เลื่อนขึ้น */
+  animation:none;
   position:fixed;
   left:0;
   right:0;
@@ -140,7 +162,8 @@ body.auth-open .sheet-backdrop{opacity:1;pointer-events:auto}
   border:1px solid var(--card-edge);
   border-bottom:none;
   border-radius:24px 24px 0 0;
-  padding:10px 18px calc(22px + env(safe-area-inset-bottom));
+  padding:10px 20px calc(24px + env(safe-area-inset-bottom));
+  box-shadow:0 -16px 40px rgba(0,0,0,.5);
   transform:translateY(102%);
   visibility:hidden;
   transition:transform .4s cubic-bezier(.2,.8,.2,1), visibility .4s;
@@ -152,7 +175,7 @@ body.auth-open .sheet-backdrop{opacity:1;pointer-events:auto}
   height:4px;
   border-radius:2px;
   background:var(--border);
-  margin:0 auto 14px;
+  margin:0 auto 16px;
 }
 body.auth-open #authCard{transform:none;visibility:visible}
 
@@ -163,8 +186,8 @@ body.auth-open #authCard{transform:none;visibility:visible}
   position:absolute;
   top:14px;
   right:14px;
-  width:36px;
-  height:36px;
+  width:44px;
+  height:44px;
   padding:0;
   border-radius:50%;
   background:var(--ghost);
@@ -174,48 +197,54 @@ body.auth-open #authCard{transform:none;visibility:visible}
 }
 
 /* ---------- 4. การ์ดและหมวด ----------
-   บนมือถือใช้หมวดเต็มความกว้างคั่นด้วยเส้น ไม่ซ้อนกรอบ */
+   บนมือถือใช้หมวดเต็มความกว้างคั่นด้วยเส้นบาง ไม่ซ้อนกรอบ */
 .card{
   border:none;
   border-radius:0;
   box-shadow:none;
   background:transparent;
   border-top:1px solid var(--card-edge);
-  padding:26px 18px;
+  padding:30px 20px;
   margin:0;
   animation:fadeUp .7s cubic-bezier(.2,.8,.2,1) both;
 }
-.card:nth-of-type(1){animation-delay:.1s}
-.card:nth-of-type(2){animation-delay:.2s}
-.card:nth-of-type(3){animation-delay:.3s}
-.card:nth-of-type(4){animation-delay:.4s}
-h2{font-size:1.02rem;margin-bottom:16px}
+.card:nth-of-type(2){animation-delay:.15s}
+.card:nth-of-type(3){animation-delay:.25s}
+.card:nth-of-type(4){animation-delay:.35s}
+h2{
+  font-size:1.08rem;
+  font-weight:700;
+  margin-bottom:18px;
+  gap:12px;
+}
+h2::before{width:3px;height:18px}
 
 /* ---------- 5. ช่องกรอกและปุ่ม ---------- */
 input[type="email"],
 input[type="password"],
 textarea{
   font-size:16px; /* ป้องกัน iOS ซูมอัตโนมัติเมื่อแตะ */
-  padding:14px 15px;
+  padding:14px 16px;
 }
 input[type="email"],
-input[type="password"]{min-height:50px;border-radius:14px}
+input[type="password"]{min-height:52px;border-radius:14px}
 textarea{
-  min-height:180px;
+  min-height:190px;
   border-radius:16px;
+  line-height:1.75;
   background:linear-gradient(180deg,rgba(255,255,255,.025),transparent 70%), var(--field);
 }
 
 .hint{
   display:block;
-  margin:10px 2px 0;
+  margin:12px 2px 0;
   font-size:.8rem;
   color:var(--muted);
-  line-height:1.55;
+  line-height:1.6;
 }
 .hint::before{content:"🔒 "}
 
-.btns{flex-direction:column;gap:12px;margin-top:16px}
+.btns{flex-direction:column;gap:12px;margin-top:18px}
 .btns button{
   width:100%;
   min-height:52px;
@@ -223,101 +252,78 @@ textarea{
   border-radius:16px;
 }
 .primary{
-  position:relative;
-  overflow:hidden;
-  font-size:1.04rem;
+  font-size:1.02rem;
   letter-spacing:.01em;
-  box-shadow:0 10px 28px rgba(229,196,119,.22);
-}
-.primary::after,
-#packageButtons button::after{
-  content:"";
-  position:absolute;
-  top:0;
-  bottom:0;
-  left:0;
-  width:40%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);
-  transform:translateX(-120%) skewX(-18deg);
-  animation:shine 4.2s ease-in-out infinite;
-  pointer-events:none;
+  box-shadow:0 8px 22px rgba(229,196,119,.16);
 }
 .ghost{border-radius:16px}
 
-.voice-opt{padding:10px 0 0;font-size:.9rem}
+.voice-opt{padding:12px 0 0;font-size:.9rem;min-height:44px}
 
 /* ---------- 6. ผลการตรวจ ---------- */
 #result{min-height:80px}
-.empty{padding:14px 8px 4px}
-.empty-art{
-  display:block;
-  text-align:center;
-  animation:floatY 4s ease-in-out infinite;
-}
-.empty-art svg{width:110px;height:auto;margin:6px auto 0;overflow:visible}
-.summary{gap:8px;margin-bottom:12px}
+.empty{padding:16px 8px 4px;font-size:.92rem}
+.empty-art{display:block;text-align:center}
+.empty-art svg{width:100px;height:auto;margin:6px auto 0;overflow:visible}
+.summary{gap:8px;margin-bottom:14px}
 .badge{padding:5px 12px;font-size:.8rem}
 .item{
-  padding:14px 15px;
+  padding:16px 16px;
   border-radius:12px;
+  margin-bottom:12px;
   animation:itemIn .45s cubic-bezier(.2,.8,.2,1) both;
 }
 .item:nth-child(2){animation-delay:.05s}
 .item:nth-child(3){animation-delay:.1s}
 .item:nth-child(4){animation-delay:.15s}
 .item:nth-child(5){animation-delay:.2s}
-.item h3{font-size:.98rem}
-.item .snippet{font-size:.86rem}
+.item h3{font-size:1rem;line-height:1.5}
+.item .snippet{font-size:.88rem;line-height:1.65}
 
 /* ---------- 7. เติมเครดิต ---------- */
 #packageButtons{flex-direction:column;gap:12px}
 #packageButtons button,
 #packageButtons .primary{
   position:relative;
-  overflow:hidden;
   width:100%;
-  min-height:60px;
+  min-height:62px;
   padding:14px 18px;
   text-align:left;
   font-size:.98rem;
   color:var(--text);
-  background:linear-gradient(145deg,#1e2027,#121318);
-  border:1px solid rgba(229,196,119,.2);
+  background:linear-gradient(145deg,var(--item),var(--field));
+  border:1px solid var(--card-edge);
   border-radius:18px;
-  box-shadow:0 8px 22px rgba(0,0,0,.45);
+  box-shadow:0 8px 22px rgba(0,0,0,.4);
 }
+/* แพ็กแรกเป็นแพ็กแนะนำ จึงใช้ทองเฉพาะตรงนี้ */
 #packageButtons button:first-child{
-  border-color:rgba(229,196,119,.7);
+  border-color:rgba(229,196,119,.6);
   background:linear-gradient(145deg,#2b2513,#15130c);
-  box-shadow:0 10px 28px rgba(229,196,119,.14);
+  box-shadow:0 10px 26px rgba(229,196,119,.12);
 }
 #packageButtons button:active{transform:scale(.985)}
-#packageButtons button:hover{background:linear-gradient(145deg,#25272f,#16171d)}
 
 /* ---------- 8. เอฟเฟกต์ (ปิดได้ที่นี่) ----------
-   ถ้าอยากให้เว็บนิ่งขึ้น ลบบล็อก @keyframes หรือ "จุดใช้อนิเมชัน" ด้านล่าง */
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-@keyframes itemIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+   มีอนิเมชันเพียง 3 จุด: ภาพตราชั่งวาดเส้นตอนเปิดหน้า การ์ดขึ้นตอนโหลด และผลตรวจขึ้นทีละรายการ
+   ถ้าอยากให้เว็บนิ่งขึ้น ลบบล็อก @keyframes หรือบล็อก .card/.item ด้านบน */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes itemIn{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
 @keyframes drawLine{to{stroke-dashoffset:0}}
-@keyframes goldSheen{to{background-position:220% center}}
-@keyframes shine{0%{transform:translateX(-120%) skewX(-18deg)}55%,100%{transform:translateX(280%) skewX(-18deg)}}
-@keyframes ringPulse{0%,100%{box-shadow:0 0 0 0 rgba(229,196,119,0)}50%{box-shadow:0 0 0 6px rgba(229,196,119,.12)}}
-@keyframes logoGlow{0%,100%{filter:drop-shadow(0 0 0 rgba(229,196,119,0))}50%{filter:drop-shadow(0 0 8px rgba(229,196,119,.55))}}
-@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-@keyframes drift{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(4%,3%,0)}}
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none !important;transition:none !important}
   .hero-art .draw{stroke-dashoffset:0}
+  #authCard{transition:none}
 }
 
 /* ---------- 9. Footer และ safe area ---------- */
 footer{
-  padding:18px 16px calc(28px + env(safe-area-inset-bottom));
+  padding:20px 20px calc(28px + env(safe-area-inset-bottom));
   font-size:.8rem;
   border-top:1px solid var(--card-edge);
 }
-.disclaimer{font-size:.8rem;line-height:1.6}
+.disclaimer{font-size:.8rem;line-height:1.65}
 
 /* ---------- 10. เมนูบัญชี (ตอนล็อกอินแล้ว) ----------
    แก้หัวบัญชี ป้ายเครดิต และปุ่มออกจากระบบได้ที่นี่ */
@@ -338,8 +344,7 @@ footer{
   border-radius:50%;
   font-size:22px;
   background:linear-gradient(145deg,#2b2513,#15130c);
-  border:1px solid rgba(229,196,119,.55);
-  box-shadow:0 0 18px rgba(229,196,119,.18);
+  border:1px solid rgba(229,196,119,.45);
 }
 .acct-info{min-width:0;display:flex;flex-direction:column}
 .acct-label{font-size:.78rem;color:var(--muted)}
@@ -355,14 +360,14 @@ footer{
   padding:8px 14px;
   border-radius:999px;
   background:var(--ghost);
-  border:1px solid rgba(229,196,119,.3);
+  border:1px solid rgba(229,196,119,.25);
   color:var(--gold-soft);
   font-size:.9rem;
   font-weight:600;
 }
 #logoutBtn{
   width:100%;
-  min-height:50px;
+  min-height:52px;
   border-radius:16px;
   font-size:1rem;
   color:var(--muted);
