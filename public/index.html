@@ -45,6 +45,7 @@
     <h3 id="ctTitle">เลือกประเภทสัญญา</h3>
     <button type="button" class="ct-close" id="ctClose" aria-label="ปิด">✕</button>
   </div>
+  <p class="ct-hint">ไม่รู้ประเภทก็เลือก "ไม่แน่ใจ" ได้</p>
   <ul class="ct-list" id="ctList" role="listbox" aria-label="ประเภทสัญญา"></ul>
 </div>
 
@@ -113,15 +114,15 @@
       </button>
       <div class="select-wrap">
         <select id="contractType" name="contractType">
-          <option value="unsure" selected>ไม่แน่ใจ (ให้ระบบพิจารณาเอง)</option>
-          <option value="rent">สัญญาเช่า (บ้าน คอนโด ที่ดิน อาคาร)</option>
-          <option value="sale">สัญญาซื้อขาย (สินค้า รถยนต์ ทรัพย์สิน)</option>
-          <option value="employment">สัญญาจ้างงาน (เงินเดือน โบนัส การเลิกจ้าง)</option>
-          <option value="service">สัญญาจ้างบริการ (ฟรีแลนซ์ รับเหมา จ้างทำงาน)</option>
-          <option value="loan">สัญญากู้ยืมเงิน (ดอกเบี้ย กำหนดคืนเงิน)</option>
-          <option value="shareholder">สัญญาหุ้นส่วน (แบ่งกำไร หน้าที่ การถอนตัว)</option>
-          <option value="nda">สัญญารักษาความลับ (ข้อมูลลับ ขอบเขตการเปิดเผย ระยะเวลาคุ้มครอง)</option>
-          <option value="other">สัญญาอื่น ๆ (ระบุเองเมื่อไม่ตรงกับตัวเลือก)</option>
+          <option value="unsure" selected>ไม่แน่ใจ (ระบบจะดูจากข้อความให้เอง)</option>
+          <option value="rent">สัญญาเช่า (ค่าเช่า เงินมัดจำ ระยะเวลาเช่า)</option>
+          <option value="sale">สัญญาซื้อขาย (ราคา การส่งมอบ การชำระเงิน)</option>
+          <option value="employment">สัญญาจ้างงาน (เงินเดือน ชั่วโมงทำงาน การเลิกจ้าง)</option>
+          <option value="service">สัญญาจ้างบริการ (ขอบเขตงาน กำหนดส่งงาน ค่าจ้างงวด)</option>
+          <option value="loan">สัญญากู้ยืมเงิน (ดอกเบี้ย วันครบกำหนดชำระ)</option>
+          <option value="shareholder">สัญญาหุ้นส่วน (แบ่งกำไร หน้าที่ของแต่ละฝ่าย)</option>
+          <option value="nda">สัญญารักษาความลับ (ห้ามเปิดเผยข้อมูล ระยะเวลาคุ้มครอง)</option>
+          <option value="other">สัญญาอื่น ๆ (ไม่ตรงกับข้อด้านบน)</option>
         </select>
       </div>
     </div>
