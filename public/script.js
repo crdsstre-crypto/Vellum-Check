@@ -196,6 +196,23 @@ function renderMissing(list) {
     <ul>${list.map(m => `<li>${esc(m)}</li>`).join('')}</ul>`;
 }
 
+// ถ้าผู้ใช้ไม่ได้เลือกประเภท (ไม่แน่ใจ) แต่ระบบดูจากข้อความได้ ให้บอกผลและเปิดให้เปลี่ยนได้
+function addDetectBanner(result, selected) {
+  const found = result?.detected_type;
+  if (selected !== 'unsure' || !found || found === 'unsure') return;
+  const opt = document.querySelector('#contractType option[value="' + found + '"]');
+  if (!opt) return;
+  const name = opt.textContent.replace(/\s*\(.*\)\s*$/, '');
+  els.result.insertAdjacentHTML('afterbegin',
+    `<div class="detect-banner"><span>ระบบดูว่าเป็น <b>${esc(name)}</b></span>` +
+    `<button type="button" class="detect-change" id="detectChange">เปลี่ยนประเภท</button></div>`);
+  document.getElementById('detectChange').addEventListener('click', function () {
+    const t = document.getElementById('ctTrigger');
+    if (t && !t.hidden) t.click();
+    else document.getElementById('contractType')?.focus();
+  });
+}
+
 function renderResult(result) {
   const items = Array.isArray(result.items) ? result.items : [];
 
@@ -258,6 +275,7 @@ async function runCheck() {
     }
 
     renderResult(r.data.result);
+    addDetectBanner(r.data.result, contractType);
     if (r.data.audio) {
       els.result.insertAdjacentHTML('afterbegin',
         `<audio controls src="data:audio/mpeg;base64,${r.data.audio}" style="width:100%;margin-bottom:12px"></audio>`);
