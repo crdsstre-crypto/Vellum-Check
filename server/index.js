@@ -368,7 +368,10 @@ app.post('/api/extract', async (req, res) => {
 });
 
 // ---------- หน้าเว็บ ----------
-app.use(express.static(path.join(__dirname, '..', 'public')));
+// ไฟล์หน้าเว็บให้เบราว์เซอร์ตรวจกับเซิร์ฟเวอร์ทุกครั้ง เพื่อไม่ให้ค้างเวอร์ชันเก่าในมือถือ
+app.use(express.static(path.join(__dirname, '..', 'public'), {
+  setHeaders: (res) => res.setHeader('Cache-Control', 'no-cache'),
+}));
 
 // เริ่มรับคำขอหลังเชื่อมฐานข้อมูลและสร้างตารางสำเร็จเท่านั้น
 initDb()
