@@ -827,6 +827,15 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
 .credit-chip.is-low b{color:var(--highText)}
 .credit-chip + .auth-toggle{margin-left:8px}
 
+/* หัวข้อขั้นตอน: เครดิตอยู่ขวาสุดของหัวข้อ "1. วางข้อความสัญญา" */
+.step-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.step-head h2{margin:0;flex:1;min-width:0}
+.step-head .credit-chip{margin-left:0}
+
 /* ปุ่มคัดลอกและแชร์ผลตรวจ */
 .share-bar{
   display:flex;
