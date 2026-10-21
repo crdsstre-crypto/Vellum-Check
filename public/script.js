@@ -171,6 +171,62 @@ async function logout() {
 
 /* ---------- 4. RENDERING ---------- */
 
+// ---- สถานะกำลังรอผล: ข้อความหมุนเวียนและกล่องโครงร่าง ----
+const LOADING_STEPS = [
+  'กำลังอ่านเงื่อนไขในสัญญา...',
+  'กำลังเทียบกับหลักกฎหมายที่เกี่ยวข้อง...',
+  'กำลังหาจุดที่ควรระวัง...',
+];
+let loadingTimer = null;
+
+function showLoading() {
+  els.result.innerHTML = `
+    <div class="loading-box" role="status" aria-live="polite">
+      <p class="loading-msg" id="loadingMsg">${esc(LOADING_STEPS[0])}</p>
+      <div class="skel"></div>
+      <div class="skel short"></div>
+      <div class="skel"></div>
+    </div>`;
+  let i = 0;
+  loadingTimer = setInterval(() => {
+    i = (i + 1) % LOADING_STEPS.length;
+    const el = document.getElementById('loadingMsg');
+    if (el) el.textContent = LOADING_STEPS[i];
+  }, 1800);
+}
+
+function stopLoading() {
+  if (loadingTimer) clearInterval(loadingTimer);
+  loadingTimer = null;
+}
+
+// ---- ข้อความแจ้งสั้น ๆ มุมล่าง ----
+let toastTimer = null;
+function toast(message) {
+  let el = document.getElementById('toast');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'toast';
+    el.className = 'toast';
+    el.setAttribute('role', 'status');
+    document.body.appendChild(el);
+  }
+  el.textContent = message;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+// เน็ตหลุด/เซิร์ฟเวอร์ไม่ตอบ: แสดงปุ่มลองใหม่ ข้อความที่วางยังอยู่ครบ
+function renderRetry(message) {
+  els.result.innerHTML = `
+    <div class="retry-box">
+      <p class="empty">${esc(message)}</p>
+      <button type="button" class="ghost" id="retryBtn">ลองใหม่อีกครั้ง</button>
+    </div>`;
+  document.getElementById('retryBtn')?.addEventListener('click', () => runCheck());
+}
+
 function renderEmpty(message = CONFIG.messages.empty) {
   els.result.innerHTML = `<p class="empty">${esc(message)}</p>`;
 }
@@ -337,7 +393,7 @@ async function runCheck() {
   }
 
   setBusy(true);
-  renderEmpty(CONFIG.messages.loading);
+  showLoading();
 
   try {
     // ประเภทสัญญาเป็นตัวเลือกเสริม ถ้าไม่มีในหน้าให้ส่ง "unsure" (ระบบพิจารณาเอง)
@@ -356,6 +412,10 @@ async function runCheck() {
       return;
     }
     if (!r.ok) {
+      if (r.status === 0) {
+        renderRetry(CONFIG.messages.network);
+        return;
+      }
       renderEmpty(r.status === 402 ? CONFIG.messages.noCredit : (r.data.error || CONFIG.messages.network));
       return;
     }
@@ -371,6 +431,7 @@ async function runCheck() {
     }
     els.result.scrollIntoView({ behavior: 'smooth', block: 'start' });
   } finally {
+    stopLoading();
     setBusy(false);
   }
 }
@@ -472,8 +533,7 @@ function init() {
     const text = buildShareText(lastResult);
     if (btn.dataset.act === 'copy') {
       const ok = await copyText(text);
-      btn.textContent = ok ? 'คัดลอกแล้ว' : 'คัดลอกไม่สำเร็จ';
-      setTimeout(() => { btn.textContent = 'คัดลอกผลตรวจ'; }, 1800);
+      toast(ok ? 'คัดลอกผลตรวจแล้ว วางในแอปอื่นได้เลย' : 'คัดลอกไม่สำเร็จ ลองอีกครั้ง');
       return;
     }
     if (navigator.share) {
@@ -482,8 +542,7 @@ function init() {
       } catch (err) { /* ผู้ใช้ยกเลิกการแชร์ */ }
     } else {
       const ok = await copyText(text);
-      btn.textContent = ok ? 'คัดลอกแล้ว (แชร์ไม่รองรับ)' : 'ทำไม่สำเร็จ';
-      setTimeout(() => { btn.textContent = 'แชร์ผลตรวจ'; }, 1800);
+      toast(ok ? 'เบราว์เซอร์นี้แชร์ไม่ได้ จึงคัดลอกให้แทนแล้ว' : 'แชร์ไม่สำเร็จ ลองอีกครั้ง');
     }
   });
   const fileIn = document.getElementById('fileIn');
