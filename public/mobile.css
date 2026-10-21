@@ -797,23 +797,47 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
   margin-left:auto;
   display:inline-flex;
   align-items:center;
-  gap:6px;
-  min-height:44px;
-  padding:6px 12px;
-  border:1px solid var(--gold-deep);
+  gap:4px;
+  min-height:36px;
+  padding:4px 8px 4px 10px;
+  border:1px solid var(--border);
   border-radius:999px;
-  background:rgba(229,196,119,.08);
-  color:var(--gold-soft);
+  background:transparent;
+  color:var(--muted);
   font-family:inherit;
-  font-size:.82rem;
+  font-size:.8rem;
   white-space:nowrap;
 }
 .credit-chip[hidden]{display:none}
-.credit-chip-label{color:var(--muted)}
-.credit-chip b{font-size:.95rem;color:var(--gold);font-weight:700}
-.credit-chip.is-low{border-color:var(--highText);color:var(--highText)}
+.credit-chip-icon{font-size:.75rem;line-height:1}
+.credit-chip b{font-size:.84rem;color:var(--gold-soft);font-weight:600}
+.credit-chip-plus{
+  display:grid;
+  place-items:center;
+  width:20px;
+  height:20px;
+  margin-left:2px;
+  border-radius:50%;
+  background:var(--ghost);
+  color:var(--gold-soft);
+  font-size:.85rem;
+  line-height:1;
+}
+.credit-chip.is-low{border-color:var(--highBorder)}
 .credit-chip.is-low b{color:var(--highText)}
 .credit-chip + .auth-toggle{margin-left:8px}
+
+/* ปุ่มคัดลอกและแชร์ผลตรวจ */
+.share-bar{
+  display:flex;
+  gap:8px;
+  margin:0 0 12px;
+}
+.share-bar button{
+  flex:1;
+  min-height:42px;
+  font-size:.86rem;
+}
 
 /* ---------- 6. ผลการตรวจ ---------- */
 #result{min-height:72px}
