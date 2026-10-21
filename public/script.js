@@ -200,8 +200,13 @@ function renderQuote(item) {
     <blockquote>${esc(item.quote)}</blockquote>`;
 }
 
-function renderItem(item) {
-  return `<details class="item ${esc(item.level)}" open>
+// บนมือถือเปิดแค่สองรายการแรก (เรียงจากความเสี่ยงสูงสุด) ที่เหลือพับไว้ให้แตะเปิดเอง
+function openByDefault(index) {
+  return window.matchMedia('(max-width: 767px)').matches ? index < 2 : true;
+}
+
+function renderItem(item, index) {
+  return `<details class="item ${esc(item.level)}" ${openByDefault(index) ? 'open' : ''}>
     <summary>
       <span class="tag">${esc(CONFIG.levelLabel[item.level] || '')}</span>
       <b>${esc(item.title)}</b>
@@ -281,15 +286,15 @@ function renderResult(result) {
   const items = Array.isArray(result.items) ? result.items : [];
 
   const body = items.length
-    ? items.map(renderItem).join('')
+    ? items.map((it, i) => renderItem(it, i)).join('')
     : `<p class="empty">${esc(CONFIG.messages.noHit)}</p>`;
 
   els.result.innerHTML = `
+    ${renderSummary(result.risk_counts || { check_detail: 0, caution: 0, low: 0 })}
     <div class="share-bar">
       <button type="button" class="ghost" data-act="copy">คัดลอกผลตรวจ</button>
       <button type="button" class="ghost" data-act="share">แชร์ผลตรวจ</button>
     </div>
-    ${renderSummary(result.risk_counts || { check_detail: 0, caution: 0, low: 0 })}
     ${renderBrief(result.summary || {})}
     ${body}
     ${renderMissing(result.missing_info || [])}
