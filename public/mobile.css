@@ -836,6 +836,49 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
   font-size:.86rem;
 }
 
+/* ---------- 5k. สถานะรอผล, ลองใหม่, ข้อความแจ้งมุมล่าง (รอบ 17) ---------- */
+.loading-box{padding:14px 2px 8px}
+.loading-msg{margin:0 0 14px;font-size:.92rem;color:var(--gold-soft)}
+.skel{
+  height:14px;
+  margin-bottom:10px;
+  border-radius:8px;
+  background:linear-gradient(90deg,var(--item) 0%,var(--ghost) 50%,var(--item) 100%);
+  background-size:200% 100%;
+  animation:skel-shimmer 1.4s ease-in-out infinite;
+}
+.skel.short{width:60%}
+@keyframes skel-shimmer{
+  0%{background-position:100% 0}
+  100%{background-position:-100% 0}
+}
+.retry-box{text-align:center;padding:12px 0}
+.retry-box .ghost{min-height:44px;margin-top:8px}
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:calc(env(safe-area-inset-bottom, 0px) + 24px);
+  transform:translate(-50%,12px);
+  max-width:calc(100% - 40px);
+  padding:10px 16px;
+  border-radius:12px;
+  background:var(--card);
+  border:1px solid var(--gold-deep);
+  color:var(--text);
+  font-size:.86rem;
+  text-align:center;
+  box-shadow:0 8px 24px rgba(0,0,0,.35);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .2s, transform .2s;
+  z-index:50;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion: reduce){
+  .skel{animation:none}
+  .toast{transition:none}
+}
+
 /* ---------- 6. ผลการตรวจ ---------- */
 #result{min-height:72px}
 .empty{padding:12px 8px 2px;font-size:.92rem}
