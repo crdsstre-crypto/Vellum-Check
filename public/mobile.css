@@ -797,9 +797,9 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
   margin-left:auto;
   display:inline-flex;
   align-items:center;
-  gap:4px;
+  gap:6px;
   min-height:36px;
-  padding:4px 8px 4px 10px;
+  padding:4px 10px;
   border:1px solid var(--border);
   border-radius:999px;
   background:transparent;
@@ -809,20 +809,8 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
   white-space:nowrap;
 }
 .credit-chip[hidden]{display:none}
-.credit-chip-icon{font-size:.75rem;line-height:1}
-.credit-chip b{font-size:.84rem;color:var(--gold-soft);font-weight:600}
-.credit-chip-plus{
-  display:grid;
-  place-items:center;
-  width:20px;
-  height:20px;
-  margin-left:2px;
-  border-radius:50%;
-  background:var(--ghost);
-  color:var(--gold-soft);
-  font-size:.85rem;
-  line-height:1;
-}
+.credit-chip-label{font-size:.76rem;color:var(--muted);white-space:nowrap}
+.credit-chip b{font-size:.9rem;color:var(--gold);font-weight:700}
 .credit-chip.is-low{border-color:var(--highBorder)}
 .credit-chip.is-low b{color:var(--highText)}
 .credit-chip + .auth-toggle{margin-left:8px}
