@@ -55,7 +55,7 @@ let lastCredits = null;
 function checkLabel() {
   if (!currentUser) return 'ตรวจสัญญา';
   if (lastCredits === 0) return 'เติมเครดิตเพื่อตรวจสัญญา';
-  return 'ตรวจสัญญา · ใช้ 1 เครดิต';
+  return 'ตรวจสัญญา (ใช้ 1 เครดิต)';
 }
 
 
