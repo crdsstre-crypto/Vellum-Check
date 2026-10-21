@@ -104,6 +104,7 @@
         <span class="acct-check" aria-hidden="true">✓</span>
       </div>
       <p id="creditsLine" class="acct-credits"></p>
+      <button class="acct-topup" id="acctTopup" type="button">+ เติมเครดิต</button>
       <button class="acct-out" id="logoutBtn" type="button">
         <span>ออกจากระบบ</span>
         <span class="acct-chev" aria-hidden="true">›</span>
@@ -197,10 +198,29 @@
 
 </main>
 
-<footer>เครื่องมือช่วยคัดกรองเบื้องต้น · Vellum Check</footer>
+<footer>
+  <details class="faq">
+    <summary>วิธีใช้งาน &amp; คำถามที่พบบ่อย</summary>
+    <div class="faq-body">
+      <p><b>ระบบนี้ทำอะไร</b><br>ช่วยคัดกรองความเสี่ยงเบื้องต้นของสัญญาภาษาไทย แสดงข้อที่ควรตรวจและแยกเป็นระดับความเสี่ยง</p>
+      <p><b>ใช้อย่างไร</b><br>เข้าสู่ระบบ เลือกประเภทสัญญา (ถ้ารู้) วางข้อความสัญญา แล้วกดตรวจ การตรวจแต่ละครั้งใช้ 1 เครดิต</p>
+      <p><b>ถ้าระบบล้มเหลว</b><br>เครดิตจะถูกคืนให้อัตโนมัติ</p>
+      <p><b>ขอบเขตของระบบ</b><br>ไม่ใช่คำปรึกษาทางกฎหมาย ระบบไม่ฟันธงว่าสัญญาเป็นธรรมหรือไม่ และไม่บอกว่าฝ่ายใดได้เปรียบ ควรให้ทนายตรวจก่อนลงนามในสัญญาสำคัญ</p>
+      <p><b>ความเป็นส่วนตัว</b><br>ไม่ควรวางข้อมูลส่วนตัวที่ไม่จำเป็น เช่น เลขบัตรประชาชน หรือเลขบัญชีธนาคาร</p>
+    </div>
+  </details>
+  <p class="faq-foot">เครื่องมือช่วยคัดกรองเบื้องต้น · Vellum Check</p>
+</footer>
 
 <script>
 /* เปิด/ปิดแผนบัญชี (มือถือ) ไม่แตะ script.js */
+/* ปุ่มเติมเครดิตด่วน: ปิดแผนบัญชี แล้วเลื่อนไปหมวด 3 */
+document.getElementById('acctTopup').addEventListener('click', function () {
+  document.body.classList.remove('auth-open');
+  document.getElementById('authToggle').setAttribute('aria-expanded', 'false');
+  var card = document.getElementById('paymentCard');
+  if (card) setTimeout(function () { card.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 250);
+});
 (function () {
   var body = document.body;
   var toggle = document.getElementById('authToggle');
