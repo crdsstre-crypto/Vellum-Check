@@ -1017,18 +1017,31 @@ footer{
 /* ---------- 11. ปุ่มเติมเครดิตด่วน & คำถามที่พบบ่อย ----------
    ปุ่มเติมเครดิตอยู่ในแผนบัญชี (#acctTopup) · คำถามอยู่ใน footer (details.faq)
    ปรับสีที่ themes.css ปรับระยะที่ "0. ตัวปรับเร็ว" */
-.acct-topup{
-  width:100%;
-  min-height:46px;
-  margin-top:10px;
-  border-radius:16px;
-  background:transparent;
-  border:1px solid rgba(229,196,119,.55);
-  color:var(--gold-soft);
-  font-size:.95rem;
-  font-weight:600;
+/* แถวเครดิต: กล่องเครดิตทางซ้าย ปุ่มเติมทองเม็ดยาทางขวา */
+.acct-credit-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:12px;
 }
-.acct-topup:active{background:rgba(229,196,119,.12)}
+.acct-credit-row .acct-credits{
+  flex:1;
+  min-width:0;
+  margin:0;
+}
+.acct-topup{
+  flex:none;
+  min-height:44px;
+  padding:0 16px;
+  border:none;
+  border-radius:999px;
+  background:linear-gradient(145deg,var(--gold-soft),var(--gold-deep));
+  color:#1a1405;
+  font-size:.92rem;
+  font-weight:700;
+  white-space:nowrap;
+}
+.acct-topup:active{filter:brightness(.92)}
 
 .faq{
   margin-bottom:12px;
