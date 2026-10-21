@@ -791,6 +791,30 @@ body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
 .ta-actions{display:flex;align-items:center;gap:4px}
 .file-pick{display:inline-flex;align-items:center;cursor:pointer}
 
+/* ---------- 5j. ป้ายเครดิตบนหน้าหลัก (รอบ 15) ---------- */
+.credit-chip{
+  flex:none;
+  margin-left:auto;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  min-height:44px;
+  padding:6px 12px;
+  border:1px solid var(--gold-deep);
+  border-radius:999px;
+  background:rgba(229,196,119,.08);
+  color:var(--gold-soft);
+  font-family:inherit;
+  font-size:.82rem;
+  white-space:nowrap;
+}
+.credit-chip[hidden]{display:none}
+.credit-chip-label{color:var(--muted)}
+.credit-chip b{font-size:.95rem;color:var(--gold);font-weight:700}
+.credit-chip.is-low{border-color:var(--highText);color:var(--highText)}
+.credit-chip.is-low b{color:var(--highText)}
+.credit-chip + .auth-toggle{margin-left:8px}
+
 /* ---------- 6. ผลการตรวจ ---------- */
 #result{min-height:72px}
 .empty{padding:12px 8px 2px;font-size:.92rem}
