@@ -237,7 +237,47 @@ function addDetectBanner(result, selected) {
   });
 }
 
+let lastResult = null;
+
+// ข้อความสรุปผลตรวจสำหรับคัดลอกหรือแชร์ (ไม่รวมข้อความต้นฉบับของสัญญา)
+function buildShareText(result) {
+  const s = result.summary || {};
+  const items = Array.isArray(result.items) ? result.items : [];
+  const lines = ['ผลตรวจสัญญาเบื้องต้น (Vellum Check)', ''];
+  lines.push(`งาน: ${s.job || '—'}`, `เงิน: ${s.money || '—'}`, `เวลา: ${s.time || '—'}`, '');
+  if (items.length === 0) {
+    lines.push(CONFIG.messages.noHit);
+  } else {
+    items.forEach((it, i) => {
+      lines.push(`${i + 1}. [${CONFIG.levelLabel[it.level] || ''}] ${it.title || ''}`);
+      if (it.explanation) lines.push(`   ${it.explanation}`);
+      if (it.suggested_fix) lines.push(`   เสนอแก้เป็น: ${it.suggested_fix}`);
+    });
+  }
+  lines.push('', CONFIG.messages.disclaimer);
+  return lines.join('\n');
+}
+
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (err) {
+    // เบราว์เซอร์บางตัวไม่อนุญาต clipboard API ใช้วิธีเลือกข้อความแทน
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand('copy');
+    ta.remove();
+    return ok;
+  }
+}
+
 function renderResult(result) {
+  lastResult = result;
   const items = Array.isArray(result.items) ? result.items : [];
 
   const body = items.length
@@ -245,6 +285,10 @@ function renderResult(result) {
     : `<p class="empty">${esc(CONFIG.messages.noHit)}</p>`;
 
   els.result.innerHTML = `
+    <div class="share-bar">
+      <button type="button" class="ghost" data-act="copy">คัดลอกผลตรวจ</button>
+      <button type="button" class="ghost" data-act="share">แชร์ผลตรวจ</button>
+    </div>
     ${renderSummary(result.risk_counts || { check_detail: 0, caution: 0, low: 0 })}
     ${renderBrief(result.summary || {})}
     ${body}
@@ -417,6 +461,26 @@ function init() {
   els.logoutBtn.addEventListener('click', logout);
   els.checkBtn.addEventListener('click', runCheck);
   els.input.addEventListener('input', updateCheckState);
+  els.result.addEventListener('click', async function (e) {
+    const btn = e.target.closest('[data-act]');
+    if (!btn || !lastResult) return;
+    const text = buildShareText(lastResult);
+    if (btn.dataset.act === 'copy') {
+      const ok = await copyText(text);
+      btn.textContent = ok ? 'คัดลอกแล้ว' : 'คัดลอกไม่สำเร็จ';
+      setTimeout(() => { btn.textContent = 'คัดลอกผลตรวจ'; }, 1800);
+      return;
+    }
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'ผลตรวจสัญญา', text });
+      } catch (err) { /* ผู้ใช้ยกเลิกการแชร์ */ }
+    } else {
+      const ok = await copyText(text);
+      btn.textContent = ok ? 'คัดลอกแล้ว (แชร์ไม่รองรับ)' : 'ทำไม่สำเร็จ';
+      setTimeout(() => { btn.textContent = 'แชร์ผลตรวจ'; }, 1800);
+    }
+  });
   const fileIn = document.getElementById('fileIn');
   if (fileIn) {
     fileIn.addEventListener('change', function () {
