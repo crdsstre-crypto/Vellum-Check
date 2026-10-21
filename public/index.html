@@ -12,7 +12,7 @@
 <!-- ลำดับการโหลด CSS: themes (สี) → style (ทุกจอ) → mobile (เฉพาะจอต่ำกว่า 768px) -->
 <link rel="stylesheet" href="themes.css">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="mobile.css?v=9p" media="(max-width: 767px)">
+<link rel="stylesheet" href="mobile.css?v=9q" media="(max-width: 767px)">
 </head>
 <body>
 
@@ -28,12 +28,6 @@
     </div>
 
     <!-- ปุ่มบัญชี: แสดงเฉพาะมือถือ กดแล้วเปิดแผนบัญชีจากด้านล่าง -->
-    <!-- ป้ายเครดิตคงเหลือ: แสดงเฉพาะมือถือและตอนล็อกอิน กดแล้วเปิดแผนบัญชี -->
-    <button type="button" class="credit-chip" id="creditChip" hidden aria-label="เครดิตคงเหลือ ดูหรือเติมเครดิต">
-      <span class="credit-chip-icon" aria-hidden="true">⚡</span>
-      <b id="creditNum">0</b>
-      <span class="credit-chip-plus" aria-hidden="true">+</span>
-    </button>
     <button type="button" class="auth-toggle" id="authToggle" aria-controls="authCard" aria-expanded="false">
       <span class="auth-toggle-out">เข้าสู่ระบบ</span>
       <span class="auth-toggle-in">บัญชีของฉัน</span>
@@ -115,7 +109,15 @@
 
   <!-- 1. วางข้อความสัญญา -->
   <section class="card">
-    <h2>1. วางข้อความสัญญา</h2>
+    <div class="step-head">
+      <h2>1. วางข้อความสัญญา</h2>
+      <!-- ป้ายเครดิตคงเหลือ: แสดงเฉพาะมือถือและตอนล็อกอิน กดแล้วเปิดแผนบัญชี -->
+    <button type="button" class="credit-chip" id="creditChip" hidden aria-label="เครดิตคงเหลือ ดูหรือเติมเครดิต">
+      <span class="credit-chip-icon" aria-hidden="true">⚡</span>
+      <b id="creditNum">0</b>
+      <span class="credit-chip-plus" aria-hidden="true">+</span>
+    </button>
+    </div>
     <div class="field-wrap">
       <label class="field-label" for="contractType">ประเภทสัญญา</label>
       <button type="button" class="ct-trigger" id="ctTrigger" aria-haspopup="dialog" aria-controls="ctSheet" aria-expanded="false" hidden>
