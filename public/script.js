@@ -113,6 +113,8 @@ function showLoggedIn(user) {
   els.loggedOut.hidden = true;
   els.loggedIn.hidden = false;
   els.userEmail.textContent = user.email;
+  const initial = document.getElementById('acctInitial');
+  if (initial) initial.textContent = (user.email || '?').charAt(0).toUpperCase();
   showCredits(user.credits, user.voice_credits);
   els.authMsg.textContent = '';
   setBusy(false);
