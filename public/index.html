@@ -94,15 +94,20 @@
       </div>
     </div>
     <div id="authLoggedIn" hidden>
-      <div class="acct-head">
-        <span class="acct-avatar" aria-hidden="true">👤</span>
+      <!-- แถวบัญชีที่ใช้งานอยู่ (รูปแบบเดียวกับหน้าการตั้งค่า) -->
+      <div class="acct-row">
+        <span class="acct-avatar" id="acctInitial" aria-hidden="true">?</span>
         <div class="acct-info">
           <span class="acct-label">เข้าสู่ระบบแล้ว</span>
           <b id="userEmail" class="acct-mail"></b>
         </div>
+        <span class="acct-check" aria-hidden="true">✓</span>
       </div>
-      <p id="creditsLine"></p>
-      <button class="ghost" id="logoutBtn">ออกจากระบบ</button>
+      <p id="creditsLine" class="acct-credits"></p>
+      <button class="acct-out" id="logoutBtn" type="button">
+        <span>ออกจากระบบ</span>
+        <span class="acct-chev" aria-hidden="true">›</span>
+      </button>
     </div>
     <p class="disclaimer" id="authMsg"></p>
   </section>
