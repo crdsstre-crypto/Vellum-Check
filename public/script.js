@@ -49,6 +49,14 @@ const els = {};
 
 // ผู้ใช้ที่ล็อกอินอยู่ หรือ null
 let currentUser = null;
+let lastCredits = null;
+
+// ข้อความปุ่มตรวจ: บอกค่าใช้จ่ายไว้ก่อนกด และเปลี่ยนเป็นเติมเครดิตเมื่อเครดิตหมด
+function checkLabel() {
+  if (!currentUser) return 'ตรวจสัญญา';
+  if (lastCredits === 0) return 'เติมเครดิตเพื่อตรวจสัญญา';
+  return 'ตรวจสัญญา · ใช้ 1 เครดิต';
+}
 
 
 /* ---------- 2. HELPERS ---------- */
@@ -80,7 +88,19 @@ async function api(path, method = 'GET', body) {
 /* ---------- 3. AUTH ---------- */
 
 function showCredits(n, voice) {
+  lastCredits = typeof n === 'number' ? n : null;
   els.creditsLine.textContent = `เครดิตตรวจคงเหลือ ${n} · เครดิตเสียงคงเหลือ ${voice ?? 0}`;
+
+  // ป้ายบนหน้าหลัก (มือถือ) ให้เห็นเครดิตทันทีโดยไม่ต้องเปิดแผนบัญชี
+  const chip = document.getElementById('creditChip');
+  const num = document.getElementById('creditNum');
+  if (chip && num) {
+    const isMobile = window.matchMedia('(max-width: 767px)').matches;
+    num.textContent = lastCredits === null ? '–' : String(lastCredits);
+    chip.hidden = !(isMobile && currentUser);
+    chip.classList.toggle('is-low', lastCredits === 0);
+  }
+  if (!busyNow) els.checkBtn.textContent = checkLabel();
 }
 
 function notifyAuthChange(user) {
@@ -103,6 +123,9 @@ function showLoggedOut(message = '') {
   notifyAuthChange(null);
   els.loggedOut.hidden = false;
   els.loggedIn.hidden = true;
+  lastCredits = null;
+  const chip = document.getElementById('creditChip');
+  if (chip) chip.hidden = true;
   els.authMsg.textContent = message;
   setBusy(false);
 }
@@ -244,12 +267,17 @@ function setBusy(busy) {
   busyNow = busy;
   updateCheckState();
   els.clearBtn.disabled = busy;
-  els.checkBtn.textContent = busy ? 'กำลังตรวจ...' : 'ตรวจสัญญา';
+  els.checkBtn.textContent = busy ? 'กำลังตรวจ...' : checkLabel();
 }
 
 async function runCheck() {
   if (!currentUser) {
     renderEmpty(CONFIG.messages.loginFirst);
+    return;
+  }
+  // เครดิตหมด: พาไปหน้าเติมเครดิตแทนการส่งคำขอที่จะถูกปฏิเสธ
+  if (lastCredits === 0) {
+    document.getElementById('authToggle')?.click();
     return;
   }
 
