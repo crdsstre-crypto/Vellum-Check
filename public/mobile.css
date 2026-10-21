@@ -1013,3 +1013,57 @@ footer{
 }
 #authLoggedIn .acct-out:active{background:rgba(229,196,119,.10)}
 .acct-chev{font-size:1.3rem;color:var(--muted);line-height:1}
+
+/* ---------- 11. ปุ่มเติมเครดิตด่วน & คำถามที่พบบ่อย ----------
+   ปุ่มเติมเครดิตอยู่ในแผนบัญชี (#acctTopup) · คำถามอยู่ใน footer (details.faq)
+   ปรับสีที่ themes.css ปรับระยะที่ "0. ตัวปรับเร็ว" */
+.acct-topup{
+  width:100%;
+  min-height:46px;
+  margin-top:10px;
+  border-radius:16px;
+  background:transparent;
+  border:1px solid rgba(229,196,119,.55);
+  color:var(--gold-soft);
+  font-size:.95rem;
+  font-weight:600;
+}
+.acct-topup:active{background:rgba(229,196,119,.12)}
+
+.faq{
+  margin-bottom:12px;
+  border-radius:16px;
+  background:var(--ghost);
+  border:1px solid var(--card-edge);
+  overflow:hidden;
+}
+.faq summary{
+  min-height:46px;
+  padding:0 16px;
+  display:flex;
+  align-items:center;
+  color:var(--text);
+  font-size:.95rem;
+  font-weight:600;
+  cursor:pointer;
+  list-style:none;
+}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{
+  content:"›";
+  margin-left:auto;
+  color:var(--muted);
+  font-size:1.3rem;
+  transform:rotate(90deg);
+  transition:transform .2s ease;
+}
+.faq[open] summary::after{transform:rotate(-90deg)}
+.faq-body{
+  padding:4px 16px 14px;
+  font-size:.88rem;
+  line-height:1.7;
+  color:var(--muted);
+}
+.faq-body p{margin:10px 0 0}
+.faq-body b{color:var(--text)}
+.faq-foot{margin:0;font-size:.8rem;text-align:center}
