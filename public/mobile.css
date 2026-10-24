@@ -1443,3 +1443,69 @@ body.pay-open #paymentCard:not([hidden]){
   body.pay-open #paymentCard:not([hidden]){display:block}
   #resultCard:has(#result > p.empty){display:none}
 }
+
+/* ---------- 25. กล่องเครดิตเป็นบัตรทองดำ (ปัดสลับได้) ----------
+   บัตรตรวจกับบัตรเสียงอยู่ในแถวเลื่อนแนวนอน ปัดซ้ายขวาเพื่อสลับ
+   มีชิปทอง และแสงโฮโลแกรมวิ่งผ่านบัตร · ปิดการเคลื่อนไหวเมื่อผู้ใช้ตั้ง reduced-motion */
+#authLoggedIn .acct-credit-row .acct-credits{
+  flex:1;
+  min-width:0;
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+  padding:0 2px 2px;
+  margin:0;
+}
+#authLoggedIn .acct-credits::-webkit-scrollbar{display:none}
+#authLoggedIn .acct-credits .acct-cell{
+  position:relative;
+  flex:0 0 78%;
+  aspect-ratio:1.586;
+  min-height:0;
+  padding:12px 14px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  overflow:hidden;
+  scroll-snap-align:start;
+  border-radius:16px;
+  background:linear-gradient(135deg,#1c1d22 0%,#0b0b0d 55%,#3a2f17 100%);
+  border:1px solid rgba(229,196,119,.38);
+  box-shadow:0 8px 22px rgba(0,0,0,.45);
+}
+#authLoggedIn .acct-credits .acct-cell::before{
+  content:"";
+  width:26px;
+  height:19px;
+  border-radius:4px;
+  background:linear-gradient(135deg,#f3dca0,#b8924a);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.25);
+}
+#authLoggedIn .acct-credits .acct-cell small{
+  font-size:.74rem;
+  color:#cfc6b0;
+}
+#authLoggedIn .acct-credits .acct-cell b{
+  font-size:1.45rem;
+  color:#f3dca0;
+}
+#authLoggedIn .acct-credits .acct-cell::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.16) 45%,transparent 60%);
+  background-size:250% 100%;
+  animation:acctHolo 4.5s linear infinite;
+  pointer-events:none;
+}
+@keyframes acctHolo{
+  0%{background-position:150% 0}
+  100%{background-position:-150% 0}
+}
+@media (prefers-reduced-motion: reduce){
+  #authLoggedIn .acct-credits .acct-cell::after{animation:none;display:none}
+}
