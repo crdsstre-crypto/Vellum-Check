@@ -86,6 +86,8 @@
     <button type="button" class="sheet-close" id="authClose" aria-label="ปิด">✕</button>
     <h2>0. บัญชีผู้ใช้</h2>
     <div id="authLoggedOut">
+        <button type="button" class="google-btn" id="googleBtn">เข้าสู่ระบบด้วย Google</button>
+        <p class="or-line">หรือ</p>
       <input id="email" type="email" placeholder="อีเมล" autocomplete="email">
       <input id="password" type="password" placeholder="รหัสผ่าน (อย่างน้อย 8 ตัว)" autocomplete="current-password">
       <div class="btns">
@@ -216,6 +218,14 @@
 
 <script>
 /* เปิด/ปิดแผนบัญชี (มือถือ) ไม่แตะ script.js */
+/* ล็อกอินด้วย Google: ส่งไปหน้ายืนยันของ Google ที่ server */
+document.getElementById('googleBtn').addEventListener('click', function () {
+  location.href = '/api/auth/google';
+});
+/* กลับมาจาก Google แล้วล็อกอินไม่สำเร็จ */
+if (/[?&]google=error/.test(location.search)) {
+  setTimeout(function () { alert('เข้าสู่ระบบด้วย Google ไม่สำเร็จ ลองใหม่อีกครั้ง'); }, 300);
+}
 /* ปุ่มเติมเครดิตด่วน: ปิดแผนบัญชี แล้วเลื่อนไปหมวด 3 */
 document.getElementById('acctTopup').addEventListener('click', function () {
   document.body.classList.remove('auth-open');
