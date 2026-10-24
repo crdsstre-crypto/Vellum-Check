@@ -365,6 +365,26 @@ function openByDefault(index) {
 
 const ICO_WARN = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2.5 20h19L12 3z"/><path d="M12 10v4M12 17.2v.1"/></svg>';
 
+
+// ข้อเสนอแนะแบบย่อ: เห็นข้อสรุปสั้น ๆ ก่อน แล้วกดดูข้อความเดิมกับข้อความที่แนะนำเมื่ออยากอ่าน
+// (ไม่เขียนเหตุผลซ้ำ เพราะมีหัวข้อ "เหตุผลที่ควรตรวจสอบ" อยู่แล้ว)
+const ICO_BULB = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>';
+function renderSuggest(item) {
+  const hasOld = !item.missing && !!item.quote;
+  return `<div class="it-sug sg">
+    <h4>${ICO_BULB}ข้อเสนอแนะ</h4>
+    <p class="sg-sum">${esc(item.suggested_fix)}</p>
+    <details class="sg-more">
+      <summary><span class="sg-open">ดูข้อความ${hasOld ? 'เดิมและข้อความ' : ''}ที่แนะนำ</span><span class="sg-close">ซ่อนรายละเอียด</span></summary>
+      ${hasOld ? `<p class="cmp-lbl">ข้อความเดิมในสัญญา</p><p class="cmp-old">${esc(item.quote)}</p>` : ''}
+      <p class="cmp-lbl">ข้อความที่แนะนำให้พิจารณาใช้</p>
+      <p class="cmp-new">${esc(item.suggested_fix)}</p>
+      <button type="button" class="more-btn" data-act="copyfix">คัดลอกข้อความที่แนะนำ</button>
+      <p class="sg-note">ตัวอย่างเพื่อประกอบการพิจารณา ควรตรวจสอบให้สอดคล้องกับข้อเท็จจริงและกฎหมายที่ใช้บังคับก่อนนำไปใช้จริง</p>
+    </details>
+  </div>`;
+}
+
 function renderItem(item, index) {
   const lv = ['check_detail', 'caution', 'low'].includes(item.level) ? item.level : 'low';
   return `<details class="item lv-${lv}" ${openByDefault(index) ? 'open' : ''}>
@@ -376,7 +396,7 @@ function renderItem(item, index) {
     ${item.explanation ? `<p class="it-lbl">เหตุผลที่ควรตรวจสอบ</p><p class="it-text${item.explanation.length > 110 ? ' clamp' : ''}">${esc(item.explanation)}</p>${item.explanation.length > 110 ? '<button type="button" class="more-btn" data-act="more">อ่านเพิ่มเติม</button>' : ''}` : ''}
     ${renderQuote(item)}
     ${item.reference ? `<p class="it-ref">📚 แนวทางตรวจ: ${esc(item.reference)}</p>` : ''}
-    ${item.suggested_fix ? `<div class="it-sug"><h4><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>ข้อเสนอแนะ</h4>${item.missing || !item.quote ? '' : `<p class="cmp-lbl">ข้อความเดิม</p><p class="cmp-old">${esc(item.quote)}</p><p class="cmp-lbl">ข้อความที่แนะนำ</p>`}<p class="cmp-new">${esc(item.suggested_fix)}</p><button type="button" class="more-btn" data-act="copyfix">คัดลอกข้อความที่แนะนำ</button></div>` : ''}
+    ${item.suggested_fix ? renderSuggest(item) : ''}
     ${item.how_to_negotiate ? `<div class="it-sug"><h4>วิธีรับมือ</h4><p>${esc(item.how_to_negotiate)}</p></div>` : ''}
   </details>`;
 }
@@ -706,7 +726,13 @@ function init() {
     if (btn.dataset.act === 'pdf') {
       // เปิดหน้าต่างพิมพ์ของเครื่อง เลือก "บันทึกเป็น PDF" (iPhone: แชร์ → บันทึกลงไฟล์)
       document.body.classList.add('printing-report');
-      const done = () => document.body.classList.remove('printing-report');
+      // กางส่วนที่พับไว้ให้ครบก่อนพิมพ์ แล้วคืนสถานะเดิมหลังพิมพ์
+      const folded = [...els.result.querySelectorAll('.sg-more:not([open])')];
+      folded.forEach(d => { d.open = true; });
+      const done = () => {
+        document.body.classList.remove('printing-report');
+        folded.forEach(d => { d.open = false; });
+      };
       window.addEventListener('afterprint', done, { once: true });
       toast('เลือก "บันทึกเป็น PDF" ในหน้าต่างถัดไป');
       setTimeout(() => window.print(), 350);
