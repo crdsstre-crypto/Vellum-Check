@@ -12,7 +12,7 @@
 <!-- ลำดับการโหลด CSS: themes (สี) → style (ทุกจอ) → mobile (เฉพาะจอต่ำกว่า 768px) -->
 <link rel="stylesheet" href="themes.css">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="mobile.css?v=9x" media="(max-width: 767px)">
+<link rel="stylesheet" href="mobile.css?v=9y" media="(max-width: 767px)">
 </head>
 <body>
 
@@ -154,6 +154,31 @@
         </div>
         <div id="histList" aria-live="polite"></div>
       </div>
+      <!-- เมนูข้อมูลและความช่วยเหลือ: แถวนโยบาย/เงื่อนไข/ติดต่อ จะแสดงเมื่อใส่ลิงก์จริงใน HELP_LINKS (สคริปต์ท้ายไฟล์) -->
+      <nav class="acct-menu" aria-label="ข้อมูลและความช่วยเหลือ">
+        <button type="button" class="menu-item" id="acctInfoBtn" aria-expanded="false" aria-controls="acctDetail">
+          <span class="menu-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span>
+          <span class="menu-txt"><b>ข้อมูลบัญชี</b><small>อีเมล เครดิต และการเก็บประวัติ</small></span>
+        </button>
+        <dl class="acct-detail" id="acctDetail" hidden>
+          <div><dt>อีเมล</dt><dd id="detEmail">–</dd></div>
+          <div><dt>เครดิตตรวจ</dt><dd id="detCheck">–</dd></div>
+          <div><dt>เครดิตเสียง</dt><dd id="detVoice">–</dd></div>
+          <div><dt>การเก็บประวัติ</dt><dd>เก็บผลตรวจล่าสุดไม่เกิน 50 รายการ</dd></div>
+        </dl>
+        <a class="menu-item" id="helpPrivacy" hidden target="_blank" rel="noopener">
+          <span class="menu-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+          <span class="menu-txt"><b>นโยบายความเป็นส่วนตัว</b><small>วิธีที่เราดูแลข้อมูลของคุณ</small></span>
+        </a>
+        <a class="menu-item" id="helpTerms" hidden target="_blank" rel="noopener">
+          <span class="menu-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></span>
+          <span class="menu-txt"><b>เงื่อนไขการใช้บริการ</b><small>ข้อตกลงและขอบเขตของบริการ</small></span>
+        </a>
+        <a class="menu-item" id="helpContact" hidden target="_blank" rel="noopener">
+          <span class="menu-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4z"/></svg></span>
+          <span class="menu-txt"><b>ติดต่อผู้ดูแล</b><small>แจ้งปัญหาการชำระเงินหรือการใช้งาน</small></span>
+        </a>
+      </nav>
       <button class="acct-out" id="logoutBtn" type="button">
         <span class="acct-ico acct-ico-danger" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></svg></span><span>ออกจากระบบ</span>
         <span class="acct-chev" aria-hidden="true">›</span>
@@ -413,6 +438,40 @@
     }
     var row = ev.target.closest('.hist-card-btn[data-id]');
     if (row) openOneResult(row.getAttribute('data-id'));
+  });
+})();
+/* เมนูข้อมูลบัญชีและความช่วยเหลือ */
+(function () {
+  /* ใส่ลิงก์จริงตรงนี้ที่เดียว: ว่างไว้ = ซ่อนแถวนั้น
+     privacy / terms = URL ของหน้าเอกสาร · contact = อีเมล (เช่น name@example.com) หรือ URL */
+  var HELP_LINKS = { privacy: '', terms: '', contact: '' };
+
+  function href(v, isContact) {
+    v = String(v || '').trim();
+    if (!v) return '';
+    if (/^https?:\/\//i.test(v)) return v;
+    if (isContact && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return 'mailto:' + v;
+    return '';
+  }
+  [['helpPrivacy', 'privacy', false], ['helpTerms', 'terms', false], ['helpContact', 'contact', true]].forEach(function (r) {
+    var a = document.getElementById(r[0]);
+    var h = href(HELP_LINKS[r[1]], r[2]);
+    if (a && h) { a.href = h; a.hidden = false; }
+  });
+
+  var btn = document.getElementById('acctInfoBtn');
+  var box = document.getElementById('acctDetail');
+  if (!btn || !box) return;
+  function text(id) { var el = document.getElementById(id); return el ? el.textContent : '–'; }
+  btn.addEventListener('click', function () {
+    var open = box.hidden;
+    if (open) {
+      document.getElementById('detEmail').textContent = text('userEmail') || '–';
+      document.getElementById('detCheck').textContent = text('walletRowCheck') + ' เครดิต';
+      document.getElementById('detVoice').textContent = text('walletRowVoice') + ' เครดิต';
+    }
+    box.hidden = !open;
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
   });
 })();
 /* ยืนยันก่อนออกจากระบบ (ดักในขั้นตอน capture ก่อนถึงปุ่มจริง) */
