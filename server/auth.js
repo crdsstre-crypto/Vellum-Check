@@ -102,6 +102,16 @@ export async function getUserFromRequest(req) {
   return rows[0] ?? null;
 }
 
+// รูปจาก Google เป็นรูปเริ่มต้น: อัปเดตเมื่อบัญชียังไม่มีรูป หรือรูปเดิมมาจาก Google
+// รูปที่ผู้ใช้อัปโหลดเอง (data URL) จะไม่ถูกทับ
+async function syncGooglePicture(userId, picture) {
+  if (!picture) return;
+  await pool.query(
+    "UPDATE users SET avatar = $2 WHERE id = $1 AND (avatar IS NULL OR avatar LIKE 'https://%')",
+    [userId, picture]
+  );
+}
+
 // หาบัญชีจาก Google หรือสร้างใหม่
 // - ถ้าเคยล็อกอินด้วย Google นี้แล้ว ใช้บัญชีเดิม
 // - ถ้าอีเมลตรงกับบัญชีเดิมและ Google ยืนยันอีเมลแล้ว ผูกบัญชี Google เข้ากับบัญชีนั้น
@@ -113,7 +123,10 @@ export async function findOrCreateGoogleUser({ sub, email, emailVerified, pictur
     'SELECT id, email, credits FROM users WHERE google_sub = $1',
     [sub]
   );
-  if (bySub.rows[0]) return bySub.rows[0];
+  if (bySub.rows[0]) {
+    await syncGooglePicture(bySub.rows[0].id, picture);
+    return bySub.rows[0];
+  }
 
   if (!emailVerified) return null;
 
@@ -123,9 +136,10 @@ export async function findOrCreateGoogleUser({ sub, email, emailVerified, pictur
   );
   if (byEmail.rows[0]) {
     await pool.query(
-      'UPDATE users SET google_sub = $1, avatar = COALESCE(avatar, $3) WHERE id = $2 AND google_sub IS NULL',
-      [sub, byEmail.rows[0].id, picture ?? null]
+      'UPDATE users SET google_sub = $1 WHERE id = $2 AND google_sub IS NULL',
+      [sub, byEmail.rows[0].id]
     );
+    await syncGooglePicture(byEmail.rows[0].id, picture);
     return byEmail.rows[0];
   }
 
