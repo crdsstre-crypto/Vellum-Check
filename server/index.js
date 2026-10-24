@@ -17,6 +17,7 @@ import {
   getUserFromRequest,
   findOrCreateGoogleUser,
 } from './auth.js';
+import { saveInspection, listInspections, getInspection, listPayments } from './history.js';
 import {
   googleConfigured, makeState, buildAuthUrl, readCookieValue, exchangeCodeForProfile,
 } from './googleAuth.js';
@@ -145,6 +146,44 @@ app.get('/api/auth/google/callback', async (req, res) => {
   } catch (err) {
     console.error('[google] failed:', err.message);
     fail();
+  }
+});
+
+// ----- ประวัติการใช้งาน -----
+app.get('/api/history/inspections', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน' });
+    res.json({ items: await listInspections(user.id) });
+  } catch (err) {
+    console.error('[history] list inspections failed:', err.message);
+    res.status(500).json({ error: 'โหลดประวัติไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+
+app.get('/api/history/inspections/:id', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน' });
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id) || id < 1) return res.status(400).json({ error: 'รหัสไม่ถูกต้อง' });
+    const result = await getInspection(user.id, id);
+    if (!result) return res.status(404).json({ error: 'ไม่พบรายการนี้' });
+    res.json({ result });
+  } catch (err) {
+    console.error('[history] get inspection failed:', err.message);
+    res.status(500).json({ error: 'โหลดผลตรวจไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+
+app.get('/api/history/payments', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน' });
+    res.json({ items: await listPayments(user.id) });
+  } catch (err) {
+    console.error('[history] list payments failed:', err.message);
+    res.status(500).json({ error: 'โหลดประวัติไม่สำเร็จ ลองใหม่อีกครั้ง' });
   }
 });
 
@@ -338,6 +377,9 @@ app.post('/api/check', async (req, res) => {
 
   const credits = await getCredits(user.id).catch(() => null);
   const voiceCredits = await getVoiceCredits(user.id).catch(() => null);
+  // บันทึกผลตรวจไว้ดูย้อนหลัง ถ้าบันทึกไม่สำเร็จไม่กระทบผลที่ส่งให้ผู้ใช้
+  saveInspection(user.id, contractType, result)
+    .catch(e => console.error('[history] save failed:', e.message));
   res.json({ ok: true, result, credits, voiceCredits, audio, voiceError });
 });
 
