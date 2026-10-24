@@ -369,33 +369,66 @@ const ICO_WARN = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" st
 // รายการความเสี่ยงแบบย่อ: เห็นชื่อ ระดับ และเหตุผลสั้น ๆ ก่อน
 // ข้อความต้นฉบับ ข้อเสนอแนะ และวิธีรับมือ รวมไว้ใต้ปุ่มเดียว กดเมื่ออยากอ่านรายละเอียด
 const ICO_BULB = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>';
+const ICO_DOC = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>';
+
+// ปุ่มกางรายละเอียด: ชื่อปุ่มเปลี่ยนตามสถานะเปิด/ปิด และมีบรรทัดอธิบายใต้ชื่อ
+function sgSummary(openText, closeText, sub) {
+  return `<summary><span class="sg-ico">${ICO_DOC}</span><span class="sg-st"><b class="sg-open">${openText}</b><b class="sg-close">${closeText}</b><small>${sub}</small></span></summary>`;
+}
+
 function renderDetail(item) {
   const hasQuote = !item.missing && !!item.quote;
-  const fixHtml = item.suggested_fix ? esc(item.suggested_fix) : '';
+  const fix = item.suggested_fix ? esc(item.suggested_fix) : '';
   const nego = item.how_to_negotiate ? `<div class="it-sug"><h4>วิธีรับมือ</h4><p>${esc(item.how_to_negotiate)}</p></div>` : '';
-  if (!hasQuote && !fixHtml && !nego) return '';
+  if (!hasQuote && !fix && !nego) return '';
 
   // ไม่มีข้อเสนอแนะ: พับข้อความต้นฉบับกับวิธีรับมือไว้ใต้ปุ่มเดียว
-  if (!fixHtml) {
+  if (!fix) {
     return `<details class="sg-more">
-      <summary><span class="sg-open">ดูข้อความต้นฉบับและวิธีรับมือ</span><span class="sg-close">ซ่อนรายละเอียด</span></summary>
+      ${sgSummary('ดูข้อความต้นฉบับและวิธีรับมือ', 'ซ่อนรายละเอียด', 'ข้อความในสัญญาที่ระบบอ้างถึง')}
       ${hasQuote ? `<p class="cmp-lbl">ข้อความเดิมในสัญญา</p>${renderQuote(item)}` : ''}${nego}
     </details>`;
   }
 
-  // มีข้อเสนอแนะ: เห็นแนวทางสั้น ๆ + ปุ่มคัดลอกทันที ส่วนข้อความเดิมเทียบกับข้อความที่แนะนำพับไว้
+  const copyBtn = (which, label) =>
+    `<button type="button" class="sg-copy" data-act="copyfix" data-copy="${which}">${ICO_COPY}<span>${label}</span></button>`;
+  const jump = hasViewer() ? '<button type="button" class="src-link" data-act="jump">ดูตำแหน่งในสัญญา <i aria-hidden="true">›</i></button>' : '';
+
+  // มีข้อความเดิม: แท็บ ข้อความเดิม / ข้อความแนะนำ / เปรียบเทียบ (เริ่มที่เปรียบเทียบ)
+  const panels = hasQuote ? `
+      <div class="sg-tabs" role="tablist">
+        <button type="button" role="tab" class="sg-tab" data-act="sgtab" data-tab="old">ข้อความเดิม</button>
+        <button type="button" role="tab" class="sg-tab" data-act="sgtab" data-tab="new">ข้อความแนะนำ</button>
+        <button type="button" role="tab" class="sg-tab on" data-act="sgtab" data-tab="cmp">เปรียบเทียบ</button>
+      </div>
+      <div class="sg-panel sg-old" data-panel="old" hidden>
+        <p class="sg-plbl">ข้อความในสัญญา</p><p class="tx-old">${esc(item.quote)}</p>${jump}
+        ${copyBtn('old', 'คัดลอกข้อความเดิม')}
+      </div>
+      <div class="sg-panel sg-new" data-panel="new" hidden>
+        <p class="sg-plbl">ข้อความที่แนะนำ</p><p class="tx-new">${fix}</p>
+        ${copyBtn('new', 'คัดลอกข้อความแนะนำ')}
+      </div>
+      <div class="sg-panel sg-cmp" data-panel="cmp">
+        <div class="sg-card sg-old"><p class="sg-plbl">01 · ข้อความเดิม</p><p>${esc(item.quote)}</p></div>
+        <p class="sg-arrow"><span aria-hidden="true">↓</span> ปรับถ้อยคำให้ชัดเจนขึ้น</p>
+        <div class="sg-card sg-new"><p class="sg-plbl">02 · ข้อความแนะนำ</p><p>${fix}</p>${copyBtn('new', 'คัดลอกข้อความแนะนำ')}</div>
+      </div>` : `
+      <div class="sg-panel sg-new" data-panel="new">
+        <p class="sg-plbl">ข้อความที่แนะนำ</p><p class="tx-new">${fix}</p>
+        ${copyBtn('new', 'คัดลอกข้อความแนะนำ')}
+      </div>`;
+
   return `<div class="it-sug sg">
-    <h4>${ICO_BULB}ควรขอแก้ไขอย่างไร?</h4>
-    <p class="sg-sum">${fixHtml}</p>
+    <h4>${ICO_BULB}แนวทางแก้ไข</h4>
+    <p class="sg-sub">ข้อเสนอแนะสำหรับนำไปพิจารณา</p>
+    <p class="sg-sum"><span>${fix}</span></p>
     <details class="sg-more">
-      <summary><span class="sg-open">ดูข้อความ${hasQuote ? 'ในสัญญาและข้อความ' : ''}ที่แนะนำ</span><span class="sg-close">ซ่อนรายละเอียด</span></summary>
-      ${hasQuote ? `<p class="cmp-lbl">ข้อความเดิมในสัญญา</p>${renderQuote(item)}` : ''}
-      <p class="cmp-lbl">ข้อความที่แนะนำให้พิจารณาใช้</p>
-      <p class="cmp-new">${fixHtml}</p>
+      ${sgSummary('ดูข้อความเปรียบเทียบ', 'ซ่อนข้อความเปรียบเทียบ', 'เปรียบเทียบก่อนนำไปแก้ไขสัญญา')}
+      ${panels}
       ${nego}
     </details>
-    <button type="button" class="sg-copy" data-act="copyfix">${ICO_COPY}<span>คัดลอกข้อความที่แนะนำ</span></button>
-    <p class="sg-note">ตัวอย่างเพื่อประกอบการพิจารณา ควรตรวจสอบให้สอดคล้องกับข้อเท็จจริงและกฎหมายที่ใช้บังคับก่อนนำไปใช้จริง</p>
+    <p class="sg-note">ข้อความตัวอย่างเพื่อประกอบการพิจารณา ควรตรวจสอบให้สอดคล้องกับข้อเท็จจริงและกฎหมายที่ใช้บังคับก่อนนำไปใช้จริง</p>
   </div>`;
 }
 
@@ -407,7 +440,7 @@ function renderItem(item, index) {
       <span class="it-title"><small>ประเด็นที่ ${pad2(index + 1)}</small><b>${esc(item.title)}</b></span>
       <span class="tag">${esc(CONFIG.levelLabel[item.level] || '')}</span>
     </summary>
-    ${item.explanation ? `<div class="it-reason"><p class="it-lbl">ทำไมเรื่องนี้ถึงสำคัญ</p><p class="it-text${item.explanation.length > 110 ? ' clamp' : ''}">${esc(item.explanation)}</p>${item.explanation.length > 110 ? '<button type="button" class="more-btn" data-act="more">อ่านเพิ่มเติม</button>' : ''}</div>` : ''}
+    ${item.explanation ? `<div class="it-reason"><p class="it-lbl">ทำไมจึงควรตรวจสอบ</p><p class="it-text${item.explanation.length > 110 ? ' clamp' : ''}">${esc(item.explanation)}</p>${item.explanation.length > 110 ? '<button type="button" class="more-btn" data-act="more">อ่านเพิ่มเติม</button>' : ''}</div>` : ''}
     ${item.missing ? renderQuote(item) : ''}
     ${item.reference ? `<p class="it-ref">📚 แนวทางตรวจ: ${esc(item.reference)}</p>` : ''}
     ${renderDetail(item)}
@@ -731,9 +764,23 @@ function init() {
       }
       return;
     }
+    if (btn.dataset.act === 'sgtab') {
+      // สลับแท็บ ข้อความเดิม / ข้อความแนะนำ / เปรียบเทียบ ภายในการ์ดเดียวกัน
+      const box = btn.closest('.sg-more');
+      if (!box) return;
+      box.querySelectorAll('.sg-tab').forEach(t => {
+        const on = t === btn;
+        t.classList.toggle('on', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      box.querySelectorAll('.sg-panel').forEach(p => { p.hidden = p.dataset.panel !== btn.dataset.tab; });
+      return;
+    }
     if (btn.dataset.act === 'copyfix') {
-      const t = btn.parentElement.querySelector('.cmp-new')?.textContent || '';
-      toast((await copyText(t)) ? 'คัดลอกข้อความที่แนะนำแล้ว' : 'คัดลอกไม่สำเร็จ ลองอีกครั้ง');
+      const old = btn.dataset.copy === 'old';
+      const t = btn.closest('.sg-more')?.querySelector(old ? '.tx-old' : '.tx-new')?.textContent || '';
+      const ok = t ? await copyText(t) : false;
+      toast(ok ? (old ? 'คัดลอกข้อความเดิมแล้ว' : 'คัดลอกข้อความที่แนะนำแล้ว') : 'คัดลอกไม่สำเร็จ ลองอีกครั้ง');
       return;
     }
     if (btn.dataset.act === 'pdf') {
