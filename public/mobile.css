@@ -1206,3 +1206,55 @@ button.hist-row:active{background:rgba(229,196,119,.10)}
   font-size:.9rem;
   color:var(--muted);
 }
+
+/* ---------- 16. ปรับหน้าตาแผนบัญชี (ไอคอน ไล่สี เงา หน้าว่าง) ----------
+   ไอคอนอยู่ใน .acct-ico ของปุ่มเมนู · ปรับได้ที่นี่โดยไม่แตะโค้ดส่วนอื่น */
+#authLoggedIn .acct-out{
+  justify-content:flex-start;
+  gap:12px;
+}
+#authLoggedIn .acct-out .acct-chev{margin-left:auto}
+.acct-ico{
+  flex:none;
+  width:30px;
+  height:30px;
+  display:grid;
+  place-items:center;
+  border-radius:10px;
+  font-size:1rem;
+  background:rgba(229,196,119,.12);
+  border:1px solid rgba(229,196,119,.25);
+}
+.acct-ico-danger{
+  background:rgba(229,120,100,.12);
+  border-color:rgba(229,120,100,.3);
+}
+
+/* ปุ่มเติมเครดิต: ไล่สีทองจากสว่างไปเข้ม และมีแสงเงาฟุ้ง */
+.acct-topup{
+  background:linear-gradient(145deg,#f1d88a,#c9a24a);
+  box-shadow:0 4px 15px rgba(212,175,55,.3);
+}
+
+/* กล่องเครดิต: ตัวเลขใหญ่ขึ้น และเส้นขอบบาง ๆ ให้แยกกับพื้นหลัง */
+.acct-cell{
+  border:1px solid rgba(255,255,255,.08);
+}
+.acct-cell b{
+  font-size:1.5rem;
+}
+
+/* หน้าว่างของประวัติ: กรอบประ และไอคอนกล่องว่าง */
+.hist-empty{
+  margin:6px;
+  padding:18px 14px;
+  border:1px dashed var(--card-edge);
+  border-radius:14px;
+}
+.hist-empty::before{
+  content:"🗂️";
+  display:block;
+  margin-bottom:6px;
+  font-size:1.6rem;
+  opacity:.7;
+}
