@@ -1939,3 +1939,67 @@ body.auth-open .wallet::before{animation:none;will-change:auto}
   .hist-card,.hist-detail,.hist-skel{animation:none}
   .hist-chip,.hist-card-btn,.wallet-histlink,.wallet-histlink::after{transition:none}
 }
+
+/* ---------- 27. ลดกรอบซ้อน + เมนูข้อมูลบัญชี (รอบ 9y) ----------
+   Wallet: ใช้พื้นหลังต่างระดับแทนเส้นขอบ (การ์ดใหญ่ > แผงยอดรวม/การ์ดบริการ) ตัวเลขเครดิตรวมเป็นจุดเด่นหลัก
+   เมนู: แถวข้อมูลบัญชีใช้ได้ทันที · นโยบาย/เงื่อนไข/ติดต่อ ต้องใส่ลิงก์ใน HELP_LINKS (index.html)
+   ซ่อมด่วน: เส้นขอบกลับมาซ้อน → .wallet-total / .wallet-card ด้านล่าง · แถวเมนูไม่ขึ้น → HELP_LINKS ว่าง */
+.wallet-total{border:none;background:rgba(255,255,255,.04)}
+.wallet-card{border:none;background:rgba(255,255,255,.05)}
+.wallet-card.is-touched{box-shadow:inset 0 0 0 1px var(--w-gold-line)}
+.wallet-total-num b{font-size:2.8rem;color:var(--gold)}
+.wallet-rows{border-top:1px solid var(--w-line)}
+
+.acct-menu{margin-top:var(--s-3)}
+.menu-item{
+  display:flex;
+  align-items:center;
+  gap:var(--s-2);
+  width:100%;
+  min-height:60px;
+  margin:0;
+  padding:var(--s-1) 2px;
+  border:none;
+  border-top:1px solid var(--w-line);
+  border-radius:0;
+  background:none;
+  color:var(--text);
+  font:inherit;
+  text-align:left;
+  text-decoration:none;
+  transition:background .2s ease;
+}
+.menu-item[hidden]{display:none}
+.menu-item:active{background:rgba(255,255,255,.04)}
+.menu-item::after{content:"›";margin-left:auto;font-size:1.4rem;line-height:1;color:var(--muted);transition:transform .2s ease}
+.menu-item[aria-expanded="true"]::after{transform:rotate(90deg)}
+.menu-ico{
+  flex:none;
+  display:grid;
+  place-items:center;
+  width:40px;
+  height:40px;
+  border-radius:12px;
+  color:var(--gold);
+  background:rgba(217,185,104,.12);
+}
+.menu-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.menu-txt b{font-size:1rem;font-weight:700}
+.menu-txt small{font-size:.84rem;color:var(--w-soft)}
+.acct-detail{
+  margin:0 0 var(--s-2);
+  padding:var(--s-3);
+  display:grid;
+  gap:var(--s-2);
+  border-radius:16px;
+  background:rgba(255,255,255,.04);
+  animation:histIn .22s ease both;
+}
+.acct-detail[hidden]{display:none}
+.acct-detail > div{display:flex;justify-content:space-between;gap:var(--s-3)}
+.acct-detail dt{margin:0;flex:none;font-size:.84rem;color:var(--muted)}
+.acct-detail dd{margin:0;min-width:0;font-size:.9rem;color:var(--text);text-align:right;overflow-wrap:anywhere}
+@media (prefers-reduced-motion: reduce){
+  .menu-item,.menu-item::after{transition:none}
+  .acct-detail{animation:none}
+}
