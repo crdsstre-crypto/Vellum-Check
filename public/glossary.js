@@ -137,7 +137,7 @@ function renderGlossary(result) {
 // ส่วนของผลตรวจที่ทำให้แตะได้ (ไม่รวมหัวข้อใน <summary> เพราะแตะแล้วต้องพับ/กางรายการ)
 // ขีดเส้นใต้เฉพาะคำที่เข้าใจยาก (ไม่ใส่ tap:false) ในคำอธิบายเหตุผล สรุป และรายการที่ไม่พบ
 // ไม่ขีดในข้อความต้นฉบับ (.hl-quote) เพราะมีสีเน้นความเสี่ยงอยู่แล้ว
-const GLOSS_TAP_AREAS = '.it-text, .brief p, .miss li';
+const GLOSS_TAP_AREAS = '.it-text, .it-detail, .brief p, .miss li';
 // ต่อหนึ่งรายการความเสี่ยง ขีดเส้นใต้ไม่เกินนี้ และแต่ละคำขีดแค่ครั้งแรก
 const GLOSS_TAP_PER_GROUP = 2;
 
