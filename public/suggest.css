@@ -113,6 +113,7 @@
 .ix-clause svg{flex:none}
 .ix-done-chip{display:none;margin-left:8px;font-style:normal;font-weight:600;color:#8fd0a8}
 .ix-card.is-done .ix-done-chip{display:inline}
+.ix-go svg{flex:none}
 .ix-go{all:unset;box-sizing:border-box;display:flex;width:100%;align-items:center;justify-content:center;gap:8px;min-height:48px;margin-top:12px;border-radius:999px;border:1px solid var(--border);color:var(--text);font-size:.95rem;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .ix-go.is-primary{background:#f3f3f1;border-color:#f3f3f1;color:#111}
 .ix-go:active{opacity:.85}
@@ -121,20 +122,31 @@
 .ix-more{all:unset;box-sizing:border-box;display:block;width:100%;margin-top:10px;padding:12px;text-align:center;border-radius:999px;border:1px solid var(--border);color:var(--text);font-size:.9rem;font-weight:600;cursor:pointer}
 
 .rpt details.item{scroll-margin-top:calc(env(safe-area-inset-top,0px) + 72px)}
-.rpt details.item.is-picked>summary .it-title small::after{content:" · ประเด็นที่เลือก";color:var(--gold-soft,var(--gold));font-weight:600}
-.rpt details.item.is-flash{animation:ixFlash 1.8s ease-out}
+.ix{scroll-margin-top:calc(env(safe-area-inset-top,0px) + 72px)}
+.pick-banner,.pk-row{display:none}
+.rpt details.item.is-picked{border-color:var(--gold);border-left-color:var(--gold);background:linear-gradient(rgba(200,167,90,.1),rgba(200,167,90,.1)),var(--card)}
+.rpt details.item.is-picked>summary{flex-wrap:wrap}
+.rpt details.item.is-picked>summary .pick-banner{order:-1;flex:0 0 100%;display:flex;align-items:center;gap:8px;margin-bottom:4px;font-size:.9rem;color:var(--gold-soft,var(--gold))}
+.pick-banner b{font-weight:600}
+.pick-banner em{margin-left:auto;font-style:normal;font-weight:600}
+.rpt details.item.is-picked[open] .pk-row{display:grid;grid-template-columns:1fr 1.15fr;gap:10px;margin-top:12px}
+.pk-btn{all:unset;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;border-radius:999px;border:1px solid var(--border);color:var(--text);font-size:.92rem;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.pk-btn.is-primary{background:#f3f3f1;border-color:#f3f3f1;color:#111}
+.pk-btn:active{opacity:.85}
+.pk-btn:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.rpt details.item.is-flash{animation:ixFlash 1.5s ease-out}
 @keyframes ixFlash{
   0%{box-shadow:0 0 0 2px var(--gold),0 0 22px rgba(200,167,90,.45)}
   70%{box-shadow:0 0 0 2px rgba(200,167,90,.6),0 0 14px rgba(200,167,90,.2)}
   100%{box-shadow:0 0 0 0 rgba(200,167,90,0)}
 }
 .rv-row{margin-top:12px}
-.rv-btn{all:unset;box-sizing:border-box;display:flex;width:100%;align-items:center;justify-content:center;min-height:44px;border-radius:999px;border:1px dashed var(--border);color:var(--muted);font-size:.88rem;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.rv-btn{all:unset;box-sizing:border-box;display:flex;width:100%;align-items:center;justify-content:center;gap:8px;min-height:44px;border-radius:999px;border:1px dashed var(--border);color:var(--muted);font-size:.88rem;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .rv-btn.is-on{border-style:solid;border-color:rgba(111,174,138,.5);background:rgba(111,174,138,.14);color:#8fd0a8}
 
 .ix-back{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + var(--nav-h,60px) + 16px);z-index:45;display:flex;align-items:center;gap:6px;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--gold-deep);background:var(--card);color:var(--gold-soft);font:inherit;font-size:.88rem;font-weight:600;box-shadow:0 6px 18px rgba(0,0,0,.4);cursor:pointer;-webkit-tap-highlight-color:transparent}
 .ix-back[hidden]{display:none}
 body.vw-open .ix-back{display:none}
 @media (min-width:768px){.ix-back{display:none}}
-@media print{.ix,.ix-back,.rv-row{display:none}}
+@media print{.ix,.ix-back,.rv-row,.pk-row,.pick-banner{display:none !important}}
 @media (prefers-reduced-motion:reduce){.rpt details.item.is-flash{animation:none;box-shadow:0 0 0 2px var(--gold)}.ix-card{transition:none}}
