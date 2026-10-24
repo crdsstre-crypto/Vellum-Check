@@ -402,7 +402,12 @@ function renderIssueIndex(items) {
   return `<section class="ix" id="issueIndex" aria-label="สารบัญประเด็นที่ควรตรวจสอบ">
     <div class="ix-head"><p class="ix-kick">ผลการตรวจสัญญา</p><span class="ix-badge${hasRisk ? '' : ' is-calm'}">พบ ${items.length} ประเด็น</span></div>
     <h3 class="ix-title">มีจุดไหนที่ควรตรวจสอบ?</h3>
-    <p class="ix-sub">เลือกประเด็นเพื่อไปยังรายละเอียด พร้อมแนวทางแก้ไขที่เกี่ยวข้อง <span class="ix-count" aria-live="polite"></span></p>
+    <p class="ix-sub">เลือกประเด็นเพื่อไปยังรายละเอียด พร้อมแนวทางแก้ไขที่เกี่ยวข้อง</p>
+    <div class="ix-prog" aria-live="polite">
+      <div class="ix-prog-row"><div><small>ตรวจแล้ว</small><b class="ix-prog-n">0 / ${items.length}</b></div><span class="ix-prog-pct">0% ความคืบหน้า</span></div>
+      <div class="ix-bar" role="progressbar" aria-label="ความคืบหน้าการตรวจ" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i style="width:0%"></i></div>
+      <p class="ix-prog-note" hidden>คุณดูครบทุกประเด็นแล้ว ควรอ่านสัญญาทั้งฉบับอีกครั้งก่อนลงนาม</p>
+    </div>
     <div class="ix-list">${cards}</div>${more}
   </section>`;
 }
@@ -425,8 +430,15 @@ function syncReview() {
     const d = b.closest('details.item');
     if (d) d.classList.toggle('is-reviewed', on);
   });
-  const c = els.result.querySelector('.ix-count');
-  if (c) c.textContent = reviewed.size ? '· ตรวจแล้ว ' + reviewed.size + '/' + total : '';
+  const pct = total ? Math.round((reviewed.size / total) * 100) : 0;
+  const n = els.result.querySelector('.ix-prog-n');
+  if (n) n.textContent = reviewed.size + ' / ' + total;
+  const pc = els.result.querySelector('.ix-prog-pct');
+  if (pc) pc.textContent = pct + '% ความคืบหน้า';
+  const bar = els.result.querySelector('.ix-bar');
+  if (bar) { bar.setAttribute('aria-valuenow', String(pct)); bar.firstElementChild.style.width = pct + '%'; }
+  const note = els.result.querySelector('.ix-prog-note');
+  if (note) note.hidden = !(total && reviewed.size === total);
 }
 
 let lastIssueIdx = -1;
@@ -561,14 +573,13 @@ function sgSummary(openText, closeText, sub) {
 function renderDetail(item) {
   const hasQuote = !item.missing && !!item.quote;
   const fix = item.suggested_fix ? esc(item.suggested_fix) : '';
-  const nego = item.how_to_negotiate ? `<div class="it-sug"><h4>วิธีรับมือ</h4><p>${esc(item.how_to_negotiate)}</p></div>` : '';
-  if (!hasQuote && !fix && !nego) return '';
+  if (!hasQuote && !fix) return '';
 
   // ไม่มีข้อเสนอแนะ: พับข้อความต้นฉบับกับวิธีรับมือไว้ใต้ปุ่มเดียว
   if (!fix) {
     return `<details class="sg-more">
-      ${sgSummary('ดูข้อความต้นฉบับและวิธีรับมือ', 'ซ่อนรายละเอียด', 'ข้อความในสัญญาที่ระบบอ้างถึง')}
-      ${hasQuote ? `<p class="cmp-lbl">ข้อความเดิมในสัญญา</p>${renderQuote(item)}` : ''}${nego}
+      ${sgSummary('ดูข้อความต้นฉบับ', 'ซ่อนรายละเอียด', 'ข้อความในสัญญาที่ระบบอ้างถึง')}
+      ${hasQuote ? `<p class="cmp-lbl">ข้อความเดิมในสัญญา</p>${renderQuote(item)}` : ''}
     </details>`;
   }
 
@@ -608,7 +619,6 @@ function renderDetail(item) {
     <details class="sg-more">
       ${sgSummary('ดูข้อความเปรียบเทียบ', 'ซ่อนข้อความเปรียบเทียบ', 'เปรียบเทียบก่อนนำไปแก้ไขสัญญา')}
       ${panels}
-      ${nego}
     </details>
     <p class="sg-note">ข้อความตัวอย่างเพื่อประกอบการพิจารณา ควรตรวจสอบให้สอดคล้องกับข้อเท็จจริงและกฎหมายที่ใช้บังคับก่อนนำไปใช้จริง</p>
   </div>`;
@@ -633,6 +643,12 @@ function renderReason(explanation) {
   return `<div class="it-reason"><p class="it-lbl">สิ่งที่ต้องรู้</p><p class="it-text${long ? ' clamp' : ''}">${esc(explanation)}</p>${long ? '<button type="button" class="more-btn" data-act="more">อ่านเพิ่มเติม</button>' : ''}</div>`;
 }
 
+// ขั้นตอนถัดไป: วิธีรับมือที่ AI เสนอ แสดงให้เห็นทันที ไม่ซ่อนไว้ใต้ปุ่ม (เป็นข้อเสนอแนะ ไม่ใช่ข้อความในสัญญา)
+function renderNext(item) {
+  if (!item.how_to_negotiate) return '';
+  return `<div class="it-next"><h4>${ICO_BULB}ขั้นตอนถัดไป</h4><p>${esc(item.how_to_negotiate)}</p></div>`;
+}
+
 function renderItem(item, index, total) {
   const lv = ['check_detail', 'caution', 'low'].includes(item.level) ? item.level : 'low';
   return `<details class="item lv-${lv}" id="issue-${index}" ${openByDefault(index) ? 'open' : ''}>
@@ -643,6 +659,7 @@ function renderItem(item, index, total) {
       <span class="tag">${esc(CONFIG.levelLabel[item.level] || '')}</span>
     </summary>
     ${renderReason(item.explanation)}
+    ${renderNext(item)}
     ${item.missing ? renderQuote(item) : ''}
     ${item.reference ? `<p class="it-ref">📚 แนวทางตรวจ: ${esc(item.reference)}</p>` : ''}
     ${renderDetail(item)}
