@@ -12,7 +12,7 @@
 <!-- ลำดับการโหลด CSS: themes (สี) → style (ทุกจอ) → mobile (เฉพาะจอต่ำกว่า 768px) -->
 <link rel="stylesheet" href="themes.css">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="mobile.css?v=9t" media="(max-width: 767px)">
+<link rel="stylesheet" href="mobile.css?v=9u" media="(max-width: 767px)">
 </head>
 <body>
 
@@ -117,21 +117,27 @@
       <section class="wallet" aria-label="กระเป๋าเครดิตของคุณ">
         <div class="wallet-head">
           <div class="wallet-titles">
-            <h3 class="wallet-title">MY WALLET</h3>
-            <p class="wallet-sub">จัดการเครดิตของคุณ</p>
+            <p class="wallet-kicker">MY WALLET</p>
+            <h3 class="wallet-title">กระเป๋าเครดิตของคุณ</h3>
           </div>
-          <button type="button" class="wallet-hist" id="walletHist" aria-label="ประวัติการเติมเครดิต">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>
-          </button>
+          <span class="wallet-head-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7V5a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
+          </span>
         </div>
         <div class="wallet-total">
-          <span class="wallet-total-label">เครดิตทั้งหมด</span>
+          <span class="wallet-total-label">เครดิตคงเหลือทั้งหมด</span>
           <p class="wallet-total-num"><b id="walletTotal">–</b> <small>เครดิต</small></p>
-          <span class="wallet-total-note">รวมเครดิตตรวจและเครดิตเสียง</span>
+          <dl class="wallet-rows">
+            <div><dt>เครดิตตรวจ</dt><dd><b id="walletRowCheck">–</b> เครดิต</dd></div>
+            <div><dt>เครดิตเสียง</dt><dd><b id="walletRowVoice">–</b> เครดิต</dd></div>
+          </dl>
         </div>
-        <div class="wallet-list-head"><b>เครดิตของฉัน</b><span>2 ประเภท</span></div>
+        <h4 class="wallet-list-title">บริการของคุณ</h4>
         <div id="creditsLine" class="wallet-cards"></div>
-        <p class="wallet-foot"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.500 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>ระบบเครดิตและประวัติการใช้งาน</p>
+        <button type="button" class="wallet-histlink" id="walletHist">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3v18l2-1.5 2 1.5 2-1.5 2 1.5 2-1.5 2 1.5V3z"/><path d="M9 8h6M9 12h6"/></svg>
+          <span>ดูประวัติรายการและรายละเอียดการใช้เครดิต</span>
+        </button>
       </section>
       <button class="acct-out" id="histInspBtn" type="button">
         <span class="acct-ico" aria-hidden="true">📜</span><span>ประวัติการตรวจสัญญา</span>
@@ -791,7 +797,7 @@ document.addEventListener('click', function (e) {
   init();
 })();
 </script>
-<script src="script.js?v=9t"></script>
+<script src="script.js?v=9u"></script>
 <script src="pay-ui.js"></script>
 </body>
 </html>
