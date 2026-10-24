@@ -1289,3 +1289,28 @@ button.hist-row:active{background:rgba(229,196,119,.10)}
   font-size:.82rem;
   text-decoration:underline;
 }
+
+/* ---------- 19. ไอคอนกล้องบนรูปโปรไฟล์ ----------
+   วงกลมไม่ถูกตัดขอบ เพื่อให้ไอคอนกล้องอยู่นอกรูปได้เล็กน้อย */
+#authLoggedIn .acct-avatar{
+  position:relative;
+  overflow:visible;
+}
+#authLoggedIn .acct-avatar img{
+  position:relative;
+  z-index:0;
+}
+#authLoggedIn .acct-cam{
+  position:absolute;
+  right:-6px;
+  bottom:-4px;
+  width:22px;
+  height:22px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:#0c0c0e;
+  border:1px solid rgba(255,255,255,.18);
+  color:#e9e9ea;
+  z-index:1;
+}
