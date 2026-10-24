@@ -90,17 +90,17 @@ async function api(path, method = 'GET', body) {
 /* MY WALLET: สร้างการ์ดครั้งเดียว หลังจากนั้นอัปเดตตัวเลขในที่เดิม
    (ไม่สร้างใหม่ทุกครั้ง เพื่อไม่ให้อนิเมชันเข้าฉากเล่นซ้ำ) */
 const WALLET_REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const ICO_CHECK = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="m9 14 2 2 4-4"/></svg>';
-const ICO_MIC = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
+const ICO_CHECK = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/><path d="m16 16-1.9-1.9"/></svg>';
+const ICO_MIC = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
 
 function walletCard(cls, icon, th, en, use, id) {
   return `<div class="wallet-card ${cls}">` +
     `<div class="wallet-card-top"><span class="wallet-ico" aria-hidden="true">${icon}</span>` +
     `<div class="wallet-card-name"><b>${th}</b><small>${en}</small></div>` +
-    `<span class="wallet-badge" id="${id}Badge">ใช้งานได้</span></div>` +
+    `<span class="wallet-badge" id="${id}Badge">พร้อมใช้งาน</span></div>` +
     `<p class="wallet-card-use">${use}</p>` +
-    `<div class="wallet-card-bottom"><p class="wallet-card-num"><b id="${id}">–</b> <small>เครดิต</small></p>` +
-    `<button type="button" class="wallet-topup">เติมเครดิต</button></div></div>`;
+    `<div class="wallet-card-bottom"><p class="wallet-card-num"><b id="${id}">–</b><small>เครดิต</small></p>` +
+    `<button type="button" class="wallet-topup" aria-label="เติม${th}">เติมเครดิต</button></div></div>`;
 }
 
 // นับตัวเลขค่อย ๆ เปลี่ยนไปยังค่าจริง (~400ms) ใช้ rAF และแก้เฉพาะข้อความ ไม่กระทบเลย์เอาต์
@@ -127,7 +127,7 @@ function walletSet(id, val) {
   else el.textContent = String(val);
   const badge = document.getElementById(id + 'Badge');
   if (badge) {
-    badge.textContent = val === 0 ? 'หมดแล้ว' : 'ใช้งานได้';
+    badge.textContent = val === 0 ? 'หมดแล้ว' : 'พร้อมใช้งาน';
     badge.classList.toggle('is-empty', val === 0);
   }
 }
@@ -138,13 +138,28 @@ function walletSet(id, val) {
   new MutationObserver(function () {
     const open = document.body.classList.contains('auth-open');
     if (open && !wasOpen) {
-      ['walletTotal', 'walletCheck', 'walletVoice'].forEach(function (id) {
+      ['walletTotal', 'walletRowCheck', 'walletRowVoice', 'walletCheck', 'walletVoice'].forEach(function (id) {
         const el = document.getElementById(id);
         if (el && el.dataset.target) walletCountTo(el, 0, Number(el.dataset.target));
       });
     }
     wasOpen = open;
   }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+})();
+
+// แตะการ์ด: ขอบเปลี่ยนเป็นสีทองเล็กน้อย (iOS ไม่รองรับ :active บน div จึงใช้คลาสแทน)
+(function () {
+  const root = document.getElementById('creditsLine');
+  if (!root) return;
+  root.addEventListener('pointerdown', function (e) {
+    const c = e.target.closest('.wallet-card');
+    if (c) c.classList.add('is-touched');
+  }, { passive: true });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (t) {
+    root.addEventListener(t, function () {
+      root.querySelectorAll('.is-touched').forEach(function (c) { c.classList.remove('is-touched'); });
+    }, { passive: true });
+  });
 })();
 
 function showCredits(n, voice) {
@@ -158,6 +173,8 @@ function showCredits(n, voice) {
   }
   walletSet('walletCheck', hasN ? n : null);
   walletSet('walletVoice', voiceNum);
+  walletSet('walletRowCheck', hasN ? n : null);
+  walletSet('walletRowVoice', voiceNum);
   walletSet('walletTotal', hasN ? n + voiceNum : null);
 
   // ป้ายบนหน้าหลัก (มือถือ) ให้เห็นเครดิตทันทีโดยไม่ต้องเปิดแผนบัญชี
