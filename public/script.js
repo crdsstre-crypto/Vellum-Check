@@ -333,9 +333,9 @@ function renderSummary(counts) {
   const top = c.check_detail ? 'check_detail' : (c.caution ? 'caution' : 'low');
   const pct = total ? Math.round((c[top] / total) * 100) : 0;
   const rows = ['check_detail', 'caution', 'low'].filter(k => k !== top).map(k =>
-    `<div class="sum-row lv-${k}"><span>${CONFIG.levelLabel[k]}</span><b>${pad2(c[k])} รายการ</b></div>`).join('');
+    `<div class="sum-row lv-${k}" data-jumplv="${k}" role="button" tabindex="0"><span>${CONFIG.levelLabel[k]}</span><b>${pad2(c[k])} รายการ</b></div>`).join('');
   return `<div class="summary sum-panel lv-${top}">
-    <div class="sum-top"><span>${CONFIG.levelLabel[top]}</span><b>${pad2(c[top])}</b></div>
+    <div class="sum-top" data-jumplv="${top}" role="button" tabindex="0"><span>${CONFIG.levelLabel[top]}</span><b>${pad2(c[top])}</b></div>
     <div class="sum-bar" role="img" aria-label="สัดส่วน ${pct}%"><i style="width:${pct}%"></i></div>
     ${rows}
   </div>`;
@@ -356,7 +356,7 @@ function renderQuote(item) {
   }
   return `<p class="found">✅ พบข้อความนี้ในสัญญาต้นฉบับ</p>
     <blockquote>${esc(item.quote)}</blockquote>
-    <button type="button" class="jump-btn" data-act="jump">ดูข้อความในสัญญาต้นฉบับ</button>`;
+    ${hasViewer() ? '<button type="button" class="jump-btn" data-act="jump">ดูข้อความในสัญญาต้นฉบับ</button>' : ''}`;
 }
 
 // บนมือถือเปิดแค่สองรายการแรก (เรียงจากความเสี่ยงสูงสุด) ที่เหลือพับไว้ให้แตะเปิดเอง
@@ -374,18 +374,19 @@ function renderItem(item, index) {
       <span class="it-title"><em>${pad2(index + 1)} —</em> <b>${esc(item.title)}</b></span>
     </summary>
     <span class="tag">${esc(CONFIG.levelLabel[item.level] || '')}</span>
-    ${item.explanation ? `<p class="it-text">${esc(item.explanation)}</p>` : ''}
+    ${item.explanation ? `<p class="it-text${item.explanation.length > 110 ? ' clamp' : ''}">${esc(item.explanation)}</p>${item.explanation.length > 110 ? '<button type="button" class="more-btn" data-act="more">อ่านเพิ่มเติม</button>' : ''}` : ''}
     ${renderQuote(item)}
     ${item.reference ? `<p class="it-ref">📚 แนวทางตรวจ: ${esc(item.reference)}</p>` : ''}
-    ${item.suggested_fix ? `<div class="it-sug"><h4>ข้อเสนอแนะ</h4><p>${esc(item.suggested_fix)}</p></div>` : ''}
+    ${item.suggested_fix ? `<div class="it-sug"><h4>ข้อเสนอแนะ</h4>${item.missing || !item.quote ? '' : `<p class="cmp-lbl">ข้อความเดิม</p><p class="cmp-old">${esc(item.quote)}</p><p class="cmp-lbl">ข้อความที่แนะนำ</p>`}<p class="cmp-new">${esc(item.suggested_fix)}</p><button type="button" class="more-btn" data-act="copyfix">คัดลอกข้อความที่แนะนำ</button></div>` : ''}
     ${item.how_to_negotiate ? `<div class="it-sug"><h4>วิธีรับมือ</h4><p>${esc(item.how_to_negotiate)}</p></div>` : ''}
   </details>`;
 }
 
 function renderMissing(list) {
   if (!list.length) return '';
-  return `<h3>สิ่งที่สัญญายังไม่ได้ระบุ</h3>
-    <ul>${list.map(m => `<li>${esc(m)}</li>`).join('')}</ul>`;
+  return `<section class="miss"><h3>ไม่พบในข้อความที่ตรวจ</h3>
+    <p class="miss-note">ไม่ได้แปลว่าสัญญาไม่มีเรื่องนี้ ระบบอาจอ่านเอกสารได้ไม่ครบ ควรเช็กกับต้นฉบับอีกครั้ง</p>
+    <ul>${list.map(m => `<li>${esc(m)}</li>`).join('')}</ul></section>`;
 }
 
 // ถ้าผู้ใช้ไม่ได้เลือกประเภท (ไม่แน่ใจ) แต่ระบบดูจากข้อความได้ ให้บอกผลและเปิดให้เปลี่ยนได้
@@ -406,6 +407,9 @@ function addDetectBanner(result, selected) {
 }
 
 let lastResult = null;
+// ข้อความสัญญาที่ใช้ตรวจ จับคู่กับผลตรวจรอบนั้นเท่านั้น (ผลจากประวัติไม่มีข้อความนี้ เพราะเราไม่เก็บไว้)
+let viewerSrc = null;
+const hasViewer = () => !!(viewerSrc && viewerSrc.result === lastResult);
 
 // ข้อความสรุปผลตรวจสำหรับคัดลอกหรือแชร์ (ไม่รวมข้อความต้นฉบับของสัญญา)
 function buildShareText(result) {
@@ -566,6 +570,7 @@ async function runCheck() {
       return;
     }
 
+    viewerSrc = { result: r.data.result, text };
     renderResult(r.data.result);
     if (typeof r.data.credits === 'number') toast('ใช้ 1 เครดิต · เหลือ ' + r.data.credits + ' เครดิต');
     addDetectBanner(r.data.result, contractType);
@@ -678,7 +683,23 @@ function init() {
     const btn = e.target.closest('[data-act]');
     if (!btn || !lastResult) return;
     if (btn.dataset.act === 'jump') {
-      jumpToQuote(btn.closest('details')?.querySelector('blockquote')?.textContent || '');
+      const all = [...els.result.querySelectorAll('details.item')];
+      const idx = all.indexOf(btn.closest('details'));
+      if (typeof openViewer === 'function') openViewer(idx);
+      else jumpToQuote(btn.closest('details')?.querySelector('blockquote')?.textContent || '');
+      return;
+    }
+    if (btn.dataset.act === 'more') {
+      const p = btn.previousElementSibling;
+      if (p && p.classList.contains('it-text')) {
+        const open = p.classList.toggle('clamp');
+        btn.textContent = open ? 'อ่านเพิ่มเติม' : 'แสดงน้อยลง';
+      }
+      return;
+    }
+    if (btn.dataset.act === 'copyfix') {
+      const t = btn.parentElement.querySelector('.cmp-new')?.textContent || '';
+      toast((await copyText(t)) ? 'คัดลอกข้อความที่แนะนำแล้ว' : 'คัดลอกไม่สำเร็จ ลองอีกครั้ง');
       return;
     }
     if (btn.dataset.act === 'pdf') {
@@ -726,6 +747,14 @@ function init() {
       if (f) handleUpload(f);
     });
   }
+  els.result.addEventListener('click', function (e) {
+    const j = e.target.closest('[data-jumplv]');
+    if (!j) return;
+    const target = els.result.querySelector('details.item.lv-' + j.dataset.jumplv);
+    if (!target) { toast('ไม่มีรายการในระดับนี้'); return; }
+    target.open = true;
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
   els.clearBtn.addEventListener('click', clearAll);
 
   showLoggedOut();
