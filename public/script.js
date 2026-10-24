@@ -89,7 +89,12 @@ async function api(path, method = 'GET', body) {
 
 function showCredits(n, voice) {
   lastCredits = typeof n === 'number' ? n : null;
-  els.creditsLine.textContent = `เครดิตตรวจคงเหลือ ${n} · เครดิตเสียงคงเหลือ ${voice ?? 0}`;
+  // แสดงเป็นสองกล่องแยกกัน (ตรวจ / เสียง) เพื่อให้ตัวเลขอ่านง่าย
+  const checkNum = typeof n === 'number' ? n : '–';
+  const voiceNum = typeof voice === 'number' ? voice : 0;
+  els.creditsLine.innerHTML =
+    `<span class="acct-cell"><small>เครดิตตรวจ</small><b>${checkNum}</b></span>` +
+    `<span class="acct-cell"><small>เครดิตเสียง</small><b>${voiceNum}</b></span>`;
 
   // ป้ายบนหน้าหลัก (มือถือ) ให้เห็นเครดิตทันทีโดยไม่ต้องเปิดแผนบัญชี
   const chip = document.getElementById('creditChip');
