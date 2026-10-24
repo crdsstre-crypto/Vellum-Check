@@ -62,6 +62,7 @@ function cleanResult(raw, sourceText) {
       id: i + 1,
       level: LEVELS.has(it?.level) ? it.level : 'caution',
       title: str(it?.title),
+      topic: str(it?.topic).slice(0, 30),
       quote,
       explanation: str(it?.explanation),
       reference: str(it?.reference),
