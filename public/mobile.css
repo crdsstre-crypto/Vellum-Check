@@ -2003,3 +2003,95 @@ body.auth-open .wallet::before{animation:none;will-change:auto}
   .menu-item,.menu-item::after{transition:none}
   .acct-detail{animation:none}
 }
+
+/* ---------- 28. แผนบัญชีกระชับ + แท็บ (รอบ 9z) ----------
+   เป้าหมาย: เลื่อนน้อยลงแต่เข้าถึงทุกเมนูได้เร็ว
+   ส่วนบนคงที่: แถวบัญชี + แผงเครดิตรวม + ปุ่มเติมเครดิต/ดูประวัติ · ส่วนล่างเป็นแท็บ บริการ / ประวัติ / บัญชี
+   ซ่อมด่วน: ส่วนหัวสูงเกิน → .acct-row, .wallet-total · แท็บไม่สลับ → .pane / .sheet-tab · รายการประวัติสูงเกิน → .hist-card */
+#authLoggedIn .acct-row{padding:var(--s-2) var(--s-3);gap:var(--s-2);border-radius:16px}
+#authLoggedIn .acct-avatar{width:40px;height:40px}
+.acct-check,.acct-label{display:none}
+.acct-mail{font-size:.95rem}
+
+.wallet{margin-top:var(--s-2);padding:var(--s-3) var(--s-3) var(--s-2);border-radius:22px}
+.wallet-head{display:none}
+.wallet-total{margin-top:0;padding:var(--s-3)}
+.wallet-total-label{font-size:.85rem}
+.wallet-total-num{margin:0;display:flex;align-items:baseline;gap:6px}
+.wallet-total-num b{font-size:2.4rem;line-height:1.1}
+.wallet-rows{flex-direction:row;gap:var(--s-2);margin:var(--s-2) 0 0;padding-top:var(--s-2)}
+.wallet-rows > div{flex:1;flex-direction:column;align-items:flex-start;gap:0}
+.wallet-rows dt{font-size:.8rem}
+.wallet-rows dd{font-size:.85rem}
+.wallet-rows dd b{font-size:1.15rem}
+
+.wallet-quick{display:flex;gap:var(--s-1);margin-top:var(--s-3)}
+.wallet-quick .wallet-topup{flex:3;min-width:0;min-height:46px;padding:0 var(--s-3)}
+.wallet-quick-hist{
+  flex:2;
+  min-height:46px;
+  border-radius:999px;
+  border:1px solid var(--w-gold-line);
+  background:transparent;
+  color:var(--gold);
+  font-size:.95rem;
+  font-weight:700;
+  transition:background .2s ease,transform .15s ease;
+}
+.wallet-quick-hist:active{background:rgba(217,185,104,.1);transform:scale(.97)}
+
+.sheet-tabs{
+  display:flex;
+  gap:6px;
+  margin:var(--s-3) 0 var(--s-2);
+  padding:4px;
+  border-radius:14px;
+  background:rgba(255,255,255,.05);
+}
+.sheet-tab{
+  flex:1;
+  min-height:40px;
+  border:none;
+  border-radius:11px;
+  background:transparent;
+  color:var(--muted);
+  font-size:.9rem;
+  font-weight:600;
+  transition:background .2s ease,color .2s ease;
+}
+.sheet-tab.is-on{background:var(--w-card);color:var(--gold)}
+.pane:not(.is-on){display:none}
+.pane.is-on{animation:histIn .22s ease both}
+
+/* บริการ: การ์ดกระชับ ไม่มีคำอธิบายยาว */
+.wallet-list-head{display:none}
+.wallet-card{padding:var(--s-3);border-radius:18px}
+.wallet-card-use{display:none}
+.wallet-ico{width:42px;height:42px;border-radius:13px}
+.wallet-card-bottom{margin-top:var(--s-2);padding-top:var(--s-2)}
+.wallet-card-num b{font-size:1.7rem}
+.wallet-card .wallet-topup{min-width:0;min-height:42px;padding:0 var(--s-3);font-size:.92rem}
+.wallet-cards{gap:var(--s-2)}
+
+/* ประวัติ: แถวเดียวต่อรายการ ยอดเงินและสถานะอยู่ขวา */
+.wallet-histlink{display:none}
+.pane[data-pane="hist"] .history-panel{margin-top:0}
+.hist-card{padding:var(--s-2) var(--s-3);margin-bottom:var(--s-1)}
+.hist-card-top,.hist-card-btn{min-height:44px}
+.hist-card-btn{padding:var(--s-2) var(--s-3);margin-bottom:var(--s-1)}
+.hist-ico{width:36px;height:36px;border-radius:11px}
+.hist-ico svg{width:18px;height:18px}
+.hist-side{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.hist-side .hist-amt{font-size:1rem}
+.hist-side .hist-status{padding:2px 10px;font-size:.74rem}
+.hist-detail{margin-top:var(--s-2);padding-top:var(--s-2);border-top:1px solid var(--w-line)}
+
+/* บัญชี: เมนูและออกจากระบบ */
+.pane[data-pane="acct"] .acct-menu{margin-top:0}
+.pane[data-pane="acct"] .menu-item:first-child{border-top:none}
+.pane[data-pane="acct"] .acct-out{margin-top:var(--s-2)}
+
+@media (prefers-reduced-motion: reduce){
+  .pane.is-on{animation:none}
+  .sheet-tab,.wallet-quick-hist{transition:none}
+}
