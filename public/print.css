@@ -1,0 +1,19 @@
+/* print.css: ใช้ตอนกด "บันทึก PDF" (โหลดด้วย media=print) */
+/* ---------- พิมพ์/บันทึก PDF: แสดงเฉพาะรายงาน พื้นขาวตัวดำ ---------- */
+@media print{
+  body.printing-report > *:not(main){display:none !important}
+  body.printing-report main > *:not(#resultCard){display:none !important}
+  body.printing-report #resultCard{display:block !important;border:0;box-shadow:none;background:#fff}
+  body.printing-report #resultCard > h2,
+  body.printing-report .share-bar,
+  body.printing-report .fu,
+  body.printing-report .jump-btn,
+  body.printing-report .detect-banner,
+  body.printing-report .to-top{display:none !important}
+  body.printing-report,body.printing-report #resultCard{background:#fff !important;color:#111 !important}
+  body.printing-report .rpt *{color:#111 !important;background:transparent !important;box-shadow:none !important;border-color:#bbb !important}
+  body.printing-report .rpt .item{break-inside:avoid;border-left:3px solid #888 !important}
+  body.printing-report .rpt details:not([open]) > *:not(summary){display:block !important}
+  body.printing-report .sum-bar{border:1px solid #bbb}
+  body.printing-report .sum-bar i{background:#555 !important}
+}
