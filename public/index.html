@@ -113,10 +113,22 @@
       </div>
       <input type="file" id="acctFile" accept="image/*" hidden>
       <button type="button" class="acct-photo-del" id="acctPhotoDel" hidden>ลบรูปโปรไฟล์</button>
-      <div class="acct-credit-row">
-        <p id="creditsLine" class="acct-credits"></p>
-        <button class="acct-topup" id="acctTopup" type="button">+ เติม</button>
-      </div>
+      <!-- MY WALLET: ตัวเลขและการ์ดเครดิตสร้างจาก script.js showCredits() -->
+      <section class="wallet" aria-label="กระเป๋าเครดิตของคุณ">
+        <div class="wallet-head">
+          <div class="wallet-titles">
+            <h3 class="wallet-title">MY WALLET</h3>
+            <p class="wallet-sub">จัดการเครดิตของคุณ</p>
+          </div>
+        </div>
+        <div class="wallet-total">
+          <span class="wallet-total-label">เครดิตทั้งหมด</span>
+          <p class="wallet-total-num"><b id="walletTotal">–</b> <small>เครดิต</small></p>
+          <span class="wallet-total-note">รวมเครดิตตรวจและเครดิตเสียง</span>
+        </div>
+        <div class="wallet-list-head"><b>เครดิตของฉัน</b><span>2 ประเภท</span></div>
+        <div id="creditsLine" class="wallet-cards"></div>
+      </section>
       <button class="acct-out" id="histInspBtn" type="button">
         <span class="acct-ico" aria-hidden="true">📜</span><span>ประวัติการตรวจสัญญา</span>
         <span class="acct-chev" aria-hidden="true">›</span>
@@ -436,7 +448,8 @@ document.getElementById('payClose').addEventListener('click', closePayModal);
 document.getElementById('payBackdrop').addEventListener('click', closePayModal);
 document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePayModal(); });
 
-document.getElementById('acctTopup').addEventListener('click', function () {
+document.addEventListener('click', function (e) {
+  if (!e.target.closest('.wallet-topup')) return;
   document.body.classList.remove('auth-open');
   document.getElementById('authToggle').setAttribute('aria-expanded', 'false');
   if (window.matchMedia('(max-width: 767px)').matches) {
