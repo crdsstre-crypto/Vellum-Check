@@ -33,3 +33,11 @@
 .sg-copy:active{opacity:.85}
 .sg-note{margin:10px 0 0 !important;font-size:.76rem !important;line-height:1.6 !important;color:var(--muted)}
 @media print{.sg-copy{display:none}}
+
+/* หัวการ์ด: ป้าย "ประเด็นที่ 01" เล็ก ๆ เหนือหัวข้อที่เป็นภาษาคนทั่วไป */
+.rpt .item .it-title{display:block;flex:1;min-width:0}
+.rpt .item .it-title small{display:block;font-size:.78rem;color:var(--muted);margin-bottom:1px}
+.rpt .item .it-title b{display:block;font-size:1.08rem;line-height:1.4;color:var(--text)}
+.rpt .item .it-ico{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.06);margin-top:0}
+.rpt .item.lv-check_detail .it-ico{background:rgba(217,112,111,.16)}
+.rpt .item.lv-caution .it-ico{background:rgba(200,167,90,.16)}
