@@ -2095,3 +2095,92 @@ body.auth-open .wallet::before{animation:none;will-change:auto}
   .pane.is-on{animation:none}
   .sheet-tab,.wallet-quick-hist{transition:none}
 }
+
+/* ---------- 29. แถบนำทางล่าง + แผนบัญชี/ประวัติแยกหน้า (รอบ 9a2) ----------
+   แถบล่าง 3 ปุ่ม: ตรวจสัญญา / ประวัติ / บัญชี (แสดงเมื่อล็อกอิน · ควบคุมโดยสคริปต์ท้าย index.html)
+   body[data-sheet="hist"] = แผนแสดงเฉพาะประวัติ · body[data-sheet="acct"] = เครดิต บริการ เมนู ออกจากระบบ
+   แถบล่างอยู่ใต้แผนเลือกประเภทสัญญาและหน้าต่างเติมเครดิต (z-index 44) แต่ลอยเหนือพื้นมืดตอนเปิดแผนบัญชี (60)
+   ซ่อมด่วน: แถบบังเนื้อหา → body.has-nav footer · แผนชนแถบล่าง → body.has-nav #authCard · ความสูงแถบ → --nav-h */
+:root{--nav-h:60px}
+
+.bottom-nav:not([hidden]){
+  display:flex;
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:44;
+  height:calc(var(--nav-h) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);
+  background:rgba(11,13,16,.94);
+  -webkit-backdrop-filter:blur(14px);
+  backdrop-filter:blur(14px);
+  border-top:1px solid var(--w-line);
+}
+body.auth-open .bottom-nav{z-index:60}
+.bn-item{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  min-height:var(--nav-h);
+  margin:0;
+  padding:0;
+  border:none;
+  background:none;
+  color:var(--muted);
+  font-size:.72rem;
+  font-weight:600;
+  transition:color .2s ease,transform .15s ease;
+}
+.bn-item:active{transform:scale(.94)}
+.bn-item.is-on{color:var(--gold)}
+
+body.has-nav footer{padding-bottom:calc(26px + var(--nav-h) + env(safe-area-inset-bottom))}
+body.has-nav #authCard{
+  bottom:calc(var(--nav-h) + env(safe-area-inset-bottom));
+  max-height:calc(100vh - var(--nav-h) - env(safe-area-inset-bottom) - 56px);
+  max-height:calc(100dvh - var(--nav-h) - env(safe-area-inset-bottom) - 56px);
+}
+body.has-nav .sheet-body{padding-bottom:var(--s-4)}
+
+/* แผนบัญชี: ไม่ใช้แท็บภายในแล้ว แสดงบริการและเมนูต่อกัน · ซ่อนประวัติ */
+.sheet-tabs{display:none}
+.pane:not(.is-on){display:block}
+.pane[data-pane="hist"]{display:none}
+.wallet-quick .wallet-topup{flex:1}
+
+/* แผนประวัติ: เหลือเฉพาะรายการ ใช้พื้นที่เต็ม */
+body[data-sheet="hist"] #authLoggedIn .acct-row,
+body[data-sheet="hist"] #authLoggedIn .acct-photo-del,
+body[data-sheet="hist"] .wallet-total,
+body[data-sheet="hist"] .pane[data-pane="services"],
+body[data-sheet="hist"] .pane[data-pane="acct"]{display:none}
+body[data-sheet="hist"] .pane[data-pane="hist"]{display:block}
+body[data-sheet="hist"] .wallet{margin-top:0;padding:0;background:none;border:none}
+body[data-sheet="hist"] .wallet::before{display:none}
+
+/* ปุ่มดูเพิ่มเติม / ลองใหม่ */
+.hist-more,
+.hist-retry{
+  display:block;
+  width:100%;
+  min-height:46px;
+  margin:var(--s-2) 0 0;
+  border-radius:999px;
+  border:1px solid var(--w-gold-line);
+  background:transparent;
+  color:var(--gold);
+  font-size:.92rem;
+  font-weight:700;
+  transition:background .2s ease,transform .15s ease;
+}
+.hist-empty .hist-retry{width:auto;margin:var(--s-2) auto 0;padding:0 var(--s-4)}
+.hist-more:active,
+.hist-retry:active{background:rgba(217,185,104,.1);transform:scale(.98)}
+
+@media (prefers-reduced-motion: reduce){
+  .bn-item,.hist-more,.hist-retry{transition:none}
+}
