@@ -98,13 +98,18 @@
     <div id="authLoggedIn" hidden>
       <!-- แถวบัญชีที่ใช้งานอยู่ (รูปแบบเดียวกับหน้าการตั้งค่า) -->
       <div class="acct-row">
-        <span class="acct-avatar" id="acctInitial" aria-hidden="true">?</span>
+        <button class="acct-avatar" id="acctAvatarBtn" type="button" aria-label="เปลี่ยนรูปโปรไฟล์">
+          <span id="acctInitial">?</span>
+          <img id="acctPhoto" alt="" hidden>
+        </button>
         <div class="acct-info">
           <span class="acct-label">เข้าสู่ระบบแล้ว</span>
           <b id="userEmail" class="acct-mail"></b>
         </div>
         <span class="acct-check" aria-hidden="true">✓</span>
       </div>
+      <input type="file" id="acctFile" accept="image/*" hidden>
+      <button type="button" class="acct-photo-del" id="acctPhotoDel" hidden>ลบรูปโปรไฟล์</button>
       <div class="acct-credit-row">
         <p id="creditsLine" class="acct-credits"></p>
         <button class="acct-topup" id="acctTopup" type="button">+ เติม</button>
@@ -314,6 +319,91 @@
       }
     }
   }, true);
+})();
+/* รูปโปรไฟล์: แตะวงกลมเพื่อเลือกรูป ระบบย่อเป็น 128 พิกเซลก่อนส่ง */
+(function () {
+  var btn = document.getElementById('acctAvatarBtn');
+  var file = document.getElementById('acctFile');
+  var del = document.getElementById('acctPhotoDel');
+  var photo = document.getElementById('acctPhoto');
+  var initial = document.getElementById('acctInitial');
+  var box = document.getElementById('authLoggedIn');
+  if (!btn || !box) return;
+
+  function applyAvatar(src) {
+    if (src) {
+      photo.src = src;
+      photo.hidden = false;
+      initial.hidden = true;
+      del.hidden = false;
+    } else {
+      photo.removeAttribute('src');
+      photo.hidden = true;
+      initial.hidden = false;
+      del.hidden = true;
+    }
+  }
+  function resizeImage(f) {
+    return new Promise(function (resolve, reject) {
+      var img = new Image();
+      var url = URL.createObjectURL(f);
+      img.onload = function () {
+        var s = Math.min(img.width, img.height);
+        var c = document.createElement('canvas');
+        c.width = 128;
+        c.height = 128;
+        c.getContext('2d').drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, 128, 128);
+        URL.revokeObjectURL(url);
+        resolve(c.toDataURL('image/jpeg', 0.85));
+      };
+      img.onerror = function () {
+        URL.revokeObjectURL(url);
+        reject(new Error('เปิดรูปนี้ไม่ได้ ลองเลือกรูปอื่น'));
+      };
+      img.src = url;
+    });
+  }
+  async function send(method, body) {
+    var res = await fetch('/api/me/avatar', {
+      method: method,
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    var data = await res.json().catch(function () { return {}; });
+    if (!res.ok) throw new Error(data.error || 'บันทึกรูปไม่สำเร็จ');
+    return data;
+  }
+  async function refresh() {
+    try {
+      var res = await fetch('/api/me', { credentials: 'same-origin' });
+      if (res.ok) applyAvatar((await res.json()).avatar || null);
+    } catch (e) { /* ไม่ต้องแจ้ง ใช้ตัวอักษรแทน */ }
+  }
+
+  btn.addEventListener('click', function () { file.click(); });
+  file.addEventListener('change', async function () {
+    var f = file.files && file.files[0];
+    file.value = '';
+    if (!f) return;
+    try {
+      var dataUrl = await resizeImage(f);
+      var d = await send('POST', { image: dataUrl });
+      applyAvatar(d.avatar);
+    } catch (e) { alert(e.message); }
+  });
+  del.addEventListener('click', async function () {
+    if (!window.confirm('ลบรูปโปรไฟล์?')) return;
+    try {
+      await send('DELETE');
+      applyAvatar(null);
+    } catch (e) { alert(e.message); }
+  });
+
+  // เมื่อแผนบัญชีแสดง (ล็อกอินแล้ว) ให้โหลดรูปจากเซิร์ฟเวอร์
+  new MutationObserver(function () { if (!box.hidden) refresh(); })
+    .observe(box, { attributes: true, attributeFilter: ['hidden'] });
+  if (!box.hidden) refresh();
 })();
 /* ล็อกอินด้วย Google: ส่งไปหน้ายืนยันของ Google ที่ server */
 document.getElementById('googleBtn').addEventListener('click', function () {
