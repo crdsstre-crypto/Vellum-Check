@@ -210,8 +210,10 @@
     </div>
   </section>
 
+  <div id="payBackdrop" hidden></div>
   <!-- 3. เติมเครดิต (ซ่อนจนกว่าจะล็อกอิน) -->
   <section class="card" id="paymentCard" hidden>
+    <button type="button" class="pay-close" id="payClose" aria-label="ปิด" hidden>✕</button>
     <h2>3. เติมเครดิต (PromptPay)</h2>
     <div id="packageButtons" class="btns"></div>
     <div id="paymentResult"></div>
@@ -417,11 +419,32 @@ if (/[?&]google=error/.test(location.search)) {
   setTimeout(function () { alert('เข้าสู่ระบบด้วย Google ไม่สำเร็จ ลองใหม่อีกครั้ง'); }, 300);
 }
 /* ปุ่มเติมเครดิตด่วน: ปิดแผนบัญชี แล้วเลื่อนไปหมวด 3 */
+/* หน้าต่างเติมเครดิต (มือถือ): ใช้การ์ด #paymentCard เดิม แค่แสดงเป็นหน้าต่างเด้ง */
+function openPayModal() {
+  var card = document.getElementById('paymentCard');
+  if (!card || card.hidden) return;
+  document.body.classList.add('pay-open');
+  document.getElementById('payBackdrop').hidden = false;
+  document.getElementById('payClose').hidden = false;
+}
+function closePayModal() {
+  document.body.classList.remove('pay-open');
+  document.getElementById('payBackdrop').hidden = true;
+  document.getElementById('payClose').hidden = true;
+}
+document.getElementById('payClose').addEventListener('click', closePayModal);
+document.getElementById('payBackdrop').addEventListener('click', closePayModal);
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePayModal(); });
+
 document.getElementById('acctTopup').addEventListener('click', function () {
   document.body.classList.remove('auth-open');
   document.getElementById('authToggle').setAttribute('aria-expanded', 'false');
-  var card = document.getElementById('paymentCard');
-  if (card) setTimeout(function () { card.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 250);
+  if (window.matchMedia('(max-width: 767px)').matches) {
+    openPayModal();
+  } else {
+    var card = document.getElementById('paymentCard');
+    if (card) setTimeout(function () { card.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 250);
+  }
 });
 (function () {
   var body = document.body;
