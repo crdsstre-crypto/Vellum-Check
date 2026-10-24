@@ -15,7 +15,11 @@ import {
   startSession,
   endSession,
   getUserFromRequest,
+  findOrCreateGoogleUser,
 } from './auth.js';
+import {
+  googleConfigured, makeState, buildAuthUrl, readCookieValue, exchangeCodeForProfile,
+} from './googleAuth.js';
 import {
   getCredits, reserveCredits, refundCredits,
   getVoiceCredits, reserveVoiceCredits, refundVoiceCredits,
@@ -98,6 +102,49 @@ app.get('/api/me', async (req, res) => {
   } catch (err) {
     console.error('[me] failed:', err.message);
     res.status(500).json({ error: 'ระบบมีปัญหา ลองใหม่อีกครั้ง' });
+  }
+});
+
+// ----- ล็อกอินด้วย Google -----
+const OAUTH_STATE_COOKIE = 'vc_oauth_state';
+const CLEAR_STATE_COOKIE = `${OAUTH_STATE_COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`;
+
+app.get('/api/auth/google', (req, res) => {
+  if (!googleConfigured()) {
+    return res.status(503).send('ยังไม่ได้ตั้งค่าการเข้าสู่ระบบด้วย Google');
+  }
+  const state = makeState();
+  res.setHeader(
+    'Set-Cookie',
+    `${OAUTH_STATE_COOKIE}=${state}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=600`
+  );
+  res.redirect(buildAuthUrl(state));
+});
+
+app.get('/api/auth/google/callback', async (req, res) => {
+  const fail = () => {
+    res.append('Set-Cookie', CLEAR_STATE_COOKIE);
+    res.redirect('/?google=error');
+  };
+  try {
+    const { code, state, error } = req.query;
+    const expected = readCookieValue(req, OAUTH_STATE_COOKIE);
+    if (error || typeof code !== 'string' || typeof state !== 'string'
+        || !expected || expected !== state) {
+      return fail();
+    }
+
+    const profile = await exchangeCodeForProfile(code);
+    const user = await findOrCreateGoogleUser(profile);
+    if (!user) return fail();
+
+    // startSession ตั้ง Set-Cookie ใหม่ จึงต้องล้างคุกกี้ state หลังจากนั้น
+    await startSession(req, res, user.id);
+    res.append('Set-Cookie', CLEAR_STATE_COOKIE);
+    res.redirect('/');
+  } catch (err) {
+    console.error('[google] failed:', err.message);
+    fail();
   }
 });
 
