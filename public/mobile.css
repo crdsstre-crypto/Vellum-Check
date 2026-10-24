@@ -2272,3 +2272,128 @@ html[data-compact] .skel{margin-bottom:6px}
 html[data-calm] *,html[data-calm] *::before,html[data-calm] *::after{
   animation:none !important;transition:none !important;scroll-behavior:auto !important;
 }
+
+
+/* =========================================================
+   รอบ 12: BLACK TITANIUM (หน้ารายงานผลตรวจ)
+   สี: พื้น #08090B · การ์ด #17181C · ทอง #C8A75A · ตัวอักษร #F5F5F5 (ตั้งใน themes.css)
+   สีความเสี่ยงใช้เฉพาะป้ายและแถบ ไม่ย้อมทั้งการ์ด:
+   แดง = ควรตรวจละเอียด · ทอง = ควรระวัง · เขียวหม่น = เสี่ยงต่ำ
+   ปรับสีที่ตัวแปร --lv-* ด้านล่างที่เดียว
+   ========================================================= */
+:root{
+  --lv-check_detail:#d9706f;
+  --lv-caution:#c8a75a;
+  --lv-low:#6fae8a;
+  --r-card:20px;
+  --line:rgba(255,255,255,.09);
+}
+body{font-family:'Anuphan','Sarabun',system-ui,sans-serif}
+
+.rpt{display:flex;flex-direction:column;gap:16px}
+.rpt-head{padding-bottom:14px;border-bottom:1px solid var(--line)}
+.rpt-kicker{margin:0 0 6px;font-size:.78rem;letter-spacing:.14em;color:var(--gold);font-weight:600}
+.rpt-kicker span{letter-spacing:.04em;color:var(--muted);font-weight:500}
+.rpt-title{margin:0 0 6px;font-size:1.45rem;line-height:1.3;font-family:'Anuphan',sans-serif;font-weight:700}
+.rpt-meta{margin:0;font-size:.86rem;color:var(--muted)}
+
+/* แผงสรุปความเสี่ยง */
+.sum-panel{
+  display:block;margin:0;padding:18px;
+  border-radius:var(--r-card);background:var(--card);border:1px solid var(--line);
+  box-shadow:0 6px 20px rgba(0,0,0,.35);
+}
+.sum-top{display:flex;align-items:baseline;justify-content:space-between;color:var(--lv-low)}
+.sum-top span{font-size:1.15rem;font-weight:600}
+.sum-top b{font-size:1.9rem;font-weight:600;letter-spacing:.02em}
+.sum-panel.lv-check_detail .sum-top{color:var(--lv-check_detail)}
+.sum-panel.lv-caution .sum-top{color:var(--lv-caution)}
+.sum-bar{height:6px;margin:10px 0 14px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden}
+.sum-bar i{display:block;height:100%;border-radius:inherit;background:var(--lv-low)}
+.sum-panel.lv-check_detail .sum-bar i{background:var(--lv-check_detail)}
+.sum-panel.lv-caution .sum-bar i{background:var(--lv-caution)}
+.sum-row{display:flex;justify-content:space-between;padding:6px 0;font-size:1rem}
+.sum-row.lv-check_detail{color:var(--lv-check_detail)}
+.sum-row.lv-caution{color:var(--lv-caution)}
+.sum-row.lv-low{color:var(--lv-low)}
+.sum-row b{font-weight:600}
+
+.brief{margin:0;padding:14px 16px;border-radius:var(--r-card);background:var(--card);border:1px solid var(--line)}
+.brief p{margin:0 0 6px;font-size:.9rem;line-height:1.6}
+.brief p:last-child{margin:0}
+
+/* การ์ดข้อกฎหมายแต่ละประเด็น: พื้นการ์ดเดียวกัน ขอบบาง ใช้สีเฉพาะแถบข้างและป้าย */
+.rpt .item{
+  margin:0;padding:16px;border-radius:var(--r-card);
+  background:var(--card);border:1px solid var(--line);
+  border-left:3px solid var(--lv-low);
+  box-shadow:0 6px 20px rgba(0,0,0,.35);
+  animation:none;
+}
+.rpt .item.lv-check_detail{border-left-color:var(--lv-check_detail)}
+.rpt .item.lv-caution{border-left-color:var(--lv-caution)}
+.rpt .item summary{
+  display:flex;align-items:flex-start;gap:12px;list-style:none;cursor:pointer;
+  min-height:44px;
+}
+.rpt .item summary::-webkit-details-marker{display:none}
+.rpt .item summary::marker{content:""}
+.it-ico{flex:none;margin-top:1px;color:var(--lv-low)}
+.lv-check_detail .it-ico{color:var(--lv-check_detail)}
+.lv-caution .it-ico{color:var(--lv-caution)}
+.it-title{font-size:1.02rem;line-height:1.5;color:var(--gold-soft)}
+.it-title em{font-style:normal;color:var(--gold)}
+.it-title b{font-weight:600;color:var(--text)}
+.rpt .item .tag{
+  display:inline-block;margin:10px 0 8px;padding:4px 12px;border-radius:999px;
+  font-size:.78rem;font-weight:600;
+  color:var(--lv-low);background:rgba(111,174,138,.14);
+}
+.rpt .item.lv-check_detail .tag{color:var(--lv-check_detail);background:rgba(217,112,111,.14)}
+.rpt .item.lv-caution .tag{color:var(--lv-caution);background:rgba(200,167,90,.14)}
+.it-text{margin:0 0 12px;font-size:.95rem;line-height:1.75}
+.rpt .item .found{margin:0 0 6px;font-size:.8rem;color:var(--muted)}
+.rpt .item .notfound{margin:0 0 10px;font-size:.84rem}
+.rpt .item blockquote{
+  margin:0 0 10px;padding:10px 12px;border-left:2px solid var(--gold-deep);
+  border-radius:0 12px 12px 0;background:rgba(255,255,255,.03);
+  font-size:.88rem;line-height:1.7;color:var(--muted);
+}
+.it-ref{margin:0 0 10px;font-size:.84rem;color:var(--muted)}
+.it-sug{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.it-sug h4{margin:0 0 6px;font-size:.88rem;font-weight:600;color:var(--gold)}
+.it-sug p{margin:0;font-size:.93rem;line-height:1.75}
+
+/* ปุ่ม: หลัก = ทองตัวอักษรดำ · รอง = พื้นดำขอบเทา · สูงเท่ากันทุกปุ่ม */
+.rpt .jump-btn{
+  display:flex;align-items:center;justify-content:center;width:100%;
+  min-height:48px;margin:6px 0 0;padding:0 16px;border:0;border-radius:14px;
+  background:var(--gold);color:#0b0b0c;font:inherit;font-size:.95rem;font-weight:600;
+}
+.rpt .jump-btn:active{filter:brightness(.92)}
+.rpt .share-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0}
+.rpt .share-bar button{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  min-height:68px;min-width:0;padding:10px 6px;border-radius:16px;
+  background:var(--card);border:1px solid var(--line);color:var(--text);
+  font:inherit;font-size:.82rem;
+}
+.rpt .share-bar button svg{color:var(--gold)}
+.rpt .share-bar button:active{background:#202126}
+.rpt .disclaimer{margin:0;text-align:center;font-size:.78rem}
+
+/* ปุ่มหลักของหน้า (ตรวจสัญญา) ให้เป็นสไตล์เดียวกัน */
+#checkBtn.primary{
+  background:var(--gold);color:#0b0b0c;border:0;border-radius:14px;
+  min-height:52px;font-weight:600;box-shadow:0 6px 18px rgba(200,167,90,.18);
+}
+#checkBtn.primary:disabled{background:rgba(200,167,90,.35);color:rgba(11,11,12,.6);box-shadow:none}
+#checkBtn.primary:disabled{opacity:1}
+
+/* แถบล่างบางลง: เมนูที่เลือกเป็นทอง ที่เหลือเทา */
+.bn-item{font-weight:500;letter-spacing:.01em}
+.bn-item svg{stroke-width:1.5}
+.bn-item.is-on{color:var(--gold)}
+
+html[data-compact] .rpt{gap:10px}
+html[data-compact] .rpt .item{padding:12px}
