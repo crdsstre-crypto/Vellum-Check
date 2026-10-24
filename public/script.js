@@ -87,26 +87,78 @@ async function api(path, method = 'GET', body) {
 
 /* ---------- 3. AUTH ---------- */
 
+/* MY WALLET: สร้างการ์ดครั้งเดียว หลังจากนั้นอัปเดตตัวเลขในที่เดิม
+   (ไม่สร้างใหม่ทุกครั้ง เพื่อไม่ให้อนิเมชันเข้าฉากเล่นซ้ำ) */
+const WALLET_REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const ICO_CHECK = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="m9 14 2 2 4-4"/></svg>';
+const ICO_MIC = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
+
+function walletCard(cls, icon, th, en, use, id) {
+  return `<div class="wallet-card ${cls}">` +
+    `<div class="wallet-card-top"><span class="wallet-ico" aria-hidden="true">${icon}</span>` +
+    `<div class="wallet-card-name"><b>${th}</b><small>${en}</small></div>` +
+    `<span class="wallet-badge" id="${id}Badge">ใช้งานได้</span></div>` +
+    `<p class="wallet-card-use">${use}</p>` +
+    `<div class="wallet-card-bottom"><p class="wallet-card-num"><b id="${id}">–</b> <small>เครดิต</small></p>` +
+    `<button type="button" class="wallet-topup">เติมเครดิต</button></div></div>`;
+}
+
+// นับตัวเลขค่อย ๆ เปลี่ยนไปยังค่าจริง (~400ms) ใช้ rAF และแก้เฉพาะข้อความ ไม่กระทบเลย์เอาต์
+function walletCountTo(el, from, to) {
+  cancelAnimationFrame(el._raf);
+  if (WALLET_REDUCED || from === to) { el.textContent = String(to); return; }
+  const t0 = performance.now(), dur = 400;
+  const step = (t) => {
+    const k = Math.min(1, (t - t0) / dur);
+    el.textContent = String(Math.round(from + (to - from) * (1 - Math.pow(1 - k, 3))));
+    if (k < 1) el._raf = requestAnimationFrame(step);
+  };
+  el._raf = requestAnimationFrame(step);
+}
+
+function walletSet(id, val) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const prev = el.dataset.target === undefined || el.dataset.target === '' ? null : Number(el.dataset.target);
+  el.dataset.target = val === null ? '' : String(val);
+  if (val === null) { el.textContent = '–'; return; }
+  const open = document.body.classList.contains('auth-open');
+  if (open && prev !== null && prev !== val) walletCountTo(el, prev, val);
+  else el.textContent = String(val);
+  const badge = document.getElementById(id + 'Badge');
+  if (badge) {
+    badge.textContent = val === 0 ? 'หมดแล้ว' : 'ใช้งานได้';
+    badge.classList.toggle('is-empty', val === 0);
+  }
+}
+
+// เปิดแผนบัญชีทีไร ตัวเลขนับขึ้นจาก 0 ไปยอดจริง
+(function () {
+  let wasOpen = document.body.classList.contains('auth-open');
+  new MutationObserver(function () {
+    const open = document.body.classList.contains('auth-open');
+    if (open && !wasOpen) {
+      ['walletTotal', 'walletCheck', 'walletVoice'].forEach(function (id) {
+        const el = document.getElementById(id);
+        if (el && el.dataset.target) walletCountTo(el, 0, Number(el.dataset.target));
+      });
+    }
+    wasOpen = open;
+  }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+})();
+
 function showCredits(n, voice) {
   lastCredits = typeof n === 'number' ? n : null;
-  // แสดงเป็นสองกล่องแยกกัน (ตรวจ / เสียง) เพื่อให้ตัวเลขอ่านง่าย
-  const checkNum = typeof n === 'number' ? n : '–';
+  const hasN = typeof n === 'number';
   const voiceNum = typeof voice === 'number' ? voice : 0;
-  const total = (typeof n === 'number' ? n : 0) + voiceNum;
-  const card = (cls, icon, th, en, num, unit) =>
-    `<div class="wallet-card ${cls}">` +
-      `<div class="wallet-card-top"><span class="wallet-ico" aria-hidden="true">${icon}</span>` +
-      `<div class="wallet-card-name"><b>${th}</b><small>${en}</small></div>` +
-      `<span class="wallet-badge${num === 0 ? ' is-empty' : ''}">${num === 0 ? 'หมดแล้ว' : 'ใช้งานได้'}</span></div>` +
-      `<div class="wallet-card-bottom"><p class="wallet-card-num"><b>${num}</b> <small>${unit}</small></p>` +
-      `<button type="button" class="wallet-topup">เติมเครดิต</button></div></div>`;
-  const icoCheck = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="m9 14 2 2 4-4"/></svg>';
-  const icoMic = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
-  els.creditsLine.innerHTML =
-    card('wallet-card-check', icoCheck, 'เครดิตตรวจ', 'Inspection Credit', checkNum, 'เครดิต') +
-    card('wallet-card-voice', icoMic, 'เครดิตเสียง', 'Voice Credit', voiceNum, 'เครดิต');
-  const totalEl = document.getElementById('walletTotal');
-  if (totalEl) totalEl.textContent = typeof n === 'number' ? String(total) : '–';
+  if (!els.creditsLine.firstElementChild) {
+    els.creditsLine.innerHTML =
+      walletCard('wallet-card-check', ICO_CHECK, 'เครดิตตรวจ', 'Inspection Credit', 'ใช้ตรวจสัญญาและวิเคราะห์ความเสี่ยง', 'walletCheck') +
+      walletCard('wallet-card-voice', ICO_MIC, 'เครดิตเสียง', 'Voice Credit', 'ใช้สรุปผลการตรวจเป็นเสียง', 'walletVoice');
+  }
+  walletSet('walletCheck', hasN ? n : null);
+  walletSet('walletVoice', voiceNum);
+  walletSet('walletTotal', hasN ? n + voiceNum : null);
 
   // ป้ายบนหน้าหลัก (มือถือ) ให้เห็นเครดิตทันทีโดยไม่ต้องเปิดแผนบัญชี
   const chip = document.getElementById('creditChip');
