@@ -2184,3 +2184,28 @@ body[data-sheet="hist"] .wallet::before{display:none}
 @media (prefers-reduced-motion: reduce){
   .bn-item,.hist-more,.hist-retry{transition:none}
 }
+
+
+/* ---------- รอบ 10: ขั้นตอนตรวจ, ปุ่มดูตำแหน่ง, ปุ่มบันทึก ---------- */
+.share-bar{flex-wrap:wrap}
+.share-bar button{min-width:calc(33% - 8px)}
+.load-steps{list-style:none;margin:0 0 10px;padding:0}
+.load-steps li{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 0;font-size:.92rem;color:var(--muted, #8a8f98);
+}
+.load-steps .dot{
+  width:10px;height:10px;border-radius:50%;
+  border:1.5px solid var(--gold-deep);flex:none;
+}
+.load-steps li.now{color:var(--gold-soft)}
+.load-steps li.now .dot{background:var(--gold);box-shadow:0 0 0 4px rgba(229,196,119,.18)}
+.load-steps li.done{color:var(--text)}
+.load-steps li.done .dot{background:var(--gold-deep);border-color:var(--gold-deep)}
+.load-note{margin:0 0 14px;font-size:.8rem;color:var(--muted, #8a8f98)}
+.jump-btn{
+  min-height:40px;margin:2px 0 8px;padding:0 14px;
+  border-radius:10px;border:1px solid var(--gold-deep);
+  background:transparent;color:var(--gold-soft);font:inherit;font-size:.84rem;
+}
+.jump-btn:active{background:rgba(229,196,119,.12)}
