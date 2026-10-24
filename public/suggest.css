@@ -13,3 +13,6 @@
 .sg-more .more-btn{display:block;width:100%;margin-top:12px}
 .sg-note{margin:10px 0 0 !important;font-size:.76rem !important;line-height:1.6 !important;color:var(--muted)}
 .sg-more .more-btn[data-act="copyfix"]{padding:12px 14px;border:1px solid var(--line,rgba(255,255,255,.15));border-radius:999px;background:transparent;color:var(--text);text-align:center;font-size:.9rem}
+.sg-more{margin-top:10px}
+.sg-more > .it-sug,.sg-more > .cmp-lbl,.sg-more > .hl-quote,.sg-more > .src-row{margin-top:12px}
+.sg-more .it-sug{padding-top:0}
