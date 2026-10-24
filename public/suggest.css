@@ -95,7 +95,6 @@
 .ix-badge.is-calm{background:rgba(111,174,138,.18);color:#8fd0a8}
 .ix-title{margin:10px 0 4px;font-size:1.45rem;line-height:1.3;font-family:'Anuphan',sans-serif;color:var(--text)}
 .ix-sub{margin:0 0 14px;font-size:.9rem;line-height:1.55;color:var(--muted)}
-.ix-count{color:var(--gold-soft,var(--gold));font-weight:600}
 .ix-list{display:grid;gap:10px}
 .ix-card{padding:12px;border-radius:20px;background:rgba(255,255,255,.05);border:1px solid transparent;transition:border-color .2s,background .2s}
 .ix-card[hidden]{display:none}
@@ -150,3 +149,19 @@ body.vw-open .ix-back{display:none}
 @media (min-width:768px){.ix-back{display:none}}
 @media print{.ix,.ix-back,.rv-row,.pk-row,.pick-banner{display:none !important}}
 @media (prefers-reduced-motion:reduce){.rpt details.item.is-flash{animation:none;box-shadow:0 0 0 2px var(--gold)}.ix-card{transition:none}}
+
+/* Risk Navigator: แถบความคืบหน้าการตรวจ + กล่องขั้นตอนถัดไป */
+.ix-prog{margin:0 0 14px;padding:12px 14px;border-radius:18px;background:rgba(255,255,255,.05)}
+.ix-prog-row{display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+.ix-prog small{display:block;font-size:.82rem;color:var(--muted)}
+.ix-prog-n{display:block;font-size:1.9rem;line-height:1.15;font-weight:600;color:var(--text)}
+.ix-prog-pct{padding-bottom:4px;font-size:.9rem;font-weight:600;color:var(--gold-soft,var(--gold));white-space:nowrap}
+.ix-bar{height:8px;margin-top:10px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden}
+.ix-bar i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,var(--gold-deep),var(--gold-soft,var(--gold)));transition:width .35s ease}
+.ix-prog-note{margin:10px 0 0;font-size:.86rem;line-height:1.5;color:#8fd0a8}
+.ix-prog-note[hidden]{display:none}
+.it-next{margin:12px 0 0;padding:12px 14px;border-radius:14px;background:rgba(111,174,138,.13)}
+.it-next h4{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:.98rem;color:#8fd0a8}
+.it-next h4 svg{flex:none}
+.it-next p{margin:0;font-size:.94rem;line-height:1.65;color:var(--text)}
+@media (prefers-reduced-motion:reduce){.ix-bar i{transition:none}}
