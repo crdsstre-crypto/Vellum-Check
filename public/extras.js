@@ -197,6 +197,110 @@
     });
   }
 
+
+  /* ---------- Smart Highlight: ดูสัญญาพร้อมไฮไลต์ตามระดับความเสี่ยง ---------- */
+  var LV_TEXT = { check_detail: 'ควรตรวจละเอียด', caution: 'ควรระวัง', low: 'เสี่ยงต่ำ' };
+  var viewerEl = null;
+
+  // หาตำแหน่งข้อความที่ AI อ้างในสัญญา แล้วตัดช่วงที่ซ้อนกันทิ้ง
+  function buildRanges(text, items) {
+    var out = [];
+    items.forEach(function (it, i) {
+      var q = (it.quote || '').trim();
+      if (!q || it.missing) return;
+      var at = text.indexOf(q), len = q.length;
+      if (at < 0 && q.length > 40) { at = text.indexOf(q.slice(0, 40)); len = Math.min(q.length, text.length - at); }
+      if (at < 0) return;
+      out.push({ start: at, end: at + len, i: i, level: it.level });
+    });
+    out.sort(function (a, b) { return a.start - b.start; });
+    var kept = [];
+    out.forEach(function (r) {
+      var last = kept[kept.length - 1];
+      if (!last || r.start >= last.end) kept.push(r);
+    });
+    return kept;
+  }
+
+  function buildViewer() {
+    var v = document.createElement('div');
+    v.className = 'vw';
+    v.hidden = true;
+    v.setAttribute('role', 'dialog');
+    v.setAttribute('aria-modal', 'true');
+    v.setAttribute('aria-label', 'สัญญาพร้อมไฮไลต์');
+    v.innerHTML =
+      '<div class="vw-head"><b>สัญญาพร้อมไฮไลต์</b><button type="button" class="vw-close" aria-label="ปิด">✕</button></div>' +
+      '<div class="vw-legend"><span class="lv-check_detail">ควรตรวจละเอียด</span><span class="lv-caution">ควรระวัง</span><span class="lv-low">เสี่ยงต่ำ</span></div>' +
+      '<div class="vw-body" id="vwBody"></div>' +
+      '<div class="vw-pop" id="vwPop" hidden></div>';
+    document.body.appendChild(v);
+    v.querySelector('.vw-close').addEventListener('click', closeViewer);
+    v.addEventListener('click', function (e) {
+      var m = e.target.closest('mark.hl');
+      var pop = document.getElementById('vwPop');
+      if (m) { showPop(+m.dataset.i, m); return; }
+      if (!e.target.closest('.vw-pop')) pop.hidden = true;
+    });
+    return v;
+  }
+
+  function showPop(i, mark) {
+    var it = lastResult.items[i];
+    var pop = document.getElementById('vwPop');
+    pop.className = 'vw-pop lv-' + it.level;
+    pop.innerHTML =
+      '<span class="vw-tag">' + esc(LV_TEXT[it.level] || '') + '</span>' +
+      '<b>' + esc(String(i + 1).padStart(2, '0')) + ' — ' + esc(it.title) + '</b>' +
+      (it.explanation ? '<p>' + esc(it.explanation) + '</p>' : '') +
+      '<button type="button" class="vw-go">ดูรายละเอียดในรายงาน</button>';
+    pop.hidden = false;
+    document.querySelectorAll('#vwBody mark.hl').forEach(function (x) { x.classList.toggle('is-on', x === mark); });
+    pop.querySelector('.vw-go').addEventListener('click', function () {
+      closeViewer();
+      var card = document.querySelectorAll('#result details.item')[i];
+      if (card) { card.open = true; card.scrollIntoView({ behavior: prefs.calm ? 'auto' : 'smooth', block: 'start' }); }
+    });
+  }
+
+  function closeViewer() {
+    if (!viewerEl) return;
+    viewerEl.hidden = true;
+    document.body.classList.remove('vw-open');
+  }
+
+  // เปิดตัวดูสัญญา แล้วเลื่อนไปที่ไฮไลต์ของรายการที่ index
+  window.openViewer = function (index) {
+    if (typeof viewerSrc === 'undefined' || !viewerSrc || viewerSrc.result !== lastResult) {
+      toastMsg('ผลจากประวัติไม่มีข้อความสัญญา เพราะระบบไม่เก็บข้อความไว้');
+      return;
+    }
+    if (!viewerEl) viewerEl = buildViewer();
+    var text = viewerSrc.text;
+    var items = lastResult.items || [];
+    var ranges = buildRanges(text, items);
+    var html = '', pos = 0;
+    ranges.forEach(function (r) {
+      html += esc(text.slice(pos, r.start)) +
+        '<mark class="hl lv-' + esc(r.level) + '" data-i="' + r.i + '" id="hl' + r.i + '" tabindex="0">' + esc(text.slice(r.start, r.end)) + '</mark>';
+      pos = r.end;
+    });
+    html += esc(text.slice(pos));
+    document.getElementById('vwBody').innerHTML = html;
+    document.getElementById('vwPop').hidden = true;
+    viewerEl.hidden = false;
+    document.body.classList.add('vw-open');
+    var target = document.getElementById('hl' + index);
+    if (target) {
+      setTimeout(function () {
+        target.scrollIntoView({ behavior: prefs.calm ? 'auto' : 'smooth', block: 'center' });
+        showPop(index, target);
+      }, 60);
+    } else {
+      toastMsg('หาตำแหน่งข้อความนี้ไม่พบ ลองเปิดจากรายการอื่น');
+    }
+  };
+
   /* ---------- ปุ่มกลับขึ้นบน ---------- */
   function buildTop() {
     var b = document.createElement('button');
