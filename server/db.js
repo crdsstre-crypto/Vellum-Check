@@ -27,6 +27,18 @@ export async function initDb() {
     )
   `);
 
+  // ผลตรวจสัญญาย้อนหลัง (เก็บเฉพาะผลลัพธ์ ไม่เก็บข้อความสัญญาต้นฉบับ)
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS inspections (
+      id            SERIAL PRIMARY KEY,
+      user_id       INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      contract_type TEXT NOT NULL DEFAULT 'unsure',
+      result        JSONB NOT NULL,
+      created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `);
+  await pool.query(`CREATE INDEX IF NOT EXISTS inspections_user_idx ON inspections (user_id, created_at)`);
+
   // บัญชี Google ไม่มีรหัสผ่าน และเก็บรหัสประจำตัวของ Google ไว้
   await pool.query(`ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL`);
   await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS google_sub TEXT UNIQUE`);
