@@ -1080,3 +1080,37 @@ footer{
 .faq-body p{margin:10px 0 0}
 .faq-body b{color:var(--text)}
 .faq-foot{margin:0;font-size:.8rem;text-align:center}
+
+/* ---------- 12. เอฟเฟกต์ตอบสนองในแผนบัญชี ----------
+   กดแล้วมีการตอบสนองเล็กน้อย · แถวบัญชีค่อย ๆ ปรากฏเมื่อเปิดแผน
+   ปิดทั้งหมดเมื่อผู้ใช้ตั้งค่าลดการเคลื่อนไหวไว้ (prefers-reduced-motion) */
+#authLoggedIn .acct-row,
+#authLoggedIn .acct-credit-row,
+#authLoggedIn .acct-out{
+  animation:acctIn .35s cubic-bezier(.2,.8,.2,1) both;
+}
+#authLoggedIn .acct-credit-row{animation-delay:.05s}
+#authLoggedIn .acct-out{animation-delay:.1s}
+@keyframes acctIn{
+  from{opacity:0;transform:translateY(6px)}
+  to{opacity:1;transform:none}
+}
+#authLoggedIn .acct-out,
+.acct-topup,
+.faq summary{
+  transition:transform .15s ease, background .15s ease;
+}
+#authLoggedIn .acct-out:active,
+.acct-topup:active,
+.faq summary:active{transform:scale(.98)}
+@media (prefers-reduced-motion: reduce){
+  #authLoggedIn .acct-row,
+  #authLoggedIn .acct-credit-row,
+  #authLoggedIn .acct-out{animation:none}
+  #authLoggedIn .acct-out,
+  .acct-topup,
+  .faq summary{transition:none}
+  #authLoggedIn .acct-out:active,
+  .acct-topup:active,
+  .faq summary:active{transform:none}
+}
