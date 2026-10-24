@@ -371,18 +371,33 @@ const ICO_WARN = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" st
 const ICO_BULB = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>';
 function renderDetail(item) {
   const hasQuote = !item.missing && !!item.quote;
-  if (!hasQuote && !item.suggested_fix && !item.how_to_negotiate) return '';
-  const quote = hasQuote ? `<p class="cmp-lbl">ข้อความต้นฉบับในสัญญา</p>${renderQuote(item)}` : '';
-  const fix = item.suggested_fix ? `<div class="it-sug sg"><h4>${ICO_BULB}ข้อเสนอแนะ</h4>
-      <p class="cmp-lbl">ข้อความที่แนะนำให้พิจารณาใช้</p>
-      <p class="cmp-new">${esc(item.suggested_fix)}</p>
-      <button type="button" class="more-btn" data-act="copyfix">คัดลอกข้อความที่แนะนำ</button>
-      <p class="sg-note">ตัวอย่างเพื่อประกอบการพิจารณา ควรตรวจสอบให้สอดคล้องกับข้อเท็จจริงและกฎหมายที่ใช้บังคับก่อนนำไปใช้จริง</p></div>` : '';
+  const fixHtml = item.suggested_fix ? esc(item.suggested_fix) : '';
   const nego = item.how_to_negotiate ? `<div class="it-sug"><h4>วิธีรับมือ</h4><p>${esc(item.how_to_negotiate)}</p></div>` : '';
-  return `<details class="sg-more">
-    <summary><span class="sg-open">ดูข้อเสนอแนะและข้อความต้นฉบับ</span><span class="sg-close">ซ่อนรายละเอียด</span></summary>
-    ${quote}${fix}${nego}
-  </details>`;
+  if (!hasQuote && !fixHtml && !nego) return '';
+
+  // ไม่มีข้อเสนอแนะ: พับข้อความต้นฉบับกับวิธีรับมือไว้ใต้ปุ่มเดียว
+  if (!fixHtml) {
+    return `<details class="sg-more">
+      <summary><span class="sg-open">ดูข้อความต้นฉบับและวิธีรับมือ</span><span class="sg-close">ซ่อนรายละเอียด</span></summary>
+      ${hasQuote ? `<p class="cmp-lbl">ข้อความเดิมในสัญญา</p>${renderQuote(item)}` : ''}${nego}
+    </details>`;
+  }
+
+  // มีข้อเสนอแนะ: เห็นแนวทางสั้น ๆ + ปุ่มคัดลอกทันที ส่วนข้อความเดิมเทียบกับข้อความที่แนะนำพับไว้
+  return `<div class="it-sug sg">
+    <h4>${ICO_BULB}ข้อเสนอแนะ</h4>
+    <p class="sg-sub">แนวทางแก้ไขที่แนะนำ</p>
+    <p class="sg-sum">${fixHtml}</p>
+    <details class="sg-more">
+      <summary><span class="sg-open">ดูข้อความ${hasQuote ? 'เดิมและข้อความ' : ''}ที่แนะนำ</span><span class="sg-close">ซ่อนรายละเอียด</span></summary>
+      ${hasQuote ? `<p class="cmp-lbl">ข้อความเดิมในสัญญา</p>${renderQuote(item)}` : ''}
+      <p class="cmp-lbl">ข้อความที่แนะนำให้พิจารณาใช้</p>
+      <p class="cmp-new">${fixHtml}</p>
+      ${nego}
+    </details>
+    <button type="button" class="sg-copy" data-act="copyfix">${ICO_COPY}<span>คัดลอกข้อความที่แนะนำ</span></button>
+    <p class="sg-note">ตัวอย่างเพื่อประกอบการพิจารณา ควรตรวจสอบให้สอดคล้องกับข้อเท็จจริงและกฎหมายที่ใช้บังคับก่อนนำไปใช้จริง</p>
+  </div>`;
 }
 
 function renderItem(item, index) {
@@ -393,7 +408,7 @@ function renderItem(item, index) {
       <span class="it-title"><em>${pad2(index + 1)} —</em> <b>${esc(item.title)}</b></span>
       <span class="tag">${esc(CONFIG.levelLabel[item.level] || '')}</span>
     </summary>
-    ${item.explanation ? `<p class="it-lbl">เหตุผลที่ควรตรวจสอบ</p><p class="it-text${item.explanation.length > 110 ? ' clamp' : ''}">${esc(item.explanation)}</p>${item.explanation.length > 110 ? '<button type="button" class="more-btn" data-act="more">อ่านเพิ่มเติม</button>' : ''}` : ''}
+    ${item.explanation ? `<div class="it-reason"><p class="it-lbl">เหตุผลที่ควรตรวจสอบ</p><p class="it-text${item.explanation.length > 110 ? ' clamp' : ''}">${esc(item.explanation)}</p>${item.explanation.length > 110 ? '<button type="button" class="more-btn" data-act="more">อ่านเพิ่มเติม</button>' : ''}</div>` : ''}
     ${item.missing ? renderQuote(item) : ''}
     ${item.reference ? `<p class="it-ref">📚 แนวทางตรวจ: ${esc(item.reference)}</p>` : ''}
     ${renderDetail(item)}
