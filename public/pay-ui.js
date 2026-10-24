@@ -90,7 +90,10 @@ async function buyPackage(packageId) {
 
 function onPackageClick(event) {
   const btn = event.target.closest('button[data-package]');
-  if (btn) buyPackage(btn.dataset.package);
+  if (!btn || btn.disabled) return;
+  // ปุ่มตอบสนองทันที และกดซ้ำไม่ได้ระหว่างรอสร้าง QR
+  btn.disabled = true;
+  buyPackage(btn.dataset.package).finally(function () { btn.disabled = false; });
 }
 
 // script.js เรียกฟังก์ชันนี้ทุกครั้งที่สถานะการล็อกอินเปลี่ยน
