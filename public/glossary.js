@@ -18,7 +18,7 @@ const GLOSS_SOURCES = {
 
 const GLOSS_TERMS = [
   {
-    id: 'lessor', name: 'ผู้ให้เช่า / ผู้เช่า', kw: ['ผู้ให้เช่า', 'ผู้เช่า', 'ค่าเช่า', 'สัญญาเช่า'],
+    id: 'lessor', tap: false, name: 'ผู้ให้เช่า / ผู้เช่า', kw: ['ผู้ให้เช่า', 'ผู้เช่า', 'ค่าเช่า', 'สัญญาเช่า'],
     text: 'ผู้ให้เช่าคือฝ่ายที่นำทรัพย์สินออกให้ใช้ ผู้เช่าคือฝ่ายที่จ่ายค่าเช่าเพื่อใช้ทรัพย์สินนั้น แต่ละฝ่ายมีสิทธิและหน้าที่ตามที่เขียนไว้ในสัญญา',
     refs: [{ label: 'ประมวลกฎหมายแพ่งและพาณิชย์ ลักษณะเช่าทรัพย์ (เริ่มที่มาตรา 537)', src: 'krisdika' }, { src: 'ocpb' }],
   },
@@ -38,7 +38,7 @@ const GLOSS_TERMS = [
     refs: [{ label: 'ประมวลกฎหมายแพ่งและพาณิชย์ มาตรา 379 และ 383', src: 'krisdika' }],
   },
   {
-    id: 'damages', name: 'ค่าเสียหาย / ค่าสินไหมทดแทน', kw: ['ค่าเสียหาย', 'ค่าสินไหม', 'ชดใช้', 'เสียหาย'],
+    id: 'damages', tap: false, name: 'ค่าเสียหาย / ค่าสินไหมทดแทน', kw: ['ค่าเสียหาย', 'ค่าสินไหม', 'ชดใช้', 'เสียหาย'],
     text: 'เงินที่ฝ่ายหนึ่งต้องชดใช้ให้อีกฝ่ายจากความเสียหายที่เกิดขึ้น ควรดูว่าสัญญากำหนดเพดานหรือขอบเขตไว้หรือไม่ และครอบคลุมความเสียหายประเภทใดบ้าง',
     refs: [{ label: 'ประมวลกฎหมายแพ่งและพาณิชย์ มาตรา 222', src: 'krisdika' }],
   },
@@ -48,7 +48,7 @@ const GLOSS_TERMS = [
     refs: [{ label: 'ประมวลกฎหมายแพ่งและพาณิชย์ มาตรา 204', src: 'krisdika' }],
   },
   {
-    id: 'terminate', name: 'การบอกเลิกสัญญา', kw: ['บอกเลิก', 'เลิกสัญญา', 'ยกเลิกสัญญา', 'ยกเลิกกลางคัน'],
+    id: 'terminate', tap: false, name: 'การบอกเลิกสัญญา', kw: ['บอกเลิก', 'เลิกสัญญา', 'ยกเลิกสัญญา', 'ยกเลิกกลางคัน'],
     text: 'การแจ้งยุติสัญญาก่อนครบกำหนด สัญญามักกำหนดเหตุ ระยะเวลาแจ้งล่วงหน้า และผลทางการเงิน เช่น การคืนเงินหรือค่าชดเชย ควรเช็กว่าทั้งสองฝ่ายมีสิทธิเท่ากันหรือไม่',
     refs: [{ label: 'ประมวลกฎหมายแพ่งและพาณิชย์ มาตรา 386', src: 'krisdika' }],
   },
@@ -135,11 +135,15 @@ function renderGlossary(result) {
 /* ---------- แตะคำศัพท์ในผลตรวจ → เปิดคำอธิบายทันที (bottom sheet) ---------- */
 
 // ส่วนของผลตรวจที่ทำให้แตะได้ (ไม่รวมหัวข้อใน <summary> เพราะแตะแล้วต้องพับ/กางรายการ)
-const GLOSS_TAP_AREAS = '.it-text, .hl-quote, .cmp-new, .brief p, .miss li';
+// ขีดเส้นใต้เฉพาะคำที่เข้าใจยาก (ไม่ใส่ tap:false) ในคำอธิบายเหตุผล สรุป และรายการที่ไม่พบ
+// ไม่ขีดในข้อความต้นฉบับ (.hl-quote) เพราะมีสีเน้นความเสี่ยงอยู่แล้ว
+const GLOSS_TAP_AREAS = '.it-text, .brief p, .miss li';
+// ต่อหนึ่งรายการความเสี่ยง ขีดเส้นใต้ไม่เกินนี้ และแต่ละคำขีดแค่ครั้งแรก
+const GLOSS_TAP_PER_GROUP = 2;
 
 function glossKeywordIndex() {
   const map = new Map();
-  GLOSS_TERMS.forEach(t => t.kw.forEach(k => { if (!map.has(k)) map.set(k, t.id); }));
+  GLOSS_TERMS.filter(t => t.tap !== false).forEach(t => t.kw.forEach(k => { if (!map.has(k)) map.set(k, t.id); }));
   const words = [...map.keys()].sort((a, b) => b.length - a.length);
   const re = new RegExp(words.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g');
   return { map, re };
@@ -149,8 +153,11 @@ function glossKeywordIndex() {
 function linkifyGlossary(root) {
   if (!root) return;
   const { map, re } = glossKeywordIndex();
+  const groups = new Map();
   root.querySelectorAll(GLOSS_TAP_AREAS).forEach(area => {
-    const seen = new Set();
+    const g = area.closest('details.item') || area.closest('.brief') || area.closest('.miss') || root;
+    if (!groups.has(g)) groups.set(g, new Set());
+    const seen = groups.get(g);
     const nodes = [];
     const walker = document.createTreeWalker(area, NodeFilter.SHOW_TEXT);
     while (walker.nextNode()) nodes.push(walker.currentNode);
@@ -160,7 +167,7 @@ function linkifyGlossary(root) {
       let last = 0, m, frag = null;
       while ((m = re.exec(text))) {
         const id = map.get(m[0]);
-        if (seen.has(id)) continue;
+        if (seen.has(id) || seen.size >= GLOSS_TAP_PER_GROUP) continue;
         seen.add(id);
         frag = frag || document.createDocumentFragment();
         frag.appendChild(document.createTextNode(text.slice(last, m.index)));
