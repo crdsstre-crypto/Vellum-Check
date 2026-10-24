@@ -1,0 +1,21 @@
+/* ศัพท์น่ารู้ — ใช้ตัวแปรสีจาก themes.css ได้ทั้งธีมดำ-ทองและธีมสว่าง ใช้ได้ทุกขนาดจอ */
+.gloss{margin:14px 0;padding:14px 16px;border-radius:18px;border:1px solid var(--card-edge,rgba(255,255,255,.07));background:var(--card)}
+.gl-head{display:flex;align-items:center;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--card-edge,rgba(255,255,255,.07))}
+.gl-ico{color:var(--gold);display:inline-flex}
+.gl-title{flex:1;min-width:0}
+.gl-title h3{margin:0;font-size:1.05rem;color:var(--text)}
+.gl-title p{margin:2px 0 0;font-size:.82rem;color:var(--muted)}
+.gl-count{font-size:.8rem;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.07);color:var(--text);white-space:nowrap}
+.gl-term{padding:12px 0;border-bottom:1px solid var(--card-edge,rgba(255,255,255,.07))}
+.gl-term summary{cursor:pointer;list-style:none;font-size:.98rem;color:var(--text);display:flex;justify-content:space-between;align-items:center;gap:8px;-webkit-tap-highlight-color:transparent}
+.gl-term summary::-webkit-details-marker{display:none}
+.gl-term summary::after{content:'›';color:var(--gold);font-size:1.3rem;transition:transform .2s}
+.gl-term[open] summary::after{transform:rotate(90deg)}
+.gl-text{margin:8px 0 6px;font-size:.92rem;line-height:1.7;color:var(--text)}
+.gl-reflbl{margin:8px 0 2px;font-size:.78rem;color:var(--muted)}
+.gl-refs{margin:0;padding:0;list-style:none}
+.gl-refs li{margin:4px 0;font-size:.86rem;line-height:1.55}
+.gl-law{display:block;color:var(--muted)}
+.gl-link{color:var(--gold);text-decoration:none;border-bottom:1px dotted var(--gold-deep,var(--gold))}
+.gl-link i{font-style:normal}
+.gl-note{margin:12px 0 0;font-size:.76rem;line-height:1.6;color:var(--muted)}
