@@ -92,9 +92,21 @@ function showCredits(n, voice) {
   // แสดงเป็นสองกล่องแยกกัน (ตรวจ / เสียง) เพื่อให้ตัวเลขอ่านง่าย
   const checkNum = typeof n === 'number' ? n : '–';
   const voiceNum = typeof voice === 'number' ? voice : 0;
+  const total = (typeof n === 'number' ? n : 0) + voiceNum;
+  const card = (cls, icon, th, en, num, unit) =>
+    `<div class="wallet-card ${cls}">` +
+      `<div class="wallet-card-top"><span class="wallet-ico" aria-hidden="true">${icon}</span>` +
+      `<div class="wallet-card-name"><b>${th}</b><small>${en}</small></div>` +
+      `<span class="wallet-badge${num === 0 ? ' is-empty' : ''}">${num === 0 ? 'หมดแล้ว' : 'ใช้งานได้'}</span></div>` +
+      `<div class="wallet-card-bottom"><p class="wallet-card-num"><b>${num}</b> <small>${unit}</small></p>` +
+      `<button type="button" class="wallet-topup">เติมเครดิต</button></div></div>`;
+  const icoCheck = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="m9 14 2 2 4-4"/></svg>';
+  const icoMic = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
   els.creditsLine.innerHTML =
-    `<span class="acct-cell"><small>เครดิตตรวจ</small><b>${checkNum}</b></span>` +
-    `<span class="acct-cell"><small>เครดิตเสียง</small><b>${voiceNum}</b></span>`;
+    card('wallet-card-check', icoCheck, 'เครดิตตรวจ', 'Inspection Credit', checkNum, 'เครดิต') +
+    card('wallet-card-voice', icoMic, 'เครดิตเสียง', 'Voice Credit', voiceNum, 'เครดิต');
+  const totalEl = document.getElementById('walletTotal');
+  if (totalEl) totalEl.textContent = typeof n === 'number' ? String(total) : '–';
 
   // ป้ายบนหน้าหลัก (มือถือ) ให้เห็นเครดิตทันทีโดยไม่ต้องเปิดแผนบัญชี
   const chip = document.getElementById('creditChip');
