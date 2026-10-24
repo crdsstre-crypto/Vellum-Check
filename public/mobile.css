@@ -1138,3 +1138,24 @@ footer{
 }
 .acct-cell small{font-size:.74rem;color:var(--muted)}
 .acct-cell b{font-size:1.25rem;font-weight:700;color:var(--gold-soft);line-height:1.2}
+
+/* ---------- 14. ปุ่มเข้าสู่ระบบด้วย Google ----------
+   อยู่เหนือช่องอีเมลในแผนบัญชี (index.html: #googleBtn) */
+.google-btn{
+  width:100%;
+  min-height:48px;
+  margin-bottom:10px;
+  border-radius:14px;
+  border:none;
+  background:#fff;
+  color:#1f1f1f;
+  font-size:1rem;
+  font-weight:600;
+}
+.google-btn:active{filter:brightness(.94)}
+.or-line{
+  margin:6px 0 10px;
+  text-align:center;
+  font-size:.85rem;
+  color:var(--muted);
+}
