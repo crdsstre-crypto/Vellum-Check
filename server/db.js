@@ -27,6 +27,10 @@ export async function initDb() {
     )
   `);
 
+  // บัญชี Google ไม่มีรหัสผ่าน และเก็บรหัสประจำตัวของ Google ไว้
+  await pool.query(`ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL`);
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS google_sub TEXT UNIQUE`);
+
   await pool.query(`
     CREATE TABLE IF NOT EXISTS sessions (
       token_hash TEXT PRIMARY KEY,
