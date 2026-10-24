@@ -1434,3 +1434,12 @@ body.pay-open #paymentCard:not([hidden]){
   place-items:center;
   box-sizing:border-box;
 }
+
+/* ---------- 24. ซ่อนการ์ดเติมเครดิตและผลการตรวจที่ยังว่างบนมือถือ ----------
+   - การ์ดเติมเครดิตซ่อนไว้ เปิดได้เฉพาะเป็นหน้าต่างจากปุ่ม "+ เติม" (body.pay-open)
+   - ผลการตรวจซ่อนเมื่อยังไม่มีผล และแสดงเองเมื่อตรวจสัญญาแล้ว */
+@media (max-width: 767px){
+  #paymentCard{display:none}
+  body.pay-open #paymentCard:not([hidden]){display:block}
+  #resultCard:has(#result > p.empty){display:none}
+}
