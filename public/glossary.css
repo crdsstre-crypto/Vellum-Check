@@ -37,3 +37,23 @@
 .gl-x{all:unset;cursor:pointer;color:var(--muted);font-size:1.1rem;padding:8px;-webkit-tap-highlight-color:transparent}
 @media (prefers-reduced-motion:reduce){.gl-panel,.gl-back{transition:none}}
 @media print{.gl-sheet{display:none}}
+
+/* หน้าต่างคำอธิบายศัพท์ (รอบ 2) */
+.gl-sh-head{gap:14px}
+.gl-ico-box{width:46px;height:46px;border-radius:14px;background:rgba(200,167,90,.16);align-items:center;justify-content:center;flex:none}
+.gl-sh-title{flex:1;min-width:0}
+.gl-sh-title small{display:block;font-size:.8rem;color:var(--muted)}
+.gl-sh-title h3{font-size:1.3rem;line-height:1.3}
+.gl-hr{border:0;border-top:1px solid var(--card-edge,rgba(255,255,255,.1));margin:14px 0}
+.gl-sec{margin:0 0 8px;font-size:1rem;color:var(--gold-soft,var(--gold))}
+.gl-text-lg{font-size:1rem;margin:0 0 12px}
+.gl-ex{margin:0 0 12px;padding:12px 14px;border-radius:14px;background:rgba(111,174,138,.16)}
+.gl-ex b{display:flex;align-items:center;gap:8px;color:#8fd0a8;font-size:.95rem;margin-bottom:4px}
+.gl-ex p{margin:0;font-size:.95rem;line-height:1.7;color:var(--text)}
+.gl-srcs{margin-top:14px}
+.gl-srcs .gl-law{margin:10px 0 6px;font-size:.82rem;color:var(--muted)}
+.gl-srcbtn{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;border:1px solid var(--gold-deep,var(--gold));color:var(--gold);text-decoration:none;margin-bottom:8px;-webkit-tap-highlight-color:transparent}
+.gl-srcbtn span{flex:1;min-width:0}
+.gl-srcbtn b{display:block;font-size:.98rem}
+.gl-srcbtn small{display:block;font-size:.78rem;color:var(--muted);margin-top:1px}
+.gl-srcbtn i{font-style:normal;font-size:1.4rem}
