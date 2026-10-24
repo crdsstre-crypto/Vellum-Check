@@ -59,3 +59,14 @@ export async function listPayments(userId) {
     creditedAt: r.credited_at,
   }));
 }
+
+// ลบผลตรวจของบัญชีนี้ทั้งหมด (ไม่แตะประวัติการเติมเครดิต เพราะเป็นหลักฐานการเงิน)
+export async function deleteAllInspections(userId) {
+  const r = await pool.query('DELETE FROM inspections WHERE user_id = $1', [userId]);
+  return r.rowCount;
+}
+
+export async function deleteInspection(userId, id) {
+  const r = await pool.query('DELETE FROM inspections WHERE id = $1 AND user_id = $2', [id, userId]);
+  return r.rowCount;
+}
