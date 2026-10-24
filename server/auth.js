@@ -58,7 +58,8 @@ export async function loginUser(email, password) {
     [email.trim().toLowerCase()]
   );
   const user = rows[0];
-  if (!user) return null;
+  // บัญชีที่สมัครด้วย Google ไม่มีรหัสผ่าน จึงล็อกอินด้วยรหัสผ่านไม่ได้
+  if (!user || !user.password_hash) return null;
   const ok = await bcrypt.compare(password, user.password_hash);
   return ok ? { id: user.id, email: user.email, credits: user.credits } : null;
 }
@@ -99,4 +100,43 @@ export async function getUserFromRequest(req) {
     [sha256(token)]
   );
   return rows[0] ?? null;
+}
+
+// หาบัญชีจาก Google หรือสร้างใหม่
+// - ถ้าเคยล็อกอินด้วย Google นี้แล้ว ใช้บัญชีเดิม
+// - ถ้าอีเมลตรงกับบัญชีเดิมและ Google ยืนยันอีเมลแล้ว ผูกบัญชี Google เข้ากับบัญชีนั้น
+// - ไม่ผูกถ้า Google ยังไม่ยืนยันอีเมล
+export async function findOrCreateGoogleUser({ sub, email, emailVerified }) {
+  const normEmail = email.trim().toLowerCase();
+
+  const bySub = await pool.query(
+    'SELECT id, email, credits FROM users WHERE google_sub = $1',
+    [sub]
+  );
+  if (bySub.rows[0]) return bySub.rows[0];
+
+  if (!emailVerified) return null;
+
+  const byEmail = await pool.query(
+    'SELECT id, email, credits FROM users WHERE email = $1',
+    [normEmail]
+  );
+  if (byEmail.rows[0]) {
+    await pool.query(
+      'UPDATE users SET google_sub = $1 WHERE id = $2 AND google_sub IS NULL',
+      [sub, byEmail.rows[0].id]
+    );
+    return byEmail.rows[0];
+  }
+
+  try {
+    const { rows } = await pool.query(
+      'INSERT INTO users (email, password_hash, google_sub) VALUES ($1, NULL, $2) RETURNING id, email, credits',
+      [normEmail, sub]
+    );
+    return rows[0];
+  } catch (err) {
+    if (err.code === '23505') return null; // ชนกันพร้อมกัน ให้ลองใหม่
+    throw err;
+  }
 }
