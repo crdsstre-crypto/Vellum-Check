@@ -12,7 +12,7 @@
 <!-- ลำดับการโหลด CSS: themes (สี) → style (ทุกจอ) → mobile (เฉพาะจอต่ำกว่า 768px) -->
 <link rel="stylesheet" href="themes.css">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="mobile.css?v=9v" media="(max-width: 767px)">
+<link rel="stylesheet" href="mobile.css?v=9w" media="(max-width: 767px)">
 </head>
 <body>
 
@@ -83,8 +83,10 @@
 
   <!-- 0. บัญชีผู้ใช้: บนมือถือเป็นแผนจากด้านล่าง บนจอใหญ่เป็นการ์ดปกติ -->
   <section class="card" id="authCard">
-    <button type="button" class="sheet-close" id="authClose" aria-label="ปิด">✕</button>
-    <h2>0. บัญชีผู้ใช้</h2>
+    <div class="sheet-head">
+      <h2>0. บัญชีผู้ใช้</h2>
+      <button type="button" class="sheet-close" id="authClose" aria-label="ปิด">✕</button>
+    </div>
     <div id="authLoggedOut">
         <button type="button" class="google-btn" id="googleBtn">เข้าสู่ระบบด้วย Google</button>
         <p class="or-line">หรือ</p>
@@ -118,7 +120,7 @@
         <div class="wallet-head">
           <div class="wallet-titles">
             <p class="wallet-kicker">MY WALLET</p>
-            <h3 class="wallet-title">กระเป๋าเครดิตของคุณ</h3>
+            <h3 class="wallet-title">บัญชีของฉัน</h3>
           </div>
           <span class="wallet-head-ico" aria-hidden="true">
             <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7V5a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
@@ -132,22 +134,20 @@
             <div><dt>เครดิตเสียง</dt><dd><b id="walletRowVoice">–</b> เครดิต</dd></div>
           </dl>
         </div>
-        <h4 class="wallet-list-title">บริการของคุณ</h4>
+        <div class="wallet-list-head"><h4 class="wallet-list-title">บริการของคุณ</h4><span>2 บริการ</span></div>
         <div id="creditsLine" class="wallet-cards"></div>
-        <button type="button" class="wallet-histlink" id="walletHist">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3v18l2-1.5 2 1.5 2-1.5 2 1.5 2-1.5 2 1.5V3z"/><path d="M9 8h6M9 12h6"/></svg>
-          <span>ดูประวัติรายการและรายละเอียดการใช้เครดิต</span>
+        <button type="button" class="wallet-histlink" id="walletHist" aria-expanded="false" aria-controls="historyPanel">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>
+          <span class="wallet-hist-txt"><b>ประวัติรายการ</b><small>ประวัติการตรวจและการเติมเครดิต</small></span>
         </button>
       </section>
-      <button class="acct-out" id="histInspBtn" type="button">
-        <span class="acct-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></span><span>ประวัติการตรวจสัญญา</span>
-        <span class="acct-chev" aria-hidden="true">›</span>
-      </button>
-      <button class="acct-out" id="histPayBtn" type="button">
-        <span class="acct-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v18l2-1.5 2 1.5 2-1.5 2 1.5 2-1.5 2 1.5V3z"/><path d="M9 8h6M9 12h6"/></svg></span><span>ประวัติการเติมเครดิต</span>
-        <span class="acct-chev" aria-hidden="true">›</span>
-      </button>
-      <div id="historyPanel" class="history-panel" hidden></div>
+      <div id="historyPanel" class="history-panel" hidden>
+        <div class="hist-tabs" role="tablist" aria-label="ประเภทประวัติ">
+          <button type="button" role="tab" class="hist-tab is-on" data-tab="insp" aria-selected="true">ตรวจสัญญา</button>
+          <button type="button" role="tab" class="hist-tab" data-tab="pay" aria-selected="false">เติมเครดิต</button>
+        </div>
+        <div id="histList"></div>
+      </div>
       <button class="acct-out" id="logoutBtn" type="button">
         <span class="acct-ico acct-ico-danger" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></svg></span><span>ออกจากระบบ</span>
         <span class="acct-chev" aria-hidden="true">›</span>
@@ -262,7 +262,8 @@
 /* ประวัติการใช้งาน: โหลดรายการและเปิดดูผลตรวจเดิม */
 (function () {
   var panel = document.getElementById('historyPanel');
-  if (!panel) return;
+  var list = document.getElementById('histList');
+  if (!panel || !list) return;
   function esc(v) {
     return String(v).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
@@ -274,7 +275,7 @@
   }
   function showMessage(text) {
     panel.hidden = false;
-    panel.innerHTML = '<p class="hist-empty">' + esc(text) + '</p>';
+    list.innerHTML = '<p class="hist-empty">' + esc(text) + '</p>';
   }
   async function getJson(url) {
     var res = await fetch(url, { credentials: 'same-origin' });
@@ -287,7 +288,7 @@
     try {
       var data = await getJson('/api/history/inspections');
       if (!data.items.length) return showMessage('ยังไม่มีประวัติการตรวจสัญญา');
-      panel.innerHTML = data.items.map(function (it) {
+      list.innerHTML = data.items.map(function (it) {
         return '<button type="button" class="hist-row" data-id="' + it.id + '">' +
           '<span>ผลตรวจสัญญา<span class="hist-meta">' + esc(fmt(it.createdAt)) + '</span></span>' +
           '<span class="hist-tag">เปิดดู</span></button>';
@@ -300,7 +301,7 @@
     try {
       var data = await getJson('/api/history/payments');
       if (!data.items.length) return showMessage('ยังไม่มีประวัติการเติมเครดิต');
-      panel.innerHTML = data.items.map(function (it) {
+      list.innerHTML = data.items.map(function (it) {
         var status = it.credited ? 'เติมแล้ว' : 'รอชำระ';
         return '<div class="hist-row">' +
           '<span>' + esc(it.label) + '<span class="hist-meta">' + esc(fmt(it.createdAt)) + ' · ' + it.amountBaht + ' บาท</span></span>' +
@@ -316,20 +317,30 @@
       if (typeof renderResult === 'function') renderResult(data.result);
     } catch (e) { alert(e.message); }
   }
-  // กดปุ่มเดิมซ้ำเพื่อซ่อนรายการ
-  var currentKind = '';
-  function toggleKind(kind, loader) {
-    if (!panel.hidden && currentKind === kind) {
+  // ปุ่มเดียว "ประวัติรายการ": กดเปิด/ปิด แล้วสลับแท็บ ตรวจสัญญา / เติมเครดิต
+  var currentKind = 'insp';
+  var link = document.getElementById('walletHist');
+  function setTab(kind) {
+    currentKind = kind;
+    panel.querySelectorAll('.hist-tab').forEach(function (b) {
+      var on = b.getAttribute('data-tab') === kind;
+      b.classList.toggle('is-on', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    if (kind === 'pay') openPayments(); else openInspections();
+  }
+  link.addEventListener('click', function () {
+    if (!panel.hidden) {
       panel.hidden = true;
-      currentKind = '';
+      link.setAttribute('aria-expanded', 'false');
       return;
     }
-    currentKind = kind;
-    loader();
-  }
-  document.getElementById('histInspBtn').addEventListener('click', function () { toggleKind('insp', openInspections); });
-  document.getElementById('histPayBtn').addEventListener('click', function () { toggleKind('pay', openPayments); });
+    link.setAttribute('aria-expanded', 'true');
+    setTab(currentKind);
+  });
   panel.addEventListener('click', function (ev) {
+    var tab = ev.target.closest('.hist-tab');
+    if (tab) { setTab(tab.getAttribute('data-tab')); return; }
     var row = ev.target.closest('.hist-row[data-id]');
     if (row) openOneResult(row.getAttribute('data-id'));
   });
@@ -458,9 +469,6 @@ document.getElementById('payClose').addEventListener('click', closePayModal);
 document.getElementById('payBackdrop').addEventListener('click', closePayModal);
 document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePayModal(); });
 
-document.getElementById('walletHist').addEventListener('click', function () {
-  document.getElementById('histPayBtn').click();
-});
 document.addEventListener('click', function (e) {
   if (!e.target.closest('.wallet-topup')) return;
   document.body.classList.remove('auth-open');
@@ -797,7 +805,7 @@ document.addEventListener('click', function (e) {
   init();
 })();
 </script>
-<script src="script.js?v=9u"></script>
+<script src="script.js?v=9v"></script>
 <script src="pay-ui.js"></script>
 </body>
 </html>
