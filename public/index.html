@@ -12,7 +12,7 @@
 <!-- ลำดับการโหลด CSS: themes (สี) → style (ทุกจอ) → mobile (เฉพาะจอต่ำกว่า 768px) -->
 <link rel="stylesheet" href="themes.css">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="mobile.css?v=9z" media="(max-width: 767px)">
+<link rel="stylesheet" href="mobile.css?v=9a2" media="(max-width: 767px)">
 </head>
 <body>
 
@@ -37,6 +37,22 @@
 
 <!-- พื้นหลังมืดของแผนบัญชี (มือถือ) -->
 <div class="sheet-backdrop" id="authBackdrop"></div>
+
+<!-- แถบนำทางด้านล่าง (มือถือ แสดงเมื่อล็อกอินแล้ว) -->
+<nav class="bottom-nav" id="bottomNav" aria-label="เมนูหลัก" hidden>
+  <button type="button" class="bn-item is-on" data-nav="home" aria-current="page">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>
+    <span>ตรวจสัญญา</span>
+  </button>
+  <button type="button" class="bn-item" data-nav="hist">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>
+    <span>ประวัติ</span>
+  </button>
+  <button type="button" class="bn-item" data-nav="acct">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+    <span>บัญชี</span>
+  </button>
+</nav>
 
 <!-- แผนเลือกประเภทสัญญา (มือถือเท่านั้น JS เป็นผู้เปิด ดู script ด้านล่าง) -->
 <div class="ct-sheet" id="ctSheet" role="dialog" aria-modal="true" aria-labelledby="ctTitle" hidden>
@@ -136,13 +152,7 @@
           </dl>
           <div class="wallet-quick">
             <button type="button" class="wallet-topup">เติมเครดิต</button>
-            <button type="button" class="wallet-quick-hist" data-goto="hist">ดูประวัติ</button>
           </div>
-        </div>
-        <div class="sheet-tabs" role="tablist" aria-label="หมวดในบัญชี">
-          <button type="button" role="tab" class="sheet-tab is-on" data-pane="services" aria-selected="true">บริการ</button>
-          <button type="button" role="tab" class="sheet-tab" data-pane="hist" aria-selected="false">ประวัติ</button>
-          <button type="button" role="tab" class="sheet-tab" data-pane="acct" aria-selected="false">บัญชี</button>
         </div>
         <div class="pane is-on" data-pane="services">
           <div class="wallet-list-head"><h4 class="wallet-list-title">บริการของคุณ</h4><span>2 บริการ</span></div>
@@ -343,21 +353,38 @@
   var payItems = [];
   var reqId = 0; // กันผลจากคำขอเก่าทับผลใหม่เมื่อสลับแท็บเร็ว ๆ
 
+  var PAGE = 10;
+  var shown = PAGE;
+  var inspItems = [];
+  function showError(msg) {
+    panel.hidden = false;
+    list.innerHTML = '<div class="hist-empty"><b>' + esc(msg) + '</b>' +
+      '<button type="button" class="hist-retry" data-retry>ลองใหม่</button></div>';
+  }
+  function moreBtn(total) {
+    if (total <= shown) return '';
+    return '<button type="button" class="hist-more" data-more>ดูเพิ่มเติม (อีก ' + (total - shown) + ')</button>';
+  }
+  function renderInspections() {
+    if (!inspItems.length) return showMessage('ยังไม่มีประวัติการตรวจสัญญา', 'เมื่อตรวจสัญญาแล้ว ผลจะถูกเก็บไว้ที่นี่เพื่อเปิดดูซ้ำ');
+    list.innerHTML = inspItems.slice(0, shown).map(function (it) {
+      return '<button type="button" class="hist-card hist-card-btn" data-id="' + esc(it.id) + '">' +
+        '<span class="hist-ico">' + ICO_DOC + '</span>' +
+        '<span class="hist-main"><b>ผลตรวจสัญญา</b><span class="hist-meta">' + esc(fmt(it.createdAt)) + '</span></span>' +
+        '<span class="hist-go">เปิดดู</span></button>';
+    }).join('') + moreBtn(inspItems.length);
+    panel.hidden = false;
+  }
   async function openInspections() {
     var my = ++reqId;
+    shown = PAGE;
     showSkeleton();
     try {
       var data = await getJson('/api/history/inspections');
       if (my !== reqId) return;
-      if (!data.items.length) return showMessage('ยังไม่มีประวัติการตรวจสัญญา', 'เมื่อตรวจสัญญาแล้ว ผลจะถูกเก็บไว้ที่นี่เพื่อเปิดดูซ้ำ');
-      list.innerHTML = data.items.map(function (it) {
-        return '<button type="button" class="hist-card hist-card-btn" data-id="' + esc(it.id) + '">' +
-          '<span class="hist-ico">' + ICO_DOC + '</span>' +
-          '<span class="hist-main"><b>ผลตรวจสัญญา</b><span class="hist-meta">' + esc(fmt(it.createdAt)) + '</span></span>' +
-          '<span class="hist-go">เปิดดู</span></button>';
-      }).join('');
-      panel.hidden = false;
-    } catch (e) { if (my === reqId) showMessage(e.message); }
+      inspItems = data.items || [];
+      renderInspections();
+    } catch (e) { if (my === reqId) showError(e.message); }
   }
 
   function renderPayments() {
@@ -370,7 +397,7 @@
       var msg = { all: 'ยังไม่มีประวัติการเติมเครดิต', pending: 'ไม่มีรายการที่รอชำระ', done: 'ยังไม่มีรายการที่สำเร็จ' }[currentStatus];
       return showMessage(msg, currentStatus === 'all' ? 'เมื่อเติมเครดิต รายการจะแสดงที่นี่' : 'ลองเลือกดูสถานะอื่น');
     }
-    list.innerHTML = rows.map(function (it, i) {
+    list.innerHTML = rows.slice(0, shown).map(function (it) {
       var done = it.credited;
       var detail = '<dl class="hist-detail" hidden>' +
         '<div><dt>สร้างรายการ</dt><dd>' + esc(fmt(it.createdAt)) + '</dd></div>' +
@@ -378,26 +405,25 @@
         (done ? '' : '<div><dt>หมายเหตุ</dt><dd>เครดิตจะเข้าอัตโนมัติหลังระบบยืนยันการชำระเงิน</dd></div>') +
         '</dl>';
       return '<div class="hist-card" data-open="0">' +
-        '<button type="button" class="hist-card-top" aria-expanded="false" data-i="' + i + '">' +
+        '<button type="button" class="hist-card-top" aria-expanded="false">' +
           '<span class="hist-ico">' + ICO_COIN + '</span>' +
           '<span class="hist-main"><b>' + esc(it.label) + '</b><span class="hist-meta">' + esc(fmt(it.createdAt)) + '</span></span>' +
           '<span class="hist-side"><b class="hist-amt">฿' + Number(it.amountBaht).toLocaleString('th-TH') + '</b>' +
             '<span class="hist-status ' + (done ? 'is-done' : 'is-pending') + '">' + (done ? 'สำเร็จ' : 'รอชำระ') + '</span></span>' +
-        '</button>' +
-
-        detail + '</div>';
-    }).join('');
+        '</button>' + detail + '</div>';
+    }).join('') + moreBtn(rows.length);
     panel.hidden = false;
   }
   async function openPayments() {
     var my = ++reqId;
+    shown = PAGE;
     showSkeleton();
     try {
       var data = await getJson('/api/history/payments');
       if (my !== reqId) return;
       payItems = data.items || [];
       renderPayments();
-    } catch (e) { if (my === reqId) showMessage(e.message); }
+    } catch (e) { if (my === reqId) showError(e.message); }
   }
   async function openOneResult(id) {
     try {
@@ -420,6 +446,7 @@
   }
   function setStatus(st) {
     currentStatus = st;
+    shown = PAGE;
     filters.querySelectorAll('.hist-chip').forEach(function (b) {
       var on = b.getAttribute('data-status') === st;
       b.classList.toggle('is-on', on);
@@ -446,6 +473,12 @@
   panel.addEventListener('click', function (ev) {
     var tab = ev.target.closest('.hist-tab');
     if (tab) { setTab(tab.getAttribute('data-tab')); return; }
+    if (ev.target.closest('[data-retry]')) { setTab(currentKind); return; }
+    if (ev.target.closest('[data-more]')) {
+      shown += PAGE;
+      if (currentKind === 'pay') renderPayments(); else renderInspections();
+      return;
+    }
     var chip = ev.target.closest('.hist-chip');
     if (chip) { setStatus(chip.getAttribute('data-status')); return; }
     var top = ev.target.closest('.hist-card-top');
@@ -461,28 +494,73 @@
     if (row) openOneResult(row.getAttribute('data-id'));
   });
 })();
-/* แท็บในแผนบัญชี (มือถือ) บริการ / ประวัติ / บัญชี · จอใหญ่แสดงทุกส่วนต่อกันเหมือนเดิม */
+/* แถบนำทางล่าง (มือถือ): ตรวจสัญญา / ประวัติ / บัญชี
+   ประวัติและบัญชีเปิดเป็นแผนเดียวกัน แต่แสดงคนละเนื้อหาผ่าน body[data-sheet] (ดู mobile.css หัวข้อ 29) */
 (function () {
-  var box = document.querySelector('.wallet');
-  if (!box) return;
-  var tabs = box.querySelectorAll('.sheet-tab');
-  var panes = box.querySelectorAll('.pane');
+  var body = document.body;
   var mq = window.matchMedia('(max-width: 767px)');
-  function show(name) {
-    tabs.forEach(function (t) {
-      var on = t.getAttribute('data-pane') === name;
-      t.classList.toggle('is-on', on);
-      t.setAttribute('aria-selected', on ? 'true' : 'false');
+  var nav = document.getElementById('bottomNav');
+  var loggedIn = document.getElementById('authLoggedIn');
+  var toggle = document.getElementById('authToggle');
+  var title = document.querySelector('#authCard .sheet-head h2');
+  var sheetBody = document.querySelector('#authCard .sheet-body');
+  if (!nav || !loggedIn) return;
+  var titleOrig = title ? title.textContent : '';
+  var want = null;
+  var lastOpen = body.classList.contains('auth-open');
+
+  function hasNav() { return mq.matches && !loggedIn.hidden; }
+  function mark(name) {
+    nav.querySelectorAll('[data-nav]').forEach(function (b) {
+      var on = b.getAttribute('data-nav') === name;
+      b.classList.toggle('is-on', on);
+      if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
     });
-    panes.forEach(function (p) { p.classList.toggle('is-on', p.getAttribute('data-pane') === name); });
-    if (name === 'hist' && mq.matches && window.vcOpenHistory) window.vcOpenHistory();
   }
-  box.addEventListener('click', function (e) {
-    var t = e.target.closest('.sheet-tab');
-    if (t) { show(t.getAttribute('data-pane')); return; }
-    var g = e.target.closest('[data-goto]');
-    if (g) show(g.getAttribute('data-goto'));
+  function sync() {
+    var on = hasNav();
+    nav.hidden = !on;
+    body.classList.toggle('has-nav', on);
+    if (!on) { body.removeAttribute('data-sheet'); if (title) title.textContent = titleOrig; }
+  }
+  function apply(mode) {
+    body.setAttribute('data-sheet', mode);
+    mark(mode);
+    if (hasNav() && title) title.textContent = mode === 'hist' ? 'ประวัติรายการ' : 'บัญชีของฉัน';
+    if (sheetBody) sheetBody.scrollTop = 0;
+    if (mode === 'hist' && mq.matches && window.vcOpenHistory) window.vcOpenHistory();
+  }
+  function go(name) {
+    if (name === 'home') {
+      body.classList.remove('auth-open');
+      if (toggle) toggle.setAttribute('aria-expanded', 'false');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    if (body.classList.contains('auth-open')) { apply(name); return; }
+    want = name;
+    body.classList.add('auth-open');
+    if (toggle) toggle.setAttribute('aria-expanded', 'true');
+  }
+  nav.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-nav]');
+    if (b) go(b.getAttribute('data-nav'));
   });
+  // ซิงก์เมื่อแผนเปิด/ปิดด้วยวิธีอื่น (ปุ่มหัวเว็บ ✕ พื้นหลัง หรือเปิดผลตรวจจากประวัติ)
+  new MutationObserver(function () {
+    var open = body.classList.contains('auth-open');
+    if (open === lastOpen) return;
+    lastOpen = open;
+    if (open) { apply(want || 'acct'); want = null; }
+    else {
+      body.removeAttribute('data-sheet');
+      mark('home');
+      if (title) title.textContent = hasNav() ? 'บัญชีของฉัน' : titleOrig;
+    }
+  }).observe(body, { attributes: true, attributeFilter: ['class'] });
+  new MutationObserver(sync).observe(loggedIn, { attributes: true, attributeFilter: ['hidden'] });
+  if (mq.addEventListener) mq.addEventListener('change', sync);
+  sync();
 })();
 /* เมนูข้อมูลบัญชีและความช่วยเหลือ */
 (function () {
