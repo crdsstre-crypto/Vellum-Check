@@ -93,7 +93,7 @@ export async function getUserFromRequest(req) {
   const token = readCookie(req, COOKIE_NAME);
   if (!token) return null;
   const { rows } = await pool.query(
-    `SELECT u.id, u.email, u.credits
+    `SELECT u.id, u.email, u.credits, u.avatar
        FROM sessions s
        JOIN users u ON u.id = s.user_id
       WHERE s.token_hash = $1 AND s.expires_at > now()`,
@@ -106,7 +106,7 @@ export async function getUserFromRequest(req) {
 // - ถ้าเคยล็อกอินด้วย Google นี้แล้ว ใช้บัญชีเดิม
 // - ถ้าอีเมลตรงกับบัญชีเดิมและ Google ยืนยันอีเมลแล้ว ผูกบัญชี Google เข้ากับบัญชีนั้น
 // - ไม่ผูกถ้า Google ยังไม่ยืนยันอีเมล
-export async function findOrCreateGoogleUser({ sub, email, emailVerified }) {
+export async function findOrCreateGoogleUser({ sub, email, emailVerified, picture }) {
   const normEmail = email.trim().toLowerCase();
 
   const bySub = await pool.query(
@@ -123,20 +123,29 @@ export async function findOrCreateGoogleUser({ sub, email, emailVerified }) {
   );
   if (byEmail.rows[0]) {
     await pool.query(
-      'UPDATE users SET google_sub = $1 WHERE id = $2 AND google_sub IS NULL',
-      [sub, byEmail.rows[0].id]
+      'UPDATE users SET google_sub = $1, avatar = COALESCE(avatar, $3) WHERE id = $2 AND google_sub IS NULL',
+      [sub, byEmail.rows[0].id, picture ?? null]
     );
     return byEmail.rows[0];
   }
 
   try {
     const { rows } = await pool.query(
-      'INSERT INTO users (email, password_hash, google_sub) VALUES ($1, NULL, $2) RETURNING id, email, credits',
-      [normEmail, sub]
+      'INSERT INTO users (email, password_hash, google_sub, avatar) VALUES ($1, NULL, $2, $3) RETURNING id, email, credits',
+      [normEmail, sub, picture ?? null]
     );
     return rows[0];
   } catch (err) {
     if (err.code === '23505') return null; // ชนกันพร้อมกัน ให้ลองใหม่
     throw err;
   }
+}
+
+// ตั้งหรือลบรูปโปรไฟล์ (value เป็น null เพื่อลบ)
+export async function setUserAvatar(userId, value) {
+  const { rows } = await pool.query(
+    'UPDATE users SET avatar = $2 WHERE id = $1 RETURNING avatar',
+    [userId, value]
+  );
+  return rows[0]?.avatar ?? null;
 }
