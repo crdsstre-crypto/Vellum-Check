@@ -1114,3 +1114,27 @@ footer{
   .acct-topup:active,
   .faq summary:active{transform:none}
 }
+
+/* ---------- 13. กล่องเครดิต 2 ช่อง (ตรวจ / เสียง) ----------
+   script.js showCredits() สร้าง .acct-cell สองช่องใน #creditsLine */
+.acct-credit-row .acct-credits{
+  flex:1;
+  min-width:0;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  padding:0;
+  background:none;
+  border:none;
+}
+.acct-cell{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  padding:10px 12px;
+  border-radius:16px;
+  background:var(--ghost);
+  border:1px solid var(--card-edge);
+}
+.acct-cell small{font-size:.74rem;color:var(--muted)}
+.acct-cell b{font-size:1.25rem;font-weight:700;color:var(--gold-soft);line-height:1.2}
