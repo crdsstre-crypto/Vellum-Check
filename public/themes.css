@@ -17,7 +17,7 @@
 
   /* พื้นหลังและการ์ด */
   --bg:#08090b;
-  --card:#15171c;
+  --card:#17181c;
   --card-edge:rgba(255,255,255,.07);
   --item:#1b1d23;
   --field:#101216;
@@ -26,15 +26,15 @@
   --shadow:0 12px 32px rgba(0,0,0,.55);
 
   /* ตัวอักษร */
-  --text:#f2f2f3;
+  --text:#f5f5f5;
   --muted:#8b8e98;
 
   /* สีเน้น (Champagne Gold) ใช้เฉพาะจุดสำคัญเท่านั้น ประมาณ 5% ของหน้า */
-  --gold:#e5c477;
-  --gold-soft:#f3dca0;
-  --gold-deep:#b8924a;
+  --gold:#c8a75a;
+  --gold-soft:#e0c581;
+  --gold-deep:#9c7f3f;
   --on-gold:#08090b;
-  --focus:rgba(229,196,119,.55);
+  --focus:rgba(200,167,90,.55);
 
   /* ระดับความเสี่ยง (ค่าใน JSON: high = ควรตรวจละเอียด, mid = ควรระวัง, low = เสี่ยงต่ำ) */
   --high:#2a1417;  --highText:#f7a6ab;  --highBorder:#e5484d;
