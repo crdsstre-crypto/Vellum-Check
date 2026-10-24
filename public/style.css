@@ -212,4 +212,4 @@ footer{
 }
 
 /* แท็บและปุ่มลัดของแผนบัญชีใช้เฉพาะมือถือ (เปิดใน mobile.css) */
-.sheet-tabs,.wallet-quick{display:none}
+.wallet-quick,.bottom-nav{display:none}
