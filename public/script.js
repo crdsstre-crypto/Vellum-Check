@@ -324,11 +324,20 @@ function renderEmpty(message = CONFIG.messages.empty) {
   els.result.innerHTML = `<p class="empty">${esc(message)}</p>`;
 }
 
+const pad2 = n => String(Math.max(0, Number(n) || 0)).padStart(2, '0');
+
+// แผงสรุปความเสี่ยง: ตัวเลขใหญ่ของระดับสูงสุดที่พบ + แถบสัดส่วน + จำนวนระดับอื่น
 function renderSummary(counts) {
-  return `<div class="summary">
-    <span class="badge high">${CONFIG.levelLabel.check_detail} ${counts.check_detail}</span>
-    <span class="badge mid">${CONFIG.levelLabel.caution} ${counts.caution}</span>
-    <span class="badge low">${CONFIG.levelLabel.low} ${counts.low}</span>
+  const c = { check_detail: counts.check_detail || 0, caution: counts.caution || 0, low: counts.low || 0 };
+  const total = c.check_detail + c.caution + c.low;
+  const top = c.check_detail ? 'check_detail' : (c.caution ? 'caution' : 'low');
+  const pct = total ? Math.round((c[top] / total) * 100) : 0;
+  const rows = ['check_detail', 'caution', 'low'].filter(k => k !== top).map(k =>
+    `<div class="sum-row lv-${k}"><span>${CONFIG.levelLabel[k]}</span><b>${pad2(c[k])} รายการ</b></div>`).join('');
+  return `<div class="summary sum-panel lv-${top}">
+    <div class="sum-top"><span>${CONFIG.levelLabel[top]}</span><b>${pad2(c[top])}</b></div>
+    <div class="sum-bar" role="img" aria-label="สัดส่วน ${pct}%"><i style="width:${pct}%"></i></div>
+    ${rows}
   </div>`;
 }
 
@@ -347,7 +356,7 @@ function renderQuote(item) {
   }
   return `<p class="found">✅ พบข้อความนี้ในสัญญาต้นฉบับ</p>
     <blockquote>${esc(item.quote)}</blockquote>
-    <button type="button" class="jump-btn" data-act="jump">↑ ดูตำแหน่งในสัญญา</button>`;
+    <button type="button" class="jump-btn" data-act="jump">ดูข้อความในสัญญาต้นฉบับ</button>`;
 }
 
 // บนมือถือเปิดแค่สองรายการแรก (เรียงจากความเสี่ยงสูงสุด) ที่เหลือพับไว้ให้แตะเปิดเอง
@@ -355,17 +364,21 @@ function openByDefault(index) {
   return window.matchMedia('(max-width: 767px)').matches ? index < 2 : true;
 }
 
+const ICO_WARN = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2.5 20h19L12 3z"/><path d="M12 10v4M12 17.2v.1"/></svg>';
+
 function renderItem(item, index) {
-  return `<details class="item ${esc(item.level)}" ${openByDefault(index) ? 'open' : ''}>
+  const lv = ['check_detail', 'caution', 'low'].includes(item.level) ? item.level : 'low';
+  return `<details class="item lv-${lv}" ${openByDefault(index) ? 'open' : ''}>
     <summary>
-      <span class="tag">${esc(CONFIG.levelLabel[item.level] || '')}</span>
-      <b>${esc(item.title)}</b>
+      <span class="it-ico">${ICO_WARN}</span>
+      <span class="it-title"><em>${pad2(index + 1)} —</em> <b>${esc(item.title)}</b></span>
     </summary>
+    <span class="tag">${esc(CONFIG.levelLabel[item.level] || '')}</span>
+    ${item.explanation ? `<p class="it-text">${esc(item.explanation)}</p>` : ''}
     ${renderQuote(item)}
-    ${item.explanation ? `<p>${esc(item.explanation)}</p>` : ''}
-    ${item.reference ? `<p>📚 แนวทางตรวจ: ${esc(item.reference)}</p>` : ''}
-    ${item.suggested_fix ? `<p><b>เสนอแก้เป็น:</b> ${esc(item.suggested_fix)}</p>` : ''}
-    ${item.how_to_negotiate ? `<p><b>วิธีรับมือ:</b> ${esc(item.how_to_negotiate)}</p>` : ''}
+    ${item.reference ? `<p class="it-ref">📚 แนวทางตรวจ: ${esc(item.reference)}</p>` : ''}
+    ${item.suggested_fix ? `<div class="it-sug"><h4>ข้อเสนอแนะ</h4><p>${esc(item.suggested_fix)}</p></div>` : ''}
+    ${item.how_to_negotiate ? `<div class="it-sug"><h4>วิธีรับมือ</h4><p>${esc(item.how_to_negotiate)}</p></div>` : ''}
   </details>`;
 }
 
@@ -446,25 +459,48 @@ async function copyText(text) {
   }
 }
 
+const ICO_COPY = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="3"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>';
+const ICO_SHARE = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/></svg>';
+const ICO_PDF = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 11 12 15.5 16.5 11M5 20h14"/></svg>';
+
+// เลขรายงาน เช่น VC-241024-1842 (ใช้เวลาในเครื่อง ไม่ใช่เลขอ้างอิงทางกฎหมาย)
+function reportMeta() {
+  const d = new Date();
+  const p = n => String(n).padStart(2, '0');
+  const no = `VC-${String(d.getFullYear()).slice(2)}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}`;
+  const date = d.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
+  const sel = document.getElementById('contractType');
+  const typeText = sel && sel.value && sel.value !== 'unsure' ? sel.options[sel.selectedIndex].text.trim() : '';
+  return { no, date, typeText };
+}
+
 function renderResult(result) {
   lastResult = result;
   const items = Array.isArray(result.items) ? result.items : [];
+  const meta = reportMeta();
 
   const body = items.length
     ? items.map((it, i) => renderItem(it, i)).join('')
     : `<p class="empty">${esc(CONFIG.messages.noHit)}</p>`;
 
   els.result.innerHTML = `
-    ${renderSummary(result.risk_counts || { check_detail: 0, caution: 0, low: 0 })}
-    <div class="share-bar">
-      <button type="button" class="ghost" data-act="copy">คัดลอกผลตรวจ</button>
-      <button type="button" class="ghost" data-act="share">แชร์ผลตรวจ</button>
-      <button type="button" class="ghost" data-act="save">บันทึกไฟล์</button>
-    </div>
-    ${renderBrief(result.summary || {})}
-    ${body}
-    ${renderMissing(result.missing_info || [])}
-    <p class="disclaimer">${esc(CONFIG.messages.disclaimer)}</p>`;
+    <article class="rpt">
+      <header class="rpt-head">
+        <p class="rpt-kicker">ANALYSIS REPORT <span>· ${esc(meta.no)}</span></p>
+        <h3 class="rpt-title">ผลการตรวจสอบสัญญา</h3>
+        <p class="rpt-meta">${meta.typeText ? 'ประเภทเอกสาร: ' + esc(meta.typeText) + ' · ' : ''}${esc(meta.date)}</p>
+      </header>
+      ${renderSummary(result.risk_counts || { check_detail: 0, caution: 0, low: 0 })}
+      ${renderBrief(result.summary || {})}
+      ${body}
+      ${renderMissing(result.missing_info || [])}
+      <div class="share-bar">
+        <button type="button" class="ghost" data-act="copy">${ICO_COPY}<span>คัดลอกผล</span></button>
+        <button type="button" class="ghost" data-act="share">${ICO_SHARE}<span>แชร์รายงาน</span></button>
+        <button type="button" class="ghost" data-act="pdf">${ICO_PDF}<span>บันทึก PDF</span></button>
+      </div>
+      <p class="disclaimer">${esc(CONFIG.messages.disclaimer)}</p>
+    </article>`;
 }
 
 
@@ -643,6 +679,16 @@ function init() {
     if (!btn || !lastResult) return;
     if (btn.dataset.act === 'jump') {
       jumpToQuote(btn.closest('details')?.querySelector('blockquote')?.textContent || '');
+      return;
+    }
+    if (btn.dataset.act === 'pdf') {
+      // เปิดหน้าต่างพิมพ์ของเครื่อง เลือก "บันทึกเป็น PDF" (iPhone: แชร์ → บันทึกลงไฟล์)
+      document.body.classList.add('printing-report');
+      const done = () => document.body.classList.remove('printing-report');
+      window.addEventListener('afterprint', done, { once: true });
+      toast('เลือก "บันทึกเป็น PDF" ในหน้าต่างถัดไป');
+      setTimeout(() => window.print(), 350);
+      setTimeout(done, 60000);
       return;
     }
     const text = buildShareText(lastResult);
