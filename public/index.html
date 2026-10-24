@@ -12,7 +12,7 @@
 <!-- ลำดับการโหลด CSS: themes (สี) → style (ทุกจอ) → mobile (เฉพาะจอต่ำกว่า 768px) -->
 <link rel="stylesheet" href="themes.css">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="mobile.css?v=9w" media="(max-width: 767px)">
+<link rel="stylesheet" href="mobile.css?v=9x" media="(max-width: 767px)">
 </head>
 <body>
 
@@ -87,6 +87,7 @@
       <h2>0. บัญชีผู้ใช้</h2>
       <button type="button" class="sheet-close" id="authClose" aria-label="ปิด">✕</button>
     </div>
+    <div class="sheet-body">
     <div id="authLoggedOut">
         <button type="button" class="google-btn" id="googleBtn">เข้าสู่ระบบด้วย Google</button>
         <p class="or-line">หรือ</p>
@@ -146,7 +147,12 @@
           <button type="button" role="tab" class="hist-tab is-on" data-tab="insp" aria-selected="true">ตรวจสัญญา</button>
           <button type="button" role="tab" class="hist-tab" data-tab="pay" aria-selected="false">เติมเครดิต</button>
         </div>
-        <div id="histList"></div>
+        <div class="hist-filters" id="histFilters" role="group" aria-label="กรองตามสถานะ" hidden>
+          <button type="button" class="hist-chip is-on" data-status="all" aria-pressed="true">ทั้งหมด</button>
+          <button type="button" class="hist-chip" data-status="pending" aria-pressed="false">รอชำระ</button>
+          <button type="button" class="hist-chip" data-status="done" aria-pressed="false">สำเร็จ</button>
+        </div>
+        <div id="histList" aria-live="polite"></div>
       </div>
       <button class="acct-out" id="logoutBtn" type="button">
         <span class="acct-ico acct-ico-danger" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></svg></span><span>ออกจากระบบ</span>
@@ -154,6 +160,7 @@
       </button>
     </div>
     <p class="disclaimer" id="authMsg"></p>
+    </div>
   </section>
 
   <!-- 1. วางข้อความสัญญา -->
@@ -263,7 +270,10 @@
 (function () {
   var panel = document.getElementById('historyPanel');
   var list = document.getElementById('histList');
+  var filters = document.getElementById('histFilters');
   if (!panel || !list) return;
+  var ICO_DOC = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>';
+  var ICO_COIN = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h4a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3h4"/></svg>';
   function esc(v) {
     return String(v).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
@@ -273,9 +283,14 @@
     try { return new Date(iso).toLocaleString('th-TH', { dateStyle: 'medium', timeStyle: 'short' }); }
     catch (e) { return ''; }
   }
-  function showMessage(text) {
+  function showMessage(text, hint) {
     panel.hidden = false;
-    list.innerHTML = '<p class="hist-empty">' + esc(text) + '</p>';
+    list.innerHTML = '<div class="hist-empty"><b>' + esc(text) + '</b>' +
+      (hint ? '<small>' + esc(hint) + '</small>' : '') + '</div>';
+  }
+  function showSkeleton() {
+    panel.hidden = false;
+    list.innerHTML = '<div class="hist-skel"></div><div class="hist-skel"></div>';
   }
   async function getJson(url) {
     var res = await fetch(url, { credentials: 'same-origin' });
@@ -283,32 +298,65 @@
     if (!res.ok) throw new Error(data.error || 'โหลดไม่สำเร็จ');
     return data;
   }
+  var currentKind = 'insp';
+  var currentStatus = 'all';
+  var payItems = [];
+  var reqId = 0; // กันผลจากคำขอเก่าทับผลใหม่เมื่อสลับแท็บเร็ว ๆ
+
   async function openInspections() {
-    showMessage('กำลังโหลด...');
+    var my = ++reqId;
+    showSkeleton();
     try {
       var data = await getJson('/api/history/inspections');
-      if (!data.items.length) return showMessage('ยังไม่มีประวัติการตรวจสัญญา');
+      if (my !== reqId) return;
+      if (!data.items.length) return showMessage('ยังไม่มีประวัติการตรวจสัญญา', 'เมื่อตรวจสัญญาแล้ว ผลจะถูกเก็บไว้ที่นี่เพื่อเปิดดูซ้ำ');
       list.innerHTML = data.items.map(function (it) {
-        return '<button type="button" class="hist-row" data-id="' + it.id + '">' +
-          '<span>ผลตรวจสัญญา<span class="hist-meta">' + esc(fmt(it.createdAt)) + '</span></span>' +
-          '<span class="hist-tag">เปิดดู</span></button>';
+        return '<button type="button" class="hist-card hist-card-btn" data-id="' + esc(it.id) + '">' +
+          '<span class="hist-ico">' + ICO_DOC + '</span>' +
+          '<span class="hist-main"><b>ผลตรวจสัญญา</b><span class="hist-meta">' + esc(fmt(it.createdAt)) + '</span></span>' +
+          '<span class="hist-go">เปิดดู</span></button>';
       }).join('');
       panel.hidden = false;
-    } catch (e) { showMessage(e.message); }
+    } catch (e) { if (my === reqId) showMessage(e.message); }
+  }
+
+  function renderPayments() {
+    var rows = payItems.filter(function (it) {
+      if (currentStatus === 'pending') return !it.credited;
+      if (currentStatus === 'done') return it.credited;
+      return true;
+    });
+    if (!rows.length) {
+      var msg = { all: 'ยังไม่มีประวัติการเติมเครดิต', pending: 'ไม่มีรายการที่รอชำระ', done: 'ยังไม่มีรายการที่สำเร็จ' }[currentStatus];
+      return showMessage(msg, currentStatus === 'all' ? 'เมื่อเติมเครดิต รายการจะแสดงที่นี่' : 'ลองเลือกดูสถานะอื่น');
+    }
+    list.innerHTML = rows.map(function (it, i) {
+      var done = it.credited;
+      var detail = '<dl class="hist-detail" hidden>' +
+        '<div><dt>สร้างรายการ</dt><dd>' + esc(fmt(it.createdAt)) + '</dd></div>' +
+        (done && it.creditedAt ? '<div><dt>เติมเครดิตแล้ว</dt><dd>' + esc(fmt(it.creditedAt)) + '</dd></div>' : '') +
+        (done ? '' : '<div><dt>หมายเหตุ</dt><dd>เครดิตจะเข้าอัตโนมัติหลังระบบยืนยันการชำระเงิน</dd></div>') +
+        '</dl>';
+      return '<div class="hist-card" data-open="0">' +
+        '<button type="button" class="hist-card-top" aria-expanded="false" data-i="' + i + '">' +
+          '<span class="hist-ico">' + ICO_COIN + '</span>' +
+          '<span class="hist-main"><b>' + esc(it.label) + '</b><span class="hist-meta">' + esc(fmt(it.createdAt)) + '</span></span>' +
+          '<span class="hist-status ' + (done ? 'is-done' : 'is-pending') + '">' + (done ? 'สำเร็จ' : 'รอชำระ') + '</span>' +
+        '</button>' +
+        '<div class="hist-card-foot"><span class="hist-amt-label">ยอดชำระ</span><b class="hist-amt">฿' + Number(it.amountBaht).toLocaleString('th-TH') + '.00</b></div>' +
+        detail + '</div>';
+    }).join('');
+    panel.hidden = false;
   }
   async function openPayments() {
-    showMessage('กำลังโหลด...');
+    var my = ++reqId;
+    showSkeleton();
     try {
       var data = await getJson('/api/history/payments');
-      if (!data.items.length) return showMessage('ยังไม่มีประวัติการเติมเครดิต');
-      list.innerHTML = data.items.map(function (it) {
-        var status = it.credited ? 'เติมแล้ว' : 'รอชำระ';
-        return '<div class="hist-row">' +
-          '<span>' + esc(it.label) + '<span class="hist-meta">' + esc(fmt(it.createdAt)) + ' · ' + it.amountBaht + ' บาท</span></span>' +
-          '<span class="hist-tag">' + status + '</span></div>';
-      }).join('');
-      panel.hidden = false;
-    } catch (e) { showMessage(e.message); }
+      if (my !== reqId) return;
+      payItems = data.items || [];
+      renderPayments();
+    } catch (e) { if (my === reqId) showMessage(e.message); }
   }
   async function openOneResult(id) {
     try {
@@ -318,7 +366,6 @@
     } catch (e) { alert(e.message); }
   }
   // ปุ่มเดียว "ประวัติรายการ": กดเปิด/ปิด แล้วสลับแท็บ ตรวจสัญญา / เติมเครดิต
-  var currentKind = 'insp';
   var link = document.getElementById('walletHist');
   function setTab(kind) {
     currentKind = kind;
@@ -327,7 +374,17 @@
       b.classList.toggle('is-on', on);
       b.setAttribute('aria-selected', on ? 'true' : 'false');
     });
+    if (filters) filters.hidden = kind !== 'pay';
     if (kind === 'pay') openPayments(); else openInspections();
+  }
+  function setStatus(st) {
+    currentStatus = st;
+    filters.querySelectorAll('.hist-chip').forEach(function (b) {
+      var on = b.getAttribute('data-status') === st;
+      b.classList.toggle('is-on', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    renderPayments();
   }
   link.addEventListener('click', function () {
     if (!panel.hidden) {
@@ -337,11 +394,24 @@
     }
     link.setAttribute('aria-expanded', 'true');
     setTab(currentKind);
+    // เลื่อนให้เห็นแผนประวัติทั้งชุด โดยเลื่อนเฉพาะส่วนเนื้อหาของแผน
+    setTimeout(function () { panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 60);
   });
   panel.addEventListener('click', function (ev) {
     var tab = ev.target.closest('.hist-tab');
     if (tab) { setTab(tab.getAttribute('data-tab')); return; }
-    var row = ev.target.closest('.hist-row[data-id]');
+    var chip = ev.target.closest('.hist-chip');
+    if (chip) { setStatus(chip.getAttribute('data-status')); return; }
+    var top = ev.target.closest('.hist-card-top');
+    if (top) {
+      var card = top.closest('.hist-card');
+      var open = card.getAttribute('data-open') !== '1';
+      card.setAttribute('data-open', open ? '1' : '0');
+      top.setAttribute('aria-expanded', open ? 'true' : 'false');
+      card.querySelector('.hist-detail').hidden = !open;
+      return;
+    }
+    var row = ev.target.closest('.hist-card-btn[data-id]');
     if (row) openOneResult(row.getAttribute('data-id'));
   });
 })();
