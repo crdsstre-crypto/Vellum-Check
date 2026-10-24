@@ -258,6 +258,7 @@
     document.querySelectorAll('#vwBody mark.hl').forEach(function (x) { x.classList.toggle('is-on', x === mark); });
     pop.querySelector('.vw-go').addEventListener('click', function () {
       closeViewer();
+      if (typeof window.focusIssue === 'function') { window.focusIssue(i); return; }
       var card = document.querySelectorAll('#result details.item')[i];
       if (card) { card.open = true; card.scrollIntoView({ behavior: prefs.calm ? 'auto' : 'smooth', block: 'start' }); }
     });
