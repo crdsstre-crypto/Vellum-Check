@@ -330,14 +330,20 @@ const pad2 = n => String(Math.max(0, Number(n) || 0)).padStart(2, '0');
 function renderSummary(counts) {
   const c = { check_detail: counts.check_detail || 0, caution: counts.caution || 0, low: counts.low || 0 };
   const total = c.check_detail + c.caution + c.low;
+  if (!total) return '';
   const top = c.check_detail ? 'check_detail' : (c.caution ? 'caution' : 'low');
-  const pct = total ? Math.round((c[top] / total) * 100) : 0;
-  const rows = ['check_detail', 'caution', 'low'].filter(k => k !== top).map(k =>
-    `<div class="sum-row lv-${k}" data-jumplv="${k}" role="button" tabindex="0"><span>${CONFIG.levelLabel[k]}</span><b>${pad2(c[k])} รายการ</b></div>`).join('');
-  return `<div class="summary sum-panel lv-${top}">
-    <div class="sum-top" data-jumplv="${top}" role="button" tabindex="0"><span>${CONFIG.levelLabel[top]}</span><b>${pad2(c[top])}</b></div>
-    <div class="sum-bar" role="img" aria-label="สัดส่วน ${pct}%"><i style="width:${pct}%"></i></div>
-    ${rows}
+  const sub = top === 'low'
+    ? 'ไม่พบประเด็นที่ต้องรีบตรวจ แต่ควรอ่านทั้งฉบับอีกครั้งก่อนลงนาม'
+    : 'มีประเด็นที่แนะนำให้ตรวจสอบเงื่อนไขก่อนลงนาม';
+  const tiles = ['check_detail', 'caution', 'low'].map(k =>
+    `<div class="sum-tile lv-${k}" data-jumplv="${k}" role="button" tabindex="0"><b>${c[k]}</b><span>${CONFIG.levelLabel[k]}</span></div>`).join('');
+  const btnLabel = top === 'low' ? 'ดูประเด็นทั้งหมด' : 'ดูประเด็นที่' + CONFIG.levelLabel[top];
+  return `<div class="summary sum-card">
+    <p class="sc-kick">สรุปผลการตรวจสอบ</p>
+    <h3 class="sc-title">พบ ${total} ประเด็นที่ควรอ่าน</h3>
+    <p class="sc-sub">${sub}</p>
+    <div class="sc-tiles">${tiles}</div>
+    <button type="button" class="sc-go" data-jumplv="${top}">${esc(btnLabel)} <span aria-hidden="true">↓</span></button>
   </div>`;
 }
 
@@ -432,15 +438,34 @@ function renderDetail(item) {
   </div>`;
 }
 
+
+// เหตุผล: ประโยคแรกเป็นหัวข้อตัวหนา ประโยคที่สองเป็นรายละเอียดสีจาง (ถ้าแยกไม่ได้ใช้แบบย่อ-ขยายเดิม)
+function splitReason(t) {
+  const text = String(t || '').trim();
+  const nl = text.indexOf('\n');
+  if (nl > 0) return [text.slice(0, nl).trim(), text.slice(nl + 1).trim()];
+  const m = text.match(/^([\s\S]{12,}?[.!?])\s+([\s\S]+)$/);
+  return m ? [m[1].trim(), m[2].trim()] : [text, ''];
+}
+function renderReason(explanation) {
+  if (!explanation) return '';
+  const [head, detail] = splitReason(explanation);
+  if (detail) {
+    return `<div class="it-reason"><p class="it-lbl">สิ่งที่ต้องรู้</p><p class="it-text it-head">${esc(head)}</p><p class="it-detail">${esc(detail)}</p></div>`;
+  }
+  const long = explanation.length > 110;
+  return `<div class="it-reason"><p class="it-lbl">สิ่งที่ต้องรู้</p><p class="it-text${long ? ' clamp' : ''}">${esc(explanation)}</p>${long ? '<button type="button" class="more-btn" data-act="more">อ่านเพิ่มเติม</button>' : ''}</div>`;
+}
+
 function renderItem(item, index) {
   const lv = ['check_detail', 'caution', 'low'].includes(item.level) ? item.level : 'low';
   return `<details class="item lv-${lv}" ${openByDefault(index) ? 'open' : ''}>
     <summary>
       <span class="it-ico">${ICO_WARN}</span>
-      <span class="it-title"><small>ประเด็นที่ ${pad2(index + 1)}</small><b>${esc(item.title)}</b></span>
+      <span class="it-title"><small>ประเด็นที่ ${pad2(index + 1)}${item.topic ? ' · ' + esc(item.topic) : ''}</small><b>${esc(item.title)}</b></span>
       <span class="tag">${esc(CONFIG.levelLabel[item.level] || '')}</span>
     </summary>
-    ${item.explanation ? `<div class="it-reason"><p class="it-lbl">ทำไมจึงควรตรวจสอบ</p><p class="it-text${item.explanation.length > 110 ? ' clamp' : ''}">${esc(item.explanation)}</p>${item.explanation.length > 110 ? '<button type="button" class="more-btn" data-act="more">อ่านเพิ่มเติม</button>' : ''}</div>` : ''}
+    ${renderReason(item.explanation)}
     ${item.missing ? renderQuote(item) : ''}
     ${item.reference ? `<p class="it-ref">📚 แนวทางตรวจ: ${esc(item.reference)}</p>` : ''}
     ${renderDetail(item)}
