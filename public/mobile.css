@@ -1314,3 +1314,16 @@ button.hist-row:active{background:rgba(229,196,119,.10)}
   color:#e9e9ea;
   z-index:1;
 }
+
+/* ---------- 20. สีวงกลมโปรไฟล์ตอนยังไม่มีรูป ----------
+   ใช้สีน้ำตาลและตัวอักษรขาวแบบรูปตัวอักษรของ Google */
+#authLoggedIn .acct-avatar{
+  background:#8c6c60;
+  border:none;
+  color:#ffffff;
+}
+#authLoggedIn .acct-avatar #acctInitial{
+  font-size:1.15rem;
+  font-weight:500;
+  color:#ffffff;
+}
