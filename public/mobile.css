@@ -1264,3 +1264,28 @@ button.hist-row:active{background:rgba(229,196,119,.10)}
 .acct-cell:nth-child(2) small::before{content:"🎙️ "}
 #authLoggedIn #logoutBtn{color:#f0a08f}
 #authLoggedIn #logoutBtn .acct-chev{color:#c98a7c}
+
+/* ---------- 18. รูปโปรไฟล์ ----------
+   วงกลมเป็นปุ่มกดได้ · รูปแสดงแทนตัวอักษรเมื่อมีรูป */
+#authLoggedIn .acct-avatar{
+  padding:0;
+  overflow:hidden;
+  font:inherit;
+  cursor:pointer;
+}
+#authLoggedIn .acct-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:50%;
+}
+#authLoggedIn .acct-photo-del{
+  display:block;
+  margin:8px 4px 0;
+  padding:4px 0;
+  background:none;
+  border:none;
+  color:var(--muted);
+  font-size:.82rem;
+  text-decoration:underline;
+}
