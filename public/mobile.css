@@ -2454,3 +2454,53 @@ mark.hl.is-on{outline:2px solid var(--gold);outline-offset:1px}
 .miss-note{margin:0 0 8px;font-size:.8rem;color:var(--muted);line-height:1.6}
 .miss ul{margin:0;padding-left:20px;font-size:.9rem;line-height:1.7}
 .sum-top,.sum-row{cursor:pointer}
+
+/* =========================================================
+   รอบ 14: Soft Highlight + Underline
+   แดง = พื้นแดงจาง ๆ เฉพาะวลีที่มีปัญหา · ทอง/เขียว = เส้นใต้ + พื้นจางมาก
+   สีตัวอักษรบนไฮไลต์: แดง #FF999D · ทอง #E5C36C · เขียว #82D0A6
+   ปรับที่ตัวแปร --hl-* ที่เดียว ใช้ร่วมกันทั้งการ์ดและหน้าดูสัญญา
+   ========================================================= */
+:root{
+  --hl-check_detail:#ff999d; --hl-check_detail-bg:rgba(255,153,157,.18);
+  --hl-caution:#e5c36c;      --hl-caution-bg:rgba(229,195,108,.10);
+  --hl-low:#82d0a6;          --hl-low-bg:rgba(130,208,166,.08);
+}
+mark.hl{
+  padding:1px 5px;border-radius:6px;border-bottom:0;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;font-weight:500;
+}
+mark.hl.lv-check_detail{background:var(--hl-check_detail-bg);color:var(--hl-check_detail)}
+mark.hl.lv-caution{background:var(--hl-caution-bg);color:var(--hl-caution);
+  text-decoration:underline;text-decoration-color:var(--hl-caution);text-decoration-thickness:2px;text-underline-offset:5px}
+mark.hl.lv-low{background:var(--hl-low-bg);color:var(--hl-low);
+  text-decoration:underline;text-decoration-color:var(--hl-low);text-decoration-thickness:2px;text-underline-offset:5px}
+mark.hl.is-on{outline:0;box-shadow:0 0 0 2px var(--gold)}
+.vw-legend .lv-check_detail{color:var(--hl-check_detail)}
+.vw-legend .lv-caution{color:var(--hl-caution)}
+.vw-legend .lv-low{color:var(--hl-low)}
+
+/* การ์ด: หัว = เลข+ชื่อ ซ้าย ป้ายขวา · ข้อความที่อ้างเป็นพื้นจางสีตามระดับ */
+.rpt .item summary{align-items:center}
+.rpt .item .tag{margin:0 0 0 auto;flex:none;display:inline-block}
+.it-lbl{margin:12px 0 4px;font-size:.8rem;color:var(--muted)}
+.rpt .item blockquote.hl-quote{
+  margin:4px 0 8px;padding:12px 14px;border:0;border-radius:14px;
+  font-size:1rem;line-height:1.7;font-weight:500;
+  color:var(--hl-low);background:var(--hl-low-bg);
+}
+.rpt .item.lv-check_detail blockquote.hl-quote{color:var(--hl-check_detail);background:var(--hl-check_detail-bg)}
+.rpt .item.lv-caution blockquote.hl-quote{color:var(--hl-caution);background:var(--hl-caution-bg)}
+.src-row{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin:0 0 4px;font-size:.8rem;color:var(--muted);
+}
+.src-link{
+  min-height:44px;padding:0;border:0;background:none;white-space:nowrap;
+  color:var(--gold);font:inherit;font-size:.86rem;font-weight:600;
+}
+.src-link i{font-style:normal;font-size:1.1rem;margin-left:2px}
+.it-sug{border-top:0;padding-top:4px}
+.it-sug h4{display:flex;align-items:center;gap:8px;margin:0 0 8px;font-size:.98rem;color:var(--text)}
+.it-sug h4 svg{color:var(--gold);flex:none}
+.rpt .item .found,.rpt .item .jump-btn{display:none}
