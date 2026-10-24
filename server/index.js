@@ -16,6 +16,7 @@ import {
   endSession,
   getUserFromRequest,
   findOrCreateGoogleUser,
+  setUserAvatar,
 } from './auth.js';
 import { saveInspection, listInspections, getInspection, listPayments } from './history.js';
 import {
@@ -98,6 +99,7 @@ app.get('/api/me', async (req, res) => {
     res.json({
       email: user.email,
       credits: user.credits,
+      avatar: user.avatar ?? null,
       voice_credits: await getVoiceCredits(user.id),
     });
   } catch (err) {
@@ -184,6 +186,38 @@ app.get('/api/history/payments', async (req, res) => {
   } catch (err) {
     console.error('[history] list payments failed:', err.message);
     res.status(500).json({ error: 'โหลดประวัติไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+
+// ----- รูปโปรไฟล์ -----
+const AVATAR_PATTERN = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/;
+const AVATAR_MAX_CHARS = 200000;
+
+app.post('/api/me/avatar', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน' });
+    const image = req.body?.image;
+    if (typeof image !== 'string' || image.length > AVATAR_MAX_CHARS || !AVATAR_PATTERN.test(image)) {
+      return res.status(400).json({ error: 'รูปไม่ถูกต้องหรือใหญ่เกินไป' });
+    }
+    const avatar = await setUserAvatar(user.id, image);
+    res.json({ avatar });
+  } catch (err) {
+    console.error('[avatar] save failed:', err.message);
+    res.status(500).json({ error: 'บันทึกรูปไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+
+app.delete('/api/me/avatar', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน' });
+    await setUserAvatar(user.id, null);
+    res.json({ avatar: null });
+  } catch (err) {
+    console.error('[avatar] delete failed:', err.message);
+    res.status(500).json({ error: 'ลบรูปไม่สำเร็จ ลองใหม่อีกครั้ง' });
   }
 });
 
