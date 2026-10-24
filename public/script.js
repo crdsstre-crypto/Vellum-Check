@@ -270,17 +270,22 @@ let loadingTimer = null;
 function showLoading() {
   els.result.innerHTML = `
     <div class="loading-box" role="status" aria-live="polite">
-      <p class="loading-msg" id="loadingMsg">${esc(LOADING_STEPS[0])}</p>
+      <ol class="load-steps" id="loadSteps">
+        ${LOADING_STEPS.map((t, k) => `<li class="${k === 0 ? 'now' : ''}"><span class="dot" aria-hidden="true"></span>${esc(t)}</li>`).join('')}
+      </ol>
+      <p class="load-note">ใช้เวลาประมาณ 10–30 วินาที ไม่ต้องกดซ้ำ</p>
       <div class="skel"></div>
       <div class="skel short"></div>
-      <div class="skel"></div>
     </div>`;
   let i = 0;
   loadingTimer = setInterval(() => {
-    i = (i + 1) % LOADING_STEPS.length;
-    const el = document.getElementById('loadingMsg');
-    if (el) el.textContent = LOADING_STEPS[i];
-  }, 1800);
+    const lis = document.querySelectorAll('#loadSteps li');
+    if (i < lis.length - 1) {
+      lis[i].className = 'done';
+      i += 1;
+      lis[i].className = 'now';
+    }
+  }, 2500);
 }
 
 function stopLoading() {
@@ -341,7 +346,8 @@ function renderQuote(item) {
     return `<p class="notfound">⚠️ ไม่พบข้อความนี้ในสัญญาต้นฉบับ AI อาจอ้างผิด โปรดตรวจเอง</p>`;
   }
   return `<p class="found">✅ พบข้อความนี้ในสัญญาต้นฉบับ</p>
-    <blockquote>${esc(item.quote)}</blockquote>`;
+    <blockquote>${esc(item.quote)}</blockquote>
+    <button type="button" class="jump-btn" data-act="jump">↑ ดูตำแหน่งในสัญญา</button>`;
 }
 
 // บนมือถือเปิดแค่สองรายการแรก (เรียงจากความเสี่ยงสูงสุด) ที่เหลือพับไว้ให้แตะเปิดเอง
@@ -407,6 +413,21 @@ function buildShareText(result) {
   return lines.join('\n');
 }
 
+// เลื่อนกลับไปที่ข้อความในช่องวางสัญญาและเลือกส่วนที่ AI อ้างถึง
+function jumpToQuote(quote) {
+  const q = quote.trim();
+  const ta = els.input;
+  if (!q || !ta) return;
+  let at = ta.value.indexOf(q);
+  if (at < 0) at = ta.value.indexOf(q.slice(0, 40)); // ข้อความยาว: ลองจับจากต้นประโยค
+  if (at < 0) { toast('หาตำแหน่งไม่พบ ข้อความอาจถูกแก้หลังตรวจ'); return; }
+  ta.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  ta.focus({ preventScroll: true });
+  ta.setSelectionRange(at, at + Math.min(q.length, ta.value.length - at));
+  // textarea เลื่อนเองตามเคอร์เซอร์ไม่แน่นอนบน iOS จึงคำนวณจากสัดส่วนข้อความ
+  ta.scrollTop = Math.max(0, (at / Math.max(1, ta.value.length)) * ta.scrollHeight - ta.clientHeight / 2);
+}
+
 async function copyText(text) {
   try {
     await navigator.clipboard.writeText(text);
@@ -438,6 +459,7 @@ function renderResult(result) {
     <div class="share-bar">
       <button type="button" class="ghost" data-act="copy">คัดลอกผลตรวจ</button>
       <button type="button" class="ghost" data-act="share">แชร์ผลตรวจ</button>
+      <button type="button" class="ghost" data-act="save">บันทึกไฟล์</button>
     </div>
     ${renderBrief(result.summary || {})}
     ${body}
@@ -509,6 +531,7 @@ async function runCheck() {
     }
 
     renderResult(r.data.result);
+    if (typeof r.data.credits === 'number') toast('ใช้ 1 เครดิต · เหลือ ' + r.data.credits + ' เครดิต');
     addDetectBanner(r.data.result, contractType);
     if (r.data.audio) {
       els.result.insertAdjacentHTML('afterbegin',
@@ -618,7 +641,23 @@ function init() {
   els.result.addEventListener('click', async function (e) {
     const btn = e.target.closest('[data-act]');
     if (!btn || !lastResult) return;
+    if (btn.dataset.act === 'jump') {
+      jumpToQuote(btn.closest('details')?.querySelector('blockquote')?.textContent || '');
+      return;
+    }
     const text = buildShareText(lastResult);
+    if (btn.dataset.act === 'save') {
+      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'ผลตรวจสัญญา.txt';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+      toast('บันทึกไฟล์แล้ว');
+      return;
+    }
     if (btn.dataset.act === 'copy') {
       const ok = await copyText(text);
       toast(ok ? 'คัดลอกผลตรวจแล้ว วางในแอปอื่นได้เลย' : 'คัดลอกไม่สำเร็จ ลองอีกครั้ง');
