@@ -1159,3 +1159,50 @@ footer{
   font-size:.85rem;
   color:var(--muted);
 }
+
+/* ---------- 15. ประวัติการใช้งาน ----------
+   ปุ่มเปิดประวัติอยู่ในแผนบัญชี (#histInspBtn, #histPayBtn) รายการแสดงใน #historyPanel */
+.history-panel{
+  margin-top:10px;
+  padding:6px;
+  max-height:50vh;
+  overflow-y:auto;
+  border-radius:18px;
+  background:var(--ghost);
+  border:1px solid var(--card-edge);
+}
+.hist-row{
+  width:100%;
+  min-height:52px;
+  padding:10px 12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  border:none;
+  border-radius:12px;
+  background:transparent;
+  color:var(--text);
+  font-size:.92rem;
+  text-align:left;
+}
+button.hist-row:active{background:rgba(229,196,119,.10)}
+.hist-meta{
+  display:block;
+  margin-top:2px;
+  font-size:.76rem;
+  color:var(--muted);
+}
+.hist-tag{
+  flex:none;
+  font-size:.8rem;
+  font-weight:600;
+  color:var(--gold-soft);
+}
+.hist-empty{
+  margin:0;
+  padding:14px;
+  text-align:center;
+  font-size:.9rem;
+  color:var(--muted);
+}
