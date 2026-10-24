@@ -5,7 +5,7 @@
 import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { analyzeContract, transcribeImage, MAX_ITEMS_LIMIT, CONTRACT_TYPES } from './ai.js';
+import { analyzeContract, answerFollowup, transcribeImage, MAX_ITEMS_LIMIT, CONTRACT_TYPES } from './ai.js';
 import { extractPdfText, extractDocxText } from './extract.js';
 import { initDb } from './db.js';
 import {
@@ -18,7 +18,7 @@ import {
   findOrCreateGoogleUser,
   setUserAvatar,
 } from './auth.js';
-import { saveInspection, listInspections, getInspection, listPayments } from './history.js';
+import { saveInspection, listInspections, getInspection, listPayments, deleteAllInspections, deleteInspection } from './history.js';
 import {
   googleConfigured, makeState, buildAuthUrl, readCookieValue, exchangeCodeForProfile,
 } from './googleAuth.js';
@@ -186,6 +186,88 @@ app.get('/api/history/payments', async (req, res) => {
   } catch (err) {
     console.error('[history] list payments failed:', err.message);
     res.status(500).json({ error: 'โหลดประวัติไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+
+// ----- ลบประวัติผลตรวจ -----
+app.delete('/api/history/inspections', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน' });
+    const deleted = await deleteAllInspections(user.id);
+    res.json({ ok: true, deleted });
+  } catch (err) {
+    console.error('[history] delete all failed:', err.message);
+    res.status(500).json({ error: 'ลบประวัติไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+
+app.delete('/api/history/inspections/:id', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน' });
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id) || id < 1) return res.status(400).json({ error: 'รหัสไม่ถูกต้อง' });
+    const deleted = await deleteInspection(user.id, id);
+    if (!deleted) return res.status(404).json({ error: 'ไม่พบรายการนี้' });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('[history] delete failed:', err.message);
+    res.status(500).json({ error: 'ลบรายการไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+
+// ----- ถามต่อจากผลตรวจ (ฟรี แต่จำกัดจำนวนต่อชั่วโมง เพราะมีต้นทุน AI) -----
+const FOLLOWUP_PER_HOUR = 15;
+const FOLLOWUP_MAX_Q = 300;
+const followupHits = new Map(); // userId -> { count, resetAt }
+
+app.post('/api/followup', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน' });
+
+    const question = typeof req.body?.question === 'string' ? req.body.question.trim() : '';
+    if (!question) return res.status(400).json({ error: 'กรุณาพิมพ์คำถาม' });
+    if (question.length > FOLLOWUP_MAX_Q) {
+      return res.status(413).json({ error: `คำถามยาวเกิน ${FOLLOWUP_MAX_Q} ตัวอักษร` });
+    }
+    // ผลตรวจที่ส่งมา: ตัดให้เหลือเฉพาะฟิลด์ที่ใช้ และจำกัดขนาด
+    const r = req.body?.result;
+    if (!r || typeof r !== 'object' || !Array.isArray(r.items)) {
+      return res.status(400).json({ error: 'ไม่พบผลตรวจที่จะอ้างอิง' });
+    }
+    const pick = v => (typeof v === 'string' ? v.slice(0, 1200) : '');
+    const context = JSON.stringify({
+      summary: { job: pick(r.summary?.job), money: pick(r.summary?.money), time: pick(r.summary?.time) },
+      items: r.items.slice(0, MAX_ITEMS_LIMIT).map(it => ({
+        level: pick(it?.level), title: pick(it?.title), quote: pick(it?.quote),
+        explanation: pick(it?.explanation), reference: pick(it?.reference),
+        suggested_fix: pick(it?.suggested_fix), how_to_negotiate: pick(it?.how_to_negotiate),
+      })),
+      missing_info: (Array.isArray(r.missing_info) ? r.missing_info : []).slice(0, 10).map(pick),
+    });
+
+    const now = Date.now();
+    let hit = followupHits.get(user.id);
+    if (!hit || hit.resetAt <= now) hit = { count: 0, resetAt: now + 60 * 60 * 1000 };
+    if (hit.count >= FOLLOWUP_PER_HOUR) {
+      return res.status(429).json({ error: 'ถามต่อได้ชั่วโมงละ ' + FOLLOWUP_PER_HOUR + ' ครั้ง รออีกสักครู่แล้วลองใหม่' });
+    }
+    hit.count += 1;
+    followupHits.set(user.id, hit);
+
+    try {
+      const answer = await answerFollowup(question, context);
+      res.json({ ok: true, answer });
+    } catch (err) {
+      hit.count -= 1; // ล้มเหลวไม่นับโควตา
+      console.error('[followup] failed:', err.message);
+      res.status(502).json({ error: 'ตอบไม่สำเร็จ ลองใหม่อีกครั้ง' });
+    }
+  } catch (err) {
+    console.error('[followup] error:', err.message);
+    res.status(500).json({ error: 'ระบบมีปัญหา ลองใหม่อีกครั้ง' });
   }
 });
 
