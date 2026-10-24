@@ -497,6 +497,7 @@ function renderResult(result) {
       ${renderBrief(result.summary || {})}
       ${body}
       ${renderMissing(result.missing_info || [])}
+      ${typeof renderGlossary === 'function' ? renderGlossary(result) : ''}
       <div class="share-bar">
         <button type="button" class="ghost" data-act="copy">${ICO_COPY}<span>คัดลอกผล</span></button>
         <button type="button" class="ghost" data-act="share">${ICO_SHARE}<span>แชร์รายงาน</span></button>
