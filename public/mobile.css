@@ -1443,3 +1443,123 @@ body.pay-open #paymentCard:not([hidden]){
   body.pay-open #paymentCard:not([hidden]){display:block}
   #resultCard:has(#result > p.empty){display:none}
 }
+
+/* ---------- 23. MY WALLET (กระเป๋าเครดิตในแผนบัญชี) ----------
+   โครงสร้าง: index.html (.wallet) · ตัวการ์ดสร้างจาก script.js showCredits()
+   สีทองมาจาก themes.css (--gold ฯลฯ) · ตัวเลขใหญ่ปรับที่ --w-num
+   อนิเมชันมีแค่ตอนเปิดแผน 1 ครั้ง (opacity/transform เท่านั้น) ไม่มีแสงวิ่งวนและไม่ใช้ blur */
+:root{--w-num:2.1rem}
+.wallet{
+  margin-top:14px;
+  padding:16px;
+  border-radius:24px;
+  background:linear-gradient(180deg,#121419,#0d0e12);
+  border:1px solid rgba(229,196,119,.14);
+}
+.wallet-title{
+  margin:0;
+  font-size:1.35rem;
+  font-weight:800;
+  letter-spacing:.02em;
+  color:var(--gold);
+}
+.wallet-sub{margin:2px 0 0;font-size:.88rem;color:var(--muted)}
+.wallet-total{
+  margin-top:14px;
+  padding:14px 16px;
+  border-radius:18px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.06);
+}
+.wallet-total-label{font-size:.85rem;color:var(--muted)}
+.wallet-total-num{margin:2px 0 4px;color:var(--muted);font-size:.95rem}
+.wallet-total-num b{
+  font-size:2.4rem;
+  font-weight:700;
+  line-height:1.15;
+  color:var(--gold);
+  font-variant-numeric:tabular-nums;
+}
+.wallet-total-note{font-size:.8rem;color:var(--muted)}
+.wallet-list-head{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  margin:18px 2px 10px;
+}
+.wallet-list-head b{font-size:1.1rem;color:var(--text)}
+.wallet-list-head span{font-size:.88rem;color:var(--gold)}
+.wallet-cards{display:flex;flex-direction:column;gap:12px}
+.wallet-card{
+  padding:14px;
+  border-radius:20px;
+  background:linear-gradient(160deg,#241f17,#1b1812);
+  border:1px solid rgba(229,196,119,.28);
+}
+.wallet-card-top{display:flex;align-items:center;gap:12px}
+.wallet-ico{
+  flex:none;
+  display:grid;
+  place-items:center;
+  width:46px;
+  height:46px;
+  border-radius:14px;
+  color:var(--gold);
+  background:rgba(229,196,119,.12);
+}
+.wallet-card-name{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.wallet-card-name b{font-size:1.1rem;color:var(--text)}
+.wallet-card-name small{font-size:.85rem;color:var(--muted)}
+.wallet-badge{
+  flex:none;
+  padding:3px 11px;
+  border-radius:999px;
+  font-size:.78rem;
+  font-weight:700;
+  color:var(--ok);
+  background:rgba(126,226,168,.12);
+}
+.wallet-badge.is-empty{color:var(--highText);background:rgba(229,72,77,.14)}
+.wallet-card-bottom{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:14px;
+}
+.wallet-card-num{margin:0;color:var(--muted);font-size:.9rem}
+.wallet-card-num b{
+  font-size:var(--w-num);
+  font-weight:700;
+  line-height:1.1;
+  color:var(--gold);
+  font-variant-numeric:tabular-nums;
+}
+.wallet-topup{
+  flex:none;
+  min-height:46px;
+  padding:0 20px;
+  border:none;
+  border-radius:999px;
+  font-size:.95rem;
+  font-weight:700;
+  color:#1a1405;
+  background:linear-gradient(145deg,#f1d88a,#d1a94f);
+  box-shadow:0 4px 14px rgba(212,175,55,.25);
+  transition:transform .15s ease;
+}
+.wallet-topup:active{transform:scale(.97)}
+
+/* เข้าฉากครั้งเดียวตอนเปิดแผน (GPU-friendly) */
+#authLoggedIn .wallet-total,
+#authLoggedIn .wallet-card{
+  animation:acctIn .4s cubic-bezier(.2,.8,.2,1) both;
+}
+#authLoggedIn .wallet-card-check{animation-delay:.06s}
+#authLoggedIn .wallet-card-voice{animation-delay:.12s}
+@media (prefers-reduced-motion: reduce){
+  #authLoggedIn .wallet-total,
+  #authLoggedIn .wallet-card{animation:none}
+  .wallet-topup{transition:none}
+  .wallet-topup:active{transform:none}
+}
