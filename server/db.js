@@ -42,6 +42,8 @@ export async function initDb() {
   // บัญชี Google ไม่มีรหัสผ่าน และเก็บรหัสประจำตัวของ Google ไว้
   await pool.query(`ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL`);
   await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS google_sub TEXT UNIQUE`);
+  // รูปโปรไฟล์: data URL ของรูปที่ย่อแล้ว หรือ URL รูปจาก Google
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar TEXT`);
 
   await pool.query(`
     CREATE TABLE IF NOT EXISTS sessions (
