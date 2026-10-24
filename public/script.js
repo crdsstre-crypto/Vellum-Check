@@ -99,7 +99,7 @@ function walletCard(cls, icon, th, en, use, id) {
     `<div class="wallet-card-name"><b>${th}</b><small>${en}</small></div>` +
     `<span class="wallet-badge" id="${id}Badge">พร้อมใช้งาน</span></div>` +
     `<p class="wallet-card-use">${use}</p>` +
-    `<div class="wallet-card-bottom"><p class="wallet-card-num"><b id="${id}">–</b><small>เครดิต</small></p>` +
+    `<div class="wallet-card-bottom"><p class="wallet-card-num"><b id="${id}">–</b><small>เครดิตคงเหลือ</small></p>` +
     `<button type="button" class="wallet-topup" aria-label="เติม${th}">เติมเครดิต</button></div></div>`;
 }
 
