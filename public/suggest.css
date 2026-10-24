@@ -66,3 +66,23 @@
   .sg-panel{display:none !important}
   .sg-panel[data-panel="cmp"],.sg-panel[data-panel="new"]:only-of-type{display:block !important}
 }
+
+/* เหตุผลแบบหัวข้อ + รายละเอียด */
+.rpt .it-reason .it-head{font-weight:700;font-size:1rem;line-height:1.55}
+.rpt .it-reason .it-detail{margin:6px 0 0;font-size:.9rem;line-height:1.65;color:var(--muted)}
+
+/* การ์ดสรุปผล: ตัวเลขแยกตามระดับ + ปุ่มข้ามไปประเด็นสำคัญ */
+.summary.sum-card{display:block;padding:18px 16px;border-radius:20px;background:var(--card);border:1px solid var(--line,rgba(255,255,255,.1));margin:14px 0}
+.sum-card .sc-kick{margin:0;font-size:.84rem;color:var(--muted)}
+.sum-card .sc-title{margin:4px 0 4px;font-size:1.5rem;line-height:1.3;font-family:'Anuphan',sans-serif;color:var(--text)}
+.sum-card .sc-sub{margin:0 0 14px;font-size:.9rem;color:var(--muted)}
+.sc-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sum-tile{padding:12px;border-radius:16px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.sum-tile b{display:block;font-size:2rem;line-height:1.1;font-weight:600}
+.sum-tile span{display:block;margin-top:4px;font-size:.84rem;color:var(--text)}
+.sum-tile.lv-check_detail{background:rgba(217,112,111,.18)}.sum-tile.lv-check_detail b{color:#ee8b8a}
+.sum-tile.lv-caution{background:rgba(200,167,90,.18)}.sum-tile.lv-caution b{color:var(--gold-soft,var(--gold))}
+.sum-tile.lv-low{background:rgba(111,174,138,.18)}.sum-tile.lv-low b{color:#8fd0a8}
+.sc-go{all:unset;box-sizing:border-box;display:flex;width:100%;align-items:center;justify-content:center;gap:8px;margin-top:12px;padding:13px 14px;border-radius:999px;background:#f3f3f1;color:#111;font-weight:600;font-size:.94rem;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.sc-go:active{opacity:.85}
+@media print{.sc-go{display:none}}
