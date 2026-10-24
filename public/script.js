@@ -347,6 +347,97 @@ function renderSummary(counts) {
   </div>`;
 }
 
+// สารบัญประเด็น: แตะแถวแล้วเลื่อนไปการ์ดประเด็นนั้นทันที (เปิดเฉพาะการ์ดที่เลือก)
+const IX_LIMIT = 5;
+function ixShort(item) {
+  const [head] = splitReason(item.explanation || '');
+  const t = String(head || item.topic || '').replace(/\s+/g, ' ').trim();
+  return t.length > 60 ? t.slice(0, 58).trim() + '…' : t;
+}
+function renderIssueIndex(items) {
+  if (!Array.isArray(items) || items.length < 2) return '';
+  const rows = items.map((it, i) => {
+    const lv = ['check_detail', 'caution', 'low'].includes(it.level) ? it.level : 'low';
+    const sub = ixShort(it);
+    return `<button type="button" class="ix-row lv-${lv}" data-jumpidx="${i}"${i >= IX_LIMIT ? ' hidden data-ixextra="1"' : ''}>
+      <span class="ix-no">${pad2(i + 1)}</span>
+      <span class="ix-tx"><b>${esc(it.title)}</b>${sub ? `<small>${esc(sub)}</small>` : ''}</span>
+      <span class="ix-tag">${esc(CONFIG.levelLabel[lv])}</span>
+      <i class="ix-go" aria-hidden="true">›</i>
+    </button>`;
+  }).join('');
+  const more = items.length > IX_LIMIT
+    ? `<button type="button" class="ix-more" data-ixmore="1" aria-expanded="false">ดูทั้งหมด ${items.length} รายการ</button>` : '';
+  return `<section class="ix" id="issueIndex" aria-label="สารบัญประเด็นที่ควรตรวจสอบ">
+    <div class="ix-head"><h3>ประเด็นที่ควรตรวจสอบ</h3><span>${items.length} รายการ</span></div>
+    <p class="ix-sub">แตะเพื่อไปยังรายละเอียดแต่ละประเด็น</p>
+    <div class="ix-list">${rows}</div>${more}
+  </section>`;
+}
+
+let lastIssueIdx = -1;
+let flashTimer = 0;
+function calmMotion() {
+  return document.documentElement.hasAttribute('data-calm') ||
+    (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+}
+// เลื่อนไปการ์ดประเด็นที่ idx: ปิดการ์ดอื่นบนมือถือ เปิดการ์ดนี้ แล้วเน้นขอบทองสั้น ๆ
+function focusIssue(idx) {
+  const all = [...els.result.querySelectorAll('details.item')];
+  const target = all[idx];
+  if (!target) { toast('ไม่พบประเด็นนี้'); return; }
+  if (window.matchMedia('(max-width: 767px)').matches) {
+    all.forEach(d => { if (d !== target) d.open = false; });
+  }
+  target.open = true;
+  lastIssueIdx = idx;
+  els.result.querySelectorAll('.ix-row').forEach(r => r.classList.toggle('is-current', +r.dataset.jumpidx === idx));
+  target.scrollIntoView({ behavior: calmMotion() ? 'auto' : 'smooth', block: 'start' });
+  all.forEach(d => d.classList.remove('is-flash'));
+  void target.offsetWidth;
+  target.classList.add('is-flash');
+  clearTimeout(flashTimer);
+  flashTimer = setTimeout(() => target.classList.remove('is-flash'), 1800);
+  const sm = target.querySelector('summary');
+  if (sm) { sm.setAttribute('tabindex', '-1'); sm.focus({ preventScroll: true }); }
+  updateIxBack();
+}
+window.focusIssue = focusIssue;
+
+// ปุ่มลอย "กลับไปรายการประเด็น" แสดงเมื่ออยู่ลึกในรายงานและรายการหลุดจอ
+let ixBackEl = null, ixObserver = null, ixVisible = true;
+function ensureIxBack() {
+  if (ixBackEl) return ixBackEl;
+  ixBackEl = document.createElement('button');
+  ixBackEl.type = 'button';
+  ixBackEl.className = 'ix-back';
+  ixBackEl.hidden = true;
+  ixBackEl.innerHTML = '<span aria-hidden="true">↑</span> กลับไปรายการประเด็น';
+  ixBackEl.addEventListener('click', () => {
+    const row = els.result.querySelector('.ix-row.is-current') || document.getElementById('issueIndex');
+    if (row) row.scrollIntoView({ behavior: calmMotion() ? 'auto' : 'smooth', block: 'center' });
+  });
+  document.body.appendChild(ixBackEl);
+  return ixBackEl;
+}
+function updateIxBack() {
+  const b = ensureIxBack();
+  b.hidden = !(lastIssueIdx >= 0 && !ixVisible && document.getElementById('issueIndex'));
+}
+function watchIssueIndex() {
+  lastIssueIdx = -1;
+  ixVisible = true;
+  if (ixObserver) ixObserver.disconnect();
+  const box = document.getElementById('issueIndex');
+  updateIxBack();
+  if (!box || !('IntersectionObserver' in window)) return;
+  ixObserver = new IntersectionObserver(entries => {
+    ixVisible = entries[0].isIntersecting;
+    updateIxBack();
+  }, { threshold: 0 });
+  ixObserver.observe(box);
+}
+
 function renderBrief(summary) {
   return `<div class="brief">
     <p>📋 <b>งาน:</b> ${esc(summary.job) || '—'}</p>
@@ -459,7 +550,7 @@ function renderReason(explanation) {
 
 function renderItem(item, index) {
   const lv = ['check_detail', 'caution', 'low'].includes(item.level) ? item.level : 'low';
-  return `<details class="item lv-${lv}" ${openByDefault(index) ? 'open' : ''}>
+  return `<details class="item lv-${lv}" id="issue-${index}" ${openByDefault(index) ? 'open' : ''}>
     <summary>
       <span class="it-ico">${ICO_WARN}</span>
       <span class="it-title"><small>ประเด็นที่ ${pad2(index + 1)}${item.topic ? ' · ' + esc(item.topic) : ''}</small><b>${esc(item.title)}</b></span>
@@ -585,6 +676,7 @@ function renderResult(result) {
         <p class="rpt-meta">${meta.typeText ? 'ประเภทเอกสาร: ' + esc(meta.typeText) + ' · ' : ''}${esc(meta.date)}</p>
       </header>
       ${renderSummary(result.risk_counts || { check_detail: 0, caution: 0, low: 0 })}
+      ${renderIssueIndex(items)}
       ${renderBrief(result.summary || {})}
       ${body}
       ${renderMissing(result.missing_info || [])}
@@ -597,6 +689,7 @@ function renderResult(result) {
       <p class="disclaimer">${esc(CONFIG.messages.disclaimer)}</p>
     </article>`;
   if (typeof linkifyGlossary === 'function') linkifyGlossary(els.result);
+  watchIssueIndex();
 }
 
 
@@ -860,12 +953,21 @@ function init() {
     });
   }
   els.result.addEventListener('click', function (e) {
+    const row = e.target.closest('[data-jumpidx]');
+    if (row) { focusIssue(+row.dataset.jumpidx); return; }
+    const more = e.target.closest('[data-ixmore]');
+    if (more) {
+      const open = more.getAttribute('aria-expanded') !== 'true';
+      els.result.querySelectorAll('[data-ixextra]').forEach(r => { r.hidden = !open; });
+      more.setAttribute('aria-expanded', open ? 'true' : 'false');
+      more.textContent = open ? 'แสดงน้อยลง' : 'ดูทั้งหมด ' + els.result.querySelectorAll('.ix-row').length + ' รายการ';
+      return;
+    }
     const j = e.target.closest('[data-jumplv]');
     if (!j) return;
     const target = els.result.querySelector('details.item.lv-' + j.dataset.jumplv);
     if (!target) { toast('ไม่มีรายการในระดับนี้'); return; }
-    target.open = true;
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    focusIssue([...els.result.querySelectorAll('details.item')].indexOf(target));
   });
   els.clearBtn.addEventListener('click', clearAll);
 
