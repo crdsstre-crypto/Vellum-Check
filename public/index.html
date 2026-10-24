@@ -109,6 +109,15 @@
         <p id="creditsLine" class="acct-credits"></p>
         <button class="acct-topup" id="acctTopup" type="button">+ เติม</button>
       </div>
+      <button class="acct-out" id="histInspBtn" type="button">
+        <span>ประวัติการตรวจสัญญา</span>
+        <span class="acct-chev" aria-hidden="true">›</span>
+      </button>
+      <button class="acct-out" id="histPayBtn" type="button">
+        <span>ประวัติการเติมเครดิต</span>
+        <span class="acct-chev" aria-hidden="true">›</span>
+      </button>
+      <div id="historyPanel" class="history-panel" hidden></div>
       <button class="acct-out" id="logoutBtn" type="button">
         <span>ออกจากระบบ</span>
         <span class="acct-chev" aria-hidden="true">›</span>
@@ -218,6 +227,70 @@
 
 <script>
 /* เปิด/ปิดแผนบัญชี (มือถือ) ไม่แตะ script.js */
+/* ประวัติการใช้งาน: โหลดรายการและเปิดดูผลตรวจเดิม */
+(function () {
+  var panel = document.getElementById('historyPanel');
+  if (!panel) return;
+  function esc(v) {
+    return String(v).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function fmt(iso) {
+    try { return new Date(iso).toLocaleString('th-TH', { dateStyle: 'medium', timeStyle: 'short' }); }
+    catch (e) { return ''; }
+  }
+  function showMessage(text) {
+    panel.hidden = false;
+    panel.innerHTML = '<p class="hist-empty">' + esc(text) + '</p>';
+  }
+  async function getJson(url) {
+    var res = await fetch(url, { credentials: 'same-origin' });
+    var data = await res.json().catch(function () { return {}; });
+    if (!res.ok) throw new Error(data.error || 'โหลดไม่สำเร็จ');
+    return data;
+  }
+  async function openInspections() {
+    showMessage('กำลังโหลด...');
+    try {
+      var data = await getJson('/api/history/inspections');
+      if (!data.items.length) return showMessage('ยังไม่มีประวัติการตรวจสัญญา');
+      panel.innerHTML = data.items.map(function (it) {
+        return '<button type="button" class="hist-row" data-id="' + it.id + '">' +
+          '<span>ผลตรวจสัญญา<span class="hist-meta">' + esc(fmt(it.createdAt)) + '</span></span>' +
+          '<span class="hist-tag">เปิดดู</span></button>';
+      }).join('');
+      panel.hidden = false;
+    } catch (e) { showMessage(e.message); }
+  }
+  async function openPayments() {
+    showMessage('กำลังโหลด...');
+    try {
+      var data = await getJson('/api/history/payments');
+      if (!data.items.length) return showMessage('ยังไม่มีประวัติการเติมเครดิต');
+      panel.innerHTML = data.items.map(function (it) {
+        var status = it.credited ? 'เติมแล้ว' : 'รอชำระ';
+        return '<div class="hist-row">' +
+          '<span>' + esc(it.label) + '<span class="hist-meta">' + esc(fmt(it.createdAt)) + ' · ' + it.amountBaht + ' บาท</span></span>' +
+          '<span class="hist-tag">' + status + '</span></div>';
+      }).join('');
+      panel.hidden = false;
+    } catch (e) { showMessage(e.message); }
+  }
+  async function openOneResult(id) {
+    try {
+      var data = await getJson('/api/history/inspections/' + encodeURIComponent(id));
+      document.body.classList.remove('auth-open');
+      if (typeof renderResult === 'function') renderResult(data.result);
+    } catch (e) { alert(e.message); }
+  }
+  document.getElementById('histInspBtn').addEventListener('click', openInspections);
+  document.getElementById('histPayBtn').addEventListener('click', openPayments);
+  panel.addEventListener('click', function (ev) {
+    var row = ev.target.closest('.hist-row[data-id]');
+    if (row) openOneResult(row.getAttribute('data-id'));
+  });
+})();
 /* ล็อกอินด้วย Google: ส่งไปหน้ายืนยันของ Google ที่ server */
 document.getElementById('googleBtn').addEventListener('click', function () {
   location.href = '/api/auth/google';
