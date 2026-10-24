@@ -19,3 +19,21 @@
 .gl-link{color:var(--gold);text-decoration:none;border-bottom:1px dotted var(--gold-deep,var(--gold))}
 .gl-link i{font-style:normal}
 .gl-note{margin:12px 0 0;font-size:.76rem;line-height:1.6;color:var(--muted)}
+
+/* คำศัพท์ที่แตะได้ในผลตรวจ: ขีดเส้นใต้สีทอง ไม่ใส่พื้นหลัง */
+.gl-tap{all:unset;display:inline;cursor:pointer;color:inherit;text-decoration:underline;text-decoration-color:var(--gold);text-decoration-thickness:1.5px;text-underline-offset:3px;-webkit-tap-highlight-color:transparent}
+.gl-tap:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:3px}
+
+/* Bottom sheet */
+.gl-sheet{position:fixed;inset:0;z-index:9999;visibility:hidden;pointer-events:none}
+.gl-sheet.open{visibility:visible;pointer-events:auto}
+.gl-back{position:absolute;inset:0;background:rgba(0,0,0,.55);opacity:0;transition:opacity .2s}
+.gl-sheet.open .gl-back{opacity:1}
+.gl-panel{position:absolute;left:0;right:0;bottom:0;max-width:640px;margin:0 auto;max-height:80vh;overflow-y:auto;padding:8px 20px calc(24px + env(safe-area-inset-bottom));border-radius:22px 22px 0 0;background:var(--card);border:1px solid var(--gold-deep,var(--gold));border-bottom:0;transform:translateY(100%);transition:transform .25s ease}
+.gl-sheet.open .gl-panel{transform:none}
+.gl-grab{width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,.2);margin:4px auto 12px}
+.gl-sh-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.gl-sh-head h3{margin:0;font-size:1.15rem;color:var(--text)}
+.gl-x{all:unset;cursor:pointer;color:var(--muted);font-size:1.1rem;padding:8px;-webkit-tap-highlight-color:transparent}
+@media (prefers-reduced-motion:reduce){.gl-panel,.gl-back{transition:none}}
+@media print{.gl-sheet{display:none}}
