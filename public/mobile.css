@@ -2209,3 +2209,66 @@ body[data-sheet="hist"] .wallet::before{display:none}
   background:transparent;color:var(--gold-soft);font:inherit;font-size:.84rem;
 }
 .jump-btn:active{background:rgba(229,196,119,.12)}
+
+/* ---------- รอบ 11: ถามต่อ, ความเป็นส่วนตัว, การแสดงผล, ปุ่มกลับขึ้นบน ---------- */
+.fu{margin:20px 0 8px;padding:16px 14px;border:1px solid var(--gold-deep);border-radius:16px;background:var(--item)}
+.fu-title{margin:0 0 10px;font-size:1rem}
+.fu-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.fu-chip{
+  min-height:40px;padding:8px 12px;border-radius:999px;
+  border:1px solid var(--gold-deep);background:transparent;color:var(--gold-soft);
+  font:inherit;font-size:.84rem;line-height:1.3;text-align:left;
+}
+.fu-chip:active{background:rgba(229,196,119,.12)}
+.fu-form{display:flex;gap:8px}
+.fu-form input{flex:1;min-width:0;min-height:44px;margin:0;font-size:16px}
+.fu-form .primary{flex:none;min-height:44px;padding:0 18px}
+.fu-log{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+.fu-q{align-self:flex-end;max-width:88%;padding:8px 12px;border-radius:14px 14px 4px 14px;background:rgba(229,196,119,.14);font-size:.9rem}
+.fu-a{align-self:flex-start;max-width:96%;padding:10px 12px;border-radius:14px 14px 14px 4px;background:var(--card);border:1px solid var(--ghost);font-size:.9rem;line-height:1.7;white-space:pre-wrap}
+.fu-a.is-wait{color:var(--muted)}
+.fu-a.is-err{border-color:#b0524a}
+.fu-note{margin:12px 0 0;font-size:.76rem;color:var(--muted)}
+
+.menu-panel{margin:0 0 8px;padding:12px 14px;border-radius:14px;background:var(--item);border:1px solid var(--ghost)}
+.menu-panel[hidden]{display:none}
+.priv-list{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-direction:column;gap:10px;font-size:.84rem;line-height:1.6;color:var(--muted)}
+.priv-list b{display:block;color:var(--text);font-size:.88rem}
+.priv-del{
+  width:100%;min-height:44px;border-radius:12px;border:1px solid #b0524a;
+  background:transparent;color:#e58a82;font:inherit;font-size:.9rem;
+}
+.priv-del:active{background:rgba(176,82,74,.14)}
+.priv-del:disabled{opacity:.5}
+.priv-note{margin:8px 0 0;font-size:.82rem;color:var(--gold-soft);min-height:1em}
+.disp-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;font-size:.9rem}
+.disp-row small{display:block;color:var(--muted);font-size:.76rem}
+.disp-row input[type=checkbox]{width:22px;height:22px;flex:none;accent-color:var(--gold)}
+.seg{display:flex;border:1px solid var(--gold-deep);border-radius:10px;overflow:hidden}
+.seg button{width:44px;min-height:40px;border:0;background:transparent;color:var(--text);font:inherit}
+.seg button:nth-child(1){font-size:.8rem}
+.seg button:nth-child(2){font-size:1rem}
+.seg button:nth-child(3){font-size:1.2rem}
+.seg button.is-on{background:rgba(229,196,119,.2);color:var(--gold-soft)}
+
+.to-top{
+  position:fixed;right:16px;
+  bottom:calc(env(safe-area-inset-bottom,0px) + var(--nav-h,60px) + 16px);
+  width:44px;height:44px;border-radius:50%;
+  border:1px solid var(--gold-deep);background:var(--card);color:var(--gold-soft);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 18px rgba(0,0,0,.4);z-index:45;
+}
+.to-top[hidden]{display:none}
+
+/* ขนาดตัวอักษร (ตั้งจากเมนูการแสดงผล) */
+html[data-font="s"]{font-size:93.75%}
+html[data-font="l"]{font-size:112.5%}
+/* โหมดกะทัดรัด */
+html[data-compact]{--m-card-y:14px;--m-h2-gap:8px;--m-hero-y:8px;--m-textarea-h:110px}
+html[data-compact] .item,html[data-compact] .fu{padding-top:10px;padding-bottom:10px}
+html[data-compact] .skel{margin-bottom:6px}
+/* ลดภาพเคลื่อนไหว */
+html[data-calm] *,html[data-calm] *::before,html[data-calm] *::after{
+  animation:none !important;transition:none !important;scroll-behavior:auto !important;
+}
