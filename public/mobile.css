@@ -1327,3 +1327,41 @@ button.hist-row:active{background:rgba(229,196,119,.10)}
   font-weight:500;
   color:#ffffff;
 }
+
+/* ---------- 21. ความหรูของแผนบัญชี (กรอบเรืองแสง แสงวิ่ง กระจกฝ้า) ----------
+   ทั้งหมดเป็นการตกแต่ง ไม่เปลี่ยนการทำงาน · ปิดการเคลื่อนไหวเมื่อผู้ใช้ตั้ง reduced-motion */
+#authLoggedIn .acct-avatar{
+  box-shadow:
+    0 0 0 2px #0c0c0e,
+    0 0 0 3.5px rgba(229,196,119,.7),
+    0 0 18px rgba(229,196,119,.35);
+}
+#authLoggedIn .acct-row,
+#authLoggedIn .acct-cell{
+  background:rgba(255,255,255,.05);
+  -webkit-backdrop-filter:blur(12px);
+  backdrop-filter:blur(12px);
+}
+.acct-topup{
+  position:relative;
+  overflow:hidden;
+}
+.acct-topup::after{
+  content:"";
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:-60%;
+  width:50%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);
+  transform:skewX(-20deg);
+  animation:acctShimmer 3.2s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes acctShimmer{
+  0%{left:-60%}
+  60%,100%{left:130%}
+}
+@media (prefers-reduced-motion: reduce){
+  .acct-topup::after{animation:none;display:none}
+}
