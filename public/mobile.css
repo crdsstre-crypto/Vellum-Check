@@ -2397,3 +2397,60 @@ body{font-family:'Anuphan','Sarabun',system-ui,sans-serif}
 
 html[data-compact] .rpt{gap:10px}
 html[data-compact] .rpt .item{padding:12px}
+
+
+/* ---------- รอบ 13: Smart Highlight ---------- */
+.vw{
+  position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;
+  background:var(--bg);padding-top:env(safe-area-inset-top);
+}
+.vw[hidden]{display:none}
+body.vw-open{overflow:hidden}
+.vw-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line)}
+.vw-head b{font-size:1.05rem}
+.vw-close{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:1rem}
+.vw-legend{display:flex;gap:14px;flex-wrap:wrap;padding:10px 16px;font-size:.78rem;border-bottom:1px solid var(--line)}
+.vw-legend span::before{content:"";display:inline-block;width:10px;height:10px;margin-right:6px;border-radius:3px;background:currentColor;vertical-align:-1px}
+.vw-legend .lv-check_detail{color:var(--lv-check_detail)}
+.vw-legend .lv-caution{color:var(--lv-caution)}
+.vw-legend .lv-low{color:var(--lv-low)}
+.vw-body{
+  flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:16px 16px 40vh;white-space:pre-wrap;overflow-wrap:anywhere;
+  font-size:1rem;line-height:1.9;color:var(--text);
+}
+mark.hl{color:inherit;padding:2px 2px;border-radius:5px;border-bottom:2px solid currentColor;transition:background .2s}
+mark.hl.lv-check_detail{background:rgba(217,112,111,.26);border-color:var(--lv-check_detail)}
+mark.hl.lv-caution{background:rgba(200,167,90,.26);border-color:var(--lv-caution)}
+mark.hl.lv-low{background:rgba(111,174,138,.22);border-color:var(--lv-low)}
+mark.hl.is-on{outline:2px solid var(--gold);outline-offset:1px}
+.vw-pop{
+  position:absolute;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);
+  padding:16px;border-radius:var(--r-card);background:var(--card);
+  border:1px solid var(--line);border-left:3px solid var(--lv-low);
+  box-shadow:0 -8px 30px rgba(0,0,0,.55);max-height:46vh;overflow-y:auto;
+}
+.vw-pop[hidden]{display:none}
+.vw-pop.lv-check_detail{border-left-color:var(--lv-check_detail)}
+.vw-pop.lv-caution{border-left-color:var(--lv-caution)}
+.vw-tag{display:inline-block;margin-bottom:6px;padding:3px 10px;border-radius:999px;font-size:.74rem;font-weight:600;color:var(--lv-low);background:rgba(111,174,138,.14)}
+.vw-pop.lv-check_detail .vw-tag{color:var(--lv-check_detail);background:rgba(217,112,111,.14)}
+.vw-pop.lv-caution .vw-tag{color:var(--lv-caution);background:rgba(200,167,90,.14)}
+.vw-pop b{display:block;margin-bottom:6px;font-size:1rem}
+.vw-pop p{margin:0 0 12px;font-size:.92rem;line-height:1.7}
+.vw-go{width:100%;min-height:46px;border:0;border-radius:14px;background:var(--gold);color:#0b0b0c;font:inherit;font-weight:600}
+
+/* การ์ด: เหตุผลสั้น 2–3 บรรทัด + อ่านเพิ่มเติม · เทียบข้อความเดิมกับที่แนะนำ */
+.it-text.clamp{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:4px}
+.more-btn{
+  min-height:40px;margin:0 0 8px;padding:0;border:0;background:none;
+  color:var(--gold);font:inherit;font-size:.86rem;font-weight:600;text-align:left;
+}
+.cmp-lbl{margin:10px 0 4px !important;font-size:.76rem !important;color:var(--muted)}
+.cmp-old{padding:10px 12px !important;border-radius:12px;background:rgba(217,112,111,.1);font-size:.88rem !important;text-decoration:line-through;text-decoration-color:rgba(217,112,111,.6)}
+.cmp-new{padding:10px 12px !important;border-radius:12px;background:rgba(111,174,138,.12);font-size:.9rem !important}
+.miss{padding:14px 16px;border-radius:var(--r-card);border:1px dashed var(--line);background:transparent}
+.miss h3{margin:0 0 4px;font-size:.98rem}
+.miss-note{margin:0 0 8px;font-size:.8rem;color:var(--muted);line-height:1.6}
+.miss ul{margin:0;padding-left:20px;font-size:.9rem;line-height:1.7}
+.sum-top,.sum-row{cursor:pointer}
