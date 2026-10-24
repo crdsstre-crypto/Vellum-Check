@@ -354,9 +354,8 @@ function renderQuote(item) {
   if (item.missing) {
     return `<p class="notfound">⚠️ ไม่พบข้อความนี้ในสัญญาต้นฉบับ AI อาจอ้างผิด โปรดตรวจเอง</p>`;
   }
-  return `<p class="found">✅ พบข้อความนี้ในสัญญาต้นฉบับ</p>
-    <blockquote>${esc(item.quote)}</blockquote>
-    ${hasViewer() ? '<button type="button" class="jump-btn" data-act="jump">ดูข้อความในสัญญาต้นฉบับ</button>' : ''}`;
+  return `<blockquote class="hl-quote">${esc(item.quote)}</blockquote>
+    <div class="src-row"><span>อ้างอิงจากข้อความในสัญญา</span>${hasViewer() ? '<button type="button" class="src-link" data-act="jump">ดูข้อความต้นฉบับ <i aria-hidden="true">›</i></button>' : ''}</div>`;
 }
 
 // บนมือถือเปิดแค่สองรายการแรก (เรียงจากความเสี่ยงสูงสุด) ที่เหลือพับไว้ให้แตะเปิดเอง
@@ -372,12 +371,12 @@ function renderItem(item, index) {
     <summary>
       <span class="it-ico">${ICO_WARN}</span>
       <span class="it-title"><em>${pad2(index + 1)} —</em> <b>${esc(item.title)}</b></span>
+      <span class="tag">${esc(CONFIG.levelLabel[item.level] || '')}</span>
     </summary>
-    <span class="tag">${esc(CONFIG.levelLabel[item.level] || '')}</span>
-    ${item.explanation ? `<p class="it-text${item.explanation.length > 110 ? ' clamp' : ''}">${esc(item.explanation)}</p>${item.explanation.length > 110 ? '<button type="button" class="more-btn" data-act="more">อ่านเพิ่มเติม</button>' : ''}` : ''}
+    ${item.explanation ? `<p class="it-lbl">เหตุผลที่ควรตรวจสอบ</p><p class="it-text${item.explanation.length > 110 ? ' clamp' : ''}">${esc(item.explanation)}</p>${item.explanation.length > 110 ? '<button type="button" class="more-btn" data-act="more">อ่านเพิ่มเติม</button>' : ''}` : ''}
     ${renderQuote(item)}
     ${item.reference ? `<p class="it-ref">📚 แนวทางตรวจ: ${esc(item.reference)}</p>` : ''}
-    ${item.suggested_fix ? `<div class="it-sug"><h4>ข้อเสนอแนะ</h4>${item.missing || !item.quote ? '' : `<p class="cmp-lbl">ข้อความเดิม</p><p class="cmp-old">${esc(item.quote)}</p><p class="cmp-lbl">ข้อความที่แนะนำ</p>`}<p class="cmp-new">${esc(item.suggested_fix)}</p><button type="button" class="more-btn" data-act="copyfix">คัดลอกข้อความที่แนะนำ</button></div>` : ''}
+    ${item.suggested_fix ? `<div class="it-sug"><h4><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>ข้อเสนอแนะ</h4>${item.missing || !item.quote ? '' : `<p class="cmp-lbl">ข้อความเดิม</p><p class="cmp-old">${esc(item.quote)}</p><p class="cmp-lbl">ข้อความที่แนะนำ</p>`}<p class="cmp-new">${esc(item.suggested_fix)}</p><button type="button" class="more-btn" data-act="copyfix">คัดลอกข้อความที่แนะนำ</button></div>` : ''}
     ${item.how_to_negotiate ? `<div class="it-sug"><h4>วิธีรับมือ</h4><p>${esc(item.how_to_negotiate)}</p></div>` : ''}
   </details>`;
 }
