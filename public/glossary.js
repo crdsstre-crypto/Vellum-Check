@@ -130,3 +130,85 @@ function renderGlossary(result) {
     <p class="gl-note">ตัวอย่างคำอธิบายเพื่อการเรียนรู้ ไม่ใช่คำวินิจฉัยทางกฎหมายสำหรับทุกกรณี ลิงก์ไปยังเว็บไซต์ทางการของหน่วยงาน ส่วนมาตราให้ค้นต่อในฉบับทางการและตรวจว่ายังมีผลใช้บังคับ</p>
   </section>`;
 }
+
+
+/* ---------- แตะคำศัพท์ในผลตรวจ → เปิดคำอธิบายทันที (bottom sheet) ---------- */
+
+// ส่วนของผลตรวจที่ทำให้แตะได้ (ไม่รวมหัวข้อใน <summary> เพราะแตะแล้วต้องพับ/กางรายการ)
+const GLOSS_TAP_AREAS = '.it-text, .hl-quote, .cmp-new, .brief p, .miss li';
+
+function glossKeywordIndex() {
+  const map = new Map();
+  GLOSS_TERMS.forEach(t => t.kw.forEach(k => { if (!map.has(k)) map.set(k, t.id); }));
+  const words = [...map.keys()].sort((a, b) => b.length - a.length);
+  const re = new RegExp(words.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g');
+  return { map, re };
+}
+
+// ครอบคำศัพท์ด้วยปุ่มขีดเส้นใต้สีทอง แต่ละคำศัพท์ครอบแค่ครั้งแรกในแต่ละย่อหน้า
+function linkifyGlossary(root) {
+  if (!root) return;
+  const { map, re } = glossKeywordIndex();
+  root.querySelectorAll(GLOSS_TAP_AREAS).forEach(area => {
+    const seen = new Set();
+    const nodes = [];
+    const walker = document.createTreeWalker(area, NodeFilter.SHOW_TEXT);
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(node => {
+      const text = node.nodeValue;
+      re.lastIndex = 0;
+      let last = 0, m, frag = null;
+      while ((m = re.exec(text))) {
+        const id = map.get(m[0]);
+        if (seen.has(id)) continue;
+        seen.add(id);
+        frag = frag || document.createDocumentFragment();
+        frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'gl-tap';
+        b.dataset.gl = id;
+        b.textContent = m[0];
+        frag.appendChild(b);
+        last = m.index + m[0].length;
+      }
+      if (frag) {
+        frag.appendChild(document.createTextNode(text.slice(last)));
+        node.parentNode.replaceChild(frag, node);
+      }
+    });
+  });
+}
+
+function closeGlossSheet() {
+  const s = document.getElementById('glSheet');
+  if (s) s.classList.remove('open');
+}
+
+function openGlossSheet(id) {
+  const t = GLOSS_TERMS.find(x => x.id === id);
+  if (!t) return;
+  let s = document.getElementById('glSheet');
+  if (!s) {
+    s = document.createElement('div');
+    s.id = 'glSheet';
+    s.className = 'gl-sheet';
+    s.innerHTML = '<div class="gl-back" data-glclose></div><div class="gl-panel" role="dialog" aria-modal="true" aria-labelledby="glSheetTitle"></div>';
+    document.body.appendChild(s);
+    s.addEventListener('click', e => { if (e.target.closest('[data-glclose]')) closeGlossSheet(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeGlossSheet(); });
+  }
+  s.querySelector('.gl-panel').innerHTML =
+    `<div class="gl-grab" aria-hidden="true"></div>
+     <div class="gl-sh-head"><h3 id="glSheetTitle">${esc(t.name)}</h3><button type="button" class="gl-x" data-glclose aria-label="ปิด">✕</button></div>
+     <p class="gl-text">${esc(t.text)}</p>
+     <p class="gl-reflbl">แหล่งอ้างอิง</p>
+     <ul class="gl-refs">${t.refs.map(glossRef).join('')}</ul>
+     <p class="gl-note">คำอธิบายเพื่อการเรียนรู้ ไม่ใช่คำวินิจฉัยทางกฎหมายสำหรับทุกกรณี คำที่ขีดเส้นใต้ไม่ได้แปลว่าเป็นความเสี่ยงของสัญญา</p>`;
+  s.classList.add('open');
+}
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('.gl-tap');
+  if (b) { e.preventDefault(); openGlossSheet(b.dataset.gl); }
+});
