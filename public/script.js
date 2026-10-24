@@ -327,7 +327,7 @@ function renderEmpty(message = CONFIG.messages.empty) {
 const pad2 = n => String(Math.max(0, Number(n) || 0)).padStart(2, '0');
 
 // แผงสรุปความเสี่ยง: ตัวเลขใหญ่ของระดับสูงสุดที่พบ + แถบสัดส่วน + จำนวนระดับอื่น
-function renderSummary(counts) {
+function renderSummary(counts, hasIndex) {
   const c = { check_detail: counts.check_detail || 0, caution: counts.caution || 0, low: counts.low || 0 };
   const total = c.check_detail + c.caution + c.low;
   if (!total) return '';
@@ -343,57 +343,111 @@ function renderSummary(counts) {
     <h3 class="sc-title">พบ ${total} ประเด็นที่ควรอ่าน</h3>
     <p class="sc-sub">${sub}</p>
     <div class="sc-tiles">${tiles}</div>
-    <button type="button" class="sc-go" data-jumplv="${top}">${esc(btnLabel)} <span aria-hidden="true">↓</span></button>
+    ${hasIndex ? '' : `<button type="button" class="sc-go" data-jumplv="${top}">${esc(btnLabel)} <span aria-hidden="true">↓</span></button>`}
   </div>`;
 }
 
-// สารบัญประเด็น: แตะแถวแล้วเลื่อนไปการ์ดประเด็นนั้นทันที (เปิดเฉพาะการ์ดที่เลือก)
-const IX_LIMIT = 5;
+// สารบัญประเด็น (Smart Issue Navigation): การ์ดแต่ละประเด็น แตะแล้วเลื่อนไปการ์ดจริงในรายงาน
+const IX_LIMIT = 4;
+const ICO_SHIELD = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"/><path d="M12 8.5v4M12 15.5v.1"/></svg>';
+const ICO_CLAUSE = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M9 9h6M9 13h6"/></svg>';
+const reviewed = new Set();
+
+// หาเลขข้อสัญญาจากข้อความต้นฉบับ (เฉพาะรอบที่ยังมีข้อความ): ข้อที่ขึ้นต้นบรรทัดล่าสุดก่อนตำแหน่ง quote
+// ถ้าหาไม่เจอหรือไม่แน่ใจ จะไม่แสดง ไม่เดา
+function clauseOf(item) {
+  if (!hasViewer() || !viewerSrc.text || item.missing) return '';
+  const text = viewerSrc.text, q = String(item.quote || '').trim();
+  if (!q) return '';
+  let at = text.indexOf(q);
+  if (at < 0 && q.length > 40) at = text.indexOf(q.slice(0, 40));
+  if (at < 0) return '';
+  let num = '';
+  for (const m of text.matchAll(/(?:^|\n)[ \t]*(?:ข้อที่|ข้อ)\s*([0-9๐-๙]{1,3})(?![0-9๐-๙])/g)) {
+    if (m.index > at) break;
+    num = m[1];
+  }
+  return num;
+}
 function ixShort(item) {
   const [head] = splitReason(item.explanation || '');
   const t = String(head || item.topic || '').replace(/\s+/g, ' ').trim();
-  return t.length > 60 ? t.slice(0, 58).trim() + '…' : t;
+  return t.length > 80 ? t.slice(0, 78).trim() + '…' : t;
 }
 function renderIssueIndex(items) {
   if (!Array.isArray(items) || items.length < 2) return '';
-  const rows = items.map((it, i) => {
+  const hasRisk = items.some(it => it.level === 'check_detail' || it.level === 'caution');
+  const cards = items.map((it, i) => {
     const lv = ['check_detail', 'caution', 'low'].includes(it.level) ? it.level : 'low';
     const sub = ixShort(it);
-    return `<button type="button" class="ix-row lv-${lv}" data-jumpidx="${i}"${i >= IX_LIMIT ? ' hidden data-ixextra="1"' : ''}>
-      <span class="ix-no">${pad2(i + 1)}</span>
-      <span class="ix-tx"><b>${esc(it.title)}</b>${sub ? `<small>${esc(sub)}</small>` : ''}</span>
-      <span class="ix-tag">${esc(CONFIG.levelLabel[lv])}</span>
-      <i class="ix-go" aria-hidden="true">›</i>
-    </button>`;
+    const clause = clauseOf(it);
+    return `<article class="ix-card lv-${lv}" data-ixcard="${i}"${i >= IX_LIMIT ? ' hidden data-ixextra="1"' : ''}>
+      <div class="ix-top">
+        <span class="ix-ico">${lv === 'check_detail' ? ICO_WARN : lv === 'caution' ? ICO_SHIELD : ICO_DOC}</span>
+        <div class="ix-tx">
+          <small>ประเด็น ${pad2(i + 1)} · ${esc(CONFIG.levelLabel[lv])}<em class="ix-done-chip">ตรวจแล้ว ✓</em></small>
+          <b>${esc(it.title)}</b>
+          ${sub ? `<p>${esc(sub)}</p>` : ''}
+          ${clause ? `<span class="ix-clause">${ICO_CLAUSE}พบในข้อ ${esc(clause)} ของสัญญา</span>` : ''}
+        </div>
+      </div>
+      <button type="button" class="ix-go${i === 0 ? ' is-primary' : ''}" data-jumpidx="${i}"><span class="ix-go-t">ไปตรวจสอบประเด็นนี้</span><span aria-hidden="true">↗</span></button>
+    </article>`;
   }).join('');
   const more = items.length > IX_LIMIT
-    ? `<button type="button" class="ix-more" data-ixmore="1" aria-expanded="false">ดูทั้งหมด ${items.length} รายการ</button>` : '';
+    ? `<button type="button" class="ix-more" data-ixmore="1" aria-expanded="false">ดูทั้งหมด ${items.length} ประเด็น</button>` : '';
   return `<section class="ix" id="issueIndex" aria-label="สารบัญประเด็นที่ควรตรวจสอบ">
-    <div class="ix-head"><h3>ประเด็นที่ควรตรวจสอบ</h3><span>${items.length} รายการ</span></div>
-    <p class="ix-sub">แตะเพื่อไปยังรายละเอียดแต่ละประเด็น</p>
-    <div class="ix-list">${rows}</div>${more}
+    <div class="ix-head"><p class="ix-kick">ผลการตรวจสัญญา</p><span class="ix-badge${hasRisk ? '' : ' is-calm'}">พบ ${items.length} ประเด็น</span></div>
+    <h3 class="ix-title">มีจุดไหนที่ควรตรวจสอบ?</h3>
+    <p class="ix-sub">เลือกประเด็นเพื่อไปยังรายละเอียด พร้อมแนวทางแก้ไขที่เกี่ยวข้อง <span class="ix-count" aria-live="polite"></span></p>
+    <div class="ix-list">${cards}</div>${more}
   </section>`;
 }
 
+// ทำเครื่องหมาย "ตรวจแล้ว": เป็นของผู้ใช้เท่านั้น ไม่เปลี่ยนระดับความเสี่ยงที่ระบบวิเคราะห์ และกดกลับมาดูได้เสมอ
+function syncReview() {
+  const total = els.result.querySelectorAll('details.item').length;
+  els.result.querySelectorAll('[data-ixcard]').forEach(c => {
+    const on = reviewed.has(+c.dataset.ixcard);
+    c.classList.toggle('is-done', on);
+    const t = c.querySelector('.ix-go-t');
+    if (t) t.textContent = on ? 'ดูอีกครั้ง' : 'ไปตรวจสอบประเด็นนี้';
+  });
+  els.result.querySelectorAll('[data-review]').forEach(b => {
+    const on = reviewed.has(+b.dataset.review);
+    b.classList.toggle('is-on', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    const t = b.querySelector('.rv-t');
+    if (t) t.textContent = on ? 'ตรวจแล้ว ✓ แตะเพื่อยกเลิก' : 'ทำเครื่องหมายว่าตรวจแล้ว';
+    const d = b.closest('details.item');
+    if (d) d.classList.toggle('is-reviewed', on);
+  });
+  const c = els.result.querySelector('.ix-count');
+  if (c) c.textContent = reviewed.size ? '· ตรวจแล้ว ' + reviewed.size + '/' + total : '';
+}
+
 let lastIssueIdx = -1;
+let ixReturnY = null;
 let flashTimer = 0;
 function calmMotion() {
   return document.documentElement.hasAttribute('data-calm') ||
     (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 }
-// เลื่อนไปการ์ดประเด็นที่ idx: ปิดการ์ดอื่นบนมือถือ เปิดการ์ดนี้ แล้วเน้นขอบทองสั้น ๆ
+// เลื่อนไปการ์ดประเด็นที่ idx: จำตำแหน่งหน้าสรุปไว้ ปิดการ์ดอื่นบนมือถือ เปิดการ์ดนี้ แล้วเน้นขอบทองสั้น ๆ
 function focusIssue(idx) {
   const all = [...els.result.querySelectorAll('details.item')];
   const target = all[idx];
   if (!target) { toast('ไม่พบประเด็นนี้'); return; }
+  const firstTop = all[0].getBoundingClientRect().top + window.scrollY;
+  if (window.scrollY < firstTop - 40) ixReturnY = window.scrollY;
   if (window.matchMedia('(max-width: 767px)').matches) {
     all.forEach(d => { if (d !== target) d.open = false; });
   }
   target.open = true;
   lastIssueIdx = idx;
-  els.result.querySelectorAll('.ix-row').forEach(r => r.classList.toggle('is-current', +r.dataset.jumpidx === idx));
+  all.forEach(d => { d.classList.remove('is-flash'); d.classList.toggle('is-picked', d === target); });
+  els.result.querySelectorAll('[data-ixcard]').forEach(c => c.classList.toggle('is-current', +c.dataset.ixcard === idx));
   target.scrollIntoView({ behavior: calmMotion() ? 'auto' : 'smooth', block: 'start' });
-  all.forEach(d => d.classList.remove('is-flash'));
   void target.offsetWidth;
   target.classList.add('is-flash');
   clearTimeout(flashTimer);
@@ -404,7 +458,7 @@ function focusIssue(idx) {
 }
 window.focusIssue = focusIssue;
 
-// ปุ่มลอย "กลับไปรายการประเด็น" แสดงเมื่ออยู่ลึกในรายงานและรายการหลุดจอ
+// ปุ่มลอย "กลับไปภาพรวม" แสดงเมื่ออยู่ลึกในรายงานและรายการประเด็นหลุดจอ กดแล้วกลับตำแหน่งเดิมของหน้าสรุป
 let ixBackEl = null, ixObserver = null, ixVisible = true;
 function ensureIxBack() {
   if (ixBackEl) return ixBackEl;
@@ -412,10 +466,12 @@ function ensureIxBack() {
   ixBackEl.type = 'button';
   ixBackEl.className = 'ix-back';
   ixBackEl.hidden = true;
-  ixBackEl.innerHTML = '<span aria-hidden="true">↑</span> กลับไปรายการประเด็น';
+  ixBackEl.innerHTML = '<span aria-hidden="true">↑</span> กลับไปภาพรวม';
   ixBackEl.addEventListener('click', () => {
-    const row = els.result.querySelector('.ix-row.is-current') || document.getElementById('issueIndex');
-    if (row) row.scrollIntoView({ behavior: calmMotion() ? 'auto' : 'smooth', block: 'center' });
+    const behavior = calmMotion() ? 'auto' : 'smooth';
+    if (ixReturnY != null) { window.scrollTo({ top: ixReturnY, behavior }); return; }
+    const box = document.getElementById('issueIndex');
+    if (box) box.scrollIntoView({ behavior, block: 'start' });
   });
   document.body.appendChild(ixBackEl);
   return ixBackEl;
@@ -426,6 +482,7 @@ function updateIxBack() {
 }
 function watchIssueIndex() {
   lastIssueIdx = -1;
+  ixReturnY = null;
   ixVisible = true;
   if (ixObserver) ixObserver.disconnect();
   const box = document.getElementById('issueIndex');
@@ -560,6 +617,7 @@ function renderItem(item, index) {
     ${item.missing ? renderQuote(item) : ''}
     ${item.reference ? `<p class="it-ref">📚 แนวทางตรวจ: ${esc(item.reference)}</p>` : ''}
     ${renderDetail(item)}
+    <div class="rv-row"><button type="button" class="rv-btn" data-review="${index}" aria-pressed="false"><span class="rv-t">ทำเครื่องหมายว่าตรวจแล้ว</span></button></div>
   </details>`;
 }
 
@@ -661,6 +719,7 @@ function reportMeta() {
 
 function renderResult(result) {
   lastResult = result;
+  reviewed.clear();
   const items = Array.isArray(result.items) ? result.items : [];
   const meta = reportMeta();
 
@@ -675,7 +734,7 @@ function renderResult(result) {
         <h3 class="rpt-title">ผลการตรวจสอบสัญญา</h3>
         <p class="rpt-meta">${meta.typeText ? 'ประเภทเอกสาร: ' + esc(meta.typeText) + ' · ' : ''}${esc(meta.date)}</p>
       </header>
-      ${renderSummary(result.risk_counts || { check_detail: 0, caution: 0, low: 0 })}
+      ${renderSummary(result.risk_counts || { check_detail: 0, caution: 0, low: 0 }, items.length >= 2)}
       ${renderIssueIndex(items)}
       ${renderBrief(result.summary || {})}
       ${body}
@@ -955,12 +1014,19 @@ function init() {
   els.result.addEventListener('click', function (e) {
     const row = e.target.closest('[data-jumpidx]');
     if (row) { focusIssue(+row.dataset.jumpidx); return; }
+    const rv = e.target.closest('[data-review]');
+    if (rv) {
+      const k = +rv.dataset.review;
+      if (reviewed.has(k)) reviewed.delete(k); else reviewed.add(k);
+      syncReview();
+      return;
+    }
     const more = e.target.closest('[data-ixmore]');
     if (more) {
       const open = more.getAttribute('aria-expanded') !== 'true';
       els.result.querySelectorAll('[data-ixextra]').forEach(r => { r.hidden = !open; });
       more.setAttribute('aria-expanded', open ? 'true' : 'false');
-      more.textContent = open ? 'แสดงน้อยลง' : 'ดูทั้งหมด ' + els.result.querySelectorAll('.ix-row').length + ' รายการ';
+      more.textContent = open ? 'แสดงน้อยลง' : 'ดูทั้งหมด ' + els.result.querySelectorAll('.ix-card').length + ' ประเด็น';
       return;
     }
     const j = e.target.closest('[data-jumplv]');
