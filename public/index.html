@@ -120,6 +120,9 @@
             <h3 class="wallet-title">MY WALLET</h3>
             <p class="wallet-sub">จัดการเครดิตของคุณ</p>
           </div>
+          <button type="button" class="wallet-hist" id="walletHist" aria-label="ประวัติการเติมเครดิต">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>
+          </button>
         </div>
         <div class="wallet-total">
           <span class="wallet-total-label">เครดิตทั้งหมด</span>
@@ -128,6 +131,7 @@
         </div>
         <div class="wallet-list-head"><b>เครดิตของฉัน</b><span>2 ประเภท</span></div>
         <div id="creditsLine" class="wallet-cards"></div>
+        <p class="wallet-foot"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.500 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>ระบบเครดิตและประวัติการใช้งาน</p>
       </section>
       <button class="acct-out" id="histInspBtn" type="button">
         <span class="acct-ico" aria-hidden="true">📜</span><span>ประวัติการตรวจสัญญา</span>
@@ -448,6 +452,9 @@ document.getElementById('payClose').addEventListener('click', closePayModal);
 document.getElementById('payBackdrop').addEventListener('click', closePayModal);
 document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePayModal(); });
 
+document.getElementById('walletHist').addEventListener('click', function () {
+  document.getElementById('histPayBtn').click();
+});
 document.addEventListener('click', function (e) {
   if (!e.target.closest('.wallet-topup')) return;
   document.body.classList.remove('auth-open');
