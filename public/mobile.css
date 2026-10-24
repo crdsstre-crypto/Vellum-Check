@@ -1415,3 +1415,22 @@ body.pay-open #paymentCard:not([hidden]){
 @media (prefers-reduced-motion: reduce){
   body.pay-open #paymentCard:not([hidden]){animation:none}
 }
+
+/* ---------- 23. แก้หน้าต่างเติมเครดิต: พื้นทึบ และปุ่มปิดขนาดถูกต้อง ---------- */
+body.pay-open #paymentCard:not([hidden]){
+  background:#15161b;
+  opacity:1;
+}
+#paymentCard #payClose{
+  width:34px;
+  height:34px;
+  min-width:34px;
+  min-height:34px;
+  padding:0;
+  margin:0;
+  line-height:1;
+  font-size:.95rem;
+  display:grid;
+  place-items:center;
+  box-sizing:border-box;
+}
