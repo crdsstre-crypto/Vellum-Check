@@ -284,12 +284,36 @@
       if (typeof renderResult === 'function') renderResult(data.result);
     } catch (e) { alert(e.message); }
   }
-  document.getElementById('histInspBtn').addEventListener('click', openInspections);
-  document.getElementById('histPayBtn').addEventListener('click', openPayments);
+  // กดปุ่มเดิมซ้ำเพื่อซ่อนรายการ
+  var currentKind = '';
+  function toggleKind(kind, loader) {
+    if (!panel.hidden && currentKind === kind) {
+      panel.hidden = true;
+      currentKind = '';
+      return;
+    }
+    currentKind = kind;
+    loader();
+  }
+  document.getElementById('histInspBtn').addEventListener('click', function () { toggleKind('insp', openInspections); });
+  document.getElementById('histPayBtn').addEventListener('click', function () { toggleKind('pay', openPayments); });
   panel.addEventListener('click', function (ev) {
     var row = ev.target.closest('.hist-row[data-id]');
     if (row) openOneResult(row.getAttribute('data-id'));
   });
+})();
+/* ยืนยันก่อนออกจากระบบ (ดักในขั้นตอน capture ก่อนถึงปุ่มจริง) */
+(function () {
+  var box = document.getElementById('authLoggedIn');
+  if (!box) return;
+  box.addEventListener('click', function (e) {
+    if (e.target.closest && e.target.closest('#logoutBtn')) {
+      if (!window.confirm('ต้องการออกจากระบบหรือไม่?')) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+    }
+  }, true);
 })();
 /* ล็อกอินด้วย Google: ส่งไปหน้ายืนยันของ Google ที่ server */
 document.getElementById('googleBtn').addEventListener('click', function () {
