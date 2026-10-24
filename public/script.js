@@ -505,6 +505,7 @@ function renderResult(result) {
       </div>
       <p class="disclaimer">${esc(CONFIG.messages.disclaimer)}</p>
     </article>`;
+  if (typeof linkifyGlossary === 'function') linkifyGlossary(els.result);
 }
 
 
