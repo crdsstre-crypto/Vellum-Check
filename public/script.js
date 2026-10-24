@@ -351,6 +351,9 @@ function renderSummary(counts, hasIndex) {
 const IX_LIMIT = 4;
 const ICO_SHIELD = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"/><path d="M12 8.5v4M12 15.5v.1"/></svg>';
 const ICO_CLAUSE = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M9 9h6M9 13h6"/></svg>';
+const ICO_TARGET = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="7.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22"/></svg>';
+const ICO_GRID = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.6"/></svg>';
+const ICO_CHECKC = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.8 2.8L16 9.6"/></svg>';
 const reviewed = new Set();
 
 // หาเลขข้อสัญญาจากข้อความต้นฉบับ (เฉพาะรอบที่ยังมีข้อความ): ข้อที่ขึ้นต้นบรรทัดล่าสุดก่อนตำแหน่ง quote
@@ -391,7 +394,7 @@ function renderIssueIndex(items) {
           ${clause ? `<span class="ix-clause">${ICO_CLAUSE}พบในข้อ ${esc(clause)} ของสัญญา</span>` : ''}
         </div>
       </div>
-      <button type="button" class="ix-go${i === 0 ? ' is-primary' : ''}" data-jumpidx="${i}"><span class="ix-go-t">ไปตรวจสอบประเด็นนี้</span><span aria-hidden="true">↗</span></button>
+      <button type="button" class="ix-go${i === 0 ? ' is-primary' : ''}" data-jumpidx="${i}">${ICO_TARGET}<span class="ix-go-t">ไปยังประเด็นนี้</span><span aria-hidden="true">→</span></button>
     </article>`;
   }).join('');
   const more = items.length > IX_LIMIT
@@ -411,7 +414,7 @@ function syncReview() {
     const on = reviewed.has(+c.dataset.ixcard);
     c.classList.toggle('is-done', on);
     const t = c.querySelector('.ix-go-t');
-    if (t) t.textContent = on ? 'ดูอีกครั้ง' : 'ไปตรวจสอบประเด็นนี้';
+    if (t) t.textContent = on ? 'ดูอีกครั้ง' : 'ไปยังประเด็นนี้';
   });
   els.result.querySelectorAll('[data-review]').forEach(b => {
     const on = reviewed.has(+b.dataset.review);
@@ -451,12 +454,38 @@ function focusIssue(idx) {
   void target.offsetWidth;
   target.classList.add('is-flash');
   clearTimeout(flashTimer);
-  flashTimer = setTimeout(() => target.classList.remove('is-flash'), 1800);
+  flashTimer = setTimeout(() => target.classList.remove('is-flash'), 1500);
+  watchPicked(target);
   const sm = target.querySelector('summary');
   if (sm) { sm.setAttribute('tabindex', '-1'); sm.focus({ preventScroll: true }); }
   updateIxBack();
 }
 window.focusIssue = focusIssue;
+
+// ล้างสถานะ "ประเด็นที่เลือก" เมื่อกลับหน้าสรุป
+function clearPick() {
+  els.result.querySelectorAll('details.item.is-picked,details.item.is-flash').forEach(d => d.classList.remove('is-picked', 'is-flash'));
+  els.result.querySelectorAll('.ix-card.is-current').forEach(c => c.classList.remove('is-current'));
+  if (pickObs) pickObs.disconnect();
+  lastIssueIdx = -1;
+  updateIxBack();
+}
+// "ภาพรวม" = ไปต้นรายการประเด็น · "กลับหน้าสรุป" = กลับตำแหน่งเดิมก่อนกดเข้ามา
+function navBack(kind) {
+  const behavior = calmMotion() ? 'auto' : 'smooth';
+  const box = document.getElementById('issueIndex');
+  if (kind === 'back' && ixReturnY != null) window.scrollTo({ top: ixReturnY, behavior });
+  else if (box) box.scrollIntoView({ behavior, block: 'start' });
+  clearPick();
+}
+let pickObs = null, pickedVisible = true;
+function watchPicked(target) {
+  if (pickObs) pickObs.disconnect();
+  pickedVisible = true;
+  if (!('IntersectionObserver' in window)) return;
+  pickObs = new IntersectionObserver(es => { pickedVisible = es[0].isIntersecting; updateIxBack(); }, { threshold: 0 });
+  pickObs.observe(target);
+}
 
 // ปุ่มลอย "กลับไปภาพรวม" แสดงเมื่ออยู่ลึกในรายงานและรายการประเด็นหลุดจอ กดแล้วกลับตำแหน่งเดิมของหน้าสรุป
 let ixBackEl = null, ixObserver = null, ixVisible = true;
@@ -468,22 +497,21 @@ function ensureIxBack() {
   ixBackEl.hidden = true;
   ixBackEl.innerHTML = '<span aria-hidden="true">↑</span> กลับไปภาพรวม';
   ixBackEl.addEventListener('click', () => {
-    const behavior = calmMotion() ? 'auto' : 'smooth';
-    if (ixReturnY != null) { window.scrollTo({ top: ixReturnY, behavior }); return; }
-    const box = document.getElementById('issueIndex');
-    if (box) box.scrollIntoView({ behavior, block: 'start' });
+    navBack('back');
   });
   document.body.appendChild(ixBackEl);
   return ixBackEl;
 }
 function updateIxBack() {
   const b = ensureIxBack();
-  b.hidden = !(lastIssueIdx >= 0 && !ixVisible && document.getElementById('issueIndex'));
+  b.hidden = !(lastIssueIdx >= 0 && !ixVisible && !pickedVisible && document.getElementById('issueIndex'));
 }
 function watchIssueIndex() {
   lastIssueIdx = -1;
   ixReturnY = null;
   ixVisible = true;
+  pickedVisible = true;
+  if (pickObs) pickObs.disconnect();
   if (ixObserver) ixObserver.disconnect();
   const box = document.getElementById('issueIndex');
   updateIxBack();
@@ -605,11 +633,12 @@ function renderReason(explanation) {
   return `<div class="it-reason"><p class="it-lbl">สิ่งที่ต้องรู้</p><p class="it-text${long ? ' clamp' : ''}">${esc(explanation)}</p>${long ? '<button type="button" class="more-btn" data-act="more">อ่านเพิ่มเติม</button>' : ''}</div>`;
 }
 
-function renderItem(item, index) {
+function renderItem(item, index, total) {
   const lv = ['check_detail', 'caution', 'low'].includes(item.level) ? item.level : 'low';
   return `<details class="item lv-${lv}" id="issue-${index}" ${openByDefault(index) ? 'open' : ''}>
     <summary>
       <span class="it-ico">${ICO_WARN}</span>
+      <span class="pick-banner" aria-live="polite">${ICO_CHECKC}<b>คุณมาถึงประเด็นที่เลือกแล้ว</b><em>${index + 1} จาก ${total}</em></span>
       <span class="it-title"><small>ประเด็นที่ ${pad2(index + 1)}${item.topic ? ' · ' + esc(item.topic) : ''}</small><b>${esc(item.title)}</b></span>
       <span class="tag">${esc(CONFIG.levelLabel[item.level] || '')}</span>
     </summary>
@@ -617,7 +646,8 @@ function renderItem(item, index) {
     ${item.missing ? renderQuote(item) : ''}
     ${item.reference ? `<p class="it-ref">📚 แนวทางตรวจ: ${esc(item.reference)}</p>` : ''}
     ${renderDetail(item)}
-    <div class="rv-row"><button type="button" class="rv-btn" data-review="${index}" aria-pressed="false"><span class="rv-t">ทำเครื่องหมายว่าตรวจแล้ว</span></button></div>
+    <div class="rv-row"><button type="button" class="rv-btn" data-review="${index}" aria-pressed="false"><span class="rv-t">ทำเครื่องหมายว่าตรวจแล้ว</span>${ICO_CHECKC}</button></div>
+    <div class="pk-row"><button type="button" class="pk-btn" data-ixnav="overview">${ICO_GRID}<span>ภาพรวม</span></button><button type="button" class="pk-btn is-primary" data-ixnav="back"><span>กลับหน้าสรุป</span></button></div>
   </details>`;
 }
 
@@ -724,7 +754,7 @@ function renderResult(result) {
   const meta = reportMeta();
 
   const body = items.length
-    ? items.map((it, i) => renderItem(it, i)).join('')
+    ? items.map((it, i) => renderItem(it, i, items.length)).join('')
     : `<p class="empty">${esc(CONFIG.messages.noHit)}</p>`;
 
   els.result.innerHTML = `
@@ -1014,6 +1044,8 @@ function init() {
   els.result.addEventListener('click', function (e) {
     const row = e.target.closest('[data-jumpidx]');
     if (row) { focusIssue(+row.dataset.jumpidx); return; }
+    const nv = e.target.closest('[data-ixnav]');
+    if (nv) { navBack(nv.dataset.ixnav); return; }
     const rv = e.target.closest('[data-review]');
     if (rv) {
       const k = +rv.dataset.review;
