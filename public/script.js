@@ -385,11 +385,10 @@ function renderDetail(item) {
 
   // มีข้อเสนอแนะ: เห็นแนวทางสั้น ๆ + ปุ่มคัดลอกทันที ส่วนข้อความเดิมเทียบกับข้อความที่แนะนำพับไว้
   return `<div class="it-sug sg">
-    <h4>${ICO_BULB}ข้อเสนอแนะ</h4>
-    <p class="sg-sub">แนวทางแก้ไขที่แนะนำ</p>
+    <h4>${ICO_BULB}ควรขอแก้ไขอย่างไร?</h4>
     <p class="sg-sum">${fixHtml}</p>
     <details class="sg-more">
-      <summary><span class="sg-open">ดูข้อความ${hasQuote ? 'เดิมและข้อความ' : ''}ที่แนะนำ</span><span class="sg-close">ซ่อนรายละเอียด</span></summary>
+      <summary><span class="sg-open">ดูข้อความ${hasQuote ? 'ในสัญญาและข้อความ' : ''}ที่แนะนำ</span><span class="sg-close">ซ่อนรายละเอียด</span></summary>
       ${hasQuote ? `<p class="cmp-lbl">ข้อความเดิมในสัญญา</p>${renderQuote(item)}` : ''}
       <p class="cmp-lbl">ข้อความที่แนะนำให้พิจารณาใช้</p>
       <p class="cmp-new">${fixHtml}</p>
@@ -405,10 +404,10 @@ function renderItem(item, index) {
   return `<details class="item lv-${lv}" ${openByDefault(index) ? 'open' : ''}>
     <summary>
       <span class="it-ico">${ICO_WARN}</span>
-      <span class="it-title"><em>${pad2(index + 1)} —</em> <b>${esc(item.title)}</b></span>
+      <span class="it-title"><small>ประเด็นที่ ${pad2(index + 1)}</small><b>${esc(item.title)}</b></span>
       <span class="tag">${esc(CONFIG.levelLabel[item.level] || '')}</span>
     </summary>
-    ${item.explanation ? `<div class="it-reason"><p class="it-lbl">เหตุผลที่ควรตรวจสอบ</p><p class="it-text${item.explanation.length > 110 ? ' clamp' : ''}">${esc(item.explanation)}</p>${item.explanation.length > 110 ? '<button type="button" class="more-btn" data-act="more">อ่านเพิ่มเติม</button>' : ''}</div>` : ''}
+    ${item.explanation ? `<div class="it-reason"><p class="it-lbl">ทำไมเรื่องนี้ถึงสำคัญ</p><p class="it-text${item.explanation.length > 110 ? ' clamp' : ''}">${esc(item.explanation)}</p>${item.explanation.length > 110 ? '<button type="button" class="more-btn" data-act="more">อ่านเพิ่มเติม</button>' : ''}</div>` : ''}
     ${item.missing ? renderQuote(item) : ''}
     ${item.reference ? `<p class="it-ref">📚 แนวทางตรวจ: ${esc(item.reference)}</p>` : ''}
     ${renderDetail(item)}
