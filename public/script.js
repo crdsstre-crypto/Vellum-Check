@@ -413,11 +413,6 @@ function renderIssueIndex(items) {
     <p class="ix-sub">${sub}</p>
     ${items.length >= 3 ? '<div class="ix-search-w"><input type="search" id="ixSearch" class="ix-search" placeholder="ค้นหาในประเด็น เช่น ค่าปรับ เงินประกัน การบอกเลิก" aria-label="ค้นหาในประเด็นที่พบ" autocomplete="off" enterkeyhint="search"></div>' : ''}
     ${seg}
-    <div class="ix-prog" aria-live="polite">
-      <div class="ix-prog-row"><span class="ix-prog-l">ตรวจแล้ว <b class="ix-prog-n">0/${items.length}</b></span>
-        <div class="ix-bar" role="progressbar" aria-label="ความคืบหน้าการตรวจ" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i style="width:0%"></i></div></div>
-      <p class="ix-prog-note" hidden>คุณดูครบทุกประเด็นแล้ว ควรอ่านสัญญาทั้งฉบับอีกครั้งก่อนลงนาม</p>
-    </div>
     <div class="ix-list">${rows}</div><p class="ix-nohit" hidden>ไม่พบประเด็นที่ตรงกับคำค้น ลองใช้คำอื่นหรือล้างตัวกรอง</p>${more}
     <details class="ix-legend"><summary>วิธีอ่านสีและข้อควรทราบ</summary>
       <ul>
@@ -631,54 +626,65 @@ function ccRow(it, i, tag) {
     <span class="cc-go" aria-hidden="true">›</span>
   </button>`;
 }
+// Command Center = สรุปสั้น ๆ หนึ่งส่วน: จำนวน + สัดส่วนระดับความเสี่ยง + ประเด็นที่ควรดูก่อน + สถานะการตรวจ
+// รายการประเด็นทั้งหมดอยู่ที่ "จุดที่ควรตรวจสอบ" ด้านล่างเท่านั้น (ไม่แสดงซ้ำเป็นการ์ดสองชุด)
+// "ระดับความเสี่ยง" (AI ประเมิน) แยกจาก "สถานะการตรวจ" (ผู้ใช้ทำเครื่องหมายเอง) ชัดเจน
 function renderCommand(items, result) {
   if (!Array.isArray(items) || !items.length) return '';
   const n = items.length;
   const cnt = k => items.filter(it => lvKey(it) === k).length;
-  const hi = cnt('check_detail'), mid = cnt('caution');
-  const pending = items.filter(isPending).length;
+  const hi = cnt('check_detail'), mid = cnt('caution'), lo = cnt('low');
   const status = hi || mid ? 'พบประเด็นที่ต้องพิจารณา' : 'ไม่พบประเด็นที่ต้องรีบตรวจ';
-  const chips = [
-    hi ? `<span class="cc-chip is-hi">${hi} ประเด็นสำคัญ</span>` : '',
-    mid ? `<span class="cc-chip is-mid">${mid} ควรระวัง</span>` : '',
-    pending ? `<span class="cc-chip is-wait">${pending} รอตรวจสอบ</span>` : '',
-  ].join('');
+  const seg = (k, c, label) => c ? `<i class="cc-seg lv-${k}" style="flex:${c}"></i>` : '';
+  const leg = (k, c, label) => c ? `<span class="cc-lg lv-${k}">${label} ${c}</span>` : '';
 
   const ti = ccTopIndex(items);
   const top = items[ti];
   const topWhy = ixShort(top);
-  const q1 = `<div class="cc-q"><h4><i>1</i>อะไรสำคัญที่สุด?</h4>
-    ${ccRow(top, ti, `ประเด็น ${pad2(ti + 1)} · ${CONFIG.levelLabel[lvKey(top)]}`)}
-    ${topWhy ? `<p class="cc-why">${esc(topWhy)}</p>` : ''}</div>`;
+  const topUr = URGENCY_RANK[top.urgency] !== undefined && top.urgency !== 'monitor' ? URGENCY_LABEL[top.urgency] : '';
+  const focus = `<div class="cc-focus lv-${lvKey(top)}">
+    <p class="cc-focus-k"><span aria-hidden="true">⚑</span> ควรดูก่อน${topUr ? ' · ' + esc(topUr) : ''}</p>
+    <b class="cc-focus-t">${esc(top.title)}</b>
+    ${topWhy ? `<p class="cc-why">${esc(topWhy)}</p>` : ''}
+    <button type="button" class="cc-focus-go" data-jumpidx="${ti}">ไปยังประเด็นนี้ <span aria-hidden="true">›</span></button>
+  </div>`;
 
+  // ประเด็นอื่นที่ควรจัดการก่อนลงนาม (ไม่ซ้ำกับประเด็นด้านบน สูงสุด 2)
   const bs = ccBeforeSign(items);
-  const shown = bs.list.slice(0, 3);
-  const q2 = `<div class="cc-q"><h4><i>2</i>อะไรต้องจัดการก่อนลงนาม?</h4>
-    ${shown.length
-      ? shown.map(({ it, i }) => ccRow(it, i, bs.withData ? (URGENCY_LABEL[it.urgency] || '') : 'ควรตรวจละเอียดก่อนตัดสินใจ')).join('')
-      : '<p class="cc-why">ระบบยังไม่ได้ระบุประเด็นที่ต้องจัดการก่อนลงนาม แต่ควรอ่านทั้งฉบับอีกครั้งก่อนตัดสินใจ</p>'}
-    ${bs.list.length > shown.length ? `<p class="cc-why">และอีก ${bs.list.length - shown.length} ประเด็น ดูได้ในรายการด้านล่าง</p>` : ''}
-    ${bs.withData ? '' : (shown.length ? '<p class="cc-why">ผลนี้มาจากประวัติเก่า ไม่มีข้อมูลความเร่งด่วน จึงแสดงตามระดับความเสี่ยง</p>' : '')}</div>`;
+  const others = bs.list.filter(({ i }) => i !== ti).slice(0, 2);
+  const more = bs.list.filter(({ i }) => i !== ti).length - others.length;
+  const before = others.length ? `<div class="cc-before"><h4>ควรจัดการก่อนลงนามด้วย</h4>
+    ${others.map(({ it, i }) => ccRow(it, i, bs.withData ? (URGENCY_LABEL[it.urgency] || '') : 'ควรตรวจละเอียด')).join('')}
+    ${more > 0 ? `<p class="cc-why">และอีก ${more} ประเด็น ดูในรายการด้านล่าง</p>` : ''}
+    ${bs.withData ? '' : '<p class="cc-why">ผลจากประวัติเก่าไม่มีข้อมูลความเร่งด่วน จึงแสดงตามระดับความเสี่ยง</p>'}</div>` : '';
 
+  const pending = items.filter(isPending).length;
   const miss = Array.isArray(result && result.missing_info) ? result.missing_info.length : 0;
-  const q3 = `<div class="cc-q"><h4><i>3</i>มีอะไรที่ยังตรวจไม่ครบ?</h4>
-    <p class="cc-line">ยังไม่ได้ทำเครื่องหมายตรวจ <b class="cc-left">${n}</b> จาก ${n} ประเด็น</p>
-    ${pending ? `<p class="cc-line">มี <b>${pending}</b> ประเด็นที่ระบบระบุว่าข้อมูลไม่ครบหรือไม่พบข้อความอ้างอิง</p>` : ''}
-    ${miss ? `<p class="cc-line">มี <b>${miss}</b> หัวข้อที่ไม่พบในข้อความที่ตรวจ (ไม่ได้แปลว่าสัญญาไม่มี)</p>` : ''}
-    <button type="button" class="cc-next" data-ccnext="1">เปิดประเด็นแรกที่ยังไม่ตรวจ <span aria-hidden="true">›</span></button></div>`;
+  const notes = [
+    pending ? `${pending} ประเด็นที่ข้อมูลไม่ครบหรือไม่พบข้อความอ้างอิง` : '',
+    miss ? `${miss} หัวข้อที่ไม่พบในข้อความที่ตรวจ (ไม่ได้แปลว่าสัญญาไม่มี)` : '',
+  ].filter(Boolean);
+  const progress = `<div class="cc-status">
+    <div class="ix-prog" aria-live="polite">
+      <div class="ix-prog-row"><span class="ix-prog-l">สถานะการตรวจ <b class="ix-prog-n">0/${n}</b></span>
+        <div class="ix-bar" role="progressbar" aria-label="ความคืบหน้าการตรวจ" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i style="width:0%"></i></div></div>
+      <p class="ix-prog-note" hidden>คุณดูครบทุกประเด็นแล้ว ควรอ่านสัญญาทั้งฉบับอีกครั้งก่อนลงนาม</p>
+    </div>
+    ${notes.length ? `<ul class="cc-notes">${notes.map(t => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}
+    <button type="button" class="cc-next" data-ccnext="1">เปิดประเด็นแรกที่ยังไม่ตรวจ <span aria-hidden="true">›</span></button>
+  </div>`;
 
-  return `<section class="cc" id="commandCenter" aria-label="สรุปสิ่งที่ควรทำก่อน">
-    <p class="cc-kick">COMMAND CENTER</p>
-    <div class="cc-head"><h3>${esc(status)}</h3></div>
-    ${chips ? `<div class="cc-chips">${chips}</div>` : ''}
-    ${q1}${q2}${q3}
-    <p class="cc-note">จัดลำดับจากการประเมินของ AI เพื่อช่วยคัดกรองเบื้องต้น ไม่ใช่คำวินิจฉัยทางกฎหมาย</p>
+  return `<section class="cc" id="commandCenter" aria-label="สรุปภาพรวมสัญญา">
+    <div class="cc-head"><div><p class="cc-kick">VELLUM CHECK / OVERVIEW</p><h3>${esc(status)}</h3></div></div>
+    <div class="cc-count"><b>${pad2(n)}</b><span>ประเด็นที่พบ</span></div>
+    <div class="cc-bar" role="img" aria-label="สัดส่วนระดับความเสี่ยง">${seg('check_detail', hi)}${seg('caution', mid)}${seg('low', lo)}</div>
+    <div class="cc-legend">${leg('check_detail', hi, 'สำคัญ')}${leg('caution', mid, 'ควรระวัง')}${leg('low', lo, 'อื่น ๆ')}</div>
+    ${focus}${before}${progress}
+    <p class="cc-note">ระดับความเสี่ยงมาจากการประเมินของ AI เพื่อคัดกรองเบื้องต้น ส่วนสถานะการตรวจเป็นของคุณเอง ไม่ใช่คำวินิจฉัยทางกฎหมาย</p>
   </section>`;
 }
 function syncCommand() {
   const total = els.result.querySelectorAll('details.item').length;
-  const left = els.result.querySelector('.cc-left');
-  if (left) left.textContent = String(Math.max(0, total - reviewed.size));
   const nx = els.result.querySelector('[data-ccnext]');
   if (nx) nx.hidden = total > 0 && reviewed.size >= total;
 }
