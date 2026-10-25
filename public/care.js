@@ -64,22 +64,29 @@
   /* ---------- 2. สถานะเครดิตใต้ปุ่มตรวจ ---------- */
   function updateCheckNote() {
     var el = document.getElementById('checkNote');
-    if (!el) return;
+    var cost = document.getElementById('stepCost');   // บรรทัดค่าใช้จ่ายของขั้นที่ 3 อยู่เหนือปุ่มตรวจ
+    if (!el && !cost) return;
     var user = null, credits = null;
     try { user = currentUser; credits = lastCredits; } catch (e) { return; }
 
-    var msg;
+    var costMsg, note = '';
     if (!user) {
-      msg = 'เข้าสู่ระบบก่อนตรวจ เพื่อใช้เครดิตและดูประวัติย้อนหลัง';
+      costMsg = 'เข้าสู่ระบบก่อนตรวจ เพื่อใช้เครดิตและดูประวัติย้อนหลัง';
     } else if (credits === 0) {
-      msg = 'เครดิตหมด · เติมเครดิตก่อนตรวจ ข้อความที่พิมพ์ไว้จะไม่ถูกลบ';
+      // เครดิต 0: ใช้ถ้อยคำเป็นกลาง ไม่ฟ้องว่า "หมด" และไม่ใช้สีแดง
+      costMsg = 'พร้อมตรวจครั้งถัดไปเมื่อคุณต้องการ ดูแพ็กเกจเพื่อเพิ่มสิทธิ์ ข้อความที่พิมพ์ไว้จะไม่ถูกลบ';
+      note = 'ผลตรวจเดิมยังดูย้อนหลังได้ในประวัติ';
     } else if (typeof credits === 'number') {
-      msg = 'เครดิตคงเหลือ ' + credits + ' · ตรวจครั้งนี้ใช้ 1 เครดิต และคืนให้ถ้าตรวจไม่สำเร็จ';
+      costMsg = 'ตรวจครั้งนี้ใช้ 1 เครดิต และคืนให้ถ้าตรวจไม่สำเร็จ';
+      note = 'เครดิตคงเหลือ ' + credits;
     } else {
-      msg = '';
+      costMsg = '';
     }
-    el.textContent = msg;
-    el.classList.toggle('is-low', Boolean(user) && credits === 0);
+    if (cost) cost.textContent = costMsg;
+    if (el) {
+      el.textContent = note;
+      el.classList.toggle('is-low', Boolean(user) && credits === 0);
+    }
   }
 
   function initCheckNote() {
