@@ -626,60 +626,99 @@ function ccRow(it, i, tag) {
     <span class="cc-go" aria-hidden="true">›</span>
   </button>`;
 }
-// Command Center = สรุปสั้น ๆ หนึ่งส่วน: จำนวน + สัดส่วนระดับความเสี่ยง + ประเด็นที่ควรดูก่อน + สถานะการตรวจ
-// รายการประเด็นทั้งหมดอยู่ที่ "จุดที่ควรตรวจสอบ" ด้านล่างเท่านั้น (ไม่แสดงซ้ำเป็นการ์ดสองชุด)
-// "ระดับความเสี่ยง" (AI ประเมิน) แยกจาก "สถานะการตรวจ" (ผู้ใช้ทำเครื่องหมายเอง) ชัดเจน
+// Contract Brief (เดิมชื่อ Command Center) = สรุปหนึ่งส่วน: ตัวเลข 3 ช่อง + "ควรจัดการก่อน" สูงสุด 2 ประเด็น + ที่มาของผลตรวจ + สถานะการตรวจ
+// รายการประเด็นทั้งหมดอยู่ที่ "จุดที่ควรตรวจสอบ" ด้านล่างเท่านั้น (ไม่แสดงรายการซ้ำเป็นการ์ดสองชุด)
+// "ระดับความเสี่ยง" (AI ประเมิน) แยกจาก "สถานะการตรวจ" (ผู้ใช้ทำเครื่องหมายเอง) ชัดเจน · ไม่มีคะแนนรวม ไม่ฟันธงผล
+const ICO_REPORT = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7z"/><path d="M14 3v4h4"/><circle cx="11.5" cy="14" r="2.3"/><path d="M13.2 15.7L15 17.5"/></svg>';
+const ICO_SHIELD_OK = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"/><path d="M8.8 12.3l2.2 2.2 4.2-4.4"/></svg>';
 function renderCommand(items, result) {
   if (!Array.isArray(items) || !items.length) return '';
   const n = items.length;
   const cnt = k => items.filter(it => lvKey(it) === k).length;
-  const hi = cnt('check_detail'), mid = cnt('caution'), lo = cnt('low');
-  const status = hi || mid ? 'พบประเด็นที่ต้องพิจารณา' : 'ไม่พบประเด็นที่ต้องรีบตรวจ';
-  const seg = (k, c, label) => c ? `<i class="cc-seg lv-${k}" style="flex:${c}"></i>` : '';
-  const leg = (k, c, label) => c ? `<span class="cc-lg lv-${k}">${label} ${c}</span>` : '';
+  const hi = cnt('check_detail'), mid = cnt('caution');
+  const pendingN = items.filter(isPending).length;
+  const missN = Array.isArray(result && result.missing_info) ? result.missing_info.length : 0;
+  const infoN = pendingN + missN;
+  const meta = reportMeta();
+  const sub = hi || mid ? 'สรุปประเด็นจากสัญญาฉบับนี้' : 'ไม่พบประเด็นที่ต้องรีบตรวจ แต่ควรอ่านทั้งฉบับก่อนลงนาม';
 
+  const tile = (cls, k, num, unit, label) => {
+    const inner = `<span class="cb-t-l">${label}</span><b>${num}</b><span class="cb-t-u">${unit}</span>`;
+    return num && k
+      ? `<button type="button" class="cb-tile ${cls}" data-jumplv="${k}">${inner}</button>`
+      : `<div class="cb-tile ${cls}">${inner}</div>`;
+  };
+  const tiles = tile('lv-check_detail', 'check_detail', hi, 'ประเด็น', 'สำคัญ') +
+    tile('lv-caution', 'caution', mid, 'ประเด็น', 'ควรระวัง') +
+    tile('lv-info', '', infoN, 'ยังไม่ครบ', 'ข้อมูล');
+
+  // ควรจัดการก่อน: ประเด็นแรกสุดตามระดับ/ความเร่งด่วน + ประเด็นถัดไปที่ควรทำก่อนลงนาม รวมสูงสุด 2
   const ti = ccTopIndex(items);
-  const top = items[ti];
-  const topWhy = ixShort(top);
-  const topUr = URGENCY_RANK[top.urgency] !== undefined && top.urgency !== 'monitor' ? URGENCY_LABEL[top.urgency] : '';
-  const focus = `<div class="cc-focus lv-${lvKey(top)}">
-    <p class="cc-focus-k"><span aria-hidden="true">⚑</span> ควรดูก่อน${topUr ? ' · ' + esc(topUr) : ''}</p>
-    <b class="cc-focus-t">${esc(top.title)}</b>
-    ${topWhy ? `<p class="cc-why">${esc(topWhy)}</p>` : ''}
-    <button type="button" class="cc-focus-go" data-jumpidx="${ti}">ไปยังประเด็นนี้ <span aria-hidden="true">›</span></button>
-  </div>`;
-
-  // ประเด็นอื่นที่ควรจัดการก่อนลงนาม (ไม่ซ้ำกับประเด็นด้านบน สูงสุด 2)
   const bs = ccBeforeSign(items);
-  const others = bs.list.filter(({ i }) => i !== ti).slice(0, 2);
-  const more = bs.list.filter(({ i }) => i !== ti).length - others.length;
-  const before = others.length ? `<div class="cc-before"><h4>ควรจัดการก่อนลงนามด้วย</h4>
-    ${others.map(({ it, i }) => ccRow(it, i, bs.withData ? (URGENCY_LABEL[it.urgency] || '') : 'ควรตรวจละเอียด')).join('')}
-    ${more > 0 ? `<p class="cc-why">และอีก ${more} ประเด็น ดูในรายการด้านล่าง</p>` : ''}
-    ${bs.withData ? '' : '<p class="cc-why">ผลจากประวัติเก่าไม่มีข้อมูลความเร่งด่วน จึงแสดงตามระดับความเสี่ยง</p>'}</div>` : '';
+  const order = [ti, ...bs.list.map(x => x.i).filter(i => i !== ti)].slice(0, 2);
+  const lvTag = { check_detail: 'สำคัญ', caution: 'ควรระวัง', low: 'อื่น ๆ' };
+  const cards = order.map((i, pos) => {
+    const it = items[i];
+    const k = lvKey(it);
+    const why = ixShort(it);
+    const clause = clauseOf(it);
+    const ur = URGENCY_RANK[it.urgency] !== undefined && it.urgency !== 'monitor' ? ' · ' + URGENCY_LABEL[it.urgency] : '';
+    const hasQuote = !it.missing && !!it.quote;
+    const cta = hasQuote ? 'ตรวจสอบข้อความต้นฉบับ' : 'ดูหลักฐานที่เกี่ยวข้อง';
+    const ref = it.missing
+      ? '<p class="cb-ref is-warn">ไม่พบข้อความนี้ในสัญญาต้นฉบับ</p>'
+      : (clause ? `<p class="cb-ref">${ICO_CLAUSE}<span>อ้างอิงข้อ ${esc(clause)} ของสัญญา</span></p>` : '');
+    return `<article class="cb-pri lv-${k}">
+      <p class="cb-pri-k">${pad2(pos + 1)} / ${esc(lvTag[k])}${esc(ur)}</p>
+      <h4 class="cb-pri-t">${esc(it.title)}</h4>
+      ${why ? `<p class="cb-pri-why">${esc(why)}</p>` : ''}
+      ${ref}
+      <button type="button" class="cb-cta${pos === 0 ? ' is-primary' : ''}" data-jumpidx="${i}" data-opendetail="1">${cta} <span aria-hidden="true">→</span></button>
+    </article>`;
+  }).join('');
+  const moreN = (bs.list.length ? bs.list.length : 1) - order.length;
+  const moreNote = moreN > 0 ? `<p class="cb-more">และอีก ${moreN} ประเด็นที่ควรจัดการก่อนลงนาม ดูในรายการด้านล่าง</p>` : '';
+  const oldNote = !bs.withData && hi ? '<p class="cb-more">ผลจากประวัติเก่าไม่มีข้อมูลความเร่งด่วน จึงเรียงตามระดับความเสี่ยง</p>' : '';
 
-  const pending = items.filter(isPending).length;
-  const miss = Array.isArray(result && result.missing_info) ? result.missing_info.length : 0;
-  const notes = [
-    pending ? `${pending} ประเด็นที่ข้อมูลไม่ครบหรือไม่พบข้อความอ้างอิง` : '',
-    miss ? `${miss} หัวข้อที่ไม่พบในข้อความที่ตรวจ (ไม่ได้แปลว่าสัญญาไม่มี)` : '',
-  ].filter(Boolean);
+  // ที่มาของผลตรวจ: นับจากข้อมูลจริงในผลลัพธ์เท่านั้น
+  const found = items.filter(it => !it.missing && it.quote).length;
+  const refs = items.filter(it => String(it.reference || '').trim()).length;
+  const srcRows = [
+    ['ข้อความสัญญา', found === n
+      ? `ข้อความอ้างอิงของทั้ง ${n} ประเด็นตรงกับสัญญาที่วาง (ตรวจโดยเซิร์ฟเวอร์)`
+      : `ข้อความอ้างอิงตรงกับสัญญา ${found} จาก ${n} ประเด็น อีก ${n - found} ประเด็นไม่พบข้อความในสัญญาต้นฉบับ`],
+    ['แหล่งอ้างอิง', refs
+      ? `AI ระบุมาตรา/ข้อกฎหมายไว้ ${refs} ประเด็น ยังไม่ได้ตรวจเทียบตัวบทกฎหมาย`
+      : 'ไม่มีประเด็นที่ AI ระบุมาตรา/ข้อกฎหมายอ้างอิง'],
+    ['สถานะการตรวจสอบ', [
+      pendingN ? `${pendingN} ประเด็นที่ข้อมูลไม่ครบหรือไม่พบข้อความอ้างอิง` : 'ทุกประเด็นมีข้อความอ้างอิง',
+      missN ? `${missN} หัวข้อที่ไม่พบในข้อความที่ตรวจ (ไม่ได้แปลว่าสัญญาไม่มี)` : '',
+    ].filter(Boolean).join(' · ')],
+  ];
+  const source = `<details class="cb-src">
+    <summary><span class="cb-src-ico">${ICO_SHIELD_OK}</span><span class="cb-src-tx"><b>ที่มาของผลตรวจสอบ</b><small>ข้อความสัญญา · แหล่งอ้างอิง · สถานะการตรวจสอบ</small></span><i class="cb-src-go" aria-hidden="true">›</i></summary>
+    <dl>${srcRows.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
+  </details>`;
+
   const progress = `<div class="cc-status">
     <div class="ix-prog" aria-live="polite">
       <div class="ix-prog-row"><span class="ix-prog-l">สถานะการตรวจ <b class="ix-prog-n">0/${n}</b></span>
         <div class="ix-bar" role="progressbar" aria-label="ความคืบหน้าการตรวจ" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i style="width:0%"></i></div></div>
       <p class="ix-prog-note" hidden>คุณดูครบทุกประเด็นแล้ว ควรอ่านสัญญาทั้งฉบับอีกครั้งก่อนลงนาม</p>
     </div>
-    ${notes.length ? `<ul class="cc-notes">${notes.map(t => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}
     <button type="button" class="cc-next" data-ccnext="1">เปิดประเด็นแรกที่ยังไม่ตรวจ <span aria-hidden="true">›</span></button>
   </div>`;
 
-  return `<section class="cc" id="commandCenter" aria-label="สรุปภาพรวมสัญญา">
-    <div class="cc-head"><div><p class="cc-kick">VELLUM CHECK / OVERVIEW</p><h3>${esc(status)}</h3></div></div>
-    <div class="cc-count"><b>${pad2(n)}</b><span>ประเด็นที่พบ</span></div>
-    <div class="cc-bar" role="img" aria-label="สัดส่วนระดับความเสี่ยง">${seg('check_detail', hi)}${seg('caution', mid)}${seg('low', lo)}</div>
-    <div class="cc-legend">${leg('check_detail', hi, 'สำคัญ')}${leg('caution', mid, 'ควรระวัง')}${leg('low', lo, 'อื่น ๆ')}</div>
-    ${focus}${before}${progress}
+  return `<section class="cc cb" id="commandCenter" aria-label="สรุปภาพรวมสัญญา">
+    <div class="cb-head">
+      <div class="cb-head-tx"><p class="cb-kick">VELLUM / INTELLIGENCE</p><h3>Contract Brief</h3><p class="cb-sub">${esc(sub)}</p></div>
+      <div class="cb-badge" aria-label="เลขที่รายงาน ${esc(meta.no)}">${ICO_REPORT}<em>VC REPORT</em><small>${esc(meta.no)}</small></div>
+    </div>
+    <div class="cb-tiles">${tiles}</div>
+    <h4 class="cb-h">ควรจัดการก่อน<span>เรียงตามลำดับ</span></h4>
+    <div class="cb-list">${cards}</div>${moreNote}${oldNote}
+    ${source}
+    ${progress}
     <p class="cc-note">ระดับความเสี่ยงมาจากการประเมินของ AI เพื่อคัดกรองเบื้องต้น ส่วนสถานะการตรวจเป็นของคุณเอง ไม่ใช่คำวินิจฉัยทางกฎหมาย</p>
   </section>`;
 }
@@ -1285,7 +1324,15 @@ function init() {
   els.result.addEventListener('click', function (e) {
     if (e.target.closest('[data-ccnext]')) { ccOpenNext(); return; }
     const row = e.target.closest('[data-jumpidx]');
-    if (row) { focusIssue(+row.dataset.jumpidx); return; }
+    if (row) {
+      focusIssue(+row.dataset.jumpidx);
+      if (row.dataset.opendetail) {
+        const d = els.result.querySelectorAll('details.item')[+row.dataset.jumpidx];
+        const more = d && d.querySelector('details.sg-more');
+        if (more) more.open = true;
+      }
+      return;
+    }
     const fl = e.target.closest('[data-ixfilter]');
     if (fl) { applyFilter(fl.dataset.ixfilter); return; }
     const nv = e.target.closest('[data-ixnav]');
