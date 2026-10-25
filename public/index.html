@@ -20,7 +20,7 @@
 <link rel="stylesheet" href="privacy.css?v=1">
 <link rel="stylesheet" href="mobile-polish.css?v=1" media="(max-width: 767px)">
 <link rel="stylesheet" href="history-polish.css?v=13">
-<link rel="stylesheet" href="history-vault.css?v=2" media="(max-width: 767px)">
+<link rel="stylesheet" href="history-vault.css?v=3" media="(max-width: 767px)">
 <link rel="stylesheet" href="print.css?v=1" media="print">
 </head>
 <body>
@@ -229,7 +229,7 @@
             </div>
             <button type="button" class="ph-topup wallet-topup"><span aria-hidden="true">+</span> เติมเครดิต</button>
           </section>
-          <label class="ph-search"><span class="sr-only">ค้นหารายการเติมเครดิต</span><input type="search" id="paySearch" placeholder="ค้นหาแพ็กเกจ วันที่ สถานะ หรือเลขที่รายการ" autocomplete="off" enterkeyhint="search"></label>
+          <label class="ph-search"><span class="sr-only">ค้นหารายการเติมเครดิต</span><input type="search" id="paySearch" placeholder="ค้นหาแพ็กเกจ / วันที่ / เลขที่รายการ" autocomplete="off" enterkeyhint="search"></label>
           <div class="hist-filters" id="histFilters" role="group" aria-label="กรองตามสถานะ" hidden>
             <button type="button" class="hist-chip is-on" data-status="all" aria-pressed="true">ทั้งหมด</button>
             <button type="button" class="hist-chip" data-status="pending" aria-pressed="false">รอชำระ</button>
@@ -944,6 +944,7 @@
         '</div>';
       return '<div class="pay-row is-' + stt + '" data-open="' + (it.chargeId && payNote[it.chargeId] ? '1' : '0') + '">' +
         '<button type="button" class="hist-card-top pay-row-top" aria-expanded="false">' +
+          '<span class="pay-thumb" aria-hidden="true">' + THUMB + '</span>' +
           '<span class="hist-ico is-receipt">' + ICO_RECEIPT + '</span>' +
           '<span class="hist-main"><b>' + esc(title) + '</b><span class="hist-meta">' + esc(timeOnly(it.createdAt)) + ' น.</span>' +
             '<span class="hist-status ' + ps[1] + '">' + ps[0] + '</span></span>' +
