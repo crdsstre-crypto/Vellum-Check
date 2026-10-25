@@ -4,7 +4,7 @@
    ลบไฟล์นี้ + บรรทัด <link> ใน index.html = กลับไปใช้ history-polish.css v13 */
 .vault-head{display:none}
 @media (max-width:767px){
-  .history-panel{--v-gold:#E8C35D;--v-gold-line:rgba(232,195,93,.45);--v-navy:#0E1624;--v-card:#11151B;--v-line:#2B303A;--d-gold:#E8C35D;--d-mint:#83D8B4;--d-sky:#85BCEB;--v-pend:#F4A66A;--d-card:#11151B;--d-line:#2B303A}
+  :root,.history-panel,#authLoggedIn{--v-gold:#E8C35D;--v-gold-line:rgba(232,195,93,.45);--v-navy:#0E1624;--v-card:#11151B;--v-line:#2B303A;--d-gold:#E8C35D;--d-mint:#83D8B4;--d-sky:#85BCEB;--v-pend:#F4A66A;--d-card:#11151B;--d-line:#2B303A}
 
   /* ---------- โซน A: Vault Header ---------- */
   .vault-head{
