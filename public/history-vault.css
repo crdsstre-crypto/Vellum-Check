@@ -126,5 +126,47 @@
 
   .pay-row .hist-ico{display:none}
 
+  /* ---------- รอบ 4: บัญชีของฉัน — การ์ดเครดิตรวม · การ์ดบริการกะทัดรัด · เมนูตั้งค่าเป็นกลุ่ม ---------- */
+  #authLoggedIn .wallet-head{display:none}
+  #authLoggedIn .acct-row{border:1px solid var(--v-line);border-radius:18px;background:var(--v-card);margin:0 0 12px}
+  #authLoggedIn .wallet{padding:0;background:none;border:0;box-shadow:none}
+  #authLoggedIn .wallet-total{display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:14px;row-gap:12px;margin:0 0 12px;padding:14px;
+    border:1px solid var(--v-gold-line);border-radius:20px;background:linear-gradient(160deg,#17130a 0%,#11151B 62%);box-shadow:0 0 0 1px rgba(232,195,93,.08),0 10px 26px rgba(0,0,0,.4)}
+  #authLoggedIn .wallet-total-label{grid-column:1;grid-row:1;align-self:end;font-size:.82rem;color:var(--h-sub,#8b8e98)}
+  #authLoggedIn .wallet-total-num{grid-column:1;grid-row:2;margin:0;display:flex;align-items:baseline;gap:8px}
+  #authLoggedIn .wallet-total-num b{font-size:2.6rem;line-height:1;color:var(--v-gold)}
+  #authLoggedIn .wallet-total-num small{font-size:.85rem}
+  #authLoggedIn .wallet-rows{grid-column:2;grid-row:1/3;display:grid;gap:6px;min-width:128px;margin:0;padding:0 0 0 14px;border:0;border-left:1px solid var(--v-line)}
+  #authLoggedIn .wallet-rows>div{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+  #authLoggedIn .wallet-rows dt{font-size:.78rem}
+  #authLoggedIn .wallet-rows dd{font-size:.78rem}
+  #authLoggedIn .wallet-rows dd b{font-size:1.1rem}
+  #authLoggedIn .wallet-quick{grid-column:1/-1;grid-row:3;margin:0}
+  #authLoggedIn .wallet-total .wallet-topup{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;margin:0;border:0;border-radius:14px;background:var(--v-gold);color:#17130A;font-size:1rem;font-weight:700;box-shadow:none}
+  #authLoggedIn .wallet-total .wallet-topup::before{content:"+";margin-right:8px;font-size:1.3rem;line-height:1}
+
+  #authLoggedIn .wallet-list-head{margin:6px 2px 8px}
+  #authLoggedIn .wallet-list-title{display:flex;align-items:center;gap:8px;font-size:.92rem;font-weight:700}
+  #authLoggedIn .wallet-list-title::before{content:"";width:3px;height:14px;border-radius:2px;background:var(--v-gold)}
+  #authLoggedIn .wallet-cards{gap:10px}
+  #authLoggedIn .wallet-card{padding:12px 14px;border-radius:18px;background:var(--v-card);border-color:var(--v-line);display:grid;grid-template-columns:1fr auto;row-gap:10px}
+  #authLoggedIn .wallet-card::after{display:none}
+  #authLoggedIn .wallet-card-top{grid-column:1/-1;gap:10px}
+  #authLoggedIn .wallet-ico{width:40px;height:40px;border-radius:12px;border:1px solid var(--v-gold-line);background:transparent}
+  #authLoggedIn .wallet-card-name b{font-size:1rem}
+  #authLoggedIn .wallet-card-name small{font-size:.78rem}
+  #authLoggedIn .wallet-badge{padding:3px 10px;font-size:.74rem}
+  #authLoggedIn .wallet-card-use{display:none}
+  #authLoggedIn .wallet-card-bottom{grid-column:1/-1;margin:0;padding:10px 0 0;border-top:1px solid var(--v-line)}
+  #authLoggedIn .wallet-card-num b{font-size:1.6rem}
+  #authLoggedIn .wallet-card-num small{font-size:.74rem}
+  #authLoggedIn .wallet-card .wallet-topup{min-height:38px;padding:0 14px;border:1px solid var(--v-gold-line);border-radius:999px;background:transparent;color:var(--v-gold);font-size:.84rem;font-weight:700}
+
+  #authLoggedIn .acct-menu{position:relative;margin:16px 0 0;padding:0;border:1px solid var(--v-line);border-radius:18px;background:var(--v-card);overflow:hidden}
+  #authLoggedIn .acct-menu::before{content:"การตั้งค่า";display:flex;align-items:center;gap:8px;padding:12px 14px 6px;font-size:.84rem;font-weight:700;color:var(--h-sub,#8b8e98)}
+  #authLoggedIn .menu-item{min-height:56px;border-color:var(--v-line)}
+  #authLoggedIn .menu-ico{border:1px solid var(--v-gold-line);background:transparent;color:var(--v-gold);border-radius:12px}
+  #authLoggedIn .acct-out{margin-top:12px;border:1px solid rgba(229,72,77,.35);border-radius:16px;background:rgba(229,72,77,.06);color:#f7a6ab}
+
   @media (prefers-reduced-motion:reduce){#histList .hr2,.hist-search input,.lib-seg-b{transition:none}}
 }
