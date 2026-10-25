@@ -1,0 +1,82 @@
+/* ct-sticker.css — ไอคอนสติกเกอร์ 3D ในตัวเลือกประเภทสัญญา (มือถือเท่านั้น)
+   โหลดท้ายสุดใน index.html · ปิดทั้งชุด: ลบบรรทัด <link ... ct-sticker.css> (ไอคอนจะเหลือแต่ SVG สีทึบ ให้ลบ/แก้ icon() ด้วยถ้าต้องการกลับเส้นบาง)
+   ปรับขนาด: --ct-tile (กรอบ) และ --ct-art (ตัวสติกเกอร์) */
+:root{--ct-tile:52px;--ct-art:44px}
+
+/* กรอบไอคอน: พื้นเรืองสีตามประเภท ไม่มีเส้นขอบ */
+.ct-ico{
+  --tint:229,196,119;
+  position:relative;
+  border:0;
+  background:radial-gradient(circle at 30% 24%,rgba(var(--tint),.30),rgba(var(--tint),.07) 72%);
+  box-shadow:inset 0 0 0 1px rgba(var(--tint),.22);
+  overflow:visible;
+}
+.ct-ico svg{
+  display:block;
+  width:var(--ct-art);
+  height:var(--ct-art);
+  overflow:visible;
+  transform-origin:50% 85%;
+  filter:drop-shadow(0 3px 3px rgba(0,0,0,.38));
+  transition:transform .38s cubic-bezier(.34,1.56,.64,1);
+  will-change:transform;
+}
+li[data-value="rent"] .ct-ico,.ct-trigger[data-v="rent"] .ct-ico{--tint:255,140,70}
+li[data-value="sale"] .ct-ico,.ct-trigger[data-v="sale"] .ct-ico{--tint:255,196,60}
+li[data-value="employment"] .ct-ico,.ct-trigger[data-v="employment"] .ct-ico{--tint:110,140,230}
+li[data-value="service"] .ct-ico,.ct-trigger[data-v="service"] .ct-ico{--tint:60,200,200}
+li[data-value="loan"] .ct-ico,.ct-trigger[data-v="loan"] .ct-ico{--tint:240,180,50}
+li[data-value="shareholder"] .ct-ico,.ct-trigger[data-v="shareholder"] .ct-ico{--tint:180,120,250}
+li[data-value="nda"] .ct-ico,.ct-trigger[data-v="nda"] .ct-ico{--tint:150,110,240}
+li[data-value="other"] .ct-ico,.ct-trigger[data-v="other"] .ct-ico{--tint:120,190,240}
+
+/* ขนาด (ต้องเขียนซ้ำตัวเลือก unsure เพราะ mobile.css ตั้งไว้เฉพาะ) */
+.ct-trigger .ct-ico{width:56px;height:56px;border-radius:16px;--ct-art:46px}
+.ct-list li .ct-ico,
+.ct-list li[data-value="unsure"] .ct-ico{width:var(--ct-tile);height:var(--ct-tile);border-radius:14px}
+.ct-list li .ct-ico svg,
+.ct-list li[data-value="unsure"] .ct-ico svg{width:var(--ct-art);height:var(--ct-art)}
+.ct-list li[data-value="unsure"] .ct-ico{width:58px;height:58px;--ct-art:48px}
+.ct-list li[data-value="unsure"] .ct-ico svg{width:48px;height:48px}
+.ct-trigger .ct-ico svg{width:46px;height:46px}
+
+/* กดค้าง: ย่อและเอียงนิดเดียว */
+.ct-list li:active .ct-ico svg,
+.ct-trigger:active .ct-ico svg{
+  transform:scale(.86) rotate(-5deg);
+  transition-duration:.12s;
+}
+/* อุปกรณ์ที่มีเมาส์/แทร็กแพด: ลอยขึ้นเมื่อชี้ */
+@media (hover:hover){
+  .ct-list li:hover .ct-ico svg{transform:translateY(-3px) rotate(-4deg) scale(1.07)}
+}
+
+/* เด้งขึ้นตอนเปิดแผนและตอนเลื่อนผ่านเข้าจอ (JS ใส่ .seen ให้) */
+.ct-list.ct-anim li[data-value] .ct-ico svg{opacity:0}
+.ct-list.ct-anim li.seen .ct-ico svg{
+  opacity:1;
+  animation:ctSpawn .55s cubic-bezier(.34,1.56,.64,1) var(--d,0ms) backwards;
+}
+@keyframes ctSpawn{
+  0%{opacity:0;transform:translateY(12px) scale(.5) rotate(-10deg)}
+  100%{opacity:1;transform:none}
+}
+/* เลือกแล้ว: กระโดดยืนยันหนึ่งครั้ง */
+.ct-list.ct-anim li.seen.pick .ct-ico svg{animation:ctPick .42s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes ctPick{
+  0%{transform:scale(.9)}
+  45%{transform:translateY(-6px) scale(1.16) rotate(6deg)}
+  100%{transform:none}
+}
+/* ปุ่มบนหน้าหลัก: เด้งเมื่อเปลี่ยนประเภท (ไอคอนถูกสร้างใหม่ทุกครั้งที่เปลี่ยน) */
+.ct-trigger .ct-ico svg{animation:ctSpawn .5s cubic-bezier(.34,1.56,.64,1) backwards}
+
+@media (prefers-reduced-motion:reduce){
+  .ct-ico svg{transition:none}
+  .ct-trigger .ct-ico svg,
+  .ct-list.ct-anim li.seen .ct-ico svg,
+  .ct-list.ct-anim li.seen.pick .ct-ico svg{animation:none}
+  .ct-list.ct-anim li[data-value] .ct-ico svg{opacity:1}
+  .ct-list li:active .ct-ico svg{transform:none}
+}
