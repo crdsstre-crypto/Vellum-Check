@@ -139,3 +139,26 @@
 .lib-seg-b svg{width:22px;height:22px}
 .brand-logo,.vault-badge svg,.cred-ico svg,.ph-ico svg,.ws-ico svg,.ld-period svg,.ls-cell svg,.lib-seg-b svg{filter:drop-shadow(0 2px 2px rgba(0,0,0,.38))}
 @media (prefers-reduced-motion:reduce){.bn-item svg{transition:none;transform:none !important}}
+
+/* ---------- สติกเกอร์รอบ 4: แผนสิทธิ์การใช้งาน, หน้าต่างเติมเครดิต, รูปโปรไฟล์ที่ยังไม่มีรูป ---------- */
+.cs-ico,.cs-r-ico,#paymentCard .pay-head-ic,#paymentCard .pkg-ic{
+  box-sizing:border-box;
+  border:var(--ct-bw) solid rgba(var(--ct-gold),.5) !important;
+  background:linear-gradient(160deg,#242a35,#191d26) !important;
+  box-shadow:0 6px 14px rgba(0,0,0,.35);
+  display:grid;place-items:center;
+}
+.cs-ico{width:56px;height:56px;padding:6px;border-radius:16px;animation:none}
+.cs-r-ico{width:48px;height:48px;padding:6px;border-radius:14px}
+.cs-ico svg,.cs-r-ico svg{display:block;width:100%;height:100%;filter:drop-shadow(0 2px 2px rgba(0,0,0,.38))}
+.cs-fine svg{width:20px;height:20px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
+#paymentCard .pay-head-ic{width:58px;height:58px;padding:7px;border-radius:16px}
+#paymentCard .pay-head-ic svg{width:100%;height:100%;filter:drop-shadow(0 2px 2px rgba(0,0,0,.38))}
+#paymentCard .pkg-ic{width:46px;height:46px;padding:5px;border-radius:14px}
+#paymentCard .pkg-ic svg{width:100%;height:100%;filter:drop-shadow(0 2px 2px rgba(0,0,0,.38))}
+#paymentCard .pay-trust b svg{width:22px;height:22px;flex:none;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
+/* รูปโปรไฟล์: ยังไม่มีรูป = สติกเกอร์คนแทนตัวอักษร (มีรูปแล้วซ่อนสติกเกอร์) */
+#authLoggedIn .acct-avatar{background:linear-gradient(160deg,#242a35,#191d26) !important}
+#authLoggedIn .acct-avatar #acctInitial{display:none}
+#authLoggedIn .acct-avatar .acct-sticker{display:block;width:78%;height:78%;filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))}
+#authLoggedIn .acct-avatar img:not([hidden]) ~ .acct-sticker{display:none}
