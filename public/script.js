@@ -409,6 +409,15 @@ function renderIssueIndex(items) {
       <p class="ix-prog-note" hidden>คุณดูครบทุกประเด็นแล้ว ควรอ่านสัญญาทั้งฉบับอีกครั้งก่อนลงนาม</p>
     </div>
     <div class="ix-list">${cards}</div>${more}
+    <details class="ix-legend"><summary>วิธีอ่านสีและข้อควรทราบ</summary>
+      <ul>
+        <li><i class="k-gold"></i>ทอง: ตัวเลข ระยะเวลา จำนวนเงินในข้อความสัญญา</li>
+        <li><i class="k-red"></i>แดง: ประเด็นระดับ “${esc(CONFIG.levelLabel.check_detail)}”</li>
+        <li><i class="k-green"></i>เขียว: ข้อเสนอแนะและขั้นตอนถัดไป</li>
+        <li><i class="k-blue"></i>ฟ้า: แหล่งอ้างอิง</li>
+      </ul>
+      <p>ข้อสังเกตเหล่านี้มาจากระบบวิเคราะห์ ไม่ใช่คำวินิจฉัยทางกฎหมาย ควรพิจารณาข้อสัญญาอื่นและข้อเท็จจริงประกอบ</p>
+    </details>
   </section>`;
 }
 
@@ -544,11 +553,30 @@ function renderBrief(summary) {
 }
 
 // ข้อความต้นฉบับ: ถ้า AI อ้างถูกต้องให้แสดง ถ้าไม่พบให้เตือน
+// ไฮไลต์ตัวเลขสำคัญในข้อความสัญญา (จำนวนเงิน ระยะเวลา ร้อยละ) ด้วยกฎตายตัว ไม่ใช้ AI เดา จึงไม่ฟันธงว่าตรงไหนเสี่ยง
+const KT_RE = /ร้อยละ\s*[0-9๐-๙][0-9๐-๙,.]*|[0-9๐-๙][0-9๐-๙,.]*\s*(?:ล้านบาท|บาท|เปอร์เซ็นต์|%|วันทำการ|วัน|สัปดาห์|เดือน|ปี|ชั่วโมง|ครั้ง)|[0-9๐-๙]{1,3}(?:,[0-9๐-๙]{3})+(?:\.[0-9]+)?/g;
+function hlKeyTerms(text) {
+  const t = String(text || '');
+  let out = '', last = 0;
+  for (const m of t.matchAll(KT_RE)) {
+    out += esc(t.slice(last, m.index)) + '<mark class="kt">' + esc(m[0]) + '</mark>';
+    last = m.index + m[0].length;
+  }
+  return out + esc(t.slice(last));
+}
+const ICO_BOOK = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5.5C5.5 4.5 8.5 4.5 12 6.5c3.5-2 6.5-2 9-1v13c-2.5-1-5.5-1-9 1-3.5-2-6.5-2-9-1v-13z"/><path d="M12 6.5v13"/></svg>';
+// แหล่งอ้างอิง: เลขข้อสัญญา (ถ้าหาเจอจริง) และแนวทางตรวจที่ระบบใช้ แยกสีฟ้าจากข้อเสนอแนะสีเขียว
+function renderSource(item) {
+  const clause = clauseOf(item);
+  if (!clause && !item.reference) return '';
+  return `<div class="it-src"><h4>${ICO_BOOK}แหล่งอ้างอิง</h4>${clause ? `<p>ข้อ ${esc(clause)} ของสัญญา</p>` : ''}${item.reference ? `<p>แนวทางตรวจ: ${esc(item.reference)}</p>` : ''}</div>`;
+}
+
 function renderQuote(item) {
   if (item.missing) {
     return `<p class="notfound">⚠️ ไม่พบข้อความนี้ในสัญญาต้นฉบับ AI อาจอ้างผิด โปรดตรวจเอง</p>`;
   }
-  return `<blockquote class="hl-quote">${esc(item.quote)}</blockquote>
+  return `<blockquote class="hl-quote">${hlKeyTerms(item.quote)}</blockquote>
     <div class="src-row"><span>อ้างอิงจากข้อความในสัญญา</span>${hasViewer() ? '<button type="button" class="src-link" data-act="jump">ดูข้อความต้นฉบับ <i aria-hidden="true">›</i></button>' : ''}</div>`;
 }
 
@@ -595,7 +623,7 @@ function renderDetail(item) {
         <button type="button" role="tab" class="sg-tab on" data-act="sgtab" data-tab="cmp">เปรียบเทียบ</button>
       </div>
       <div class="sg-panel sg-old" data-panel="old" hidden>
-        <p class="sg-plbl">ข้อความในสัญญา</p><p class="tx-old">${esc(item.quote)}</p>${jump}
+        <p class="sg-plbl">ข้อความในสัญญา</p><p class="tx-old">${hlKeyTerms(item.quote)}</p>${jump}
         ${copyBtn('old', 'คัดลอกข้อความเดิม')}
       </div>
       <div class="sg-panel sg-new" data-panel="new" hidden>
@@ -603,7 +631,7 @@ function renderDetail(item) {
         ${copyBtn('new', 'คัดลอกข้อความแนะนำ')}
       </div>
       <div class="sg-panel sg-cmp" data-panel="cmp">
-        <div class="sg-card sg-old"><p class="sg-plbl">01 · ข้อความเดิม</p><p>${esc(item.quote)}</p></div>
+        <div class="sg-card sg-old"><p class="sg-plbl">01 · ข้อความเดิม</p><p>${hlKeyTerms(item.quote)}</p></div>
         <p class="sg-arrow"><span aria-hidden="true">↓</span> ปรับถ้อยคำให้ชัดเจนขึ้น</p>
         <div class="sg-card sg-new"><p class="sg-plbl">02 · ข้อความแนะนำ</p><p>${fix}</p>${copyBtn('new', 'คัดลอกข้อความแนะนำ')}</div>
       </div>` : `
@@ -661,7 +689,7 @@ function renderItem(item, index, total) {
     ${renderReason(item.explanation)}
     ${renderNext(item)}
     ${item.missing ? renderQuote(item) : ''}
-    ${item.reference ? `<p class="it-ref">📚 แนวทางตรวจ: ${esc(item.reference)}</p>` : ''}
+    ${renderSource(item)}
     ${renderDetail(item)}
     <div class="rv-row"><button type="button" class="rv-btn" data-review="${index}" aria-pressed="false"><span class="rv-t">ทำเครื่องหมายว่าตรวจแล้ว</span>${ICO_CHECKC}</button></div>
     <div class="pk-row"><button type="button" class="pk-btn" data-ixnav="overview">${ICO_GRID}<span>ภาพรวม</span></button><button type="button" class="pk-btn is-primary" data-ixnav="back"><span>กลับหน้าสรุป</span></button></div>
