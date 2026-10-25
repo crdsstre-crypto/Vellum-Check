@@ -1,0 +1,26 @@
+/* care.css: แถบกู้คืนข้อความ สถานะเครดิตใต้ปุ่ม และสถานะอัปโหลด (ใช้ตัวแปรสีเดิมจาก themes.css) */
+.draft-bar{
+  display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;
+  margin:0 0 10px;padding:10px 12px;
+  background:var(--item);border:1px solid var(--border);border-radius:12px;
+  font-size:.88rem;line-height:1.55;color:var(--muted);
+}
+.draft-bar[hidden]{display:none}
+.draft-bar span{flex:1 1 200px}
+.draft-bar button{
+  min-height:40px;padding:6px 14px;font-size:.88rem;border-radius:10px;
+  background:transparent;color:var(--text);border:1px solid var(--border);
+}
+.draft-bar button[data-draft="restore"]{color:var(--gold-soft);border-color:var(--gold-deep)}
+
+.check-note{margin:10px 0 0;font-size:.86rem;line-height:1.55;color:var(--muted)}
+.check-note:empty{display:none}
+.check-note.is-low{color:var(--gold-soft)}
+
+.up-status{
+  margin:8px 0 0;padding:9px 12px;font-size:.86rem;line-height:1.55;
+  color:var(--muted);background:var(--item);border:1px solid var(--border);border-radius:10px;
+}
+.up-status[hidden]{display:none}
+.up-status.is-ok{border-color:var(--gold-deep);color:var(--text)}
+.up-status.is-error{border-color:var(--highBorder);color:var(--highText)}
