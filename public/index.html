@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="care.css?v=2">
 <link rel="stylesheet" href="privacy.css?v=1">
 <link rel="stylesheet" href="mobile-polish.css?v=1" media="(max-width: 767px)">
-<link rel="stylesheet" href="history-polish.css?v=6">
+<link rel="stylesheet" href="history-polish.css?v=7">
 <link rel="stylesheet" href="print.css?v=1" media="print">
 </head>
 <body>
@@ -372,7 +372,7 @@
   <section class="card" id="paymentCard" hidden role="dialog" aria-labelledby="payTitle">
     <button type="button" class="pay-close" id="payClose" aria-label="ปิด" hidden>✕</button>
     <div class="pay-head">
-      <span class="pay-head-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="5.5"/><path d="M9 6.5v5M7.5 8h2.2a1 1 0 0 1 0 2H7.5"/><path d="M14.5 9.6A5.5 5.5 0 1 1 9.6 14.5"/></svg></span>
+      <span class="pay-head-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H17a1 1 0 0 1 1 1v1.5"/><path d="M4 7.5V17a2 2 0 0 0 2 2h12a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 18 8H6.5A2.5 2.5 0 0 1 4 7.5z"/><path d="M15.5 13.5h4v3h-4a1.5 1.5 0 0 1 0-3z"/></svg></span>
       <div class="pay-head-tx">
         <h2 id="payTitle">เติมเครดิต</h2>
         <p>เลือกแพ็กเกจที่เหมาะกับการใช้งานของคุณ</p>
@@ -413,6 +413,7 @@
   if (!panel || !list) return;
   var ICO_DOC = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>';
   var ICO_COIN = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h4a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3h4"/></svg>';
+  var ICO_RECEIPT = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M8.5 12h7M8.5 15h7M8.5 18h3"/></svg>';
   function esc(v) {
     return String(v).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
@@ -772,7 +773,12 @@
       var msg = { all: 'ยังไม่มีประวัติการเติมเครดิต', pending: 'ไม่มีรายการที่รอชำระ', done: 'ยังไม่มีรายการที่สำเร็จ' }[currentStatus];
       return showMessage(msg, currentStatus === 'all' ? 'เมื่อเติมเครดิต รายการจะแสดงที่นี่' : 'ลองเลือกดูสถานะอื่น');
     }
-    list.innerHTML = rows.slice(0, shown).map(function (it) {
+    var nPend = payItems.filter(function (x) { return !x.credited; }).length;
+    var nDone = payItems.length - nPend;
+    var pstats = '<div class="pay-stats"><button type="button" class="pay-stat" data-pst="all"><span>รายการทั้งหมด</span><b>' + payItems.length + '</b></button>' +
+      '<button type="button" class="pay-stat is-pend" data-pst="pending"><span>รอชำระ</span><b>' + nPend + '</b></button>' +
+      '<button type="button" class="pay-stat is-done" data-pst="done"><span>สำเร็จ</span><b>' + nDone + '</b></button></div>';
+    list.innerHTML = pstats + rows.slice(0, shown).map(function (it) {
       var done = it.credited;
       // ชื่อแพ็กเกจแยกจากราคา (ข้อมูลจริงเดิมจากระบบ แค่ตัดคำว่า "ราคา ... บาท" ออกจากชื่อ)
       var title = String(it.label || '').replace(/\s*ราคา\s*[\d,]+\s*บาท\s*$/, '') || String(it.label || '');
@@ -784,7 +790,7 @@
         '</dl>';
       return '<div class="hist-card" data-open="0">' +
         '<button type="button" class="hist-card-top" aria-expanded="false">' +
-          '<span class="hist-ico">' + ICO_COIN + '</span>' +
+          '<span class="hist-ico is-receipt">' + ICO_RECEIPT + '</span>' +
           '<span class="hist-main"><b>' + esc(title) + '</b><span class="hist-meta">' + esc(fmt(it.createdAt)) + '</span>' +
             '<span class="hist-more-hint">ดูรายละเอียด</span></span>' +
           '<span class="hist-side"><b class="hist-amt">฿' + Number(it.amountBaht).toLocaleString('th-TH') + '</b>' +
@@ -883,6 +889,8 @@
       if (currentKind === 'pay') renderPayments(); else renderInspections();
       return;
     }
+    var pst = ev.target.closest('[data-pst]');
+    if (pst) { setStatus(pst.getAttribute('data-pst')); return; }
     var chip = ev.target.closest('.hist-chip');
     if (chip) { setStatus(chip.getAttribute('data-status')); return; }
     var top = ev.target.closest('.hist-card-top');
