@@ -23,9 +23,10 @@
 <link rel="stylesheet" href="history-vault.css?v=11" media="(max-width: 767px)">
 <link rel="stylesheet" href="account-v2.css?v=11" media="(max-width: 767px)">
 <link rel="stylesheet" href="print.css?v=1" media="print">
-<link rel="stylesheet" href="ct-sticker.css?v=2" media="(max-width: 767px)">
+<link rel="stylesheet" href="ct-sticker.css?v=3" media="(max-width: 767px)">
 </head>
 <body>
+<svg id="vcStickerDefs" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="vcg-y" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffe58a"/><stop offset="1" stop-color="#f5a623"/></linearGradient><linearGradient id="vcg-o" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffb86b"/><stop offset="1" stop-color="#ef5a2a"/></linearGradient><linearGradient id="vcg-b" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#8fd0ff"/><stop offset="1" stop-color="#2f6fe0"/></linearGradient><linearGradient id="vcg-n" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#7d92d6"/><stop offset="1" stop-color="#26376f"/></linearGradient><linearGradient id="vcg-t" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#86f0d8"/><stop offset="1" stop-color="#1a98ab"/></linearGradient><linearGradient id="vcg-p" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ff9fc6"/><stop offset="1" stop-color="#df3f7c"/></linearGradient><linearGradient id="vcg-g" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#a8ea8f"/><stop offset="1" stop-color="#3b9f57"/></linearGradient><linearGradient id="vcg-v" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#c4b0ff"/><stop offset="1" stop-color="#6540d6"/></linearGradient><linearGradient id="vcg-w" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d5dce8"/></linearGradient><linearGradient id="vcg-au" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#fff0b3"/><stop offset="1" stop-color="#d9a014"/></linearGradient><linearGradient id="vcg-s" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#a9b3c7"/></linearGradient></defs></svg>
 
 <!-- ============ HEADER (ติดด้านบน) ============ -->
 <header class="site-header">
@@ -86,24 +87,7 @@
   <!-- ============ ส่วนนำ ============ -->
   <section class="hero">
     <!-- ภาพวาดตราชั่งเส้นทอง (SVG ในหน้า ไม่ต้องโหลดไฟล์เพิ่ม) -->
-    <svg class="hero-art" viewBox="0 0 240 150" aria-hidden="true">
-      <defs>
-        <linearGradient id="goldLine" x1="0" y1="0" x2="240" y2="150" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stop-color="#f3dca0"/>
-          <stop offset="1" stop-color="#b8924a"/>
-        </linearGradient>
-      </defs>
-      <g fill="none" stroke="url(#goldLine)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line class="draw" pathLength="1" x1="120" y1="22" x2="120" y2="128"/>
-        <path class="draw" pathLength="1" d="M70 36 H170"/>
-        <circle class="draw" pathLength="1" cx="120" cy="22" r="5"/>
-        <path class="draw" pathLength="1" d="M70 36 L50 82 M70 36 L90 82"/>
-        <path class="draw" pathLength="1" d="M50 82 Q70 98 90 82"/>
-        <path class="draw" pathLength="1" d="M170 36 L150 82 M170 36 L190 82"/>
-        <path class="draw" pathLength="1" d="M150 82 Q170 98 190 82"/>
-        <path class="draw" pathLength="1" d="M96 128 H144"/>
-      </g>
-    </svg>
+    <svg viewBox="0 0 64 64" class="hero-art" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><rect x="29" y="14" width="6" height="40" rx="3" fill="url(#vcg-au)"/><rect x="19" y="51" width="26" height="7" rx="3.5" fill="url(#vcg-o)"/><rect x="7" y="17" width="50" height="5" rx="2.5" fill="url(#vcg-au)"/><circle cx="32" cy="12" r="5.5" fill="url(#vcg-y)"/><path d="M12 22L6 38M12 22L18 38M52 22L46 38M52 22L58 38" stroke="#d9a014" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M3 38h18a9 8 0 0 1-18 0z" fill="url(#vcg-y)"/><path d="M43 38h18a9 8 0 0 1-18 0z" fill="url(#vcg-y)"/><path d="M32 17v32" stroke="#fff" stroke-width="1.6" opacity=".4" fill="none" stroke-linecap="round"/></svg>
     <h1>เช็กสัญญา</h1>
     <p>ตรวจสัญญาอย่างมั่นใจ · วางข้อความสัญญา ระบบจะไฮไลต์จุดที่ควรระวัง</p>
   </section>
@@ -254,7 +238,7 @@
         <div class="pane" data-pane="acct">
         <nav class="acct-menu" aria-label="ข้อมูลและความช่วยเหลือ">
           <button type="button" class="menu-item" id="acctInfoBtn" aria-expanded="false" aria-controls="acctDetail">
-            <span class="menu-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span>
+            <span class="menu-ico" aria-hidden="true"><svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><path d="M12 57c0-13 9-20 20-20s20 7 20 20z" fill="url(#vcg-b)"/><circle cx="32" cy="22" r="11" fill="url(#vcg-y)"/><path d="M19 50c1-6 5-10 9-11" stroke="#fff" stroke-width="2.6" stroke-linecap="round" opacity=".4" fill="none"/></svg></span>
             <span class="menu-txt"><b>ข้อมูลบัญชี</b><small>อีเมล เครดิต และการเก็บประวัติ</small></span>
           </button>
           <dl class="acct-detail" id="acctDetail" hidden>
@@ -264,15 +248,15 @@
             <div><dt>การเก็บประวัติ</dt><dd>เก็บผลตรวจล่าสุดไม่เกิน 50 รายการ</dd></div>
           </dl>
           <a class="menu-item" id="helpPrivacy" hidden target="_blank" rel="noopener">
-            <span class="menu-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+            <span class="menu-ico" aria-hidden="true"><svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><path d="M20.5 30v-8.5a11.5 11.5 0 0 1 23 0V30" stroke="url(#vcg-s)" stroke-width="6" fill="none" stroke-linecap="round"/><rect x="13" y="28" width="38" height="27" rx="8" fill="url(#vcg-g)"/><circle cx="32" cy="39" r="4.2" fill="url(#vcg-y)"/><rect x="30" y="41" width="4" height="9" rx="2" fill="url(#vcg-y)"/><path d="M18.5 37v-2a3 3 0 0 1 3-3H29" stroke="#fff" stroke-width="2.6" stroke-linecap="round" fill="none" opacity=".35"/></svg></span>
             <span class="menu-txt"><b>นโยบายความเป็นส่วนตัว</b><small>วิธีที่เราดูแลข้อมูลของคุณ</small></span>
           </a>
           <a class="menu-item" id="helpTerms" hidden target="_blank" rel="noopener">
-            <span class="menu-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></span>
+            <span class="menu-ico" aria-hidden="true"><svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><path d="M20 7H39L51 19V50a7 7 0 0 1-7 7H20a7 7 0 0 1-7-7V14a7 7 0 0 1 7-7z" fill="url(#vcg-w)"/><path d="M39 7L51 19H42a3 3 0 0 1-3-3z" fill="#aeb9d1"/><rect x="19" y="27" width="26" height="4.5" rx="2.25" fill="url(#vcg-t)"/><rect x="19" y="35.5" width="26" height="4.5" rx="2.25" fill="url(#vcg-p)"/><rect x="19" y="44" width="15" height="4.5" rx="2.25" fill="url(#vcg-y)"/></svg></span>
             <span class="menu-txt"><b>เงื่อนไขการใช้บริการ</b><small>ข้อตกลงและขอบเขตของบริการ</small></span>
           </a>
           <a class="menu-item" id="helpContact" hidden target="_blank" rel="noopener">
-            <span class="menu-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4z"/></svg></span>
+            <span class="menu-ico" aria-hidden="true"><svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true" focusable="false"><path d="M16 6H48a6 6 0 0 1 6 6V36a6 6 0 0 1-6 6H30L18 54V42H16a6 6 0 0 1-6-6V12a6 6 0 0 1 6-6Z" fill="url(#vcg-t)"/><circle cx="22" cy="24" r="3.2" fill="#fff"/><circle cx="32" cy="24" r="3.2" fill="#fff"/><circle cx="42" cy="24" r="3.2" fill="#fff"/><path d="M14 14a4 4 0 0 1 4-4h8" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".45" fill="none"/></svg></span>
             <span class="menu-txt"><b>ติดต่อผู้ดูแล</b><small>แจ้งปัญหาการชำระเงินหรือการใช้งาน</small></span>
           </a>
         </nav>
@@ -345,7 +329,7 @@
     <!-- Privacy Shield: ปกปิดข้อมูลส่วนตัวในเบราว์เซอร์ก่อนส่งวิเคราะห์ (privacy.js) -->
     <section class="ps" id="privacyShield" aria-labelledby="psTitle">
       <div class="ps-head">
-        <span class="ps-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M9 12l2.2 2.2L15.5 10"/></svg></span>
+        <span class="ps-ico" aria-hidden="true"><svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true" focusable="false"><path d="M32 5L54 13V32C54 46 44 54 32 59C20 54 10 46 10 32V13Z" fill="url(#vcg-t)"/><path d="M32 11L48 17V32C48 42 41 48 32 52C23 48 16 42 16 32V17Z" fill="url(#vcg-b)" opacity=".55"/><path d="M22 32L29 39L43 24" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M14 16L30 9" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".45" fill="none"/></svg></span>
         <div class="ps-title"><b id="psTitle">ปกป้องข้อมูลส่วนตัว</b><small>Privacy Shield</small></div>
         <span class="ps-badge" id="psBadge">เปิดใช้งาน</span>
       </div>
@@ -1439,7 +1423,7 @@ document.addEventListener('click', function (e) {
 
   function icon(v) {
     ensureDefs();
-    return '<svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">' + (ICONS[v] || ICONS.other) + '</svg>';
+    return '<svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true" focusable="false">' + (ICONS[v] || ICONS.other) + '</svg>';
   }
 
   // แยกชื่อกับคำอธิบายจากข้อความใน option เช่น "สัญญาเช่า (บ้าน คอนโด)"
@@ -1747,7 +1731,7 @@ document.addEventListener('click', function (e) {
 </script>
 <script src="glossary.js?v=5"></script>
 <script src="script.js?v=32"></script>
-<script src="extras.js?v=3"></script>
+<script src="extras.js?v=4"></script>
 <script src="pay-ui.js?v=2"></script>
 <script src="privacy.js?v=1"></script>
 <script src="care.js?v=2"></script>
