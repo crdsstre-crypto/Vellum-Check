@@ -278,5 +278,30 @@
   #authLoggedIn .menu-ico{width:44px;height:44px;border-radius:13px}
   #authLoggedIn .acct-out{border-radius:18px;min-height:54px}
 
+  /* ---------- รอบ 8: Midnight Credit Console — แผงเครดิตแผงเดียว ปรับละเอียด ----------
+     พื้น #08090B · แผง #111317 · ทอง #EAC66A · ฟ้า #79B8FF · เขียว #5CE0B0 · ตัวอักษรรอง #9297A1 */
+  #authLoggedIn{--a-card:#111317;--a-amber:#EAC66A;--a-blue:#79B8FF;--a-green:#5CE0B0}
+  body[data-sheet="acct"] #authCard,body[data-sheet="acct"] #authCard .sheet-body{background:#08090B}
+  #authLoggedIn .wallet-total{grid-template-columns:1fr;row-gap:6px;padding:16px;background:#111317;border:1px solid var(--a-line)}
+  #authLoggedIn .wallet-total::before{content:"";right:auto;left:auto;position:static;display:none}
+  #authLoggedIn .wallet-total-label{display:flex;align-items:center;justify-content:space-between;font-size:.9rem;color:#9297A1}
+  #authLoggedIn .wallet-total.has-credit .wallet-total-label::after{content:"พร้อมใช้งาน";padding:4px 12px 4px 24px;border-radius:999px;font-size:.78rem;font-weight:600;color:var(--a-green);background:rgba(92,224,176,.12) radial-gradient(circle at 12px 50%,var(--a-green) 0 4px,transparent 4.5px)}
+  #authLoggedIn .wallet-total-num b{font-size:3rem;color:#F4F4F5}
+  #authLoggedIn .wallet-total-num small{color:#9297A1}
+  #authLoggedIn .wallet-rows{grid-template-columns:1fr 1fr;gap:10px;margin:10px 0 6px;padding:14px 0 0;border-top:1px solid var(--a-line)}
+  #authLoggedIn .wallet-rows>div,#authLoggedIn .wallet-rows>div+div{display:block;padding:14px;border:0;border-radius:16px}
+  #authLoggedIn .wallet-rows>div:nth-child(1){background:rgba(121,184,255,.10)}
+  #authLoggedIn .wallet-rows>div:nth-child(2){background:rgba(92,224,176,.10)}
+  #authLoggedIn .wallet-rows dt{display:flex;align-items:center;gap:8px;margin:0 0 8px;font-size:.95rem;font-weight:600}
+  #authLoggedIn .wallet-rows>div:nth-child(1) dt{color:var(--a-blue)}
+  #authLoggedIn .wallet-rows>div:nth-child(2) dt{color:var(--a-green)}
+  #authLoggedIn .wallet-rows dt::before{width:22px;height:22px;border-radius:0;background-color:transparent!important;background-size:22px}
+  #authLoggedIn .wallet-rows dd{display:block;font-size:0;color:#9297A1}
+  #authLoggedIn .wallet-rows dd b{font-size:2rem;line-height:1.1;color:#F4F4F5}
+  #authLoggedIn .wallet-rows dd::after{content:"ครั้งที่ใช้ได้";display:block;margin-top:6px;font-size:.84rem}
+  #authLoggedIn .wallet-total .wallet-topup{min-height:52px;background:var(--a-amber)}
+  #authLoggedIn .wallet-total .wallet-topup::before{content:"+";display:inline-grid;place-items:center;width:20px;height:20px;margin-right:10px;border:1.7px solid currentColor;border-radius:50%;font-size:1rem;line-height:1}
+  #authLoggedIn .wallet-total::after{content:"ยอดรวมจากเครดิตทุกประเภท";grid-row:5;margin-top:8px;font-size:.8rem;color:#9297A1}
+
   @media (prefers-reduced-motion:reduce){#histList .hr2,.hist-search input,.lib-seg-b{transition:none}}
 }
