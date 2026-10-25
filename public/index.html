@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="glossary.css?v=3">
 <link rel="stylesheet" href="suggest.css?v=20">
 <link rel="stylesheet" href="pay.css?v=1">
+<link rel="stylesheet" href="care.css?v=1">
 <link rel="stylesheet" href="print.css?v=1" media="print">
 </head>
 <body>
@@ -250,6 +251,11 @@
         </select>
       </div>
     </div>
+    <div class="draft-bar" id="draftBar" hidden>
+      <span>พบข้อความที่ยังไม่ได้ตรวจ บันทึกไว้ในเบราว์เซอร์เครื่องนี้เท่านั้น</span>
+      <button type="button" data-draft="restore">กู้คืนข้อความ</button>
+      <button type="button" data-draft="delete">ลบ</button>
+    </div>
     <div class="ta-wrap">
       <textarea id="input" placeholder="วางข้อความสัญญาที่นี่..."></textarea>
       <button type="button" class="ta-clear" id="taClear" aria-label="ล้างข้อความ" hidden>✕</button>
@@ -262,12 +268,14 @@
         <button type="button" class="sample-btn" id="sampleBtn">ลองใช้ข้อความตัวอย่าง</button>
       </div>
     </div>
+    <p class="up-status" id="upStatus" role="status" aria-live="polite" hidden></p>
     <p class="hint">แนะนำ: วางเฉพาะข้อความสัญญาที่ต้องการตรวจ ไม่ต้องใส่ข้อมูลส่วนตัวที่ไม่จำเป็น</p>
     <label class="voice-opt"><span class="voice-text">สรุปเป็นเสียง <small>(ใช้เครดิตเสียง 1 ครั้ง)</small></span><input type="checkbox" id="voiceOpt" role="switch" aria-label="สรุปเป็นเสียง"><span class="voice-switch" aria-hidden="true"></span></label>
     <div class="btns">
       <button class="primary" id="checkBtn">ตรวจสัญญา</button>
       <button class="ghost" id="clearBtn">ล้างข้อความ</button>
     </div>
+    <p class="check-note" id="checkNote" aria-live="polite"></p>
     <p class="disclaimer">* เครื่องมือนี้ช่วยคัดกรองเบื้องต้นเท่านั้น ไม่ใช่คำปรึกษาทางกฎหมาย ควรให้ทนายตรวจก่อนลงนามในสัญญาสำคัญ</p>
   </section>
 
@@ -1072,8 +1080,9 @@ document.addEventListener('click', function (e) {
 })();
 </script>
 <script src="glossary.js?v=5"></script>
-<script src="script.js?v=27"></script>
+<script src="script.js?v=28"></script>
 <script src="extras.js?v=3"></script>
 <script src="pay-ui.js?v=2"></script>
+<script src="care.js?v=1"></script>
 </body>
 </html>
