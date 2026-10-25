@@ -1,82 +1,100 @@
-/* ct-sticker.css — ไอคอนสติกเกอร์ 3D ในตัวเลือกประเภทสัญญา (มือถือเท่านั้น)
-   โหลดท้ายสุดใน index.html · ปิดทั้งชุด: ลบบรรทัด <link ... ct-sticker.css> (ไอคอนจะเหลือแต่ SVG สีทึบ ให้ลบ/แก้ icon() ด้วยถ้าต้องการกลับเส้นบาง)
-   ปรับขนาด: --ct-tile (กรอบ) และ --ct-art (ตัวสติกเกอร์) */
-:root{--ct-tile:52px;--ct-art:44px}
+/* ct-sticker.css — สติกเกอร์ 3D ในกรอบทองบาง (แบบที่ 1) ของตัวเลือกประเภทสัญญา (มือถือเท่านั้น)
+   โหลดท้ายสุดใน index.html · ปรับค่าที่ตัวแปรด้านล่าง (ทุกกรอบขนาดเท่ากัน)
+   ปิดทั้งชุด: ลบบรรทัด <link ... ct-sticker.css> */
+:root{
+  --ct-frame:76px;      /* ขนาดกรอบ */
+  --ct-pad:7px;         /* ระยะขอบถึงภาพ (6–8) */
+  --ct-radius:18px;     /* ความโค้ง (18–20) */
+  --ct-bw:1.2px;        /* ความหนาขอบ (1–1.5) */
+  --ct-gold:229,196,119;
+}
 
-/* กรอบไอคอน: พื้นเรืองสีตามประเภท ไม่มีเส้นขอบ */
 .ct-ico{
-  --tint:229,196,119;
   position:relative;
-  border:0;
-  background:radial-gradient(circle at 30% 24%,rgba(var(--tint),.30),rgba(var(--tint),.07) 72%);
-  box-shadow:inset 0 0 0 1px rgba(var(--tint),.22);
-  overflow:visible;
+  box-sizing:border-box;
+  display:grid;
+  place-items:center;
+  flex:none;
+  width:var(--ct-frame);
+  height:var(--ct-frame);
+  padding:var(--ct-pad);
+  border:var(--ct-bw) solid rgba(var(--ct-gold),.5);
+  border-radius:var(--ct-radius);
+  background:linear-gradient(160deg,#242a35,#191d26);
+  box-shadow:0 6px 14px rgba(0,0,0,.35);
+  overflow:hidden;
+  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease,background .22s ease;
 }
 .ct-ico svg{
   display:block;
-  width:var(--ct-art);
-  height:var(--ct-art);
+  width:100%;
+  height:100%;
   overflow:visible;
   transform-origin:50% 85%;
   filter:drop-shadow(0 3px 3px rgba(0,0,0,.38));
-  transition:transform .38s cubic-bezier(.34,1.56,.64,1);
-  will-change:transform;
 }
-li[data-value="rent"] .ct-ico,.ct-trigger[data-v="rent"] .ct-ico{--tint:255,140,70}
-li[data-value="sale"] .ct-ico,.ct-trigger[data-v="sale"] .ct-ico{--tint:255,196,60}
-li[data-value="employment"] .ct-ico,.ct-trigger[data-v="employment"] .ct-ico{--tint:110,140,230}
-li[data-value="service"] .ct-ico,.ct-trigger[data-v="service"] .ct-ico{--tint:60,200,200}
-li[data-value="loan"] .ct-ico,.ct-trigger[data-v="loan"] .ct-ico{--tint:240,180,50}
-li[data-value="shareholder"] .ct-ico,.ct-trigger[data-v="shareholder"] .ct-ico{--tint:180,120,250}
-li[data-value="nda"] .ct-ico,.ct-trigger[data-v="nda"] .ct-ico{--tint:150,110,240}
-li[data-value="other"] .ct-ico,.ct-trigger[data-v="other"] .ct-ico{--tint:120,190,240}
 
-/* ขนาด (ต้องเขียนซ้ำตัวเลือก unsure เพราะ mobile.css ตั้งไว้เฉพาะ) */
-.ct-trigger .ct-ico{width:56px;height:56px;border-radius:16px;--ct-art:46px}
+/* ทุกกรอบขนาดเท่ากัน รวมถึง "ไม่แน่ใจ" (ต้องเขียนซ้ำเพราะ mobile.css ตั้งเฉพาะไว้) */
 .ct-list li .ct-ico,
-.ct-list li[data-value="unsure"] .ct-ico{width:var(--ct-tile);height:var(--ct-tile);border-radius:14px}
+.ct-list li[data-value="unsure"] .ct-ico{
+  width:var(--ct-frame);
+  height:var(--ct-frame);
+  border-radius:var(--ct-radius);
+}
 .ct-list li .ct-ico svg,
-.ct-list li[data-value="unsure"] .ct-ico svg{width:var(--ct-art);height:var(--ct-art)}
-.ct-list li[data-value="unsure"] .ct-ico{width:58px;height:58px;--ct-art:48px}
-.ct-list li[data-value="unsure"] .ct-ico svg{width:48px;height:48px}
-.ct-trigger .ct-ico svg{width:46px;height:46px}
+.ct-list li[data-value="unsure"] .ct-ico svg{width:100%;height:100%}
+/* ปุ่มบนหน้าหลักใช้กรอบเล็กลงแต่สัดส่วนเดิม */
+.ct-trigger .ct-ico{--ct-frame:58px;--ct-pad:6px;--ct-radius:16px;width:58px;height:58px;border-radius:16px}
 
-/* กดค้าง: ย่อและเอียงนิดเดียว */
-.ct-list li:active .ct-ico svg,
-.ct-trigger:active .ct-ico svg{
-  transform:scale(.86) rotate(-5deg);
-  transition-duration:.12s;
-}
-/* อุปกรณ์ที่มีเมาส์/แทร็กแพด: ลอยขึ้นเมื่อชี้ */
+/* แตะหรือชี้: ภาพขยาย 4% ลอยขึ้น 3px ใน 220ms */
+.ct-list li:active .ct-ico,
+.ct-trigger:active .ct-ico{transform:translateY(-3px) scale(1.04)}
 @media (hover:hover){
-  .ct-list li:hover .ct-ico svg{transform:translateY(-3px) rotate(-4deg) scale(1.07)}
+  .ct-list li:hover .ct-ico{transform:translateY(-3px) scale(1.04)}
 }
 
-/* เด้งขึ้นตอนเปิดแผนและตอนเลื่อนผ่านเข้าจอ (JS ใส่ .seen ให้) */
+/* เลือกแล้ว: ขอบทองเต็ม + แสงเรืองบาง + พื้นสว่างขึ้นเล็กน้อย */
+.ct-list li.is-on .ct-ico{
+  border-color:rgb(var(--ct-gold));
+  background:linear-gradient(160deg,#2f3441,#202532);
+  box-shadow:0 0 0 1px rgba(var(--ct-gold),.35),0 0 18px rgba(var(--ct-gold),.35),0 6px 14px rgba(0,0,0,.35);
+}
+/* แสงวิ่งผ่านกรอบครั้งเดียวตอนกดเลือก (ไม่วนซ้ำ) */
+.ct-ico::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(115deg,transparent 35%,rgba(255,236,170,.55) 50%,transparent 65%);
+  transform:translateX(-120%);
+}
+.ct-list li.pick .ct-ico::after{animation:ctSweep .55s ease-out 1}
+@keyframes ctSweep{to{transform:translateX(120%)}}
+
+/* ไอคอนเด้งตอนเปิดแผน/เลื่อนผ่านเข้าจอ (JS ใส่ .seen) */
 .ct-list.ct-anim li[data-value] .ct-ico svg{opacity:0}
 .ct-list.ct-anim li.seen .ct-ico svg{
   opacity:1;
-  animation:ctSpawn .55s cubic-bezier(.34,1.56,.64,1) var(--d,0ms) backwards;
+  animation:ctSpawn .5s cubic-bezier(.34,1.56,.64,1) var(--d,0ms) backwards;
 }
 @keyframes ctSpawn{
-  0%{opacity:0;transform:translateY(12px) scale(.5) rotate(-10deg)}
+  0%{opacity:0;transform:translateY(10px) scale(.55) rotate(-8deg)}
   100%{opacity:1;transform:none}
 }
-/* เลือกแล้ว: กระโดดยืนยันหนึ่งครั้ง */
 .ct-list.ct-anim li.seen.pick .ct-ico svg{animation:ctPick .42s cubic-bezier(.34,1.56,.64,1) both}
 @keyframes ctPick{
-  0%{transform:scale(.9)}
-  45%{transform:translateY(-6px) scale(1.16) rotate(6deg)}
+  0%{transform:scale(.92)}
+  45%{transform:translateY(-4px) scale(1.12) rotate(5deg)}
   100%{transform:none}
 }
-/* ปุ่มบนหน้าหลัก: เด้งเมื่อเปลี่ยนประเภท (ไอคอนถูกสร้างใหม่ทุกครั้งที่เปลี่ยน) */
 .ct-trigger .ct-ico svg{animation:ctSpawn .5s cubic-bezier(.34,1.56,.64,1) backwards}
 
 @media (prefers-reduced-motion:reduce){
-  .ct-ico svg{transition:none}
+  .ct-ico{transition:none}
   .ct-trigger .ct-ico svg,
   .ct-list.ct-anim li.seen .ct-ico svg,
-  .ct-list.ct-anim li.seen.pick .ct-ico svg{animation:none}
+  .ct-list.ct-anim li.seen.pick .ct-ico svg,
+  .ct-list li.pick .ct-ico::after{animation:none}
   .ct-list.ct-anim li[data-value] .ct-ico svg{opacity:1}
-  .ct-list li:active .ct-ico svg{transform:none}
+  .ct-list li:active .ct-ico{transform:none}
 }
