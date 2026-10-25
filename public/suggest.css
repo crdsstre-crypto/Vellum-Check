@@ -184,3 +184,19 @@ mark.kt{padding:0 3px;border-radius:4px;background:rgba(216,182,92,.24);color:#f
 .ix-legend .k-gold{background:#d8b65c}.ix-legend .k-red{background:#e78383}.ix-legend .k-green{background:#83c9a3}.ix-legend .k-blue{background:#8fb4e8}
 .ix-legend p{margin:0;font-size:.82rem;line-height:1.55;color:var(--muted)}
 @media print{.ix-legend{display:none}}
+
+/* การ์ดกระชับ: กล่องเขียวเห็นทันที + ปุ่มรายละเอียดปุ่มเดียว · ตัวกรองระดับ · แหล่งอ้างอิงแยกสถานะ */
+.rpt details.item[hidden]{display:none !important}
+.it-fix p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.rpt details.item>.sg-more{margin:12px 0 0}
+.it-src p b{font-weight:600;color:#9dbcf0;margin-right:6px}
+.it-src .src-warn{margin-top:6px;font-size:.84rem;line-height:1.55;color:var(--muted)}
+.ix-filter{margin:0 0 14px}
+.ix-filter-l{display:block;margin-bottom:8px;font-size:.84rem;color:var(--muted)}
+.ix-chips{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
+.ix-chips::-webkit-scrollbar{display:none}
+.ix-chip{all:unset;box-sizing:border-box;flex:none;display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--border);color:var(--text);font-size:.9rem;font-weight:600;white-space:nowrap;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ix-chip[aria-pressed="true"]{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3)}
+.ix-chip:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+body.has-ixback .to-top{display:none}
+@media print{.ix-filter{display:none}}
