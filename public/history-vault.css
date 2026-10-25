@@ -1,0 +1,71 @@
+/* ===== history-vault.css (v1): หน้าประวัติแบบ "คลังเอกสารอัจฉริยะ" — มือถือเท่านั้น =====
+   โซน A Vault Header · B Credit Command · C Command Search · D Smart Timeline · E Floating Nav
+   ทองใช้เฉพาะจุดนำสายตา · ฟ้า = ทบทวน · เขียวมิ้นต์ = สำเร็จ
+   ลบไฟล์นี้ + บรรทัด <link> ใน index.html = กลับไปใช้ history-polish.css v13 */
+.vault-head{display:none}
+@media (max-width:767px){
+  .history-panel{--v-gold:#D9B968;--v-gold-line:rgba(217,185,104,.45);--v-navy:#0E1624;--v-card:#12151A;--v-line:#262A31}
+
+  /* ---------- โซน A: Vault Header ---------- */
+  .vault-head{
+    position:relative;display:flex;align-items:center;gap:14px;margin:0 0 14px;padding:14px 14px;
+    border:1px solid var(--v-line);border-radius:20px;overflow:hidden;
+    background:radial-gradient(120% 140% at 0% 0%,rgba(217,185,104,.16),transparent 55%),linear-gradient(160deg,#101a2b,#0A0D13 70%);
+  }
+  .vault-head::after{content:"";position:absolute;left:14px;right:14px;top:0;height:1px;background:linear-gradient(90deg,transparent,var(--v-gold-line),transparent)}
+  .vault-badge{flex:0 0 auto;width:56px;height:56px;display:grid;place-items:center;border-radius:16px;
+    background:linear-gradient(160deg,#16233a,#0A0F18);border:1px solid var(--v-gold-line);box-shadow:0 0 18px rgba(217,185,104,.18),inset 0 0 0 1px rgba(255,255,255,.04);color:var(--v-gold)}
+  .vault-badge svg{width:34px;height:34px}
+  .vault-txt{min-width:0;display:flex;flex-direction:column;gap:3px}
+  .vault-txt b{font-size:1.28rem;font-weight:700;line-height:1.2;color:var(--h-text,#f5f5f5);letter-spacing:.01em}
+  .vault-txt small{font-size:.86rem;line-height:1.35;color:var(--h-sub,#8b8e98)}
+
+  /* ---------- โซน B: Credit Command (ฮับเครดิต) ---------- */
+  .pay-hub{margin:0 0 12px;padding:14px;border:1px solid var(--v-line);border-radius:18px;
+    background:linear-gradient(160deg,#17130a 0%,#121317 55%);box-shadow:none}
+  .pay-hub .ph-bal p{margin:2px 0 0;display:flex;align-items:baseline;gap:8px}
+  .pay-hub .ph-bal b{font-size:2.5rem;font-weight:700;line-height:1;color:var(--v-gold);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .pay-hub .ph-bal small{font-size:.9rem;color:var(--h-sub,#8b8e98)}
+  .pay-hub .ph-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:12px 0;border:1px solid var(--v-line);border-radius:14px;background:rgba(0,0,0,.25)}
+  .pay-hub .ph-stat{min-height:52px;padding:6px 4px;border:0;border-radius:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-variant-numeric:tabular-nums}
+  .pay-hub .ph-stat+.ph-stat{border-left:1px solid var(--v-line)}
+  .pay-hub .ph-stat span{font-size:.74rem;color:var(--h-sub,#8b8e98)}
+  .pay-hub .ph-stat b{font-size:1.15rem;line-height:1}
+  .pay-hub .ph-stat.is-done b{color:var(--d-mint,#7FCFB0)}
+  .pay-hub .ph-stat.is-pend b{color:var(--d-sky,#8DB9D8)}
+  .pay-hub .ph-topup{width:100%;min-height:48px;border:0;border-radius:14px;background:var(--v-gold);color:#17130A;font:inherit;font-weight:700}
+
+  /* ---------- โซน C: Command Search ---------- */
+  .hist-tools{position:sticky;top:0;z-index:4;margin:0 -2px 10px;padding:6px 2px 8px;background:linear-gradient(#08090b 82%,rgba(8,9,11,0))}
+  .hist-search{order:-1;margin:0 0 8px}
+  .hist-tools{display:flex;flex-direction:column}
+  .hist-search input{min-height:48px;border-radius:16px;background:var(--v-card);border:1px solid var(--v-line);transition:border-color .2s,box-shadow .2s}
+  .hist-search input:focus{border-color:var(--v-gold-line);box-shadow:0 0 0 3px rgba(217,185,104,.12);outline:0}
+  .lib-seg{display:flex;gap:8px;margin:0;padding:2px 0;border:0;border-radius:0;background:none;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+  .lib-seg::-webkit-scrollbar{display:none}
+  .lib-seg-b{flex:0 0 auto;min-height:38px;padding:0 14px;border:1px solid var(--v-line);border-radius:999px;background:var(--v-card);scroll-snap-align:start;transition:background .2s,color .2s,border-color .2s}
+  .lib-seg-b.is-on{background:var(--v-gold);border-color:var(--v-gold);color:#17130A}
+  .lib-chips{margin:8px 0 0}
+
+  /* ---------- โซน D: Smart Timeline ---------- */
+  #histList .hr-day{margin:18px 0 0}
+  #histList .hr-day-list{position:relative;gap:12px;padding-left:22px}
+  #histList .hr-day-list::before{content:"";position:absolute;left:6px;top:14px;bottom:14px;width:2px;border-radius:2px;
+    background:linear-gradient(180deg,var(--v-gold-line),rgba(217,185,104,.08))}
+  #histList .hr2{position:relative;background:var(--v-card);border-radius:18px;transition:border-color .2s,transform .15s}
+  #histList .hr2:active{transform:scale(.99)}
+  #histList .hr2::before{content:"";position:absolute;left:-21px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;
+    background:#0A0D13;border:2px solid var(--v-gold-line)}
+  #histList .hr-day:first-of-type .hr2:first-child{border-color:var(--v-gold-line);box-shadow:0 0 0 1px rgba(217,185,104,.10),0 8px 22px rgba(0,0,0,.4)}
+  #histList .hr-day:first-of-type .hr2:first-child::before{background:var(--v-gold);border-color:var(--v-gold);box-shadow:0 0 10px rgba(217,185,104,.6)}
+  #histList .hr2.is-pinned{border-color:var(--v-gold-line)}
+  #histList .hr2 .hr-thumb{width:64px;height:84px;border-radius:9px;box-shadow:0 6px 14px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.08);transform:rotate(-1.5deg)}
+  @media (max-width:360px){#histList .hr2 .hr-thumb{width:54px;height:72px}#histList .hr-day-list{padding-left:18px}#histList .hr2::before{left:-17px}}
+
+  /* ---------- โซน E: Floating Navigation (ปุ่มปัจจุบันเป็นสีทอง + เส้นเน้นบางด้านบน) ---------- */
+  .bottom-nav .bn-item{position:relative}
+  .bottom-nav .bn-item.is-on{color:var(--v-gold)}
+  .bottom-nav .bn-item.is-on::before{content:"";position:absolute;left:28%;right:28%;top:0;height:2px;border-radius:0 0 2px 2px;background:var(--v-gold);box-shadow:0 0 8px rgba(217,185,104,.55)}
+
+  @media (prefers-reduced-motion:reduce){#histList .hr2,.hist-search input,.lib-seg-b{transition:none}}
+}
