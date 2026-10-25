@@ -1081,6 +1081,8 @@ function setBusy(busy) {
   updateCheckState();
   els.clearBtn.disabled = busy;
   els.checkBtn.textContent = busy ? 'กำลังตรวจ...' : checkLabel();
+  els.checkBtn.classList.toggle('is-busy', busy);
+  els.checkBtn.setAttribute('aria-busy', busy ? 'true' : 'false');
 }
 
 // ---------- แจ้งเตือนเครดิต ----------
