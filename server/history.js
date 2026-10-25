@@ -84,7 +84,7 @@ export async function getInspection(userId, id) {
 
 export async function listPayments(userId) {
   const { rows } = await pool.query(
-    `SELECT package_id, amount_satang, status, created_at, credited_at
+    `SELECT charge_id, package_id, amount_satang, status, created_at, credited_at
        FROM payments WHERE user_id = $1
       ORDER BY created_at DESC LIMIT 50`,
     [userId]
@@ -93,6 +93,8 @@ export async function listPayments(userId) {
     label: PACKAGES[r.package_id]?.label ?? r.package_id,
     amountBaht: Math.round(r.amount_satang / 100),
     credited: r.status === 'credited',
+    status: ['pending', 'credited', 'failed', 'expired'].includes(r.status) ? r.status : 'pending',
+    chargeId: r.charge_id,
     createdAt: r.created_at,
     creditedAt: r.credited_at,
   }));
