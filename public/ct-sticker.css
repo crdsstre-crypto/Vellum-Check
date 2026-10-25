@@ -118,3 +118,24 @@
   .hero-art,.ps-ico,.menu-ico{transition:none}
   .menu-item:active .menu-ico{transform:none}
 }
+
+/* ---------- สติกเกอร์ในแถบบน แถบล่าง คลังเอกสาร และเครดิต ---------- */
+.brand-logo{width:30px;height:30px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))}
+.bn-item svg{width:30px;height:30px;stroke:none;transition:transform .22s ease,filter .22s ease}
+.bn-item:not(.is-on) svg{filter:grayscale(.9) brightness(.85) opacity(.7)}
+.bn-item.is-on svg{filter:drop-shadow(0 2px 3px rgba(0,0,0,.4));transform:translateY(-2px)}
+.vault-badge,.cred-ico,.ph-ico{
+  border:var(--ct-bw) solid rgba(var(--ct-gold),.5) !important;
+  background:linear-gradient(160deg,#242a35,#191d26) !important;
+  box-shadow:0 6px 14px rgba(0,0,0,.35);
+}
+.vault-badge svg{width:42px;height:42px}
+.cred-ico svg{width:30px;height:30px}
+.ph-ico svg{width:30px;height:30px}
+#authLoggedIn .cred-card .ws-ico{width:30px;height:30px}
+#authLoggedIn .cred-card .ws-ico svg{width:30px;height:30px}
+.ld-period svg{width:24px;height:24px}
+.ls-cell svg{width:28px;height:28px}
+.lib-seg-b svg{width:22px;height:22px}
+.brand-logo,.vault-badge svg,.cred-ico svg,.ph-ico svg,.ws-ico svg,.ld-period svg,.ls-cell svg,.lib-seg-b svg{filter:drop-shadow(0 2px 2px rgba(0,0,0,.38))}
+@media (prefers-reduced-motion:reduce){.bn-item svg{transition:none;transform:none !important}}
