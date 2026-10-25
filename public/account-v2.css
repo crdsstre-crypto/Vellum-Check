@@ -1,5 +1,5 @@
 /* =========================================================
-   account-v2.css (v7) — แผน "บัญชีของฉัน" บนมือถือ: Compact Luxury Profile
+   account-v2.css (v8) — แผน "บัญชีของฉัน" บนมือถือ: Compact Luxury Profile
    โหลดท้ายสุดใน index.html ด้วย media="(max-width: 767px)"
    โครงสร้าง: index.html (.cred-card > .acct-row, .wallet-total > .wallet-rows .ws)
    ลบไฟล์นี้ + บรรทัด <link> = กลับไปหน้าตาเดิมจาก history-vault.css รอบ 9
@@ -56,15 +56,24 @@ body.auth-open #authLoggedIn .cred-card .acct-avatar{animation:vcGlow 1.3s ease 
 #authLoggedIn .cred-card .cred-line{display:block;height:3px;margin:12px 0 14px;border-radius:2px;background:linear-gradient(90deg,var(--av2-gold),rgba(231,191,88,.5));transform-origin:left;animation:vcLine .5s ease .2s both}
 @keyframes vcLine{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 
-/* ---- เครดิตตรวจสัญญา / เครดิตเสียง ---- */
-#authLoggedIn .cred-card .wallet-rows{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 14px;padding:0;border:0}
-#authLoggedIn .cred-card .ws{display:flex;flex-direction:column;align-items:flex-start;text-align:left;min-height:116px;padding:12px 14px;border-radius:var(--av2-radius);margin:0}
-#authLoggedIn .cred-card .ws-check{background:rgba(128,185,255,.10);color:var(--a-blue);animation:vcIn .3s ease .14s both}
-#authLoggedIn .cred-card .ws-voice{background:rgba(67,214,173,.10);color:var(--a-green);animation:vcIn .3s ease .2s both}
-#authLoggedIn .cred-card .ws-ico{display:grid;place-items:center;width:26px;height:26px}
-#authLoggedIn .cred-card .ws-num{margin:8px 0 0;line-height:1}
-#authLoggedIn .cred-card .ws-num b{font-size:2.1rem;font-weight:700;color:#F4F4F5;font-variant-numeric:tabular-nums}
-#authLoggedIn .cred-card .ws-lab{margin:6px 0 0;font-size:.85rem;font-weight:500;line-height:1.3;color:inherit}
+/* ---- เครดิตตรวจ / เครดิตเสียง: แถบสรุปแนวนอนกะทัดรัด (กรอบเดียว สองช่อง เส้นแบ่งบาง) ---- */
+#authLoggedIn .cred-card .wallet-rows{
+  display:grid;grid-template-columns:1fr 1fr;gap:0;margin:0 0 14px;padding:0;
+  border:1px solid var(--av2-line);border-radius:var(--av2-radius);background:rgba(255,255,255,.03);overflow:hidden;
+  animation:vcIn .3s ease .14s both;
+}
+#authLoggedIn .cred-card .ws{
+  display:grid;grid-template-columns:24px 1fr;grid-template-rows:auto auto;column-gap:8px;row-gap:2px;align-items:center;
+  min-height:0;padding:10px 14px 11px;margin:0;border-radius:0;background:none;text-align:left;animation:none;
+}
+#authLoggedIn .cred-card .ws+.ws{border-left:1px solid var(--av2-line)}
+#authLoggedIn .cred-card .ws-check{color:var(--a-blue)}
+#authLoggedIn .cred-card .ws-voice{color:var(--a-green)}
+#authLoggedIn .cred-card .ws-ico{grid-column:1;grid-row:1;display:grid;place-items:center;width:24px;height:24px}
+#authLoggedIn .cred-card .ws-ico svg{width:20px;height:20px}
+#authLoggedIn .cred-card .ws-lab{grid-column:2;grid-row:1;margin:0;font-size:.82rem;font-weight:500;line-height:1.2;white-space:nowrap;color:inherit}
+#authLoggedIn .cred-card .ws-num{grid-column:1 / -1;grid-row:2;margin:0;line-height:1.1}
+#authLoggedIn .cred-card .ws-num b{font-size:1.75rem;font-weight:700;color:#F4F4F5;font-variant-numeric:tabular-nums}
 
 /* ---- ปุ่มเติมเครดิต: เรียบ มีแสงทองผ่านครั้งเดียวตอนเปิดแผน ---- */
 #authLoggedIn .cred-card .wallet-quick{margin:0}
@@ -89,7 +98,7 @@ body.auth-open #authLoggedIn .cred-card .wallet-total .wallet-topup{animation:vc
 #authLoggedIn .acct-out{margin-top:var(--av2-gap);min-height:var(--av2-row);background:rgba(201,110,100,.07);border:1px solid rgba(201,110,100,.22);color:#E0948A;animation:vcIn .3s ease .32s both}
 
 @media (prefers-reduced-motion:reduce){
-  #authLoggedIn .cred-card .acct-row,#authLoggedIn .cred-card .acct-info,#authLoggedIn .cred-card .wallet-total,#authLoggedIn .cred-card .ws,
+  #authLoggedIn .cred-card .acct-row,#authLoggedIn .cred-card .acct-info,#authLoggedIn .cred-card .wallet-total,#authLoggedIn .cred-card .wallet-rows,
   #authLoggedIn .cred-card .cred-line,#authLoggedIn .acct-menu,#authLoggedIn .acct-out{animation:none}
   body.auth-open #authLoggedIn .cred-card .acct-avatar,body.auth-open #authLoggedIn .cred-card .wallet-total .wallet-topup{animation:none}
   #authLoggedIn .cred-card .wallet-total .wallet-topup,#authLoggedIn .menu-item{transition:none}
