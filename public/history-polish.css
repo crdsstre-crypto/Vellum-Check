@@ -1,0 +1,70 @@
+/* history-polish.css: หน้าประวัติรายการบนมือถือ (โหลดหลัง mobile.css)
+   ใช้ข้อมูลและสถานะจริงจากระบบเท่านั้น ไม่มีสถานะจำลอง */
+.hist-lead{display:none}
+@media (max-width:767px){
+  .history-panel,.hist-lead{
+    --h-bg:#090B0E; --h-card:#14171C; --h-line:#292E36; --h-gold:#E4BE62;
+    --h-text:#F5F5F5; --h-sub:#969BA6;
+  }
+  /* A. หัวเรื่อง: ชื่อหน้า 28px + คำอธิบาย 15px ไม่สูงเกินไป */
+  body[data-sheet="hist"] .sheet-head{padding-top:10px;padding-bottom:4px;border-bottom:1px solid var(--h-line);background:linear-gradient(180deg,rgba(228,190,98,.06),transparent 70%),var(--card)}
+  body[data-sheet="hist"] .sheet-head h2{font-size:1.75rem;line-height:1.25;font-weight:700}
+  .hist-lead{display:block;margin:4px 0 0;font-size:.94rem;line-height:1.55;color:var(--h-sub)}
+  body:not([data-sheet="hist"]) .hist-lead{display:none}
+
+  /* C. แท็บ: สูง 56px แตะง่าย แท็บที่เลือกพื้นทองหม่นและตัวอักษรทอง */
+  .hist-tabs{display:flex;gap:8px;margin:0 0 14px;padding:6px;border:1px solid var(--h-line);border-radius:20px;background:transparent}
+  .hist-tab{
+    flex:1 1 0;min-width:0;min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+    padding:6px 8px;border:1px solid transparent;border-radius:15px;background:rgba(255,255,255,.04);color:var(--h-sub);
+    font-size:.92rem;font-weight:700;line-height:1.2;
+    transition:background-color .2s ease,color .2s ease,border-color .2s ease,transform .15s ease;
+  }
+  .hist-tab::before{
+    content:"";width:22px;height:22px;background:currentColor;
+    -webkit-mask:var(--ic) center/contain no-repeat;mask:var(--ic) center/contain no-repeat;
+  }
+  .hist-tab[data-tab="insp"]{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z'/%3E%3Cpath d='M14 3v5h5M9 13h6M9 17h4'/%3E%3C/svg%3E")}
+  .hist-tab[data-tab="pay"]{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 7v10M9.5 9.5h4a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3h4'/%3E%3C/svg%3E")}
+  .hist-tab:active{transform:scale(.98)}
+  .hist-tab.is-on{background:rgba(228,190,98,.14);border-color:var(--h-gold);color:var(--h-gold)}
+
+  /* D. ตัวกรอง: เฉพาะสถานะที่มีในระบบจริง (ทั้งหมด/รอชำระ/สำเร็จ) ห่อบรรทัดแทนการล้นจอ */
+  .hist-filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;overflow:visible}
+  .hist-filters[hidden]{display:none}
+  .hist-chip{
+    flex:0 1 auto;min-height:44px;padding:0 20px;border:1px solid var(--h-line);border-radius:999px;background:rgba(255,255,255,.04);
+    color:var(--h-sub);font-size:.95rem;font-weight:700;
+    transition:background-color .2s ease,color .2s ease,border-color .2s ease,transform .15s ease;
+  }
+  .hist-chip.is-on{background:rgba(228,190,98,.14);border-color:var(--h-gold);color:var(--h-gold)}
+
+  /* E. การ์ดประวัติ */
+  .hist-card,.hist-card.hist-card-btn{
+    margin:0 0 12px;padding:16px;border:1px solid var(--h-line);border-radius:20px;background:var(--h-card);
+  }
+  .hist-card-btn{display:flex;align-items:center;gap:14px;flex-wrap:wrap;transition:border-color .2s ease,transform .15s ease,background-color .2s ease}
+  .hist-card-btn:active,.hist-card-top:active{border-color:rgba(228,190,98,.5)}
+  .hist-card-top{display:flex;align-items:center;gap:14px;min-height:56px;padding:0;width:100%}
+  .hist-ico{width:56px;height:56px;border-radius:16px;background:rgba(228,190,98,.12);color:var(--h-gold)}
+  .hist-ico svg{width:26px;height:26px}
+  .hist-main{flex:1 1 0;min-width:0;gap:4px}
+  .hist-main b{font-size:1.06rem;line-height:1.35;font-weight:600;color:var(--h-text)}
+  .hist-meta{font-size:.9rem;line-height:1.45;color:var(--h-sub)}
+  .hist-tag{display:inline-flex;align-items:center;gap:6px;margin:0;padding:0;background:none;font-size:.88rem;color:var(--h-sub)}
+  .hist-side{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+  .hist-status{padding:3px 12px;font-size:.82rem;line-height:1.6;font-weight:700}
+  .hist-go{
+    flex:none;display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:56px;padding:0 4px;
+    font-size:1rem;font-weight:700;color:var(--h-gold);
+  }
+  .hist-amt{font-size:1.1rem;color:var(--h-gold)}
+  .hist-detail{margin-top:12px;padding-top:12px;border-top:1px solid var(--h-line)}
+  .hist-detail dt,.hist-detail dd{font-size:.9rem}
+  .hist-empty{border:1px dashed var(--h-line);border-radius:20px;padding:28px 18px;background:transparent}
+  .hist-more{display:block;width:100%;min-height:48px;margin-top:4px;border:1px solid var(--h-line);border-radius:16px;background:transparent;color:var(--h-gold);font-weight:700}
+  .hist-retry{min-height:44px;padding:0 20px}
+  .history-panel{padding-bottom:8px}
+  .hist-card{animation-duration:.22s}
+}
+@media (prefers-reduced-motion:reduce){.hist-card,.hist-detail{animation:none}}
