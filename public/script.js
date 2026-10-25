@@ -635,6 +635,10 @@ function ccRow(it, i, tag) {
 // รายการประเด็นทั้งหมดอยู่ที่ "จุดที่ควรตรวจสอบ" ด้านล่างเท่านั้น (ไม่แสดงรายการซ้ำเป็นการ์ดสองชุด)
 // "ระดับความเสี่ยง" (AI ประเมิน) แยกจาก "สถานะการตรวจ" (ผู้ใช้ทำเครื่องหมายเอง) ชัดเจน · ไม่มีคะแนนรวม ไม่ฟันธงผล
 const ICO_REPORT = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7z"/><path d="M14 3v4h4"/><circle cx="11.5" cy="14" r="2.3"/><path d="M13.2 15.7L15 17.5"/></svg>';
+const ST = (b, n) => `<svg viewBox="0 0 64 64" width="${n}" height="${n}" aria-hidden="true" focusable="false">${b}</svg>`;
+const ICO_ST_SHIELD = ST('<ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><path d="M32 5l22 8v17c0 14-9 23-22 29C19 53 10 44 10 30V13z" fill="url(#vcg-t)"/><path d="M32 5l22 8v17c0 14-9 23-22 29z" fill="#1a98ab" opacity=".35"/><path d="M21 31l8 8 15-16" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M16 17l12-5" stroke="#fff" stroke-width="3" opacity=".5" stroke-linecap="round" fill="none"/>', 28);
+const ICO_ST_HIST = ST('<ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><path d="M15 6h22l14 14v30a7 7 0 0 1-7 7H15a7 7 0 0 1-7-7V13a7 7 0 0 1 7-7z" fill="url(#vcg-w)"/><path d="M37 6l14 14H41a4 4 0 0 1-4-4z" fill="#aeb9d1"/><rect x="15" y="26" width="22" height="4" rx="2" fill="url(#vcg-t)"/><rect x="15" y="34" width="16" height="4" rx="2" fill="url(#vcg-p)"/><circle cx="44" cy="44" r="14" fill="url(#vcg-au)"/><circle cx="44" cy="44" r="10" fill="#fff" opacity=".9"/><path d="M44 38v6.5l4 2.5" stroke="#b8750a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>', 30);
+const ICO_ST_NEW = ST('<ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><path d="M15 6h22l14 14v30a7 7 0 0 1-7 7H15a7 7 0 0 1-7-7V13a7 7 0 0 1 7-7z" fill="url(#vcg-w)"/><path d="M37 6l14 14H41a4 4 0 0 1-4-4z" fill="#aeb9d1"/><rect x="15" y="26" width="22" height="4" rx="2" fill="url(#vcg-t)"/><rect x="15" y="34" width="16" height="4" rx="2" fill="url(#vcg-p)"/><circle cx="44" cy="44" r="14" fill="url(#vcg-g)"/><path d="M44 37v14M37 44h14" stroke="#fff" stroke-width="5" stroke-linecap="round"/>', 30);
 const ICO_SHIELD_OK = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"/><path d="M8.8 12.3l2.2 2.2 4.2-4.4"/></svg>';
 function renderCommand(items, result) {
   if (!Array.isArray(items) || !items.length) return '';
@@ -1120,7 +1124,7 @@ function showCreditSheet() {
         <span class="cs-grab" aria-hidden="true"></span>
         <button type="button" class="cs-x" data-cs="close" aria-label="ปิด">✕</button>
         <div class="cs-top">
-          <span class="cs-ico">${ICO_SHIELD_OK}</span>
+          <span class="cs-ico">${ICO_ST_SHIELD}</span>
           <div><h3 id="csTitle">สิทธิ์การใช้งานพร้อมเพิ่มเมื่อคุณต้องการ</h3><p>ผลตรวจเดิมยังอยู่ครบ ไม่ต้องรีบตัดสินใจ</p></div>
         </div>
         <div class="cs-status">
@@ -1128,12 +1132,12 @@ function showCreditSheet() {
           <div class="cs-meter" role="img" aria-label="ใช้เครดิตครบแล้ว"><i></i></div>
         </div>
         <div class="cs-box">
-          <div class="cs-row"><span class="cs-r-ico">${icoHist}</span><p><b>ผลตรวจเดิมยังดูย้อนหลังได้</b><small>เปิดประวัติการตรวจได้โดยไม่ต้องใช้เครดิตเพิ่ม</small></p></div>
-          <div class="cs-row"><span class="cs-r-ico">${icoNew}</span><p><b>ตรวจฉบับใหม่ได้เมื่อพร้อม</b><small>ตรวจสอบราคาและจำนวนครั้งก่อนยืนยันทุกครั้ง</small></p></div>
+          <div class="cs-row"><span class="cs-r-ico">${ICO_ST_HIST}</span><p><b>ผลตรวจเดิมยังดูย้อนหลังได้</b><small>เปิดประวัติการตรวจได้โดยไม่ต้องใช้เครดิตเพิ่ม</small></p></div>
+          <div class="cs-row"><span class="cs-r-ico">${ICO_ST_NEW}</span><p><b>ตรวจฉบับใหม่ได้เมื่อพร้อม</b><small>ตรวจสอบราคาและจำนวนครั้งก่อนยืนยันทุกครั้ง</small></p></div>
         </div>
         <button type="button" class="cs-main wallet-topup" data-cs="close"><span>ดูแพ็กเกจเครดิต</span><i aria-hidden="true">→</i></button>
         <button type="button" class="cs-alt" data-cs="hist">ดูประวัติการตรวจ</button>
-        <p class="cs-fine">${ICO_SHIELD_OK}<span>ไม่มีการชำระเงินโดยไม่ได้รับความยินยอมจากคุณ</span></p>
+        <p class="cs-fine">${ICO_ST_SHIELD}<span>ไม่มีการชำระเงินโดยไม่ได้รับความยินยอมจากคุณ</span></p>
         <p class="cs-foot">ชัดเจน · ไม่บังคับซื้อ · ดูประวัติได้</p>
       </div>`;
     document.body.appendChild(el);
