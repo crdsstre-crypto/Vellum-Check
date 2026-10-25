@@ -38,6 +38,9 @@ export async function initDb() {
     )
   `);
   await pool.query(`CREATE INDEX IF NOT EXISTS inspections_user_idx ON inspections (user_id, created_at)`);
+  // ชื่อรายงานที่ผู้ใช้ตั้งเอง และการปักหมุด (ไม่กระทบเครดิตหรือผลตรวจเดิม)
+  await pool.query(`ALTER TABLE inspections ADD COLUMN IF NOT EXISTS title TEXT`);
+  await pool.query(`ALTER TABLE inspections ADD COLUMN IF NOT EXISTS pinned BOOLEAN NOT NULL DEFAULT false`);
 
   // บัญชี Google ไม่มีรหัสผ่าน และเก็บรหัสประจำตัวของ Google ไว้
   await pool.query(`ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL`);
