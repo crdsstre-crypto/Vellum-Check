@@ -411,13 +411,14 @@ function renderIssueIndex(items) {
   return `<section class="ix" id="issueIndex" aria-label="สารบัญประเด็นที่ควรตรวจสอบ">
     <div class="ix-head"><h3 class="ix-title">จุดที่ควรตรวจสอบ</h3><span class="ix-badge${hasRisk ? '' : ' is-calm'}">พบ ${items.length} ประเด็น</span></div>
     <p class="ix-sub">${sub}</p>
+    ${items.length >= 3 ? '<div class="ix-search-w"><input type="search" id="ixSearch" class="ix-search" placeholder="ค้นหาในประเด็น เช่น ค่าปรับ เงินประกัน การบอกเลิก" aria-label="ค้นหาในประเด็นที่พบ" autocomplete="off" enterkeyhint="search"></div>' : ''}
     ${seg}
     <div class="ix-prog" aria-live="polite">
       <div class="ix-prog-row"><span class="ix-prog-l">ตรวจแล้ว <b class="ix-prog-n">0/${items.length}</b></span>
         <div class="ix-bar" role="progressbar" aria-label="ความคืบหน้าการตรวจ" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i style="width:0%"></i></div></div>
       <p class="ix-prog-note" hidden>คุณดูครบทุกประเด็นแล้ว ควรอ่านสัญญาทั้งฉบับอีกครั้งก่อนลงนาม</p>
     </div>
-    <div class="ix-list">${rows}</div>${more}
+    <div class="ix-list">${rows}</div><p class="ix-nohit" hidden>ไม่พบประเด็นที่ตรงกับคำค้น ลองใช้คำอื่นหรือล้างตัวกรอง</p>${more}
     <details class="ix-legend"><summary>วิธีอ่านสีและข้อควรทราบ</summary>
       <ul>
         <li><i class="k-gold"></i>ทอง: ตัวเลข ระยะเวลา จำนวนเงินในข้อความสัญญา</li>
@@ -458,6 +459,7 @@ function syncReview() {
   if (bar) { bar.setAttribute('aria-valuenow', String(pct)); bar.firstElementChild.style.width = pct + '%'; }
   const note = els.result.querySelector('.ix-prog-note');
   if (note) note.hidden = !(total && reviewed.size === total);
+  syncCommand();
 }
 
 let filterLevel = 'all';
@@ -468,18 +470,32 @@ function calmMotion() {
   return document.documentElement.hasAttribute('data-calm') ||
     (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 }
-// กรองประเด็นตามระดับ: ซ่อนทั้งรายการในสารบัญและการ์ดในรายงาน
+// กรองประเด็นตามระดับและคำค้น: ซ่อนทั้งรายการในสารบัญและการ์ดในรายงาน
+let ixQuery = '';
+const normQ = t => String(t || '').toLowerCase().replace(/\s+/g, '');
+function issueHay(it) {
+  return normQ([it.title, it.topic, it.explanation, it.quote, it.suggested_fix, it.how_to_negotiate, it.impact, it.reference].join(' '));
+}
 function applyFilter(level) {
   filterLevel = level;
+  const q = normQ(ixQuery);
+  const items = (lastResult && Array.isArray(lastResult.items)) ? lastResult.items : [];
+  const hit = i => !q || (items[i] ? issueHay(items[i]).includes(q) : true);
   const more = els.result.querySelector('[data-ixmore]');
   const expanded = more && more.getAttribute('aria-expanded') === 'true';
+  let shownN = 0;
   els.result.querySelectorAll('[data-ixcard]').forEach(c => {
-    c.hidden = level === 'all' ? (c.hasAttribute('data-ixextra') && !expanded) : !c.classList.contains('lv-' + level);
+    const lvOk = level === 'all' || c.classList.contains('lv-' + level);
+    const folded = level === 'all' && !q && c.hasAttribute('data-ixextra') && !expanded;
+    c.hidden = !(lvOk && hit(+c.dataset.ixcard)) || folded;
+    if (lvOk && hit(+c.dataset.ixcard)) shownN++;
   });
-  els.result.querySelectorAll('details.item').forEach(d => {
-    d.hidden = !(level === 'all' || d.classList.contains('lv-' + level));
+  els.result.querySelectorAll('details.item').forEach((d, i) => {
+    d.hidden = !((level === 'all' || d.classList.contains('lv-' + level)) && hit(i));
   });
-  if (more) more.hidden = level !== 'all';
+  if (more) more.hidden = level !== 'all' || !!q;
+  const nohit = els.result.querySelector('.ix-nohit');
+  if (nohit) nohit.hidden = shownN > 0;
   els.result.querySelectorAll('[data-ixfilter]').forEach(b => b.setAttribute('aria-pressed', b.dataset.ixfilter === level ? 'true' : 'false'));
 }
 
@@ -488,7 +504,12 @@ function focusIssue(idx) {
   const all = [...els.result.querySelectorAll('details.item')];
   const target = all[idx];
   if (!target) { toast('ไม่พบประเด็นนี้'); return; }
-  if (target.hidden) applyFilter('all');
+  if (target.hidden) {
+    ixQuery = '';
+    const sb = document.getElementById('ixSearch');
+    if (sb) sb.value = '';
+    applyFilter('all');
+  }
   if (lastIssueIdx < 0 || ixVisible) ixReturnY = window.scrollY;
   if (window.matchMedia('(max-width: 767px)').matches) {
     all.forEach(d => { if (d !== target) d.open = false; });
@@ -571,6 +592,129 @@ function watchIssueIndex() {
   ixObserver.observe(box);
 }
 
+
+// ---------- Command Center + มิติความเสี่ยง (ใช้ข้อมูลที่ระบบมีจริงเท่านั้น ไม่เดาเพิ่ม) ----------
+const URGENCY_LABEL = {
+  before_sign: 'ควรจัดการก่อนลงนาม',
+  before_pay: 'ควรจัดการก่อนชำระเงิน/ส่งมอบ',
+  before_deadline: 'มีกำหนดเวลาที่ต้องระวัง',
+  monitor: 'ติดตามได้',
+};
+const URGENCY_RANK = { before_sign: 0, before_pay: 1, before_deadline: 2, monitor: 3 };
+const LEVEL_RANK = { check_detail: 0, caution: 1, low: 2 };
+const lvKey = it => (LEVEL_RANK[it && it.level] !== undefined ? it.level : 'low');
+const urRank = it => (URGENCY_RANK[it && it.urgency] !== undefined ? URGENCY_RANK[it.urgency] : 3);
+// ผลจากประวัติเก่าไม่มีฟิลด์ urgency: ต้องไม่แสดงเหมือนระบบประเมินแล้ว
+const hasUrgencyData = items => items.some(it => it && URGENCY_RANK[it.urgency] !== undefined);
+const isPending = it => !!(it && (it.missing || String(it.uncertainty || '').trim()));
+
+function ccTopIndex(items) {
+  let best = -1;
+  items.forEach((it, i) => {
+    if (best < 0) { best = i; return; }
+    const a = items[best];
+    if (LEVEL_RANK[lvKey(it)] < LEVEL_RANK[lvKey(a)] ||
+        (LEVEL_RANK[lvKey(it)] === LEVEL_RANK[lvKey(a)] && urRank(it) < urRank(a))) best = i;
+  });
+  return best;
+}
+function ccBeforeSign(items) {
+  const withData = hasUrgencyData(items);
+  const list = items.map((it, i) => ({ it, i })).filter(({ it }) => (withData
+    ? lvKey(it) !== 'low' && urRank(it) < 3
+    : lvKey(it) === 'check_detail'));
+  return { withData, list: list.sort((a, b) => urRank(a.it) - urRank(b.it) || a.i - b.i) };
+}
+function ccRow(it, i, tag) {
+  return `<button type="button" class="cc-row lv-${lvKey(it)}" data-jumpidx="${i}">
+    <span class="cc-row-tx"><small>${esc(tag)}</small><b>${esc(it.title)}</b></span>
+    <span class="cc-go" aria-hidden="true">›</span>
+  </button>`;
+}
+function renderCommand(items, result) {
+  if (!Array.isArray(items) || !items.length) return '';
+  const n = items.length;
+  const cnt = k => items.filter(it => lvKey(it) === k).length;
+  const hi = cnt('check_detail'), mid = cnt('caution');
+  const pending = items.filter(isPending).length;
+  const status = hi || mid ? 'พบประเด็นที่ต้องพิจารณา' : 'ไม่พบประเด็นที่ต้องรีบตรวจ';
+  const chips = [
+    hi ? `<span class="cc-chip is-hi">${hi} ประเด็นสำคัญ</span>` : '',
+    mid ? `<span class="cc-chip is-mid">${mid} ควรระวัง</span>` : '',
+    pending ? `<span class="cc-chip is-wait">${pending} รอตรวจสอบ</span>` : '',
+  ].join('');
+
+  const ti = ccTopIndex(items);
+  const top = items[ti];
+  const topWhy = ixShort(top);
+  const q1 = `<div class="cc-q"><h4><i>1</i>อะไรสำคัญที่สุด?</h4>
+    ${ccRow(top, ti, `ประเด็น ${pad2(ti + 1)} · ${CONFIG.levelLabel[lvKey(top)]}`)}
+    ${topWhy ? `<p class="cc-why">${esc(topWhy)}</p>` : ''}</div>`;
+
+  const bs = ccBeforeSign(items);
+  const shown = bs.list.slice(0, 3);
+  const q2 = `<div class="cc-q"><h4><i>2</i>อะไรต้องจัดการก่อนลงนาม?</h4>
+    ${shown.length
+      ? shown.map(({ it, i }) => ccRow(it, i, bs.withData ? (URGENCY_LABEL[it.urgency] || '') : 'ควรตรวจละเอียดก่อนตัดสินใจ')).join('')
+      : '<p class="cc-why">ระบบยังไม่ได้ระบุประเด็นที่ต้องจัดการก่อนลงนาม แต่ควรอ่านทั้งฉบับอีกครั้งก่อนตัดสินใจ</p>'}
+    ${bs.list.length > shown.length ? `<p class="cc-why">และอีก ${bs.list.length - shown.length} ประเด็น ดูได้ในรายการด้านล่าง</p>` : ''}
+    ${bs.withData ? '' : (shown.length ? '<p class="cc-why">ผลนี้มาจากประวัติเก่า ไม่มีข้อมูลความเร่งด่วน จึงแสดงตามระดับความเสี่ยง</p>' : '')}</div>`;
+
+  const miss = Array.isArray(result && result.missing_info) ? result.missing_info.length : 0;
+  const q3 = `<div class="cc-q"><h4><i>3</i>มีอะไรที่ยังตรวจไม่ครบ?</h4>
+    <p class="cc-line">ยังไม่ได้ทำเครื่องหมายตรวจ <b class="cc-left">${n}</b> จาก ${n} ประเด็น</p>
+    ${pending ? `<p class="cc-line">มี <b>${pending}</b> ประเด็นที่ระบบระบุว่าข้อมูลไม่ครบหรือไม่พบข้อความอ้างอิง</p>` : ''}
+    ${miss ? `<p class="cc-line">มี <b>${miss}</b> หัวข้อที่ไม่พบในข้อความที่ตรวจ (ไม่ได้แปลว่าสัญญาไม่มี)</p>` : ''}
+    <button type="button" class="cc-next" data-ccnext="1">เปิดประเด็นแรกที่ยังไม่ตรวจ <span aria-hidden="true">›</span></button></div>`;
+
+  return `<section class="cc" id="commandCenter" aria-label="สรุปสิ่งที่ควรทำก่อน">
+    <p class="cc-kick">COMMAND CENTER</p>
+    <div class="cc-head"><h3>${esc(status)}</h3></div>
+    ${chips ? `<div class="cc-chips">${chips}</div>` : ''}
+    ${q1}${q2}${q3}
+    <p class="cc-note">จัดลำดับจากการประเมินของ AI เพื่อช่วยคัดกรองเบื้องต้น ไม่ใช่คำวินิจฉัยทางกฎหมาย</p>
+  </section>`;
+}
+function syncCommand() {
+  const total = els.result.querySelectorAll('details.item').length;
+  const left = els.result.querySelector('.cc-left');
+  if (left) left.textContent = String(Math.max(0, total - reviewed.size));
+  const nx = els.result.querySelector('[data-ccnext]');
+  if (nx) nx.hidden = total > 0 && reviewed.size >= total;
+}
+function ccOpenNext() {
+  const total = els.result.querySelectorAll('details.item').length;
+  for (let i = 0; i < total; i++) if (!reviewed.has(i)) { focusIssue(i); return; }
+  toast('ตรวจครบทุกประเด็นแล้ว ควรอ่านสัญญาทั้งฉบับอีกครั้งก่อนลงนาม');
+}
+
+// มิติความเสี่ยง 4 ด้านในการ์ดประเด็น: ผลกระทบ · ความเร่งด่วน · หลักฐาน · ความไม่แน่นอน
+// ผลกระทบ/ความเร่งด่วน/ความไม่แน่นอน มาจากการประเมินของ AI · หลักฐานคำนวณจากการตรวจข้อความจริงฝั่งเซิร์ฟเวอร์
+function renderDims(item) {
+  const rows = [];
+  const impact = String(item.impact || '').trim();
+  if (impact) rows.push(['ผลกระทบ', esc(impact)]);
+  if (URGENCY_RANK[item.urgency] !== undefined) {
+    const note = String(item.urgency_note || '').trim();
+    rows.push(['ความเร่งด่วน', `<b>${esc(URGENCY_LABEL[item.urgency])}</b>${note ? ' · ' + esc(note) : ''}`]);
+  }
+  const clause = clauseOf(item);
+  const ref = String(item.reference || '').trim();
+  const ev = [];
+  ev.push(item.missing ? '<span class="dm-bad">ไม่พบข้อความนี้ในสัญญาต้นฉบับ</span>' : 'ข้อความตรงกับสัญญา');
+  if (clause) ev.push(`ข้อ ${esc(clause)} ของสัญญา`);
+  if (ref) ev.push(`มาตราที่ AI ระบุ: ${esc(ref)} (ยังไม่ได้ตรวจเทียบกฎหมาย)`);
+  rows.push(['หลักฐาน', ev.join(' · ')]);
+  const unc = String(item.uncertainty || '').trim();
+  rows.push(['ความไม่แน่นอน', unc ? esc(unc) : '<span class="dm-mute">ระบบไม่ได้ระบุ (ไม่ได้แปลว่าไม่มีข้อมูลที่ขาด)</span>']);
+  return `<div class="dims"><h4>มิติความเสี่ยง</h4><dl>${rows.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl></div>`;
+}
+// แถบสั้นใต้เหตุผลในการ์ด: ความเร่งด่วน (ถ้าระบบระบุ)
+function renderUrgencyChip(item) {
+  if (URGENCY_RANK[item.urgency] === undefined || item.urgency === 'monitor') return '';
+  return `<p class="ur-chip ur-${item.urgency}"><span aria-hidden="true">●</span> ${esc(URGENCY_LABEL[item.urgency])}</p>`;
+}
+
 function renderBrief(summary) {
   return `<div class="brief">
     <p>📋 <b>งาน:</b> ${esc(summary.job) || '—'}</p>
@@ -640,7 +784,7 @@ function renderDetail(item) {
   const fix = item.suggested_fix ? esc(item.suggested_fix) : '';
   const nego = item.suggested_fix && item.how_to_negotiate ? renderNext(item) : '';
   const src = renderSource(item);
-  if (!hasQuote && !fix && !nego && !src) return '';
+  const dims = renderDims(item);
 
   const copyBtn = (which, label) =>
     `<button type="button" class="sg-copy" data-act="copyfix" data-copy="${which}">${ICO_COPY}<span>${label}</span></button>`;
@@ -680,7 +824,7 @@ function renderDetail(item) {
 
   return `<details class="sg-more">
     ${sgSummary('ดูรายละเอียด ข้อกฎหมาย และข้อความต้นฉบับ', 'ซ่อนรายละเอียด', 'แหล่งอ้างอิงและข้อความเปรียบเทียบ')}
-    ${nego}${src}${body}${note}
+    ${dims}${nego}${src}${body}${note}
   </details>`;
 }
 
@@ -719,6 +863,7 @@ function renderItem(item, index, total) {
       <span class="tag">${esc(CONFIG.levelLabel[item.level] || '')}</span>
     </summary>
     ${renderReason(item.explanation)}
+    ${renderUrgencyChip(item)}
     ${renderFix(item)}
     ${item.missing ? renderQuote(item) : ''}
     ${renderDetail(item)}
@@ -835,6 +980,7 @@ function renderResult(result) {
     }
   }
   filterLevel = 'all';
+  ixQuery = '';
   const items = Array.isArray(result.items) ? result.items : [];
   const meta = reportMeta();
 
@@ -850,6 +996,7 @@ function renderResult(result) {
         <p class="rpt-meta">${meta.typeText ? 'ประเภทเอกสาร: ' + esc(meta.typeText) + ' · ' : ''}${esc(meta.date)}</p>
       </header>
       ${renderSummary(result.risk_counts || { check_detail: 0, caution: 0, low: 0 }, items.length >= 2)}
+      ${renderCommand(items, result)}
       ${renderIssueIndex(items)}
       ${renderBrief(result.summary || {})}
       ${body}
@@ -1126,7 +1273,11 @@ function init() {
       if (f) handleUpload(f);
     });
   }
+  els.result.addEventListener('input', function (e) {
+    if (e.target && e.target.id === 'ixSearch') { ixQuery = e.target.value; applyFilter(filterLevel); }
+  });
   els.result.addEventListener('click', function (e) {
+    if (e.target.closest('[data-ccnext]')) { ccOpenNext(); return; }
     const row = e.target.closest('[data-jumpidx]');
     if (row) { focusIssue(+row.dataset.jumpidx); return; }
     const fl = e.target.closest('[data-ixfilter]');
