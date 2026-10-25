@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="care.css?v=2">
 <link rel="stylesheet" href="privacy.css?v=1">
 <link rel="stylesheet" href="mobile-polish.css?v=1" media="(max-width: 767px)">
-<link rel="stylesheet" href="history-polish.css?v=5">
+<link rel="stylesheet" href="history-polish.css?v=6">
 <link rel="stylesheet" href="print.css?v=1" media="print">
 </head>
 <body>
@@ -178,6 +178,12 @@
               <b class="lib-title">คลังรายงานของฉัน</b><small>รายงานที่บันทึกไว้ทั้งหมด</small></div>
             <div class="lib-count" aria-live="polite"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="3"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg><b id="libCount">0</b><span>รายงาน</span></div>
           </header>
+          <div class="lib-stats" id="libStats" role="group" aria-label="ภาพรวมคลังรายงาน" hidden>
+            <button type="button" class="lib-stat is-on" data-q="all"><b id="stAll">0</b><span>รายงานทั้งหมด</span></button>
+            <button type="button" class="lib-stat" data-q="done"><b id="stDone">0</b><span>ตรวจเสร็จแล้ว</span></button>
+            <button type="button" class="lib-stat" data-q="pin"><b id="stPin">0</b><span>ปักหมุด</span></button>
+            <button type="button" class="lib-stat" data-q="review"><b id="stReview">0</b><span>ประเด็นควรทบทวน</span></button>
+          </div>
           <div class="hist-tabs" role="tablist" aria-label="ประเภทประวัติ">
             <button type="button" role="tab" class="hist-tab is-on" data-tab="insp" aria-selected="true">ตรวจสัญญา</button>
             <button type="button" role="tab" class="hist-tab" data-tab="pay" aria-selected="false">เติมเครดิต</button>
@@ -188,9 +194,10 @@
             <div class="lib-chips" id="libChips" role="group" aria-label="ตัวกรองด่วน">
               <button type="button" class="lib-chip is-on" data-q="all" aria-pressed="true">ทั้งหมด <span id="libChipAll">0</span></button>
               <button type="button" class="lib-chip" data-q="pin" aria-pressed="false">ปักหมุด <span id="libChipPin">0</span></button>
-              <button type="button" class="lib-chip" data-q="type" aria-pressed="false">ประเภทสัญญา <span aria-hidden="true">▾</span></button>
+              <button type="button" class="lib-chip" data-q="type" aria-pressed="false" aria-haspopup="listbox" aria-expanded="false"><span id="libTypeLbl">ประเภทสัญญา</span> <span aria-hidden="true">▾</span></button>
+              <button type="button" class="lib-chip is-plain" data-q="sort" aria-haspopup="listbox" aria-expanded="false"><span id="libSortLbl">ใหม่ไปเก่า</span> <span aria-hidden="true">▾</span></button>
             </div>
-            <div class="hist-selects">
+            <div class="hist-selects" hidden>
               <select id="histType" aria-label="กรองตามประเภทสัญญา"><option value="all">ทุกประเภท</option></select>
               <select id="histSort" aria-label="เรียงลำดับ"><option value="new">ใหม่ไปเก่า</option><option value="old">เก่าไปใหม่</option></select>
             </div>
@@ -451,7 +458,7 @@
   // ประวัติตรวจเก็บเฉพาะรายการที่ตรวจสำเร็จ จึงแสดงป้าย "สำเร็จ" ได้จริง
   var TYPE_NAME = { rent: 'สัญญาเช่า', sale: 'สัญญาซื้อขาย', employment: 'สัญญาจ้างงาน', service: 'สัญญาจ้างบริการ', loan: 'สัญญากู้ยืมเงิน', shareholder: 'สัญญาหุ้นส่วน', nda: 'สัญญารักษาความลับ', other: 'สัญญาอื่น ๆ' };
   // ---- คลังรายงานส่วนตัว: ชื่อ ค้นหา กรอง เรียง ปักหมุด เปลี่ยนชื่อ ลบ ----
-  var view = { q: '', type: 'all', sort: 'new', pinOnly: false };
+  var view = { q: '', type: 'all', sort: 'new', pinOnly: false, reviewOnly: false };
   var tools = document.getElementById('histTools');
   function shortDate(iso) {
     try { return new Date(iso).toLocaleDateString('th-TH', { day: 'numeric', month: 'short' }); } catch (e) { return ''; }
@@ -488,12 +495,40 @@
     if (cur !== 'all' && !present[cur]) cur = 'all';
     sel.value = cur; view.type = cur;
   }
+  var counted = {};
+  function countTo(id, to) {
+    var el = document.getElementById(id); if (!el) return;
+    var from = counted[id];
+    counted[id] = to;
+    if (from === to) { el.textContent = String(to); return; }
+    if (from === undefined && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) && to > 0) from = 0;
+    if (from === undefined || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) { el.textContent = String(to); return; }
+    var t0 = null, dur = 600;
+    function step(ts) {
+      if (t0 === null) t0 = ts;
+      var k = Math.min(1, (ts - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = String(Math.round(from + (to - from) * e));
+      if (k < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
   function updateLibHead() {
     var head = document.getElementById('libHead');
     var pins = inspItems.filter(function (x) { return x.pinned; }).length;
     if (head) head.hidden = !inspItems.length || currentKind === 'pay';
     var set = function (id, v) { var e = document.getElementById(id); if (e) e.textContent = String(v); };
     set('libCount', inspItems.length); set('libChipAll', inspItems.length); set('libChipPin', pins);
+    var rev = inspItems.reduce(function (n, x) { return n + (x.summary ? x.summary.check_detail || 0 : 0); }, 0);
+    var st = document.getElementById('libStats'); if (st) st.hidden = !inspItems.length || currentKind === 'pay';
+    countTo('stAll', inspItems.length); countTo('stDone', inspItems.length); countTo('stPin', pins); countTo('stReview', rev);
+    var tl = document.getElementById('libTypeLbl'); if (tl) tl.textContent = view.type !== 'all' ? (TYPE_NAME[view.type] || 'ประเภทสัญญา') : 'ประเภทสัญญา';
+    var sl = document.getElementById('libSortLbl'); if (sl) sl.textContent = view.sort === 'old' ? 'เก่าไปใหม่' : 'ใหม่ไปเก่า';
+    document.querySelectorAll('#libStats .lib-stat').forEach(function (b) {
+      var k = b.getAttribute('data-q');
+      var on = k === 'pin' ? view.pinOnly : k === 'review' ? view.reviewOnly : (!view.pinOnly && !view.reviewOnly);
+      if (k === 'done') on = false;
+      b.classList.toggle('is-on', on);
+    });
     var chips = document.querySelectorAll('#libChips .lib-chip');
     chips.forEach(function (c) {
       var k = c.getAttribute('data-q'), on = k === 'pin' ? view.pinOnly : k === 'type' ? view.type !== 'all' : (!view.pinOnly && view.type === 'all');
@@ -508,6 +543,7 @@
     var q = view.q.trim().toLowerCase();
     var rows = inspItems.filter(function (it) {
       if (view.pinOnly && !it.pinned) return false;
+      if (view.reviewOnly && !(it.summary && it.summary.check_detail > 0)) return false;
       if (view.type !== 'all' && it.contractType !== view.type) return false;
       if (!q) return true;
       return (titleOf(it) + ' ' + (TYPE_NAME[it.contractType] || '')).toLowerCase().indexOf(q) >= 0;
@@ -539,7 +575,7 @@
               '<span class="hr-chip is-ok">ตรวจเสร็จแล้ว</span></span></div>' +
           '<button type="button" class="hr-menu" data-menu aria-label="จัดการรายงาน" aria-haspopup="dialog">' +
             '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg></button></div>' +
-        summary +
+        topLine(it) + summary +
         '<div class="hr-foot"><span class="hr-credit">ใช้เครดิต 1 หน่วย</span>' +
           '<button type="button" class="hr-open" data-open>ดูรายงานฉบับเต็ม<span aria-hidden="true"> ›</span></button></div></div>';
     }).join('') + moreBtn(rows.length);
@@ -548,6 +584,13 @@
       savedScroll = null;
       if (sbody) requestAnimationFrame(function () { sbody.scrollTop = pos; });
     }
+  }
+  function topLine(it) {
+    if (!it.topIssue || !it.topIssue.title) return '';
+    var lv = it.topIssue.level === 'check_detail' ? 'is-high' : it.topIssue.level === 'caution' ? 'is-mid' : 'is-low';
+    var lbl = it.topIssue.level === 'check_detail' ? 'ควรตรวจละเอียด' : it.topIssue.level === 'caution' ? 'ควรระวัง' : 'ข้อสังเกต';
+    return '<button type="button" class="hr-top-issue ' + lv + '" data-open aria-label="เปิดรายงานที่ประเด็นสำคัญที่สุด"><span class="hr-dot" aria-hidden="true"></span>' +
+      '<span class="hr-ti-txt"><small>ประเด็นสำคัญที่สุด · ' + lbl + '</small><b>' + esc(it.topIssue.title) + '</b></span></button>';
   }
   function findItem(id) { return inspItems.filter(function (x) { return String(x.id) === String(id); })[0]; }
   async function patchItem(id, body) {
@@ -558,6 +601,42 @@
     var data = await res.json().catch(function () { return {}; });
     if (!res.ok) throw new Error(data.error || 'บันทึกไม่สำเร็จ ลองใหม่อีกครั้ง');
   }
+  // เมนูเลือกแบบกำหนดเอง (แทน dropdown ของระบบ): เลือกแล้วปิดทันที แสดงสถานะที่เลือกจุดเดียว
+  var popEl = null, popBtn = null;
+  function closePop() {
+    if (!popEl) return;
+    popEl.remove(); popEl = null;
+    if (popBtn) { popBtn.setAttribute('aria-expanded', 'false'); popBtn = null; }
+  }
+  function openPop(btn, kind) {
+    if (popEl && popBtn === btn) { closePop(); return; }
+    closePop();
+    var opts = kind === 'sort'
+      ? [['new', 'ใหม่ไปเก่า'], ['old', 'เก่าไปใหม่']]
+      : [['all', 'ทุกประเภท']].concat(Object.keys(TYPE_NAME).filter(function (k) {
+          return inspItems.some(function (x) { return x.contractType === k; });
+        }).map(function (k) { return [k, TYPE_NAME[k]]; }));
+    var cur = kind === 'sort' ? view.sort : view.type;
+    popEl = document.createElement('div');
+    popEl.className = 'lib-pop'; popEl.setAttribute('role', 'listbox');
+    popEl.innerHTML = opts.map(function (o) {
+      return '<button type="button" role="option" class="lib-opt' + (o[0] === cur ? ' is-sel' : '') + '" data-v="' + esc(o[0]) + '" aria-selected="' + (o[0] === cur) + '">' +
+        '<span>' + esc(o[1]) + '</span><i aria-hidden="true">' + (o[0] === cur ? '✓' : '') + '</i></button>';
+    }).join('');
+    var host = document.getElementById('libChips');
+    host.parentNode.insertBefore(popEl, host.nextSibling);
+    popBtn = btn; btn.setAttribute('aria-expanded', 'true');
+    popEl.addEventListener('click', function (e) {
+      var o = e.target.closest('.lib-opt'); if (!o) return;
+      var v = o.getAttribute('data-v');
+      if (kind === 'sort') view.sort = v; else view.type = v;
+      closePop(); shown = PAGE; renderInspections();
+    });
+  }
+  document.addEventListener('click', function (e) {
+    if (popEl && !popEl.contains(e.target) && !(popBtn && popBtn.contains(e.target))) closePop();
+  });
+  document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') closePop(); });
   // แผ่นล่างสำหรับเมนูจัดการ เปลี่ยนชื่อ และยืนยันการลบ
   var sheetEl = null, lastFocus = null, savedScroll = null;
   function closeSheet() {
@@ -581,6 +660,7 @@
   function openMenu(id) {
     var it = findItem(id); if (!it) return;
     var sh = openSheet('<p class="hs-title">' + esc(titleOf(it)) + '</p>' +
+      '<button type="button" class="hs-act" data-hs-act="open">เปิดรายงาน</button>' +
       '<button type="button" class="hs-act" data-hs-act="rename">เปลี่ยนชื่อรายงาน</button>' +
       '<button type="button" class="hs-act" data-hs-act="pin">' + (it.pinned ? 'เลิกปักหมุด' : 'ปักหมุดรายงานนี้') + '</button>' +
       '<button type="button" class="hs-act is-danger" data-hs-act="del">ลบรายงานนี้</button>' +
@@ -612,6 +692,7 @@
     var id = sheetEl.dataset.id, act = b.getAttribute('data-hs-act');
     var err = sheetEl.querySelector('.hs-err');
     function fail(m) { if (err) { err.textContent = m; err.hidden = false; } b.disabled = false; }
+    if (act === 'open') { closeSheet(); openOneResult(id); return; }
     if (act === 'rename') { openRename(id); return; }
     if (act === 'del') { openDelete(id); return; }
     b.disabled = true;               // กันกดซ้ำจนเกิดคำขอซ้ำ
@@ -636,7 +717,7 @@
     var to = null;
     var sInput = document.getElementById('histSearch'), sClear = document.getElementById('histSearchClear');
     function resetFilters() {
-      sInput.value = ''; view.q = ''; view.type = 'all'; view.pinOnly = false; document.getElementById('histType').value = 'all';
+      sInput.value = ''; view.q = ''; view.type = 'all'; view.pinOnly = false; view.reviewOnly = false; document.getElementById('histType').value = 'all';
       sClear.hidden = true; shown = PAGE; renderInspections();
     }
     window.vcHistResetFilters = resetFilters;
@@ -651,7 +732,17 @@
       var k = c.getAttribute('data-q');
       if (k === 'all') { view.pinOnly = false; view.type = 'all'; document.getElementById('histType').value = 'all'; }
       else if (k === 'pin') { view.pinOnly = !view.pinOnly; }
-      else { var sel = document.getElementById('histType'); try { sel.showPicker ? sel.showPicker() : sel.focus(); } catch (er) { sel.focus(); } return; }
+      else if (k === 'type') { openPop(c, 'type'); return; }
+      else if (k === 'sort') { openPop(c, 'sort'); return; }
+      view.reviewOnly = false;
+      shown = PAGE; renderInspections();
+    });
+    document.getElementById('libStats').addEventListener('click', function (e) {
+      var b = e.target.closest('.lib-stat'); if (!b) return;
+      var k = b.getAttribute('data-q');
+      if (k === 'all' || k === 'done') { view.pinOnly = false; view.reviewOnly = false; view.type = 'all'; }
+      else if (k === 'pin') { view.pinOnly = !view.pinOnly; view.reviewOnly = false; }
+      else if (k === 'review') { view.reviewOnly = !view.reviewOnly; view.pinOnly = false; }
       shown = PAGE; renderInspections();
     });
     document.getElementById('histType').addEventListener('change', function (e) { view.type = e.target.value; shown = PAGE; renderInspections(); });
