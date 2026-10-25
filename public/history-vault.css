@@ -168,5 +168,42 @@
   #authLoggedIn .menu-ico{border:1px solid var(--v-gold-line);background:transparent;color:var(--v-gold);border-radius:12px}
   #authLoggedIn .acct-out{margin-top:12px;border:1px solid rgba(229,72,77,.35);border-radius:16px;background:rgba(229,72,77,.06);color:#f7a6ab}
 
+  /* ---------- รอบ 5: บัญชีของฉัน — Modern SaaS + Colorful Fintech (เรียบ ไม่มีแสงวิ่ง) ----------
+     ฟ้า = เครดิตตรวจ/ข้อมูลบัญชี · เขียว = เครดิตเสียง/ความเป็นส่วนตัว · ม่วง = การแสดงผล · อำพัน = ปุ่มเติมเครดิต */
+  #authLoggedIn{--a-card:#1A2230;--a-line:rgba(255,255,255,.07);--a-amber:#E8B84D;--a-blue:#5BA8FF;--a-green:#39D6A0;--a-purple:#A78BFA;--a-orange:#FF9F59}
+  #authLoggedIn .acct-row{background:var(--a-card);border-color:var(--a-line)}
+  #authLoggedIn .acct-avatar{box-shadow:none;border-color:var(--a-blue)}
+  #authLoggedIn .wallet-total{display:grid;grid-template-columns:1fr 1fr;column-gap:10px;row-gap:10px;padding:14px;background:var(--a-card);border:1px solid var(--a-line);box-shadow:none;border-radius:20px}
+  #authLoggedIn .wallet-total-label{grid-column:1/-1;grid-row:1;align-self:auto}
+  #authLoggedIn .wallet-total-num{grid-column:1/-1;grid-row:2}
+  #authLoggedIn .wallet-total-num b{color:var(--a-amber);font-size:2.4rem}
+  #authLoggedIn .wallet-rows{grid-column:1/-1;grid-row:3;display:grid;grid-template-columns:1fr 1fr;gap:10px;min-width:0;padding:0;border:0}
+  #authLoggedIn .wallet-rows>div{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:10px 12px;border-radius:14px;background:rgba(91,168,255,.12)}
+  #authLoggedIn .wallet-rows>div:nth-child(1) dt{color:var(--a-blue)}
+  #authLoggedIn .wallet-rows>div:nth-child(2){background:rgba(57,214,160,.12)}
+  #authLoggedIn .wallet-rows>div:nth-child(2) dt{color:var(--a-green)}
+  #authLoggedIn .wallet-rows dt{font-size:.8rem;font-weight:600}
+  #authLoggedIn .wallet-rows dd{font-size:.8rem;color:var(--h-sub,#9aa3b2)}
+  #authLoggedIn .wallet-rows dd b{font-size:1.25rem;color:var(--h-text,#f5f5f5)}
+  #authLoggedIn .wallet-quick{grid-column:1/-1;grid-row:4}
+  #authLoggedIn .wallet-total .wallet-topup{background:var(--a-amber);color:#1a1405;border-radius:14px}
+
+  #authLoggedIn .wallet-list-title::before{background:var(--a-blue)}
+  #authLoggedIn .wallet-card{background:var(--a-card);border-color:var(--a-line);box-shadow:none}
+  #authLoggedIn .wallet-card-check .wallet-ico{background:rgba(91,168,255,.14);border-color:transparent;color:var(--a-blue)}
+  #authLoggedIn .wallet-card-voice .wallet-ico{background:rgba(57,214,160,.14);border-color:transparent;color:var(--a-green)}
+  #authLoggedIn .wallet-card-bottom{border-top-color:var(--a-line)}
+  #authLoggedIn .wallet-card-num b{color:var(--h-text,#f5f5f5)}
+  #authLoggedIn .wallet-card-check .wallet-topup{border-color:rgba(91,168,255,.5);color:var(--a-blue)}
+  #authLoggedIn .wallet-card-voice .wallet-topup{border-color:rgba(57,214,160,.5);color:var(--a-green)}
+
+  #authLoggedIn .acct-menu{background:var(--a-card);border-color:var(--a-line)}
+  #authLoggedIn .menu-item{border-color:var(--a-line)}
+  #authLoggedIn .menu-ico{border:0;background:rgba(91,168,255,.14);color:var(--a-blue)}
+  #authLoggedIn #privBtn .menu-ico{background:rgba(57,214,160,.14);color:var(--a-green)}
+  #authLoggedIn #dispBtn .menu-ico{background:rgba(167,139,250,.14);color:var(--a-purple)}
+  #authLoggedIn .acct-menu::before{color:var(--h-sub,#9aa3b2)}
+  #authLoggedIn .acct-out{background:rgba(255,92,92,.08);border-color:rgba(255,92,92,.3)}
+
   @media (prefers-reduced-motion:reduce){#histList .hr2,.hist-search input,.lib-seg-b{transition:none}}
 }
