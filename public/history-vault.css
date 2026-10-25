@@ -124,5 +124,7 @@
   .pay-row .hist-amt{font-size:1.05rem;font-weight:700;color:var(--v-gold)}
   @media (max-width:360px){.pay-thumb{display:none}.pay-hub .ph-bal b{font-size:1.6rem}}
 
+  .pay-row .hist-ico{display:none}
+
   @media (prefers-reduced-motion:reduce){#histList .hr2,.hist-search input,.lib-seg-b{transition:none}}
 }
