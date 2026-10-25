@@ -200,3 +200,45 @@ mark.kt{padding:0 3px;border-radius:4px;background:rgba(216,182,92,.24);color:#f
 .ix-chip:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 body.has-ixback .to-top{display:none}
 @media print{.ix-filter{display:none}}
+
+/* Compact Risk List: แถวกระชับ แตะทั้งแถว ลูกศรเล็ก · ตัวกรองแบบ segmented · ความคืบหน้าบรรทัดเดียว
+   บนมือถือแสดงเฉพาะการ์ดรายละเอียดที่เลือก (รายการด้านบนเป็นทางเข้าเดียว) */
+.ix{padding:16px 14px 12px;border-radius:20px}
+.ix-head{align-items:center}
+.ix-title{margin:0;font-size:1.25rem;line-height:1.3}
+.ix-sub{margin:4px 0 12px;font-size:.86rem}
+.ix-seg{display:flex;gap:4px;padding:4px;margin:0 0 12px;border-radius:999px;background:rgba(255,255,255,.05);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.ix-seg::-webkit-scrollbar{display:none}
+.ix-seg .ix-chip{flex:1 0 auto;justify-content:center;min-height:40px;padding:0 12px;border:1px solid transparent;font-size:.84rem;color:var(--muted)}
+.ix-seg .ix-chip[aria-pressed="true"]{background:rgba(200,167,90,.16);border-color:var(--gold-deep);color:var(--gold-soft,var(--gold))}
+.ix-prog{margin:0 0 12px;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,.05)}
+.ix-prog-row{display:flex;align-items:center;gap:12px}
+.ix-prog-l{flex:none;font-size:.86rem;color:var(--muted)}
+.ix-prog-n{margin-left:4px;font-size:1rem;color:var(--text)}
+.ix-prog .ix-bar{flex:1;margin:0}
+.ix-list{gap:10px}
+.ix-row{all:unset;box-sizing:border-box;display:grid;grid-template-columns:44px minmax(0,1fr) 44px;gap:12px;align-items:center;width:100%;padding:12px 14px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid transparent;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:border-color .2s,background .2s}
+.ix-row[hidden]{display:none}
+.ix-row:active{background:rgba(255,255,255,.09)}
+.ix-row:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.ix-row.is-current{border-color:var(--gold-deep);background:rgba(200,167,90,.08)}
+.ix-row .ix-ico{width:44px;height:44px;border-radius:14px;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.06)}
+.ix-row.lv-check_detail .ix-ico{background:rgba(217,112,111,.2);color:#ee8b8a}
+.ix-row.lv-caution .ix-ico{background:rgba(200,167,90,.2);color:var(--gold-soft,var(--gold))}
+.ix-row.lv-low .ix-ico{background:rgba(111,174,138,.2);color:#8fd0a8}
+.ix-row .ix-tx small{display:block;font-size:.78rem;color:var(--muted)}
+.ix-row .ix-tx b{display:block;margin-top:1px;font-size:1.05rem;line-height:1.35;color:var(--text)}
+.ix-row .ix-tx p{margin:2px 0 0;font-size:.86rem;line-height:1.4;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ix-row .ix-clause{margin-top:4px;font-size:.8rem}
+.ix-clause.is-warn{color:#ee8b8a}
+.ix-row.is-done .ix-done-chip{display:inline}
+.ix-arrow{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;border:1px solid var(--gold-deep);color:var(--gold-soft,var(--gold));font-size:1.2rem;line-height:1}
+.ix-more{margin-top:10px;min-height:44px;display:flex;align-items:center;justify-content:center;border:0;background:none;color:var(--gold-soft,var(--gold))}
+
+@media (max-width:767px){
+  .rpt.has-ix details.item:not(.is-picked){display:none}
+}
+@media print{
+  .rpt.has-ix details.item{display:block !important}
+  .ix-row{break-inside:avoid}
+}
