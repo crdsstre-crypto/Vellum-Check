@@ -107,7 +107,7 @@ function walletCard(cls, icon, th, en, use, id) {
 function walletCountTo(el, from, to) {
   cancelAnimationFrame(el._raf);
   if (WALLET_REDUCED || from === to) { el.textContent = String(to); return; }
-  const t0 = performance.now(), dur = 400;
+  const t0 = performance.now(), dur = 600;
   const step = (t) => {
     const k = Math.min(1, (t - t0) / dur);
     el.textContent = String(Math.round(from + (to - from) * (1 - Math.pow(1 - k, 3))));
