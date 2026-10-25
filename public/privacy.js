@@ -197,3 +197,16 @@
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
+
+/* เปิดสวิตช์ปกปิดอัตโนมัติ: วาดเครื่องหมายถูกของโล่ใหม่หนึ่งครั้ง */
+(function () {
+  document.addEventListener('change', function (e) {
+    if (!e.target || e.target.id !== 'psMaster' || !e.target.checked) return;
+    var ico = document.querySelector('.ps-ico');
+    if (!ico) return;
+    ico.classList.remove('st-redraw');
+    void ico.offsetWidth;
+    ico.classList.add('st-redraw');
+    setTimeout(function () { ico.classList.remove('st-redraw'); }, 1000);
+  });
+})();
