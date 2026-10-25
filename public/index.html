@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="care.css?v=2">
 <link rel="stylesheet" href="privacy.css?v=1">
 <link rel="stylesheet" href="mobile-polish.css?v=1" media="(max-width: 767px)">
-<link rel="stylesheet" href="history-polish.css?v=3">
+<link rel="stylesheet" href="history-polish.css?v=4">
 <link rel="stylesheet" href="print.css?v=1" media="print">
 </head>
 <body>
@@ -178,7 +178,8 @@
             <button type="button" role="tab" class="hist-tab" data-tab="pay" aria-selected="false">เติมเครดิต</button>
           </div>
           <div class="hist-tools" id="histTools">
-            <label class="hist-search"><span class="sr-only">ค้นหารายงาน</span><input type="search" id="histSearch" placeholder="ค้นหาจากชื่อรายงานหรือประเภทสัญญา" autocomplete="off" enterkeyhint="search"></label>
+            <div class="hist-search"><label><span class="sr-only">ค้นหารายงาน</span><input type="search" id="histSearch" placeholder="ค้นหาจากชื่อรายงานหรือประเภทสัญญา" autocomplete="off" enterkeyhint="search"></label>
+              <button type="button" class="hist-search-clear" id="histSearchClear" aria-label="ล้างคำค้นหา" hidden>✕</button></div>
             <div class="hist-selects">
               <select id="histType" aria-label="กรองตามประเภทสัญญา"><option value="all">ทุกประเภท</option></select>
               <select id="histSort" aria-label="เรียงลำดับ"><option value="new">ใหม่ไปเก่า</option><option value="old">เก่าไปใหม่</option></select>
@@ -448,17 +449,23 @@
   function shortTime(iso) {
     try { return new Date(iso).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }); } catch (e) { return ''; }
   }
-  // ชื่ออัตโนมัติ: ระดับ 1 จากประเภทที่ระบบมีจริง · ระดับ 3 ชื่อสำรอง (ไม่แต่งประเภทขึ้นเอง)
-  function autoTitle(it) {
-    var t = TYPE_NAME[it.contractType];
-    return t ? t + ' · ตรวจวันที่ ' + shortDate(it.createdAt)
-             : 'รายงานตรวจสัญญา · ' + shortDate(it.createdAt) + ' ' + shortTime(it.createdAt);
+  // ชื่อหลักสั้น: ผู้ใช้ตั้งเอง > ประเภทที่ระบบรู้จริง > ชื่อสำรอง (ไม่แต่งประเภทขึ้นเอง) · วันที่อยู่บรรทัดรอง
+  function autoTitle(it) { return TYPE_NAME[it.contractType] || 'รายงานตรวจสัญญา'; }
+  var nameMap = {};
+  function computeNames() {
+    var groups = {};
+    nameMap = {};
+    inspItems.forEach(function (it) {
+      if (it.title) { nameMap[it.id] = it.title; return; }
+      var t = autoTitle(it);
+      (groups[t] = groups[t] || []).push(it);
+    });
+    Object.keys(groups).forEach(function (t) {
+      var g = groups[t].sort(function (x, y) { return new Date(x.createdAt) - new Date(y.createdAt); });
+      g.forEach(function (it, i) { nameMap[it.id] = g.length > 1 ? t + ' · ฉบับที่ ' + (i + 1) : t; });
+    });
   }
-  function titleOf(it, dupes) {
-    if (it.title) return it.title;            // ระดับ 2: ผู้ใช้ตั้งเอง
-    var t = autoTitle(it);
-    return dupes[t] > 1 && TYPE_NAME[it.contractType] ? t + ' · ' + shortTime(it.createdAt) : t;
-  }
+  function titleOf(it) { return nameMap[it.id] || autoTitle(it); }
   function fillTypeOptions() {
     var sel = document.getElementById('histType');
     if (!sel) return;
@@ -474,13 +481,12 @@
   function renderInspections() {
     if (tools) tools.hidden = !inspItems.length;
     if (!inspItems.length) return showMessage('ยังไม่มีประวัติการตรวจสัญญา', 'เมื่อตรวจสัญญาแล้ว ผลจะถูกเก็บไว้ที่นี่เพื่อเปิดดูซ้ำ', true);
-    var dupes = {};
-    inspItems.forEach(function (it) { var t = autoTitle(it); dupes[t] = (dupes[t] || 0) + 1; });
+    computeNames();
     var q = view.q.trim().toLowerCase();
     var rows = inspItems.filter(function (it) {
       if (view.type !== 'all' && it.contractType !== view.type) return false;
       if (!q) return true;
-      return (titleOf(it, dupes) + ' ' + (TYPE_NAME[it.contractType] || '')).toLowerCase().indexOf(q) >= 0;
+      return (titleOf(it) + ' ' + (TYPE_NAME[it.contractType] || '')).toLowerCase().indexOf(q) >= 0;
     }).sort(function (x, y) {
       if (x.pinned !== y.pinned) return x.pinned ? -1 : 1;
       var d = new Date(y.createdAt) - new Date(x.createdAt);
@@ -488,7 +494,8 @@
     });
     panel.hidden = false;
     if (!rows.length) {
-      list.innerHTML = '<div class="hist-empty"><b>ไม่พบรายงานที่ตรงกัน</b><small>ลองเปลี่ยนคำค้นหาหรือประเภทสัญญา</small></div>';
+      list.innerHTML = '<div class="hist-empty"><b>ไม่พบรายงานที่ตรงกับ' + (q ? ' “' + esc(view.q.trim()) + '”' : 'ตัวกรองนี้') + '</b><small>รายงานของคุณยังอยู่ครบ ลองเปลี่ยนคำค้นหาหรือประเภทสัญญา</small>' +
+        '<button type="button" class="hist-retry" data-clear-filter>ล้างการค้นหาและตัวกรอง</button></div>';
       return;
     }
     list.innerHTML = rows.slice(0, shown).map(function (it) {
@@ -496,12 +503,12 @@
       var sm = it.summary;
       var concern = sm ? (sm.check_detail || 0) + (sm.caution || 0) : 0;
       var note = sm ? (sm.low || 0) : 0;
-      var summary = sm ? '<div class="hr-sum"><p class="hr-sum-t">สรุปผลการตรวจ</p><div class="hr-sum-row">' +
-          '<div><b class="hr-num">' + concern + '</b><span>ประเด็นที่ควรระวัง</span></div>' +
-          '<div><b class="hr-num">' + note + '</b><span>ข้อสังเกตเพิ่มเติม</span></div></div></div>' : '';
+      var summary = sm ? '<button type="button" class="hr-sum" data-open aria-label="ดูรายละเอียดสรุปผลการตรวจ">' +
+          '<span class="hr-sum-line"><b>' + concern + '</b> ประเด็นที่ควรระวัง<i aria-hidden="true"> · </i><b>' + note + '</b> ข้อสังเกตเพิ่มเติม</span>' +
+          '<span class="hr-sum-go" aria-hidden="true">›</span></button>' : '';
       return '<div class="hist-card hist-report' + (it.pinned ? ' is-pinned' : '') + '" data-rid="' + esc(it.id) + '">' +
         '<div class="hr-top"><span class="hist-ico">' + ICO_DOC + '</span>' +
-          '<div class="hist-main"><b>' + esc(titleOf(it, dupes)) + '</b>' +
+          '<div class="hist-main"><b>' + esc(titleOf(it)) + '</b>' +
             '<span class="hist-meta">' + esc(fmt(it.createdAt)) + '</span>' +
             '<span class="hr-chips">' + (it.pinned ? '<span class="hr-chip is-pin">ปักหมุด</span>' : '') +
               (tname ? '<span class="hr-chip">' + esc(tname) + '</span>' : '') +
@@ -512,6 +519,11 @@
         '<div class="hr-foot"><span class="hr-credit">ใช้เครดิต 1 หน่วย</span>' +
           '<button type="button" class="hr-open" data-open>ดูรายงานฉบับเต็ม<span aria-hidden="true"> ›</span></button></div></div>';
     }).join('') + moreBtn(rows.length);
+    if (savedScroll !== null) {
+      var sbody = document.querySelector('#authCard .sheet-body'), pos = savedScroll;
+      savedScroll = null;
+      if (sbody) requestAnimationFrame(function () { sbody.scrollTop = pos; });
+    }
   }
   function findItem(id) { return inspItems.filter(function (x) { return String(x.id) === String(id); })[0]; }
   async function patchItem(id, body) {
@@ -523,7 +535,7 @@
     if (!res.ok) throw new Error(data.error || 'บันทึกไม่สำเร็จ ลองใหม่อีกครั้ง');
   }
   // แผ่นล่างสำหรับเมนูจัดการ เปลี่ยนชื่อ และยืนยันการลบ
-  var sheetEl = null, lastFocus = null;
+  var sheetEl = null, lastFocus = null, savedScroll = null;
   function closeSheet() {
     if (!sheetEl) return;
     sheetEl.remove(); sheetEl = null;
@@ -544,8 +556,7 @@
   }
   function openMenu(id) {
     var it = findItem(id); if (!it) return;
-    var dupes = {}; dupes[autoTitle(it)] = 1;
-    var sh = openSheet('<p class="hs-title">' + esc(titleOf(it, dupes)) + '</p>' +
+    var sh = openSheet('<p class="hs-title">' + esc(titleOf(it)) + '</p>' +
       '<button type="button" class="hs-act" data-hs-act="rename">เปลี่ยนชื่อรายงาน</button>' +
       '<button type="button" class="hs-act" data-hs-act="pin">' + (it.pinned ? 'เลิกปักหมุด' : 'ปักหมุดรายงานนี้') + '</button>' +
       '<button type="button" class="hs-act is-danger" data-hs-act="del">ลบรายงานนี้</button>' +
@@ -599,7 +610,15 @@
   document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') closeSheet(); });
   if (tools) {
     var to = null;
-    document.getElementById('histSearch').addEventListener('input', function (e) {
+    var sInput = document.getElementById('histSearch'), sClear = document.getElementById('histSearchClear');
+    function resetFilters() {
+      sInput.value = ''; view.q = ''; view.type = 'all'; document.getElementById('histType').value = 'all';
+      sClear.hidden = true; shown = PAGE; renderInspections();
+    }
+    window.vcHistResetFilters = resetFilters;
+    sClear.addEventListener('click', function () { sInput.value = ''; view.q = ''; sClear.hidden = true; shown = PAGE; renderInspections(); sInput.focus({ preventScroll: true }); });
+    sInput.addEventListener('input', function (e) {
+      sClear.hidden = !e.target.value;
       clearTimeout(to); var v = e.target.value;
       to = setTimeout(function () { view.q = v; shown = PAGE; renderInspections(); }, 200);
     });
@@ -664,8 +683,19 @@
   async function openOneResult(id) {
     try {
       var data = await getJson('/api/history/inspections/' + encodeURIComponent(id));
+      var sb = document.querySelector('#authCard .sheet-body');
+      savedScroll = sb ? sb.scrollTop : null;       // จำตำแหน่งในคลังไว้ตอนกลับมา
       document.body.classList.remove('auth-open');
       if (typeof renderResult === 'function') renderResult(data.result);
+      var res = document.getElementById('result');
+      if (res) {
+        res.insertAdjacentHTML('afterbegin', '<button type="button" class="vault-back" data-vault-back>‹ กลับไปคลังรายงาน</button>');
+        var vb = res.querySelector('[data-vault-back]');
+        vb.addEventListener('click', function () {
+          var nb = document.querySelector('#bottomNav [data-nav="hist"]');
+          if (nb) nb.click();
+        });
+      }
     } catch (e) { alert(e.message); }
   }
   // ปุ่มเดียว "ประวัติรายการ": กดเปิด/ปิด แล้วสลับแท็บ ตรวจสัญญา / เติมเครดิต
@@ -711,6 +741,7 @@
     var tab = ev.target.closest('.hist-tab');
     if (tab) { setTab(tab.getAttribute('data-tab')); return; }
     if (ev.target.closest('[data-retry]')) { setTab(currentKind); return; }
+    if (ev.target.closest('[data-clear-filter]')) { if (window.vcHistResetFilters) window.vcHistResetFilters(); return; }
     var goBtn = ev.target.closest('[data-go="home"]');
     if (goBtn) { var h = document.querySelector('#bottomNav [data-nav="home"]'); if (h) h.click(); return; }
     if (ev.target.closest('[data-faq]')) {
