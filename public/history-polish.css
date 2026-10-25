@@ -511,3 +511,66 @@
   .pay-row .pay-note{margin:8px 0 0}
   @media (prefers-reduced-motion:reduce){.pay-chev,.ph-stat,.pay-row-top{transition:none}}
 }
+
+/* ===== v10: Dashboard รายการตรวจสัญญา (ดำ-ทอง แบบเรียบหรู) ===== */
+.lib-dash{display:none}
+@media (max-width:767px){
+  .lib-dash[hidden]{display:none}
+  .lib-dash{
+    --d-bg:#101113;--d-card:#191B1F;--d-gold:#DDBB63;--d-mint:#8DD7B4;--d-sky:#91B8D4;--d-line:#2B2E35;
+    display:block;margin:0 0 16px;padding:16px;border:1px solid var(--d-line);border-radius:24px;
+    background:linear-gradient(180deg,rgba(255,255,255,.035),transparent 40%),var(--d-bg);
+    box-shadow:0 12px 30px rgba(0,0,0,.35);animation:ldIn .26s cubic-bezier(.2,.7,.2,1) both;
+  }
+  @keyframes ldIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .ld-head{display:flex;align-items:center;flex-wrap:wrap;gap:10px 12px;margin:0 0 14px}
+  .ld-mark{width:3px;height:30px;border-radius:2px;background:var(--d-gold);flex:none}
+  .ld-ico{flex:none;display:grid;place-items:center;color:var(--d-gold)}
+  .ld-txt{flex:1 1 150px;min-width:0}
+  .ld-txt b{display:block;font-size:1.3rem;line-height:1.25;color:var(--h-text)}
+  .ld-txt small{display:block;margin-top:2px;font-size:.86rem;color:var(--h-sub)}
+  .ld-period{
+    flex:none;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border:1px solid rgba(221,187,99,.45);
+    border-radius:999px;background:transparent;color:var(--d-gold);font:inherit;font-size:.86rem;transition:background-color .2s,transform .12s;
+  }
+  .ld-period svg{width:17px;height:17px}
+  .ld-period i{font-style:normal;font-size:.8rem}
+  .ld-period:active{transform:scale(.97);background:rgba(221,187,99,.1)}
+  .ld-period[aria-expanded="true"]{background:rgba(221,187,99,.12)}
+  .lib-dash .lib-pop{flex:1 0 100%;margin:0 0 4px;order:9}
+  .ld-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .lib-dash .lib-stat{
+    position:relative;display:flex;align-items:flex-start;gap:10px;min-height:112px;padding:14px 12px;overflow:hidden;
+    border:1px solid var(--d-line);border-radius:20px;background:var(--d-card);text-align:left;font:inherit;color:var(--h-text);
+    box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;transition:border-color .22s,transform .14s,background-color .22s;
+  }
+  .lib-dash .lib-stat:active{transform:scale(.975)}
+  .ls-ic{
+    flex:none;width:40px;height:40px;display:grid;place-items:center;border-radius:50%;border:1px solid currentColor;
+    background:rgba(255,255,255,.02);
+  }
+  .ls-ic svg{width:20px;height:20px}
+  .ls-tx{display:flex;flex-direction:column;min-width:0;gap:1px}
+  .ls-tx b{font-size:2rem;line-height:1.1;font-weight:700;font-variant-numeric:tabular-nums;color:var(--h-text)}
+  .ls-tx strong{font-size:.9rem;font-weight:600;line-height:1.3;color:var(--h-text)}
+  .ls-tx small{font-size:.7rem;line-height:1.35;color:var(--h-sub)}
+  .ls-go{
+    position:absolute;right:10px;top:10px;width:24px;height:24px;display:grid;place-items:center;border-radius:50%;
+    background:rgba(255,255,255,.05);font-style:normal;font-size:1.05rem;line-height:1;color:var(--h-sub);
+  }
+  .lib-stat.is-gold .ls-ic,.lib-stat.is-gold-soft .ls-ic{color:var(--d-gold)}
+  .lib-stat.is-mint .ls-ic{color:var(--d-mint)}
+  .lib-stat.is-sky .ls-ic{color:var(--d-sky)}
+  .lib-stat.is-gold .ls-tx b{color:var(--d-gold)}
+  .lib-stat.is-gold{background:linear-gradient(145deg,rgba(221,187,99,.10),var(--d-card) 70%)}
+  .lib-stat.is-on{border-color:rgba(221,187,99,.6)}
+  .lib-stat.is-mint.is-on{border-color:rgba(141,215,180,.55)}
+  .lib-stat.is-sky.is-on{border-color:rgba(145,184,212,.55)}
+  /* การ์ดปรากฏไล่ลำดับสั้น ๆ ครั้งเดียว */
+  .lib-dash .lib-stat:nth-child(1){animation:ldIn .26s .02s both}
+  .lib-dash .lib-stat:nth-child(2){animation:ldIn .26s .06s both}
+  .lib-dash .lib-stat:nth-child(3){animation:ldIn .26s .1s both}
+  .lib-dash .lib-stat:nth-child(4){animation:ldIn .26s .14s both}
+  @media (max-width:360px){.ls-tx small{display:none}.lib-dash .lib-stat{min-height:92px}}
+  @media (prefers-reduced-motion:reduce){.lib-dash,.lib-dash .lib-stat{animation:none!important;transition:none}}
+}
