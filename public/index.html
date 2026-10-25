@@ -20,7 +20,7 @@
 <link rel="stylesheet" href="privacy.css?v=1">
 <link rel="stylesheet" href="mobile-polish.css?v=1" media="(max-width: 767px)">
 <link rel="stylesheet" href="history-polish.css?v=13">
-<link rel="stylesheet" href="history-vault.css?v=1" media="(max-width: 767px)">
+<link rel="stylesheet" href="history-vault.css?v=2" media="(max-width: 767px)">
 <link rel="stylesheet" href="print.css?v=1" media="print">
 </head>
 <body>
@@ -198,8 +198,8 @@
             <div class="ld-active" id="libActive" hidden><span id="libActiveTxt"></span><button type="button" id="libActiveClear" aria-label="ล้างตัวกรอง">ล้าง ✕</button></div>
           </section>
           <div class="hist-tabs" role="tablist" aria-label="ประเภทประวัติ">
-            <button type="button" role="tab" class="hist-tab is-on" data-tab="insp" aria-selected="true">ตรวจสัญญา</button>
-            <button type="button" role="tab" class="hist-tab" data-tab="pay" aria-selected="false">เติมเครดิต</button>
+            <button type="button" role="tab" class="hist-tab is-on" data-tab="insp" aria-selected="true">เอกสาร</button>
+            <button type="button" role="tab" class="hist-tab" data-tab="pay" aria-selected="false">เครดิตและชำระเงิน</button>
           </div>
           <div class="hist-tools" id="histTools">
             <div class="lib-seg" id="libSeg" role="group" aria-label="กรองรายการ">
@@ -586,18 +586,33 @@
   function rowHtml(it, withDate) {
     var tname = TYPE_NAME[it.contractType];
     var when = shortTime(it.createdAt) + ' น.' + (withDate ? ' · ' + dFull(it.createdAt) : '');
+    var docNo = inspItems.filter(function (x) { return new Date(x.createdAt) <= new Date(it.createdAt); }).length;
+    var rv = it.summary && it.summary.check_detail > 0 ? it.summary.check_detail : 0;
     return '<div class="hist-card hist-report hr2' + (it.pinned ? ' is-pinned' : '') + '" data-rid="' + esc(it.id) + '">' +
       '<span class="hr-thumb" aria-hidden="true">' + THUMB + '</span>' +
-      '<div class="hist-main"><b>' + esc(titleOf(it)) + '</b>' +
+      '<div class="hist-main"><small class="hr-no">DOCUMENT · ' + String(docNo).padStart(3, '0') + '</small><b>' + esc(titleOf(it)) + '</b>' +
         '<span class="hr-line">' + (tname ? '<span class="hr-chip">' + ICO_DOCSM + esc(tname) + '</span>' : '') +
           (it.pinned ? '<span class="hr-chip is-pin">ปักหมุด</span>' : '') +
-          '<span class="hr-state">' + ICO_CHK + 'ตรวจแล้ว</span></span>' +
+          '<span class="hr-state">' + ICO_CHK + 'ตรวจสำเร็จ</span>' +
+          (rv ? '<span class="hr-review">ควรทบทวน ' + rv + ' จุด</span>' : '') + '</span>' +
         '<span class="hr-time">' + ICO_CLK + esc(when) + '</span></div>' +
       '<button type="button" class="hr-menu" data-menu aria-label="จัดการรายงาน" aria-haspopup="dialog">' +
         '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg></button></div>';
   }
+  var collapsedDays = {};
+  document.addEventListener('click', function (e) {
+    var h = e.target.closest && e.target.closest('.hr-day-h');
+    if (!h) return;
+    var sec = h.parentNode, k = sec.getAttribute('data-day');
+    var c = sec.classList.toggle('is-collapsed');
+    collapsedDays[k] = c; h.setAttribute('aria-expanded', c ? 'false' : 'true');
+  });
+  document.addEventListener('keydown', function (e) {
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('hr-day-h')) { e.preventDefault(); e.target.click(); }
+  });
   function groupHtml(label, items, withDate, ico) {
-    return '<section class="hr-day"><h4 class="hr-day-h">' + ico + '<span>' + esc(label) + '</span><i class="hr-day-line" aria-hidden="true"></i></h4>' +
+    var col = collapsedDays[label] ? ' is-collapsed' : '';
+    return '<section class="hr-day' + col + '" data-day="' + esc(label) + '"><h4 class="hr-day-h" role="button" tabindex="0" aria-expanded="' + (col ? 'false' : 'true') + '">' + ico + '<span>' + esc(label) + '</span><em class="hr-day-n">' + items.length + '</em><i class="hr-day-line" aria-hidden="true"></i><i class="hr-day-chev" aria-hidden="true">⌄</i></h4>' +
       '<div class="hr-day-list">' + items.map(function (it) { return rowHtml(it, withDate); }).join('') + '</div></section>';
   }
   function renderInspections() {
