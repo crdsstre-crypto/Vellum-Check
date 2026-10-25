@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="care.css?v=2">
 <link rel="stylesheet" href="privacy.css?v=1">
 <link rel="stylesheet" href="mobile-polish.css?v=1" media="(max-width: 767px)">
+<link rel="stylesheet" href="history-polish.css?v=1">
 <link rel="stylesheet" href="print.css?v=1" media="print">
 </head>
 <body>
@@ -166,6 +167,7 @@
           <div id="creditsLine" class="wallet-cards"></div>
         </div>
         <div class="pane" data-pane="hist">
+          <p class="hist-lead">ดูรายการตรวจสัญญาและประวัติการใช้เครดิตของคุณ</p>
           <button type="button" class="wallet-histlink" id="walletHist" aria-expanded="false" aria-controls="historyPanel">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>
             <span class="wallet-hist-txt"><b>ประวัติรายการ</b><small>ประวัติการตรวจและการเติมเครดิต</small></span>
@@ -422,13 +424,17 @@
     if (total <= shown) return '';
     return '<button type="button" class="hist-more" data-more>ดูเพิ่มเติม (อีก ' + (total - shown) + ')</button>';
   }
+  // ประวัติตรวจเก็บเฉพาะรายการที่ตรวจสำเร็จ จึงแสดงป้าย "สำเร็จ" ได้จริง
+  var TYPE_NAME = { rent: 'สัญญาเช่า', sale: 'สัญญาซื้อขาย', employment: 'สัญญาจ้างงาน', service: 'สัญญาจ้างบริการ', loan: 'สัญญากู้ยืมเงิน', shareholder: 'สัญญาหุ้นส่วน', nda: 'สัญญารักษาความลับ', other: 'สัญญาอื่น ๆ' };
   function renderInspections() {
     if (!inspItems.length) return showMessage('ยังไม่มีประวัติการตรวจสัญญา', 'เมื่อตรวจสัญญาแล้ว ผลจะถูกเก็บไว้ที่นี่เพื่อเปิดดูซ้ำ');
     list.innerHTML = inspItems.slice(0, shown).map(function (it) {
+      var tname = TYPE_NAME[it.contractType];
       return '<button type="button" class="hist-card hist-card-btn" data-id="' + esc(it.id) + '">' +
         '<span class="hist-ico">' + ICO_DOC + '</span>' +
-        '<span class="hist-main"><b>ผลตรวจสัญญา</b><span class="hist-meta">' + esc(fmt(it.createdAt)) + '</span></span>' +
-        '<span class="hist-go">เปิดดู</span></button>';
+        '<span class="hist-main"><b>ผลตรวจสัญญา</b><span class="hist-meta">' + esc(fmt(it.createdAt)) + '</span>' +
+          (tname ? '<span class="hist-tag">ประเภท: ' + esc(tname) + '</span>' : '') + '</span>' +
+        '<span class="hist-side"><span class="hist-status is-done">สำเร็จ</span><span class="hist-go">เปิดดู</span></span></button>';
     }).join('') + moreBtn(inspItems.length);
     panel.hidden = false;
   }
