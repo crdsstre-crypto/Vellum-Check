@@ -397,12 +397,18 @@ function renderIssueIndex(items) {
       <button type="button" class="ix-go${i === 0 ? ' is-primary' : ''}" data-jumpidx="${i}">${ICO_TARGET}<span class="ix-go-t">ไปยังประเด็นนี้</span><span aria-hidden="true">→</span></button>
     </article>`;
   }).join('');
+  const lvOf = it => (['check_detail', 'caution', 'low'].includes(it.level) ? it.level : 'low');
+  const present = ['check_detail', 'caution', 'low'].filter(k => items.some(it => lvOf(it) === k));
+  const chips = present.length > 1
+    ? `<div class="ix-filter" role="group" aria-label="กรองประเด็นตามระดับ"><span class="ix-filter-l">แสดงประเด็น</span><div class="ix-chips"><button type="button" class="ix-chip" data-ixfilter="all" aria-pressed="true">ทั้งหมด</button>${present.map(k => `<button type="button" class="ix-chip" data-ixfilter="${k}" aria-pressed="false">${esc(CONFIG.levelLabel[k])} (${items.filter(it => lvOf(it) === k).length})</button>`).join('')}</div></div>`
+    : '';
   const more = items.length > IX_LIMIT
     ? `<button type="button" class="ix-more" data-ixmore="1" aria-expanded="false">ดูทั้งหมด ${items.length} ประเด็น</button>` : '';
   return `<section class="ix" id="issueIndex" aria-label="สารบัญประเด็นที่ควรตรวจสอบ">
     <div class="ix-head"><p class="ix-kick">ผลการตรวจสัญญา</p><span class="ix-badge${hasRisk ? '' : ' is-calm'}">พบ ${items.length} ประเด็น</span></div>
     <h3 class="ix-title">มีจุดไหนที่ควรตรวจสอบ?</h3>
-    <p class="ix-sub">เลือกประเด็นเพื่อไปยังรายละเอียด พร้อมแนวทางแก้ไขที่เกี่ยวข้อง</p>
+    <p class="ix-sub">เลือกประเด็นเพื่อไปยังรายละเอียด เรียงจากความเสี่ยงสูงสุดก่อน</p>
+    ${chips}
     <div class="ix-prog" aria-live="polite">
       <div class="ix-prog-row"><div><small>ตรวจแล้ว</small><b class="ix-prog-n">0 / ${items.length}</b></div><span class="ix-prog-pct">0% ความคืบหน้า</span></div>
       <div class="ix-bar" role="progressbar" aria-label="ความคืบหน้าการตรวจ" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i style="width:0%"></i></div>
@@ -416,7 +422,8 @@ function renderIssueIndex(items) {
         <li><i class="k-green"></i>เขียว: ข้อเสนอแนะและขั้นตอนถัดไป</li>
         <li><i class="k-blue"></i>ฟ้า: แหล่งอ้างอิง</li>
       </ul>
-      <p>ข้อสังเกตเหล่านี้มาจากระบบวิเคราะห์ ไม่ใช่คำวินิจฉัยทางกฎหมาย ควรพิจารณาข้อสัญญาอื่นและข้อเท็จจริงประกอบ</p>
+      <p>ระดับความเสี่ยงมาจากการประเมินของ AI ตามข้อความสัญญาที่อ่านได้ ไม่ใช่เกณฑ์ทางกฎหมาย และเรียงจากระดับสูงไปต่ำ ไม่ได้เรียงตามเลขข้อสัญญา</p>
+      <p>ข้อสังเกตเหล่านี้ไม่ใช่คำวินิจฉัยทางกฎหมาย ควรพิจารณาข้อสัญญาอื่นและข้อเท็จจริงประกอบ</p>
     </details>
   </section>`;
 }
@@ -450,6 +457,7 @@ function syncReview() {
   if (note) note.hidden = !(total && reviewed.size === total);
 }
 
+let filterLevel = 'all';
 let lastIssueIdx = -1;
 let ixReturnY = null;
 let flashTimer = 0;
@@ -457,11 +465,27 @@ function calmMotion() {
   return document.documentElement.hasAttribute('data-calm') ||
     (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 }
+// กรองประเด็นตามระดับ: ซ่อนทั้งรายการในสารบัญและการ์ดในรายงาน
+function applyFilter(level) {
+  filterLevel = level;
+  const more = els.result.querySelector('[data-ixmore]');
+  const expanded = more && more.getAttribute('aria-expanded') === 'true';
+  els.result.querySelectorAll('[data-ixcard]').forEach(c => {
+    c.hidden = level === 'all' ? (c.hasAttribute('data-ixextra') && !expanded) : !c.classList.contains('lv-' + level);
+  });
+  els.result.querySelectorAll('details.item').forEach(d => {
+    d.hidden = !(level === 'all' || d.classList.contains('lv-' + level));
+  });
+  if (more) more.hidden = level !== 'all';
+  els.result.querySelectorAll('[data-ixfilter]').forEach(b => b.setAttribute('aria-pressed', b.dataset.ixfilter === level ? 'true' : 'false'));
+}
+
 // เลื่อนไปการ์ดประเด็นที่ idx: จำตำแหน่งหน้าสรุปไว้ ปิดการ์ดอื่นบนมือถือ เปิดการ์ดนี้ แล้วเน้นขอบทองสั้น ๆ
 function focusIssue(idx) {
   const all = [...els.result.querySelectorAll('details.item')];
   const target = all[idx];
   if (!target) { toast('ไม่พบประเด็นนี้'); return; }
+  if (target.hidden) applyFilter('all');
   const firstTop = all[0].getBoundingClientRect().top + window.scrollY;
   if (window.scrollY < firstTop - 40) ixReturnY = window.scrollY;
   if (window.matchMedia('(max-width: 767px)').matches) {
@@ -526,6 +550,7 @@ function ensureIxBack() {
 function updateIxBack() {
   const b = ensureIxBack();
   b.hidden = !(lastIssueIdx >= 0 && !ixVisible && !pickedVisible && document.getElementById('issueIndex'));
+  document.body.classList.toggle('has-ixback', !b.hidden);
 }
 function watchIssueIndex() {
   lastIssueIdx = -1;
@@ -565,11 +590,13 @@ function hlKeyTerms(text) {
   return out + esc(t.slice(last));
 }
 const ICO_BOOK = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5.5C5.5 4.5 8.5 4.5 12 6.5c3.5-2 6.5-2 9-1v13c-2.5-1-5.5-1-9 1-3.5-2-6.5-2-9-1v-13z"/><path d="M12 6.5v13"/></svg>';
-// แหล่งอ้างอิง: เลขข้อสัญญา (ถ้าหาเจอจริง) และแนวทางตรวจที่ระบบใช้ แยกสีฟ้าจากข้อเสนอแนะสีเขียว
+// แหล่งอ้างอิง: เลขข้อสัญญา (หาเจอจริงเท่านั้น) และมาตราที่ AI ระบุ
+// "reference" มาจาก AI และยังไม่ได้ตรวจเทียบกับแหล่งกฎหมายจริง จึงต้องบอกสถานะนี้เสมอ ห้ามแสดงเหมือนผ่านการตรวจแล้ว
 function renderSource(item) {
   const clause = clauseOf(item);
-  if (!clause && !item.reference) return '';
-  return `<div class="it-src"><h4>${ICO_BOOK}แหล่งอ้างอิง</h4>${clause ? `<p>ข้อ ${esc(clause)} ของสัญญา</p>` : ''}${item.reference ? `<p>แนวทางตรวจ: ${esc(item.reference)}</p>` : ''}</div>`;
+  const ref = String(item.reference || '').trim();
+  if (!clause && !ref) return '';
+  return `<div class="it-src"><h4>${ICO_BOOK}แหล่งอ้างอิง</h4>${clause ? `<p><b>ข้อความจากสัญญา</b> ข้อ ${esc(clause)}</p>` : ''}${ref ? `<p><b>มาตราที่ระบบระบุ</b> ${esc(ref)}</p><p class="src-warn">ระบบยังไม่ได้ตรวจเทียบกับแหล่งกฎหมายจริง ต้องตรวจสอบเพิ่มเติม</p>` : ''}</div>`;
 }
 
 function renderQuote(item) {
@@ -598,25 +625,28 @@ function sgSummary(openText, closeText, sub) {
   return `<summary><span class="sg-ico">${ICO_DOC}</span><span class="sg-st"><b class="sg-open">${openText}</b><b class="sg-close">${closeText}</b><small>${sub}</small></span></summary>`;
 }
 
+// กล่องเขียวที่เห็นทันที: "สิ่งที่ควรขอแก้ไข" (ถ้าไม่มีข้อเสนอแก้ไข ใช้ขั้นตอนถัดไปแทน)
+function renderFix(item) {
+  const text = item.suggested_fix || item.how_to_negotiate;
+  if (!text) return '';
+  return `<div class="it-next it-fix"><h4>${ICO_BULB}${item.suggested_fix ? 'สิ่งที่ควรขอแก้ไข' : 'ขั้นตอนถัดไป'}</h4><p>${esc(text)}</p></div>`;
+}
+
+// รายละเอียดทั้งหมดรวมไว้ใต้ปุ่มเดียว: ขั้นตอนถัดไป แหล่งอ้างอิง ข้อความต้นฉบับ และข้อความเปรียบเทียบ
 function renderDetail(item) {
   const hasQuote = !item.missing && !!item.quote;
   const fix = item.suggested_fix ? esc(item.suggested_fix) : '';
-  if (!hasQuote && !fix) return '';
-
-  // ไม่มีข้อเสนอแนะ: พับข้อความต้นฉบับกับวิธีรับมือไว้ใต้ปุ่มเดียว
-  if (!fix) {
-    return `<details class="sg-more">
-      ${sgSummary('ดูข้อความต้นฉบับ', 'ซ่อนรายละเอียด', 'ข้อความในสัญญาที่ระบบอ้างถึง')}
-      ${hasQuote ? `<p class="cmp-lbl">ข้อความเดิมในสัญญา</p>${renderQuote(item)}` : ''}
-    </details>`;
-  }
+  const nego = item.suggested_fix && item.how_to_negotiate ? renderNext(item) : '';
+  const src = renderSource(item);
+  if (!hasQuote && !fix && !nego && !src) return '';
 
   const copyBtn = (which, label) =>
     `<button type="button" class="sg-copy" data-act="copyfix" data-copy="${which}">${ICO_COPY}<span>${label}</span></button>`;
   const jump = hasViewer() ? '<button type="button" class="src-link" data-act="jump">ดูตำแหน่งในสัญญา <i aria-hidden="true">›</i></button>' : '';
 
-  // มีข้อความเดิม: แท็บ ข้อความเดิม / ข้อความแนะนำ / เปรียบเทียบ (เริ่มที่เปรียบเทียบ)
-  const panels = hasQuote ? `
+  let body = '';
+  if (fix && hasQuote) {
+    body = `
       <div class="sg-tabs" role="tablist">
         <button type="button" role="tab" class="sg-tab" data-act="sgtab" data-tab="old">ข้อความเดิม</button>
         <button type="button" role="tab" class="sg-tab" data-act="sgtab" data-tab="new">ข้อความแนะนำ</button>
@@ -634,22 +664,22 @@ function renderDetail(item) {
         <div class="sg-card sg-old"><p class="sg-plbl">01 · ข้อความเดิม</p><p>${hlKeyTerms(item.quote)}</p></div>
         <p class="sg-arrow"><span aria-hidden="true">↓</span> ปรับถ้อยคำให้ชัดเจนขึ้น</p>
         <div class="sg-card sg-new"><p class="sg-plbl">02 · ข้อความแนะนำ</p><p>${fix}</p>${copyBtn('new', 'คัดลอกข้อความแนะนำ')}</div>
-      </div>` : `
+      </div>`;
+  } else if (fix) {
+    body = `
       <div class="sg-panel sg-new" data-panel="new">
         <p class="sg-plbl">ข้อความที่แนะนำ</p><p class="tx-new">${fix}</p>
         ${copyBtn('new', 'คัดลอกข้อความแนะนำ')}
       </div>`;
+  } else if (hasQuote) {
+    body = `<p class="cmp-lbl">ข้อความเดิมในสัญญา</p>${renderQuote(item)}`;
+  }
+  const note = fix ? '<p class="sg-note">ข้อความตัวอย่างเพื่อประกอบการพิจารณา ควรตรวจสอบให้สอดคล้องกับข้อเท็จจริงและกฎหมายที่ใช้บังคับก่อนนำไปใช้จริง</p>' : '';
 
-  return `<div class="it-sug sg">
-    <h4>${ICO_BULB}แนวทางแก้ไข</h4>
-    <p class="sg-sub">ข้อเสนอแนะสำหรับนำไปพิจารณา</p>
-    <p class="sg-sum"><span>${fix}</span></p>
-    <details class="sg-more">
-      ${sgSummary('ดูข้อความเปรียบเทียบ', 'ซ่อนข้อความเปรียบเทียบ', 'เปรียบเทียบก่อนนำไปแก้ไขสัญญา')}
-      ${panels}
-    </details>
-    <p class="sg-note">ข้อความตัวอย่างเพื่อประกอบการพิจารณา ควรตรวจสอบให้สอดคล้องกับข้อเท็จจริงและกฎหมายที่ใช้บังคับก่อนนำไปใช้จริง</p>
-  </div>`;
+  return `<details class="sg-more">
+    ${sgSummary('ดูรายละเอียด ข้อกฎหมาย และข้อความต้นฉบับ', 'ซ่อนรายละเอียด', 'แหล่งอ้างอิงและข้อความเปรียบเทียบ')}
+    ${nego}${src}${body}${note}
+  </details>`;
 }
 
 
@@ -687,9 +717,8 @@ function renderItem(item, index, total) {
       <span class="tag">${esc(CONFIG.levelLabel[item.level] || '')}</span>
     </summary>
     ${renderReason(item.explanation)}
-    ${renderNext(item)}
+    ${renderFix(item)}
     ${item.missing ? renderQuote(item) : ''}
-    ${renderSource(item)}
     ${renderDetail(item)}
     <div class="rv-row"><button type="button" class="rv-btn" data-review="${index}" aria-pressed="false"><span class="rv-t">ทำเครื่องหมายว่าตรวจแล้ว</span>${ICO_CHECKC}</button></div>
     <div class="pk-row"><button type="button" class="pk-btn" data-ixnav="overview">${ICO_GRID}<span>ภาพรวม</span></button><button type="button" class="pk-btn is-primary" data-ixnav="back"><span>กลับหน้าสรุป</span></button></div>
@@ -795,6 +824,15 @@ function reportMeta() {
 function renderResult(result) {
   lastResult = result;
   reviewed.clear();
+  // เรียงตามระดับความเสี่ยงที่ระบบประเมิน (สูง -> ต่ำ) แบบ stable ไม่เรียงตามเลขข้อสัญญา
+  if (Array.isArray(result.items)) {
+    const RANK = { check_detail: 0, caution: 1, low: 2 };
+    const rk = x => (x && RANK[x.level] !== undefined ? RANK[x.level] : 2);
+    if (result.items.some((x, i, a) => i && rk(x) < rk(a[i - 1]))) {
+      result.items = result.items.map((x, i) => [x, i]).sort((a, b) => rk(a[0]) - rk(b[0]) || a[1] - b[1]).map(p => p[0]);
+    }
+  }
+  filterLevel = 'all';
   const items = Array.isArray(result.items) ? result.items : [];
   const meta = reportMeta();
 
@@ -1089,6 +1127,8 @@ function init() {
   els.result.addEventListener('click', function (e) {
     const row = e.target.closest('[data-jumpidx]');
     if (row) { focusIssue(+row.dataset.jumpidx); return; }
+    const fl = e.target.closest('[data-ixfilter]');
+    if (fl) { applyFilter(fl.dataset.ixfilter); return; }
     const nv = e.target.closest('[data-ixnav]');
     if (nv) { navBack(nv.dataset.ixnav); return; }
     const rv = e.target.closest('[data-review]');
