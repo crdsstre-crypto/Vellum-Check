@@ -28,7 +28,7 @@ import {
 } from './credits.js';
 import { isBlocked, recordFailure, clearFailures } from './rateLimit.js';
 import { buildSpokenSummary, synthesizeSpeech, VOICE_CREDIT_COST } from './voice.js';
-import { createPromptPayPayment, confirmAndCredit, PACKAGES } from './payments.js';
+import { createPromptPayPayment, confirmAndCredit, getPaymentStatus, PACKAGES } from './payments.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -376,6 +376,26 @@ app.post('/api/payments/promptpay', async (req, res) => {
     // บันทึกเฉพาะข้อความผิดพลาด ห้ามบันทึกคีย์หรือข้อมูลการชำระ
     console.error('[payment] สร้างรายการ PromptPay ไม่สำเร็จ:', err.message);
     res.status(500).json({ error: 'สร้างรายการชำระเงินไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+
+// ดูสถานะรายการชำระเงินของตัวเอง (หน้าเว็บถามทุกไม่กี่วินาทีระหว่างรอ)
+app.get('/api/payments/:chargeId/status', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน' });
+
+    const chargeId = req.params.chargeId;
+    if (!/^chrg_[A-Za-z0-9_]{4,64}$/.test(chargeId)) {
+      return res.status(400).json({ error: 'รหัสรายการไม่ถูกต้อง' });
+    }
+
+    const result = await getPaymentStatus(user.id, chargeId);
+    if (!result) return res.status(404).json({ error: 'ไม่พบรายการนี้' });
+    res.json(result);
+  } catch (err) {
+    console.error('[payment] ตรวจสถานะไม่สำเร็จ:', err.message);
+    res.status(500).json({ error: 'ตรวจสอบสถานะไม่สำเร็จ ลองใหม่อีกครั้ง' });
   }
 });
 
