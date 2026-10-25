@@ -34,7 +34,9 @@ export async function listInspections(userId) {
             ELSE 0 END AS n_caution,
             CASE WHEN jsonb_typeof(result->'items') = 'array' THEN
               (SELECT count(*) FROM jsonb_array_elements(result->'items') e WHERE e->>'level' = 'low')
-            ELSE 0 END AS n_low
+            ELSE 0 END AS n_low,
+            CASE WHEN jsonb_typeof(result->'items') = 'array' THEN left(result->'items'->0->>'title', 120) END AS top_title,
+            CASE WHEN jsonb_typeof(result->'items') = 'array' THEN result->'items'->0->>'level' END AS top_level
        FROM inspections
       WHERE user_id = $1 ORDER BY created_at DESC, id DESC LIMIT $2`,
     [userId, KEEP_INSPECTIONS]
@@ -47,6 +49,7 @@ export async function listInspections(userId) {
     pinned: r.pinned === true,
     // นับจากผลตรวจจริงที่บันทึกไว้
     summary: { check_detail: Number(r.n_detail), caution: Number(r.n_caution), low: Number(r.n_low) },
+    topIssue: r.top_title ? { title: r.top_title, level: r.top_level || null } : null,
   }));
 }
 
