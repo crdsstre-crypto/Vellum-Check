@@ -456,3 +456,58 @@
   .pay-dl dd{margin:0;color:var(--h-text);font-size:.88rem;text-align:right}
   @media (prefers-reduced-motion:reduce){.pay-hub::before,.hist-detail,.pay-tl li.is-now::before{animation:none}.ph-topup,.pay-act{transition:none}}
 }
+
+/* ===== v9: Vellum Noir — ฮับกะทัดรัด + รายการธุรกรรมแบบแถว จัดกลุ่มตามวัน ===== */
+@media (max-width:767px){
+  .ph-search[hidden]{display:none}
+  .pay-hub{padding:16px;border-radius:22px;background:linear-gradient(165deg,rgba(228,190,98,.05),transparent 50%),#101216}
+  .pay-hub::before{opacity:.8}
+  .ph-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+  .ph-eyebrow{display:block;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--h-sub)}
+  .ph-top .ph-title{display:block;margin-top:2px;font-size:1.3rem;font-weight:700;color:var(--h-text)}
+  .ph-ico{width:42px;height:42px;border-radius:13px;background:transparent;border:1px solid rgba(228,190,98,.35)}
+  .ph-bal{margin:12px 0 0;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.035)}
+  .ph-bal b{font-size:2.1rem}
+  .ph-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0 0}
+  .ph-stat{
+    display:flex;flex-direction:column;align-items:flex-start;gap:0;min-height:58px;padding:9px 12px;font:inherit;text-align:left;
+    border:0;border-radius:14px;background:rgba(255,255,255,.035);color:var(--h-text);transition:transform .12s,background-color .18s;
+  }
+  .ph-stat:active{transform:scale(.97);background:rgba(255,255,255,.07)}
+  .ph-stat span{font-size:.76rem;color:var(--h-sub);line-height:1.35}
+  .ph-stat b{font-size:1.35rem;line-height:1.2;font-variant-numeric:tabular-nums}
+  .ph-stat.is-done b{color:#8fd4a9}
+  .ph-stat.is-pend b{color:#f2b37a}
+  .ph-topup{margin:10px 0 0;min-height:50px;border:0;border-radius:15px;background:linear-gradient(180deg,#E4C46E,#D4B15A);color:#14110a;font-size:1.02rem;font-weight:800;box-shadow:0 8px 20px rgba(212,177,90,.18)}
+  .ph-topup span{margin-right:8px;font-size:1.2rem;line-height:1}
+  .ph-topup:active{background:linear-gradient(180deg,#d8b862,#c6a24e)}
+
+  /* รายการธุรกรรมแบบ Compact Premium: กลุ่มตามวัน เส้นแบ่งบาง ไม่ตีกรอบทุกใบ */
+  .pay-day{margin:0 0 14px}
+  .pay-day-h{margin:0 0 6px 4px;font-size:.84rem;font-weight:600;color:var(--h-sub);letter-spacing:.02em}
+  .pay-list{border:1px solid var(--h-line);border-radius:20px;background:#101216;overflow:hidden}
+  .pay-row + .pay-row{border-top:1px solid rgba(255,255,255,.06)}
+  .pay-row-top{
+    display:flex;align-items:center;gap:12px;width:100%;min-height:68px;padding:12px 14px;border:0;background:transparent;
+    color:inherit;font:inherit;text-align:left;transition:background-color .18s;
+  }
+  .pay-row-top:active{background:rgba(255,255,255,.05)}
+  .pay-row .hist-ico{width:40px;height:40px;border-radius:12px;flex:none}
+  .pay-row .hist-ico svg{width:19px;height:19px}
+  .pay-row.is-credited .hist-ico{background:rgba(128,201,160,.12);border-color:rgba(128,201,160,.25);color:#8fd4a9}
+  .pay-row.is-expired .hist-ico,.pay-row.is-failed .hist-ico{background:rgba(255,255,255,.04);border-color:var(--h-line);color:var(--h-sub)}
+  .pay-row .hist-main{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:0}
+  .pay-row .hist-main b{font-size:1rem;font-weight:600;color:var(--h-text)}
+  .pay-row .hist-meta{font-size:.82rem}
+  .pay-row .hist-status{align-self:flex-start;padding:1px 9px;font-size:.74rem}
+  .pay-row .hist-side{flex:none;display:flex;flex-direction:row;align-items:center;gap:6px}
+  .pay-row .hist-amt{font-size:1.15rem;font-weight:700;color:var(--h-text);font-variant-numeric:tabular-nums}
+  .pay-row.is-pending .hist-amt{color:var(--h-gold)}
+  .pay-row.is-expired .hist-amt,.pay-row.is-failed .hist-amt{color:var(--h-sub)}
+  .pay-chev{font-size:1.5rem;line-height:1;color:var(--h-sub);transition:transform .2s}
+  .pay-row[data-open="1"] .pay-chev{transform:rotate(90deg)}
+  .pay-row .hist-detail{margin:0;padding:4px 16px 14px 66px;border-top:0}
+  .pay-row .pay-act{width:100%;margin:10px 0 0}
+  .pay-row .pay-note{margin:8px 0 0}
+  @media (prefers-reduced-motion:reduce){.pay-chev,.ph-stat,.pay-row-top{transition:none}}
+}
