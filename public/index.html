@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="care.css?v=2">
 <link rel="stylesheet" href="privacy.css?v=1">
 <link rel="stylesheet" href="mobile-polish.css?v=1" media="(max-width: 767px)">
-<link rel="stylesheet" href="history-polish.css?v=9">
+<link rel="stylesheet" href="history-polish.css?v=10">
 <link rel="stylesheet" href="print.css?v=1" media="print">
 </head>
 <body>
@@ -173,17 +173,21 @@
             <span class="wallet-hist-txt"><b>ประวัติรายการ</b><small>ประวัติการตรวจและการเติมเครดิต</small></span>
           </button>
         <div id="historyPanel" class="history-panel" hidden>
-          <header class="lib-head" id="libHead" hidden>
-            <div class="lib-head-txt"><span class="lib-eyebrow">Vellum Check / Library</span>
-              <b class="lib-title">คลังรายงานของฉัน</b><small>รายงานที่บันทึกไว้ทั้งหมด</small></div>
-            <div class="lib-count" aria-live="polite"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="3"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg><b id="libCount">0</b><span>รายงาน</span></div>
-          </header>
-          <div class="lib-stats" id="libStats" role="group" aria-label="ภาพรวมคลังรายงาน" hidden>
-            <button type="button" class="lib-stat is-on" data-q="all"><b id="stAll">0</b><span>รายงานทั้งหมด</span></button>
-            <button type="button" class="lib-stat" data-q="done"><b id="stDone">0</b><span>ตรวจเสร็จแล้ว</span></button>
-            <button type="button" class="lib-stat" data-q="pin"><b id="stPin">0</b><span>ปักหมุด</span></button>
-            <button type="button" class="lib-stat" data-q="review"><b id="stReview">0</b><span>ประเด็นควรทบทวน</span></button>
-          </div>
+          
+          <section class="lib-dash" id="libStats" aria-label="ภาพรวมรายการตรวจสัญญา" hidden>
+            <div class="ld-head" id="libDashHead">
+              <span class="ld-mark" aria-hidden="true"></span>
+              <span class="ld-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></span>
+              <div class="ld-txt"><b>ดูรายการตรวจสัญญา</b><small>และประวัติการใช้เครดิตของคุณ</small></div>
+              <button type="button" class="ld-period" id="libPeriod" aria-haspopup="listbox" aria-expanded="false"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg><span id="libPeriodLbl">ช่วงเวลา</span><i aria-hidden="true">▾</i></button>
+            </div>
+            <div class="ld-grid" role="group" aria-label="สรุปรายการ">
+              <button type="button" class="lib-stat is-gold is-on" data-q="all"><span class="ls-ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></span><span class="ls-tx"><b id="stAll">0</b><strong>รายงานทั้งหมด</strong><small>ดูรายละเอียดทั้งหมดของคุณ</small></span><i class="ls-go" aria-hidden="true">›</i></button>
+              <button type="button" class="lib-stat is-mint" data-q="done"><span class="ls-ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.3 2.4 2.4 4.6-5"/></svg></span><span class="ls-tx"><b id="stDone">0</b><strong>ตรวจเสร็จแล้ว</strong><small>ดำเนินการสำเร็จเรียบร้อย</small></span><i class="ls-go" aria-hidden="true">›</i></button>
+              <button type="button" class="lib-stat is-gold-soft" data-q="pin"><span class="ls-ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4h6l-1 6 3 3v1.5H7V13l3-3z"/><path d="M12 14.5V21"/></svg></span><span class="ls-tx"><b id="stPin">0</b><strong>ปักหมุด</strong><small>รายการที่คุณบันทึกไว้</small></span><i class="ls-go" aria-hidden="true">›</i></button>
+              <button type="button" class="lib-stat is-sky" data-q="review"><span class="ls-ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4v4.5h-4.5M12 8v4.2l2.8 1.6"/></svg></span><span class="ls-tx"><b id="stReview">0</b><strong>ประเด็นควรทบทวน</strong><small>รายการที่ต้องตรวจสอบเพิ่มเติม</small></span><i class="ls-go" aria-hidden="true">›</i></button>
+            </div>
+          </section>
           <div class="hist-tabs" role="tablist" aria-label="ประเภทประวัติ">
             <button type="button" role="tab" class="hist-tab is-on" data-tab="insp" aria-selected="true">ตรวจสัญญา</button>
             <button type="button" role="tab" class="hist-tab" data-tab="pay" aria-selected="false">เติมเครดิต</button>
@@ -192,8 +196,6 @@
             <div class="hist-search"><label><span class="sr-only">ค้นหารายงาน</span><input type="search" id="histSearch" placeholder="ค้นหาจากชื่อรายงานหรือประเภทสัญญา" autocomplete="off" enterkeyhint="search"></label>
               <button type="button" class="hist-search-clear" id="histSearchClear" aria-label="ล้างคำค้นหา" hidden>✕</button></div>
             <div class="lib-chips" id="libChips" role="group" aria-label="ตัวกรองด่วน">
-              <button type="button" class="lib-chip is-on" data-q="all" aria-pressed="true">ทั้งหมด <span id="libChipAll">0</span></button>
-              <button type="button" class="lib-chip" data-q="pin" aria-pressed="false">ปักหมุด <span id="libChipPin">0</span></button>
               <button type="button" class="lib-chip" data-q="type" aria-pressed="false" aria-haspopup="listbox" aria-expanded="false"><span id="libTypeLbl">ประเภทสัญญา</span> <span aria-hidden="true">▾</span></button>
               <button type="button" class="lib-chip is-plain" data-q="sort" aria-haspopup="listbox" aria-expanded="false"><span id="libSortLbl">ใหม่ไปเก่า</span> <span aria-hidden="true">▾</span></button>
             </div>
@@ -460,6 +462,7 @@
   var shown = PAGE;
   var inspItems = [];
   function showError(msg) {
+    var ds = document.getElementById('libStats'); if (ds) ds.hidden = true;
     panel.hidden = false;
     list.innerHTML = '<div class="hist-empty"><b>' + esc(msg) + '</b>' +
       '<button type="button" class="hist-retry" data-retry>ลองใหม่</button></div>';
@@ -471,7 +474,7 @@
   // ประวัติตรวจเก็บเฉพาะรายการที่ตรวจสำเร็จ จึงแสดงป้าย "สำเร็จ" ได้จริง
   var TYPE_NAME = { rent: 'สัญญาเช่า', sale: 'สัญญาซื้อขาย', employment: 'สัญญาจ้างงาน', service: 'สัญญาจ้างบริการ', loan: 'สัญญากู้ยืมเงิน', shareholder: 'สัญญาหุ้นส่วน', nda: 'สัญญารักษาความลับ', other: 'สัญญาอื่น ๆ' };
   // ---- คลังรายงานส่วนตัว: ชื่อ ค้นหา กรอง เรียง ปักหมุด เปลี่ยนชื่อ ลบ ----
-  var view = { q: '', type: 'all', sort: 'new', pinOnly: false, reviewOnly: false };
+  var view = { q: '', type: 'all', sort: 'new', pinOnly: false, reviewOnly: false, period: 'all' };
   var tools = document.getElementById('histTools');
   function shortDate(iso) {
     try { return new Date(iso).toLocaleDateString('th-TH', { day: 'numeric', month: 'short' }); } catch (e) { return ''; }
@@ -509,31 +512,23 @@
     sel.value = cur; view.type = cur;
   }
   var counted = {};
-  function countTo(id, to) {
-    var el = document.getElementById(id); if (!el) return;
-    var from = counted[id];
-    counted[id] = to;
-    if (from === to) { el.textContent = String(to); return; }
-    if (from === undefined && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) && to > 0) from = 0;
-    if (from === undefined || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) { el.textContent = String(to); return; }
-    var t0 = null, dur = 600;
-    function step(ts) {
-      if (t0 === null) t0 = ts;
-      var k = Math.min(1, (ts - t0) / dur), e = 1 - Math.pow(1 - k, 3);
-      el.textContent = String(Math.round(from + (to - from) * e));
-      if (k < 1) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
+  function countTo(id, to) { var el = document.getElementById(id); if (el) el.textContent = String(to); }
+  var PERIODS = [['all', 'ทุกช่วงเวลา'], ['7', '7 วันล่าสุด'], ['30', '30 วันล่าสุด'], ['365', '1 ปีล่าสุด']];
+  function inPeriod(it) {
+    if (view.period === 'all') return true;
+    return Date.now() - new Date(it.createdAt).getTime() <= Number(view.period) * 86400000;
   }
   function updateLibHead() {
     var head = document.getElementById('libHead');
-    var pins = inspItems.filter(function (x) { return x.pinned; }).length;
+    var pitems = inspItems.filter(inPeriod);
+    var pins = pitems.filter(function (x) { return x.pinned; }).length;
     if (head) head.hidden = !inspItems.length || currentKind === 'pay';
     var set = function (id, v) { var e = document.getElementById(id); if (e) e.textContent = String(v); };
-    set('libCount', inspItems.length); set('libChipAll', inspItems.length); set('libChipPin', pins);
-    var rev = inspItems.reduce(function (n, x) { return n + (x.summary ? x.summary.check_detail || 0 : 0); }, 0);
+
+    var rev = pitems.reduce(function (n, x) { return n + (x.summary ? x.summary.check_detail || 0 : 0); }, 0);
     var st = document.getElementById('libStats'); if (st) st.hidden = !inspItems.length || currentKind === 'pay';
-    countTo('stAll', inspItems.length); countTo('stDone', inspItems.length); countTo('stPin', pins); countTo('stReview', rev);
+    countTo('stAll', pitems.length); countTo('stDone', pitems.length); countTo('stPin', pins); countTo('stReview', rev);
+    var pl = document.getElementById('libPeriodLbl'); if (pl) pl.textContent = view.period === 'all' ? 'ช่วงเวลา' : PERIODS.filter(function (x) { return x[0] === view.period; })[0][1];
     var tl = document.getElementById('libTypeLbl'); if (tl) tl.textContent = view.type !== 'all' ? (TYPE_NAME[view.type] || 'ประเภทสัญญา') : 'ประเภทสัญญา';
     var sl = document.getElementById('libSortLbl'); if (sl) sl.textContent = view.sort === 'old' ? 'เก่าไปใหม่' : 'ใหม่ไปเก่า';
     document.querySelectorAll('#libStats .lib-stat').forEach(function (b) {
@@ -555,6 +550,7 @@
     updateLibHead();
     var q = view.q.trim().toLowerCase();
     var rows = inspItems.filter(function (it) {
+      if (!inPeriod(it)) return false;
       if (view.pinOnly && !it.pinned) return false;
       if (view.reviewOnly && !(it.summary && it.summary.check_detail > 0)) return false;
       if (view.type !== 'all' && it.contractType !== view.type) return false;
@@ -624,25 +620,25 @@
   function openPop(btn, kind) {
     if (popEl && popBtn === btn) { closePop(); return; }
     closePop();
-    var opts = kind === 'sort'
+    var opts = kind === 'period' ? PERIODS : kind === 'sort'
       ? [['new', 'ใหม่ไปเก่า'], ['old', 'เก่าไปใหม่']]
       : [['all', 'ทุกประเภท']].concat(Object.keys(TYPE_NAME).filter(function (k) {
           return inspItems.some(function (x) { return x.contractType === k; });
         }).map(function (k) { return [k, TYPE_NAME[k]]; }));
-    var cur = kind === 'sort' ? view.sort : view.type;
+    var cur = kind === 'period' ? view.period : kind === 'sort' ? view.sort : view.type;
     popEl = document.createElement('div');
     popEl.className = 'lib-pop'; popEl.setAttribute('role', 'listbox');
     popEl.innerHTML = opts.map(function (o) {
       return '<button type="button" role="option" class="lib-opt' + (o[0] === cur ? ' is-sel' : '') + '" data-v="' + esc(o[0]) + '" aria-selected="' + (o[0] === cur) + '">' +
         '<span>' + esc(o[1]) + '</span><i aria-hidden="true">' + (o[0] === cur ? '✓' : '') + '</i></button>';
     }).join('');
-    var host = document.getElementById('libChips');
+    var host = document.getElementById(kind === 'period' ? 'libDashHead' : 'libChips');
     host.parentNode.insertBefore(popEl, host.nextSibling);
     popBtn = btn; btn.setAttribute('aria-expanded', 'true');
     popEl.addEventListener('click', function (e) {
       var o = e.target.closest('.lib-opt'); if (!o) return;
       var v = o.getAttribute('data-v');
-      if (kind === 'sort') view.sort = v; else view.type = v;
+      if (kind === 'sort') view.sort = v; else if (kind === 'period') view.period = v; else view.type = v;
       closePop(); shown = PAGE; renderInspections();
     });
   }
@@ -751,6 +747,7 @@
       shown = PAGE; renderInspections();
     });
     document.getElementById('libStats').addEventListener('click', function (e) {
+      var pb = e.target.closest('#libPeriod'); if (pb) { openPop(pb, 'period'); return; }
       var b = e.target.closest('.lib-stat'); if (!b) return;
       var k = b.getAttribute('data-q');
       if (k === 'all' || k === 'done') { view.pinOnly = false; view.reviewOnly = false; view.type = 'all'; }
@@ -920,6 +917,7 @@
     var ph = document.getElementById('payHub'); if (ph) ph.hidden = kind !== 'pay';
     var psr0 = document.querySelector('.ph-search'); if (psr0) psr0.hidden = kind !== 'pay';
     var lh = document.getElementById('libHead'); if (lh && kind === 'pay') lh.hidden = true;
+    var ld = document.getElementById('libStats'); if (ld && kind === 'pay') ld.hidden = true;
     if (tools) tools.hidden = kind === 'pay' || !inspItems.length;
     if (kind === 'pay') openPayments(); else openInspections();
   }
