@@ -1223,22 +1223,34 @@ async function runCheck() {
 const UPLOAD_MAX_BYTES = 5 * 1024 * 1024;
 const UPLOAD_EXT = ['txt', 'pdf', 'docx', 'jpg', 'jpeg', 'png', 'webp'];
 
+// แจ้งสถานะอัปโหลดในหน้า (care.js) ถ้าไม่มีให้ใช้ alert แบบเดิม
+function upStatus(kind, message) {
+  if (typeof window.careUpload === 'function' && window.careUpload(kind, message)) return;
+  if (kind === 'error') alert(message);
+}
+function fmtSize(n) {
+  return n >= 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB';
+}
+
 // ไฟล์ .txt อ่านในเครื่อง ส่วน PDF, Word และรูปภาพส่งไปให้เซิร์ฟเวอร์อ่าน
 async function handleUpload(file) {
   const ext = file.name.includes('.') ? file.name.split('.').pop().toLowerCase() : '';
   if (!UPLOAD_EXT.includes(ext)) {
-    alert('รองรับไฟล์ .txt, .pdf, .docx, JPG, PNG และ WEBP');
+    upStatus('error', 'รองรับไฟล์ .txt, .pdf, .docx, JPG, PNG และ WEBP เท่านั้น หรือวางข้อความสัญญาแทนได้');
     return;
   }
   if (file.size > UPLOAD_MAX_BYTES) {
-    alert('ไฟล์ต้องมีขนาดไม่เกิน 5 MB');
+    upStatus('error', 'ไฟล์ "' + file.name + '" ใหญ่ ' + fmtSize(file.size) + ' (รองรับไม่เกิน 5 MB) ลองลดขนาดหรือวางข้อความแทน');
     return;
   }
+
+  upStatus('busy', 'กำลังอ่านไฟล์ ' + file.name + ' (' + fmtSize(file.size) + ')...');
 
   if (ext === 'txt') {
     const reader = new FileReader();
     reader.onload = function () {
       els.input.value = String(reader.result || '');
+      upStatus('ok', 'อ่านไฟล์ ' + file.name + ' แล้ว (' + els.input.value.length.toLocaleString('th-TH') + ' ตัวอักษร) ตรวจข้อความในกล่องก่อนกดตรวจ');
       els.input.dispatchEvent(new Event('input', { bubbles: true }));
     };
     reader.readAsText(file, 'utf-8');
@@ -1246,7 +1258,7 @@ async function handleUpload(file) {
   }
 
   if (!currentUser) {
-    alert('กรุณาเข้าสู่ระบบก่อนอัปโหลดไฟล์');
+    upStatus('error', 'กรุณาเข้าสู่ระบบก่อนอัปโหลดไฟล์ PDF, Word หรือรูปภาพ (ไฟล์ .txt หรือการวางข้อความใช้ได้เลย)');
     return;
   }
 
@@ -1262,12 +1274,13 @@ async function handleUpload(file) {
     const r = await api(CONFIG.api.extract, 'POST', { name: file.name, data: base64 });
     if (typeof r.data.credits === 'number') showCredits(r.data.credits, r.data.voiceCredits);
     if (!r.ok) {
-      alert(r.data.error || 'อ่านไฟล์ไม่สำเร็จ');
+      upStatus('error', (r.data.error || 'อ่านไฟล์ไม่สำเร็จ') + ' · ลองวางข้อความสัญญาแทนได้ ข้อความที่พิมพ์ไว้ไม่ถูกลบ');
       return;
     }
     els.input.value = r.data.text;
+    upStatus('ok', 'อ่านไฟล์ ' + file.name + ' แล้ว (' + String(r.data.text).length.toLocaleString('th-TH') + ' ตัวอักษร) ตรวจข้อความในกล่องก่อนกดตรวจ');
   } catch (err) {
-    alert('อ่านไฟล์ไม่สำเร็จ ลองใหม่อีกครั้ง');
+    upStatus('error', 'อ่านไฟล์ไม่สำเร็จ ลองใหม่อีกครั้ง หรือวางข้อความสัญญาแทนได้');
   } finally {
     // อัปเดตตัวนับและปุ่มตรวจให้ตรงกับข้อความที่อยู่ในกล่องจริง
     els.input.dispatchEvent(new Event('input', { bubbles: true }));
