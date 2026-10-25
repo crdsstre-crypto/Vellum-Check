@@ -98,3 +98,23 @@
   .ct-list.ct-anim li[data-value] .ct-ico svg{opacity:1}
   .ct-list li:active .ct-ico{transform:none}
 }
+
+/* ---------- ไอคอนส่วนอื่น (ตราชั่งหน้าแรก, Privacy Shield, เมนูบัญชี) ในกรอบทองบางแบบเดียวกัน ---------- */
+.hero-art,.ps-ico,.menu-ico{
+  box-sizing:border-box;
+  border:var(--ct-bw) solid rgba(var(--ct-gold),.5) !important;
+  background:linear-gradient(160deg,#242a35,#191d26) !important;
+  box-shadow:0 6px 14px rgba(0,0,0,.35);
+  overflow:visible;
+  transition:transform .22s ease,border-color .22s ease;
+}
+.hero-art{border-radius:var(--ct-radius)}
+.ps-ico{width:48px;height:48px;padding:6px;border-radius:15px}
+#authLoggedIn .menu-ico,.menu-ico{width:48px;height:48px;flex:0 0 48px;padding:6px;border-radius:15px}
+.ps-ico svg,.menu-ico svg{display:block;width:100%;height:100%;filter:drop-shadow(0 2px 2px rgba(0,0,0,.38))}
+.menu-item:active .menu-ico,.ps-head:active .ps-ico{transform:translateY(-2px) scale(1.04)}
+.hero-art{filter:drop-shadow(0 3px 3px rgba(0,0,0,.2))}
+@media (prefers-reduced-motion:reduce){
+  .hero-art,.ps-ico,.menu-ico{transition:none}
+  .menu-item:active .menu-ico{transform:none}
+}
