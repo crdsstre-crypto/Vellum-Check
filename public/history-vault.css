@@ -242,5 +242,41 @@
   #authLoggedIn .menu-item{border-color:var(--a-line)}
   #authLoggedIn .acct-menu::before{color:#92949C}
 
+  /* ---------- รอบ 7: บัญชีของฉัน — VELLUM Black Label · Wallet Dashboard แผงเดียว ----------
+     พื้น #090A0C · การ์ด #131417 · เส้น #292A2F · ฟ้า #73B5FF ตรวจสัญญา · เขียว #55D9A6 เสียง · ม่วง #B69AFF ตั้งค่า · ทอง #F0C75E แบรนด์ */
+  #authLoggedIn{--a-card:#131417;--a-line:#292A2F;--a-amber:#F0C75E;--a-blue:#73B5FF;--a-green:#55D9A6;--a-purple:#B69AFF}
+  #authLoggedIn .pane[data-pane="services"]{display:none!important}
+  #authLoggedIn .acct-row{padding:14px;border-radius:20px}
+  #authLoggedIn .acct-label{display:block;font-size:1.05rem;font-weight:700;color:#F4F4F5}
+  #authLoggedIn .acct-mail{display:block;margin-top:2px;font-size:.92rem;font-weight:400;color:#92949C}
+  #authLoggedIn .acct-info::after{content:"✓ ข้อมูลบัญชี";display:block;margin-top:3px;font-size:.84rem;font-weight:600;color:var(--a-green)}
+  #authLoggedIn .acct-check{display:none}
+  #authLoggedIn .acct-avatar{border-color:var(--a-amber);box-shadow:none}
+
+  #authLoggedIn .wallet-total{position:relative;grid-template-columns:1fr;padding:16px 16px 14px;border-radius:20px}
+  #authLoggedIn .wallet-total::before{content:"";position:absolute;right:16px;top:16px;width:26px;height:26px;background:url("data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23F0C75E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"%3E%3Cpath d="M20 7V5a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2"/%3E%3Cpath d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/%3E%3C/svg%3E") center/contain no-repeat}
+  #authLoggedIn .wallet-total-label{grid-row:1;font-size:.88rem;color:#92949C}
+  #authLoggedIn .wallet-total-num{grid-row:2}
+  #authLoggedIn .wallet-total-num b{font-size:3rem;color:#F4F4F5;letter-spacing:-.01em}
+  #authLoggedIn .wallet-rows{display:grid;grid-row:3;grid-template-columns:1fr 1fr;gap:0;margin:6px 0 4px;padding:14px 0 0;border:0;border-top:1px solid var(--a-line)}
+  #authLoggedIn .wallet-rows>div{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:10px;row-gap:6px;align-items:center;padding:0 0 0 0;background:none;border-radius:0}
+  #authLoggedIn .wallet-rows>div+div{padding-left:16px;border-left:1px solid var(--a-line)}
+  #authLoggedIn .wallet-rows dt{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-size:.92rem;font-weight:500;color:#C9CBD2}
+  #authLoggedIn .wallet-rows dt::before{content:"";flex:0 0 auto;width:36px;height:36px;border-radius:11px;background-position:center;background-repeat:no-repeat;background-size:20px}
+  #authLoggedIn .wallet-rows>div:nth-child(1) dt::before{background-color:rgba(115,181,255,.14);background-image:url("data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%2373B5FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"%3E%3Cpath d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/%3E%3Ccircle cx="12" cy="12" r="3"/%3E%3C/svg%3E")}
+  #authLoggedIn .wallet-rows>div:nth-child(2) dt::before{background-color:rgba(85,217,166,.14);background-image:url("data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%2355D9A6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"%3E%3Crect x="9" y="3" width="6" height="11" rx="3"/%3E%3Cpath d="M5 11a7 7 0 0 0 14 0M12 18v3"/%3E%3C/svg%3E")}
+  #authLoggedIn .wallet-rows>div:nth-child(1) dt{color:#C9CBD2}
+  #authLoggedIn .wallet-rows>div:nth-child(2) dt{color:#C9CBD2}
+  #authLoggedIn .wallet-rows dd{grid-column:1/-1;margin:0;font-size:.84rem;color:#92949C}
+  #authLoggedIn .wallet-rows dd b{font-size:1.7rem;color:#F4F4F5}
+  #authLoggedIn .wallet-quick{grid-row:4;margin-top:8px}
+  #authLoggedIn .wallet-total .wallet-topup{min-height:52px;border-radius:15px;background:var(--a-amber);color:#16120a;font-size:1.02rem}
+  #authLoggedIn .wallet-total .wallet-topup::after{content:"↗";margin-left:8px;font-size:.9rem}
+
+  #authLoggedIn .acct-menu{border-radius:20px;margin-top:14px}
+  #authLoggedIn .acct-menu::before{padding:14px 16px 6px;font-size:.95rem;font-weight:700;color:#F4F4F5}
+  #authLoggedIn .menu-ico{width:44px;height:44px;border-radius:13px}
+  #authLoggedIn .acct-out{border-radius:18px;min-height:54px}
+
   @media (prefers-reduced-motion:reduce){#histList .hr2,.hist-search input,.lib-seg-b{transition:none}}
 }
