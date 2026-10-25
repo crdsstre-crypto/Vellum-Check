@@ -4,7 +4,7 @@
    ลบไฟล์นี้ + บรรทัด <link> ใน index.html = กลับไปใช้ history-polish.css v13 */
 .vault-head{display:none}
 @media (max-width:767px){
-  .history-panel{--v-gold:#D9B968;--v-gold-line:rgba(217,185,104,.45);--v-navy:#0E1624;--v-card:#12151A;--v-line:#262A31}
+  .history-panel{--v-gold:#E8C35D;--v-gold-line:rgba(232,195,93,.45);--v-navy:#0E1624;--v-card:#11151B;--v-line:#2B303A;--d-gold:#E8C35D;--d-mint:#83D8B4;--d-sky:#85BCEB;--v-pend:#F4A66A;--d-card:#11151B;--d-line:#2B303A}
 
   /* ---------- โซน A: Vault Header ---------- */
   .vault-head{
@@ -66,6 +66,21 @@
   .bottom-nav .bn-item{position:relative}
   .bottom-nav .bn-item.is-on{color:var(--v-gold)}
   .bottom-nav .bn-item.is-on::before{content:"";position:absolute;left:28%;right:28%;top:0;height:2px;border-radius:0 0 2px 2px;background:var(--v-gold);box-shadow:0 0 8px rgba(217,185,104,.55)}
+
+  /* ---------- รอบ 2: การ์ดเอกสาร · กลุ่มวันพับได้ · สีสถานะ + ข้อความกำกับ ---------- */
+  .hist-tabs .hist-tab{font-weight:600}
+  .hist-tabs .hist-tab.is-on{background:#22262E;color:var(--h-text,#f5f5f5)}
+  .hr2 .hr-no{display:block;margin:0;font-size:.7rem;font-weight:700;letter-spacing:.08em;color:var(--v-gold);text-transform:uppercase}
+  .hr2 .hr-review{display:inline-flex;align-items:center;padding:3px 9px;border-radius:9px;background:rgba(133,188,235,.12);color:var(--d-sky);font-size:.76rem;font-weight:600}
+  .hr2 .hr-state{padding:3px 9px;border-radius:9px;background:rgba(131,216,180,.12)}
+  .hr-day-h{cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none}
+  .hr-day-n{font-style:normal;font-size:.74rem;font-weight:700;padding:1px 8px;border-radius:999px;background:var(--d-chip,#22252B);color:var(--h-sub,#8b8e98)}
+  .hr-day-chev{flex:0 0 auto;font-style:normal;font-size:1.1rem;line-height:1;color:var(--h-sub,#8b8e98);transition:transform .2s}
+  .hr-day.is-collapsed .hr-day-chev{transform:rotate(-90deg)}
+  .hr-day.is-collapsed .hr-day-list{display:none}
+  .pay-row.is-pending .hist-status{color:var(--v-pend);background:rgba(244,166,106,.12)}
+  .pay-row.is-credited .hist-status{color:var(--d-mint);background:rgba(131,216,180,.12)}
+  .pay-row{border-color:var(--v-line);border-radius:16px;background:var(--v-card)}
 
   @media (prefers-reduced-motion:reduce){#histList .hr2,.hist-search input,.lib-seg-b{transition:none}}
 }
