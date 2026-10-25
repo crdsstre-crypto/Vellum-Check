@@ -44,6 +44,7 @@ app.use((req, res, next) => (
 
 // ---------- ตรวจผลจาก AI ----------
 const LEVELS = new Set(['check_detail', 'caution', 'low']);
+const URGENCIES = new Set(['before_sign', 'before_pay', 'before_deadline', 'monitor']);
 
 // ตัดช่องว่างทั้งหมดก่อนเทียบ เพื่อกันปัญหาการขึ้นบรรทัดใหม่ต่างกัน
 const squash = s => s.replace(/\s+/g, '');
@@ -68,6 +69,10 @@ function cleanResult(raw, sourceText) {
       reference: str(it?.reference),
       suggested_fix: str(it?.suggested_fix),
       how_to_negotiate: str(it?.how_to_negotiate),
+      impact: str(it?.impact).slice(0, 300),
+      urgency: URGENCIES.has(it?.urgency) ? it.urgency : 'monitor',
+      urgency_note: str(it?.urgency_note).slice(0, 300),
+      uncertainty: str(it?.uncertainty).slice(0, 300),
       missing: !found,
     };
   });
@@ -245,6 +250,7 @@ app.post('/api/followup', async (req, res) => {
         level: pick(it?.level), title: pick(it?.title), quote: pick(it?.quote),
         explanation: pick(it?.explanation), reference: pick(it?.reference),
         suggested_fix: pick(it?.suggested_fix), how_to_negotiate: pick(it?.how_to_negotiate),
+        impact: pick(it?.impact), uncertainty: pick(it?.uncertainty),
       })),
       missing_info: (Array.isArray(r.missing_info) ? r.missing_info : []).slice(0, 10).map(pick),
     });
