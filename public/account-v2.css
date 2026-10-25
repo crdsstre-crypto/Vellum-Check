@@ -1,5 +1,5 @@
 /* =========================================================
-   account-v2.css (v8) — แผน "บัญชีของฉัน" บนมือถือ: Compact Luxury Profile
+   account-v2.css (v9) — แผน "บัญชีของฉัน" บนมือถือ: Compact Luxury Profile
    โหลดท้ายสุดใน index.html ด้วย media="(max-width: 767px)"
    โครงสร้าง: index.html (.cred-card > .acct-row, .wallet-total > .wallet-rows .ws)
    ลบไฟล์นี้ + บรรทัด <link> = กลับไปหน้าตาเดิมจาก history-vault.css รอบ 9
@@ -28,11 +28,11 @@ body[data-sheet="acct"] #authCard .sheet-head h2::after{
 
 /* ---- การ์ดเดียว: ใช้พื้นที่น้อยลง ---- */
 .cred-head{display:none}
-#authLoggedIn .cred-card{margin:0 0 var(--av2-gap);padding:var(--av2-pad);border-radius:20px;background:var(--av2-surface);border:1px solid var(--av2-line)}
+#authLoggedIn .cred-card{margin:0 0 var(--av2-gap);padding:14px;border-radius:20px;background:var(--av2-surface);border:1px solid var(--av2-line)}
 
 /* ---- บัญชีที่เข้าสู่ระบบ (แถวเดียว ไม่ซ้อนกรอบ) ---- */
 #authLoggedIn .cred-card .acct-row{
-  margin:0 0 14px;padding:0 0 14px;border:0;border-bottom:1px solid var(--av2-line);border-radius:0;background:none;
+  margin:0 0 12px;padding:2px 2px 0;border:0;border-radius:0;background:none;
   animation:vcIn .3s ease both;
 }
 #authLoggedIn .cred-card .acct-avatar{width:48px;height:48px;border-color:var(--av2-gold)}
@@ -46,8 +46,32 @@ body.auth-open #authLoggedIn .cred-card .acct-avatar{animation:vcGlow 1.3s ease 
 @keyframes vcFade{from{opacity:0}to{opacity:1}}
 
 /* ---- เครดิตคงเหลือ ---- */
-#authLoggedIn .cred-card .wallet-total{display:flex;flex-direction:column;align-items:stretch;text-align:left;margin:0;padding:0;background:none;border:0;border-radius:0;animation:vcIn .3s ease .08s both}
-#authLoggedIn .cred-card .wallet-total::before,#authLoggedIn .cred-card .wallet-total::after{display:none}
+#authLoggedIn .cred-card .wallet-total{
+  position:relative;isolation:isolate;overflow:hidden;
+  display:flex;flex-direction:column;align-items:stretch;text-align:left;margin:0;padding:16px 14px 14px;
+  border:1px solid rgba(231,191,88,.18);border-radius:18px;
+  background:linear-gradient(160deg,#18150D 0%,#0E0F12 58%);
+  animation:vcIn .3s ease .08s both;
+}
+#authLoggedIn .cred-card .wallet-total>*{position:relative;z-index:1}
+/* พื้นหลังเคลื่อนไหว "Liquid Gold Flow": แสงทองไหลช้า ๆ + เส้นแสงโค้ง (ใช้ transform อย่างเดียว เล่นเฉพาะตอนแผนเปิด) */
+#authLoggedIn .cred-card .wallet-total::before{
+  content:"";display:block;position:absolute;z-index:0;inset:-35%;pointer-events:none;
+  background:
+    radial-gradient(38% 34% at 26% 32%,rgba(231,191,88,.30),transparent 70%),
+    radial-gradient(34% 30% at 78% 72%,rgba(231,191,88,.17),transparent 70%),
+    radial-gradient(28% 28% at 62% 16%,rgba(255,228,150,.12),transparent 70%);
+  will-change:transform;
+}
+#authLoggedIn .cred-card .wallet-total::after{
+  content:"";display:block;position:absolute;z-index:0;top:0;bottom:0;left:0;width:200%;pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 120' preserveAspectRatio='none' fill='none' stroke='%23E7BF58' stroke-linecap='round'%3E%3Cpath d='M0 78C75 28 225 128 300 78' stroke-width='1.2' stroke-opacity='.38'/%3E%3Cpath d='M0 92C75 42 225 142 300 92' stroke-width='.8' stroke-opacity='.22'/%3E%3Cpath d='M0 64C75 14 225 114 300 64' stroke-width='.8' stroke-opacity='.18'/%3E%3C/svg%3E") repeat-x 0 0/50% 100%;
+  will-change:transform;
+}
+body.auth-open #authLoggedIn .cred-card .wallet-total::before{animation:vcFlow 16s ease-in-out infinite alternate}
+body.auth-open #authLoggedIn .cred-card .wallet-total::after{animation:vcWave 24s linear infinite}
+@keyframes vcFlow{0%{transform:translate3d(-4%,-3%,0) rotate(0deg) scale(1)}100%{transform:translate3d(5%,4%,0) rotate(14deg) scale(1.12)}}
+@keyframes vcWave{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
 #authLoggedIn .cred-card .wallet-total-label{display:flex;align-items:center;justify-content:space-between;font-size:.85rem;color:var(--av2-sub)}
 #authLoggedIn .cred-card .wallet-total-num{display:flex;align-items:baseline;gap:8px;margin:2px 0 0}
 #authLoggedIn .cred-card .wallet-total-num b{font-size:3rem;line-height:1;font-weight:700;color:#F4F4F5;font-variant-numeric:tabular-nums}
@@ -59,8 +83,8 @@ body.auth-open #authLoggedIn .cred-card .acct-avatar{animation:vcGlow 1.3s ease 
 /* ---- เครดิตตรวจ / เครดิตเสียง: แถบสรุปแนวนอนกะทัดรัด (กรอบเดียว สองช่อง เส้นแบ่งบาง) ---- */
 #authLoggedIn .cred-card .wallet-rows{
   display:grid;grid-template-columns:1fr 1fr;gap:0;margin:0 0 14px;padding:0;
-  border:1px solid var(--av2-line);border-radius:var(--av2-radius);background:rgba(255,255,255,.03);overflow:hidden;
-  animation:vcIn .3s ease .14s both;
+  border:1px solid rgba(255,255,255,.08);border-radius:var(--av2-radius);background:rgba(8,9,11,.45);overflow:hidden;
+  animation:none;
 }
 #authLoggedIn .cred-card .ws{
   display:grid;grid-template-columns:24px 1fr;grid-template-rows:auto auto;column-gap:8px;row-gap:2px;align-items:center;
