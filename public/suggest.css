@@ -328,3 +328,73 @@ body.has-ixback .to-top{display:none}
 
 @media (prefers-reduced-motion:reduce){.cc-row,.cc-next{transition:none}}
 @media print{.cc-next,.cc-focus-go,.ix-search-w,.cc-go{display:none}.cc{break-inside:avoid}}
+
+/* =========================================================
+   Contract Brief (รอบ 8: แทนที่ Command Center เดิมบนทุกจอ มือถือเป็นค่าพื้นฐาน)
+   ซ่อมด่วน: ป้ายตัวเลข 3 ช่อง → .cb-tile · การ์ดควรจัดการก่อน → .cb-pri · ที่มาผลตรวจ → .cb-src
+   สีมาจากตัวแปรใน themes.css เท่านั้น (ไม่มีสีใหม่ถาวร)
+   ========================================================= */
+.cc.cb{padding:18px 16px 16px;border-radius:22px}
+.cb-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.cb-head-tx{min-width:0}
+.cb-kick{margin:0 0 4px;font-size:.72rem;letter-spacing:.12em;color:var(--gold-soft,var(--gold))}
+.cb-head h3{margin:0;font-size:1.5rem;line-height:1.2;font-weight:600;color:var(--text)}
+.cb-sub{margin:4px 0 0;font-size:.9rem;line-height:1.5;color:var(--muted)}
+.cb-badge{flex:none;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:92px;padding:10px 10px 8px;border-radius:14px;border:1px solid var(--card-edge);background:rgba(255,255,255,.03);color:var(--gold-soft,var(--gold));text-align:center}
+.cb-badge em{font-style:normal;font-size:.7rem;letter-spacing:.08em;color:var(--text)}
+.cb-badge small{font-size:.6rem;color:var(--muted);letter-spacing:.02em}
+
+.cb-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0 0;padding-top:16px;border-top:1px solid var(--card-edge)}
+.cb-tile{all:unset;box-sizing:border-box;display:flex;flex-direction:column;gap:2px;min-width:0;min-height:44px;padding:12px 10px 10px;border-radius:14px;background:rgba(255,255,255,.05);cursor:default}
+button.cb-tile{cursor:pointer}
+button.cb-tile:active{filter:brightness(1.15)}
+button.cb-tile:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.cb-tile b{font-size:2.1rem;line-height:1.1;font-weight:600;color:var(--text);font-variant-numeric:tabular-nums}
+.cb-t-l{font-size:.82rem;font-weight:600}
+.cb-t-u{font-size:.8rem;color:var(--muted)}
+.cb-tile.lv-check_detail{background:rgba(229,72,77,.16)}
+.cb-tile.lv-check_detail .cb-t-l{color:var(--highText)}
+.cb-tile.lv-caution{background:rgba(224,165,38,.14)}
+.cb-tile.lv-caution .cb-t-l{color:var(--midText)}
+.cb-tile.lv-info{background:rgba(74,159,208,.14)}
+.cb-tile.lv-info .cb-t-l{color:var(--lowText)}
+
+.cb-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:20px 0 10px;font-size:1.05rem;font-weight:600;color:var(--text)}
+.cb-h span{font-size:.8rem;font-weight:500;color:var(--gold-soft,var(--gold))}
+.cb-list{display:grid;gap:10px}
+.cb-pri{position:relative;padding:14px 14px 12px 16px;border-radius:16px;background:rgba(255,255,255,.045);overflow:hidden}
+.cb-pri::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--border)}
+.cb-pri.lv-check_detail::before{background:var(--highBorder)}
+.cb-pri.lv-caution::before{background:var(--midBorder)}
+.cb-pri-k{margin:0 0 4px;font-size:.8rem;font-weight:600;color:var(--muted)}
+.cb-pri.lv-check_detail .cb-pri-k{color:var(--highText)}
+.cb-pri.lv-caution .cb-pri-k{color:var(--midText)}
+.cb-pri-t{margin:0;font-size:1.15rem;line-height:1.35;font-weight:600;color:var(--text)}
+.cb-pri-why{margin:6px 0 0;font-size:.9rem;line-height:1.6;color:var(--muted)}
+.cb-ref{display:flex;align-items:center;gap:6px;margin:8px 0 0;font-size:.85rem;color:var(--gold-soft,var(--gold))}
+.cb-ref svg{flex:none}
+.cb-ref.is-warn{color:var(--warn)}
+.cb-cta{all:unset;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:48px;margin-top:12px;border-radius:14px;font-size:.95rem;font-weight:600;color:var(--gold-soft,var(--gold));cursor:pointer;-webkit-tap-highlight-color:transparent}
+.cb-cta.is-primary{background:#f1f0ec;color:#17181c}
+.cb-cta:not(.is-primary){justify-content:flex-start;min-height:44px;margin-top:6px}
+.cb-cta:active{opacity:.8}
+.cb-cta:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+:root[data-theme="light"] .cb-cta.is-primary{background:var(--gold);color:var(--on-gold)}
+.cb-more{margin:10px 0 0;font-size:.84rem;line-height:1.55;color:var(--muted)}
+
+.cb-src{margin-top:16px;border-top:1px solid var(--card-edge)}
+.cb-src summary{list-style:none;display:flex;align-items:center;gap:12px;min-height:60px;padding:10px 0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.cb-src summary::-webkit-details-marker{display:none}
+.cb-src summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:10px}
+.cb-src-ico{flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:12px;color:var(--ok);background:rgba(126,226,168,.1)}
+.cb-src-tx{flex:1;min-width:0}
+.cb-src-tx b{display:block;font-size:1rem;color:var(--text)}
+.cb-src-tx small{display:block;margin-top:2px;font-size:.8rem;line-height:1.45;color:var(--muted)}
+.cb-src-go{flex:none;font-style:normal;font-size:1.5rem;line-height:1;color:var(--muted);transition:transform .2s}
+.cb-src[open] .cb-src-go{transform:rotate(90deg)}
+.cb-src dl{margin:0 0 6px;display:grid;gap:10px}
+.cb-src dt{font-size:.78rem;font-weight:600;color:var(--gold-soft,var(--gold))}
+.cb-src dd{margin:2px 0 0;font-size:.88rem;line-height:1.6;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.cb-src-go{transition:none}}
+@media (max-width:359px){.cb-badge{display:none}.cb-tile b{font-size:1.8rem}}
+@media print{.cb-cta{display:none}.cb-src dl{display:grid}.cb-pri{break-inside:avoid}}
