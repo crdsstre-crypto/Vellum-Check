@@ -574,3 +574,82 @@
   @media (max-width:360px){.ls-tx small{display:none}.lib-dash .lib-stat{min-height:92px}}
   @media (prefers-reduced-motion:reduce){.lib-dash,.lib-dash .lib-stat{animation:none!important;transition:none}}
 }
+
+/* ===== v11: Dashboard ประวัติรายการ — Hero + คู่ + เต็มความกว้าง ===== */
+@media (max-width:767px){
+  .lib-dash{
+    --d-bg:#101113;--d-card:#191B1F;--d-gold:#E6C36A;--d-mint:#83D7B8;--d-sky:#91C7E8;--d-line:#2B2F36;
+    padding:16px;border-radius:24px;
+  }
+  .ld-head{flex-wrap:nowrap;gap:12px;margin:0 0 14px}
+  .ld-mark{display:none}
+  .ld-ico{width:48px;height:48px;border-radius:14px;background:linear-gradient(145deg,#2a2412,#15130c);color:var(--d-gold)}
+  .ld-txt b{font-size:1.35rem}
+  .ld-txt small{font-size:.84rem;line-height:1.4}
+  .ld-period{min-height:42px;padding:0 14px;font-size:.95rem}
+  .ld-period i{display:none}
+  .ld-head{position:relative;flex-wrap:wrap}
+  .ld-grid{grid-template-columns:1fr 1fr;gap:12px}
+  .lib-dash .lib-stat{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:0;padding:16px;border-radius:22px}
+  .lib-dash .lib-stat .ls-ic{width:38px;height:38px;border:0;background:transparent;padding:0;justify-content:flex-start;place-items:center start}
+  .lib-dash .lib-stat strong{font-size:1.02rem;font-weight:700;color:var(--h-text);line-height:1.3}
+  .lib-dash .lib-stat small{font-size:.8rem;line-height:1.4;color:var(--h-sub)}
+  .ls-num{font-size:2.3rem;line-height:1.1;font-weight:700;font-variant-numeric:tabular-nums;margin:6px 0 2px}
+  .ls-link{margin-top:8px;font-size:.9rem;font-weight:600}
+
+  /* Hero: รายงานทั้งหมด */
+  .lib-stat.is-hero{grid-column:1 / -1;display:grid;grid-template-columns:auto 1fr auto;column-gap:12px;row-gap:2px;align-items:center;
+    border-color:rgba(230,195,106,.55);background:linear-gradient(150deg,rgba(230,195,106,.11),var(--d-card) 62%)}
+  .lib-stat.is-hero .ls-ic{width:50px;height:50px;border-radius:15px;background:rgba(230,195,106,.14);color:var(--d-gold);place-items:center}
+  .lib-stat.is-hero .ls-tx{display:flex;flex-direction:column;gap:2px}
+  .lib-stat.is-hero .ls-go{position:static;width:auto;height:auto;background:none;font-size:1.25rem;color:var(--d-gold)}
+  .lib-stat.is-hero .ls-num{grid-column:1 / -1;font-size:2.9rem;color:var(--d-gold);margin:8px 0 0}
+  .lib-stat.is-hero .ls-link{grid-column:1 / -1;margin-top:2px;color:var(--d-gold)}
+  /* คู่: ตรวจเสร็จ + ปักหมุด */
+  .lib-stat.is-mint{border-color:rgba(131,215,184,.38);background:linear-gradient(160deg,rgba(131,215,184,.07),var(--d-card) 70%)}
+  .lib-stat.is-mint .ls-ic,.lib-stat.is-mint .ls-num{color:var(--d-mint)}
+  .lib-stat.is-gold-soft{border-color:rgba(230,195,106,.32);background:linear-gradient(160deg,rgba(230,195,106,.06),var(--d-card) 70%)}
+  .lib-stat.is-gold-soft .ls-ic,.lib-stat.is-gold-soft .ls-num{color:var(--d-gold)}
+  /* เต็มความกว้าง: ประเด็นควรทบทวน */
+  .lib-stat.is-wide{grid-column:1 / -1;display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:center;
+    border-color:rgba(145,199,232,.38);background:linear-gradient(160deg,rgba(145,199,232,.07),var(--d-card) 70%)}
+  .lib-stat.is-wide .ls-ic{width:44px;height:44px;color:var(--d-sky)}
+  .lib-stat.is-wide .ls-tx{display:flex;flex-direction:column;gap:2px}
+  .lib-stat.is-wide .ls-num{grid-column:1 / -1;color:var(--d-sky);font-size:2.5rem}
+  .lib-stat.is-wide .ls-link{grid-column:1 / -1;color:var(--d-sky);margin-top:2px}
+  .lib-dash .lib-stat.is-on{box-shadow:inset 0 0 0 1px currentColor}
+  .lib-stat.is-hero.is-on{color:var(--d-gold)}.lib-stat.is-mint.is-on{color:var(--d-mint)}
+  .lib-stat.is-gold-soft.is-on{color:var(--d-gold)}.lib-stat.is-sky.is-on{color:var(--d-sky)}
+  .lib-stat.is-on strong,.lib-stat.is-on small,.lib-stat.is-on .ls-link{color:inherit}
+  .lib-stat.is-on strong{color:var(--h-text)}
+  .lib-stat.is-on small{color:var(--h-sub)}
+  .lib-dash .lib-stat:nth-child(n){animation:none}
+  .lib-dash .lib-stat.is-hero{animation:ldIn .26s .02s both}
+  .lib-dash .lib-stat.is-mint{animation:ldIn .26s .07s both}
+  .lib-dash .lib-stat.is-gold-soft{animation:ldIn .26s .1s both}
+  .lib-dash .lib-stat.is-sky{animation:ldIn .26s .14s both}
+
+  /* สถิติย้อนหลัง (นับจากรายงานจริง) */
+  .ld-trend{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:12px 0 0}
+  .ld-trend-h{flex:1 0 100%;font-size:.8rem;color:var(--h-sub)}
+  .ld-trend button{
+    flex:1 1 0;min-height:42px;padding:0 8px;border:1px solid var(--d-line);border-radius:14px;background:transparent;
+    color:var(--h-sub);font:inherit;font-size:.82rem;transition:border-color .2s,transform .12s;
+  }
+  .ld-trend button b{color:var(--h-text);font-size:1rem;margin-right:2px}
+  .ld-trend button:active{transform:scale(.97);border-color:rgba(230,195,106,.5)}
+  .ld-active{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 0 0;padding:8px 8px 8px 14px;
+    border:1px solid rgba(230,195,106,.35);border-radius:14px;background:rgba(230,195,106,.07);font-size:.88rem;color:var(--d-gold)}
+  .ld-active[hidden]{display:none}
+  .ld-active button{min-height:36px;padding:0 12px;border:0;border-radius:10px;background:rgba(255,255,255,.06);color:var(--h-text);font:inherit;font-size:.82rem}
+
+  /* Skeleton ตอนโหลด (โครงเท่าการ์ดจริง ไม่แสดงเลข 0) */
+  .lib-dash.is-loading .ls-num,.lib-dash.is-loading .ld-trend b{color:transparent;position:relative}
+  .lib-dash.is-loading .ls-num::after,.lib-dash.is-loading .ld-trend b::after{
+    content:"";position:absolute;left:0;top:12%;width:2.2ch;height:76%;border-radius:8px;
+    background:linear-gradient(90deg,rgba(255,255,255,.06),rgba(255,255,255,.14),rgba(255,255,255,.06));background-size:200% 100%;
+    animation:ldSk 1.2s linear infinite;
+  }
+  @keyframes ldSk{from{background-position:200% 0}to{background-position:-200% 0}}
+  @media (prefers-reduced-motion:reduce){.lib-dash .lib-stat{animation:none!important}.lib-dash.is-loading .ls-num::after,.lib-dash.is-loading .ld-trend b::after{animation:none}}
+}
