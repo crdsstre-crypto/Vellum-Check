@@ -23,7 +23,7 @@
 <link rel="stylesheet" href="history-vault.css?v=11" media="(max-width: 767px)">
 <link rel="stylesheet" href="account-v2.css?v=11" media="(max-width: 767px)">
 <link rel="stylesheet" href="print.css?v=1" media="print">
-<link rel="stylesheet" href="ct-sticker.css?v=3" media="(max-width: 767px)">
+<link rel="stylesheet" href="ct-sticker.css?v=4" media="(max-width: 767px)">
 </head>
 <body>
 <svg id="vcStickerDefs" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="vcg-y" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffe58a"/><stop offset="1" stop-color="#f5a623"/></linearGradient><linearGradient id="vcg-o" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffb86b"/><stop offset="1" stop-color="#ef5a2a"/></linearGradient><linearGradient id="vcg-b" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#8fd0ff"/><stop offset="1" stop-color="#2f6fe0"/></linearGradient><linearGradient id="vcg-n" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#7d92d6"/><stop offset="1" stop-color="#26376f"/></linearGradient><linearGradient id="vcg-t" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#86f0d8"/><stop offset="1" stop-color="#1a98ab"/></linearGradient><linearGradient id="vcg-p" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ff9fc6"/><stop offset="1" stop-color="#df3f7c"/></linearGradient><linearGradient id="vcg-g" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#a8ea8f"/><stop offset="1" stop-color="#3b9f57"/></linearGradient><linearGradient id="vcg-v" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#c4b0ff"/><stop offset="1" stop-color="#6540d6"/></linearGradient><linearGradient id="vcg-w" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d5dce8"/></linearGradient><linearGradient id="vcg-au" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#fff0b3"/><stop offset="1" stop-color="#d9a014"/></linearGradient><linearGradient id="vcg-s" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#a9b3c7"/></linearGradient></defs></svg>
@@ -32,10 +32,7 @@
 <header class="site-header">
   <div class="topbar">
     <div class="brand">
-      <svg class="brand-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true">
-        <path d="M12 3l7 3v5c0 4.5-3 8.2-7 9.5C8 19.2 5 15.5 5 11V6l7-3z"/>
-        <path d="M9 12l2 2 4-4"/>
-      </svg>
+      <svg viewBox="0 0 64 64" class="brand-logo" aria-hidden="true" focusable="false"><path d="M32 5L54 13V32C54 46 44 54 32 59C20 54 10 46 10 32V13Z" fill="url(#vcg-t)"/><path d="M32 11L48 17V32C48 42 41 48 32 52C23 48 16 42 16 32V17Z" fill="url(#vcg-b)" opacity=".55"/><path d="M22 32L29 39L43 24" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M14 16L30 9" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".45" fill="none"/></svg>
       <span class="brand-name">Vellum Check</span>
     </div>
 
@@ -53,15 +50,15 @@
 <!-- แถบนำทางด้านล่าง (มือถือ แสดงเมื่อล็อกอินแล้ว) -->
 <nav class="bottom-nav" id="bottomNav" aria-label="เมนูหลัก" hidden>
   <button type="button" class="bn-item is-on" data-nav="home" aria-current="page">
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>
+    <svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><path d="M20 7H39L51 19V50a7 7 0 0 1-7 7H20a7 7 0 0 1-7-7V14a7 7 0 0 1 7-7z" fill="url(#vcg-w)"/><path d="M39 7L51 19H42a3 3 0 0 1-3-3z" fill="#aeb9d1"/><rect x="19" y="27" width="26" height="4.5" rx="2.25" fill="url(#vcg-t)"/><rect x="19" y="35.5" width="26" height="4.5" rx="2.25" fill="url(#vcg-p)"/><rect x="19" y="44" width="15" height="4.5" rx="2.25" fill="url(#vcg-y)"/></svg>
     <span>ตรวจสัญญา</span>
   </button>
   <button type="button" class="bn-item" data-nav="hist">
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>
+    <svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true" focusable="false"><circle cx="34" cy="33" r="23" fill="url(#vcg-b)"/><circle cx="34" cy="33" r="17.5" fill="url(#vcg-w)"/><path d="M34 22v11l8 5" stroke="#26376f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M5 20l2 14 12-7z" fill="url(#vcg-o)"/></svg>
     <span>ประวัติ</span>
   </button>
   <button type="button" class="bn-item" data-nav="acct">
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+    <svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><path d="M12 57c0-13 9-20 20-20s20 7 20 20z" fill="url(#vcg-b)"/><circle cx="32" cy="22" r="11" fill="url(#vcg-y)"/><path d="M19 50c1-6 5-10 9-11" stroke="#fff" stroke-width="2.6" stroke-linecap="round" opacity=".4" fill="none"/></svg>
     <span>บัญชี</span>
   </button>
 </nav>
@@ -114,7 +111,7 @@
       <div class="cred-card">
         <div class="cred-head">
           <div class="cred-titles"><h3 class="cred-title">เครดิตของคุณ</h3><p class="cred-sub">บัญชีและยอดเครดิตคงเหลือ</p></div>
-          <span class="cred-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7V5a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg></span>
+          <span class="cred-ico" aria-hidden="true"><svg viewBox="0 0 64 64" width="24" height="24" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><rect x="12" y="8" width="38" height="14" rx="5" fill="url(#vcg-b)" transform="rotate(-7 31 15)"/><rect x="6" y="17" width="52" height="38" rx="10" fill="url(#vcg-au)"/><rect x="37" y="30" width="23" height="15" rx="7.5" fill="url(#vcg-o)"/><circle cx="46" cy="37.5" r="3" fill="#fff"/><path d="M12 27a5 5 0 0 1 4-4h14" stroke="#fff" stroke-width="2.6" stroke-linecap="round" opacity=".5" fill="none"/></svg></span>
         </div>
         <div class="acct-row">
           <button class="acct-avatar" id="acctAvatarBtn" type="button" aria-label="เปลี่ยนรูปโปรไฟล์">
@@ -138,8 +135,8 @@
           <p class="wallet-total-num"><b id="walletTotal">–</b> <small>เครดิต</small></p>
           <i class="cred-line" aria-hidden="true"></i>
           <div class="wallet-rows" role="group" aria-label="เครดิตแยกตามประเภท">
-            <div class="ws ws-check"><span class="ws-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/></svg></span><p class="ws-num"><b id="walletRowCheck">–</b></p><p class="ws-lab">เครดิตตรวจ</p></div>
-            <div class="ws ws-voice"><span class="ws-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span><p class="ws-num"><b id="walletRowVoice">–</b></p><p class="ws-lab">เครดิตเสียง</p></div>
+            <div class="ws ws-check"><span class="ws-ico" aria-hidden="true"><svg viewBox="0 0 64 64" width="24" height="24" aria-hidden="true" focusable="false"><path d="M10 22V15a5 5 0 0 1 5-5h7M42 10h7a5 5 0 0 1 5 5v7M54 42v7a5 5 0 0 1-5 5h-7M22 54h-7a5 5 0 0 1-5-5v-7" stroke="#5aa9ff" stroke-width="5" stroke-linecap="round" fill="none"/><circle cx="32" cy="32" r="11" fill="url(#vcg-b)"/><circle cx="28.5" cy="28.5" r="3.2" fill="#fff" opacity=".65"/></svg></span><p class="ws-num"><b id="walletRowCheck">–</b></p><p class="ws-lab">เครดิตตรวจ</p></div>
+            <div class="ws ws-voice"><span class="ws-ico" aria-hidden="true"><svg viewBox="0 0 64 64" width="24" height="24" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><path d="M14 30a18 18 0 0 0 36 0M32 48v9M23 57h18" stroke="#43d6ad" stroke-width="4.5" stroke-linecap="round" fill="none"/><rect x="23" y="5" width="18" height="34" rx="9" fill="url(#vcg-g)"/><rect x="27.5" y="11" width="3.2" height="13" rx="1.6" fill="#fff" opacity=".45"/></svg></span><p class="ws-num"><b id="walletRowVoice">–</b></p><p class="ws-lab">เครดิตเสียง</p></div>
           </div>
           <div class="wallet-quick">
             <button type="button" class="wallet-topup">เติมเครดิต</button>
@@ -160,24 +157,24 @@
         <div class="pane" data-pane="hist">
           <p class="hist-lead">ดูรายการตรวจสัญญาและประวัติการใช้เครดิตของคุณ</p>
           <button type="button" class="wallet-histlink" id="walletHist" aria-expanded="false" aria-controls="historyPanel">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>
+            <svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true" focusable="false"><circle cx="34" cy="33" r="23" fill="url(#vcg-b)"/><circle cx="34" cy="33" r="17.5" fill="url(#vcg-w)"/><path d="M34 22v11l8 5" stroke="#26376f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M5 20l2 14 12-7z" fill="url(#vcg-o)"/></svg>
             <span class="wallet-hist-txt"><b>ประวัติรายการ</b><small>ประวัติการตรวจและการเติมเครดิต</small></span>
           </button>
         <div id="historyPanel" class="history-panel" hidden>
           <header class="vault-head">
-            <span class="vault-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4.5 6v5.5c0 4.4 3.1 8.1 7.5 9.5 4.4-1.4 7.5-5.1 7.5-9.5V6z"/><path d="M9 9.5h4l2 2V16H9z"/><circle cx="12" cy="12.8" r=".9" fill="currentColor" stroke="none"/></svg></span>
+            <span class="vault-badge" aria-hidden="true"><svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path d="M32 5L54 13V32C54 46 44 54 32 59C20 54 10 46 10 32V13Z" fill="url(#vcg-au)"/><rect x="22" y="19" width="20" height="26" rx="4" fill="url(#vcg-w)"/><rect x="26" y="26" width="12" height="3.2" rx="1.6" fill="url(#vcg-t)"/><rect x="26" y="32" width="12" height="3.2" rx="1.6" fill="url(#vcg-p)"/><rect x="26" y="38" width="7" height="3.2" rx="1.6" fill="url(#vcg-y)"/><path d="M14 16L30 9" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".5" fill="none"/></svg></span>
             <div class="vault-txt"><b>คลังเอกสาร</b><small>ทุกการตรวจสอบอยู่ที่นี่</small></div>
           </header>
           
           <section class="lib-dash" id="libStats" aria-label="ภาพรวมประวัติรายการ" hidden>
             <div class="ld-head" id="libDashHead">
               <div class="ld-txt"><b>ประวัติ</b><small>รายการตรวจสอบทั้งหมด</small></div>
-              <button type="button" class="ld-period" id="libPeriod" aria-haspopup="listbox" aria-expanded="false"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg><span id="libPeriodLbl">ทั้งหมด</span></button>
+              <button type="button" class="ld-period" id="libPeriod" aria-haspopup="listbox" aria-expanded="false"><svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><rect x="8" y="12" width="48" height="44" rx="9" fill="url(#vcg-w)"/><path d="M8 21a9 9 0 0 1 9-9h30a9 9 0 0 1 9 9v7H8z" fill="url(#vcg-o)"/><rect x="18" y="6" width="5" height="12" rx="2.5" fill="url(#vcg-n)"/><rect x="41" y="6" width="5" height="12" rx="2.5" fill="url(#vcg-n)"/><circle cx="20" cy="39" r="3.2" fill="url(#vcg-b)"/><circle cx="32" cy="39" r="3.2" fill="url(#vcg-y)"/><circle cx="44" cy="39" r="3.2" fill="url(#vcg-g)"/><circle cx="20" cy="49" r="3.2" fill="url(#vcg-p)"/><circle cx="32" cy="49" r="3.2" fill="url(#vcg-v)"/></svg><span id="libPeriodLbl">ทั้งหมด</span></button>
             </div>
             <div class="ld-strip" role="group" aria-label="สรุปรายการ">
-              <div class="ls-cell"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg><span class="ls-v"><b class="ls-num" id="stAll">0</b><small>รายการ</small></span></div>
-              <div class="ls-cell is-ok"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.3 2.4 2.4 4.6-5"/></svg><span class="ls-v"><b class="ls-num" id="stDone">0</b><small>สำเร็จ</small></span></div>
-              <div class="ls-cell is-pin"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4h6l-1 6 3 3v1.5H7V13l3-3z"/><path d="M12 14.5V21"/></svg><span class="ls-v"><b class="ls-num" id="stPin">0</b><small>ปักหมุด</small></span></div>
+              <div class="ls-cell"><svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><path d="M20 7H39L51 19V50a7 7 0 0 1-7 7H20a7 7 0 0 1-7-7V14a7 7 0 0 1 7-7z" fill="url(#vcg-w)"/><path d="M39 7L51 19H42a3 3 0 0 1-3-3z" fill="#aeb9d1"/><rect x="19" y="27" width="26" height="4.5" rx="2.25" fill="url(#vcg-t)"/><rect x="19" y="35.5" width="26" height="4.5" rx="2.25" fill="url(#vcg-p)"/><rect x="19" y="44" width="15" height="4.5" rx="2.25" fill="url(#vcg-y)"/></svg><span class="ls-v"><b class="ls-num" id="stAll">0</b><small>รายการ</small></span></div>
+              <div class="ls-cell is-ok"><svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><circle cx="32" cy="31" r="24" fill="url(#vcg-g)"/><path d="M20.5 31.5L28.5 39.5L44 23" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M14 22a19 19 0 0 1 12-10" stroke="#fff" stroke-width="3" opacity=".45" stroke-linecap="round" fill="none"/></svg><span class="ls-v"><b class="ls-num" id="stDone">0</b><small>สำเร็จ</small></span></div>
+              <div class="ls-cell is-pin"><svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><path d="M32 42V58" stroke="#a9b3c7" stroke-width="3.2" stroke-linecap="round" fill="none"/><rect x="19" y="36" width="26" height="6" rx="3" fill="url(#vcg-p)"/><path d="M25 14h14l-2 22H27z" fill="url(#vcg-p)"/><rect x="22" y="6" width="20" height="10" rx="5" fill="url(#vcg-p)"/><path d="M28 18l-1 14" stroke="#fff" stroke-width="2.6" stroke-linecap="round" opacity=".45" fill="none"/></svg><span class="ls-v"><b class="ls-num" id="stPin">0</b><small>ปักหมุด</small></span></div>
             </div>
             <div class="ld-trend" id="libTrend" aria-label="สถิติย้อนหลัง">
               <span class="ld-trend-h">ตรวจสัญญาย้อนหลัง</span>
@@ -193,9 +190,9 @@
           </div>
           <div class="hist-tools" id="histTools">
             <div class="lib-seg" id="libSeg" role="group" aria-label="กรองรายการ">
-              <button type="button" class="lib-seg-b is-on" data-seg="all" aria-pressed="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg><span>ทั้งหมด</span></button>
-              <button type="button" class="lib-seg-b" data-seg="done" aria-pressed="false"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.3 2.4 2.4 4.6-5"/></svg><span>สำเร็จ</span></button>
-              <button type="button" class="lib-seg-b" data-seg="pin" aria-pressed="false"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4h6l-1 6 3 3v1.5H7V13l3-3z"/><path d="M12 14.5V21"/></svg><span>ปักหมุด</span></button>
+              <button type="button" class="lib-seg-b is-on" data-seg="all" aria-pressed="true"><svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><path d="M20 7H39L51 19V50a7 7 0 0 1-7 7H20a7 7 0 0 1-7-7V14a7 7 0 0 1 7-7z" fill="url(#vcg-w)"/><path d="M39 7L51 19H42a3 3 0 0 1-3-3z" fill="#aeb9d1"/><rect x="19" y="27" width="26" height="4.5" rx="2.25" fill="url(#vcg-t)"/><rect x="19" y="35.5" width="26" height="4.5" rx="2.25" fill="url(#vcg-p)"/><rect x="19" y="44" width="15" height="4.5" rx="2.25" fill="url(#vcg-y)"/></svg><span>ทั้งหมด</span></button>
+              <button type="button" class="lib-seg-b" data-seg="done" aria-pressed="false"><svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><circle cx="32" cy="31" r="24" fill="url(#vcg-g)"/><path d="M20.5 31.5L28.5 39.5L44 23" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M14 22a19 19 0 0 1 12-10" stroke="#fff" stroke-width="3" opacity=".45" stroke-linecap="round" fill="none"/></svg><span>สำเร็จ</span></button>
+              <button type="button" class="lib-seg-b" data-seg="pin" aria-pressed="false"><svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><path d="M32 42V58" stroke="#a9b3c7" stroke-width="3.2" stroke-linecap="round" fill="none"/><rect x="19" y="36" width="26" height="6" rx="3" fill="url(#vcg-p)"/><path d="M25 14h14l-2 22H27z" fill="url(#vcg-p)"/><rect x="22" y="6" width="20" height="10" rx="5" fill="url(#vcg-p)"/><path d="M28 18l-1 14" stroke="#fff" stroke-width="2.6" stroke-linecap="round" opacity=".45" fill="none"/></svg><span>ปักหมุด</span></button>
             </div>
             <div class="hist-search"><label><span class="sr-only">ค้นหารายงาน</span><input type="search" id="histSearch" placeholder="ค้นหาจากชื่อรายงานหรือประเภทสัญญา" autocomplete="off" enterkeyhint="search"></label>
               <button type="button" class="hist-search-clear" id="histSearchClear" aria-label="ล้างคำค้นหา" hidden>✕</button></div>
@@ -210,7 +207,7 @@
           </div>
           <section class="pay-hub" id="payHub" aria-label="เครดิตของคุณ" hidden>
             <div class="ph-top"><div><span class="ph-eyebrow">Vellum / Financial</span><b class="ph-title">เครดิตของคุณ</b></div>
-              <span class="ph-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H17a1 1 0 0 1 1 1v1.5"/><path d="M4 7.5V17a2 2 0 0 0 2 2h12a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 18 8H6.5A2.5 2.5 0 0 1 4 7.5z"/><path d="M15.5 13.5h4v3h-4a1.5 1.5 0 0 1 0-3z"/></svg></span></div>
+              <span class="ph-ico" aria-hidden="true"><svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><circle cx="32" cy="31" r="24" fill="url(#vcg-au)"/><circle cx="32" cy="31" r="18" fill="none" stroke="#c98a10" stroke-width="2" opacity=".7"/><path d="M24 20h8a6 6 0 0 1 0 12h-8zM24 32h9a6 6 0 0 1 0 12h-9zM28 16v32" stroke="#b9780b" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M14 22a19 19 0 0 1 12-10" stroke="#fff" stroke-width="3" opacity=".5" stroke-linecap="round" fill="none"/></svg></span></div>
             <div class="ph-bal"><span>ยอดเครดิตคงเหลือ</span><p><b id="phBal">–</b> <small>เครดิต</small></p></div>
             <div class="ph-stats" role="group" aria-label="สรุปธุรกรรม">
               <button type="button" class="ph-stat" data-pst="all"><span>ธุรกรรม</span><b id="phAll">0</b></button>
@@ -430,8 +427,8 @@
   var list = document.getElementById('histList');
   var filters = document.getElementById('histFilters');
   if (!panel || !list) return;
-  var ICO_DOC = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>';
-  var ICO_COIN = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h4a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3h4"/></svg>';
+  var ICO_DOC = '<svg viewBox="0 0 64 64" width="20" height="20" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><path d="M20 7H39L51 19V50a7 7 0 0 1-7 7H20a7 7 0 0 1-7-7V14a7 7 0 0 1 7-7z" fill="url(#vcg-w)"/><path d="M39 7L51 19H42a3 3 0 0 1-3-3z" fill="#aeb9d1"/><rect x="19" y="27" width="26" height="4.5" rx="2.25" fill="url(#vcg-t)"/><rect x="19" y="35.5" width="26" height="4.5" rx="2.25" fill="url(#vcg-p)"/><rect x="19" y="44" width="15" height="4.5" rx="2.25" fill="url(#vcg-y)"/></svg>';
+  var ICO_COIN = '<svg viewBox="0 0 64 64" width="20" height="20" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><circle cx="32" cy="31" r="24" fill="url(#vcg-au)"/><circle cx="32" cy="31" r="18" fill="none" stroke="#c98a10" stroke-width="2" opacity=".7"/><path d="M24 20h8a6 6 0 0 1 0 12h-8zM24 32h9a6 6 0 0 1 0 12h-9zM28 16v32" stroke="#b9780b" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M14 22a19 19 0 0 1 12-10" stroke="#fff" stroke-width="3" opacity=".5" stroke-linecap="round" fill="none"/></svg>';
   var ICO_RECEIPT = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M8.5 12h7M8.5 15h7M8.5 18h3"/></svg>';
   function esc(v) {
     return String(v).replace(/[&<>"']/g, function (c) {
@@ -559,8 +556,8 @@
     });
   }
   // ---- รายการประวัติแบบกะทัดรัด: จัดกลุ่มตามวัน · ภาพย่อเอกสาร + ชื่อ + ประเภท + สถานะ + เวลา ----
-  var ICO_CAL = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>';
-  var ICO_PINSM = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4h6l-1 6 3 3v1.5H7V13l3-3z"/><path d="M12 14.5V21"/></svg>';
+  var ICO_CAL = '<svg viewBox="0 0 64 64" width="18" height="18" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><rect x="8" y="12" width="48" height="44" rx="9" fill="url(#vcg-w)"/><path d="M8 21a9 9 0 0 1 9-9h30a9 9 0 0 1 9 9v7H8z" fill="url(#vcg-o)"/><rect x="18" y="6" width="5" height="12" rx="2.5" fill="url(#vcg-n)"/><rect x="41" y="6" width="5" height="12" rx="2.5" fill="url(#vcg-n)"/><circle cx="20" cy="39" r="3.2" fill="url(#vcg-b)"/><circle cx="32" cy="39" r="3.2" fill="url(#vcg-y)"/><circle cx="44" cy="39" r="3.2" fill="url(#vcg-g)"/><circle cx="20" cy="49" r="3.2" fill="url(#vcg-p)"/><circle cx="32" cy="49" r="3.2" fill="url(#vcg-v)"/></svg>';
+  var ICO_PINSM = '<svg viewBox="0 0 64 64" width="18" height="18" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><path d="M32 42V58" stroke="#a9b3c7" stroke-width="3.2" stroke-linecap="round" fill="none"/><rect x="19" y="36" width="26" height="6" rx="3" fill="url(#vcg-p)"/><path d="M25 14h14l-2 22H27z" fill="url(#vcg-p)"/><rect x="22" y="6" width="20" height="10" rx="5" fill="url(#vcg-p)"/><path d="M28 18l-1 14" stroke="#fff" stroke-width="2.6" stroke-linecap="round" opacity=".45" fill="none"/></svg>';
   var ICO_CHK = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="m7.8 12.4 3 3 5.6-6.2" fill="none" stroke="#0F1012" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   var ICO_CLK = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
   var ICO_DOCSM = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>';
@@ -1730,7 +1727,7 @@ document.addEventListener('click', function (e) {
 })();
 </script>
 <script src="glossary.js?v=5"></script>
-<script src="script.js?v=32"></script>
+<script src="script.js?v=33"></script>
 <script src="extras.js?v=4"></script>
 <script src="pay-ui.js?v=2"></script>
 <script src="privacy.js?v=1"></script>
