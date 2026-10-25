@@ -68,3 +68,49 @@
   .hist-card{animation-duration:.22s}
 }
 @media (prefers-reduced-motion:reduce){.hist-card,.hist-detail{animation:none}}
+
+/* ---------- F-H. ประวัติเติมเครดิต กล่องคำแนะนำ แถบล่าง แอนิเมชัน ---------- */
+.hist-know{display:none}
+.hist-more-hint{display:none}
+@media (max-width:767px){
+  /* F. การ์ดเติมเครดิต: ชื่อแพ็กเกจ + วันที่ ซ้าย · ราคา + สถานะ ขวา */
+  .hist-card-top{align-items:flex-start}
+  .hist-card-top .hist-main{gap:4px}
+  .hist-card-top .hist-main b{overflow-wrap:anywhere}
+  .hist-card-top .hist-side{align-items:flex-end;gap:8px}
+  .hist-card-top .hist-amt{font-size:1.2rem;font-weight:700;font-variant-numeric:tabular-nums}
+  .hist-more-hint{display:inline-flex;align-items:center;min-height:32px;font-size:.88rem;font-weight:600;color:var(--h-gold)}
+  .hist-card[data-open="1"] .hist-more-hint{opacity:.7}
+  /* สถานะต้องมีทั้งข้อความและไอคอน ไม่ใช้สีอย่างเดียว */
+  .hist-status::before{margin-right:5px;font-weight:800}
+  .hist-status.is-done{color:#8fd4a9;background:rgba(128,201,160,.14)}
+  .hist-status.is-done::before{content:"✓"}
+  .hist-status.is-pending{color:#f2b37a;background:rgba(240,163,94,.14)}
+  .hist-status.is-pending::before{content:"●";font-size:.7em;vertical-align:.1em}
+  .hist-go-check{margin-top:14px}
+
+  /* G. กล่อง "รู้ไว้ก่อนใช้งาน" พื้นทองหม่น contrast พอ ไม่สูงเกิน */
+  .hist-know{
+    display:block;margin:16px 0 0;padding:14px 16px;border:1px solid rgba(228,190,98,.28);border-radius:18px;
+    background:rgba(228,190,98,.08);
+  }
+  .hist-know b{display:block;font-size:1rem;color:var(--h-gold)}
+  .hist-know p{margin:4px 0 0;font-size:.9rem;line-height:1.6;color:#d6d8de}
+  .hist-know-btn{
+    display:inline-flex;align-items:center;min-height:44px;margin:4px 0 0;padding:0;border:none;background:none;
+    color:var(--h-gold);font-size:.95rem;font-weight:700;text-decoration:underline;text-underline-offset:4px;
+  }
+
+  /* H. แถบนำทางล่าง: ไอคอน 24px ข้อความ 12.5px เลือก=ทอง ไม่เลือก=เทา พื้นเกือบดำ ไม่กระโดด */
+  .bottom-nav:not([hidden]){background:rgba(9,11,14,.97);contain:layout paint;transform:translateZ(0)}
+  .bn-item{font-size:.78rem;color:var(--h-sub)}
+  .bn-item svg{width:24px;height:24px}
+  .bn-item.is-on{color:var(--h-gold)}
+  body.has-nav .sheet-body{padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 20px)}
+
+  /* แอนิเมชัน: เปิดหน้าประวัติ fade + translateY เล็กน้อย · skeleton ขนาดเท่าการ์ดจริง */
+  body[data-sheet="hist"] .pane[data-pane="hist"]{animation:histOpen .24s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes histOpen{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .hist-skel{height:92px;margin:0 0 12px;border-radius:20px;background:var(--h-card);border:1px solid var(--h-line);animation:histPulse 1.1s ease-in-out 4}
+}
+@media (prefers-reduced-motion:reduce){body[data-sheet="hist"] .pane[data-pane="hist"],.hist-skel{animation:none !important}}
