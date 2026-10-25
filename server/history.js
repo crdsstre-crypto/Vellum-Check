@@ -25,7 +25,17 @@ export async function saveInspection(userId, contractType, result) {
 
 export async function listInspections(userId) {
   const { rows } = await pool.query(
-    `SELECT id, contract_type, created_at FROM inspections
+    `SELECT id, contract_type, created_at, title, pinned,
+            CASE WHEN jsonb_typeof(result->'items') = 'array' THEN
+              (SELECT count(*) FROM jsonb_array_elements(result->'items') e WHERE e->>'level' = 'check_detail')
+            ELSE 0 END AS n_detail,
+            CASE WHEN jsonb_typeof(result->'items') = 'array' THEN
+              (SELECT count(*) FROM jsonb_array_elements(result->'items') e WHERE e->>'level' = 'caution')
+            ELSE 0 END AS n_caution,
+            CASE WHEN jsonb_typeof(result->'items') = 'array' THEN
+              (SELECT count(*) FROM jsonb_array_elements(result->'items') e WHERE e->>'level' = 'low')
+            ELSE 0 END AS n_low
+       FROM inspections
       WHERE user_id = $1 ORDER BY created_at DESC, id DESC LIMIT $2`,
     [userId, KEEP_INSPECTIONS]
   );
@@ -33,7 +43,32 @@ export async function listInspections(userId) {
     id: r.id,
     contractType: r.contract_type,
     createdAt: r.created_at,
+    title: r.title || null,
+    pinned: r.pinned === true,
+    // นับจากผลตรวจจริงที่บันทึกไว้
+    summary: { check_detail: Number(r.n_detail), caution: Number(r.n_caution), low: Number(r.n_low) },
   }));
+}
+
+// เปลี่ยนชื่อรายงาน / ปักหมุด (เฉพาะรายการของบัญชีนี้) ชื่อว่าง = กลับไปใช้ชื่ออัตโนมัติ
+export async function updateInspection(userId, id, { title, pinned }) {
+  const sets = [];
+  const vals = [id, userId];
+  if (title !== undefined) {
+    const t = String(title ?? '').replace(/\s+/g, ' ').trim().slice(0, 60);
+    vals.push(t === '' ? null : t);
+    sets.push(`title = $${vals.length}`);
+  }
+  if (pinned !== undefined) {
+    vals.push(pinned === true);
+    sets.push(`pinned = $${vals.length}`);
+  }
+  if (!sets.length) return 0;
+  const r = await pool.query(
+    `UPDATE inspections SET ${sets.join(', ')} WHERE id = $1 AND user_id = $2`,
+    vals
+  );
+  return r.rowCount;
 }
 
 export async function getInspection(userId, id) {
