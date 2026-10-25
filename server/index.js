@@ -463,7 +463,7 @@ app.post('/api/check', async (req, res) => {
   }
   if (!reserved) {
     const credits = await getCredits(user.id).catch(() => 0);
-    return res.status(402).json({ error: 'เครดิตตรวจสัญญาหมดแล้ว กรุณาซื้อแพ็กตรวจสัญญา', credits });
+    return res.status(402).json({ error: 'พร้อมตรวจครั้งถัดไปเมื่อคุณต้องการ ดูแพ็กเกจเพื่อเพิ่มสิทธิ์ได้', credits });
   }
 
   // 2) ถ้าขอเสียง หักยอดเสียง ถ้าไม่พอให้คืนยอดตรวจที่หักไปแล้ว
@@ -568,7 +568,7 @@ app.post('/api/extract', async (req, res) => {
       reserved = await reserveCredits(user.id, 1);
       if (!reserved) {
         const credits = await getCredits(user.id).catch(() => 0);
-        return res.status(402).json({ error: 'เครดิตตรวจสัญญาหมดแล้ว กรุณาซื้อแพ็กตรวจสัญญา', credits });
+        return res.status(402).json({ error: 'พร้อมตรวจครั้งถัดไปเมื่อคุณต้องการ ดูแพ็กเกจเพื่อเพิ่มสิทธิ์ได้', credits });
       }
       text = await transcribeImage(buffer.toString('base64'), imageType);
     }
