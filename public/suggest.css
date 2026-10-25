@@ -435,3 +435,33 @@ body.cs-open{overflow:hidden}
 .cr-note small{display:block;margin-top:2px;font-size:.8rem;color:var(--muted)}
 .cr-btn{all:unset;box-sizing:border-box;flex:none;display:flex;align-items:center;min-height:44px;padding:0 16px;border-radius:999px;background:var(--gold-soft,var(--gold));color:var(--on-gold);font-size:.88rem;font-weight:600;cursor:pointer}
 @media print{.cs,.cr-note{display:none}}
+
+/* ---- แจ้งเตือนเครดิต: Premium Edition (รอบ 11) ---- */
+.cs-back{background:rgba(0,0,0,.72);animation:csFade .35s ease-out}
+.cs-sheet{padding-top:10px;background:linear-gradient(180deg,#1b1c21 0,var(--card) 120px);border-color:rgba(200,167,90,.22);animation:csUp .42s cubic-bezier(.2,.8,.2,1)}
+.cs-grab{display:block;width:44px;height:4px;margin:0 auto 14px;border-radius:4px;background:rgba(255,255,255,.18)}
+.cs-top{padding-bottom:14px}
+.cs-ico{position:relative;border:1px solid rgba(200,167,90,.55);background:rgba(200,167,90,.1);animation:csGlow 1.6s ease-out 1 .2s both}
+.cs-status{margin:14px 0 0}
+.cs-status-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.9rem;color:var(--text)}
+.cs-chip{padding:4px 12px;border-radius:999px;border:1px solid rgba(229,72,77,.55);font-size:.78rem;color:var(--highText)}
+.cs-chip i{font-style:normal;font-weight:700}
+.cs-meter{height:5px;margin-top:10px;border-radius:5px;background:var(--border);overflow:hidden}
+.cs-meter i{display:block;width:100%;height:100%;border-radius:5px;background:linear-gradient(90deg,var(--gold-deep),var(--gold-soft));transform-origin:left;animation:csMeter .9s ease-out .3s both}
+.cs-box{margin:14px 0 16px;padding:4px 14px;border:1px solid var(--card-edge);background:rgba(255,255,255,.03)}
+.cs-row{display:flex;align-items:center;gap:12px;padding:12px 0}
+.cs-row+.cs-row{border-top:1px solid var(--card-edge)}
+.cs-r-ico{flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.06);color:var(--text)}
+.cs-row p{display:block;margin:0}
+.cs-row b{display:block;font-size:.95rem;color:var(--text)}
+.cs-row small{display:block;margin-top:2px;font-size:.8rem;line-height:1.5;color:var(--muted)}
+.cs-main{gap:10px;background:linear-gradient(180deg,#e8cf8e,#d4b46a);box-shadow:0 8px 22px rgba(200,167,90,.22)}
+.cs-main i{font-style:normal;font-size:1.1rem}
+.cs-fine{display:flex;align-items:center;justify-content:center;gap:6px;margin:14px 0 0;font-size:.78rem;color:var(--muted)}
+.cs-fine svg{width:16px;height:16px;flex:none;color:var(--gold-soft,var(--gold))}
+.cs-foot{margin:12px 0 0;padding-top:10px;border-top:1px solid var(--card-edge);text-align:center;font-size:.74rem;letter-spacing:.04em;color:var(--muted)}
+@keyframes csFade{from{opacity:0}to{opacity:1}}
+@keyframes csGlow{0%{box-shadow:0 0 0 0 rgba(200,167,90,.5)}100%{box-shadow:0 0 0 16px rgba(200,167,90,0)}}
+@keyframes csMeter{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@media (prefers-reduced-motion:reduce){.cs-back,.cs-ico,.cs-meter i{animation:none}}
+:root[data-calm] .cs-back,:root[data-calm] .cs-sheet,:root[data-calm] .cs-ico,:root[data-calm] .cs-meter i{animation:none}
