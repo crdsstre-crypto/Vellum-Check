@@ -231,3 +231,41 @@
   .history-panel{padding-bottom:calc(var(--nav-h,64px) + env(safe-area-inset-bottom) + 24px)}
   .hist-filters,.hist-tools{scroll-margin-top:12px}
 }
+
+/* ===== คลังรายงาน: หัวคลัง + ตัวกรองด่วน + การ์ดค่อย ๆ ปรากฏ (รอบ v5) ===== */
+.lib-head,.lib-chips{display:none}
+@media (max-width:767px){
+  .lib-head[hidden]{display:none}
+  .lib-head{
+    display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+    margin:0 0 14px;padding:18px;border:1px solid var(--h-line);border-radius:22px;
+    background:linear-gradient(160deg,rgba(228,190,98,.07),transparent 60%),var(--h-card);
+  }
+  .lib-head-txt{display:flex;flex-direction:column;min-width:0}
+  .lib-eyebrow{font-size:.78rem;font-weight:700;letter-spacing:.06em;color:var(--h-gold);text-transform:uppercase}
+  .lib-title{margin-top:6px;font-size:1.5rem;line-height:1.25;color:var(--h-text)}
+  .lib-head small{margin-top:4px;font-size:.92rem;color:var(--h-sub)}
+  .lib-count{
+    flex:0 0 auto;min-width:84px;padding:12px 10px;border-radius:18px;text-align:center;
+    background:rgba(228,190,98,.10);color:var(--h-gold);display:flex;flex-direction:column;align-items:center;gap:2px;
+  }
+  .lib-count b{font-size:1.7rem;line-height:1.1;font-variant-numeric:tabular-nums}
+  .lib-count span{font-size:.82rem;color:var(--h-sub)}
+  .lib-chips{display:flex;gap:8px;position:relative;margin:10px 0 0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .lib-chips::-webkit-scrollbar{display:none}
+  .lib-chip{
+    flex:0 0 auto;min-height:44px;padding:0 18px;border:1px solid var(--h-line);border-radius:999px;
+    background:rgba(255,255,255,.04);color:var(--h-sub);font:inherit;font-size:.95rem;font-weight:700;
+    transition:background-color .18s,border-color .18s,color .18s,transform .12s;
+  }
+  .lib-chip:active{transform:scale(.97)}
+  .lib-chip.is-on{background:rgba(228,190,98,.14);border-color:var(--h-gold);color:var(--h-gold)}
+  .hist-selects #histType{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}
+  /* การ์ดค่อย ๆ ปรากฏครั้งเดียวตอนเปิดคลัง (transform/opacity เท่านั้น ไม่กระตุก) */
+  #histList.is-reveal .hist-report{animation:libIn .42s cubic-bezier(.2,.7,.2,1) both}
+  #histList.is-reveal .hist-report:nth-child(2){animation-delay:.06s}
+  #histList.is-reveal .hist-report:nth-child(3){animation-delay:.12s}
+  #histList.is-reveal .hist-report:nth-child(n+4){animation-delay:.18s}
+  @keyframes libIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){#histList.is-reveal .hist-report{animation:none}}
+}
