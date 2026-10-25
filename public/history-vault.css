@@ -303,5 +303,37 @@
   #authLoggedIn .wallet-total .wallet-topup::before{content:"+";display:inline-grid;place-items:center;width:20px;height:20px;margin-right:10px;border:1.7px solid currentColor;border-radius:50%;font-size:1rem;line-height:1}
   #authLoggedIn .wallet-total::after{content:"ยอดรวมจากเครดิตทุกประเภท";grid-row:5;margin-top:8px;font-size:.8rem;color:#9297A1}
 
+  /* ---------- รอบ 9: บัญชีของฉัน — Minimal Premium (สเปกสุดท้าย) ----------
+     พื้น #090A0C · การ์ด #141619 · เน้น #EBC65F · สถานะ #55DDB0 · ฟ้า #80B9FF · รอง #999DA7
+     ระยะ: ขอบ 20 · ระหว่างส่วน 20 · มุมการ์ด 18 · ปุ่มเติม 54 · แถวเมนู 56
+     แอนิเมชัน: เข้าหน้า 300ms ไล่ทีละส่วน (fade + เลื่อนขึ้น 10px) · ตัวเลขนับ 600ms · กดปุ่ม 150ms · สลับแผง 220ms · เคารพ Reduce Motion */
+  #authLoggedIn{--a-card:#141619;--a-amber:#EBC65F;--a-green:#55DDB0;--a-blue:#80B9FF;font-family:'IBM Plex Sans Thai','Anuphan','Sarabun',system-ui,sans-serif}
+  body[data-sheet="acct"] #authCard,body[data-sheet="acct"] #authCard .sheet-body{background:#090A0C}
+  body[data-sheet="acct"] #authCard .sheet-body{padding-left:20px;padding-right:20px}
+  #authLoggedIn .acct-row{margin:0 0 20px;padding:12px 14px;border-radius:18px}
+  #authLoggedIn .acct-avatar{width:46px;height:46px}
+  #authLoggedIn .wallet-total{margin:0 0 20px;border-radius:18px;background:var(--a-card)}
+  #authLoggedIn .wallet-total-label{color:#999DA7}
+  #authLoggedIn .wallet-total-num b{font-size:2.9rem;font-weight:600}
+  #authLoggedIn .wallet-rows dd::after{color:#999DA7}
+  #authLoggedIn .wallet-rows>div:nth-child(1){background:rgba(128,185,255,.10)}
+  #authLoggedIn .wallet-rows>div:nth-child(1) dt{color:var(--a-blue)}
+  #authLoggedIn .wallet-rows>div:nth-child(2){background:rgba(85,221,176,.10)}
+  #authLoggedIn .wallet-rows>div:nth-child(2) dt{color:var(--a-green)}
+  #authLoggedIn .wallet-total.has-credit .wallet-total-label::after{color:var(--a-green);background-color:rgba(85,221,176,.12)}
+  #authLoggedIn .wallet-total .wallet-topup{min-height:54px;background:var(--a-amber);transition:transform .15s ease,opacity .15s ease}
+  #authLoggedIn .wallet-total .wallet-topup:active{transform:scale(.97);opacity:.92}
+  #authLoggedIn .acct-menu{margin-top:0;border-radius:18px;background:var(--a-card)}
+  #authLoggedIn .menu-item{min-height:56px}
+  #authLoggedIn .acct-out{margin-top:20px;transition:transform .15s ease}
+  #authLoggedIn .acct-out:active,#authLoggedIn .menu-item:active{transform:scale(.985)}
+
+  @keyframes vcIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  #authLoggedIn .acct-row{animation:vcIn .3s ease both}
+  #authLoggedIn .wallet-total{animation:vcIn .3s ease .06s both}
+  #authLoggedIn .acct-menu{animation:vcIn .3s ease .12s both}
+  #authLoggedIn .acct-out{animation:vcIn .3s ease .18s both}
+  @media (prefers-reduced-motion:reduce){#authLoggedIn .acct-row,#authLoggedIn .wallet-total,#authLoggedIn .acct-menu,#authLoggedIn .acct-out{animation:none}#authLoggedIn .wallet-topup,#authLoggedIn .acct-out{transition:none}}
+
   @media (prefers-reduced-motion:reduce){#histList .hr2,.hist-search input,.lib-seg-b{transition:none}}
 }
