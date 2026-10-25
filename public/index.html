@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="care.css?v=2">
 <link rel="stylesheet" href="privacy.css?v=1">
 <link rel="stylesheet" href="mobile-polish.css?v=1" media="(max-width: 767px)">
-<link rel="stylesheet" href="history-polish.css?v=1">
+<link rel="stylesheet" href="history-polish.css?v=2">
 <link rel="stylesheet" href="print.css?v=1" media="print">
 </head>
 <body>
@@ -183,6 +183,11 @@
             <button type="button" class="hist-chip" data-status="done" aria-pressed="false">สำเร็จ</button>
           </div>
           <div id="histList" aria-live="polite"></div>
+          <aside class="hist-know" aria-label="รู้ไว้ก่อนใช้งาน">
+            <b>รู้ไว้ก่อนใช้งาน</b>
+            <p>ตรวจสอบจำนวนเครดิตก่อนเริ่มใช้งาน และเก็บประวัติรายการไว้สำหรับตรวจสอบย้อนหลัง</p>
+            <button type="button" class="hist-know-btn" data-faq>ดูรายละเอียด</button>
+          </aside>
         </div>
         <!-- เมนูข้อมูลและความช่วยเหลือ: แถวนโยบาย/เงื่อนไข/ติดต่อ จะแสดงเมื่อใส่ลิงก์จริงใน HELP_LINKS (สคริปต์ท้ายไฟล์) -->
         </div>
@@ -392,14 +397,15 @@
     try { return new Date(iso).toLocaleString('th-TH', { dateStyle: 'medium', timeStyle: 'short' }); }
     catch (e) { return ''; }
   }
-  function showMessage(text, hint) {
+  function showMessage(text, hint, goCheck) {
     panel.hidden = false;
     list.innerHTML = '<div class="hist-empty"><b>' + esc(text) + '</b>' +
-      (hint ? '<small>' + esc(hint) + '</small>' : '') + '</div>';
+      (hint ? '<small>' + esc(hint) + '</small>' : '') +
+      (goCheck ? '<button type="button" class="hist-retry hist-go-check" data-go="home">ไปหน้าตรวจสัญญา</button>' : '') + '</div>';
   }
   function showSkeleton() {
     panel.hidden = false;
-    list.innerHTML = '<div class="hist-skel"></div><div class="hist-skel"></div>';
+    list.innerHTML = '<div class="hist-skel"></div><div class="hist-skel"></div><div class="hist-skel"></div>';
   }
   async function getJson(url) {
     var res = await fetch(url, { credentials: 'same-origin' });
@@ -427,7 +433,7 @@
   // ประวัติตรวจเก็บเฉพาะรายการที่ตรวจสำเร็จ จึงแสดงป้าย "สำเร็จ" ได้จริง
   var TYPE_NAME = { rent: 'สัญญาเช่า', sale: 'สัญญาซื้อขาย', employment: 'สัญญาจ้างงาน', service: 'สัญญาจ้างบริการ', loan: 'สัญญากู้ยืมเงิน', shareholder: 'สัญญาหุ้นส่วน', nda: 'สัญญารักษาความลับ', other: 'สัญญาอื่น ๆ' };
   function renderInspections() {
-    if (!inspItems.length) return showMessage('ยังไม่มีประวัติการตรวจสัญญา', 'เมื่อตรวจสัญญาแล้ว ผลจะถูกเก็บไว้ที่นี่เพื่อเปิดดูซ้ำ');
+    if (!inspItems.length) return showMessage('ยังไม่มีประวัติการตรวจสัญญา', 'เมื่อตรวจสัญญาแล้ว ผลจะถูกเก็บไว้ที่นี่เพื่อเปิดดูซ้ำ', true);
     list.innerHTML = inspItems.slice(0, shown).map(function (it) {
       var tname = TYPE_NAME[it.contractType];
       return '<button type="button" class="hist-card hist-card-btn" data-id="' + esc(it.id) + '">' +
@@ -462,7 +468,10 @@
     }
     list.innerHTML = rows.slice(0, shown).map(function (it) {
       var done = it.credited;
+      // ชื่อแพ็กเกจแยกจากราคา (ข้อมูลจริงเดิมจากระบบ แค่ตัดคำว่า "ราคา ... บาท" ออกจากชื่อ)
+      var title = String(it.label || '').replace(/\s*ราคา\s*[\d,]+\s*บาท\s*$/, '') || String(it.label || '');
       var detail = '<dl class="hist-detail" hidden>' +
+        '<div><dt>แพ็กเกจ</dt><dd>' + esc(it.label) + '</dd></div>' +
         '<div><dt>สร้างรายการ</dt><dd>' + esc(fmt(it.createdAt)) + '</dd></div>' +
         (done && it.creditedAt ? '<div><dt>เติมเครดิตแล้ว</dt><dd>' + esc(fmt(it.creditedAt)) + '</dd></div>' : '') +
         (done ? '' : '<div><dt>หมายเหตุ</dt><dd>เครดิตจะเข้าอัตโนมัติหลังระบบยืนยันการชำระเงิน</dd></div>') +
@@ -470,7 +479,8 @@
       return '<div class="hist-card" data-open="0">' +
         '<button type="button" class="hist-card-top" aria-expanded="false">' +
           '<span class="hist-ico">' + ICO_COIN + '</span>' +
-          '<span class="hist-main"><b>' + esc(it.label) + '</b><span class="hist-meta">' + esc(fmt(it.createdAt)) + '</span></span>' +
+          '<span class="hist-main"><b>' + esc(title) + '</b><span class="hist-meta">' + esc(fmt(it.createdAt)) + '</span>' +
+            '<span class="hist-more-hint">ดูรายละเอียด</span></span>' +
           '<span class="hist-side"><b class="hist-amt">฿' + Number(it.amountBaht).toLocaleString('th-TH') + '</b>' +
             '<span class="hist-status ' + (done ? 'is-done' : 'is-pending') + '">' + (done ? 'สำเร็จ' : 'รอชำระ') + '</span></span>' +
         '</button>' + detail + '</div>';
@@ -537,6 +547,17 @@
     var tab = ev.target.closest('.hist-tab');
     if (tab) { setTab(tab.getAttribute('data-tab')); return; }
     if (ev.target.closest('[data-retry]')) { setTab(currentKind); return; }
+    var goBtn = ev.target.closest('[data-go="home"]');
+    if (goBtn) { var h = document.querySelector('#bottomNav [data-nav="home"]'); if (h) h.click(); return; }
+    if (ev.target.closest('[data-faq]')) {
+      // ปิดแผน กลับหน้าตรวจสัญญา แล้วเปิดคำถามที่พบบ่อยที่มีอยู่แล้วในหน้า
+      var h2 = document.querySelector('#bottomNav [data-nav="home"]'); if (h2) h2.click();
+      setTimeout(function () {
+        var faq = document.querySelector('details.faq');
+        if (faq) { faq.open = true; faq.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      }, 350);
+      return;
+    }
     if (ev.target.closest('[data-more]')) {
       shown += PAGE;
       if (currentKind === 'pay') renderPayments(); else renderInspections();
