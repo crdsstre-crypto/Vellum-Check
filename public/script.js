@@ -90,8 +90,8 @@ async function api(path, method = 'GET', body) {
 /* MY WALLET: สร้างการ์ดครั้งเดียว หลังจากนั้นอัปเดตตัวเลขในที่เดิม
    (ไม่สร้างใหม่ทุกครั้ง เพื่อไม่ให้อนิเมชันเข้าฉากเล่นซ้ำ) */
 const WALLET_REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const ICO_CHECK = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/><path d="m16 16-1.9-1.9"/></svg>';
-const ICO_MIC = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
+const ICO_CHECK = '<svg viewBox="0 0 64 64" width="24" height="24" aria-hidden="true" focusable="false"><path d="M10 22V15a5 5 0 0 1 5-5h7M42 10h7a5 5 0 0 1 5 5v7M54 42v7a5 5 0 0 1-5 5h-7M22 54h-7a5 5 0 0 1-5-5v-7" stroke="#5aa9ff" stroke-width="5" stroke-linecap="round" fill="none"/><circle cx="32" cy="32" r="11" fill="url(#vcg-b)"/><circle cx="28.5" cy="28.5" r="3.2" fill="#fff" opacity=".65"/></svg>';
+const ICO_MIC = '<svg viewBox="0 0 64 64" width="24" height="24" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><path d="M14 30a18 18 0 0 0 36 0M32 48v9M23 57h18" stroke="#43d6ad" stroke-width="4.5" stroke-linecap="round" fill="none"/><rect x="23" y="5" width="18" height="34" rx="9" fill="url(#vcg-g)"/><rect x="27.5" y="11" width="3.2" height="13" rx="1.6" fill="#fff" opacity=".45"/></svg>';
 
 function walletCard(cls, icon, th, en, use, id) {
   return `<div class="wallet-card ${cls}">` +
