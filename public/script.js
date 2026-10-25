@@ -176,6 +176,7 @@ function showCredits(n, voice) {
   walletSet('walletRowCheck', hasN ? n : null);
   walletSet('walletRowVoice', voiceNum);
   walletSet('walletTotal', hasN ? n + voiceNum : null);
+  { const wt = document.querySelector('.wallet-total'); if (wt) wt.classList.toggle('has-credit', hasN && n + voiceNum > 0); }
 
   // ป้ายบนหน้าหลัก (มือถือ) ให้เห็นเครดิตทันทีโดยไม่ต้องเปิดแผนบัญชี
   const chip = document.getElementById('creditChip');
