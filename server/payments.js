@@ -1,97 +1,283 @@
-// ระบบเติมเครดิตผ่าน PromptPay
-// หลักการ: ราคาและจำนวนเครดิตกำหนดที่เซิร์ฟเวอร์เท่านั้น หน้าเว็บส่งได้แค่รหัสแพ็กเกจ
-// การเติมเครดิตทำเฉพาะหลังยืนยันกับ Omise แล้วเท่านั้น (ดู confirmAndCredit ด้านล่าง)
+/* =========================================================
+   pay.css: หน้าต่างเติมเครดิต (ดำ-ทอง Premium Legal Tech)
+   - ใช้ทุกจอ แต่ตำแหน่งหน้าต่างเด้งบนมือถืออยู่ที่ mobile.css หัวข้อ 22-24
+   - สีทั้งหมดอยู่ในตัวแปร --p-* ด้านล่าง และมีผลเฉพาะใน #paymentCard
+     (ไม่แตะ themes.css จึงไม่กระทบสีส่วนอื่นของเว็บ)
+   - ไม่มีอนิเมชันวนซ้ำ
 
-import { pool } from './db.js';
-import { omisePost, omiseGet } from './omise.js';
+   ซ่อมด่วน
+   | อาการ                          | ไปที่หัวข้อ              |
+   |--------------------------------|-------------------------|
+   | สี/ขอบของหน้าต่างเติมเครดิต      | "1. ตัวแปรสี"            |
+   | หัวหน้าต่างและปุ่มปิด            | "2. หัวหน้าต่าง"         |
+   | การ์ดแพ็กเกจ ป้ายแนะนำ          | "3. การ์ดแพ็กเกจ"        |
+   | สรุปยอด ปุ่มสร้าง QR             | "4. สรุปยอดและปุ่ม"      |
+   | QR และสถานะรอ/ตรวจสอบ           | "5. QR และสถานะ"         |
+   | หน้าสำเร็จ/ไม่สำเร็จ/หมดเวลา      | "6. ผลลัพธ์"             |
+   | หน้าต่างสูงเกินจอ iPhone         | "7. มือถือ"              |
+   ========================================================= */
 
-// ราคาปัจจุบัน 50 บาทต่อ 10 ครั้ง หน่วยเป็นสตางค์ (50 บาท = 5000) ปรับได้ที่นี่ที่เดียว
-export const PACKAGES = {
-  check3: { kind: 'check', credits: 3, amountSatang: 4900, label: 'ตรวจสัญญา 3 ครั้ง ราคา 49 บาท' },
-  voice1: { kind: 'voice', credits: 1, amountSatang: 900,  label: 'สรุปเสียง 1 ครั้ง ราคา 9 บาท' },
-  voice5: { kind: 'voice', credits: 5, amountSatang: 3900, label: 'สรุปเสียง 5 ครั้ง ราคา 39 บาท' },
-};
-
-// สร้างรายการ PromptPay แล้วคืน QR สำหรับให้ผู้ใช้สแกน
-export async function createPromptPayPayment(userId, packageId) {
-  const pkg = PACKAGES[packageId];
-  if (!pkg) throw new Error('ไม่พบแพ็กเกจ');
-
-  // 1) สร้างแหล่งชำระเงินชนิด PromptPay
-  const source = await omisePost('/sources', {
-    type: 'promptpay',
-    amount: pkg.amountSatang,
-    currency: 'thb',
-  });
-
-  // 2) สร้างรายการเรียกเก็บเงินจากแหล่งนั้น
-  const charge = await omisePost('/charges', {
-    amount: pkg.amountSatang,
-    currency: 'thb',
-    source: source.id,
-    description: `เติมเครดิต ${pkg.credits} ครั้ง (user ${userId})`,
-  });
-
-  // 3) บันทึกเป็นรายการรอชำระ เครดิตยังไม่ถูกเพิ่มจนกว่าจะยืนยันว่าจ่ายแล้ว
-  await pool.query(
-    `INSERT INTO payments (charge_id, user_id, package_id, credits, amount_satang, status, kind)
-     VALUES ($1, $2, $3, $4, $5, 'pending', $6)`,
-    [charge.id, userId, packageId, pkg.credits, pkg.amountSatang, pkg.kind]
-  );
-
-  return {
-    chargeId: charge.id,
-    status: charge.status,
-    label: pkg.label,
-    // ลิงก์รูป QR ที่ Omise สร้างให้ ถ้าไม่มีให้ตรวจโครงสร้างตอบกลับตอนทดสอบ
-    qrImageUrl: charge.source?.scannable_code?.image?.download_uri ?? null,
-    expiresAt: charge.expires_at ?? null,
-  };
+/* ---------- 1. ตัวแปรสี ---------- */
+#paymentCard{
+  --p-bg:#0B0C0F;
+  --p-card:#15171C;
+  --p-card-2:#1B1D23;
+  --p-gold:#E4C574;
+  --p-gold-deep:#B89A4E;
+  --p-line:#2B2E35;
+  --p-text:#F5F3ED;
+  --p-mute:#9A9DA6;
+  --p-ok:#7ee2a8;
+  --p-bad:#f7a6ab;
+  background:var(--p-bg);
+  border:1px solid var(--p-line);
+  border-radius:22px;
+  color:var(--p-text);
+  padding:20px 18px calc(18px + env(safe-area-inset-bottom,0px));
 }
 
+/* ---------- 2. หัวหน้าต่าง ---------- */
+#paymentCard .pay-head{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:0 44px 16px 0;
+  border-bottom:1px solid var(--p-line);
+}
+#paymentCard .pay-head-ic{
+  flex:none;
+  width:54px;
+  height:54px;
+  display:grid;
+  place-items:center;
+  border-radius:16px;
+  color:var(--p-gold);
+  background:linear-gradient(145deg,#2a2412,#15130c);
+  border:1px solid rgba(228,197,116,.28);
+}
+#paymentCard .pay-head-tx{min-width:0}
+#paymentCard .pay-head h2{
+  margin:0;
+  font-size:1.35rem;
+  line-height:1.3;
+  color:var(--p-text);
+}
+#paymentCard .pay-head h2::before{display:none}
+#paymentCard .pay-head p{
+  margin:2px 0 0;
+  font-size:.88rem;
+  line-height:1.5;
+  color:var(--p-mute);
+}
+#paymentCard .pay-label{
+  margin:18px 0 10px;
+  font-size:1rem;
+  font-weight:700;
+  color:var(--p-gold);
+}
 
-/* ---------- ยืนยันการจ่ายและเติมเครดิต (ขั้นที่ 3) ---------- */
+/* ---------- 3. การ์ดแพ็กเกจ ---------- */
+#paymentCard #packageButtons{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:0;
+}
+#paymentCard #packageButtons .pkg{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  min-height:68px;
+  padding:12px 14px;
+  text-align:left;
+  color:var(--p-text);
+  background:var(--p-card);
+  border:1px solid var(--p-line);
+  border-radius:16px;
+  box-shadow:none;
+}
+#paymentCard #packageButtons .pkg:hover{background:var(--p-card-2)}
+#paymentCard #packageButtons .pkg:active{transform:scale(.985)}
+#paymentCard #packageButtons .pkg.is-selected{
+  background:linear-gradient(145deg,#24200f,#15171C);
+  border-color:var(--p-gold);
+  box-shadow:0 0 0 1px rgba(228,197,116,.35),0 10px 26px rgba(228,197,116,.1);
+}
+#paymentCard #packageButtons .pkg:disabled{opacity:.55}
+#paymentCard .pkg-ic{flex:none;display:grid;place-items:center;width:30px;color:var(--p-gold)}
+#paymentCard .pkg-tx{flex:1;min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:2px 8px}
+#paymentCard .pkg-tx b{flex:1 1 100%;font-size:1.05rem;font-weight:700;line-height:1.35}
+#paymentCard .pkg-tx small{font-size:.86rem;font-weight:400;color:var(--p-mute)}
+#paymentCard .pkg-tag{
+  font-style:normal;
+  font-size:.74rem;
+  font-weight:600;
+  line-height:1;
+  padding:5px 9px;
+  border-radius:999px;
+  color:var(--p-text);
+  background:var(--p-card-2);
+  border:1px solid var(--p-line);
+}
+#paymentCard .pkg-pr{
+  flex:none;
+  font-size:1.35rem;
+  font-weight:700;
+  color:var(--p-gold);
+  white-space:nowrap;
+}
+#paymentCard .pkg.is-selected .pkg-tag{border-color:rgba(228,197,116,.5);color:var(--p-gold)}
 
-// เรียกจาก webhook ของ Omise
-// หลักการ: ไม่เชื่อข้อมูลใน webhook แต่ดึงสถานะจาก Omise ด้วยคีย์ลับอีกครั้ง
-// คืนค่า result เป็น 'credited' | 'already' | 'not_paid' | 'unknown'
-export async function confirmAndCredit(chargeId) {
-  const { rows } = await pool.query(
-    'SELECT user_id, amount_satang, status FROM payments WHERE charge_id = $1',
-    [chargeId]
-  );
-  const row = rows[0];
-  if (!row) return { result: 'unknown' }; // ไม่ใช่รายการที่ระบบนี้สร้าง
-  if (row.status === 'credited') return { result: 'already' };
+/* ---------- 4. สรุปยอดและปุ่ม ---------- */
+#paymentCard #paymentResult{margin-top:14px}
+#paymentCard .pay-hint{
+  margin:0;
+  padding:12px 14px;
+  font-size:.9rem;
+  line-height:1.6;
+  color:var(--p-mute);
+  background:var(--p-card);
+  border:1px dashed var(--p-line);
+  border-radius:14px;
+}
+#paymentCard .pay-sum{
+  margin:0 0 12px;
+  padding:4px 14px;
+  background:var(--p-card);
+  border:1px solid var(--p-line);
+  border-radius:14px;
+}
+#paymentCard .pay-sum div{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding:9px 0;
+  border-bottom:1px solid var(--p-line);
+  font-size:.95rem;
+}
+#paymentCard .pay-sum div:last-child{border-bottom:0}
+#paymentCard .pay-sum dt{color:var(--p-mute)}
+#paymentCard .pay-sum dd{margin:0;font-weight:600;text-align:right}
+#paymentCard .pay-sum-total dd{color:var(--p-gold);font-size:1.2rem}
+#paymentCard .pay-go,
+#paymentCard .pay-alt{
+  display:block;
+  width:100%;
+  min-height:50px;
+  margin-top:10px;
+  font-size:1rem;
+  border-radius:14px;
+}
+#paymentCard .pay-go{
+  color:#0B0C0F;
+  background:linear-gradient(180deg,#EAD08A,#D2B05F);
+  box-shadow:0 8px 22px rgba(228,197,116,.16);
+}
+#paymentCard .pay-go:hover{background:linear-gradient(180deg,#F0DA9C,#DDBC6C)}
+#paymentCard .pay-go:disabled{opacity:.6}
+#paymentCard .pay-alt{color:var(--p-text);background:transparent;border:1px solid var(--p-line)}
+#paymentCard .pay-alt:hover{border-color:var(--p-gold-deep);color:var(--p-gold)}
 
-  const charge = await omiseGet(`/charges/${encodeURIComponent(chargeId)}`);
-  if (charge.status !== 'successful') return { result: 'not_paid' };
+/* ---------- 5. QR และสถานะ ---------- */
+#paymentCard .pay-status{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  margin-bottom:12px;
+  padding:12px 14px;
+  font-size:.88rem;
+  line-height:1.55;
+  color:var(--p-mute);
+  background:var(--p-card);
+  border:1px solid var(--p-line);
+  border-radius:14px;
+}
+#paymentCard .pay-status b{font-size:1rem;color:var(--p-text)}
+#paymentCard .pay-status.is-checking{border-color:rgba(228,197,116,.5)}
+#paymentCard .pay-status.is-checking b{color:var(--p-gold)}
+#paymentCard .pay-qr{
+  width:min(100%,260px);
+  margin:0 auto 12px;
+  padding:12px;
+  background:#fff;
+  border-radius:16px;
+}
+#paymentCard .pay-qr img{display:block;width:100%;height:auto}
+#paymentCard .pay-count{margin:0 0 6px;text-align:center;font-size:.9rem;color:var(--p-gold)}
+#paymentCard .pay-count:empty{display:none}
+#paymentCard .pay-note-line{margin:0 0 6px;text-align:center;font-size:.86rem;color:var(--p-mute)}
+#paymentCard .disclaimer{margin:12px 0 0;text-align:center;font-size:.82rem;color:var(--p-mute)}
+#paymentCard .notfound{margin:0 0 12px;color:var(--p-bad)}
 
-  // ยอดและสกุลเงินต้องตรงกับที่บันทึกไว้ตอนสร้างรายการ
-  // เทียบแบบแปลงชนิดก่อน และแสดงค่าจริงในข้อความ error เพื่อให้ดูจาก Logs ได้
-  const sameAmount = Number(charge.amount) === Number(row.amount_satang);
-  const sameCurrency = String(charge.currency).toLowerCase() === 'thb';
-  if (!sameAmount || !sameCurrency) {
-    throw new Error(
-      `ยอดหรือสกุลเงินไม่ตรง ${chargeId}: จาก Omise=${charge.amount} ${charge.currency}, ที่บันทึก=${row.amount_satang}`
-    );
+/* ---------- 6. ผลลัพธ์ ---------- */
+#paymentCard .pay-done{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  padding:22px 14px;
+  text-align:center;
+  font-size:.92rem;
+  line-height:1.6;
+  color:var(--p-mute);
+  background:var(--p-card);
+  border:1px solid var(--p-line);
+  border-radius:16px;
+}
+#paymentCard .pay-done b{font-size:1.15rem;color:var(--p-text)}
+#paymentCard .pay-done.is-ok .pay-done-ic{color:var(--p-ok)}
+#paymentCard .pay-done.is-bad .pay-done-ic{color:var(--p-bad)}
+
+/* ---------- 6b. ส่วนท้าย: ความโปร่งใส ---------- */
+#paymentCard .pay-trust{
+  margin-top:16px;
+  padding:14px;
+  background:var(--p-card);
+  border-radius:14px;
+}
+#paymentCard .pay-trust b{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:.98rem;
+  color:var(--p-gold);
+}
+#paymentCard .pay-trust p{
+  margin:6px 0 0;
+  font-size:.86rem;
+  line-height:1.6;
+  color:var(--p-mute);
+}
+/* ระหว่างรอ/ตรวจสอบ/ผลลัพธ์ ซ่อนรายการแพ็กเกจ ให้เห็นเฉพาะสิ่งที่ต้องทำ */
+#paymentCard[data-stage="creating"] #packageButtons,
+#paymentCard[data-stage="waiting"] #packageButtons,
+#paymentCard[data-stage="checking"] #packageButtons,
+#paymentCard[data-stage="success"] #packageButtons,
+#paymentCard[data-stage="failed"] #packageButtons,
+#paymentCard[data-stage="expired"] #packageButtons,
+#paymentCard[data-stage="creating"] .pay-label,
+#paymentCard[data-stage="waiting"] .pay-label,
+#paymentCard[data-stage="checking"] .pay-label,
+#paymentCard[data-stage="success"] .pay-label,
+#paymentCard[data-stage="failed"] .pay-label,
+#paymentCard[data-stage="expired"] .pay-label{display:none}
+
+/* ---------- 7. มือถือ: หน้าต่างไม่สูงเกินจอ และเลื่อนในตัวเอง ---------- */
+@media (max-width:767px){
+  body.pay-open #paymentCard:not([hidden]){
+    background:var(--p-bg);
+    width:min(94vw,440px);
+    max-height:calc(100vh - 32px);
+    max-height:calc(100dvh - 32px);
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+    box-shadow:0 24px 70px rgba(0,0,0,.7),0 0 0 1px rgba(228,197,116,.22);
   }
-
-  // เปลี่ยนสถานะและเติมเครดิตในคำสั่งเดียว
-  // ถ้า webhook ส่งซ้ำพร้อมกัน จะมีเพียงคำสั่งเดียวที่เปลี่ยนจาก pending ได้
-  const { rowCount } = await pool.query(
-    `WITH claimed AS (
-       UPDATE payments SET status = 'credited', credited_at = now()
-        WHERE charge_id = $1 AND status = 'pending'
-        RETURNING user_id, credits, kind
-     )
-     UPDATE users SET
-       credits       = users.credits       + CASE WHEN claimed.kind = 'check' THEN claimed.credits ELSE 0 END,
-       voice_credits = users.voice_credits + CASE WHEN claimed.kind = 'voice' THEN claimed.credits ELSE 0 END
-       FROM claimed
-      WHERE users.id = claimed.user_id`,
-    [chargeId]
-  );
-
-  return { result: rowCount === 1 ? 'credited' : 'already' };
+  #paymentCard .pay-head h2{font-size:1.3rem}
+  #paymentCard #packageButtons .pkg{min-height:72px}
+}
+@media (prefers-reduced-motion:reduce){
+  #paymentCard #packageButtons .pkg,
+  #paymentCard .pay-go{transition:none}
 }
