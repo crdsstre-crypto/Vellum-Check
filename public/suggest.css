@@ -444,7 +444,7 @@ body.cs-open{overflow:hidden}
 .cs-ico{position:relative;border:1px solid rgba(200,167,90,.55);background:rgba(200,167,90,.1);animation:csGlow 1.6s ease-out 1 .2s both}
 .cs-status{margin:14px 0 0}
 .cs-status-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.9rem;color:var(--text)}
-.cs-chip{padding:4px 12px;border-radius:999px;border:1px solid rgba(229,72,77,.55);font-size:.78rem;color:var(--highText)}
+.cs-chip{padding:4px 12px;border-radius:999px;border:1px solid var(--gold-deep);font-size:.78rem;color:var(--gold-soft)}
 .cs-chip i{font-style:normal;font-weight:700}
 .cs-meter{height:5px;margin-top:10px;border-radius:5px;background:var(--border);overflow:hidden}
 .cs-meter i{display:block;width:100%;height:100%;border-radius:5px;background:linear-gradient(90deg,var(--gold-deep),var(--gold-soft));transform-origin:left;animation:csMeter .9s ease-out .3s both}
