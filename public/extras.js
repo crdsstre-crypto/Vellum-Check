@@ -107,8 +107,8 @@
   }
 
   /* ---------- ศูนย์ความเป็นส่วนตัว + การแสดงผล (ในเมนูบัญชี) ---------- */
-  var ICO_LOCK = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
-  var ICO_DISP = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h10M4 17h6"/></svg>';
+  var ICO_LOCK = '<svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><path d="M20.5 30v-8.5a11.5 11.5 0 0 1 23 0V30" stroke="url(#vcg-s)" stroke-width="6" fill="none" stroke-linecap="round"/><rect x="13" y="28" width="38" height="27" rx="8" fill="url(#vcg-g)"/><circle cx="32" cy="39" r="4.2" fill="url(#vcg-y)"/><rect x="30" y="41" width="4" height="9" rx="2" fill="url(#vcg-y)"/><path d="M18.5 37v-2a3 3 0 0 1 3-3H29" stroke="#fff" stroke-width="2.6" stroke-linecap="round" fill="none" opacity=".35"/></svg>';
+  var ICO_DISP = '<svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><rect x="8" y="8" width="48" height="48" rx="12" fill="url(#vcg-v)"/><rect x="16" y="19" width="32" height="4" rx="2" fill="#fff" opacity=".55"/><rect x="16" y="30" width="32" height="4" rx="2" fill="#fff" opacity=".55"/><rect x="16" y="41" width="32" height="4" rx="2" fill="#fff" opacity=".55"/><circle cx="27" cy="21" r="5.5" fill="url(#vcg-y)"/><circle cx="40" cy="32" r="5.5" fill="url(#vcg-p)"/><circle cx="30" cy="43" r="5.5" fill="url(#vcg-g)"/><path d="M13 16a6 6 0 0 1 5-4" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".4" fill="none"/></svg>';
 
   function menuHtml() {
     return '' +
