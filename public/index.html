@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="mobile.css?v=14a" media="(max-width: 767px)">
 <link rel="stylesheet" href="glossary.css?v=3">
 <link rel="stylesheet" href="suggest.css?v=20">
+<link rel="stylesheet" href="pay.css?v=1">
 <link rel="stylesheet" href="print.css?v=1" media="print">
 </head>
 <body>
@@ -294,11 +295,22 @@
 
   <div id="payBackdrop" hidden></div>
   <!-- 3. เติมเครดิต (ซ่อนจนกว่าจะล็อกอิน) -->
-  <section class="card" id="paymentCard" hidden>
+  <section class="card" id="paymentCard" hidden role="dialog" aria-labelledby="payTitle">
     <button type="button" class="pay-close" id="payClose" aria-label="ปิด" hidden>✕</button>
-    <h2>3. เติมเครดิต (PromptPay)</h2>
-    <div id="packageButtons" class="btns"></div>
-    <div id="paymentResult"></div>
+    <div class="pay-head">
+      <span class="pay-head-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="5.5"/><path d="M9 6.5v5M7.5 8h2.2a1 1 0 0 1 0 2H7.5"/><path d="M14.5 9.6A5.5 5.5 0 1 1 9.6 14.5"/></svg></span>
+      <div class="pay-head-tx">
+        <h2 id="payTitle">เติมเครดิต</h2>
+        <p>เลือกแพ็กเกจที่เหมาะกับการใช้งานของคุณ</p>
+      </div>
+    </div>
+    <p class="pay-label" id="payLabel">เลือกบริการ</p>
+    <div id="packageButtons" class="btns" role="group" aria-labelledby="payLabel"></div>
+    <div id="paymentResult" aria-live="polite"></div>
+    <div class="pay-trust">
+      <b><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v5c0 4.4 2.9 8.3 7 10 4.1-1.7 7-5.6 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>ชำระเงินอย่างโปร่งใส</b>
+      <p>ตรวจสอบยอดเงินและจำนวนครั้งก่อนชำระทุกครั้ง ไม่มีการเรียกเก็บเงินซ้ำโดยอัตโนมัติ</p>
+    </div>
   </section>
 
 </main>
@@ -1062,6 +1074,6 @@ document.addEventListener('click', function (e) {
 <script src="glossary.js?v=5"></script>
 <script src="script.js?v=27"></script>
 <script src="extras.js?v=3"></script>
-<script src="pay-ui.js"></script>
+<script src="pay-ui.js?v=2"></script>
 </body>
 </html>
