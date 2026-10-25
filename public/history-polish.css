@@ -185,3 +185,49 @@
 @keyframes hsUp{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
 @keyframes hsFade{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion:reduce){.hs-box,.hs-back{animation:none}}
+
+/* ---------- รอบปรับให้กะทัดรัดและใช้งานจริง ---------- */
+.hist-search{position:relative}
+.hist-search label{display:block}
+.hist-search input{padding-right:48px}
+.hist-search input::-webkit-search-cancel-button{display:none}
+.hist-search-clear{
+  position:absolute;top:2px;right:2px;width:44px;height:44px;display:grid;place-items:center;border:none;border-radius:50%;
+  background:transparent;color:var(--h-sub);font-size:.9rem;
+}
+.hist-search-clear[hidden]{display:none}
+.hist-search-clear:active{background:rgba(255,255,255,.08);color:var(--h-text)}
+.vault-back{
+  display:flex;align-items:center;min-height:44px;margin:0 0 12px;padding:0 14px;border:1px solid var(--h-gold);border-radius:14px;
+  background:rgba(228,190,98,.08);color:var(--h-gold);font-size:.96rem;font-weight:700;
+  transition:background-color .18s ease,transform .15s ease;
+}
+.vault-back:active{background:rgba(228,190,98,.18);transform:scale(.98)}
+@media (max-width:767px){
+  /* ย่อการ์ดให้เห็นหลายรายการขึ้น โดยไม่ลดขนาดตัวอักษร */
+  .hist-report{padding:14px;margin-bottom:10px}
+  .hr-top{gap:12px}
+  .hr-top .hist-ico{width:48px;height:48px;border-radius:14px}
+  .hr-top .hist-ico svg{width:22px;height:22px}
+  .hr-top .hist-main{gap:2px}
+  .hr-chips{margin-top:4px}
+  .hr-chip{padding:1px 10px;font-size:.8rem}
+  /* เมนูสามจุด: พื้นที่แตะ 48x48 */
+  .hr-menu{width:48px;height:48px;margin:-8px -10px 0 0}
+  .hr-menu svg{width:24px;height:24px}
+  /* สรุปผลบรรทัดเดียว กดเพื่อดูรายละเอียดได้ */
+  .hr-sum{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:48px;margin:10px 0 0;padding:8px 14px;
+    border:1px solid transparent;border-radius:14px;background:rgba(255,255,255,.05);text-align:left;color:#d6d8de;
+    transition:background-color .18s ease,border-color .18s ease;
+  }
+  .hr-sum:active{background:rgba(228,190,98,.1);border-color:rgba(228,190,98,.4)}
+  .hr-sum-line{flex:1;min-width:0;font-size:.92rem;line-height:1.5}
+  .hr-sum-line b{font-size:1.15rem;font-weight:700;color:var(--h-gold);font-variant-numeric:tabular-nums}
+  .hr-sum-line i{font-style:normal;color:var(--h-sub)}
+  .hr-sum-go{flex:none;font-size:1.4rem;line-height:1;color:var(--h-gold)}
+  .hr-foot{margin-top:6px}
+  /* รายการท้ายสุดไม่ถูกแถบนำทางบัง */
+  .history-panel{padding-bottom:calc(var(--nav-h,64px) + env(safe-area-inset-bottom) + 24px)}
+  .hist-filters,.hist-tools{scroll-margin-top:12px}
+}
