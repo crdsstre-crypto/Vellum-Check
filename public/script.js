@@ -1102,20 +1102,29 @@ function showCreditSheet() {
     el.setAttribute('role', 'dialog');
     el.setAttribute('aria-modal', 'true');
     el.setAttribute('aria-labelledby', 'csTitle');
+    const I = d => `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+    const icoHist = I('<path d="M14 3H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4"/><path d="M14 3v4h4v2"/><circle cx="17" cy="17" r="4"/><path d="M17 15.2V17l1.2.8"/>');
+    const icoNew = I('<path d="M14 3H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/><path d="M14 3v4h4v3"/><path d="M18 14v6M15 17h6"/>');
     el.innerHTML = `<div class="cs-back" data-cs="close"></div>
       <div class="cs-sheet">
+        <span class="cs-grab" aria-hidden="true"></span>
         <button type="button" class="cs-x" data-cs="close" aria-label="ปิด">✕</button>
         <div class="cs-top">
           <span class="cs-ico">${ICO_SHIELD_OK}</span>
-          <div><h3 id="csTitle">การตรวจสอบหยุดชั่วคราว</h3><p>เครดิตสำหรับตรวจสัญญาหมดแล้ว</p></div>
+          <div><h3 id="csTitle">คุณตรวจครบทุกเครดิตแล้ว</h3><p>พักการตรวจไว้ชั่วคราว ไม่ต้องกังวล</p></div>
+        </div>
+        <div class="cs-status">
+          <div class="cs-status-row"><b>สถานะการใช้งาน</b><span class="cs-chip">เครดิตคงเหลือ <i>0</i></span></div>
+          <div class="cs-meter" role="img" aria-label="ใช้เครดิตครบแล้ว"><i></i></div>
         </div>
         <div class="cs-box">
-          <p><span aria-hidden="true">✓</span>ผลตรวจที่บันทึกไว้แล้วยังดูย้อนหลังได้ในประวัติ โดยไม่ต้องเติมเครดิต</p>
-          <p><span aria-hidden="true">✓</span>ถ้าต้องการตรวจสัญญาฉบับใหม่ เติมเครดิตได้ทุกเมื่อ ราคาและจำนวนครั้งแสดงก่อนชำระเงินเสมอ</p>
+          <div class="cs-row"><span class="cs-r-ico">${icoHist}</span><p><b>ผลตรวจเดิมยังดูย้อนหลังได้</b><small>เปิดประวัติการตรวจได้โดยไม่ต้องใช้เครดิตเพิ่ม</small></p></div>
+          <div class="cs-row"><span class="cs-r-ico">${icoNew}</span><p><b>ตรวจฉบับใหม่ได้เมื่อพร้อม</b><small>ตรวจสอบราคาและจำนวนครั้งก่อนยืนยันทุกครั้ง</small></p></div>
         </div>
-        <button type="button" class="cs-main wallet-topup" data-cs="close">ดูแพ็กเกจเครดิต</button>
-        <button type="button" class="cs-alt" data-cs="hist">กลับไปดูประวัติการตรวจ</button>
-        <p class="cs-fine">ไม่มีการเรียกเก็บเงินเพิ่มเติมโดยไม่ได้รับความยินยอมจากคุณ</p>
+        <button type="button" class="cs-main wallet-topup" data-cs="close"><span>ดูแพ็กเกจเครดิต</span><i aria-hidden="true">→</i></button>
+        <button type="button" class="cs-alt" data-cs="hist">ดูประวัติการตรวจ</button>
+        <p class="cs-fine">${ICO_SHIELD_OK}<span>ไม่มีการชำระเงินโดยไม่ได้รับความยินยอมจากคุณ</span></p>
+        <p class="cs-foot">ชัดเจน · ไม่บังคับซื้อ · ดูประวัติได้</p>
       </div>`;
     document.body.appendChild(el);
     el.addEventListener('click', e => {
