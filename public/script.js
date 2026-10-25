@@ -36,7 +36,7 @@ const CONFIG = {
     loading:      'กำลังตรวจสัญญา รอสักครู่...',
     network:      'เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ ลองใหม่อีกครั้ง',
     noHit:        '✅ AI ไม่พบจุดที่ควรตรวจ ลองอ่านทั้งฉบับอีกครั้งเพื่อความมั่นใจ',
-    noCredit:     'เครดิตหมดแล้ว',
+    noCredit:     'พร้อมตรวจครั้งถัดไปเมื่อคุณต้องการ ดูแพ็กเกจเพื่อเพิ่มสิทธิ์ได้',
     sessionEnded: 'หมดเวลาการเข้าสู่ระบบ กรุณาเข้าสู่ระบบใหม่',
     loggedOut:    'ออกจากระบบแล้ว',
     clearConfirm: 'ล้างข้อความสัญญาทั้งหมดใช่ไหม?',
@@ -54,7 +54,7 @@ let lastCredits = null;
 // ข้อความปุ่มตรวจ: บอกค่าใช้จ่ายไว้ก่อนกด และเปลี่ยนเป็นเติมเครดิตเมื่อเครดิตหมด
 function checkLabel() {
   if (!currentUser) return 'ตรวจสัญญา';
-  if (lastCredits === 0) return 'เติมเครดิตเพื่อตรวจสัญญา';
+  if (lastCredits === 0) return 'ดูแพ็กเกจเพื่อตรวจสัญญา';
   return 'ตรวจสัญญา (ใช้ 1 เครดิต)';
 }
 
@@ -127,7 +127,7 @@ function walletSet(id, val) {
   else el.textContent = String(val);
   const badge = document.getElementById(id + 'Badge');
   if (badge) {
-    badge.textContent = val === 0 ? 'หมดแล้ว' : 'พร้อมใช้งาน';
+    badge.textContent = val === 0 ? 'ใช้ครบแล้ว' : 'พร้อมใช้งาน';
     badge.classList.toggle('is-empty', val === 0);
   }
 }
@@ -182,9 +182,13 @@ function showCredits(n, voice) {
   const num = document.getElementById('creditNum');
   if (chip && num) {
     const isMobile = window.matchMedia('(max-width: 767px)').matches;
-    num.textContent = lastCredits === null ? '–' : String(lastCredits);
+    // เครดิต 0 ไม่แสดงเลขศูนย์เด่น ๆ ในกรอบแดง ใช้ข้อความเป็นกลางและพาไปดูแพ็กเกจแทน
+    const zero = lastCredits === 0;
+    num.textContent = lastCredits === null ? '–' : (zero ? 'ดูแพ็กเกจ' : String(lastCredits));
+    const lab = chip.querySelector('.credit-chip-label');
+    if (lab) lab.textContent = zero ? 'สิทธิ์การใช้งาน' : 'เครดิตคงเหลือ';
     chip.hidden = !(isMobile && currentUser);
-    chip.classList.toggle('is-low', lastCredits === 0);
+    chip.classList.toggle('is-zero', zero);
   }
   if (!busyNow) els.checkBtn.textContent = checkLabel();
 }
@@ -972,7 +976,10 @@ function jumpToQuote(quote) {
   if (!q || !ta) return;
   let at = ta.value.indexOf(q);
   if (at < 0) at = ta.value.indexOf(q.slice(0, 40)); // ข้อความยาว: ลองจับจากต้นประโยค
-  if (at < 0) { toast('หาตำแหน่งไม่พบ ข้อความอาจถูกแก้หลังตรวจ'); return; }
+  if (at < 0) {
+    toast(q.includes('[ปกปิด') ? 'ส่วนนี้มีข้อมูลที่ปกปิดไว้ จึงหาตำแหน่งตรง ๆ ไม่ได้' : 'หาตำแหน่งไม่พบ ข้อความอาจถูกแก้หลังตรวจ');
+    return;
+  }
   ta.scrollIntoView({ behavior: 'smooth', block: 'center' });
   ta.focus({ preventScroll: true });
   ta.setSelectionRange(at, at + Math.min(q.length, ta.value.length - at));
@@ -1111,10 +1118,10 @@ function showCreditSheet() {
         <button type="button" class="cs-x" data-cs="close" aria-label="ปิด">✕</button>
         <div class="cs-top">
           <span class="cs-ico">${ICO_SHIELD_OK}</span>
-          <div><h3 id="csTitle">คุณตรวจครบทุกเครดิตแล้ว</h3><p>พักการตรวจไว้ชั่วคราว ไม่ต้องกังวล</p></div>
+          <div><h3 id="csTitle">สิทธิ์การใช้งานพร้อมเพิ่มเมื่อคุณต้องการ</h3><p>ผลตรวจเดิมยังอยู่ครบ ไม่ต้องรีบตัดสินใจ</p></div>
         </div>
         <div class="cs-status">
-          <div class="cs-status-row"><b>สถานะการใช้งาน</b><span class="cs-chip">เครดิตคงเหลือ <i>0</i></span></div>
+          <div class="cs-status-row"><b>สถานะการใช้งาน</b><span class="cs-chip">ใช้สิทธิ์ครบแล้ว</span></div>
           <div class="cs-meter" role="img" aria-label="ใช้เครดิตครบแล้ว"><i></i></div>
         </div>
         <div class="cs-box">
@@ -1148,7 +1155,7 @@ function addCreditNote(credits) {
   const zero = credits === 0;
   at.insertAdjacentHTML('beforebegin', `<div class="cr-note${zero ? ' is-zero' : ''}" role="status">
     <span class="cr-ico">${ICO_SHIELD_OK}</span>
-    <p><b>${zero ? 'เครดิตสำหรับตรวจสัญญาหมดแล้ว' : 'เหลือเครดิตสำหรับตรวจสัญญาอีก 1 ครั้ง'}</b>
+    <p><b>${zero ? 'พร้อมสำหรับการตรวจครั้งถัดไปเมื่อคุณต้องการ' : 'เหลือเครดิตสำหรับตรวจสัญญาอีก 1 ครั้ง'}</b>
     <small>${zero ? 'ผลตรวจนี้ยังดูย้อนหลังได้ในประวัติ' : 'ตัดสินใจได้ก่อนเริ่มตรวจฉบับถัดไป'}</small></p>
     ${zero ? '<button type="button" class="cr-btn wallet-topup">ดูแพ็กเกจ</button>' : ''}
   </div>`);
@@ -1165,11 +1172,13 @@ async function runCheck() {
     return;
   }
 
-  const text = els.input.value.trim();
-  if (!text) {
+  const original = els.input.value.trim();
+  if (!original) {
     renderEmpty(CONFIG.messages.noInput);
     return;
   }
+  // Privacy Shield (privacy.js): แทนที่ชื่อ เลขบัตร เบอร์โทร อีเมล ก่อนส่งออกจากเครื่อง
+  const text = typeof window.privacyRedact === 'function' ? window.privacyRedact(original).trim() : original;
 
   setBusy(true);
   showLoading();
