@@ -18,7 +18,7 @@ import {
   findOrCreateGoogleUser,
   setUserAvatar,
 } from './auth.js';
-import { saveInspection, listInspections, getInspection, listPayments, deleteAllInspections, deleteInspection } from './history.js';
+import { saveInspection, listInspections, getInspection, listPayments, deleteAllInspections, deleteInspection, updateInspection } from './history.js';
 import {
   googleConfigured, makeState, buildAuthUrl, readCookieValue, exchangeCodeForProfile,
 } from './googleAuth.js';
@@ -205,6 +205,26 @@ app.delete('/api/history/inspections', async (req, res) => {
   } catch (err) {
     console.error('[history] delete all failed:', err.message);
     res.status(500).json({ error: 'ลบประวัติไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+
+app.patch('/api/history/inspections/:id', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน' });
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id) || id < 1) return res.status(400).json({ error: 'รหัสไม่ถูกต้อง' });
+    const body = req.body || {};
+    const patch = {};
+    if (typeof body.title === 'string' || body.title === null) patch.title = body.title;
+    if (typeof body.pinned === 'boolean') patch.pinned = body.pinned;
+    if (!Object.keys(patch).length) return res.status(400).json({ error: 'ไม่มีข้อมูลที่จะแก้ไข' });
+    const n = await updateInspection(user.id, id, patch);
+    if (!n) return res.status(404).json({ error: 'ไม่พบรายการนี้' });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('[history] update failed:', err.message);
+    res.status(500).json({ error: 'บันทึกไม่สำเร็จ ลองใหม่อีกครั้ง' });
   }
 });
 
