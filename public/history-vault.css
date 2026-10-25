@@ -205,5 +205,42 @@
   #authLoggedIn .acct-menu::before{color:var(--h-sub,#9aa3b2)}
   #authLoggedIn .acct-out{background:rgba(255,92,92,.08);border-color:rgba(255,92,92,.3)}
 
+  /* ---------- รอบ 6: บัญชีของฉัน — VELLUM Black Wallet (ดำสนิท เรียบ มีสีเฉพาะจุด) ----------
+     พื้น #090A0C · การ์ด #131417 · เส้น #292A2F · ทอง #F2C75C เฉพาะปุ่มเติมเครดิต · ฟ้า #72B4FF = เครดิตตรวจ · เขียว #55D9A6 = เครดิตเสียง */
+  #authLoggedIn{--a-card:#131417;--a-line:#292A2F;--a-amber:#F2C75C;--a-blue:#72B4FF;--a-green:#55D9A6;--a-purple:#A78BFA}
+  body[data-sheet="acct"] #authCard,body[data-sheet="acct"] #authCard .sheet-body{background:#090A0C}
+  #authLoggedIn .wallet-total{padding:16px;background:var(--a-card);border:1px solid var(--a-line);border-radius:20px;grid-template-columns:1fr;row-gap:8px}
+  #authLoggedIn .wallet-total-label{grid-column:1;font-size:.84rem;color:#92949C}
+  #authLoggedIn .wallet-total-num{grid-column:1;grid-row:2}
+  #authLoggedIn .wallet-total-num b{color:#F4F4F5;font-size:2.8rem}
+  #authLoggedIn .wallet-total-num small{font-size:1rem;color:#92949C}
+  #authLoggedIn .wallet-rows{display:none}
+  #authLoggedIn .wallet-quick{grid-column:1;grid-row:3;margin-top:6px}
+  #authLoggedIn .wallet-total .wallet-topup{min-height:50px;background:var(--a-amber);color:#16120a;border-radius:14px;font-weight:700}
+
+  #authLoggedIn .wallet-list-head{margin:18px 2px 8px}
+  #authLoggedIn .wallet-list-title{font-size:.86rem;font-weight:600;color:#92949C}
+  #authLoggedIn .wallet-list-title::before{content:none}
+  #authLoggedIn .wallet-cards{display:block;border:1px solid var(--a-line);border-radius:18px;background:var(--a-card);overflow:hidden}
+  #authLoggedIn .wallet-card{display:grid;grid-template-columns:48px minmax(0,1fr) auto;column-gap:14px;row-gap:0;align-items:center;padding:14px 16px;border:0;border-radius:0;background:transparent;animation:none}
+  #authLoggedIn .wallet-card+.wallet-card{border-top:1px solid var(--a-line)}
+  #authLoggedIn .wallet-card-top,#authLoggedIn .wallet-card-bottom{display:contents}
+  #authLoggedIn .wallet-ico{grid-column:1;grid-row:1;width:48px;height:48px;border-radius:14px}
+  #authLoggedIn .wallet-card-check .wallet-ico{background:rgba(114,180,255,.14);color:var(--a-blue)}
+  #authLoggedIn .wallet-card-voice .wallet-ico{background:rgba(85,217,166,.14);color:var(--a-green)}
+  #authLoggedIn .wallet-card-name{grid-column:2;grid-row:1}
+  #authLoggedIn .wallet-card-name b{font-size:1rem;color:#F4F4F5}
+  #authLoggedIn .wallet-card-name small{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:#92949C}
+  #authLoggedIn .wallet-badge,#authLoggedIn .wallet-card .wallet-topup{display:none}
+  #authLoggedIn .wallet-card-num{grid-column:3;grid-row:1;text-align:right}
+  #authLoggedIn .wallet-card-num b{font-size:1.7rem;color:#F4F4F5}
+  #authLoggedIn .wallet-card-num small{font-size:0;line-height:0;margin:0}
+  #authLoggedIn .wallet-card-num small::after{content:"เครดิต";font-size:.78rem;line-height:1.4;color:#92949C}
+  #authLoggedIn .pane[data-pane="services"]::after{content:"แสดงยอดเครดิตคงเหลือจากบัญชีของคุณ";display:block;margin:12px 4px 0;font-size:.8rem;color:#92949C}
+
+  #authLoggedIn .acct-row,#authLoggedIn .acct-menu{background:var(--a-card);border-color:var(--a-line)}
+  #authLoggedIn .menu-item{border-color:var(--a-line)}
+  #authLoggedIn .acct-menu::before{color:#92949C}
+
   @media (prefers-reduced-motion:reduce){#histList .hr2,.hist-search input,.lib-seg-b{transition:none}}
 }
