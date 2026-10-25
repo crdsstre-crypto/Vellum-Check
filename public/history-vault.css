@@ -82,5 +82,47 @@
   .pay-row.is-credited .hist-status{color:var(--d-mint);background:rgba(131,216,180,.12)}
   .pay-row{border-color:var(--v-line);border-radius:16px;background:var(--v-card)}
 
+  /* ---------- รอบ 3: Financial Document Timeline (แท็บเครดิตและชำระเงิน) ---------- */
+  .pay-hub{display:grid;grid-template-columns:auto 1fr auto;align-items:center;column-gap:12px;row-gap:10px;padding:12px;margin:0 0 10px;border-radius:18px;background:linear-gradient(160deg,#17130a 0%,#11151B 60%)}
+  .pay-hub .ph-top{display:contents}
+  .pay-hub .ph-top>div{display:none}
+  .pay-hub .ph-ico{grid-column:1;grid-row:1;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:var(--v-gold);border:1px solid var(--v-gold-line);background:transparent}
+  .pay-hub .ph-bal{grid-column:2;grid-row:1;margin:0;padding:0;background:none;min-width:0}
+  .pay-hub .ph-bal span{display:block;font-size:.78rem;color:var(--h-sub,#8b8e98)}
+  .pay-hub .ph-bal p{margin:0}
+  .pay-hub .ph-bal b{font-size:1.9rem}
+  .pay-hub .ph-bal small{font-size:.8rem}
+  .pay-hub .ph-topup{grid-column:3;grid-row:1;width:auto;min-height:40px;margin:0;padding:0 14px;border:1px solid var(--v-gold);border-radius:12px;background:transparent;color:var(--v-gold);font-size:.88rem;font-weight:700;white-space:nowrap}
+  .pay-hub .ph-topup span{margin-right:5px;font-size:1.05rem}
+  .pay-hub .ph-stats{grid-column:1/-1;grid-row:2;margin:0}
+  .pay-hub .ph-stat{min-height:44px}
+  .pay-hub .ph-stat b{font-size:1.05rem}
+  .ph-search{margin:0 0 8px}
+  .ph-search input{min-height:46px;border-radius:14px;background:var(--v-card);border:1px solid var(--v-line)}
+  .hist-filters{flex-wrap:nowrap;overflow-x:auto;gap:8px;margin:0 0 6px;padding:2px 0;scrollbar-width:none}
+  .hist-filters::-webkit-scrollbar{display:none}
+  .hist-chip{flex:0 0 auto;min-height:36px;padding:0 14px;border-radius:999px;background:var(--v-card);border:1px solid var(--v-line);color:var(--h-sub,#8b8e98);font-weight:600}
+  .hist-chip.is-on{background:rgba(232,195,93,.14);border-color:var(--v-gold);color:var(--v-gold)}
+  .hist-chip[data-status="pending"]::before,.hist-chip[data-status="done"]::before{content:"";display:inline-block;width:8px;height:8px;margin-right:7px;border-radius:50%;background:var(--v-pend)}
+  .hist-chip[data-status="done"]::before{background:var(--d-mint)}
+  .pay-day{margin:16px 0 0}
+  .pay-day-h{display:flex;align-items:center;gap:8px;margin:0 0 8px 2px;font-size:.92rem;font-weight:700;color:var(--h-text,#f5f5f5)}
+  .pay-day-h::before{content:"";width:16px;height:16px;border:1.6px solid var(--v-gold);border-radius:5px;border-top-width:4px;box-sizing:border-box}
+  .pay-day-h::after{content:"";flex:1;height:1px;background:var(--v-line)}
+  .pay-list{border:1px solid var(--v-line);border-radius:16px;background:var(--v-card)}
+  .pay-row+.pay-row{border-top:1px solid var(--v-line)}
+  .pay-row{border:0;border-radius:0;background:transparent}
+  .pay-row-top{align-items:center;gap:10px}
+  .pay-thumb{flex:0 0 auto;width:42px;height:54px;border-radius:7px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.08)}
+  .pay-row .hist-ico{width:32px;height:32px;border-radius:10px;border:1px solid var(--v-gold-line);background:transparent;color:var(--v-gold)}
+  .pay-row .hist-ico svg{width:16px;height:16px}
+  .pay-row .hist-main{gap:3px}
+  .pay-row .hist-main>b{font-size:.98rem}
+  .pay-row .hist-status{align-self:flex-start;padding:2px 9px;border-radius:999px;font-size:.74rem;font-weight:700;border:1px solid currentColor}
+  .pay-row.is-pending .hist-status{border-color:rgba(244,166,106,.5)}
+  .pay-row.is-credited .hist-status{border-color:rgba(131,216,180,.5)}
+  .pay-row .hist-amt{font-size:1.05rem;font-weight:700;color:var(--v-gold)}
+  @media (max-width:360px){.pay-thumb{display:none}.pay-hub .ph-bal b{font-size:1.6rem}}
+
   @media (prefers-reduced-motion:reduce){#histList .hr2,.hist-search input,.lib-seg-b{transition:none}}
 }
