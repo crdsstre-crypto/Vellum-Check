@@ -269,3 +269,75 @@
   @keyframes libIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
   @media (prefers-reduced-motion:reduce){#histList.is-reveal .hist-report{animation:none}}
 }
+
+/* ===== v6: ศูนย์ภาพรวม + เมนูเลือกกำหนดเอง + ประเด็นสำคัญสุด + เอฟเฟกต์ Obsidian × Champagne ===== */
+.lib-stats,.lib-pop,.hr-top-issue{display:none}
+@media (max-width:767px){
+  .lib-stats[hidden]{display:none}
+  .lib-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
+  .lib-stat{
+    display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:76px;padding:14px 16px;
+    border:1px solid var(--h-line);border-radius:18px;font:inherit;text-align:left;color:var(--h-text);
+    background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.015));
+    box-shadow:0 8px 22px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.05);
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+    transition:border-color .18s,background-color .18s,transform .12s;
+  }
+  .lib-stat b{font-size:1.65rem;line-height:1.1;font-variant-numeric:tabular-nums;color:var(--h-gold)}
+  .lib-stat span{font-size:.88rem;color:var(--h-sub)}
+  .lib-stat:active{transform:scale(.975)}
+  .lib-stat.is-on{border-color:rgba(228,190,98,.55);background:linear-gradient(180deg,rgba(228,190,98,.12),rgba(228,190,98,.03))}
+
+  /* หัวคลัง: แสงทองจาง ๆ เคลื่อนช้า (transform/opacity เท่านั้น) */
+  .lib-head{position:relative;overflow:hidden;isolation:isolate;box-shadow:0 10px 30px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.05)}
+  .lib-head::before{
+    content:"";position:absolute;z-index:-1;width:240px;height:240px;right:-70px;top:-110px;border-radius:50%;
+    background:radial-gradient(circle,rgba(228,190,98,.22),transparent 68%);
+    animation:libGlow 9s ease-in-out infinite alternate;will-change:transform,opacity;
+  }
+  @keyframes libGlow{from{transform:translate3d(0,0,0) scale(1);opacity:.6}to{transform:translate3d(-26px,22px,0) scale(1.15);opacity:1}}
+
+  .hist-report{
+    background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.01)),var(--h-card);
+    box-shadow:0 8px 22px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.04);
+    transition:transform .12s,border-color .18s;
+  }
+  .hist-report:active{transform:scale(.99)}
+  .hr-open:active,.hr-sum:active,.hr-menu:active,.hr-top-issue:active{transform:scale(.97)}
+  .hr-open,.hr-sum,.hr-menu,.hr-top-issue{transition:transform .12s,background-color .18s}
+
+  /* ปุ่มเรียง/ประเภท แบบเรียบ */
+  .lib-chip.is-plain{background:transparent}
+  .lib-chip[aria-expanded="true"]{border-color:var(--h-gold);color:var(--h-gold)}
+  .lib-pop{
+    display:block;margin:8px 0 0;padding:6px;border:1px solid var(--h-line);border-radius:18px;
+    background:rgba(20,23,28,.96);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    box-shadow:0 16px 36px rgba(0,0,0,.5);animation:libPop .18s ease-out both;
+  }
+  @keyframes libPop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+  .lib-opt{
+    display:flex;align-items:center;justify-content:space-between;width:100%;min-height:48px;padding:0 14px;
+    border:0;border-radius:12px;background:transparent;color:var(--h-text);font:inherit;font-size:1rem;text-align:left;
+  }
+  .lib-opt i{font-style:normal;color:var(--h-gold);font-weight:700}
+  .lib-opt.is-sel{background:rgba(228,190,98,.10);color:var(--h-gold)}
+  .lib-opt:active{background:rgba(255,255,255,.07)}
+
+  /* ประเด็นสำคัญที่สุด (ข้อมูลจริงจากรายงาน) */
+  .hr-top-issue{
+    display:flex;align-items:flex-start;gap:10px;width:100%;margin:10px 0 0;padding:12px 14px;border:1px solid var(--h-line);
+    border-radius:14px;background:rgba(255,255,255,.03);color:var(--h-text);font:inherit;text-align:left;
+  }
+  .hr-dot{flex:0 0 auto;width:9px;height:9px;margin-top:7px;border-radius:50%;background:var(--h-gold)}
+  .hr-top-issue.is-high .hr-dot{background:#E0725F}
+  .hr-top-issue.is-low .hr-dot{background:#80C9A0}
+  .hr-ti-txt{display:flex;flex-direction:column;min-width:0;gap:2px}
+  .hr-ti-txt small{font-size:.8rem;color:var(--h-sub)}
+  .hr-ti-txt b{font-size:.98rem;line-height:1.4;font-weight:600;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+
+  @media (prefers-reduced-motion:reduce){
+    .lib-head::before{animation:none}
+    .lib-pop{animation:none}
+    .lib-stat,.hist-report,.lib-chip{transition:none}
+  }
+}
