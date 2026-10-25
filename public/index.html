@@ -21,7 +21,7 @@
 <link rel="stylesheet" href="mobile-polish.css?v=1" media="(max-width: 767px)">
 <link rel="stylesheet" href="history-polish.css?v=13">
 <link rel="stylesheet" href="history-vault.css?v=11" media="(max-width: 767px)">
-<link rel="stylesheet" href="account-v2.css?v=3" media="(max-width: 767px)">
+<link rel="stylesheet" href="account-v2.css?v=6" media="(max-width: 767px)">
 <link rel="stylesheet" href="print.css?v=1" media="print">
 </head>
 <body>
@@ -125,43 +125,46 @@
       </div>
     </div>
     <div id="authLoggedIn" hidden>
-      <!-- แถวบัญชีที่ใช้งานอยู่ (รูปแบบเดียวกับหน้าการตั้งค่า) -->
-      <div class="acct-row">
-        <button class="acct-avatar" id="acctAvatarBtn" type="button" aria-label="เปลี่ยนรูปโปรไฟล์">
-          <span id="acctInitial">?</span>
-          <img id="acctPhoto" alt="" hidden>
-          <span class="acct-cam" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
-          </span>
-        </button>
-        <div class="acct-info">
-          <span class="acct-label">บัญชีของคุณ</span>
-          <b id="userEmail" class="acct-mail"></b>
+      <!-- การ์ดเครดิตของคุณ: บัญชี + ยอดคงเหลือ + เครดิตแยกประเภท + ปุ่มเติม ไว้ในการ์ดเดียว (ตัวเลขสร้างจาก script.js showCredits() ผ่าน id เดิม) -->
+      <div class="cred-card">
+        <div class="cred-head">
+          <div class="cred-titles"><h3 class="cred-title">เครดิตของคุณ</h3><p class="cred-sub">บัญชีและยอดเครดิตคงเหลือ</p></div>
+          <span class="cred-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7V5a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg></span>
         </div>
-        <span class="acct-check" aria-hidden="true">✓</span>
-      </div>
-      <input type="file" id="acctFile" accept="image/*" hidden>
-      <button type="button" class="acct-photo-del" id="acctPhotoDel" hidden>ลบรูปโปรไฟล์</button>
-      <!-- MY WALLET: ตัวเลขและการ์ดเครดิตสร้างจาก script.js showCredits() -->
-      <section class="wallet" aria-label="กระเป๋าเครดิตของคุณ">
-        <div class="wallet-head">
-          <div class="wallet-titles">
-            <p class="wallet-kicker">MY WALLET</p>
-            <h3 class="wallet-title">บัญชีของฉัน</h3>
+        <div class="acct-row">
+          <button class="acct-avatar" id="acctAvatarBtn" type="button" aria-label="เปลี่ยนรูปโปรไฟล์">
+            <span id="acctInitial">?</span>
+            <img id="acctPhoto" alt="" hidden>
+            <span class="acct-cam" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+            </span>
+          </button>
+          <div class="acct-info">
+            <span class="acct-label">บัญชีที่เข้าสู่ระบบ</span>
+            <b id="userEmail" class="acct-mail"></b>
           </div>
-          <span class="wallet-head-ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7V5a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>
-          </span>
+          <span class="acct-check" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4.5 6v5.5c0 4.4 3.1 8.1 7.5 9.5 4.4-1.4 7.5-5.1 7.5-9.5V6z"/><path d="m9 12 2.2 2.2L15.5 10"/></svg></span>
         </div>
+        <input type="file" id="acctFile" accept="image/*" hidden>
+        <button type="button" class="acct-photo-del" id="acctPhotoDel" hidden>ลบรูปโปรไฟล์</button>
         <div class="wallet-total">
           <span class="wallet-total-label">เครดิตคงเหลือทั้งหมด</span>
           <p class="wallet-total-num"><b id="walletTotal">–</b> <small>เครดิต</small></p>
-          <dl class="wallet-rows">
-            <div><dt>เครดิตตรวจ</dt><dd><b id="walletRowCheck">–</b> เครดิต</dd></div>
-            <div><dt>เครดิตเสียง</dt><dd><b id="walletRowVoice">–</b> เครดิต</dd></div>
-          </dl>
+          <i class="cred-line" aria-hidden="true"></i>
+          <div class="wallet-rows" role="group" aria-label="เครดิตแยกตามประเภท">
+            <div class="ws ws-check"><span class="ws-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/></svg></span><p class="ws-num"><b id="walletRowCheck">–</b></p><p class="ws-lab">เครดิตตรวจสัญญา</p></div>
+            <div class="ws ws-voice"><span class="ws-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span><p class="ws-num"><b id="walletRowVoice">–</b></p><p class="ws-lab">เครดิตเสียง</p></div>
+          </div>
           <div class="wallet-quick">
             <button type="button" class="wallet-topup">เติมเครดิต</button>
+          </div>
+        </div>
+      </div>
+      <section class="wallet" aria-label="กระเป๋าเครดิตของคุณ">
+        <div class="wallet-head" hidden>
+          <div class="wallet-titles">
+            <p class="wallet-kicker">MY WALLET</p>
+            <h3 class="wallet-title">บัญชีของฉัน</h3>
           </div>
         </div>
         <div class="pane is-on" data-pane="services">
