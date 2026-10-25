@@ -404,3 +404,45 @@
 @keyframes ctCoin{0%,60%,100%{transform:none}68%{transform:translateY(-2.5px)}77%{transform:none}}
 @keyframes ctSlice{0%,56%,100%{transform:none}66%{transform:translate(2px,-2px)}80%{transform:none}}
 @keyframes ctShackle{0%,58%,100%{transform:none}68%{transform:translateY(-2.5px) rotate(-7deg)}80%{transform:none}}
+
+/* ---------- รอบ 8: จังหวะตามไอคอน (บ้านเด้ง+เงา, รถเข็นสะดุ้ง, กระเป๋ายกแล้วกระแทก, กองเหรียญยุบ-เด้ง, พายขยาย, แม่กุญแจเด้ง, เอกสารเอียง) + ตอบสนองเมื่อเลือกการ์ด ---------- */
+@media (prefers-reduced-motion:no-preference){
+:root:not([data-calm]) .st-house,:root:not([data-calm]) .st-bag,:root:not([data-calm]) .st-lockbody,
+:root:not([data-calm]) .st-pie,:root:not([data-calm]) .st-docbody,:root:not([data-calm]) .st-gsh{transform-box:view-box}
+:root:not([data-calm]) .st-roof{animation:none}
+:root:not([data-calm]) .st-house{transform-origin:32px 55px;animation:ctHouse 14s ease-in-out -2s infinite}
+:root:not([data-calm]) .ct-list li[data-value="rent"] .st-gsh,:root:not([data-calm]) .ct-trigger[data-value="rent"] .st-gsh{transform-origin:32px 55.5px;animation:ctGsh 14s ease-in-out -2s infinite}
+:root:not([data-calm]) .st-cart{transform-origin:32px 50px;animation:ctCart 14s ease-in-out -5s infinite}
+:root:not([data-calm]) .st-bag{transform-origin:32px 54px;animation:ctBag 14s ease-in-out -8s infinite}
+:root:not([data-calm]) .st-handle{transform-origin:32px 21px;animation:ctHandle 14s ease-in-out -7.8s infinite}
+:root:not([data-calm]) .st-coin{transform-origin:32px 56px;animation:ctCoin 14s ease-in-out -3s infinite}
+:root:not([data-calm]) .st-coin.c3{transform-origin:32px 30px;animation-name:ctCoinTop}
+:root:not([data-calm]) .st-pie{transform-origin:31px 36px;animation:ctPie 14s ease-in-out -6s infinite}
+:root:not([data-calm]) .st-lockbody{transform-origin:32px 55px;animation:ctLockBody 14s ease-in-out -9s infinite}
+:root:not([data-calm]) .st-docbody{transform-origin:32px 56px;animation:ctDocTilt 14s ease-in-out -4s infinite}
+/* เงาใต้ชิ้นที่ลอย/เด้ง หดตามจังหวะ */
+:root:not([data-calm]) .ct-list li[data-value="employment"] .st-gsh{animation:ctGsh 14s ease-in-out -8s infinite}
+:root:not([data-calm]) .ct-list li[data-value="nda"] .st-gsh{animation:ctGsh 14s ease-in-out -9s infinite}
+:root:not([data-calm]) .ct-list li[data-value="other"] .st-gsh{animation:ctGsh 14s ease-in-out -4s infinite}
+:root:not([data-calm]) .st-gsh{transform-origin:32px 58.5px}
+/* เมื่อแตะเลือกการ์ด: ตอบสนองสั้น ๆ ครั้งเดียว */
+:root:not([data-calm]) .ct-list li.pick .st-wrench{animation:ctWrenchPick .8s ease-out 1}
+:root:not([data-calm]) .ct-list li.pick .st-slice{animation:ctSlicePick .7s cubic-bezier(.34,1.56,.64,1) 1}
+:root:not([data-calm]) .ct-list li.pick .st-shackle{animation:ctShacklePick .6s cubic-bezier(.34,1.56,.64,1) 1}
+:root:not([data-calm]) .ct-list li.pick .st-house{animation:ctHouse2 .6s ease-out 1}
+}
+@keyframes ctHouse{0%,60%,100%{transform:none}66%{transform:translateY(-3px) rotate(-2deg)}74%{transform:translateY(0) rotate(1.5deg)}82%{transform:rotate(-.6deg)}90%{transform:none}}
+@keyframes ctHouse2{0%{transform:none}40%{transform:translateY(-4px) rotate(-2deg)}100%{transform:none}}
+@keyframes ctGsh{0%,60%,100%{transform:none}66%{transform:scale(.85)}74%{transform:scale(1.06)}90%{transform:none}}
+@keyframes ctCart{0%,55%,100%{transform:none}65%{transform:translateX(2.2px)}75%{transform:translateX(-.8px) rotate(-1.2deg)}82%{transform:rotate(.8deg)}90%{transform:none}}
+@keyframes ctBag{0%,60%,100%{transform:none}68%{transform:translateY(-2px)}76%{transform:translateY(1px) scale(1.02,.97)}84%{transform:none}}
+@keyframes ctHandle{0%,60%,100%{transform:none}68%{transform:translateY(-1.5px) rotate(-3deg)}74%{transform:rotate(3deg)}80%{transform:rotate(-1.5deg)}88%{transform:none}}
+@keyframes ctCoin{0%,58%,100%{transform:none}64%{transform:translateY(1px) scale(1.02,.96)}72%{transform:translateY(-2px)}80%{transform:none}}
+@keyframes ctCoinTop{0%,58%,100%{transform:none}64%{transform:translateY(1px) scale(1.02,.96)}72%{transform:translateY(-3px) rotate(-4deg)}80%{transform:rotate(2deg)}88%{transform:none}}
+@keyframes ctPie{0%,56%,100%{transform:none}66%{transform:scale(1.04)}80%{transform:none}}
+@keyframes ctLockBody{0%,58%,100%{transform:none}68%{transform:translateY(-1.5px)}76%{transform:translateY(.5px)}84%{transform:none}}
+@keyframes ctShackle{0%,58%,100%{transform:none}64%{transform:rotate(-2deg)}68%{transform:translateY(-2.5px) rotate(-7deg)}72%{transform:translateY(-2.5px) rotate(-4deg)}80%{transform:none}}
+@keyframes ctDocTilt{0%,56%,100%{transform:none}66%{transform:rotate(-4deg) skewY(-2deg)}80%{transform:none}}
+@keyframes ctWrenchPick{0%{transform:none}55%{transform:rotate(28deg)}100%{transform:none}}
+@keyframes ctSlicePick{0%{transform:translate(3px,-3px)}100%{transform:none}}
+@keyframes ctShacklePick{0%{transform:translateY(-4px)}100%{transform:none}}
