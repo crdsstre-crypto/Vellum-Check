@@ -654,95 +654,99 @@
   @media (prefers-reduced-motion:reduce){.lib-dash .lib-stat{animation:none!important}.lib-dash.is-loading .ls-num::after,.lib-dash.is-loading .ld-trend b::after{animation:none}}
 }
 
-/* ===== v12: Vellum Executive Dashboard — Dark Editorial Luxury (มือถือ) =====
-   หลักคิด: ทุกการ์ดใช้พื้นหลังและเส้นขอบแบบเดียวกัน (เทาเข้ม) · แยกความหมายด้วยไอคอนและสีตัวเลขเท่านั้น
-   สีทองใช้เฉพาะ ไอคอน/ลิงก์ของ Hero และตัวเลขปักหมุด · การ์ดเตี้ยลง เห็นสถิติอื่นได้เร็วขึ้น
-   ไม่แตะ id / data-q / logic ใน index.html (เปลี่ยนเฉพาะข้อความ) */
+/* ===== v13: ประวัติแบบกะทัดรัด (มือถือ) — Dark Editorial Luxury =====
+   ลำดับ: หัว + แถบสถิติ 3 ช่อง → แท็บกรอง → ค้นหา → รายการจัดกลุ่มตามวัน → แถบประเด็นควรทบทวน
+   การ์ดรายการ = ภาพย่อเอกสาร | ชื่อ + ประเภท + สถานะ + เวลา | เมนู · พื้นหลังและเส้นขอบเดียวกันทุกใบ
+   ทองใช้เฉพาะ: แถบหัว, แท็บที่เลือก, ไอคอนวัน/ปักหมุด · เขียว = ตรวจแล้ว · ฟ้า = ประเด็นควรทบทวน
+   ลบบล็อกนี้ = กลับไปใช้ v11 */
 @media (max-width:767px){
-  .lib-dash{
-    --d-bg:#0F1012;--d-card:#17191D;--d-line:#262A31;--d-gold:#D9B968;--d-mint:#7FCFB0;--d-sky:#8DB9D8;
-    padding:14px;border-radius:24px;background:var(--d-bg);border:1px solid var(--d-line);box-shadow:none;
-  }
+  .history-panel{--d-card:#15171B;--d-chip:#22252B;--d-line:#262A31;--d-gold:#D9B968;--d-mint:#7FCFB0;--d-sky:#8DB9D8}
+  .hist-lead,.wallet-histlink{display:none}
+
+  /* หัว */
+  .lib-dash{padding:0;margin:0 0 12px;border:0;border-radius:0;background:none;box-shadow:none}
   .lib-dash::before,.lib-dash::after{content:none}
-
-  /* หัว: ไอคอน + ชื่อ + ช่วงเวลา อยู่แถวเดียว คั่นด้วยเส้นบาง */
-  .ld-head{flex-wrap:nowrap;align-items:center;gap:10px;margin:0 0 12px;padding:0 0 12px;border-bottom:1px solid var(--d-line)}
-  .ld-ico{flex:0 0 auto;width:40px;height:40px;border-radius:12px;background:#1E1B12;color:var(--d-gold)}
+  .ld-head{display:flex;flex-wrap:nowrap;align-items:center;gap:10px;margin:0 0 10px;padding:0;border:0}
+  .ld-head::before{content:none}
+  .ld-ico{display:none}
   .ld-txt{flex:1 1 auto;min-width:0}
-  .ld-txt b{display:block;font-size:1.2rem;line-height:1.25}
-  .ld-txt small{display:block;font-size:.8rem;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .ld-period{flex:0 0 auto;min-height:40px;padding:0 10px;border-radius:14px;background:transparent;border:1px solid var(--d-line);color:var(--h-text);font-size:.88rem;gap:6px}
-  .ld-period svg{color:var(--d-gold)}
+  .ld-txt b{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .ld-txt small{display:block;font-size:.95rem;line-height:1.35;font-weight:600;color:var(--h-sub)}
+  .ld-period{flex:0 0 auto;min-height:38px;padding:0 12px;gap:6px;border-radius:12px;background:transparent;border:1px solid var(--d-line);color:var(--h-text);font-size:.88rem}
+  .ld-period svg{width:18px;height:18px;color:var(--d-gold)}
 
-  /* การ์ดทุกใบ: โครงเดียวกัน */
-  .ld-grid{grid-template-columns:1fr 1fr;gap:10px}
-  .lib-dash .lib-stat{
-    padding:14px;border-radius:18px;gap:2px;
-    background:var(--d-card);border:1px solid var(--d-line);box-shadow:none;
-  }
-  .lib-dash .lib-stat.is-hero,.lib-dash .lib-stat.is-mint,.lib-dash .lib-stat.is-gold-soft,.lib-dash .lib-stat.is-wide{
-    background:var(--d-card);border-color:var(--d-line);
-  }
-  .lib-dash .lib-stat strong{font-size:.98rem;font-weight:700}
-  .lib-dash .lib-stat small{font-size:.78rem;line-height:1.35}
-  .lib-dash .ls-num{font-size:2rem;line-height:1.05;margin:4px 0 0}
-
-  /* Hero: ชื่อ + คำอธิบาย | ไอคอน / เลข + หน่วย / ลิงก์ — เตี้ยลงราว 35% */
-  .lib-dash .lib-stat.is-hero{
-    grid-column:1 / -1;display:grid;grid-template-columns:auto 1fr auto;column-gap:8px;row-gap:0;align-items:center;padding:14px 16px 0;
-  }
-  .lib-dash .lib-stat.is-hero .ls-tx{grid-column:1 / 3;grid-row:1}
-  .lib-dash .lib-stat.is-hero .ls-ic{grid-column:3;grid-row:1;width:36px;height:36px;border-radius:11px;background:#1E1B12;color:var(--d-gold);place-items:center;justify-content:center}
-  .lib-dash .lib-stat.is-hero .ls-go{display:none}
-  .lib-dash .lib-stat.is-hero .ls-num{grid-column:1;grid-row:2;font-size:2.4rem;color:var(--h-text);margin:10px 0 12px}
-  .lib-dash .lib-stat.is-hero .ls-unit{grid-column:2;grid-row:2;align-self:end;margin:0 0 15px;font-size:.95rem;color:var(--h-sub)}
-  .lib-dash .lib-stat.is-hero .ls-link{
-    grid-column:1 / -1;grid-row:3;display:flex;align-items:center;gap:10px;min-height:48px;margin:0;
-    border-top:1px solid var(--d-line);color:var(--d-gold);font-size:.95rem;font-weight:600;
-  }
-  .lib-dash .lib-stat.is-hero .ls-link::before{content:"\2197";font-size:.95rem}
-  .lib-dash .lib-stat.is-hero .ls-link::after{content:"\203A";margin-left:auto;font-size:1.4rem;line-height:1;color:var(--h-sub)}
-  .ls-unit{display:none}
-  .lib-dash .lib-stat.is-hero .ls-unit{display:block}
-
-  /* คู่: ไอคอน → เลข → ชื่อ → คำอธิบาย (สีเฉพาะไอคอนกับเลข) */
-  .lib-dash .lib-stat.is-mint .ls-ic,.lib-dash .lib-stat.is-mint .ls-num{color:var(--d-mint)}
-  .lib-dash .lib-stat.is-gold-soft .ls-ic,.lib-dash .lib-stat.is-gold-soft .ls-num{color:var(--d-gold)}
-  .lib-dash .lib-stat.is-mint .ls-ic,.lib-dash .lib-stat.is-gold-soft .ls-ic{width:28px;height:28px}
-
-  /* เต็มความกว้าง: ไอคอน | ชื่อ+คำอธิบาย | เลขชิดขวา / ลิงก์ */
-  .lib-dash .lib-stat.is-wide{
-    grid-column:1 / -1;display:grid;grid-template-columns:auto 1fr auto;column-gap:12px;row-gap:0;align-items:center;padding:14px 16px 0;
-  }
-  .lib-dash .lib-stat.is-wide .ls-ic{grid-column:1;grid-row:1;width:28px;height:28px;color:var(--d-sky)}
-  .lib-dash .lib-stat.is-wide .ls-tx{grid-column:2;grid-row:1}
-  .lib-dash .lib-stat.is-wide .ls-num{grid-column:3;grid-row:1;margin:0;font-size:2rem;color:var(--d-sky)}
-  .lib-dash .lib-stat.is-wide .ls-link{
-    grid-column:1 / -1;grid-row:2;display:flex;align-items:center;min-height:46px;margin:12px -16px 0;padding:0 16px;
-    border-top:1px solid var(--d-line);color:var(--h-text);font-size:.92rem;font-weight:600;
-  }
-  .lib-dash .lib-stat.is-wide .ls-link::after{content:"\203A";margin-left:auto;font-size:1.4rem;line-height:1;color:var(--h-sub)}
-  /* Hero: ให้เส้นแบ่งลิงก์ชิดขอบการ์ด */
-  .lib-dash .lib-stat.is-hero .ls-link{margin:0 -16px;padding:0 16px}
-
-  /* ตัวที่เลือกอยู่: เส้นขอบบางสีเดียวกับเนื้อหา ไม่เพิ่มแสง */
-  .lib-dash .lib-stat.is-on{box-shadow:none;border-color:currentColor}
-  .lib-dash .lib-stat.is-hero.is-on{border-color:var(--d-line)}
-  .lib-dash .lib-stat.is-mint.is-on{border-color:var(--d-mint)}
-  .lib-dash .lib-stat.is-gold-soft.is-on{border-color:var(--d-gold)}
-  .lib-dash .lib-stat.is-wide.is-on{border-color:var(--d-sky)}
-
-  /* สถิติย้อนหลัง: แถวเดียวเตี้ย ไม่มีหัวข้อซ้ำ (ยังอ่านได้ด้วย screen reader) */
-  .ld-trend{gap:8px;margin:10px 0 0}
-  .ld-trend-h{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-  .ld-trend button{min-height:38px;border-radius:12px;font-size:.8rem}
+  /* แถบสถิติ 3 ช่องแถวเดียว */
+  .ld-strip{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--d-line);border-radius:16px;background:var(--d-card)}
+  .ls-cell{position:relative;display:flex;align-items:center;justify-content:center;gap:10px;min-height:64px;padding:10px 6px}
+  .ls-cell+.ls-cell::before{content:"";position:absolute;left:0;top:20%;bottom:20%;width:1px;background:var(--d-line)}
+  .ls-cell svg{flex:0 0 auto;width:26px;height:26px;color:var(--h-sub)}
+  .ls-cell.is-ok svg{color:var(--d-mint)}
+  .ls-cell.is-pin svg{color:var(--d-gold)}
+  .ls-v{display:flex;flex-direction:column;gap:2px;line-height:1.1}
+  .ls-cell .ls-num{margin:0;font-size:1.45rem;font-weight:700;color:var(--h-text);font-variant-numeric:tabular-nums}
+  .ls-cell small{font-size:.76rem;color:var(--h-sub)}
+  .ld-trend{display:none}
   .ld-active{margin:10px 0 0}
 
-  /* จอเล็กมาก (iPhone SE ฯลฯ) */
-  @media (max-width:360px){
-    .lib-dash{padding:12px}
-    .lib-dash .ls-num{font-size:1.8rem}
-    .lib-dash .lib-stat.is-hero .ls-num{font-size:2.1rem}
-    .ld-period svg{display:none}
+  /* ประเภทประวัติ (ตรวจสัญญา/เติมเครดิต) ให้เล็กลง */
+  .history-panel .hist-tabs{margin:0 0 10px;padding:3px;gap:3px;border-radius:14px}
+  .history-panel .hist-tab{min-height:38px;padding:0 10px;border-radius:11px;font-size:.88rem}
+  .history-panel .hist-tab{flex-direction:row;gap:8px}
+  .history-panel .hist-tab::before{width:18px;height:18px}
+  .lib-dash{overflow:visible}
+  body[data-sheet="hist"] .wallet{overflow:visible}
+  .ld-period{box-sizing:border-box;max-width:none;overflow:visible}
+
+  /* แท็บกรอง + ค้นหา */
+  .lib-seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;margin:0 0 10px;border:1px solid var(--d-line);border-radius:16px;background:var(--d-card)}
+  .lib-seg-b{display:flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 6px;border:0;border-radius:12px;background:transparent;color:var(--h-sub);font:inherit;font-size:.9rem;font-weight:600;transition:background .15s,color .15s}
+  .lib-seg-b svg{width:18px;height:18px}
+  .lib-seg-b.is-on{background:var(--d-gold);color:#17130A}
+  .lib-seg-b:not(.is-on)[data-seg="done"] svg{color:var(--d-mint)}
+  .hist-search input{min-height:46px;border-radius:14px;background:var(--d-card);border:1px solid var(--d-line)}
+  .lib-chips{margin:8px 0 0;gap:8px}
+  .lib-chip{min-height:36px;padding:0 12px;border-radius:12px;font-size:.84rem}
+  .history-panel .lib-chip[data-q="sort"]{background:transparent;border-color:var(--d-line);color:var(--h-sub)}
+
+  /* รายการจัดกลุ่มตามวัน */
+  .hr-day{margin:14px 0 0}
+  .hr-day-h{display:flex;align-items:center;gap:8px;margin:0 0 8px;font-size:.95rem;font-weight:700;color:var(--h-text)}
+  .hr-day-h svg{flex:0 0 auto;color:var(--d-gold)}
+  .hr-day-line{flex:1;height:1px;background:var(--d-line)}
+  .hr-day-list{display:grid;gap:10px}
+  .hist-card.hist-report.hr2{
+    display:grid;grid-template-columns:62px minmax(0,1fr) auto;align-items:center;gap:12px;
+    margin:0;padding:10px 4px 10px 10px;min-height:0;border-radius:16px;background:var(--d-card);border:1px solid var(--d-line);box-shadow:none;
   }
+  .hist-report.hr2.is-pinned{border-color:var(--d-line)}
+  .hr2 .hr-thumb{display:block;width:62px;height:80px;border-radius:8px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.06)}
+  .hr2 .hist-main{display:flex;flex-direction:column;gap:6px;min-width:0}
+  .hr2 .hist-main>b{font-size:1.02rem;font-weight:700;line-height:1.3;color:var(--h-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .hr2 .hr-line{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px}
+  .hr2 .hr-chip{display:inline-flex;align-items:center;gap:5px;max-width:100%;padding:3px 9px;border:0;border-radius:9px;background:var(--d-chip);color:var(--h-sub);font-size:.76rem;font-weight:500;line-height:1.3}
+  .hr2 .hr-chip.is-pin{background:rgba(217,185,104,.12);color:var(--d-gold)}
+  .hr2 .hr-state{display:inline-flex;align-items:center;gap:5px;color:var(--d-mint);font-size:.84rem;font-weight:700}
+  .hr2 .hr-time{display:flex;align-items:center;gap:6px;color:var(--h-sub);font-size:.78rem}
+  .hr2 .hr-menu{width:40px;height:48px;display:grid;place-items:center;border:0;background:transparent;color:var(--h-sub)}
+
+  /* แถบประเด็นควรทบทวน: ลอยเหนือแถบนำทางล่าง */
+  .lib-review{position:sticky;bottom:calc(8px - var(--nav-h,64px) - env(safe-area-inset-bottom,0px) - 20px);z-index:5;display:flex;align-items:center;gap:10px;width:100%;min-height:48px;margin:14px 0 0;padding:0 14px;
+    border:1px solid rgba(141,185,216,.4);border-radius:14px;background:rgba(18,28,38,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    color:var(--d-sky);font:inherit;font-weight:600;text-align:left}
+  .lib-review[hidden]{display:none}
+  .lib-review svg{flex:0 0 auto;width:22px;height:22px}
+  .lib-review .lr-t{flex:1;min-width:0}
+  .lib-review b{color:#BFE0F5}
+  .lib-review i{font-style:normal;font-size:1.5rem;line-height:1;color:var(--h-sub)}
+  .lib-review.is-on{border-color:var(--d-sky);box-shadow:inset 0 0 0 1px var(--d-sky)}
+
+  /* skeleton ตอนโหลด: ไม่แสดงเลข 0 */
+  .lib-dash.is-loading .ls-num{color:transparent;position:relative}
+  .lib-dash.is-loading .ls-num::after{content:"";position:absolute;left:0;top:10%;width:2ch;height:80%;border-radius:6px;background:rgba(255,255,255,.1)}
+  @media (max-width:360px){
+    .ls-cell{gap:6px;padding:10px 2px}.ls-cell svg{width:22px;height:22px}.ls-cell .ls-num{font-size:1.25rem}
+    .hist-card.hist-report.hr2{grid-template-columns:54px minmax(0,1fr) auto;gap:10px}.hr2 .hr-thumb{width:54px;height:70px}
+    .lib-seg-b svg{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){.lib-seg-b{transition:none}}
 }
