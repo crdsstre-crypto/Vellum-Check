@@ -1076,6 +1076,75 @@ function setBusy(busy) {
   els.checkBtn.textContent = busy ? 'กำลังตรวจ...' : checkLabel();
 }
 
+// ---------- แจ้งเตือนเครดิต ----------
+// เครดิตหมด: แผนจากด้านล่างบอกตรง ๆ ว่าเกิดอะไรขึ้น + ทางเลือก (เติมเครดิต / ดูประวัติ / ปิด) ไม่บังคับซื้อ
+let creditSheetEl = null;
+function closeCreditSheet() {
+  if (!creditSheetEl) return;
+  creditSheetEl.hidden = true;
+  document.body.classList.remove('cs-open');
+}
+function openHistoryPanel() {
+  const body = document.body;
+  if (!body.classList.contains('auth-open')) document.getElementById('authToggle')?.click();
+  setTimeout(() => {
+    const link = document.getElementById('walletHist');
+    const panel = document.getElementById('historyPanel');
+    if (link && panel && panel.hidden) link.click();
+    (panel || link)?.scrollIntoView({ behavior: calmMotion() ? 'auto' : 'smooth', block: 'start' });
+  }, 320);
+}
+function showCreditSheet() {
+  if (!creditSheetEl) {
+    const el = document.createElement('div');
+    el.className = 'cs';
+    el.hidden = true;
+    el.setAttribute('role', 'dialog');
+    el.setAttribute('aria-modal', 'true');
+    el.setAttribute('aria-labelledby', 'csTitle');
+    el.innerHTML = `<div class="cs-back" data-cs="close"></div>
+      <div class="cs-sheet">
+        <button type="button" class="cs-x" data-cs="close" aria-label="ปิด">✕</button>
+        <div class="cs-top">
+          <span class="cs-ico">${ICO_SHIELD_OK}</span>
+          <div><h3 id="csTitle">การตรวจสอบหยุดชั่วคราว</h3><p>เครดิตสำหรับตรวจสัญญาหมดแล้ว</p></div>
+        </div>
+        <div class="cs-box">
+          <p><span aria-hidden="true">✓</span>ผลตรวจที่บันทึกไว้แล้วยังดูย้อนหลังได้ในประวัติ โดยไม่ต้องเติมเครดิต</p>
+          <p><span aria-hidden="true">✓</span>ถ้าต้องการตรวจสัญญาฉบับใหม่ เติมเครดิตได้ทุกเมื่อ ราคาและจำนวนครั้งแสดงก่อนชำระเงินเสมอ</p>
+        </div>
+        <button type="button" class="cs-main wallet-topup" data-cs="close">ดูแพ็กเกจเครดิต</button>
+        <button type="button" class="cs-alt" data-cs="hist">กลับไปดูประวัติการตรวจ</button>
+        <p class="cs-fine">ไม่มีการเรียกเก็บเงินเพิ่มเติมโดยไม่ได้รับความยินยอมจากคุณ</p>
+      </div>`;
+    document.body.appendChild(el);
+    el.addEventListener('click', e => {
+      const b = e.target.closest('[data-cs]');
+      if (!b) return;
+      closeCreditSheet();
+      if (b.dataset.cs === 'hist') openHistoryPanel();
+    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCreditSheet(); });
+    creditSheetEl = el;
+  }
+  creditSheetEl.hidden = false;
+  document.body.classList.add('cs-open');
+  creditSheetEl.querySelector('.cs-main').focus({ preventScroll: true });
+}
+// ท้ายผลตรวจ: เหลือ 1 ครั้งแจ้งเบา ๆ · หมดแล้วบอกว่าผลนี้ไม่หาย
+function addCreditNote(credits) {
+  if (credits !== 0 && credits !== 1) return;
+  const at = els.result.querySelector('.disclaimer');
+  if (!at) return;
+  const zero = credits === 0;
+  at.insertAdjacentHTML('beforebegin', `<div class="cr-note${zero ? ' is-zero' : ''}" role="status">
+    <span class="cr-ico">${ICO_SHIELD_OK}</span>
+    <p><b>${zero ? 'เครดิตสำหรับตรวจสัญญาหมดแล้ว' : 'เหลือเครดิตสำหรับตรวจสัญญาอีก 1 ครั้ง'}</b>
+    <small>${zero ? 'ผลตรวจนี้ยังดูย้อนหลังได้ในประวัติ' : 'ตัดสินใจได้ก่อนเริ่มตรวจฉบับถัดไป'}</small></p>
+    ${zero ? '<button type="button" class="cr-btn wallet-topup">ดูแพ็กเกจ</button>' : ''}
+  </div>`);
+}
+
 async function runCheck() {
   if (!currentUser) {
     renderEmpty(CONFIG.messages.loginFirst);
@@ -1083,7 +1152,7 @@ async function runCheck() {
   }
   // เครดิตหมด: พาไปหน้าเติมเครดิตแทนการส่งคำขอที่จะถูกปฏิเสธ
   if (lastCredits === 0) {
-    document.getElementById('authToggle')?.click();
+    showCreditSheet();
     return;
   }
 
@@ -1118,6 +1187,7 @@ async function runCheck() {
         return;
       }
       renderEmpty(r.status === 402 ? CONFIG.messages.noCredit : (r.data.error || CONFIG.messages.network));
+      if (r.status === 402) showCreditSheet();
       return;
     }
 
@@ -1125,6 +1195,7 @@ async function runCheck() {
     renderResult(r.data.result);
     if (typeof r.data.credits === 'number') toast('ใช้ 1 เครดิต · เหลือ ' + r.data.credits + ' เครดิต');
     addDetectBanner(r.data.result, contractType);
+    addCreditNote(r.data.credits);
     if (r.data.audio) {
       els.result.insertAdjacentHTML('afterbegin',
         `<audio controls src="data:audio/mpeg;base64,${r.data.audio}" style="width:100%;margin-bottom:12px"></audio>`);
