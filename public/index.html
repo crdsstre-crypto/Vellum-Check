@@ -16,7 +16,8 @@
 <link rel="stylesheet" href="glossary.css?v=3">
 <link rel="stylesheet" href="suggest.css?v=20">
 <link rel="stylesheet" href="pay.css?v=1">
-<link rel="stylesheet" href="care.css?v=1">
+<link rel="stylesheet" href="care.css?v=2">
+<link rel="stylesheet" href="privacy.css?v=1">
 <link rel="stylesheet" href="print.css?v=1" media="print">
 </head>
 <body>
@@ -218,10 +219,10 @@
     </div>
   </section>
 
-  <!-- 1. วางข้อความสัญญา -->
+  <!-- 1. เลือกประเภทและใส่สัญญา -->
   <section class="card">
     <div class="step-head">
-      <h2>1. วางข้อความสัญญา</h2>
+      <h2>1. เลือกประเภทและใส่สัญญา</h2>
       <!-- ป้ายเครดิตคงเหลือ: แสดงเฉพาะมือถือและตอนล็อกอิน กดแล้วเปิดแผนบัญชี -->
     <button type="button" class="credit-chip" id="creditChip" hidden aria-label="เครดิตคงเหลือ ดูหรือเติมเครดิต">
       <span class="credit-chip-label">เครดิตคงเหลือ</span>
@@ -270,7 +271,39 @@
     </div>
     <p class="up-status" id="upStatus" role="status" aria-live="polite" hidden></p>
     <p class="hint">แนะนำ: วางเฉพาะข้อความสัญญาที่ต้องการตรวจ ไม่ต้องใส่ข้อมูลส่วนตัวที่ไม่จำเป็น</p>
+    <div class="step-sub"><h3>2. เลือกสิ่งที่ต้องการและปกป้องข้อมูล</h3></div>
     <label class="voice-opt"><span class="voice-text">สรุปเป็นเสียง <small>(ใช้เครดิตเสียง 1 ครั้ง)</small></span><input type="checkbox" id="voiceOpt" role="switch" aria-label="สรุปเป็นเสียง"><span class="voice-switch" aria-hidden="true"></span></label>
+
+    <!-- Privacy Shield: ปกปิดข้อมูลส่วนตัวในเบราว์เซอร์ก่อนส่งวิเคราะห์ (privacy.js) -->
+    <section class="ps" id="privacyShield" aria-labelledby="psTitle">
+      <div class="ps-head">
+        <span class="ps-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M9 12l2.2 2.2L15.5 10"/></svg></span>
+        <div class="ps-title"><b id="psTitle">ปกป้องข้อมูลส่วนตัว</b><small>Privacy Shield</small></div>
+        <span class="ps-badge" id="psBadge">เปิดใช้งาน</span>
+      </div>
+      <p class="ps-summary" id="psSummary" aria-live="polite"></p>
+      <div class="ps-actions">
+        <button type="button" id="psPeek" aria-expanded="false" hidden>ดูตัวอย่างข้อความหลังปกปิด</button>
+        <button type="button" id="psMore" class="is-plain" aria-expanded="false" aria-controls="psBody">ตั้งค่า</button>
+      </div>
+      <pre class="ps-preview" id="psPreview" hidden></pre>
+      <div class="ps-body" id="psBody" hidden>
+        <ul class="ps-list">
+          <li><label class="ps-row"><span>เปิดการปกปิดอัตโนมัติ<small>ปกปิดก่อนส่งข้อความไปวิเคราะห์</small></span><input type="checkbox" id="psMaster" checked></label></li>
+          <li><label class="ps-row"><span>ชื่อและนามสกุล<small>เช่น นายสมชาย ใจดี</small></span><input type="checkbox" id="ps_name" checked></label></li>
+          <li><label class="ps-row"><span>เลขบัตรประชาชน<small>ปกปิดเลข 13 หลักที่ตรวจพบ</small></span><input type="checkbox" id="ps_id" checked></label></li>
+          <li><label class="ps-row"><span>เบอร์โทรศัพท์<small>ปกปิดหมายเลขโทรศัพท์ที่ตรวจพบ</small></span><input type="checkbox" id="ps_phone" checked></label></li>
+          <li><label class="ps-row"><span>อีเมลและข้อมูลติดต่อ<small>ปกปิดอีเมลที่ตรวจพบ</small></span><input type="checkbox" id="ps_email" checked></label></li>
+        </ul>
+        <label class="ps-custom">ปกปิดคำอื่นเพิ่มเอง (คั่นด้วยจุลภาค เช่น ชื่อบริษัท, ที่อยู่)
+          <input type="text" id="psCustom" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="พิมพ์คำที่ไม่ต้องการส่ง">
+        </label>
+      </div>
+      <p class="ps-fine">ระบบอาจตรวจจับไม่ครบทุกกรณี โดยเฉพาะชื่อและไฟล์สแกนหรือภาพถ่ายเอกสาร ควรดูตัวอย่างก่อนกดตรวจ ค่าเช่า วันที่ ระยะเวลา และจำนวนเงินจะไม่ถูกปกปิด</p>
+    </section>
+
+    <div class="step-sub"><h3>3. ตรวจสัญญา</h3></div>
+    <p class="step-cost" id="stepCost">ตรวจครั้งนี้ใช้ 1 เครดิต และคืนให้ถ้าตรวจไม่สำเร็จ</p>
     <div class="btns">
       <button class="primary" id="checkBtn">ตรวจสัญญา</button>
       <button class="ghost" id="clearBtn">ล้างข้อความ</button>
@@ -279,9 +312,9 @@
     <p class="disclaimer">* เครื่องมือนี้ช่วยคัดกรองเบื้องต้นเท่านั้น ไม่ใช่คำปรึกษาทางกฎหมาย ควรให้ทนายตรวจก่อนลงนามในสัญญาสำคัญ</p>
   </section>
 
-  <!-- 2. ผลการตรวจ -->
+  <!-- ผลการตรวจ -->
   <section class="card" id="resultCard">
-    <h2>2. ผลการตรวจ</h2>
+    <h2>ผลการตรวจ</h2>
     <div id="result">
       <div class="empty-art" aria-hidden="true">
         <svg viewBox="0 0 120 90" fill="none" stroke="url(#goldLineSm)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1080,9 +1113,10 @@ document.addEventListener('click', function (e) {
 })();
 </script>
 <script src="glossary.js?v=5"></script>
-<script src="script.js?v=28"></script>
+<script src="script.js?v=29"></script>
 <script src="extras.js?v=3"></script>
 <script src="pay-ui.js?v=2"></script>
-<script src="care.js?v=1"></script>
+<script src="privacy.js?v=1"></script>
+<script src="care.js?v=2"></script>
 </body>
 </html>
