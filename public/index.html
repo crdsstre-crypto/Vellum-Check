@@ -23,7 +23,7 @@
 <link rel="stylesheet" href="history-vault.css?v=11" media="(max-width: 767px)">
 <link rel="stylesheet" href="account-v2.css?v=11" media="(max-width: 767px)">
 <link rel="stylesheet" href="print.css?v=1" media="print">
-<link rel="stylesheet" href="ct-sticker.css?v=1" media="(max-width: 767px)">
+<link rel="stylesheet" href="ct-sticker.css?v=2" media="(max-width: 767px)">
 </head>
 <body>
 
@@ -1596,13 +1596,13 @@ document.addEventListener('click', function (e) {
     var picked = list.querySelector('li[data-value="' + v + '"]');
     if (picked) {
       picked.classList.add('pick');
-      setTimeout(function () { picked.classList.remove('pick'); }, 450);
+      setTimeout(function () { picked.classList.remove('pick'); }, 700);
     }
     if (navigator.vibrate) navigator.vibrate(10);
     setTimeout(function () {
       setOpen(false);
       trigger.focus();
-    }, 300);
+    }, 480);
   }
 
   // มือถือ: แสดงปุ่มและแผน ซ่อน select เดิม (ยังอ่านค่าได้) / จอใหญ่: คงของเดิมไว้
