@@ -162,3 +162,133 @@
 #authLoggedIn .acct-avatar #acctInitial{display:none}
 #authLoggedIn .acct-avatar .acct-sticker{display:block;width:78%;height:78%;filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))}
 #authLoggedIn .acct-avatar img:not([hidden]) ~ .acct-sticker{display:none}
+
+/* ---------- แอนิเมชันสติกเกอร์ 3 ชั้น (รอบ 5) ----------
+   ชั้น 1 Ambient: ลอยช้า ๆ เอียงนิดเดียว วนทุก ~5-7 วินาที (ใช้ translate/rotate แยกจาก transform เดิม)
+   ชั้น 2 Light Sweep: แสงวิ่งผ่านกรอบเป็นช่วง ๆ ทุก ~8-10 วินาที
+   ชั้น 3 Interactive: กดแล้วย่อ ปล่อยแล้วเด้งกลับ + กรอบทองเรืองตอนเลือก
+   ปิดทั้งหมด: ลบบล็อกนี้ · ปิดอัตโนมัติเมื่อผู้ใช้ตั้งลดการเคลื่อนไหว หรือ data-calm */
+@media (prefers-reduced-motion:no-preference){
+:root:not([data-calm]){
+  --fr-sel:1;
+}
+/* --- ชั้น 1: ลอย --- */
+:root:not([data-calm]) .ct-list.ct-anim li.seen .ct-ico svg{
+  animation:ctSpawn .5s cubic-bezier(.34,1.56,.64,1) var(--d,0ms) backwards, ctFloat 5.6s ease-in-out calc(.5s + var(--d,0ms)) infinite;
+}
+:root:not([data-calm]) .ct-list.ct-anim li.seen.pick .ct-ico svg{
+  animation:ctPick .42s cubic-bezier(.34,1.56,.64,1) both, ctFloat 5.6s ease-in-out .42s infinite;
+}
+:root:not([data-calm]) .ct-trigger .ct-ico svg{
+  animation:ctSpawn .5s cubic-bezier(.34,1.56,.64,1) backwards, ctFloat 6s ease-in-out .5s infinite;
+}
+:root:not([data-calm]) .hero-art svg,
+:root:not([data-calm]) .ps-ico svg,
+:root:not([data-calm]) .menu-ico svg,
+:root:not([data-calm]) .vault-badge svg,
+:root:not([data-calm]) .cred-ico svg,
+:root:not([data-calm]) .ph-ico svg,
+:root:not([data-calm]) .cs-ico svg,
+:root:not([data-calm]) .cs-r-ico svg,
+:root:not([data-calm]) #paymentCard .pay-head-ic svg,
+:root:not([data-calm]) #paymentCard .pkg-ic svg,
+:root:not([data-calm]) .bn-item.is-on svg,
+:root:not([data-calm]) .brand-logo,
+:root:not([data-calm]) .acct-sticker{
+  animation:ctFloat 6.2s ease-in-out var(--ad,0s) infinite;
+}
+/* กระจายจังหวะไม่ให้ลอยพร้อมกัน */
+:root:not([data-calm]) .menu-item:nth-child(2) .menu-ico svg,
+:root:not([data-calm]) .bn-item:nth-child(2) svg,
+:root:not([data-calm]) #paymentCard .pkg:nth-child(2) .pkg-ic svg,
+:root:not([data-calm]) .cs-row:nth-child(2) .cs-r-ico svg{animation-delay:-1.7s}
+:root:not([data-calm]) .menu-item:nth-child(3) .menu-ico svg,
+:root:not([data-calm]) .bn-item:nth-child(3) svg,
+:root:not([data-calm]) #paymentCard .pkg:nth-child(3) .pkg-ic svg{animation-delay:-3.1s}
+:root:not([data-calm]) .menu-item:nth-child(4) .menu-ico svg{animation-delay:-4.3s}
+:root:not([data-calm]) .menu-item:nth-child(5) .menu-ico svg{animation-delay:-2.4s}
+:root:not([data-calm]) .menu-item:nth-child(6) .menu-ico svg{animation-delay:-5.2s}
+:root:not([data-calm]) .ct-list li:nth-child(even) .ct-ico svg{animation-delay:0s,-2.2s}
+/* เครื่องหมายคำถาม: ส่ายมากกว่าตัวอื่นเล็กน้อย */
+:root:not([data-calm]) .ct-list li[data-value="unsure"].seen .ct-ico svg,
+:root:not([data-calm]) .ct-trigger[data-value="unsure"] .ct-ico svg{
+  animation-name:ctSpawn,ctSway;
+  animation-duration:.5s,4.8s;
+}
+/* โล่ Privacy Shield: แสงเรืองหายใจเบา ๆ */
+:root:not([data-calm]) .ps-ico svg,
+:root:not([data-calm]) .cs-ico svg{
+  animation:ctFloat 6.2s ease-in-out infinite, ctShieldGlow 5s ease-in-out infinite;
+}
+
+/* --- ชั้น 2: แสงวิ่ง --- */
+.hero-art,.ps-ico,.menu-ico,.vault-badge,.cred-ico,.ph-ico,.cs-ico,.cs-r-ico,
+#paymentCard .pay-head-ic,#paymentCard .pkg-ic{position:relative;overflow:hidden}
+.hero-art::after,.ps-ico::after,.menu-ico::after,.vault-badge::after,.cred-ico::after,.ph-ico::after,
+.cs-ico::after,.cs-r-ico::after,#paymentCard .pay-head-ic::after,#paymentCard .pkg-ic::after{
+  content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(115deg,transparent 38%,rgba(255,236,170,.42) 50%,transparent 62%);
+  transform:translateX(-130%);
+}
+:root:not([data-calm]) .ct-ico::after,
+:root:not([data-calm]) .hero-art::after,
+:root:not([data-calm]) .ps-ico::after,
+:root:not([data-calm]) .menu-ico::after,
+:root:not([data-calm]) .vault-badge::after,
+:root:not([data-calm]) .cred-ico::after,
+:root:not([data-calm]) .ph-ico::after,
+:root:not([data-calm]) .cs-ico::after,
+:root:not([data-calm]) .cs-r-ico::after,
+:root:not([data-calm]) #paymentCard .pay-head-ic::after,
+:root:not([data-calm]) #paymentCard .pkg-ic::after{
+  animation:ctGlint 9s ease-in-out var(--gd,0s) infinite;
+}
+:root:not([data-calm]) .ct-list li.pick .ct-ico::after{animation:ctSweep .55s ease-out 1}
+:root:not([data-calm]) .ct-list li:nth-child(2) .ct-ico::after,
+:root:not([data-calm]) .menu-item:nth-child(2) .menu-ico::after,
+:root:not([data-calm]) #paymentCard .pkg:nth-child(2) .pkg-ic::after{--gd:-2.4s}
+:root:not([data-calm]) .ct-list li:nth-child(3) .ct-ico::after,
+:root:not([data-calm]) .menu-item:nth-child(3) .menu-ico::after,
+:root:not([data-calm]) #paymentCard .pkg:nth-child(3) .pkg-ic::after{--gd:-4.8s}
+:root:not([data-calm]) .ct-list li:nth-child(4) .ct-ico::after,
+:root:not([data-calm]) .menu-item:nth-child(4) .menu-ico::after{--gd:-6.9s}
+:root:not([data-calm]) .ct-list li:nth-child(5) .ct-ico::after,
+:root:not([data-calm]) .menu-item:nth-child(5) .menu-ico::after{--gd:-1.1s}
+:root:not([data-calm]) .ct-list li:nth-child(6) .ct-ico::after,
+:root:not([data-calm]) .menu-item:nth-child(6) .menu-ico::after{--gd:-3.6s}
+:root:not([data-calm]) .ct-list li:nth-child(7) .ct-ico::after{--gd:-5.7s}
+:root:not([data-calm]) .ct-list li:nth-child(8) .ct-ico::after{--gd:-7.8s}
+:root:not([data-calm]) .ct-list li:nth-child(9) .ct-ico::after{--gd:-8.5s}
+
+/* --- ชั้น 3: ตอบสนองการแตะ --- */
+.ct-ico svg,.ps-ico svg,.menu-ico svg,.cs-r-ico svg,.cs-ico svg,.hero-art svg,
+#paymentCard .pkg-ic svg,#paymentCard .pay-head-ic svg,.acct-sticker{
+  transition:scale .2s cubic-bezier(.34,1.56,.64,1);
+}
+.ct-list li:active .ct-ico svg,.ct-trigger:active .ct-ico svg,
+.menu-item:active .menu-ico svg,.ps-head:active .ps-ico svg,
+#paymentCard #packageButtons .pkg:active .pkg-ic svg,
+#authLoggedIn .acct-avatar:active .acct-sticker,.hero-art:active svg{scale:.9}
+#paymentCard #packageButtons .pkg{transition:background .2s ease,border-color .2s ease,box-shadow .25s ease,transform .15s ease}
+#paymentCard #packageButtons .pkg.is-selected .pkg-ic{
+  border-color:rgb(var(--ct-gold)) !important;
+  box-shadow:0 0 0 1px rgba(var(--ct-gold),.35),0 0 16px rgba(var(--ct-gold),.4),0 6px 14px rgba(0,0,0,.35);
+}
+#paymentCard #packageButtons .pkg.is-selected .pkg-ic svg{animation:ctPick .42s cubic-bezier(.34,1.56,.64,1) both, ctFloat 5.6s ease-in-out .42s infinite}
+}
+@keyframes ctFloat{
+  0%,100%{translate:0 0;rotate:-1.5deg}
+  50%{translate:0 -2.6px;rotate:1.5deg}
+}
+@keyframes ctSway{
+  0%,100%{translate:0 0;rotate:-5deg}
+  50%{translate:0 -3px;rotate:5deg}
+}
+@keyframes ctGlint{
+  0%,66%{transform:translateX(-130%)}
+  100%{transform:translateX(130%)}
+}
+@keyframes ctShieldGlow{
+  0%,100%{filter:drop-shadow(0 2px 2px rgba(0,0,0,.38))}
+  50%{filter:drop-shadow(0 2px 2px rgba(0,0,0,.38)) drop-shadow(0 0 6px rgba(80,225,205,.55))}
+}
