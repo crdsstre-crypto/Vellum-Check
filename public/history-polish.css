@@ -375,3 +375,84 @@
   .hist-status.is-pending{color:#f2b37a;background:rgba(240,163,94,.14);box-shadow:inset 0 0 0 1px rgba(240,163,94,.28)}
   .hist-status.is-done{color:#8fd4a9;background:rgba(128,201,160,.14);box-shadow:inset 0 0 0 1px rgba(128,201,160,.28)}
 }
+
+/* ===== v8: Vellum Financial Hub + การ์ดธุรกรรม + ไทม์ไลน์ ===== */
+.pay-hub{display:none}
+@media (max-width:767px){
+  .pay-hub[hidden]{display:none}
+  .pay-hub{
+    display:block;position:relative;overflow:hidden;isolation:isolate;margin:0 0 14px;padding:18px;
+    border:1px solid var(--h-line);border-radius:22px;
+    background:linear-gradient(160deg,rgba(228,190,98,.07),transparent 55%),var(--h-card);
+    box-shadow:0 10px 30px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.05);
+  }
+  .pay-hub::before{
+    content:"";position:absolute;z-index:-1;width:220px;height:220px;right:-80px;top:-100px;border-radius:50%;
+    background:radial-gradient(circle,rgba(228,190,98,.20),transparent 68%);
+    animation:libGlow 10s ease-in-out infinite alternate;will-change:transform,opacity;
+  }
+  .ph-top{display:flex;align-items:center;gap:12px}
+  .ph-ico{
+    flex:none;width:48px;height:48px;display:grid;place-items:center;border-radius:14px;color:var(--h-gold);
+    background:linear-gradient(145deg,#2a2412,#15130c);border:1px solid rgba(228,190,98,.28);
+  }
+  .ph-top b{display:block;font-size:1.2rem;color:var(--h-text);line-height:1.3}
+  .ph-top small{font-size:.88rem;color:var(--h-sub)}
+  .ph-bal{margin:16px 0 0;padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.04)}
+  .ph-bal span{font-size:.88rem;color:var(--h-sub)}
+  .ph-bal p{margin:4px 0 0;display:flex;align-items:baseline;gap:8px}
+  .ph-bal b{font-size:2.3rem;line-height:1.1;font-variant-numeric:tabular-nums;color:var(--h-text)}
+  .ph-bal small{font-size:.95rem;color:var(--h-sub)}
+  .ph-rows{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0 0}
+  .ph-rows div{padding:10px 14px;border-radius:14px;background:rgba(255,255,255,.03)}
+  .ph-rows dt{font-size:.8rem;color:var(--h-sub)}
+  .ph-rows dd{margin:2px 0 0;font-size:.86rem;color:var(--h-sub)}
+  .ph-rows b{font-size:1.2rem;color:var(--h-text);font-variant-numeric:tabular-nums}
+  .ph-topup{
+    display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;margin:12px 0 0;border:1px solid rgba(228,190,98,.45);
+    border-radius:14px;background:rgba(228,190,98,.14);color:var(--h-gold);font:inherit;font-weight:700;font-size:1rem;
+    transition:transform .12s,background-color .18s;
+  }
+  .ph-topup:active{transform:scale(.98);background:rgba(228,190,98,.22)}
+  .ph-search{display:block;margin:12px 0 0}
+  .ph-search input{
+    width:100%;min-height:46px;padding:0 14px;border:1px solid var(--h-line);border-radius:14px;background:rgba(255,255,255,.04);
+    color:var(--h-text);font:inherit;font-size:.95rem;box-sizing:border-box;
+  }
+  .ph-search input:focus{outline:none;border-color:var(--h-gold);box-shadow:0 0 0 3px rgba(228,190,98,.18)}
+
+  /* การ์ดธุรกรรม: สิ่งที่ต้องรู้ + สิ่งที่ต้องทำต่อ */
+  .pay-ref{font-variant-numeric:tabular-nums;letter-spacing:.02em}
+  .pay-acts{display:flex;gap:8px;margin:10px 0 0}
+  .pay-act{
+    flex:1 1 0;min-height:44px;padding:0 10px;border:1px solid var(--h-line);border-radius:12px;background:transparent;
+    color:var(--h-text);font:inherit;font-size:.92rem;font-weight:600;transition:transform .12s,background-color .18s;
+  }
+  .pay-act.is-main{border-color:rgba(228,190,98,.4);background:rgba(228,190,98,.13);color:var(--h-gold)}
+  .pay-act:active{transform:scale(.97)}
+  .pay-act:disabled{opacity:.6}
+  .pay-note{margin:8px 0 0;font-size:.86rem;line-height:1.5;color:var(--h-sub)}
+  .hist-status.is-expired{color:#b9bec8;background:rgba(185,190,200,.12);box-shadow:inset 0 0 0 1px rgba(185,190,200,.25)}
+  .hist-status.is-expired::before{content:"◷"}
+  .hist-status.is-failed{color:#f08a7a;background:rgba(224,114,95,.14);box-shadow:inset 0 0 0 1px rgba(224,114,95,.3)}
+  .hist-status.is-failed::before{content:"✕"}
+  .pay-card.is-expired .hist-amt,.pay-card.is-failed .hist-amt{color:var(--h-sub)}
+
+  /* ไทม์ไลน์ (แสดงเฉพาะขั้นตอนที่เกิดขึ้นจริง) + แผงเลื่อนขึ้นนุ่ม ๆ */
+  .hist-detail{animation:payUp .26s cubic-bezier(.2,.7,.2,1) both}
+  @keyframes payUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .pay-tl{list-style:none;margin:0 0 10px;padding:0 0 0 18px;border-left:1px solid var(--h-line)}
+  .pay-tl li{position:relative;padding:0 0 12px 12px}
+  .pay-tl li::before{content:"";position:absolute;left:-23px;top:5px;width:9px;height:9px;border-radius:50%;background:var(--h-line);box-shadow:0 0 0 3px var(--h-card)}
+  .pay-tl li.is-on::before{background:#80C9A0}
+  .pay-tl li.is-now::before{background:#f2b37a;animation:payPulse 1.6s ease-in-out infinite}
+  .pay-tl li.is-bad::before{background:#E0725F}
+  .pay-tl b{display:block;font-size:.92rem;color:var(--h-text);font-weight:600}
+  .pay-tl small{display:block;font-size:.8rem;color:var(--h-sub)}
+  @keyframes payPulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .pay-dl{margin:0}
+  .pay-dl div{display:flex;justify-content:space-between;gap:12px;padding:6px 0}
+  .pay-dl dt{color:var(--h-sub);font-size:.88rem}
+  .pay-dl dd{margin:0;color:var(--h-text);font-size:.88rem;text-align:right}
+  @media (prefers-reduced-motion:reduce){.pay-hub::before,.hist-detail,.pay-tl li.is-now::before{animation:none}.ph-topup,.pay-act{transition:none}}
+}
