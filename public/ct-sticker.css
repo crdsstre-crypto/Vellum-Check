@@ -174,13 +174,13 @@
 }
 /* --- ชั้น 1: ลอย --- */
 :root:not([data-calm]) .ct-list.ct-anim li.seen .ct-ico svg{
-  animation:ctSpawn .5s cubic-bezier(.34,1.56,.64,1) var(--d,0ms) backwards, ctFloat 5.6s ease-in-out calc(.5s + var(--d,0ms)) infinite;
+  animation:ctSpawn .5s cubic-bezier(.34,1.56,.64,1) var(--d,0ms) backwards, ctFloat 9s ease-in-out calc(.5s + var(--d,0ms)) infinite;
 }
 :root:not([data-calm]) .ct-list.ct-anim li.seen.pick .ct-ico svg{
-  animation:ctPick .42s cubic-bezier(.34,1.56,.64,1) both, ctFloat 5.6s ease-in-out .42s infinite;
+  animation:ctPick .42s cubic-bezier(.34,1.56,.64,1) both, ctFloat 9s ease-in-out .42s infinite;
 }
 :root:not([data-calm]) .ct-trigger .ct-ico svg{
-  animation:ctSpawn .5s cubic-bezier(.34,1.56,.64,1) backwards, ctFloat 6s ease-in-out .5s infinite;
+  animation:ctSpawn .5s cubic-bezier(.34,1.56,.64,1) backwards, ctFloat 9.5s ease-in-out .5s infinite;
 }
 :root:not([data-calm]) .hero-art svg,
 :root:not([data-calm]) .ps-ico svg,
@@ -195,7 +195,7 @@
 :root:not([data-calm]) .bn-item.is-on svg,
 :root:not([data-calm]) .brand-logo,
 :root:not([data-calm]) .acct-sticker{
-  animation:ctFloat 6.2s ease-in-out var(--ad,0s) infinite;
+  animation:ctFloat 10s ease-in-out var(--ad,0s) infinite;
 }
 /* กระจายจังหวะไม่ให้ลอยพร้อมกัน */
 :root:not([data-calm]) .menu-item:nth-child(2) .menu-ico svg,
@@ -213,12 +213,12 @@
 :root:not([data-calm]) .ct-list li[data-value="unsure"].seen .ct-ico svg,
 :root:not([data-calm]) .ct-trigger[data-value="unsure"] .ct-ico svg{
   animation-name:ctSpawn,ctSway;
-  animation-duration:.5s,4.8s;
+  animation-duration:.5s,9s;
 }
 /* โล่ Privacy Shield: แสงเรืองหายใจเบา ๆ */
 :root:not([data-calm]) .ps-ico svg,
 :root:not([data-calm]) .cs-ico svg{
-  animation:ctFloat 6.2s ease-in-out infinite, ctShieldGlow 5s ease-in-out infinite;
+  animation:ctFloat 10s ease-in-out infinite, ctShieldGlow 8s ease-in-out infinite;
 }
 
 /* --- ชั้น 2: แสงวิ่ง --- */
@@ -227,7 +227,7 @@
 .hero-art::after,.ps-ico::after,.menu-ico::after,.vault-badge::after,.cred-ico::after,.ph-ico::after,
 .cs-ico::after,.cs-r-ico::after,#paymentCard .pay-head-ic::after,#paymentCard .pkg-ic::after{
   content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
-  background:linear-gradient(115deg,transparent 38%,rgba(255,236,170,.42) 50%,transparent 62%);
+  background:linear-gradient(115deg,transparent 38%,rgba(255,236,170,.28) 50%,transparent 62%);
   transform:translateX(-130%);
 }
 :root:not([data-calm]) .ct-ico::after,
@@ -241,7 +241,7 @@
 :root:not([data-calm]) .cs-r-ico::after,
 :root:not([data-calm]) #paymentCard .pay-head-ic::after,
 :root:not([data-calm]) #paymentCard .pkg-ic::after{
-  animation:ctGlint 9s ease-in-out var(--gd,0s) infinite;
+  animation:ctGlint 18s ease-in-out var(--gd,0s) infinite;
 }
 :root:not([data-calm]) .ct-list li.pick .ct-ico::after{animation:ctSweep .55s ease-out 1}
 :root:not([data-calm]) .ct-list li:nth-child(2) .ct-ico::after,
@@ -274,18 +274,18 @@
   border-color:rgb(var(--ct-gold)) !important;
   box-shadow:0 0 0 1px rgba(var(--ct-gold),.35),0 0 16px rgba(var(--ct-gold),.4),0 6px 14px rgba(0,0,0,.35);
 }
-#paymentCard #packageButtons .pkg.is-selected .pkg-ic svg{animation:ctPick .42s cubic-bezier(.34,1.56,.64,1) both, ctFloat 5.6s ease-in-out .42s infinite}
+#paymentCard #packageButtons .pkg.is-selected .pkg-ic svg{animation:ctPick .42s cubic-bezier(.34,1.56,.64,1) both, ctFloat 9s ease-in-out .42s infinite}
 }
 @keyframes ctFloat{
-  0%,100%{translate:0 0;rotate:-1.5deg}
-  50%{translate:0 -2.6px;rotate:1.5deg}
+  0%,100%{translate:0 0;rotate:-1deg}
+  50%{translate:0 -1.6px;rotate:1deg}
 }
 @keyframes ctSway{
-  0%,100%{translate:0 0;rotate:-5deg}
-  50%{translate:0 -3px;rotate:5deg}
+  0%,100%{translate:0 0;rotate:-2.5deg}
+  50%{translate:0 -2px;rotate:2.5deg}
 }
 @keyframes ctGlint{
-  0%,66%{transform:translateX(-130%)}
+  0%,82%{transform:translateX(-130%)}
   100%{transform:translateX(130%)}
 }
 @keyframes ctShieldGlow{
@@ -303,50 +303,50 @@
 :root:not([data-calm]) .st-corner,
 :root:not([data-calm]) .st-ln{transform-box:view-box}
 /* ตราชั่ง: คานเอียงซ้ายขวา ~5 องศา ถาดสวนกันเล็กน้อย กลับสู่สมดุลแล้วหยุดพัก */
-:root:not([data-calm]) .st-beam{transform-origin:32px 19.5px;animation:ctBeam 7s ease-in-out infinite}
-:root:not([data-calm]) .st-pl{transform-origin:12px 22px;animation:ctPanL 7s ease-in-out infinite}
-:root:not([data-calm]) .st-pr{transform-origin:52px 22px;animation:ctPanR 7s ease-in-out infinite}
+:root:not([data-calm]) .st-beam{transform-origin:32px 19.5px;animation:ctBeam 12s ease-in-out infinite}
+:root:not([data-calm]) .st-pl{transform-origin:12px 22px;animation:ctPanL 12s ease-in-out infinite}
+:root:not([data-calm]) .st-pr{transform-origin:52px 22px;animation:ctPanR 12s ease-in-out infinite}
 /* เครื่องหมายคำถาม: เด้งเป็นช่วง ๆ เอียงซ้ายขวา เงาหดขยายตามจังหวะ */
-:root:not([data-calm]) .st-q{transform-origin:32px 56px;animation:ctQHop 5.4s ease-in-out infinite}
-:root:not([data-calm]) .st-sh{transform-origin:32px 58.5px;animation:ctQShadow 5.4s ease-in-out infinite}
+:root:not([data-calm]) .st-q{transform-origin:32px 56px;animation:ctQHop 10s ease-in-out infinite}
+:root:not([data-calm]) .st-sh{transform-origin:32px 58.5px;animation:ctQShadow 10s ease-in-out infinite}
 /* โล่: เอียงและย่อขยายนุ่ม ๆ + วาดเครื่องหมายถูกเมื่อปรากฏ/เปิดใช้งาน */
-:root:not([data-calm]) .st-shield{transform-origin:32px 34px;animation:ctShieldTilt 5.8s ease-in-out infinite}
+:root:not([data-calm]) .st-shield{transform-origin:32px 34px;animation:ctShieldTilt 10s ease-in-out infinite}
 :root:not([data-calm]) .st-check{stroke-dasharray:1;animation:ctCheckDraw .8s ease-out .25s both}
 :root:not([data-calm]) .ps-ico.st-redraw .st-check{animation:ctCheckDraw .8s ease-out both}
 /* เอกสาร: มุมกระดาษยกคล้ายพลิก เส้นข้อความปรากฏทีละเส้น */
-:root:not([data-calm]) .st-corner{transform-origin:37px 20px;animation:ctCorner 6.4s ease-in-out infinite}
-:root:not([data-calm]) .st-ln{transform-box:fill-box;transform-origin:0 50%;animation:ctLine 9s ease-out infinite both}
+:root:not([data-calm]) .st-corner{transform-origin:37px 20px;animation:ctCorner 12s ease-in-out infinite}
+:root:not([data-calm]) .st-ln{transform-box:fill-box;transform-origin:0 50%;animation:ctLine 18s ease-out infinite both}
 :root:not([data-calm]) .st-ln:nth-of-type(2){animation-delay:.25s}
 :root:not([data-calm]) .st-ln:nth-of-type(3){animation-delay:.5s}
 :root:not([data-calm]) .ct-list li.pick .st-corner{animation:ctCornerPop .6s ease-out 1}
 }
 @keyframes ctBeam{
   0%,86%,100%{transform:rotate(0)}
-  16%{transform:rotate(5deg)}
-  38%{transform:rotate(-5deg)}
-  56%{transform:rotate(3deg)}
-  72%{transform:rotate(-1.2deg)}
+  16%{transform:rotate(3.5deg)}
+  38%{transform:rotate(-3.5deg)}
+  56%{transform:rotate(2deg)}
+  72%{transform:rotate(-.8deg)}
 }
 @keyframes ctPanL{
   0%,86%,100%{transform:rotate(0)}
-  16%{transform:rotate(-8deg)}
-  38%{transform:rotate(7deg)}
-  56%{transform:rotate(-5deg)}
-  72%{transform:rotate(2deg)}
+  16%{transform:rotate(-5deg)}
+  38%{transform:rotate(4.5deg)}
+  56%{transform:rotate(-3deg)}
+  72%{transform:rotate(1.2deg)}
 }
 @keyframes ctPanR{
   0%,86%,100%{transform:rotate(0)}
-  16%{transform:rotate(-2deg)}
-  38%{transform:rotate(3deg)}
-  56%{transform:rotate(-4deg)}
-  72%{transform:rotate(1.5deg)}
+  16%{transform:rotate(-1.5deg)}
+  38%{transform:rotate(2deg)}
+  56%{transform:rotate(-2.5deg)}
+  72%{transform:rotate(1deg)}
 }
 @keyframes ctQHop{
   0%,52%,100%{transform:none}
-  58%{transform:translateY(1.5px) scale(1.05,.92)}
-  68%{transform:translateY(-7px) rotate(-7deg) scale(.97,1.04)}
-  78%{transform:translateY(0) rotate(5deg) scale(1.05,.93)}
-  88%{transform:rotate(-2deg)}
+  58%{transform:translateY(1px) scale(1.04,.94)}
+  68%{transform:translateY(-5px) rotate(-5deg) scale(.98,1.03)}
+  78%{transform:translateY(0) rotate(3.5deg) scale(1.04,.95)}
+  88%{transform:rotate(-1.5deg)}
 }
 @keyframes ctQShadow{
   0%,52%,100%{transform:none}
@@ -356,8 +356,8 @@
   88%{transform:scale(.97)}
 }
 @keyframes ctShieldTilt{
-  0%,100%{transform:rotate(-3deg) scale(1)}
-  50%{transform:rotate(3deg) scale(1.06)}
+  0%,100%{transform:rotate(-2deg) scale(1)}
+  50%{transform:rotate(2deg) scale(1.04)}
 }
 @keyframes ctCheckDraw{
   from{stroke-dashoffset:1}
@@ -365,8 +365,8 @@
 }
 @keyframes ctCorner{
   0%,58%,100%{transform:none}
-  70%{transform:translate(-1.6px,1.6px) rotate(-9deg) scale(1.1)}
-  84%{transform:translate(-.4px,.4px) rotate(-2deg)}
+  70%{transform:translate(-1.2px,1.2px) rotate(-7deg) scale(1.08)}
+  84%{transform:translate(-.3px,.3px) rotate(-1.5deg)}
 }
 @keyframes ctCornerPop{
   0%{transform:none}
@@ -377,3 +377,30 @@
   0%{transform:scaleX(0)}
   8%,100%{transform:scaleX(1)}
 }
+
+/* ---------- รอบ 7: สติกเกอร์ประเภทสัญญา + ทำให้ช้าลง (แต่ละชิ้นขยับสั้น ๆ แล้วนิ่งนาน คนละจังหวะ) ---------- */
+@media (prefers-reduced-motion:no-preference){
+:root:not([data-calm]) .st-roof,
+:root:not([data-calm]) .st-cart,
+:root:not([data-calm]) .st-handle,
+:root:not([data-calm]) .st-wrench,
+:root:not([data-calm]) .st-coin,
+:root:not([data-calm]) .st-slice,
+:root:not([data-calm]) .st-shackle{transform-box:view-box}
+:root:not([data-calm]) .st-roof{animation:ctRoof 14s ease-in-out -2s infinite}
+:root:not([data-calm]) .st-cart{animation:ctCart 14s ease-in-out -5s infinite}
+:root:not([data-calm]) .st-handle{animation:ctHandle 14s ease-in-out -8s infinite}
+:root:not([data-calm]) .st-wrench{transform-origin:32px 32px;animation:ctWrench 14s ease-in-out -11s infinite}
+:root:not([data-calm]) .st-coin{animation:ctCoin 14s ease-in-out -3s infinite}
+:root:not([data-calm]) .st-coin.c2{animation-delay:-2.85s}
+:root:not([data-calm]) .st-coin.c1{animation-delay:-2.7s}
+:root:not([data-calm]) .st-slice{animation:ctSlice 14s ease-in-out -6s infinite}
+:root:not([data-calm]) .st-shackle{transform-origin:21px 30px;animation:ctShackle 14s ease-in-out -9s infinite}
+}
+@keyframes ctRoof{0%,60%,100%{transform:none}68%{transform:translateY(-2px)}76%{transform:translateY(.4px)}84%{transform:none}}
+@keyframes ctCart{0%,55%,100%{transform:none}65%{transform:translateX(2px)}75%{transform:translateX(-1px)}85%{transform:none}}
+@keyframes ctHandle{0%,60%,100%{transform:none}68%{transform:translateY(-2px)}78%{transform:none}}
+@keyframes ctWrench{0%,58%,100%{transform:none}66%{transform:rotate(-8deg)}76%{transform:rotate(4deg)}86%{transform:none}}
+@keyframes ctCoin{0%,60%,100%{transform:none}68%{transform:translateY(-2.5px)}77%{transform:none}}
+@keyframes ctSlice{0%,56%,100%{transform:none}66%{transform:translate(2px,-2px)}80%{transform:none}}
+@keyframes ctShackle{0%,58%,100%{transform:none}68%{transform:translateY(-2.5px) rotate(-7deg)}80%{transform:none}}
