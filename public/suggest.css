@@ -243,34 +243,66 @@ body.has-ixback .to-top{display:none}
   .ix-row{break-inside:avoid}
 }
 
-/* ---------- Command Center + มิติความเสี่ยง + ค้นหาประเด็น (รอบ 8) ----------
-   มือถือเป็นค่าพื้นฐาน · ใช้ตัวแปรสีเดิมจาก themes.css ไม่เพิ่มสีแบรนด์ใหม่ */
-.cc{margin:0 0 14px;padding:16px 14px 14px;border-radius:20px;background:var(--card);border:1px solid var(--card-edge)}
-.cc-kick{margin:0 0 4px;font-size:.72rem;letter-spacing:.14em;color:var(--gold-soft,var(--gold))}
+/* ---------- Command Center (รอบ 9: สรุปสั้นหนึ่งส่วน) + มิติความเสี่ยง + ค้นหาประเด็น ----------
+   สีใช้เฉพาะจุดเน้น: แดง = ประเด็นสำคัญ · ทอง = ควรระวังและการนำทาง · ข้อความทั่วไปขาว/เทา */
+.cc{margin:0 0 18px;padding:18px 16px 14px;border-radius:20px;background:var(--card);border:1px solid var(--card-edge)}
+.cc-kick{margin:0 0 4px;font-size:.72rem;letter-spacing:.12em;color:var(--gold-soft,var(--gold))}
 .cc-head h3{margin:0;font-size:1.3rem;line-height:1.3;color:var(--text)}
-.cc-chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
-.cc-chip{display:inline-flex;align-items:center;min-height:28px;padding:0 12px;border-radius:999px;font-size:.8rem;font-weight:600;border:1px solid transparent}
-.cc-chip.is-hi{background:var(--high);color:var(--highText);border-color:var(--highBorder)}
-.cc-chip.is-mid{background:var(--mid);color:var(--midText);border-color:var(--midBorder)}
-.cc-chip.is-wait{background:rgba(255,255,255,.06);color:var(--muted);border-color:var(--border)}
-.cc-q{margin-top:14px;padding-top:12px;border-top:1px solid var(--card-edge)}
-.cc-q h4{display:flex;align-items:center;gap:8px;margin:0 0 8px;font-size:.95rem;color:var(--text)}
-.cc-q h4 i{flex:none;display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;font-style:normal;font-size:.76rem;font-weight:700;background:rgba(200,167,90,.18);color:var(--gold-soft,var(--gold))}
-.cc-row{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:10px;width:100%;min-height:52px;margin:0 0 6px;padding:8px 12px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid transparent;border-left:3px solid var(--border);cursor:pointer;-webkit-tap-highlight-color:transparent}
-.cc-row.lv-check_detail{border-left-color:var(--highBorder)}
-.cc-row.lv-caution{border-left-color:var(--midBorder)}
-.cc-row.lv-low{border-left-color:var(--lowBorder)}
-.cc-row:active{background:rgba(255,255,255,.1)}
-.cc-row:focus-visible,.cc-next:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.cc-count{display:flex;align-items:baseline;gap:10px;margin:16px 0 8px}
+.cc-count b{font-size:2.6rem;line-height:1;font-weight:600;letter-spacing:-.02em;color:var(--text)}
+.cc-count span{font-size:.95rem;color:var(--muted)}
+.cc-bar{display:flex;gap:4px;height:6px}
+.cc-seg{display:block;border-radius:999px;background:var(--border)}
+.cc-seg.lv-check_detail{background:#ee7e83}
+.cc-seg.lv-caution{background:#d8b65c}
+.cc-seg.lv-low{background:#5b5f6b}
+.cc-legend{display:flex;flex-wrap:wrap;gap:4px 16px;margin:8px 0 0}
+.cc-lg{font-size:.84rem;font-weight:600;color:var(--muted)}
+.cc-lg.lv-check_detail{color:#ee8b8a}
+.cc-lg.lv-caution{color:var(--gold-soft,var(--gold))}
+.cc-focus{margin:16px 0 0;padding:14px 14px 12px;border-radius:16px;background:rgba(255,255,255,.05);border-left:3px solid var(--border)}
+.cc-focus.lv-check_detail{border-left-color:#ee7e83}
+.cc-focus.lv-caution{border-left-color:#d8b65c}
+.cc-focus-k{margin:0 0 4px;font-size:.8rem;font-weight:600;color:#ee8b8a}
+.cc-focus.lv-caution .cc-focus-k{color:var(--gold-soft,var(--gold))}
+.cc-focus.lv-low .cc-focus-k{color:var(--muted)}
+.cc-focus-t{display:block;font-size:1.15rem;line-height:1.35;color:var(--text)}
+.cc-focus-go{all:unset;box-sizing:border-box;display:inline-flex;align-items:center;gap:6px;min-height:44px;margin-top:2px;font-size:.92rem;font-weight:600;color:var(--gold-soft,var(--gold));cursor:pointer;-webkit-tap-highlight-color:transparent}
+.cc-before{margin-top:16px}
+.cc-before h4{margin:0 0 6px;font-size:.88rem;color:var(--muted);font-weight:600}
+.cc-row{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:10px;width:100%;min-height:52px;padding:6px 0 6px 12px;border-top:1px solid var(--card-edge);position:relative;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.cc-row::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:2px;background:var(--border)}
+.cc-row.lv-check_detail::before{background:#ee7e83}
+.cc-row.lv-caution::before{background:#d8b65c}
+.cc-row:active{background:rgba(255,255,255,.05)}
+.cc-focus-go:focus-visible,.cc-row:focus-visible,.cc-next:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 .cc-row-tx{flex:1;min-width:0}
 .cc-row-tx small{display:block;font-size:.76rem;color:var(--muted)}
 .cc-row-tx b{display:block;font-size:1rem;line-height:1.35;color:var(--text)}
 .cc-go{flex:none;font-size:1.3rem;color:var(--gold-soft,var(--gold))}
-.cc-why,.cc-line{margin:4px 0 0;font-size:.86rem;line-height:1.55;color:var(--muted)}
-.cc-line b{color:var(--text)}
-.cc-next{all:unset;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:44px;margin-top:10px;border-radius:12px;border:1px solid var(--gold-deep);color:var(--gold-soft,var(--gold));font-size:.9rem;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.cc-why{margin:4px 0 0;font-size:.86rem;line-height:1.55;color:var(--muted)}
+.cc-status{margin-top:16px;padding-top:12px;border-top:1px solid var(--card-edge)}
+.cc-status .ix-prog{margin:0;padding:0;background:none}
+.cc-notes{margin:10px 0 0;padding:0 0 0 18px;font-size:.84rem;line-height:1.55;color:var(--muted)}
+.cc-next{all:unset;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:44px;margin-top:12px;border-radius:12px;border:1px solid var(--gold-deep);color:var(--gold-soft,var(--gold));font-size:.9rem;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .cc-next[hidden]{display:none}
 .cc-note{margin:14px 0 0;font-size:.78rem;line-height:1.5;color:var(--muted)}
+
+/* รายการประเด็น (จุดที่ควรตรวจสอบ) = แถวเรียบ แถบสีบาง ไม่ใช่การ์ดซ้อนการ์ด ต่างจาก Command Center ชัดเจน */
+.ix{background:none;border:0;box-shadow:none;padding:4px 0 8px}
+.ix-row{padding:12px 0 12px 14px;border-radius:0;background:none;border:0;border-top:1px solid var(--card-edge);position:relative;grid-template-columns:minmax(0,1fr) 28px}
+.ix-row::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:2px;background:var(--border)}
+.ix-row.lv-check_detail::before{background:#ee7e83}
+.ix-row.lv-caution::before{background:#d8b65c}
+.ix-row:active{background:rgba(255,255,255,.05)}
+.ix-row.is-current{background:rgba(200,167,90,.06);border-color:var(--card-edge)}
+.ix-row .ix-ico,.ix-row .ix-tx p{display:none}
+.ix-row .ix-tx small{font-size:.8rem}
+.ix-row.lv-check_detail .ix-tx small{color:#ee8b8a}
+.ix-row.lv-caution .ix-tx small{color:var(--gold-soft,var(--gold))}
+.ix-row .ix-arrow{width:28px;height:28px;border:0;border-radius:0;font-size:1.4rem;color:var(--gold-soft,var(--gold))}
+.ix-list{gap:0}
+.ix-list .ix-row:last-child{border-bottom:1px solid var(--card-edge)}
 
 /* ความเร่งด่วนในการ์ดประเด็น + มิติความเสี่ยงในปุ่มรายละเอียด */
 .ur-chip{display:inline-flex;align-items:center;gap:6px;margin:8px 0 0;padding:4px 12px;border-radius:999px;font-size:.8rem;font-weight:600;background:rgba(255,255,255,.06);color:var(--text)}
@@ -294,10 +326,5 @@ body.has-ixback .to-top{display:none}
 .ix-nohit{margin:10px 2px;font-size:.88rem;color:var(--muted)}
 .ix-nohit[hidden]{display:none}
 
-@media (min-width:768px){
-  .cc{padding:20px 22px 16px}
-  .cc-q{display:grid;grid-template-columns:230px 1fr;column-gap:16px}
-  .cc-q h4{grid-row:1 / span 6;margin:0}
-}
 @media (prefers-reduced-motion:reduce){.cc-row,.cc-next{transition:none}}
-@media print{.cc-next,.ix-search-w,.cc-go{display:none}.cc{break-inside:avoid}}
+@media print{.cc-next,.cc-focus-go,.ix-search-w,.cc-go{display:none}.cc{break-inside:avoid}}
