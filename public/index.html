@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="care.css?v=2">
 <link rel="stylesheet" href="privacy.css?v=1">
 <link rel="stylesheet" href="mobile-polish.css?v=1" media="(max-width: 767px)">
-<link rel="stylesheet" href="history-polish.css?v=7">
+<link rel="stylesheet" href="history-polish.css?v=8">
 <link rel="stylesheet" href="print.css?v=1" media="print">
 </head>
 <body>
@@ -202,6 +202,14 @@
               <select id="histSort" aria-label="เรียงลำดับ"><option value="new">ใหม่ไปเก่า</option><option value="old">เก่าไปใหม่</option></select>
             </div>
           </div>
+          <section class="pay-hub" id="payHub" aria-label="ศูนย์เครดิตและธุรกรรม" hidden>
+            <div class="ph-top"><span class="ph-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H17a1 1 0 0 1 1 1v1.5"/><path d="M4 7.5V17a2 2 0 0 0 2 2h12a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 18 8H6.5A2.5 2.5 0 0 1 4 7.5z"/><path d="M15.5 13.5h4v3h-4a1.5 1.5 0 0 1 0-3z"/></svg></span>
+              <div><b class="ph-title">Vellum Financial Hub</b><small>เครดิตและประวัติธุรกรรม</small></div></div>
+            <div class="ph-bal"><span>ยอดเครดิตคงเหลือ</span><p><b id="phBal">–</b> <small>เครดิต</small></p></div>
+            <dl class="ph-rows"><div><dt>ธุรกรรมทั้งหมด</dt><dd><b id="phAll">0</b> รายการ</dd></div><div><dt>เติมสำเร็จ</dt><dd><b id="phDone">0</b> รายการ</dd></div></dl>
+            <button type="button" class="ph-topup wallet-topup">+ เติมเครดิต</button>
+            <label class="ph-search"><span class="sr-only">ค้นหารายการเติมเครดิต</span><input type="search" id="paySearch" placeholder="ค้นหาแพ็กเกจ วันที่ สถานะ หรือเลขที่รายการ" autocomplete="off" enterkeyhint="search"></label>
+          </section>
           <div class="hist-filters" id="histFilters" role="group" aria-label="กรองตามสถานะ" hidden>
             <button type="button" class="hist-chip is-on" data-status="all" aria-pressed="true">ทั้งหมด</button>
             <button type="button" class="hist-chip" data-status="pending" aria-pressed="false">รอชำระ</button>
@@ -441,7 +449,7 @@
   }
   var currentKind = 'insp';
   var currentStatus = 'all';
-  var payItems = [];
+  var payItems = [], payQ = '', payNote = {}, payBusy = {};
   var reqId = 0; // กันผลจากคำขอเก่าทับผลใหม่เมื่อสลับแท็บเร็ว ๆ
 
   var PAGE = 10;
@@ -749,6 +757,14 @@
     document.getElementById('histType').addEventListener('change', function (e) { view.type = e.target.value; shown = PAGE; renderInspections(); });
     document.getElementById('histSort').addEventListener('change', function (e) { view.sort = e.target.value; renderInspections(); });
   }
+  var paySearch = document.getElementById('paySearch');
+  if (paySearch) {
+    var pto = null;
+    paySearch.addEventListener('input', function (e) {
+      clearTimeout(pto); var v = e.target.value;
+      pto = setTimeout(function () { payQ = v; shown = PAGE; renderPayments(); }, 200);
+    });
+  }
   async function openInspections() {
     var my = ++reqId;
     shown = PAGE;
@@ -763,39 +779,87 @@
     } catch (e) { if (my === reqId) showError(e.message); }
   }
 
+  function pst(it) { return it.status || (it.credited ? 'credited' : 'pending'); }
+  var PST = { credited: ['สำเร็จ', 'is-done'], pending: ['รอชำระเงิน', 'is-pending'], expired: ['หมดอายุ', 'is-expired'], failed: ['ไม่สำเร็จ', 'is-failed'] };
+  function refOf(it) { return it.chargeId ? '…' + String(it.chargeId).slice(-8).toUpperCase() : ''; }
+  function updatePayHub() {
+    var hub = document.getElementById('payHub'); if (!hub) return;
+    hub.hidden = currentKind !== 'pay';
+    var bal = document.getElementById('walletTotal');
+    var set = function (id, v) { var e = document.getElementById(id); if (e) e.textContent = String(v); };
+    set('phBal', bal ? bal.textContent : '–');
+    set('phAll', payItems.length);
+    set('phDone', payItems.filter(function (x) { return pst(x) === 'credited'; }).length);
+  }
+  function timeline(it) {
+    var st = pst(it);
+    var steps = [['สร้างรายการ', fmt(it.createdAt), 'is-on']];
+    steps.push(['รอชำระเงิน', st === 'pending' ? 'กำลังรอการยืนยัน' : '', st === 'pending' ? 'is-now' : 'is-on']);
+    if (st === 'credited') {
+      steps.push(['ยืนยันการชำระ', it.creditedAt ? fmt(it.creditedAt) : '', 'is-on']);
+      steps.push(['เพิ่มเครดิตแล้ว', it.creditedAt ? fmt(it.creditedAt) : '', 'is-on']);
+    } else if (st === 'expired') steps.push(['รายการหมดอายุ', '', 'is-bad']);
+    else if (st === 'failed') steps.push(['การชำระไม่สำเร็จ', '', 'is-bad']);
+    return '<ol class="pay-tl">' + steps.map(function (x) {
+      return '<li class="' + x[2] + '"><b>' + esc(x[0]) + '</b>' + (x[1] ? '<small>' + esc(x[1]) + '</small>' : '') + '</li>';
+    }).join('') + '</ol>';
+  }
+  async function checkPayment(cid) {
+    if (payBusy[cid]) return;
+    payBusy[cid] = true; payNote[cid] = 'กำลังตรวจสอบกับระบบชำระเงิน…'; renderPayments();
+    try {
+      var d = await getJson('/api/payments/' + encodeURIComponent(cid) + '/status');
+      var it = payItems.filter(function (x) { return x.chargeId === cid; })[0];
+      if (it && d.status) {
+        it.status = d.status; it.credited = d.status === 'credited';
+        if (it.credited && !it.creditedAt) it.creditedAt = new Date().toISOString();
+      }
+      payNote[cid] = d.status === 'credited' ? 'ยืนยันแล้ว เครดิตเข้าบัญชีเรียบร้อย' : d.status === 'pending' ? 'ยังไม่พบการชำระเงิน ลองตรวจสอบอีกครั้งภายหลัง' : d.status === 'expired' ? 'รายการนี้หมดอายุแล้ว' : 'การชำระเงินไม่สำเร็จ';
+      if (d.status === 'credited') {
+        try { var me = await getJson('/api/me'); if (typeof showCredits === 'function') showCredits(me.credits, me.voice_credits); } catch (e2) {}
+      }
+    } catch (e) { payNote[cid] = e.message || 'ตรวจสอบไม่สำเร็จ ลองใหม่อีกครั้ง'; }
+    payBusy[cid] = false; renderPayments(); updatePayHub();
+  }
   function renderPayments() {
+    updatePayHub();
     var rows = payItems.filter(function (it) {
-      if (currentStatus === 'pending') return !it.credited;
-      if (currentStatus === 'done') return it.credited;
+      if (currentStatus === 'pending' && pst(it) !== 'pending') return false;
+      if (currentStatus === 'done' && pst(it) !== 'credited') return false;
+      var q = payQ.trim().toLowerCase();
+      if (q && (String(it.label) + ' ' + fmt(it.createdAt) + ' ' + PST[pst(it)][0] + ' ' + refOf(it)).toLowerCase().indexOf(q) < 0) return false;
       return true;
     });
     if (!rows.length) {
       var msg = { all: 'ยังไม่มีประวัติการเติมเครดิต', pending: 'ไม่มีรายการที่รอชำระ', done: 'ยังไม่มีรายการที่สำเร็จ' }[currentStatus];
+      if (payQ.trim()) return showMessage('ไม่พบรายการที่ตรงกับ “' + payQ.trim() + '”', 'ลองค้นหาด้วยชื่อแพ็กเกจ วันที่ หรือสถานะ');
       return showMessage(msg, currentStatus === 'all' ? 'เมื่อเติมเครดิต รายการจะแสดงที่นี่' : 'ลองเลือกดูสถานะอื่น');
     }
-    var nPend = payItems.filter(function (x) { return !x.credited; }).length;
-    var nDone = payItems.length - nPend;
+    var nPend = payItems.filter(function (x) { return pst(x) === 'pending'; }).length;
+    var nDone = payItems.filter(function (x) { return pst(x) === 'credited'; }).length;
     var pstats = '<div class="pay-stats"><button type="button" class="pay-stat" data-pst="all"><span>รายการทั้งหมด</span><b>' + payItems.length + '</b></button>' +
       '<button type="button" class="pay-stat is-pend" data-pst="pending"><span>รอชำระ</span><b>' + nPend + '</b></button>' +
       '<button type="button" class="pay-stat is-done" data-pst="done"><span>สำเร็จ</span><b>' + nDone + '</b></button></div>';
     list.innerHTML = pstats + rows.slice(0, shown).map(function (it) {
-      var done = it.credited;
+      var stt = pst(it), done = stt === 'credited', ps = PST[stt];
       // ชื่อแพ็กเกจแยกจากราคา (ข้อมูลจริงเดิมจากระบบ แค่ตัดคำว่า "ราคา ... บาท" ออกจากชื่อ)
       var title = String(it.label || '').replace(/\s*ราคา\s*[\d,]+\s*บาท\s*$/, '') || String(it.label || '');
-      var detail = '<dl class="hist-detail" hidden>' +
-        '<div><dt>แพ็กเกจ</dt><dd>' + esc(it.label) + '</dd></div>' +
-        '<div><dt>สร้างรายการ</dt><dd>' + esc(fmt(it.createdAt)) + '</dd></div>' +
-        (done && it.creditedAt ? '<div><dt>เติมเครดิตแล้ว</dt><dd>' + esc(fmt(it.creditedAt)) + '</dd></div>' : '') +
-        (done ? '' : '<div><dt>หมายเหตุ</dt><dd>เครดิตจะเข้าอัตโนมัติหลังระบบยืนยันการชำระเงิน</dd></div>') +
-        '</dl>';
-      return '<div class="hist-card" data-open="0">' +
+      var detail = '<div class="hist-detail" hidden>' + timeline(it) +
+        '<dl class="pay-dl"><div><dt>แพ็กเกจ</dt><dd>' + esc(it.label) + '</dd></div>' +
+        (refOf(it) ? '<div><dt>เลขที่รายการ</dt><dd>' + esc(refOf(it)) + '</dd></div>' : '') +
+        (done ? '' : stt === 'pending' ? '<div><dt>หมายเหตุ</dt><dd>เครดิตจะเข้าอัตโนมัติหลังระบบยืนยันการชำระเงิน</dd></div>' : '') +
+        '</dl></div>';
+      var note = it.chargeId && payNote[it.chargeId] ? '<p class="pay-note" role="status">' + esc(payNote[it.chargeId]) + '</p>' : '';
+      var acts = '<div class="pay-acts"><button type="button" class="pay-act" data-pdetail>ดูรายละเอียด</button>' +
+        (stt === 'pending' && it.chargeId ? '<button type="button" class="pay-act is-main" data-pcheck="' + esc(it.chargeId) + '"' + (payBusy[it.chargeId] ? ' disabled' : '') + '>' + (payBusy[it.chargeId] ? 'กำลังตรวจสอบ…' : 'ตรวจสอบสถานะ') + '</button>' : '') + '</div>';
+      return '<div class="hist-card pay-card is-' + stt + '" data-open="0">' +
         '<button type="button" class="hist-card-top" aria-expanded="false">' +
           '<span class="hist-ico is-receipt">' + ICO_RECEIPT + '</span>' +
           '<span class="hist-main"><b>' + esc(title) + '</b><span class="hist-meta">' + esc(fmt(it.createdAt)) + '</span>' +
-            '<span class="hist-more-hint">ดูรายละเอียด</span></span>' +
+            (refOf(it) ? '<span class="hist-meta pay-ref">เลขที่ ' + esc(refOf(it)) + '</span>' : '') + '</span>' +
           '<span class="hist-side"><b class="hist-amt">฿' + Number(it.amountBaht).toLocaleString('th-TH') + '</b>' +
-            '<span class="hist-status ' + (done ? 'is-done' : 'is-pending') + '">' + (done ? 'สำเร็จ' : 'รอชำระ') + '</span></span>' +
-        '</button>' + detail + '</div>';
+            '<span class="hist-status ' + ps[1] + '">' + ps[0] + '</span></span>' +
+        '</button>' + acts + note + detail + '</div>';
     }).join('') + moreBtn(rows.length);
     panel.hidden = false;
   }
@@ -838,6 +902,7 @@
       b.setAttribute('aria-selected', on ? 'true' : 'false');
     });
     if (filters) filters.hidden = kind !== 'pay';
+    var ph = document.getElementById('payHub'); if (ph) ph.hidden = kind !== 'pay';
     var lh = document.getElementById('libHead'); if (lh && kind === 'pay') lh.hidden = true;
     if (tools) tools.hidden = kind === 'pay' || !inspItems.length;
     if (kind === 'pay') openPayments(); else openInspections();
@@ -889,8 +954,12 @@
       if (currentKind === 'pay') renderPayments(); else renderInspections();
       return;
     }
-    var pst = ev.target.closest('[data-pst]');
-    if (pst) { setStatus(pst.getAttribute('data-pst')); return; }
+    var pstBtn = ev.target.closest('[data-pst]');
+    if (pstBtn) { setStatus(pstBtn.getAttribute('data-pst')); return; }
+    var pchk = ev.target.closest('[data-pcheck]');
+    if (pchk) { checkPayment(pchk.getAttribute('data-pcheck')); return; }
+    var pdet = ev.target.closest('[data-pdetail]');
+    if (pdet) { var tp = pdet.closest('.hist-card').querySelector('.hist-card-top'); if (tp) tp.click(); return; }
     var chip = ev.target.closest('.hist-chip');
     if (chip) { setStatus(chip.getAttribute('data-status')); return; }
     var top = ev.target.closest('.hist-card-top');
