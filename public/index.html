@@ -23,7 +23,7 @@
 <link rel="stylesheet" href="history-vault.css?v=11" media="(max-width: 767px)">
 <link rel="stylesheet" href="account-v2.css?v=11" media="(max-width: 767px)">
 <link rel="stylesheet" href="print.css?v=1" media="print">
-<link rel="stylesheet" href="ct-sticker.css?v=4" media="(max-width: 767px)">
+<link rel="stylesheet" href="ct-sticker.css?v=5" media="(max-width: 767px)">
 </head>
 <body>
 <svg id="vcStickerDefs" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="vcg-y" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffe58a"/><stop offset="1" stop-color="#f5a623"/></linearGradient><linearGradient id="vcg-o" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffb86b"/><stop offset="1" stop-color="#ef5a2a"/></linearGradient><linearGradient id="vcg-b" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#8fd0ff"/><stop offset="1" stop-color="#2f6fe0"/></linearGradient><linearGradient id="vcg-n" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#7d92d6"/><stop offset="1" stop-color="#26376f"/></linearGradient><linearGradient id="vcg-t" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#86f0d8"/><stop offset="1" stop-color="#1a98ab"/></linearGradient><linearGradient id="vcg-p" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ff9fc6"/><stop offset="1" stop-color="#df3f7c"/></linearGradient><linearGradient id="vcg-g" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#a8ea8f"/><stop offset="1" stop-color="#3b9f57"/></linearGradient><linearGradient id="vcg-v" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#c4b0ff"/><stop offset="1" stop-color="#6540d6"/></linearGradient><linearGradient id="vcg-w" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d5dce8"/></linearGradient><linearGradient id="vcg-au" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#fff0b3"/><stop offset="1" stop-color="#d9a014"/></linearGradient><linearGradient id="vcg-s" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#a9b3c7"/></linearGradient></defs></svg>
@@ -117,6 +117,7 @@
           <button class="acct-avatar" id="acctAvatarBtn" type="button" aria-label="เปลี่ยนรูปโปรไฟล์">
             <span id="acctInitial">?</span>
             <img id="acctPhoto" alt="" hidden>
+            <svg class="acct-sticker" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><path d="M10 56c0-12 9-19 22-19s22 7 22 19z" fill="url(#vcg-n)"/><circle cx="32" cy="22" r="14" fill="url(#vcg-au)"/><path d="M23 17a10 10 0 0 1 8-6" stroke="#fff" stroke-width="3" opacity=".55" fill="none" stroke-linecap="round"/></svg>
             <span class="acct-cam" aria-hidden="true">
               <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
             </span>
@@ -388,7 +389,7 @@
   <section class="card" id="paymentCard" hidden role="dialog" aria-labelledby="payTitle">
     <button type="button" class="pay-close" id="payClose" aria-label="ปิด" hidden>✕</button>
     <div class="pay-head">
-      <span class="pay-head-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H17a1 1 0 0 1 1 1v1.5"/><path d="M4 7.5V17a2 2 0 0 0 2 2h12a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 18 8H6.5A2.5 2.5 0 0 1 4 7.5z"/><path d="M15.5 13.5h4v3h-4a1.5 1.5 0 0 1 0-3z"/></svg></span>
+      <span class="pay-head-ic" aria-hidden="true"><svg viewBox="0 0 64 64" width="30" height="30" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><rect x="12" y="8" width="38" height="14" rx="5" fill="url(#vcg-b)" transform="rotate(-7 31 15)"/><rect x="6" y="17" width="52" height="38" rx="10" fill="url(#vcg-au)"/><rect x="37" y="30" width="23" height="15" rx="7.5" fill="url(#vcg-o)"/><circle cx="46" cy="37.5" r="3" fill="#fff"/><path d="M12 27a5 5 0 0 1 4-4h14" stroke="#fff" stroke-width="2.6" stroke-linecap="round" opacity=".5" fill="none"/></svg></span>
       <div class="pay-head-tx">
         <h2 id="payTitle">เติมเครดิต</h2>
         <p>เลือกแพ็กเกจที่เหมาะกับการใช้งานของคุณ</p>
@@ -398,7 +399,7 @@
     <div id="packageButtons" class="btns" role="group" aria-labelledby="payLabel"></div>
     <div id="paymentResult" aria-live="polite"></div>
     <div class="pay-trust">
-      <b><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v5c0 4.4 2.9 8.3 7 10 4.1-1.7 7-5.6 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>ชำระเงินอย่างโปร่งใส</b>
+      <b><svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><path d="M32 5l22 8v17c0 14-9 23-22 29C19 53 10 44 10 30V13z" fill="url(#vcg-t)"/><path d="M32 5l22 8v17c0 14-9 23-22 29z" fill="#1a98ab" opacity=".35"/><path d="M21 31l8 8 15-16" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M16 17l12-5" stroke="#fff" stroke-width="3" opacity=".5" stroke-linecap="round" fill="none"/></svg>ชำระเงินอย่างโปร่งใส</b>
       <p>ตรวจสอบยอดเงินและจำนวนครั้งก่อนชำระทุกครั้ง ไม่มีการเรียกเก็บเงินซ้ำโดยอัตโนมัติ</p>
     </div>
   </section>
@@ -1727,9 +1728,9 @@ document.addEventListener('click', function (e) {
 })();
 </script>
 <script src="glossary.js?v=5"></script>
-<script src="script.js?v=33"></script>
+<script src="script.js?v=34"></script>
 <script src="extras.js?v=4"></script>
-<script src="pay-ui.js?v=2"></script>
+<script src="pay-ui.js?v=3"></script>
 <script src="privacy.js?v=1"></script>
 <script src="care.js?v=2"></script>
 </body>
