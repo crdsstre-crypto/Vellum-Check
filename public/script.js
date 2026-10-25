@@ -1325,7 +1325,14 @@ function init() {
     if (e.target.closest('[data-ccnext]')) { ccOpenNext(); return; }
     const row = e.target.closest('[data-jumpidx]');
     if (row) {
-      focusIssue(+row.dataset.jumpidx);
+      const ci = +row.dataset.jumpidx;
+      const cit = lastResult && lastResult.items && lastResult.items[ci];
+      // Clause Lens: ปุ่ม "ตรวจสอบข้อความต้นฉบับ" เปิดสัญญาพร้อมไฮไลต์ประโยคที่เกี่ยวข้องและคำอธิบายด้านล่าง
+      if (row.dataset.opendetail && cit && !cit.missing && cit.quote && hasViewer() && typeof openViewer === 'function') {
+        openViewer(ci);
+        return;
+      }
+      focusIssue(ci);
       if (row.dataset.opendetail) {
         const d = els.result.querySelectorAll('details.item')[+row.dataset.jumpidx];
         const more = d && d.querySelector('details.sg-more');
