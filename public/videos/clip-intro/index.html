@@ -4,12 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Vellum Check คลิปเปิดตัว</title>
-<link rel="stylesheet" href="clip.css">
+<link rel="stylesheet" href="clip.css?v=2">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
 
 </head>
 <body>
 <div class="stage" id="st" aria-label="ตัวอย่างคลิปเปิดตัว Vellum Check เว็บเช็กสัญญา" role="img">
+<div class="cv" id="cv" role="button" tabindex="0" aria-label="เล่นคลิปแนะนำ"><i class="pb"></i><b>ดูคลิปแนะนำ</b><span>แตะเพื่อเล่น · มีเสียงพากย์ · <em id="cv-d">1:04</em> นาที</span></div>
+<div class="cv en hide" id="en"><b>พร้อมเข้าใจสัญญาของคุณมากขึ้นหรือยัง?</b><button id="en-go" type="button">เริ่มตรวจสัญญา</button><button id="en-rp" type="button" class="g">ดูอีกครั้ง</button></div>
  <div class="mesh"><i></i><i></i><i></i></div><div class="grid"></div><div id="pts"></div>
  <div class="scene"><div class="doc glass" id="doc">
   <div class="grain"></div><div class="wm">ตัวอย่าง</div>
@@ -104,6 +106,6 @@
 <script src="img-data.js"></script>
 <script src="vo-data.js"></script>
 <script>(function(){var m=window.CLIP_IMG;if(!m)return;var l=document.getElementsByTagName("img");for(var i=0;i<l.length;i++){var k=(l[i].getAttribute("src")||"").replace(/^.*\//,"").replace(/\.webp$/,"");if(m[k])l[i].src=m[k]}})();</script>
-<script src="clip.js"></script>
+<script src="clip.js?v=2"></script>
 </body>
 </html>
