@@ -216,7 +216,8 @@ sn.onclick=function(){sfx=!sfx;sn.setAttribute('aria-pressed',sfx);sn.textConten
 /*VOJS*/var NW=['ฉากที่ 5 ตัวอย่างคำแนะนำ','ฉากที่ 6 แยกสีตามความเสี่ยง','ฉากที่ 7 ตัดสินใจด้วยตัวคุณเอง'];
 function wsc(R){set('--wo',0);for(var i=0;i<3;i++)set('--ws'+i,0);return;var b=W1+X;set('--wo',seg(R,b-.2,b+.2)*(1-seg(R,b+X2-.2,b+X2+.2)));for(var i=0;i<3;i++){var a=b+i*5;set('--ws'+i,seg(R,a+.15,a+.65)*(1-seg(R,a+4.45,a+4.9)))}}
 var VURL='audio/vo.mp3',vbuf=null,vld=false,vsrc=null,vstart=0,vg=null;
-function vload(){if(vbuf||vld||!AC)return;vld=true;try{fetch(VURL).then(function(r){if(!r.ok)throw 0;return r.arrayBuffer()}).then(function(buf){AC.decodeAudioData(buf,function(b){vbuf=b},function(){vld=false})}).catch(function(){vld=false})}catch(x){vld=false}}
+function vb64(u){var b=atob(u.split(',')[1]),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a.buffer}
+function vload(){if(vbuf||vld||!AC)return;vld=true;if(window.CLIP_VO){try{AC.decodeAudioData(vb64(window.CLIP_VO),function(b){vbuf=b},function(){vld=false})}catch(x){vld=false}return}try{fetch(VURL).then(function(r){if(!r.ok)throw 0;return r.arrayBuffer()}).then(function(buf){AC.decodeAudioData(buf,function(b){vbuf=b},function(){vld=false})}).catch(function(){vld=false})}catch(x){vld=false}}
 function vstop(){if(vsrc){try{vsrc.stop()}catch(x){}vsrc=null}}
 function vsync(R){if(sfx&&playing&&AC&&vbuf&&R<vbuf.duration){if(!vsrc||Math.abs(AC.currentTime-vstart-R)>.6){vstop();if(!vg){vg=AC.createGain();vg.gain.value=1.5;vg.connect(AC.destination)}vsrc=AC.createBufferSource();vsrc.buffer=vbuf;vsrc.connect(vg);vsrc.start(0,Math.max(0,R));vstart=AC.currentTime-R}}else vstop()}
 sn.addEventListener('click',function(){if(sfx)vload()});
