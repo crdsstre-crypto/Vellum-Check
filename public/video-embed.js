@@ -4,6 +4,12 @@
   window.addEventListener('message', function (e) {
     if (e.origin !== location.origin) return;
     var d = e.data;
+    if (d && d.type === 'vc-cta') {
+      var c = document.getElementById('contractType');
+      var t = (c && (c.closest('.card') || c)) || document.querySelector('.card');
+      if (t && t.scrollIntoView) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
     if (!d || d.type !== 'vc-height' || !(d.h > 0)) return;
     var frames = document.querySelectorAll('iframe.vc-frame');
     for (var i = 0; i < frames.length; i++) {
