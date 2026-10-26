@@ -22,6 +22,7 @@
 <link rel="stylesheet" href="history-polish.css?v=13">
 <link rel="stylesheet" href="history-vault.css?v=11" media="(max-width: 767px)">
 <link rel="stylesheet" href="account-v2.css?v=11" media="(max-width: 767px)">
+<link rel="stylesheet" href="video-embed.css?v=1">
 <link rel="stylesheet" href="print.css?v=1" media="print">
 <link rel="stylesheet" href="ct-sticker.css?v=9" media="(max-width: 767px)">
 </head>
@@ -87,6 +88,11 @@
     <svg viewBox="0 0 64 64" class="hero-art" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><rect x="29" y="14" width="6" height="40" rx="3" fill="url(#vcg-au)"/><rect x="19" y="51" width="26" height="7" rx="3.5" fill="url(#vcg-o)"/><g class="st-beam"><rect x="7" y="17" width="50" height="5" rx="2.5" fill="url(#vcg-au)"/><g class="st-pan st-pl"><path d="M12 22L6 38M12 22L18 38" stroke="#d9a014" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M3 38h18a9 8 0 0 1-18 0z" fill="url(#vcg-y)"/></g><g class="st-pan st-pr"><path d="M52 22L46 38M52 22L58 38" stroke="#d9a014" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M43 38h18a9 8 0 0 1-18 0z" fill="url(#vcg-y)"/></g></g><circle cx="32" cy="12" r="5.5" fill="url(#vcg-y)"/><path d="M32 17v32" stroke="#fff" stroke-width="1.6" opacity=".4" fill="none" stroke-linecap="round"/></svg>
     <h1>เช็กสัญญา</h1>
     <p>ตรวจสัญญาอย่างมั่นใจ · วางข้อความสัญญา ระบบจะไฮไลต์จุดที่ควรระวัง</p>
+  </section>
+
+  <!-- คลิปแนะนำ: ไฟล์อยู่ใน public/videos/clip-intro/ (แยก CSS/JS/เสียง/ภาพ) โหลดเมื่อเลื่อนมาถึง -->
+  <section class="vc-embed" aria-label="คลิปแนะนำเช็กสัญญา">
+    <iframe class="vc-frame" src="videos/clip-intro/index.html" title="คลิปแนะนำ Vellum Check เช็กสัญญา" loading="lazy" allow="fullscreen" allowfullscreen></iframe>
   </section>
 
   <!-- 0. บัญชีผู้ใช้: บนมือถือเป็นแผนจากด้านล่าง บนจอใหญ่เป็นการ์ดปกติ -->
@@ -1736,5 +1742,6 @@ document.addEventListener('click', function (e) {
 <script src="pay-ui.js?v=3"></script>
 <script src="privacy.js?v=2"></script>
 <script src="care.js?v=2"></script>
+<script src="video-embed.js?v=1"></script>
 </body>
 </html>
