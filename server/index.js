@@ -621,6 +621,11 @@ app.post('/api/extract', async (req, res) => {
 
 // ---------- หน้าเว็บ ----------
 // ไฟล์หน้าเว็บให้เบราว์เซอร์ตรวจกับเซิร์ฟเวอร์ทุกครั้ง เพื่อไม่ให้ค้างเวอร์ชันเก่าในมือถือ
+// คลิปวิดีโอ (public/videos/<ชื่อคลิป>/) แคชนาน 30 วัน — ถ้าแก้คลิป ให้เปลี่ยนชื่อโฟลเดอร์เป็นเวอร์ชันใหม่ (เช่น clip-intro-v2)
+app.use('/videos', express.static(path.join(__dirname, '..', 'public', 'videos'), {
+  maxAge: '30d',
+  immutable: true,
+}));
 app.use(express.static(path.join(__dirname, '..', 'public'), {
   setHeaders: (res) => res.setHeader('Cache-Control', 'no-cache'),
 }));
