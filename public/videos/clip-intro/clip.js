@@ -15,7 +15,7 @@ function measure(){var h=doc.offsetHeight||1;pos=els.map(function(e){return(e.of
 var P=[];for(var i=0;i<22;i++){var d=document.createElement('i');d.className='pt';var s=.5+Math.random()*.8;d.style.width=d.style.height=s+'cqw';pts.appendChild(d);P.push({e:d,x:Math.random()*100,y:Math.random(),v:2+Math.random()*4,ph:Math.random()*6})}
 var names=['อินโทร โลโก้ Vellum Check','ภาพก่อนใช้ สัญญายาวอ่านไม่ไหว','ฉากที่ 1 เปิดตัวอย่างมีระดับ','ฉากที่ 2 แสดงการตรวจสอบ','ฉากที่ 3 สรุปผลให้เข้าใจง่าย','ฉากที่ 4 ปิดท้ายด้วยความน่าเชื่อถือ','ฉากที่ 1 ปัญหาและกลุ่มเป้าหมาย','ฉากที่ 2 ฟีเจอร์หลัก','ฉากปิด คำเตือนและข้อจำกัด','ฉากจบ ตัดสินใจด้วยตัวเอง'];
 var CP=[[.3,2.8,'อ่านสัญญา 20 หน้า… เสี่ยงโดนเอาเปรียบโดยไม่รู้ตัว?'],[2.9,4.3,'ให้ Vellum Check ช่วยอ่านและสรุปให้ ก่อนเซ็น'],[4.6,6.4,'ส่งสัญญาเข้ามา ระบบเข้ารหัสและปกป้องข้อมูลก่อนเริ่มตรวจ'],[6.6,9.1,'เอ็กซ์เรย์ทุกข้อ พร้อม AI แนะนำข้อความที่ควรขอแก้'],[9.2,12.5,'ตรวจเสร็จ ให้คะแนนสุขภาพสัญญา สรุปง่าย แยกสีตามความเสี่ยง'],[12.6,13.9,'รู้ก่อนว่าข้อไหนควรระวัง ก่อนลงนาม'],[14.1,16.4,'ปกป้องคุณจากข้อสัญญาที่ไม่เป็นธรรม คุ้มกว่าเสี่ยงเสียเงินทีหลัง']];
-CP.forEach(function(c,i){if(i>0){c[0]+=SS;c[1]+=SS}});CP.push([2.9,5.4,'สัญญายาว ศัพท์ซับซ้อน ใครๆ ก็พลาดได้'],[5.6,8.2,'สแกนหาข้อเสียเปรียบ สรุปให้เข้าใจง่าย และปลอดภัยสูง']);var t=0,u=0,playing=true,last=0,capIdx=-2;
+CP.forEach(function(c,i){if(i>0){c[0]+=SS;c[1]+=SS}});CP.push([2.9,5.4,'สัญญายาว ศัพท์ซับซ้อน ใครๆ ก็พลาดได้'],[5.6,8.2,'สแกนหาข้อเสียเปรียบ สรุปให้เข้าใจง่าย และปลอดภัยสูง']);var PT=20,t=PT,u=0,playing=false,last=0,capIdx=-2;
 /*VO*/var VC=[[0.0, 4.22, "อ่านสัญญา 20 หน้า… เสี่ยงโดนเอาเปรียบโดยไม่รู้ตัว?"], [4.77, 8.31, "สัญญายาว ศัพท์ซับซ้อน ใครๆ ก็พลาดได้"], [8.7, 12.54, "สิ่งที่น่ากังวลที่สุด อาจไม่ใช่สิ่งที่คุณอ่านเจอ"], [12.82, 14.45, "แต่เป็นสิ่งที่คุณมองข้ามไป"], [14.87, 18.74, "ค่าเช่าปรับได้ เลิกสัญญาต้องแจ้งล่วงหน้า มีค่าปรับ"], [19.07, 21.36, "ข้อเล็ก ๆ เหล่านี้ อาจเปลี่ยนทุกอย่าง"], [21.65, 24.16, "Vellum Check เข้ามาช่วยอ่านสัญญาแทนคุณ"], [24.32, 27.59, "ชี้จุดที่ควรระวัง พร้อมคำแนะนำที่ควรขอแก้"], [27.72, 31.59, "สแกนหาข้อเสียเปรียบ สรุปให้เข้าใจง่าย และปลอดภัยสูง"], [31.71, 34.67, "ให้ Vellum Check ช่วยอ่านและสรุปให้ ก่อนเซ็น"], [34.82, 38.34, "ส่งสัญญาเข้ามา ระบบเข้ารหัสและปกป้องข้อมูลก่อนเริ่มตรวจ"], [38.5, 42.37, "เอ็กซ์เรย์ทุกข้อ พร้อม AI แนะนำข้อความที่ควรขอแก้"], [42.49, 45.98, "ตรวจเสร็จ ให้คะแนนสุขภาพสัญญา สรุปง่าย แยกสีตามความเสี่ยง"], [46.1, 48.92, "รู้ก่อนว่าข้อไหนควรระวัง ก่อนลงนาม"], [48.98, 53.3, "ปกป้องคุณจากข้อสัญญาที่ไม่เป็นธรรม คุ้มกว่าเสี่ยงเสียเงินทีหลัง"]],WO=[0, 5.5, 10.2, 14.8, 20.3, 26.8, 30.1, 32.6, 34.1, 35.2, 36.0, 37.0],WV=[0, 8.45, 14.62, 21.46, 27.55, 37.6, 41.0, 43.0, 44.6, 46.3, 48.9, 53.3],MD=63.9,MW=0;
 function wf(m){var n=WV.length-1;if(m<=0)return m;if(m>=WV[n])return WO[n]+(m-WV[n]);for(var i=0;i<n;i++)if(m<WV[i+1])return WO[i]+(m-WV[i])*(WO[i+1]-WO[i])/(WV[i+1]-WV[i]);return m}
 var RTw=0,NC=[[5.7,7.9,'สิ่งที่น่ากังวลที่สุด อาจไม่ใช่สิ่งที่คุณอ่านเจอ'],[8,10.2,'แต่เป็นสิ่งที่คุณมองข้ามไป'],[10.6,12.4,'ค่าเช่าปรับได้ เลิกสัญญาต้องแจ้งล่วงหน้า มีค่าปรับ'],[12.5,14.6,'ข้อเล็ก ๆ เหล่านี้ อาจเปลี่ยนทุกอย่าง'],[15,17.1,'Vellum Check เข้ามาช่วยอ่านสัญญาแทนคุณ'],[17.2,20.2,'ชี้จุดที่ควรระวัง พร้อมคำแนะนำที่ควรขอแก้'],[37.3,41.8,'ตัวอย่าง: AI ชี้ข้อเสี่ยง พร้อมแนะนำข้อความที่ควรขอแก้'],[42.3,46.8,'สรุปง่าย แยกสีตามระดับความเสี่ยง'],[47.3,51.8,'AI ช่วยเช็ก ผู้เชี่ยวชาญตรวจซ้ำ แต่คุณเป็นผู้ตัดสินใจ']];
@@ -202,14 +202,21 @@ function render0(){
  tm.textContent=Math.min(t,D).toFixed(1)+' / '+D+' วินาที';
  sk.value=Math.min(t,D);
 }
+var cv=document.getElementById('cv'),en=document.getElementById('en');
+function showEnd(){en.classList.remove('hide')}
+function startShow(){if(!sfx)sn.click();t=0;setPlay(true)}
+cv.onclick=startShow;
+document.getElementById('en-rp').onclick=function(){if(!sfx)sn.click();stopSweep();t=0;setPlay(true)};
+document.getElementById('en-go').onclick=function(){try{parent.postMessage({type:'vc-cta'},location.origin)}catch(e){}};
+document.getElementById('cv-d').textContent=Math.floor(MD/60)+':'+('0'+Math.round(MD%60)).slice(-2);
 function tick(now){
  var dt=Math.min(.1,(now-last)/1000);last=now;
- if(playing){var a=t,ta=(sfx&&AC&&AC.state==='running'&&vsrc&&vbuf&&a<vbuf.duration-.1)?AC.currentTime-vstart:-1;t=(ta>=0&&Math.abs(ta-a)<1.5)?ta:a+dt;if(t>MD+1){t=0;stopSweep()}else sfxCheck(wf(a),wf(t))}
+ if(playing){var a=t,ta=(sfx&&AC&&AC.state==='running'&&vsrc&&vbuf&&a<vbuf.duration-.1)?AC.currentTime-vstart:-1;t=(ta>=0&&Math.abs(ta-a)<1.5)?ta:a+dt;if(t>MD+1){t=MD;stopSweep();vstop();setPlay(false);showEnd()}else sfxCheck(wf(a),wf(t))}
  if(!lite||now-lr>=32){lr=now;render()}requestAnimationFrame(tick);
 }
-function setPlay(v){playing=v;pp.textContent=v?'หยุด':'เล่น';if(!v)stopSweep()}
+function setPlay(v){playing=v;if(v){cv.classList.add('hide');en.classList.add('hide')}pp.textContent=v?'หยุด':'เล่น';if(!v)stopSweep()}
 setPlay(playing);
-pp.onclick=function(){setPlay(!playing)};
+pp.onclick=function(){if(!playing&&t>=MD-.05)t=0;setPlay(!playing)};
 document.getElementById('rp').onclick=function(){stopSweep();t=0;setPlay(true)};
 sn.onclick=function(){sfx=!sfx;sn.setAttribute('aria-pressed',sfx);sn.textContent='เสียง: '+(sfx?'เปิด':'ปิด');
  if(sfx){if(!ensure()){sfx=false;sn.textContent='เสียง: ปิด';return}chime(1318,.08)}else stopSweep()};
