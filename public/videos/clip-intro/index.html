@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Vellum Check คลิปเปิดตัว</title>
-<link rel="stylesheet" href="clip.css?v=2">
+<link rel="stylesheet" href="clip.css?v=3">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
 
 </head>
@@ -81,9 +81,9 @@
   <div class="mark"><div class="aura"></div>
    <svg viewBox="0 0 64 64"><defs><linearGradient id="gg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3d6"/><stop offset=".55" stop-color="#e8cf9a"/><stop offset="1" stop-color="#b8923f"/></linearGradient></defs>
     <path class="pan" d="M7 34Q16 44 25 34Z"/><path class="pan" d="M39 34Q48 44 57 34Z"/>
-    <path class="dr" pathLength="100" d="M32 12V50"/><path class="dr" pathLength="100" d="M21 53h22"/><path class="dr" pathLength="100" d="M12 21Q32 13 52 21"/>
-    <path class="dr" pathLength="100" d="M16 18L9 34M16 18L23 34M7 34Q16 44 25 34Z"/><path class="dr" pathLength="100" d="M48 18L41 34M48 18L55 34M39 34Q48 44 57 34Z"/>
-    <circle class="dr" pathLength="100" cx="32" cy="9" r="2.4"/></svg></div>
+    <path class="vdr" pathLength="100" d="M32 12V50"/><path class="vdr" pathLength="100" d="M21 53h22"/><path class="vdr" pathLength="100" d="M12 21Q32 13 52 21"/>
+    <path class="vdr" pathLength="100" d="M16 18L9 34M16 18L23 34M7 34Q16 44 25 34Z"/><path class="vdr" pathLength="100" d="M48 18L41 34M48 18L55 34M39 34Q48 44 57 34Z"/>
+    <circle class="vdr" pathLength="100" cx="32" cy="9" r="2.4"/></svg></div>
   <div class="word">Vellum Check</div><div class="sub">เช็กสัญญา</div>
  </div>
  <div class="sc4"><div class="m1">AI ช่วยให้คุณเห็น</div><div class="m2"><span>แต่คุณเลือกได้</span></div><div class="m3">เข้าใจทุกข้อ ก่อนตัดสินใจ</div><div class="m4"><span>เริ่มตรวจสัญญา ก่อนลงนาม</span></div></div>
@@ -103,9 +103,18 @@
 </div>
 <div class="lbl"><span id="sc">อินโทร โลโก้ Vellum Check</span><span id="tm">0.0 / 16.4 วินาที</span></div>
 <div class="hint">แตะ “เต็มจอ” เพื่อดูเป็นคลิปแนวนอน · เอียงมือถือหรือแตะบนคลิปเพื่อดูมิติ 3D</div>
+<div class="vdk" id="dock">
+<div class="vdr">
+<button type="button" class="vpp" id="d-pp" aria-label="เล่น"><svg class="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg class="i-pause" viewBox="0 0 24 24"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg></button>
+<div class="vtt"><b id="d-t">สิ่งที่มักมองข้าม</b><span class="vds"><i id="d-s">ข้อเล็ก ๆ ที่เปลี่ยนทุกอย่าง</i><em id="d-tm">0:00 / 1:04</em></span></div>
+<button type="button" class="vib mute" id="d-sn" aria-label="เปิดหรือปิดเสียง"><svg class="i-on" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><svg class="i-off" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg></button>
+<button type="button" class="vib" id="d-fs" aria-label="เต็มจอ"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+</div>
+<div class="vch"><button type="button" class="vcp" data-i="0"><i class="vf"></i><b>01</b>ปัญหา</button><button type="button" class="vcp" data-i="1"><i class="vf"></i><b>02</b>ฟีเจอร์</button><button type="button" class="vcp" data-i="2"><i class="vf"></i><b>03</b>สรุปผล</button></div>
+</div>
 <script src="img-data.js"></script>
 <script src="vo-data.js"></script>
 <script>(function(){var m=window.CLIP_IMG;if(!m)return;var l=document.getElementsByTagName("img");for(var i=0;i<l.length;i++){var k=(l[i].getAttribute("src")||"").replace(/^.*\//,"").replace(/\.webp$/,"");if(m[k])l[i].src=m[k]}})();</script>
-<script src="clip.js?v=2"></script>
+<script src="clip.js?v=3"></script>
 </body>
 </html>
