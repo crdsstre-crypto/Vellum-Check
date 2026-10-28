@@ -1,0 +1,220 @@
+/* =========================================================
+   art/workspace.css: ขั้น 3 ของ Vellum "The Annotated Page" — "โต๊ะอ่านสัญญา"
+   บัญชีและเครดิต · เลือกประเภทและวางสัญญา · Privacy Shield · ปุ่ม · ช่องผลตรวจ (ส่วนหัว)
+   - โหลดต่อจาก art/sections.css  ทุกกฎขึ้นต้น html.vc-art
+   - ไม่แตะ id / ปุ่ม / JS ใด ๆ  เปลี่ยนเฉพาะหน้าตา  แผนบัญชีมือถือ แถบล่าง และแผนเลือกประเภทยังทำงานเดิม
+   - รายงานผลตรวจ (.rpt) จะจัดใหม่ในขั้น 4
+
+   ดัชนี
+   1. การ์ดและคอลัมน์   2. หัวข้อ   3. ช่องกรอกและปุ่ม   4. ช่องวางสัญญา (กระดาษ)
+   5. Privacy Shield   6. บัญชีและเครดิต   7. ไอคอน   8. ช่องผลตรวจ (ว่าง)
+   ========================================================= */
+
+/* ---------- 1. การ์ดและคอลัมน์ ---------- */
+html.vc-art main > .card{
+  background:transparent;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+}
+@media (min-width:1024px){
+  html.vc-art main > #authCard,
+  html.vc-art main > #checkCard,
+  html.vc-art main > #resultCard{
+    margin:0;
+    padding:28px clamp(20px,2vw,36px) 56px;
+    border-top:1px solid var(--hair-strong);
+    border-left:1px solid var(--hair);
+  }
+  html.vc-art main > #authCard{border-left:0;padding-left:0}
+  html.vc-art main > #resultCard{padding-right:0}
+  html.vc-art main > #paymentCard{margin:0}
+}
+html.vc-art .step-sub{border-top:1px solid var(--hair);margin-top:32px;padding-top:24px}
+html.vc-art .step-sub h3{font-family:var(--font-display);font-weight:500;font-size:1.2rem;margin:0 0 14px;color:var(--paper)}
+
+/* ---------- 2. หัวข้อ ---------- */
+html.vc-art :is(#authCard,#checkCard,#resultCard) > h2,
+html.vc-art :is(#authCard,#checkCard,#resultCard) .step-head h2{
+  display:block;
+  margin:0 0 22px;
+  font-family:var(--font-display);
+  font-weight:500;
+  font-size:1.35rem;
+  line-height:1.4;
+  color:var(--paper);
+}
+html.vc-art :is(#authCard,#checkCard,#resultCard) h2::before{display:none}
+html.vc-art .field-label{font-family:var(--font-mono);font-size:.7rem;font-weight:500;color:var(--silver);letter-spacing:.04em}
+
+html.vc-art #authCard .sheet-head h2{font-family:var(--font-display);font-weight:500;font-size:1.05rem;white-space:nowrap}
+
+/* ---------- 3. ช่องกรอกและปุ่ม ---------- */
+html.vc-art :is(#email,#password,.select-wrap select){
+  background:transparent;
+  border:0;
+  border-bottom:1px solid var(--hair-strong);
+  border-radius:0;
+  padding:14px 0;
+  color:var(--paper);
+  box-shadow:none;
+}
+html.vc-art .select-wrap select{padding-right:34px}
+html.vc-art :is(#email,#password,.select-wrap select):focus{border-bottom-color:var(--paper);box-shadow:none}
+html.vc-art .select-wrap::after{right:4px;border-color:var(--silver)}
+html.vc-art button.primary,
+html.vc-art #checkBtn.primary{
+  background:var(--paper);color:var(--ink);
+  border:1px solid var(--paper);border-radius:2px;
+  min-height:52px;box-shadow:none;
+}
+html.vc-art button.primary:hover:not(:disabled){background:var(--silver-hi);border-color:var(--silver-hi)}
+html.vc-art #checkBtn.primary:disabled{background:transparent;color:var(--muted);border-color:var(--hair-strong);opacity:1}
+html.vc-art button.ghost{background:transparent;color:var(--paper);border:1px solid var(--hair-strong);border-radius:2px;min-height:52px}
+html.vc-art button.ghost:hover:not(:disabled){border-color:var(--paper);color:var(--paper)}
+html.vc-art .google-btn{border-radius:2px;background:var(--paper);color:var(--ink)}
+html.vc-art .or-line{font-family:var(--font-mono);font-size:.7rem;color:var(--muted)}
+html.vc-art .sample-btn{
+  background:transparent;border:0;border-bottom:1px solid var(--hair-strong);border-radius:0;
+  padding:6px 0;color:var(--silver);font-weight:500;font-size:.84rem;
+}
+html.vc-art .sample-btn:hover{color:var(--paper);border-bottom-color:var(--paper)}
+html.vc-art .ta-count{font-family:var(--font-mono);font-size:.7rem}
+html.vc-art .hint,
+html.vc-art .step-cost,
+html.vc-art .check-note{color:var(--muted)}
+html.vc-art .disclaimer{color:var(--muted);border-top:1px solid var(--hair);padding-top:14px;margin-top:20px;font-size:.82rem}
+html.vc-art .voice-opt{border-radius:0;border:0;border-bottom:1px solid var(--hair);background:transparent;padding-left:0;padding-right:0}
+
+/* ---------- 4. ช่องวางสัญญา: หน้ากระดาษเวลลัม ---------- */
+html.vc-art #input{
+  min-height:clamp(280px,44vh,520px);
+  padding:24px 26px;
+  background-color:var(--paper);
+  background-image:repeating-linear-gradient(to bottom,transparent 0,transparent calc(1.8em - 1px),rgba(12,12,13,.08) calc(1.8em - 1px),rgba(12,12,13,.08) 1.8em);
+  background-attachment:local;
+  background-position:0 24px;
+  color:#19191b;
+  caret-color:#19191b;
+  line-height:1.8;
+  border:0;
+  border-radius:2px;
+  box-shadow:0 30px 60px -34px rgba(0,0,0,.9);
+}
+html.vc-art #input::placeholder{color:rgba(25,25,27,.45)}
+html.vc-art #input::selection{background:#19191b;color:var(--paper)}
+html.vc-art #input:focus{outline:none;box-shadow:0 0 0 2px var(--silver-hi),0 30px 60px -34px rgba(0,0,0,.9)}
+html.vc-art .ta-clear{background:rgba(12,12,13,.1);color:#19191b}
+html.vc-art .draft-bar{border-radius:0;border:0;border-left:2px solid var(--silver);background:var(--graphite-2)}
+
+/* ---------- 5. Privacy Shield: แถบปกปิด ---------- */
+html.vc-art .ps{
+  background:transparent;border:0;border-radius:0;box-shadow:none;
+  border-top:1px solid var(--hair-strong);border-bottom:1px solid var(--hair-strong);
+  padding:18px 0;
+}
+html.vc-art .ps-title b{font-family:var(--font-display);font-weight:500;font-size:1.12rem;color:var(--paper)}
+html.vc-art .ps-title b::after{
+  content:"";display:inline-block;width:2.6em;height:.5em;margin-left:.8em;background:var(--silver);opacity:.55;vertical-align:.1em;
+}
+html.vc-art .ps-title small{font-family:var(--font-mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+html.vc-art .ps-badge{
+  background:transparent;border:1px solid var(--hair-strong);border-radius:2px;color:var(--silver);
+  font-family:var(--font-mono);font-size:.64rem;font-weight:500;box-shadow:none;
+}
+html.vc-art .ps-actions button{border-radius:2px;background:transparent;border:1px solid var(--hair-strong);color:var(--paper);box-shadow:none}
+html.vc-art .ps-preview{border-radius:0;background:var(--field);border:1px solid var(--hair)}
+
+/* ---------- 6. บัญชีและเครดิต ---------- */
+html.vc-art #authLoggedIn{--a-green:var(--silver-hi);--a-blue:var(--silver-hi);--a-purple:var(--silver-hi);--a-orange:var(--silver-hi);--a-amber:var(--silver-hi)}
+html.vc-art #authLoggedIn#authLoggedIn .cred-card{background:transparent;border:0;border-radius:0;box-shadow:none;padding:0}
+html.vc-art #authLoggedIn#authLoggedIn .cred-card::before,
+html.vc-art #authLoggedIn#authLoggedIn .cred-card::after,
+html.vc-art #authLoggedIn#authLoggedIn .wallet-total::before,
+html.vc-art #authLoggedIn#authLoggedIn .wallet-total::after,
+html.vc-art #authLoggedIn#authLoggedIn .wt-fx,
+html.vc-art #authLoggedIn#authLoggedIn .cred-line{display:none}
+html.vc-art #authLoggedIn#authLoggedIn .cred-head{display:block;margin:0 0 18px}
+html.vc-art #authLoggedIn#authLoggedIn .cred-title{margin:0;font-family:var(--font-display);font-weight:500;font-size:1.15rem;color:var(--paper)}
+html.vc-art #authLoggedIn#authLoggedIn .cred-sub{margin:2px 0 0;font-size:.8rem;color:var(--muted)}
+html.vc-art #authLoggedIn#authLoggedIn .cred-ico{display:none}
+html.vc-art #authLoggedIn#authLoggedIn .acct-row{display:flex;align-items:center;gap:14px;margin:0 0 20px;padding:0 0 18px;border-bottom:1px solid var(--hair)}
+html.vc-art #authLoggedIn#authLoggedIn .acct-avatar{
+  position:relative;flex:0 0 46px;width:46px;height:46px;padding:0;border-radius:50%;
+  background:var(--graphite-2);border:1px solid var(--hair-strong);overflow:hidden;box-shadow:none;
+}
+html.vc-art #authLoggedIn#authLoggedIn .acct-avatar #acctInitial{display:grid;place-items:center;width:100%;height:100%;font-family:var(--font-display);font-size:1.2rem;color:var(--paper)}
+html.vc-art #authLoggedIn#authLoggedIn .acct-avatar #acctPhoto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+html.vc-art #authLoggedIn#authLoggedIn .acct-sticker{display:none}
+html.vc-art #authLoggedIn#authLoggedIn .acct-cam{display:none}
+html.vc-art #authLoggedIn#authLoggedIn .acct-info{min-width:0;display:block}
+html.vc-art #authLoggedIn#authLoggedIn .acct-label{display:block;font-family:var(--font-mono);font-size:.64rem;color:var(--muted)}
+html.vc-art #authLoggedIn#authLoggedIn .acct-mail{display:block;font-weight:500;font-size:.9rem;color:var(--paper);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html.vc-art #authLoggedIn#authLoggedIn .acct-check{display:none}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-total{background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;margin:0}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-total-label{display:block;font-family:var(--font-mono);font-size:.66rem;color:var(--muted)}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-total-num{margin:6px 0 16px;color:var(--paper)}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-total-num b{font-family:var(--font-display);font-weight:300;font-size:clamp(3.4rem,6vw,4.6rem);line-height:1}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-total-num small{font-size:.8rem;color:var(--muted);margin-left:6px}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-rows{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--hair)}
+html.vc-art #authLoggedIn#authLoggedIn .ws{display:block;padding:12px 0;background:transparent;border:0;border-radius:0;box-shadow:none}
+html.vc-art #authLoggedIn#authLoggedIn .ws + .ws{border-left:1px solid var(--hair);padding-left:16px}
+html.vc-art #authLoggedIn#authLoggedIn .ws-ico{display:none}
+html.vc-art #authLoggedIn#authLoggedIn .ws-num{margin:0;font-family:var(--font-display);font-size:1.6rem;line-height:1.1;color:var(--paper)}
+html.vc-art #authLoggedIn#authLoggedIn .ws-lab{margin:2px 0 0;font-size:.74rem;color:var(--muted)}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-quick{margin-top:14px}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-topup{
+  background:var(--paper);color:var(--ink);border:1px solid var(--paper);border-radius:2px;box-shadow:none;animation:none;
+}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-topup:hover{background:var(--silver-hi)}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-quick .wallet-topup{width:100%;min-height:48px}
+html.vc-art #authLoggedIn#authLoggedIn .wallet{background:transparent;border:0;box-shadow:none;margin-top:24px}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-list-title{font-family:var(--font-mono);font-size:.68rem;font-weight:500;color:var(--silver);letter-spacing:.04em}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-card{background:transparent;border:0;border-top:1px solid var(--hair);border-radius:0;box-shadow:none;padding:14px 0}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-ico{display:none}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-badge{background:transparent;border:1px solid var(--hair-strong);border-radius:2px;color:var(--silver);box-shadow:none}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-card-name b{font-weight:600;color:var(--paper)}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-card-name small{font-family:var(--font-mono);font-size:.62rem;color:var(--muted)}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-card-use{color:var(--muted)}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-card-num b{font-family:var(--font-display);font-weight:400;color:var(--paper)}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-card-bottom .wallet-topup{background:transparent;color:var(--paper);border:1px solid var(--hair-strong)}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-card-bottom .wallet-topup:hover{border-color:var(--paper);background:transparent}
+html.vc-art #authLoggedIn#authLoggedIn .menu-item,
+html.vc-art #authLoggedIn#authLoggedIn .acct-out,
+html.vc-art #authLoggedIn#authLoggedIn .wallet-histlink{
+  border-radius:0;background:transparent;border:0;border-top:1px solid var(--hair);box-shadow:none;
+}
+html.vc-art #authLoggedIn#authLoggedIn .menu-item b,
+html.vc-art #authLoggedIn#authLoggedIn .wallet-hist-txt b{color:var(--paper)}
+html.vc-art #authLoggedIn#authLoggedIn .acct-detail{background:transparent;border:0;border-top:1px solid var(--hair);border-radius:0}
+
+html.vc-art #authLoggedIn#authLoggedIn .wallet-total-label::after{display:none}   /* ป้ายเรืองแสง "พร้อมใช้งาน" (มือถือ) */
+
+/* บัตรเครดิตแยกประเภท: จัดแถวให้อ่านง่ายทั้งจอคอมและมือถือ */
+html.vc-art #authLoggedIn#authLoggedIn .wallet-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-card-name{flex:1;min-width:0;display:block}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-card-name b,
+html.vc-art #authLoggedIn#authLoggedIn .wallet-card-name small{display:block}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-badge{flex:none;padding:2px 8px;font-size:.66rem;line-height:1.7}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-card-use{margin:8px 0 0;font-size:.84rem}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-card-bottom{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:12px}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-card-num{margin:0}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-card-num b{display:block;font-size:1.7rem;line-height:1.1}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-card-num small{display:block;font-size:.74rem;color:var(--muted)}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-card-bottom .wallet-topup{width:auto;min-height:40px;padding:8px 16px}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-total .wallet-topup,
+html.vc-art #authLoggedIn#authLoggedIn .wallet-quick .wallet-topup{background:var(--paper);color:var(--ink);box-shadow:none}
+
+/* ---------- 7. ไอคอนสติกเกอร์ที่ยังเหลือ: โทนเดียวกัน ----------
+   ไอคอนเดิมมีเส้นสีฟ้า เขียว ที่ฝังในตัว SVG  ใช้ filter ให้เป็นเทาเงินทั้งหมดจนกว่าจะวาดชุดไอคอนใหม่ */
+html.vc-art :is(.ct-ico,.cs-ico,.cs-r-ico,.menu-ico,.ps-ico,.pay-head-ic,.pkg-ic,.vault-badge,.ph-ico,.ld-ico,.ls-cell,.lib-seg-b,.bn-item,.hr-thumb,.wallet-histlink,.ct-trigger) svg{
+  filter:grayscale(1) contrast(1.08);
+}
+html.vc-art .ct-trigger{border-radius:2px;background:transparent;border:0;border-bottom:1px solid var(--hair-strong)}
+html.vc-art .ct-chip{border-radius:2px;background:transparent;border:1px solid var(--hair-strong);color:var(--paper)}
+html.vc-art .credit-chip{border-radius:2px;background:transparent;border:1px solid var(--hair-strong);color:var(--paper)}
+
+/* ---------- 8. ช่องผลตรวจ (สถานะว่าง) ---------- */
+html.vc-art #result .empty-art{opacity:.4;margin:32px 0 12px}
+html.vc-art #result .empty-art svg{filter:grayscale(1)}
+html.vc-art #result > .empty{color:var(--muted)}

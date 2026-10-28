@@ -7,6 +7,8 @@
    - [data-reveal]           เมื่อเข้าจอ เติม .is-in  (ตัวเลือก: style="--i:2" เพื่อหน่วงตามลำดับ)
    - [data-split="lines"]    ห่อข้อความเป็นบรรทัด/คำ เพื่อเปิดทีละบรรทัด (ตัดคำไทยด้วย Intl.Segmenter)
    - [data-scene]            เขียนค่า --p (0..1) ตามความคืบหน้าการเลื่อนผ่านองค์ประกอบ (ใช้ rAF เฉพาะตอนอยู่ในจอ)
+                             เพิ่ม data-pin = ฉากตรึงจอ (องค์ประกอบสูงกว่าจอ แล้วเนื้อหา position:sticky)
+                             data-scene="exit" = 0 เมื่ออยู่บนสุด → 1 เมื่อเลื่อนพ้นไป (ใช้ทำพาราแลกซ์ตอนออก)
    ========================================================= */
 (function () {
   'use strict';
@@ -39,8 +41,9 @@
   api.split = function (el) {
     if (!el || el.getAttribute('data-split-done')) return;
     var text = el.textContent;
-    el.setAttribute('aria-label', text.trim());
     var parts = segmentWords(text), html = '', i = 0;
+    /* ข้อความจริงสำหรับโปรแกรมอ่านหน้าจอ (ซ่อนด้วยสายตา) ส่วนคำที่แยกแล้วเป็น aria-hidden */
+    html += '<span class="vc-sr" style="position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">' + text.replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }) + '</span>';
     parts.forEach(function (w) {
       if (/^\s+$/.test(w)) { html += w; return; }
       html += '<span class="vc-word" aria-hidden="true" style="display:inline-block;overflow:hidden;vertical-align:top"><span style="display:inline-block;transition:transform var(--dur-4) var(--ease-out);transition-delay:calc(' + (i++) + ' * 28ms)">' + w.replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }) + '</span></span>';
@@ -86,16 +89,18 @@
     scenes.forEach(function (s) {
       if (!s.on) return;
       var r = s.el.getBoundingClientRect();
-      var p = s.pin ? -r.top / Math.max(1, r.height - vh) : (vh - r.top) / (r.height + vh);
+      var p = s.pin ? -r.top / Math.max(1, r.height - vh)
+            : s.exit ? -r.top / Math.max(1, r.height)
+            : (vh - r.top) / (r.height + vh);
       p = Math.min(1, Math.max(0, p));
       s.el.style.setProperty('--p', p.toFixed(4));
     });
   }
   function requestTick() { if (!ticking) { ticking = true; requestAnimationFrame(updateScenes); } }
   api.scene = function (el, opts) {
-    var s = { el: el, on: false, pin: !!(opts && opts.pin) };
+    var s = { el: el, on: false, pin: !!(opts && opts.pin), exit: !!(opts && opts.exit) };
     scenes.push(s);
-    if (api.reduced || !hasIO) { el.style.setProperty('--p', '1'); return s; }
+    if (api.reduced || !hasIO) { el.style.setProperty('--p', s.exit ? '0' : '1'); return s; }
     new IntersectionObserver(function (es) { s.on = es[0].isIntersecting; if (s.on) requestTick(); }, { rootMargin: '10% 0px' }).observe(el);
     return s;
   };
@@ -110,7 +115,7 @@
       }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
     }
     api.observe(document);
-    document.querySelectorAll('[data-scene]').forEach(function (el) { api.scene(el, { pin: el.hasAttribute('data-pin') }); });
+    document.querySelectorAll('[data-scene]').forEach(function (el) { api.scene(el, { pin: el.hasAttribute('data-pin'), exit: el.getAttribute('data-scene') === 'exit' }); });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
