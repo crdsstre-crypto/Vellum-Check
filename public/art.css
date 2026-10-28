@@ -21,9 +21,9 @@
 
   /* ตัวอักษร: เซอริฟ Latin ตามด้วยเซอริฟไทย (เบราว์เซอร์เลือกฟอนต์ตามตัวอักษรที่ใช้)
      ห้ามใส่ letter-spacing กับภาษาไทย */
-  --font-display:'Newsreader','Noto Serif Thai','Sarabun',Georgia,serif;
-  --font-body:'IBM Plex Sans Thai','Anuphan','Sarabun',system-ui,sans-serif;
-  --font-mono:'IBM Plex Mono',ui-monospace,'SFMono-Regular',Menlo,monospace;
+  --font-display:'Newsreader','Taviraj','Sarabun',Georgia,serif;
+  --font-body:'Prompt','Sarabun',system-ui,sans-serif;
+  --font-mono:'IBM Plex Mono','Prompt',ui-monospace,'SFMono-Regular',Menlo,monospace;
 
   /* ขนาดตัวอักษรแสดงผล */
   --t-hero:clamp(3.1rem,11.5vw,10.5rem);
@@ -63,7 +63,7 @@
 /* ---------- 1. พื้นหลังและเกรน ---------- */
 html.vc-art body{
   background:var(--bg);
-  font-family:var(--font-body);
+  --ff:var(--font-body);
 }
 html.vc-art body::before{display:none}          /* แสงทองที่มุมบนของมือถือ */
 html.vc-art .site-header{background:rgba(12,12,13,.9);border-bottom-color:var(--hair)}
@@ -85,7 +85,7 @@ html.vc-art body::after{
 html.vc-art h1,
 html.vc-art h2,
 html.vc-art .rpt-title{
-  font-family:var(--font-display);
+  --ff:var(--font-display);
   font-weight:500;
   letter-spacing:0;
 }
@@ -96,7 +96,7 @@ html.vc-art .hr-no,
 html.vc-art .ph-eyebrow,
 html.vc-art .wallet-kicker,
 html.vc-art .dx-pill{
-  font-family:var(--font-mono);
+  --ff:var(--font-mono);
   font-weight:500;
 }
 
@@ -206,7 +206,7 @@ html.vc-art{--art-head:56px;--content-max:1360px}
 html.vc-art,
 html.vc-art body{overflow-x:clip}
 html.vc-art main{max-width:none;width:100%;margin:0;padding:0}
-html.vc-art .mono{font-family:var(--font-mono);letter-spacing:.04em}
+html.vc-art .mono{--ff:var(--font-mono);letter-spacing:.04em}
 html.vc-art .dx-hero-video{display:none !important}   /* วิดีโอ hero เก่า (ไฟล์ hero-video.mp4 ไม่ได้อยู่ในรีโป) */
 
 /* ---------- 1. Header ---------- */
@@ -232,7 +232,7 @@ html.vc-art .sec-label::after{content:"";flex:0 0 clamp(40px,8vw,120px);height:1
 html.vc-art :is(.mf-title,.ch-head h2,.film-head h2,.desk-head h2){
   display:block;
   margin:0;
-  font-family:var(--font-display);
+  --ff:var(--font-display);
   font-weight:400;
   font-size:var(--t-display);
   line-height:1.22;
@@ -267,7 +267,7 @@ html.vc-art .hero-meta{
   display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
   padding-bottom:14px;
   border-bottom:1px solid var(--hair);
-  font-family:var(--font-mono);
+  --ff:var(--font-mono);
   font-size:.68rem;
   color:var(--muted);
   text-transform:uppercase;
@@ -286,11 +286,11 @@ html.vc-art .hero-copy{min-width:0}
 html.vc-art .hero .dx-pill[hidden]{
   display:block !important;margin:0 0 22px;padding:0;border:0;background:none;
   -webkit-backdrop-filter:none;backdrop-filter:none;
-  font-family:var(--font-mono);font-size:.7rem;font-weight:500;letter-spacing:.2em;color:var(--silver);
+  --ff:var(--font-mono);font-size:.7rem;font-weight:500;letter-spacing:.2em;color:var(--silver);
 }
 html.vc-art .hero-title{
   margin:0;
-  font-family:var(--font-display);
+  --ff:var(--font-display);
   font-weight:400;
   font-size:clamp(3.4rem,15vw,5.6rem);
   line-height:1.3;
@@ -348,12 +348,12 @@ html.vc-art .frag-page{
   box-shadow:0 40px 70px -34px rgba(0,0,0,.95),0 0 0 1px rgba(255,255,255,.05);
   rotate:-1deg;
 }
-html.vc-art .frag-h{color:#19191b;margin:0 0 14px;padding-bottom:10px;border-bottom:1px solid rgba(12,12,13,.22);font-family:var(--font-display);font-weight:600;font-size:1.12rem}
+html.vc-art .frag-h{color:#19191b;margin:0 0 14px;padding-bottom:10px;border-bottom:1px solid rgba(12,12,13,.22);--ff:var(--font-display);font-weight:600;font-size:1.12rem}
 html.vc-art .fl{margin:0 0 10px;font-size:.92rem;line-height:1.75;color:#19191b}
 html.vc-art .fl:last-child{margin-bottom:0}
 html.vc-art .note{
   display:inline-block;margin:0 0 0 8px;padding:0 7px;border:1px solid currentColor;border-radius:2px;
-  font-family:var(--font-mono);font-size:.62rem;font-weight:500;line-height:1.7;vertical-align:.08em;white-space:nowrap;
+  --ff:var(--font-mono);font-size:.62rem;font-weight:500;line-height:1.7;vertical-align:.08em;white-space:nowrap;
 }
 html.vc-art .fl-mid .note,html.vc-art .cl-mid .note{color:#85610f}
 html.vc-art .fl-high .note,html.vc-art .cl-high .note{color:#9a2f2b}
@@ -425,7 +425,7 @@ html.vc-art .mf-doc{
 html.vc-art .mf-doc p{margin:0 0 10px;font-size:clamp(.8rem,2.5vw,.96rem);line-height:1.8}
 html.vc-art .mf-doc p:last-child{margin-bottom:0}
 html.vc-art .mf-tag{margin:0 0 8px;font-size:.62rem;color:rgba(25,25,27,.55);text-transform:uppercase}
-html.vc-art .mf-dh{font-family:var(--font-display);font-weight:600;font-size:clamp(1rem,3vw,1.2rem) !important;padding-bottom:8px;border-bottom:1px solid rgba(12,12,13,.22)}
+html.vc-art .mf-dh{--ff:var(--font-display);font-weight:600;font-size:clamp(1rem,3vw,1.2rem) !important;padding-bottom:8px;border-bottom:1px solid rgba(12,12,13,.22)}
 /* ค่าความคืบหน้าของแต่ละชิ้น: --a = จุดเริ่ม (0..1) กว้าง .07–.08 ของการเลื่อน */
 html.vc-art .mf-doc .rd{--rt:clamp(0,calc((var(--p) - var(--a)) / .07),1)}
 html.vc-art .mf-doc .cl{--t:clamp(0,calc((var(--p) - var(--a)) / .08),1)}
@@ -455,11 +455,11 @@ html.vc-art .ch-item{
   padding-top:26px;border-top:1px solid var(--hair-strong);align-items:start;
 }
 html.vc-art .ch-n{
-  font-family:var(--font-display);font-weight:300;font-size:clamp(3.6rem,18vw,5.6rem);line-height:.9;
+  --ff:var(--font-display);font-weight:300;font-size:clamp(3.6rem,18vw,5.6rem);line-height:.9;
   color:transparent;-webkit-text-stroke:1px var(--silver);
 }
 html.vc-art .ch-body h3{
-  margin:0 0 12px;font-family:var(--font-display);font-weight:500;font-size:clamp(1.8rem,6vw,2.7rem);line-height:1.25;color:var(--paper);
+  margin:0 0 12px;--ff:var(--font-display);font-weight:500;font-size:clamp(1.8rem,6vw,2.7rem);line-height:1.25;color:var(--paper);
 }
 html.vc-art .ch-body p{margin:0;max-width:36em;font-size:.98rem;line-height:1.9;color:var(--paper-dim)}
 html.vc-art .ch-tag{
@@ -574,23 +574,23 @@ html.vc-art main > .card{
   html.vc-art main > #paymentCard{margin:0}
 }
 html.vc-art .step-sub{border-top:1px solid var(--hair);margin-top:32px;padding-top:24px}
-html.vc-art .step-sub h3{font-family:var(--font-display);font-weight:500;font-size:1.2rem;margin:0 0 14px;color:var(--paper)}
+html.vc-art .step-sub h3{--ff:var(--font-display);font-weight:500;font-size:1.2rem;margin:0 0 14px;color:var(--paper)}
 
 /* ---------- 2. หัวข้อ ---------- */
 html.vc-art :is(#authCard,#checkCard,#resultCard) > h2,
 html.vc-art :is(#authCard,#checkCard,#resultCard) .step-head h2{
   display:block;
   margin:0 0 22px;
-  font-family:var(--font-display);
+  --ff:var(--font-display);
   font-weight:500;
   font-size:1.35rem;
   line-height:1.4;
   color:var(--paper);
 }
 html.vc-art :is(#authCard,#checkCard,#resultCard) h2::before{display:none}
-html.vc-art .field-label{font-family:var(--font-mono);font-size:.7rem;font-weight:500;color:var(--silver);letter-spacing:.04em}
+html.vc-art .field-label{--ff:var(--font-mono);font-size:.7rem;font-weight:500;color:var(--silver);letter-spacing:.04em}
 
-html.vc-art #authCard .sheet-head h2{font-family:var(--font-display);font-weight:500;font-size:1.05rem;white-space:nowrap}
+html.vc-art #authCard .sheet-head h2{--ff:var(--font-display);font-weight:500;font-size:1.05rem;white-space:nowrap}
 
 /* ---------- 3. ช่องกรอกและปุ่ม ---------- */
 html.vc-art :is(#email,#password,.select-wrap select){
@@ -616,13 +616,13 @@ html.vc-art #checkBtn.primary:disabled{background:transparent;color:var(--muted)
 html.vc-art button.ghost{background:transparent;color:var(--paper);border:1px solid var(--hair-strong);border-radius:2px;min-height:52px}
 html.vc-art button.ghost:hover:not(:disabled){border-color:var(--paper);color:var(--paper)}
 html.vc-art .google-btn{border-radius:2px;background:var(--paper);color:var(--ink)}
-html.vc-art .or-line{font-family:var(--font-mono);font-size:.7rem;color:var(--muted)}
+html.vc-art .or-line{--ff:var(--font-mono);font-size:.7rem;color:var(--muted)}
 html.vc-art .sample-btn{
   background:transparent;border:0;border-bottom:1px solid var(--hair-strong);border-radius:0;
   padding:6px 0;color:var(--silver);font-weight:500;font-size:.84rem;
 }
 html.vc-art .sample-btn:hover{color:var(--paper);border-bottom-color:var(--paper)}
-html.vc-art .ta-count{font-family:var(--font-mono);font-size:.7rem}
+html.vc-art .ta-count{--ff:var(--font-mono);font-size:.7rem}
 html.vc-art .hint,
 html.vc-art .step-cost,
 html.vc-art .check-note{color:var(--muted)}
@@ -656,14 +656,14 @@ html.vc-art .ps{
   border-top:1px solid var(--hair-strong);border-bottom:1px solid var(--hair-strong);
   padding:18px 0;
 }
-html.vc-art .ps-title b{font-family:var(--font-display);font-weight:500;font-size:1.12rem;color:var(--paper)}
+html.vc-art .ps-title b{--ff:var(--font-display);font-weight:500;font-size:1.12rem;color:var(--paper)}
 html.vc-art .ps-title b::after{
   content:"";display:inline-block;width:2.6em;height:.5em;margin-left:.8em;background:var(--silver);opacity:.55;vertical-align:.1em;
 }
-html.vc-art .ps-title small{font-family:var(--font-mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+html.vc-art .ps-title small{--ff:var(--font-mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 html.vc-art .ps-badge{
   background:transparent;border:1px solid var(--hair-strong);border-radius:2px;color:var(--silver);
-  font-family:var(--font-mono);font-size:.64rem;font-weight:500;box-shadow:none;
+  --ff:var(--font-mono);font-size:.64rem;font-weight:500;box-shadow:none;
 }
 html.vc-art .ps-actions button{border-radius:2px;background:transparent;border:1px solid var(--hair-strong);color:var(--paper);box-shadow:none}
 html.vc-art .ps-preview{border-radius:0;background:var(--field);border:1px solid var(--hair)}
@@ -678,7 +678,7 @@ html.vc-art #authLoggedIn#authLoggedIn .wallet-total::after,
 html.vc-art #authLoggedIn#authLoggedIn .wt-fx,
 html.vc-art #authLoggedIn#authLoggedIn .cred-line{display:none}
 html.vc-art #authLoggedIn#authLoggedIn .cred-head{display:block;margin:0 0 18px}
-html.vc-art #authLoggedIn#authLoggedIn .cred-title{margin:0;font-family:var(--font-display);font-weight:500;font-size:1.15rem;color:var(--paper)}
+html.vc-art #authLoggedIn#authLoggedIn .cred-title{margin:0;--ff:var(--font-display);font-weight:500;font-size:1.15rem;color:var(--paper)}
 html.vc-art #authLoggedIn#authLoggedIn .cred-sub{margin:2px 0 0;font-size:.8rem;color:var(--muted)}
 html.vc-art #authLoggedIn#authLoggedIn .cred-ico{display:none}
 html.vc-art #authLoggedIn#authLoggedIn .acct-row{display:flex;align-items:center;gap:14px;margin:0 0 20px;padding:0 0 18px;border-bottom:1px solid var(--hair)}
@@ -686,24 +686,24 @@ html.vc-art #authLoggedIn#authLoggedIn .acct-avatar{
   position:relative;flex:0 0 46px;width:46px;height:46px;padding:0;border-radius:50%;
   background:var(--graphite-2);border:1px solid var(--hair-strong);overflow:hidden;box-shadow:none;
 }
-html.vc-art #authLoggedIn#authLoggedIn .acct-avatar #acctInitial{display:grid;place-items:center;width:100%;height:100%;font-family:var(--font-display);font-size:1.2rem;color:var(--paper)}
+html.vc-art #authLoggedIn#authLoggedIn .acct-avatar #acctInitial{display:grid;place-items:center;width:100%;height:100%;--ff:var(--font-display);font-size:1.2rem;color:var(--paper)}
 html.vc-art #authLoggedIn#authLoggedIn .acct-avatar #acctPhoto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 html.vc-art #authLoggedIn#authLoggedIn .acct-sticker{display:none}
 html.vc-art #authLoggedIn#authLoggedIn .acct-cam{display:none}
 html.vc-art #authLoggedIn#authLoggedIn .acct-info{min-width:0;display:block}
-html.vc-art #authLoggedIn#authLoggedIn .acct-label{display:block;font-family:var(--font-mono);font-size:.64rem;color:var(--muted)}
+html.vc-art #authLoggedIn#authLoggedIn .acct-label{display:block;--ff:var(--font-mono);font-size:.64rem;color:var(--muted)}
 html.vc-art #authLoggedIn#authLoggedIn .acct-mail{display:block;font-weight:500;font-size:.9rem;color:var(--paper);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 html.vc-art #authLoggedIn#authLoggedIn .acct-check{display:none}
 html.vc-art #authLoggedIn#authLoggedIn .wallet-total{background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;margin:0}
-html.vc-art #authLoggedIn#authLoggedIn .wallet-total-label{display:block;font-family:var(--font-mono);font-size:.66rem;color:var(--muted)}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-total-label{display:block;--ff:var(--font-mono);font-size:.66rem;color:var(--muted)}
 html.vc-art #authLoggedIn#authLoggedIn .wallet-total-num{margin:6px 0 16px;color:var(--paper)}
-html.vc-art #authLoggedIn#authLoggedIn .wallet-total-num b{font-family:var(--font-display);font-weight:300;font-size:clamp(3.4rem,6vw,4.6rem);line-height:1}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-total-num b{--ff:var(--font-display);font-weight:300;font-size:clamp(3.4rem,6vw,4.6rem);line-height:1}
 html.vc-art #authLoggedIn#authLoggedIn .wallet-total-num small{font-size:.8rem;color:var(--muted);margin-left:6px}
 html.vc-art #authLoggedIn#authLoggedIn .wallet-rows{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--hair)}
 html.vc-art #authLoggedIn#authLoggedIn .ws{display:block;padding:12px 0;background:transparent;border:0;border-radius:0;box-shadow:none}
 html.vc-art #authLoggedIn#authLoggedIn .ws + .ws{border-left:1px solid var(--hair);padding-left:16px}
 html.vc-art #authLoggedIn#authLoggedIn .ws-ico{display:none}
-html.vc-art #authLoggedIn#authLoggedIn .ws-num{margin:0;font-family:var(--font-display);font-size:1.6rem;line-height:1.1;color:var(--paper)}
+html.vc-art #authLoggedIn#authLoggedIn .ws-num{margin:0;--ff:var(--font-display);font-size:1.6rem;line-height:1.1;color:var(--paper)}
 html.vc-art #authLoggedIn#authLoggedIn .ws-lab{margin:2px 0 0;font-size:.74rem;color:var(--muted)}
 html.vc-art #authLoggedIn#authLoggedIn .wallet-quick{margin-top:14px}
 html.vc-art #authLoggedIn#authLoggedIn .wallet-topup{
@@ -712,14 +712,14 @@ html.vc-art #authLoggedIn#authLoggedIn .wallet-topup{
 html.vc-art #authLoggedIn#authLoggedIn .wallet-topup:hover{background:var(--silver-hi)}
 html.vc-art #authLoggedIn#authLoggedIn .wallet-quick .wallet-topup{width:100%;min-height:48px}
 html.vc-art #authLoggedIn#authLoggedIn .wallet{background:transparent;border:0;box-shadow:none;margin-top:24px}
-html.vc-art #authLoggedIn#authLoggedIn .wallet-list-title{font-family:var(--font-mono);font-size:.68rem;font-weight:500;color:var(--silver);letter-spacing:.04em}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-list-title{--ff:var(--font-mono);font-size:.68rem;font-weight:500;color:var(--silver);letter-spacing:.04em}
 html.vc-art #authLoggedIn#authLoggedIn .wallet-card{background:transparent;border:0;border-top:1px solid var(--hair);border-radius:0;box-shadow:none;padding:14px 0}
 html.vc-art #authLoggedIn#authLoggedIn .wallet-ico{display:none}
 html.vc-art #authLoggedIn#authLoggedIn .wallet-badge{background:transparent;border:1px solid var(--hair-strong);border-radius:2px;color:var(--silver);box-shadow:none}
 html.vc-art #authLoggedIn#authLoggedIn .wallet-card-name b{font-weight:600;color:var(--paper)}
-html.vc-art #authLoggedIn#authLoggedIn .wallet-card-name small{font-family:var(--font-mono);font-size:.62rem;color:var(--muted)}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-card-name small{--ff:var(--font-mono);font-size:.62rem;color:var(--muted)}
 html.vc-art #authLoggedIn#authLoggedIn .wallet-card-use{color:var(--muted)}
-html.vc-art #authLoggedIn#authLoggedIn .wallet-card-num b{font-family:var(--font-display);font-weight:400;color:var(--paper)}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-card-num b{--ff:var(--font-display);font-weight:400;color:var(--paper)}
 html.vc-art #authLoggedIn#authLoggedIn .wallet-card-bottom .wallet-topup{background:transparent;color:var(--paper);border:1px solid var(--hair-strong)}
 html.vc-art #authLoggedIn#authLoggedIn .wallet-card-bottom .wallet-topup:hover{border-color:var(--paper);background:transparent}
 html.vc-art #authLoggedIn#authLoggedIn .menu-item,
@@ -805,8 +805,8 @@ html.vc-art .hero-sheets i:nth-child(3){left:80%;width:17vw;--d:14px;--sy:-18px}
   html.vc-art .hero-sheets i:nth-child(3){display:none}
 }
 /* หัวข้อ: บรรทัดแรกเซอริฟบาง บรรทัดสองซานส์ (คู่ตรงข้ามของตัวพิมพ์) */
-html.vc-art .ht-l:first-child{font-family:var(--font-display);font-weight:300}
-html.vc-art .ht-l2{font-family:var(--font-body);font-weight:500;color:var(--paper)}
+html.vc-art .ht-l:first-child{--ff:var(--font-display);font-weight:300}
+html.vc-art .ht-l2{--ff:var(--font-body);font-weight:500;color:var(--paper)}
 /* ลิงก์ปุ่มในฉากเปิดเป็นเม็ดยา (ปุ่มส่งฟอร์มยังเป็นสี่เหลี่ยมมุมเล็ก) */
 html.vc-art .dx-cta,
 html.vc-art .dx-cta-ghost{border-radius:999px;padding:14px 28px;transition:background .3s var(--ease-out),color .3s var(--ease-out),border-color .3s var(--ease-out)}
@@ -821,7 +821,7 @@ html.vc-art .dx-nav a{
 html.vc-art .dx-nav a:not(:last-child):hover,
 html.vc-art .dx-nav a.is-here:not(:last-child){
   color:var(--paper);
-  font-family:var(--font-display);
+  --ff:var(--font-display);
   box-shadow:inset 0 0 0 1px var(--hair-strong);
   background:transparent;
 }
@@ -884,3 +884,38 @@ html.vc-art .hero .dx-cta-row[hidden]{justify-content:center}
 html.vc-art .hero .dx-points[hidden]{justify-content:center}
 html.vc-art .hero-cue{align-self:center}
 html.vc-art .hero-title{width:100%}
+
+
+/* ===== ฟอนต์ใหม่และขนาดที่เล็กลง (29 ต.ค. 2026) =====
+   หัวข้อ: Newsreader (ละติน) + Taviraj (ไทย เซอริฟสง่า)  เนื้อหา: Prompt (ซานส์ไทยสมัยใหม่)  ป้ายเล็ก: IBM Plex Mono
+   กลไก: ทุกองค์ประกอบใช้ฟอนต์จากตัวแปร --ff (ถ้าไม่ตั้งจะเป็นฟอนต์เนื้อหา) แล้วใช้ !important
+   เพื่อทับกฎฟอนต์เดิมที่ฝังอยู่ในไฟล์ CSS เก่าทุกไฟล์ในครั้งเดียว  จะเปลี่ยนฟอนต์ภายหลังให้แก้ที่ --font-* ใน art-tokens ด้านบนและลิงก์ฟอนต์ใน index.html */
+@property --ff{syntax:"*";inherits:false}
+html.vc-art,
+html.vc-art *,
+html.vc-art *::before,
+html.vc-art *::after{font-family:var(--ff,var(--font-body)) !important}
+html.vc-art :is(h1,h2,h3){--ff:var(--font-display)}
+html.vc-art :is(pre,code,kbd,samp){--ff:var(--font-mono)}
+html.vc-art{--t-hero:clamp(2.4rem,5.4vw,4.6rem);--t-display:clamp(1.7rem,3.4vw,2.8rem);--t-title:clamp(1.25rem,2.2vw,1.7rem)}
+@media (min-width:1024px){ html.vc-art{font-size:15px} }
+/* ฉากเปิด */
+html.vc-art .hero-title{font-size:clamp(2.7rem,11vw,3.8rem);line-height:1.35}
+@media (min-width:1024px){ html.vc-art .hero-title{font-size:clamp(3.4rem,5.4vw,5.2rem)} }
+html.vc-art .hero-lead{font-size:clamp(.92rem,1.05vw,1.05rem)}
+html.vc-art .dx-cta,html.vc-art .dx-cta-ghost{font-size:.92rem;padding:12px 24px}
+html.vc-art .hero-meta{font-size:.64rem}
+/* ฉากอ่านสัญญา / สามขั้น / หัวส่วนต่าง ๆ */
+html.vc-art .mf-title{font-size:clamp(1.5rem,5.6vw,2rem)}
+@media (min-width:1024px){ html.vc-art .mf-title{font-size:clamp(1.8rem,2.8vw,2.6rem)} }
+html.vc-art .mf-steps b{font-size:.95rem}
+html.vc-art .mf-steps span{font-size:.84rem}
+html.vc-art .ch-n{font-size:clamp(2.6rem,13vw,3.8rem)}
+@media (min-width:1024px){ html.vc-art .ch-n{font-size:clamp(3rem,5.6vw,5rem)} }
+html.vc-art .ch-body h3{font-size:clamp(1.3rem,4.6vw,1.8rem)}
+html.vc-art .ch-body p{font-size:.9rem;line-height:1.85}
+html.vc-art .sec-label{font-size:.68rem}
+/* โต๊ะอ่านสัญญา */
+html.vc-art :is(#authCard,#checkCard,#resultCard) > h2,
+html.vc-art :is(#authCard,#checkCard,#resultCard) .step-head h2{font-size:1.15rem}
+html.vc-art #authLoggedIn#authLoggedIn .wallet-total-num b{font-size:clamp(2.8rem,5vw,3.8rem)}
