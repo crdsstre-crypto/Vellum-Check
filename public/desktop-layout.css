@@ -74,7 +74,7 @@ body{
 .dx-nav a:last-child:hover{background:var(--gold-soft);color:var(--on-gold)}
 
 /* ---------- 3. Hero: เต็มจอ มีวิดีโอเล่นเอง (ไม่มีเสียง) ----------
-   วิดีโอ: videos/hero-v1/hero.mp4 (เพิ่มด้วย JS เฉพาะจอ ≥1024px จึงไม่โหลดบนมือถือ)
+   วิดีโอ: hero-video.mp4 (เพิ่มด้วย JS เฉพาะจอ ≥1024px จึงไม่โหลดบนมือถือ)
    ถ้าเปลี่ยนวิดีโอ ให้เปลี่ยนชื่อโฟลเดอร์เป็นเวอร์ชันใหม่ (เช่น hero-v2) */
 main > .hero{
   grid-column:1 / -1;
@@ -92,7 +92,7 @@ main > .hero{
   align-items:center;
   text-align:center;
   padding:0 32px clamp(32px,6vh,64px);
-  background:var(--bg) url(videos/hero-v1/poster.jpg) center/cover no-repeat;
+  background:var(--bg) url(hero-poster.jpg) center/cover no-repeat;
 }
 .hero::before{ /* ไล่สีมืดด้านล่างให้ตัวอักษรอ่านชัด */
   content:"";
