@@ -35,6 +35,7 @@
 <link rel="stylesheet" href="art/base.css?v=2">
 <link rel="stylesheet" href="art/sections.css?v=3">
 <link rel="stylesheet" href="art/workspace.css?v=1">
+<link rel="stylesheet" href="art/finish.css?v=1">
 </head>
 <body>
 <svg id="vcStickerDefs" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="vcg-y" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#f4f4f2"/><stop offset="1" stop-color="#a6a9b0"/></linearGradient><linearGradient id="vcg-o" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#dcdcdb"/><stop offset="1" stop-color="#8a8d94"/></linearGradient><linearGradient id="vcg-b" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#e6e8ec"/><stop offset="1" stop-color="#8f949d"/></linearGradient><linearGradient id="vcg-n" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#9a9ea6"/><stop offset="1" stop-color="#43464d"/></linearGradient><linearGradient id="vcg-t" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#eef0f1"/><stop offset="1" stop-color="#9fa3ab"/></linearGradient><linearGradient id="vcg-p" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#e0e0e0"/><stop offset="1" stop-color="#7f8289"/></linearGradient><linearGradient id="vcg-g" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#d6d9db"/><stop offset="1" stop-color="#888c93"/></linearGradient><linearGradient id="vcg-v" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#cdd0d5"/><stop offset="1" stop-color="#60636b"/></linearGradient><linearGradient id="vcg-w" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d5d8dc"/></linearGradient><linearGradient id="vcg-au" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#f7f7f5"/><stop offset="1" stop-color="#b4b7bd"/></linearGradient><linearGradient id="vcg-s" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#b0b4bb"/></linearGradient></defs></svg>
@@ -103,6 +104,7 @@
   <!-- ============ I. ส่วนนำ (Vellum "The Annotated Page") ============
        เนื้อหาเดิม (ข้อความนำ ปุ่ม จุดเด่น) คงไว้ครบ คลิปไม่มีเสียงจะถูกแทรกเป็นลูกแรกของ .hero โดย silent-clip.js (เฉพาะจอ ≥1024px) -->
   <section class="hero" id="top" data-scene="exit" aria-labelledby="heroTitle">
+    <div class="hero-sheets" aria-hidden="true"><i></i><i></i><i></i></div>
     <div class="hero-meta" data-reveal>
       <span>VELLUM CHECK <i>Nº 001</i></span>
       <span>ห้องอ่านสัญญา · READING ROOM</span>
@@ -113,13 +115,13 @@
         <h1 class="hero-title" id="heroTitle"><span class="ht-l" data-split>อ่านให้ครบ</span> <span class="ht-l ht-l2" data-split>ก่อนเซ็น</span></h1>
         <p class="hero-lead" data-reveal style="--i:4">ตรวจสัญญาอย่างมั่นใจ · วางข้อความสัญญา ระบบจะไฮไลต์จุดที่ควรระวัง</p>
         <div class="dx-cta-row" hidden>
-      <a class="dx-cta" href="#checkCard">เริ่มตรวจสัญญา</a>
+      <a class="dx-cta" href="#checkCard" data-cursor>เริ่มตรวจสัญญา</a>
       <a class="dx-cta-ghost" href="#introVideo">ดูคลิปแนะนำ (มีเสียงพากย์)</a>
     </div>
       </div>
       <figure class="hero-frag" data-reveal style="--i:3" aria-label="ตัวอย่างประกอบ: สัญญาที่ถูกอ่านและทำเครื่องหมาย ไม่ใช่ผลตรวจจริง">
         <figcaption class="mono">ตัวอย่างประกอบ · ไม่ใช่ผลตรวจจริง</figcaption>
-        <div class="frag-page">
+        <div class="frag-page" data-tilt>
           <p class="frag-h">สัญญาจ้างบริการรายเดือน</p>
           <p class="fl">ผู้ว่าจ้าง <span class="rd">นายสมชาย ใจดี</span></p>
           <p class="fl">ข้อ 4 ส่งมอบงานภายใน 30 วันนับแต่วันที่ได้รับชำระเงินงวดแรก</p>
@@ -151,7 +153,7 @@
         </ol>
       </div>
       <div class="mf-stage">
-        <article class="mf-doc" aria-label="ตัวอย่างประกอบ: สัญญาที่ถูกอ่านทีละขั้น ไม่ใช่ผลตรวจจริง">
+        <article class="mf-doc" data-tilt aria-label="ตัวอย่างประกอบ: สัญญาที่ถูกอ่านทีละขั้น ไม่ใช่ผลตรวจจริง">
           <p class="mf-tag mono">ตัวอย่างประกอบ · ไม่ใช่ผลตรวจจริง</p>
           <p class="mf-dh">สัญญาจ้างบริการ</p>
           <p>ระหว่าง <span class="rd" style="--a:.08">บริษัท ตัวอย่าง จำกัด</span> ผู้ว่าจ้าง กับ <span class="rd" style="--a:.14">นายสมชาย ใจดี</span> เลขประจำตัวประชาชน <span class="rd" style="--a:.2">1-2345-67890-12-3</span> ผู้รับจ้าง</p>
@@ -166,7 +168,7 @@
   </section>
 
   <!-- ============ III. สามขั้น ============ -->
-  <section class="ch" id="chapters" aria-labelledby="chTitle">
+  <section class="ch" id="chapters" data-scene aria-labelledby="chTitle">
     <header class="ch-head">
       <p class="sec-label mono" data-reveal>II · วิธีทำงาน</p>
       <h2 id="chTitle" data-reveal style="--i:1">สามขั้น<br>ไม่มีอะไรซ่อน</h2>
@@ -1883,6 +1885,8 @@ document.addEventListener('click', function (e) {
 <script src="care.js?v=2"></script>
 <script src="video-embed.js?v=1"></script>
 <script src="silent-clip.js?v=1"></script>
-<script src="art/motion.js?v=1"></script>
+<script src="art/motion.js?v=2"></script>
+<script src="art/cursor.js?v=1"></script>
+<script src="art/field.js?v=1"></script>
 </body>
 </html>
