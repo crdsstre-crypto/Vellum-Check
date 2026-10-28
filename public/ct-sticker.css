@@ -6,7 +6,7 @@
   --ct-pad:7px;         /* ระยะขอบถึงภาพ (6–8) */
   --ct-radius:18px;     /* ความโค้ง (18–20) */
   --ct-bw:1.2px;        /* ความหนาขอบ (1–1.5) */
-  --ct-gold:229,196,119;
+  --ct-gold:170,173,178;
 }
 
 .ct-ico{
@@ -65,7 +65,7 @@
   position:absolute;
   inset:0;
   pointer-events:none;
-  background:linear-gradient(115deg,transparent 35%,rgba(255,236,170,.55) 50%,transparent 65%);
+  background:linear-gradient(115deg,transparent 35%,rgba(210,212,215,.55) 50%,transparent 65%);
   transform:translateX(-120%);
 }
 .ct-list li.pick .ct-ico::after{animation:ctSweep .55s ease-out 1}
@@ -227,7 +227,7 @@
 .hero-art::after,.ps-ico::after,.menu-ico::after,.vault-badge::after,.cred-ico::after,.ph-ico::after,
 .cs-ico::after,.cs-r-ico::after,#paymentCard .pay-head-ic::after,#paymentCard .pkg-ic::after{
   content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
-  background:linear-gradient(115deg,transparent 38%,rgba(255,236,170,.28) 50%,transparent 62%);
+  background:linear-gradient(115deg,transparent 38%,rgba(210,212,215,.28) 50%,transparent 62%);
   transform:translateX(-130%);
 }
 :root:not([data-calm]) .ct-ico::after,
