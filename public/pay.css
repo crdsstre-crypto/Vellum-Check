@@ -22,8 +22,8 @@
   --p-bg:#0B0C0F;
   --p-card:#15171C;
   --p-card-2:#1B1D23;
-  --p-gold:#E4C574;
-  --p-gold-deep:#B89A4E;
+  --p-gold:#a8abb0;
+  --p-gold-deep:#7d8289;
   --p-line:#2B2E35;
   --p-text:#F5F3ED;
   --p-mute:#9A9DA6;
@@ -52,8 +52,8 @@
   place-items:center;
   border-radius:16px;
   color:var(--p-gold);
-  background:linear-gradient(145deg,#2a2412,#15130c);
-  border:1px solid rgba(228,197,116,.28);
+  background:linear-gradient(145deg,#1c1e20,#101011);
+  border:1px solid rgba(168,171,176,.28);
 }
 #paymentCard .pay-head-tx{min-width:0}
 #paymentCard .pay-head h2{
@@ -100,9 +100,9 @@
 #paymentCard #packageButtons .pkg:hover{background:var(--p-card-2)}
 #paymentCard #packageButtons .pkg:active{transform:scale(.985)}
 #paymentCard #packageButtons .pkg.is-selected{
-  background:linear-gradient(145deg,#24200f,#15171C);
+  background:linear-gradient(145deg,#18191b,#15171C);
   border-color:var(--p-gold);
-  box-shadow:0 0 0 1px rgba(228,197,116,.35),0 10px 26px rgba(228,197,116,.1);
+  box-shadow:0 0 0 1px rgba(168,171,176,.35),0 10px 26px rgba(168,171,176,.1);
 }
 #paymentCard #packageButtons .pkg:disabled{opacity:.55}
 #paymentCard .pkg-ic{flex:none;display:grid;place-items:center;width:30px;color:var(--p-gold)}
@@ -127,7 +127,7 @@
   color:var(--p-gold);
   white-space:nowrap;
 }
-#paymentCard .pkg.is-selected .pkg-tag{border-color:rgba(228,197,116,.5);color:var(--p-gold)}
+#paymentCard .pkg.is-selected .pkg-tag{border-color:rgba(168,171,176,.5);color:var(--p-gold)}
 
 /* ---------- 4. สรุปยอดและปุ่ม ---------- */
 #paymentCard #paymentResult{margin-top:14px}
@@ -171,10 +171,10 @@
 }
 #paymentCard .pay-go{
   color:#0B0C0F;
-  background:linear-gradient(180deg,#EAD08A,#D2B05F);
-  box-shadow:0 8px 22px rgba(228,197,116,.16);
+  background:linear-gradient(180deg,#b7b9bd,#93989e);
+  box-shadow:0 8px 22px rgba(168,171,176,.16);
 }
-#paymentCard .pay-go:hover{background:linear-gradient(180deg,#F0DA9C,#DDBC6C)}
+#paymentCard .pay-go:hover{background:linear-gradient(180deg,#c3c6c9,#a0a4a9)}
 #paymentCard .pay-go:disabled{opacity:.6}
 #paymentCard .pay-alt{color:var(--p-text);background:transparent;border:1px solid var(--p-line)}
 #paymentCard .pay-alt:hover{border-color:var(--p-gold-deep);color:var(--p-gold)}
@@ -194,7 +194,7 @@
   border-radius:14px;
 }
 #paymentCard .pay-status b{font-size:1rem;color:var(--p-text)}
-#paymentCard .pay-status.is-checking{border-color:rgba(228,197,116,.5)}
+#paymentCard .pay-status.is-checking{border-color:rgba(168,171,176,.5)}
 #paymentCard .pay-status.is-checking b{color:var(--p-gold)}
 #paymentCard .pay-qr{
   width:min(100%,260px);
@@ -272,7 +272,7 @@
     max-height:calc(100dvh - 32px);
     overscroll-behavior:contain;
     -webkit-overflow-scrolling:touch;
-    box-shadow:0 24px 70px rgba(0,0,0,.7),0 0 0 1px rgba(228,197,116,.22);
+    box-shadow:0 24px 70px rgba(0,0,0,.7),0 0 0 1px rgba(168,171,176,.22);
   }
   #paymentCard .pay-head h2{font-size:1.3rem}
   #paymentCard #packageButtons .pkg{min-height:72px}
