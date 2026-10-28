@@ -17,7 +17,7 @@
   --dl-gap:22px;
   --dl-side:310px;                         /* คอลัมน์บัญชี (≥1280px) */
   --dl-head:64px;                          /* ความสูง header */
-  --dl-line:rgba(224,197,129,.16);
+  --dl-line:rgba(173,176,180,.16);
   --dl-serif:'Noto Serif Thai','Sarabun',serif;
 }
 @media (min-width:1600px){
@@ -30,8 +30,8 @@ html{scroll-behavior:smooth}
 /* ---------- 1. พื้นหลัง ---------- */
 body{
   background:
-    radial-gradient(900px 520px at 84% -80px, rgba(200,167,90,.12), transparent 70%),
-    radial-gradient(700px 420px at 6% 18%, rgba(200,167,90,.05), transparent 70%),
+    radial-gradient(900px 520px at 84% -80px, rgba(139,144,150,.12), transparent 70%),
+    radial-gradient(700px 420px at 6% 18%, rgba(139,144,150,.05), transparent 70%),
     var(--bg);
 }
 
@@ -65,7 +65,7 @@ body{
   text-decoration:none;
   transition:color .2s, background .2s;
 }
-.dx-nav a:hover{color:var(--gold-soft);background:rgba(224,197,129,.08)}
+.dx-nav a:hover{color:var(--gold-soft);background:rgba(173,176,180,.08)}
 .dx-nav a:last-child{
   color:var(--on-gold);
   background:var(--gold);
@@ -106,7 +106,7 @@ main > .hero{
   content:"";
   position:absolute;
   left:0;right:0;bottom:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(224,197,129,.45),transparent);
+  background:linear-gradient(90deg,transparent,rgba(173,176,180,.45),transparent);
 }
 .dx-hero-video{
   position:absolute;
@@ -125,7 +125,7 @@ main > .hero{
   letter-spacing:.2em;
   text-transform:uppercase;
   color:var(--gold-soft);
-  border:1px solid rgba(224,197,129,.34);
+  border:1px solid rgba(173,176,180,.34);
   border-radius:999px;
   background:rgba(8,9,11,.5);
   -webkit-backdrop-filter:blur(6px);
@@ -136,7 +136,7 @@ main > .hero{
   font-family:var(--dl-serif);
   font-size:clamp(3rem,5vw,5rem);
   line-height:1.2;
-  background:linear-gradient(100deg,#f1dca6 0%,#e0c581 45%,#c8a75a 100%);
+  background:linear-gradient(100deg,#c9cbce 0%,#adb0b4 45%,#8b9096 100%);
   -webkit-background-clip:text;
   background-clip:text;
   -webkit-text-fill-color:transparent;
@@ -159,7 +159,7 @@ main > .hero{
   text-decoration:none;
   transition:background .2s, border-color .2s, color .2s;
 }
-.dx-cta{background:var(--gold);color:var(--on-gold);box-shadow:0 8px 22px rgba(200,167,90,.25)}
+.dx-cta{background:var(--gold);color:var(--on-gold);box-shadow:0 8px 22px rgba(139,144,150,.25)}
 .dx-cta:hover{background:var(--gold-soft)}
 .dx-cta-ghost{color:var(--text);border:1px solid rgba(255,255,255,.28);background:rgba(8,9,11,.35);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 .dx-cta-ghost:hover{border-color:var(--gold-soft);color:var(--gold-soft)}
@@ -189,7 +189,7 @@ main > .hero{
   transform:rotate(-45deg);
 }
 .vc-embed{margin:0}
-.vc-embed .vc-frame{box-shadow:0 0 0 1px rgba(232,207,154,.3),0 24px 56px rgba(0,0,0,.6)}
+.vc-embed .vc-frame{box-shadow:0 0 0 1px rgba(190,192,196,.3),0 24px 56px rgba(0,0,0,.6)}
 
 /* ---------- 4. กริดพื้นที่ทำงาน ---------- */
 main{
@@ -248,7 +248,7 @@ main > #paymentCard{grid-area:pay;width:min(100%,760px);justify-self:center}
 .card{
   padding:26px 28px;
   border-radius:18px;
-  box-shadow:inset 0 1px 0 rgba(224,197,129,.12), var(--shadow);
+  box-shadow:inset 0 1px 0 rgba(173,176,180,.12), var(--shadow);
 }
 .card h2{font-size:1.08rem;margin-bottom:18px}
 .step-sub{margin-top:28px;padding-top:22px;border-top:1px solid var(--card-edge)}
@@ -330,7 +330,7 @@ main > #paymentCard{grid-area:pay;width:min(100%,760px);justify-self:center}
   cursor:pointer;
   transition:border-color .2s, background .2s;
 }
-.sample-btn:hover{border-color:var(--gold-deep);background:rgba(224,197,129,.06)}
+.sample-btn:hover{border-color:var(--gold-deep);background:rgba(173,176,180,.06)}
 
 /* สรุปเป็นเสียง */
 .voice-opt{
