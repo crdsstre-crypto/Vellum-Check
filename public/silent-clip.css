@@ -1,26 +1,27 @@
-/* คลิปแนะนำแบบไม่มีเสียง (วนเล่นเอง) — อยู่ในพื้นที่ว่างด้านบนของ Hero เฉพาะจอคอม/โน้ตบุ๊ก
+/* คลิปแนะนำแบบไม่มีเสียง (วนเล่นเอง) — อยู่ด้านบนของ Hero เฉพาะจอคอม/โน้ตบุ๊ก
    - ไฟล์นี้โหลดด้วย media="(min-width: 1024px)" ใน index.html มือถือไม่ได้ใช้กฎใดเลย
    - ตัวคลิปคือ silent-clip.html (แยกจากคลิปแนะนำมีเสียง videos/clip-intro/ ไม่แก้ร่วมกัน)
-   - ขนาดคลิปปรับตามพื้นที่ว่างเหนือชื่อ "เช็กสัญญา" อัตโนมัติ (สัดส่วน 16:9) */
+   - ปรับขนาดคลิปที่ --vs-w (กว้างสูงสุด) · Hero ยืดความสูงตามคลิป */
+:root{--vs-w:1120px}
 .vs-embed[hidden]{display:none !important}
+main > .hero{
+  height:auto;
+  max-height:none;
+  min-height:calc(100vh - var(--dl-head));
+  justify-content:flex-start;
+  padding-top:clamp(20px,3.5vh,40px);
+}
 .hero > .vs-embed{
-  flex:1 1 0;
-  min-height:200px;
-  width:100%;
-  margin:0;
-  padding:clamp(18px,3vh,34px) 0 clamp(14px,2.4vh,26px);
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  flex:0 0 auto;
+  width:min(100%,var(--vs-w));
+  margin:0 0 clamp(24px,4vh,44px);
 }
 .vs-frame{
   display:block;
-  height:100%;
-  width:auto;
-  max-width:min(100%,1040px);
+  width:100%;
   aspect-ratio:16/9;
   border:0;
-  border-radius:16px;
+  border-radius:18px;
   background:#060a14;
   box-shadow:0 0 0 1px rgba(232,207,154,.3),0 24px 56px rgba(0,0,0,.6);
 }
