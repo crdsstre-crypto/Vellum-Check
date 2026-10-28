@@ -330,7 +330,7 @@
     '  }',
     '  col=col/(1.+col*.55);',
     '  float vig=1.-dot(uv*vec2(.9,1.),uv*vec2(.9,1.))*.9;col*=clamp(vig,.25,1.);',
-    '  float m=mix(uDim,1.,smoothstep(.12,.7,gl_FragCoord.x/uRes.x));col*=m;',
+    '  float cx=abs(gl_FragCoord.x/uRes.x-.5)*2.;float m=mix(uDim,1.,smoothstep(.2,.95,cx));col*=m;',
     '  col+=(hash(gl_FragCoord.xy+fract(uTime)*91.)-.5)*.022;',
     '  gl_FragColor=vec4(pow(max(col,0.),vec3(.95)),1.);',
     '}'
@@ -382,7 +382,7 @@
       gl.uniform1f(U.uTime, still ? 3.0 : (now - t0) / 1000);
       gl.uniform2f(U.uMouse, still ? 0 : P.x, still ? 0 : P.y);
       gl.uniform1f(U.uScroll, still ? 0 : sc);
-      gl.uniform1f(U.uDim, small ? 0.62 : 0.52);
+      gl.uniform1f(U.uDim, small ? 0.6 : 0.46);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     }
     function loop(now) {
