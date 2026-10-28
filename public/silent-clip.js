@@ -16,7 +16,7 @@
         sec.className = 'vs-embed';
         sec.id = 'silentClip';
         sec.setAttribute('aria-label', 'คลิปแนะนำแบบไม่มีเสียง');
-        sec.innerHTML = '<iframe class="vs-frame" src="silent-clip.html?v=1" title="คลิปแนะนำ Vellum Check เช็กสัญญา (ไม่มีเสียง)"></iframe>';
+        sec.innerHTML = '<iframe class="vs-frame" src="silent-clip.html?v=2&bg=1" title="คลิปแนะนำ Vellum Check เช็กสัญญา (ไม่มีเสียง)"></iframe>';
         hero.insertBefore(sec, hero.firstChild);
       }
       sec.hidden = false;
