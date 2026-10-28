@@ -25,7 +25,7 @@
 <link rel="stylesheet" href="video-embed.css?v=1">
 <link rel="stylesheet" href="print.css?v=1" media="print">
 <link rel="stylesheet" href="ct-sticker.css?v=9" media="(max-width: 767px)">
-<link rel="stylesheet" href="desktop-layout.css?v=2" media="(min-width: 1024px)">
+<link rel="stylesheet" href="desktop-layout.css?v=4" media="(min-width: 1024px)">
 </head>
 <body>
 <svg id="vcStickerDefs" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="vcg-y" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffe58a"/><stop offset="1" stop-color="#f5a623"/></linearGradient><linearGradient id="vcg-o" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffb86b"/><stop offset="1" stop-color="#ef5a2a"/></linearGradient><linearGradient id="vcg-b" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#8fd0ff"/><stop offset="1" stop-color="#2f6fe0"/></linearGradient><linearGradient id="vcg-n" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#7d92d6"/><stop offset="1" stop-color="#26376f"/></linearGradient><linearGradient id="vcg-t" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#86f0d8"/><stop offset="1" stop-color="#1a98ab"/></linearGradient><linearGradient id="vcg-p" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ff9fc6"/><stop offset="1" stop-color="#df3f7c"/></linearGradient><linearGradient id="vcg-g" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#a8ea8f"/><stop offset="1" stop-color="#3b9f57"/></linearGradient><linearGradient id="vcg-v" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#c4b0ff"/><stop offset="1" stop-color="#6540d6"/></linearGradient><linearGradient id="vcg-w" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d5dce8"/></linearGradient><linearGradient id="vcg-au" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#fff0b3"/><stop offset="1" stop-color="#d9a014"/></linearGradient><linearGradient id="vcg-s" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#a9b3c7"/></linearGradient></defs></svg>
@@ -99,7 +99,7 @@
     <p>ตรวจสัญญาอย่างมั่นใจ · วางข้อความสัญญา ระบบจะไฮไลต์จุดที่ควรระวัง</p>
     <div class="dx-cta-row" hidden>
       <a class="dx-cta" href="#checkCard">เริ่มตรวจสัญญา</a>
-      <a class="dx-cta-ghost" href="#introVideo">ดูคลิปแนะนำ</a>
+      <a class="dx-cta-ghost" href="#introVideo">ดูคลิปแนะนำ (มีเสียงพากย์)</a>
     </div>
     <ul class="dx-points" hidden>
       <li>เครื่องมือคัดกรองเบื้องต้น ไม่ใช่คำปรึกษาทางกฎหมาย</li>
@@ -1752,6 +1752,32 @@ document.addEventListener('click', function (e) {
   if (mq.addEventListener) mq.addEventListener('change', init);
   else mq.addListener(init);
   init();
+})();
+</script>
+<script>
+/* วิดีโอพื้นหลัง hero: เปิดเฉพาะจอคอม/โน้ตบุ๊ก (≥1024px) และไม่เล่นถ้าผู้ใช้ตั้งลดการเคลื่อนไหว
+   มือถือจึงไม่ดาวน์โหลดไฟล์วิดีโอนี้เลย */
+(function () {
+  try {
+    var mq = window.matchMedia('(min-width: 1024px)');
+    var still = window.matchMedia('(prefers-reduced-motion: reduce)');
+    function add() {
+      if (!mq.matches || still.matches || document.querySelector('.dx-hero-video')) return;
+      var hero = document.querySelector('main > .hero');
+      if (!hero) return;
+      var v = document.createElement('video');
+      v.className = 'dx-hero-video';
+      v.muted = true; v.defaultMuted = true; v.loop = true; v.autoplay = true; v.playsInline = true;
+      v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('aria-hidden', 'true');
+      v.tabIndex = -1;
+      v.poster = 'videos/hero-v1/poster.jpg';
+      v.src = 'videos/hero-v1/hero.mp4';
+      hero.insertBefore(v, hero.firstChild);
+      var p = v.play(); if (p && p.catch) p.catch(function () {});
+    }
+    add();
+    if (mq.addEventListener) mq.addEventListener('change', add);
+  } catch (e) {}
 })();
 </script>
 <script src="glossary.js?v=5"></script>
