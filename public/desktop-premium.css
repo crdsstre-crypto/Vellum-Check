@@ -1,0 +1,687 @@
+/* =========================================================
+   desktop-premium.css: หน้าตาเฉพาะจอคอมและโน๊ตบุ๊ก (1024px ขึ้นไป)
+   - ไฟล์นี้ถูกโหลดด้วย media="(min-width: 1024px)" ใน index.html
+     มือถือและไอแพดจึงไม่ได้ใช้กฎใดจากไฟล์นี้เลย
+   - ไม่แก้ไฟล์มือถือ (mobile.css, mobile-polish.css, ct-sticker.css ฯลฯ)
+   - องค์ประกอบใหม่ (.dx-*) มี hidden ใน index.html และถูกเปิดที่นี่เท่านั้น
+   - สีหลักยังมาจาก themes.css (--gold, --bg ฯลฯ)
+
+   ดัชนี
+   0. ตัวแปรและความกว้าง   1. พื้นหลังและฟอนต์   2. Header
+   3. Hero                 4. แถบหลักการ          5. วิธีทำงาน + คลิป
+   6. เลย์เอาต์พื้นที่ทำงาน  7. การ์ด ปุ่ม ช่องกรอก  8. ผลตรวจ
+   9. Footer              10. การเคลื่อนไหว
+   ========================================================= */
+
+/* ---------- 0. ตัวแปรและความกว้าง ---------- */
+:root{
+  --dx-w:min(1280px, calc(100% - 96px));   /* โน๊ตบุ๊ก 1366 / 1440 */
+  --dx-side:clamp(300px, 24vw, 360px);     /* คอลัมน์บัญชี */
+  --dx-gap:28px;
+  --dx-ivory:#f3ecdc;
+  --dx-ink:#25221b;
+  --dx-line:rgba(224,197,129,.16);
+  --dx-line-strong:rgba(224,197,129,.34);
+  --dx-panel:#121317;
+  --dx-head:72px;
+  --dx-serif:'Noto Serif Thai','Sarabun',serif;
+  --dx-sans:'IBM Plex Sans Thai','Sarabun',system-ui,sans-serif;
+}
+@media (min-width:1700px){
+  :root{ --dx-w:min(1560px, calc(100% - 200px)); --dx-side:380px; --dx-gap:36px; }
+}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
+
+/* ---------- 1. พื้นหลังและฟอนต์ ---------- */
+body{
+  font-family:var(--dx-sans);
+  background:
+    radial-gradient(900px 520px at 82% -60px, rgba(200,167,90,.13), transparent 70%),
+    radial-gradient(700px 480px at 6% 18%, rgba(200,167,90,.05), transparent 70%),
+    var(--bg);
+  background-repeat:no-repeat;
+}
+[id]{scroll-margin-top:calc(var(--dx-head) + 20px)}
+
+/* ---------- 2. Header ---------- */
+header.site-header{
+  position:sticky;
+  top:0;
+  z-index:50;
+  padding:0;
+  text-align:left;
+  background:rgba(8,9,11,.78);
+  -webkit-backdrop-filter:blur(16px) saturate(1.2);
+  backdrop-filter:blur(16px) saturate(1.2);
+  border-bottom:1px solid var(--dx-line);
+}
+header.site-header .topbar{
+  width:var(--dx-w);
+  height:var(--dx-head);
+  margin:0 auto;
+  justify-content:space-between;
+}
+header.site-header .brand{
+  display:grid;
+  grid-template-columns:auto auto;
+  grid-template-areas:"logo name" "logo sub";
+  align-items:center;
+  justify-content:start;
+  column-gap:14px;
+  row-gap:0;
+}
+header.site-header .brand-logo{grid-area:logo;width:38px;height:38px}
+header.site-header .brand-logo path:nth-of-type(1){fill:url(#dxg)}
+header.site-header .brand-logo path:nth-of-type(2){fill:var(--bg);opacity:.92}
+header.site-header .brand-logo path:nth-of-type(3){stroke:var(--gold-soft)}
+header.site-header .brand-logo path:nth-of-type(4){display:none}
+header.site-header .brand-name{
+  grid-area:name;
+  align-self:end;
+  font-size:.95rem;
+  font-weight:700;
+  letter-spacing:.24em;
+  color:var(--text);
+  line-height:1.2;
+}
+header.site-header .dx-brand-sub[hidden]{
+  display:block !important;
+  grid-area:sub;
+  align-self:start;
+  font-size:.66rem;
+  letter-spacing:.28em;
+  text-transform:uppercase;
+  color:var(--muted);
+  line-height:1.3;
+}
+.dx-nav[hidden]{display:flex !important;align-items:center;gap:6px}
+.dx-nav a{
+  color:var(--muted);
+  text-decoration:none;
+  font-size:.95rem;
+  font-weight:500;
+  padding:10px 16px;
+  border-radius:10px;
+  transition:color .2s;
+}
+.dx-nav a:hover{color:var(--text)}
+.dx-nav a:focus-visible,
+.dx-cta:focus-visible,
+.dx-link:focus-visible{outline:2px solid var(--gold-soft);outline-offset:3px}
+.dx-nav .dx-nav-cta{
+  margin-left:10px;
+  color:var(--gold-soft);
+  border:1px solid var(--dx-line-strong);
+  padding:10px 20px;
+}
+.dx-nav .dx-nav-cta:hover{background:rgba(224,197,129,.08);color:var(--gold-soft)}
+
+/* ---------- เลย์เอาต์หลัก ---------- */
+main{
+  width:var(--dx-w);
+  max-width:none;
+  margin:0 auto;
+  padding:0 0 88px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  grid-template-areas:
+    "hero  hero"
+    "trust trust"
+    "how   video"
+    "auth  auth"
+    "input result"
+    "pay   pay";
+  column-gap:var(--dx-gap);
+  row-gap:var(--dx-gap);
+  align-items:start;
+}
+@media (min-width:1280px){
+  main{
+    grid-template-columns:var(--dx-side) minmax(0,1fr) minmax(0,1fr);
+    grid-template-areas:
+      "hero  hero  hero"
+      "trust trust trust"
+      "how   video video"
+      "auth  input result"
+      "pay   pay   pay";
+  }
+}
+main > .hero{display:none}
+.dx-hero[hidden]{grid-area:hero;display:grid !important}
+.dx-trust[hidden]{grid-area:trust;display:grid !important}
+.dx-how[hidden]{grid-area:how;display:block !important}
+main > .vc-embed{grid-area:video;margin:0}
+main > #authCard{grid-area:auth;margin:0}
+main > #checkCard{grid-area:input;margin:0}
+main > #resultCard{grid-area:result;margin:0}
+main > #paymentCard{grid-area:pay;margin:0;width:min(100%,760px);justify-self:center}
+main > #checkCard .field-wrap{margin-bottom:16px}
+
+/* ---------- 3. Hero ---------- */
+.dx-hero[hidden]{
+  grid-template-columns:minmax(0,1fr) minmax(0,1.04fr);
+  align-items:center;
+  column-gap:clamp(40px,5vw,88px);
+  padding:clamp(40px,6vh,76px) 0 clamp(28px,5vh,56px);
+  min-height:min(720px, calc(100vh - var(--dx-head)));
+}
+.dx-pill{
+  display:inline-block;
+  margin:0 0 28px;
+  padding:7px 16px;
+  font-size:.74rem;
+  font-weight:600;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--gold-soft);
+  border:1px solid var(--dx-line-strong);
+  border-radius:999px;
+  background:rgba(224,197,129,.06);
+}
+.dx-hero h1{
+  margin:0;
+  font-family:var(--dx-serif);
+  font-weight:700;
+  font-size:clamp(3.6rem, 4.7vw, 5.8rem);
+  line-height:1.22;
+  letter-spacing:-.005em;
+}
+.dx-hero h1 span{display:block}
+.dx-hero h1 span:first-child{color:var(--dx-ivory)}
+.dx-hero h1 span:last-child{
+  background:linear-gradient(100deg,#f1dca6 0%,#e0c581 40%,#c8a75a 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  color:var(--gold-soft);
+}
+.dx-lead{
+  margin:30px 0 0;
+  font-family:var(--dx-serif);
+  font-size:clamp(1.2rem,1.5vw,1.5rem);
+  font-weight:600;
+  line-height:1.6;
+  color:var(--text);
+}
+.dx-sub{
+  margin:12px 0 0;
+  max-width:34em;
+  font-size:clamp(1rem,1.1vw,1.12rem);
+  line-height:1.8;
+  color:var(--muted);
+}
+.dx-cta-row{display:flex;align-items:center;gap:26px;margin-top:38px;flex-wrap:wrap}
+.dx-cta{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:58px;
+  padding:0 38px;
+  border-radius:14px;
+  font-weight:700;
+  font-size:1.05rem;
+  text-decoration:none;
+  color:var(--on-gold);
+  background:linear-gradient(180deg,#e6cd8b 0%,#c8a75a 100%);
+  box-shadow:0 1px 0 rgba(255,255,255,.35) inset, 0 14px 34px rgba(200,167,90,.22);
+  transition:transform .2s, box-shadow .2s, filter .2s;
+}
+.dx-cta:hover{transform:translateY(-1px);filter:brightness(1.05);box-shadow:0 1px 0 rgba(255,255,255,.35) inset, 0 18px 40px rgba(200,167,90,.3)}
+.dx-link{
+  color:var(--text);
+  text-decoration:none;
+  font-weight:500;
+  padding:6px 2px;
+  border-bottom:1px solid var(--dx-line-strong);
+  transition:color .2s, border-color .2s;
+}
+.dx-link:hover{color:var(--gold-soft);border-color:var(--gold-soft)}
+.dx-assure{
+  display:flex;
+  flex-wrap:wrap;
+  margin:34px 0 0;
+  padding:0;
+  list-style:none;
+  font-size:.9rem;
+  color:var(--muted);
+}
+.dx-assure li{padding:0 20px;border-left:1px solid var(--dx-line)}
+.dx-assure li:first-child{padding-left:0;border-left:0}
+.dx-fine{margin:18px 0 0;font-size:.82rem;color:var(--muted);opacity:.85}
+
+/* ภาพสัญญา (จุดเด่นเดียวของหน้าแรก) */
+.dx-stage{position:relative;margin:0;min-height:560px;display:flex;align-items:center;justify-content:flex-end}
+.dx-wave{position:absolute;inset:-6% 0 -6% -18%;width:118%;height:112%;pointer-events:none}
+.dx-paper{
+  position:relative;
+  width:min(100%,540px);
+  max-height:580px;
+  overflow:hidden;
+  padding:34px 42px 0;
+  background:var(--dx-ivory);
+  color:var(--dx-ink);
+  border-radius:6px;
+  box-shadow:0 50px 90px rgba(0,0,0,.65), 0 0 0 1px rgba(255,255,255,.05), 0 0 140px rgba(200,167,90,.14);
+  -webkit-mask-image:linear-gradient(#000 82%, transparent);
+  mask-image:linear-gradient(#000 82%, transparent);
+  font-family:'Sarabun',var(--dx-sans);
+}
+.dx-paper-top{
+  display:flex;
+  justify-content:space-between;
+  padding-bottom:14px;
+  margin-bottom:22px;
+  font-size:.8rem;
+  color:rgba(37,34,27,.55);
+  border-bottom:1px solid rgba(37,34,27,.14);
+}
+.dx-clause{position:relative;padding:14px 0 12px;isolation:isolate}
+.dx-clause h4{margin:0 0 8px;font-size:1rem;font-weight:700;color:var(--dx-ink)}
+.dx-clause i{display:block;height:7px;margin:9px 0;border-radius:4px;background:rgba(37,34,27,.13)}
+.dx-clause i.s{width:56%}
+.dx-clause p{margin:0;font-size:1.02rem;line-height:1.75;color:var(--dx-ink)}
+.dx-clause.is-hit{margin:8px -18px;padding:16px 18px}
+.dx-clause.is-hit::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  border-radius:4px;
+  border-left:3px solid #b8892b;
+  background:linear-gradient(90deg,rgba(214,176,84,.5),rgba(214,176,84,.3));
+  transform-origin:left center;
+}
+.dx-note{
+  position:absolute;
+  left:-5%;
+  bottom:1%;
+  width:min(310px,58%);
+  padding:18px 20px 16px;
+  background:#17181c;
+  border:1px solid var(--dx-line-strong);
+  border-radius:14px;
+  box-shadow:0 24px 54px rgba(0,0,0,.6);
+}
+.dx-note-tag{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:3px 11px 3px 9px;
+  border-radius:999px;
+  font-size:.76rem;
+  font-weight:700;
+  color:var(--highText);
+  background:var(--high);
+}
+.dx-note-tag::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--highBorder)}
+.dx-note b{display:block;margin-top:11px;font-size:1rem;line-height:1.4;color:var(--text)}
+.dx-note p{margin:6px 0 0;font-size:.88rem;line-height:1.65;color:var(--muted)}
+.dx-note small{display:block;margin-top:11px;padding-top:9px;border-top:1px solid var(--dx-line);font-size:.74rem;color:var(--muted);opacity:.8}
+
+@media (min-width:1700px){
+  .dx-stage{min-height:700px}
+  .dx-paper{width:min(100%,680px);max-height:700px;padding:46px 56px 0}
+  .dx-paper-top{font-size:.9rem}
+  .dx-clause h4{font-size:1.12rem}
+  .dx-clause p{font-size:1.16rem}
+  .dx-clause i{height:8px}
+  .dx-note{width:min(370px,56%);padding:22px 24px 18px}
+  .dx-note b{font-size:1.1rem}
+  .dx-note p{font-size:.95rem}
+}
+
+/* ---------- 4. แถบหลักการ ---------- */
+.dx-trust[hidden]{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  border-top:1px solid var(--dx-line);
+  border-bottom:1px solid var(--dx-line);
+  padding:0;
+}
+.dx-tr{padding:36px 40px 38px 0}
+.dx-tr + .dx-tr{padding-left:40px;border-left:1px solid var(--dx-line)}
+.dx-tr svg{
+  width:30px;height:30px;margin-bottom:16px;
+  fill:none;stroke:var(--gold);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;
+}
+.dx-tr b{display:block;font-family:var(--dx-serif);font-size:1.18rem;font-weight:700;line-height:1.45;color:var(--text)}
+.dx-tr p{margin:8px 0 0;font-size:.95rem;line-height:1.75;color:var(--muted);max-width:30em}
+
+/* ---------- 5. วิธีทำงาน + คลิป ---------- */
+.dx-how{align-self:center;padding-top:8px}
+.dx-how h2{
+  display:block;
+  margin:0;
+  font-family:var(--dx-serif);
+  font-size:1.5rem;
+  line-height:1.4;
+}
+.dx-how h2::before{display:none}
+.dx-how > p{margin:10px 0 0;color:var(--muted);font-size:.95rem;line-height:1.7}
+.dx-how ol{margin:26px 0 0;padding:0;list-style:none;counter-reset:dx}
+.dx-how li{
+  position:relative;
+  padding:0 0 22px 46px;
+  counter-increment:dx;
+}
+.dx-how li::before{
+  content:counter(dx);
+  position:absolute;
+  left:0;top:0;
+  width:30px;height:30px;
+  display:grid;place-items:center;
+  border:1px solid var(--dx-line-strong);
+  border-radius:50%;
+  font-size:.85rem;font-weight:600;color:var(--gold-soft);
+}
+.dx-how li:not(:last-child)::after{
+  content:"";position:absolute;left:15px;top:36px;bottom:6px;width:1px;background:var(--dx-line);
+}
+.dx-how li b{display:block;font-size:1rem;color:var(--text);line-height:1.5}
+.dx-how li span{display:block;font-size:.88rem;color:var(--muted);line-height:1.6}
+.vc-embed .vc-frame{
+  border-radius:20px !important;
+  box-shadow:0 0 0 1px var(--dx-line-strong), 0 30px 70px rgba(0,0,0,.55);
+}
+
+/* ---------- 6-7. การ์ด ปุ่ม ช่องกรอก ---------- */
+main > .card{
+  padding:28px;
+  border-radius:20px;
+  border:1px solid var(--dx-line);
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.035),transparent 120px),
+    var(--dx-panel);
+  box-shadow:0 1px 0 rgba(255,255,255,.04) inset, 0 24px 60px rgba(0,0,0,.45);
+}
+main > .card > h2,
+main > .card .step-head h2,
+main > .card .sheet-head h2{
+  font-family:var(--dx-serif);
+  font-size:1.2rem;
+  line-height:1.45;
+  margin-bottom:18px;
+}
+main > .card h2::before{display:none}
+main > .card .step-sub h3{
+  font-family:var(--dx-serif);
+  font-size:1.08rem;
+}
+main > .card .step-sub{margin-top:30px;padding-top:24px;border-top:1px solid var(--dx-line)}
+main > .card .field-label{display:block;margin:0 0 8px;font-size:.88rem;font-weight:500;color:var(--muted)}
+
+/* ช่องกรอก */
+main input[type="email"],
+main input[type="password"],
+main input[type="text"],
+main textarea,
+main select{
+  background:#0c0d10;
+  border:1px solid #272a31;
+  border-radius:12px;
+  color:var(--text);
+  font-family:var(--dx-sans);
+  font-size:1rem;
+}
+main input[type="email"],
+main input[type="password"]{min-height:50px;margin-bottom:12px}
+main textarea{min-height:320px;padding:16px 18px;line-height:1.8}
+main select{
+  width:100%;
+  min-height:50px;
+  padding:0 44px 0 16px;
+  -webkit-appearance:none;
+  appearance:none;
+  cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1.5l6 6 6-6' fill='none' stroke='%23c8a75a' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 18px center;
+}
+main select:focus{outline:none;border-color:var(--gold-deep);box-shadow:0 0 0 3px var(--focus)}
+main input:hover,main textarea:hover,main select:hover{border-color:#383c45}
+main input:focus,main textarea:focus{border-color:var(--gold-deep)}
+.ta-meta{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:12px;flex-wrap:wrap}
+.ta-count{margin:0;font-size:.85rem;color:var(--muted)}
+.ta-actions{display:flex;align-items:center;gap:10px}
+.sample-btn{
+  display:inline-flex;align-items:center;
+  min-height:40px;padding:0 16px;
+  font:inherit;font-size:.88rem;font-weight:600;
+  color:var(--text);
+  background:transparent;
+  border:1px solid #2f323a;
+  border-radius:10px;
+  cursor:pointer;
+  transition:border-color .2s,color .2s,background .2s;
+}
+.sample-btn:hover{border-color:var(--gold-deep);color:var(--gold-soft);background:rgba(224,197,129,.05)}
+
+/* ปุ่ม */
+main .primary{
+  min-height:54px;
+  font-weight:700;
+  font-size:1.02rem;
+  border-radius:12px;
+  background:linear-gradient(180deg,#e6cd8b 0%,#c8a75a 100%);
+  box-shadow:0 1px 0 rgba(255,255,255,.3) inset, 0 12px 28px rgba(200,167,90,.16);
+}
+main .primary:hover:not(:disabled){filter:brightness(1.06);background:linear-gradient(180deg,#ecd696 0%,#cfae60 100%)}
+main .ghost{min-height:54px;border-color:#2f323a;border-radius:12px}
+main .btns{margin-top:18px}
+
+/* บัญชี (ยังไม่ล็อกอิน) */
+#authCard{position:sticky;top:calc(var(--dx-head) + 16px)}
+#authLoggedOut .google-btn{
+  display:flex;align-items:center;justify-content:center;
+  width:100%;min-height:50px;
+  background:transparent;
+  color:var(--text);
+  border:1px solid #2f323a;
+  border-radius:12px;
+  font-weight:600;
+  transition:border-color .2s,background .2s;
+}
+#authLoggedOut .google-btn:hover{border-color:var(--dx-line-strong);background:rgba(255,255,255,.03)}
+.or-line{
+  display:flex;align-items:center;gap:14px;
+  margin:16px 0;
+  font-size:.82rem;color:var(--muted);
+}
+.or-line::before,.or-line::after{content:"";flex:1;height:1px;background:#262930}
+#authLoggedOut .btns{flex-wrap:nowrap}
+#authLoggedOut .btns .primary{flex:1 1 auto}
+#authLoggedOut .btns .ghost{flex:0 0 auto;padding:0 20px}
+
+/* สวิตช์สรุปเป็นเสียง + ไอคอน Privacy Shield ให้เข้าธีมทอง */
+.voice-opt{justify-content:space-between;margin-top:20px;padding:14px 16px;border:1px solid #272a31;border-radius:12px;background:#0c0d10}
+.voice-opt .voice-switch{display:none}
+.voice-opt .voice-text{font-size:.95rem;color:var(--text)}
+.voice-opt .voice-text small{color:var(--muted)}
+.voice-opt input#voiceOpt{
+  -webkit-appearance:none;appearance:none;
+  position:relative;flex:none;
+  width:46px;height:26px;margin:0;
+  border-radius:999px;background:#3a3d46;
+  cursor:pointer;transition:background .2s;
+}
+.voice-opt input#voiceOpt::before{
+  content:"";position:absolute;top:3px;left:3px;
+  width:20px;height:20px;border-radius:50%;
+  background:#d9dadf;transition:transform .2s,background .2s;
+}
+.voice-opt input#voiceOpt:checked{background:var(--gold)}
+.voice-opt input#voiceOpt:checked::before{transform:translateX(20px);background:var(--bg)}
+.voice-opt input#voiceOpt:focus-visible{outline:2px solid var(--gold-soft);outline-offset:3px}
+.ps{background:#0f1014;border-color:#272a31;border-radius:14px}
+.ps-ico svg path:nth-of-type(1){fill:url(#dxg)}
+.ps-ico svg path:nth-of-type(2){fill:var(--bg);opacity:.92}
+.ps-ico svg path:nth-of-type(3){stroke:var(--gold-soft)}
+.ps-ico svg path:nth-of-type(4){display:none}
+
+
+/* ---------- 7b. บัญชีที่ล็อกอินแล้ว (กระเป๋าเครดิต เมนู) ---------- */
+#authCard{max-height:calc(100vh - var(--dx-head) - 32px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:#2b2e36 transparent}
+#authCard:has(#authLoggedIn:not([hidden])) .sheet-head{display:none}
+#authLoggedIn{display:grid;gap:18px}
+#authLoggedIn .cred-card{display:grid;gap:18px}
+#authLoggedIn .cred-head{display:block}
+#authLoggedIn .cred-ico,
+#authLoggedIn .acct-check,
+#authLoggedIn .wt-fx,
+#authLoggedIn .cred-line,
+#authLoggedIn .wallet-rows,
+#authLoggedIn .wallet-list-head,
+#authLoggedIn .hist-lead,
+#authLoggedIn .wallet-ico{display:none}
+#authLoggedIn .cred-title{margin:0;font-family:var(--dx-serif);font-size:1.2rem;line-height:1.45;color:var(--text)}
+#authLoggedIn .cred-sub{margin:2px 0 0;font-size:.85rem;color:var(--muted)}
+
+#authLoggedIn .acct-row{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid #272a31;border-radius:14px;background:#0f1014}
+#authLoggedIn .acct-avatar{
+  position:relative;flex:none;
+  width:52px;height:52px;min-height:0;padding:0;
+  border-radius:50%;
+  border:1px solid var(--dx-line-strong);
+  background:radial-gradient(circle at 30% 25%,#2a2517,#15130d);
+  display:grid;place-items:center;
+  overflow:visible;
+}
+#authLoggedIn .acct-avatar > svg{display:none}
+#authLoggedIn #acctInitial{font-family:var(--dx-serif);font-size:1.25rem;font-weight:700;color:var(--gold-soft);text-transform:uppercase}
+#authLoggedIn #acctPhoto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%}
+#authLoggedIn .acct-cam{
+  position:absolute;right:-3px;bottom:-3px;
+  width:20px;height:20px;border-radius:50%;
+  display:grid;place-items:center;
+  background:var(--gold);border:2px solid #0f1014;
+}
+#authLoggedIn .acct-cam svg{width:10px;height:10px;color:var(--on-gold)}
+#authLoggedIn .acct-info{display:flex;flex-direction:column;min-width:0;flex:1}
+#authLoggedIn .acct-label{font-size:.78rem;color:var(--muted)}
+#authLoggedIn .acct-mail{font-size:.95rem;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#authLoggedIn .acct-photo-del{align-self:flex-start;padding:0;min-height:0;font-size:.8rem;font-weight:500;color:var(--muted);background:none;border:0;text-decoration:underline;margin-top:-8px}
+
+#authLoggedIn .wallet-total{
+  display:block;position:relative;
+  padding:20px 20px 18px;
+  border:1px solid var(--dx-line-strong);
+  border-radius:14px;
+  background:linear-gradient(135deg,rgba(224,197,129,.14),rgba(224,197,129,.03) 60%),#0f1014;
+}
+#authLoggedIn .wallet-total-label{font-size:.85rem;color:var(--muted)}
+#authLoggedIn .wallet-total-num{margin:4px 0 0;display:flex;align-items:baseline;gap:8px}
+#authLoggedIn .wallet-total-num b{font-family:var(--dx-serif);font-size:2.6rem;line-height:1.2;font-weight:700;color:var(--gold-soft)}
+#authLoggedIn .wallet-total-num small{font-size:.9rem;color:var(--muted)}
+
+#authLoggedIn .wallet{display:grid;gap:16px}
+#authLoggedIn .wallet .pane{display:grid;gap:10px;margin:0}
+#authLoggedIn .wallet-cards{display:grid;gap:12px}
+#authLoggedIn .wallet-card{
+  display:grid;gap:10px;
+  padding:16px;
+  border:1px solid #272a31;border-radius:14px;background:#0f1014;
+}
+#authLoggedIn .wallet-card-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#authLoggedIn .wallet-card-name b{display:block;font-size:.98rem;line-height:1.4;color:var(--text)}
+#authLoggedIn .wallet-card-name small{display:block;font-size:.76rem;color:var(--muted)}
+#authLoggedIn .wallet-badge{flex:none;padding:3px 10px;border-radius:999px;font-size:.74rem;font-weight:600;color:var(--ok);background:rgba(126,226,168,.1)}
+#authLoggedIn .wallet-card-use{margin:0;font-size:.85rem;line-height:1.6;color:var(--muted)}
+#authLoggedIn .wallet-card-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:12px;border-top:1px solid var(--dx-line)}
+#authLoggedIn .wallet-card-num{margin:0;display:flex;align-items:baseline;gap:6px}
+#authLoggedIn .wallet-card-num b{font-family:var(--dx-serif);font-size:1.5rem;color:var(--text)}
+#authLoggedIn .wallet-card-num small{font-size:.78rem;color:var(--muted)}
+.wallet-topup{
+  min-height:38px;padding:0 16px;
+  font-size:.88rem;font-weight:600;
+  color:var(--gold-soft);
+  background:transparent;
+  border:1px solid var(--dx-line-strong);
+  border-radius:10px;
+}
+.wallet-topup:hover{background:rgba(224,197,129,.1)}
+
+#authLoggedIn .wallet-histlink,
+#authLoggedIn .menu-item,
+#authLoggedIn .acct-out{
+  display:flex;align-items:center;gap:12px;
+  width:100%;min-height:58px;padding:12px 14px;
+  text-align:left;text-decoration:none;
+  font:inherit;font-weight:500;color:var(--text);
+  background:#0f1014;border:1px solid #272a31;border-radius:12px;
+  cursor:pointer;
+  transition:border-color .2s,background .2s;
+}
+#authLoggedIn .wallet-histlink:hover,
+#authLoggedIn .menu-item:hover,
+#authLoggedIn .acct-out:hover{border-color:var(--dx-line-strong);background:rgba(255,255,255,.03)}
+#authLoggedIn .wallet-histlink > svg,
+#authLoggedIn .menu-ico svg,
+#authLoggedIn .acct-ico svg{width:26px;height:26px;flex:none}
+#authLoggedIn .menu-ico,#authLoggedIn .acct-ico{display:grid;place-items:center;flex:none}
+#authLoggedIn .wallet-hist-txt,
+#authLoggedIn .menu-txt{display:flex;flex-direction:column;min-width:0;flex:1}
+#authLoggedIn .wallet-hist-txt b,
+#authLoggedIn .menu-txt b{font-size:.95rem;font-weight:600;line-height:1.4}
+#authLoggedIn .wallet-hist-txt small,
+#authLoggedIn .menu-txt small{font-size:.78rem;font-weight:400;line-height:1.5;color:var(--muted)}
+#authLoggedIn .acct-menu{display:grid;gap:8px}
+#authLoggedIn .acct-chev{margin-left:auto;color:var(--muted)}
+#authLoggedIn .acct-out{color:var(--highText)}
+#authLoggedIn .acct-detail{margin:0;padding:6px 14px;border:1px solid #272a31;border-radius:12px;background:#0c0d10}
+#authLoggedIn .acct-detail > div{display:flex;justify-content:space-between;gap:12px;padding:9px 0;font-size:.85rem}
+#authLoggedIn .acct-detail > div + div{border-top:1px solid var(--dx-line)}
+#authLoggedIn .acct-detail dt{color:var(--muted)}
+#authLoggedIn .acct-detail dd{margin:0;text-align:right;color:var(--text)}
+
+/* ---------- 8. ผลตรวจ ---------- */
+#resultCard{position:sticky;top:calc(var(--dx-head) + 16px);min-height:420px}
+#resultCard .empty{
+  padding:36px 8px 24px;
+  font-size:1rem;
+  color:var(--text);
+}
+#resultCard .empty::after{
+  content:"วางสัญญาในช่องด้านซ้าย แล้วกดตรวจสัญญา ผลจะแสดงที่นี่";
+  display:block;
+  max-width:18em;
+  margin:8px auto 0;
+  font-size:.9rem;
+  line-height:1.7;
+  color:var(--muted);
+}
+#resultCard .empty-art{display:block;width:84px;margin:30px auto 0;opacity:.9}
+#resultCard .empty-art svg{display:block;width:100%;height:auto}
+
+/* ---------- 9. Footer ---------- */
+footer{
+  width:var(--dx-w);
+  margin:0 auto;
+  padding:34px 0 52px;
+  border-top:1px solid var(--dx-line);
+  display:flex;
+  flex-wrap:wrap;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:20px 40px;
+  text-align:left;
+  font-size:.88rem;
+}
+footer .faq{flex:1 1 520px;max-width:760px}
+footer .faq summary{cursor:pointer;color:var(--text);font-weight:600;list-style:none}
+footer .faq summary::-webkit-details-marker{display:none}
+footer .faq summary::before{content:"+";display:inline-block;width:22px;color:var(--gold)}
+footer .faq[open] summary::before{content:"–"}
+footer .faq-body{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:6px 36px}
+footer .faq-body p{margin:0 0 14px;color:var(--muted);line-height:1.75}
+footer .faq-body b{color:var(--text)}
+footer .faq-foot{margin:0;color:var(--muted)}
+
+/* ---------- 10. การเคลื่อนไหว (จังหวะเดียวตอนเปิดหน้า) ---------- */
+@media (prefers-reduced-motion:no-preference){
+  .dx-paper{animation:dxRise .8s cubic-bezier(.2,.7,.2,1) both}
+  .dx-clause.is-hit::before{animation:dxMark .9s cubic-bezier(.3,.7,.2,1) .8s both}
+  .dx-note{animation:dxNote .7s cubic-bezier(.2,.7,.2,1) 1.55s both}
+}
+@keyframes dxRise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes dxMark{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes dxNote{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
