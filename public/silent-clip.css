@@ -1,27 +1,26 @@
-/* คลิปแนะนำแบบไม่มีเสียง (วนเล่นเอง) — ใช้เฉพาะจอคอม/โน้ตบุ๊ก
+/* คลิปแนะนำแบบไม่มีเสียง (วนเล่นเอง) — อยู่ในพื้นที่ว่างด้านบนของ Hero เฉพาะจอคอม/โน้ตบุ๊ก
    - ไฟล์นี้โหลดด้วย media="(min-width: 1024px)" ใน index.html มือถือไม่ได้ใช้กฎใดเลย
-   - ตัวคลิปอยู่ที่ videos/clip-silent/ (ถ้าแก้คลิป ให้เปลี่ยนชื่อโฟลเดอร์เป็น clip-silent-v2 เพราะเซิร์ฟเวอร์แคช /videos 30 วัน)
-   - แยกจากคลิปแนะนำมีเสียง (videos/clip-intro/) ไม่แก้ร่วมกัน */
-.vs-embed{margin:0}
+   - ตัวคลิปคือ silent-clip.html (แยกจากคลิปแนะนำมีเสียง videos/clip-intro/ ไม่แก้ร่วมกัน)
+   - ขนาดคลิปปรับตามพื้นที่ว่างเหนือชื่อ "เช็กสัญญา" อัตโนมัติ (สัดส่วน 16:9) */
 .vs-embed[hidden]{display:none !important}
-main > .vs-embed{grid-area:silent;width:min(100%,1040px);justify-self:center}
-.vs-frame{display:block;width:100%;aspect-ratio:16/9;border:0;border-radius:16px;background:#060a14;box-shadow:0 0 0 1px rgba(232,207,154,.3),0 24px 56px rgba(0,0,0,.6)}
-main.has-silent{
-  grid-template-areas:
-    "hero  hero"
-    "silent silent"
-    "video video"
-    "auth  auth"
-    "input result"
-    "pay   pay";
+.hero > .vs-embed{
+  flex:1 1 0;
+  min-height:200px;
+  width:100%;
+  margin:0;
+  padding:clamp(18px,3vh,34px) 0 clamp(14px,2.4vh,26px);
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
-@media (min-width:1280px){
-  main.has-silent{
-    grid-template-areas:
-      "hero  hero  hero"
-      "silent silent silent"
-      "video video video"
-      "auth  input result"
-      "pay   pay   pay";
-  }
+.vs-frame{
+  display:block;
+  height:100%;
+  width:auto;
+  max-width:min(100%,1040px);
+  aspect-ratio:16/9;
+  border:0;
+  border-radius:16px;
+  background:#060a14;
+  box-shadow:0 0 0 1px rgba(232,207,154,.3),0 24px 56px rgba(0,0,0,.6);
 }
