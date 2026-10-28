@@ -355,7 +355,7 @@
     '  return vec4(col,a);',
     '}',
     'vec4 fireplace(vec2 q){',
-    '  vec2 p=vec2(q.x*1.9,q.y*1.8);float t=gT;',
+    '  vec2 p=vec2(q.x*1.9,q.y*2.4+.6);float t=gT;',
     '  float dM=sdb(p,vec2(0.,-.05),vec2(1.55,1.58),.05);',
     '  float mM=msk(dM);',
     '  float vein=smoothstep(.035,.0,abs(fbm(p*1.15+3.)-.5));',
@@ -376,6 +376,19 @@
     '  vec3 logc=vec3(.02,.014,.011)+vec3(1.,.28,.04)*.22*(.3+fbm(p*7.+t*.4));',
     '  inner=mix(inner,logc,msk(dLog)*(1.-fl*.85)*.9);',
     '  col=mix(col,inner,mO);a=max(a,mO);',
+    '  vec2 sp=p-vec2(-.72,1.68);',
+    '  float dB=sdb(sp,vec2(0.,.07),vec2(.30,.07),.03);',
+    '  float dP=sdb(sp,vec2(0.,.78),vec2(.035,.70),.02);',
+    '  float dBm=sdb(sp,vec2(0.,1.50),vec2(.66,.032),.02);',
+    '  float dKn=length(sp-vec2(0.,1.54))-.07;',
+    '  float dPans=1e3;float dStr=1e3;',
+    '  for(int k=0;k<2;k++){float s=k==0?-1.:1.;',
+    '    dPans=min(dPans,sdb(sp,vec2(s*.58,.98),vec2(.19,.028),.028));',
+    '    dStr=min(dStr,min(dseg(sp,vec2(s*.58,1.47),vec2(s*.58-.18,1.02)),dseg(sp,vec2(s*.58,1.47),vec2(s*.58+.18,1.02)))-.007);}',
+    '  float dSc=min(min(min(dB,dP),min(dBm,dKn)),min(dPans,dStr));',
+    '  float mSc=msk(dSc);',
+    '  vec3 brass=vec3(.40,.30,.17)*(.30+.80*smoothstep(-.9,.9,sp.x+.9))*(.55+.7*gFlick)+vec3(.9,.45,.15)*smoothstep(-.05,0.,dSc)*.35*gFlick;',
+    '  col=mix(col,brass,mSc);a=max(a,mSc);',
     '  vec2 ec=vec2(p.x*6.,(p.y-t*.55)*6.);vec2 id=floor(ec);vec2 fr=fract(ec)-.5;',
     '  float e=step(.955,h21(id))*smoothstep(.16,.0,length(fr+(h21(id+3.)-.5)*.4))*smoothstep(-.9,.3,p.y)*smoothstep(1.7,.2,p.y)*step(abs(p.x),1.15);',
     '  col+=vec3(1.,.5,.12)*e*1.6;a=max(a,e);',
@@ -404,7 +417,7 @@
     '  {',
     '    vec3 n=vec3(-.2764,0.,.9610);vec3 R=vec3(.9610,0.,.2764);',
     '    float dn=dot(rd,n);float t=dot(gFire-ro,n)/dn;',
-    '    if(dn<0.&&t>.05&&t<best){vec3 p=ro+rd*t-gFire;vec2 q=vec2(dot(p,R)/(1.9*gSc),p.y/(1.8*gSc));',
+    '    if(dn<0.&&t>.05&&t<best){vec3 p=ro+rd*t-gFire;vec2 q=vec2(dot(p,R)/(1.9*gSc),(p.y/gSc-.6)/2.4);',
     '      if(abs(q.x)<1.&&abs(q.y)<1.){vec4 f=fireplace(q);',
     '        if(f.a>.5){best=t;pc=f.rgb;pset=1.;}}}',
     '  }',
@@ -420,10 +433,10 @@
     '}',
     'vec3 render(vec2 uv){',
     '  float asp=uRes.x/uRes.y;float fv=clamp(.9/asp,1.,2.3);',
-    '  vec3 ro=vec3(-uMouse.x*.9+sin(uTime*.11)*.15,.45+uMouse.y*.7+sin(uTime*.09)*.04,4.9-uScroll*9.);',
+    '  vec3 ro=vec3(-uMouse.x*.9+sin(uTime*.11)*.15,.45+uMouse.y*.38+sin(uTime*.09)*.04,4.9-uScroll*9.);',
     '  vec3 ta=vec3(0.,.7,-4.5-uScroll*9.);',
     '  vec3 f=normalize(ta-ro);',
-    '  float yw=uMouse.x*.34;float pt=uMouse.y*.5;float cyw=cos(yw),syw=sin(yw);',
+    '  float yw=uMouse.x*.34;float pt=uMouse.y*.26;float cyw=cos(yw),syw=sin(yw);',
     '  f=vec3(f.x*cyw+f.z*syw,f.y,-f.x*syw+f.z*cyw);f.y+=pt;f=normalize(f);',
     '  vec3 r=normalize(cross(f,vec3(0.,1.,0.)));vec3 u=cross(r,f);',
     '  float rl=uMouse.x*.10;vec3 r2=r*cos(rl)+u*sin(rl);vec3 u2=-r*sin(rl)+u*cos(rl);',
@@ -486,7 +499,7 @@
       AR[i * 3] = cr * cy + sr * sp * sy; AR[i * 3 + 1] = sr * cp; AR[i * 3 + 2] = -cr * sy + sr * sp * cy;
       AU[i * 3] = -sr * cy + cr * sp * sy; AU[i * 3 + 1] = cr * cp; AU[i * 3 + 2] = sr * sy + cr * sp * cy;
       var side = (i % 2) ? 1 : -1;
-      AC[i * 3] = side * (1.5 + ((i * .37) % 1.7)) + Math.sin(i * 2.1) * .5;
+      AC[i * 3] = side * (3.0 + ((i * .37) % 1.6)) + Math.sin(i * 2.1) * .4;
       AC[i * 3 + 1] = .45 + .85 * Math.sin(i * 1.7) + Math.sin(t * .4 + i * 1.3) * .08;
       AC[i * 3 + 2] = -4.2 - i * .9;
     }
@@ -588,6 +601,18 @@
     if (mq) { var h = function () { if (mq.matches) { running = false; draw(performance.now(), true); } else go(); }; if (mq.addEventListener) mq.addEventListener('change', h); else if (mq.addListener) mq.addListener(h); }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+
+/* ===== แถบหัวเว็บโปร่งใสเมื่ออยู่บนสุดของหน้า (29 ต.ค. 2026) =====
+   html.vc-top = เลื่อนอยู่ใกล้บนสุด: แถบหัวเว็บไม่มีพื้นและไม่มีเส้น โลโก้กับเมนูลอยบนฉากเปิด
+   เลื่อนลงแล้วพื้นแถบกลับมา เพื่อให้เมนูอ่านออกบนส่วนสีอื่น */
+(function () {
+  'use strict';
+  var root = document.documentElement, ticking = false;
+  function upd() { ticking = false; root.classList.toggle('vc-top', (window.scrollY || window.pageYOffset || 0) < 24); }
+  function req() { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }
+  window.addEventListener('scroll', req, { passive: true });
+  upd();
 })();
 
 /* ===== (จาก art-field.js) ===== */
