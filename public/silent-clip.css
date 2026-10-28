@@ -1,13 +1,17 @@
-/* คลิปแนะนำแบบไม่มีเสียง เป็นพื้นหลังเต็ม Hero (วนเล่นเอง) — เฉพาะจอคอม/โน้ตบุ๊ก
+/* คลิปแนะนำแบบไม่มีเสียง เป็นพื้นหลัง Hero (วนเล่นเอง) — เฉพาะจอคอม/โน้ตบุ๊ก
    - ไฟล์นี้โหลดด้วย media="(min-width: 1024px)" ใน index.html มือถือไม่ได้ใช้กฎใดเลย
    - ตัวคลิปคือ silent-clip.html?bg=1 (แยกจากคลิปแนะนำมีเสียง videos/clip-intro/ ไม่แก้ร่วมกัน)
-   - ความสูง Hero: --vs-h (ต่ำสุด) · ขนาดภาพในคลิปแก้ที่ scale(.56) ใน silent-clip.html (.bg .sw) */
-:root{--vs-h:880px}
+   - ภาพในคลิปอยู่ด้านบน ชื่อ "เช็กสัญญา" + ปุ่มอยู่ใต้ภาพทันที
+   - --vs-bottom = ตำแหน่งขอบล่างของภาพในคลิป (ย่อ .6 ที่ `.bg .sw` ใน silent-clip.html → ถ้าเปลี่ยน scale ต้องปรับค่านี้
+     สูตร: (top .4 + 56.25 × scale) vw เช่น scale .6 → 34.2vw) */
+:root{--vs-bottom:34.2vw}
 .vs-embed[hidden]{display:none !important}
 main > .hero{
   height:auto;
   max-height:none;
-  min-height:max(calc(100vh - var(--dl-head)), var(--vs-h));
+  min-height:calc(100vh - var(--dl-head));
+  justify-content:flex-start;
+  padding-top:calc(var(--vs-bottom) + 14px);
 }
 .hero > .vs-embed{
   position:absolute;
@@ -16,16 +20,18 @@ main > .hero{
   margin:0;
   pointer-events:none;
 }
-.hero > .vs-embed::after{ /* ไล่สีมืดด้านล่าง ให้ชื่อและปุ่มอ่านชัด */
+.hero > .vs-embed::after{ /* ไล่สีมืดใต้ภาพในคลิป ให้ชื่อและปุ่มอ่านชัด */
   content:"";
   position:absolute;
-  inset:0;
-  background:linear-gradient(to top, rgba(8,9,11,.97) 0%, rgba(8,9,11,.86) 30%, rgba(8,9,11,.35) 52%, rgba(8,9,11,0) 68%);
+  left:0;right:0;bottom:0;
+  top:calc(var(--vs-bottom) - 28px);
+  background:linear-gradient(to bottom, rgba(8,9,11,0) 0%, rgba(8,9,11,.6) 36px, rgba(8,9,11,.85) 100%);
 }
 .vs-frame{
   display:block;
   width:100%;
   height:100%;
+  min-height:56.25vw;
   border:0;
   background:#060a14;
 }
