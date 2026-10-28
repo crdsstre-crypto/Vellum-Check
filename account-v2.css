@@ -7,8 +7,8 @@
    ========================================================= */
 #authLoggedIn{
   --av2-gap:14px; --av2-radius:16px; --av2-row:56px; --av2-pad:16px;
-  --a-amber:#EAC65D; --a-green:#35DDB4; --a-blue:#70B8FF;
-  --av2-gold:#EAC65D; --av2-sub:#999DA7; --av2-surface:#16181C; --av2-line:#292C34;
+  --a-amber:#9fa3a8; --a-green:#35DDB4; --a-blue:#70B8FF;
+  --av2-gold:#9fa3a8; --av2-sub:#999DA7; --av2-surface:#16181C; --av2-line:#292C34;
 }
 body[data-sheet="hist"] .cred-card{display:none}
 
@@ -37,7 +37,7 @@ body[data-sheet="acct"] #authCard .sheet-head h2::after{
 }
 #authLoggedIn .cred-card .acct-avatar{width:48px;height:48px;border-color:var(--av2-gold)}
 body.auth-open #authLoggedIn .cred-card .acct-avatar{animation:vcGlow 1.3s ease .35s 1 both}
-@keyframes vcGlow{0%{box-shadow:0 0 0 0 rgba(234,198,93,0)}35%{box-shadow:0 0 0 5px rgba(234,198,93,.28),0 0 18px rgba(234,198,93,.35)}100%{box-shadow:0 0 0 0 rgba(234,198,93,0)}}
+@keyframes vcGlow{0%{box-shadow:0 0 0 0 rgba(159,163,168,0)}35%{box-shadow:0 0 0 5px rgba(159,163,168,.28),0 0 18px rgba(159,163,168,.35)}100%{box-shadow:0 0 0 0 rgba(159,163,168,0)}}
 #authLoggedIn .cred-card .acct-info{animation:vcFade .3s ease .15s both}
 #authLoggedIn .cred-card .acct-label{font-size:.78rem;font-weight:400;color:var(--av2-sub)}
 #authLoggedIn .cred-card .acct-mail{margin-top:1px;font-size:1rem;font-weight:600;color:#F4F4F5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -49,9 +49,9 @@ body.auth-open #authLoggedIn .cred-card .acct-avatar{animation:vcGlow 1.3s ease 
 #authLoggedIn .cred-card .wallet-total{
   position:relative;isolation:isolate;overflow:hidden;
   display:flex;flex-direction:column;align-items:stretch;text-align:left;margin:0;padding:16px 14px 14px;
-  border:1px solid rgba(234,198,93,.18);border-radius:18px;
-  background:linear-gradient(160deg,#14110A 0%,#090C10 60%);
-  box-shadow:inset 0 0 44px rgba(234,198,93,.07);
+  border:1px solid rgba(159,163,168,.18);border-radius:18px;
+  background:linear-gradient(160deg,#0e0f10 0%,#090C10 60%);
+  box-shadow:inset 0 0 44px rgba(159,163,168,.07);
   animation:vcIn .3s ease .08s both;
 }
 #authLoggedIn .cred-card .wallet-total>*{position:relative;z-index:1}
@@ -60,9 +60,9 @@ body.auth-open #authLoggedIn .cred-card .acct-avatar{animation:vcGlow 1.3s ease 
 #authLoggedIn .cred-card .wallet-total::before{
   content:"";display:block;position:absolute;z-index:0;inset:-40%;pointer-events:none;
   background:
-    linear-gradient(118deg,transparent 32%,rgba(234,198,93,.20) 44%,rgba(234,198,93,.07) 54%,transparent 68%),
-    radial-gradient(36% 32% at 24% 30%,rgba(234,198,93,.22),transparent 70%),
-    radial-gradient(30% 28% at 80% 74%,rgba(234,198,93,.12),transparent 70%);
+    linear-gradient(118deg,transparent 32%,rgba(159,163,168,.20) 44%,rgba(159,163,168,.07) 54%,transparent 68%),
+    radial-gradient(36% 32% at 24% 30%,rgba(159,163,168,.22),transparent 70%),
+    radial-gradient(30% 28% at 80% 74%,rgba(159,163,168,.12),transparent 70%);
   will-change:transform;
 }
 #authLoggedIn .cred-card .wallet-total::after{
@@ -92,7 +92,7 @@ body.auth-open #authLoggedIn .cred-card .wallet-total::after{animation:vcWave 24
 #authLoggedIn .cred-card .wallet-total-num b{font-size:3rem;line-height:1;font-weight:700;color:#F4F4F5;font-variant-numeric:tabular-nums}
 #authLoggedIn .cred-card .wallet-total-num small{font-size:.95rem;color:var(--av2-sub)}
 /* เส้นทองประดับ (ไม่ใช่แถบสัดส่วน: ระบบยังไม่มียอดเครดิตทั้งหมดที่เคยได้รับ) */
-#authLoggedIn .cred-card .cred-line{display:block;height:3px;margin:12px 0 14px;border-radius:2px;background:linear-gradient(90deg,var(--av2-gold),rgba(234,198,93,.5));transform-origin:left;animation:vcLine .5s ease .2s both}
+#authLoggedIn .cred-card .cred-line{display:block;height:3px;margin:12px 0 14px;border-radius:2px;background:linear-gradient(90deg,var(--av2-gold),rgba(159,163,168,.5));transform-origin:left;animation:vcLine .5s ease .2s both}
 @keyframes vcLine{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 
 /* ---- เครดิตตรวจ / เครดิตเสียง: แถบสรุปแนวนอนกะทัดรัด (กรอบเดียว สองช่อง เส้นแบ่งบาง) ---- */
@@ -127,7 +127,7 @@ body.auth-open #authLoggedIn .cred-card .ws-voice::after{animation:vcCorner 9s e
 /* ---- ปุ่มเติมเครดิต: เรียบ มีแสงทองผ่านครั้งเดียวตอนเปิดแผน ---- */
 #authLoggedIn .cred-card .wallet-quick{margin:0}
 #authLoggedIn .cred-card .wallet-total .wallet-topup{
-  min-height:56px;border-radius:15px;color:#16120a;font-weight:700;
+  min-height:56px;border-radius:15px;color:#0f1011;font-weight:700;
   background-color:var(--av2-gold);
   background-image:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.5) 50%,transparent 60%);
   background-size:250% 100%;background-position:150% 0;background-repeat:no-repeat;

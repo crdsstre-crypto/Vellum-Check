@@ -1,0 +1,44 @@
+/* =========================================================
+   art/tokens.css: ตัวแปรของ Vellum Art Direction (ฉบับ "The Annotated Page")
+   โหลดต่อจาก themes.css  ไม่แก้กฎใดของไฟล์อื่น  มีแต่ตัวแปร
+   ========================================================= */
+:root{
+  /* สี: charcoal → graphite → paper → silver */
+  --ink:#0c0c0d;
+  --graphite-1:#141415;
+  --graphite-2:#1b1b1d;
+  --graphite-3:#2a2a2d;
+  --graphite-4:#47474c;
+  --paper:#ece9e2;
+  --paper-dim:#bcb9b2;
+  --silver:#b8bbc1;
+  --silver-hi:#d9dbdf;
+  --hair:rgba(236,233,226,.12);
+  --hair-strong:rgba(236,233,226,.24);
+
+  /* ตัวอักษร: เซอริฟ Latin ตามด้วยเซอริฟไทย (เบราว์เซอร์เลือกฟอนต์ตามตัวอักษรที่ใช้)
+     ห้ามใส่ letter-spacing กับภาษาไทย */
+  --font-display:'Newsreader','Noto Serif Thai','Sarabun',Georgia,serif;
+  --font-body:'IBM Plex Sans Thai','Anuphan','Sarabun',system-ui,sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,'SFMono-Regular',Menlo,monospace;
+
+  /* ขนาดตัวอักษรแสดงผล */
+  --t-hero:clamp(3.1rem,11.5vw,10.5rem);
+  --t-display:clamp(2.2rem,6.4vw,5.4rem);
+  --t-title:clamp(1.5rem,3.2vw,2.4rem);
+  --t-meta:.72rem;
+
+  /* ระยะ */
+  --gutter:clamp(20px,5vw,72px);
+  --section-y:clamp(72px,13vh,168px);
+
+  /* การเคลื่อนไหว: ใช้ชุดเดียวทั้งเว็บ */
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --ease-in-out:cubic-bezier(.65,0,.35,1);
+  --ease-soft:cubic-bezier(.22,.61,.36,1);
+  --dur-1:160ms;
+  --dur-2:320ms;
+  --dur-3:640ms;
+  --dur-4:1100ms;
+  --stagger:70ms;
+}

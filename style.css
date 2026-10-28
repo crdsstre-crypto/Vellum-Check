@@ -36,7 +36,7 @@ header{
   padding:18px 20px;
   text-align:center;
   background:var(--bg);
-  border-bottom:1px solid rgba(229,196,119,.3);
+  border-bottom:1px solid rgba(170,173,178,.3);
 }
 .topbar{display:flex;align-items:center;justify-content:center}
 .brand{display:flex;flex-direction:row;align-items:center;gap:10px}
@@ -106,7 +106,7 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
   flex:1 1 auto;
   background:var(--gold);
   color:var(--on-gold);
-  box-shadow:0 6px 18px rgba(229,196,119,.18);
+  box-shadow:0 6px 18px rgba(170,173,178,.18);
 }
 .primary:hover{background:var(--gold-soft)}
 .ghost{

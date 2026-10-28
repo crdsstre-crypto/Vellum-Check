@@ -1,3 +1,3 @@
 /* คลิปวิดีโอแนะนำ (ฝังด้วย iframe จาก /videos/<ชื่อคลิป>/) — ความสูงถูกปรับอัตโนมัติโดย video-embed.js */
 .vc-embed{margin:0 0 16px}
-.vc-embed .vc-frame{display:block;width:100%;height:auto;aspect-ratio:16/10.5;border:0;background:#07080a;border-radius:16px;box-shadow:0 0 0 1px rgba(232,207,154,.3),0 18px 40px rgba(0,0,0,.55)}
+.vc-embed .vc-frame{display:block;width:100%;height:auto;aspect-ratio:16/10.5;border:0;background:#07080a;border-radius:16px;box-shadow:0 0 0 1px rgba(190,192,196,.3),0 18px 40px rgba(0,0,0,.55)}

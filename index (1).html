@@ -3,14 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#08090b">
+<meta name="theme-color" content="#0c0c0d">
+<!-- Vellum Art Direction: เปิดชั้นสไตล์ art/ (ถ้าจะย้อนกลับ ลบสคริปต์บรรทัดนี้) -->
+<script>document.documentElement.classList.add("vc-art");</script>
 <title>เช็กสัญญา | Vellum Check</title>
 
 <!-- ฟอนต์ -->
-<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Noto+Serif+Thai:wght@600;700&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Noto+Serif+Thai:wght@300;400;500;600;700&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
 
 <!-- ลำดับการโหลด CSS: themes (สี) → style (ทุกจอ) → mobile (เฉพาะจอต่ำกว่า 768px) -->
 <link rel="stylesheet" href="themes.css">
+<link rel="stylesheet" href="art/tokens.css?v=1">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="mobile.css?v=14a" media="(max-width: 767px)">
 <link rel="stylesheet" href="glossary.css?v=3">
@@ -25,10 +30,12 @@
 <link rel="stylesheet" href="video-embed.css?v=1">
 <link rel="stylesheet" href="print.css?v=1" media="print">
 <link rel="stylesheet" href="ct-sticker.css?v=9" media="(max-width: 767px)">
-<link rel="stylesheet" href="desktop-layout.css?v=1" media="(min-width: 1024px)">
+<link rel="stylesheet" href="desktop-layout.css?v=5" media="(min-width: 1024px)">
+<link rel="stylesheet" href="silent-clip.css?v=1" media="(min-width: 1024px)">
+<link rel="stylesheet" href="art/base.css?v=1">
 </head>
 <body>
-<svg id="vcStickerDefs" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="vcg-y" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffe58a"/><stop offset="1" stop-color="#f5a623"/></linearGradient><linearGradient id="vcg-o" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffb86b"/><stop offset="1" stop-color="#ef5a2a"/></linearGradient><linearGradient id="vcg-b" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#8fd0ff"/><stop offset="1" stop-color="#2f6fe0"/></linearGradient><linearGradient id="vcg-n" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#7d92d6"/><stop offset="1" stop-color="#26376f"/></linearGradient><linearGradient id="vcg-t" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#86f0d8"/><stop offset="1" stop-color="#1a98ab"/></linearGradient><linearGradient id="vcg-p" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ff9fc6"/><stop offset="1" stop-color="#df3f7c"/></linearGradient><linearGradient id="vcg-g" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#a8ea8f"/><stop offset="1" stop-color="#3b9f57"/></linearGradient><linearGradient id="vcg-v" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#c4b0ff"/><stop offset="1" stop-color="#6540d6"/></linearGradient><linearGradient id="vcg-w" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d5dce8"/></linearGradient><linearGradient id="vcg-au" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#fff0b3"/><stop offset="1" stop-color="#d9a014"/></linearGradient><linearGradient id="vcg-s" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#a9b3c7"/></linearGradient></defs></svg>
+<svg id="vcStickerDefs" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="vcg-y" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#f4f4f2"/><stop offset="1" stop-color="#a6a9b0"/></linearGradient><linearGradient id="vcg-o" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#dcdcdb"/><stop offset="1" stop-color="#8a8d94"/></linearGradient><linearGradient id="vcg-b" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#e6e8ec"/><stop offset="1" stop-color="#8f949d"/></linearGradient><linearGradient id="vcg-n" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#9a9ea6"/><stop offset="1" stop-color="#43464d"/></linearGradient><linearGradient id="vcg-t" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#eef0f1"/><stop offset="1" stop-color="#9fa3ab"/></linearGradient><linearGradient id="vcg-p" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#e0e0e0"/><stop offset="1" stop-color="#7f8289"/></linearGradient><linearGradient id="vcg-g" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#d6d9db"/><stop offset="1" stop-color="#888c93"/></linearGradient><linearGradient id="vcg-v" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#cdd0d5"/><stop offset="1" stop-color="#60636b"/></linearGradient><linearGradient id="vcg-w" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d5d8dc"/></linearGradient><linearGradient id="vcg-au" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#f7f7f5"/><stop offset="1" stop-color="#b4b7bd"/></linearGradient><linearGradient id="vcg-s" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#b0b4bb"/></linearGradient></defs></svg>
 
 <!-- ============ HEADER (ติดด้านบน) ============ -->
 <header class="site-header">
@@ -37,6 +44,13 @@
       <svg viewBox="0 0 64 64" class="brand-logo" aria-hidden="true" focusable="false"><path d="M32 5L54 13V32C54 46 44 54 32 59C20 54 10 46 10 32V13Z" fill="url(#vcg-t)"/><path d="M32 11L48 17V32C48 42 41 48 32 52C23 48 16 42 16 32V17Z" fill="url(#vcg-b)" opacity=".55"/><path class="st-check" pathLength="1" d="M22 32L29 39L43 24" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M14 16L30 9" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".45" fill="none"/></svg>
       <span class="brand-name">Vellum Check</span>
     </div>
+
+    <!-- เมนูจอคอม/โน้ตบุ๊ก: ซ่อนด้วย hidden เปิดใน desktop-layout.css เท่านั้น -->
+    <nav class="dx-nav" aria-label="เมนูหลัก" hidden>
+      <a href="#introVideo">คลิปแนะนำ</a>
+      <a href="#authCard">บัญชี</a>
+      <a href="#checkCard">ตรวจสัญญา</a>
+    </nav>
 
     <!-- ปุ่มบัญชี: แสดงเฉพาะมือถือ กดแล้วเปิดแผนบัญชีจากด้านล่าง -->
     <button type="button" class="auth-toggle" id="authToggle" aria-controls="authCard" aria-expanded="false">
@@ -86,14 +100,24 @@
   <!-- ============ ส่วนนำ ============ -->
   <section class="hero">
     <!-- ภาพวาดตราชั่งเส้นทอง (SVG ในหน้า ไม่ต้องโหลดไฟล์เพิ่ม) -->
-    <svg viewBox="0 0 64 64" class="hero-art" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><rect x="29" y="14" width="6" height="40" rx="3" fill="url(#vcg-au)"/><rect x="19" y="51" width="26" height="7" rx="3.5" fill="url(#vcg-o)"/><g class="st-beam"><rect x="7" y="17" width="50" height="5" rx="2.5" fill="url(#vcg-au)"/><g class="st-pan st-pl"><path d="M12 22L6 38M12 22L18 38" stroke="#d9a014" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M3 38h18a9 8 0 0 1-18 0z" fill="url(#vcg-y)"/></g><g class="st-pan st-pr"><path d="M52 22L46 38M52 22L58 38" stroke="#d9a014" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M43 38h18a9 8 0 0 1-18 0z" fill="url(#vcg-y)"/></g></g><circle cx="32" cy="12" r="5.5" fill="url(#vcg-y)"/><path d="M32 17v32" stroke="#fff" stroke-width="1.6" opacity=".4" fill="none" stroke-linecap="round"/></svg>
+    <svg viewBox="0 0 64 64" class="hero-art" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><rect x="29" y="14" width="6" height="40" rx="3" fill="url(#vcg-au)"/><rect x="19" y="51" width="26" height="7" rx="3.5" fill="url(#vcg-o)"/><g class="st-beam"><rect x="7" y="17" width="50" height="5" rx="2.5" fill="url(#vcg-au)"/><g class="st-pan st-pl"><path d="M12 22L6 38M12 22L18 38" stroke="#71767c" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M3 38h18a9 8 0 0 1-18 0z" fill="url(#vcg-y)"/></g><g class="st-pan st-pr"><path d="M52 22L46 38M52 22L58 38" stroke="#71767c" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M43 38h18a9 8 0 0 1-18 0z" fill="url(#vcg-y)"/></g></g><circle cx="32" cy="12" r="5.5" fill="url(#vcg-y)"/><path d="M32 17v32" stroke="#fff" stroke-width="1.6" opacity=".4" fill="none" stroke-linecap="round"/></svg>
+    <span class="dx-pill" hidden>AI Contract Review</span>
     <h1>เช็กสัญญา</h1>
     <p>ตรวจสัญญาอย่างมั่นใจ · วางข้อความสัญญา ระบบจะไฮไลต์จุดที่ควรระวัง</p>
+    <div class="dx-cta-row" hidden>
+      <a class="dx-cta" href="#checkCard">เริ่มตรวจสัญญา</a>
+      <a class="dx-cta-ghost" href="#introVideo">ดูคลิปแนะนำ (มีเสียงพากย์)</a>
+    </div>
+    <ul class="dx-points" hidden>
+      <li>เครื่องมือคัดกรองเบื้องต้น ไม่ใช่คำปรึกษาทางกฎหมาย</li>
+      <li>ปกปิดข้อมูลส่วนตัวในเบราว์เซอร์ก่อนส่งวิเคราะห์</li>
+      <li>คืนเครดิตให้อัตโนมัติเมื่อระบบตรวจไม่สำเร็จ</li>
+    </ul>
   </section>
 
   <!-- คลิปแนะนำ: ไฟล์อยู่ใน public/videos/clip-intro/ (แยก CSS/JS/เสียง/ภาพ) โหลดเมื่อเลื่อนมาถึง -->
-  <section class="vc-embed" aria-label="คลิปแนะนำเช็กสัญญา">
-    <iframe class="vc-frame" src="videos/clip-intro/index.html?v=3" style="display:block;width:100%;aspect-ratio:16/11.2;border:0;border-radius:16px" title="คลิปแนะนำ Vellum Check เช็กสัญญา" loading="lazy" allow="fullscreen" allowfullscreen></iframe>
+  <section class="vc-embed" id="introVideo" aria-label="คลิปแนะนำเช็กสัญญา">
+    <iframe class="vc-frame" src="videos/clip-intro/index.html?v=4" style="display:block;width:100%;aspect-ratio:16/11.2;border:0;border-radius:16px" title="คลิปแนะนำ Vellum Check เช็กสัญญา" loading="lazy" allow="fullscreen" allowfullscreen></iframe>
   </section>
 
   <!-- 0. บัญชีผู้ใช้: บนมือถือเป็นแผนจากด้านล่าง บนจอใหญ่เป็นการ์ดปกติ -->
@@ -215,7 +239,7 @@
           </div>
           <section class="pay-hub" id="payHub" aria-label="เครดิตของคุณ" hidden>
             <div class="ph-top"><div><span class="ph-eyebrow">Vellum / Financial</span><b class="ph-title">เครดิตของคุณ</b></div>
-              <span class="ph-ico" aria-hidden="true"><svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><circle cx="32" cy="31" r="24" fill="url(#vcg-au)"/><circle cx="32" cy="31" r="18" fill="none" stroke="#c98a10" stroke-width="2" opacity=".7"/><path d="M24 20h8a6 6 0 0 1 0 12h-8zM24 32h9a6 6 0 0 1 0 12h-9zM28 16v32" stroke="#b9780b" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M14 22a19 19 0 0 1 12-10" stroke="#fff" stroke-width="3" opacity=".5" stroke-linecap="round" fill="none"/></svg></span></div>
+              <span class="ph-ico" aria-hidden="true"><svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><circle cx="32" cy="31" r="24" fill="url(#vcg-au)"/><circle cx="32" cy="31" r="18" fill="none" stroke="#676c72" stroke-width="2" opacity=".7"/><path d="M24 20h8a6 6 0 0 1 0 12h-8zM24 32h9a6 6 0 0 1 0 12h-9zM28 16v32" stroke="#5d6167" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M14 22a19 19 0 0 1 12-10" stroke="#fff" stroke-width="3" opacity=".5" stroke-linecap="round" fill="none"/></svg></span></div>
             <div class="ph-bal"><span>ยอดเครดิตคงเหลือ</span><p><b id="phBal">–</b> <small>เครดิต</small></p></div>
             <div class="ph-stats" role="group" aria-label="สรุปธุรกรรม">
               <button type="button" class="ph-stat" data-pst="all"><span>ธุรกรรม</span><b id="phAll">0</b></button>
@@ -277,7 +301,7 @@
   </section>
 
   <!-- 1. เลือกประเภทและใส่สัญญา -->
-  <section class="card">
+  <section class="card" id="checkCard">
     <div class="step-head">
       <h2>1. เลือกประเภทและใส่สัญญา</h2>
       <!-- ป้ายเครดิตคงเหลือ: แสดงเฉพาะมือถือและตอนล็อกอิน กดแล้วเปิดแผนบัญชี -->
@@ -377,8 +401,8 @@
         <svg viewBox="0 0 120 90" fill="none" stroke="url(#goldLineSm)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <defs>
             <linearGradient id="goldLineSm" x1="0" y1="0" x2="120" y2="90" gradientUnits="userSpaceOnUse">
-              <stop offset="0" stop-color="#f3dca0"/>
-              <stop offset="1" stop-color="#b8924a"/>
+              <stop offset="0" stop-color="#c7c9cc"/>
+              <stop offset="1" stop-color="#7b8087"/>
             </linearGradient>
           </defs>
           <rect x="30" y="10" width="46" height="60" rx="5"/>
@@ -436,7 +460,7 @@
   var filters = document.getElementById('histFilters');
   if (!panel || !list) return;
   var ICO_DOC = '<svg viewBox="0 0 64 64" width="20" height="20" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><path d="M20 7H39L51 19V50a7 7 0 0 1-7 7H20a7 7 0 0 1-7-7V14a7 7 0 0 1 7-7z" fill="url(#vcg-w)"/><path class="st-corner" d="M39 7L51 19H42a3 3 0 0 1-3-3z" fill="#aeb9d1"/><rect class="st-ln" x="19" y="27" width="26" height="4.5" rx="2.25" fill="url(#vcg-t)"/><rect class="st-ln" x="19" y="35.5" width="26" height="4.5" rx="2.25" fill="url(#vcg-p)"/><rect class="st-ln" x="19" y="44" width="15" height="4.5" rx="2.25" fill="url(#vcg-y)"/></svg>';
-  var ICO_COIN = '<svg viewBox="0 0 64 64" width="20" height="20" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><circle cx="32" cy="31" r="24" fill="url(#vcg-au)"/><circle cx="32" cy="31" r="18" fill="none" stroke="#c98a10" stroke-width="2" opacity=".7"/><path d="M24 20h8a6 6 0 0 1 0 12h-8zM24 32h9a6 6 0 0 1 0 12h-9zM28 16v32" stroke="#b9780b" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M14 22a19 19 0 0 1 12-10" stroke="#fff" stroke-width="3" opacity=".5" stroke-linecap="round" fill="none"/></svg>';
+  var ICO_COIN = '<svg viewBox="0 0 64 64" width="20" height="20" aria-hidden="true" focusable="false"><ellipse cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/><circle cx="32" cy="31" r="24" fill="url(#vcg-au)"/><circle cx="32" cy="31" r="18" fill="none" stroke="#676c72" stroke-width="2" opacity=".7"/><path d="M24 20h8a6 6 0 0 1 0 12h-8zM24 32h9a6 6 0 0 1 0 12h-9zM28 16v32" stroke="#5d6167" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M14 22a19 19 0 0 1 12-10" stroke="#fff" stroke-width="3" opacity=".5" stroke-linecap="round" fill="none"/></svg>';
   var ICO_RECEIPT = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M8.5 12h7M8.5 15h7M8.5 18h3"/></svg>';
   function esc(v) {
     return String(v).replace(/[&<>"']/g, function (c) {
@@ -569,7 +593,7 @@
   var ICO_CHK = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="m7.8 12.4 3 3 5.6-6.2" fill="none" stroke="#0F1012" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   var ICO_CLK = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
   var ICO_DOCSM = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>';
-  var THUMB = '<svg viewBox="0 0 56 72" width="100%" height="100%" aria-hidden="true"><rect x="0.5" y="0.5" width="55" height="71" rx="6" fill="#E8E4D8"/><rect x="8" y="9" width="22" height="4" rx="2" fill="#B89A4B"/><g fill="#9A9688"><rect x="8" y="20" width="40" height="2.6" rx="1.3"/><rect x="8" y="27" width="40" height="2.6" rx="1.3"/><rect x="8" y="34" width="34" height="2.6" rx="1.3"/><rect x="8" y="41" width="40" height="2.6" rx="1.3"/><rect x="8" y="48" width="40" height="2.6" rx="1.3"/><rect x="8" y="55" width="24" height="2.6" rx="1.3"/></g></svg>';
+  var THUMB = '<svg viewBox="0 0 56 72" width="100%" height="100%" aria-hidden="true"><rect x="0.5" y="0.5" width="55" height="71" rx="6" fill="#E8E4D8"/><rect x="8" y="9" width="22" height="4" rx="2" fill="#7b8088"/><g fill="#9A9688"><rect x="8" y="20" width="40" height="2.6" rx="1.3"/><rect x="8" y="27" width="40" height="2.6" rx="1.3"/><rect x="8" y="34" width="34" height="2.6" rx="1.3"/><rect x="8" y="41" width="40" height="2.6" rx="1.3"/><rect x="8" y="48" width="40" height="2.6" rx="1.3"/><rect x="8" y="55" width="24" height="2.6" rx="1.3"/></g></svg>';
   function dKey(iso) { var d = new Date(iso); return d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate(); }
   function dFull(iso) { try { return new Date(iso).toLocaleDateString('th-TH-u-ca-gregory', { day: 'numeric', month: 'short', year: 'numeric' }); } catch (e) { return ''; } }
   function dLabel(iso) {
@@ -1349,10 +1373,10 @@ document.addEventListener('click', function (e) {
      สีไล่เฉดอยู่ใน <defs> ชุดเดียว (vcStickerDefs) ทุกไอคอนอ้าง url(#vcg-ชื่อ)
      อยากเปลี่ยนเป็นภาพจากคลังนักออกแบบ: แก้ icon() ให้คืน <img src="..."> แทน */
   var GRAD = {
-    y: ['#ffe58a', '#f5a623'], o: ['#ffb86b', '#ef5a2a'], b: ['#8fd0ff', '#2f6fe0'],
-    n: ['#7d92d6', '#26376f'], t: ['#86f0d8', '#1a98ab'], p: ['#ff9fc6', '#df3f7c'],
-    g: ['#a8ea8f', '#3b9f57'], v: ['#c4b0ff', '#6540d6'], w: ['#ffffff', '#d5dce8'],
-    au: ['#fff0b3', '#d9a014'], s: ['#ffffff', '#a9b3c7']
+    y: ['#f4f4f2', '#a6a9b0'], o: ['#dcdcdb', '#8a8d94'], b: ['#e6e8ec', '#8f949d'],
+    n: ['#9a9ea6', '#43464d'], t: ['#eef0f1', '#9fa3ab'], p: ['#e0e0e0', '#7f8289'],
+    g: ['#d6d9db', '#888c93'], v: ['#cdd0d5', '#60636b'], w: ['#ffffff', '#d5d8dc'],
+    au: ['#f7f7f5', '#b4b7bd'], s: ['#ffffff', '#b0b4bb']
   };
   function ensureDefs() {
     if (document.getElementById('vcStickerDefs')) return;
@@ -1368,7 +1392,7 @@ document.addEventListener('click', function (e) {
   function coin(y) {
     return '<path d="M14 ' + y + 'v7a18 7 0 0 0 36 0v-7z" fill="url(#vcg-o)"/>' +
       '<ellipse cx="32" cy="' + y + '" rx="18" ry="7" fill="url(#vcg-au)"/>' +
-      '<ellipse cx="32" cy="' + y + '" rx="12" ry="4.4" fill="none" stroke="#c98a10" stroke-width="1.5" opacity=".7"/>';
+      '<ellipse cx="32" cy="' + y + '" rx="12" ry="4.4" fill="none" stroke="#676c72" stroke-width="1.5" opacity=".7"/>';
   }
   var ICONS = {
     unsure: '<ellipse class="st-sh" cx="32" cy="58.5" rx="17" ry="3" fill="#000" opacity=".3"/>' +
@@ -1391,7 +1415,7 @@ document.addEventListener('click', function (e) {
       '<path d="M5 9h7l7 29" stroke="url(#vcg-p)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>' +
       '<rect x="24" y="10" width="14" height="12" rx="3" fill="url(#vcg-g)"/>' +
       '<path d="M12.5 17H56a1.8 1.8 0 0 1 1.8 2.2L53 36.5a3 3 0 0 1-2.9 2.3H21a3 3 0 0 1-2.9-2.3z" fill="url(#vcg-y)"/>' +
-      '<path d="M20 25H54M21.5 31.5H52" stroke="#e8861e" stroke-width="2" opacity=".55" stroke-linecap="round" fill="none"/>' +
+      '<path d="M20 25H54M21.5 31.5H52" stroke="#7d8289" stroke-width="2" opacity=".55" stroke-linecap="round" fill="none"/>' +
       '<path d="M18 43H50" stroke="#ef7a2a" stroke-width="4" stroke-linecap="round" fill="none"/>' +
       '<circle cx="24" cy="51" r="5.5" fill="url(#vcg-b)"/><circle cx="45" cy="51" r="5.5" fill="url(#vcg-b)"/>' +
       '<circle cx="24" cy="51" r="2" fill="#fff" opacity=".75"/><circle cx="45" cy="51" r="2" fill="#fff" opacity=".75"/>' +
@@ -1737,6 +1761,32 @@ document.addEventListener('click', function (e) {
   init();
 })();
 </script>
+<script>
+/* วิดีโอพื้นหลัง hero: เปิดเฉพาะจอคอม/โน้ตบุ๊ก (≥1024px) และไม่เล่นถ้าผู้ใช้ตั้งลดการเคลื่อนไหว
+   มือถือจึงไม่ดาวน์โหลดไฟล์วิดีโอนี้เลย */
+(function () {
+  try {
+    var mq = window.matchMedia('(min-width: 1024px)');
+    var still = window.matchMedia('(prefers-reduced-motion: reduce)');
+    function add() {
+      if (!mq.matches || still.matches || document.querySelector('.dx-hero-video')) return;
+      var hero = document.querySelector('main > .hero');
+      if (!hero) return;
+      var v = document.createElement('video');
+      v.className = 'dx-hero-video';
+      v.muted = true; v.defaultMuted = true; v.loop = true; v.autoplay = true; v.playsInline = true;
+      v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('aria-hidden', 'true');
+      v.tabIndex = -1;
+      v.poster = 'hero-poster.jpg';
+      v.src = 'hero-video.mp4';
+      hero.insertBefore(v, hero.firstChild);
+      var p = v.play(); if (p && p.catch) p.catch(function () {});
+    }
+    add();
+    if (mq.addEventListener) mq.addEventListener('change', add);
+  } catch (e) {}
+})();
+</script>
 <script src="glossary.js?v=5"></script>
 <script src="script.js?v=35"></script>
 <script src="extras.js?v=4"></script>
@@ -1744,5 +1794,7 @@ document.addEventListener('click', function (e) {
 <script src="privacy.js?v=2"></script>
 <script src="care.js?v=2"></script>
 <script src="video-embed.js?v=1"></script>
+<script src="silent-clip.js?v=1"></script>
+<script src="art/motion.js?v=1"></script>
 </body>
 </html>

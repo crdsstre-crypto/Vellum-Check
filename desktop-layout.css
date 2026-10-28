@@ -1,89 +1,361 @@
 /* =========================================================
-   desktop-layout.css: โครงสร้างหน้าจอ (ส่วนที่ 1) เฉพาะคอมและโน้ตบุ๊ก
+   desktop-layout.css: หน้าตาและเลย์เอาต์สำหรับจอคอมและโน้ตบุ๊ก
    - โหลดด้วย media="(min-width: 1024px)" ใน index.html
-     มือถือและไอแพดแนวตั้งจึงไม่ได้ใช้กฎใดจากไฟล์นี้
-   - ไม่แตะ HTML, JavaScript, สี (themes.css) หรือไฟล์มือถือ
-   - ตัวปรับเร็ว: แก้ตัวแปร --dl-* ด้านล่างได้เลย
+     มือถือและไอแพดแนวตั้งจึงไม่ได้ใช้กฎใดจากไฟล์นี้เลย
+   - สี (themes.css) และ JavaScript ไม่ถูกแก้
+   - องค์ประกอบ .dx-* ใน index.html ซ่อนด้วย hidden และถูกเปิดที่นี่เท่านั้น
 
+   ดัชนี
+   0. ตัวแปร   1. พื้นหลัง   2. Header   3. Hero   4. กริดพื้นที่ทำงาน
+   5. การ์ด    6. ฟอร์ม      7. ผลตรวจ   8. Footer
    ขนาดที่ออกแบบไว้: 1024 / 1280 / 1366×768 / 1440 / 1920×1080
    ========================================================= */
 
+/* ---------- 0. ตัวแปร (แก้เร็วที่นี่) ---------- */
 :root{
-  --dl-w:min(1240px, calc(100% - 64px));  /* ความกว้างเนื้อหา โน้ตบุ๊ก */
-  --dl-gap:20px;
-  --dl-side:300px;                         /* คอลัมน์บัญชี (≥1280px) */
+  --dl-w:min(1240px, calc(100% - 64px));  /* ความกว้างเนื้อหา */
+  --dl-gap:22px;
+  --dl-side:310px;                         /* คอลัมน์บัญชี (≥1280px) */
+  --dl-head:64px;                          /* ความสูง header */
+  --dl-line:rgba(173,176,180,.16);
+  --dl-serif:'Noto Serif Thai','Sarabun',serif;
 }
 @media (min-width:1600px){
-  :root{ --dl-w:min(1480px, calc(100% - 128px)); --dl-gap:24px; --dl-side:340px; }
+  :root{ --dl-w:min(1520px, calc(100% - 160px)); --dl-gap:28px; --dl-side:350px; }
+}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
+#introVideo,#authCard,#checkCard{scroll-margin-top:calc(var(--dl-head) + 16px)}
+
+/* ---------- 1. พื้นหลัง ---------- */
+body{
+  background:
+    radial-gradient(900px 520px at 84% -80px, rgba(139,144,150,.12), transparent 70%),
+    radial-gradient(700px 420px at 6% 18%, rgba(139,144,150,.05), transparent 70%),
+    var(--bg);
 }
 
-/* ---------- Header: เต็มความกว้าง ตราอยู่ซ้าย ---------- */
-.site-header{padding:14px 0}
+/* ---------- 2. Header: ตราซ้าย เมนูขวา ติดด้านบน ---------- */
+.site-header{
+  position:sticky;
+  top:0;
+  z-index:40;
+  padding:0;
+  background:rgba(8,9,11,.84);
+  -webkit-backdrop-filter:blur(14px);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--dl-line);
+}
 .site-header .topbar{
   width:var(--dl-w);
+  height:var(--dl-head);
   margin:0 auto;
-  justify-content:flex-start;
+  justify-content:space-between;
 }
+.brand{gap:12px}
+.brand-logo{width:34px;height:34px}
+.brand-name{font-size:.82rem;color:var(--gold-soft)}
+.dx-nav[hidden]{display:flex !important;gap:6px;align-items:center}
+.dx-nav a{
+  padding:8px 16px;
+  border-radius:999px;
+  font-size:.92rem;
+  font-weight:500;
+  color:var(--muted);
+  text-decoration:none;
+  transition:color .2s, background .2s;
+}
+.dx-nav a:hover{color:var(--gold-soft);background:rgba(173,176,180,.08)}
+.dx-nav a:last-child{
+  color:var(--on-gold);
+  background:var(--gold);
+  font-weight:600;
+}
+.dx-nav a:last-child:hover{background:var(--gold-soft);color:var(--on-gold)}
 
-/* ---------- main: กริดกว้างขึ้น ---------- */
+/* ---------- 3. Hero: เต็มจอ มีวิดีโอเล่นเอง (ไม่มีเสียง) ----------
+   วิดีโอ: hero-video.mp4 (เพิ่มด้วย JS เฉพาะจอ ≥1024px จึงไม่โหลดบนมือถือ)
+   ถ้าเปลี่ยนวิดีโอ ให้เปลี่ยนชื่อโฟลเดอร์เป็นเวอร์ชันใหม่ (เช่น hero-v2) */
+main > .hero{
+  grid-column:1 / -1;
+  width:100vw;
+  margin-left:calc(50% - 50vw);
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+  min-height:560px;
+  height:calc(100vh - var(--dl-head));
+  max-height:960px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  align-items:center;
+  text-align:center;
+  padding:0 32px clamp(32px,6vh,64px);
+  background:var(--bg) url(hero-poster.jpg) center/cover no-repeat;
+}
+.hero::before{ /* ไล่สีมืดด้านล่างให้ตัวอักษรอ่านชัด */
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  background:
+    linear-gradient(to top, rgba(8,9,11,.98) 0%, rgba(8,9,11,.93) 34%, rgba(8,9,11,.55) 52%, rgba(8,9,11,.08) 74%, rgba(8,9,11,.3) 100%);
+}
+.hero::after{ /* เส้นทองบางๆ ปิดท้าย hero */
+  content:"";
+  position:absolute;
+  left:0;right:0;bottom:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(173,176,180,.45),transparent);
+}
+.dx-hero-video{
+  position:absolute;
+  inset:0;
+  z-index:-2;
+  width:100%;height:100%;
+  object-fit:cover;
+  pointer-events:none;
+}
+.dx-pill[hidden]{
+  display:inline-block !important;
+  margin:0 0 18px;
+  padding:6px 16px;
+  font-size:.72rem;
+  font-weight:600;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--gold-soft);
+  border:1px solid rgba(173,176,180,.34);
+  border-radius:999px;
+  background:rgba(8,9,11,.5);
+  -webkit-backdrop-filter:blur(6px);
+  backdrop-filter:blur(6px);
+}
+.hero h1{
+  margin:0;
+  font-family:var(--dl-serif);
+  font-size:clamp(3rem,5vw,5rem);
+  line-height:1.2;
+  background:linear-gradient(100deg,#c9cbce 0%,#adb0b4 45%,#8b9096 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  color:var(--gold-soft);
+}
+.hero p{
+  margin:14px 0 0;
+  max-width:36em;
+  font-size:clamp(1.02rem,1.3vw,1.28rem);
+  line-height:1.7;
+  color:rgba(245,245,245,.86);
+}
+.dx-cta-row[hidden]{display:flex !important;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:26px}
+.dx-cta,.dx-cta-ghost{
+  display:inline-block;
+  padding:13px 28px;
+  border-radius:var(--radius-btn);
+  font-size:1rem;
+  font-weight:600;
+  text-decoration:none;
+  transition:background .2s, border-color .2s, color .2s;
+}
+.dx-cta{background:var(--gold);color:var(--on-gold);box-shadow:0 8px 22px rgba(139,144,150,.25)}
+.dx-cta:hover{background:var(--gold-soft)}
+.dx-cta-ghost{color:var(--text);border:1px solid rgba(255,255,255,.28);background:rgba(8,9,11,.35);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.dx-cta-ghost:hover{border-color:var(--gold-soft);color:var(--gold-soft)}
+.dx-points[hidden]{
+  display:flex !important;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px 30px;
+  margin:28px 0 0;
+  padding:0;
+  list-style:none;
+}
+.dx-points li{
+  position:relative;
+  padding-left:22px;
+  font-size:.86rem;
+  line-height:1.5;
+  color:rgba(245,245,245,.7);
+}
+.dx-points li::before{
+  content:"";
+  position:absolute;
+  left:1px;top:.48em;
+  width:11px;height:6px;
+  border-left:2px solid var(--gold);
+  border-bottom:2px solid var(--gold);
+  transform:rotate(-45deg);
+}
+.vc-embed{margin:0}
+.vc-embed .vc-frame{box-shadow:0 0 0 1px rgba(190,192,196,.3),0 24px 56px rgba(0,0,0,.6)}
+
+/* ---------- 4. กริดพื้นที่ทำงาน ---------- */
 main{
   width:var(--dl-w);
   max-width:none;
   margin:0 auto;
-  padding:24px 0 16px;
+  padding:0 0 20px;
   display:grid;
   grid-template-columns:minmax(0,1fr) minmax(0,1fr);
   grid-template-areas:
-    "hero  video"
+    "hero  hero"
+    "video video"
     "auth  auth"
     "input result"
     "pay   pay";
   gap:var(--dl-gap);
+  row-gap:clamp(36px,6vh,64px);
   align-items:start;
 }
 main > .card{margin:0}
 main > .hero{grid-area:hero}
-main > .vc-embed{grid-area:video;margin:0}
+main > .vc-embed{grid-area:video;width:min(100%,960px);justify-self:center}
 main > #authCard{grid-area:auth}
-main > .card:not(#authCard):not(#resultCard):not(#paymentCard){grid-area:input}
+main > #checkCard{grid-area:input}
 main > #resultCard{grid-area:result}
 main > #paymentCard{grid-area:pay;width:min(100%,760px);justify-self:center}
 
-/* ---------- Hero: ชิดซ้าย อยู่คู่กับคลิป ---------- */
-.hero{
-  text-align:left;
-  align-self:center;
-  padding:8px 8px 8px 0;
-}
-.hero h1{font-size:clamp(2.2rem,3.4vw,3.2rem);line-height:1.2}
-.hero p{font-size:1.05rem;margin-top:12px;max-width:34em}
-
-/* ---------- การ์ด: ระยะขอบสบายตาบนจอใหญ่ ---------- */
-.card{padding:24px 26px}
-textarea{min-height:clamp(240px,38vh,420px)}
-
-/* ---------- ผลตรวจ: ค้างด้านบนตอนเลื่อน อ่านคู่กับข้อความสัญญา ---------- */
-#resultCard{
-  position:sticky;
-  top:16px;
-  max-height:calc(100vh - 32px);
-  overflow:auto;
-}
-
-/* ---------- โน้ตบุ๊กและจอใหญ่ (≥1280px): 3 คอลัมน์ บัญชี | ข้อความสัญญา | ผลตรวจ ---------- */
+/* โน้ตบุ๊กและจอใหญ่: บัญชี | ข้อความสัญญา | ผลตรวจ */
 @media (min-width:1280px){
   main{
-    grid-template-columns:var(--dl-side) minmax(0,1fr) minmax(0,1fr);
+    grid-template-columns:var(--dl-side) minmax(0,1.25fr) minmax(0,1fr);
     grid-template-areas:
-      "hero  hero  video"
+      "hero  hero  hero"
+      "video video video"
       "auth  input result"
       "pay   pay   pay";
   }
-  #authCard{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto}
+  main > #authCard,
+  main > #resultCard{
+    position:sticky;
+    top:calc(var(--dl-head) + 16px);
+    max-height:calc(100vh - var(--dl-head) - 32px);
+    overflow:auto;
+  }
+}
+@media (min-width:1024px) and (max-width:1279px){
+  #resultCard{
+    position:sticky;
+    top:calc(var(--dl-head) + 16px);
+    max-height:calc(100vh - var(--dl-head) - 32px);
+    overflow:auto;
+  }
 }
 
-/* ---------- โน้ตบุ๊กจอเตี้ย (เช่น 1366×768) ---------- */
-@media (min-width:1024px) and (max-height:800px){
-  main{padding-top:16px}
-  .card{padding:20px 22px}
+/* ---------- 5. การ์ด ---------- */
+.card{
+  padding:26px 28px;
+  border-radius:18px;
+  box-shadow:inset 0 1px 0 rgba(173,176,180,.12), var(--shadow);
 }
+.card h2{font-size:1.08rem;margin-bottom:18px}
+.step-sub{margin-top:28px;padding-top:22px;border-top:1px solid var(--card-edge)}
+
+/* ---------- 6. ฟอร์ม ---------- */
+/* บัญชี */
+.google-btn{
+  width:100%;
+  min-height:48px;
+  margin-bottom:10px;
+  border:none;
+  border-radius:var(--radius-btn);
+  background:#fff;
+  color:#1f1f1f;
+  font-size:.98rem;
+  font-weight:600;
+}
+.google-btn:hover{filter:brightness(.94)}
+.or-line{margin:8px 0 12px;text-align:center;font-size:.85rem;color:var(--muted)}
+#authCard .btns .primary{min-width:0}
+
+/* ประเภทสัญญา */
+.field-label{display:block;margin:0 0 8px;font-size:.88rem;font-weight:600;color:var(--text)}
+.field-wrap{margin:0 0 16px}
+.select-wrap{position:relative}
+.select-wrap::after{
+  content:"";
+  position:absolute;
+  right:20px;top:50%;
+  width:8px;height:8px;
+  border-right:2px solid var(--gold);
+  border-bottom:2px solid var(--gold);
+  transform:translateY(-70%) rotate(45deg);
+  pointer-events:none;
+}
+.select-wrap select{
+  width:100%;
+  min-height:50px;
+  appearance:none;
+  -webkit-appearance:none;
+  background:var(--field);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:var(--radius-btn);
+  padding:12px 44px 12px 16px;
+  font:inherit;
+  transition:border-color .2s, box-shadow .2s;
+}
+.select-wrap select:hover{border-color:var(--gold-deep)}
+.select-wrap select:focus{outline:none;border-color:var(--gold-deep);box-shadow:0 0 0 3px var(--focus)}
+.select-wrap option{background:var(--card);color:var(--text)}
+
+/* ช่องวางสัญญา */
+.ta-wrap{position:relative}
+.ta-wrap textarea{padding:16px 18px;min-height:clamp(300px,46vh,560px)}
+.ta-clear{
+  position:absolute;top:10px;right:10px;
+  width:32px;height:32px;padding:0;
+  display:grid;place-items:center;
+  border:none;border-radius:50%;
+  background:var(--ghost);color:var(--text);
+  font-size:.8rem;line-height:1;
+}
+.ta-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px}
+.ta-count{margin:0;font-size:.82rem;color:var(--muted)}
+.ta-count.is-over{color:var(--highText);font-weight:600}
+.ta-actions{display:flex;align-items:center;gap:10px}
+.sample-btn{
+  display:inline-block;
+  padding:8px 16px;
+  border:1px solid var(--border);
+  border-radius:var(--radius-btn);
+  background:transparent;
+  color:var(--gold-soft);
+  font:inherit;
+  font-size:.86rem;
+  font-weight:600;
+  line-height:1.4;
+  cursor:pointer;
+  transition:border-color .2s, background .2s;
+}
+.sample-btn:hover{border-color:var(--gold-deep);background:rgba(173,176,180,.06)}
+
+/* สรุปเป็นเสียง */
+.voice-opt{
+  margin-top:12px;
+  padding:12px 14px;
+  border:1px solid var(--card-edge);
+  border-radius:var(--radius-btn);
+  background:var(--item);
+}
+
+/* ปุ่มตรวจ */
+#checkBtn{padding:14px 24px;font-size:1.02rem}
+.step-cost{margin:4px 0 0;font-size:.86rem;color:var(--muted)}
+
+/* ---------- 7. ผลตรวจ ---------- */
+#resultCard{min-height:clamp(380px,52vh,560px)}
+#result .empty-art{display:block;width:104px;margin:clamp(24px,6vh,64px) auto 0;opacity:.9}
+#result .empty-art svg{display:block;width:100%;height:auto}
+#result .empty{padding:14px 12px 28px;font-size:1rem}
+
+/* ---------- 8. Footer ---------- */
+footer{
+  width:var(--dl-w);
+  margin:28px auto 0;
+  padding:26px 0 36px;
+}
+.faq{max-width:760px;margin:0 auto 10px;text-align:center}
+.faq-body{text-align:left}

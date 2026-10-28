@@ -1,15 +1,14 @@
-/* ใส่คลิปไม่มีเสียงเฉพาะจอคอม/โน้ตบุ๊ก (≥1024px): บนมือถือไม่สร้างองค์ประกอบ ไม่โหลดไฟล์คลิป */
+/* ใส่คลิปไม่มีเสียงในพื้นที่ว่างด้านบนของ Hero เฉพาะจอคอม/โน้ตบุ๊ก (≥1024px)
+   บนมือถือไม่สร้างองค์ประกอบและไม่โหลดไฟล์คลิป */
 (function () {
   try {
     var mq = window.matchMedia('(min-width: 1024px)');
     var sec = null;
     function sync() {
-      var main = document.querySelector('main');
       var hero = document.querySelector('main > .hero');
-      if (!main || !hero) return;
+      if (!hero) return;
       if (!mq.matches) {
         if (sec) sec.hidden = true;
-        main.classList.remove('has-silent');
         return;
       }
       if (!sec) {
@@ -17,11 +16,10 @@
         sec.className = 'vs-embed';
         sec.id = 'silentClip';
         sec.setAttribute('aria-label', 'คลิปแนะนำแบบไม่มีเสียง');
-        sec.innerHTML = '<iframe class="vs-frame" src="videos/clip-silent/index.html?v=1" title="คลิปแนะนำ Vellum Check เช็กสัญญา (ไม่มีเสียง)" loading="lazy"></iframe>';
-        hero.parentNode.insertBefore(sec, hero.nextSibling);
+        sec.innerHTML = '<iframe class="vs-frame" src="silent-clip.html?v=2&bg=1" title="คลิปแนะนำ Vellum Check เช็กสัญญา (ไม่มีเสียง)"></iframe>';
+        hero.insertBefore(sec, hero.firstChild);
       }
       sec.hidden = false;
-      main.classList.add('has-silent');
     }
     sync();
     if (mq.addEventListener) mq.addEventListener('change', sync);

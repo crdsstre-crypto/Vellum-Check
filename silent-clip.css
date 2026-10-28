@@ -1,27 +1,37 @@
-/* คลิปแนะนำแบบไม่มีเสียง (วนเล่นเอง) — ใช้เฉพาะจอคอม/โน้ตบุ๊ก
+/* คลิปแนะนำแบบไม่มีเสียง เป็นพื้นหลัง Hero (วนเล่นเอง) — เฉพาะจอคอม/โน้ตบุ๊ก
    - ไฟล์นี้โหลดด้วย media="(min-width: 1024px)" ใน index.html มือถือไม่ได้ใช้กฎใดเลย
-   - ตัวคลิปอยู่ที่ videos/clip-silent/ (ถ้าแก้คลิป ให้เปลี่ยนชื่อโฟลเดอร์เป็น clip-silent-v2 เพราะเซิร์ฟเวอร์แคช /videos 30 วัน)
-   - แยกจากคลิปแนะนำมีเสียง (videos/clip-intro/) ไม่แก้ร่วมกัน */
-.vs-embed{margin:0}
+   - ตัวคลิปคือ silent-clip.html?bg=1 (แยกจากคลิปแนะนำมีเสียง videos/clip-intro/ ไม่แก้ร่วมกัน)
+   - ภาพในคลิปอยู่ด้านบน ชื่อ "เช็กสัญญา" + ปุ่มอยู่ใต้ภาพทันที
+   - --vs-bottom = ตำแหน่งขอบล่างของภาพในคลิป (ย่อ .6 ที่ `.bg .sw` ใน silent-clip.html → ถ้าเปลี่ยน scale ต้องปรับค่านี้
+     สูตร: (top .4 + 56.25 × scale) vw เช่น scale .6 → 34.2vw) */
+:root{--vs-bottom:34.2vw}
 .vs-embed[hidden]{display:none !important}
-main > .vs-embed{grid-area:silent;width:min(100%,1040px);justify-self:center}
-.vs-frame{display:block;width:100%;aspect-ratio:16/9;border:0;border-radius:16px;background:#060a14;box-shadow:0 0 0 1px rgba(232,207,154,.3),0 24px 56px rgba(0,0,0,.6)}
-main.has-silent{
-  grid-template-areas:
-    "hero  hero"
-    "silent silent"
-    "video video"
-    "auth  auth"
-    "input result"
-    "pay   pay";
+main > .hero{
+  height:auto;
+  max-height:none;
+  min-height:calc(100vh - var(--dl-head));
+  justify-content:flex-start;
+  padding-top:calc(var(--vs-bottom) + 14px);
 }
-@media (min-width:1280px){
-  main.has-silent{
-    grid-template-areas:
-      "hero  hero  hero"
-      "silent silent silent"
-      "video video video"
-      "auth  input result"
-      "pay   pay   pay";
-  }
+.hero > .vs-embed{
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  margin:0;
+  pointer-events:none;
+}
+.hero > .vs-embed::after{ /* ไล่สีมืดใต้ภาพในคลิป ให้ชื่อและปุ่มอ่านชัด */
+  content:"";
+  position:absolute;
+  left:0;right:0;bottom:0;
+  top:calc(var(--vs-bottom) - 28px);
+  background:linear-gradient(to bottom, rgba(8,9,11,0) 0%, rgba(8,9,11,.6) 36px, rgba(8,9,11,.85) 100%);
+}
+.vs-frame{
+  display:block;
+  width:100%;
+  height:100%;
+  min-height:56.25vw;
+  border:0;
+  background:#060a14;
 }

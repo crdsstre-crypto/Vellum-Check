@@ -40,7 +40,7 @@
 
 /* หน้าต่างคำอธิบายศัพท์ (รอบ 2) */
 .gl-sh-head{gap:14px}
-.gl-ico-box{width:46px;height:46px;border-radius:14px;background:rgba(200,167,90,.16);align-items:center;justify-content:center;flex:none}
+.gl-ico-box{width:46px;height:46px;border-radius:14px;background:rgba(139,144,150,.16);align-items:center;justify-content:center;flex:none}
 .gl-sh-title{flex:1;min-width:0}
 .gl-sh-title small{display:block;font-size:.8rem;color:var(--muted)}
 .gl-sh-title h3{font-size:1.3rem;line-height:1.3}

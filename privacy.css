@@ -7,7 +7,7 @@
 .ps-head{display:flex;align-items:center;gap:12px}
 .ps-ico{
   flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;
-  background:rgba(200,167,90,.12);color:var(--gold-soft);
+  background:rgba(139,144,150,.12);color:var(--gold-soft);
 }
 .ps-title{flex:1;min-width:0}
 .ps-title b{display:block;font-size:1rem;line-height:1.3;color:var(--text)}
@@ -54,5 +54,5 @@
 .step-cost{margin:6px 0 0;font-size:.86rem;line-height:1.55;color:var(--muted)}
 
 /* ป้ายสิทธิ์การใช้งานเมื่อเครดิตเป็น 0: โทนทอง ไม่ใช้กรอบแดง */
-.credit-chip.is-zero{border-color:var(--gold-deep);background:rgba(200,167,90,.08)}
+.credit-chip.is-zero{border-color:var(--gold-deep);background:rgba(139,144,150,.08)}
 .credit-chip.is-zero b{color:var(--gold-soft);font-size:.82rem}
