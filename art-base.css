@@ -1,0 +1,137 @@
+/* =========================================================
+   art/base.css: ชั้นสไตล์ Vellum "The Annotated Page"
+   - โหลดเป็นไฟล์สุดท้ายใน <head> ทุกกฎขึ้นต้นด้วย html.vc-art
+     (class นี้ถูกเติมโดยสคริปต์สั้น ๆ ใน <head> ถ้าไม่ต้องการให้ลบ class ออกได้)
+   - ขั้น 1: พื้นหลังเรียบ เกรนฟิล์ม ฟอนต์ ลดอนิเมชันวนซ้ำที่เป็นของตกแต่ง
+     และโครงโหมดลดการเคลื่อนไหว  ขั้นถัดไปจะเพิ่มส่วนอื่นในไฟล์นี้
+
+   ดัชนี
+   1. พื้นหลังและเกรน   2. ตัวอักษร   3. โฟกัสและการเลือกข้อความ
+   4. ลดของตกแต่งที่วนซ้ำ   5. การเปิดเผยตอนเลื่อน ([data-reveal])
+   6. โหมดลดการเคลื่อนไหว
+   ========================================================= */
+
+/* ---------- 1. พื้นหลังและเกรน ---------- */
+html.vc-art body{
+  background:var(--bg);
+  font-family:var(--font-body);
+}
+html.vc-art body::before{display:none}          /* แสงทองที่มุมบนของมือถือ */
+html.vc-art .site-header{background:rgba(12,12,13,.9);border-bottom-color:var(--hair)}
+
+/* เกรนฟิล์มบาง ๆ (ภาพเดียว ไม่เคลื่อนไหว ไม่รับการแตะ) */
+html.vc-art body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  pointer-events:none;
+  opacity:.07;
+  mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-size:220px 220px;
+}
+
+/* ---------- 2. ตัวอักษร ---------- */
+html.vc-art h1,
+html.vc-art h2,
+html.vc-art .rpt-title{
+  font-family:var(--font-display);
+  font-weight:500;
+  letter-spacing:0;
+}
+html.vc-art .hero h1{color:var(--paper);text-shadow:none}
+/* ป้ายกำกับเล็กแบบเอกสาร ใช้ฟอนต์ mono */
+html.vc-art .rpt-kicker,
+html.vc-art .hr-no,
+html.vc-art .ph-eyebrow,
+html.vc-art .wallet-kicker,
+html.vc-art .dx-pill{
+  font-family:var(--font-mono);
+  font-weight:500;
+}
+
+/* ---------- 3. โฟกัสและการเลือกข้อความ ---------- */
+html.vc-art ::selection{background:var(--paper);color:var(--ink)}
+html.vc-art :focus-visible{outline:2px solid var(--silver-hi);outline-offset:3px}
+
+/* ---------- 4. ลดของตกแต่งที่วนซ้ำ (ตัวโหลดและโครงรอข้อมูลยังคงอยู่) ---------- */
+html.vc-art body.auth-open #authLoggedIn .cred-card .wallet-total::before,
+html.vc-art body.auth-open #authLoggedIn .cred-card .wallet-total::after,
+html.vc-art body.auth-open #authLoggedIn .cred-card .wt-fx::before,
+html.vc-art body.auth-open #authLoggedIn .cred-card .wt-fx::after,
+html.vc-art body.auth-open #authLoggedIn .cred-card .ws-check::after,
+html.vc-art body.auth-open #authLoggedIn .cred-card .ws-voice::after,
+html.vc-art body.auth-open #authLoggedIn .cred-card .wallet-total .wallet-topup,
+html.vc-art body.auth-open .wallet::before,
+html.vc-art .lib-head::before,
+html.vc-art .lib-stat::before,
+html.vc-art .pay-hub::before{
+  animation:none;
+}
+
+/* ไอคอนสติกเกอร์: เอาการลอยและประกายที่วนซ้ำออก (ผู้ใช้ยังเปิด "โหมดสงบ" ของเดิมได้ตามปกติ) */
+html.vc-art .ct-ico svg,
+html.vc-art .acct-sticker,
+html.vc-art .cs-ico svg,
+html.vc-art .cs-r-ico svg,
+html.vc-art .pkg-ic svg,
+html.vc-art .pay-head-ic svg,
+html.vc-art .menu-ico svg,
+html.vc-art .ct-ico::after,
+html.vc-art .cs-ico::after,
+html.vc-art .cs-r-ico::after,
+html.vc-art .pkg-ic::after,
+html.vc-art .pay-head-ic::after,
+html.vc-art .menu-ico::after,
+html.vc-art svg [class*="st-"]{
+  animation:none !important;
+}
+
+/* ---------- 5. การเปิดเผยตอนเลื่อน ----------
+   ซ่อนองค์ประกอบเฉพาะเมื่อ motion.js ยืนยันว่าเล่นอนิเมชันได้ (class vc-motion)
+   ถ้า JS ไม่ทำงานหรือผู้ใช้ลดการเคลื่อนไหว เนื้อหาจะเห็นครบเสมอ */
+html.vc-art.vc-motion [data-reveal]{
+  opacity:0;
+  transform:translate3d(0,18px,0);
+  transition:opacity var(--dur-3) var(--ease-out),transform var(--dur-3) var(--ease-out);
+  transition-delay:calc(var(--i,0) * var(--stagger));
+}
+html.vc-art.vc-motion [data-reveal].is-in{opacity:1;transform:none}
+/* เปิดเผยทีละบรรทัด (motion.js ห่อแต่ละบรรทัดด้วย .vc-line > span) */
+html.vc-art .vc-line{display:block;overflow:hidden}
+html.vc-art.vc-motion .vc-line > span{
+  display:block;
+  transform:translate3d(0,110%,0);
+  transition:transform var(--dur-4) var(--ease-out);
+  transition-delay:calc(var(--i,0) * var(--stagger));
+}
+html.vc-art.vc-motion .is-in .vc-line > span{transform:none}
+
+/* ---------- 6. โหมดลดการเคลื่อนไหว ----------
+   ครอบทั้งกรณีระบบตั้งค่าไว้ และกรณี motion.js ตั้ง data-motion="reduced" */
+@media (prefers-reduced-motion:reduce){
+  html.vc-art *,html.vc-art *::before,html.vc-art *::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    animation-delay:0s !important;
+    transition-duration:.01ms !important;
+    transition-delay:0s !important;
+    scroll-behavior:auto !important;
+  }
+}
+html.vc-art[data-motion="reduced"] *,
+html.vc-art[data-motion="reduced"] *::before,
+html.vc-art[data-motion="reduced"] *::after{
+  animation-duration:.01ms !important;
+  animation-iteration-count:1 !important;
+  animation-delay:0s !important;
+  transition-duration:.01ms !important;
+  transition-delay:0s !important;
+}
+
+/* ตัวหมุนตอนกำลังตรวจเป็นการเคลื่อนไหวที่จำเป็น (บอกว่าระบบยังทำงาน) จึงยังหมุนช้า ๆ ในโหมดลดการเคลื่อนไหว */
+@media (prefers-reduced-motion:reduce){
+  html.vc-art #checkBtn.is-busy::after{animation:vcSpin 1.6s linear infinite !important}
+}
+html.vc-art[data-motion="reduced"] #checkBtn.is-busy::after{animation:vcSpin 1.6s linear infinite !important}

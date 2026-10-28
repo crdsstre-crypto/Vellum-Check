@@ -1,0 +1,100 @@
+/* =========================================================
+   art/finish.css: รอบ 2b "บรรยากาศและการโต้ตอบ" (ตีความจากวิดีโออ้างอิงที่ผู้ใช้ส่งมา — ไม่คัดลอกภาพหรือโค้ด)
+   - โหลดเป็นไฟล์สุดท้าย ทุกกฎขึ้นต้น html.vc-art
+   ดัชนี
+   1. พื้นผิวจุดฝุ่น   2. ฉากเปิด: ผืนแคนวาส แผ่นเวลลัม หัวข้อ ปุ่มเม็ดยา   3. เมนู: ไฮไลต์เม็ดยาและเปลี่ยนเป็นเซอริฟ
+   4. วงแหวนเมาส์และการเอียง   5. ส่วนกระดาษขาวนวล (#chapters) กางออกตอนเลื่อน
+   ========================================================= */
+
+/* ---------- 1. พื้นผิวจุดฝุ่นและเส้นใย (สร้างโดย field.js ถ้าไม่มี --specks ก็ไม่แสดง) ---------- */
+html.vc-art.vc-specks body::before{
+  display:block;
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:9997;
+  pointer-events:none;
+  background:var(--specks) 0 0/1024px 1024px repeat;
+  opacity:.65;
+}
+
+/* ---------- 2. ฉากเปิด ---------- */
+html.vc-art .hero-field{
+  position:absolute;inset:0;z-index:-2;width:100%;height:100%;pointer-events:none;
+}
+html.vc-art .hero-3d{position:absolute;inset:0;z-index:-3;width:100%;height:100%;pointer-events:none;display:block}
+html.vc-art.vc-3d .hero-sheets{display:none}
+html.vc-art .hero-sheets{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+html.vc-art .hero-sheets i{
+  position:absolute;top:-8%;bottom:-8%;
+  border-left:1px solid rgba(236,233,226,.07);border-right:1px solid rgba(236,233,226,.04);
+  background:linear-gradient(180deg,rgba(236,233,226,.05) 0%,rgba(236,233,226,.012) 55%,rgba(236,233,226,0) 100%);
+  translate:calc(var(--mx,0) * var(--d,30px) * -1) calc(var(--p,0) * var(--sy,-40px));
+}
+html.vc-art .hero-sheets i:nth-child(1){left:46%;width:15vw;--d:22px;--sy:-30px}
+html.vc-art .hero-sheets i:nth-child(2){left:64%;width:10vw;--d:44px;--sy:-70px;background:linear-gradient(180deg,rgba(236,233,226,.075),rgba(236,233,226,.01) 60%,transparent)}
+html.vc-art .hero-sheets i:nth-child(3){left:80%;width:17vw;--d:14px;--sy:-18px}
+@media (max-width:1023px){
+  html.vc-art .hero-sheets i:nth-child(1){left:52%;width:24vw}
+  html.vc-art .hero-sheets i:nth-child(2){left:76%;width:16vw}
+  html.vc-art .hero-sheets i:nth-child(3){display:none}
+}
+/* หัวข้อ: บรรทัดแรกเซอริฟบาง บรรทัดสองซานส์ (คู่ตรงข้ามของตัวพิมพ์) */
+html.vc-art .ht-l:first-child{font-family:var(--font-display);font-weight:300}
+html.vc-art .ht-l2{font-family:var(--font-body);font-weight:500;color:var(--paper)}
+/* ลิงก์ปุ่มในฉากเปิดเป็นเม็ดยา (ปุ่มส่งฟอร์มยังเป็นสี่เหลี่ยมมุมเล็ก) */
+html.vc-art .dx-cta,
+html.vc-art .dx-cta-ghost{border-radius:999px;padding:14px 28px;transition:background .3s var(--ease-out),color .3s var(--ease-out),border-color .3s var(--ease-out)}
+html.vc-art .dx-cta::after{content:"\2197";display:inline-block;margin-left:.6em;font-weight:400;transition:transform .3s var(--ease-out)}
+html.vc-art .dx-cta:hover::after{transform:translate(2px,-2px)}
+
+/* ---------- 3. เมนู ---------- */
+html.vc-art .dx-nav a{
+  border-radius:999px;
+  transition:box-shadow .3s var(--ease-out),color .3s var(--ease-out),background .3s var(--ease-out);
+}
+html.vc-art .dx-nav a:not(:last-child):hover,
+html.vc-art .dx-nav a.is-here:not(:last-child){
+  color:var(--paper);
+  font-family:var(--font-display);
+  box-shadow:inset 0 0 0 1px var(--hair-strong);
+  background:transparent;
+}
+html.vc-art .dx-nav a.is-here:not(:last-child){box-shadow:inset 0 0 0 1px var(--silver)}
+
+/* ---------- 4. วงแหวนเมาส์ (cursor.js สร้างเฉพาะอุปกรณ์ที่มีเมาส์) ---------- */
+html.vc-art .vc-cursor{
+  position:fixed;left:0;top:0;z-index:10000;width:0;height:0;pointer-events:none;
+  mix-blend-mode:difference;
+}
+html.vc-art .vc-cursor i{
+  position:absolute;left:-14px;top:-14px;width:28px;height:28px;border-radius:50%;
+  border:1px solid #fff;opacity:0;
+  transition:transform .35s var(--ease-out),opacity .25s ease;
+}
+html.vc-art .vc-cursor.is-on i{opacity:.9}
+html.vc-art .vc-cursor.is-link i{transform:scale(1.9)}
+html.vc-art .vc-cursor.is-down i{transform:scale(.7)}
+html.vc-art .vc-cursor.is-link.is-down i{transform:scale(1.5)}
+html.vc-art .vc-cursor.is-text i{opacity:0}
+[data-tilt]{will-change:transform;transform-style:preserve-3d}
+
+/* ---------- 5. ส่วนกระดาษขาวนวล: กางออกจากแผ่นเล็กเป็นเต็มจอตอนเลื่อนเข้ามา ---------- */
+html.vc-art .ch{
+  background:var(--paper);color:#19191b;border-top:0;
+}
+html.vc-art .ch .sec-label{color:rgba(25,25,27,.62)}
+html.vc-art .ch .sec-label::after{background:rgba(25,25,27,.28)}
+html.vc-art .ch-head h2{color:#19191b}
+html.vc-art .ch-item{border-top-color:rgba(25,25,27,.28)}
+html.vc-art .ch-n{-webkit-text-stroke:1px rgba(25,25,27,.55)}
+html.vc-art .ch-body h3{color:#19191b}
+html.vc-art .ch-body p{color:rgba(25,25,27,.8)}
+html.vc-art .ch-tag{border-color:rgba(25,25,27,.32);color:rgba(25,25,27,.72)}
+html.vc-art .ch-foot{border-top-color:rgba(25,25,27,.22);color:rgba(25,25,27,.65)}
+html.vc-art.vc-motion .ch{
+  --t:clamp(0,calc(var(--p,0) / .2),1);
+  --u:clamp(0,calc((1 - var(--p,0)) / .16),1);
+  --o:max(1 - var(--t),1 - var(--u));
+  clip-path:inset(calc((1 - var(--t)) * 9vh) calc(var(--o) * 5vw) calc((1 - var(--u)) * 9vh) calc(var(--o) * 5vw) round calc(var(--o) * 28px));
+}

@@ -1,0 +1,353 @@
+/* =========================================================
+   art/sections.css: ขั้น 2 ของ Vellum "The Annotated Page"
+   หน้าแรก · ฉากอ่านสัญญา (ตรึงจอตอนเลื่อน) · สามขั้น · แผ่นคลิป · โครงกริดของหน้า
+   - โหลดต่อจาก art/base.css ทุกกฎขึ้นต้น html.vc-art
+   - สถานะเริ่มต้นที่ซ่อนหรือเลื่อนอยู่ จะมีผลเมื่อ html มี class vc-motion เท่านั้น
+     (motion.js เติมเมื่อเล่นอนิเมชันได้) ถ้า JS ล้มหรือผู้ใช้ลดการเคลื่อนไหว จะเห็นเนื้อหาสภาพสุดท้ายครบ
+
+   ดัชนี
+   0. ตัวแปรและกรอบหน้า   1. Header   2. ป้ายและหัวข้อร่วม   3. หน้าแรก (.hero)
+   4. ฉากอ่านสัญญา (.mf)   5. สามขั้น (.ch)   6. แผ่นคลิป (#introVideo)
+   7. หัวพื้นที่ทำงาน (.desk-head)   8. กริดของหน้า (≥1024px)
+   ========================================================= */
+
+/* ---------- 0. ตัวแปรและกรอบหน้า ---------- */
+html.vc-art{--art-head:56px;--content-max:1360px}
+@media (min-width:1024px){ html.vc-art{--art-head:64px} }
+/* overflow-x:hidden ที่เดิมใช้ทำให้ position:sticky พัง (ตัวเลื่อนย้ายไปที่ body) ใช้ clip แทน */
+html.vc-art,
+html.vc-art body{overflow-x:clip}
+html.vc-art main{max-width:none;width:100%;margin:0;padding:0}
+html.vc-art .mono{font-family:var(--font-mono);letter-spacing:.04em}
+html.vc-art .dx-hero-video{display:none !important}   /* วิดีโอ hero เก่า (ไฟล์ hero-video.mp4 ไม่ได้อยู่ในรีโป) */
+
+/* ---------- 1. Header ---------- */
+html.vc-art .brand-name{color:var(--paper);letter-spacing:.22em}
+html.vc-art .dx-nav a{border-radius:0;color:var(--muted);padding:8px 14px}
+html.vc-art .dx-nav a:hover{background:transparent;color:var(--paper)}
+html.vc-art .dx-nav a:last-child{
+  background:var(--paper);color:var(--ink);border-radius:2px;margin-left:8px;padding:8px 18px;
+}
+html.vc-art .dx-nav a:last-child:hover{background:var(--silver-hi);color:var(--ink)}
+
+/* ---------- 2. ป้ายและหัวข้อร่วม ---------- */
+html.vc-art :is(.mf,.ch,.vc-embed,.desk-head){text-align:left}
+/* style.css มีกฎ header{...} ทั่วไป (กลางหน้า มีเส้นล่าง) ต้องล้างจากหัวส่วนใหม่ */
+html.vc-art :is(.film-head,.ch-head){text-align:left;padding:0;background:none;border:0}
+html.vc-art .sec-label{
+  margin:0 0 22px;
+  font-size:.74rem;
+  color:var(--silver);
+  display:flex;align-items:center;gap:14px;
+}
+html.vc-art .sec-label::after{content:"";flex:0 0 clamp(40px,8vw,120px);height:1px;background:var(--hair-strong)}
+html.vc-art :is(.mf-title,.ch-head h2,.film-head h2,.desk-head h2){
+  display:block;
+  margin:0;
+  font-family:var(--font-display);
+  font-weight:400;
+  font-size:var(--t-display);
+  line-height:1.22;
+  color:var(--paper);
+}
+html.vc-art :is(.mf-title,.ch-head h2,.film-head h2,.desk-head h2)::before{display:none}
+
+/* ---------- 3. หน้าแรก ---------- */
+html.vc-art main > .hero{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  width:auto;
+  margin:0;
+  min-height:calc(100svh - var(--art-head));
+  height:auto;
+  max-height:none;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  justify-content:flex-start;
+  text-align:left;
+  padding:clamp(18px,3vh,32px) var(--gutter) clamp(20px,4vh,40px);
+  background:var(--bg);
+}
+html.vc-art .hero::before{display:none}
+html.vc-art .hero::after{
+  content:"";position:absolute;left:var(--gutter);right:var(--gutter);bottom:0;height:1px;
+  background:var(--hair);
+}
+html.vc-art .hero-meta{
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  padding-bottom:14px;
+  border-bottom:1px solid var(--hair);
+  font-family:var(--font-mono);
+  font-size:.68rem;
+  color:var(--muted);
+  text-transform:uppercase;
+}
+html.vc-art .hero-meta span:first-child{letter-spacing:.18em}
+html.vc-art .hero-meta i{font-style:normal;color:var(--silver);margin-left:10px}
+html.vc-art .hero-main{
+  flex:1;
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  align-content:center;
+  gap:clamp(36px,6vh,64px);
+  padding:clamp(32px,7vh,88px) 0;
+}
+html.vc-art .hero-copy{min-width:0}
+html.vc-art .hero .dx-pill[hidden]{
+  display:block !important;margin:0 0 22px;padding:0;border:0;background:none;
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+  font-family:var(--font-mono);font-size:.7rem;font-weight:500;letter-spacing:.2em;color:var(--silver);
+}
+html.vc-art .hero-title{
+  margin:0;
+  font-family:var(--font-display);
+  font-weight:400;
+  font-size:clamp(3.4rem,15vw,5.6rem);
+  line-height:1.3;
+  letter-spacing:0;
+  color:var(--paper);
+  background:none;
+  -webkit-text-fill-color:currentColor;
+  text-shadow:none;
+}
+html.vc-art .ht-l{display:block}
+html.vc-art .ht-l2{position:relative;width:fit-content;color:var(--silver);font-weight:300}
+html.vc-art .ht-l2::after{
+  content:"";position:absolute;left:0;right:0;bottom:.08em;height:2px;background:var(--paper);
+  transform-origin:left center;
+}
+html.vc-art .vc-word{padding:.1em 0 .16em;margin:-.1em 0 -.16em}
+html.vc-art .hero-lead{
+  max-width:32em;margin:clamp(20px,3vh,32px) 0 0;
+  font-size:clamp(1rem,1.25vw,1.18rem);line-height:1.85;color:var(--paper-dim);
+}
+html.vc-art .hero .dx-cta-row[hidden]{
+  display:flex !important;flex-wrap:wrap;justify-content:flex-start;gap:12px;margin-top:clamp(24px,4vh,36px);
+}
+html.vc-art .dx-cta,
+html.vc-art .dx-cta-ghost{
+  display:inline-block;padding:15px 26px;border-radius:2px;font-size:.98rem;font-weight:600;text-decoration:none;
+  -webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none;
+}
+html.vc-art .dx-cta{background:var(--paper);color:var(--ink);border:1px solid var(--paper)}
+html.vc-art .dx-cta:hover{background:var(--silver-hi);border-color:var(--silver-hi)}
+html.vc-art .dx-cta-ghost{background:transparent;color:var(--paper);border:1px solid var(--hair-strong)}
+html.vc-art .dx-cta-ghost:hover{border-color:var(--paper);color:var(--paper)}
+html.vc-art .hero .dx-points[hidden]{
+  display:flex !important;flex-wrap:wrap;justify-content:flex-start;gap:8px 36px;
+  margin:0;padding:16px 0 0;border-top:1px solid var(--hair);list-style:none;
+}
+html.vc-art .dx-points li{padding-left:28px;font-size:.8rem;color:var(--muted)}
+html.vc-art .dx-points li::before{
+  left:0;top:.8em;width:18px;height:1px;border:0;background:var(--silver);transform:none;
+}
+html.vc-art .hero-cue{
+  align-self:flex-end;margin-top:18px;display:flex;align-items:center;gap:12px;
+  font-size:.7rem;color:var(--muted);text-decoration:none;
+}
+html.vc-art .hero-cue:hover{color:var(--paper)}
+html.vc-art .hero-cue i{display:block;width:44px;height:1px;background:currentColor}
+html.vc-art .hero-art{display:none}
+
+/* ชิ้นส่วนต้นฉบับสัญญาในหน้าแรก (ตัวอย่างประกอบ) */
+html.vc-art .hero-frag{margin:0;width:min(100%,460px);justify-self:start;translate:0 calc(var(--p,0) * -48px)}
+html.vc-art .hero-frag figcaption{margin-bottom:12px;font-size:.66rem;color:var(--muted);text-transform:uppercase}
+html.vc-art .frag-page{
+  position:relative;padding:26px 28px 24px;border-radius:2px;
+  background:var(--paper);color:#19191b;
+  box-shadow:0 40px 70px -34px rgba(0,0,0,.95),0 0 0 1px rgba(255,255,255,.05);
+  rotate:-1deg;
+}
+html.vc-art .frag-h{color:#19191b;margin:0 0 14px;padding-bottom:10px;border-bottom:1px solid rgba(12,12,13,.22);font-family:var(--font-display);font-weight:600;font-size:1.12rem}
+html.vc-art .fl{margin:0 0 10px;font-size:.92rem;line-height:1.75;color:#19191b}
+html.vc-art .fl:last-child{margin-bottom:0}
+html.vc-art .note{
+  display:inline-block;margin:0 0 0 8px;padding:0 7px;border:1px solid currentColor;border-radius:2px;
+  font-family:var(--font-mono);font-size:.62rem;font-weight:500;line-height:1.7;vertical-align:.08em;white-space:nowrap;
+}
+html.vc-art .fl-mid .note,html.vc-art .cl-mid .note{color:#85610f}
+html.vc-art .fl-high .note,html.vc-art .cl-high .note{color:#9a2f2b}
+html.vc-art .cl-low .note{color:#3d6684}
+/* เส้นใต้ที่ถูกลากด้วยหมึก และแถบปกปิด (ใช้ร่วมกันทั้งหน้าแรกและฉากอ่านสัญญา) */
+html.vc-art .mk{
+  background-image:linear-gradient(var(--mkc,currentColor),var(--mkc,currentColor));
+  background-repeat:no-repeat;background-position:0 100%;background-size:100% 2px;
+  padding-bottom:1px;
+}
+html.vc-art .fl-mid{--mkc:#b38a35}
+html.vc-art .fl-high{--mkc:#b4524f}
+html.vc-art .rd{position:relative;display:inline-block}
+html.vc-art .rd::after{
+  content:"";position:absolute;left:-.14em;right:-.14em;top:.16em;bottom:.04em;
+  background:var(--ink);transform-origin:left center;transform:scaleX(var(--rt,1));
+}
+/* จังหวะเล่นตอนเปิดหน้า */
+html.vc-art.vc-motion .hero-frag .mk{background-size:0 2px;transition:background-size 1.1s var(--ease-out) var(--d,1.3s)}
+html.vc-art.vc-motion .hero-frag .fl-high .mk{--d:1.9s}
+html.vc-art.vc-motion .hero-frag.is-in .mk{background-size:100% 2px}
+html.vc-art.vc-motion .hero-frag .rd{--rt:0}
+html.vc-art.vc-motion .hero-frag .rd::after{transition:transform .9s var(--ease-in-out) .9s}
+html.vc-art.vc-motion .hero-frag.is-in .rd::after{transform:scaleX(1)}
+html.vc-art.vc-motion .ht-l2::after{transform:scaleX(0);transition:transform 1.2s var(--ease-out) 1s}
+html.vc-art.vc-motion .ht-l2.is-in::after{transform:scaleX(1)}
+html.vc-art.vc-motion .hero-title{translate:0 calc(var(--p,0) * -22px)}
+
+@media (min-width:1024px){
+  html.vc-art .hero-main{grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);align-items:center;gap:clamp(40px,6vw,104px)}
+  html.vc-art .hero-title{font-size:clamp(4.6rem,8.4vw,9rem)}
+  html.vc-art .hero-frag{justify-self:end}
+}
+
+/* ---------- 4. ฉากอ่านสัญญา (ตรึงจอ) ---------- */
+html.vc-art .mf{position:relative;height:340vh;border-top:1px solid var(--hair);background:var(--bg)}
+html.vc-art.vc-motion .mf{--p:0}
+html.vc-art:not(.vc-motion) .mf{--p:1;height:auto}
+html.vc-art .mf-pin{
+  position:sticky;top:var(--art-head);
+  height:calc(100svh - var(--art-head));
+  display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);
+  align-items:center;align-content:center;
+  gap:clamp(14px,3vh,28px);
+  padding:clamp(16px,3vh,32px) var(--gutter);
+  overflow:hidden;
+}
+html.vc-art:not(.vc-motion) .mf-pin{position:static;height:auto;padding-block:var(--section-y);gap:40px}
+html.vc-art .mf-title{font-size:clamp(1.8rem,7vw,2.6rem)}
+html.vc-art .mf-steps{list-style:none;margin:clamp(12px,2.4vh,28px) 0 0;padding:0;display:grid}
+html.vc-art .mf-steps li{margin:0 0 18px}
+html.vc-art .mf-steps b{display:block;margin-bottom:6px;font-size:1rem;font-weight:600;color:var(--paper)}
+html.vc-art .mf-steps span{display:block;font-size:.88rem;line-height:1.7;color:var(--paper-dim);max-width:30em}
+html.vc-art.vc-motion .mf-steps li{
+  grid-area:1/1;margin:0;
+  --in:clamp(0,calc((var(--p) - var(--a)) / .05),1);
+  --out:clamp(0,calc((var(--b) - var(--p)) / .05),1);
+  opacity:min(var(--in),var(--out));
+  translate:0 calc((1 - var(--in)) * 14px);
+}
+html.vc-art .mf-stage{min-width:0;display:flex;flex-direction:column;align-items:center;gap:14px;justify-self:center;width:100%}
+html.vc-art .mf-doc{
+  width:min(100%,600px);
+  padding:clamp(18px,3vw,40px);
+  background:var(--paper);color:#19191b;border-radius:2px;
+  box-shadow:0 50px 90px -40px rgba(0,0,0,.95),0 0 0 1px rgba(255,255,255,.05);
+  translate:0 calc((.5 - var(--p)) * 36px);
+}
+html.vc-art .mf-doc p{margin:0 0 10px;font-size:clamp(.8rem,2.5vw,.96rem);line-height:1.8}
+html.vc-art .mf-doc p:last-child{margin-bottom:0}
+html.vc-art .mf-tag{margin:0 0 8px;font-size:.62rem;color:rgba(25,25,27,.55);text-transform:uppercase}
+html.vc-art .mf-dh{font-family:var(--font-display);font-weight:600;font-size:clamp(1rem,3vw,1.2rem) !important;padding-bottom:8px;border-bottom:1px solid rgba(12,12,13,.22)}
+/* ค่าความคืบหน้าของแต่ละชิ้น: --a = จุดเริ่ม (0..1) กว้าง .07–.08 ของการเลื่อน */
+html.vc-art .mf-doc .rd{--rt:clamp(0,calc((var(--p) - var(--a)) / .07),1)}
+html.vc-art .mf-doc .cl{--t:clamp(0,calc((var(--p) - var(--a)) / .08),1)}
+html.vc-art .mf-doc .cl .mk{background-size:calc(var(--t) * 100%) 2px}
+html.vc-art .mf-doc .cl-mid{--mkc:#b38a35}
+html.vc-art .mf-doc .cl-high{--mkc:#b4524f}
+html.vc-art .mf-doc .cl-low{--mkc:#5a88a6}
+html.vc-art .mf-doc .cl .note{opacity:var(--t)}
+html.vc-art .mf-tally{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;margin:0;font-size:.68rem;color:var(--paper-dim);
+  opacity:clamp(0,calc((var(--p) - .78) / .08),1);
+}
+html.vc-art .mf-tally span{white-space:nowrap}
+@media (min-width:1024px){
+  html.vc-art .mf-pin{grid-template-columns:minmax(0,5fr) minmax(0,7fr);grid-template-rows:none;gap:clamp(32px,6vw,104px);align-content:center}
+  html.vc-art .mf-title{font-size:clamp(2.2rem,3.8vw,3.6rem)}
+  html.vc-art .mf-steps span{font-size:.98rem}
+  html.vc-art .mf-stage{align-items:flex-end}
+  html.vc-art .mf-doc{rotate:.8deg}
+}
+
+/* ---------- 5. สามขั้น ---------- */
+html.vc-art .ch{padding:var(--section-y) var(--gutter);border-top:1px solid var(--hair);background:var(--bg)}
+html.vc-art .ch-list{list-style:none;margin:clamp(40px,8vh,96px) 0 0;padding:0;display:grid;gap:clamp(28px,6vh,64px)}
+html.vc-art .ch-item{
+  display:grid;grid-template-columns:minmax(0,1fr);gap:14px;
+  padding-top:26px;border-top:1px solid var(--hair-strong);align-items:start;
+}
+html.vc-art .ch-n{
+  font-family:var(--font-display);font-weight:300;font-size:clamp(3.6rem,18vw,5.6rem);line-height:.9;
+  color:transparent;-webkit-text-stroke:1px var(--silver);
+}
+html.vc-art .ch-body h3{
+  margin:0 0 12px;font-family:var(--font-display);font-weight:500;font-size:clamp(1.8rem,6vw,2.7rem);line-height:1.25;color:var(--paper);
+}
+html.vc-art .ch-body p{margin:0;max-width:36em;font-size:.98rem;line-height:1.9;color:var(--paper-dim)}
+html.vc-art .ch-tag{
+  justify-self:start;padding:5px 10px;border:1px solid var(--hair-strong);border-radius:2px;
+  font-size:.64rem;letter-spacing:.18em;color:var(--silver);
+}
+html.vc-art .ch-foot{margin:clamp(48px,9vh,96px) 0 0;padding-top:18px;border-top:1px solid var(--hair);font-size:.72rem;color:var(--muted)}
+@media (min-width:1024px){
+  html.vc-art .ch-item{grid-template-columns:minmax(120px,.5fr) minmax(0,3fr) auto;gap:clamp(24px,4vw,64px)}
+  html.vc-art .ch-item:nth-child(2){margin-left:10%}
+  html.vc-art .ch-item:nth-child(3){margin-left:20%}
+  html.vc-art .ch-n{font-size:clamp(4.4rem,9vw,8rem)}
+}
+
+/* ---------- 6. แผ่นคลิป (#introVideo) ---------- */
+html.vc-art main > .vc-embed{
+  width:100%;margin:0;padding:var(--section-y) var(--gutter);border-top:1px solid var(--hair);background:var(--bg);
+}
+html.vc-art .film-head{margin:0 0 clamp(28px,5vh,56px)}
+html.vc-art .film-meta{margin:18px 0 0;font-size:.72rem;color:var(--muted)}
+html.vc-art .vc-embed .vc-frame{
+  width:100%;max-width:1040px;margin:0 auto;
+  border:1px solid var(--hair-strong) !important;border-radius:0 !important;box-shadow:none;background:#050506;
+  filter:grayscale(.85) contrast(1.05);       /* ชั่วคราวจนกว่าจะปรับสีคลิปในขั้น 6 */
+}
+
+/* คลิปไม่มีเสียง (จอ ≥1024px เท่านั้น: silent-clip.js สร้าง iframe ในช่องนี้) */
+html.vc-art .film-silent{display:none;width:100%;max-width:1040px;margin:clamp(28px,5vh,56px) auto 0}
+@media (min-width:1024px){ html.vc-art .film-silent{display:block} }
+html.vc-art .film-silent > .mono{margin:0 0 10px;font-size:.68rem;color:var(--muted)}
+html.vc-art .film-silent .vs-embed{margin:0}
+html.vc-art .film-silent .vs-frame{
+  display:block;width:100%;height:auto;min-height:0;aspect-ratio:16/9;
+  border:1px solid var(--hair-strong);filter:grayscale(1) contrast(1.05);opacity:.9;
+}
+
+/* ---------- 7. หัวพื้นที่ทำงาน ---------- */
+html.vc-art .desk-head{padding:var(--section-y) var(--gutter) clamp(24px,5vh,56px);border-top:1px solid var(--hair);background:var(--bg)}
+
+/* ---------- 8. กริดของหน้า (≥1024px) ----------
+   คอลัมน์ข้าง ๆ คือขอบกว้างของหน้า ส่วนกลางคือพื้นที่เนื้อหา ส่วนเต็มจอ (hero, ฉาก, สามขั้น, คลิป) ครอบทุกคอลัมน์ */
+@media (min-width:1024px){
+  html.vc-art main{
+    display:grid;
+    grid-template-columns:minmax(var(--gutter),1fr) minmax(0,calc(var(--content-max) / 2)) minmax(0,calc(var(--content-max) / 2)) minmax(var(--gutter),1fr);
+    grid-template-areas:
+      "hero   hero    hero   hero"
+      "mf     mf      mf     mf"
+      "ch     ch      ch     ch"
+      "video  video   video  video"
+      ".      deskhead deskhead ."
+      ".      auth    auth   ."
+      ".      input   result ."
+      ".      pay     pay    .";
+    column-gap:0;row-gap:0;align-items:start;
+  }
+  html.vc-art main > .hero{grid-area:hero}
+  html.vc-art main > .mf{grid-area:mf}
+  html.vc-art main > .ch{grid-area:ch}
+  html.vc-art main > #introVideo{grid-area:video;width:100%;justify-self:stretch}
+  html.vc-art main > .desk-head{grid-area:deskhead;padding-left:0;padding-right:0;border-top:0}
+  html.vc-art main > #authCard{grid-area:auth}
+  html.vc-art main > #checkCard{grid-area:input}
+  html.vc-art main > #resultCard{grid-area:result}
+  html.vc-art main > #paymentCard{grid-area:pay}
+}
+@media (min-width:1280px){
+  html.vc-art main{
+    grid-template-columns:minmax(var(--gutter),1fr) minmax(0,320px) minmax(0,calc((var(--content-max) - 320px) * .56)) minmax(0,calc((var(--content-max) - 320px) * .44)) minmax(var(--gutter),1fr);
+    grid-template-areas:
+      "hero   hero   hero    hero   hero"
+      "mf     mf     mf      mf     mf"
+      "ch     ch     ch      ch     ch"
+      "video  video  video   video  video"
+      ".      deskhead deskhead deskhead ."
+      ".      auth   input   result ."
+      ".      pay    pay     pay    .";
+  }
+}
