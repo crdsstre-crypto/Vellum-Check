@@ -73,15 +73,52 @@ body{
 }
 .dx-nav a:last-child:hover{background:var(--gold-soft);color:var(--on-gold)}
 
-/* ---------- 3. Hero ---------- */
-.hero{
-  text-align:left;
-  align-self:center;
-  padding:clamp(8px,2vh,28px) 8px clamp(8px,2vh,28px) 0;
+/* ---------- 3. Hero: เต็มจอ มีวิดีโอเล่นเอง (ไม่มีเสียง) ----------
+   วิดีโอ: videos/hero-v1/hero.mp4 (เพิ่มด้วย JS เฉพาะจอ ≥1024px จึงไม่โหลดบนมือถือ)
+   ถ้าเปลี่ยนวิดีโอ ให้เปลี่ยนชื่อโฟลเดอร์เป็นเวอร์ชันใหม่ (เช่น hero-v2) */
+main > .hero{
+  grid-column:1 / -1;
+  width:100vw;
+  margin-left:calc(50% - 50vw);
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+  min-height:560px;
+  height:calc(100vh - var(--dl-head));
+  max-height:960px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  align-items:center;
+  text-align:center;
+  padding:0 32px clamp(32px,6vh,64px);
+  background:var(--bg) url(videos/hero-v1/poster.jpg) center/cover no-repeat;
+}
+.hero::before{ /* ไล่สีมืดด้านล่างให้ตัวอักษรอ่านชัด */
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  background:
+    linear-gradient(to top, rgba(8,9,11,.98) 0%, rgba(8,9,11,.93) 34%, rgba(8,9,11,.55) 52%, rgba(8,9,11,.08) 74%, rgba(8,9,11,.3) 100%);
+}
+.hero::after{ /* เส้นทองบางๆ ปิดท้าย hero */
+  content:"";
+  position:absolute;
+  left:0;right:0;bottom:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(224,197,129,.45),transparent);
+}
+.dx-hero-video{
+  position:absolute;
+  inset:0;
+  z-index:-2;
+  width:100%;height:100%;
+  object-fit:cover;
+  pointer-events:none;
 }
 .dx-pill[hidden]{
   display:inline-block !important;
-  margin:0 0 22px;
+  margin:0 0 18px;
   padding:6px 16px;
   font-size:.72rem;
   font-weight:600;
@@ -90,14 +127,15 @@ body{
   color:var(--gold-soft);
   border:1px solid rgba(224,197,129,.34);
   border-radius:999px;
-  background:rgba(224,197,129,.06);
+  background:rgba(8,9,11,.5);
+  -webkit-backdrop-filter:blur(6px);
+  backdrop-filter:blur(6px);
 }
 .hero h1{
   margin:0;
   font-family:var(--dl-serif);
-  font-size:clamp(3rem,4.4vw,4.6rem);
+  font-size:clamp(3rem,5vw,5rem);
   line-height:1.2;
-  letter-spacing:0;
   background:linear-gradient(100deg,#f1dca6 0%,#e0c581 45%,#c8a75a 100%);
   -webkit-background-clip:text;
   background-clip:text;
@@ -105,47 +143,47 @@ body{
   color:var(--gold-soft);
 }
 .hero p{
-  margin:18px 0 0;
-  max-width:30em;
-  font-size:clamp(1.02rem,1.2vw,1.2rem);
-  line-height:1.75;
-  color:rgba(245,245,245,.72);
+  margin:14px 0 0;
+  max-width:36em;
+  font-size:clamp(1.02rem,1.3vw,1.28rem);
+  line-height:1.7;
+  color:rgba(245,245,245,.86);
 }
-.dx-cta-row[hidden]{display:flex !important;flex-wrap:wrap;gap:12px;margin-top:28px}
+.dx-cta-row[hidden]{display:flex !important;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:26px}
 .dx-cta,.dx-cta-ghost{
   display:inline-block;
-  padding:13px 26px;
+  padding:13px 28px;
   border-radius:var(--radius-btn);
   font-size:1rem;
   font-weight:600;
   text-decoration:none;
   transition:background .2s, border-color .2s, color .2s;
 }
-.dx-cta{background:var(--gold);color:var(--on-gold);box-shadow:0 8px 22px rgba(200,167,90,.22)}
+.dx-cta{background:var(--gold);color:var(--on-gold);box-shadow:0 8px 22px rgba(200,167,90,.25)}
 .dx-cta:hover{background:var(--gold-soft)}
-.dx-cta-ghost{color:var(--text);border:1px solid var(--border)}
-.dx-cta-ghost:hover{border-color:var(--gold-deep);color:var(--gold-soft)}
+.dx-cta-ghost{color:var(--text);border:1px solid rgba(255,255,255,.28);background:rgba(8,9,11,.35);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.dx-cta-ghost:hover{border-color:var(--gold-soft);color:var(--gold-soft)}
 .dx-points[hidden]{
-  display:grid !important;
-  gap:11px;
-  margin:34px 0 0;
-  padding:26px 0 0;
+  display:flex !important;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px 30px;
+  margin:28px 0 0;
+  padding:0;
   list-style:none;
-  border-top:1px solid var(--dl-line);
-  max-width:32em;
 }
 .dx-points li{
   position:relative;
-  padding-left:28px;
-  font-size:.95rem;
+  padding-left:22px;
+  font-size:.86rem;
   line-height:1.5;
-  color:rgba(245,245,245,.78);
+  color:rgba(245,245,245,.7);
 }
 .dx-points li::before{
   content:"";
   position:absolute;
-  left:2px;top:.42em;
-  width:14px;height:8px;
+  left:1px;top:.48em;
+  width:11px;height:6px;
   border-left:2px solid var(--gold);
   border-bottom:2px solid var(--gold);
   transform:rotate(-45deg);
@@ -158,20 +196,22 @@ main{
   width:var(--dl-w);
   max-width:none;
   margin:0 auto;
-  padding:clamp(24px,4vh,48px) 0 20px;
+  padding:0 0 20px;
   display:grid;
   grid-template-columns:minmax(0,1fr) minmax(0,1fr);
   grid-template-areas:
-    "hero  video"
+    "hero  hero"
+    "video video"
     "auth  auth"
     "input result"
     "pay   pay";
   gap:var(--dl-gap);
+  row-gap:clamp(36px,6vh,64px);
   align-items:start;
 }
 main > .card{margin:0}
 main > .hero{grid-area:hero}
-main > .vc-embed{grid-area:video}
+main > .vc-embed{grid-area:video;width:min(100%,960px);justify-self:center}
 main > #authCard{grid-area:auth}
 main > #checkCard{grid-area:input}
 main > #resultCard{grid-area:result}
@@ -182,10 +222,10 @@ main > #paymentCard{grid-area:pay;width:min(100%,760px);justify-self:center}
   main{
     grid-template-columns:var(--dl-side) minmax(0,1.25fr) minmax(0,1fr);
     grid-template-areas:
-      "hero  hero  video"
+      "hero  hero  hero"
+      "video video video"
       "auth  input result"
       "pay   pay   pay";
-    row-gap:clamp(36px,6vh,64px);
   }
   main > #authCard,
   main > #resultCard{
