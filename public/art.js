@@ -233,7 +233,7 @@
 (function () {
   'use strict';
   var root = document.documentElement;
-  var NS = 9;
+  var NS = 12;
 
   var VERT = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
 
@@ -244,8 +244,8 @@
     'precision mediump float;',
     '#endif',
     'uniform vec2 uRes;uniform float uTime;uniform vec2 uMouse;uniform float uScroll;uniform float uDim;uniform vec2 uLens;uniform float uLensOn;',
-    'uniform vec3 uC[9];uniform vec3 uR[9];uniform vec3 uU[9];',
-    'const int N=9;',
+    'uniform vec3 uC[12];uniform vec3 uR[12];uniform vec3 uU[12];',
+    'const int N=12;',
     'const vec3 L=vec3(-.35,.7,.62);',
     'float h21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}',
     'float dseg(vec2 p,vec2 a,vec2 b){vec2 pa=p-a,ba=b-a;float h=clamp(dot(pa,ba)/dot(ba,ba),0.,1.);return length(pa-ba*h);}',
@@ -278,7 +278,7 @@
     '      if(hv<.045&&x>.25&&x<.25+.32*Ln&&band>.5)ink=1.;',                    /* แถบปกปิด */
     '    }',
     '  }',
-    '  col=mix(col,hl,hla);col=mix(col,vec3(.09,.09,.11),ink);',
+    '  hla*=.82+.18*sin(uTime*2.1+seed*3.7+u*2.);col=mix(col,hl,hla);col=mix(col,vec3(.09,.09,.11),ink);',
     '  col=mix(col,vec3(.16),smoothstep(.006,0.,abs(v+.90))*step(abs(u+.12),.60)*.55);',   /* เส้นลายเซ็น */
     '  float sg=smoothstep(.010,0.,abs(v+.86+.045*sin(u*13.+seed*2.)))*step(.04,u)*step(u,.66);col=mix(col,vec3(.10,.10,.16),sg*.8);',
     '  if(mod(seed,4.)>2.5){',                                                  /* ตราตรวจแล้ว */
@@ -289,29 +289,37 @@
     '  float e=min(1.-abs(u),1.-abs(v));col*=.88+.12*smoothstep(0.,.05,e);',
     '  return col;',
     '}',
-    /* ตัดรังสีกับแผ่นสัญญาทั้งหมด เก็บแผ่นที่ใกล้สุด (hit=1 ถ้าชน) */
+    /* ตัดรังสีกับแผ่นสัญญาทั้งหมด เก็บเฉพาะข้อมูลของแผ่นที่ใกล้สุด แล้วค่อยลงสีครั้งเดียวหลังลูป (ลดขนาด shader มาก) */
     'vec3 sheets(vec3 ro,vec3 rd,float tmax,out float hit){',
-    '  float best=tmax;vec3 col=vec3(0.);hit=0.;',
+    '  float best=tmax;hit=0.;float bs=0.;vec2 bq=vec2(0.);float bdn=1.;float bl=1.;float bf=1.;',
     '  for(int i=0;i<N;i++){',
-    '    vec3 C=uC[i];vec3 R=uR[i];vec3 U=uU[i];vec3 n=cross(R,U);',
+    '    vec3 C=uC[i];vec3 R=uR[i];vec3 U=uU[i];vec3 n=normalize(cross(R,U));',
     '    float dn=dot(rd,n);if(abs(dn)<1e-4)continue;',
     '    float t=dot(C-ro,n)/dn;if(t<=.05||t>=best)continue;',
     '    vec3 p=ro+rd*t-C;float u=dot(p,R)/.78;float v=dot(p,U)/1.1;',
     '    if(abs(u)>1.||abs(v)>1.)continue;',
-    '    best=t;hit=1.;',
-    '    vec3 c=dn<0.?sheetCol(float(i)+1.,vec2(u,v)):vec3(.50,.49,.47);',     /* ด้านหลังแผ่นเป็นกระดาษเปล่า */
-    '    float lit=.40+.60*clamp(abs(dot(n,normalize(L))),0.,1.);',
-    '    c*=lit*.92;c=mix(c,vec3(.02,.022,.027),1.-exp(-t*.075));',
-    '    col=c;',
+    '    best=t;hit=1.;bs=float(i)+1.;bq=vec2(u,v);bdn=dn;',
+    '    bl=.40+.60*clamp(abs(dot(n,normalize(L))),0.,1.);',
+    '    bf=smoothstep(-1.25,-.55,C.y)*smoothstep(4.7,4.0,C.y);',
+    '  }',
+    '  vec3 col=vec3(0.);',
+    '  if(hit>.5){',
+    '    vec3 c=bdn<0.?sheetCol(bs,bq):vec3(.50,.49,.47);',                  /* ด้านหลังแผ่นเป็นกระดาษเปล่า */
+    '    c*=bl*.92;c=mix(c,vec3(.02,.022,.027),1.-exp(-best*.075));',
+    '    col=mix(vec3(.02,.022,.027),c,bf);',
     '  }',
     '  return col;',
     '}',
     'vec3 render(vec2 uv){',
     '  float asp=uRes.x/uRes.y;float fv=clamp(.9/asp,1.,2.3);',
-    '  vec3 ro=vec3(uMouse.x*.9+sin(uTime*.11)*.18,.45-uMouse.y*.3+sin(uTime*.09)*.04,4.9-uScroll*9.);',
-    '  vec3 ta=vec3(uMouse.x*1.0,.7-uMouse.y*.4,-4.5-uScroll*9.);',
-    '  vec3 f=normalize(ta-ro);vec3 r=normalize(cross(f,vec3(0.,1.,0.)));vec3 u=cross(r,f);',
-    '  vec3 rd=normalize(f+(uv.x*r+uv.y*u)*1.12*fv);',
+    '  vec3 ro=vec3(-uMouse.x*.9+sin(uTime*.11)*.15,.45+uMouse.y*.7+sin(uTime*.09)*.04,4.9-uScroll*9.);',
+    '  vec3 ta=vec3(0.,.7,-4.5-uScroll*9.);',
+    '  vec3 f=normalize(ta-ro);',
+    '  float yw=uMouse.x*.34;float pt=uMouse.y*.5;float cyw=cos(yw),syw=sin(yw);',
+    '  f=vec3(f.x*cyw+f.z*syw,f.y,-f.x*syw+f.z*cyw);f.y+=pt;f=normalize(f);',
+    '  vec3 r=normalize(cross(f,vec3(0.,1.,0.)));vec3 u=cross(r,f);',
+    '  float rl=uMouse.x*.10;vec3 r2=r*cos(rl)+u*sin(rl);vec3 u2=-r*sin(rl)+u*cos(rl);',
+    '  vec3 rd=normalize(f+(uv.x*r2+uv.y*u2)*1.12*fv);',
     '  vec3 col;float tf=1e5;float h=0.;',
     '  if(rd.y<-1e-3)tf=(-1.7-ro.y)/rd.y;',
     '  if(tf>0.&&tf<1e4){',
@@ -330,7 +338,7 @@
     '}',
     'void main(){',
     '  vec2 uv=(gl_FragCoord.xy-.5*uRes)/uRes.y;',
-    '  float d=length(uv-uLens);float LR=.17;float inL=uLensOn*step(d,LR);float k=clamp(d/LR,0.,1.);',
+    '  float d=length(uv-uLens);float LR=.12;float inL=uLensOn*step(d,LR);float k=clamp(d/LR,0.,1.);',
     '  vec2 uvm=uLens+(uv-uLens)*mix(1.,.50+.50*k*k,inL);',        /* เลนส์ขยาย */
     '  vec3 col=render(uvm);',
     '  col=col/(1.+col*.55);',
@@ -348,6 +356,17 @@
   var AC = new Float32Array(NS * 3), AR = new Float32Array(NS * 3), AU = new Float32Array(NS * 3);
   function layout(t) {
     for (var i = 0; i < NS; i++) {
+      if (i >= 9) {                                   /* กระดาษที่ร่วงลงมาและหมุนตกลงมาเป็นรอบ ๆ */
+        var j = i - 9, v = .46 + .08 * j, cyc = 6.2, ph = j * 2.3;
+        var yw = t * .5 + j * 2, pt = Math.sin(t * .8 + j) * .6, rl = t * .35 + j, sc = .7;
+        var c1 = Math.cos(yw), s1 = Math.sin(yw), c2 = Math.cos(pt), s2 = Math.sin(pt), c3 = Math.cos(rl), s3 = Math.sin(rl);
+        AR[i * 3] = (c3 * c1 + s3 * s2 * s1) / sc; AR[i * 3 + 1] = (s3 * c2) / sc; AR[i * 3 + 2] = (-c3 * s1 + s3 * s2 * c1) / sc;
+        AU[i * 3] = (-s3 * c1 + c3 * s2 * s1) / sc; AU[i * 3 + 1] = (c3 * c2) / sc; AU[i * 3 + 2] = (s3 * s1 + c3 * s2 * c1) / sc;
+        AC[i * 3] = [-2.5, .5, 2.7][j] + Math.sin(t * .7 + j * 2) * .4;
+        AC[i * 3 + 1] = 4.5 - (((t * v + ph) % cyc) + cyc) % cyc;
+        AC[i * 3 + 2] = -1.2 - j * 1.3;
+        continue;
+      }
       var yaw = Math.sin(i * 1.9) * .55 + Math.sin(t * .17 + i) * .07;
       var pit = Math.sin(i * 2.7) * .16 + Math.sin(t * .13 + i * 2) * .04;
       var rol = Math.sin(i * 3.3) * .22 + Math.sin(t * .11 + i * 3) * .05;
@@ -393,8 +412,11 @@
     var scale = small ? 0.55 : 0.72, running = false, inView = true, t0 = performance.now(), raf = 0, W = 0, H = 0;
     var frames = 0, acc = 0, last = 0, lost = false;
     var lens = { x: .12, y: .06, tx: .12, ty: .06, moved: -1e9 };
+    var mp = { x: 0, y: 0, tx: 0, ty: 0 }, fixedT = null;
+    window.addEventListener('pointermove', function (e) { mp.tx = e.clientX / window.innerWidth - .5; mp.ty = e.clientY / window.innerHeight - .5; }, { passive: true });
+    document.addEventListener('pointerleave', function () { mp.tx = 0; mp.ty = 0; });
 
-    /* แว่นขยายตามเมาส์/นิ้วที่อยู่บนฉากเปิด ถ้านิ่งเกิน 2.5 วินาทีจะเดินวนเอง */
+    /* แว่นขยายตามเมาส์/นิ้วที่อยู่บนฉากเปิด ถ้านิ่งเกิน 6 วินาทีจะเดินวนเอง */
     function onMove(e) {
       var r = hero.getBoundingClientRect();
       if (e.clientY < r.top || e.clientY > r.bottom) return;
@@ -412,13 +434,14 @@
       cv.width = W; cv.height = H; gl.viewport(0, 0, W, H);
     }
     function draw(now, still) {
-      var P = window.VCPointer || { x: 0, y: 0 };
       var r = hero.getBoundingClientRect();
       var sc = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height)));
-      var t = still ? 3.0 : (now - t0) / 1000, asp = W / H;
+      if (!still) { mp.x += (mp.tx - mp.x) * .16; mp.y += (mp.ty - mp.y) * .16; }
+      var P = still ? { x: 0, y: 0 } : mp;
+      var t = still ? 3.0 : (fixedT !== null ? fixedT : (now - t0) / 1000), asp = W / H;
       if (still) { lens.x = asp * .12; lens.y = .05; }
       else {
-        if (now - lens.moved > 2500) { lens.tx = Math.sin(t * .33) * .27 * asp; lens.ty = Math.cos(t * .21) * .15; }
+        if (now - lens.moved > 6000) { lens.tx = Math.sin(t * .33) * .27 * asp; lens.ty = Math.cos(t * .21) * .15; }
         lens.x += (lens.tx - lens.x) * .12; lens.y += (lens.ty - lens.y) * .12;
       }
       layout(t);
@@ -444,7 +467,7 @@
       if (!running && inView && !document.hidden) { running = true; last = 0; if (!raf) raf = requestAnimationFrame(loop); }
     }
     size(); draw(performance.now(), mq && mq.matches); go();
-    window.VCScene = { ok: true, get scale() { return scale; } };
+    window.VCScene = { ok: true, get scale() { return scale; }, freeze: function (t) { fixedT = (typeof t === 'number') ? t : null; } };   /* freeze(t): ตรึงเวลาของฉาก ใช้ทดสอบ */
 
     cv.addEventListener('webglcontextlost', function (e) { e.preventDefault(); lost = true; running = false; root.classList.remove('vc-3d'); cv.style.display = 'none'; });
     if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { inView = es[0].isIntersecting; if (!inView) running = false; else go(); }, { threshold: 0 }).observe(hero);
