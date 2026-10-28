@@ -863,3 +863,24 @@ html.vc-art.vc-motion .ch{
   --o:max(1 - var(--t),1 - var(--u));
   clip-path:inset(calc((1 - var(--t)) * 9vh) calc(var(--o) * 5vw) calc((1 - var(--u)) * 9vh) calc(var(--o) * 5vw) round calc(var(--o) * 28px));
 }
+
+
+/* ===== ฉากเปิดจัดกึ่งกลาง (29 ต.ค. 2026) — ข้อความอยู่กลางจอทับฉาก 3 มิติ ===== */
+html.vc-art main > .hero{text-align:center}
+html.vc-art .hero-main{
+  grid-template-columns:minmax(0,1fr) !important;
+  justify-items:center;
+  align-content:center;
+  text-align:center;
+}
+html.vc-art .hero-copy{display:flex;flex-direction:column;align-items:center;width:100%}
+html.vc-art .hero .dx-pill[hidden]{margin-inline:auto}
+html.vc-art .hero-title{font-size:clamp(3.4rem,13vw,5.4rem);text-align:center}
+@media (min-width:1024px){ html.vc-art .hero-title{font-size:clamp(4.6rem,9vw,9.6rem)} }
+html.vc-art .ht-l{text-align:center}
+html.vc-art .ht-l2{margin-inline:auto}
+html.vc-art .hero-lead{margin-inline:auto;text-align:center;max-width:34em}
+html.vc-art .hero .dx-cta-row[hidden]{justify-content:center}
+html.vc-art .hero .dx-points[hidden]{justify-content:center}
+html.vc-art .hero-cue{align-self:center}
+html.vc-art .hero-title{width:100%}
