@@ -1,27 +1,31 @@
-/* คลิปแนะนำแบบไม่มีเสียง (วนเล่นเอง) — อยู่ด้านบนของ Hero เฉพาะจอคอม/โน้ตบุ๊ก
+/* คลิปแนะนำแบบไม่มีเสียง เป็นพื้นหลังเต็ม Hero (วนเล่นเอง) — เฉพาะจอคอม/โน้ตบุ๊ก
    - ไฟล์นี้โหลดด้วย media="(min-width: 1024px)" ใน index.html มือถือไม่ได้ใช้กฎใดเลย
-   - ตัวคลิปคือ silent-clip.html (แยกจากคลิปแนะนำมีเสียง videos/clip-intro/ ไม่แก้ร่วมกัน)
-   - ปรับขนาดคลิปที่ --vs-w (กว้างสูงสุด) · Hero ยืดความสูงตามคลิป */
-:root{--vs-w:1120px}
+   - ตัวคลิปคือ silent-clip.html?bg=1 (แยกจากคลิปแนะนำมีเสียง videos/clip-intro/ ไม่แก้ร่วมกัน)
+   - ความสูง Hero: --vs-h (ต่ำสุด) · ขนาดภาพในคลิปแก้ที่ scale(.56) ใน silent-clip.html (.bg .sw) */
+:root{--vs-h:880px}
 .vs-embed[hidden]{display:none !important}
 main > .hero{
   height:auto;
   max-height:none;
-  min-height:calc(100vh - var(--dl-head));
-  justify-content:flex-start;
-  padding-top:clamp(20px,3.5vh,40px);
+  min-height:max(calc(100vh - var(--dl-head)), var(--vs-h));
 }
 .hero > .vs-embed{
-  flex:0 0 auto;
-  width:min(100%,var(--vs-w));
-  margin:0 0 clamp(24px,4vh,44px);
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  margin:0;
+  pointer-events:none;
+}
+.hero > .vs-embed::after{ /* ไล่สีมืดด้านล่าง ให้ชื่อและปุ่มอ่านชัด */
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to top, rgba(8,9,11,.97) 0%, rgba(8,9,11,.86) 30%, rgba(8,9,11,.35) 52%, rgba(8,9,11,0) 68%);
 }
 .vs-frame{
   display:block;
   width:100%;
-  aspect-ratio:16/9;
+  height:100%;
   border:0;
-  border-radius:18px;
   background:#060a14;
-  box-shadow:0 0 0 1px rgba(232,207,154,.3),0 24px 56px rgba(0,0,0,.6);
 }
