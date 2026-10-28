@@ -74,8 +74,10 @@
       var t = (now - t0) / 1000, P = window.VCPointer || { x: 0, y: 0 };
       var sc = Math.min(1, Math.max(0, -hero.getBoundingClientRect().top / Math.max(1, H)));
       g.clearRect(0, 0, W, H);
-      beam(W * .72, W * .07, .055, Math.sin(t * .18) * .015 + P.x * .02);
-      beam(W * .9, W * .045, .035, Math.sin(t * .13 + 1) * .012 + P.x * .015);
+      if (!root.classList.contains('vc-3d')) {
+        beam(W * .72, W * .07, .055, Math.sin(t * .18) * .015 + P.x * .02);
+        beam(W * .9, W * .045, .035, Math.sin(t * .13 + 1) * .012 + P.x * .015);
+      }
       for (var i = 0; i < parts.length; i++) {
         var p = parts[i];
         var x = p.x + Math.sin(t * .25 * p.sp + p.ph) * 14 * p.z - P.x * 46 * p.z;
