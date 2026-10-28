@@ -1,0 +1,2506 @@
+/* =========================================================
+   mobile.css: ใช้เฉพาะจอต่ำกว่า 768px (รอบ 8: กระชับหน้าและจัดระเบียบ)
+   โหลดจาก index.html ด้วย media="(max-width: 767px)"
+   - ไม่เปลี่ยนสี (สีอยู่ที่ themes.css)
+   - ระยะและขนาดหลักอยู่ที่ "0. ตัวปรับเร็ว" ด้านล่าง แก้ที่เดียวจบ
+   - อนิเมชันมีเฉพาะตอนโหลดหน้าและตอนผลลัพธ์ขึ้น ไม่มีอนิเมชันวนซ้ำ
+
+   ซ่อมด่วน: หาหัวข้อตามอาการ แล้วแก้เฉพาะส่วนนั้น
+   | อาการ                                 | ไปที่หัวข้อ                 |
+   |---------------------------------------|----------------------------|
+   | ระยะห่าง/ขนาดโดยรวมไม่พอดี             | "0. ตัวปรับเร็ว"            |
+   | หัวเว็บ/ปุ่มบัญชีมุมขวาบนผิด           | "1. Header"                |
+   | ไอคอนหรือหัวเรื่องส่วนนำผิด            | "2. ส่วนนำ"                |
+   | แผนบัญชีไม่เลื่อนขึ้น/ปิดไม่ได้         | "3. แผนบัญชี"              |
+   | การ์ดชิดหรือห่างเกินไป                 | "4. การ์ดและหมวด"           |
+   | ช่องกรอก/ปุ่มเล็กเกินแตะ               | "5. ช่องกรอกและปุ่ม"        |
+   | เลือกประเภทสัญญาไม่ขึ้น/แผนไม่เปิด      | "5c. ตัวเลือกประเภทสัญญา"   |
+   | ผลการตรวจอ่านยาก/อนิเมชันผลลัพธ์        | "6. ผลการตรวจ"             |
+   | ปุ่มเติมเครดิตแน่นหรือสีไม่เข้ากัน       | "7. เติมเครดิต"            |
+   | เอฟเฟกต์รบกวนการอ่าน/อยากปิด            | "8. เอฟเฟกต์ (ปิดได้ที่นี่)" |
+   | ด้านล่างชนขอบจอ iPhone                 | "9. Footer และ safe area"  |
+   ========================================================= */
+
+/* ---------- 0. ตัวปรับเร็ว (แก้ค่าตรงนี้ได้ทันที) ----------
+   --m-page-x     ระยะซ้ายขวาของหน้า (ค่าเดิม 18px)
+   --m-hero-y     ระยะบนล่างของส่วนนำ (ค่าน้อย = หน้ากระชับ)
+   --m-icon       ขนาดกล่องไอคอนในส่วนนำ (ค่าปัจจุบัน 64px)
+   --m-icon-pad   ระยะขอบภายในกล่อง ยิ่งมากตัวตราชั่งยิ่งเล็ก (ค่าปัจจุบัน 6px ตัวตราชั่งราว 52px)
+   --m-card-y     ระยะบนล่างของแต่ละหมวด
+   --m-h2-gap     ระยะระหว่างหัวข้อกับเนื้อหา
+   --m-textarea-h ความสูงช่องวางสัญญาเริ่มต้น (ยังเลื่อนอ่านได้เมื่อพิมพ์ยาว) */
+:root{
+  --m-page-x:18px;
+  --m-hero-y:14px;
+  --m-icon:64px;
+  --m-icon-pad:6px;
+  --m-card-y:22px;
+  --m-h2-gap:12px;
+  --m-textarea-h:140px;
+}
+
+/* ---------- ตั้งค่าทั่วไป ---------- */
+html,body{overflow-x:hidden}
+button{-webkit-tap-highlight-color:transparent}
+svg{max-width:100%}
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible{
+  outline:2px solid var(--focus);
+  outline-offset:2px;
+}
+
+/* ---------- 1. Header ---------- */
+header{
+  position:sticky;
+  top:0;
+  z-index:40;
+  padding:0;
+  padding-top:env(safe-area-inset-top);
+  text-align:left;
+  background:rgba(8,9,11,.92);
+  -webkit-backdrop-filter:blur(14px);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--card-edge);
+}
+.topbar{justify-content:space-between;padding:10px var(--m-page-x)}
+.brand{gap:10px}
+.brand-logo{width:26px;height:26px;color:var(--gold)}
+.brand-name{
+  font-size:.92rem;
+  font-weight:600;
+  letter-spacing:.02em;
+  text-transform:none;
+  color:var(--text);
+}
+
+.auth-toggle{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  min-height:44px;
+  padding:8px 18px;
+  border-radius:999px;
+  background:transparent;
+  border:1px solid var(--gold-deep);
+  color:var(--gold-soft);
+  font-size:.88rem;
+  font-weight:600;
+  white-space:nowrap;
+}
+.auth-toggle:active{background:rgba(229,196,119,.12)}
+.auth-toggle-in{display:none}
+body:has(#authLoggedIn:not([hidden])) .auth-toggle-out{display:none}
+body:has(#authLoggedIn:not([hidden])) .auth-toggle-in{display:inline}
+
+/* ---------- 2. ส่วนนำ ----------
+   ไอคอนอยู่ซ้าย หัวเรื่องอยู่ขวา กินพื้นที่แนวตั้งน้อยที่สุด */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1; /* อยู่ล่างสุดเสมอ ไม่ไปสร้างชั้นซ้อนให้ main */
+  pointer-events:none;
+  background:radial-gradient(circle at 50% 0%, rgba(229,196,119,.09), transparent 50%);
+}
+
+main{padding:0}
+.hero{
+  display:grid;
+  grid-template-columns:var(--m-icon) 1fr;
+  column-gap:14px;
+  align-items:center;
+  text-align:left;
+  padding:var(--m-hero-y) var(--m-page-x);
+}
+.hero-art{
+  display:block;
+  grid-column:1;
+  grid-row:1 / span 2;
+  width:var(--m-icon);
+  height:var(--m-icon);
+  box-sizing:border-box;
+  padding:var(--m-icon-pad);
+  margin:0;
+  border-radius:16px;
+  background:var(--item);
+  border:1px solid var(--card-edge);
+  overflow:visible;
+}
+/* เส้นหนาขึ้นตามขนาดที่ย่อลง ภาพใช้ viewBox ที่ตัดขอบแล้วจึงเต็มกรอบ */
+.hero-art g{stroke-width:7}
+.hero-art .draw{
+  stroke-dasharray:1;
+  stroke-dashoffset:1;
+  animation:drawLine 1.2s cubic-bezier(.4,0,.2,1) forwards;
+}
+.hero-art .draw:nth-child(2){animation-delay:.15s}
+.hero-art .draw:nth-child(3){animation-delay:.25s}
+.hero-art .draw:nth-child(4){animation-delay:.35s}
+.hero-art .draw:nth-child(5){animation-delay:.42s}
+.hero-art .draw:nth-child(6){animation-delay:.5s}
+.hero-art .draw:nth-child(7){animation-delay:.58s}
+.hero-art .draw:nth-child(8){animation-delay:.66s}
+
+/* หัวเรื่องใช้ตัวอักษรไทยแบบมีหัว ให้ความรู้สึกเป็นงานกฎหมาย */
+.hero h1,
+h2{font-family:'Noto Serif Thai',Georgia,serif}
+.hero h1{
+  grid-column:2;
+  grid-row:1;
+  align-self:end;
+  font-size:1.3rem;
+  font-weight:700;
+  line-height:1.3;
+  margin:0;
+  color:var(--text);
+  letter-spacing:0;
+}
+.hero p{
+  grid-column:2;
+  grid-row:2;
+  align-self:start;
+  font-size:.84rem;
+  line-height:1.5;
+  color:var(--muted);
+  margin:4px 0 0;
+}
+
+/* ---------- 3. แผนบัญชีจากด้านล่าง ---------- */
+body.auth-open{overflow:hidden}
+
+.sheet-backdrop{
+  display:block;
+  position:fixed;
+  inset:0;
+  z-index:45;
+  background:rgba(0,0,0,.62);
+  -webkit-backdrop-filter:blur(3px);
+  backdrop-filter:blur(3px);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .3s ease;
+}
+body.auth-open .sheet-backdrop{opacity:1;pointer-events:auto}
+
+#authCard{
+  /* ปิดอนิเมชันการ์ดทั่วไป ไม่เช่นนั้น fadeUp จะทับ transform ของแผนและทำให้แผนไม่เลื่อนขึ้น */
+  animation:none;
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:50;
+  margin:0;
+  max-height:88vh;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  background:var(--card);
+  border:1px solid var(--card-edge);
+  border-bottom:none;
+  border-radius:24px 24px 0 0;
+  padding:10px calc(var(--m-page-x) + 2px) calc(24px + env(safe-area-inset-bottom));
+  box-shadow:0 -16px 40px rgba(0,0,0,.5);
+  transform:translateY(102%);
+  visibility:hidden;
+  transition:transform .4s cubic-bezier(.2,.8,.2,1), visibility .4s;
+}
+#authCard::before{
+  content:"";
+  display:block;
+  width:44px;
+  height:4px;
+  border-radius:2px;
+  background:var(--border);
+  margin:0 auto 14px;
+}
+body.auth-open #authCard{transform:none;visibility:visible}
+
+.sheet-close{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:absolute;
+  top:12px;
+  right:12px;
+  width:44px;
+  height:44px;
+  padding:0;
+  border-radius:50%;
+  background:var(--ghost);
+  color:var(--text);
+  font-size:.95rem;
+  line-height:1;
+}
+
+/* ---------- 4. การ์ดและหมวด ----------
+   บนมือถือใช้หมวดเต็มความกว้างคั่นด้วยเส้นบาง ไม่ซ้อนกรอบ */
+.card{
+  border:none;
+  border-radius:0;
+  box-shadow:none;
+  background:transparent;
+  border-top:1px solid var(--card-edge);
+  padding:var(--m-card-y) var(--m-page-x);
+  margin:0;
+  animation:fadeUp .6s cubic-bezier(.2,.8,.2,1) both;
+}
+.card:nth-of-type(2){animation-delay:.12s}
+.card:nth-of-type(3){animation-delay:.2s}
+.card:nth-of-type(4){animation-delay:.28s}
+h2{
+  font-size:1.05rem;
+  font-weight:700;
+  margin-bottom:var(--m-h2-gap);
+  gap:10px;
+}
+h2::before{width:3px;height:16px}
+
+/* ---------- 5. ช่องกรอกและปุ่ม ---------- */
+input[type="email"],
+input[type="password"],
+textarea{
+  font-size:16px; /* ป้องกัน iOS ซูมอัตโนมัติเมื่อแตะ */
+  padding:12px 14px;
+}
+input[type="email"],
+input[type="password"]{min-height:50px;border-radius:14px}
+textarea{
+  min-height:var(--m-textarea-h);
+  border-radius:16px;
+  line-height:1.7;
+  background:linear-gradient(180deg,rgba(255,255,255,.025),transparent 70%), var(--field);
+}
+
+.hint{
+  display:block;
+  margin:10px 2px 0;
+  font-size:.8rem;
+  color:var(--muted);
+  line-height:1.5;
+}
+.hint::before{content:"🔒 "}
+
+.btns{flex-direction:column;gap:10px;margin-top:14px}
+.btns button{
+  width:100%;
+  min-height:50px;
+  font-size:1rem;
+  border-radius:16px;
+}
+.primary{
+  font-size:1.02rem;
+  letter-spacing:.01em;
+  box-shadow:0 8px 22px rgba(229,196,119,.16);
+}
+.ghost{border-radius:16px}
+
+.voice-opt{padding:10px 0 0;font-size:.9rem;min-height:44px}
+
+/* ---------- 5b. ประเภทสัญญา (ดรอปดาวน์) ----------
+   ใช้ช่องเลือกแบบดรอปดาวน์เพื่อไม่ให้หน้ายาว ค่าสีทั้งหมดดึงจาก themes.css */
+.field-wrap{margin:0 0 14px}
+.field-label{
+  display:block;
+  font-size:.88rem;
+  font-weight:600;
+  color:var(--text);
+  margin:0 0 8px;
+}
+.select-wrap{position:relative}
+.select-wrap::after{
+  content:"";
+  position:absolute;
+  right:20px;
+  top:50%;
+  width:8px;
+  height:8px;
+  border-right:2px solid var(--gold);
+  border-bottom:2px solid var(--gold);
+  transform:translateY(-70%) rotate(45deg);
+  pointer-events:none;
+}
+.select-wrap select{
+  width:100%;
+  min-height:50px;
+  appearance:none;
+  -webkit-appearance:none;
+  background:var(--field);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:12px 44px 12px 14px;
+  font:inherit;
+  font-size:16px; /* ป้องกัน iOS ซูมอัตโนมัติ */
+  transition:border-color .2s, box-shadow .2s;
+}
+.select-wrap select:focus{
+  outline:none;
+  border-color:var(--gold-deep);
+  box-shadow:0 0 0 3px var(--focus);
+}
+.select-wrap option{background:var(--card);color:var(--text)}
+
+/* ---------- 5c. ตัวเลือกประเภทสัญญา (ปุ่มและแผนจากด้านล่าง, มือถือเท่านั้น) ----------
+   ค่าจริงอยู่ที่ <select id="contractType"> ซึ่งซ่อนเมื่อ JS เปิดใช้ (html.ct-ready)
+   หัวแผนกับปุ่มปิดอยู่กับที่ มีเพียงรายการที่เลื่อนได้
+   ปิดการใช้: ลบ class ct-ready ออกจาก <html> หรือลบ JS ของตัวเลือกใน index.html */
+[hidden]{display:none !important}
+html.ct-ready .select-wrap{display:none}
+
+.ct-ico{
+  display:grid;
+  place-items:center;
+  flex:none;
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  background:var(--ghost);
+  border:1px solid var(--card-edge);
+  color:var(--gold);
+}
+.ct-ico svg{width:22px;height:22px}
+.ct-txt{display:flex;flex-direction:column;min-width:0;gap:2px}
+.ct-txt b{font-size:.95rem;font-weight:600;color:var(--text)}
+.ct-txt small{font-size:.78rem;line-height:1.4;color:var(--muted)}
+
+/* ปุ่มบนหน้าหลัก */
+.ct-trigger{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  min-height:64px;
+  padding:10px 16px 10px 12px;
+  text-align:left;
+  font:inherit;
+  color:var(--text);
+  background:var(--item);
+  border:1px solid var(--gold-deep);
+  border-radius:16px;
+  box-shadow:0 8px 22px rgba(229,196,119,.1);
+  cursor:pointer;
+}
+.ct-trigger .ct-ico{border-color:var(--gold-deep)}
+.ct-trigger .ct-txt{flex:1}
+.ct-trigger:active{transform:scale(.99)}
+.ct-chev{
+  flex:none;
+  width:8px;
+  height:8px;
+  margin-right:6px;
+  border-right:2px solid var(--gold);
+  border-bottom:2px solid var(--gold);
+  transform:rotate(45deg);
+}
+
+/* แผน: หัวอยู่กับที่ รายการเลื่อนได้ */
+.ct-sheet{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:50;
+  display:flex;
+  flex-direction:column;
+  max-height:80vh;
+  max-height:80dvh;
+  overflow:hidden;
+  padding-top:10px;
+  background:var(--card);
+  border:1px solid var(--card-edge);
+  border-bottom:none;
+  border-radius:24px 24px 0 0;
+  box-shadow:0 -16px 40px rgba(0,0,0,.5);
+  transform:translateY(102%);
+  visibility:hidden;
+  transition:transform .4s cubic-bezier(.2,.8,.2,1), visibility .4s;
+}
+body.ct-open{overflow:hidden}
+body.ct-open .ct-sheet{transform:none;visibility:visible}
+body.ct-open .sheet-backdrop{opacity:1;pointer-events:auto}
+.ct-grip{
+  flex:none;
+  width:44px;
+  height:4px;
+  border-radius:2px;
+  background:var(--border);
+  margin:0 auto 10px;
+}
+.ct-head{
+  flex:none;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:0 var(--m-page-x);
+  margin-bottom:10px;
+}
+.ct-hint{
+  flex:none;
+  margin:-4px var(--m-page-x) 12px;
+  font-size:.8rem;
+  line-height:1.5;
+  color:var(--muted);
+}
+.ct-head h3{
+  margin:0;
+  font-family:'Noto Serif Thai',Georgia,serif;
+  font-size:1.05rem;
+  font-weight:700;
+  color:var(--text);
+}
+.ct-close{
+  display:grid;
+  place-items:center;
+  width:44px;
+  height:44px;
+  padding:0;
+  border:none;
+  border-radius:50%;
+  background:var(--ghost);
+  color:var(--text);
+  font-size:.95rem;
+  line-height:1;
+}
+/* ช่องค้นหาประเภท (รอบ 9) */
+.ct-search-wrap{flex:none;padding:0 var(--m-page-x) 10px}
+.ct-search{
+  width:100%;
+  min-height:46px;
+  padding:10px 14px;
+  font-size:16px; /* ป้องกัน iOS ซูมอัตโนมัติ */
+  border-radius:14px;
+  border:1px solid var(--border);
+  background:var(--field);
+  color:var(--text);
+  -webkit-appearance:none;
+  appearance:none;
+}
+.ct-search::placeholder{color:var(--muted)}
+.ct-search::-webkit-search-cancel-button{filter:invert(.7)}
+.ct-list li[hidden],.ct-list .ct-none[hidden]{display:none}
+.ct-none{
+  padding:14px 4px;
+  font-size:.88rem;
+  color:var(--muted);
+  text-align:center;
+  list-style:none;
+}
+.ct-list{
+  flex:1 1 auto;
+  min-height:0;
+  list-style:none;
+  margin:0;
+  padding:0 var(--m-page-x) calc(16px + env(safe-area-inset-bottom));
+  display:grid;
+  gap:6px;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+}
+.ct-list li{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 12px 8px 8px;
+  border:1px solid var(--card-edge);
+  border-radius:14px;
+  background:var(--item);
+  cursor:pointer;
+  transition:border-color .2s, background .2s;
+}
+.ct-list li:active{
+  transform:scale(.98);
+  border-color:var(--gold-deep);
+  background:rgba(229,196,119,.06);
+}
+.ct-list li:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+/* รายการที่เลือก: ไฮไลต์เหลืองอ่อนแบบไม่แสบตา ขอบทองจาง และเครื่องหมายถูก */
+.ct-list li.is-on{
+  border-color:var(--gold-deep);
+  background:rgba(229,196,119,.08);
+}
+.ct-list li.is-on .ct-txt b{color:var(--gold-soft)}
+.ct-tick{
+  flex:none;
+  margin-left:auto;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  border:1px solid var(--border);
+}
+.ct-list li.is-on .ct-tick{
+  background:var(--gold);
+  border-color:var(--gold);
+  box-shadow:inset 0 0 0 5px var(--item);
+  animation:ctTick .25s ease both; /* เล่นครั้งเดียวตอนเลือก ไม่วนซ้ำ */
+}
+@keyframes ctTick{from{transform:scale(.6);opacity:.4}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion: reduce){
+  .ct-sheet{transition:none}
+  .ct-list li.is-on .ct-tick{animation:none}
+}
+
+/* ---------- 5d. ตารางสองคอลัมน์ของแผนประเภทสัญญา (รอบ 9) ----------
+   เห็นตัวเลือกได้มากขึ้นโดยไม่ต้องเลื่อน · "ไม่แน่ใจ" เต็มความกว้างเป็นทางลัดด้านบน
+   ปรับจำนวนคอลัมน์ได้ที่ --ct-cols (ตั้งเป็น 1 เพื่อกลับไปแบบรายการยาว) */
+:root{--ct-cols:2}
+.ct-list{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:stretch;
+  align-content:flex-start;
+  gap:8px;
+}
+.ct-list li{
+  position:relative;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:8px;
+  min-height:0;
+  padding:12px;
+}
+.ct-list li[data-value="unsure"]{
+  width:100%;
+  flex-direction:row;
+  align-items:center;
+  gap:10px;
+  padding:8px 12px 8px 8px;
+}
+.ct-list li .ct-tick{
+  position:absolute;
+  top:10px;
+  right:10px;
+  width:20px;
+  height:20px;
+  margin:0;
+}
+.ct-list li[data-value="unsure"] .ct-tick{position:static;margin-left:auto}
+
+.ct-list li{
+  width:calc((100% - 8px) / var(--ct-cols));
+  height:auto;
+  min-height:0;
+  overflow:visible;
+  flex:0 0 auto;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:flex-start;
+}
+.ct-list li{padding:10px 10px 12px;gap:6px}
+.ct-list li .ct-ico{flex:none;width:32px;height:32px;border-radius:9px}
+.ct-list li .ct-ico svg{width:18px;height:18px}
+.ct-list li .ct-txt{flex:none;width:100%;padding-right:0;gap:3px}
+.ct-list li .ct-txt b{font-size:.98rem;line-height:1.3}
+.ct-list li .ct-txt small{font-size:.8rem;line-height:1.4}
+/* ไม่แน่ใจ: แถบเดียวเต็มความกว้าง ไม่ต้องสูงเท่าการ์ด และตัวอักษรใหญ่ขึ้น */
+.ct-list li[data-value="unsure"]{min-height:0;padding:14px 16px 14px 14px}
+.ct-list li[data-value="unsure"] .ct-ico{width:44px;height:44px;border-radius:12px}
+.ct-list li[data-value="unsure"] .ct-ico svg{width:24px;height:24px}
+.ct-list li[data-value="unsure"] .ct-txt b{font-size:1.15rem}
+.ct-list li[data-value="unsure"] .ct-txt small{font-size:.94rem}
+.ct-list .ct-none{width:100%}
+.ct-list li:focus-within{outline:none}
+
+/* ---------- 5e. ล้างค่า, ใช้ล่าสุด, ลากลงเพื่อปิด (รอบ 10) ---------- */
+.ct-search{padding-right:46px}
+.ct-search-clear{
+  position:absolute;
+  right:calc(var(--m-page-x) + 8px);
+  top:23px;
+  transform:translateY(-50%);
+  width:32px;
+  height:32px;
+  padding:0;
+  border:none;
+  border-radius:50%;
+  background:var(--ghost);
+  color:var(--text);
+  font-size:.8rem;
+  line-height:1;
+  display:grid;
+  place-items:center;
+}
+.ct-recent{
+  flex:none;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px;
+  padding:0 var(--m-page-x) 12px;
+}
+.ct-recent-label{font-size:.78rem;color:var(--muted);margin-right:2px}
+.ct-chip{
+  min-height:36px;
+  padding:6px 14px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  background:var(--item);
+  color:var(--text);
+  font-family:inherit;
+  font-size:.86rem;
+}
+.ct-chip:active{border-color:var(--gold-deep);background:rgba(229,196,119,.06)}
+.ct-reset{
+  display:block;
+  margin:2px 0 10px auto;
+  padding:6px 4px;
+  min-height:36px;
+  border:none;
+  background:none;
+  color:var(--gold-soft);
+  font-family:inherit;
+  font-size:.84rem;
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+.ct-grip{cursor:grab}
+.ct-head{touch-action:none}
+
+/* ---------- 5f. ปุ่มประเภทที่ใช้บ่อยบนหน้าหลัก (รอบ 11) ---------- */
+.ct-quick{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  margin:10px 0 0;
+  padding:2px 0 4px;
+}
+.ct-quick::-webkit-scrollbar{display:none}
+.ct-quick .ct-chip{flex:none}
+.ct-chip.is-on{
+  border-color:var(--gold-deep);
+  background:rgba(229,196,119,.1);
+  color:var(--gold-soft);
+}
+
+/* ---------- 5g. ช่องวางข้อความ: ปุ่มล้าง และปุ่มตรวจเมื่อวางข้อความ (รอบ 12) ---------- */
+.ta-wrap{position:relative}
+.ta-wrap textarea{padding-right:52px}
+.ta-clear{
+  position:absolute;
+  top:10px;
+  right:10px;
+  width:34px;
+  height:34px;
+  padding:0;
+  border:none;
+  border-radius:50%;
+  background:var(--ghost);
+  color:var(--text);
+  font-size:.82rem;
+  line-height:1;
+  display:grid;
+  place-items:center;
+}
+.primary.is-ready{
+  outline:2px solid var(--gold);
+  outline-offset:3px;
+}
+
+/* ---------- 5h. ตัวนับตัวอักษร ตัวอย่าง และสวิตช์สรุปเป็นเสียง (รอบ 13) ---------- */
+.ta-meta{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:8px;
+}
+.ta-count{margin:0;font-size:.8rem;color:var(--muted)}
+.ta-count.is-over{color:var(--highText);font-weight:600}
+.sample-btn{
+  min-height:40px;
+  padding:6px 10px;
+  border:none;
+  background:none;
+  color:var(--gold-soft);
+  font-family:inherit;
+  font-size:.84rem;
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+.voice-opt{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:6px;
+  padding:10px 12px;
+  border:1px solid var(--card-edge);
+  border-radius:14px;
+  background:var(--item);
+  cursor:pointer;
+}
+.voice-text{font-size:.92rem;color:var(--text)}
+.voice-text small{color:var(--muted);font-size:.8rem}
+/* ซ่อน checkbox เดิมไว้ให้ script ยังอ่านค่าได้ แล้ววาดสวิตช์แทน */
+.voice-opt input[type="checkbox"]{
+  position:absolute;
+  opacity:0;
+  width:1px;
+  height:1px;
+  margin:0;
+  pointer-events:none;
+}
+.voice-switch{
+  position:relative;
+  flex:none;
+  width:52px;
+  height:30px;
+  border-radius:999px;
+  background:var(--ghost);
+  border:1px solid var(--border);
+  transition:background .2s, border-color .2s;
+}
+.voice-switch::after{
+  content:"";
+  position:absolute;
+  top:3px;
+  left:3px;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  background:var(--muted);
+  transition:transform .2s, background .2s;
+}
+.voice-opt input:checked + .voice-switch{
+  background:rgba(229,196,119,.18);
+  border-color:var(--gold-deep);
+}
+.voice-opt input:checked + .voice-switch::after{
+  transform:translateX(22px);
+  background:var(--gold);
+}
+.voice-opt input:focus-visible + .voice-switch{outline:2px solid var(--focus);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){
+  .voice-switch,.voice-switch::after{transition:none}
+}
+
+/* ---------- 5i. ปุ่มตรวจ: ล็อกเมื่อยังไม่มีข้อความ, ซ่อนปุ่มล้างใหญ่ (รอบ 14) ---------- */
+/* ปุ่มล้างใหญ่ซ่อนไว้ มี ✕ มุมกล่องข้อความแทน (ยังเรียก click ได้จาก script) */
+#clearBtn{display:none}
+.primary:disabled{
+  opacity:.4;
+  box-shadow:none;
+  cursor:not-allowed;
+}
+.ta-meta{flex-wrap:wrap}
+.ta-actions{display:flex;align-items:center;gap:4px}
+.file-pick{display:inline-flex;align-items:center;cursor:pointer}
+
+/* ---------- 5j. ป้ายเครดิตบนหน้าหลัก (รอบ 15) ---------- */
+.credit-chip{
+  flex:none;
+  margin-left:auto;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  min-height:36px;
+  padding:4px 10px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  background:transparent;
+  color:var(--muted);
+  font-family:inherit;
+  font-size:.8rem;
+  white-space:nowrap;
+}
+.credit-chip[hidden]{display:none}
+.credit-chip-label{font-size:.76rem;color:var(--muted);white-space:nowrap}
+.credit-chip b{font-size:.9rem;color:var(--gold);font-weight:700}
+.credit-chip.is-low{border-color:var(--highBorder)}
+.credit-chip.is-low b{color:var(--highText)}
+.credit-chip + .auth-toggle{margin-left:8px}
+
+/* หัวข้อขั้นตอน: เครดิตอยู่ขวาสุดของหัวข้อ "1. วางข้อความสัญญา" */
+.step-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.step-head h2{margin:0;flex:1;min-width:0}
+.step-head .credit-chip{margin-left:0}
+
+/* ปุ่มคัดลอกและแชร์ผลตรวจ */
+.share-bar{
+  display:flex;
+  gap:8px;
+  margin:0 0 12px;
+}
+.share-bar button{
+  flex:1;
+  min-height:42px;
+  font-size:.86rem;
+}
+
+/* ---------- 5k. สถานะรอผล, ลองใหม่, ข้อความแจ้งมุมล่าง (รอบ 17) ---------- */
+.loading-box{padding:14px 2px 8px}
+.loading-msg{margin:0 0 14px;font-size:.92rem;color:var(--gold-soft)}
+.skel{
+  height:14px;
+  margin-bottom:10px;
+  border-radius:8px;
+  background:linear-gradient(90deg,var(--item) 0%,var(--ghost) 50%,var(--item) 100%);
+  background-size:200% 100%;
+  animation:skel-shimmer 1.4s ease-in-out infinite;
+}
+.skel.short{width:60%}
+@keyframes skel-shimmer{
+  0%{background-position:100% 0}
+  100%{background-position:-100% 0}
+}
+.retry-box{text-align:center;padding:12px 0}
+.retry-box .ghost{min-height:44px;margin-top:8px}
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:calc(env(safe-area-inset-bottom, 0px) + 24px);
+  transform:translate(-50%,12px);
+  max-width:calc(100% - 40px);
+  padding:10px 16px;
+  border-radius:12px;
+  background:var(--card);
+  border:1px solid var(--gold-deep);
+  color:var(--text);
+  font-size:.86rem;
+  text-align:center;
+  box-shadow:0 8px 24px rgba(0,0,0,.35);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .2s, transform .2s;
+  z-index:50;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion: reduce){
+  .skel{animation:none}
+  .toast{transition:none}
+}
+
+/* ---------- 6. ผลการตรวจ ---------- */
+#result{min-height:72px}
+.empty{padding:12px 8px 2px;font-size:.92rem}
+.empty-art{display:block;text-align:center}
+.empty-art svg{width:96px;height:auto;margin:4px auto 0;overflow:visible}
+.summary{gap:8px;margin-bottom:12px}
+.badge{padding:5px 12px;font-size:.8rem}
+.item{
+  padding:14px 15px;
+  border-radius:12px;
+  margin-bottom:10px;
+  animation:itemIn .45s cubic-bezier(.2,.8,.2,1) both;
+}
+.item:nth-child(2){animation-delay:.05s}
+.item:nth-child(3){animation-delay:.1s}
+.item:nth-child(4){animation-delay:.15s}
+.item:nth-child(5){animation-delay:.2s}
+.item h3{font-size:1rem;line-height:1.5}
+.item .snippet{font-size:.88rem;line-height:1.65}
+
+/* ---------- 7. เติมเครดิต ---------- */
+#packageButtons{flex-direction:column;gap:10px}
+#packageButtons button,
+#packageButtons .primary{
+  position:relative;
+  width:100%;
+  min-height:58px;
+  padding:12px 16px;
+  text-align:left;
+  font-size:.98rem;
+  color:var(--text);
+  background:linear-gradient(145deg,var(--item),var(--field));
+  border:1px solid var(--card-edge);
+  border-radius:18px;
+  box-shadow:0 8px 22px rgba(0,0,0,.4);
+}
+/* แพ็กแรกเป็นแพ็กแนะนำ จึงใช้ทองเฉพาะตรงนี้ */
+#packageButtons button:first-child{
+  border-color:rgba(229,196,119,.6);
+  background:linear-gradient(145deg,#2b2513,#15130c);
+  box-shadow:0 10px 26px rgba(229,196,119,.12);
+}
+#packageButtons button:active{transform:scale(.985)}
+
+/* ---------- 8. เอฟเฟกต์ (ปิดได้ที่นี่) ----------
+   มีอนิเมชันเพียง 3 จุด: ไอคอนวาดเส้นตอนเปิดหน้า การ์ดขึ้นตอนโหลด และผลตรวจขึ้นทีละรายการ
+   ถ้าอยากให้เว็บนิ่งขึ้น ลบบล็อก @keyframes หรือบล็อก .card/.item ด้านบน */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes itemIn{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
+@keyframes drawLine{to{stroke-dashoffset:0}}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+  .hero-art .draw{stroke-dashoffset:0}
+  #authCard{transition:none}
+}
+
+/* ---------- 9. Footer และ safe area ---------- */
+footer{
+  padding:18px var(--m-page-x) calc(26px + env(safe-area-inset-bottom));
+  font-size:.8rem;
+  border-top:1px solid var(--card-edge);
+}
+.disclaimer{font-size:.8rem;line-height:1.6}
+
+/* ---------- 10. เมนูบัญชี (ตอนล็อกอินแล้ว) ----------
+   รูปแบบเหมือนหน้าการตั้งค่าของ Claude: แถวบัญชีมีวงกลมอักษรและเครื่องหมายถูก
+   ตามด้วยกล่องรายการ · แก้สี/ขนาดได้ที่นี่ · โครงสร้างอยู่ใน index.html (authLoggedIn)
+   ตัวแปรสีอยู่ที่ themes.css */
+.acct-row{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:14px 16px;
+  border-radius:18px;
+  background:var(--ghost);
+  border:1px solid var(--card-edge);
+}
+.acct-avatar{
+  flex:none;
+  display:grid;
+  place-items:center;
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  font-size:1.05rem;
+  font-weight:700;
+  color:var(--gold-soft);
+  background:#0c0c0e;
+  border:1px solid rgba(229,196,119,.45);
+}
+.acct-info{min-width:0;flex:1;display:flex;flex-direction:column;gap:2px}
+.acct-label{font-size:.78rem;color:var(--muted)}
+.acct-mail{
+  font-size:1rem;
+  font-weight:600;
+  color:var(--text);
+  overflow-wrap:anywhere;
+}
+.acct-check{
+  flex:none;
+  font-size:1.15rem;
+  font-weight:700;
+  color:var(--gold);
+}
+.acct-credits{
+  margin:12px 0 0;
+  padding:14px 16px;
+  border-radius:18px;
+  background:var(--ghost);
+  border:1px solid var(--card-edge);
+  font-size:.9rem;
+  line-height:1.6;
+  color:var(--gold-soft);
+  font-weight:600;
+}
+#authLoggedIn .acct-out{
+  width:100%;
+  min-height:52px;
+  margin-top:12px;
+  padding:0 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-radius:18px;
+  background:var(--ghost);
+  border:1px solid var(--card-edge);
+  color:var(--text);
+  font-size:1rem;
+  font-weight:500;
+  text-align:left;
+}
+#authLoggedIn .acct-out:active{background:rgba(229,196,119,.10)}
+.acct-chev{font-size:1.3rem;color:var(--muted);line-height:1}
+
+/* ---------- 11. ปุ่มเติมเครดิตด่วน & คำถามที่พบบ่อย ----------
+   ปุ่มเติมเครดิตอยู่ในแผนบัญชี (#acctTopup) · คำถามอยู่ใน footer (details.faq)
+   ปรับสีที่ themes.css ปรับระยะที่ "0. ตัวปรับเร็ว" */
+/* แถวเครดิต: กล่องเครดิตทางซ้าย ปุ่มเติมทองเม็ดยาทางขวา */
+.acct-credit-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:12px;
+}
+.acct-credit-row .acct-credits{
+  flex:1;
+  min-width:0;
+  margin:0;
+}
+.acct-topup{
+  flex:none;
+  min-height:44px;
+  padding:0 16px;
+  border:none;
+  border-radius:999px;
+  background:linear-gradient(145deg,var(--gold-soft),var(--gold-deep));
+  color:#1a1405;
+  font-size:.92rem;
+  font-weight:700;
+  white-space:nowrap;
+}
+.acct-topup:active{filter:brightness(.92)}
+
+.faq{
+  margin-bottom:12px;
+  border-radius:16px;
+  background:var(--ghost);
+  border:1px solid var(--card-edge);
+  overflow:hidden;
+}
+.faq summary{
+  min-height:46px;
+  padding:0 16px;
+  display:flex;
+  align-items:center;
+  color:var(--text);
+  font-size:.95rem;
+  font-weight:600;
+  cursor:pointer;
+  list-style:none;
+}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{
+  content:"›";
+  margin-left:auto;
+  color:var(--muted);
+  font-size:1.3rem;
+  transform:rotate(90deg);
+  transition:transform .2s ease;
+}
+.faq[open] summary::after{transform:rotate(-90deg)}
+.faq-body{
+  padding:4px 16px 14px;
+  font-size:.88rem;
+  line-height:1.7;
+  color:var(--muted);
+}
+.faq-body p{margin:10px 0 0}
+.faq-body b{color:var(--text)}
+.faq-foot{margin:0;font-size:.8rem;text-align:center}
+
+/* ---------- 12. เอฟเฟกต์ตอบสนองในแผนบัญชี ----------
+   กดแล้วมีการตอบสนองเล็กน้อย · แถวบัญชีค่อย ๆ ปรากฏเมื่อเปิดแผน
+   ปิดทั้งหมดเมื่อผู้ใช้ตั้งค่าลดการเคลื่อนไหวไว้ (prefers-reduced-motion) */
+#authLoggedIn .acct-row,
+#authLoggedIn .acct-credit-row,
+#authLoggedIn .acct-out{
+  animation:acctIn .35s cubic-bezier(.2,.8,.2,1) both;
+}
+#authLoggedIn .acct-credit-row{animation-delay:.05s}
+#authLoggedIn .acct-out{animation-delay:.1s}
+@keyframes acctIn{
+  from{opacity:0;transform:translateY(6px)}
+  to{opacity:1;transform:none}
+}
+#authLoggedIn .acct-out,
+.acct-topup,
+.faq summary{
+  transition:transform .15s ease, background .15s ease;
+}
+#authLoggedIn .acct-out:active,
+.acct-topup:active,
+.faq summary:active{transform:scale(.98)}
+@media (prefers-reduced-motion: reduce){
+  #authLoggedIn .acct-row,
+  #authLoggedIn .acct-credit-row,
+  #authLoggedIn .acct-out{animation:none}
+  #authLoggedIn .acct-out,
+  .acct-topup,
+  .faq summary{transition:none}
+  #authLoggedIn .acct-out:active,
+  .acct-topup:active,
+  .faq summary:active{transform:none}
+}
+
+/* ---------- 13. กล่องเครดิต 2 ช่อง (ตรวจ / เสียง) ----------
+   script.js showCredits() สร้าง .acct-cell สองช่องใน #creditsLine */
+.acct-credit-row .acct-credits{
+  flex:1;
+  min-width:0;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  padding:0;
+  background:none;
+  border:none;
+}
+.acct-cell{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  padding:10px 12px;
+  border-radius:16px;
+  background:var(--ghost);
+  border:1px solid var(--card-edge);
+}
+.acct-cell small{font-size:.74rem;color:var(--muted)}
+.acct-cell b{font-size:1.25rem;font-weight:700;color:var(--gold-soft);line-height:1.2}
+
+/* ---------- 14. ปุ่มเข้าสู่ระบบด้วย Google ----------
+   อยู่เหนือช่องอีเมลในแผนบัญชี (index.html: #googleBtn) */
+.google-btn{
+  width:100%;
+  min-height:48px;
+  margin-bottom:10px;
+  border-radius:14px;
+  border:none;
+  background:#fff;
+  color:#1f1f1f;
+  font-size:1rem;
+  font-weight:600;
+}
+.google-btn:active{filter:brightness(.94)}
+.or-line{
+  margin:6px 0 10px;
+  text-align:center;
+  font-size:.85rem;
+  color:var(--muted);
+}
+
+/* ---------- 15. ประวัติการใช้งาน ----------
+   ปุ่มเปิดประวัติอยู่ในแผนบัญชี (#walletHist) รายการแสดงใน #historyPanel */
+.history-panel{
+  margin-top:10px;
+  padding:6px;
+  max-height:50vh;
+  overflow-y:auto;
+  border-radius:18px;
+  background:var(--ghost);
+  border:1px solid var(--card-edge);
+}
+.hist-row{
+  width:100%;
+  min-height:52px;
+  padding:10px 12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  border:none;
+  border-radius:12px;
+  background:transparent;
+  color:var(--text);
+  font-size:.92rem;
+  text-align:left;
+}
+button.hist-row:active{background:rgba(229,196,119,.10)}
+.hist-meta{
+  display:block;
+  margin-top:2px;
+  font-size:.76rem;
+  color:var(--muted);
+}
+.hist-tag{
+  flex:none;
+  font-size:.8rem;
+  font-weight:600;
+  color:var(--gold-soft);
+}
+.hist-empty{
+  margin:0;
+  padding:14px;
+  text-align:center;
+  font-size:.9rem;
+  color:var(--muted);
+}
+
+/* ---------- 16. ปรับหน้าตาแผนบัญชี (ไอคอน ไล่สี เงา หน้าว่าง) ----------
+   ไอคอนอยู่ใน .acct-ico ของปุ่มเมนู · ปรับได้ที่นี่โดยไม่แตะโค้ดส่วนอื่น */
+#authLoggedIn .acct-out{
+  justify-content:flex-start;
+  gap:12px;
+}
+#authLoggedIn .acct-out .acct-chev{margin-left:auto}
+.acct-ico{
+  flex:none;
+  width:30px;
+  height:30px;
+  display:grid;
+  place-items:center;
+  border-radius:10px;
+  font-size:1rem;
+  background:rgba(229,196,119,.12);
+  border:1px solid rgba(229,196,119,.25);
+}
+.acct-ico-danger{
+  background:rgba(229,120,100,.12);
+  border-color:rgba(229,120,100,.3);
+}
+
+/* ปุ่มเติมเครดิต: ไล่สีทองจากสว่างไปเข้ม และมีแสงเงาฟุ้ง */
+.acct-topup{
+  background:linear-gradient(145deg,#f1d88a,#c9a24a);
+  box-shadow:0 4px 15px rgba(212,175,55,.3);
+}
+
+/* กล่องเครดิต: ตัวเลขใหญ่ขึ้น และเส้นขอบบาง ๆ ให้แยกกับพื้นหลัง */
+.acct-cell{
+  border:1px solid rgba(255,255,255,.08);
+}
+.acct-cell b{
+  font-size:1.5rem;
+}
+
+/* หน้าว่างของประวัติ: กรอบประ และไอคอนกล่องว่าง */
+.hist-empty{
+  margin:6px;
+  padding:18px 14px;
+  border:1px dashed var(--card-edge);
+  border-radius:14px;
+}
+.hist-empty::before{
+  content:"🗂️";
+  display:block;
+  margin-bottom:6px;
+  font-size:1.6rem;
+  opacity:.7;
+}
+
+/* ---------- 17. ไอคอนกล่องเครดิต และสีปุ่มออกจากระบบ ---------- */
+.acct-cell:nth-child(1) small::before{content:"📄 "}
+.acct-cell:nth-child(2) small::before{content:"🎙️ "}
+#authLoggedIn #logoutBtn{color:#f0a08f}
+#authLoggedIn #logoutBtn .acct-chev{color:#c98a7c}
+
+/* ---------- 18. รูปโปรไฟล์ ----------
+   วงกลมเป็นปุ่มกดได้ · รูปแสดงแทนตัวอักษรเมื่อมีรูป */
+#authLoggedIn .acct-avatar{
+  padding:0;
+  overflow:hidden;
+  font:inherit;
+  cursor:pointer;
+}
+#authLoggedIn .acct-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:50%;
+}
+#authLoggedIn .acct-photo-del{
+  display:block;
+  margin:8px 4px 0;
+  padding:4px 0;
+  background:none;
+  border:none;
+  color:var(--muted);
+  font-size:.82rem;
+  text-decoration:underline;
+}
+
+/* ---------- 19. ไอคอนกล้องบนรูปโปรไฟล์ ----------
+   วงกลมไม่ถูกตัดขอบ เพื่อให้ไอคอนกล้องอยู่นอกรูปได้เล็กน้อย */
+#authLoggedIn .acct-avatar{
+  position:relative;
+  overflow:visible;
+}
+#authLoggedIn .acct-avatar img{
+  position:relative;
+  z-index:0;
+}
+#authLoggedIn .acct-cam{
+  position:absolute;
+  right:-6px;
+  bottom:-4px;
+  width:22px;
+  height:22px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:#0c0c0e;
+  border:1px solid rgba(255,255,255,.18);
+  color:#e9e9ea;
+  z-index:1;
+}
+
+/* ---------- 20. สีวงกลมโปรไฟล์ตอนยังไม่มีรูป ----------
+   ใช้สีน้ำตาลและตัวอักษรขาวแบบรูปตัวอักษรของ Google */
+#authLoggedIn .acct-avatar{
+  background:#8c6c60;
+  border:none;
+  color:#ffffff;
+}
+#authLoggedIn .acct-avatar #acctInitial{
+  font-size:1.15rem;
+  font-weight:500;
+  color:#ffffff;
+}
+
+/* ---------- 21. ความหรูของแผนบัญชี (กรอบเรืองแสง แสงวิ่ง กระจกฝ้า) ----------
+   ทั้งหมดเป็นการตกแต่ง ไม่เปลี่ยนการทำงาน · ปิดการเคลื่อนไหวเมื่อผู้ใช้ตั้ง reduced-motion */
+#authLoggedIn .acct-avatar{
+  box-shadow:
+    0 0 0 2px #0c0c0e,
+    0 0 0 3.5px rgba(229,196,119,.7),
+    0 0 18px rgba(229,196,119,.35);
+}
+#authLoggedIn .acct-row,
+#authLoggedIn .acct-cell{
+  background:rgba(255,255,255,.05);
+  -webkit-backdrop-filter:blur(12px);
+  backdrop-filter:blur(12px);
+}
+.acct-topup{
+  position:relative;
+  overflow:hidden;
+}
+.acct-topup::after{
+  content:"";
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:-60%;
+  width:50%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);
+  transform:skewX(-20deg);
+  animation:acctShimmer 3.2s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes acctShimmer{
+  0%{left:-60%}
+  60%,100%{left:130%}
+}
+@media (prefers-reduced-motion: reduce){
+  .acct-topup::after{animation:none;display:none}
+}
+
+/* ---------- 22. หน้าต่างเติมเครดิต (มือถือ) ----------
+   การ์ด #paymentCard เดิมกลายเป็นหน้าต่างกลางจอเมื่อมี body.pay-open
+   ตรรกะการชำระเงินใน pay-ui.js ไม่เปลี่ยน */
+#payBackdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  -webkit-backdrop-filter:blur(4px);
+  backdrop-filter:blur(4px);
+  z-index:1000;
+}
+#payBackdrop[hidden]{display:none}
+body.pay-open{overflow:hidden}
+body.pay-open #paymentCard:not([hidden]){
+  position:fixed;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:min(92vw,420px);
+  max-height:82vh;
+  overflow-y:auto;
+  margin:0;
+  z-index:1001;
+  animation:payIn .25s cubic-bezier(.2,.8,.2,1);
+  box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 0 1px rgba(229,196,119,.25);
+}
+@keyframes payIn{
+  from{opacity:0;transform:translate(-50%,-46%) scale(.98)}
+  to{opacity:1;transform:translate(-50%,-50%) scale(1)}
+}
+.pay-close{
+  position:absolute;
+  top:12px;
+  right:12px;
+  z-index:2;
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  border:1px solid var(--card-edge);
+  background:var(--ghost);
+  color:var(--text);
+  font-size:.95rem;
+}
+.pay-close[hidden]{display:none}
+@media (prefers-reduced-motion: reduce){
+  body.pay-open #paymentCard:not([hidden]){animation:none}
+}
+
+/* ---------- 23. แก้หน้าต่างเติมเครดิต: พื้นทึบ และปุ่มปิดขนาดถูกต้อง ---------- */
+body.pay-open #paymentCard:not([hidden]){
+  background:#15161b;
+  opacity:1;
+}
+#paymentCard #payClose{
+  width:34px;
+  height:34px;
+  min-width:34px;
+  min-height:34px;
+  padding:0;
+  margin:0;
+  line-height:1;
+  font-size:.95rem;
+  display:grid;
+  place-items:center;
+  box-sizing:border-box;
+}
+
+/* ---------- 24. ซ่อนการ์ดเติมเครดิตและผลการตรวจที่ยังว่างบนมือถือ ----------
+   - การ์ดเติมเครดิตซ่อนไว้ เปิดได้เฉพาะเป็นหน้าต่างจากปุ่ม "+ เติม" (body.pay-open)
+   - ผลการตรวจซ่อนเมื่อยังไม่มีผล และแสดงเองเมื่อตรวจสัญญาแล้ว */
+@media (max-width: 767px){
+  #paymentCard{display:none}
+  body.pay-open #paymentCard:not([hidden]){display:block}
+  #resultCard:has(#result > p.empty){display:none}
+}
+
+/* ---------- 23. MY WALLET (กระเป๋าเครดิตในแผนบัญชี) ----------
+   โครงสร้าง: index.html (.wallet) · การ์ดสร้างจาก script.js showCredits()
+   สีด้านล่างใช้เฉพาะจอมือถือ (ทับค่าใน themes.css): พื้นดำอมเทา #0B0D10 + ทองแชมเปญ #D9B968
+   กฎสี: เส้นขอบทั่วไปเป็นเทาบาง (--w-line) · ทองใช้กับตัวเลข ปุ่ม และขอบการ์ดตอนแตะเท่านั้น
+   อนิเมชันใช้ opacity/transform เท่านั้น ไม่มีแสงวนและไม่ใช้ blur */
+:root{
+  --bg:#0B0D10;
+  --gold:#D9B968;
+  --w-num:2.1rem;
+  --w-line:rgba(255,255,255,.08);
+  --w-gold-line:rgba(217,185,104,.16);
+  --w-card:#191B20;
+  --w-gap:14px;
+  --w-soft:#a6aab3;
+  --w-ok:#80C9A0;
+}
+.wallet{
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+  margin-top:14px;
+  padding:20px 18px 8px;
+  border-radius:26px;
+  background:linear-gradient(180deg,#101216,#0B0D10);
+  border:1px solid var(--w-line);
+}
+.wallet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.wallet-kicker{
+  margin:0;
+  font-size:.95rem;
+  font-weight:800;
+  letter-spacing:.08em;
+  color:var(--gold);
+}
+.wallet-title{margin:4px 0 0;font-size:1.45rem;font-weight:700;line-height:1.3;color:var(--text)}
+.wallet-head-ico{
+  flex:none;
+  display:grid;
+  place-items:center;
+  width:46px;
+  height:46px;
+  border-radius:14px;
+  color:var(--gold);
+  background:rgba(217,185,104,.12);
+}
+.wallet-total{
+  margin-top:var(--w-gap);
+  padding:18px 16px;
+  border-radius:20px;
+  background:var(--w-card);
+  border:1px solid var(--w-line);
+}
+.wallet-total-label{font-size:.9rem;color:var(--muted)}
+.wallet-total-num{margin:4px 0 0;color:var(--muted);font-size:1rem}
+.wallet-total-num b{
+  font-size:2.8rem;
+  font-weight:700;
+  line-height:1.15;
+  color:var(--gold);
+  font-variant-numeric:tabular-nums;
+}
+.wallet-rows{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin:14px 0 0;
+  padding-top:12px;
+  border-top:1px solid var(--w-line);
+}
+.wallet-rows > div{display:flex;align-items:baseline;justify-content:space-between}
+.wallet-rows dt{margin:0;font-size:.95rem;color:var(--muted)}
+.wallet-rows dd{margin:0;font-size:.95rem;color:var(--text)}
+.wallet-rows dd b{font-size:1.25rem;font-weight:700;font-variant-numeric:tabular-nums}
+.wallet-list-head{display:flex;align-items:baseline;justify-content:space-between;margin:20px 2px 10px}
+.wallet-list-head span{font-size:.9rem;color:var(--muted)}
+.wallet-list-title{margin:0;font-size:1.1rem;font-weight:700;color:var(--text)}
+.wallet-cards{display:grid;grid-auto-rows:1fr;gap:var(--w-gap)}
+.wallet-card{
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  padding:16px;
+  border-radius:20px;
+  background:var(--w-card);
+  border:1px solid var(--w-gold-line);
+  transition:border-color .2s ease;
+}
+.wallet-card.is-touched{border-color:rgba(217,185,104,.6)}
+.wallet-card-top{display:flex;align-items:center;gap:12px}
+.wallet-ico{
+  flex:none;
+  display:grid;
+  place-items:center;
+  width:50px;
+  height:50px;
+  border-radius:15px;
+  color:var(--gold);
+  background:rgba(217,185,104,.12);
+}
+.wallet-card-name{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.wallet-card-name b{font-size:1.1rem;color:var(--text)}
+.wallet-card-name small{font-size:.9rem;color:var(--muted)}
+.wallet-badge{
+  flex:none;
+  padding:4px 12px;
+  border-radius:999px;
+  font-size:.8rem;
+  font-weight:700;
+  color:var(--w-ok);
+  background:rgba(128,201,160,.12);
+}
+.wallet-badge.is-empty{color:var(--highText);background:rgba(229,72,77,.14)}
+.wallet-card-use{margin:14px 2px 14px;font-size:.92rem;line-height:1.55;color:var(--w-soft)}
+.wallet-card-bottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:auto;
+  padding-top:14px;
+  border-top:1px solid var(--w-line);
+}
+.wallet-card-num{margin:0;line-height:1.1}
+.wallet-card-num b{
+  display:block;
+  font-size:var(--w-num);
+  font-weight:700;
+  color:var(--gold);
+  font-variant-numeric:tabular-nums;
+}
+.wallet-card-num small{display:block;margin-top:2px;font-size:.9rem;color:var(--muted)}
+.wallet-topup{
+  flex:none;
+  min-width:140px;
+  min-height:48px;
+  padding:0 22px;
+  border:none;
+  border-radius:999px;
+  font-size:1rem;
+  font-weight:700;
+  color:#14110a;
+  background:linear-gradient(145deg,#e6cb85,#cfae5e);
+  transition:transform .15s ease,box-shadow .2s ease;
+}
+.wallet-topup:active{transform:scale(.97);box-shadow:0 0 14px rgba(217,185,104,.35)}
+.wallet-histlink{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  width:100%;
+  min-height:68px;
+  margin-top:14px;
+  padding:10px 2px;
+  border:none;
+  border-top:1px solid var(--w-line);
+  border-radius:0;
+  background:none;
+  color:var(--gold);
+  text-align:left;
+}
+.wallet-hist-txt{flex:1;min-width:0}
+.wallet-hist-txt b{display:block;font-size:1.05rem;font-weight:700;color:var(--text)}
+.wallet-hist-txt small{display:block;margin-top:2px;font-size:.85rem;font-weight:400;color:var(--w-soft)}
+.wallet-histlink::after{content:"›";margin-left:auto;font-size:1.4rem;line-height:1;color:var(--muted)}
+.wallet-histlink:active .wallet-hist-txt b{color:var(--gold)}
+#packageButtons button:disabled{opacity:.6}
+
+/* เข้าฉากครั้งเดียวตอนเปิดแผน */
+#authLoggedIn .wallet-total,
+#authLoggedIn .wallet-card{animation:acctIn .35s cubic-bezier(.2,.8,.2,1) both}
+#authLoggedIn .wallet-card-check{animation-delay:.06s}
+#authLoggedIn .wallet-card-voice{animation-delay:.12s}
+
+/* แสงทองสะท้อนผ่านการ์ดช้า ๆ รอบเดียว (รอบละ 5 วินาที) */
+.wallet-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(105deg,transparent 35%,rgba(255,236,170,.12) 50%,transparent 65%);
+  transform:translateX(-100%);
+  animation:walletShine 5s ease-in-out .5s 1 both;
+  pointer-events:none;
+}
+.wallet-card-voice::after{animation-delay:.9s}
+@keyframes walletShine{
+  0%{transform:translateX(-100%)}
+  40%,100%{transform:translateX(100%)}
+}
+@media (prefers-reduced-motion: reduce){
+  #authLoggedIn .wallet-total,
+  #authLoggedIn .wallet-card{animation:none}
+  .wallet-card::after{animation:none;display:none}
+  .wallet-card,.wallet-topup{transition:none}
+  .wallet-topup:active{transform:none}
+}
+
+/* ---------- 24. เมนูบัญชี ไอคอน และแผนบัญชีบน iPhone ----------
+   ไอคอนเมนูเป็น SVG เส้นแบบเดียวกันทั้งชุด · สีส้มแดงเฉพาะ "ออกจากระบบ"
+   แสงทองด้านหลังกระเป๋าเคลื่อนช้า ๆ เฉพาะตอนแผนเปิดอยู่ (transform อย่างเดียว) */
+.wallet-head-ico svg{width:22px;height:22px}
+.acct-ico{
+  color:var(--gold);
+  background:rgba(217,185,104,.10);
+  border-color:rgba(217,185,104,.18);
+}
+.acct-ico.acct-ico-danger{
+  color:#e5806c;
+  background:rgba(229,120,100,.12);
+  border-color:rgba(229,120,100,.28);
+}
+.acct-ico svg{display:block}
+
+.wallet::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  top:-130px;
+  right:-110px;
+  width:300px;
+  height:300px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(217,185,104,.15),transparent 65%);
+  pointer-events:none;
+}
+body.auth-open .wallet::before{
+  animation:walletGlow 14s ease-in-out infinite alternate;
+  will-change:transform;
+}
+@keyframes walletGlow{
+  from{transform:translate3d(0,0,0) scale(1)}
+  to{transform:translate3d(-46px,38px,0) scale(1.12)}
+}
+@media (prefers-reduced-motion: reduce){
+  body.auth-open .wallet::before{animation:none;will-change:auto}
+}
+
+/* iPhone: แผนบัญชีเลื่อนอ่านได้ครบ ปุ่มปิดไม่เลื่อนหายตามเนื้อหา และไม่ถูกแถบ Home บัง */
+#authCard{
+  max-height:88vh;
+  max-height:88dvh;
+  overscroll-behavior:contain;
+}
+
+/* ---------- 25. แถบหัวแผนบัญชี และแท็บประวัติ ----------
+   แถบหัว (หัวข้อ + ปุ่มปิด) ติดบนสุดตอนเลื่อน เนื้อหาไหลอยู่ใต้แถบ ปุ่มปิดจึงไม่ทับการ์ดหรือปุ่มเติมเครดิต */
+.sheet-head{
+  position:sticky;
+  top:-10px;
+  z-index:6;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:0 calc(-1 * (var(--m-page-x) + 2px));
+  padding:12px calc(var(--m-page-x) + 2px) 8px;
+  background:var(--card);
+}
+.sheet-head h2{margin:0}
+#authCard::before{margin-bottom:2px}
+#authCard .sheet-close{position:static;flex:none;width:44px;height:44px}
+
+.history-panel{margin-top:var(--w-gap)}
+.hist-tabs{
+  display:flex;
+  gap:6px;
+  margin:0 0 6px;
+  padding:4px;
+  border-radius:14px;
+  background:rgba(255,255,255,.05);
+}
+.hist-tab{
+  flex:1;
+  min-height:40px;
+  border:none;
+  border-radius:11px;
+  background:transparent;
+  color:var(--muted);
+  font-size:.9rem;
+  font-weight:600;
+  transition:background .2s ease,color .2s ease;
+}
+.hist-tab.is-on{background:var(--w-card);color:var(--gold)}
+@media (prefers-reduced-motion: reduce){.hist-tab{transition:none}}
+
+/* หน้าว่างของประวัติ: ไม่ใช้อีโมจิ ให้ไอคอนเมนูเป็นชุดเดียวกัน */
+.hist-empty::before{display:none}
+
+/* ---------- 26. แผนบัญชีแบบพรีเมียม (รอบ 9) ----------
+   เป้าหมาย: หัวแผน + ปุ่มปิด อยู่กับที่ เลื่อนเฉพาะเนื้อหาใน .sheet-body ชั้นเดียว
+   ระยะห่างใช้ชุดเดียว 8 / 12 / 16 / 24 · ทองใช้เฉพาะตัวเลข ปุ่มหลัก และสถานะที่เลือก
+   โครงสร้าง: index.html (.sheet-body, .hist-filters) · รายการประวัติสร้างจากสคริปต์ท้าย index.html
+   ซ่อมด่วน: ปุ่มปิดหาย → .sheet-head · เลื่อนซ้อนกันสองชั้น → .sheet-body และ .history-panel */
+:root{
+  --s-1:8px;
+  --s-2:12px;
+  --s-3:16px;
+  --s-4:24px;
+  --w-pending:#F0A35E;
+}
+
+#authCard{
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  padding:10px calc(var(--m-page-x) + 2px) 0;
+}
+#authCard::before{flex:none}
+.sheet-head{
+  position:static;
+  flex:none;
+  margin:0 calc(-1 * (var(--m-page-x) + 2px));
+  padding:var(--s-2) calc(var(--m-page-x) + 2px) var(--s-2);
+  border-bottom:1px solid var(--w-line);
+}
+.sheet-body{
+  flex:1;
+  min-height:0;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  margin:0 calc(-1 * (var(--m-page-x) + 2px));
+  padding:var(--s-3) calc(var(--m-page-x) + 2px) calc(var(--s-4) + env(safe-area-inset-bottom));
+}
+
+/* ประวัติ: ไม่มีกล่องเลื่อนซ้อนในกล่องเลื่อน */
+.history-panel{
+  max-height:none;
+  overflow:visible;
+  margin-top:var(--s-3);
+  padding:0;
+  background:none;
+  border:none;
+}
+.hist-tabs{margin-bottom:var(--s-2)}
+
+/* ตัวกรองสถานะ */
+.hist-filters{
+  display:flex;
+  gap:var(--s-1);
+  margin:0 0 var(--s-2);
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.hist-filters::-webkit-scrollbar{display:none}
+.hist-filters[hidden]{display:none}
+.hist-chip{
+  flex:none;
+  min-height:36px;
+  padding:0 var(--s-3);
+  border-radius:999px;
+  border:1px solid var(--w-line);
+  background:transparent;
+  color:var(--w-soft);
+  font-size:.88rem;
+  font-weight:600;
+  transition:background .2s ease,color .2s ease,border-color .2s ease,transform .15s ease;
+}
+.hist-chip:active{transform:scale(.96)}
+.hist-chip.is-on{
+  color:var(--gold);
+  border-color:var(--w-gold-line);
+  background:rgba(217,185,104,.12);
+}
+
+/* การ์ดรายการ */
+.hist-card{
+  margin:0 0 var(--s-2);
+  padding:var(--s-3);
+  border-radius:18px;
+  background:var(--w-card);
+  border:1px solid var(--w-line);
+  animation:histIn .28s cubic-bezier(.2,.8,.2,1) both;
+}
+.hist-card:nth-child(2){animation-delay:.04s}
+.hist-card:nth-child(3){animation-delay:.08s}
+.hist-card:nth-child(n+4){animation-delay:.12s}
+@keyframes histIn{
+  from{opacity:0;transform:translateY(6px)}
+  to{opacity:1;transform:none}
+}
+.hist-card-top,
+.hist-card-btn{
+  display:flex;
+  align-items:center;
+  gap:var(--s-2);
+  width:100%;
+  min-height:48px;
+  margin:0;
+  padding:0;
+  border:none;
+  background:none;
+  color:var(--text);
+  text-align:left;
+  font:inherit;
+}
+.hist-card-btn{
+  padding:var(--s-3);
+  margin:0 0 var(--s-2);
+  border-radius:18px;
+  background:var(--w-card);
+  border:1px solid var(--w-line);
+  transition:border-color .2s ease,transform .15s ease;
+}
+.hist-card.hist-card-btn{margin:0 0 var(--s-2)}
+.hist-card-btn:active{border-color:var(--w-gold-line);transform:scale(.99)}
+.hist-ico{
+  flex:none;
+  display:grid;
+  place-items:center;
+  width:44px;
+  height:44px;
+  border-radius:14px;
+  color:var(--gold);
+  background:rgba(217,185,104,.12);
+}
+.hist-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.hist-main b{font-size:1rem;font-weight:700;color:var(--text)}
+.hist-meta{margin:0;font-size:.82rem;color:var(--muted)}
+.hist-go{flex:none;font-size:.86rem;font-weight:600;color:var(--gold)}
+.hist-status{
+  flex:none;
+  padding:4px var(--s-2);
+  border-radius:999px;
+  font-size:.8rem;
+  font-weight:700;
+}
+.hist-status.is-pending{color:var(--w-pending);background:rgba(240,163,94,.14)}
+.hist-status.is-done{color:var(--w-ok);background:rgba(128,201,160,.12)}
+.hist-card-foot{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:var(--s-2);
+  margin-top:var(--s-2);
+  padding-top:var(--s-2);
+  border-top:1px solid var(--w-line);
+}
+.hist-amt-label{font-size:.85rem;color:var(--muted)}
+.hist-amt{
+  font-size:1.5rem;
+  font-weight:700;
+  color:var(--gold);
+  font-variant-numeric:tabular-nums;
+}
+.hist-detail{
+  margin:var(--s-2) 0 0;
+  display:grid;
+  gap:var(--s-1);
+  animation:histIn .22s ease both;
+}
+.hist-detail[hidden]{display:none}
+.hist-detail > div{display:flex;justify-content:space-between;gap:var(--s-3)}
+.hist-detail dt{margin:0;font-size:.82rem;color:var(--muted);flex:none}
+.hist-detail dd{margin:0;font-size:.86rem;color:var(--w-soft);text-align:right}
+
+/* หน้าว่าง + ตอนกำลังโหลด */
+.hist-empty{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  padding:var(--s-4) var(--s-3);
+  border:1px dashed var(--w-line);
+  border-radius:18px;
+  text-align:center;
+  background:none;
+}
+.hist-empty b{font-size:.98rem;font-weight:600;color:var(--text)}
+.hist-empty small{font-size:.85rem;line-height:1.5;color:var(--muted)}
+.hist-skel{
+  height:104px;
+  margin-bottom:var(--s-2);
+  border-radius:18px;
+  background:var(--w-card);
+  border:1px solid var(--w-line);
+  animation:histPulse 1.1s ease-in-out 4;
+}
+@keyframes histPulse{50%{opacity:.5}}
+
+/* ปุ่มเปิดประวัติ: ลูกศรหมุนเมื่อเปิด + ตอบสนองตอนแตะ */
+.wallet-histlink::after{transition:transform .2s ease}
+.wallet-histlink[aria-expanded="true"]::after{transform:rotate(90deg)}
+.wallet-histlink{transition:background .2s ease}
+.wallet-histlink:active{background:rgba(255,255,255,.04)}
+
+/* ลดความรก: เส้นขอบการ์ดเป็นเทา ทองเฉพาะตอนแตะ · ไม่มีแสงและประกายวนซ้ำ */
+.wallet-card{border-color:var(--w-line)}
+.wallet-card.is-touched{border-color:var(--w-gold-line)}
+body.auth-open .wallet::before{animation:none;will-change:auto}
+.acct-topup::after{animation:none;display:none}
+
+@media (prefers-reduced-motion: reduce){
+  .hist-card,.hist-detail,.hist-skel{animation:none}
+  .hist-chip,.hist-card-btn,.wallet-histlink,.wallet-histlink::after{transition:none}
+}
+
+/* ---------- 27. ลดกรอบซ้อน + เมนูข้อมูลบัญชี (รอบ 9y) ----------
+   Wallet: ใช้พื้นหลังต่างระดับแทนเส้นขอบ (การ์ดใหญ่ > แผงยอดรวม/การ์ดบริการ) ตัวเลขเครดิตรวมเป็นจุดเด่นหลัก
+   เมนู: แถวข้อมูลบัญชีใช้ได้ทันที · นโยบาย/เงื่อนไข/ติดต่อ ต้องใส่ลิงก์ใน HELP_LINKS (index.html)
+   ซ่อมด่วน: เส้นขอบกลับมาซ้อน → .wallet-total / .wallet-card ด้านล่าง · แถวเมนูไม่ขึ้น → HELP_LINKS ว่าง */
+.wallet-total{border:none;background:rgba(255,255,255,.04)}
+.wallet-card{border:none;background:rgba(255,255,255,.05)}
+.wallet-card.is-touched{box-shadow:inset 0 0 0 1px var(--w-gold-line)}
+.wallet-total-num b{font-size:2.8rem;color:var(--gold)}
+.wallet-rows{border-top:1px solid var(--w-line)}
+
+.acct-menu{margin-top:var(--s-3)}
+.menu-item{
+  display:flex;
+  align-items:center;
+  gap:var(--s-2);
+  width:100%;
+  min-height:60px;
+  margin:0;
+  padding:var(--s-1) 2px;
+  border:none;
+  border-top:1px solid var(--w-line);
+  border-radius:0;
+  background:none;
+  color:var(--text);
+  font:inherit;
+  text-align:left;
+  text-decoration:none;
+  transition:background .2s ease;
+}
+.menu-item[hidden]{display:none}
+.menu-item:active{background:rgba(255,255,255,.04)}
+.menu-item::after{content:"›";margin-left:auto;font-size:1.4rem;line-height:1;color:var(--muted);transition:transform .2s ease}
+.menu-item[aria-expanded="true"]::after{transform:rotate(90deg)}
+.menu-ico{
+  flex:none;
+  display:grid;
+  place-items:center;
+  width:40px;
+  height:40px;
+  border-radius:12px;
+  color:var(--gold);
+  background:rgba(217,185,104,.12);
+}
+.menu-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.menu-txt b{font-size:1rem;font-weight:700}
+.menu-txt small{font-size:.84rem;color:var(--w-soft)}
+.acct-detail{
+  margin:0 0 var(--s-2);
+  padding:var(--s-3);
+  display:grid;
+  gap:var(--s-2);
+  border-radius:16px;
+  background:rgba(255,255,255,.04);
+  animation:histIn .22s ease both;
+}
+.acct-detail[hidden]{display:none}
+.acct-detail > div{display:flex;justify-content:space-between;gap:var(--s-3)}
+.acct-detail dt{margin:0;flex:none;font-size:.84rem;color:var(--muted)}
+.acct-detail dd{margin:0;min-width:0;font-size:.9rem;color:var(--text);text-align:right;overflow-wrap:anywhere}
+@media (prefers-reduced-motion: reduce){
+  .menu-item,.menu-item::after{transition:none}
+  .acct-detail{animation:none}
+}
+
+/* ---------- 28. แผนบัญชีกระชับ + แท็บ (รอบ 9z) ----------
+   เป้าหมาย: เลื่อนน้อยลงแต่เข้าถึงทุกเมนูได้เร็ว
+   ส่วนบนคงที่: แถวบัญชี + แผงเครดิตรวม + ปุ่มเติมเครดิต/ดูประวัติ · ส่วนล่างเป็นแท็บ บริการ / ประวัติ / บัญชี
+   ซ่อมด่วน: ส่วนหัวสูงเกิน → .acct-row, .wallet-total · แท็บไม่สลับ → .pane / .sheet-tab · รายการประวัติสูงเกิน → .hist-card */
+#authLoggedIn .acct-row{padding:var(--s-2) var(--s-3);gap:var(--s-2);border-radius:16px}
+#authLoggedIn .acct-avatar{width:40px;height:40px}
+.acct-check,.acct-label{display:none}
+.acct-mail{font-size:.95rem}
+
+.wallet{margin-top:var(--s-2);padding:var(--s-3) var(--s-3) var(--s-2);border-radius:22px}
+.wallet-head{display:none}
+.wallet-total{margin-top:0;padding:var(--s-3)}
+.wallet-total-label{font-size:.85rem}
+.wallet-total-num{margin:0;display:flex;align-items:baseline;gap:6px}
+.wallet-total-num b{font-size:2.4rem;line-height:1.1}
+.wallet-rows{flex-direction:row;gap:var(--s-2);margin:var(--s-2) 0 0;padding-top:var(--s-2)}
+.wallet-rows > div{flex:1;flex-direction:column;align-items:flex-start;gap:0}
+.wallet-rows dt{font-size:.8rem}
+.wallet-rows dd{font-size:.85rem}
+.wallet-rows dd b{font-size:1.15rem}
+
+.wallet-quick{display:flex;gap:var(--s-1);margin-top:var(--s-3)}
+.wallet-quick .wallet-topup{flex:3;min-width:0;min-height:46px;padding:0 var(--s-3)}
+.wallet-quick-hist{
+  flex:2;
+  min-height:46px;
+  border-radius:999px;
+  border:1px solid var(--w-gold-line);
+  background:transparent;
+  color:var(--gold);
+  font-size:.95rem;
+  font-weight:700;
+  transition:background .2s ease,transform .15s ease;
+}
+.wallet-quick-hist:active{background:rgba(217,185,104,.1);transform:scale(.97)}
+
+.sheet-tabs{
+  display:flex;
+  gap:6px;
+  margin:var(--s-3) 0 var(--s-2);
+  padding:4px;
+  border-radius:14px;
+  background:rgba(255,255,255,.05);
+}
+.sheet-tab{
+  flex:1;
+  min-height:40px;
+  border:none;
+  border-radius:11px;
+  background:transparent;
+  color:var(--muted);
+  font-size:.9rem;
+  font-weight:600;
+  transition:background .2s ease,color .2s ease;
+}
+.sheet-tab.is-on{background:var(--w-card);color:var(--gold)}
+.pane:not(.is-on){display:none}
+.pane.is-on{animation:histIn .22s ease both}
+
+/* บริการ: การ์ดกระชับ ไม่มีคำอธิบายยาว */
+.wallet-list-head{display:none}
+.wallet-card{padding:var(--s-3);border-radius:18px}
+.wallet-card-use{display:none}
+.wallet-ico{width:42px;height:42px;border-radius:13px}
+.wallet-card-bottom{margin-top:var(--s-2);padding-top:var(--s-2)}
+.wallet-card-num b{font-size:1.7rem}
+.wallet-card .wallet-topup{min-width:0;min-height:42px;padding:0 var(--s-3);font-size:.92rem}
+.wallet-cards{gap:var(--s-2)}
+
+/* ประวัติ: แถวเดียวต่อรายการ ยอดเงินและสถานะอยู่ขวา */
+.wallet-histlink{display:none}
+.pane[data-pane="hist"] .history-panel{margin-top:0}
+.hist-card{padding:var(--s-2) var(--s-3);margin-bottom:var(--s-1)}
+.hist-card-top,.hist-card-btn{min-height:44px}
+.hist-card-btn{padding:var(--s-2) var(--s-3);margin-bottom:var(--s-1)}
+.hist-ico{width:36px;height:36px;border-radius:11px}
+.hist-ico svg{width:18px;height:18px}
+.hist-side{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.hist-side .hist-amt{font-size:1rem}
+.hist-side .hist-status{padding:2px 10px;font-size:.74rem}
+.hist-detail{margin-top:var(--s-2);padding-top:var(--s-2);border-top:1px solid var(--w-line)}
+
+/* บัญชี: เมนูและออกจากระบบ */
+.pane[data-pane="acct"] .acct-menu{margin-top:0}
+.pane[data-pane="acct"] .menu-item:first-child{border-top:none}
+.pane[data-pane="acct"] .acct-out{margin-top:var(--s-2)}
+
+@media (prefers-reduced-motion: reduce){
+  .pane.is-on{animation:none}
+  .sheet-tab,.wallet-quick-hist{transition:none}
+}
+
+/* ---------- 29. แถบนำทางล่าง + แผนบัญชี/ประวัติแยกหน้า (รอบ 9a2) ----------
+   แถบล่าง 3 ปุ่ม: ตรวจสัญญา / ประวัติ / บัญชี (แสดงเมื่อล็อกอิน · ควบคุมโดยสคริปต์ท้าย index.html)
+   body[data-sheet="hist"] = แผนแสดงเฉพาะประวัติ · body[data-sheet="acct"] = เครดิต บริการ เมนู ออกจากระบบ
+   แถบล่างอยู่ใต้แผนเลือกประเภทสัญญาและหน้าต่างเติมเครดิต (z-index 44) แต่ลอยเหนือพื้นมืดตอนเปิดแผนบัญชี (60)
+   ซ่อมด่วน: แถบบังเนื้อหา → body.has-nav footer · แผนชนแถบล่าง → body.has-nav #authCard · ความสูงแถบ → --nav-h */
+:root{--nav-h:60px}
+
+.bottom-nav:not([hidden]){
+  display:flex;
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:44;
+  height:calc(var(--nav-h) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);
+  background:rgba(11,13,16,.94);
+  -webkit-backdrop-filter:blur(14px);
+  backdrop-filter:blur(14px);
+  border-top:1px solid var(--w-line);
+}
+body.auth-open .bottom-nav{z-index:60}
+.bn-item{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  min-height:var(--nav-h);
+  margin:0;
+  padding:0;
+  border:none;
+  background:none;
+  color:var(--muted);
+  font-size:.72rem;
+  font-weight:600;
+  transition:color .2s ease,transform .15s ease;
+}
+.bn-item:active{transform:scale(.94)}
+.bn-item.is-on{color:var(--gold)}
+
+body.has-nav footer{padding-bottom:calc(26px + var(--nav-h) + env(safe-area-inset-bottom))}
+body.has-nav #authCard{
+  bottom:calc(var(--nav-h) + env(safe-area-inset-bottom));
+  max-height:calc(100vh - var(--nav-h) - env(safe-area-inset-bottom) - 56px);
+  max-height:calc(100dvh - var(--nav-h) - env(safe-area-inset-bottom) - 56px);
+}
+body.has-nav .sheet-body{padding-bottom:var(--s-4)}
+
+/* แผนบัญชี: ไม่ใช้แท็บภายในแล้ว แสดงบริการและเมนูต่อกัน · ซ่อนประวัติ */
+.sheet-tabs{display:none}
+.pane:not(.is-on){display:block}
+.pane[data-pane="hist"]{display:none}
+.wallet-quick .wallet-topup{flex:1}
+
+/* แผนประวัติ: เหลือเฉพาะรายการ ใช้พื้นที่เต็ม */
+body[data-sheet="hist"] #authLoggedIn .acct-row,
+body[data-sheet="hist"] #authLoggedIn .acct-photo-del,
+body[data-sheet="hist"] .wallet-total,
+body[data-sheet="hist"] .pane[data-pane="services"],
+body[data-sheet="hist"] .pane[data-pane="acct"]{display:none}
+body[data-sheet="hist"] .pane[data-pane="hist"]{display:block}
+body[data-sheet="hist"] .wallet{margin-top:0;padding:0;background:none;border:none}
+body[data-sheet="hist"] .wallet::before{display:none}
+
+/* ปุ่มดูเพิ่มเติม / ลองใหม่ */
+.hist-more,
+.hist-retry{
+  display:block;
+  width:100%;
+  min-height:46px;
+  margin:var(--s-2) 0 0;
+  border-radius:999px;
+  border:1px solid var(--w-gold-line);
+  background:transparent;
+  color:var(--gold);
+  font-size:.92rem;
+  font-weight:700;
+  transition:background .2s ease,transform .15s ease;
+}
+.hist-empty .hist-retry{width:auto;margin:var(--s-2) auto 0;padding:0 var(--s-4)}
+.hist-more:active,
+.hist-retry:active{background:rgba(217,185,104,.1);transform:scale(.98)}
+
+@media (prefers-reduced-motion: reduce){
+  .bn-item,.hist-more,.hist-retry{transition:none}
+}
+
+
+/* ---------- รอบ 10: ขั้นตอนตรวจ, ปุ่มดูตำแหน่ง, ปุ่มบันทึก ---------- */
+.share-bar{flex-wrap:wrap}
+.share-bar button{min-width:calc(33% - 8px)}
+.load-steps{list-style:none;margin:0 0 10px;padding:0}
+.load-steps li{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 0;font-size:.92rem;color:var(--muted, #8a8f98);
+}
+.load-steps .dot{
+  width:10px;height:10px;border-radius:50%;
+  border:1.5px solid var(--gold-deep);flex:none;
+}
+.load-steps li.now{color:var(--gold-soft)}
+.load-steps li.now .dot{background:var(--gold);box-shadow:0 0 0 4px rgba(229,196,119,.18)}
+.load-steps li.done{color:var(--text)}
+.load-steps li.done .dot{background:var(--gold-deep);border-color:var(--gold-deep)}
+.load-note{margin:0 0 14px;font-size:.8rem;color:var(--muted, #8a8f98)}
+.jump-btn{
+  min-height:40px;margin:2px 0 8px;padding:0 14px;
+  border-radius:10px;border:1px solid var(--gold-deep);
+  background:transparent;color:var(--gold-soft);font:inherit;font-size:.84rem;
+}
+.jump-btn:active{background:rgba(229,196,119,.12)}
+
+/* ---------- รอบ 11: ถามต่อ, ความเป็นส่วนตัว, การแสดงผล, ปุ่มกลับขึ้นบน ---------- */
+.fu{margin:20px 0 8px;padding:16px 14px;border:1px solid var(--gold-deep);border-radius:16px;background:var(--item)}
+.fu-title{margin:0 0 10px;font-size:1rem}
+.fu-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.fu-chip{
+  min-height:40px;padding:8px 12px;border-radius:999px;
+  border:1px solid var(--gold-deep);background:transparent;color:var(--gold-soft);
+  font:inherit;font-size:.84rem;line-height:1.3;text-align:left;
+}
+.fu-chip:active{background:rgba(229,196,119,.12)}
+.fu-form{display:flex;gap:8px}
+.fu-form input{flex:1;min-width:0;min-height:44px;margin:0;font-size:16px}
+.fu-form .primary{flex:none;min-height:44px;padding:0 18px}
+.fu-log{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+.fu-q{align-self:flex-end;max-width:88%;padding:8px 12px;border-radius:14px 14px 4px 14px;background:rgba(229,196,119,.14);font-size:.9rem}
+.fu-a{align-self:flex-start;max-width:96%;padding:10px 12px;border-radius:14px 14px 14px 4px;background:var(--card);border:1px solid var(--ghost);font-size:.9rem;line-height:1.7;white-space:pre-wrap}
+.fu-a.is-wait{color:var(--muted)}
+.fu-a.is-err{border-color:#b0524a}
+.fu-note{margin:12px 0 0;font-size:.76rem;color:var(--muted)}
+
+.menu-panel{margin:0 0 8px;padding:12px 14px;border-radius:14px;background:var(--item);border:1px solid var(--ghost)}
+.menu-panel[hidden]{display:none}
+.priv-list{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-direction:column;gap:10px;font-size:.84rem;line-height:1.6;color:var(--muted)}
+.priv-list b{display:block;color:var(--text);font-size:.88rem}
+.priv-del{
+  width:100%;min-height:44px;border-radius:12px;border:1px solid #b0524a;
+  background:transparent;color:#e58a82;font:inherit;font-size:.9rem;
+}
+.priv-del:active{background:rgba(176,82,74,.14)}
+.priv-del:disabled{opacity:.5}
+.priv-note{margin:8px 0 0;font-size:.82rem;color:var(--gold-soft);min-height:1em}
+.disp-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;font-size:.9rem}
+.disp-row small{display:block;color:var(--muted);font-size:.76rem}
+.disp-row input[type=checkbox]{width:22px;height:22px;flex:none;accent-color:var(--gold)}
+.seg{display:flex;border:1px solid var(--gold-deep);border-radius:10px;overflow:hidden}
+.seg button{width:44px;min-height:40px;border:0;background:transparent;color:var(--text);font:inherit}
+.seg button:nth-child(1){font-size:.8rem}
+.seg button:nth-child(2){font-size:1rem}
+.seg button:nth-child(3){font-size:1.2rem}
+.seg button.is-on{background:rgba(229,196,119,.2);color:var(--gold-soft)}
+
+.to-top{
+  position:fixed;right:16px;
+  bottom:calc(env(safe-area-inset-bottom,0px) + var(--nav-h,60px) + 16px);
+  width:44px;height:44px;border-radius:50%;
+  border:1px solid var(--gold-deep);background:var(--card);color:var(--gold-soft);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 18px rgba(0,0,0,.4);z-index:45;
+}
+.to-top[hidden]{display:none}
+
+/* ขนาดตัวอักษร (ตั้งจากเมนูการแสดงผล) */
+html[data-font="s"]{font-size:93.75%}
+html[data-font="l"]{font-size:112.5%}
+/* โหมดกะทัดรัด */
+html[data-compact]{--m-card-y:14px;--m-h2-gap:8px;--m-hero-y:8px;--m-textarea-h:110px}
+html[data-compact] .item,html[data-compact] .fu{padding-top:10px;padding-bottom:10px}
+html[data-compact] .skel{margin-bottom:6px}
+/* ลดภาพเคลื่อนไหว */
+html[data-calm] *,html[data-calm] *::before,html[data-calm] *::after{
+  animation:none !important;transition:none !important;scroll-behavior:auto !important;
+}
+
+
+/* =========================================================
+   รอบ 12: BLACK TITANIUM (หน้ารายงานผลตรวจ)
+   สี: พื้น #08090B · การ์ด #17181C · ทอง #C8A75A · ตัวอักษร #F5F5F5 (ตั้งใน themes.css)
+   สีความเสี่ยงใช้เฉพาะป้ายและแถบ ไม่ย้อมทั้งการ์ด:
+   แดง = ควรตรวจละเอียด · ทอง = ควรระวัง · เขียวหม่น = เสี่ยงต่ำ
+   ปรับสีที่ตัวแปร --lv-* ด้านล่างที่เดียว
+   ========================================================= */
+:root{
+  --lv-check_detail:#d9706f;
+  --lv-caution:#c8a75a;
+  --lv-low:#6fae8a;
+  --r-card:20px;
+  --line:rgba(255,255,255,.09);
+}
+body{font-family:'Anuphan','Sarabun',system-ui,sans-serif}
+
+.rpt{display:flex;flex-direction:column;gap:16px}
+.rpt-head{padding-bottom:14px;border-bottom:1px solid var(--line)}
+.rpt-kicker{margin:0 0 6px;font-size:.78rem;letter-spacing:.14em;color:var(--gold);font-weight:600}
+.rpt-kicker span{letter-spacing:.04em;color:var(--muted);font-weight:500}
+.rpt-title{margin:0 0 6px;font-size:1.45rem;line-height:1.3;font-family:'Anuphan',sans-serif;font-weight:700}
+.rpt-meta{margin:0;font-size:.86rem;color:var(--muted)}
+
+/* แผงสรุปความเสี่ยง */
+.sum-panel{
+  display:block;margin:0;padding:18px;
+  border-radius:var(--r-card);background:var(--card);border:1px solid var(--line);
+  box-shadow:0 6px 20px rgba(0,0,0,.35);
+}
+.sum-top{display:flex;align-items:baseline;justify-content:space-between;color:var(--lv-low)}
+.sum-top span{font-size:1.15rem;font-weight:600}
+.sum-top b{font-size:1.9rem;font-weight:600;letter-spacing:.02em}
+.sum-panel.lv-check_detail .sum-top{color:var(--lv-check_detail)}
+.sum-panel.lv-caution .sum-top{color:var(--lv-caution)}
+.sum-bar{height:6px;margin:10px 0 14px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden}
+.sum-bar i{display:block;height:100%;border-radius:inherit;background:var(--lv-low)}
+.sum-panel.lv-check_detail .sum-bar i{background:var(--lv-check_detail)}
+.sum-panel.lv-caution .sum-bar i{background:var(--lv-caution)}
+.sum-row{display:flex;justify-content:space-between;padding:6px 0;font-size:1rem}
+.sum-row.lv-check_detail{color:var(--lv-check_detail)}
+.sum-row.lv-caution{color:var(--lv-caution)}
+.sum-row.lv-low{color:var(--lv-low)}
+.sum-row b{font-weight:600}
+
+.brief{margin:0;padding:14px 16px;border-radius:var(--r-card);background:var(--card);border:1px solid var(--line)}
+.brief p{margin:0 0 6px;font-size:.9rem;line-height:1.6}
+.brief p:last-child{margin:0}
+
+/* การ์ดข้อกฎหมายแต่ละประเด็น: พื้นการ์ดเดียวกัน ขอบบาง ใช้สีเฉพาะแถบข้างและป้าย */
+.rpt .item{
+  margin:0;padding:16px;border-radius:var(--r-card);
+  background:var(--card);border:1px solid var(--line);
+  border-left:3px solid var(--lv-low);
+  box-shadow:0 6px 20px rgba(0,0,0,.35);
+  animation:none;
+}
+.rpt .item.lv-check_detail{border-left-color:var(--lv-check_detail)}
+.rpt .item.lv-caution{border-left-color:var(--lv-caution)}
+.rpt .item summary{
+  display:flex;align-items:flex-start;gap:12px;list-style:none;cursor:pointer;
+  min-height:44px;
+}
+.rpt .item summary::-webkit-details-marker{display:none}
+.rpt .item summary::marker{content:""}
+.it-ico{flex:none;margin-top:1px;color:var(--lv-low)}
+.lv-check_detail .it-ico{color:var(--lv-check_detail)}
+.lv-caution .it-ico{color:var(--lv-caution)}
+.it-title{font-size:1.02rem;line-height:1.5;color:var(--gold-soft)}
+.it-title em{font-style:normal;color:var(--gold)}
+.it-title b{font-weight:600;color:var(--text)}
+.rpt .item .tag{
+  display:inline-block;margin:10px 0 8px;padding:4px 12px;border-radius:999px;
+  font-size:.78rem;font-weight:600;
+  color:var(--lv-low);background:rgba(111,174,138,.14);
+}
+.rpt .item.lv-check_detail .tag{color:var(--lv-check_detail);background:rgba(217,112,111,.14)}
+.rpt .item.lv-caution .tag{color:var(--lv-caution);background:rgba(200,167,90,.14)}
+.it-text{margin:0 0 12px;font-size:.95rem;line-height:1.75}
+.rpt .item .found{margin:0 0 6px;font-size:.8rem;color:var(--muted)}
+.rpt .item .notfound{margin:0 0 10px;font-size:.84rem}
+.rpt .item blockquote{
+  margin:0 0 10px;padding:10px 12px;border-left:2px solid var(--gold-deep);
+  border-radius:0 12px 12px 0;background:rgba(255,255,255,.03);
+  font-size:.88rem;line-height:1.7;color:var(--muted);
+}
+.it-ref{margin:0 0 10px;font-size:.84rem;color:var(--muted)}
+.it-sug{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.it-sug h4{margin:0 0 6px;font-size:.88rem;font-weight:600;color:var(--gold)}
+.it-sug p{margin:0;font-size:.93rem;line-height:1.75}
+
+/* ปุ่ม: หลัก = ทองตัวอักษรดำ · รอง = พื้นดำขอบเทา · สูงเท่ากันทุกปุ่ม */
+.rpt .jump-btn{
+  display:flex;align-items:center;justify-content:center;width:100%;
+  min-height:48px;margin:6px 0 0;padding:0 16px;border:0;border-radius:14px;
+  background:var(--gold);color:#0b0b0c;font:inherit;font-size:.95rem;font-weight:600;
+}
+.rpt .jump-btn:active{filter:brightness(.92)}
+.rpt .share-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0}
+.rpt .share-bar button{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  min-height:68px;min-width:0;padding:10px 6px;border-radius:16px;
+  background:var(--card);border:1px solid var(--line);color:var(--text);
+  font:inherit;font-size:.82rem;
+}
+.rpt .share-bar button svg{color:var(--gold)}
+.rpt .share-bar button:active{background:#202126}
+.rpt .disclaimer{margin:0;text-align:center;font-size:.78rem}
+
+/* ปุ่มหลักของหน้า (ตรวจสัญญา) ให้เป็นสไตล์เดียวกัน */
+#checkBtn.primary{
+  background:var(--gold);color:#0b0b0c;border:0;border-radius:14px;
+  min-height:52px;font-weight:600;box-shadow:0 6px 18px rgba(200,167,90,.18);
+}
+#checkBtn.primary:disabled{background:rgba(200,167,90,.35);color:rgba(11,11,12,.6);box-shadow:none}
+#checkBtn.primary:disabled{opacity:1}
+
+/* แถบล่างบางลง: เมนูที่เลือกเป็นทอง ที่เหลือเทา */
+.bn-item{font-weight:500;letter-spacing:.01em}
+.bn-item svg{stroke-width:1.5}
+.bn-item.is-on{color:var(--gold)}
+
+html[data-compact] .rpt{gap:10px}
+html[data-compact] .rpt .item{padding:12px}
+
+
+/* ---------- รอบ 13: Smart Highlight ---------- */
+.vw{
+  position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;
+  background:var(--bg);padding-top:env(safe-area-inset-top);
+}
+.vw[hidden]{display:none}
+body.vw-open{overflow:hidden}
+.vw-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line)}
+.vw-head b{font-size:1.05rem}
+.vw-close{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:1rem}
+.vw-legend{display:flex;gap:14px;flex-wrap:wrap;padding:10px 16px;font-size:.78rem;border-bottom:1px solid var(--line)}
+.vw-legend span::before{content:"";display:inline-block;width:10px;height:10px;margin-right:6px;border-radius:3px;background:currentColor;vertical-align:-1px}
+.vw-legend .lv-check_detail{color:var(--lv-check_detail)}
+.vw-legend .lv-caution{color:var(--lv-caution)}
+.vw-legend .lv-low{color:var(--lv-low)}
+.vw-body{
+  flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:16px 16px 40vh;white-space:pre-wrap;overflow-wrap:anywhere;
+  font-size:1rem;line-height:1.9;color:var(--text);
+}
+mark.hl{color:inherit;padding:2px 2px;border-radius:5px;border-bottom:2px solid currentColor;transition:background .2s}
+mark.hl.lv-check_detail{background:rgba(217,112,111,.26);border-color:var(--lv-check_detail)}
+mark.hl.lv-caution{background:rgba(200,167,90,.26);border-color:var(--lv-caution)}
+mark.hl.lv-low{background:rgba(111,174,138,.22);border-color:var(--lv-low)}
+mark.hl.is-on{outline:2px solid var(--gold);outline-offset:1px}
+.vw-pop{
+  position:absolute;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);
+  padding:16px;border-radius:var(--r-card);background:var(--card);
+  border:1px solid var(--line);border-left:3px solid var(--lv-low);
+  box-shadow:0 -8px 30px rgba(0,0,0,.55);max-height:46vh;overflow-y:auto;
+}
+.vw-pop[hidden]{display:none}
+.vw-pop.lv-check_detail{border-left-color:var(--lv-check_detail)}
+.vw-pop.lv-caution{border-left-color:var(--lv-caution)}
+.vw-tag{display:inline-block;margin-bottom:6px;padding:3px 10px;border-radius:999px;font-size:.74rem;font-weight:600;color:var(--lv-low);background:rgba(111,174,138,.14)}
+.vw-pop.lv-check_detail .vw-tag{color:var(--lv-check_detail);background:rgba(217,112,111,.14)}
+.vw-pop.lv-caution .vw-tag{color:var(--lv-caution);background:rgba(200,167,90,.14)}
+.vw-pop b{display:block;margin-bottom:6px;font-size:1rem}
+.vw-pop p{margin:0 0 12px;font-size:.92rem;line-height:1.7}
+.vw-go{width:100%;min-height:46px;border:0;border-radius:14px;background:var(--gold);color:#0b0b0c;font:inherit;font-weight:600}
+
+/* การ์ด: เหตุผลสั้น 2–3 บรรทัด + อ่านเพิ่มเติม · เทียบข้อความเดิมกับที่แนะนำ */
+.it-text.clamp{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:4px}
+.more-btn{
+  min-height:40px;margin:0 0 8px;padding:0;border:0;background:none;
+  color:var(--gold);font:inherit;font-size:.86rem;font-weight:600;text-align:left;
+}
+.cmp-lbl{margin:10px 0 4px !important;font-size:.76rem !important;color:var(--muted)}
+.cmp-old{padding:10px 12px !important;border-radius:12px;background:rgba(217,112,111,.1);font-size:.88rem !important;text-decoration:line-through;text-decoration-color:rgba(217,112,111,.6)}
+.cmp-new{padding:10px 12px !important;border-radius:12px;background:rgba(111,174,138,.12);font-size:.9rem !important}
+.miss{padding:14px 16px;border-radius:var(--r-card);border:1px dashed var(--line);background:transparent}
+.miss h3{margin:0 0 4px;font-size:.98rem}
+.miss-note{margin:0 0 8px;font-size:.8rem;color:var(--muted);line-height:1.6}
+.miss ul{margin:0;padding-left:20px;font-size:.9rem;line-height:1.7}
+.sum-top,.sum-row{cursor:pointer}
+
+/* =========================================================
+   รอบ 14: Soft Highlight + Underline
+   แดง = พื้นแดงจาง ๆ เฉพาะวลีที่มีปัญหา · ทอง/เขียว = เส้นใต้ + พื้นจางมาก
+   สีตัวอักษรบนไฮไลต์: แดง #FF999D · ทอง #E5C36C · เขียว #82D0A6
+   ปรับที่ตัวแปร --hl-* ที่เดียว ใช้ร่วมกันทั้งการ์ดและหน้าดูสัญญา
+   ========================================================= */
+:root{
+  --hl-check_detail:#ff999d; --hl-check_detail-bg:rgba(255,153,157,.18);
+  --hl-caution:#e5c36c;      --hl-caution-bg:rgba(229,195,108,.10);
+  --hl-low:#82d0a6;          --hl-low-bg:rgba(130,208,166,.08);
+}
+mark.hl{
+  padding:1px 5px;border-radius:6px;border-bottom:0;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;font-weight:500;
+}
+mark.hl.lv-check_detail{background:var(--hl-check_detail-bg);color:var(--hl-check_detail)}
+mark.hl.lv-caution{background:var(--hl-caution-bg);color:var(--hl-caution);
+  text-decoration:underline;text-decoration-color:var(--hl-caution);text-decoration-thickness:2px;text-underline-offset:5px}
+mark.hl.lv-low{background:var(--hl-low-bg);color:var(--hl-low);
+  text-decoration:underline;text-decoration-color:var(--hl-low);text-decoration-thickness:2px;text-underline-offset:5px}
+mark.hl.is-on{outline:0;box-shadow:0 0 0 2px var(--gold)}
+.vw-legend .lv-check_detail{color:var(--hl-check_detail)}
+.vw-legend .lv-caution{color:var(--hl-caution)}
+.vw-legend .lv-low{color:var(--hl-low)}
+
+/* การ์ด: หัว = เลข+ชื่อ ซ้าย ป้ายขวา · ข้อความที่อ้างเป็นพื้นจางสีตามระดับ */
+.rpt .item summary{align-items:center}
+.rpt .item .tag{margin:0 0 0 auto;flex:none;display:inline-block}
+.it-lbl{margin:12px 0 4px;font-size:.8rem;color:var(--muted)}
+.rpt .item blockquote.hl-quote{
+  margin:4px 0 8px;padding:12px 14px;border:0;border-radius:14px;
+  font-size:1rem;line-height:1.7;font-weight:500;
+  color:var(--hl-low);background:var(--hl-low-bg);
+}
+.rpt .item.lv-check_detail blockquote.hl-quote{color:var(--hl-check_detail);background:var(--hl-check_detail-bg)}
+.rpt .item.lv-caution blockquote.hl-quote{color:var(--hl-caution);background:var(--hl-caution-bg)}
+.src-row{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin:0 0 4px;font-size:.8rem;color:var(--muted);
+}
+.src-link{
+  min-height:44px;padding:0;border:0;background:none;white-space:nowrap;
+  color:var(--gold);font:inherit;font-size:.86rem;font-weight:600;
+}
+.src-link i{font-style:normal;font-size:1.1rem;margin-left:2px}
+.it-sug{border-top:0;padding-top:4px}
+.it-sug h4{display:flex;align-items:center;gap:8px;margin:0 0 8px;font-size:.98rem;color:var(--text)}
+.it-sug h4 svg{color:var(--gold);flex:none}
+.rpt .item .found,.rpt .item .jump-btn{display:none}

@@ -1,0 +1,85 @@
+/* =========================================================
+   themes.css: สีและธีมทั้งหมดอยู่ที่นี่ที่เดียว
+   ธีมปัจจุบัน: Vellum Black Label (Obsidian + Champagne Gold) ใช้ทุกจอ
+
+   แก้สีที่พบบ่อย:
+   - โทนทองทั้งหมด                 → --gold, --gold-soft, --gold-deep
+   - พื้นหลังหน้า                    → --bg
+   - พื้นการ์ด                       → --card
+   - ช่องกรอกข้อความ                 → --field
+   - ระดับความเสี่ยงในผลตรวจ         → กลุ่ม "ระดับความเสี่ยง"
+   - กลับไปธีมสว่าง                  → ตั้ง data-theme="light" ที่ <html>
+   ========================================================= */
+
+/* ---------- 1. ธีมหลัก (Vellum Black Label) ---------- */
+:root{
+  color-scheme:dark;
+
+  /* พื้นหลังและการ์ด */
+  --bg:#08090b;
+  --card:#17181c;
+  --card-edge:rgba(255,255,255,.07);
+  --item:#1b1d23;
+  --field:#101216;
+  --border:#2b2e36;
+  --ghost:#202126;
+  --shadow:0 12px 32px rgba(0,0,0,.55);
+
+  /* ตัวอักษร */
+  --text:#f5f5f5;
+  --muted:#8b8e98;
+
+  /* สีเน้น (Champagne Gold) ใช้เฉพาะจุดสำคัญเท่านั้น ประมาณ 5% ของหน้า */
+  --gold:#c8a75a;
+  --gold-soft:#e0c581;
+  --gold-deep:#9c7f3f;
+  --on-gold:#08090b;
+  --focus:rgba(200,167,90,.55);
+
+  /* ระดับความเสี่ยง (ค่าใน JSON: high = ควรตรวจละเอียด, mid = ควรระวัง, low = เสี่ยงต่ำ) */
+  --high:#2a1417;  --highText:#f7a6ab;  --highBorder:#e5484d;
+  --mid:#2a2312;   --midText:#f5d68a;   --midBorder:#e0a526;
+  --low:#11202a;   --lowText:#9fd3ee;   --lowBorder:#4a9fd0;
+
+  /* สถานะและไฮไลต์ */
+  --ok:#7ee2a8;
+  --warn:#f5d68a;
+  --mark:rgba(229,196,119,.28);
+  --markText:#fff6dc;
+
+  /* รูปทรง */
+  --radius-card:16px;
+  --radius-btn:12px;
+}
+
+/* ---------- 2. ธีมสว่าง (ใช้เมื่อตั้ง data-theme="light") ---------- */
+:root[data-theme="light"]{
+  color-scheme:light;
+
+  --bg:#f4f6fb;
+  --card:#ffffff;
+  --card-edge:#e5e7eb;
+  --item:#fafafa;
+  --field:#ffffff;
+  --border:#d1d5db;
+  --ghost:#e5e7eb;
+  --shadow:0 2px 8px rgba(0,0,0,.06);
+
+  --text:#1f2937;
+  --muted:#6b7280;
+
+  --gold:#2563eb;
+  --gold-soft:#3b82f6;
+  --gold-deep:#1d4ed8;
+  --on-gold:#ffffff;
+  --focus:rgba(37,99,235,.45);
+
+  --high:#fee2e2;  --highText:#991b1b;  --highBorder:#dc2626;
+  --mid:#fef3c7;   --midText:#92400e;   --midBorder:#f59e0b;
+  --low:#e0f2fe;   --lowText:#075985;   --lowBorder:#0284c7;
+
+  --ok:#15803d;
+  --warn:#b45309;
+  --mark:#fde047;
+  --markText:#1f2937;
+}

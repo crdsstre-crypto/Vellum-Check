@@ -1,0 +1,103 @@
+/* mobile-polish.css: ขัดมือถือ 5 จุด (โหลดหลัง mobile.css) ใช้เฉพาะจอ <= 767px
+   1 ไม่ล้นจอ+ปุ่มสูง 44-48px · 2 ลดข้อความซ้ำ+ระยะห่าง · 3 ช่องวางสัญญา
+   4 แถบล่าง+safe area · 5 สถานะปุ่มและ transition 150-250ms */
+html,body{max-width:100%;overflow-x:hidden}
+*,*::before,*::after{box-sizing:border-box}
+button,.file-pick,.ct-chip,.bn-item{touch-action:manipulation}
+img,svg,video,canvas,select,textarea,input{max-width:100%}
+
+/* ---------- 1. ไม่ล้นจอ และพื้นที่แตะ 44-48px ---------- */
+.ct-trigger{min-height:56px;max-width:100%;padding-right:14px}
+.ct-txt{flex:1;min-width:0}
+.ct-txt b,.ct-txt small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ct-quick{flex-wrap:wrap;overflow:visible;gap:8px;margin:12px 0 0;padding:0}
+.ct-quick .ct-chip{flex:0 1 auto;max-width:100%;min-height:44px;padding:8px 16px}
+.ct-chip,.ct-reset,.sample-btn,.draft-bar button,.ps-actions button{min-height:44px}
+.credit-chip{min-height:44px;padding:6px 14px}
+.btns button,#checkBtn.primary{min-height:48px}
+.ta-clear{width:40px;height:40px;top:8px;right:8px}
+.ta-wrap textarea{padding-right:56px}
+.step-head{flex-wrap:wrap;row-gap:8px}
+.step-head h2{flex:1 1 180px}
+.ps,.ps-list,.ps-preview,.cr-note,.draft-bar{max-width:100%}
+.ps-row{min-height:56px}
+.ps-row input{width:26px;height:26px}
+
+/* ---------- 2. ลำดับสายตา ลดข้อความซ้ำ ---------- */
+.hint{display:none}                    /* ซ้ำกับคำอธิบายใน Privacy Shield */
+.card{padding-top:20px;padding-bottom:22px}
+h2{font-size:1.12rem;line-height:1.35;margin-bottom:12px}
+.step-sub{margin:26px 0 0}
+.step-sub h3{font-size:1.04rem;line-height:1.4}
+.step-cost{margin:8px 0 0;font-size:.88rem;line-height:1.6}
+.ps{margin-top:14px}
+.ps-summary{font-size:.9rem;line-height:1.65}
+.ps-fine{font-size:.8rem;margin-top:12px}
+.check-note{margin-top:12px;font-size:.84rem}
+.field-label{font-size:.86rem;margin-bottom:8px}
+.disclaimer{margin-top:16px;font-size:.78rem;line-height:1.6}
+.btns{margin-top:16px}
+
+/* ---------- 3. ช่องวางสัญญา ---------- */
+textarea{
+  border:1px solid var(--border);
+  transition:border-color .2s ease,box-shadow .2s ease,background-color .2s ease;
+}
+textarea::placeholder{color:var(--muted);opacity:.85}
+textarea:focus,textarea:focus-visible{
+  outline:none;
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(200,167,90,.18),0 8px 24px rgba(200,167,90,.08);
+}
+.ta-wrap:focus-within .ta-clear{background:rgba(200,167,90,.18);color:var(--gold-soft)}
+.ta-meta{margin-top:10px;gap:10px 12px;align-items:center}
+.ta-count{font-size:.8rem;flex:1 1 auto}
+.ta-actions{flex:1 1 100%;gap:8px;display:flex;flex-wrap:wrap}
+/* ปุ่มอัปโหลดให้ดูเป็นปุ่มจริง */
+.file-pick{
+  flex:1 1 auto;justify-content:center;gap:8px;min-height:48px;padding:8px 16px;
+  border:1px solid var(--gold-deep);border-radius:14px;text-decoration:none;
+  background:rgba(200,167,90,.08);color:var(--gold-soft);font-size:.92rem;font-weight:600;
+  transition:background-color .18s ease,transform .15s ease;
+}
+.file-pick::before{
+  content:"";width:18px;height:18px;flex:none;background:currentColor;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 16V4M7 9l5-5 5 5M5 20h14'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 16V4M7 9l5-5 5 5M5 20h14'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+.file-pick:active{background:rgba(200,167,90,.16);transform:scale(.98)}
+.sample-btn:not(.file-pick){flex:1 1 auto;min-height:48px;text-decoration:none;border:1px solid var(--border);border-radius:14px;color:var(--text);font-size:.92rem}
+.up-status{margin-top:10px}
+
+/* ---------- 4. แถบนำทางล่าง ---------- */
+:root{--nav-h:64px}
+.bottom-nav:not([hidden]){padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+.bn-item{position:relative;gap:4px;font-size:.72rem;transition:color .2s ease,transform .15s ease}
+.bn-item svg{width:24px;height:24px;stroke-width:1.6;transition:transform .2s ease}
+.bn-item::before{
+  content:"";position:absolute;top:0;left:50%;width:28px;height:2px;margin-left:-14px;border-radius:0 0 2px 2px;
+  background:var(--gold);opacity:0;transform:scaleX(.4);transition:opacity .2s ease,transform .2s ease;
+}
+.bn-item.is-on{color:var(--gold-soft);font-weight:600}
+.bn-item.is-on::before{opacity:1;transform:scaleX(1)}
+.bn-item.is-on svg{transform:translateY(-1px)}
+body.has-nav main,body.has-nav .wrap{scroll-padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 16px)}
+
+/* ---------- 5. สถานะปุ่มและ transition ---------- */
+button,.ghost,.primary{transition:background-color .18s ease,border-color .18s ease,color .18s ease,box-shadow .2s ease,transform .15s ease,opacity .2s ease}
+.primary:not(:disabled):active,.ghost:not(:disabled):active,.ct-chip:active,.ps-actions button:active{transform:scale(.98)}
+.primary:not(:disabled):active{background:var(--gold-soft);box-shadow:0 3px 10px rgba(200,167,90,.2)}
+.ghost:not(:disabled):active{border-color:var(--gold-deep);color:var(--gold-soft)}
+#checkBtn.primary:disabled{background:rgba(200,167,90,.22);color:rgba(245,245,245,.45);cursor:not-allowed}
+.ct-chip.is-on{border-color:var(--gold);box-shadow:inset 0 0 0 1px rgba(200,167,90,.35)}
+/* กำลังตรวจ: ปุ่มนิ่ง มีวงหมุนเล็ก ๆ บอกว่ายังทำงาน (script.js ใส่ is-busy) */
+#checkBtn.is-busy{position:relative;cursor:progress}
+#checkBtn.is-busy::after{
+  content:"";display:inline-block;width:16px;height:16px;margin-left:10px;vertical-align:-3px;
+  border:2px solid rgba(11,11,12,.25);border-top-color:#0b0b0c;border-radius:50%;
+  animation:vcSpin .8s linear infinite;
+}
+@keyframes vcSpin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important;animation-iteration-count:1 !important}
+}

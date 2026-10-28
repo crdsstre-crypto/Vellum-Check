@@ -1,0 +1,89 @@
+/* =========================================================
+   desktop-layout.css: โครงสร้างหน้าจอ (ส่วนที่ 1) เฉพาะคอมและโน้ตบุ๊ก
+   - โหลดด้วย media="(min-width: 1024px)" ใน index.html
+     มือถือและไอแพดแนวตั้งจึงไม่ได้ใช้กฎใดจากไฟล์นี้
+   - ไม่แตะ HTML, JavaScript, สี (themes.css) หรือไฟล์มือถือ
+   - ตัวปรับเร็ว: แก้ตัวแปร --dl-* ด้านล่างได้เลย
+
+   ขนาดที่ออกแบบไว้: 1024 / 1280 / 1366×768 / 1440 / 1920×1080
+   ========================================================= */
+
+:root{
+  --dl-w:min(1240px, calc(100% - 64px));  /* ความกว้างเนื้อหา โน้ตบุ๊ก */
+  --dl-gap:20px;
+  --dl-side:300px;                         /* คอลัมน์บัญชี (≥1280px) */
+}
+@media (min-width:1600px){
+  :root{ --dl-w:min(1480px, calc(100% - 128px)); --dl-gap:24px; --dl-side:340px; }
+}
+
+/* ---------- Header: เต็มความกว้าง ตราอยู่ซ้าย ---------- */
+.site-header{padding:14px 0}
+.site-header .topbar{
+  width:var(--dl-w);
+  margin:0 auto;
+  justify-content:flex-start;
+}
+
+/* ---------- main: กริดกว้างขึ้น ---------- */
+main{
+  width:var(--dl-w);
+  max-width:none;
+  margin:0 auto;
+  padding:24px 0 16px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  grid-template-areas:
+    "hero  video"
+    "auth  auth"
+    "input result"
+    "pay   pay";
+  gap:var(--dl-gap);
+  align-items:start;
+}
+main > .card{margin:0}
+main > .hero{grid-area:hero}
+main > .vc-embed{grid-area:video;margin:0}
+main > #authCard{grid-area:auth}
+main > .card:not(#authCard):not(#resultCard):not(#paymentCard){grid-area:input}
+main > #resultCard{grid-area:result}
+main > #paymentCard{grid-area:pay;width:min(100%,760px);justify-self:center}
+
+/* ---------- Hero: ชิดซ้าย อยู่คู่กับคลิป ---------- */
+.hero{
+  text-align:left;
+  align-self:center;
+  padding:8px 8px 8px 0;
+}
+.hero h1{font-size:clamp(2.2rem,3.4vw,3.2rem);line-height:1.2}
+.hero p{font-size:1.05rem;margin-top:12px;max-width:34em}
+
+/* ---------- การ์ด: ระยะขอบสบายตาบนจอใหญ่ ---------- */
+.card{padding:24px 26px}
+textarea{min-height:clamp(240px,38vh,420px)}
+
+/* ---------- ผลตรวจ: ค้างด้านบนตอนเลื่อน อ่านคู่กับข้อความสัญญา ---------- */
+#resultCard{
+  position:sticky;
+  top:16px;
+  max-height:calc(100vh - 32px);
+  overflow:auto;
+}
+
+/* ---------- โน้ตบุ๊กและจอใหญ่ (≥1280px): 3 คอลัมน์ บัญชี | ข้อความสัญญา | ผลตรวจ ---------- */
+@media (min-width:1280px){
+  main{
+    grid-template-columns:var(--dl-side) minmax(0,1fr) minmax(0,1fr);
+    grid-template-areas:
+      "hero  hero  video"
+      "auth  input result"
+      "pay   pay   pay";
+  }
+  #authCard{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto}
+}
+
+/* ---------- โน้ตบุ๊กจอเตี้ย (เช่น 1366×768) ---------- */
+@media (min-width:1024px) and (max-height:800px){
+  main{padding-top:16px}
+  .card{padding:20px 22px}
+}

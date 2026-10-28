@@ -1,0 +1,59 @@
+/* ศัพท์น่ารู้ — ใช้ตัวแปรสีจาก themes.css ได้ทั้งธีมดำ-ทองและธีมสว่าง ใช้ได้ทุกขนาดจอ */
+.gloss{margin:14px 0;padding:14px 16px;border-radius:18px;border:1px solid var(--card-edge,rgba(255,255,255,.07));background:var(--card)}
+.gl-head{display:flex;align-items:center;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--card-edge,rgba(255,255,255,.07))}
+.gl-ico{color:var(--gold);display:inline-flex}
+.gl-title{flex:1;min-width:0}
+.gl-title h3{margin:0;font-size:1.05rem;color:var(--text)}
+.gl-title p{margin:2px 0 0;font-size:.82rem;color:var(--muted)}
+.gl-count{font-size:.8rem;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.07);color:var(--text);white-space:nowrap}
+.gl-term{padding:12px 0;border-bottom:1px solid var(--card-edge,rgba(255,255,255,.07))}
+.gl-term summary{cursor:pointer;list-style:none;font-size:.98rem;color:var(--text);display:flex;justify-content:space-between;align-items:center;gap:8px;-webkit-tap-highlight-color:transparent}
+.gl-term summary::-webkit-details-marker{display:none}
+.gl-term summary::after{content:'›';color:var(--gold);font-size:1.3rem;transition:transform .2s}
+.gl-term[open] summary::after{transform:rotate(90deg)}
+.gl-text{margin:8px 0 6px;font-size:.92rem;line-height:1.7;color:var(--text)}
+.gl-reflbl{margin:8px 0 2px;font-size:.78rem;color:var(--muted)}
+.gl-refs{margin:0;padding:0;list-style:none}
+.gl-refs li{margin:4px 0;font-size:.86rem;line-height:1.55}
+.gl-law{display:block;color:var(--muted)}
+.gl-link{color:var(--gold);text-decoration:none;border-bottom:1px dotted var(--gold-deep,var(--gold))}
+.gl-link i{font-style:normal}
+.gl-note{margin:12px 0 0;font-size:.76rem;line-height:1.6;color:var(--muted)}
+
+/* คำศัพท์ที่แตะได้ในผลตรวจ: ขีดเส้นใต้สีทอง ไม่ใส่พื้นหลัง */
+.gl-tap{all:unset;display:inline;cursor:pointer;color:inherit;text-decoration:underline;text-decoration-color:var(--gold);text-decoration-thickness:1.5px;text-underline-offset:3px;-webkit-tap-highlight-color:transparent}
+.gl-tap:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:3px}
+
+/* Bottom sheet */
+.gl-sheet{position:fixed;inset:0;z-index:9999;visibility:hidden;pointer-events:none}
+.gl-sheet.open{visibility:visible;pointer-events:auto}
+.gl-back{position:absolute;inset:0;background:rgba(0,0,0,.55);opacity:0;transition:opacity .2s}
+.gl-sheet.open .gl-back{opacity:1}
+.gl-panel{position:absolute;left:0;right:0;bottom:0;max-width:640px;margin:0 auto;max-height:80vh;overflow-y:auto;padding:8px 20px calc(24px + env(safe-area-inset-bottom));border-radius:22px 22px 0 0;background:var(--card);border:1px solid var(--gold-deep,var(--gold));border-bottom:0;transform:translateY(100%);transition:transform .25s ease}
+.gl-sheet.open .gl-panel{transform:none}
+.gl-grab{width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,.2);margin:4px auto 12px}
+.gl-sh-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.gl-sh-head h3{margin:0;font-size:1.15rem;color:var(--text)}
+.gl-x{all:unset;cursor:pointer;color:var(--muted);font-size:1.1rem;padding:8px;-webkit-tap-highlight-color:transparent}
+@media (prefers-reduced-motion:reduce){.gl-panel,.gl-back{transition:none}}
+@media print{.gl-sheet{display:none}}
+
+/* หน้าต่างคำอธิบายศัพท์ (รอบ 2) */
+.gl-sh-head{gap:14px}
+.gl-ico-box{width:46px;height:46px;border-radius:14px;background:rgba(200,167,90,.16);align-items:center;justify-content:center;flex:none}
+.gl-sh-title{flex:1;min-width:0}
+.gl-sh-title small{display:block;font-size:.8rem;color:var(--muted)}
+.gl-sh-title h3{font-size:1.3rem;line-height:1.3}
+.gl-hr{border:0;border-top:1px solid var(--card-edge,rgba(255,255,255,.1));margin:14px 0}
+.gl-sec{margin:0 0 8px;font-size:1rem;color:var(--gold-soft,var(--gold))}
+.gl-text-lg{font-size:1rem;margin:0 0 12px}
+.gl-ex{margin:0 0 12px;padding:12px 14px;border-radius:14px;background:rgba(111,174,138,.16)}
+.gl-ex b{display:flex;align-items:center;gap:8px;color:#8fd0a8;font-size:.95rem;margin-bottom:4px}
+.gl-ex p{margin:0;font-size:.95rem;line-height:1.7;color:var(--text)}
+.gl-srcs{margin-top:14px}
+.gl-srcs .gl-law{margin:10px 0 6px;font-size:.82rem;color:var(--muted)}
+.gl-srcbtn{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;border:1px solid var(--gold-deep,var(--gold));color:var(--gold);text-decoration:none;margin-bottom:8px;-webkit-tap-highlight-color:transparent}
+.gl-srcbtn span{flex:1;min-width:0}
+.gl-srcbtn b{display:block;font-size:.98rem}
+.gl-srcbtn small{display:block;font-size:.78rem;color:var(--muted);margin-top:1px}
+.gl-srcbtn i{font-style:normal;font-size:1.4rem}

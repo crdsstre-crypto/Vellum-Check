@@ -1,0 +1,215 @@
+/* =========================================================
+   style.css: สไตล์หลัก (ใช้ทุกจอ)
+   - สีทั้งหมดดึงจาก themes.css ห้ามใส่สี hex ในไฟล์นี้
+   - ชื่อคลาสและ id ต้องตรงกับ index.html และ script.js
+   - ส่วนที่เป็น "มือถือ" ซ่อนไว้ที่นี่ แล้วเปิดใน mobile.css
+
+   ดัชนีแก้ปัญหาเร็ว:
+   1. พื้นฐานหน้า                       → "1. พื้นฐาน"
+   2. Header และปุ่มบัญชี                 → "2. Header"
+   3. ส่วนนำ (hero)                      → "3. ส่วนนำ"
+   4. การ์ดและหัวข้อ h2                  → "4. การ์ด"
+   5. ปุ่ม (primary, ghost, btns)        → "5. ปุ่ม"
+   6. ช่องกรอก อีเมล รหัสผ่าน สัญญา       → "6. ช่องกรอก"
+   7. ผลการตรวจ (badge, item, ไฮไลต์)     → "7. ผลการตรวจ"
+   8. ข้อความทั่วไป                       → "8. ข้อความ"
+   9. Footer                            → "9. Footer"
+   ========================================================= */
+
+/* ---------- 1. พื้นฐาน ---------- */
+[hidden]{display:none !important}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  font-family:'Sarabun',system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.65;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+main{max-width:800px;margin:0 auto;padding:20px 16px 8px}
+
+/* ---------- 2. Header และปุ่มบัญชี ---------- */
+header{
+  padding:18px 20px;
+  text-align:center;
+  background:var(--bg);
+  border-bottom:1px solid rgba(229,196,119,.3);
+}
+.topbar{display:flex;align-items:center;justify-content:center}
+.brand{display:flex;flex-direction:row;align-items:center;gap:10px}
+.brand-logo{width:30px;height:30px;color:var(--gold)}
+.brand-name{
+  font-size:.74rem;
+  font-weight:600;
+  letter-spacing:.3em;
+  color:var(--muted);
+  text-transform:uppercase;
+}
+
+/* ปุ่มบัญชีและแผนบัญชี: ซ่อนบนจอใหญ่ (เปิดใน mobile.css) */
+.auth-toggle,
+.sheet-close,
+.sheet-backdrop{display:none}
+
+/* ---------- 3. ส่วนนำ ---------- */
+.hero{text-align:center;padding:8px 0 18px}
+.hero h1{margin:4px 0 0;font-size:1.5rem;font-weight:700;color:var(--gold-soft);letter-spacing:.01em}
+.hero p{margin:6px 0 0;color:var(--muted);font-size:.92rem}
+.hero-art{display:none}
+
+/* ---------- 4. การ์ดและหัวข้อ ---------- */
+.card{
+  position:relative;
+  background:linear-gradient(180deg,rgba(255,255,255,.03),transparent 60%), var(--card);
+  border:1px solid var(--card-edge);
+  border-radius:var(--radius-card);
+  padding:20px;
+  box-shadow:var(--shadow);
+  margin-bottom:16px;
+}
+h2{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:1.02rem;
+  font-weight:700;
+  margin:0 0 14px;
+  color:var(--text);
+}
+h2::before{
+  content:"";
+  width:3px;
+  height:16px;
+  border-radius:2px;
+  background:var(--gold);
+  flex:none;
+}
+
+/* ---------- 5. ปุ่ม ---------- */
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+button{
+  font:inherit;
+  font-weight:600;
+  font-size:.95rem;
+  border:1px solid transparent;
+  border-radius:var(--radius-btn);
+  padding:11px 20px;
+  cursor:pointer;
+  transition:background .2s, color .2s, border-color .2s, opacity .2s, transform .08s;
+}
+button:active{transform:scale(.98)}
+button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.primary{
+  flex:1 1 auto;
+  background:var(--gold);
+  color:var(--on-gold);
+  box-shadow:0 6px 18px rgba(229,196,119,.18);
+}
+.primary:hover{background:var(--gold-soft)}
+.ghost{
+  background:transparent;
+  color:var(--text);
+  border-color:var(--border);
+}
+.ghost:hover{border-color:var(--gold-deep);color:var(--gold-soft)}
+
+/* ---------- 6. ช่องกรอก ---------- */
+input[type="email"],
+input[type="password"],
+textarea{
+  width:100%;
+  background:var(--field);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:var(--radius-btn);
+  padding:12px 14px;
+  font:inherit;
+  transition:border-color .2s, box-shadow .2s;
+}
+input[type="email"],
+input[type="password"]{margin-bottom:10px}
+textarea{min-height:200px;resize:vertical;line-height:1.7}
+input::placeholder,
+textarea::placeholder{color:var(--muted)}
+input:focus,
+textarea:focus{
+  outline:none;
+  border-color:var(--gold-deep);
+  box-shadow:0 0 0 3px var(--focus);
+}
+.voice-opt{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:14px;
+  color:var(--muted);
+  font-size:.92rem;
+  cursor:pointer;
+}
+.voice-opt input{accent-color:var(--gold);width:18px;height:18px}
+
+/* ---------- 7. ผลการตรวจ ---------- */
+.summary{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.badge{
+  padding:6px 14px;
+  border-radius:999px;
+  font-size:.85rem;
+  font-weight:600;
+  background:var(--ghost);
+  color:var(--text);
+  border:1px solid var(--card-edge);
+}
+.badge.high{background:var(--high);color:var(--highText);border-color:transparent}
+.badge.mid{background:var(--mid);color:var(--midText);border-color:transparent}
+.badge.low{background:var(--low);color:var(--lowText);border-color:transparent}
+
+.item{
+  background:var(--item);
+  border:1px solid var(--card-edge);
+  border-left:3px solid var(--border);
+  border-radius:10px;
+  padding:14px 16px;
+  margin-bottom:10px;
+  overflow-wrap:anywhere;
+}
+.item.high{border-left-color:var(--highBorder);background:var(--high)}
+.item.mid{border-left-color:var(--midBorder);background:var(--mid)}
+.item.low{border-left-color:var(--lowBorder);background:var(--low)}
+.item h3{margin:0 0 4px;font-size:1rem;font-weight:700;color:var(--text)}
+.item .tag{font-size:.78rem;font-weight:700;letter-spacing:.02em;margin-bottom:4px}
+.item.high .tag{color:var(--highText)}
+.item.mid .tag{color:var(--midText)}
+.item.low .tag{color:var(--lowText)}
+.item .snippet{
+  font-size:.9rem;
+  color:var(--muted);
+  margin-top:6px;
+  white-space:pre-wrap;
+}
+mark{
+  background:var(--mark);
+  color:var(--markText);
+  padding:0 3px;
+  border-radius:4px;
+}
+.empty{color:var(--muted);text-align:center;padding:28px 12px}
+.empty-art{display:none}
+
+/* ---------- 8. ข้อความทั่วไป ---------- */
+.disclaimer{font-size:.84rem;color:var(--muted);margin-top:10px;line-height:1.6}
+.hint{display:none}
+
+/* ---------- 9. Footer ---------- */
+footer{
+  text-align:center;
+  color:var(--muted);
+  font-size:.82rem;
+  padding:22px 20px 28px;
+  border-top:1px solid var(--card-edge);
+}
+
+/* แท็บและปุ่มลัดของแผนบัญชีใช้เฉพาะมือถือ (เปิดใน mobile.css) */
+.wallet-quick,.bottom-nav{display:none}
