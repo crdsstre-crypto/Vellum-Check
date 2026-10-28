@@ -4,17 +4,17 @@
    ลบไฟล์นี้ + บรรทัด <link> ใน index.html = กลับไปใช้ history-polish.css v13 */
 .vault-head{display:none}
 @media (max-width:767px){
-  :root,.history-panel,#authLoggedIn{--v-gold:#E8C35D;--v-gold-line:rgba(232,195,93,.45);--v-navy:#0E1624;--v-card:#11151B;--v-line:#2B303A;--d-gold:#E8C35D;--d-mint:#83D8B4;--d-sky:#85BCEB;--v-pend:#F4A66A;--d-card:#11151B;--d-line:#2B303A}
+  :root,.history-panel,#authLoggedIn{--v-gold:#9ea2a7;--v-gold-line:rgba(158,162,167,.45);--v-navy:#0E1624;--v-card:#11151B;--v-line:#2B303A;--d-gold:#9ea2a7;--d-mint:#83D8B4;--d-sky:#85BCEB;--v-pend:#F4A66A;--d-card:#11151B;--d-line:#2B303A}
 
   /* ---------- โซน A: Vault Header ---------- */
   .vault-head{
     position:relative;display:flex;align-items:center;gap:14px;margin:0 0 14px;padding:14px 14px;
     border:1px solid var(--v-line);border-radius:20px;overflow:hidden;
-    background:radial-gradient(120% 140% at 0% 0%,rgba(217,185,104,.16),transparent 55%),linear-gradient(160deg,#101a2b,#0A0D13 70%);
+    background:radial-gradient(120% 140% at 0% 0%,rgba(156,160,165,.16),transparent 55%),linear-gradient(160deg,#101a2b,#0A0D13 70%);
   }
   .vault-head::after{content:"";position:absolute;left:14px;right:14px;top:0;height:1px;background:linear-gradient(90deg,transparent,var(--v-gold-line),transparent)}
   .vault-badge{flex:0 0 auto;width:56px;height:56px;display:grid;place-items:center;border-radius:16px;
-    background:linear-gradient(160deg,#16233a,#0A0F18);border:1px solid var(--v-gold-line);box-shadow:0 0 18px rgba(217,185,104,.18),inset 0 0 0 1px rgba(255,255,255,.04);color:var(--v-gold)}
+    background:linear-gradient(160deg,#16233a,#0A0F18);border:1px solid var(--v-gold-line);box-shadow:0 0 18px rgba(156,160,165,.18),inset 0 0 0 1px rgba(255,255,255,.04);color:var(--v-gold)}
   .vault-badge svg{width:34px;height:34px}
   .vault-txt{min-width:0;display:flex;flex-direction:column;gap:3px}
   .vault-txt b{font-size:1.28rem;font-weight:700;line-height:1.2;color:var(--h-text,#f5f5f5);letter-spacing:.01em}
@@ -22,7 +22,7 @@
 
   /* ---------- โซน B: Credit Command (ฮับเครดิต) ---------- */
   .pay-hub{margin:0 0 12px;padding:14px;border:1px solid var(--v-line);border-radius:18px;
-    background:linear-gradient(160deg,#17130a 0%,#121317 55%);box-shadow:none}
+    background:linear-gradient(160deg,#101011 0%,#121317 55%);box-shadow:none}
   .pay-hub .ph-bal p{margin:2px 0 0;display:flex;align-items:baseline;gap:8px}
   .pay-hub .ph-bal b{font-size:2.5rem;font-weight:700;line-height:1;color:var(--v-gold);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
   .pay-hub .ph-bal small{font-size:.9rem;color:var(--h-sub,#8b8e98)}
@@ -33,31 +33,31 @@
   .pay-hub .ph-stat b{font-size:1.15rem;line-height:1}
   .pay-hub .ph-stat.is-done b{color:var(--d-mint,#7FCFB0)}
   .pay-hub .ph-stat.is-pend b{color:var(--d-sky,#8DB9D8)}
-  .pay-hub .ph-topup{width:100%;min-height:48px;border:0;border-radius:14px;background:var(--v-gold);color:#17130A;font:inherit;font-weight:700}
+  .pay-hub .ph-topup{width:100%;min-height:48px;border:0;border-radius:14px;background:var(--v-gold);color:#101011;font:inherit;font-weight:700}
 
   /* ---------- โซน C: Command Search ---------- */
   .hist-tools{position:sticky;top:0;z-index:4;margin:0 -2px 10px;padding:6px 2px 8px;background:linear-gradient(#08090b 82%,rgba(8,9,11,0))}
   .hist-search{order:-1;margin:0 0 8px}
   .hist-tools{display:flex;flex-direction:column}
   .hist-search input{min-height:48px;border-radius:16px;background:var(--v-card);border:1px solid var(--v-line);transition:border-color .2s,box-shadow .2s}
-  .hist-search input:focus{border-color:var(--v-gold-line);box-shadow:0 0 0 3px rgba(217,185,104,.12);outline:0}
+  .hist-search input:focus{border-color:var(--v-gold-line);box-shadow:0 0 0 3px rgba(156,160,165,.12);outline:0}
   .lib-seg{display:flex;gap:8px;margin:0;padding:2px 0;border:0;border-radius:0;background:none;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
   .lib-seg::-webkit-scrollbar{display:none}
   .lib-seg-b{flex:0 0 auto;min-height:38px;padding:0 14px;border:1px solid var(--v-line);border-radius:999px;background:var(--v-card);scroll-snap-align:start;transition:background .2s,color .2s,border-color .2s}
-  .lib-seg-b.is-on{background:var(--v-gold);border-color:var(--v-gold);color:#17130A}
+  .lib-seg-b.is-on{background:var(--v-gold);border-color:var(--v-gold);color:#101011}
   .lib-chips{margin:8px 0 0}
 
   /* ---------- โซน D: Smart Timeline ---------- */
   #histList .hr-day{margin:18px 0 0}
   #histList .hr-day-list{position:relative;gap:12px;padding-left:22px}
   #histList .hr-day-list::before{content:"";position:absolute;left:6px;top:14px;bottom:14px;width:2px;border-radius:2px;
-    background:linear-gradient(180deg,var(--v-gold-line),rgba(217,185,104,.08))}
+    background:linear-gradient(180deg,var(--v-gold-line),rgba(156,160,165,.08))}
   #histList .hr2{position:relative;background:var(--v-card);border-radius:18px;transition:border-color .2s,transform .15s}
   #histList .hr2:active{transform:scale(.99)}
   #histList .hr2::before{content:"";position:absolute;left:-21px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;
     background:#0A0D13;border:2px solid var(--v-gold-line)}
-  #histList .hr-day:first-of-type .hr2:first-child{border-color:var(--v-gold-line);box-shadow:0 0 0 1px rgba(217,185,104,.10),0 8px 22px rgba(0,0,0,.4)}
-  #histList .hr-day:first-of-type .hr2:first-child::before{background:var(--v-gold);border-color:var(--v-gold);box-shadow:0 0 10px rgba(217,185,104,.6)}
+  #histList .hr-day:first-of-type .hr2:first-child{border-color:var(--v-gold-line);box-shadow:0 0 0 1px rgba(156,160,165,.10),0 8px 22px rgba(0,0,0,.4)}
+  #histList .hr-day:first-of-type .hr2:first-child::before{background:var(--v-gold);border-color:var(--v-gold);box-shadow:0 0 10px rgba(156,160,165,.6)}
   #histList .hr2.is-pinned{border-color:var(--v-gold-line)}
   #histList .hr2 .hr-thumb{width:64px;height:84px;border-radius:9px;box-shadow:0 6px 14px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.08);transform:rotate(-1.5deg)}
   @media (max-width:360px){#histList .hr2 .hr-thumb{width:54px;height:72px}#histList .hr-day-list{padding-left:18px}#histList .hr2::before{left:-17px}}
@@ -65,7 +65,7 @@
   /* ---------- โซน E: Floating Navigation (ปุ่มปัจจุบันเป็นสีทอง + เส้นเน้นบางด้านบน) ---------- */
   .bottom-nav .bn-item{position:relative}
   .bottom-nav .bn-item.is-on{color:var(--v-gold)}
-  .bottom-nav .bn-item.is-on::before{content:"";position:absolute;left:28%;right:28%;top:0;height:2px;border-radius:0 0 2px 2px;background:var(--v-gold);box-shadow:0 0 8px rgba(217,185,104,.55)}
+  .bottom-nav .bn-item.is-on::before{content:"";position:absolute;left:28%;right:28%;top:0;height:2px;border-radius:0 0 2px 2px;background:var(--v-gold);box-shadow:0 0 8px rgba(156,160,165,.55)}
 
   /* ---------- รอบ 2: การ์ดเอกสาร · กลุ่มวันพับได้ · สีสถานะ + ข้อความกำกับ ---------- */
   .hist-tabs .hist-tab{font-weight:600}
@@ -83,7 +83,7 @@
   .pay-row{border-color:var(--v-line);border-radius:16px;background:var(--v-card)}
 
   /* ---------- รอบ 3: Financial Document Timeline (แท็บเครดิตและชำระเงิน) ---------- */
-  .pay-hub{display:grid;grid-template-columns:auto 1fr auto;align-items:center;column-gap:12px;row-gap:10px;padding:12px;margin:0 0 10px;border-radius:18px;background:linear-gradient(160deg,#17130a 0%,#11151B 60%)}
+  .pay-hub{display:grid;grid-template-columns:auto 1fr auto;align-items:center;column-gap:12px;row-gap:10px;padding:12px;margin:0 0 10px;border-radius:18px;background:linear-gradient(160deg,#101011 0%,#11151B 60%)}
   .pay-hub .ph-top{display:contents}
   .pay-hub .ph-top>div{display:none}
   .pay-hub .ph-ico{grid-column:1;grid-row:1;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:var(--v-gold);border:1px solid var(--v-gold-line);background:transparent}
@@ -102,7 +102,7 @@
   .hist-filters{flex-wrap:nowrap;overflow-x:auto;gap:8px;margin:0 0 6px;padding:2px 0;scrollbar-width:none}
   .hist-filters::-webkit-scrollbar{display:none}
   .hist-chip{flex:0 0 auto;min-height:36px;padding:0 14px;border-radius:999px;background:var(--v-card);border:1px solid var(--v-line);color:var(--h-sub,#8b8e98);font-weight:600}
-  .hist-chip.is-on{background:rgba(232,195,93,.14);border-color:var(--v-gold);color:var(--v-gold)}
+  .hist-chip.is-on{background:rgba(158,162,167,.14);border-color:var(--v-gold);color:var(--v-gold)}
   .hist-chip[data-status="pending"]::before,.hist-chip[data-status="done"]::before{content:"";display:inline-block;width:8px;height:8px;margin-right:7px;border-radius:50%;background:var(--v-pend)}
   .hist-chip[data-status="done"]::before{background:var(--d-mint)}
   .pay-day{margin:16px 0 0}
@@ -131,7 +131,7 @@
   #authLoggedIn .acct-row{border:1px solid var(--v-line);border-radius:18px;background:var(--v-card);margin:0 0 12px}
   #authLoggedIn .wallet{padding:0;background:none;border:0;box-shadow:none}
   #authLoggedIn .wallet-total{display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:14px;row-gap:12px;margin:0 0 12px;padding:14px;
-    border:1px solid var(--v-gold-line);border-radius:20px;background:linear-gradient(160deg,#17130a 0%,#11151B 62%);box-shadow:0 0 0 1px rgba(232,195,93,.08),0 10px 26px rgba(0,0,0,.4)}
+    border:1px solid var(--v-gold-line);border-radius:20px;background:linear-gradient(160deg,#101011 0%,#11151B 62%);box-shadow:0 0 0 1px rgba(158,162,167,.08),0 10px 26px rgba(0,0,0,.4)}
   #authLoggedIn .wallet-total-label{grid-column:1;grid-row:1;align-self:end;font-size:.82rem;color:var(--h-sub,#8b8e98)}
   #authLoggedIn .wallet-total-num{grid-column:1;grid-row:2;margin:0;display:flex;align-items:baseline;gap:8px}
   #authLoggedIn .wallet-total-num b{font-size:2.6rem;line-height:1;color:var(--v-gold)}
@@ -142,7 +142,7 @@
   #authLoggedIn .wallet-rows dd{font-size:.78rem}
   #authLoggedIn .wallet-rows dd b{font-size:1.1rem}
   #authLoggedIn .wallet-quick{grid-column:1/-1;grid-row:3;margin:0}
-  #authLoggedIn .wallet-total .wallet-topup{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;margin:0;border:0;border-radius:14px;background:var(--v-gold);color:#17130A;font-size:1rem;font-weight:700;box-shadow:none}
+  #authLoggedIn .wallet-total .wallet-topup{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;margin:0;border:0;border-radius:14px;background:var(--v-gold);color:#101011;font-size:1rem;font-weight:700;box-shadow:none}
   #authLoggedIn .wallet-total .wallet-topup::before{content:"+";margin-right:8px;font-size:1.3rem;line-height:1}
 
   #authLoggedIn .wallet-list-head{margin:6px 2px 8px}
@@ -170,7 +170,7 @@
 
   /* ---------- รอบ 5: บัญชีของฉัน — Modern SaaS + Colorful Fintech (เรียบ ไม่มีแสงวิ่ง) ----------
      ฟ้า = เครดิตตรวจ/ข้อมูลบัญชี · เขียว = เครดิตเสียง/ความเป็นส่วนตัว · ม่วง = การแสดงผล · อำพัน = ปุ่มเติมเครดิต */
-  #authLoggedIn{--a-card:#1A2230;--a-line:rgba(255,255,255,.07);--a-amber:#E8B84D;--a-blue:#5BA8FF;--a-green:#39D6A0;--a-purple:#A78BFA;--a-orange:#FF9F59}
+  #authLoggedIn{--a-card:#1A2230;--a-line:rgba(255,255,255,.07);--a-amber:#959aa0;--a-blue:#5BA8FF;--a-green:#39D6A0;--a-purple:#A78BFA;--a-orange:#FF9F59}
   #authLoggedIn .acct-row{background:var(--a-card);border-color:var(--a-line)}
   #authLoggedIn .acct-avatar{box-shadow:none;border-color:var(--a-blue)}
   #authLoggedIn .wallet-total{display:grid;grid-template-columns:1fr 1fr;column-gap:10px;row-gap:10px;padding:14px;background:var(--a-card);border:1px solid var(--a-line);box-shadow:none;border-radius:20px}
@@ -186,7 +186,7 @@
   #authLoggedIn .wallet-rows dd{font-size:.8rem;color:var(--h-sub,#9aa3b2)}
   #authLoggedIn .wallet-rows dd b{font-size:1.25rem;color:var(--h-text,#f5f5f5)}
   #authLoggedIn .wallet-quick{grid-column:1/-1;grid-row:4}
-  #authLoggedIn .wallet-total .wallet-topup{background:var(--a-amber);color:#1a1405;border-radius:14px}
+  #authLoggedIn .wallet-total .wallet-topup{background:var(--a-amber);color:#0f0f10;border-radius:14px}
 
   #authLoggedIn .wallet-list-title::before{background:var(--a-blue)}
   #authLoggedIn .wallet-card{background:var(--a-card);border-color:var(--a-line);box-shadow:none}
@@ -206,8 +206,8 @@
   #authLoggedIn .acct-out{background:rgba(255,92,92,.08);border-color:rgba(255,92,92,.3)}
 
   /* ---------- รอบ 6: บัญชีของฉัน — VELLUM Black Wallet (ดำสนิท เรียบ มีสีเฉพาะจุด) ----------
-     พื้น #090A0C · การ์ด #131417 · เส้น #292A2F · ทอง #F2C75C เฉพาะปุ่มเติมเครดิต · ฟ้า #72B4FF = เครดิตตรวจ · เขียว #55D9A6 = เครดิตเสียง */
-  #authLoggedIn{--a-card:#131417;--a-line:#292A2F;--a-amber:#F2C75C;--a-blue:#72B4FF;--a-green:#55D9A6;--a-purple:#A78BFA}
+     พื้น #090A0C · การ์ด #131417 · เส้น #292A2F · ทอง #a3a6ab เฉพาะปุ่มเติมเครดิต · ฟ้า #72B4FF = เครดิตตรวจ · เขียว #55D9A6 = เครดิตเสียง */
+  #authLoggedIn{--a-card:#131417;--a-line:#292A2F;--a-amber:#a3a6ab;--a-blue:#72B4FF;--a-green:#55D9A6;--a-purple:#A78BFA}
   body[data-sheet="acct"] #authCard,body[data-sheet="acct"] #authCard .sheet-body{background:#090A0C}
   #authLoggedIn .wallet-total{padding:16px;background:var(--a-card);border:1px solid var(--a-line);border-radius:20px;grid-template-columns:1fr;row-gap:8px}
   #authLoggedIn .wallet-total-label{grid-column:1;font-size:.84rem;color:#92949C}
@@ -216,7 +216,7 @@
   #authLoggedIn .wallet-total-num small{font-size:1rem;color:#92949C}
   #authLoggedIn .wallet-rows{display:none}
   #authLoggedIn .wallet-quick{grid-column:1;grid-row:3;margin-top:6px}
-  #authLoggedIn .wallet-total .wallet-topup{min-height:50px;background:var(--a-amber);color:#16120a;border-radius:14px;font-weight:700}
+  #authLoggedIn .wallet-total .wallet-topup{min-height:50px;background:var(--a-amber);color:#0f1011;border-radius:14px;font-weight:700}
 
   #authLoggedIn .wallet-list-head{margin:18px 2px 8px}
   #authLoggedIn .wallet-list-title{font-size:.86rem;font-weight:600;color:#92949C}
@@ -243,8 +243,8 @@
   #authLoggedIn .acct-menu::before{color:#92949C}
 
   /* ---------- รอบ 7: บัญชีของฉัน — VELLUM Black Label · Wallet Dashboard แผงเดียว ----------
-     พื้น #090A0C · การ์ด #131417 · เส้น #292A2F · ฟ้า #73B5FF ตรวจสัญญา · เขียว #55D9A6 เสียง · ม่วง #B69AFF ตั้งค่า · ทอง #F0C75E แบรนด์ */
-  #authLoggedIn{--a-card:#131417;--a-line:#292A2F;--a-amber:#F0C75E;--a-blue:#73B5FF;--a-green:#55D9A6;--a-purple:#B69AFF}
+     พื้น #090A0C · การ์ด #131417 · เส้น #292A2F · ฟ้า #73B5FF ตรวจสัญญา · เขียว #55D9A6 เสียง · ม่วง #B69AFF ตั้งค่า · ทอง #a3a6ab แบรนด์ */
+  #authLoggedIn{--a-card:#131417;--a-line:#292A2F;--a-amber:#a3a6ab;--a-blue:#73B5FF;--a-green:#55D9A6;--a-purple:#B69AFF}
   #authLoggedIn .pane[data-pane="services"]{display:none!important}
   #authLoggedIn .acct-row{padding:14px;border-radius:20px}
   #authLoggedIn .acct-label{display:block;font-size:1.05rem;font-weight:700;color:#F4F4F5}
@@ -270,7 +270,7 @@
   #authLoggedIn .wallet-rows dd{grid-column:1/-1;margin:0;font-size:.84rem;color:#92949C}
   #authLoggedIn .wallet-rows dd b{font-size:1.7rem;color:#F4F4F5}
   #authLoggedIn .wallet-quick{grid-row:4;margin-top:8px}
-  #authLoggedIn .wallet-total .wallet-topup{min-height:52px;border-radius:15px;background:var(--a-amber);color:#16120a;font-size:1.02rem}
+  #authLoggedIn .wallet-total .wallet-topup{min-height:52px;border-radius:15px;background:var(--a-amber);color:#0f1011;font-size:1.02rem}
   #authLoggedIn .wallet-total .wallet-topup::after{content:"↗";margin-left:8px;font-size:.9rem}
 
   #authLoggedIn .acct-menu{border-radius:20px;margin-top:14px}
@@ -279,8 +279,8 @@
   #authLoggedIn .acct-out{border-radius:18px;min-height:54px}
 
   /* ---------- รอบ 8: Midnight Credit Console — แผงเครดิตแผงเดียว ปรับละเอียด ----------
-     พื้น #08090B · แผง #111317 · ทอง #EAC66A · ฟ้า #79B8FF · เขียว #5CE0B0 · ตัวอักษรรอง #9297A1 */
-  #authLoggedIn{--a-card:#111317;--a-amber:#EAC66A;--a-blue:#79B8FF;--a-green:#5CE0B0}
+     พื้น #08090B · แผง #111317 · ทอง #a6a9ae · ฟ้า #79B8FF · เขียว #5CE0B0 · ตัวอักษรรอง #9297A1 */
+  #authLoggedIn{--a-card:#111317;--a-amber:#a6a9ae;--a-blue:#79B8FF;--a-green:#5CE0B0}
   body[data-sheet="acct"] #authCard,body[data-sheet="acct"] #authCard .sheet-body{background:#08090B}
   #authLoggedIn .wallet-total{grid-template-columns:1fr;row-gap:6px;padding:16px;background:#111317;border:1px solid var(--a-line)}
   #authLoggedIn .wallet-total::before{content:"";right:auto;left:auto;position:static;display:none}
@@ -304,10 +304,10 @@
   #authLoggedIn .wallet-total::after{content:"ยอดรวมจากเครดิตทุกประเภท";grid-row:5;margin-top:8px;font-size:.8rem;color:#9297A1}
 
   /* ---------- รอบ 9: บัญชีของฉัน — Minimal Premium (สเปกสุดท้าย) ----------
-     พื้น #090A0C · การ์ด #141619 · เน้น #EBC65F · สถานะ #55DDB0 · ฟ้า #80B9FF · รอง #999DA7
+     พื้น #090A0C · การ์ด #141619 · เน้น #a0a4aa · สถานะ #55DDB0 · ฟ้า #80B9FF · รอง #999DA7
      ระยะ: ขอบ 20 · ระหว่างส่วน 20 · มุมการ์ด 18 · ปุ่มเติม 54 · แถวเมนู 56
      แอนิเมชัน: เข้าหน้า 300ms ไล่ทีละส่วน (fade + เลื่อนขึ้น 10px) · ตัวเลขนับ 600ms · กดปุ่ม 150ms · สลับแผง 220ms · เคารพ Reduce Motion */
-  #authLoggedIn{--a-card:#141619;--a-amber:#EBC65F;--a-green:#55DDB0;--a-blue:#80B9FF;font-family:'IBM Plex Sans Thai','Anuphan','Sarabun',system-ui,sans-serif}
+  #authLoggedIn{--a-card:#141619;--a-amber:#a0a4aa;--a-green:#55DDB0;--a-blue:#80B9FF;font-family:'IBM Plex Sans Thai','Anuphan','Sarabun',system-ui,sans-serif}
   body[data-sheet="acct"] #authCard,body[data-sheet="acct"] #authCard .sheet-body{background:#090A0C}
   body[data-sheet="acct"] #authCard .sheet-body{padding-left:20px;padding-right:20px}
   #authLoggedIn .acct-row{margin:0 0 20px;padding:12px 14px;border-radius:18px}
