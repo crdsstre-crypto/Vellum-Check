@@ -1025,3 +1025,100 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();
+
+
+/* ===== ตราประทับ "เข้าสู่ระบบแล้ว" เมื่อล็อกอินสำเร็จ (29 ต.ค. 2026) =====
+   ไม่แตะ script.js: เฝ้าดู #authLoggedIn ว่าเพิ่งถูกแสดง (script.js เรียก showLoggedIn) และมี "เจตนาล็อกอิน" ล่าสุด
+   (กดปุ่ม เข้าสู่ระบบ/สมัครใหม่ หรือกด Enter ในช่องกรอก หรือเพิ่งกลับมาจาก Google) จึงสร้างสำเนาเอกสาร
+   ลอยทับตำแหน่งเดิม ประทับตรา แล้วค่อยเลือนออกเผยการ์ดบัญชีที่อยู่ข้างใต้
+   - ตอนเปิดหน้าแล้วมี session อยู่แล้ว (ไม่มีเจตนา) จะไม่ประทับ
+   - ลดการเคลื่อนไหว/ไม่มี WAAPI: ข้ามอนิเมชัน ไม่มีผลต่อการล็อกอิน */
+(function () {
+  'use strict';
+  var intent = null;      /* { t, rect, email } */
+  var GKEY = 'vc_stamp_google';
+  function docEl() { return document.querySelector('#authLoggedOut .auth-doc'); }
+  function remember() {
+    var d = docEl(); if (!d) return;
+    var r = d.getBoundingClientRect(); if (r.width < 50) return;
+    var em = document.getElementById('email');
+    intent = { t: Date.now(), rect: { left: r.left, top: r.top, width: r.width, height: r.height }, email: em ? em.value.trim() : '' };
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('#loginBtn,#signupBtn');
+    if (b) { remember(); return; }
+    if (e.target.closest && e.target.closest('#googleBtn')) { try { sessionStorage.setItem(GKEY, String(Date.now())); } catch (x) {} }
+  }, true);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && e.target && (e.target.id === 'email' || e.target.id === 'password')) remember();
+  }, true);
+
+  function reduce() { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+
+  function play(info) {
+    if (reduce() || !document.body.animate) return;
+    var src = docEl() || document.querySelector('.auth-doc'); if (!src) return;
+    var g = document.createElement('div'); g.className = 'auth-ghost'; g.setAttribute('aria-hidden', 'true');
+    var clone = src.cloneNode(true);
+    clone.removeAttribute('data-tilt'); clone.style.transform = '';
+    clone.querySelectorAll('[id]').forEach(function (n) { n.removeAttribute('id'); });
+    clone.querySelectorAll('label').forEach(function (n) { n.removeAttribute('for'); });
+    clone.querySelectorAll('input').forEach(function (inp, i) {
+      var sp = document.createElement('span'); sp.className = 'gv';
+      sp.textContent = i === 0 ? (info.email || '') : '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022';
+      inp.parentNode.replaceChild(sp, inp);
+    });
+    clone.querySelectorAll('button').forEach(function (n) { n.tabIndex = -1; });
+    var wrap = document.createElement('div'); wrap.className = 'auth-doc-wrap';
+    var pose = document.createElement('div'); pose.className = 'ad-pose';
+    pose.appendChild(clone); wrap.appendChild(pose); g.appendChild(wrap);
+    var r = info.rect, vw = window.innerWidth, vh = window.innerHeight;
+    var w = r ? r.width : Math.min(330, vw - 32), h = r ? r.height : 470;
+    g.style.width = w + 'px'; g.style.left = (r ? r.left : (vw - w) / 2) + 'px'; g.style.top = (r ? r.top : Math.max(70, (vh - h) / 2)) + 'px';
+    var st = document.createElement('div'); st.className = 'auth-stamp';
+    st.innerHTML = '<span class="as-ring"><b>เข้าสู่ระบบแล้ว</b><small>VELLUM CHECK</small></span>';
+    clone.appendChild(st);
+    document.body.appendChild(g);
+    var E = 'cubic-bezier(.16,1,.3,1)';
+    g.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 220, easing: 'ease-out', fill: 'both' });
+    /* ตราลงมาประทับ: ใหญ่+เอียง → กระแทกลงที่ขนาดจริง → ยุบเล็กน้อย → นิ่ง */
+    var sa = st.animate([
+      { opacity: 0, transform: 'translateZ(0) scale(2.8) rotate(-26deg)' },
+      { opacity: .95, transform: 'translateZ(0) scale(.93) rotate(-12deg)', offset: .38 },
+      { opacity: .9, transform: 'translateZ(0) scale(1.04) rotate(-12deg)', offset: .55 },
+      { opacity: .9, transform: 'translateZ(0) scale(1) rotate(-12deg)' }
+    ], { duration: 620, delay: 380, easing: 'cubic-bezier(.3,0,.2,1)', fill: 'both' });
+    /* กระดาษสะเทือนตอนตราแตะ + เงาหดตัว */
+    clone.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(7px)', offset: .5 }, { transform: 'translateY(0)' }],
+      { duration: 260, delay: 380 + 230, easing: 'ease-out' });
+    /* วงหมึกแผ่ออกจากรอบตราตอนกระแทก */
+    var ring = document.createElement('i'); ring.setAttribute('aria-hidden', 'true');
+    ring.style.cssText = 'position:absolute;left:50%;top:64%;width:170px;height:170px;margin:-85px 0 0 -85px;border-radius:50%;border:2px solid rgba(154,47,43,.55);pointer-events:none;opacity:0';
+    clone.appendChild(ring);
+    ring.animate([{ opacity: .7, transform: 'scale(.9)' }, { opacity: 0, transform: 'scale(1.9)' }], { duration: 650, delay: 380 + 230, easing: E, fill: 'both' });
+    /* ค้างให้อ่านครู่หนึ่ง แล้วเลือนออก */
+    setTimeout(function () {
+      var out = g.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-14px) scale(.985)' }], { duration: 520, easing: 'ease-in', fill: 'forwards' });
+      out.onfinish = function () { if (g.parentNode) g.parentNode.removeChild(g); };
+    }, 380 + 620 + 1100);
+  }
+
+  function onLoggedIn() {
+    var gAt = 0; try { gAt = Number(sessionStorage.getItem(GKEY) || 0); sessionStorage.removeItem(GKEY); } catch (x) {}
+    var fromForm = intent && (Date.now() - intent.t) < 15000;
+    var fromGoogle = gAt && (Date.now() - gAt) < 180000;
+    if (!fromForm && !fromGoogle) return;
+    var info = fromForm ? intent : { rect: null, email: '' };
+    intent = null;
+    play(info);
+  }
+  function init() {
+    var li = document.getElementById('authLoggedIn'); if (!li || !('MutationObserver' in window)) return;
+    var wasHidden = li.hidden;
+    new MutationObserver(function () {
+      if (wasHidden && !li.hidden) { wasHidden = false; onLoggedIn(); }
+      else if (li.hidden) wasHidden = true;
+    }).observe(li, { attributes: true, attributeFilter: ['hidden'] });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
