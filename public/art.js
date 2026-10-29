@@ -889,3 +889,125 @@
     at(b, e);
   }, true);
 })();
+
+
+/* ===== โครงหน้าแบบหน้าเดียว: หน้าแรกมีแต่ฉากเปิด ส่วนอื่นเป็น "หน้าย่อย" เปิดด้วยเมนูด้านบน (29 ต.ค. 2026) =====
+   html[data-view] = home | how | film | desk
+     home = ฉากเปิด (#top)            how = #manifesto + #chapters (วิธีอ่าน)
+     film = #introVideo (คลิปแนะนำ)    desk = .desk-head + #authCard + #checkCard + #resultCard + #paymentCard (บัญชี/ตรวจสัญญา)
+   - ซ่อนด้วย CSS (display:none) ไม่ลบองค์ประกอบ  ทุก id และ JS เดิมทำงานต่อได้
+   - ลิงก์ #hash เดิมใช้ได้ทั้งหมด (เมนู ปุ่มในฉากเปิด คลิป): เปลี่ยน hash → สลับหน้าด้วยฉากม่าน → เลื่อนไปหาเป้าหมาย
+   - ครอบ Element.scrollIntoView: ถ้าเป้าหมายอยู่ในหน้าที่ถูกซ่อน (เช่น script.js เลื่อนไปหาผลตรวจ) จะสลับหน้าให้ก่อนอัตโนมัติ
+   - ปุ่ม Back/Forward ของเบราว์เซอร์ทำงานตามปกติ  ลดการเคลื่อนไหว: สลับทันทีไม่มีม่าน
+   - ปิดทั้งหมด: ลบ class "vc-spa" ออกจาก html (ในสคริปต์ที่ <head>) */
+(function () {
+  'use strict';
+  var root = document.documentElement;
+  if (!root.classList.contains('vc-art')) return;
+  var MAP = [
+    ['home', ['main > .hero']],
+    ['how', ['#manifesto', '#chapters']],
+    ['film', ['#introVideo']],
+    ['desk', ['.desk-head', '#authCard', '#checkCard', '#resultCard', '#paymentCard']]
+  ];
+  var HASH = { '': 'home', '#top': 'home', '#manifesto': 'how', '#chapters': 'how', '#introVideo': 'film',
+               '#desk': 'desk', '#authCard': 'desk', '#checkCard': 'desk', '#resultCard': 'desk', '#paymentCard': 'desk' };
+  var cur = 'home', busy = false;
+  var reduce = function () { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; };
+
+  function tag() {
+    MAP.forEach(function (m) { m[1].forEach(function (sel) { document.querySelectorAll(sel).forEach(function (el) { el.setAttribute('data-v', m[0]); }); }); });
+    var f = document.querySelector('footer'); if (f) f.setAttribute('data-v', 'foot');
+  }
+  function viewOf(el) { var h = el && el.closest ? el.closest('[data-v]') : null; var v = h && h.getAttribute('data-v'); return v === 'foot' ? 'how' : v; }
+  function mark(view) {
+    var h = location.hash, links = document.querySelectorAll('.dx-nav a[href^="#"]'), best = null;
+    links.forEach(function (a) { a.classList.remove('is-here'); a.removeAttribute('aria-current'); });
+    if (view !== 'home') {
+      links.forEach(function (a) { if (a.getAttribute('href') === h && HASH[h] === view) best = a; });
+      if (!best) links.forEach(function (a) { if (!best && HASH[a.getAttribute('href')] === view) best = a; });
+    }
+    if (best) { best.classList.add('is-here'); best.setAttribute('aria-current', 'page'); }
+  }
+  function apply(view) {
+    cur = view; root.setAttribute('data-view', view);
+    window.dispatchEvent(new Event('resize'));       /* ให้ฉาก 3 มิติ/ฉากเลื่อนคำนวณขนาดใหม่ */
+    document.dispatchEvent(new CustomEvent('vc-view', { detail: { view: view } }));
+  }
+  /* ฉากม่าน: แผ่นชาร์โคลเลื่อนปิดจากล่างขึ้นบน → สลับหน้า → เลื่อนเปิดขึ้นไปบน */
+  var wipe = null;
+  function getWipe() {
+    if (wipe) return wipe;
+    wipe = document.createElement('div'); wipe.id = 'vcWipe'; wipe.setAttribute('aria-hidden', 'true');
+    wipe.innerHTML = '<span></span>'; document.body.appendChild(wipe); return wipe;
+  }
+  var seq = 0;
+  function hideWipe() { if (wipe) { wipe.getAnimations().forEach(function (x) { x.cancel(); }); wipe.style.display = 'none'; } busy = false; }
+  function go(view, after, opts) {
+    opts = opts || {};
+    var my = ++seq;                                  /* การสลับหน้าใหม่ยกเลิกอันเก่าที่ค้างอยู่ (กันกดรัว ๆ) */
+    if (view === cur) { hideWipe(); if (after) after(); return; }
+    var finish = function () { window.scrollTo(0, 0); apply(view); mark(view); if (after) after(); };
+    if (reduce() || opts.instant || !document.body.animate) { hideWipe(); finish(); return; }
+    hideWipe(); busy = true;
+    var w = getWipe(); w.style.display = 'block';
+    var a = w.animate([{ clipPath: 'inset(100% 0 0 0)' }, { clipPath: 'inset(0 0 0 0)' }], { duration: 420, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'forwards' });
+    a.onfinish = function () {
+      if (my !== seq) return;
+      finish();
+      var bn = w.animate([{ clipPath: 'inset(0 0 0 0)' }, { clipPath: 'inset(0 0 100% 0)' }], { duration: 520, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'forwards', delay: 120 });
+      bn.onfinish = function () { if (my === seq) { w.style.display = 'none'; busy = false; } };
+    };
+  }
+  function scrollToHash(h) {
+    var el = h && h.length > 1 ? document.getElementById(h.slice(1)) : null;
+    if (!el) { window.scrollTo(0, 0); return; }
+    var ref = el.getBoundingClientRect().top + (window.pageYOffset || 0) - ((parseFloat(getComputedStyle(root).getPropertyValue('--art-head')) || 64) + 12);
+    /* หัวส่วนของหน้าอยู่บนสุดอยู่แล้ว: ถ้าเป้าหมายคือส่วนแรกของหน้าให้อยู่บนสุด */
+    window.scrollTo({ top: Math.max(0, ref), behavior: 'instant' });
+  }
+  function route(h, opts) {
+    var view = HASH.hasOwnProperty(h) ? HASH[h] : (h && document.getElementById(h.slice(1)) ? (viewOf(document.getElementById(h.slice(1))) || cur) : 'home');
+    go(view, function () { if (view !== 'home') scrollToHash(h); }, opts);
+  }
+  window.addEventListener('hashchange', function () { route(location.hash); });
+  window.addEventListener('popstate', function () { route(location.hash, { instant: true }); });
+
+  /* เมนูหลัก / โลโก้ / ปุ่มในฉากเปิด */
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (a) {
+      var hr = a.getAttribute('href');
+      if (hr && hr.length > 1 && HASH.hasOwnProperty(hr)) {
+        e.preventDefault();
+        if (location.hash !== hr) history.pushState(null, '', hr);
+        route(hr);
+        return;
+      }
+    }
+    var br = e.target.closest && e.target.closest('.brand');
+    if (br && cur !== 'home') { if (location.hash) history.pushState(null, '', location.pathname + location.search); route(''); }
+  });
+
+  /* ครอบ scrollIntoView */
+  var orig = Element.prototype.scrollIntoView;
+  Element.prototype.scrollIntoView = function () {
+    var v = viewOf(this), args = arguments, self = this;
+    if (v && v !== cur) { go(v, function () { orig.apply(self, args); }, { instant: true }); return; }
+    return orig.apply(this, args);
+  };
+  /* คลิปแนะนำส่งข้อความขอไปหน้าตรวจสัญญา (video-embed.js เลื่อนไปที่การ์ดเอง ซึ่งผ่านตัวครอบข้างบนแล้ว) และแถบล่างมือถือแท็บ "ตรวจสัญญา" */
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('#bottomNav [data-nav="home"]');
+    if (b && cur !== 'desk') go('desk', null, { instant: true });
+  }, true);
+
+  function start() {
+    tag();
+    var h = location.hash;
+    if (HASH.hasOwnProperty(h) && HASH[h] !== 'home') { apply(HASH[h]); mark(HASH[h]); setTimeout(function () { scrollToHash(h); }, 60); }
+    else apply('home');
+    window.VCView = { get current() { return cur; }, go: function (v, instant) { go(v, null, { instant: !!instant }); }, route: route };
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();
