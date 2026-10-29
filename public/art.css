@@ -1536,3 +1536,17 @@ html.vc-art .auth-doc .ad-fold::after{content:"VC";position:absolute;inset:0;dis
   html.vc-art .ld-scene{margin-top:-65px;min-height:100svh !important;padding-top:65px}
   html.vc-spa[data-view="desk"] body:has(#authLoggedOut:not([hidden])) .site-header{background:linear-gradient(180deg,rgba(6,4,2,.78),rgba(6,4,2,0)) !important;border-bottom-color:transparent !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;box-shadow:none !important}
 }
+
+/* แก้วกาแฟ (มองจากด้านบน) พร้อมควันลอยขึ้น */
+@media (min-width:768px){
+  .ld-cup{position:absolute;right:8%;top:50%;width:clamp(120px,min(15vw,25vh),210px);z-index:1;pointer-events:none;transform:rotate(-8deg);
+    filter:brightness(calc(.6 + .4 * var(--on))) drop-shadow(0 6px 6px rgba(0,0,0,.5))}
+  .ld-cup svg{display:block;width:100%;height:auto;overflow:visible}
+  .ld-steam{position:absolute;width:34%;aspect-ratio:1;margin:-17% 0 0 -17%;border-radius:50%;pointer-events:none;opacity:0;
+    background:radial-gradient(circle,rgba(255,244,228,.75),rgba(255,236,210,.28) 55%,transparent 72%);filter:blur(7px);
+    animation:ldSteam var(--d,5s) ease-out var(--w,0s) infinite}
+}
+@keyframes ldSteam{0%{opacity:0;transform:translate(0,0) scale(.5)}20%{opacity:.95}70%{opacity:.4}100%{opacity:0;transform:translate(var(--x,10px),-120%) scale(2.2)}}
+@media (max-width:767px){.ld-cup{display:none}}
+@media (prefers-reduced-motion:reduce){.ld-steam{animation:none;opacity:.25}}
+html[data-calm] .ld-steam{animation:none;opacity:.2}
