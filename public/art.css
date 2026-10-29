@@ -1122,7 +1122,7 @@ html.vc-spa .mf-steps b{font-size:1.1rem}
 
 /* ===== แบบฟอร์มเข้าสู่ระบบเป็นเอกสาร 3 มิติ + ตราประทับ (29 ต.ค. 2026) ===== */
 html.vc-art .auth-doc-wrap{perspective:1100px;padding:6px 4px 30px}
-html.vc-art .ad-pose{transform:rotateY(-7deg) rotateX(3deg);transform-origin:50% 40%;animation:adFloat 8s ease-in-out infinite alternate}
+html.vc-art .ad-pose{transform:rotate(-1.6deg);transform-origin:50% 50%}
 @keyframes adFloat{from{translate:0 0}to{translate:0 -8px}}
 html[data-calm] .ad-pose{animation:none}
 html.vc-art .auth-doc{
@@ -1212,34 +1212,32 @@ html.vc-motion[data-entering] .sec-label{animation:vcTitleRise .8s var(--ease-ou
   74%{--on:0} 76%{--on:.7} 78%{--on:.1} 81%{--on:.9} 84%,100%{--on:1}
 }
 @property --on{syntax:"<number>";inherits:true;initial-value:1}
-.ld-scene{--on:1;position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:center;overflow:hidden;isolation:isolate;background:#0d0b0a}
+.ld-scene{--on:1;position:relative;min-height:calc(100vh - 65px);min-height:calc(100svh - 65px);display:flex;align-items:flex-end;overflow:hidden;background:transparent}
 html.vc-art .ld-scene{animation:ldLamp 12s linear infinite}
 html[data-calm] .ld-scene{animation:none}
 /* ผนังไม้บุ + ชั้นหนังสือ */
-.ld-wall{position:absolute;inset:0 0 40% 0;background:
+.ld-wall{display:none;position:absolute;inset:0 0 40% 0;background:
   radial-gradient(55% 75% at 78% 46%,rgba(255,170,80,calc(.2 * var(--on))),transparent 72%),
   radial-gradient(120% 90% at 50% 40%,transparent 40%,rgba(0,0,0,.55) 100%),
   repeating-linear-gradient(90deg,rgba(0,0,0,.28) 0 2px,transparent 2px 120px),
   linear-gradient(180deg,#1a1410 0%,#2a1f16 100%)}
-.ld-books{position:absolute;left:3%;top:9%;width:36%;height:44%;display:flex;flex-direction:column;justify-content:space-between;
+.ld-books{display:none !important;position:absolute;left:3%;top:9%;width:36%;height:44%;display:flex;flex-direction:column;justify-content:space-between;
   filter:brightness(calc(.45 + .5 * var(--on)))}
 .ld-books .bk-row{position:relative;height:46%;display:flex;align-items:flex-end;gap:1px;padding:0 6px;border-bottom:8px solid #3b2615;
   box-shadow:0 10px 14px -6px rgba(0,0,0,.6);background:linear-gradient(180deg,rgba(0,0,0,.45),rgba(0,0,0,.15))}
 .ld-books i{display:block;flex:none;border-radius:1px 1px 0 0}
 /* โต๊ะไม้: ลายไม้ตามแนวนอน ขอบหน้าโต๊ะ และแสงตะเกียงตกบนผิว */
-.ld-desk{position:absolute;left:0;right:0;bottom:0;height:40%;background:
-  radial-gradient(52% 70% at 76% 4%,rgba(255,176,90,calc(.42 * var(--on))),transparent 70%),
-  radial-gradient(60% 55% at 50% 45%,rgba(255,170,90,calc(.18 * var(--on))),transparent 75%),
-  linear-gradient(180deg,rgba(0,0,0,.35),transparent 18%,transparent 70%,rgba(0,0,0,.55)),
-  url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='900' height='300'><filter id='w' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.0018 .085' numOctaves='5' seed='11'/><feColorMatrix values='0 0 0 0 .08  0 0 0 0 .04  0 0 0 0 .01  -1.3 0 0 0 1.05'/></filter><rect width='100%' height='100%' filter='url(%23w)'/></svg>") 0 0/900px 300px,
-  linear-gradient(180deg,#5a3d24 0%,#43291a 50%,#2a190f 100%);
-  border-top:2px solid rgba(255,206,140,calc(.25 + .35 * var(--on)));box-shadow:0 -14px 30px rgba(0,0,0,.6)}
-.ld-desk::after{content:"";position:absolute;left:0;right:0;bottom:0;height:12px;background:linear-gradient(180deg,#1a0f08,#0a0603);box-shadow:0 -1px 0 rgba(255,200,130,.18)}
+.ld-desk{position:absolute;inset:24% 0 0 0;border-top:3px solid rgba(255,210,150,calc(.25 + .3 * var(--on)));box-shadow:0 -22px 40px rgba(0,0,0,.55);background:
+  radial-gradient(34% 48% at 82% 34%,rgba(255,170,80,calc(.34 * var(--on))),transparent 70%),
+  radial-gradient(34% 62% at 50% 62%,rgba(255,170,90,calc(.16 * var(--on))),transparent 75%),
+  repeating-linear-gradient(180deg,transparent 0 176px,rgba(0,0,0,.55) 176px 179px,rgba(255,200,140,.08) 179px 181px),
+  url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'><filter id='w' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.0014 .05' numOctaves='5' seed='11'/><feColorMatrix values='0 0 0 0 .09  0 0 0 0 .045  0 0 0 0 .015  -1.6 0 0 0 1.25'/></filter><rect width='100%' height='100%' filter='url(%23w)'/><path d='M523 759 q32 6 65 2' stroke='rgba(255,225,170,0.22)' stroke-width='1.2' fill='none'/><path d='M1085 29 q63 1 127 3' stroke='rgba(255,225,170,0.1)' stroke-width='1.2' fill='none'/><path d='M106 160 q17 -1 34 0' stroke='rgba(255,225,170,0.1)' stroke-width='0.9' fill='none'/><path d='M1113 104 q46 -3 93 -3' stroke='rgba(255,225,170,0.22)' stroke-width='0.6' fill='none'/><path d='M835 286 q21 6 43 0' stroke='rgba(255,225,170,0.1)' stroke-width='0.6' fill='none'/><path d='M284 632 q49 1 99 -2' stroke='rgba(255,225,170,0.1)' stroke-width='0.6' fill='none'/><path d='M10 214 q59 -3 119 -2' stroke='rgba(255,225,170,0.1)' stroke-width='0.9' fill='none'/><path d='M642 203 q44 4 89 2' stroke='rgba(255,225,170,0.1)' stroke-width='0.6' fill='none'/><path d='M403 392 q29 -6 58 -1' stroke='rgba(255,225,170,0.16)' stroke-width='0.6' fill='none'/><path d='M298 270 q14 -1 28 -1' stroke='rgba(255,225,170,0.22)' stroke-width='1.2' fill='none'/><path d='M6 610 q53 5 106 -1' stroke='rgba(255,225,170,0.1)' stroke-width='0.9' fill='none'/><path d='M727 313 q40 5 81 -1' stroke='rgba(255,225,170,0.1)' stroke-width='0.9' fill='none'/><path d='M967 721 q21 -6 42 -1' stroke='rgba(255,225,170,0.1)' stroke-width='1.2' fill='none'/><path d='M732 413 q11 2 22 3' stroke='rgba(255,225,170,0.16)' stroke-width='0.9' fill='none'/><path d='M770 592 q63 -6 127 0' stroke='rgba(255,225,170,0.1)' stroke-width='1.2' fill='none'/><path d='M370 638 q22 -5 45 3' stroke='rgba(255,225,170,0.1)' stroke-width='0.9' fill='none'/><path d='M705 524 q32 2 65 -1' stroke='rgba(255,225,170,0.16)' stroke-width='0.6' fill='none'/><path d='M752 302 q12 0 24 -3' stroke='rgba(255,225,170,0.1)' stroke-width='0.9' fill='none'/><path d='M1050 625 q33 -4 66 -1' stroke='rgba(255,225,170,0.16)' stroke-width='1.2' fill='none'/><path d='M1116 94 q29 4 59 -1' stroke='rgba(255,225,170,0.16)' stroke-width='0.6' fill='none'/><path d='M160 641 q19 5 39 2' stroke='rgba(255,225,170,0.16)' stroke-width='0.9' fill='none'/><path d='M330 737 q13 -5 26 1' stroke='rgba(255,225,170,0.22)' stroke-width='0.9' fill='none'/><path d='M65 243 q57 3 114 -1' stroke='rgba(255,225,170,0.16)' stroke-width='0.9' fill='none'/><path d='M863 149 q13 4 27 -3' stroke='rgba(255,225,170,0.16)' stroke-width='0.9' fill='none'/><path d='M424 133 q56 3 113 -2' stroke='rgba(255,225,170,0.22)' stroke-width='0.9' fill='none'/><path d='M218 172 q37 -1 75 -2' stroke='rgba(255,225,170,0.1)' stroke-width='0.9' fill='none'/><path d='M603 144 q39 3 78 3' stroke='rgba(255,225,170,0.1)' stroke-width='1.2' fill='none'/><path d='M928 499 q54 5 108 -1' stroke='rgba(255,225,170,0.16)' stroke-width='0.9' fill='none'/><path d='M596 481 q35 -4 71 -3' stroke='rgba(255,225,170,0.16)' stroke-width='1.2' fill='none'/><path d='M367 642 q69 1 139 3' stroke='rgba(255,225,170,0.16)' stroke-width='0.6' fill='none'/><path d='M182 503 q27 2 54 3' stroke='rgba(255,225,170,0.22)' stroke-width='1.2' fill='none'/><path d='M739 64 q60 6 120 3' stroke='rgba(255,225,170,0.16)' stroke-width='1.2' fill='none'/><path d='M70 777 q29 -1 59 1' stroke='rgba(255,225,170,0.22)' stroke-width='1.2' fill='none'/><path d='M575 497 q26 6 53 2' stroke='rgba(255,225,170,0.22)' stroke-width='0.9' fill='none'/><path d='M696 665 q21 3 42 3' stroke='rgba(255,225,170,0.1)' stroke-width='0.9' fill='none'/><path d='M1120 792 q26 -1 52 2' stroke='rgba(255,225,170,0.16)' stroke-width='0.9' fill='none'/><path d='M591 512 q51 4 102 3' stroke='rgba(255,225,170,0.16)' stroke-width='0.9' fill='none'/><path d='M560 659 q32 5 64 3' stroke='rgba(255,225,170,0.16)' stroke-width='0.9' fill='none'/><path d='M353 704 q38 -1 77 -1' stroke='rgba(255,225,170,0.22)' stroke-width='0.6' fill='none'/><path d='M1084 170 q22 -1 45 3' stroke='rgba(255,225,170,0.16)' stroke-width='0.9' fill='none'/><path d='M161 736 q52 5 105 0' stroke='rgba(255,225,170,0.1)' stroke-width='1.2' fill='none'/><path d='M1189 528 q52 0 105 -1' stroke='rgba(255,225,170,0.22)' stroke-width='1.2' fill='none'/><path d='M554 737 q11 -3 23 -2' stroke='rgba(255,225,170,0.22)' stroke-width='0.9' fill='none'/><path d='M370 224 q58 4 117 -2' stroke='rgba(255,225,170,0.22)' stroke-width='1.2' fill='none'/><path d='M85 482 q24 -4 48 -3' stroke='rgba(255,225,170,0.1)' stroke-width='0.6' fill='none'/><path d='M649 185 q40 -3 81 1' stroke='rgba(255,225,170,0.1)' stroke-width='0.9' fill='none'/><path d='M952 359 q34 4 68 1' stroke='rgba(255,225,170,0.1)' stroke-width='1.2' fill='none'/><path d='M418 243 q55 -1 111 -3' stroke='rgba(255,225,170,0.16)' stroke-width='0.9' fill='none'/><path d='M570 419 q65 -5 130 2' stroke='rgba(255,225,170,0.22)' stroke-width='0.9' fill='none'/><path d='M73 563 q49 -2 98 -3' stroke='rgba(255,225,170,0.16)' stroke-width='1.2' fill='none'/><path d='M1049 347 q47 -2 94 -1' stroke='rgba(255,225,170,0.1)' stroke-width='0.9' fill='none'/><path d='M838 577 q51 2 102 -1' stroke='rgba(255,225,170,0.16)' stroke-width='0.6' fill='none'/><path d='M321 610 q34 3 68 0' stroke='rgba(255,225,170,0.1)' stroke-width='0.6' fill='none'/><path d='M186 359 q62 4 125 -3' stroke='rgba(255,225,170,0.16)' stroke-width='0.6' fill='none'/><path d='M667 579 q68 3 137 1' stroke='rgba(255,225,170,0.1)' stroke-width='0.9' fill='none'/><path d='M1155 384 q37 0 74 -2' stroke='rgba(255,225,170,0.16)' stroke-width='0.9' fill='none'/><path d='M982 725 q34 0 68 3' stroke='rgba(255,225,170,0.1)' stroke-width='1.2' fill='none'/><path d='M532 758 q29 1 58 -1' stroke='rgba(255,225,170,0.16)' stroke-width='0.6' fill='none'/><path d='M653 314 q41 -2 82 -2' stroke='rgba(255,225,170,0.16)' stroke-width='0.6' fill='none'/><path d='M249 675 q49 1 99 -2' stroke='rgba(255,225,170,0.16)' stroke-width='0.6' fill='none'/><path d='M279 401 q10 1 21 1' stroke='rgba(255,225,170,0.22)' stroke-width='0.9' fill='none'/><path d='M498 485 q60 -6 120 -2' stroke='rgba(255,225,170,0.16)' stroke-width='0.9' fill='none'/><path d='M316 738 q28 -2 56 0' stroke='rgba(255,225,170,0.22)' stroke-width='0.9' fill='none'/><path d='M1061 660 q65 3 130 2' stroke='rgba(255,225,170,0.1)' stroke-width='0.6' fill='none'/><path d='M258 307 q28 2 56 2' stroke='rgba(255,225,170,0.16)' stroke-width='1.2' fill='none'/><path d='M607 748 q43 -6 87 0' stroke='rgba(255,225,170,0.16)' stroke-width='0.9' fill='none'/><path d='M271 37 q10 -2 20 1' stroke='rgba(255,225,170,0.16)' stroke-width='1.2' fill='none'/><path d='M220 703 q44 -3 89 -3' stroke='rgba(255,225,170,0.16)' stroke-width='0.9' fill='none'/><path d='M1178 705 q55 4 110 2' stroke='rgba(255,225,170,0.16)' stroke-width='0.9' fill='none'/><path d='M974 401 q53 5 107 -2' stroke='rgba(255,225,170,0.16)' stroke-width='0.9' fill='none'/><path d='M135 310 q15 1 30 0' stroke='rgba(0,0,0,.35)' stroke-width='1.4' fill='none'/><path d='M636 146 q36 2 72 4' stroke='rgba(0,0,0,.35)' stroke-width='1.4' fill='none'/><path d='M677 550 q34 1 69 4' stroke='rgba(0,0,0,.35)' stroke-width='0.8' fill='none'/><path d='M140 750 q44 -1 88 -3' stroke='rgba(0,0,0,.35)' stroke-width='0.8' fill='none'/><path d='M52 341 q69 -4 139 2' stroke='rgba(0,0,0,.35)' stroke-width='1.4' fill='none'/><path d='M100 126 q30 -2 61 -3' stroke='rgba(0,0,0,.35)' stroke-width='0.8' fill='none'/><path d='M599 722 q71 -3 142 -2' stroke='rgba(0,0,0,.35)' stroke-width='0.8' fill='none'/><path d='M847 165 q23 4 47 -1' stroke='rgba(0,0,0,.35)' stroke-width='0.8' fill='none'/><path d='M1137 110 q63 -4 127 0' stroke='rgba(0,0,0,.35)' stroke-width='0.8' fill='none'/><path d='M1169 589 q30 1 60 -2' stroke='rgba(0,0,0,.35)' stroke-width='0.8' fill='none'/><path d='M884 93 q55 5 110 3' stroke='rgba(0,0,0,.35)' stroke-width='1.4' fill='none'/><path d='M723 671 q62 -5 125 -2' stroke='rgba(0,0,0,.35)' stroke-width='1.4' fill='none'/><path d='M309 582 q79 -1 159 4' stroke='rgba(0,0,0,.35)' stroke-width='0.8' fill='none'/><path d='M539 64 q45 -1 90 0' stroke='rgba(0,0,0,.35)' stroke-width='0.8' fill='none'/><path d='M480 380 q73 1 146 -2' stroke='rgba(0,0,0,.35)' stroke-width='0.8' fill='none'/><path d='M38 670 q58 -4 117 -4' stroke='rgba(0,0,0,.35)' stroke-width='0.8' fill='none'/><path d='M255 518 q73 -2 146 2' stroke='rgba(0,0,0,.35)' stroke-width='1.4' fill='none'/><path d='M983 331 q28 3 57 -4' stroke='rgba(0,0,0,.35)' stroke-width='1.4' fill='none'/><path d='M109 154 q69 5 139 -1' stroke='rgba(0,0,0,.35)' stroke-width='0.8' fill='none'/><path d='M171 681 q77 -2 155 -2' stroke='rgba(0,0,0,.35)' stroke-width='1.4' fill='none'/><path d='M725 240 q52 0 104 1' stroke='rgba(0,0,0,.35)' stroke-width='1.4' fill='none'/><path d='M774 139 q60 5 121 0' stroke='rgba(0,0,0,.35)' stroke-width='1.4' fill='none'/><path d='M741 529 q19 4 39 -1' stroke='rgba(0,0,0,.35)' stroke-width='0.8' fill='none'/><path d='M810 64 q27 -5 54 -4' stroke='rgba(0,0,0,.35)' stroke-width='0.8' fill='none'/><path d='M414 200 q20 2 40 3' stroke='rgba(0,0,0,.35)' stroke-width='1.4' fill='none'/><path d='M0 437 q75 -1 150 2' stroke='rgba(0,0,0,.35)' stroke-width='1.4' fill='none'/><path d='M953 472 q27 -2 55 -2' stroke='rgba(0,0,0,.35)' stroke-width='0.8' fill='none'/><path d='M145 383 q64 2 128 -2' stroke='rgba(0,0,0,.35)' stroke-width='1.4' fill='none'/><path d='M225 284 q35 -1 71 -1' stroke='rgba(0,0,0,.35)' stroke-width='0.8' fill='none'/><path d='M987 32 q59 0 118 1' stroke='rgba(0,0,0,.35)' stroke-width='0.8' fill='none'/><ellipse cx='180' cy='170' rx='26' ry='9' fill='none' stroke='rgba(20,8,0,.45)' stroke-width='2'/><ellipse cx='180' cy='170' rx='13' ry='4' fill='rgba(20,8,0,.35)'/><ellipse cx='870' cy='330' rx='22' ry='8' fill='none' stroke='rgba(20,8,0,.45)' stroke-width='2'/><ellipse cx='870' cy='330' rx='11' ry='4' fill='rgba(20,8,0,.35)'/><ellipse cx='430' cy='610' rx='30' ry='10' fill='none' stroke='rgba(20,8,0,.45)' stroke-width='2'/><ellipse cx='430' cy='610' rx='15' ry='5' fill='rgba(20,8,0,.35)'/><ellipse cx='1040' cy='700' rx='20' ry='7' fill='none' stroke='rgba(20,8,0,.45)' stroke-width='2'/><ellipse cx='1040' cy='700' rx='10' ry='4' fill='rgba(20,8,0,.35)'/><ellipse cx='700' cy='90' rx='18' ry='6' fill='none' stroke='rgba(20,8,0,.45)' stroke-width='2'/><ellipse cx='700' cy='90' rx='9' ry='3' fill='rgba(20,8,0,.35)'/></svg>") 0 0/100% 100%,
+  linear-gradient(180deg,#2a1b11 0%,#1d120a 50%,#120a05 100%)}
 /* วัตถุบนโต๊ะ: สมุดบัญชี แฟ้ม ม้วนกระดาษ */
-.ld-pile{position:absolute;left:5%;bottom:calc(40% - 36px);width:min(340px,28%);aspect-ratio:320/270;z-index:1;filter:brightness(calc(.5 + .5 * var(--on))) drop-shadow(0 6px 8px rgba(0,0,0,.5))}
+.ld-pile{position:absolute;left:5%;top:48%;width:min(340px,28%);aspect-ratio:320/270;z-index:1;filter:brightness(calc(.5 + .5 * var(--on))) drop-shadow(0 6px 8px rgba(0,0,0,.5))}
 .ld-pile svg{display:block;width:100%;height:100%;overflow:visible}
 /* ตะเกียงน้ำมันทองเหลือง */
-.ld-lamp{position:absolute;right:10%;bottom:calc(40% - 22px);width:clamp(140px,13vw,200px);height:auto;overflow:visible;z-index:1}
+.ld-lamp{position:absolute;right:9%;top:34%;width:clamp(140px,13vw,200px);height:auto;overflow:visible;z-index:1}
 .ld-lamp .lp-shadow{fill:rgba(0,0,0,.55)}
 .ld-lamp .lp-halo{opacity:var(--on);mix-blend-mode:screen}
 .ld-lamp .lp-glass{fill:url(#lpGlass);stroke:rgba(255,230,190,.5)}
@@ -1252,13 +1250,13 @@ html[data-calm] :is(.lp-flame,.lp-core){animation:none}
 .ld-glow{position:absolute;inset:0;pointer-events:none;background:
   radial-gradient(38% 52% at 78% 44%,rgba(255,176,90,calc(.3 * var(--on))),transparent 72%),
   radial-gradient(46% 30% at 50% 78%,rgba(255,170,90,calc(.2 * var(--on))),transparent 75%);mix-blend-mode:screen}
-.ld-dark{position:absolute;inset:0;pointer-events:none;background:radial-gradient(90% 90% at 50% 50%,rgba(5,4,3,.35),rgba(3,2,1,.9));opacity:calc(.25 + (1 - var(--on)) * .6)}
+.ld-dark{position:absolute;inset:0;pointer-events:none;background:radial-gradient(70% 75% at 56% 60%,rgba(5,4,3,.1),rgba(3,2,1,.92));opacity:calc(.6 + (1 - var(--on)) * .38)}
 /* โต๊ะ: ตัวเอกสารอยู่กลางฉาก */
 .ld-scene .auth-doc-wrap{position:relative;z-index:2;width:min(380px,92%);margin:0 auto;padding:46px 0 52px}
 @media (min-width:1024px){.ld-scene .auth-doc-wrap{width:380px}}
 /* กระดาษเก่าขอบไหม้ (ชั้นพื้น + ขอบไหม้ สร้างด้วย art.js เป็น .ad-rim/.ad-face) */
 html.vc-art .auth-doc{background:none;box-shadow:none;--ink:#3a2714;color:var(--ink);padding:42px 30px 30px;background-image:none}
-html.vc-art .ad-pose{filter:drop-shadow(0 26px 22px rgba(0,0,0,.7))}
+html.vc-art .ad-pose{filter:drop-shadow(0 3px 3px rgba(0,0,0,.6)) drop-shadow(0 10px 14px rgba(0,0,0,.45))}
 html.vc-art .auth-doc::before,html.vc-art .auth-doc::after,html.vc-art .ad-fold{display:none}
 .auth-doc .ad-rim,.auth-doc .ad-face{position:absolute;inset:0;pointer-events:none;z-index:-1}
 .auth-doc .ad-rim{background:linear-gradient(160deg,#6a4423,#4a2c14 55%,#6a4423)}
@@ -1323,3 +1321,38 @@ html.vc-art .auth-ghost .ad-hand{display:none}
 
 /* ตอนสลับหน้า ห้ามให้ main เลื่อน padding แบบมีทรานซิชัน (เห็นเป็นหน้าเลื่อนลง 64px) */
 html.vc-spa main{transition:none !important}
+
+/* ฉากโต๊ะ: ให้เห็นภาพ 3 มิติ (ห้องอ่านหนังสือ+เตาผิง) เหนือขอบโต๊ะ ลดความทึบของชั้นมืดด้านหลัง */
+html.vc-spa[data-view="desk"] body:has(#authLoggedOut:not([hidden])) #vcBackdrop::after{background:rgba(12,12,13,.3) !important}
+
+/* ===== หน้าบัญชีของฉัน: แฟ้มประจำตัวหนังเก่า (30 ต.ค. 2026) =====
+   การ์ดบัญชีตอนล็อกอินเป็นแฟ้มหนังสีเข้ม มีป้ายทองเหลือง ตราขี้ผึ้ง เครดิตสีทองเรืองตามแสงตะเกียง
+   ประวัติ = ลิ้นชักแฟ้ม · ฟังก์ชันและ id เดิมทั้งหมดไม่เปลี่ยน (แต่งผ่าน CSS เท่านั้น) */
+@keyframes dsBreath{0%,100%{text-shadow:0 0 10px rgba(255,170,70,.35),0 0 28px rgba(255,150,50,.18)}50%{text-shadow:0 0 16px rgba(255,185,90,.6),0 0 40px rgba(255,150,50,.3)}}
+@media (min-width:768px){
+  html.vc-art #authCard:has(#authLoggedIn:not([hidden])){
+    position:relative;border:1px solid #5b4126 !important;border-radius:6px !important;margin:18px 0 18px 18px;
+    background:
+      radial-gradient(120% 60% at 50% 0%,rgba(255,170,80,.14),transparent 60%),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='l' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 .02  0 0 0 0 .01  0 0 0 0 0  1.1 0 0 0 -.38'/></filter><rect width='100%' height='100%' filter='url(%23l)'/></svg>"),
+      linear-gradient(170deg,#2c1d13 0%,#1d130c 55%,#140c07 100%) !important;
+    box-shadow:0 22px 40px rgba(0,0,0,.6),inset 0 0 0 5px rgba(0,0,0,.25),inset 0 0 0 6px rgba(201,165,87,.22);
+    padding-top:34px !important;overflow:visible !important;max-height:none !important}
+  html.vc-art #authCard:has(#authLoggedIn:not([hidden])) .sheet-head{display:none}
+  html.vc-art #authCard:has(#authLoggedIn:not([hidden])) .sheet-body{padding:6px 22px 24px !important}
+  html.vc-art #authCard:has(#authLoggedIn:not([hidden]))::before{content:"แฟ้มประจำตัว · ACCOUNT";position:absolute;top:-14px;left:26px;padding:6px 16px;
+    font:500 .66rem/1 var(--font-mono);letter-spacing:.14em;color:#2b1c08;border-radius:3px;
+    background:linear-gradient(180deg,#f0d796,#c19a4a 55%,#98742d);box-shadow:0 3px 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.5)}
+  html.vc-art #authCard:has(#authLoggedIn:not([hidden]))::after{content:"";position:absolute;top:14px;right:18px;width:30px;height:30px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#d86a5f,#9a2420 55%,#5e1210);box-shadow:0 3px 6px rgba(0,0,0,.55),inset 0 0 0 3px rgba(255,150,140,.25)}
+  html.vc-art #authLoggedIn#authLoggedIn .wallet-total-num b{color:#f0cf8a;animation:dsBreath 4s ease-in-out infinite}
+  html.vc-art #authLoggedIn#authLoggedIn .acct-avatar{border-color:#c9a557 !important;box-shadow:0 0 0 3px rgba(201,165,87,.18)}
+  html.vc-art #authLoggedIn#authLoggedIn .cred-title{color:#f0d796}
+  html.vc-art #authLoggedIn#authLoggedIn .wallet-histlink{border:1px solid #8a6a30 !important;border-radius:3px !important;background:linear-gradient(180deg,rgba(201,165,87,.16),rgba(201,165,87,.04)) !important;box-shadow:inset 0 1px 0 rgba(255,230,170,.18)}
+  html.vc-art #authLoggedIn .history-panel{border:1px solid rgba(201,165,87,.35);border-radius:4px;background:rgba(10,6,3,.55);padding:12px}
+  html.vc-art #authLoggedIn .vault-head .vault-txt b{color:#f0d796}
+}
+@media (prefers-reduced-motion:reduce){html.vc-art #authLoggedIn#authLoggedIn .wallet-total-num b{animation:none}}
+/* พื้นโต๊ะไม้ด้านหลังพื้นที่ทำงานตอนล็อกอินแล้ว (ให้ต่อเนื่องกับฉากเข้าสู่ระบบ) */
+html.vc-spa[data-view="desk"] body:has(#authLoggedIn:not([hidden])) #vcBackdrop::before{content:"";position:absolute;inset:34% 0 0 0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(0,0,0,.2),rgba(14,8,4,.82)),repeating-linear-gradient(180deg,transparent 0 150px,rgba(0,0,0,.5) 150px 153px),linear-gradient(180deg,#2a1b11,#120a05);opacity:.9}
