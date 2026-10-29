@@ -1114,3 +1114,74 @@ html.vc-spa .mf-steps b{font-size:1.1rem}
 @media (max-width:767px){
   html.vc-art .dx-nav a[href="#authCard"]{display:none}
 }
+
+
+/* ===== แบบฟอร์มเข้าสู่ระบบเป็นเอกสาร 3 มิติ + ตราประทับ (29 ต.ค. 2026) ===== */
+html.vc-art .auth-doc-wrap{perspective:1100px;padding:6px 4px 30px}
+html.vc-art .ad-pose{transform:rotateY(-7deg) rotateX(3deg);transform-origin:50% 40%;animation:adFloat 8s ease-in-out infinite alternate}
+@keyframes adFloat{from{translate:0 0}to{translate:0 -8px}}
+html[data-calm] .ad-pose{animation:none}
+html.vc-art .auth-doc{
+  position:relative;transform-style:flat !important;
+  padding:30px 24px 22px;border-radius:2px;
+  background:var(--paper);color:#19191b;
+  box-shadow:0 46px 50px -30px rgba(0,0,0,.95),0 0 0 1px rgba(255,255,255,.05);
+  background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 31px,rgba(12,12,13,.045) 31px,rgba(12,12,13,.045) 32px);
+}
+/* ความหนาของกองกระดาษด้านหลัง */
+html.vc-art .auth-doc::before,
+html.vc-art .auth-doc::after{content:"";position:absolute;inset:0;border-radius:2px;background:#cfcbc2;pointer-events:none;z-index:-1}
+html.vc-art .auth-doc::before{transform:translate(6px,7px);box-shadow:0 0 0 1px rgba(0,0,0,.25)}
+html.vc-art .auth-doc::after{transform:translate(11px,13px);background:#a9a59c}
+/* มุมกระดาษพับ */
+html.vc-art .ad-fold{position:absolute;top:0;right:0;width:30px;height:30px;pointer-events:none;background:linear-gradient(225deg,var(--ink) 50%,#d9d5cc 50%);box-shadow:-3px 3px 6px rgba(0,0,0,.25)}
+html.vc-art .ad-kicker{margin:0 0 6px;font-size:.62rem;letter-spacing:.14em;color:rgba(25,25,27,.55);text-transform:uppercase}
+html.vc-art .ad-title{margin:0;font-family:var(--font-display);font-weight:500;font-size:1.7rem;line-height:1.3;color:#19191b}
+html.vc-art .ad-sub{margin:8px 0 18px;font-size:.78rem;line-height:1.7;color:rgba(25,25,27,.7)}
+html.vc-art .ad-field{display:block;margin:0 0 12px}
+html.vc-art .ad-lab{display:block;font-size:.64rem;letter-spacing:.1em;color:rgba(25,25,27,.6)}
+html.vc-art .auth-doc :is(#email,#password){
+  --ff:var(--font-mono);display:block;width:100%;margin:2px 0 0;
+  padding:8px 2px;background:transparent;border:0;border-bottom:1px solid rgba(25,25,27,.5);border-radius:0;
+  color:#19191b;caret-color:#19191b;font-size:.95rem;box-shadow:none;
+}
+html.vc-art .auth-doc :is(#email,#password)::placeholder{color:rgba(25,25,27,.34)}
+html.vc-art .auth-doc :is(#email,#password):focus{border-bottom-color:#19191b;border-bottom-width:2px;padding-bottom:7px;outline:none;box-shadow:none}
+html.vc-art .auth-doc .btns{margin-top:16px;gap:8px}
+html.vc-art .auth-doc button.primary{background:#19191b;color:var(--paper);border:1px solid #19191b;--hv-fill:var(--paper)}
+html.vc-art .auth-doc button.ghost{background:transparent;color:#19191b;border:1px solid rgba(25,25,27,.55);--hv-fill:#19191b}
+@media (hover:hover){
+  html.vc-art .auth-doc button.primary:hover:not(:disabled){background:#19191b;color:#19191b;border-color:#19191b}
+  html.vc-art .auth-doc button.ghost:hover:not(:disabled){color:var(--paper);border-color:#19191b}
+  html.vc-art .auth-doc .google-btn:hover{background:#19191b;color:var(--paper)}
+}
+html.vc-art .auth-doc .or-line{margin:14px 0 10px;font-size:.64rem;color:rgba(25,25,27,.5);text-align:center}
+html.vc-art .auth-doc .google-btn{width:100%;margin:0;background:transparent;color:#19191b;border:1px dashed rgba(25,25,27,.55);border-radius:2px;font-size:.92rem}
+html.vc-art .ad-sign{display:flex;align-items:flex-end;gap:10px;margin:22px 0 0;font-size:.62rem;color:rgba(25,25,27,.5)}
+html.vc-art .ad-sign i{flex:1;border-bottom:1px solid rgba(25,25,27,.35);height:1px;margin-bottom:3px}
+html.vc-art .ad-fine{margin:10px 0 0;font-size:.64rem;line-height:1.6;color:rgba(25,25,27,.55)}
+@media (min-width:768px){
+  html.vc-art #authCard:has(#authLoggedOut:not([hidden])) .sheet-head h2{display:none}
+  html.vc-art #authCard:has(#authLoggedOut:not([hidden])) .sheet-head{margin:0}
+}
+@media (max-width:767px){
+  html.vc-art .ad-pose{transform:none;animation:none}
+  html.vc-art .auth-doc-wrap{perspective:none;padding:2px 2px 14px}
+  html.vc-art .auth-doc::before{transform:translate(4px,5px)}
+  html.vc-art .auth-doc::after{transform:translate(8px,10px)}
+}
+/* ตราประทับ "เข้าสู่ระบบแล้ว": สำเนาเอกสารลอยทับ แล้วประทับตราลงมา */
+html.vc-art .auth-ghost{position:fixed;z-index:10040;pointer-events:none}
+html.vc-art .auth-ghost .auth-doc-wrap{padding:0}
+html.vc-art .auth-ghost .ad-pose{animation:none}
+html.vc-art .auth-ghost .gv{display:block;padding:8px 2px;border-bottom:1px solid rgba(25,25,27,.5);font-family:var(--font-mono);font-size:.95rem;min-height:2.1em;color:#19191b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html.vc-art .auth-stamp{position:absolute;left:50%;top:60%;width:170px;height:170px;margin:-85px 0 0 -85px;pointer-events:none;opacity:0;mix-blend-mode:multiply}
+html.vc-art .auth-stamp .as-ring{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;border-radius:50%;
+  border:4px double #9a2f2b;color:#9a2f2b;text-align:center;
+  box-shadow:inset 0 0 0 5px rgba(154,47,43,.0),0 0 0 2px rgba(154,47,43,.0);
+  -webkit-mask-image:radial-gradient(circle at 30% 24%,#000 55%,rgba(0,0,0,.78) 100%);mask-image:radial-gradient(circle at 30% 24%,#000 55%,rgba(0,0,0,.78) 100%)}
+html.vc-art .auth-stamp b{font-family:var(--font-display);font-size:1.28rem;font-weight:600;line-height:1.25;letter-spacing:0}
+html.vc-art .auth-stamp small{display:block;margin-top:6px;font-family:var(--font-mono);font-size:.6rem;letter-spacing:.18em;border-top:1px solid #9a2f2b;padding-top:5px}
+/* สำเนาตอนประทับตรา: ซ่อนปุ่มให้เหลือกระดาษว่างให้ตราอ่านออก (เนื้อที่ยังอยู่ จึงขนาดเท่าเดิม) */
+html.vc-art .auth-ghost :is(.btns,.or-line,.google-btn){visibility:hidden}
+html.vc-art .auth-stamp{top:64%}
