@@ -1167,3 +1167,92 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
+
+
+/* ===== โต๊ะเขียนเอกสาร: สร้างกองเอกสาร ขอบกระดาษไหม้ และอนิเมชันมือเซ็นชื่อ (29 ต.ค. 2026) =====
+   - กองเอกสาร: แผ่นสุ่มแบบกำหนดค่าเริ่มต้นคงที่ (seed) ซ้อนกัน 46 แผ่น มีแท็บสี ตราแดงบางแผ่น
+   - ขอบกระดาษ: ชั้น .ad-rim (ขอบไหม้เข้ม) กับ .ad-face (หน้ากระดาษ) ตัดด้วย clip-path polygon ขอบเว้าแหว่ง (seed คงที่)
+     แทรกเป็นลูกแรกของ .auth-doc (ตัวคัดลอกในตราประทับจึงได้ขอบเดียวกัน)
+   - มือ: ปากกาเคลื่อนไปตามเส้นลายเซ็น (SVG getPointAtLength) หมึกถูกวาดตามด้วย stroke-dashoffset
+     วน: เขียน 3.4 วินาที → ค้าง → จางหาย → พัก แล้วเขียนใหม่ · หยุดเมื่อไม่อยู่ในจอ · ลดการเคลื่อนไหว = ลายเซ็นเสร็จแล้ว มือวางนิ่ง */
+(function () {
+  'use strict';
+  function rng(seed) { var s = seed >>> 0 || 1; return function () { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
+
+  function pile() {
+    var box = document.querySelector('.ld-pile'); if (!box || box.__built) return; box.__built = true;
+    var r = rng(20261029), N = 46, tones = ['#e9dcc0', '#e2d3b2', '#d9c9a4', '#ece2c9', '#d3c19a', '#cdb98f'];
+    var frag = document.createDocumentFragment();
+    for (var i = 0; i < N; i++) {
+      var d = document.createElement('i'); d.className = 'ps-sh';
+      var rot = (r() - .5) * 9, dx = (r() - .5) * 34;
+      d.style.cssText = 'bottom:' + (i * 4.4).toFixed(1) + 'px;margin-left:-39%;transform:translateX(' + dx.toFixed(1) + 'px) rotate(' + rot.toFixed(2) + 'deg);background-color:' + tones[Math.floor(r() * tones.length)] + ';z-index:' + i;
+      if (r() < .22) { var t = document.createElement('b'); t.className = 'ps-tab'; t.style.top = (8 + r() * 60).toFixed(0) + '%'; d.appendChild(t); }
+      if (r() < .1) { var m = document.createElement('b'); m.className = 'ps-red'; d.appendChild(m); }
+      frag.appendChild(d);
+    }
+    /* กองเล็กพิงอยู่ข้างๆ และแผ่นที่ปลิวออกมาบนโต๊ะ */
+    for (var k = 0; k < 9; k++) {
+      var e = document.createElement('i'); e.className = 'ps-sh';
+      e.style.cssText = 'bottom:' + (k * 4 - 14) + 'px;margin-left:' + (10 + r() * 20).toFixed(0) + '%;width:62%;height:50%;transform:translateX(' + (r() * 24).toFixed(1) + 'px) rotate(' + ((r() - .5) * 14 + 5).toFixed(1) + 'deg);background-color:' + tones[Math.floor(r() * tones.length)] + ';z-index:' + (k + 2);
+      frag.appendChild(e);
+    }
+    box.appendChild(frag);
+  }
+
+  function paper(doc) {
+    if (!doc || doc.__paper) return; doc.__paper = true;
+    function ragged(inset, amp, seed) {
+      var r = rng(seed), pts = [], i, n, t;
+      n = 26; for (i = 0; i <= n; i++) { t = i / n * 100; pts.push([t, inset + r() * amp + (r() < .08 ? r() * amp * 2.2 : 0)]); }
+      n = 34; for (i = 1; i <= n; i++) { t = i / n * 100; pts.push([100 - inset - r() * amp - (r() < .08 ? r() * amp * 1.6 : 0), t]); }
+      n = 26; for (i = n - 1; i >= 0; i--) { t = i / n * 100; pts.push([t, 100 - inset - r() * amp - (r() < .08 ? r() * amp * 2 : 0)]); }
+      n = 34; for (i = n - 1; i >= 1; i--) { t = i / n * 100; pts.push([inset + r() * amp + (r() < .08 ? r() * amp * 1.6 : 0), t]); }
+      return 'polygon(' + pts.map(function (p) { return p[0].toFixed(2) + '% ' + p[1].toFixed(2) + '%'; }).join(',') + ')';
+    }
+    var rim = document.createElement('i'); rim.className = 'ad-rim'; rim.setAttribute('aria-hidden', 'true'); rim.style.clipPath = ragged(.2, 1.6, 7);
+    var face = document.createElement('i'); face.className = 'ad-face'; face.setAttribute('aria-hidden', 'true'); face.style.clipPath = ragged(1.9, 1.3, 19);
+    doc.insertBefore(face, doc.firstChild); doc.insertBefore(rim, doc.firstChild);
+  }
+
+  function hand(doc) {
+    var svg = doc && doc.querySelector('.ad-hand'); if (!svg || svg.__run) return; svg.__run = true;
+    var p1 = svg.querySelector('.ah-ink1'), p2 = svg.querySelector('.ah-ink2'), hd = svg.querySelector('.ah-hand');
+    if (!p1 || !p2 || !hd || !p1.getTotalLength) return;
+    var L1 = p1.getTotalLength(), L2 = p2.getTotalLength(), LT = L1 + L2;
+    [[p1, L1], [p2, L2]].forEach(function (x) { x[0].style.strokeDasharray = x[1]; });
+    function setProgress(p, ink) {                   /* p 0..1 ของลายเซ็นทั้งหมด */
+      var len = p * LT, a = Math.min(len, L1), b = Math.max(0, Math.min(len - L1, L2));
+      p1.style.strokeDashoffset = String(L1 - a); p2.style.strokeDashoffset = String(L2 - b);
+      var seg = len <= L1 ? p1 : p2, at = len <= L1 ? len : len - L1;
+      var pt = seg.getPointAtLength(Math.max(0, Math.min(at, seg === p1 ? L1 : L2)));
+      var wob = Math.sin(p * 90) * 1.2;              /* มือสั่นเบา ๆ ตอนเขียน */
+      hd.style.transform = 'translate(' + (pt.x + 0).toFixed(1) + 'px,' + (pt.y + wob).toFixed(1) + 'px) scale(.72)';
+      p1.style.opacity = p2.style.opacity = String(ink == null ? .9 : ink);
+    }
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced || document.documentElement.hasAttribute('data-calm')) { setProgress(1, .9); hd.style.transform = 'translate(262px,86px) scale(.72)'; return; }
+    var WRITE = 3400, HOLD = 1300, FADE = 800, REST = 700, T = WRITE + HOLD + FADE + REST, t0 = performance.now(), raf = 0, on = false;
+    function frame(now) {
+      raf = 0; if (!on) return;
+      var t = (now - t0) % T;
+      if (t < WRITE) { var q = t / WRITE; setProgress(q < .5 ? 2 * q * q : 1 - Math.pow(-2 * q + 2, 2) / 2, .9); }
+      else if (t < WRITE + HOLD) { setProgress(1, .9); var rest = (t - WRITE) / HOLD; hd.style.transform = 'translate(' + (262 + rest * 14).toFixed(1) + 'px,' + (86 - rest * 6).toFixed(1) + 'px) scale(.72)'; }
+      else if (t < WRITE + HOLD + FADE) { setProgress(1, .9 * (1 - (t - WRITE - HOLD) / FADE)); }
+      else { setProgress(0, 0); hd.style.transform = 'translate(70px,92px) scale(.72)'; }
+      raf = requestAnimationFrame(frame);
+    }
+    function go() { if (!on) { on = true; t0 = performance.now(); raf = requestAnimationFrame(frame); } }
+    function stop() { on = false; }
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { if (es[0].isIntersecting && !document.hidden) go(); else stop(); }, { threshold: .05 }).observe(svg);
+    else go();
+    document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); else if (svg.getBoundingClientRect().height) go(); });
+    setProgress(0, 0);
+  }
+
+  function init() {
+    var doc = document.querySelector('#authLoggedOut .auth-doc'); if (!doc) return;
+    pile(); paper(doc); hand(doc);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
