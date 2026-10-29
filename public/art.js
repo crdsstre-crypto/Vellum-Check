@@ -74,6 +74,14 @@
       if (el.hasAttribute('data-split')) playSplit(el);
     });
   }
+  /* เล่นการเปิดเผยของหน้าใหม่ซ้ำทุกครั้งที่เปิดหน้านั้น (ใช้กับระบบหน้า) */
+  api.replay = function (scope) {
+    (scope || document).querySelectorAll('[data-reveal],[data-split]').forEach(function (el) {
+      el.classList.remove('is-in');
+      if (el.hasAttribute('data-split')) el.querySelectorAll('.vc-word > span').forEach(function (s) { if (root.classList.contains('vc-motion')) s.style.transform = 'translate3d(0,110%,0)'; });
+    });
+    api.observe(scope);
+  };
   api.observe = function (scope) {
     var els = (scope || document).querySelectorAll('[data-reveal],[data-split]');
     els.forEach(function (el) {
@@ -948,30 +956,67 @@
     window.dispatchEvent(new Event('resize'));       /* ให้ฉาก 3 มิติ/ฉากเลื่อนคำนวณขนาดใหม่ */
     document.dispatchEvent(new CustomEvent('vc-view', { detail: { view: view } }));
   }
-  /* ฉากม่าน: แผ่นชาร์โคลเลื่อนปิดจากล่างขึ้นบน → สลับหน้า → เลื่อนเปิดขึ้นไปบน */
-  var wipe = null;
+  /* ระลอกหมึก (Ink tide): แถบหมึกชาร์โคลมีขอบเงินบางแบบเส้นบรรทัดบัญชี ไหลขึ้นจากล่างจอเป็นคลื่น ปิดทั้งจอ → สลับหน้าตอนปิดสนิท
+     → ขอบท้ายของแถบไหลขึ้นไปเผยหน้าใหม่ (คลื่นพาดผ่านทั้งจอ) · หัวข้อของหน้าใหม่ลอยขึ้นพร้อมเงาสะท้อนบนผิวหมึก (CSS ของ art.css)
+     คลื่น = ขอบที่คำนวณด้วย sin หลายความถี่ วาดเป็น clip-path polygon ทุกเฟรม (rAF) 3 ชั้น: เทาเข้มนำหน้า / เงินบางเป็นขอบ / หมึกเป็นตัวแผ่น */
+  var wipe = null, layers = null, rafId = 0;
+  var PTS = 44;
   function getWipe() {
     if (wipe) return wipe;
     wipe = document.createElement('div'); wipe.id = 'vcWipe'; wipe.setAttribute('aria-hidden', 'true');
-    wipe.innerHTML = '<span></span>'; document.body.appendChild(wipe); return wipe;
+    wipe.innerHTML = '<i class="tw tw3"></i><i class="tw tw1"></i><i class="tw tw2"></i><b class="tw-lab mono"></b>';
+    document.body.appendChild(wipe);
+    layers = [wipe.querySelector('.tw3'), wipe.querySelector('.tw1'), wipe.querySelector('.tw2')];
+    return wipe;
+  }
+  var ease = function (t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+  function edge(x, base, amp, ph) {                  /* ความสูงของขอบ (หน่วย %) ที่ตำแหน่ง x (0..1) */
+    return base + amp * (Math.sin(x * 8.6 + ph) + .55 * Math.sin(x * 17.3 - ph * 1.7) + .25 * Math.sin(x * 31 + ph * 2.3));
+  }
+  function poly(base, amp, ph, off, fromTop) {       /* off = เลื่อนขอบลง/ขึ้น (%) ของแต่ละชั้น */
+    var pts = [];
+    for (var i = 0; i <= PTS; i++) { var x = i / PTS; pts.push([x * 100, edge(x, base, amp, ph) + off]); }
+    var s;
+    if (fromTop) { s = '0 -2%,100% -2%'; for (var j = PTS; j >= 0; j--) s += ',' + pts[j][0].toFixed(2) + '% ' + pts[j][1].toFixed(2) + '%'; }
+    else { s = '0 102%,100% 102%'; for (var k = PTS; k >= 0; k--) s += ',' + pts[k][0].toFixed(2) + '% ' + pts[k][1].toFixed(2) + '%'; }
+    return 'polygon(' + s + ')';
+  }
+  function runTide(dir, dur, label, onEnd, tok) {    /* dir 'up' = หมึกขึ้นปิดจอ · 'out' = ขอบท้ายขึ้นเปิดจอ */
+    var t0 = performance.now(), W = getWipe();
+    var lab = W.querySelector('.tw-lab'); lab.textContent = label || '';
+    W.style.display = 'block';
+    function step(now) {
+      if (tok !== seq) return;
+      var p = Math.min(1, (now - t0) / dur), e = ease(p), env = Math.sin(Math.PI * p);
+      var amp = 2.2 + 5.5 * env, ph = (now - t0) / 260;
+      var base = dir === 'up' ? 118 - 138 * e : 118 - 138 * e;      /* 118% → -20% */
+      var top = dir === 'out';
+      var lead = top ? 7 : -7, line = top ? -.6 : .6;                              /* ชั้นเทาเข้มนำหน้า/ตามหลัง 7% ชั้นหมึกเว้นจากเงิน .6% ให้เห็นเป็นเส้นเงินบาง */
+      layers[0].style.clipPath = poly(base, amp * 1.15, ph - .8, lead, top);      /* เทาเข้ม */
+      layers[1].style.clipPath = poly(base, amp, ph, 0, top);                       /* เงิน */
+      layers[2].style.clipPath = poly(base, amp, ph, line, top);                    /* หมึก */
+      lab.style.opacity = String(top ? Math.max(0, 1 - p * 2.2) : Math.min(1, p * 3));
+      if (p < 1) rafId = requestAnimationFrame(step); else { rafId = 0; if (onEnd) onEnd(); }
+    }
+    rafId = requestAnimationFrame(step);
   }
   var seq = 0;
-  function hideWipe() { if (wipe) { wipe.getAnimations().forEach(function (x) { x.cancel(); }); wipe.style.display = 'none'; } busy = false; }
+  function hideWipe() { if (rafId) { cancelAnimationFrame(rafId); rafId = 0; } if (wipe) wipe.style.display = 'none'; busy = false; root.removeAttribute('data-entering'); }
+  var NAME = { home: '', how: 'วิธีอ่าน', film: 'คลิปแนะนำ', desk: 'ตรวจสัญญา' };
   function go(view, after, opts) {
     opts = opts || {};
     var my = ++seq;                                  /* การสลับหน้าใหม่ยกเลิกอันเก่าที่ค้างอยู่ (กันกดรัว ๆ) */
     if (view === cur) { hideWipe(); if (after) after(); return; }
-    var finish = function () { window.scrollTo(0, 0); apply(view); mark(view); if (after) after(); };
-    if (reduce() || opts.instant || !document.body.animate) { hideWipe(); finish(); return; }
+    var finish = function () { window.scrollTo(0, 0); apply(view); mark(view); if (after) after(); if (window.VCMotion && VCMotion.replay) VCMotion.replay(document.querySelector('main')); };
+    if (reduce() || opts.instant || !window.requestAnimationFrame) { hideWipe(); finish(); return; }
     hideWipe(); busy = true;
-    var w = getWipe(); w.style.display = 'block';
-    var a = w.animate([{ clipPath: 'inset(100% 0 0 0)' }, { clipPath: 'inset(0 0 0 0)' }], { duration: 420, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'forwards' });
-    a.onfinish = function () {
+    runTide('up', 640, NAME[view] || '', function () {
       if (my !== seq) return;
       finish();
-      var bn = w.animate([{ clipPath: 'inset(0 0 0 0)' }, { clipPath: 'inset(0 0 100% 0)' }], { duration: 520, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'forwards', delay: 120 });
-      bn.onfinish = function () { if (my === seq) { w.style.display = 'none'; busy = false; } };
-    };
+      root.setAttribute('data-entering', view);
+      runTide('out', 700, NAME[view] || '', function () { if (my === seq) { hideWipe(); } }, my);
+      setTimeout(function () { if (my === seq) root.removeAttribute('data-entering'); }, 1500);
+    }, my);
   }
   function scrollToHash(h) {
     var el = h && h.length > 1 ? document.getElementById(h.slice(1)) : null;
