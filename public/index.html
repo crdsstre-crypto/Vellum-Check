@@ -31,7 +31,7 @@
 <link rel="stylesheet" href="ct-sticker.css?v=9" media="(max-width: 767px)">
 <link rel="stylesheet" href="desktop-layout.css?v=5" media="(min-width: 1024px)">
 <link rel="stylesheet" href="silent-clip.css?v=1" media="(min-width: 1024px)">
-<link rel="stylesheet" href="art.css?v=11">
+<link rel="stylesheet" href="art.css?v=14">
 </head>
 <body>
 <svg id="vcStickerDefs" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="vcg-y" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#f4f4f2"/><stop offset="1" stop-color="#a6a9b0"/></linearGradient><linearGradient id="vcg-o" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#dcdcdb"/><stop offset="1" stop-color="#8a8d94"/></linearGradient><linearGradient id="vcg-b" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#e6e8ec"/><stop offset="1" stop-color="#8f949d"/></linearGradient><linearGradient id="vcg-n" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#9a9ea6"/><stop offset="1" stop-color="#43464d"/></linearGradient><linearGradient id="vcg-t" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#eef0f1"/><stop offset="1" stop-color="#9fa3ab"/></linearGradient><linearGradient id="vcg-p" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#e0e0e0"/><stop offset="1" stop-color="#7f8289"/></linearGradient><linearGradient id="vcg-g" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#d6d9db"/><stop offset="1" stop-color="#888c93"/></linearGradient><linearGradient id="vcg-v" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#cdd0d5"/><stop offset="1" stop-color="#60636b"/></linearGradient><linearGradient id="vcg-w" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d5d8dc"/></linearGradient><linearGradient id="vcg-au" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#f7f7f5"/><stop offset="1" stop-color="#b4b7bd"/></linearGradient><linearGradient id="vcg-s" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#b0b4bb"/></linearGradient></defs></svg>
@@ -187,14 +187,26 @@
     </div>
     <div class="sheet-body">
     <div id="authLoggedOut">
+      <!-- แบบฟอร์มกระดาษ 3 มิติ: id/ปุ่ม/ช่องกรอกเดิมครบ (googleBtn email password loginBtn signupBtn) เปลี่ยนแค่การจัดวางและหน้าตา
+           ตอนล็อกอินสำเร็จ art.js เล่นอนิเมชันประทับตรา "เข้าสู่ระบบแล้ว" -->
+      <div class="auth-doc-wrap"><div class="ad-pose"><div class="auth-doc" data-tilt>
+        <i class="ad-fold" aria-hidden="true"></i>
+        <p class="ad-kicker mono">แบบฟอร์ม · เข้าใช้งาน</p>
+        <h3 class="ad-title">เข้าสู่ระบบ</h3>
+        <p class="ad-sub">กรอกอีเมลและรหัสผ่านด้วยตัวเอง หรือเข้าด้วยบัญชี Google</p>
+        <label class="ad-field" for="email"><span class="ad-lab mono">อีเมล</span>
+          <input id="email" type="email" placeholder="ชื่อ@อีเมลของคุณ" autocomplete="email"></label>
+        <label class="ad-field" for="password"><span class="ad-lab mono">รหัสผ่าน</span>
+          <input id="password" type="password" placeholder="อย่างน้อย 8 ตัว" autocomplete="current-password"></label>
+        <div class="btns">
+          <button class="primary" id="loginBtn">เข้าสู่ระบบ</button>
+          <button class="ghost" id="signupBtn">สมัครใหม่</button>
+        </div>
+        <p class="or-line mono">หรือ</p>
         <button type="button" class="google-btn" id="googleBtn">เข้าสู่ระบบด้วย Google</button>
-        <p class="or-line">หรือ</p>
-      <input id="email" type="email" placeholder="อีเมล" autocomplete="email">
-      <input id="password" type="password" placeholder="รหัสผ่าน (อย่างน้อย 8 ตัว)" autocomplete="current-password">
-      <div class="btns">
-        <button class="primary" id="loginBtn">เข้าสู่ระบบ</button>
-        <button class="ghost" id="signupBtn">สมัครใหม่</button>
-      </div>
+        <p class="ad-sign mono"><span>ลงชื่อ</span><i></i></p>
+        <p class="ad-fine">เครื่องมือคัดกรองเบื้องต้น · ไม่ใช่คำปรึกษาทางกฎหมาย</p>
+      </div></div></div>
     </div>
     <div id="authLoggedIn" hidden>
       <!-- การ์ดเครดิตของคุณ: บัญชี + ยอดคงเหลือ + เครดิตแยกประเภท + ปุ่มเติม ไว้ในการ์ดเดียว (ตัวเลขสร้างจาก script.js showCredits() ผ่าน id เดิม) -->
@@ -1854,6 +1866,6 @@ document.addEventListener('click', function (e) {
 <script src="care.js?v=2"></script>
 <script src="video-embed.js?v=1"></script>
 <script src="silent-clip.js?v=1"></script>
-<script src="art.js?v=10"></script>
+<script src="art.js?v=12"></script>
 </body>
 </html>
