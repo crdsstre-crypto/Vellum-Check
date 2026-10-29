@@ -137,6 +137,7 @@
   var root = document.documentElement;
   var pointer = { x: 0, y: 0 };
   window.VCPointer = pointer;
+  window.VCFX = window.VCFX || { hover: 0, pulse: 0 };   /* ตัวส่งสัญญาณไปฉาก 3 มิติ: hover = แตะปุ่มหลัก, pulse = เพิ่งคลิก */
 
   /* ---- เมนู: ไฮไลต์ลิงก์ของส่วนที่กำลังดู (ทำงานทุกอุปกรณ์) ---- */
   function navHere() {
@@ -174,18 +175,58 @@
     var tiltEl = null, tiltT = { x: 0, y: 0 }, tiltC = { x: 0, y: 0 };
     var px = 0, py = 0;               /* ตำแหน่งเมาส์ที่นิ่งแล้ว (พาราแลกซ์) */
     var LINK = 'a,button,summary,select,label[for],[role="button"],[data-cursor]';
+    var SNAP = '.dx-cta,.dx-cta-ghost,.dx-nav a,button.primary,button.ghost';          /* วงแหวนล็อกเข้ากับปุ่มเหล่านี้ */
+    var HERO_BTN = '.dx-cta,.dx-cta-ghost,.dx-nav a:last-child';                          /* ปุ่มที่ทำให้ฉาก 3 มิติตอบสนอง */
+    var MAGNET = '.dx-cta,.dx-cta-ghost,.dx-nav a:last-child';                           /* ปุ่มที่ถูกดูดตามเมาส์ */
+    var snapEl = null, mouseX = -999, mouseY = -999, ringSize = { w: 28, h: 28, r: 14 };
+    var mags = [].slice.call(document.querySelectorAll(MAGNET)).map(function (el) { return { el: el, x: 0, y: 0, tx: 0, ty: 0, inner: null }; });
+
+    /* ตัวอักษรกลิ้ง: ห่อข้อความของลิงก์ปุ่มด้วยสองชั้น (ชั้นจริง + ชั้นซ้ำที่กลิ้งขึ้นมา) ชั้นซ้ำซ่อนจากโปรแกรมอ่านหน้าจอ */
+    [].slice.call(document.querySelectorAll('.dx-cta,.dx-cta-ghost,.dx-nav a')).forEach(function (el) {
+      if (el.querySelector('.rl')) return;
+      var tn = null;
+      for (var i = 0; i < el.childNodes.length; i++) { var n = el.childNodes[i]; if (n.nodeType === 3 && n.nodeValue.trim()) { tn = n; break; } }
+      if (!tn) return;
+      var txt = tn.nodeValue.trim(), w = document.createElement('span');
+      w.className = 'rl';
+      var a = document.createElement('span'); a.className = 'rl-a'; a.textContent = txt;
+      var b = document.createElement('span'); b.className = 'rl-b'; b.setAttribute('aria-hidden', 'true'); b.textContent = txt;
+      w.appendChild(a); w.appendChild(b);
+      el.replaceChild(w, tn);
+      mags.forEach(function (m) { if (m.el === el) m.inner = w; });
+    });
     var TEXT = 'input:not([type=checkbox]):not([type=radio]):not([type=file]),textarea,[contenteditable="true"]';
 
     function frame() {
       raf = 0;
-      rx += (tx - rx) * 0.2; ry += (ty - ry) * 0.2;
+      var gx = tx, gy = ty;
+      if (snapEl) {
+        var sr = snapEl.getBoundingClientRect();
+        gx = sr.left + sr.width / 2; gy = sr.top + sr.height / 2;
+        ringSize.w = sr.width + 16; ringSize.h = sr.height + 16;
+        ringSize.r = Math.min(ringSize.h / 2, (parseFloat(getComputedStyle(snapEl).borderTopLeftRadius) || 0) + 8);
+      } else { ringSize.w = 28; ringSize.h = 28; ringSize.r = 14; }
+      ring.style.setProperty('--rw', ringSize.w.toFixed(1) + 'px'); ring.style.setProperty('--rh', ringSize.h.toFixed(1) + 'px'); ring.style.setProperty('--rr', ringSize.r.toFixed(1) + 'px');
+      var magMoving = false;
+      for (var mi = 0; mi < mags.length; mi++) {
+        var m = mags[mi], mr = m.el.getBoundingClientRect(), cx = mr.left - (m.x), cy = mr.top - (m.y);
+        var ccx = cx + mr.width / 2, ccy = cy + mr.height / 2;
+        var dxm = mouseX - ccx, dym = mouseY - ccy;
+        var near = mouseX > cx - 70 && mouseX < cx + mr.width + 70 && mouseY > cy - 70 && mouseY < cy + mr.height + 70;
+        m.tx = near ? Math.max(-14, Math.min(14, dxm * .30)) : 0; m.ty = near ? Math.max(-10, Math.min(10, dym * .30)) : 0;
+        m.x += (m.tx - m.x) * .16; m.y += (m.ty - m.y) * .16;
+        if (Math.abs(m.tx - m.x) > .05 || Math.abs(m.ty - m.y) > .05) magMoving = true;
+        m.el.style.translate = m.x.toFixed(2) + 'px ' + m.y.toFixed(2) + 'px';
+        if (m.inner) m.inner.style.translate = (m.x * .18).toFixed(2) + 'px ' + (m.y * .18).toFixed(2) + 'px';
+      }
+      rx += (gx - rx) * (snapEl ? 0.28 : 0.2); ry += (gy - ry) * (snapEl ? 0.28 : 0.2);
       ring.style.transform = 'translate3d(' + rx.toFixed(1) + 'px,' + ry.toFixed(1) + 'px,0)';
       px += (pointer.tx - px) * 0.06; py += (pointer.ty - py) * 0.06;
       pointer.x = px; pointer.y = py;
       var hero = document.querySelector('.hero');
       if (hero) { hero.style.setProperty('--mx', px.toFixed(3)); hero.style.setProperty('--my', py.toFixed(3)); }
       tiltC.x += (tiltT.x - tiltC.x) * 0.12; tiltC.y += (tiltT.y - tiltC.y) * 0.12;
-      var moving = Math.abs(tx - rx) > .3 || Math.abs(ty - ry) > .3 || Math.abs(pointer.tx - px) > .001 || Math.abs(pointer.ty - py) > .001 ||
+      var moving = magMoving || snapEl || Math.abs(gx - rx) > .3 || Math.abs(gy - ry) > .3 || Math.abs(pointer.tx - px) > .001 || Math.abs(pointer.ty - py) > .001 ||
                    Math.abs(tiltT.x - tiltC.x) > .02 || Math.abs(tiltT.y - tiltC.y) > .02;
       if (tiltEl) tiltEl.style.transform = 'perspective(900px) rotateX(' + (-tiltC.y).toFixed(2) + 'deg) rotateY(' + tiltC.x.toFixed(2) + 'deg)';
       if (moving || tiltEl) raf = requestAnimationFrame(frame);
@@ -195,14 +236,19 @@
 
     window.addEventListener('pointermove', function (e) {
       if (e.pointerType && e.pointerType !== 'mouse') return;
-      tx = e.clientX; ty = e.clientY;
+      tx = e.clientX; ty = e.clientY; mouseX = tx; mouseY = ty;
       if (!seen) { seen = true; rx = tx; ry = ty; ring.classList.add('is-on'); }
       pointer.tx = e.clientX / window.innerWidth - .5; pointer.ty = e.clientY / window.innerHeight - .5;
       var t = e.target && e.target.closest ? e.target : null;
       if (t) {
         var inText = !!t.closest(TEXT);
         ring.classList.toggle('is-text', inText);
-        ring.classList.toggle('is-link', !inText && !!t.closest(LINK));
+        var sn = !inText ? t.closest(SNAP) : null;
+        if (sn && sn.disabled) sn = null;
+        snapEl = sn;
+        ring.classList.toggle('is-snap', !!sn);
+        ring.classList.toggle('is-link', !inText && !sn && !!t.closest(LINK));
+        window.VCFX.hover = (sn && sn.matches(HERO_BTN)) ? 1 : 0;
         var tilt = t.closest('[data-tilt]');
         if (tilt) {
           if (tilt !== tiltEl) { if (tiltEl) tiltEl.style.transform = ''; tiltEl = tilt; }
@@ -213,9 +259,36 @@
       }
       kick();
     }, { passive: true });
-    window.addEventListener('pointerdown', function () { ring.classList.add('is-down'); }, { passive: true });
+    window.addEventListener('pointerdown', function (e) {
+      ring.classList.add('is-down');
+      var b = e.target && e.target.closest ? e.target.closest(SNAP) : null;
+      if (!b || b.disabled || (e.pointerType && e.pointerType !== 'mouse')) return;
+      if (b.matches(HERO_BTN)) window.VCFX.pulse = 1;
+      burst(e.clientX, e.clientY);
+    }, { passive: true });
+    /* ประกายไฟกระเด็น + คลื่นวงแหวนตอนคลิกปุ่ม (WAAPI ล้วน ลบตัวเองเมื่อจบ) */
+    function burst(x, y) {
+      if (!document.body.animate) return;
+      var wv = document.createElement('i'); wv.className = 'vc-wave'; wv.style.left = x + 'px'; wv.style.top = y + 'px'; document.body.appendChild(wv);
+      var wa = wv.animate([{ transform: 'scale(.4)', opacity: .9 }, { transform: 'scale(7)', opacity: 0 }], { duration: 780, easing: 'cubic-bezier(.16,1,.3,1)' });
+      wa.onfinish = function () { wv.remove(); };
+      var cols = ['#ece9e2', '#d9dbdf', '#f2b266', '#ff9a3c', '#ffd9a0'];
+      for (var k = 0; k < 16; k++) {
+        var s = document.createElement('i'); s.className = 'vc-spark';
+        s.style.left = x + 'px'; s.style.top = y + 'px'; s.style.background = cols[k % cols.length];
+        var sz = 2 + Math.random() * 4; s.style.width = s.style.height = sz + 'px';
+        document.body.appendChild(s);
+        var ang = Math.random() * Math.PI * 2, dist = 50 + Math.random() * 110, dx = Math.cos(ang) * dist, dy = Math.sin(ang) * dist;
+        var an = s.animate([
+          { transform: 'translate(-50%,-50%) translate(0,0) scale(1)', opacity: 1 },
+          { transform: 'translate(-50%,-50%) translate(' + (dx * .75).toFixed(1) + 'px,' + (dy * .75).toFixed(1) + 'px) scale(.9)', opacity: 1, offset: .55 },
+          { transform: 'translate(-50%,-50%) translate(' + dx.toFixed(1) + 'px,' + (dy + 60 + Math.random() * 50).toFixed(1) + 'px) scale(0)', opacity: 0 }
+        ], { duration: 650 + Math.random() * 600, easing: 'cubic-bezier(.2,.7,.3,1)' });
+        an.onfinish = (function (el) { return function () { el.remove(); }; })(s);
+      }
+    }
     window.addEventListener('pointerup', function () { ring.classList.remove('is-down'); }, { passive: true });
-    document.addEventListener('pointerleave', function () { ring.classList.remove('is-on'); });
+    document.addEventListener('pointerleave', function () { ring.classList.remove('is-on'); snapEl = null; mouseX = mouseY = -999; window.VCFX.hover = 0; kick(); });
     document.addEventListener('pointerenter', function () { if (seen) ring.classList.add('is-on'); });
     /* เมื่อเมาส์ออกจากองค์ประกอบเอียง ให้ค่อย ๆ กลับที่เดิมแล้วล้าง transform */
     setInterval(function () {
@@ -243,7 +316,7 @@
     '#else',
     'precision mediump float;',
     '#endif',
-    'uniform vec2 uRes;uniform float uTime;uniform vec2 uMouse;uniform float uScroll;uniform float uDim;uniform vec2 uLens;uniform float uLensOn;uniform float uLite;',
+    'uniform vec2 uRes;uniform float uTime;uniform vec2 uMouse;uniform float uScroll;uniform float uDim;uniform vec2 uLens;uniform float uLensOn;uniform float uLite;uniform float uEx;uniform vec3 uRip;',
     'uniform vec3 uC[12];uniform vec3 uR[12];uniform vec3 uU[12];',
     'const int N=12;',
     'const vec3 L=vec3(-.35,.7,.62);',
@@ -369,7 +442,7 @@
     '  float n=fbm(vec2(f.x*2.6,f.y*2.0-t*1.5));',
     '  float n2=fbm(vec2(f.x*5.,f.y*3.5-t*2.4)+7.);',
     '  float env=(1.-pow(abs(f.x),1.4))*smoothstep(1.25,.0,f.y)*smoothstep(0.,.08,f.y);',
-    '  float fl=clamp((n*.8+n2*.6)*env*2.7-.2,0.,1.)*(.92+.15*sin(t*7.));',
+    '  float fl=clamp((n*.8+n2*.6)*env*2.7-.2+uEx*.3,0.,1.)*(.92+.15*sin(t*7.));',
     '  vec3 fc=mix(vec3(.9,.12,.02),vec3(1.,.55,.1),smoothstep(.1,.55,fl));fc=mix(fc,vec3(1.,.9,.6),smoothstep(.6,1.,fl));',
     '  vec3 inner=vec3(.012,.008,.007)+fc*fl*2.3;',
     '  float dLog=min(sdb(p,vec2(-.2,-1.45),vec2(.55,.1),.09),sdb(p,vec2(.3,-1.40),vec2(.5,.11),.1));',
@@ -391,7 +464,7 @@
     '  col=mix(col,brass,mSc);a=max(a,mSc);',
     '  vec2 ec=vec2(p.x*6.,(p.y-t*.55)*6.);vec2 id=floor(ec);vec2 fr=fract(ec)-.5;',
     '  float e=step(.955,h21(id))*smoothstep(.16,.0,length(fr+(h21(id+3.)-.5)*.4))*smoothstep(-.9,.3,p.y)*smoothstep(1.7,.2,p.y)*step(abs(p.x),1.15);',
-    '  col+=vec3(1.,.5,.12)*e*1.6;a=max(a,e);',
+    '  col+=vec3(1.,.5,.12)*e*(1.6+uEx*2.);a=max(a,e);',
     '  return vec4(col,a);',
     '}',
     'vec3 scene(vec3 ro,vec3 rd,float tmax,out float hit){',
@@ -433,7 +506,7 @@
     '}',
     'vec3 render(vec2 uv){',
     '  float asp=uRes.x/uRes.y;float fv=clamp(.9/asp,1.,2.3);',
-    '  vec3 ro=vec3(-uMouse.x*.9+sin(uTime*.11)*.15,.45+uMouse.y*.38+sin(uTime*.09)*.04,4.9-uScroll*9.);',
+    '  vec3 ro=vec3(-uMouse.x*.9+sin(uTime*.11)*.15,.45+uMouse.y*.38+sin(uTime*.09)*.04,4.9-uScroll*9.-uEx*.9);',
     '  vec3 ta=vec3(0.,.7,-4.5-uScroll*9.);',
     '  vec3 f=normalize(ta-ro);',
     '  float yw=uMouse.x*.34;float pt=uMouse.y*.26;float cyw=cos(yw),syw=sin(yw);',
@@ -467,7 +540,7 @@
     '  gT=uTime;gSc=clamp(vis*6.1/5.4,.55,1.15);',
     '  gFig=vec3(-.54*vis*6.1,-1.7+1.7*gSc,-1.0);',
     '  gFire=vec3(.52*vis*6.1,-1.7+1.8*gSc,-1.4);',
-    '  gFlick=.86+.10*sin(uTime*7.3)+.06*sin(uTime*13.1+1.7);',
+    '  gFlick=.86+.10*sin(uTime*7.3)+.06*sin(uTime*13.1+1.7)+uEx*.32;',
     '  float d=length(uv-uLens);float LR=.12;float inL=uLensOn*step(d,LR);float k=clamp(d/LR,0.,1.);',
     '  vec2 uvm=uLens+(uv-uLens)*mix(1.,.50+.50*k*k,inL);',
     '  vec3 col=render(uvm);',
@@ -477,6 +550,10 @@
     '  col+=inL*vec3(.035,.038,.045)*(1.-k);',
     '  float rim=uLensOn*smoothstep(.0065,0.,abs(d-LR));float halo=uLensOn*smoothstep(.03,0.,abs(d-LR-.006))*.18;',
     '  col=mix(col,vec3(.93,.94,.96),rim*.92)+halo*vec3(.7,.72,.76);',
+    '  float ra=uRip.z;float rd2=length(uv-uRip.xy);',
+    '  float ring=step(0.,ra)*smoothstep(.022,0.,abs(rd2-ra*.6))*exp(-ra*1.3);',
+    '  float ring2=step(.12,ra)*smoothstep(.014,0.,abs(rd2-(ra-.12)*.6))*exp(-ra*1.8);',
+    '  col+=(ring+ring2*.6)*vec3(.85,.87,.92)*.55;',
     '  col+=(h21(gl_FragCoord.xy+fract(uTime)*91.)-.5)*.022;',
     '  gl_FragColor=vec4(pow(max(col,0.),vec3(.95)),1.);',
     '}'
@@ -484,7 +561,9 @@
 
   /* ตำแหน่งและการหมุนของแผ่นสัญญาแต่ละแผ่น (คำนวณทุกเฟรมเพื่อให้ลอยเบา ๆ) */
   var AC = new Float32Array(NS * 3), AR = new Float32Array(NS * 3), AU = new Float32Array(NS * 3);
+  var BURST = { age: -1, x: 0, y: 0 };   /* คลื่นกระแทกจากการคลิก: age = วินาทีนับจากคลิก (-1 = ไม่มี), x/y = ตำแหน่งโดยประมาณในโลก 3 มิติ */
   function layout(t) {
+    var amp = BURST.age >= 0 ? 2.2 * Math.exp(-BURST.age * 1.5) * (1 - Math.exp(-BURST.age * 9)) : 0;
     for (var i = 0; i < NS; i++) {
       if (i >= 9) {                                   /* กระดาษที่ร่วงลงมาและหมุนตกลงมาเป็นรอบ ๆ */
         var j = i - 9, v = .46 + .08 * j, cyc = 6.2, ph = j * 2.3;
@@ -497,7 +576,7 @@
         AC[i * 3 + 2] = -2.0 - j * 1.2;
         continue;
       }
-      var yaw = Math.sin(i * 1.9) * .55 + Math.sin(t * .17 + i) * .07;
+      var yaw = Math.sin(i * 1.9) * .55 + Math.sin(t * .17 + i) * .07 + amp * .5 * Math.sin(i * 1.3);
       var pit = Math.sin(i * 2.7) * .16 + Math.sin(t * .13 + i * 2) * .04;
       var rol = Math.sin(i * 3.3) * .22 + Math.sin(t * .11 + i * 3) * .05;
       var cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pit), sp = Math.sin(pit), cr = Math.cos(rol), sr = Math.sin(rol);
@@ -507,6 +586,10 @@
       AC[i * 3] = side * (3.0 + ((i * .37) % 1.6)) + Math.sin(i * 2.1) * .4;
       AC[i * 3 + 1] = .45 + .85 * Math.sin(i * 1.7) + Math.sin(t * .4 + i * 1.3) * .08;
       AC[i * 3 + 2] = -4.2 - i * .9;
+      if (amp > 0) {                                     /* แผ่นสัญญากระเด็นออกจากจุดคลิก */
+        var bdx = AC[i * 3] - BURST.x, bdy = AC[i * 3 + 1] - BURST.y, bl = Math.sqrt(bdx * bdx + bdy * bdy) + .35;
+        AC[i * 3] += bdx / bl * amp * 1.4; AC[i * 3 + 1] += bdy / bl * amp * 1.4; AC[i * 3 + 2] -= amp * .6;
+      }
     }
   }
 
@@ -539,7 +622,7 @@
     var buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
     var loc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    var U = {}; ['uRes', 'uTime', 'uMouse', 'uScroll', 'uDim', 'uLens', 'uLensOn', 'uLite', 'uC', 'uR', 'uU'].forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
+    var U = {}; ['uRes', 'uTime', 'uMouse', 'uScroll', 'uDim', 'uLens', 'uLensOn', 'uLite', 'uEx', 'uRip', 'uC', 'uR', 'uU'].forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
 
     hero.insertBefore(cv, hero.firstChild);
     root.classList.add('vc-3d');
@@ -554,7 +637,16 @@
     var scale = soft ? 0.4 : (weak ? 0.4 : (small ? 0.55 : 0.6)), running = false, inView = true, t0 = performance.now(), raf = 0, W = 0, H = 0;
     var frames = 0, acc = 0, last = 0, lost = false;
     var lens = { x: .12, y: .06, tx: .12, ty: .06, moved: -1e9 };
-    var mp = { x: 0, y: 0, tx: 0, ty: 0 }, fixedT = null;
+    var mp = { x: 0, y: 0, tx: 0, ty: 0 }, fixedT = null, exH = 0, pulseV = 0, rip = { x: 0, y: 0, t0: 0 };
+    /* คลิกบนฉากเปิด: วงคลื่นแผ่ออกจากจุดคลิก และแผ่นสัญญากระเด็นออก (ข้ามถ้าเครื่องช้า/ลดการเคลื่อนไหว) */
+    window.addEventListener('pointerdown', function (e) {
+      if (tier >= 2 || (mq && mq.matches)) return;
+      var r = hero.getBoundingClientRect();
+      if (e.clientY < r.top || e.clientY > r.bottom) return;
+      var asp = r.width / r.height, fv = Math.min(2.3, Math.max(1, .9 / asp));
+      rip.x = ((e.clientX - r.left) / r.width - .5) * asp; rip.y = .5 - (e.clientY - r.top) / r.height; rip.t0 = performance.now();
+      BURST.x = rip.x * 1.12 * fv * 10; BURST.y = .7 + rip.y * 1.12 * fv * 10; BURST.age = 0;
+    }, { passive: true });
     window.addEventListener('pointermove', function (e) { mp.tx = e.clientX / window.innerWidth - .5; mp.ty = e.clientY / window.innerHeight - .5; }, { passive: true });
     document.addEventListener('pointerleave', function () { mp.tx = 0; mp.ty = 0; });
 
@@ -595,6 +687,12 @@
       gl.uniform2f(U.uLens, lens.x, lens.y);
       gl.uniform1f(U.uLensOn, sc < .6 ? 1 : 0);
       gl.uniform1f(U.uLite, tier > 0 ? 1 : 0);
+      if (!still && rip.t0 && (now - rip.t0) / 1000 < 3.2) BURST.age = (now - rip.t0) / 1000; else BURST.age = -1;
+      gl.uniform3f(U.uRip, rip.x, rip.y, BURST.age);
+      var fx = window.VCFX || { hover: 0, pulse: 0 };
+      if (fx.pulse) { pulseV = Math.max(pulseV, fx.pulse); fx.pulse = 0; }
+      pulseV *= .93; exH += ((fx.hover || 0) * .55 - exH) * .07;
+      gl.uniform1f(U.uEx, still ? 0 : Math.min(1.4, exH + pulseV * .9));
       gl.uniform3fv(U.uC, AC); gl.uniform3fv(U.uR, AR); gl.uniform3fv(U.uU, AU);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     }
@@ -619,7 +717,7 @@
       if (!running && inView && !document.hidden) { running = true; last = 0; if (!raf) raf = requestAnimationFrame(loop); }
     }
     size(); draw(performance.now(), mq && mq.matches); go();
-    window.VCScene = { ok: true, get scale() { return scale; }, get tier() { return tier; }, get fps() { return fpsNow; }, get renderer() { return rend; }, freeze: function (t) { fixedT = (typeof t === 'number') ? t : null; } };   /* freeze(t): ตรึงเวลาของฉาก ใช้ทดสอบ */
+    window.VCScene = { ok: true, get scale() { return scale; }, get tier() { return tier; }, get burst() { return BURST.age; }, get ex() { return exH + pulseV * .9; }, get fps() { return fpsNow; }, get renderer() { return rend; }, freeze: function (t) { fixedT = (typeof t === 'number') ? t : null; } };   /* freeze(t): ตรึงเวลาของฉาก ใช้ทดสอบ */
 
     if (/[?&]fps\b/.test(location.search)) {
       var box = document.createElement('div');
@@ -760,4 +858,34 @@
     if (mq) { var h = function () { if (mq.matches) { running = false; draw(t0 + 4000); } else go(); }; if (mq.addEventListener) mq.addEventListener('change', h); else if (mq.addListener) mq.addListener(h); }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', field); else field();
+})();
+
+
+/* ===== พื้นบานจากจุดที่เมาส์เข้า/ออกของปุ่ม (29 ต.ค. 2026) =====
+   เก็บตำแหน่งเมาส์ในปุ่มเป็น --hx/--hy ให้ CSS (art.css: clip-path วงกลมบานออกจากจุดนั้น และหดกลับเข้าจุดที่เมาส์ออก)
+   ส่วนอื่นของเอฟเฟกต์ปุ่ม (วงแหวนล็อก, ดูดตามเมาส์, ตัวอักษรกลิ้ง, ประกายไฟ, ไฟเตาแรงขึ้น) อยู่ใน art-cursor ด้านบน */
+(function () {
+  'use strict';
+  var fine = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!fine || reduced) return;
+  var SEL = '.dx-cta,.dx-cta-ghost,.dx-nav a:last-child,button.primary,button.ghost';
+  function at(btn, e) {
+    var r = btn.getBoundingClientRect();
+    btn.style.setProperty('--hx', (e.clientX - r.left).toFixed(0) + 'px');
+    btn.style.setProperty('--hy', (e.clientY - r.top).toFixed(0) + 'px');
+  }
+  /* ใช้ event delegation จึงรวมปุ่มที่ถูกสร้างภายหลังด้วย */
+  document.addEventListener('pointerover', function (e) {
+    if (e.pointerType && e.pointerType !== 'mouse') return;
+    var b = e.target.closest && e.target.closest(SEL); if (!b || b.disabled) return;
+    if (e.relatedTarget && b.contains(e.relatedTarget)) return;
+    at(b, e);
+  }, true);
+  document.addEventListener('pointerout', function (e) {
+    if (e.pointerType && e.pointerType !== 'mouse') return;
+    var b = e.target.closest && e.target.closest(SEL); if (!b) return;
+    if (e.relatedTarget && b.contains(e.relatedTarget)) return;
+    at(b, e);
+  }, true);
 })();
