@@ -1091,3 +1091,26 @@ html.vc-art .dx-nav a{text-decoration:none}
   html.vc-art .dx-nav a:last-child{background:var(--paper);color:var(--ink);border-radius:999px}
   html.vc-art .dx-nav a.is-here:not(:last-child){border-radius:999px}
 }
+
+
+/* ===== ฉาก 3 มิติเป็นฉากหลังของทุกหน้า + หน้า "วิธีอ่าน" ไม่มีกระดาษตัวอย่าง + ปุ่มบัญชีไม่ซ้ำบนมือถือ (29 ต.ค. 2026) ===== */
+#vcBackdrop{position:fixed;inset:0;z-index:-3;pointer-events:none;background:var(--ink)}
+#vcBackdrop .hero-3d{position:absolute;inset:0;width:100%;height:100%;z-index:auto}
+#vcBackdrop::after{content:"";position:absolute;inset:0;background:rgba(12,12,13,.5)}
+html.vc-spa[data-view="desk"] #vcBackdrop::after{background:rgba(12,12,13,.82)}
+html.vc-spa[data-view="film"] #vcBackdrop::after{background:rgba(12,12,13,.66)}
+html.vc-spa:not([data-view="home"]) body{background:transparent}
+html.vc-spa:not([data-view="home"]) :is(.mf,.vc-embed,.desk-head,.ch-head){background:transparent}
+html.vc-spa .mf{border-top:0}
+/* หน้า "วิธีอ่าน": ไม่มีกระดาษตัวอย่าง เหลือหัวข้อกับสามขั้นที่สลับตามการเลื่อน อยู่กลางหน้าเหนือฉาก 3 มิติ */
+html.vc-spa .mf-pin{grid-template-columns:minmax(0,1fr) !important;justify-items:center;text-align:center}
+html.vc-spa .mf-copy{max-width:44rem;display:flex;flex-direction:column;align-items:center}
+html.vc-spa .mf-title{text-align:center}
+html.vc-spa .mf .sec-label{justify-content:center}
+html.vc-spa .mf-steps li{text-align:center}
+html.vc-spa .mf-steps span{margin-inline:auto}
+html.vc-spa .mf-steps b{font-size:1.1rem}
+/* บนมือถือ: ปุ่มเข้าสู่ระบบ/บัญชีของฉันอยู่มุมบนขวาแล้ว จึงไม่ซ้ำเป็นลิงก์ "บัญชี" ในแถวเมนู */
+@media (max-width:767px){
+  html.vc-art .dx-nav a[href="#authCard"]{display:none}
+}
