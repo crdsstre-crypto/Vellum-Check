@@ -1519,3 +1519,14 @@ html.vc-art .auth-doc .ad-fold::after{content:"VC";position:absolute;inset:0;dis
   .ld-bag{width:clamp(150px,min(31vw,50vh),460px)}
   .ld-scene .ld-lamp{width:clamp(120px,min(28vw,40vh),420px)}
 }
+
+/* ขนาดกระดาษ: ใหญ่ขึ้นแต่ยังพอดีความสูงจอ */
+@media (min-width:768px) and (max-height:1099px){.ld-scene .auth-doc-wrap{zoom:1.5}}
+@media (min-width:768px) and (max-height:980px){.ld-scene .auth-doc-wrap{zoom:1.42}}
+@media (min-width:768px) and (max-height:900px){.ld-scene .auth-doc-wrap{zoom:1.35}}
+@media (min-width:768px) and (max-height:830px){.ld-scene .auth-doc-wrap{zoom:1.22}}
+@media (min-width:768px) and (max-height:760px){.ld-scene .auth-doc-wrap{zoom:1.08}}
+@media (min-width:768px) and (max-height:690px){.ld-scene .auth-doc-wrap{zoom:.95}}
+@media (min-width:768px) and (max-height:620px){.ld-scene .auth-doc-wrap{zoom:.84}}
+@media (min-width:768px) and (max-height:560px){.ld-scene .auth-doc-wrap{zoom:.73}}
+@media (min-width:768px) and (max-height:500px){.ld-scene .auth-doc-wrap{zoom:.63}}
