@@ -1551,3 +1551,26 @@ html.vc-art .auth-doc .ad-fold::after{content:"VC";position:absolute;inset:0;dis
 @media (prefers-reduced-motion:reduce){.ld-steam{animation:none;opacity:.25}}
 html[data-calm] .ld-steam{animation:none;opacity:.2}
 @media (min-width:768px){.ld-cup{top:19%;right:9%;width:clamp(150px,min(19vw,31vh),290px)}}
+
+/* ===== ฉากมือเล่นกับกาแฟ ===== */
+.ld-arm{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:6;opacity:0;transition:opacity .25s}
+.ld-arm .wind{opacity:0;transition:opacity .2s}
+.ld-arm .wind.on{opacity:1}
+.ld-arm .wind line{stroke:rgba(255,255,255,.7);stroke-width:2.6;stroke-linecap:round;stroke-dasharray:16 26;animation:ldWind .35s linear infinite}
+@keyframes ldWind{to{stroke-dashoffset:-42}}
+.ld-cup.nosteam .ld-steam{opacity:0 !important;animation:none}
+.ld-ice{position:absolute;width:10%;aspect-ratio:1;margin:-5% 0 0 -5%;border-radius:18%;pointer-events:none;opacity:0;transform:scale(1.9) rotate(var(--r,0deg));
+  background:linear-gradient(135deg,rgba(240,250,255,.85),rgba(160,205,230,.45));box-shadow:inset 0 0 0 1px rgba(255,255,255,.85),0 2px 3px rgba(0,0,0,.4)}
+.ld-ice.in{opacity:.95;transform:scale(1) rotate(var(--r,0deg));transition:transform .45s cubic-bezier(.3,1.6,.5,1),opacity .2s}
+.ld-ice.melt{opacity:0;transform:scale(.35) rotate(var(--r,0deg));transition:transform 4s ease-in,opacity 4s ease-in}
+.ld-rip{position:absolute;width:6%;aspect-ratio:1;margin:-3% 0 0 -3%;border-radius:50%;border:2px solid rgba(255,235,200,.75);pointer-events:none;animation:ldRip 1s ease-out forwards}
+@keyframes ldRip{from{opacity:.9;transform:scale(.4)}to{opacity:0;transform:scale(4)}}
+.ld-cup .cp-cof,.ld-cup .cp-swirl{transition:opacity .4s}
+.ad-spill{position:absolute;inset:6px;z-index:-1;pointer-events:none;opacity:0;mix-blend-mode:multiply;transform:scale(.04);transform-origin:76% 68%}
+.ad-spill svg{display:block;width:100%;height:100%}
+.ad-spill.on{opacity:.85;transform:scale(1);transition:transform 1.3s cubic-bezier(.15,.8,.3,1),opacity .4s}
+.ad-spill.on.dry{opacity:0;transition:opacity 3.4s linear}
+.ld-stain{position:absolute;z-index:1;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;opacity:0;transition:opacity .6s;
+  background:radial-gradient(closest-side,rgba(38,16,5,.9),rgba(38,16,5,.6) 62%,transparent);filter:blur(2px)}
+@media (max-width:767px){.ld-arm,.ad-spill,.ld-stain{display:none}}
+.ld-cup .cp-swirl{transform-box:view-box;transform-origin:120px 120px}
