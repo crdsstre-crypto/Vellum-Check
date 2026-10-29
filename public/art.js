@@ -930,7 +930,7 @@
     ['home', ['main > .hero']],
     ['how', ['#manifesto', '#chapters']],
     ['film', ['#introVideo']],
-    ['desk', ['.desk-head', '#authCard', '#checkCard', '#resultCard', '#paymentCard']]
+    ['desk', ['#desk', '#authCard', '#checkCard', '#resultCard', '#paymentCard']]
   ];
   var HASH = { '': 'home', '#top': 'home', '#manifesto': 'how', '#chapters': 'how', '#introVideo': 'film',
                '#desk': 'desk', '#authCard': 'desk', '#checkCard': 'desk', '#resultCard': 'desk', '#paymentCard': 'desk' };
@@ -1179,25 +1179,22 @@
   'use strict';
   function rng(seed) { var s = seed >>> 0 || 1; return function () { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
 
+  var PILE_SVG = '<defs>\n<linearGradient id="pvL1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a3a22"/><stop offset="1" stop-color="#3a1d10"/></linearGradient>\n<linearGradient id="pvL2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f4a3a"/><stop offset="1" stop-color="#15271d"/></linearGradient>\n<linearGradient id="pvL3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a2530"/><stop offset="1" stop-color="#2c0f16"/></linearGradient>\n<linearGradient id="pvPg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2cfa0"/><stop offset="1" stop-color="#b79c66"/></linearGradient>\n<linearGradient id="pvMan" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#cfa968"/><stop offset="1" stop-color="#9c7a40"/></linearGradient>\n<linearGradient id="pvScr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f1e1b6"/><stop offset=".5" stop-color="#d8c18a"/><stop offset="1" stop-color="#9f8450"/></linearGradient>\n<pattern id="pvLines" width="4" height="3" patternUnits="userSpaceOnUse"><rect width="4" height=".8" y="2" fill="rgba(70,45,15,.35)"/></pattern>\n</defs>\n<ellipse cx="170" cy="250" rx="165" ry="12" fill="rgba(0,0,0,.55)"/>\n<!-- แฟ้มสีน้ำตาลเก่า วางเฉียงด้านหลัง มีกระดาษโผล่ -->\n<g transform="rotate(-5 220 190)">\n<rect x="120" y="150" width="190" height="90" rx="2" fill="#e5d3a5"/>\n<rect x="124" y="140" width="186" height="90" rx="2" fill="#d9c593"/>\n<rect x="116" y="130" width="196" height="108" rx="3" fill="url(#pvMan)"/>\n<path d="M116 130 H170 L178 120 H236 L244 130 H312" fill="none" stroke="rgba(60,40,15,.5)" stroke-width="1.2"/>\n<rect x="190" y="126" width="60" height="9" rx="2" fill="#7b4a2a" opacity=".55"/>\n<path d="M130 150 H300 M130 164 H300" stroke="rgba(60,40,15,.25)" stroke-width="1"/>\n<path d="M214 130 C214 160 218 190 224 238" fill="none" stroke="#9c2d2a" stroke-width="2"/>\n<path d="M214 130 C206 160 210 190 218 238" fill="none" stroke="#7d2220" stroke-width="1.5"/>\n</g>\n<!-- สมุดบัญชีเล่มหนา 3 เล่ม ซ้อนกัน -->\n<g>\n<rect x="14" y="204" width="246" height="38" rx="3" fill="url(#pvL1)"/>\n<rect x="22" y="212" width="236" height="22" fill="url(#pvPg)"/>\n<rect x="22" y="212" width="236" height="22" fill="url(#pvLines)"/>\n<rect x="14" y="204" width="246" height="7" rx="3" fill="#7a4628"/>\n<rect x="14" y="236" width="246" height="6" rx="3" fill="#2d160b"/>\n<rect x="8" y="204" width="14" height="38" rx="4" fill="#55301b"/>\n<path d="M12 212 H22 M12 224 H22 M12 234 H22" stroke="#d3ac55" stroke-width="1.6"/>\n</g>\n<g transform="rotate(-2.5 140 190)">\n<rect x="34" y="170" width="220" height="34" rx="3" fill="url(#pvL2)"/>\n<rect x="42" y="177" width="210" height="20" fill="url(#pvPg)"/>\n<rect x="42" y="177" width="210" height="20" fill="url(#pvLines)"/>\n<rect x="34" y="170" width="220" height="6" rx="3" fill="#3f6150"/>\n<rect x="34" y="198" width="220" height="6" rx="3" fill="#0f1c15"/>\n<rect x="28" y="170" width="14" height="34" rx="4" fill="#1d3226"/>\n<path d="M32 178 H42 M32 188 H42 M32 198 H42" stroke="#d3ac55" stroke-width="1.6"/>\n</g>\n<g transform="rotate(1.8 140 160)">\n<rect x="50" y="140" width="190" height="30" rx="3" fill="url(#pvL3)"/>\n<rect x="58" y="146" width="180" height="18" fill="url(#pvPg)"/>\n<rect x="58" y="146" width="180" height="18" fill="url(#pvLines)"/>\n<rect x="50" y="140" width="190" height="6" rx="3" fill="#7a3441"/>\n<rect x="50" y="164" width="190" height="6" rx="3" fill="#1f0a10"/>\n<rect x="44" y="140" width="14" height="30" rx="4" fill="#3d1620"/>\n<path d="M48 147 H58 M48 155 H58 M48 163 H58" stroke="#d3ac55" stroke-width="1.6"/>\n<rect x="150" y="142" width="26" height="22" rx="1" fill="#d8c08a" opacity=".0"/>\n</g>\n<!-- ม้วนหนังสือผูกริบบิ้นพร้อมตราขี้ผึ้ง วางด้านหน้า -->\n<g transform="rotate(-8 150 232)">\n<ellipse cx="156" cy="244" rx="104" ry="8" fill="rgba(0,0,0,.45)"/>\n<rect x="64" y="216" width="190" height="28" rx="14" fill="url(#pvScr)"/>\n<ellipse cx="66" cy="230" rx="9" ry="14" fill="#c4a96c"/>\n<ellipse cx="66" cy="230" rx="5" ry="8.5" fill="#8a7040"/>\n<ellipse cx="252" cy="230" rx="9" ry="14" fill="#d9c58f"/>\n<path d="M150 216 C146 226 146 236 150 244 M162 216 C158 226 158 236 162 244" stroke="#8c2a2a" stroke-width="3.2" fill="none"/>\n<path d="M156 244 C152 254 148 262 142 266 M158 244 C162 254 168 260 172 264" stroke="#8c2a2a" stroke-width="2.4" fill="none" stroke-linecap="round"/>\n<circle cx="156" cy="232" r="11" fill="#8f1f1d"/><circle cx="156" cy="232" r="7.5" fill="none" stroke="#c0453f" stroke-width="1.4"/>\n<circle cx="153" cy="229" r="3" fill="rgba(255,200,190,.4)"/>\n</g>\n';
   function pile() {
     var box = document.querySelector('.ld-pile'); if (!box || box.__built) return; box.__built = true;
-    var r = rng(20261029), N = 46, tones = ['#e9dcc0', '#e2d3b2', '#d9c9a4', '#ece2c9', '#d3c19a', '#cdb98f'];
-    var frag = document.createDocumentFragment();
-    for (var i = 0; i < N; i++) {
-      var d = document.createElement('i'); d.className = 'ps-sh';
-      var rot = (r() - .5) * 9, dx = (r() - .5) * 34;
-      d.style.cssText = 'bottom:' + (i * 4.4).toFixed(1) + 'px;margin-left:-39%;transform:translateX(' + dx.toFixed(1) + 'px) rotate(' + rot.toFixed(2) + 'deg);background-color:' + tones[Math.floor(r() * tones.length)] + ';z-index:' + i;
-      if (r() < .22) { var t = document.createElement('b'); t.className = 'ps-tab'; t.style.top = (8 + r() * 60).toFixed(0) + '%'; d.appendChild(t); }
-      if (r() < .1) { var m = document.createElement('b'); m.className = 'ps-red'; d.appendChild(m); }
-      frag.appendChild(d);
+    box.innerHTML = '<svg viewBox="0 0 320 270" focusable="false" aria-hidden="true">' + PILE_SVG + '</svg>';
+    /* ชั้นหนังสือบนผนัง: สันหนังสือสุ่มแบบ seed คงที่ 2 ชั้น */
+    var sh = document.querySelector('.ld-books'); if (!sh || sh.__built) return; sh.__built = true;
+    var r = rng(77123), cols = ['#4a2a1a', '#2f4636', '#5a2a34', '#3a3550', '#6b4a24', '#2b2b2f', '#5b3b2a', '#40301f'];
+    for (var row = 0; row < 2; row++) {
+      var line = document.createElement('div'); line.className = 'bk-row';
+      for (var i = 0; i < 24; i++) {
+        var b = document.createElement('i'), c = cols[Math.floor(r() * cols.length)];
+        b.style.cssText = 'width:' + (10 + r() * 18).toFixed(0) + 'px;height:' + (62 + r() * 38).toFixed(0) + '%;background:linear-gradient(90deg,rgba(0,0,0,.45),rgba(255,255,255,.07) 40%,rgba(0,0,0,.4)),' + c + (r() < .5 ? ';box-shadow:inset 0 10px 0 -8px #c9a557,inset 0 -10px 0 -8px #c9a557' : '') + (r() < .08 ? ';transform:rotate(' + (4 + r() * 5).toFixed(1) + 'deg);transform-origin:bottom left' : '');
+        line.appendChild(b);
+      }
+      sh.appendChild(line);
     }
-    /* กองเล็กพิงอยู่ข้างๆ และแผ่นที่ปลิวออกมาบนโต๊ะ */
-    for (var k = 0; k < 9; k++) {
-      var e = document.createElement('i'); e.className = 'ps-sh';
-      e.style.cssText = 'bottom:' + (k * 4 - 14) + 'px;margin-left:' + (10 + r() * 20).toFixed(0) + '%;width:62%;height:50%;transform:translateX(' + (r() * 24).toFixed(1) + 'px) rotate(' + ((r() - .5) * 14 + 5).toFixed(1) + 'deg);background-color:' + tones[Math.floor(r() * tones.length)] + ';z-index:' + (k + 2);
-      frag.appendChild(e);
-    }
-    box.appendChild(frag);
   }
 
   function paper(doc) {
@@ -1227,19 +1224,19 @@
       var seg = len <= L1 ? p1 : p2, at = len <= L1 ? len : len - L1;
       var pt = seg.getPointAtLength(Math.max(0, Math.min(at, seg === p1 ? L1 : L2)));
       var wob = Math.sin(p * 90) * 1.2;              /* มือสั่นเบา ๆ ตอนเขียน */
-      hd.style.transform = 'translate(' + (pt.x + 0).toFixed(1) + 'px,' + (pt.y + wob).toFixed(1) + 'px) scale(.72)';
+      hd.style.transform = 'translate(' + (pt.x + 0).toFixed(1) + 'px,' + (pt.y + wob).toFixed(1) + 'px) rotate(52deg) scale(.8)';
       p1.style.opacity = p2.style.opacity = String(ink == null ? .9 : ink);
     }
     var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced || document.documentElement.hasAttribute('data-calm')) { setProgress(1, .9); hd.style.transform = 'translate(262px,86px) scale(.72)'; return; }
+    if (reduced || document.documentElement.hasAttribute('data-calm')) { setProgress(1, .9); hd.style.transform = 'translate(262px,86px) rotate(52deg) scale(.8)'; return; }
     var WRITE = 3400, HOLD = 1300, FADE = 800, REST = 700, T = WRITE + HOLD + FADE + REST, t0 = performance.now(), raf = 0, on = false;
     function frame(now) {
       raf = 0; if (!on) return;
       var t = (now - t0) % T;
       if (t < WRITE) { var q = t / WRITE; setProgress(q < .5 ? 2 * q * q : 1 - Math.pow(-2 * q + 2, 2) / 2, .9); }
-      else if (t < WRITE + HOLD) { setProgress(1, .9); var rest = (t - WRITE) / HOLD; hd.style.transform = 'translate(' + (262 + rest * 14).toFixed(1) + 'px,' + (86 - rest * 6).toFixed(1) + 'px) scale(.72)'; }
+      else if (t < WRITE + HOLD) { setProgress(1, .9); var rest = (t - WRITE) / HOLD; hd.style.transform = 'translate(' + (262 + rest * 14).toFixed(1) + 'px,' + (86 - rest * 6).toFixed(1) + 'px) rotate(52deg) scale(.8)'; }
       else if (t < WRITE + HOLD + FADE) { setProgress(1, .9 * (1 - (t - WRITE - HOLD) / FADE)); }
-      else { setProgress(0, 0); hd.style.transform = 'translate(70px,92px) scale(.72)'; }
+      else { setProgress(0, 0); hd.style.transform = 'translate(70px,92px) rotate(52deg) scale(.8)'; }
       raf = requestAnimationFrame(frame);
     }
     function go() { if (!on) { on = true; t0 = performance.now(); raf = requestAnimationFrame(frame); } }
