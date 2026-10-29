@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0c0c0d">
-<!-- Vellum Art Direction: เปิดชั้นสไตล์ art/ (ถ้าจะย้อนกลับ ลบสคริปต์บรรทัดนี้) -->
-<script>document.documentElement.classList.add("vc-art");</script>
+<!-- Vellum Art Direction: "vc-art" = ชั้นสไตล์ใหม่ (ลบสคริปต์บรรทัดนี้เพื่อย้อนกลับ) · "vc-spa" = หน้าแรกหน้าเดียว ส่วนอื่นเปิดจากเมนู (ลบเฉพาะ vc-spa เพื่อกลับไปเป็นหน้ายาวหน้าเดียว) -->
+<script>document.documentElement.classList.add("vc-art","vc-spa");</script>
 <title>เช็กสัญญา | Vellum Check</title>
 
 <!-- ฟอนต์ -->
@@ -31,7 +31,7 @@
 <link rel="stylesheet" href="ct-sticker.css?v=9" media="(max-width: 767px)">
 <link rel="stylesheet" href="desktop-layout.css?v=5" media="(min-width: 1024px)">
 <link rel="stylesheet" href="silent-clip.css?v=1" media="(min-width: 1024px)">
-<link rel="stylesheet" href="art.css?v=7">
+<link rel="stylesheet" href="art.css?v=10">
 </head>
 <body>
 <svg id="vcStickerDefs" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="vcg-y" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#f4f4f2"/><stop offset="1" stop-color="#a6a9b0"/></linearGradient><linearGradient id="vcg-o" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#dcdcdb"/><stop offset="1" stop-color="#8a8d94"/></linearGradient><linearGradient id="vcg-b" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#e6e8ec"/><stop offset="1" stop-color="#8f949d"/></linearGradient><linearGradient id="vcg-n" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#9a9ea6"/><stop offset="1" stop-color="#43464d"/></linearGradient><linearGradient id="vcg-t" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#eef0f1"/><stop offset="1" stop-color="#9fa3ab"/></linearGradient><linearGradient id="vcg-p" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#e0e0e0"/><stop offset="1" stop-color="#7f8289"/></linearGradient><linearGradient id="vcg-g" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#d6d9db"/><stop offset="1" stop-color="#888c93"/></linearGradient><linearGradient id="vcg-v" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#cdd0d5"/><stop offset="1" stop-color="#60636b"/></linearGradient><linearGradient id="vcg-w" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d5d8dc"/></linearGradient><linearGradient id="vcg-au" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#f7f7f5"/><stop offset="1" stop-color="#b4b7bd"/></linearGradient><linearGradient id="vcg-s" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#b0b4bb"/></linearGradient></defs></svg>
@@ -117,7 +117,7 @@
       <li>ปกปิดข้อมูลส่วนตัวในเบราว์เซอร์ก่อนส่งวิเคราะห์</li>
       <li>คืนเครดิตให้อัตโนมัติเมื่อระบบตรวจไม่สำเร็จ</li>
     </ul>
-    <a class="hero-cue mono" href="#manifesto" data-reveal style="--i:6"><span>เลื่อนลง</span><i aria-hidden="true"></i></a>
+    <a class="hero-cue mono" href="#manifesto" data-reveal style="--i:6"><span>ดูวิธีอ่าน</span><i aria-hidden="true"></i></a>
   </section>
 
   <!-- ============ II. ฉากอ่านสัญญา: ตรึงจอแล้วเล่นตามการเลื่อน (ค่า --p จาก motion.js) ============
@@ -1866,6 +1866,6 @@ document.addEventListener('click', function (e) {
 <script src="care.js?v=2"></script>
 <script src="video-embed.js?v=1"></script>
 <script src="silent-clip.js?v=1"></script>
-<script src="art.js?v=7"></script>
+<script src="art.js?v=9"></script>
 </body>
 </html>
