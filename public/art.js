@@ -443,18 +443,22 @@
     '  vec3 rd=normalize(f+(uv.x*r2+uv.y*u2)*1.12*fv);',
     '  vec3 col;float tf=1e5;float h=0.;',
     '  if(rd.y<-1e-3)tf=(-1.7-ro.y)/rd.y;',
-    '  if(tf>0.&&tf<1e4){',
-    '    vec3 p=ro+rd*tf;vec3 rr=vec3(rd.x,-rd.y,rd.z);',
-    '    float rh=0.;vec3 rc=sky(rr);',
-    '    if(uLite<.5){rc=scene(p+vec3(0.,.002,0.),rr,40.,rh);rc=mix(sky(rr),rc,rh);}',
+    '  bool onFloor=tf>0.&&tf<1e4;',
+    '  vec3 p=ro+rd*tf;vec3 rr=vec3(rd.x,-rd.y,rd.z);',
+    '  vec3 rc=sky(rr);vec3 sc=vec3(0.);',
+    '  for(int pass=0;pass<2;pass++){',
+    '    vec3 o=ro;vec3 d=rd;float tm=onFloor?tf:1e5;',
+    '    if(pass==0){if(!onFloor||uLite>.5)continue;o=p+vec3(0.,.002,0.);d=rr;tm=40.;}',
+    '    float hh;vec3 cc=scene(o,d,tm,hh);',
+    '    if(pass==0)rc=mix(sky(rr),cc,hh);else{h=hh;sc=cc;}',
+    '  }',
+    '  if(onFloor){',
     '    float fres=.12+.62*pow(1.-clamp(-rd.y,0.,1.),3.);',
     '    vec2 g=abs(fract(p.xz*.5)-.5);float grid=smoothstep(.012,0.,min(g.x,g.y))*.045;',
     '    vec3 base=vec3(.016,.017,.020)+vec3(.55,.57,.62)*grid+warmAt(p)*.30;',
     '    col=mix(base,rc,fres);col=mix(col,sky(rd)*.9,clamp(1.-exp(-tf*.05),0.,1.));',
-    '    vec3 sc=scene(ro,rd,tf,h);col=mix(col,sc,h);',
-    '  }else{',
-    '    col=sky(rd);vec3 sc=scene(ro,rd,1e5,h);col=mix(col,sc,h);',
-    '  }',
+    '  }else col=sky(rd);',
+    '  col=mix(col,sc,h);',
     '  return col;',
     '}',
     'void main(){',
@@ -523,6 +527,13 @@
     var vs = sh(gl.VERTEX_SHADER, VERT), fs = sh(gl.FRAGMENT_SHADER, FRAG);
     if (!vs || !fs) return;
     var prog = gl.createProgram(); gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog);
+    /* คอมไพล์ shader แบบขนาน (ถ้าเบราว์เซอร์รองรับ) เพื่อไม่ให้หน้าเว็บค้างตอนเปิด: รอจนเสร็จแล้วค่อยเริ่มฉาก */
+    var par = null; try { par = gl.getExtension('KHR_parallel_shader_compile'); } catch (e) {}
+    function whenReady(cb) {
+      if (!par) { cb(); return; }
+      (function chk() { var ok = true; try { ok = gl.getProgramParameter(prog, par.COMPLETION_STATUS_KHR); } catch (e) {} if (ok) cb(); else setTimeout(chk, 40); })();
+    }
+    whenReady(function boot() {
     if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { try { console.warn('[VCScene] link', gl.getProgramInfoLog(prog)); } catch (e) {} return; }
     gl.useProgram(prog);
     var buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
@@ -538,8 +549,9 @@
     /* ตรวจชนิดการ์ดจอ: ถ้าเป็นตัววาดด้วยซอฟต์แวร์ (ไม่ได้เปิดการเร่งด้วยการ์ดจอ) เริ่มที่โหมดเบาทันที */
     var rend = ''; try { var dbg = gl.getExtension('WEBGL_debug_renderer_info'); rend = dbg ? String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL)) : ''; } catch (e) {}
     var soft = /swiftshader|basic render|llvmpipe|softpipe|software/i.test(rend) && !/[?&]hq\b/.test(location.search);   /* ?hq = บังคับคุณภาพเต็ม (ใช้ทดสอบ) */
-    var tier = soft ? 2 : 0, fpsNow = 0, minScale = soft ? 0.3 : 0.36;
-    var scale = soft ? 0.4 : (small ? 0.55 : 0.72), running = false, inView = true, t0 = performance.now(), raf = 0, W = 0, H = 0;
+    var weak = !soft && /vega\s*[1-9]\b|intel.*(hd|uhd|iris)|mali|adreno|powervr|radeon\(tm\) graphics/i.test(rend) && !/[?&]hq\b/.test(location.search);   /* การ์ดจอในตัวที่อ่อน: เริ่มที่โหมดเบา */
+    var tier = soft ? 2 : (weak ? 1 : 0), fpsNow = 0, minScale = soft ? 0.3 : (weak ? 0.3 : 0.36);
+    var scale = soft ? 0.4 : (weak ? 0.4 : (small ? 0.55 : 0.6)), running = false, inView = true, t0 = performance.now(), raf = 0, W = 0, H = 0;
     var frames = 0, acc = 0, last = 0, lost = false;
     var lens = { x: .12, y: .06, tx: .12, ty: .06, moved: -1e9 };
     var mp = { x: 0, y: 0, tx: 0, ty: 0 }, fixedT = null;
@@ -589,16 +601,20 @@
     function loop(now) {
       raf = 0; if (!running || lost) return;
       draw(now, false);
-      if (last) { acc += now - last; frames++; if (frames === 12) {
+      if (last) {
+        var dtm = now - last; acc += dtm; frames++;
+        if ((acc >= 600 || frames >= 12) && !/[?&]hq\b/.test(location.search)) {                    /* ตัดสินใจทุก ~0.6 วินาที (เร็วพอแม้เฟรมช้ามาก) */
           var avg = acc / frames; fpsNow = 1000 / avg;
           if (avg > 36 && scale > minScale) { scale = Math.max(minScale, scale * 0.75); size(); }
-          else if (avg > 45 && tier < 2) { tier++; if (tier === 2) { minScale = 0.3; } }   /* ช้าแม้ที่ความละเอียดต่ำสุด: เข้าโหมดเบา (ไม่มีเงาสะท้อน เตาผิงลดความละเอียดลาย) */
+          else if (avg > 45 && tier < 2) { tier++; minScale = 0.3; }
+          else if (avg > 110 && tier >= 2) { tier = 3; running = false; draw(performance.now(), true); }   /* ช้ามากแม้โหมดเบา: หยุดฉากเป็นภาพนิ่ง ให้หน้าเว็บยังลื่น */
           frames = 0; acc = 0;
-        } }
+        } else if (acc >= 600 || frames >= 12) { fpsNow = 1000 * frames / acc; frames = 0; acc = 0; }
+      }
       last = now; raf = requestAnimationFrame(loop);
     }
     function go() {
-      if (lost) return;
+      if (lost || tier === 3) return;
       if (mq && mq.matches) { running = false; draw(performance.now(), true); return; }
       if (!running && inView && !document.hidden) { running = true; last = 0; if (!raf) raf = requestAnimationFrame(loop); }
     }
@@ -616,8 +632,14 @@
     document.addEventListener('visibilitychange', function () { if (document.hidden) running = false; else go(); });
     var rt; window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { small = window.innerWidth < 768; size(); if (!running) draw(performance.now(), mq && mq.matches); }, 150); });
     if (mq) { var h = function () { if (mq.matches) { running = false; draw(performance.now(), true); } else go(); }; if (mq.addEventListener) mq.addEventListener('change', h); else if (mq.addListener) mq.addListener(h); }
+    });
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+  /* เริ่มฉากหลังหน้าโหลดเสร็จและเบราว์เซอร์ว่าง เพื่อให้กดอะไรได้ทันทีตอนเปิดเว็บ */
+  function start() {
+    var go = function () { setTimeout(init, 300); };
+    if (window.requestIdleCallback) window.requestIdleCallback(go, { timeout: 1500 }); else go();
+  }
+  if (document.readyState === 'complete') start(); else window.addEventListener('load', start);
 })();
 
 /* ===== แถบหัวเว็บโปร่งใสเมื่ออยู่บนสุดของหน้า (29 ต.ค. 2026) =====
