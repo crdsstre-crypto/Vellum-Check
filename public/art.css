@@ -938,3 +938,54 @@ html.vc-art main > .hero{
   min-height:100svh;
   padding-top:calc(var(--art-head) + clamp(18px,3vh,32px));
 }
+
+
+/* ===== ปุ่มเปลี่ยนสีเมื่อเอาเมาส์ไปแตะ: พื้นดำ/ขาวเลื่อนขึ้นมาจากด้านล่าง (29 ต.ค. 2026) =====
+   ปุ่มขาว (เริ่มตรวจสัญญา, ตรวจสัญญา ในเมนู, ปุ่มหลักในพื้นที่ทำงาน): แตะแล้วพื้นเป็นดำ ตัวอักษรเป็นขาว
+   ปุ่มโปร่ง (ดูคลิปแนะนำ, ปุ่มรอง): แตะแล้วพื้นเป็นขาว ตัวอักษรเป็นดำ
+   ใช้ ::before เป็นแผ่นสีที่เลื่อนขึ้น (ขอบบนโค้งแล้วแบนลงตอนเต็ม) ปุ่มที่ปิดใช้งาน (disabled) ไม่เปลี่ยน */
+html.vc-art :is(.dx-cta,.dx-cta-ghost,.dx-nav a:last-child,button.primary,button.ghost){
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+  transition:color .45s var(--ease-out),border-color .45s var(--ease-out),background-color .45s var(--ease-out);
+}
+html.vc-art :is(.dx-cta,.dx-cta-ghost,.dx-nav a:last-child,button.primary,button.ghost)::before{
+  content:"";
+  position:absolute;
+  left:-2px;right:-2px;bottom:-2px;
+  height:calc(100% + 4px);
+  z-index:-1;
+  background:var(--hv-fill,var(--ink));
+  border-radius:50% 50% 0 0 / 100% 100% 0 0;
+  transform:translate3d(0,102%,0);
+  transition:transform .55s var(--ease-out),border-radius .55s var(--ease-out);
+  pointer-events:none;
+}
+/* ปุ่มขาว -> เติมดำ */
+html.vc-art :is(.dx-cta,.dx-nav a:last-child,button.primary){--hv-fill:var(--ink);border:1px solid var(--paper)}
+/* ปุ่มโปร่ง -> เติมขาว */
+html.vc-art :is(.dx-cta-ghost,button.ghost){--hv-fill:var(--paper)}
+@media (hover:hover){
+  html.vc-art :is(.dx-cta,.dx-nav a:last-child):hover,
+  html.vc-art button.primary:hover:not(:disabled){
+    background:var(--paper);
+    color:var(--paper);
+    border-color:var(--paper);
+  }
+  html.vc-art :is(.dx-cta-ghost,button.ghost):hover:not(:disabled){
+    color:var(--ink);
+    border-color:var(--paper);
+  }
+  html.vc-art :is(.dx-cta,.dx-cta-ghost,.dx-nav a:last-child,button.primary,button.ghost):hover:not(:disabled)::before{
+    transform:translate3d(0,0,0);
+    border-radius:0;
+  }
+}
+/* ใช้แป้นพิมพ์: โฟกัสแล้วเปลี่ยนเหมือนกัน */
+html.vc-art :is(.dx-cta,.dx-nav a:last-child,button.primary):focus-visible:not(:disabled){color:var(--paper)}
+html.vc-art :is(.dx-cta-ghost,button.ghost):focus-visible:not(:disabled){color:var(--ink)}
+html.vc-art :is(.dx-cta,.dx-cta-ghost,.dx-nav a:last-child,button.primary,button.ghost):focus-visible:not(:disabled)::before{transform:translate3d(0,0,0);border-radius:0}
+html.vc-art .dx-cta:hover::after{transform:translate(3px,-3px)}
+/* ปุ่มส่งตรวจที่กำลังโหลดไม่เปลี่ยนสี */
+html.vc-art #checkBtn.is-busy::before{display:none}
