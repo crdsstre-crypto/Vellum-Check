@@ -1201,3 +1201,123 @@ html.vc-spa :is(.film-head h2,.desk-head h2,.mf-title){
 }
 html.vc-motion[data-entering] :is(.film-head h2,.desk-head h2,.mf-title){animation:vcTitleRise 1.05s var(--ease-out) .18s both}
 html.vc-motion[data-entering] .sec-label{animation:vcTitleRise .8s var(--ease-out) .08s both}
+
+
+/* ===== โต๊ะเขียนเอกสาร: ฉากเข้าสู่ระบบ (29 ต.ค. 2026) =====
+   กระดาษเก่าขอบไหม้ · มือเซ็นชื่อ · ตะเกียงติดๆดับๆ · กองเอกสาร · ฉากเต็มความกว้างตอนยังไม่ล็อกอิน
+   ไม่ใช้ preserve-3d/translateZ ในเอกสาร (ทำให้คลิกไม่โดน) ขอบกระดาษทำด้วย clip-path ที่ art.js คำนวณ */
+@keyframes ldLamp{            /* 1 รอบ 12 วินาที: ติด → กะพริบ → ดับ → กะพริบกลับ → ติด */
+  0%,46%{--on:1} 
+  48%{--on:.55} 50%{--on:1} 52%{--on:.2} 54%{--on:.85} 56%{--on:0}
+  74%{--on:0} 76%{--on:.7} 78%{--on:.1} 81%{--on:.9} 84%,100%{--on:1}
+}
+@property --on{syntax:"<number>";inherits:true;initial-value:1}
+.ld-scene{--on:1;position:relative;min-height:640px;overflow:hidden;isolation:isolate;background:#0d0b0a}
+html.vc-art .ld-scene{animation:ldLamp 12s linear infinite}
+html[data-calm] .ld-scene{animation:none}
+.ld-wall{position:absolute;inset:0 0 38% 0;background:
+  radial-gradient(60% 70% at 76% 38%,rgba(255,170,80,calc(.16 * var(--on))),transparent 70%),
+  linear-gradient(180deg,#141210 0%,#1a1612 100%)}
+.ld-desk{position:absolute;left:0;right:0;bottom:0;height:38%;background:
+  linear-gradient(180deg,rgba(255,170,80,calc(.10 * var(--on))),transparent 40%),
+  repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 2px,transparent 2px 9px),
+  linear-gradient(180deg,#3a2a1c 0%,#241a11 55%,#1a120b 100%);
+  border-top:1px solid rgba(255,200,130,calc(.35 * var(--on)))}
+/* กองเอกสารด้านซ้าย (สร้างแผ่นด้วย art.js) */
+.ld-pile{position:absolute;left:3%;bottom:calc(38% - 28px);width:min(300px,26%);height:300px}
+.ld-pile .ps-sh{position:absolute;left:50%;width:78%;height:64%;border-radius:2px;
+  box-shadow:0 1px 0 rgba(0,0,0,.35),0 3px 5px rgba(0,0,0,.35);
+  background-image:repeating-linear-gradient(0deg,transparent 0 9px,rgba(40,28,14,.16) 9px 10px),linear-gradient(90deg,rgba(0,0,0,.18),transparent 14%,transparent 86%,rgba(0,0,0,.14))}
+.ld-pile .ps-tab{position:absolute;right:-1px;top:14%;width:16%;height:9%;background:#6e3b2a;opacity:.85}
+.ld-pile .ps-red{position:absolute;right:10%;top:10%;width:22%;aspect-ratio:1;border:2px double rgba(160,50,44,.7);border-radius:50%;transform:rotate(-14deg)}
+/* ตะเกียงด้านขวา */
+.ld-lamp{position:absolute;right:11%;bottom:calc(38% - 6px);width:clamp(150px,15vw,220px);height:auto;overflow:visible}
+.ld-lamp .lp-shadow{fill:rgba(0,0,0,.55)}
+.ld-lamp :is(.lp-base,.lp-stem,.lp-bowl,.lp-top){fill:#2b2118;stroke:#6b5232;stroke-width:1.5}
+.ld-lamp .lp-bowl{fill:#33261a}
+.ld-lamp .lp-glass{fill:rgba(255,200,120,calc(.10 + .22 * var(--on)));stroke:rgba(255,220,170,calc(.2 + .4 * var(--on)));stroke-width:1.5}
+.ld-lamp .lp-flame{fill:rgb(255,150,40);opacity:var(--on);transform-origin:80px 140px;animation:ldFlame .55s ease-in-out infinite alternate}
+.ld-lamp .lp-core{fill:#fff1c4;opacity:calc(var(--on) * .95);transform-origin:80px 138px;animation:ldFlame .4s ease-in-out infinite alternate-reverse}
+@keyframes ldFlame{from{transform:scale(.94,1.04) skewX(-3deg)}to{transform:scale(1.04,.94) skewX(3deg)}}
+html[data-calm] :is(.lp-flame,.lp-core){animation:none}
+/* แสงจากตะเกียงบนทั้งฉาก และความมืดตอนไฟดับ */
+.ld-glow{position:absolute;inset:0;pointer-events:none;background:
+  radial-gradient(38% 52% at 74% 36%,rgba(255,176,90,calc(.34 * var(--on))),transparent 72%),
+  radial-gradient(50% 36% at 50% 76%,rgba(255,170,90,calc(.16 * var(--on))),transparent 75%);mix-blend-mode:screen}
+.ld-dark{position:absolute;inset:0;pointer-events:none;background:#050403;opacity:calc((1 - var(--on)) * .72)}
+/* โต๊ะ: ตัวเอกสารอยู่กลางฉาก */
+.ld-scene .auth-doc-wrap{position:relative;z-index:2;width:min(380px,92%);margin:0 auto;padding:46px 0 52px}
+@media (min-width:1024px){.ld-scene .auth-doc-wrap{width:380px}}
+/* กระดาษเก่าขอบไหม้ (ชั้นพื้น + ขอบไหม้ สร้างด้วย art.js เป็น .ad-rim/.ad-face) */
+html.vc-art .auth-doc{background:none;box-shadow:none;--ink:#3a2714;color:var(--ink);padding:42px 30px 30px;background-image:none}
+html.vc-art .ad-pose{filter:drop-shadow(0 26px 22px rgba(0,0,0,.7))}
+html.vc-art .auth-doc::before,html.vc-art .auth-doc::after,html.vc-art .ad-fold{display:none}
+.auth-doc .ad-rim,.auth-doc .ad-face{position:absolute;inset:0;pointer-events:none;z-index:-1}
+.auth-doc .ad-rim{background:linear-gradient(160deg,#6a4423,#4a2c14 55%,#6a4423)}
+.auth-doc .ad-face{background:
+  url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='420'><filter id='n' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.014 .02' numOctaves='4' seed='4'/><feColorMatrix values='0 0 0 0 .42  0 0 0 0 .27  0 0 0 0 .12  1.5 0 0 0 -.62'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>") 0 0/100% 100%,
+  radial-gradient(ellipse 78% 74% at 50% 46%,#f3e5c3 0%,#ecd9ae 46%,#dcbf86 78%,#c49659 100%)}
+.auth-doc .ad-face::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,transparent 56%,rgba(86,50,18,.38) 100%)}
+html.vc-art .ad-kicker{color:rgba(58,39,20,.62)}
+html.vc-art .ad-title{color:var(--ink);font-weight:600}
+html.vc-art .ad-sub{color:rgba(58,39,20,.75)}
+html.vc-art .ad-lab{color:rgba(58,39,20,.68)}
+html.vc-art .auth-doc :is(#email,#password){color:var(--ink);caret-color:var(--ink);border-bottom-color:rgba(58,39,20,.55)}
+html.vc-art .auth-doc :is(#email,#password)::placeholder{color:rgba(58,39,20,.38)}
+html.vc-art .auth-doc :is(#email,#password):focus{border-bottom-color:var(--ink)}
+html.vc-art .auth-doc button.primary{background:var(--ink);color:#f1e3bf;border-color:var(--ink);--hv-fill:#f1e3bf}
+html.vc-art .auth-doc button.ghost{color:var(--ink);border-color:rgba(58,39,20,.6);--hv-fill:var(--ink)}
+html.vc-art .auth-doc .google-btn{color:var(--ink);border-color:rgba(58,39,20,.6)}
+html.vc-art .auth-doc .or-line,html.vc-art .ad-sign,html.vc-art .ad-fine{color:rgba(58,39,20,.58)}
+html.vc-art .ad-sign i{border-bottom-color:rgba(58,39,20,.45)}
+@media (hover:hover){
+  html.vc-art .auth-doc button.primary:hover:not(:disabled){background:var(--ink);color:var(--ink);border-color:var(--ink)}
+  html.vc-art .auth-doc button.ghost:hover:not(:disabled){color:#f1e3bf}
+  html.vc-art .auth-doc .google-btn:hover{background:var(--ink);color:#f1e3bf}
+}
+/* มือเขียนเอกสาร (SVG ทับเหนือเส้นลงชื่อ) */
+.ad-hand{position:absolute;left:0;right:0;bottom:6px;width:100%;height:112px;overflow:visible;pointer-events:none;z-index:3}
+.ad-hand .ah-ink{fill:none;stroke:#2a1a3a;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;opacity:.9}
+.ad-hand .ah-shadow{fill:rgba(40,24,10,.28);filter:blur(3px)}
+.ad-hand .ah-sleeve{fill:#25252a}
+.ad-hand .ah-cuff{fill:#e6dfcf}
+.ad-hand .ah-palm{fill:#cf9b70}
+.ad-hand .ah-finger{fill:#dcae84}
+.ad-hand .ah-pen{fill:none;stroke:#17130f;stroke-width:5;stroke-linecap:round}
+.ad-hand .ah-nib{fill:none;stroke:#b8924a;stroke-width:3;stroke-linecap:round}
+.ad-hand .ah-hand{transform:translate(70px,92px) scale(.72)}
+html.vc-art .auth-ghost .ad-hand{display:none}
+/* ฉากเต็มความกว้างตอนยังไม่ล็อกอิน (เฉพาะจอ ≥768px) */
+@media (min-width:768px){
+  html.vc-art main:has(#authLoggedOut:not([hidden])) > #authCard{grid-column:1/-1 !important;padding:0 !important;border:0 !important;max-height:none !important;overflow:visible !important;position:relative !important;top:auto !important}
+  html.vc-art #authCard:has(#authLoggedOut:not([hidden])) .sheet-head{display:none}
+  html.vc-art #authCard:has(#authLoggedOut:not([hidden])) .sheet-body{padding:0}
+  html.vc-art main:has(#authLoggedOut:not([hidden])) > .desk-head{grid-column:1/-1;padding-left:calc((100vw - var(--content-max)) / 2);padding-right:var(--gutter)}
+  @media (max-width:1439px){html.vc-art main:has(#authLoggedOut:not([hidden])) > .desk-head{padding-left:var(--gutter)}}
+}
+@media (min-width:1024px) and (max-width:1279px){
+  html.vc-art main:has(#authLoggedOut:not([hidden])){
+    grid-template-areas:"hero hero hero hero" "mf mf mf mf" "ch ch ch ch" "video video video video" ". deskhead deskhead ." "auth auth auth auth" ". input result ." ". pay pay .";
+  }
+}
+@media (min-width:1280px){
+  html.vc-art main:has(#authLoggedOut:not([hidden])){
+    grid-template-areas:"hero hero hero hero hero" "mf mf mf mf mf" "ch ch ch ch ch" "video video video video video" ". deskhead deskhead deskhead ." "auth auth auth auth auth" ". input input result ." ". pay pay pay .";
+  }
+}
+/* มือถือ: ไม่มีโต๊ะ/ตะเกียง/กองเอกสาร เหลือกระดาษกับมือในแผ่นบัญชี */
+@media (max-width:767px){
+  .ld-scene{min-height:0;background:none;animation:none}
+  .ld-scene :is(.ld-wall,.ld-desk,.ld-pile,.ld-lamp,.ld-glow,.ld-dark){display:none}
+  .ld-scene .auth-doc-wrap{width:100%;padding:8px 6px 18px}
+  html.vc-art .auth-doc{padding:36px 22px 26px}
+}
+
+/* หัวแผ่นบัญชีมือถือ: ไอคอน 44px ของเดิมถูกซ่อนด้วยกฎหัวข้อใหม่ ทำให้ชื่อทับกัน ใช้แบบบล็อกธรรมดา */
+@media (max-width:767px){
+  html.vc-art body[data-sheet="acct"] #authCard .sheet-head h2{display:block;white-space:normal}
+  html.vc-art body[data-sheet="acct"] #authCard .sheet-head h2::after{display:block;margin-top:2px}
+}
+
+/* ตอนสลับหน้า ห้ามให้ main เลื่อน padding แบบมีทรานซิชัน (เห็นเป็นหน้าเลื่อนลง 64px) */
+html.vc-spa main{transition:none !important}
