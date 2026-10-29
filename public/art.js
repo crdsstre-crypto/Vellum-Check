@@ -1372,6 +1372,11 @@
     requestAnimationFrame(function () { requestAnimationFrame(function () { el.classList.add('in'); }); });
     setTimeout(function () { if (r.parentNode) r.parentNode.removeChild(r); }, 1100);
   }
+  function emo(ch, x, y, sz) {
+    var e = document.createElement('i'); e.className = 'ld-emo'; e.textContent = ch; e.setAttribute('aria-hidden', 'true');
+    e.style.cssText = 'left:' + x.toFixed(0) + 'px;top:' + y.toFixed(0) + 'px;font-size:' + Math.round((sz || 46) * Math.max(1, S * .9)) + 'px';
+    sc.appendChild(e); setTimeout(function () { if (e.parentNode) e.parentNode.removeChild(e); }, 2300);
+  }
   function setLiq(v) { var l = q('.liq', toolG); if (l) l.style.opacity = v; }
   function cofScale(s) { Array.prototype.forEach.call(cofs, function (c) { c.style.transformOrigin = '120px 120px'; c.style.transition = 'transform .8s'; c.style.transform = 'scale(' + s + ')'; }); }
 
@@ -1403,7 +1408,7 @@
     for (var s = 0; s < 2; s++) {
       await go(cu.x + R * .1, cu.y + R * .1, 70, 900); setLiq(.95); await w(250);
       await go(cu.x + R * .5, cu.y - R * .9, 66, 600);
-      await go(OFF.x - 260, OFF.y - 200, 40, 1500); await w(900); setLiq(0); cofScale(s ? .84 : .93);
+      await go(OFF.x - 260, OFF.y - 200, 40, 1500); emo(s ? '😍' : '😋', W - 190, H - 170, 54); if (s) setTimeout(function () { emo('😊', W - 120, H - 230, 38); }, 500); await w(1100); setLiq(0); cofScale(s ? .84 : .93);
       await go(cu.x + R * .4, cu.y - R * .9, 66, 1400);
     }
     await go(sp.x, sp.y, 62, 1000); spoon.style.opacity = 1; tool(null);
@@ -1423,24 +1428,24 @@
     await go(dc.x + dc.w * .14, dc.y - dc.h * .1, 86, 900, { shake: 1.6, f: function (p, e) { hold(p.x, p.y, -22 - 52 * e); } });
     /* พลาด: มือสะดุด แก้วหลุดตกบนกระดาษ กาแฟหกเต็มเอกสาร */
     var tx = P.x, ty = P.y, drop = { x: dc.x + dc.w * .08, y: dc.y + dc.h * .2 };
-    spill.classList.add('on'); Array.prototype.forEach.call(cofs, function (c) { c.style.opacity = .08; });
+    spill.classList.add('on'); emo('😱', tx - 30, ty - 120, 56); setTimeout(function () { emo('💦', drop.x, drop.y - 60, 40); }, 350); Array.prototype.forEach.call(cofs, function (c) { c.style.opacity = .08; });
     await Promise.all([go(tx + 90, ty - 70, 40, 520, { shake: 3 }), an(620, function (e) { hold(lerp(tx, drop.x, e), lerp(ty, drop.y, e), lerp(-74, -150, e)); })]);
     var dsk = { x: dc.x + dc.w * .62, y: dc.y + dc.h * .6 };
     var stain = document.createElement('i'); stain.className = 'ld-stain'; stain.style.cssText = 'left:' + dsk.x + 'px;top:' + dsk.y + 'px;width:' + (cu.w * 1.05) + 'px;height:' + (cu.w * .8) + 'px'; sc.appendChild(stain);
     requestAnimationFrame(function () { stain.style.opacity = 1; });
     an(900, function (e) { hold(lerp(drop.x, dsk.x, e), lerp(drop.y, dsk.y, e), lerp(-150, -232, e)); });
-    await go(P.x + 40, P.y - 90, 30, 500, { shake: 4 }); await w(300);
+    emo('😰', P.x - 40, P.y - 140, 50); await go(P.x + 40, P.y - 90, 30, 700, { shake: 7 }); await w(300);
     /* รีบไปหยิบไดร์จากกระเป๋า */
-    await go(bg.x + bg.w * .08, bg.y - bg.h * .05, 40, 1300, { shake: 1.2 }); jiggle(); await w(800); tool('dryer');
+    setTimeout(function () { emo('😵‍💫', bg.x + 40, bg.y - 140, 48); }, 700); await go(bg.x + bg.w * .08, bg.y - bg.h * .05, 40, 1300, { shake: 6 }); jiggle(); await w(800); tool('dryer');
     await go(dc.x + dc.w * .4, dc.y + dc.h * .42, 38, 1300); var wind = q('.wind', toolG); wind.classList.add('on');
     spill.classList.add('dry');
     try { pose.animate([{ rotate: '0deg' }, { rotate: '1.1deg' }, { rotate: '-1deg' }, { rotate: '0deg' }], { duration: 300, iterations: 16 }); } catch (e) {}
-    for (var k = 0; k < 3; k++) { await go(dc.x + dc.w * .1, dc.y + dc.h * .12, 30, 750); await go(dc.x + dc.w * .38, dc.y + dc.h * .42, 40, 750); }
+    for (var k = 0; k < 3; k++) { if (k === 1) emo('🥵', dc.x + dc.w * .3, dc.y + dc.h * .25, 44); await go(dc.x + dc.w * .1, dc.y + dc.h * .12, 30, 750, { shake: 3 }); await go(dc.x + dc.w * .38, dc.y + dc.h * .42, 40, 750, { shake: 3 }); }
     wind.classList.remove('on'); spill.className = 'ad-spill';
     await go(bg.x + bg.w * .08, bg.y - bg.h * .05, 40, 1100); tool(null); jiggle(); await w(600); tool('towel');
     await go(dsk.x + 70, dsk.y, 50, 1200);
     for (var m = 0; m < 4; m++) { stain.style.transition = 'opacity .4s'; stain.style.opacity = 1 - (m + 1) / 4; await go(dsk.x - 70, dsk.y + 8, 50, 420); await go(dsk.x + 70, dsk.y - 8, 50, 420); }
-    if (stain.parentNode) stain.parentNode.removeChild(stain);
+    if (stain.parentNode) stain.parentNode.removeChild(stain); emo('😮‍💨', dsk.x, dsk.y - 110, 50);
     await go(OFF.x, OFF.y, 52, 1100); tool(null); await w(400);
     /* หยิบแก้วที่ตกไปทิ้ง แล้วเอาแก้วใหม่ (กาแฟเต็ม) มาวางที่เดิม */
     var hd = ctr(hdm); await go(hd.x, hd.y, 58, 1400);
@@ -1448,7 +1453,7 @@
     Array.prototype.forEach.call(cofs, function (c) { c.style.opacity = ''; }); Array.prototype.forEach.call(cup.querySelectorAll('.ld-ice'), function (n) { n.parentNode.removeChild(n); });
     await w(700);
     await go(h0.x, h0.y, 56, 1500, { f: function (p, e) { hold(p.x, p.y, lerp(-232, base, e)); } });
-    cup.style.transform = ''; cup.classList.remove('nosteam'); await w(300);
+    cup.style.transform = ''; cup.classList.remove('nosteam'); emo('😌', h0.x + 10, h0.y - 110, 50); await w(300);
     await go(OFF.x, OFF.y, 52, 1200);
   }
 
@@ -1466,14 +1471,17 @@
     return !reduced && !document.documentElement.hasAttribute('data-calm') && !document.hidden && inView && sc.offsetParent !== null && sc.offsetWidth > 700 && !userBusy() && !busy;
   }
   function scheduler() {
-    var acts = [act1, act2, act3], lastPick = -1, last = performance.now() + 2000, gap = 9000 + Math.random() * 9000;
+    var acts = [act1, act2, act3], bag = [], lastPick = -1, last = performance.now() + 2000, gap = 9000 + Math.random() * 9000;
+    function pick() {   /* ถุงสุ่ม: ครบทั้ง 3 ฉากก่อนถึงจะวนรอบใหม่ และฉากแรกของรอบใหม่ไม่ซ้ำฉากสุดท้ายของรอบก่อน */
+      if (!bag.length) {
+        bag = [0, 1, 2]; for (var i = 2; i > 0; i--) { var k = Math.floor(Math.random() * (i + 1)), t = bag[i]; bag[i] = bag[k]; bag[k] = t; }
+        if (bag[0] === lastPick) { var t2 = bag[0]; bag[0] = bag[2]; bag[2] = t2; }
+      }
+      lastPick = bag.shift(); return lastPick;
+    }
     setInterval(function () {
       if (busy) { last = performance.now(); return; }
-      if (performance.now() - last > gap && okToRun()) {
-        var n; do { n = Math.floor(Math.random() * acts.length); } while (n === lastPick);   /* สุ่ม ไม่ซ้ำฉากเดิมติดกัน */
-        lastPick = n; gap = 9000 + Math.random() * 11000;
-        runAct(acts[n]).then(function () { last = performance.now(); });
-      }
+      if (performance.now() - last > gap && okToRun()) { gap = 9000 + Math.random() * 11000; runAct(acts[pick()]).then(function () { last = performance.now(); }); }
     }, 1000);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { setTimeout(init, 800); }); else setTimeout(init, 800);
