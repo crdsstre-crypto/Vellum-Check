@@ -1471,7 +1471,7 @@
     return !reduced && !document.documentElement.hasAttribute('data-calm') && !document.hidden && inView && sc.offsetParent !== null && sc.offsetWidth > 700 && !userBusy() && !busy;
   }
   function scheduler() {
-    var acts = [act1, act2, act3], bag = [], lastPick = -1, last = performance.now() + 2000, gap = 9000 + Math.random() * 9000;
+    var acts = [act1, act2, act3], bag = [], lastPick = -1, last = performance.now(), gap = 5500;
     function pick() {   /* ถุงสุ่ม: ครบทั้ง 3 ฉากก่อนถึงจะวนรอบใหม่ และฉากแรกของรอบใหม่ไม่ซ้ำฉากสุดท้ายของรอบก่อน */
       if (!bag.length) {
         bag = [0, 1, 2]; for (var i = 2; i > 0; i--) { var k = Math.floor(Math.random() * (i + 1)), t = bag[i]; bag[i] = bag[k]; bag[k] = t; }
@@ -1481,7 +1481,7 @@
     }
     setInterval(function () {
       if (busy) { last = performance.now(); return; }
-      if (performance.now() - last > gap && okToRun()) { gap = 9000 + Math.random() * 11000; runAct(acts[pick()]).then(function () { last = performance.now(); }); }
+      if (performance.now() - last > gap && okToRun()) { gap = 2500 + Math.random() * 3500; runAct(acts[pick()]).then(function () { last = performance.now(); }); }
     }, 1000);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { setTimeout(init, 800); }); else setTimeout(init, 800);
