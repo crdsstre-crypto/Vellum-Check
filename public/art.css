@@ -989,3 +989,58 @@ html.vc-art :is(.dx-cta,.dx-cta-ghost,.dx-nav a:last-child,button.primary,button
 html.vc-art .dx-cta:hover::after{transform:translate(3px,-3px)}
 /* ปุ่มส่งตรวจที่กำลังโหลดไม่เปลี่ยนสี */
 html.vc-art #checkBtn.is-busy::before{display:none}
+
+
+/* ===== เอฟเฟกต์เมาส์แตะปุ่ม (29 ต.ค. 2026): วงแหวนล็อกปุ่ม · ปุ่มดูดเมาส์ · ตัวอักษรกลิ้ง · ประกายไฟตอนคลิก · ฉาก 3 มิติตอบสนอง =====
+   ทั้งหมดทำงานเฉพาะอุปกรณ์ที่มีเมาส์จริงและไม่ได้ลดการเคลื่อนไหว (cursor.js เติม class vc-cursor-on) */
+html.vc-art .vc-cursor i{
+  left:calc(var(--rw,28px) / -2);
+  top:calc(var(--rh,28px) / -2);
+  width:var(--rw,28px);
+  height:var(--rh,28px);
+  border-radius:var(--rr,50%);
+  transition:width .5s var(--ease-out),height .5s var(--ease-out),left .5s var(--ease-out),top .5s var(--ease-out),border-radius .5s var(--ease-out),transform .35s var(--ease-out),opacity .25s ease,border-width .3s ease;
+}
+html.vc-art .vc-cursor.is-snap i{transform:none;border-width:2px;opacity:1}
+html.vc-art .vc-cursor.is-snap.is-down i{transform:scale(.93)}
+html.vc-art .vc-spark{position:fixed;display:block;border-radius:50%;pointer-events:none;z-index:10002;box-shadow:0 0 6px rgba(255,170,80,.55)}
+html.vc-art .vc-wave{position:fixed;display:block;width:24px;height:24px;margin:-12px 0 0 -12px;border:1.5px solid rgba(236,233,226,.9);border-radius:50%;pointer-events:none;z-index:10002}
+/* ตัวอักษรกลิ้งขึ้นเมื่อแตะปุ่ม */
+html.vc-cursor-on .rl{display:inline-block;position:relative;overflow:hidden;vertical-align:top;padding-block:.14em;margin-block:-.14em}
+html.vc-cursor-on .rl-a,
+html.vc-cursor-on .rl-b{display:block;white-space:nowrap;transition:transform .65s var(--ease-out)}
+html.vc-cursor-on .rl-b{position:absolute;left:0;top:.14em;transform:translateY(135%)}
+@media (hover:hover){
+  html.vc-cursor-on :is(.dx-cta,.dx-cta-ghost,.dx-nav a):hover .rl-a{transform:translateY(-135%)}
+  html.vc-cursor-on :is(.dx-cta,.dx-cta-ghost,.dx-nav a):hover .rl-b{transform:translateY(0)}
+}
+html.vc-cursor-on :is(.dx-cta,.dx-cta-ghost,.dx-nav a:last-child){will-change:translate}
+
+
+/* ===== ปุ่มมีชีวิต (29 ต.ค. 2026) — ทับกฎ "แถบเลื่อนจากล่าง" ด้านบนด้วยพื้นที่บานออกจากจุดที่เมาส์เข้า ===== */
+html.vc-art :is(.dx-cta,.dx-cta-ghost,.dx-nav a:last-child,button.primary,button.ghost){--hx:50%;--hy:105%}
+html.vc-art :is(.dx-cta,.dx-cta-ghost,.dx-nav a:last-child,button.primary,button.ghost)::before{
+  left:0;right:0;top:0;bottom:0;height:auto;
+  transform:none;border-radius:0;
+  clip-path:circle(0% at var(--hx) var(--hy));
+  transition:clip-path .7s var(--ease-out);
+}
+@media (hover:hover){
+  html.vc-art :is(.dx-cta,.dx-cta-ghost,.dx-nav a:last-child,button.primary,button.ghost):hover:not(:disabled)::before{
+    transform:none;border-radius:0;
+    clip-path:circle(150% at var(--hx) var(--hy));
+  }
+}
+html.vc-art :is(.dx-cta,.dx-cta-ghost,.dx-nav a:last-child,button.primary,button.ghost):focus-visible:not(:disabled)::before{
+  transform:none;border-radius:0;clip-path:circle(150% at 50% 50%);
+}
+/* ลูกศร ↗ บินออกมุมขวาบนแล้ววนเข้าจากมุมซ้ายล่าง */
+@keyframes vcArrowFly{
+  0%{transform:translate(0,0);opacity:1}
+  42%{transform:translate(1.4em,-1.4em);opacity:0}
+  43%{transform:translate(-1.4em,1.4em);opacity:0}
+  100%{transform:translate(0,0);opacity:1}
+}
+@media (hover:hover){
+  html.vc-art .dx-cta:hover::after{transform:none;animation:vcArrowFly .7s var(--ease-out) both}
+}
