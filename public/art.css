@@ -1530,3 +1530,9 @@ html.vc-art .auth-doc .ad-fold::after{content:"VC";position:absolute;inset:0;dis
 @media (min-width:768px) and (max-height:620px){.ld-scene .auth-doc-wrap{zoom:.84}}
 @media (min-width:768px) and (max-height:560px){.ld-scene .auth-doc-wrap{zoom:.73}}
 @media (min-width:768px) and (max-height:500px){.ld-scene .auth-doc-wrap{zoom:.63}}
+
+/* พื้นโต๊ะขยายขึ้นไปถึงขอบบนสุดของหน้าจอ ใต้แถบเมนูโปร่งใส */
+@media (min-width:768px){
+  html.vc-art .ld-scene{margin-top:-65px;min-height:100svh !important;padding-top:65px}
+  html.vc-spa[data-view="desk"] body:has(#authLoggedOut:not([hidden])) .site-header{background:linear-gradient(180deg,rgba(6,4,2,.78),rgba(6,4,2,0)) !important;border-bottom-color:transparent !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;box-shadow:none !important}
+}
