@@ -1238,7 +1238,7 @@ html[data-calm] .ld-scene{animation:none}
 .ld-pile svg{display:block;width:100%;height:100%;overflow:visible}
 /* ตะเกียงน้ำมันทองเหลือง */
 .ld-lamp{position:absolute;right:9%;top:34%;width:clamp(140px,13vw,200px);height:auto;overflow:visible;z-index:1}
-.ld-lamp .lp-shadow{fill:rgba(0,0,0,.55)}
+
 .ld-lamp .lp-halo{opacity:var(--on);mix-blend-mode:screen}
 .ld-lamp .lp-glass{fill:url(#lpGlass);stroke:rgba(255,230,190,.5)}
 .ld-lamp .lp-hl{opacity:calc(.3 + .6 * var(--on))}
@@ -1325,34 +1325,185 @@ html.vc-spa main{transition:none !important}
 /* ฉากโต๊ะ: ให้เห็นภาพ 3 มิติ (ห้องอ่านหนังสือ+เตาผิง) เหนือขอบโต๊ะ ลดความทึบของชั้นมืดด้านหลัง */
 html.vc-spa[data-view="desk"] body:has(#authLoggedOut:not([hidden])) #vcBackdrop::after{background:rgba(12,12,13,.3) !important}
 
-/* ===== หน้าบัญชีของฉัน: แฟ้มประจำตัวหนังเก่า (30 ต.ค. 2026) =====
-   การ์ดบัญชีตอนล็อกอินเป็นแฟ้มหนังสีเข้ม มีป้ายทองเหลือง ตราขี้ผึ้ง เครดิตสีทองเรืองตามแสงตะเกียง
-   ประวัติ = ลิ้นชักแฟ้ม · ฟังก์ชันและ id เดิมทั้งหมดไม่เปลี่ยน (แต่งผ่าน CSS เท่านั้น) */
-@keyframes dsBreath{0%,100%{text-shadow:0 0 10px rgba(255,170,70,.35),0 0 28px rgba(255,150,50,.18)}50%{text-shadow:0 0 16px rgba(255,185,90,.6),0 0 40px rgba(255,150,50,.3)}}
+/* ===== ฉากโต๊ะ (หน้าเข้าสู่ระบบ): ของประกอบเพิ่ม + ฝุ่นในแสงตะเกียง (30 ต.ค. 2026) ===== */
+.ld-blotter{position:absolute;left:50%;bottom:-30px;width:min(560px,60%);height:84%;transform:translateX(-50%) rotate(-1deg);border-radius:6px;pointer-events:none;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='l' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' seed='5'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1 0 0 0 -.4'/></filter><rect width='100%' height='100%' filter='url(%23l)' opacity='.6'/></svg>"),
+    linear-gradient(160deg,#3a2a1b,#26190f);
+  box-shadow:0 14px 26px rgba(0,0,0,.65),inset 0 0 0 7px rgba(0,0,0,.3),inset 0 0 0 8px rgba(201,165,87,.4);
+  filter:brightness(calc(.55 + .45 * var(--on)))}
+.ld-extra{position:absolute;z-index:1;filter:brightness(calc(.5 + .5 * var(--on))) drop-shadow(0 6px 6px rgba(0,0,0,.55));pointer-events:none}
+.ld-extra svg{display:block;width:100%;height:auto;overflow:visible}
+.ld-scales{left:16%;top:33%;width:clamp(110px,10vw,150px)}
+.ld-ink{right:19%;top:66%;width:clamp(110px,10vw,150px)}
+.ld-dust{position:absolute;inset:0;pointer-events:none;z-index:2;overflow:hidden}
+.ld-dust i{position:absolute;width:3px;height:3px;border-radius:50%;background:rgba(255,215,160,.9);box-shadow:0 0 6px rgba(255,190,110,.8);opacity:0;animation:ldDust var(--d,9s) linear var(--w,0s) infinite}
+@keyframes ldDust{0%{opacity:0;transform:translate(0,0)}15%{opacity:calc(.7 * var(--on))}85%{opacity:calc(.5 * var(--on))}100%{opacity:0;transform:translate(var(--x,20px),-170px)}}
+html[data-calm] .ld-dust{display:none}
+@media (max-width:767px){.ld-blotter,.ld-extra,.ld-dust{display:none}}
+
+/* ===== หน้าเข้าสู่ระบบ: เหลือโต๊ะไม้กับกระดาษใบใหญ่ (30 ต.ค. 2026) ===== */
 @media (min-width:768px){
-  html.vc-art #authCard:has(#authLoggedIn:not([hidden])){
-    position:relative;border:1px solid #5b4126 !important;border-radius:6px !important;margin:18px 0 18px 18px;
-    background:
-      radial-gradient(120% 60% at 50% 0%,rgba(255,170,80,.14),transparent 60%),
-      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='l' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 .02  0 0 0 0 .01  0 0 0 0 0  1.1 0 0 0 -.38'/></filter><rect width='100%' height='100%' filter='url(%23l)'/></svg>"),
-      linear-gradient(170deg,#2c1d13 0%,#1d130c 55%,#140c07 100%) !important;
-    box-shadow:0 22px 40px rgba(0,0,0,.6),inset 0 0 0 5px rgba(0,0,0,.25),inset 0 0 0 6px rgba(201,165,87,.22);
-    padding-top:34px !important;overflow:visible !important;max-height:none !important}
-  html.vc-art #authCard:has(#authLoggedIn:not([hidden])) .sheet-head{display:none}
-  html.vc-art #authCard:has(#authLoggedIn:not([hidden])) .sheet-body{padding:6px 22px 24px !important}
-  html.vc-art #authCard:has(#authLoggedIn:not([hidden]))::before{content:"แฟ้มประจำตัว · ACCOUNT";position:absolute;top:-14px;left:26px;padding:6px 16px;
-    font:500 .66rem/1 var(--font-mono);letter-spacing:.14em;color:#2b1c08;border-radius:3px;
-    background:linear-gradient(180deg,#f0d796,#c19a4a 55%,#98742d);box-shadow:0 3px 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.5)}
-  html.vc-art #authCard:has(#authLoggedIn:not([hidden]))::after{content:"";position:absolute;top:14px;right:18px;width:30px;height:30px;border-radius:50%;
-    background:radial-gradient(circle at 35% 30%,#d86a5f,#9a2420 55%,#5e1210);box-shadow:0 3px 6px rgba(0,0,0,.55),inset 0 0 0 3px rgba(255,150,140,.25)}
-  html.vc-art #authLoggedIn#authLoggedIn .wallet-total-num b{color:#f0cf8a;animation:dsBreath 4s ease-in-out infinite}
-  html.vc-art #authLoggedIn#authLoggedIn .acct-avatar{border-color:#c9a557 !important;box-shadow:0 0 0 3px rgba(201,165,87,.18)}
-  html.vc-art #authLoggedIn#authLoggedIn .cred-title{color:#f0d796}
-  html.vc-art #authLoggedIn#authLoggedIn .wallet-histlink{border:1px solid #8a6a30 !important;border-radius:3px !important;background:linear-gradient(180deg,rgba(201,165,87,.16),rgba(201,165,87,.04)) !important;box-shadow:inset 0 1px 0 rgba(255,230,170,.18)}
-  html.vc-art #authLoggedIn .history-panel{border:1px solid rgba(201,165,87,.35);border-radius:4px;background:rgba(10,6,3,.55);padding:12px}
-  html.vc-art #authLoggedIn .vault-head .vault-txt b{color:#f0d796}
+  .ld-scene :is(.ld-blotter,.ld-extra,.ld-pile,.ld-dust,.ld-books,.ld-wall){display:none !important}
+  html.vc-art .ld-scene{--on:1;min-height:max(100svh,1020px);align-items:center}
+  .ld-desk{inset:10% 0 0 0}
+  .ld-dark{opacity:.55}
+  .ld-scene .auth-doc-wrap{zoom:1.3;width:380px;padding:30px 0 40px}
 }
-@media (prefers-reduced-motion:reduce){html.vc-art #authLoggedIn#authLoggedIn .wallet-total-num b{animation:none}}
-/* พื้นโต๊ะไม้ด้านหลังพื้นที่ทำงานตอนล็อกอินแล้ว (ให้ต่อเนื่องกับฉากเข้าสู่ระบบ) */
-html.vc-spa[data-view="desk"] body:has(#authLoggedIn:not([hidden])) #vcBackdrop::before{content:"";position:absolute;inset:34% 0 0 0;z-index:1;pointer-events:none;
-  background:linear-gradient(180deg,rgba(0,0,0,.2),rgba(14,8,4,.82)),repeating-linear-gradient(180deg,transparent 0 150px,rgba(0,0,0,.5) 150px 153px),linear-gradient(180deg,#2a1b11,#120a05);opacity:.9}
+
+/* หน้าเข้าสู่ระบบ: โต๊ะเต็มถึงใต้แถบเมนู + ขอบภาพเบลอและมืด เหมือนบรรยากาศหน้าแรก */
+@media (min-width:768px){
+  .ld-desk{inset:0}
+  .ld-desk{border-top:0;box-shadow:none}
+  .ld-dark{opacity:1;background:
+    radial-gradient(ellipse 62% 64% at 50% 54%,rgba(4,3,2,0) 30%,rgba(3,2,1,.62) 70%,rgba(2,1,1,.93) 100%),
+    radial-gradient(60% 40% at 18% 20%,rgba(120,100,80,.10),transparent 70%),
+    radial-gradient(50% 36% at 84% 78%,rgba(120,100,80,.08),transparent 70%)}
+  .ld-dark::before{content:"";position:absolute;inset:0;-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);
+    -webkit-mask-image:radial-gradient(ellipse 58% 62% at 50% 54%,transparent 38%,#000 86%);mask-image:radial-gradient(ellipse 58% 62% at 50% 54%,transparent 38%,#000 86%)}
+}
+
+/* หน้าเข้าสู่ระบบ: กระดาษใหญ่ขึ้นอีกและวางเฉียง */
+@media (min-width:768px){
+  html.vc-art .ld-scene{min-height:max(100svh,1240px)}
+  .ld-scene .auth-doc-wrap{zoom:1.5}
+  html.vc-art .ad-pose{transform:rotate(-7deg)}
+}
+@media (min-width:768px){html.vc-art .ld-scene{align-items:flex-start;min-height:max(100svh,1160px)}.ld-scene .auth-doc-wrap{margin-top:40px}}
+
+/* ตะเกียง 3 มิติ: ติด-ดับเองเป็นรอบ และแตะที่ตะเกียงเพื่อเปิด/ปิดเองได้ */
+@media (min-width:768px){
+  .ld-scene .ld-lamp{display:block;left:2%;right:auto;top:6%;width:clamp(300px,28vw,420px);cursor:pointer;pointer-events:auto;z-index:3;
+    filter:drop-shadow(0 18px 14px rgba(0,0,0,.6)) drop-shadow(0 0 calc(26px * var(--on)) rgba(255,170,70,calc(.55 * var(--on))));
+    transform:none;transition:filter .3s}
+  .ld-scene .ld-lamp:hover{transform:scale(1.04)}
+  .ld-scene .ld-lamp{transition:transform .35s ease,filter .3s}
+  .ld-scene .ld-glow{display:block;background:
+    radial-gradient(34% 40% at 17% 22%,rgba(255,176,90,calc(.42 * var(--on))),transparent 72%),
+    radial-gradient(46% 40% at 38% 58%,rgba(255,170,90,calc(.2 * var(--on))),transparent 75%);mix-blend-mode:screen;z-index:2}
+  .ld-dark{background:
+    linear-gradient(rgba(0,0,0,calc((1 - var(--on)) * .72)),rgba(0,0,0,calc((1 - var(--on)) * .72))),
+    radial-gradient(ellipse 62% 64% at 50% 54%,rgba(4,3,2,0) 30%,rgba(3,2,1,.62) 70%,rgba(2,1,1,.93) 100%) !important}
+  .ld-scene{transition:--on .4s}
+  html.vc-art .ad-pose{filter:drop-shadow(0 3px 3px rgba(0,0,0,.6)) drop-shadow(0 10px 14px rgba(0,0,0,.45)) brightness(calc(.62 + .38 * var(--on)))}
+  html.vc-art .ld-scene[data-lamp="on"]{animation:none !important;--on:1}
+  html.vc-art .ld-scene[data-lamp="off"]{animation:none !important;--on:0}
+  .ld-scene .ld-lamp:focus{outline:none}
+  .ld-scene .ld-lamp:focus-visible{outline:2px solid rgba(255,200,120,.7);outline-offset:6px;border-radius:8px}
+}
+
+/* ตะเกียงมองจากด้านบน: เปลวไฟมองจากบน กระพริบอยู่กลางวง */
+.ld-scene .ld-lamp :is(.lp-flame,.lp-core){transform-box:fill-box;transform-origin:center;animation:ldFlameTop .5s ease-in-out infinite alternate}
+@keyframes ldFlameTop{from{transform:scale(.9)}to{transform:scale(1.08)}}
+.ld-scene .ld-lamp .lp-glass{fill:url(#ltGl)}
+
+/* ===== กระดาษเข้าสู่ระบบ: ผิวกระดาษเก่าสมจริงขึ้น (รอยพับ คราบ เส้นใย รอยไหม้ แสงเฉียง ตราขี้ผึ้ง) ===== */
+.auth-doc .ad-face{background:
+  radial-gradient(circle at 16% 20%,rgba(126,76,24,.26),transparent 20%),
+  radial-gradient(circle at 82% 64%,rgba(110,62,18,.22),transparent 24%),
+  radial-gradient(circle at 36% 90%,rgba(120,70,20,.2),transparent 18%),
+  radial-gradient(circle at 72% 12%,rgba(150,100,40,.16),transparent 16%),
+  url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='f' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.9 .06' numOctaves='3' seed='8'/><feColorMatrix values='0 0 0 0 .35  0 0 0 0 .22  0 0 0 0 .08  0 0 0 .5 -.16'/></filter><rect width='100%' height='100%' filter='url(%23f)'/></svg>") 0 0/300px 300px,
+  url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='420'><filter id='n' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.014 .02' numOctaves='4' seed='4'/><feColorMatrix values='0 0 0 0 .42  0 0 0 0 .27  0 0 0 0 .12  1.5 0 0 0 -.62'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>") 0 0/100% 100%,
+  radial-gradient(ellipse 80% 76% at 46% 44%,#f6e9c8 0%,#efdcae 46%,#dcbc80 78%,#bf9050 100%)}
+.auth-doc .ad-face::before{content:"";position:absolute;inset:0;pointer-events:none;background:
+  linear-gradient(180deg,transparent calc(33% - 2px),rgba(70,40,12,.30) 33%,rgba(255,246,220,.42) calc(33% + 2px),transparent calc(33% + 7px)),
+  linear-gradient(180deg,transparent calc(67% - 2px),rgba(70,40,12,.26) 67%,rgba(255,246,220,.38) calc(67% + 2px),transparent calc(67% + 7px)),
+  linear-gradient(90deg,transparent calc(52% - 2px),rgba(70,40,12,.2) 52%,rgba(255,246,220,.3) calc(52% + 2px),transparent calc(52% + 6px)),
+  linear-gradient(118deg,rgba(255,244,210,.4),transparent 36%,transparent 62%,rgba(40,16,3,.3) 100%)}
+.auth-doc .ad-face::after{background:radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(96,48,12,.42) 80%,rgba(42,16,3,.82) 100%)}
+.auth-doc .ad-rim{background:linear-gradient(160deg,#7d4a22,#3c1e0b 55%,#80481d)}
+html.vc-art .auth-doc .ad-fold{display:block;position:absolute;top:-16px;right:30px;width:60px;height:58px;z-index:4;pointer-events:none;
+  border-radius:48% 52% 50% 50%/52% 46% 54% 48%;
+  background:radial-gradient(circle at 34% 28%,#e6827a,#a82a20 48%,#5a120c 100%);
+  box-shadow:0 5px 8px rgba(0,0,0,.5),inset 0 0 0 4px rgba(255,170,160,.16),inset 0 -4px 6px rgba(0,0,0,.4)}
+html.vc-art .auth-doc .ad-fold::before{content:"";position:absolute;inset:11px;border-radius:50%;border:1.5px solid rgba(90,15,8,.55);box-shadow:inset 0 1px 0 rgba(255,170,160,.35)}
+html.vc-art .auth-doc .ad-fold::after{content:"VC";position:absolute;inset:0;display:grid;place-items:center;font:600 1.05rem/1 var(--font-display,serif);color:rgba(70,10,5,.8);text-shadow:0 1px 0 rgba(255,170,160,.4)}
+
+/* ===== เอกสารเข้าสู่ระบบ แบบเอกสารกฎหมายจริงบนโต๊ะ (ตามคำแนะนำ: กระดาษหลายแผ่นซ้อน ขอบหนา กรอบเส้นคู่ คลิป ปากกา ตรา) ===== */
+@media (min-width:768px){
+  .auth-doc .ad-rim,.auth-doc .ad-face{clip-path:none !important;border-radius:3px}
+  .auth-doc .ad-rim{transform:translate(3px,4px);background:linear-gradient(180deg,#d2c29b,#a99567);box-shadow:0 1px 0 rgba(0,0,0,.25)}
+  .auth-doc .ad-face{background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'><rect x='3.2' y='2.4' width='93.6' height='95.2' fill='none' stroke='rgba(150,112,48,.65)' stroke-width='1.2' vector-effect='non-scaling-stroke'/><rect x='4.4' y='3.3' width='91.2' height='93.4' fill='none' stroke='rgba(150,112,48,.4)' stroke-width='.8' vector-effect='non-scaling-stroke'/></svg>") 0 0/100% 100% no-repeat,
+    radial-gradient(circle at 18% 22%,rgba(126,76,24,.10),transparent 22%),
+    radial-gradient(circle at 84% 70%,rgba(110,62,18,.09),transparent 24%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='f' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.75 .5' numOctaves='3' seed='9'/><feColorMatrix values='0 0 0 0 .4  0 0 0 0 .3  0 0 0 0 .15  0 0 0 .34 -.1'/></filter><rect width='100%' height='100%' filter='url(%23f)'/></svg>") 0 0/300px 300px,
+    linear-gradient(120deg,#f8f0dc 0%,#f2e8cf 55%,#e6d8b6 100%)}
+  .auth-doc .ad-face::before{background:
+    linear-gradient(180deg,transparent calc(50% - 2px),rgba(70,45,15,.16) 50%,rgba(255,250,232,.4) calc(50% + 2px),transparent calc(50% + 6px)),
+    linear-gradient(112deg,rgba(255,236,190,.5),transparent 34%,transparent 64%,rgba(60,30,6,.24) 100%)}
+  .auth-doc .ad-face::after{background:radial-gradient(ellipse at 50% 50%,transparent 62%,rgba(110,70,25,.2) 100%)}
+  /* แผ่นรองด้านล่างซ้อนเฉียง ให้เห็นเป็นกองเอกสาร */
+  html.vc-art .auth-doc::before,html.vc-art .auth-doc::after{display:block;content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;border-radius:3px;
+    background:linear-gradient(160deg,#eadfc3,#d4c49c);box-shadow:0 2px 4px rgba(0,0,0,.35)}
+  html.vc-art .auth-doc::before{transform:rotate(2.6deg) translate(10px,8px)}
+  html.vc-art .auth-doc::after{z-index:-3;transform:rotate(-2.2deg) translate(-8px,12px);background:linear-gradient(160deg,#e2d6b8,#c9b88f)}
+  html.vc-art .ad-pose{filter:drop-shadow(0 2px 2px rgba(0,0,0,.55)) drop-shadow(0 14px 18px rgba(0,0,0,.5)) brightness(calc(.64 + .36 * var(--on)));animation:docSettle .9s cubic-bezier(.2,.8,.25,1) both}
+  .auth-doc .ad-clip{position:absolute;top:-24px;left:4px;width:26px;height:74px;z-index:5;pointer-events:none;filter:drop-shadow(1px 3px 2px rgba(0,0,0,.5))}
+  .ld-pen{position:absolute;left:16%;top:74%;width:clamp(200px,20vw,300px);transform:rotate(-24deg);z-index:1;pointer-events:none;filter:brightness(calc(.55 + .45 * var(--on))) drop-shadow(0 8px 6px rgba(0,0,0,.6))}
+  .ld-pen svg{display:block;width:100%;height:auto;overflow:visible}
+}
+@keyframes docSettle{from{opacity:0;transform:translateY(-22px) rotate(-10deg)}to{opacity:1;transform:rotate(-7deg)}}
+@media (prefers-reduced-motion:reduce){html.vc-art .ad-pose{animation:none}}
+
+/* เอกสารสีน้ำตาล (กระดาษคราฟต์เก่า) */
+@media (min-width:768px){
+  .auth-doc .ad-face{background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'><rect x='3.2' y='2.4' width='93.6' height='95.2' fill='none' stroke='rgba(70,38,12,.6)' stroke-width='1.2' vector-effect='non-scaling-stroke'/><rect x='4.4' y='3.3' width='91.2' height='93.4' fill='none' stroke='rgba(70,38,12,.35)' stroke-width='.8' vector-effect='non-scaling-stroke'/></svg>") 0 0/100% 100% no-repeat,
+    radial-gradient(circle at 18% 22%,rgba(90,50,16,.14),transparent 24%),
+    radial-gradient(circle at 84% 70%,rgba(70,38,10,.16),transparent 26%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='f' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.75 .5' numOctaves='3' seed='9'/><feColorMatrix values='0 0 0 0 .25  0 0 0 0 .15  0 0 0 0 .06  0 0 0 .4 -.12'/></filter><rect width='100%' height='100%' filter='url(%23f)'/></svg>") 0 0/300px 300px,
+    linear-gradient(120deg,#d2a874 0%,#c19460 55%,#a97c47 100%)}
+  .auth-doc .ad-rim{background:linear-gradient(180deg,#8a6234,#5e3f1d)}
+  html.vc-art .auth-doc::before{background:linear-gradient(160deg,#b98d58,#9a7142)}
+  html.vc-art .auth-doc::after{background:linear-gradient(160deg,#a67b48,#82592d)}
+  html.vc-art .auth-doc{--ink:#2a1608}
+  .auth-doc .ad-field input::placeholder{color:rgba(60,34,12,.55)}
+  html.vc-art .auth-doc button.primary{background:#2a1608;color:#f3dfb8}
+}
+
+/* แผ่นกระดาษขาววางบนกระดาษสีน้ำตาล (เฉพาะส่วนฟอร์ม) */
+@media (min-width:768px){
+  .auth-doc .ad-sheet{position:absolute;left:8px;right:12px;top:54px;bottom:14px;z-index:-1;pointer-events:none;border-radius:2px;transform:rotate(-.5deg);
+    background:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='w' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .45  0 0 0 0 .35  0 0 0 .16 -.04'/></filter><rect width='100%' height='100%' filter='url(%23w)'/></svg>") 0 0/260px 260px,
+      linear-gradient(118deg,#fffdf8 0%,#f8f4ea 60%,#ece6d6 100%);
+    box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 3px 6px rgba(50,25,5,.45),0 0 0 1px rgba(90,60,25,.25)}
+  html.vc-art .auth-doc{--ink:#2a1a0c}
+}
+
+/* เอกสารสีขาวทั้งแผ่น (ตรา คลิป และมือคงเดิม) */
+@media (min-width:768px){
+  .auth-doc .ad-sheet{display:none}
+  .auth-doc .ad-face{background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'><rect x='3.2' y='2.4' width='93.6' height='95.2' fill='none' stroke='rgba(110,110,120,.5)' stroke-width='1.1' vector-effect='non-scaling-stroke'/><rect x='4.4' y='3.3' width='91.2' height='93.4' fill='none' stroke='rgba(110,110,120,.3)' stroke-width='.8' vector-effect='non-scaling-stroke'/></svg>") 0 0/100% 100% no-repeat,
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='w' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .47  0 0 0 0 .4  0 0 0 .14 -.03'/></filter><rect width='100%' height='100%' filter='url(%23w)'/></svg>") 0 0/260px 260px,
+    linear-gradient(118deg,#fffefb 0%,#f9f6ee 60%,#eeeadf 100%)}
+  .auth-doc .ad-rim{background:linear-gradient(180deg,#d9d5ca,#b8b3a6)}
+  html.vc-art .auth-doc::before{background:linear-gradient(160deg,#efebe0,#d8d3c6)}
+  html.vc-art .auth-doc::after{background:linear-gradient(160deg,#e3dfd3,#c6c1b3)}
+  .auth-doc .ad-kicker{color:rgba(60,45,30,.7)}
+}
+
+/* ลบปากกาบนโต๊ะ + ลิ้นชักแฟ้มเปิดอยู่มุมซ้ายล่าง */
+@media (min-width:768px){
+  .ld-pen{display:none !important}
+  .ld-drawer{position:absolute;left:2.5%;bottom:7%;width:clamp(210px,19vw,280px);transform:rotate(-4deg);z-index:1;pointer-events:none;
+    filter:brightness(calc(.55 + .45 * var(--on))) drop-shadow(0 10px 10px rgba(0,0,0,.6))}
+  .ld-drawer svg{display:block;width:100%;height:auto;overflow:visible}
+}
+@media (min-width:768px){.ld-drawer{left:3%;bottom:6%;width:clamp(210px,19vw,280px);transform:none}}
+
+/* ลิ้นชักออก ใส่กระเป๋าสะพายหนังแทน (วางบนโต๊ะมุมซ้ายล่าง) */
+@media (min-width:768px){
+  .ld-drawer{display:none !important}
+  .ld-bag{position:absolute;left:2%;bottom:6%;width:clamp(300px,28vw,420px);transform:rotate(-9deg);z-index:1;pointer-events:none;
+    filter:brightness(calc(.55 + .45 * var(--on))) drop-shadow(0 10px 10px rgba(0,0,0,.6))}
+  .ld-bag svg{display:block;width:100%;height:auto;overflow:visible}
+}
+@media (min-width:768px){.ld-bag{left:3%;bottom:4%;width:clamp(190px,18vw,270px);transform:rotate(-8deg)}}
+@media (min-width:768px){.ld-bag{left:3%;bottom:11%;width:clamp(170px,15.5vw,235px)}}
+@media (min-width:768px){.ld-bag{left:3%;bottom:9%;width:clamp(240px,22vw,340px);transform:rotate(12deg)}}
+@media (min-width:768px){.ld-bag{left:-1%;bottom:2%;width:clamp(320px,31vw,460px);transform:rotate(26deg);transform-origin:50% 85%}}
+@media (min-width:768px){.ld-bag{transform:rotate(26deg) scaleY(.74);transform-origin:50% 90%;bottom:3%}}
+@media (min-width:768px){.ld-bag{left:-8%;bottom:0%}}
