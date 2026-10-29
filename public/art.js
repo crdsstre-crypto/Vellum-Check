@@ -1253,17 +1253,17 @@
     }
     var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced || document.documentElement.hasAttribute('data-calm')) { setProgress(1, .9); hd.style.transform = 'translate(262px,86px) rotate(52deg) scale(.8)'; return; }
-    var WRITE = 3400, HOLD = 1300, FADE = 800, REST = 700, T = WRITE + HOLD + FADE + REST, t0 = performance.now(), raf = 0, on = false;
+    var WRITE = 3400, HOLD = 1300, t0 = performance.now(), raf = 0, on = false;
+    hd.style.transition = 'opacity .5s';
     function frame(now) {
       raf = 0; if (!on) return;
-      var t = (now - t0) % T;
+      var t = now - t0;
       if (t < WRITE) { var q = t / WRITE; setProgress(q < .5 ? 2 * q * q : 1 - Math.pow(-2 * q + 2, 2) / 2, .9); }
       else if (t < WRITE + HOLD) { setProgress(1, .9); var rest = (t - WRITE) / HOLD; hd.style.transform = 'translate(' + (262 + rest * 14).toFixed(1) + 'px,' + (86 - rest * 6).toFixed(1) + 'px) rotate(52deg) scale(.8)'; }
-      else if (t < WRITE + HOLD + FADE) { setProgress(1, .9 * (1 - (t - WRITE - HOLD) / FADE)); }
-      else { setProgress(0, 0); hd.style.transform = 'translate(70px,92px) rotate(52deg) scale(.8)'; }
+      else { setProgress(1, .9); hd.style.opacity = 0; svg.setAttribute('data-done', '1'); on = false; return; }   /* เซ็นครั้งเดียว: ลายเซ็นค้างอยู่ มือถอยออก */
       raf = requestAnimationFrame(frame);
     }
-    function go() { if (!on) { on = true; t0 = performance.now(); raf = requestAnimationFrame(frame); } }
+    function go() { if (!on && !svg.getAttribute('data-done')) { on = true; t0 = performance.now(); raf = requestAnimationFrame(frame); } }
     function stop() { on = false; }
     if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { if (es[0].isIntersecting && !document.hidden) go(); else stop(); }, { threshold: .05 }).observe(svg);
     else go();
@@ -1286,7 +1286,7 @@
 (function () {
   'use strict';
   var NS = 'http://www.w3.org/2000/svg';
-  var sc, wrap, doc, pose, docSvg, cup, spoon, swirl, cofs, hdm, bag, spill, arm, G, toolG;
+  var sc, wrap, doc, pose, docSvg, docHand, cup, spoon, swirl, cofs, hdm, bag, spill, arm, G, toolG;
   var tok = 0, ci = 0, busy = false, inView = true, P = { x: 0, y: 0, r: 52 }, S = 1, W = 0, H = 0, OFF = { x: 0, y: 0 };
   function q(s, r) { return (r || document).querySelector(s); }
   function ez(t) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
@@ -1341,7 +1341,7 @@
     });
     if (!toolG) return;
     G.appendChild(body); arm.appendChild(G); sc.appendChild(arm);
-    docSvg.style.transition = 'opacity .3s';
+    docHand = q('.ah-hand', docSvg); docHand.style.transition = 'opacity .3s';
     doc.addEventListener('focusin', abort);
     window.VCActs = { act1: act1, act2: act2, act3: act3, run: function (n) { return runAct([act1, act2, act3][n - 1]); }, abort: abort };
     if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { inView = es[0].isIntersecting; if (!inView) abort(); }, { threshold: .05 }).observe(sc);
@@ -1352,10 +1352,10 @@
     var z = parseFloat(getComputedStyle(wrap).zoom) || 1; S = .8 * z; W = sc.offsetWidth; H = sc.offsetHeight;
     OFF.x = W + 140; OFF.y = H + 240; P.x = OFF.x; P.y = OFF.y; P.r = 52; place();
   }
-  function begin() { layout(); arm.style.opacity = 1; docSvg.style.opacity = 0; }
+  function begin() { layout(); arm.style.opacity = 1; docHand.style.opacity = 0; }
   function cleanup() {
     if (!sc) return;
-    arm.style.opacity = 0; tool(null); docSvg.style.opacity = 1;
+    arm.style.opacity = 0; tool(null); docHand.style.opacity = docSvg.getAttribute('data-done') ? 0 : '';
     spoon.style.opacity = ''; cup.style.transform = ''; cup.style.zIndex = ''; cup.classList.remove('nosteam');
     Array.prototype.forEach.call(cofs, function (c) { c.style.opacity = ''; c.style.transform = ''; });
     swirl.style.transform = '';
