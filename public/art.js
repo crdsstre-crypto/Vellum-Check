@@ -243,7 +243,7 @@
     '#else',
     'precision mediump float;',
     '#endif',
-    'uniform vec2 uRes;uniform float uTime;uniform vec2 uMouse;uniform float uScroll;uniform float uDim;uniform vec2 uLens;uniform float uLensOn;',
+    'uniform vec2 uRes;uniform float uTime;uniform vec2 uMouse;uniform float uScroll;uniform float uDim;uniform vec2 uLens;uniform float uLensOn;uniform float uLite;',
     'uniform vec3 uC[12];uniform vec3 uR[12];uniform vec3 uU[12];',
     'const int N=12;',
     'const vec3 L=vec3(-.35,.7,.62);',
@@ -251,7 +251,7 @@
     'float h21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}',
     'float dseg(vec2 p,vec2 a,vec2 b){vec2 pa=p-a,ba=b-a;float h=clamp(dot(pa,ba)/dot(ba,ba),0.,1.);return length(pa-ba*h);}',
     'float vn(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h21(i),h21(i+vec2(1.,0.)),f.x),mix(h21(i+vec2(0.,1.)),h21(i+vec2(1.,1.)),f.x),f.y);}',
-    'float fbm(vec2 p){float a=.5,s=0.;for(int i=0;i<4;i++){s+=a*vn(p);p*=2.03;a*=.5;}return s;}',
+    'float fbm(vec2 p){float a=.5,s=0.;for(int i=0;i<4;i++){if(uLite>.5&&i>=2)break;s+=a*vn(p);p*=2.03;a*=.5;}return s;}',
     'float sdb(vec2 p,vec2 c,vec2 h,float r){return length(max(abs(p-c)-h+r,0.))-r;}',
     'float msk(float d){return 1.-smoothstep(-.012,.012,d);}',
     'vec3 sky(vec3 rd){',
@@ -445,7 +445,8 @@
     '  if(rd.y<-1e-3)tf=(-1.7-ro.y)/rd.y;',
     '  if(tf>0.&&tf<1e4){',
     '    vec3 p=ro+rd*tf;vec3 rr=vec3(rd.x,-rd.y,rd.z);',
-    '    float rh;vec3 rc=scene(p+vec3(0.,.002,0.),rr,40.,rh);rc=mix(sky(rr),rc,rh);',
+    '    float rh=0.;vec3 rc=sky(rr);',
+    '    if(uLite<.5){rc=scene(p+vec3(0.,.002,0.),rr,40.,rh);rc=mix(sky(rr),rc,rh);}',
     '    float fres=.12+.62*pow(1.-clamp(-rd.y,0.,1.),3.);',
     '    vec2 g=abs(fract(p.xz*.5)-.5);float grid=smoothstep(.012,0.,min(g.x,g.y))*.045;',
     '    vec3 base=vec3(.016,.017,.020)+vec3(.55,.57,.62)*grid+warmAt(p)*.30;',
@@ -527,14 +528,18 @@
     var buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
     var loc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    var U = {}; ['uRes', 'uTime', 'uMouse', 'uScroll', 'uDim', 'uLens', 'uLensOn', 'uC', 'uR', 'uU'].forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
+    var U = {}; ['uRes', 'uTime', 'uMouse', 'uScroll', 'uDim', 'uLens', 'uLensOn', 'uLite', 'uC', 'uR', 'uU'].forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
 
     hero.insertBefore(cv, hero.firstChild);
     root.classList.add('vc-3d');
 
     var mq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
     var small = window.innerWidth < 768;
-    var scale = small ? 0.55 : 0.72, running = false, inView = true, t0 = performance.now(), raf = 0, W = 0, H = 0;
+    /* ตรวจชนิดการ์ดจอ: ถ้าเป็นตัววาดด้วยซอฟต์แวร์ (ไม่ได้เปิดการเร่งด้วยการ์ดจอ) เริ่มที่โหมดเบาทันที */
+    var rend = ''; try { var dbg = gl.getExtension('WEBGL_debug_renderer_info'); rend = dbg ? String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL)) : ''; } catch (e) {}
+    var soft = /swiftshader|basic render|llvmpipe|softpipe|software/i.test(rend) && !/[?&]hq\b/.test(location.search);   /* ?hq = บังคับคุณภาพเต็ม (ใช้ทดสอบ) */
+    var tier = soft ? 2 : 0, fpsNow = 0, minScale = soft ? 0.3 : 0.36;
+    var scale = soft ? 0.4 : (small ? 0.55 : 0.72), running = false, inView = true, t0 = performance.now(), raf = 0, W = 0, H = 0;
     var frames = 0, acc = 0, last = 0, lost = false;
     var lens = { x: .12, y: .06, tx: .12, ty: .06, moved: -1e9 };
     var mp = { x: 0, y: 0, tx: 0, ty: 0 }, fixedT = null;
@@ -577,13 +582,19 @@
       gl.uniform1f(U.uDim, small ? 0.6 : 0.5);
       gl.uniform2f(U.uLens, lens.x, lens.y);
       gl.uniform1f(U.uLensOn, sc < .6 ? 1 : 0);
+      gl.uniform1f(U.uLite, tier > 0 ? 1 : 0);
       gl.uniform3fv(U.uC, AC); gl.uniform3fv(U.uR, AR); gl.uniform3fv(U.uU, AU);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     }
     function loop(now) {
       raf = 0; if (!running || lost) return;
       draw(now, false);
-      if (last) { acc += now - last; frames++; if (frames === 12) { if (acc / frames > 36 && scale > 0.36) { scale = Math.max(0.36, scale * 0.75); size(); } frames = 0; acc = 0; } }
+      if (last) { acc += now - last; frames++; if (frames === 12) {
+          var avg = acc / frames; fpsNow = 1000 / avg;
+          if (avg > 36 && scale > minScale) { scale = Math.max(minScale, scale * 0.75); size(); }
+          else if (avg > 45 && tier < 2) { tier++; if (tier === 2) { minScale = 0.3; } }   /* ช้าแม้ที่ความละเอียดต่ำสุด: เข้าโหมดเบา (ไม่มีเงาสะท้อน เตาผิงลดความละเอียดลาย) */
+          frames = 0; acc = 0;
+        } }
       last = now; raf = requestAnimationFrame(loop);
     }
     function go() {
@@ -592,8 +603,14 @@
       if (!running && inView && !document.hidden) { running = true; last = 0; if (!raf) raf = requestAnimationFrame(loop); }
     }
     size(); draw(performance.now(), mq && mq.matches); go();
-    window.VCScene = { ok: true, get scale() { return scale; }, freeze: function (t) { fixedT = (typeof t === 'number') ? t : null; } };   /* freeze(t): ตรึงเวลาของฉาก ใช้ทดสอบ */
+    window.VCScene = { ok: true, get scale() { return scale; }, get tier() { return tier; }, get fps() { return fpsNow; }, get renderer() { return rend; }, freeze: function (t) { fixedT = (typeof t === 'number') ? t : null; } };   /* freeze(t): ตรึงเวลาของฉาก ใช้ทดสอบ */
 
+    if (/[?&]fps\b/.test(location.search)) {
+      var box = document.createElement('div');
+      box.style.cssText = 'position:fixed;left:8px;bottom:8px;z-index:10001;padding:6px 8px;font:12px/1.4 monospace;color:#fff;background:rgba(0,0,0,.7);border-radius:4px;pointer-events:none;max-width:90vw;white-space:pre-wrap';
+      document.body.appendChild(box);
+      setInterval(function () { box.textContent = 'fps ' + fpsNow.toFixed(1) + ' | scale ' + scale.toFixed(2) + ' | tier ' + tier + (soft ? ' (software GL!)' : '') + '\n' + rend; }, 500);
+    }
     cv.addEventListener('webglcontextlost', function (e) { e.preventDefault(); lost = true; running = false; root.classList.remove('vc-3d'); cv.style.display = 'none'; });
     if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { inView = es[0].isIntersecting; if (!inView) running = false; else go(); }, { threshold: 0 }).observe(hero);
     document.addEventListener('visibilitychange', function () { if (document.hidden) running = false; else go(); });
