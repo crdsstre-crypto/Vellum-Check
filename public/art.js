@@ -1466,10 +1466,14 @@
     return !reduced && !document.documentElement.hasAttribute('data-calm') && !document.hidden && inView && sc.offsetParent !== null && sc.offsetWidth > 700 && !userBusy() && !busy;
   }
   function scheduler() {
-    var last = performance.now() + 4000;
+    var acts = [act1, act2, act3], lastPick = -1, last = performance.now() + 2000, gap = 9000 + Math.random() * 9000;
     setInterval(function () {
       if (busy) { last = performance.now(); return; }
-      if (performance.now() - last > 11000 && okToRun()) { runAct([act1, act2, act3][ci++ % 3]).then(function () { last = performance.now(); }); }
+      if (performance.now() - last > gap && okToRun()) {
+        var n; do { n = Math.floor(Math.random() * acts.length); } while (n === lastPick);   /* สุ่ม ไม่ซ้ำฉากเดิมติดกัน */
+        lastPick = n; gap = 9000 + Math.random() * 11000;
+        runAct(acts[n]).then(function () { last = performance.now(); });
+      }
     }, 1000);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { setTimeout(init, 800); }); else setTimeout(init, 800);
