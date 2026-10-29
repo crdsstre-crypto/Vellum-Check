@@ -1044,3 +1044,50 @@ html.vc-art :is(.dx-cta,.dx-cta-ghost,.dx-nav a:last-child,button.primary,button
 @media (hover:hover){
   html.vc-art .dx-cta:hover::after{transform:none;animation:vcArrowFly .7s var(--ease-out) both}
 }
+
+
+/* ===== โครงหน้าแบบหน้าเดียว (29 ต.ค. 2026): หน้าแรก = ฉากเปิดอย่างเดียว ส่วนอื่นเป็นหน้าย่อย ===== */
+html.vc-spa:not([data-view="home"]) [data-v="home"],
+html.vc-spa:not([data-view="how"]) [data-v="how"],
+html.vc-spa:not([data-view="film"]) [data-v="film"],
+html.vc-spa[data-view="home"] [data-v="foot"],
+html.vc-spa[data-view="desk"] [data-v="foot"]{display:none !important}
+/* หน้าตรวจสัญญา: บนจอเล็ก #authCard กับ #paymentCard เป็นแผ่นเลื่อนขึ้นจากล่างที่เปิดได้จากทุกหน้า จึงซ่อนเฉพาะส่วนที่เหลือ */
+@media (min-width:768px){
+  html.vc-spa:not([data-view="desk"]) [data-v="desk"]{display:none !important}
+}
+@media (max-width:767px){
+  html.vc-spa:not([data-view="desk"]) :is(.desk-head,#checkCard,#resultCard)[data-v="desk"]{display:none !important}
+}
+/* หน้าแรกไม่เลื่อน */
+html.vc-spa[data-view="home"],
+html.vc-spa[data-view="home"] body{overflow:hidden;height:100%}
+html.vc-spa[data-view="home"] main > .hero{height:100svh;min-height:0}
+/* หน้าย่อยเริ่มใต้หัวเว็บ */
+html.vc-spa:not([data-view="home"]) main{padding-top:var(--art-head)}
+html.vc-spa:not([data-view="home"]) .site-header{background:rgba(12,12,13,.92)}
+html.vc-spa:not([data-view="home"]) .mf-pin{top:var(--art-head)}
+/* เมนู: หน้านี้ที่กำลังเปิด */
+html.vc-spa .dx-nav a.is-here:not(:last-child){box-shadow:inset 0 0 0 1px var(--silver);color:var(--paper)}
+html.vc-spa .brand{cursor:pointer}
+/* ฉากม่าน */
+#vcWipe{position:fixed;inset:0;z-index:10050;display:none;background:var(--ink);clip-path:inset(100% 0 0 0);pointer-events:all}
+#vcWipe span{position:absolute;left:0;right:0;top:0;height:2px;background:var(--hair-strong)}
+/* จอเล็กกว่า 1024px: เมนูหลักเป็นแถบเลื่อนแถวที่สองใต้หัวเว็บ (เดิมซ่อนไว้) */
+@media (max-width:1023px){
+  html.vc-art{--art-head:92px}
+  html.vc-art .site-header .topbar{flex-wrap:wrap;row-gap:0;align-content:flex-start}
+  html.vc-art .site-header .dx-nav[hidden]{
+    display:flex !important;order:3;flex:0 0 100%;width:100%;gap:2px;
+    overflow-x:auto;scrollbar-width:none;padding:2px 0 8px;-webkit-overflow-scrolling:touch;
+  }
+  html.vc-art .site-header .dx-nav::-webkit-scrollbar{display:none}
+  html.vc-art .dx-nav a{flex:0 0 auto;padding:7px 14px;font-size:.84rem;white-space:nowrap}
+  html.vc-art .dx-nav a:last-child{margin-left:auto}
+}
+html.vc-art .dx-nav a{text-decoration:none}
+@media (max-width:1023px){
+  html.vc-art .dx-nav a{color:var(--paper-dim)}
+  html.vc-art .dx-nav a:last-child{background:var(--paper);color:var(--ink);border-radius:999px}
+  html.vc-art .dx-nav a.is-here:not(:last-child){border-radius:999px}
+}
