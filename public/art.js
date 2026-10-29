@@ -624,6 +624,11 @@
     var loc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     var U = {}; ['uRes', 'uTime', 'uMouse', 'uScroll', 'uDim', 'uLens', 'uLensOn', 'uLite', 'uEx', 'uRip', 'uC', 'uR', 'uU'].forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
 
+    /* ฉากอยู่ที่ฉากเปิดในหน้าแรก และย้ายไปเป็นฉากหลังคงที่ (#vcBackdrop) ทุกหน้าอื่น: host = องค์ประกอบที่กำหนดขนาดของแคนวาส */
+    var back = document.getElementById('vcBackdrop');
+    if (!back) { back = document.createElement('div'); back.id = 'vcBackdrop'; back.setAttribute('aria-hidden', 'true'); document.body.insertBefore(back, document.body.firstChild); }
+    var host = hero;
+    var onHome = function () { return root.getAttribute('data-view') !== null ? root.getAttribute('data-view') === 'home' : true; };
     hero.insertBefore(cv, hero.firstChild);
     root.classList.add('vc-3d');
 
@@ -641,6 +646,7 @@
     /* คลิกบนฉากเปิด: วงคลื่นแผ่ออกจากจุดคลิก และแผ่นสัญญากระเด็นออก (ข้ามถ้าเครื่องช้า/ลดการเคลื่อนไหว) */
     window.addEventListener('pointerdown', function (e) {
       if (tier >= 2 || (mq && mq.matches)) return;
+      if (!onHome()) return;
       var r = hero.getBoundingClientRect();
       if (e.clientY < r.top || e.clientY > r.bottom) return;
       var asp = r.width / r.height, fv = Math.min(2.3, Math.max(1, .9 / asp));
@@ -652,6 +658,7 @@
 
     /* แว่นขยายตามเมาส์/นิ้วที่อยู่บนฉากเปิด ถ้านิ่งเกิน 6 วินาทีจะเดินวนเอง */
     function onMove(e) {
+      if (!onHome()) return;
       var r = hero.getBoundingClientRect();
       if (e.clientY < r.top || e.clientY > r.bottom) return;
       lens.tx = ((e.clientX - r.left) / r.width - .5) * (r.width / r.height);
@@ -662,14 +669,14 @@
     window.addEventListener('pointerdown', onMove, { passive: true });
 
     function size() {
-      var r = hero.getBoundingClientRect();
+      var r = host.getBoundingClientRect();
       var dpr = Math.min(window.devicePixelRatio || 1, 1.25);
       W = Math.max(2, Math.round(r.width * scale * dpr)); H = Math.max(2, Math.round(r.height * scale * dpr));
       cv.width = W; cv.height = H; gl.viewport(0, 0, W, H);
     }
     function draw(now, still) {
-      var r = hero.getBoundingClientRect();
-      var sc = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height)));
+      var r = host.getBoundingClientRect();
+      var sc = onHome() ? Math.min(1, Math.max(0, -r.top / Math.max(1, r.height))) : 0;
       if (!still) { mp.x += (mp.tx - mp.x) * .16; mp.y += (mp.ty - mp.y) * .16; }
       var P = still ? { x: 0, y: 0 } : mp;
       var t = still ? 3.0 : (fixedT !== null ? fixedT : (now - t0) / 1000), asp = W / H;
@@ -685,7 +692,7 @@
       gl.uniform1f(U.uScroll, still ? 0 : sc);
       gl.uniform1f(U.uDim, small ? 0.6 : 0.5);
       gl.uniform2f(U.uLens, lens.x, lens.y);
-      gl.uniform1f(U.uLensOn, sc < .6 ? 1 : 0);
+      gl.uniform1f(U.uLensOn, (onHome() && sc < .6) ? 1 : 0);
       gl.uniform1f(U.uLite, tier > 0 ? 1 : 0);
       if (!still && rip.t0 && (now - rip.t0) / 1000 < 3.2) BURST.age = (now - rip.t0) / 1000; else BURST.age = -1;
       gl.uniform3f(U.uRip, rip.x, rip.y, BURST.age);
@@ -726,7 +733,14 @@
       setInterval(function () { box.textContent = 'fps ' + fpsNow.toFixed(1) + ' | scale ' + scale.toFixed(2) + ' | tier ' + tier + (soft ? ' (software GL!)' : '') + '\n' + rend; }, 500);
     }
     cv.addEventListener('webglcontextlost', function (e) { e.preventDefault(); lost = true; running = false; root.classList.remove('vc-3d'); cv.style.display = 'none'; });
-    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { inView = es[0].isIntersecting; if (!inView) running = false; else go(); }, { threshold: 0 }).observe(hero);
+    var heroSeen = true;
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { heroSeen = es[0].isIntersecting; if (onHome()) { inView = heroSeen; if (!inView) running = false; else go(); } }, { threshold: 0 }).observe(hero);
+    document.addEventListener('vc-view', function (e) {
+      var v = e.detail && e.detail.view;
+      if (v === 'home') { host = hero; hero.insertBefore(cv, hero.firstChild); inView = true; }
+      else { host = back; back.appendChild(cv); inView = (v !== 'desk'); }
+      size(); if (v === 'desk') { running = false; draw(performance.now(), mq && mq.matches); } else { running = false; go(); }
+    });
     document.addEventListener('visibilitychange', function () { if (document.hidden) running = false; else go(); });
     var rt; window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { small = window.innerWidth < 768; size(); if (!running) draw(performance.now(), mq && mq.matches); }, 150); });
     if (mq) { var h = function () { if (mq.matches) { running = false; draw(performance.now(), true); } else go(); }; if (mq.addEventListener) mq.addEventListener('change', h); else if (mq.addListener) mq.addListener(h); }
