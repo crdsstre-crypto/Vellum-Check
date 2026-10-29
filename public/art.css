@@ -1212,39 +1212,47 @@ html.vc-motion[data-entering] .sec-label{animation:vcTitleRise .8s var(--ease-ou
   74%{--on:0} 76%{--on:.7} 78%{--on:.1} 81%{--on:.9} 84%,100%{--on:1}
 }
 @property --on{syntax:"<number>";inherits:true;initial-value:1}
-.ld-scene{--on:1;position:relative;min-height:640px;overflow:hidden;isolation:isolate;background:#0d0b0a}
+.ld-scene{--on:1;position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:center;overflow:hidden;isolation:isolate;background:#0d0b0a}
 html.vc-art .ld-scene{animation:ldLamp 12s linear infinite}
 html[data-calm] .ld-scene{animation:none}
-.ld-wall{position:absolute;inset:0 0 38% 0;background:
-  radial-gradient(60% 70% at 76% 38%,rgba(255,170,80,calc(.16 * var(--on))),transparent 70%),
-  linear-gradient(180deg,#141210 0%,#1a1612 100%)}
-.ld-desk{position:absolute;left:0;right:0;bottom:0;height:38%;background:
-  linear-gradient(180deg,rgba(255,170,80,calc(.10 * var(--on))),transparent 40%),
-  repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 2px,transparent 2px 9px),
-  linear-gradient(180deg,#3a2a1c 0%,#241a11 55%,#1a120b 100%);
-  border-top:1px solid rgba(255,200,130,calc(.35 * var(--on)))}
-/* กองเอกสารด้านซ้าย (สร้างแผ่นด้วย art.js) */
-.ld-pile{position:absolute;left:3%;bottom:calc(38% - 28px);width:min(300px,26%);height:300px}
-.ld-pile .ps-sh{position:absolute;left:50%;width:78%;height:64%;border-radius:2px;
-  box-shadow:0 1px 0 rgba(0,0,0,.35),0 3px 5px rgba(0,0,0,.35);
-  background-image:repeating-linear-gradient(0deg,transparent 0 9px,rgba(40,28,14,.16) 9px 10px),linear-gradient(90deg,rgba(0,0,0,.18),transparent 14%,transparent 86%,rgba(0,0,0,.14))}
-.ld-pile .ps-tab{position:absolute;right:-1px;top:14%;width:16%;height:9%;background:#6e3b2a;opacity:.85}
-.ld-pile .ps-red{position:absolute;right:10%;top:10%;width:22%;aspect-ratio:1;border:2px double rgba(160,50,44,.7);border-radius:50%;transform:rotate(-14deg)}
-/* ตะเกียงด้านขวา */
-.ld-lamp{position:absolute;right:11%;bottom:calc(38% - 6px);width:clamp(150px,15vw,220px);height:auto;overflow:visible}
+/* ผนังไม้บุ + ชั้นหนังสือ */
+.ld-wall{position:absolute;inset:0 0 40% 0;background:
+  radial-gradient(55% 75% at 78% 46%,rgba(255,170,80,calc(.2 * var(--on))),transparent 72%),
+  radial-gradient(120% 90% at 50% 40%,transparent 40%,rgba(0,0,0,.55) 100%),
+  repeating-linear-gradient(90deg,rgba(0,0,0,.28) 0 2px,transparent 2px 120px),
+  linear-gradient(180deg,#1a1410 0%,#2a1f16 100%)}
+.ld-books{position:absolute;left:3%;top:9%;width:36%;height:44%;display:flex;flex-direction:column;justify-content:space-between;
+  filter:brightness(calc(.45 + .5 * var(--on)))}
+.ld-books .bk-row{position:relative;height:46%;display:flex;align-items:flex-end;gap:1px;padding:0 6px;border-bottom:8px solid #3b2615;
+  box-shadow:0 10px 14px -6px rgba(0,0,0,.6);background:linear-gradient(180deg,rgba(0,0,0,.45),rgba(0,0,0,.15))}
+.ld-books i{display:block;flex:none;border-radius:1px 1px 0 0}
+/* โต๊ะไม้: ลายไม้ตามแนวนอน ขอบหน้าโต๊ะ และแสงตะเกียงตกบนผิว */
+.ld-desk{position:absolute;left:0;right:0;bottom:0;height:40%;background:
+  radial-gradient(52% 70% at 76% 4%,rgba(255,176,90,calc(.42 * var(--on))),transparent 70%),
+  radial-gradient(60% 55% at 50% 45%,rgba(255,170,90,calc(.18 * var(--on))),transparent 75%),
+  linear-gradient(180deg,rgba(0,0,0,.35),transparent 18%,transparent 70%,rgba(0,0,0,.55)),
+  url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='900' height='300'><filter id='w' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.0018 .085' numOctaves='5' seed='11'/><feColorMatrix values='0 0 0 0 .08  0 0 0 0 .04  0 0 0 0 .01  -1.3 0 0 0 1.05'/></filter><rect width='100%' height='100%' filter='url(%23w)'/></svg>") 0 0/900px 300px,
+  linear-gradient(180deg,#5a3d24 0%,#43291a 50%,#2a190f 100%);
+  border-top:2px solid rgba(255,206,140,calc(.25 + .35 * var(--on)));box-shadow:0 -14px 30px rgba(0,0,0,.6)}
+.ld-desk::after{content:"";position:absolute;left:0;right:0;bottom:0;height:12px;background:linear-gradient(180deg,#1a0f08,#0a0603);box-shadow:0 -1px 0 rgba(255,200,130,.18)}
+/* วัตถุบนโต๊ะ: สมุดบัญชี แฟ้ม ม้วนกระดาษ */
+.ld-pile{position:absolute;left:5%;bottom:calc(40% - 36px);width:min(340px,28%);aspect-ratio:320/270;z-index:1;filter:brightness(calc(.5 + .5 * var(--on))) drop-shadow(0 6px 8px rgba(0,0,0,.5))}
+.ld-pile svg{display:block;width:100%;height:100%;overflow:visible}
+/* ตะเกียงน้ำมันทองเหลือง */
+.ld-lamp{position:absolute;right:10%;bottom:calc(40% - 22px);width:clamp(140px,13vw,200px);height:auto;overflow:visible;z-index:1}
 .ld-lamp .lp-shadow{fill:rgba(0,0,0,.55)}
-.ld-lamp :is(.lp-base,.lp-stem,.lp-bowl,.lp-top){fill:#2b2118;stroke:#6b5232;stroke-width:1.5}
-.ld-lamp .lp-bowl{fill:#33261a}
-.ld-lamp .lp-glass{fill:rgba(255,200,120,calc(.10 + .22 * var(--on)));stroke:rgba(255,220,170,calc(.2 + .4 * var(--on)));stroke-width:1.5}
-.ld-lamp .lp-flame{fill:rgb(255,150,40);opacity:var(--on);transform-origin:80px 140px;animation:ldFlame .55s ease-in-out infinite alternate}
-.ld-lamp .lp-core{fill:#fff1c4;opacity:calc(var(--on) * .95);transform-origin:80px 138px;animation:ldFlame .4s ease-in-out infinite alternate-reverse}
-@keyframes ldFlame{from{transform:scale(.94,1.04) skewX(-3deg)}to{transform:scale(1.04,.94) skewX(3deg)}}
+.ld-lamp .lp-halo{opacity:var(--on);mix-blend-mode:screen}
+.ld-lamp .lp-glass{fill:url(#lpGlass);stroke:rgba(255,230,190,.5)}
+.ld-lamp .lp-hl{opacity:calc(.3 + .6 * var(--on))}
+.ld-lamp :is(.lp-flame,.lp-core){opacity:var(--on);transform-origin:100px 162px;animation:ldFlame .55s ease-in-out infinite alternate}
+.ld-lamp .lp-core{animation-duration:.4s;animation-direction:alternate-reverse}
+@keyframes ldFlame{from{transform:scale(.94,1.05) skewX(-3deg)}to{transform:scale(1.05,.94) skewX(3deg)}}
 html[data-calm] :is(.lp-flame,.lp-core){animation:none}
 /* แสงจากตะเกียงบนทั้งฉาก และความมืดตอนไฟดับ */
 .ld-glow{position:absolute;inset:0;pointer-events:none;background:
-  radial-gradient(38% 52% at 74% 36%,rgba(255,176,90,calc(.34 * var(--on))),transparent 72%),
-  radial-gradient(50% 36% at 50% 76%,rgba(255,170,90,calc(.16 * var(--on))),transparent 75%);mix-blend-mode:screen}
-.ld-dark{position:absolute;inset:0;pointer-events:none;background:#050403;opacity:calc((1 - var(--on)) * .72)}
+  radial-gradient(38% 52% at 78% 44%,rgba(255,176,90,calc(.3 * var(--on))),transparent 72%),
+  radial-gradient(46% 30% at 50% 78%,rgba(255,170,90,calc(.2 * var(--on))),transparent 75%);mix-blend-mode:screen}
+.ld-dark{position:absolute;inset:0;pointer-events:none;background:radial-gradient(90% 90% at 50% 50%,rgba(5,4,3,.35),rgba(3,2,1,.9));opacity:calc(.25 + (1 - var(--on)) * .6)}
 /* โต๊ะ: ตัวเอกสารอยู่กลางฉาก */
 .ld-scene .auth-doc-wrap{position:relative;z-index:2;width:min(380px,92%);margin:0 auto;padding:46px 0 52px}
 @media (min-width:1024px){.ld-scene .auth-doc-wrap{width:380px}}
@@ -1278,14 +1286,8 @@ html.vc-art .ad-sign i{border-bottom-color:rgba(58,39,20,.45)}
 /* มือเขียนเอกสาร (SVG ทับเหนือเส้นลงชื่อ) */
 .ad-hand{position:absolute;left:0;right:0;bottom:6px;width:100%;height:112px;overflow:visible;pointer-events:none;z-index:3}
 .ad-hand .ah-ink{fill:none;stroke:#2a1a3a;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;opacity:.9}
-.ad-hand .ah-shadow{fill:rgba(40,24,10,.28);filter:blur(3px)}
-.ad-hand .ah-sleeve{fill:#25252a}
-.ad-hand .ah-cuff{fill:#e6dfcf}
-.ad-hand .ah-palm{fill:#cf9b70}
-.ad-hand .ah-finger{fill:#dcae84}
-.ad-hand .ah-pen{fill:none;stroke:#17130f;stroke-width:5;stroke-linecap:round}
-.ad-hand .ah-nib{fill:none;stroke:#b8924a;stroke-width:3;stroke-linecap:round}
-.ad-hand .ah-hand{transform:translate(70px,92px) scale(.72)}
+.ad-hand .ah-hand{transform:translate(70px,92px) rotate(52deg) scale(.8)}
+.ad-hand .ah-hand{filter:drop-shadow(0 6px 5px rgba(0,0,0,.45))}
 html.vc-art .auth-ghost .ad-hand{display:none}
 /* ฉากเต็มความกว้างตอนยังไม่ล็อกอิน (เฉพาะจอ ≥768px) */
 @media (min-width:768px){
@@ -1307,8 +1309,8 @@ html.vc-art .auth-ghost .ad-hand{display:none}
 }
 /* มือถือ: ไม่มีโต๊ะ/ตะเกียง/กองเอกสาร เหลือกระดาษกับมือในแผ่นบัญชี */
 @media (max-width:767px){
-  .ld-scene{min-height:0;background:none;animation:none}
-  .ld-scene :is(.ld-wall,.ld-desk,.ld-pile,.ld-lamp,.ld-glow,.ld-dark){display:none}
+  .ld-scene{min-height:0;display:block;background:none;animation:none}
+  .ld-scene :is(.ld-wall,.ld-books,.ld-desk,.ld-pile,.ld-lamp,.ld-glow,.ld-dark){display:none}
   .ld-scene .auth-doc-wrap{width:100%;padding:8px 6px 18px}
   html.vc-art .auth-doc{padding:36px 22px 26px}
 }
