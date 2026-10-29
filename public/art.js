@@ -1206,7 +1206,7 @@
       lamp.addEventListener('click', flip); lamp.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } }); }
     var desk = sc.querySelector('.ld-desk'), mk = function (cls, html, vb) { var d = document.createElement('div'); d.className = cls; d.setAttribute('aria-hidden', 'true'); if (html) d.innerHTML = '<svg viewBox="' + vb + '" focusable="false">' + html + '</svg>'; return d; };
     sc.insertBefore(mk('ld-bag', '<defs><linearGradient id="tbB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#202023"/><stop offset=".5" stop-color="#101012"/><stop offset="1" stop-color="#050506"/></linearGradient><linearGradient id="tbS" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#050506"/><stop offset=".45" stop-color="#1b1b1e"/><stop offset="1" stop-color="#050506"/></linearGradient><linearGradient id="tbE" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="rgba(255,255,255,.12)"/><stop offset=".12" stop-color="rgba(255,255,255,0)"/><stop offset=".9" stop-color="rgba(0,0,0,0)"/><stop offset="1" stop-color="rgba(255,255,255,.07)"/></linearGradient><filter id="tbN" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".85 .8" numOctaves="2" seed="6"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .5 -.18"/></filter><clipPath id="tbC"><rect x="20" y="108" width="220" height="300" rx="3"/></clipPath><pattern id="tbW" width="3" height="3" patternUnits="userSpaceOnUse"><path d="M0 .5 H3 M.5 0 V3" stroke="rgba(255,255,255,.025)" stroke-width=".6"/></pattern></defs>\n<ellipse cx="136" cy="414" rx="124" ry="10" fill="rgba(0,0,0,.6)"/>\n<path d="M70 120 C58 0 94 -58 130 -58 C166 -58 202 0 190 120 L166 120 C174 10 154 -34 130 -34 C106 -34 86 10 94 120 Z" fill="url(#tbS)" stroke="#2a2a2e" stroke-width="1.4" stroke-linejoin="round"/>\n<path d="M96 120 C90 20 108 -26 130 -28" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="2" stroke-linecap="round"/>\n<path d="M76 118 C66 10 98 -50 130 -52" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1.5" stroke-linecap="round"/>\n<rect x="20" y="108" width="220" height="300" rx="3" fill="url(#tbB)" stroke="#000" stroke-width="1.5"/>\n<g clip-path="url(#tbC)"><rect x="20" y="108" width="220" height="300" fill="url(#tbW)"/><rect x="20" y="108" width="220" height="300" filter="url(#tbN)" opacity=".2"/><rect x="20" y="108" width="220" height="300" fill="url(#tbE)"/>\n<path d="M30 190 Q120 176 230 196" stroke="rgba(255,255,255,.05)" stroke-width="10" fill="none"/><path d="M26 290 Q130 276 236 300" stroke="rgba(0,0,0,.35)" stroke-width="8" fill="none"/><path d="M60 140 Q70 260 52 400" stroke="rgba(255,255,255,.04)" stroke-width="14" fill="none"/></g>\n<path d="M20 134 H240" stroke="rgba(200,200,205,.35)" stroke-width="1" stroke-dasharray="3 2.5"/>\n<path d="M20 136 H240" stroke="rgba(0,0,0,.6)" stroke-width="1.5"/>\n<g fill="none" stroke="rgba(200,200,205,.4)" stroke-width="1" stroke-dasharray="3 2.5"><rect x="70" y="108" width="24" height="44"/><rect x="166" y="108" width="24" height="44"/><path d="M70 108 L94 152 M94 108 L70 152 M166 108 L190 152 M190 108 L166 152"/></g>\n<path d="M20 108 H240" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>\n<path d="M20 408 H240" stroke="rgba(255,255,255,.07)" stroke-width="2"/>', '0 -66 260 486'), sc.querySelector('.ld-lamp'));
-    var cup = mk('ld-cup', '<defs>\n<radialGradient id="cpS" cx=".32" cy=".28" r="1"><stop offset="0" stop-color="#fffdf8"/><stop offset=".55" stop-color="#e9e3d4"/><stop offset="1" stop-color="#a9a291"/></radialGradient>\n<linearGradient id="cpRim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#d9d3c3"/><stop offset="1" stop-color="#8f8978"/></linearGradient>\n<radialGradient id="cpWell" cx=".6" cy=".62" r=".9"><stop offset="0" stop-color="#fbf8ef"/><stop offset=".7" stop-color="#e0d9c8"/><stop offset="1" stop-color="#bdb6a4"/></radialGradient>\n<linearGradient id="cpWall" x1="1" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#5a3519"/><stop offset=".6" stop-color="#b9a98c"/><stop offset="1" stop-color="#f1ebdc"/></linearGradient>\n<radialGradient id="cpK" cx=".36" cy=".3" r=".85"><stop offset="0" stop-color="#8f5d30"/><stop offset=".45" stop-color="#4f2810"/><stop offset="1" stop-color="#1d0d05"/></radialGradient>\n<linearGradient id="cpH" gradientUnits="userSpaceOnUse" x1="170" y1="90" x2="226" y2="150"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#d8d2c2"/><stop offset="1" stop-color="#8d8777"/></linearGradient>\n<linearGradient id="cpSp" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fafafc"/><stop offset=".45" stop-color="#a3a5ad"/><stop offset=".75" stop-color="#ececf0"/><stop offset="1" stop-color="#7d7f88"/></linearGradient>\n<radialGradient id="cpSh"><stop offset="0" stop-color="rgba(0,0,0,.62)"/><stop offset=".6" stop-color="rgba(0,0,0,.28)"/><stop offset="1" stop-color="rgba(0,0,0,0)"/></radialGradient>\n<radialGradient id="cpCt"><stop offset="0" stop-color="rgba(0,0,0,.5)"/><stop offset=".75" stop-color="rgba(0,0,0,.3)"/><stop offset="1" stop-color="rgba(0,0,0,0)"/></radialGradient>\n<radialGradient id="cpGl"><stop offset="0" stop-color="rgba(255,236,190,.95)"/><stop offset="1" stop-color="rgba(255,236,190,0)"/></radialGradient>\n</defs>\n<ellipse cx="130" cy="136" rx="122" ry="116" fill="url(#cpSh)"/>\n<circle cx="120" cy="120" r="104" fill="url(#cpS)"/>\n<circle cx="120" cy="120" r="102" fill="none" stroke="url(#cpRim)" stroke-width="4"/>\n<circle cx="120" cy="120" r="103.5" fill="none" stroke="rgba(90,80,60,.45)" stroke-width="1"/>\n<circle cx="120" cy="120" r="84" fill="url(#cpWell)"/>\n<circle cx="120" cy="120" r="84" fill="none" stroke="rgba(120,110,90,.35)" stroke-width="2.4"/>\n<circle cx="120" cy="120" r="86.5" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="1.4"/>\n<ellipse cx="136" cy="138" rx="70" ry="66" fill="url(#cpCt)"/>\n<ellipse cx="170" cy="170" rx="9" ry="6" fill="rgba(110,60,25,.4)" transform="rotate(30 170 170)"/>\n<g transform="rotate(38 120 120)"><path d="M120 190 L117 236 Q120 241 123 236 L120 190 Z" fill="url(#cpSp)" stroke="#6f717a" stroke-width=".8"/><ellipse cx="120" cy="178" rx="15" ry="22" fill="url(#cpSp)" stroke="#6f717a" stroke-width="1"/><ellipse cx="120" cy="178" rx="10.5" ry="17" fill="none" stroke="rgba(0,0,0,.25)" stroke-width="2"/><ellipse cx="114" cy="170" rx="4" ry="8" fill="rgba(255,255,255,.85)"/></g>\n<path d="M172 98 C216 88 226 154 172 146" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="19" stroke-linecap="round" transform="translate(3 5)"/>\n<path d="M172 98 C216 88 226 154 172 146" fill="none" stroke="#7f7969" stroke-width="17" stroke-linecap="round"/>\n<path d="M172 98 C216 88 226 154 172 146" fill="none" stroke="url(#cpH)" stroke-width="14" stroke-linecap="round"/>\n<path d="M176 95 C208 90 214 110 212 124" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="2.6" stroke-linecap="round"/>\n<circle cx="120" cy="120" r="64" fill="#8c8675"/>\n<circle cx="120" cy="120" r="63" fill="url(#cpRim)"/>\n<circle cx="120" cy="120" r="55" fill="url(#cpRim)" stroke="rgba(110,100,80,.5)" stroke-width="1"/>\n<circle cx="120" cy="120" r="50" fill="url(#cpWall)"/>\n<circle cx="120" cy="120" r="50" fill="none" stroke="rgba(40,20,8,.5)" stroke-width="1.5"/>\n<circle cx="120" cy="120" r="47" fill="url(#cpK)"/>\n<circle cx="120" cy="120" r="46" fill="none" stroke="rgba(214,160,100,.55)" stroke-width="3"/>\n<path d="M120 120 m-2 0 a6 6 0 1 1 10 -3 a13 13 0 1 1 -22 6 a21 21 0 1 1 34 -12" fill="none" stroke="rgba(214,160,100,.4)" stroke-width="3.2" stroke-linecap="round"/>\n<path d="M120 120 m2 3 a9 9 0 1 0 -8 -10 a18 18 0 1 0 26 14" fill="none" stroke="rgba(30,12,4,.5)" stroke-width="2.4" stroke-linecap="round"/>\n<ellipse cx="102" cy="102" rx="22" ry="13" fill="url(#cpGl)" transform="rotate(-35 102 102)" opacity=".7"/>\n<ellipse cx="97" cy="98" rx="6" ry="3" fill="rgba(255,255,255,.9)" transform="rotate(-35 97 98)"/>\n<path d="M82 126 C84 144 96 156 112 160" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="3" stroke-linecap="round"/>\n<g fill="rgba(235,190,130,.55)"><circle cx="150" cy="140" r="2.2"/><circle cx="146" cy="147" r="1.6"/><circle cx="154" cy="134" r="1.4"/><circle cx="141" cy="152" r="1.8"/></g>\n<path d="M62 70 C74 52 94 42 114 40" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="2.4" stroke-linecap="round"/>', '0 0 240 240');
+    var cup = mk('ld-cup', '<defs>\n<radialGradient id="cpS" cx=".32" cy=".28" r="1"><stop offset="0" stop-color="#fffdf8"/><stop offset=".55" stop-color="#e9e3d4"/><stop offset="1" stop-color="#a9a291"/></radialGradient>\n<linearGradient id="cpRim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#d9d3c3"/><stop offset="1" stop-color="#8f8978"/></linearGradient>\n<radialGradient id="cpWell" cx=".6" cy=".62" r=".9"><stop offset="0" stop-color="#fbf8ef"/><stop offset=".7" stop-color="#e0d9c8"/><stop offset="1" stop-color="#bdb6a4"/></radialGradient>\n<linearGradient id="cpWall" x1="1" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#5a3519"/><stop offset=".6" stop-color="#b9a98c"/><stop offset="1" stop-color="#f1ebdc"/></linearGradient>\n<radialGradient id="cpK" cx=".36" cy=".3" r=".85"><stop offset="0" stop-color="#8f5d30"/><stop offset=".45" stop-color="#4f2810"/><stop offset="1" stop-color="#1d0d05"/></radialGradient>\n<linearGradient id="cpH" gradientUnits="userSpaceOnUse" x1="170" y1="90" x2="226" y2="150"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#d8d2c2"/><stop offset="1" stop-color="#8d8777"/></linearGradient>\n<linearGradient id="cpSp" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fafafc"/><stop offset=".45" stop-color="#a3a5ad"/><stop offset=".75" stop-color="#ececf0"/><stop offset="1" stop-color="#7d7f88"/></linearGradient>\n<radialGradient id="cpSh"><stop offset="0" stop-color="rgba(0,0,0,.62)"/><stop offset=".6" stop-color="rgba(0,0,0,.28)"/><stop offset="1" stop-color="rgba(0,0,0,0)"/></radialGradient>\n<radialGradient id="cpCt"><stop offset="0" stop-color="rgba(0,0,0,.5)"/><stop offset=".75" stop-color="rgba(0,0,0,.3)"/><stop offset="1" stop-color="rgba(0,0,0,0)"/></radialGradient>\n<radialGradient id="cpGl"><stop offset="0" stop-color="rgba(255,236,190,.95)"/><stop offset="1" stop-color="rgba(255,236,190,0)"/></radialGradient>\n</defs>\n<ellipse cx="130" cy="136" rx="122" ry="116" fill="url(#cpSh)"/>\n<circle cx="120" cy="120" r="104" fill="url(#cpS)"/>\n<circle cx="120" cy="120" r="102" fill="none" stroke="url(#cpRim)" stroke-width="4"/>\n<circle cx="120" cy="120" r="103.5" fill="none" stroke="rgba(90,80,60,.45)" stroke-width="1"/>\n<circle cx="120" cy="120" r="84" fill="url(#cpWell)"/>\n<circle cx="120" cy="120" r="84" fill="none" stroke="rgba(120,110,90,.35)" stroke-width="2.4"/>\n<circle cx="120" cy="120" r="86.5" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="1.4"/>\n<ellipse cx="136" cy="138" rx="70" ry="66" fill="url(#cpCt)"/>\n<ellipse cx="170" cy="170" rx="9" ry="6" fill="rgba(110,60,25,.4)" transform="rotate(30 170 170)"/>\n<g class="cp-spoon" transform="rotate(38 120 120)"><path d="M120 190 L117 236 Q120 241 123 236 L120 190 Z" fill="url(#cpSp)" stroke="#6f717a" stroke-width=".8"/><ellipse cx="120" cy="178" rx="15" ry="22" fill="url(#cpSp)" stroke="#6f717a" stroke-width="1"/><ellipse cx="120" cy="178" rx="10.5" ry="17" fill="none" stroke="rgba(0,0,0,.25)" stroke-width="2"/><ellipse cx="114" cy="170" rx="4" ry="8" fill="rgba(255,255,255,.85)"/></g>\n<path d="M172 98 C216 88 226 154 172 146" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="19" stroke-linecap="round" transform="translate(3 5)"/>\n<path d="M172 98 C216 88 226 154 172 146" fill="none" stroke="#7f7969" stroke-width="17" stroke-linecap="round"/>\n<path d="M172 98 C216 88 226 154 172 146" fill="none" stroke="url(#cpH)" stroke-width="14" stroke-linecap="round"/>\n<path d="M176 95 C208 90 214 110 212 124" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="2.6" stroke-linecap="round"/>\n<circle cx="120" cy="120" r="64" fill="#8c8675"/>\n<circle cx="120" cy="120" r="63" fill="url(#cpRim)"/>\n<circle cx="120" cy="120" r="55" fill="url(#cpRim)" stroke="rgba(110,100,80,.5)" stroke-width="1"/>\n<circle cx="120" cy="120" r="50" fill="url(#cpWall)"/>\n<circle cx="120" cy="120" r="50" fill="none" stroke="rgba(40,20,8,.5)" stroke-width="1.5"/>\n<circle class="cp-cof" cx="120" cy="120" r="47" fill="url(#cpK)"/>\n<circle class="cp-cof" cx="120" cy="120" r="46" fill="none" stroke="rgba(214,160,100,.55)" stroke-width="3"/><g class="cp-swirl">\n<path d="M120 120 m-2 0 a6 6 0 1 1 10 -3 a13 13 0 1 1 -22 6 a21 21 0 1 1 34 -12" fill="none" stroke="rgba(214,160,100,.4)" stroke-width="3.2" stroke-linecap="round"/>\n<path d="M120 120 m2 3 a9 9 0 1 0 -8 -10 a18 18 0 1 0 26 14" fill="none" stroke="rgba(30,12,4,.5)" stroke-width="2.4" stroke-linecap="round"/></g>\n<ellipse cx="102" cy="102" rx="22" ry="13" fill="url(#cpGl)" transform="rotate(-35 102 102)" opacity=".7"/>\n<ellipse cx="97" cy="98" rx="6" ry="3" fill="rgba(255,255,255,.9)" transform="rotate(-35 97 98)"/>\n<path d="M82 126 C84 144 96 156 112 160" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="3" stroke-linecap="round"/>\n<g fill="rgba(235,190,130,.55)"><circle cx="150" cy="140" r="2.2"/><circle cx="146" cy="147" r="1.6"/><circle cx="154" cy="134" r="1.4"/><circle cx="141" cy="152" r="1.8"/></g>\n<path d="M62 70 C74 52 94 42 114 40" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="2.4" stroke-linecap="round"/><circle class="cp-hd" cx="214" cy="122" r="3" fill="none"/>', '0 0 240 240');
     for (var q = 0; q < 5; q++) { var st = document.createElement('i'); st.className = 'ld-steam'; st.style.cssText = '--d:' + (4.2 + q * .7).toFixed(1) + 's;--w:-' + (q * 1.1).toFixed(1) + 's;--x:' + ((q % 2 ? 1 : -1) * (10 + q * 5)) + 'px;left:' + (44 + q * 3) + '%;top:' + (40 + (q % 3) * 4) + '%'; cup.appendChild(st); }
     sc.insertBefore(cup, sc.querySelector('.ld-lamp'));
     sc.insertBefore(mk('ld-pen', '<defs><linearGradient id="pnB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a4a42"/><stop offset=".35" stop-color="#14100d"/><stop offset="1" stop-color="#050403"/></linearGradient><linearGradient id="pnG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0b8"/><stop offset=".5" stop-color="#c9a24c"/><stop offset="1" stop-color="#6b4d17"/></linearGradient></defs><ellipse cx="150" cy="30" rx="140" ry="6" fill="rgba(0,0,0,.4)"/><rect x="40" y="10" width="190" height="16" rx="8" fill="url(#pnB)"/><rect x="60" y="10" width="7" height="16" fill="url(#pnG)"/><rect x="198" y="10" width="5" height="16" fill="url(#pnG)"/><path d="M230 11 H252 L276 18 L252 25 H230 Z" fill="url(#pnG)"/><path d="M276 18 L296 18" stroke="#8a6a28" stroke-width="2.4"/><path d="M52 8 L36 8 Q30 8 30 12 L30 14 L40 14 L40 12 L52 12 Z" fill="url(#pnG)"/><path d="M70 12 H190" stroke="rgba(255,255,255,.3)" stroke-width="2" stroke-linecap="round"/>', '0 0 300 36'), sc.querySelector('.ld-lamp'));
@@ -1233,6 +1233,7 @@
     var face = document.createElement('i'); face.className = 'ad-face'; face.setAttribute('aria-hidden', 'true'); face.style.clipPath = ragged(1.9, 1.3, 19);
     doc.insertBefore(face, doc.firstChild); doc.insertBefore(rim, doc.firstChild);
     var sheet = document.createElement('i'); sheet.className = 'ad-sheet'; sheet.setAttribute('aria-hidden', 'true'); face.parentNode.insertBefore(sheet, face.nextSibling);
+    var sp = document.createElement('i'); sp.className = 'ad-spill'; sp.setAttribute('aria-hidden', 'true'); sp.innerHTML = '<svg viewBox="0 0 100 100" preserveAspectRatio="none"><g fill="#3d1c09"><path d="M58 58 C44 50 46 34 60 32 C76 28 94 42 90 58 C96 74 80 92 64 86 C50 94 38 80 46 70 C40 66 48 62 58 58 Z"/><path d="M30 66 C22 60 26 50 36 52 C46 52 48 64 40 70 C36 76 26 74 30 66 Z"/><path d="M70 22 C64 16 70 8 78 12 C86 14 84 24 76 26 Z"/><path d="M12 40 C8 34 14 28 20 32 C24 36 20 44 14 44 Z"/></g><g fill="#4a2410"><circle cx="26" cy="34" r="2.2"/><circle cx="18" cy="58" r="1.8"/><circle cx="44" cy="18" r="2"/><circle cx="56" cy="10" r="1.4"/><circle cx="90" cy="34" r="2.4"/><circle cx="94" cy="72" r="1.8"/><circle cx="30" cy="88" r="2.2"/><circle cx="52" cy="94" r="1.6"/><circle cx="12" cy="78" r="1.4"/></g><path d="M62 86 C61 92 63 96 62 100" stroke="#3d1c09" stroke-width="3" fill="none"/><path d="M46 70 C45 80 47 88 46 98" stroke="#3d1c09" stroke-width="2.4" fill="none"/></svg>'; face.parentNode.insertBefore(sp, sheet.nextSibling);
   }
 
   function hand(doc) {
@@ -1275,4 +1276,202 @@
     pile(); extras(); paper(doc); hand(doc);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+
+
+/* ===== โต๊ะเขียนเอกสาร: ฉากมือเล่นกับกาแฟ (30 ต.ค. 2026) =====
+   3 ฉากสลับกันหลังเซ็นชื่อเสร็จ: (1) คนกาแฟแล้วใส่น้ำแข็ง (2) ตักกาแฟกิน (3) ทำแก้วหก → ไปหยิบไดร์เป่าจากกระเป๋า → ผ้าเช็ดโต๊ะ → แก้วใหม่
+   แขนสติกเกอร์ตัวที่สอง (.ld-arm) คัดลอกจากแขนที่เขียนลายเซ็น แล้วเปลี่ยนปากกาเป็นช้อน/น้ำแข็ง/ไดร์/ผ้า
+   หยุดทันทีเมื่อผู้ใช้โฟกัสช่องกรอก · ไม่ทำงานเมื่อลดการเคลื่อนไหว/มือถือ/ซ่อนฉาก */
+(function () {
+  'use strict';
+  var NS = 'http://www.w3.org/2000/svg';
+  var sc, wrap, doc, pose, docSvg, cup, spoon, swirl, cofs, hdm, bag, spill, arm, G, toolG;
+  var tok = 0, ci = 0, busy = false, inView = true, P = { x: 0, y: 0, r: 52 }, S = 1, W = 0, H = 0, OFF = { x: 0, y: 0 };
+  function q(s, r) { return (r || document).querySelector(s); }
+  function ez(t) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function ctr(el) { var a = el.getBoundingClientRect(), b = sc.getBoundingClientRect(); return { x: a.left - b.left + a.width / 2, y: a.top - b.top + a.height / 2, w: a.width, h: a.height }; }
+  function chk(my) { if (my !== tok) throw new Error('abort'); }
+  function w(ms) { var my = tok; return new Promise(function (r) { setTimeout(r, ms); }).then(function () { chk(my); }); }
+  function place() { G.setAttribute('transform', 'translate(' + P.x.toFixed(1) + ' ' + P.y.toFixed(1) + ') rotate(' + P.r.toFixed(1) + ') scale(' + S.toFixed(3) + ')'); }
+  function an(dur, f) {
+    var my = tok;
+    return new Promise(function (res, rej) {
+      var t0 = performance.now();
+      (function fr(now) { if (my !== tok) { rej(new Error('abort')); return; } var t = Math.min(1, (now - t0) / dur); f(ez(t), t); if (t < 1) requestAnimationFrame(fr); else res(); })(t0);
+    });
+  }
+  function go(x, y, r, dur, o) {
+    o = o || {}; var a = { x: P.x, y: P.y, r: P.r };
+    return an(dur, function (e) {
+      P.x = lerp(a.x, x, e); P.y = lerp(a.y, y, e); P.r = lerp(a.r, r, e);
+      if (o.shake) { var n = performance.now(); P.x += Math.sin(n / 40) * o.shake; P.y += Math.cos(n / 33) * o.shake; }
+      place(); if (o.f) o.f(P, e);
+    });
+  }
+  function orbit(cx, cy, rad, turns, dur, f) {
+    return an(dur, function (e, t) { var a = t * turns * Math.PI * 2; P.x = cx + rad * Math.cos(a); P.y = cy + rad * Math.sin(a) * .85; P.r = 68 + 8 * Math.sin(a); place(); if (f) f(a); });
+  }
+
+  var TOOLS = {
+    spoon: '<path d="M14 -2 L130 -8" stroke="url(#asSp)" stroke-width="6" stroke-linecap="round" fill="none"/><ellipse cx="0" cy="0" rx="17" ry="11" fill="url(#asSp)" stroke="#6f717a" stroke-width="1.2"/><ellipse class="liq" cx="1" cy="0" rx="12" ry="7" fill="#3f1e0b" opacity="0"/><ellipse cx="-6" cy="-4" rx="5" ry="2.4" fill="rgba(255,255,255,.8)"/>',
+    ice: '<g class="i1"><rect x="-13" y="-13" width="26" height="26" rx="5" fill="rgba(210,238,255,.72)" stroke="rgba(255,255,255,.95)" stroke-width="1.5"/><path d="M-8 -8 L-1 -8" stroke="#fff" stroke-width="2.5"/></g><g class="i2" transform="translate(16 20) rotate(22)"><rect x="-12" y="-12" width="24" height="24" rx="5" fill="rgba(200,232,255,.72)" stroke="rgba(255,255,255,.95)" stroke-width="1.5"/><path d="M-7 -7 L0 -7" stroke="#fff" stroke-width="2.5"/></g>',
+    dryer: '<g class="wind"><line x1="-30" y1="-18" x2="-150" y2="-24"/><line x1="-34" y1="-6" x2="-172" y2="-8"/><line x1="-30" y1="6" x2="-160" y2="10"/><line x1="-26" y1="18" x2="-140" y2="26"/></g><rect x="12" y="-28" width="108" height="46" rx="16" fill="#1e1e23" stroke="#4a4a52" stroke-width="1.5"/><path d="M12 -20 L-14 -12 L-14 6 L12 12 Z" fill="#34343a" stroke="#55555d"/><rect x="6" y="-26" width="9" height="42" rx="3" fill="url(#asSp)"/><path d="M30 -22 H104 M30 -14 H104" stroke="rgba(255,255,255,.18)" stroke-width="1.6"/><rect x="72" y="14" width="26" height="62" rx="9" fill="#17171a" stroke="#3a3a40"/><circle cx="52" cy="-4" r="3.5" fill="#c8402f"/>',
+    towel: '<path d="M-36 -34 C-10 -44 40 -38 70 -36 L78 38 C44 46 -4 42 -30 44 Z" fill="url(#asTw)" stroke="#8fa0b3" stroke-width="1.5"/><path d="M-24 -24 L66 -28 M-26 -4 L70 -6 M-26 16 L72 14 M-24 34 L68 32" stroke="rgba(70,110,170,.55)" stroke-width="5"/><path d="M10 -40 C14 -10 8 20 14 44" stroke="rgba(0,0,0,.18)" stroke-width="3" fill="none"/>'
+  };
+  function tool(n) { toolG.innerHTML = n ? TOOLS[n] : ''; }
+
+  function init() {
+    sc = q('.ld-scene'); if (!sc || sc.__acts) return;
+    wrap = q('.auth-doc-wrap', sc); doc = q('.auth-doc', sc); pose = q('.ad-pose', sc); docSvg = doc && q('.ad-hand', doc);
+    cup = q('.ld-cup', sc); bag = q('.ld-bag', sc); spill = q('.ad-spill', doc);
+    var rot = docSvg && q('.ah-rot', docSvg);
+    if (!cup || !bag || !rot || !spill) return;
+    sc.__acts = true;
+    spoon = q('.cp-spoon', cup); swirl = q('.cp-swirl', cup); cofs = cup.querySelectorAll('.cp-cof'); hdm = q('.cp-hd', cup);
+    arm = document.createElementNS(NS, 'svg'); arm.setAttribute('class', 'ld-arm'); arm.setAttribute('aria-hidden', 'true');
+    arm.innerHTML = '<defs><linearGradient id="asSp" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fafafc"/><stop offset=".45" stop-color="#a3a5ad"/><stop offset=".75" stop-color="#ececf0"/><stop offset="1" stop-color="#7d7f88"/></linearGradient><linearGradient id="asTw" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbfbfd"/><stop offset="1" stop-color="#c9d6e6"/></linearGradient></defs>';
+    G = document.createElementNS(NS, 'g'); var body = rot.cloneNode(true);
+    Array.prototype.slice.call(body.querySelectorAll('path')).forEach(function (p) {
+      var d = p.getAttribute('d') || '';
+      if (d.indexOf('M0 0 L172') === 0) p.parentNode.removeChild(p);
+      else if (d.indexOf('M0 0 L124') === 0) { toolG = document.createElementNS(NS, 'g'); p.parentNode.replaceChild(toolG, p); }
+      else if (d.indexOf('M14 -3 L110') === 0 || d.indexOf('M70 -5 L76') === 0 || d.indexOf('M-12 1 L20') === 0) p.parentNode.removeChild(p);
+    });
+    if (!toolG) return;
+    G.appendChild(body); arm.appendChild(G); sc.appendChild(arm);
+    docSvg.style.transition = 'opacity .3s';
+    doc.addEventListener('focusin', abort);
+    window.VCActs = { act1: act1, act2: act2, act3: act3, run: function (n) { return runAct([act1, act2, act3][n - 1]); }, abort: abort };
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { inView = es[0].isIntersecting; if (!inView) abort(); }, { threshold: .05 }).observe(sc);
+    scheduler();
+  }
+
+  function layout() {
+    var z = parseFloat(getComputedStyle(wrap).zoom) || 1; S = .8 * z; W = sc.offsetWidth; H = sc.offsetHeight;
+    OFF.x = W + 140; OFF.y = H + 240; P.x = OFF.x; P.y = OFF.y; P.r = 52; place();
+  }
+  function begin() { layout(); arm.style.opacity = 1; docSvg.style.opacity = 0; }
+  function cleanup() {
+    if (!sc) return;
+    arm.style.opacity = 0; tool(null); docSvg.style.opacity = 1;
+    spoon.style.opacity = ''; cup.style.transform = ''; cup.style.zIndex = ''; cup.classList.remove('nosteam');
+    Array.prototype.forEach.call(cofs, function (c) { c.style.opacity = ''; c.style.transform = ''; });
+    swirl.style.transform = '';
+    Array.prototype.slice.call(cup.querySelectorAll('.ld-ice,.ld-rip')).forEach(function (n) { n.parentNode.removeChild(n); });
+    Array.prototype.slice.call(sc.querySelectorAll('.ld-stain')).forEach(function (n) { n.parentNode.removeChild(n); });
+    spill.className = 'ad-spill';
+  }
+  function abort() { if (busy) { tok++; } }
+
+  function ice(i) {
+    var el = document.createElement('i'); el.className = 'ld-ice'; var pos = [[-7, -5, 18], [6, 4, -24], [-1, 9, 40]][i];
+    el.style.cssText = 'left:' + (50 + pos[0]) + '%;top:' + (50 + pos[1]) + '%;--r:' + pos[2] + 'deg'; cup.appendChild(el);
+    var r = document.createElement('i'); r.className = 'ld-rip'; r.style.cssText = 'left:' + (50 + pos[0]) + '%;top:' + (50 + pos[1]) + '%'; cup.appendChild(r);
+    requestAnimationFrame(function () { requestAnimationFrame(function () { el.classList.add('in'); }); });
+    setTimeout(function () { if (r.parentNode) r.parentNode.removeChild(r); }, 1100);
+  }
+  function setLiq(v) { var l = q('.liq', toolG); if (l) l.style.opacity = v; }
+  function cofScale(s) { Array.prototype.forEach.call(cofs, function (c) { c.style.transformOrigin = '120px 120px'; c.style.transition = 'transform .8s'; c.style.transform = 'scale(' + s + ')'; }); }
+
+  async function act1() {
+    begin(); var cu = ctr(cup), sp = ctr(spoon), R = cu.w / 240 * 47;
+    await go(sp.x, sp.y, 62, 1500); tool('spoon'); spoon.style.opacity = 0;
+    await go(cu.x + R * .15, cu.y, 70, 800);
+    await orbit(cu.x, cu.y, R * .52, 3, 2700, function (a) { swirl.style.transform = 'rotate(' + (a * 57.3).toFixed(0) + 'deg)'; });
+    await go(cu.x + R * .4, cu.y - R * .8, 62, 600);
+    await go(sp.x, sp.y, 62, 900); spoon.style.opacity = 1; tool(null);
+    await go(OFF.x, OFF.y, 52, 1100); await w(500);
+    tool('ice'); await go(cu.x + R * .5, cu.y - R * 1.1, 78, 1400);
+    q('.i1', toolG).style.opacity = 0; ice(0); await w(450);
+    await go(cu.x + R * .2, cu.y - R * 1.05, 78, 500); ice(1);
+    q('.i2', toolG).style.opacity = 0; await w(450);
+    await go(OFF.x, OFF.y, 52, 1200); tool(null); await w(300);
+    await go(sp.x, sp.y, 62, 1300); tool('spoon'); spoon.style.opacity = 0;
+    await orbit(cu.x, cu.y, R * .45, 1.5, 1500, function (a) { swirl.style.transform = 'rotate(' + (a * 57.3).toFixed(0) + 'deg)'; });
+    await go(sp.x, sp.y, 62, 900); spoon.style.opacity = 1; tool(null);
+    await go(OFF.x, OFF.y, 52, 1100);
+    await w(5000);
+    Array.prototype.forEach.call(cup.querySelectorAll('.ld-ice'), function (n) { n.classList.add('melt'); });
+    await w(4200);
+  }
+
+  async function act2() {
+    begin(); var cu = ctr(cup), sp = ctr(spoon), R = cu.w / 240 * 47;
+    await go(sp.x, sp.y, 62, 1500); tool('spoon'); spoon.style.opacity = 0;
+    for (var s = 0; s < 2; s++) {
+      await go(cu.x + R * .1, cu.y + R * .1, 70, 900); setLiq(.95); await w(250);
+      await go(cu.x + R * .5, cu.y - R * .9, 66, 600);
+      await go(OFF.x - 260, OFF.y - 200, 40, 1500); await w(900); setLiq(0); cofScale(s ? .84 : .93);
+      await go(cu.x + R * .4, cu.y - R * .9, 66, 1400);
+    }
+    await go(sp.x, sp.y, 62, 1000); spoon.style.opacity = 1; tool(null);
+    await go(OFF.x, OFF.y, 52, 1100); await w(900); cofScale(1); await w(900);
+  }
+
+  async function act3() {
+    begin(); var dc = ctr(doc), cu = ctr(cup), h0 = ctr(hdm), bg = ctr(bag), v = { x: h0.x - cu.x, y: h0.y - cu.y }, base = -8;
+    cup.style.zIndex = 5;
+    function hold(x, y, th) {
+      var d = (th - base) * Math.PI / 180, c = Math.cos(d), s = Math.sin(d), vx = v.x * c - v.y * s, vy = v.x * s + v.y * c;
+      cup.style.transform = 'translate(' + (x - vx - cu.x).toFixed(1) + 'px,' + (y - vy - cu.y).toFixed(1) + 'px) rotate(' + th.toFixed(1) + 'deg)';
+    }
+    function jiggle() { try { bag.animate([{ translate: '0 0' }, { translate: '-7px 4px' }, { translate: '6px -3px' }, { translate: '0 0' }], { duration: 260, iterations: 3 }); } catch (e) {} }
+    await go(h0.x, h0.y, 56, 1400); hold(h0.x, h0.y, base); cup.classList.add('nosteam');
+    await go(dc.x + dc.w * .3, dc.y - dc.h * .02, 70, 1200, { f: function (p, e) { hold(p.x, p.y, base - 14 * e); } });
+    await go(dc.x + dc.w * .14, dc.y - dc.h * .1, 86, 900, { shake: 1.6, f: function (p, e) { hold(p.x, p.y, -22 - 52 * e); } });
+    /* พลาด: มือสะดุด แก้วหลุดตกบนกระดาษ กาแฟหกเต็มเอกสาร */
+    var tx = P.x, ty = P.y, drop = { x: dc.x + dc.w * .08, y: dc.y + dc.h * .2 };
+    spill.classList.add('on'); Array.prototype.forEach.call(cofs, function (c) { c.style.opacity = .08; });
+    await Promise.all([go(tx + 90, ty - 70, 40, 520, { shake: 3 }), an(620, function (e) { hold(lerp(tx, drop.x, e), lerp(ty, drop.y, e), lerp(-74, -150, e)); })]);
+    var dsk = { x: dc.x + dc.w * .62, y: dc.y + dc.h * .6 };
+    var stain = document.createElement('i'); stain.className = 'ld-stain'; stain.style.cssText = 'left:' + dsk.x + 'px;top:' + dsk.y + 'px;width:' + (cu.w * 1.05) + 'px;height:' + (cu.w * .8) + 'px'; sc.appendChild(stain);
+    requestAnimationFrame(function () { stain.style.opacity = 1; });
+    an(900, function (e) { hold(lerp(drop.x, dsk.x, e), lerp(drop.y, dsk.y, e), lerp(-150, -232, e)); });
+    await go(P.x + 40, P.y - 90, 30, 500, { shake: 4 }); await w(300);
+    /* รีบไปหยิบไดร์จากกระเป๋า */
+    await go(bg.x + bg.w * .08, bg.y - bg.h * .05, 40, 1300, { shake: 1.2 }); jiggle(); await w(800); tool('dryer');
+    await go(dc.x + dc.w * .4, dc.y + dc.h * .42, 38, 1300); var wind = q('.wind', toolG); wind.classList.add('on');
+    spill.classList.add('dry');
+    try { pose.animate([{ rotate: '0deg' }, { rotate: '1.1deg' }, { rotate: '-1deg' }, { rotate: '0deg' }], { duration: 300, iterations: 16 }); } catch (e) {}
+    for (var k = 0; k < 3; k++) { await go(dc.x + dc.w * .1, dc.y + dc.h * .12, 30, 750); await go(dc.x + dc.w * .38, dc.y + dc.h * .42, 40, 750); }
+    wind.classList.remove('on'); spill.className = 'ad-spill';
+    await go(bg.x + bg.w * .08, bg.y - bg.h * .05, 40, 1100); tool(null); jiggle(); await w(600); tool('towel');
+    await go(dsk.x + 70, dsk.y, 50, 1200);
+    for (var m = 0; m < 4; m++) { stain.style.transition = 'opacity .4s'; stain.style.opacity = 1 - (m + 1) / 4; await go(dsk.x - 70, dsk.y + 8, 50, 420); await go(dsk.x + 70, dsk.y - 8, 50, 420); }
+    if (stain.parentNode) stain.parentNode.removeChild(stain);
+    await go(OFF.x, OFF.y, 52, 1100); tool(null); await w(400);
+    /* หยิบแก้วที่ตกไปทิ้ง แล้วเอาแก้วใหม่ (กาแฟเต็ม) มาวางที่เดิม */
+    var hd = ctr(hdm); await go(hd.x, hd.y, 58, 1400);
+    await go(OFF.x - 60, OFF.y - 60, 50, 1300, { f: function (p) { hold(p.x, p.y, -232); } });
+    Array.prototype.forEach.call(cofs, function (c) { c.style.opacity = ''; }); Array.prototype.forEach.call(cup.querySelectorAll('.ld-ice'), function (n) { n.parentNode.removeChild(n); });
+    await w(700);
+    await go(h0.x, h0.y, 56, 1500, { f: function (p, e) { hold(p.x, p.y, lerp(-232, base, e)); } });
+    cup.style.transform = ''; cup.classList.remove('nosteam'); await w(300);
+    await go(OFF.x, OFF.y, 52, 1200);
+  }
+
+  async function runAct(fn) {
+    if (busy) return; busy = true; var my = ++tok;
+    try { await fn(); } catch (e) { if (!(e && e.message === 'abort')) console.warn(e); }
+    cleanup(); busy = false;
+  }
+  function userBusy() {
+    var a = document.activeElement, em = q('#email'), pw = q('#password');
+    return (a && doc.contains(a) && /INPUT|BUTTON/.test(a.tagName)) || (em && em.value) || (pw && pw.value);
+  }
+  function okToRun() {
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    return !reduced && !document.documentElement.hasAttribute('data-calm') && !document.hidden && inView && sc.offsetParent !== null && sc.offsetWidth > 700 && !userBusy() && !busy;
+  }
+  function scheduler() {
+    var last = performance.now() + 4000;
+    setInterval(function () {
+      if (busy) { last = performance.now(); return; }
+      if (performance.now() - last > 11000 && okToRun()) { runAct([act1, act2, act3][ci++ % 3]).then(function () { last = performance.now(); }); }
+    }, 1000);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { setTimeout(init, 800); }); else setTimeout(init, 800);
+  window.addEventListener('load', function () { setTimeout(init, 1200); });
 })();
