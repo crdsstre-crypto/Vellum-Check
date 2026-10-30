@@ -1198,6 +1198,7 @@
     play(info);
   }
   function init() {
+    if (/[?&]stampdemo=1/.test(location.search)) setTimeout(function () { var d = docEl(), r = d && d.getBoundingClientRect(); play({ rect: r && r.width > 50 ? { left: r.left, top: r.top, width: r.width, height: r.height } : null, email: 'somchai@example.com' }); }, 3500);
     var li = document.getElementById('authLoggedIn'); if (!li || !('MutationObserver' in window)) return;
     var wasHidden = li.hidden;
     new MutationObserver(function () {
