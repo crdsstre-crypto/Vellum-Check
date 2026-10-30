@@ -1283,9 +1283,32 @@
     });
   }
 
+  function hoverFx(doc) {
+    if (doc.__hov) return; doc.__hov = true;
+    var sc = doc.closest('.ld-scene'), pose = doc.closest('.ad-pose'); if (!sc || !pose) return;
+    var g = document.createElement('i'); g.className = 'ad-glint'; g.setAttribute('aria-hidden', 'true'); doc.appendChild(g);
+    var sp = document.createElement('i'); sp.className = 'ld-spot'; sp.setAttribute('aria-hidden', 'true'); sc.appendChild(sp);
+    var raf = 0, mx = .5, my = .5, cx = .5, cy = .5, on = false;
+    function loop() {
+      raf = 0; cx += (mx - cx) * .14; cy += (my - cy) * .14;
+      pose.style.setProperty('--rx', ((.5 - cy) * 9).toFixed(2) + 'deg'); pose.style.setProperty('--ry', ((cx - .5) * 11).toFixed(2) + 'deg');
+      doc.style.setProperty('--gx', (cx * 100).toFixed(1) + '%'); doc.style.setProperty('--gy', (cy * 100).toFixed(1) + '%');
+      sc.style.setProperty('--px', ((.5 - cx) * 14).toFixed(1) + 'px'); sc.style.setProperty('--py', ((.5 - cy) * 10).toFixed(1) + 'px');
+      if (on || Math.abs(mx - cx) > .002 || Math.abs(my - cy) > .002) raf = requestAnimationFrame(loop);
+    }
+    doc.addEventListener('pointermove', function (e) {
+      if (e.pointerType && e.pointerType !== 'mouse') return;
+      var r = doc.getBoundingClientRect(); mx = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)); my = Math.max(0, Math.min(1, (e.clientY - r.top) / r.height));
+      var s = sc.getBoundingClientRect(); sc.style.setProperty('--sx', (e.clientX - s.left).toFixed(0) + 'px'); sc.style.setProperty('--sy', (e.clientY - s.top).toFixed(0) + 'px');
+      if (!raf) raf = requestAnimationFrame(loop);
+    });
+    doc.addEventListener('pointerenter', function (e) { if (e.pointerType && e.pointerType !== 'mouse') return; on = true; pose.classList.add('is-hover'); sc.classList.add('doc-hover'); if (!raf) raf = requestAnimationFrame(loop); });
+    doc.addEventListener('pointerleave', function () { on = false; mx = my = .5; pose.classList.remove('is-hover'); sc.classList.remove('doc-hover'); if (!raf) raf = requestAnimationFrame(loop); });
+  }
+
   function init() {
     var doc = document.querySelector('#authLoggedOut .auth-doc'); if (!doc) return;
-    pressFx(doc);
+    pressFx(doc); hoverFx(doc);
     pile(); extras(); paper(doc); hand(doc);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
@@ -1355,7 +1378,7 @@
     if (!toolG) return;
     G.appendChild(body); arm.appendChild(G); sc.appendChild(arm);
     docHand = q('.ah-hand', docSvg); docHand.style.transition = 'opacity .3s';
-    doc.addEventListener('focusin', abort);
+    doc.addEventListener('focusin', abort); doc.addEventListener('pointerenter', function (e) { if (!e.pointerType || e.pointerType === 'mouse') abort(); });
     window.VCActs = { act1: act1, act2: act2, act3: act3, run: function (n) { return runAct([act1, act2, act3][n - 1]); }, abort: abort };
     if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { inView = es[0].isIntersecting; if (!inView) abort(); }, { threshold: .05 }).observe(sc);
     scheduler();
@@ -1481,7 +1504,7 @@
   }
   function okToRun() {
     var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    return !reduced && !document.documentElement.hasAttribute('data-calm') && !document.hidden && inView && sc.offsetParent !== null && sc.offsetWidth > 700 && !userBusy() && !busy;
+    return !reduced && !document.documentElement.hasAttribute('data-calm') && !document.hidden && inView && sc.offsetParent !== null && sc.offsetWidth > 700 && !userBusy() && !busy && !sc.classList.contains('doc-hover');
   }
   function scheduler() {
     var acts = [act1, act2, act3], bag = [], lastPick = -1, last = performance.now(), gap = 5500;
