@@ -1572,12 +1572,12 @@ html[data-calm] .ld-steam{animation:none;opacity:.2}
 .ad-spill.on.dry{opacity:0;transition:opacity 3.4s linear}
 .ld-stain{position:absolute;z-index:1;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;opacity:0;transition:opacity .6s;
   background:radial-gradient(closest-side,rgba(38,16,5,.9),rgba(38,16,5,.6) 62%,transparent);filter:blur(2px)}
-@media (max-width:767px){.ld-arm,.ad-spill,.ld-stain{display:none}}
+
 .ld-cup .cp-swirl{transform-box:view-box;transform-origin:120px 120px}
 .ld-emo{position:absolute;z-index:8;pointer-events:none;line-height:1;margin:-.5em 0 0 -.5em;opacity:0;transform-origin:50% 100%;
   font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif;filter:drop-shadow(0 3px 4px rgba(0,0,0,.5));animation:ldEmo 2.1s cubic-bezier(.2,.8,.3,1) forwards}
 @keyframes ldEmo{0%{opacity:0;transform:translateY(10px) scale(.2)}14%{opacity:1;transform:translateY(-6px) scale(1.35) rotate(-8deg)}28%{transform:translateY(-14px) scale(1) rotate(6deg)}78%{opacity:1;transform:translateY(-34px) scale(1) rotate(-3deg)}100%{opacity:0;transform:translateY(-60px) scale(.9)}}
-@media (max-width:767px){.ld-emo{display:none}}
+
 
 /* ปุ่มเข้าสู่ระบบ/สมัครใหม่: ขนาดเท่ากัน ไม่มีกรอบโฟกัสแบบสี่เหลี่ยมเอียง + อนิเมชันตอนกด */
 html.vc-art .auth-doc .btns{display:grid !important;grid-template-columns:1fr 1fr;gap:12px;align-items:stretch}
@@ -1649,3 +1649,10 @@ html.vc-art .auth-doc.pressed{animation:adPress .28s ease-out}
 @media (max-width:767px){.ld-scene .ld-cup{top:4px;right:2%;width:80px}.ld-scene .ld-lamp{top:6px;width:84px}}
 @media (max-width:767px){.auth-doc .ad-face::after{background:radial-gradient(ellipse at 50% 50%,transparent 66%,rgba(110,70,25,.16) 100%)}
   html.vc-art .ad-pose{filter:drop-shadow(0 2px 2px rgba(0,0,0,.5)) drop-shadow(0 10px 12px rgba(0,0,0,.45))}}
+
+/* มือถือ: พื้นโต๊ะเต็มพื้นที่ของแผ่น (ไม่มีขอบดำรอบฉาก) + แขนเล่นกาแฟเปิดใช้ */
+@media (max-width:767px){
+  html.vc-art #authCard:has(#authLoggedOut:not([hidden])) .sheet-body{padding:0 !important;background:#120a05}
+  html.vc-art .ld-scene{border-radius:0;margin:0;min-height:calc(100svh - 200px)}
+  .ld-scene .ld-arm{display:block}
+}
