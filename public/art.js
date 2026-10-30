@@ -253,6 +253,7 @@
         ring.classList.toggle('is-text', inText);
         var sn = !inText ? t.closest(SNAP) : null;
         if (sn && sn.disabled) sn = null;
+        if (sn && sn.closest('.auth-doc')) sn = null;   /* กระดาษเอียง: กรอบดูดแบบสี่เหลี่ยมตรงจะไม่ตรงกับปุ่ม จึงไม่ดูด */
         snapEl = sn;
         ring.classList.toggle('is-snap', !!sn);
         ring.classList.toggle('is-link', !inText && !sn && !!t.closest(LINK));
@@ -1271,8 +1272,20 @@
     setProgress(0, 0);
   }
 
+  function pressFx(doc) {
+    if (doc.__press) return; doc.__press = true;
+    doc.addEventListener('pointerdown', function (e) {
+      var b = e.target.closest && e.target.closest('.btns button, .google-btn'); if (!b || b.disabled) return;
+      var r = document.createElement('i'); r.className = 'rp'; r.setAttribute('aria-hidden', 'true'); b.appendChild(r);
+      setTimeout(function () { if (r.parentNode) r.parentNode.removeChild(r); }, 700);
+      doc.classList.remove('pressed'); void doc.offsetWidth; doc.classList.add('pressed');
+      setTimeout(function () { doc.classList.remove('pressed'); }, 320);
+    });
+  }
+
   function init() {
     var doc = document.querySelector('#authLoggedOut .auth-doc'); if (!doc) return;
+    pressFx(doc);
     pile(); extras(); paper(doc); hand(doc);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
