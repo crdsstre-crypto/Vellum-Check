@@ -1578,3 +1578,17 @@ html[data-calm] .ld-steam{animation:none;opacity:.2}
   font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif;filter:drop-shadow(0 3px 4px rgba(0,0,0,.5));animation:ldEmo 2.1s cubic-bezier(.2,.8,.3,1) forwards}
 @keyframes ldEmo{0%{opacity:0;transform:translateY(10px) scale(.2)}14%{opacity:1;transform:translateY(-6px) scale(1.35) rotate(-8deg)}28%{transform:translateY(-14px) scale(1) rotate(6deg)}78%{opacity:1;transform:translateY(-34px) scale(1) rotate(-3deg)}100%{opacity:0;transform:translateY(-60px) scale(.9)}}
 @media (max-width:767px){.ld-emo{display:none}}
+
+/* ปุ่มเข้าสู่ระบบ/สมัครใหม่: ขนาดเท่ากัน ไม่มีกรอบโฟกัสแบบสี่เหลี่ยมเอียง + อนิเมชันตอนกด */
+html.vc-art .auth-doc .btns{display:grid !important;grid-template-columns:1fr 1fr;gap:12px;align-items:stretch}
+html.vc-art .auth-doc .btns button{width:100% !important;height:54px;min-height:54px;margin:0 !important;padding:0 12px;border-radius:3px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;
+  outline:none !important;transition:transform .14s cubic-bezier(.3,1.6,.5,1),box-shadow .2s}
+html.vc-art .auth-doc :is(.btns button,.google-btn){outline:none !important}
+html.vc-art .auth-doc :is(.btns button,.google-btn):focus-visible{box-shadow:0 0 0 2px rgba(255,250,235,.95),0 0 0 4px rgba(42,22,8,.85)}
+html.vc-art .auth-doc :is(.btns button,.google-btn):active:not(:disabled){transform:scale(.95) translateY(1px);box-shadow:inset 0 4px 10px rgba(0,0,0,.4)}
+html.vc-art .auth-doc :is(.btns button,.google-btn){isolation:isolate}
+html.vc-art .auth-doc .rp{position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px;border-radius:50%;pointer-events:none;z-index:2;background:rgba(255,236,190,.6);animation:adRp .65s ease-out forwards}
+html.vc-art .auth-doc .ghost .rp,html.vc-art .auth-doc .google-btn .rp{background:rgba(42,22,8,.28)}
+@keyframes adRp{from{transform:scale(1);opacity:.9}to{transform:scale(34);opacity:0}}
+@keyframes adPress{0%{transform:translateY(0)}35%{transform:translateY(3px) rotate(.25deg)}100%{transform:translateY(0)}}
+html.vc-art .auth-doc.pressed{animation:adPress .28s ease-out}
