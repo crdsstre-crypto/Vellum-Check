@@ -1662,3 +1662,10 @@ html.vc-art .auth-doc.pressed{animation:adPress .28s ease-out}
   html.vc-art .ld-scene .auth-doc .btns button{height:46px;min-height:46px}
   html.vc-art .ld-scene .auth-doc .ad-title{font-size:1.55rem}
   html.vc-art .ld-scene .auth-doc .ad-sub,html.vc-art .ld-scene .auth-doc .ad-fine{font-size:.78rem}}
+
+/* มือถือเท่านั้น: แผ่นเข้าสู่ระบบขยายขึ้นไปจนสุดขอบบนของหน้าจอ (ไม่เห็นหน้าเว็บเบลอด้านบน) */
+@media (max-width:767px){
+  html.vc-art body.auth-open #authCard:has(#authLoggedOut:not([hidden])){top:0 !important;max-height:100vh !important;max-height:100dvh !important;height:100vh;height:100dvh;border-radius:0 !important}
+  html.vc-art body.auth-open #authCard:has(#authLoggedOut:not([hidden])) .sheet-head{padding-top:calc(14px + env(safe-area-inset-top))}
+  html.vc-art .ld-scene{min-height:calc(100svh - 120px)}
+}
