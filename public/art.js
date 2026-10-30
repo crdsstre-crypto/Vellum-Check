@@ -1120,33 +1120,72 @@
     pose.appendChild(clone); wrap.appendChild(pose); g.appendChild(wrap);
     var r = info.rect, vw = window.innerWidth, vh = window.innerHeight;
     var w = r ? r.width : Math.min(330, vw - 32), h = r ? r.height : 470;
-    g.style.width = w + 'px'; g.style.left = (r ? r.left : (vw - w) / 2) + 'px'; g.style.top = (r ? r.top : Math.max(70, (vh - h) / 2)) + 'px';
+    g.style.width = w + 'px'; g.style.left = (r ? r.left : (vw - w) / 2) + 'px'; g.style.top = (r ? Math.max(r.top, Math.min(100, vh - h - 10)) : Math.max(70, (vh - h) / 2)) + 'px';
     var st = document.createElement('div'); st.className = 'auth-stamp';
-    st.innerHTML = '<span class="as-ring"><b>เข้าสู่ระบบแล้ว</b><small>VELLUM CHECK</small></span>';
+    st.innerHTML = '<span class="as-ring"><b>ได้รับการ<br>ตรวจสอบแล้ว</b><small>VERIFIED · VELLUM CHECK</small></span>';
     clone.appendChild(st);
+    /* ฉากบังคับ: ทั้งหน้ามืดลงและเบลอ โฟกัสที่เอกสารอย่างเดียว กดอะไรไม่ได้จนจบ */
+    var dim = document.createElement('div'); dim.className = 'auth-focus'; document.body.appendChild(dim);
+    dim.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 450, easing: 'ease-out', fill: 'both' });
     document.body.appendChild(g);
     var E = 'cubic-bezier(.16,1,.3,1)';
-    g.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 220, easing: 'ease-out', fill: 'both' });
+    g.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 300, easing: 'ease-out', fill: 'both' });
+
+    /* มือเขียนชื่อผู้ใช้ (อีเมลที่เข้าสู่ระบบ) ลงบนช่องแรก ตัวอักษรค่อยๆ โผล่ตามปลายปากกา */
+    var gv = clone.querySelector('.gv'), email = (info.email || '').trim(), WRITE = 0, handSvg = null;
+    if (gv && email) {
+      gv.innerHTML = '<span class="gw"></span>'; var gw = gv.firstChild; gw.textContent = email;
+      var tw = gw.offsetWidth || 120;
+      WRITE = Math.max(1500, Math.min(3200, 700 + email.length * 85));
+      gw.style.clipPath = 'inset(-6px 100% -6px 0)';
+      var src2 = document.querySelector('#authLoggedOut .ad-hand .ah-rot');
+      var defs = document.querySelector('#authLoggedOut .ad-hand defs');
+      if (src2 && defs) {
+        var gr = g.getBoundingClientRect(), er = gw.getBoundingClientRect();
+        var sx = er.left - gr.left, sy = er.top - gr.top + er.height * .78;
+        var sc2 = Math.max(.5, Math.min(.8, gr.width / 450));
+        var rn = function (s) { return s.replace(/vcSkin2/g, 'ghSkin2').replace(/vcSkin/g, 'ghSkin').replace(/vcSleeve/g, 'ghSleeve').replace(/vcCuff/g, 'ghCuff').replace(/vcPen/g, 'ghPen').replace(/vcShade/g, 'ghShade'); };
+        handSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); handSvg.setAttribute('class', 'gh-hand'); handSvg.setAttribute('aria-hidden', 'true');
+        handSvg.innerHTML = rn(defs.outerHTML) + '<g class="gh-g">' + rn(src2.outerHTML) + '</g>';
+        g.appendChild(handSvg);
+        var hg = handSvg.querySelector('.gh-g'); hg.style.opacity = 0;
+        var put = function (x, y) { hg.setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ') rotate(52) scale(' + sc2 + ')'); };
+        var t0 = performance.now() + 450;
+        (function fr(now) {
+          var t = now - t0; if (t < 0) { requestAnimationFrame(fr); return; }
+          var p = Math.min(1, t / WRITE), e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+          hg.style.opacity = Math.min(1, t / 250);
+          gw.style.clipPath = 'inset(-6px ' + ((1 - e) * 100).toFixed(1) + '% -6px 0)';
+          put(sx + 4 + e * tw, sy + Math.sin(p * 55) * 2.2 + Math.sin(p * 17) * 1.2);
+          if (p < 1) requestAnimationFrame(fr);
+          else { /* ถอนมือออกไปทางมุมล่างขวา */
+            var t1 = performance.now(), lx = sx + 4 + tw, ly = sy;
+            (function ex(n2) { var q = Math.min(1, (n2 - t1) / 600); put(lx + q * 260, ly + q * 320); hg.style.opacity = 1 - q; if (q < 1) requestAnimationFrame(ex); else if (handSvg.parentNode) handSvg.parentNode.removeChild(handSvg); })(t1);
+          }
+        })(performance.now());
+      } else { gw.style.clipPath = 'none'; WRITE = 0; }
+    } else WRITE = 0;
+    var D = 450 + (WRITE ? WRITE + 700 : 200);   /* เวลาที่ตราจะลงประทับ */
     /* ตราลงมาประทับ: ใหญ่+เอียง → กระแทกลงที่ขนาดจริง → ยุบเล็กน้อย → นิ่ง */
-    var sa = st.animate([
+    st.animate([
       { opacity: 0, transform: 'translateZ(0) scale(2.8) rotate(-26deg)' },
       { opacity: .95, transform: 'translateZ(0) scale(.93) rotate(-12deg)', offset: .38 },
       { opacity: .9, transform: 'translateZ(0) scale(1.04) rotate(-12deg)', offset: .55 },
       { opacity: .9, transform: 'translateZ(0) scale(1) rotate(-12deg)' }
-    ], { duration: 620, delay: 380, easing: 'cubic-bezier(.3,0,.2,1)', fill: 'both' });
-    /* กระดาษสะเทือนตอนตราแตะ + เงาหดตัว */
+    ], { duration: 620, delay: D, easing: 'cubic-bezier(.3,0,.2,1)', fill: 'both' });
     clone.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(7px)', offset: .5 }, { transform: 'translateY(0)' }],
-      { duration: 260, delay: 380 + 230, easing: 'ease-out' });
-    /* วงหมึกแผ่ออกจากรอบตราตอนกระแทก */
+      { duration: 260, delay: D + 230, easing: 'ease-out' });
     var ring = document.createElement('i'); ring.setAttribute('aria-hidden', 'true');
     ring.style.cssText = 'position:absolute;left:50%;top:64%;width:170px;height:170px;margin:-85px 0 0 -85px;border-radius:50%;border:2px solid rgba(154,47,43,.55);pointer-events:none;opacity:0';
     clone.appendChild(ring);
-    ring.animate([{ opacity: .7, transform: 'scale(.9)' }, { opacity: 0, transform: 'scale(1.9)' }], { duration: 650, delay: 380 + 230, easing: E, fill: 'both' });
-    /* ค้างให้อ่านครู่หนึ่ง แล้วเลือนออก */
+    ring.animate([{ opacity: .7, transform: 'scale(.9)' }, { opacity: 0, transform: 'scale(1.9)' }], { duration: 650, delay: D + 230, easing: E, fill: 'forwards' });
+    /* ค้างให้อ่านครู่หนึ่ง แล้วเลือนทั้งเอกสารและความมืดออก */
     setTimeout(function () {
-      var out = g.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-14px) scale(.985)' }], { duration: 520, easing: 'ease-in', fill: 'forwards' });
+      var out = g.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-14px) scale(.985)' }], { duration: 560, easing: 'ease-in', fill: 'forwards' });
       out.onfinish = function () { if (g.parentNode) g.parentNode.removeChild(g); };
-    }, 380 + 620 + 1100);
+      var d2 = dim.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 700, easing: 'ease-in', fill: 'forwards' });
+      d2.onfinish = function () { if (dim.parentNode) dim.parentNode.removeChild(dim); };
+    }, D + 620 + 1500);
   }
 
   function onLoggedIn() {
