@@ -1592,3 +1592,27 @@ html.vc-art .auth-doc .ghost .rp,html.vc-art .auth-doc .google-btn .rp{backgroun
 @keyframes adRp{from{transform:scale(1);opacity:.9}to{transform:scale(34);opacity:0}}
 @keyframes adPress{0%{transform:translateY(0)}35%{transform:translateY(3px) rotate(.25deg)}100%{transform:translateY(0)}}
 html.vc-art .auth-doc.pressed{animation:adPress .28s ease-out}
+
+/* ===== เลื่อนเมาส์ไปบนเอกสารเข้าสู่ระบบ: ยกตัว เอียงตามเมาส์ เงาลึก ขอบทอง แสงตามเมาส์ ตราขยาย แผ่นล่างแยกตัว ===== */
+@media (min-width:768px) and (hover:hover){
+  html.vc-art .ad-pose{--rx:0deg;--ry:0deg;translate:0 0;scale:1;
+    transition:translate .45s cubic-bezier(.2,.8,.25,1),scale .45s cubic-bezier(.2,.8,.25,1),filter .45s}
+  html.vc-art .ad-pose.is-hover{translate:0 -11px;scale:1.025;
+    filter:drop-shadow(0 4px 3px rgba(0,0,0,.5)) drop-shadow(0 34px 34px rgba(0,0,0,.62)) drop-shadow(0 0 20px rgba(255,190,90,.22)) brightness(calc(.84 + .16 * var(--on)))}
+  html.vc-art .ad-pose.is-hover .auth-doc{transform:perspective(1100px) rotateX(var(--rx)) rotateY(var(--ry)) !important}
+  html.vc-art .ad-pose .auth-doc{transition:transform .25s ease-out}
+  html.vc-art .auth-doc::before,html.vc-art .auth-doc::after{transition:transform .5s cubic-bezier(.2,.8,.25,1)}
+  html.vc-art .ad-pose.is-hover .auth-doc::before{transform:rotate(3.6deg) translate(16px,13px)}
+  html.vc-art .ad-pose.is-hover .auth-doc::after{transform:rotate(-3.2deg) translate(-14px,19px)}
+  html.vc-art .auth-doc .ad-glint{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .35s;border-radius:3px;
+    background:radial-gradient(circle at var(--gx,50%) var(--gy,50%),rgba(255,226,150,.42),rgba(255,210,120,.12) 32%,transparent 58%);mix-blend-mode:soft-light;
+    box-shadow:inset 0 0 0 1.5px rgba(232,190,100,.0)}
+  html.vc-art .ad-pose.is-hover .ad-glint{opacity:1;box-shadow:inset 0 0 0 1.5px rgba(232,190,100,.55),inset 0 0 22px rgba(232,190,100,.22)}
+  html.vc-art .auth-doc .ad-fold{transition:transform .35s cubic-bezier(.3,1.6,.5,1),box-shadow .35s}
+  html.vc-art .ad-pose.is-hover .ad-fold{transform:scale(1.08) rotate(-4deg);box-shadow:0 7px 12px rgba(0,0,0,.5),0 0 16px rgba(230,70,50,.55),inset 0 0 0 4px rgba(255,170,160,.2),inset 0 -4px 6px rgba(0,0,0,.4)}
+  .ld-spot{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity .4s;
+    background:radial-gradient(260px 260px at var(--sx,50%) var(--sy,50%),rgba(255,184,96,calc(.2 * var(--on))),transparent 70%);mix-blend-mode:screen}
+  .ld-scene.doc-hover .ld-spot{opacity:1}
+  .ld-scene .ld-desk{transform:scale(1.04) translate(var(--px,0px),var(--py,0px));transition:transform .5s ease-out}
+}
+@media (prefers-reduced-motion:reduce){html.vc-art .ad-pose.is-hover{translate:0 0;scale:1}}
