@@ -1616,3 +1616,36 @@ html.vc-art .auth-doc.pressed{animation:adPress .28s ease-out}
   .ld-scene .ld-desk{transform:scale(1.04) translate(var(--px,0px),var(--py,0px));transition:transform .5s ease-out}
 }
 @media (prefers-reduced-motion:reduce){html.vc-art .ad-pose.is-hover{translate:0 0;scale:1}}
+
+/* ===== มือถือ: โต๊ะไม้ + กระดาษขาว + ตะเกียง/กาแฟ/กระเป๋า เหมือนบนคอม (ย่อขนาด) ===== */
+@media (max-width:767px){
+  html.vc-art .ld-scene{--on:1;position:relative;display:block;min-height:0;overflow:hidden;border-radius:8px;background:#120a05;animation:none}
+  html.vc-art .ld-scene :is(.ld-desk,.ld-dark,.ld-lamp,.ld-glow,.ld-bag,.ld-cup){display:block}
+  .ld-scene :is(.ld-wall,.ld-books,.ld-pile,.ld-pen,.ld-blotter,.ld-extra,.ld-dust,.ld-drawer,.ld-spot){display:none !important}
+  .ld-desk{inset:0;border:0;box-shadow:none}
+  .ld-dark{opacity:1;background:radial-gradient(ellipse 80% 70% at 50% 52%,rgba(4,3,2,0) 35%,rgba(3,2,1,.7) 100%)}
+  .ld-scene .ld-lamp{left:2%;right:auto;top:10px;bottom:auto;width:92px;transform:none;z-index:1;pointer-events:auto;cursor:pointer;filter:drop-shadow(0 6px 5px rgba(0,0,0,.55)) drop-shadow(0 0 14px rgba(255,170,70,.45))}
+  .ld-scene .ld-cup{right:3%;left:auto;top:12px;bottom:auto;width:92px;transform:rotate(-8deg);z-index:1}
+  .ld-scene .ld-bag{left:-6%;right:auto;bottom:-14px;top:auto;width:150px;transform:rotate(26deg) scaleY(.74);transform-origin:50% 90%;z-index:0;opacity:.95}
+  html.vc-art .ld-scene .auth-doc-wrap{position:relative;z-index:2;width:100%;padding:92px 12px 46px}
+  html.vc-art .ad-pose{transform:rotate(-2.4deg);filter:drop-shadow(0 2px 2px rgba(0,0,0,.55)) drop-shadow(0 12px 14px rgba(0,0,0,.5))}
+  html.vc-art .auth-doc{padding:38px 22px 28px}
+  .auth-doc .ad-rim,.auth-doc .ad-face{clip-path:none !important;border-radius:3px}
+  .auth-doc .ad-rim{transform:translate(3px,4px);background:linear-gradient(180deg,#d9d5ca,#b8b3a6)}
+  .auth-doc .ad-face{background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'><rect x='3.2' y='2.4' width='93.6' height='95.2' fill='none' stroke='rgba(110,110,120,.5)' stroke-width='1.1' vector-effect='non-scaling-stroke'/><rect x='4.4' y='3.3' width='91.2' height='93.4' fill='none' stroke='rgba(110,110,120,.3)' stroke-width='.8' vector-effect='non-scaling-stroke'/></svg>") 0 0/100% 100% no-repeat,
+    linear-gradient(118deg,#fffefb 0%,#f9f6ee 60%,#eeeadf 100%)}
+  .auth-doc .ad-face::before{background:linear-gradient(180deg,transparent calc(50% - 2px),rgba(70,45,15,.14) 50%,rgba(255,250,232,.4) calc(50% + 2px),transparent calc(50% + 6px))}
+  html.vc-art .auth-doc::before,html.vc-art .auth-doc::after{display:block;content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;border-radius:3px;background:linear-gradient(160deg,#efebe0,#d8d3c6);box-shadow:0 2px 4px rgba(0,0,0,.35)}
+  html.vc-art .auth-doc::before{transform:rotate(2.4deg) translate(7px,6px)}
+  html.vc-art .auth-doc::after{z-index:-3;transform:rotate(-2deg) translate(-6px,9px);background:linear-gradient(160deg,#e3dfd3,#c6c1b3)}
+  .auth-doc .ad-clip{position:absolute;top:-20px;left:6px;width:22px;height:62px;z-index:5;pointer-events:none}
+  .auth-doc .ad-clip svg{display:block;width:100%;height:100%}
+  html.vc-art .auth-doc .ad-fold{top:-14px;right:20px;width:46px;height:44px}
+  html.vc-art .auth-doc .ad-fold::after{font-size:.85rem}
+  html.vc-art .auth-doc{--ink:#2a1a0c}
+}
+@media (max-width:767px){.ld-scene :is(.ld-bag,.ld-cup){position:absolute;pointer-events:none}.ld-scene .ld-bag{width:130px;left:-5%}}
+@media (max-width:767px){.ld-scene .ld-cup{top:4px;right:2%;width:80px}.ld-scene .ld-lamp{top:6px;width:84px}}
+@media (max-width:767px){.auth-doc .ad-face::after{background:radial-gradient(ellipse at 50% 50%,transparent 66%,rgba(110,70,25,.16) 100%)}
+  html.vc-art .ad-pose{filter:drop-shadow(0 2px 2px rgba(0,0,0,.5)) drop-shadow(0 10px 12px rgba(0,0,0,.45))}}
