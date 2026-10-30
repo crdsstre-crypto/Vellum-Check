@@ -1385,7 +1385,7 @@
   }
 
   function layout() {
-    var z = parseFloat(getComputedStyle(wrap).zoom) || 1; S = .8 * z; W = sc.offsetWidth; H = sc.offsetHeight;
+    var z = parseFloat(getComputedStyle(wrap).zoom) || 1; S = (sc.offsetWidth < 600 ? .55 : .8) * z; W = sc.offsetWidth; H = sc.offsetHeight;
     OFF.x = W + 140; OFF.y = H + 240; P.x = OFF.x; P.y = OFF.y; P.r = 52; place();
   }
   function begin() { layout(); arm.style.opacity = 1; docHand.style.opacity = 0; }
@@ -1495,7 +1495,7 @@
 
   async function runAct(fn) {
     if (busy) return; busy = true; var my = ++tok;
-    try { await fn(); } catch (e) { if (!(e && e.message === 'abort')) console.warn(e); }
+    try { await fn(); } catch (e) { if (!(e && e.message === 'abort')) console.warn(e); else window.__abortAt = (new Error()).stack; }
     cleanup(); busy = false;
   }
   function userBusy() {
@@ -1504,7 +1504,7 @@
   }
   function okToRun() {
     var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    return !reduced && !document.documentElement.hasAttribute('data-calm') && !document.hidden && inView && sc.offsetParent !== null && sc.offsetWidth > 700 && !userBusy() && !busy && !sc.classList.contains('doc-hover');
+    return !reduced && !document.documentElement.hasAttribute('data-calm') && !document.hidden && inView && sc.offsetParent !== null && sc.offsetWidth > 300 && (innerWidth >= 768 || document.body.classList.contains('auth-open')) && !userBusy() && !busy && !sc.classList.contains('doc-hover');
   }
   function scheduler() {
     var acts = [act1, act2, act3], bag = [], lastPick = -1, last = performance.now(), gap = 5500;
