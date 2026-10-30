@@ -1656,3 +1656,9 @@ html.vc-art .auth-doc.pressed{animation:adPress .28s ease-out}
   html.vc-art .ld-scene{border-radius:0;margin:0;min-height:calc(100svh - 200px)}
   .ld-scene .ld-arm{display:block}
 }
+/* มือถือ: ย่อเอกสารเข้าสู่ระบบลง ~18% */
+@media (max-width:767px){html.vc-art .ld-scene .auth-doc-wrap{zoom:1;width:100%;padding:96px 30px 50px}
+  html.vc-art .ld-scene .auth-doc{padding:30px 17px 22px}
+  html.vc-art .ld-scene .auth-doc .btns button{height:46px;min-height:46px}
+  html.vc-art .ld-scene .auth-doc .ad-title{font-size:1.55rem}
+  html.vc-art .ld-scene .auth-doc .ad-sub,html.vc-art .ld-scene .auth-doc .ad-fine{font-size:.78rem}}
