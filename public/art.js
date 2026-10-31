@@ -1294,8 +1294,8 @@
     cue(D, function () {
     /* พิธีประทับตราจริง: หยดขี้ผึ้งแดงแผ่ตัว → ตราทองเหลืองเลื่อนลงมา (เงาค่อยๆ คมชัด) → กดลง → ยกออก เผยรอยตรา VC ในขี้ผึ้ง */
     var SZ = st.offsetWidth || 118;
-    var pool = document.createElement('i'); pool.className = 'wx-pool'; pool.style.cssText = 'left:' + stX + 'px;top:' + stY + 'px;width:' + SZ + 'px;height:' + SZ + 'px;margin:-' + SZ / 2 + 'px 0 0 -' + SZ / 2 + 'px'; clone.appendChild(pool);
-    A(pool, [{ opacity: 0, transform: 'scale(.08) rotate(0deg)' }, { opacity: 1, transform: 'scale(.6) rotate(12deg)', offset: .35 }, { opacity: 1, transform: 'scale(.96) rotate(20deg)' }], { duration: 520, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'both' });
+    var pool = document.createElement('i'); pool.className = 'wx-pool'; var PS2 = SZ * 1.12; pool.style.cssText = 'left:' + stX + 'px;top:' + stY + 'px;width:' + PS2 + 'px;height:' + PS2 + 'px;margin:-' + PS2 / 2 + 'px 0 0 -' + PS2 / 2 + 'px'; clone.appendChild(pool);
+    A(pool, [{ opacity: 0, transform: 'scale(.12) rotate(-10deg)' }, { opacity: 1, transform: 'scale(.55) rotate(-4deg)', offset: .3 }, { opacity: 1, transform: 'scale(1.04) rotate(3deg)' }], { duration: 560, easing: 'cubic-bezier(.15,.75,.3,1)', fill: 'both' });
     A(pool, [{ opacity: 1 }, { opacity: 0 }], { duration: 80, delay: 560, fill: 'forwards' });
     var TS = SZ * 1.18, tool = document.createElement('div'); tool.className = 'wx-tool';
     tool.style.cssText = 'left:' + stX + 'px;top:' + stY + 'px;width:' + TS + 'px;height:' + TS + 'px;margin:-' + TS / 2 + 'px 0 0 -' + TS / 2 + 'px';
