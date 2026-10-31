@@ -1842,3 +1842,8 @@ html.vc-art .auth-ghost .gh-serial{position:absolute;z-index:5;margin:0;white-sp
 #authLoggedIn .acct-avatar{position:relative;overflow:visible !important}
 #authLoggedIn .acct-avatar .av-seal{position:absolute;right:-7px;bottom:-7px;width:24px;height:24px;pointer-events:none;z-index:2;filter:drop-shadow(0 2px 2px rgba(0,0,0,.5))}
 #authLoggedIn .acct-avatar .av-seal svg{display:block;width:100%;height:100%}
+
+/* ลายมือหมึกซึม: อีเมลที่มือเขียนในพิธีเข้าสู่ระบบ */
+html.vc-art .auth-ghost .gv .gw{font-family:"Charmonman","Newsreader","Taviraj",cursive !important;font-style:normal !important;font-weight:700;font-size:1.5rem;letter-spacing:.01em;line-height:1.5}
+html.vc-art .auth-ghost .gv{min-height:2.6em}
+@media (max-width:767px){html.vc-art .auth-ghost .gv .gw{font-size:1.3rem}}
