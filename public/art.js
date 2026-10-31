@@ -1120,7 +1120,7 @@
     clone.querySelectorAll('label').forEach(function (n) { n.removeAttribute('for'); });
     clone.querySelectorAll('input').forEach(function (inp, i) {
       var sp = document.createElement('span'); sp.className = 'gv';
-      sp.textContent = i === 0 ? (info.email || '') : '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022';
+      sp.textContent = i === 0 ? '' : '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022';
       inp.parentNode.replaceChild(sp, inp);
     });
     clone.querySelectorAll('button').forEach(function (n) { n.tabIndex = -1; });
@@ -1140,23 +1140,28 @@
     var E = 'cubic-bezier(.16,1,.3,1)';
     g.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 300, easing: 'ease-out', fill: 'both' });
 
-    /* มือเขียนชื่อผู้ใช้ (อีเมลที่เข้าสู่ระบบ) ลงบนช่องแรก ตัวอักษรค่อยๆ โผล่ตามปลายปากกา */
-    var gv = clone.querySelector('.gv'), email = (info.email || '').trim(), WRITE = 0, handSvg = null;
-    if (gv && email) {
-      gv.innerHTML = '<span class="gw"></span>'; var gw = gv.firstChild; gw.textContent = email;
+    /* มือเขียนชื่อผู้ใช้ (อีเมล) ลงบนเส้น "ลงชื่อ" ที่ท้ายเอกสาร ตัวอักษรค่อยๆ โผล่ตามปลายปากกา */
+    function offs(el, root) { var x = 0, y = 0; while (el && el !== root) { x += el.offsetLeft; y += el.offsetTop; el = el.offsetParent; } return { x: x, y: y }; }
+    var email = (info.email || '').trim(), WRITE = 0, handSvg = null;
+    var signLine = clone.querySelector('.ad-sign i') || clone.querySelector('.ad-sign');
+    var sgn = signLine ? offs(signLine, clone) : { x: 90, y: clone.offsetHeight - 70 };
+    var lineW = signLine ? Math.max(signLine.offsetWidth, 120) : clone.offsetWidth * .6;
+    if (email) {
+      var gw = document.createElement('span'); gw.className = 'gw gw2'; gw.textContent = email;
+      gw.style.cssText = 'position:absolute;left:' + (sgn.x + 6) + 'px;top:' + (sgn.y - 38) + 'px;pointer-events:none;z-index:4;clip-path:inset(-8px 100% -8px 0)';
+      clone.appendChild(gw);
       var tw = gw.offsetWidth || 120;
+      if (tw > lineW - 12) { gw.style.fontSize = (parseFloat(getComputedStyle(gw).fontSize) * (lineW - 12) / tw).toFixed(1) + 'px'; tw = gw.offsetWidth; }
       WRITE = Math.max(1500, Math.min(3200, 700 + email.length * 85));
-      gw.style.clipPath = 'inset(-6px 100% -6px 0)';
       var src2 = document.querySelector('#authLoggedOut .ad-hand .ah-rot');
       var defs = document.querySelector('#authLoggedOut .ad-hand defs');
       if (src2 && defs) {
-        var gr = g.getBoundingClientRect(), er = gw.getBoundingClientRect();
-        var sx = er.left - gr.left, sy = er.top - gr.top + er.height * .78;
-        var sc2 = Math.max(.5, Math.min(.8, gr.width / 450));
+        var sx = sgn.x + 6, sy = sgn.y - 38 + gw.offsetHeight * .78;
+        var sc2 = Math.max(.5, Math.min(.8, clone.offsetWidth / 450));
         var rn = function (s) { return s.replace(/vcSkin2/g, 'ghSkin2').replace(/vcSkin/g, 'ghSkin').replace(/vcSleeve/g, 'ghSleeve').replace(/vcCuff/g, 'ghCuff').replace(/vcPen/g, 'ghPen').replace(/vcShade/g, 'ghShade'); };
         handSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); handSvg.setAttribute('class', 'gh-hand'); handSvg.setAttribute('aria-hidden', 'true');
         handSvg.innerHTML = rn(defs.outerHTML) + '<g class="gh-g">' + rn(src2.outerHTML) + '</g>';
-        g.appendChild(handSvg);
+        clone.appendChild(handSvg);
         var hg = handSvg.querySelector('.gh-g'); hg.style.opacity = 0;
         var put = function (x, y) { hg.setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ') rotate(52) scale(' + sc2 + ')'); };
         var t0 = performance.now() + 450;
@@ -1164,16 +1169,19 @@
           var t = now - t0; if (t < 0) { requestAnimationFrame(fr); return; }
           var p = Math.min(1, t / WRITE), e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
           hg.style.opacity = Math.min(1, t / 250);
-          gw.style.clipPath = 'inset(-6px ' + ((1 - e) * 100).toFixed(1) + '% -6px 0)';
+          gw.style.clipPath = 'inset(-8px ' + ((1 - e) * 100).toFixed(1) + '% -8px 0)';
           put(sx + 4 + e * tw, sy + Math.sin(p * 55) * 2.2 + Math.sin(p * 17) * 1.2);
           if (p < 1) requestAnimationFrame(fr);
-          else { /* ถอนมือออกไปทางมุมล่างขวา */
+          else {
             var t1 = performance.now(), lx = sx + 4 + tw, ly = sy;
             (function ex(n2) { var q = Math.min(1, (n2 - t1) / 600); put(lx + q * 260, ly + q * 320); hg.style.opacity = 1 - q; if (q < 1) requestAnimationFrame(ex); else if (handSvg.parentNode) handSvg.parentNode.removeChild(handSvg); })(t1);
           }
         })(performance.now());
       } else { gw.style.clipPath = 'none'; WRITE = 0; }
-    } else WRITE = 0;
+    }
+    /* ตราลงตรงเส้นลงชื่อ: ทับปลายลายมือเล็กน้อย */
+    var stX = Math.min(clone.offsetWidth * .66, clone.offsetWidth - 95), stY = Math.max(95, sgn.y - 88);
+    st.style.left = stX + 'px'; st.style.top = stY + 'px';
     var D = 450 + (WRITE ? WRITE + 700 : 200);   /* เวลาที่ตราจะลงประทับ */
     /* ตราลงมาประทับ: ใหญ่+เอียง → กระแทกลงที่ขนาดจริง → ยุบเล็กน้อย → นิ่ง */
     st.animate([
@@ -1185,7 +1193,7 @@
     clone.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(7px)', offset: .5 }, { transform: 'translateY(0)' }],
       { duration: 260, delay: D + 230, easing: 'ease-out' });
     var ring = document.createElement('i'); ring.setAttribute('aria-hidden', 'true');
-    ring.style.cssText = 'position:absolute;left:50%;top:64%;width:170px;height:170px;margin:-85px 0 0 -85px;border-radius:50%;border:2px solid rgba(154,47,43,.55);pointer-events:none;opacity:0';
+    ring.style.cssText = 'position:absolute;left:' + stX + 'px;top:' + stY + 'px;width:170px;height:170px;margin:-85px 0 0 -85px;border-radius:50%;border:2px solid rgba(154,47,43,.55);pointer-events:none;opacity:0';
     clone.appendChild(ring);
     ring.animate([{ opacity: .7, transform: 'scale(.9)' }, { opacity: 0, transform: 'scale(1.9)' }], { duration: 650, delay: D + 230, easing: E, fill: 'forwards' });
     /* ค้างให้อ่านครู่หนึ่ง แล้วเลือนทั้งเอกสารและความมืดออก */
