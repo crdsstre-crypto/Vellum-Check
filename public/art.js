@@ -1205,7 +1205,7 @@
     clone.appendChild(sig);
     var sp = sig.firstChild, SL = sp.getTotalLength ? sp.getTotalLength() : 0;
     sp.style.strokeDasharray = SL; sp.style.strokeDashoffset = SL;
-    var gw = null, tw = 0;
+    var gw = null, tw = 0, bead = document.createElement('i'); bead.className = 'ink-bead'; bead.style.opacity = 0; clone.appendChild(bead);
     if (gv && email) {
       gv.innerHTML = '<span class="gw"></span>'; gw = gv.firstChild; gw.textContent = email;
       tw = gw.offsetWidth || 120; inkMask(gw, 0);
@@ -1230,19 +1230,20 @@
         var wob = Math.sin(t / 40) * 1.8 + Math.sin(t / 130) * 1;
         hg.style.opacity = Math.min(1, t / 250);
         if (t < T1 && gw) {
-          var p = t / T1, e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
-          inkMask(gw, e * tw); put(sx + 4 + e * tw, sy + wob);
+          var p = t / T1, e = inkPace(p);
+          inkMask(gw, e * tw); bead.style.left = (go.x + e * tw) + 'px'; bead.style.top = (go.y + gw.offsetHeight * .62) + 'px'; bead.style.opacity = .85; put(sx + 4 + e * tw, sy + wob);
           if (!fr.s1) { fr.s1 = 1; sfx('scratch', T1); }
         } else if (t < T2) {
-          if (gw) { gw.style.webkitMaskImage = gw.style.maskImage = 'none'; gw.classList.add('dry'); }
+          if (gw) { gw.style.webkitMaskImage = gw.style.maskImage = 'none'; gw.classList.add('dry'); } bead.style.opacity = 0; if (!fr.b1) { fr.b1 = 1; blot(sigX + sp.getPointAtLength(0).x * k, sigY + sp.getPointAtLength(0).y * k, 3.2); }
           var q = (t - T1) / GAP, f = q * q * (3 - 2 * q), p0 = sp.getPointAtLength(0);
           put(lerp2(lastEmail.x, sigX + p0.x * k, f), lerp2(lastEmail.y, sigY + p0.y * k, f) - Math.sin(q * Math.PI) * 26);
         } else if (t < T3) {
-          var p2 = (t - T2) / SIG, e2 = p2 < .5 ? 2 * p2 * p2 : 1 - Math.pow(-2 * p2 + 2, 2) / 2, pt = sp.getPointAtLength(e2 * SL);
-          sp.style.strokeDashoffset = SL * (1 - e2); put(sigX + pt.x * k, sigY + pt.y * k + wob);
+          var p2 = (t - T2) / SIG, e2 = inkPace(p2), pt = sp.getPointAtLength(e2 * SL);
+          sp.style.strokeDashoffset = SL * (1 - e2); sp.style.strokeWidth = (2.1 + Math.abs(Math.sin(e2 * 23)) * 1.3 + (1 - p2) * .4).toFixed(2); put(sigX + pt.x * k, sigY + pt.y * k + wob);
           if (!fr.s2) { fr.s2 = 1; sfx('scratch', SIG); }
         } else if (t < T4) {
           var r = (t - T3) / 600, pe = sp.getPointAtLength(SL);
+          if (!fr.b2) { fr.b2 = 1; blot(sigX + pe.x * k, sigY + pe.y * k, 2.6); sp.style.strokeWidth = '2.6'; }
           sp.style.strokeDashoffset = 0; put(sigX + pe.x * k + r * 260, sigY + pe.y * k + r * 320); hg.style.opacity = 1 - r;
         } else { if (handSvg.parentNode) handSvg.parentNode.removeChild(handSvg); return; }
         requestAnimationFrame(fr);
@@ -1250,6 +1251,10 @@
       WRITE = T3 + 150;   /* ตราลงตอนมือกำลังถอยออก */
     } else { if (gw) { gw.style.webkitMaskImage = gw.style.maskImage = 'none'; } sp.style.strokeDashoffset = 0; WRITE = 0; }
     function lerp2(a, b, t) { return a + (b - a) * t; }
+    /* ความเร็วเขียนแบบคนจริง: เร่ง-ชะลอ-หยุดสั้นๆ เป็นช่วงๆ */
+    function inkPace(p) { var N = 5, s = Math.min(N - 1e-6, p * N), i = Math.floor(s), f = s - i, sm = f * f * (3 - 2 * f); return (i + sm * .92 + f * .08) / N; }
+    function blot(x, y, r) { var b = document.createElement('i'); b.className = 'ink-blot'; b.style.cssText = 'left:' + x.toFixed(1) + 'px;top:' + y.toFixed(1) + 'px;width:' + (r * 2) + 'px;height:' + (r * 2) + 'px'; clone.appendChild(b);
+      b.animate([{ transform: 'scale(.2)', opacity: .9 }, { transform: 'scale(1.15)', opacity: .9, offset: .5 }, { transform: 'scale(1)', opacity: .75 }], { duration: 700, easing: 'ease-out', fill: 'both' }); }
     function inkMask(el, x) { var m = 'linear-gradient(90deg,#000 ' + Math.max(0, x - 10).toFixed(1) + 'px,rgba(0,0,0,.35) ' + x.toFixed(1) + 'px,transparent ' + (x + 6).toFixed(1) + 'px)'; el.style.webkitMaskImage = m; el.style.maskImage = m; }
     /* ตราลงตรงเส้นลงชื่อ ด้านขวา */
     var stX = Math.min(clone.offsetWidth * .68, clone.offsetWidth - 95), stY = Math.max(110, sgn.y - 150);
@@ -1266,6 +1271,11 @@
       hl.animate([{ opacity: 0 }, { opacity: 1, offset: .25 }, { opacity: .35 }], { duration: 900, delay: at, easing: 'ease-out', fill: 'both' });
     });
     var D = scAt + SC + 150;   /* เวลาที่ตราจะลงประทับ */
+    var ls = document.createElement('i'); ls.className = 'ls-shade'; clone.appendChild(ls);
+    var tot = D + 900;
+    ls.animate([{ opacity: .62 }, { opacity: .4, offset: 900 / tot }, { opacity: .12, offset: Math.min(.9, (900 + WRITE * .7) / tot) }, { opacity: .05, offset: (D - 100) / tot }, { opacity: .3, offset: (D + 420) / tot }, { opacity: .08 }], { duration: tot, easing: 'ease-in-out', fill: 'both' });
+    var rake = document.createElement('i'); rake.className = 'ls-rake'; clone.appendChild(rake);
+    rake.animate([{ opacity: 0 }, { opacity: 1, offset: .35 }, { opacity: .55 }], { duration: 1400, delay: D + 300, easing: 'ease-out', fill: 'both' });
     /* ตราขี้ผึ้งลงมาจากด้านบน → กดลง ยุบตัว → เงาสัมผัส → กระดาษสั่นเบาๆ → คำบรรยายตรา */
     var mob = window.innerWidth < 768;
     var sh = document.createElement('i'); sh.className = 'wx-shadow'; sh.style.left = stX + 'px'; sh.style.top = stY + 'px'; clone.appendChild(sh);
@@ -1317,7 +1327,15 @@
     /* เปลี่ยนกลับเข้าเว็บ: กระดาษค่อยๆ เลื่อนขึ้นและจาง เผยหน้าบัญชี */
     setTimeout(function () {
       window.removeEventListener('pointermove', onMove);
-      var out = g.animate([{ opacity: 1, transform: 'scale(' + (mob ? 1.04 : 1.08) + ')' }, { opacity: 1, offset: .6 }, { opacity: 0, transform: 'translate(' + (mob ? 30 : 120) + 'px,' + Math.round(innerHeight * .9) + 'px) rotate(7deg) scale(.96)' }], { duration: 850, easing: 'cubic-bezier(.55,0,.75,.3)', fill: 'forwards' });
+      var cr = clone.getBoundingClientRect(), vf = document.createElement('i'); vf.className = 'vf-frame'; document.body.appendChild(vf);
+      var ix = cr.width * .04, iy = cr.height * .03, M = innerWidth < 768 ? 8 : 18;
+      vf.animate([
+        { left: (cr.left + ix) + 'px', top: (cr.top + iy) + 'px', width: (cr.width - ix * 2) + 'px', height: (cr.height - iy * 2) + 'px', opacity: 1, transform: 'rotate(-7deg)' },
+        { left: M + 'px', top: M + 'px', width: (innerWidth - M * 2) + 'px', height: (innerHeight - M * 2) + 'px', opacity: 1, transform: 'rotate(0deg)', offset: .7 },
+        { left: M + 'px', top: M + 'px', width: (innerWidth - M * 2) + 'px', height: (innerHeight - M * 2) + 'px', opacity: 0, transform: 'rotate(0deg)' }
+      ], { duration: 1500, easing: 'cubic-bezier(.65,0,.25,1)', fill: 'forwards' }).onfinish = function () { if (vf.parentNode) vf.parentNode.removeChild(vf); };
+      setTimeout(function () { document.documentElement.classList.add('vf-glow'); setTimeout(function () { document.documentElement.classList.remove('vf-glow'); }, 1600); }, 900);
+      var out = g.animate([{ opacity: 1, transform: 'scale(' + (mob ? 1.04 : 1.08) + ')' }, { opacity: 1, offset: .6 }, { opacity: 0, transform: 'scale(' + (mob ? 1.06 : 1.12) + ')', filter: 'blur(3px)' }], { duration: 700, easing: 'cubic-bezier(.55,0,.75,.3)', fill: 'forwards' });
       out.onfinish = function () { if (g.parentNode) g.parentNode.removeChild(g); };
       document.documentElement.classList.remove('vc-ritual');
       [dim, wl, skip, snd].forEach(function (n) { var a2 = n.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 750, easing: 'ease-in', fill: 'forwards' }); a2.onfinish = function () { if (n.parentNode) n.parentNode.removeChild(n); }; });
