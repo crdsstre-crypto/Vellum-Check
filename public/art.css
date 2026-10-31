@@ -1676,4 +1676,6 @@ html.vc-art .auth-doc.pressed{animation:adPress .28s ease-out}
 html.vc-art .auth-ghost .gv{border-bottom:1px solid rgba(25,25,27,.5);min-height:2.4em;display:block}
 html.vc-art .auth-ghost .gv .gw{display:inline-block;font-family:var(--font-display),"Taviraj",serif;font-style:italic;font-size:1.25rem;color:#2a1a3a;line-height:1.7;white-space:nowrap}
 html.vc-art .auth-ghost .gh-hand{position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible;pointer-events:none;z-index:6}
+html.vc-art .auth-ghost .gw2{font-size:1.15rem}
+html.vc-art .auth-ghost .auth-stamp{top:auto}
 html.vc-art .auth-stamp .as-ring b{font-size:1.12rem}
