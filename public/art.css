@@ -1,4 +1,4 @@
-/* art.css: รวมจาก art-tokens, art-base, art-sections, art-workspace, art-finish (ตามลำดับ) */
+ฃ/* art.css: รวมจาก art-tokens, art-base, art-sections, art-workspace, art-finish (ตามลำดับ) */
 
 /* ===== (จาก art-tokens.css) ===== */
 /* =========================================================
@@ -1847,3 +1847,27 @@ html.vc-art .auth-ghost .gh-serial{position:absolute;z-index:5;margin:0;white-sp
 html.vc-art .auth-ghost .gv .gw{font-family:"Charmonman","Newsreader","Taviraj",cursive !important;font-style:normal !important;font-weight:700;font-size:1.5rem;letter-spacing:.01em;line-height:1.5}
 html.vc-art .auth-ghost .gv{min-height:2.6em}
 @media (max-width:767px){html.vc-art .auth-ghost .gv .gw{font-size:1.3rem}}
+
+/* ===== ภาพถ่ายจริง (31 ต.ค.): โต๊ะไม้ · กระดาษ · ปากกา (ไฟล์ใน public/img/) ===== */
+/* โต๊ะ: ไม้จริง + แสงตะเกียง + มืดลงให้เข้ากับฉาก */
+html.vc-art .ld-scene .ld-desk{background:
+  radial-gradient(40% 46% at 18% 24%,rgba(255,176,96,calc(.22 * var(--on))),transparent 70%),
+  linear-gradient(rgba(8,5,3,.28),rgba(8,5,3,.28)),
+  url("img/desk-wood.jpg") center/cover no-repeat #1a110b !important}
+/* เวทีพิธีเข้าสู่ระบบ: ไม้เดียวกัน มืดกว่า */
+.auth-focus{background:
+  radial-gradient(48% 58% at 34% 30%,rgba(255,190,120,.10),transparent 70%),
+  radial-gradient(ellipse 72% 80% at 48% 52%,rgba(10,7,5,.55),rgba(3,2,1,.93) 100%),
+  url("img/desk-wood.jpg") center/cover no-repeat #070504 !important}
+/* กระดาษ: ผิวกระดาษจริง + เส้นกรอบบางๆ เดิม */
+html.vc-art .auth-doc .ad-face{background:
+  url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'><rect x='3.2' y='2.4' width='93.6' height='95.2' fill='none' stroke='rgba(90,70,45,.45)' stroke-width='1.1' vector-effect='non-scaling-stroke'/><rect x='4.4' y='3.3' width='91.2' height='93.4' fill='none' stroke='rgba(90,70,45,.28)' stroke-width='.8' vector-effect='non-scaling-stroke'/></svg>") 0 0/100% 100% no-repeat,
+  url("img/paper.jpg") center/100% 100% no-repeat #e6d6bf !important}
+html.vc-art .auth-doc .ad-face::after{background:radial-gradient(ellipse at 50% 50%,transparent 66%,rgba(80,55,30,.18) 100%) !important}
+html.vc-art .auth-doc .ad-rim{background:linear-gradient(180deg,#cdbca0,#a8977a) !important}
+html.vc-art .auth-doc::before{background:linear-gradient(160deg,#e3d3ba,#c9b797) !important}
+html.vc-art .auth-doc::after{background:linear-gradient(160deg,#d8c7ab,#bba886) !important}
+/* ปากกา: ภาพจริง ปลายปากกาอยู่ที่จุดหมุน (0, 8.9px) */
+.gh-penw{height:auto !important;margin:-8.9px 0 0 0 !important;transform-origin:0 8.9px !important}
+.gh-penw .pn{display:block;width:100%;height:auto;-webkit-user-drag:none;user-select:none}
+.gh-pensh{height:14px !important;margin-top:-7px !important;transform-origin:0 50% !important}
