@@ -1321,7 +1321,7 @@
       for (var i = 0; i < cands.length; i++) { var el = document.querySelector(cands[i]); if (el) { var rr = el.getBoundingClientRect(); if (rr.width > 0 && rr.height > 0) return { el: el, r: rr }; } }
       return null;
     }
-    var J0 = LK + 900, LIFT = 650, TRAVEL = 850, ARRIVE = 700;
+    var J0 = LK + 700, LIFT = 450, TRAVEL = 260 + 300 * 7 + 520, ARRIVE = 700;
     EXIT = J0 + LIFT + TRAVEL + ARRIVE;
     cue(J0, function () {
       /* ปากกาและเงาปากกาอยู่บนโต๊ะ: จางลงแทนการติดไปกับกระดาษ */
@@ -1332,27 +1332,50 @@
       A(cs, [{ opacity: 1, transform: 'none' }, { opacity: .55, transform: 'translate3d(10px,22px,0) scale(1.04)' }], { duration: LIFT, easing: EASE_IO, fill: 'forwards' });
     });
     cue(J0 + LIFT, function () {
-      var tg = target(), gr = g.getBoundingClientRect();
-      var gx = gr.left + gr.width / 2, gy = gr.top + gr.height / 2;
-      var tx = tg ? tg.r.left + tg.r.width / 2 : innerWidth / 2, ty = tg ? tg.r.top + tg.r.height / 2 : (mob ? innerHeight - 30 : 32);
-      var sEnd = Math.max(.04, Math.min(.2, (tg ? Math.max(tg.r.width, 40) : 48) / gr.width));
-      var dx = tx - gx, dy = ty - gy;
-      /* ความมืดจางเผยหน้าบัญชีจริงด้านหลัง ขณะกระดาษเดินทาง */
-      A(dim, [{ opacity: 1 }, { opacity: 0 }], { duration: TRAVEL, easing: EASE_IO, fill: 'forwards' });
-      [skip, snd].forEach(function (n) { A(n, [{ opacity: 1 }, { opacity: 0 }], { duration: 300, easing: EASE_OUT, fill: 'forwards' }); });
-      /* เส้นทางโค้งเล็กน้อย (ไม่ตรงแข็ง) ขนาดลดแบบเร่งปลาย รักษามุมกระดาษเดิม */
+      /* ---------- Unlock Burst (ตามคลิปตัวอย่าง): แสงรัศมีหลากสีหมุน เปลี่ยนสีเป็นจังหวะ ดาวระยิบ ตราเรืองแสงกลางจอ
+         แล้วทั้งหมดยุบเข้าไปที่ปุ่มบัญชี · ใช้ transform/opacity เท่านั้น (สีเปลี่ยนด้วยการสลับชั้น ไม่ใช้ filter) ---------- */
+      var tg = target(), gr = g.getBoundingClientRect(), cx = innerWidth / 2, cy = innerHeight / 2;
+      var tx = tg ? tg.r.left + tg.r.width / 2 : cx, ty = tg ? tg.r.top + tg.r.height / 2 : (mob ? innerHeight - 30 : 32);
+      var COLORS = ['#ff3b3b', '#36ff6a', '#22e3ff', '#3f6bff', '#c043ff', '#ff3b3b', '#ffd23a'], STEP = 300, HOLDB = STEP * COLORS.length;
+      var bx = document.createElement('div'); bx.className = 'ub-wrap'; bx.setAttribute('aria-hidden', 'true');
+      var rays = document.createElement('div'); rays.className = 'ub-rays'; bx.appendChild(rays);
+      COLORS.forEach(function (c, i) { var l = document.createElement('i'); l.className = 'ub-ray'; l.style.setProperty('--c', c); rays.appendChild(l);
+        A(l, [{ opacity: 0 }, { opacity: 1, offset: .25 }, { opacity: 1, offset: .75 }, { opacity: 0 }], { duration: STEP * 1.6, delay: 200 + i * STEP - STEP * .3, easing: 'linear', fill: 'both' }); });
+      var core = document.createElement('i'); core.className = 'ub-core'; bx.appendChild(core);
+      for (var s = 0; s < 16; s++) { var star = document.createElement('i'); star.className = 'ub-star'; star.textContent = '✦';
+        var ang = s / 16 * Math.PI * 2 + (s % 2) * .2, dist = (mob ? 90 : 140) + (s * 37 % 120);
+        star.style.cssText = 'left:' + (Math.cos(ang) * dist).toFixed(0) + 'px;top:' + (Math.sin(ang) * dist).toFixed(0) + 'px;font-size:' + (10 + s * 7 % 16) + 'px';
+        bx.appendChild(star);
+        A(star, [{ opacity: 0, transform: 'scale(.2) rotate(0deg)' }, { opacity: 1, transform: 'scale(1.2) rotate(45deg)', offset: .3 }, { opacity: .2, transform: 'scale(.7) rotate(90deg)', offset: .6 }, { opacity: 1, transform: 'scale(1) rotate(140deg)', offset: .8 }, { opacity: 0, transform: 'scale(.3) rotate(180deg)' }],
+          { duration: 900 + (s * 53 % 500), delay: 250 + (s * 97 % 700), iterations: 2, easing: 'ease-in-out', fill: 'both' }); }
+      var badge = document.createElement('div'); badge.className = 'ub-badge';
+      var sv = st.querySelector('svg'); badge.innerHTML = (sv ? sv.outerHTML : '') + '<b>บัญชีของฉัน</b><span></span>';
+      badge.querySelector('span').textContent = email || '';
+      bx.appendChild(badge);
+      var glow = document.createElement('i'); glow.className = 'ub-glow'; badge.insertBefore(glow, badge.firstChild);
+      COLORS.forEach(function (c, i) { A(glow, [{ boxShadow: '0 0 0 0 ' + c }, { boxShadow: '0 0 60px 26px ' + c }], { duration: STEP, delay: 200 + i * STEP, easing: 'ease-in-out', direction: 'alternate', fill: 'none' });
+        A(badge.querySelector('b'), [{ color: '#fff', textShadow: '0 0 0 ' + c }, { color: '#fff', textShadow: '0 0 18px ' + c }], { duration: STEP, delay: 200 + i * STEP, direction: 'alternate', fill: 'none' }); });
+      document.body.appendChild(bx);
+      /* กระดาษพุ่งเข้ากลางจอแล้วสลายเป็นแสง */
       g.style.transformOrigin = '50% 50%';
-      A(g, [
-        { transform: 'translate3d(0,0,0) scale(1)', opacity: 1, offset: 0, easing: 'cubic-bezier(.5,0,.3,1)' },
-        { transform: 'translate3d(' + (dx * .45).toFixed(1) + 'px,' + (dy * .38 - 30).toFixed(1) + 'px,0) scale(' + (.62 + sEnd * .2).toFixed(3) + ')', opacity: 1, offset: .5, easing: 'cubic-bezier(.4,0,.2,1)' },
-        { transform: 'translate3d(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px,0) scale(' + sEnd.toFixed(3) + ')', opacity: .9, offset: .92 },
-        { transform: 'translate3d(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px,0) scale(' + (sEnd * .9).toFixed(3) + ')', opacity: 0 }
-      ], { duration: TRAVEL, fill: 'forwards' });
-      A(cs, [{ opacity: .55 }, { opacity: 0 }], { duration: TRAVEL * .6, easing: EASE_OUT, fill: 'forwards' });
-      /* ถึงปุ่มบัญชี: ปุ่มรับแรงกดเบาๆ */
-      if (tg) A(tg.el, [{ transform: 'none' }, { transform: 'scale(.9)', offset: .35 }, { transform: 'none' }], { duration: 420, delay: TRAVEL * .88, easing: EASE_OUT });
+      var gx = gr.left + gr.width / 2, gy = gr.top + gr.height / 2;
+      A(g, [{ transform: 'none', opacity: 1 }, { transform: 'translate3d(' + (cx - gx).toFixed(0) + 'px,' + (cy - gy).toFixed(0) + 'px,0) scale(.22)', opacity: 0 }], { duration: 380, easing: 'cubic-bezier(.6,0,.9,.5)', fill: 'forwards' });
+      A(cs, [{ opacity: .55 }, { opacity: 0 }], { duration: 250, fill: 'forwards' });
+      [skip, snd].forEach(function (n) { A(n, [{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' }); });
+      A(core, [{ opacity: 0, transform: 'scale(.2)' }, { opacity: 1, transform: 'scale(1.6)', offset: .5 }, { opacity: .55, transform: 'scale(1)' }], { duration: 600, delay: 260, easing: 'ease-out', fill: 'both' });
+      A(rays, [{ transform: 'scale(.2) rotate(0deg)', opacity: 0 }, { transform: 'scale(1) rotate(25deg)', opacity: 1, offset: .12 }, { transform: 'scale(1.08) rotate(120deg)', opacity: 1 }], { duration: HOLDB + 200, delay: 260, easing: 'linear', fill: 'both' });
+      A(badge, [{ opacity: 0, transform: 'translate(-50%,-50%) scale(.3)' }, { opacity: 1, transform: 'translate(-50%,-50%) scale(1.18)', offset: .55 }, { opacity: 1, transform: 'translate(-50%,-50%) scale(1)' }], { duration: 650, delay: 300, easing: 'cubic-bezier(.2,.9,.3,1.2)', fill: 'both' });
+      A(badge, [{ transform: 'translate(-50%,-50%) scale(1)' }, { transform: 'translate(-50%,-50%) scale(1.05)' }], { duration: 500, delay: 950, iterations: Math.max(1, Math.floor((HOLDB - 900) / 500)), direction: 'alternate', easing: 'ease-in-out', composite: 'replace' });
+      sfx('seal');
+      /* ยุบทั้งหมดเข้าไปที่ปุ่มบัญชี */
+      var OUT = 260 + HOLDB;
+      A(bx, [{ transform: 'translate3d(0,0,0) scale(1)', opacity: 1 }, { transform: 'translate3d(' + (tx - cx).toFixed(0) + 'px,' + (ty - cy).toFixed(0) + 'px,0) scale(.06)', opacity: 0 }], { duration: 520, delay: OUT, easing: 'cubic-bezier(.6,0,.85,.4)', fill: 'forwards' });
+      A(dim, [{ opacity: 1 }, { opacity: 0 }], { duration: 520, delay: OUT, easing: EASE_IO, fill: 'forwards' });
+      if (tg) A(tg.el, [{ transform: 'none', filter: 'none' }, { transform: 'scale(1.25)', filter: 'drop-shadow(0 0 10px #ffd23a)', offset: .35 }, { transform: 'none', filter: 'none' }], { duration: 650, delay: OUT + 420, easing: EASE_OUT });
+      TL.burstEnd = OUT + 520;
+      TL.anims.push({ cancel: function () { if (bx.parentNode) bx.parentNode.removeChild(bx); } });
     });
-    cue(J0 + LIFT + TRAVEL * .85, function () {
+    cue(J0 + LIFT + TRAVEL - 120, function () {
       /* หน้าบัญชีจริงค่อยๆ ปรากฏทีละส่วน (แค่ opacity/transform ชั่วคราว ไม่แตะข้อมูล) */
       var li = document.getElementById('authLoggedIn'); if (!li || li.hidden) return;
       var parts = li.querySelectorAll('.cred-head, .acct-row, .wallet-total, .wallet, .wallet-quick'); var n = 0;
@@ -1367,7 +1390,7 @@
     if (tl0 != null) TL.anims.forEach(function (x) { try { x.startTime = tl0; } catch (e) {} });
     sfx('paper');
     TL.raf = requestAnimationFrame(tick);
-    window.__vcRitual = { TL: TL, times: { P0: P0, W0: W0, G0: G0, S0: S0, R0: R0, D: D, CONTACT: CONTACT, LK: LK, J0: LK + 900, EXIT: EXIT } };
+    window.__vcRitual = { TL: TL, times: { P0: P0, W0: W0, G0: G0, S0: S0, R0: R0, D: D, CONTACT: CONTACT, LK: LK, J0: LK + 700, EXIT: EXIT } };
   }
 
   function onLoggedIn() {
