@@ -1878,3 +1878,42 @@ html.vc-art .auth-doc::after{background:linear-gradient(160deg,#d8c7ab,#bba886) 
 html.vc-art .auth-doc .ad-fold{display:none !important}
 /* ตัดแสงวิบวับที่วิ่งผ่านตราขี้ผึ้ง */
 .wx-glint{display:none !important}
+
+/* ===== Beauty pass (31 ต.ค.): เอกสารแบบหัวจดหมายทางการ · หมึกน้ำเงินดำ · ปุ่มพิมพ์นูน · แสงเงาตามตะเกียง · เกรนฟิล์ม ===== */
+/* หัวเอกสาร: จัดกลาง มีตราประจำแบรนด์เล็กๆ และเส้นคู่คั่นแบบเอกสารกฎหมาย */
+html.vc-art .auth-doc .ad-kicker{display:flex !important;flex-direction:column;align-items:center;gap:8px;text-align:center;margin:0 0 10px !important;
+  letter-spacing:.32em !important;font-size:.58rem !important;color:rgba(60,42,24,.72) !important}
+html.vc-art .auth-doc .ad-kicker::before{content:"";width:26px;height:30px;opacity:.78;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M32 5L54 13V32C54 46 44 54 32 59C20 54 10 46 10 32V13Z' fill='none' stroke='%233c2a18' stroke-width='3'/><path d='M32 12L48 18V32C48 42 41 48 32 52C23 48 16 42 16 32V18Z' fill='none' stroke='%233c2a18' stroke-width='1.2'/><text x='32' y='38' text-anchor='middle' font-family='Georgia,serif' font-size='15' font-weight='700' fill='%233c2a18'>VC</text></svg>") center/contain no-repeat}
+html.vc-art .auth-doc .ad-title{text-align:center !important;letter-spacing:.02em;margin-top:0 !important;color:#24170c !important}
+html.vc-art .auth-doc .ad-sub{text-align:center !important;max-width:30ch;margin-left:auto !important;margin-right:auto !important;color:rgba(50,36,22,.72) !important;
+  padding-bottom:14px;margin-bottom:16px !important;
+  background:linear-gradient(rgba(70,50,28,.45),rgba(70,50,28,.45)) 50% calc(100% - 3px)/62% 1px no-repeat,linear-gradient(rgba(70,50,28,.3),rgba(70,50,28,.3)) 50% 100%/62% 1px no-repeat}
+/* ป้ายช่องกรอก: ตัวพิมพ์เล็กระยะห่างกว้างแบบแบบฟอร์มราชการ */
+html.vc-art .auth-doc .ad-lab{letter-spacing:.2em !important;color:rgba(60,42,24,.7) !important}
+/* หมึก: น้ำเงินดำแบบหมึกปากกาหมึกซึม (เอกสารจริงและฉากพิธี) */
+html.vc-art .auth-doc :is(#email,#password){color:#1b1a33 !important}
+html.vc-art .auth-ghost .gv,html.vc-art .auth-ghost .gv .gw{color:#1b1a33 !important}
+html.vc-art .auth-ghost .gv .gw.dry{color:#232448 !important}
+html.vc-art .auth-ghost .gh-sig path,html.vc-art .ad-hand .ah-ink{stroke:#1d1c3a !important}
+/* ปุ่ม: แบบพิมพ์นูน (letterpress) แทนกล่องทึบ */
+html.vc-art .auth-doc button.primary{background:linear-gradient(180deg,#3a2716,#24170c) !important;color:#f1e6cf !important;border:1px solid #1a1008 !important;
+  box-shadow:inset 0 1px 0 rgba(255,235,200,.18),inset 0 -2px 0 rgba(0,0,0,.35),0 1px 0 rgba(255,250,235,.5),0 2px 4px rgba(40,25,10,.35) !important;letter-spacing:.04em}
+html.vc-art .auth-doc :is(button.ghost,.google-btn){background:rgba(255,250,238,.18) !important;color:#2a1c0f !important;border:1px solid rgba(60,42,24,.42) !important;
+  box-shadow:inset 0 1px 2px rgba(60,40,20,.18),0 1px 0 rgba(255,250,235,.55) !important}
+html.vc-art .auth-doc .or-line{letter-spacing:.3em !important;color:rgba(60,42,24,.55) !important}
+html.vc-art .auth-doc .ad-fine{text-align:center !important;font-size:.66rem !important;letter-spacing:.04em;color:rgba(60,42,24,.55) !important}
+/* แสงเงาสอดคล้องกับตะเกียงซ้ายบน: เงาทอดไปทางขวาล่าง */
+@media (min-width:768px){
+  html.vc-art .ld-scene .ad-pose{filter:drop-shadow(2px 3px 2px rgba(0,0,0,.55)) drop-shadow(18px 24px 22px rgba(0,0,0,.5)) brightness(calc(.84 + .16 * var(--on))) !important}
+  html.vc-art .ld-scene .ad-pose.is-hover{filter:drop-shadow(3px 5px 3px rgba(0,0,0,.5)) drop-shadow(26px 38px 34px rgba(0,0,0,.55)) brightness(calc(.9 + .1 * var(--on))) !important}
+}
+html.vc-art .auth-ghost .auth-doc{box-shadow:1px 2px 2px rgba(0,0,0,.5),14px 20px 26px rgba(0,0,0,.42) !important}
+/* แสงตะเกียงตกบนกระดาษ (ซ้ายบนอุ่น ขวาล่างเย็นลง) */
+html.vc-art .auth-doc .ad-face::after{background:
+  radial-gradient(120% 90% at 0% 0%,rgba(255,214,150,.16),transparent 55%),
+  radial-gradient(ellipse at 50% 50%,transparent 62%,rgba(70,48,26,.2) 100%),
+  linear-gradient(135deg,transparent 55%,rgba(30,20,10,.1)) !important}
+/* เกรนฟิล์มนิ่งบางๆ ทั้งฉาก (ภาพนิ่ง ไม่ขยับ จึงไม่กินเครื่อง) */
+.ld-scene::after,.auth-focus::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:9;opacity:.07;mix-blend-mode:overlay;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>") 0 0/180px 180px}
