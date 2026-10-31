@@ -1672,7 +1672,7 @@ html.vc-art .auth-doc.pressed{animation:adPress .28s ease-out}
 
 /* ฉากบังคับตอนล็อกอินสำเร็จ: มืด+เบลอรอบเอกสาร, มือเขียนชื่อผู้ใช้, ตรา "ได้รับการตรวจสอบแล้ว" */
 .auth-focus{position:fixed;inset:0;z-index:10035;pointer-events:auto;cursor:progress;
-  background:radial-gradient(ellipse 58% 62% at 50% 50%,rgba(14,8,4,.45),rgba(2,1,1,.94) 100%);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px)}
+  background:radial-gradient(ellipse 75% 80% at 50% 50%,rgba(14,8,4,.2),rgba(2,1,1,.66) 100%);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
 html.vc-art .auth-ghost .gv{border-bottom:1px solid rgba(25,25,27,.5);min-height:2.4em;display:block}
 html.vc-art .auth-ghost .gv .gw{display:inline-block;font-family:var(--font-display),"Taviraj",serif;font-style:italic;font-size:1.25rem;color:#2a1a3a;line-height:1.7;white-space:nowrap}
 html.vc-art .auth-ghost .gh-hand{position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible;pointer-events:none;z-index:6}
