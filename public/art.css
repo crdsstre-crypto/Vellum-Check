@@ -1876,3 +1876,5 @@ html.vc-art .auth-doc::after{background:linear-gradient(160deg,#d8c7ab,#bba886) 
 
 /* ตราขี้ผึ้งซ้ำ: ซ่อนตราเล็กมุมกระดาษ (เหลือตราที่ประทับตอนเข้าสู่ระบบอันเดียว) */
 html.vc-art .auth-doc .ad-fold{display:none !important}
+/* ตัดแสงวิบวับที่วิ่งผ่านตราขี้ผึ้ง */
+.wx-glint{display:none !important}
