@@ -1703,3 +1703,33 @@ html.vc-art .auth-stamp.wax .wx-cap small{display:block;font-family:var(--font-m
 .auth-welcome b{display:block;font-family:var(--font-display),"Taviraj",serif;font-weight:500;font-size:clamp(1.3rem,2.4vw,1.9rem)}
 .auth-welcome span{display:block;margin-top:6px;font-size:.82rem;color:rgba(243,231,207,.7)}
 @media (max-width:767px){.auth-welcome{bottom:auto;top:max(4vh,env(safe-area-inset-top));}.auth-welcome b{font-size:1.15rem}}
+
+/* ===== The Living Document: เวทีโต๊ะดำจริง ไม่มีวงแสงขาวจากฉาก 3 มิติ ===== */
+html.vc-ritual #vcBackdrop .hero-3d,html.vc-ritual .hero-3d{visibility:hidden !important}
+.auth-focus{-webkit-backdrop-filter:none !important;backdrop-filter:none !important;background:
+  radial-gradient(48% 58% at 34% 26%,rgba(255,196,120,.16),transparent 70%),
+  radial-gradient(ellipse 70% 78% at 48% 52%,rgba(20,13,8,.80),rgba(3,2,1,.97) 100%),
+  url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='900' height='300'><filter id='w' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.0016 .09' numOctaves='4' seed='7'/><feColorMatrix values='0 0 0 0 .07  0 0 0 0 .04  0 0 0 0 .02  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23w)'/></svg>") 0 0/900px 300px,
+  #070504 !important}
+/* เอกสารเอียงตามมุมกล้อง + เงาสัมผัสบนโต๊ะ (ไม่ใช่ภาพแปะ) */
+html.vc-art .auth-ghost .auth-doc-wrap{transform:perspective(1500px) rotateX(9deg);transform-origin:50% 75%}
+html.vc-art .auth-ghost .ad-pose{filter:drop-shadow(0 1px 1px rgba(0,0,0,.7)) drop-shadow(0 6px 6px rgba(0,0,0,.45)) !important}
+.gh-contact{position:absolute;left:4%;right:2%;top:7%;bottom:-3%;z-index:-1;pointer-events:none;border-radius:6px;
+  background:radial-gradient(closest-side,rgba(0,0,0,.75),rgba(0,0,0,.35) 70%,transparent);filter:blur(14px);transform-origin:50% 60%}
+/* แสงเฉียงผ่านขอบกระดาษ (ไล่จากซ้ายบน) */
+.gh-rake{position:absolute;inset:0;z-index:3;pointer-events:none;border-radius:3px;mix-blend-mode:soft-light;
+  background:linear-gradient(115deg,rgba(255,236,200,.55) 0%,rgba(255,236,200,.18) 30%,transparent 48%,rgba(30,15,5,.35) 100%) -60% 0/220% 100% no-repeat}
+/* หมึกเปียกตอนเขียน แล้วแห้ง */
+html.vc-art .auth-ghost .gv .gw{color:#140a22;text-shadow:0 0 .6px rgba(20,10,34,.8);transition:color 1.2s,text-shadow 1.2s}
+html.vc-art .auth-ghost .gv .gw.dry{color:#2a1a3a;text-shadow:none}
+/* ตรา: ขี้ผึ้งแผ่ออก + แสงวาบบนผิวตรา */
+.wx-spread{position:absolute;width:132px;height:132px;margin:-66px 0 0 -66px;border-radius:50%;pointer-events:none;z-index:3;
+  background:radial-gradient(closest-side,rgba(142,29,23,.55),rgba(142,29,23,.15) 70%,transparent)}
+html.vc-art .auth-stamp.wax{overflow:visible}
+.wx-glint{position:absolute;left:14%;top:-10%;width:30%;height:120%;pointer-events:none;border-radius:50%;
+  background:linear-gradient(90deg,transparent,rgba(255,235,225,.55),transparent);mix-blend-mode:screen;opacity:0;
+  -webkit-mask-image:radial-gradient(circle at 50% 50%,#000 60%,transparent 62%);mask-image:none}
+.auth-sound{position:fixed;right:calc(max(18px,env(safe-area-inset-right)) + 92px);bottom:max(18px,env(safe-area-inset-bottom));z-index:10050;padding:9px 14px;border-radius:999px;cursor:pointer;
+  border:1px solid rgba(240,225,200,.25);background:rgba(20,14,10,.6);color:rgba(241,227,200,.8);font:500 .72rem/1 var(--font-mono);letter-spacing:.1em}
+.auth-sound[aria-pressed="true"]{color:#f1e3c8;border-color:rgba(240,225,200,.5)}
+@media (max-width:767px){html.vc-art .auth-ghost .auth-doc-wrap{transform:perspective(1200px) rotateX(6deg)}}
