@@ -1302,8 +1302,6 @@
       { opacity: 1, transform: 'translate3d(0,0,0) scale(1) rotate(-8deg)' }
     ], { duration: 650, delay: 0, fill: 'both' });
     A(clone, [{ transform: 'translateY(0)' }, { transform: 'translateY(1.5px)', offset: .35 }, { transform: 'translateY(0)' }], { duration: 300, delay: 520, easing: EASE_OUT });
-    var gl = document.createElement('i'); gl.className = 'wx-glint'; st.appendChild(gl);
-    A(gl, [{ transform: 'translateX(-120%) rotate(25deg)', opacity: 0 }, { opacity: .7, offset: .35 }, { transform: 'translateX(140%) rotate(25deg)', opacity: 0 }], { duration: 1000, delay: 520 + 260, easing: EASE_IO, fill: 'both' });
     var cap = st.querySelector('.wx-cap');
     if (cap) A(cap, [{ opacity: 0, transform: 'translateX(-50%) translateY(4px)' }, { opacity: 1, transform: 'translateX(-50%)' }], { duration: 520, delay: 520 + 180, easing: SETTLE, fill: 'both' });
     });
