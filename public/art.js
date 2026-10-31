@@ -1675,7 +1675,7 @@
   }
 
   function layout() {
-    var z = parseFloat(getComputedStyle(wrap).zoom) || 1; S = (sc.offsetWidth < 600 ? .55 : .8) * z; W = sc.offsetWidth; H = sc.offsetHeight;
+    var z = parseFloat(getComputedStyle(wrap).zoom) || 1; S = (sc.offsetWidth < 600 ? .8 : .8) * z; W = sc.offsetWidth; H = sc.offsetHeight;
     OFF.x = W + 140; OFF.y = H + 240; P.x = OFF.x; P.y = OFF.y; P.r = 52; place();
   }
   function begin() { layout(); arm.style.opacity = 1; docHand.style.opacity = 0; sc.classList.add('acts-on'); }
