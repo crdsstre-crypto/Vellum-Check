@@ -1127,16 +1127,28 @@
       var g2 = a.createGain(), n3 = noise(a, .12); f.type = 'lowpass'; f.frequency.value = 1200; n3.connect(f); f.connect(g2); g2.connect(a.destination); g2.gain.setValueAtTime(.12, t); g2.gain.exponentialRampToValueAtTime(.001, t + .12); n3.start(t); }
   }
   function playInner(info) {
+    if (document.querySelector('.auth-ghost')) return;                     /* กันเริ่มซ้อน */
     var src = docEl() || document.querySelector('.auth-doc'); if (!src) return;
+    var NSV = 'http://www.w3.org/2000/svg', mob = window.innerWidth < 768;
+    /* ---------- Timeline กลาง: ทุกอนิเมชันอ้างเวลาศูนย์เดียวกัน ---------- */
+    var TL = { t0: 0, anims: [], cues: [], dead: false, raf: 0, frame: null };
+    function A(el, kf, o) { var x = el.animate(kf, o); TL.anims.push(x); return x; }
+    function cue(at, fn) { TL.cues.push({ at: at, fn: fn }); }
+    function kill() { if (TL.dead) return; TL.dead = true; cancelAnimationFrame(TL.raf); TL.anims.forEach(function (x) { try { x.cancel(); } catch (e) {} });
+      document.documentElement.classList.remove('vc-ritual');
+      Array.prototype.forEach.call(document.querySelectorAll('.auth-focus,.auth-ghost,.auth-skip,.auth-welcome,.auth-sound'), function (n) { if (n.parentNode) n.parentNode.removeChild(n); }); }
+    var EASE_OUT = 'cubic-bezier(.22,.61,.36,1)', EASE_IO = 'cubic-bezier(.45,0,.25,1)', SETTLE = 'cubic-bezier(.16,1,.3,1)';
+
+    /* ---------- สร้างเอกสาร (สำเนาแบบฟอร์ม ไม่มี id/ช่องกรอกจริง) ---------- */
     var g = document.createElement('div'); g.className = 'auth-ghost'; g.setAttribute('aria-hidden', 'true');
     var clone = src.cloneNode(true);
     clone.removeAttribute('data-tilt'); clone.style.transform = '';
     clone.querySelectorAll('[id]').forEach(function (n) { n.removeAttribute('id'); });
     clone.querySelectorAll('label').forEach(function (n) { n.removeAttribute('for'); });
     clone.querySelectorAll('input').forEach(function (inp, i) {
-      var sp = document.createElement('span'); sp.className = 'gv';
-      sp.textContent = i === 0 ? '' : '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022';
-      inp.parentNode.replaceChild(sp, inp);
+      var s = document.createElement('span'); s.className = 'gv';
+      s.textContent = i === 0 ? '' : '••••••••';
+      inp.parentNode.replaceChild(s, inp);
     });
     clone.querySelectorAll('button').forEach(function (n) { n.tabIndex = -1; });
     var wrap = document.createElement('div'); wrap.className = 'auth-doc-wrap';
@@ -1145,223 +1157,199 @@
     var r = info.rect, vw = window.innerWidth, vh = window.innerHeight;
     var w = r ? r.width : Math.min(330, vw - 32), h = r ? r.height : 470;
     g.style.width = w + 'px'; g.style.left = (r ? r.left : (vw - w) / 2) + 'px'; g.style.top = (r ? Math.max(r.top, Math.min(100, vh - h - 10)) : Math.max(70, (vh - h) / 2)) + 'px';
-    var st = document.createElement('div'); st.className = 'auth-stamp';
+    var st = document.createElement('div');
     st.className = 'auth-stamp wax'; st.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><defs><radialGradient id="wrg" cx=".36" cy=".3" r=".8"><stop offset="0" stop-color="#c8463c"/><stop offset=".45" stop-color="#8e1d17"/><stop offset="1" stop-color="#4a0a07"/></radialGradient><radialGradient id="wri" cx=".62" cy=".66" r=".75"><stop offset="0" stop-color="#a8302a"/><stop offset="1" stop-color="#651310"/></radialGradient></defs><path d="M114.6 60.0 Q114.6 60.0 112.3 65.7 Q110.0 71.4 110.0 77.7 Q110.0 84.1 104.6 87.7 Q99.2 91.3 95.0 95.0 Q90.9 98.7 88.3 106.0 Q85.7 113.3 78.6 112.1 Q71.6 110.9 65.8 111.2 Q60.0 111.4 53.9 112.6 Q47.7 113.8 41.9 111.7 Q36.1 109.6 32.5 104.3 Q28.9 99.0 24.5 95.4 Q20.1 91.8 17.5 86.8 Q15.0 81.7 11.9 76.7 Q8.7 71.7 6.8 65.9 Q4.8 60.0 7.6 54.3 Q10.3 48.7 10.7 42.5 Q11.0 36.4 16.5 33.0 Q21.9 29.6 23.9 23.5 Q26.0 17.3 32.1 16.1 Q38.3 14.9 43.2 11.3 Q48.1 7.7 54.0 7.4 Q60.0 7.0 65.4 9.7 Q70.9 12.4 76.5 13.3 Q82.1 14.2 87.6 16.4 Q93.1 18.5 98.1 22.1 Q103.2 25.6 106.6 30.8 Q110.0 35.9 112.6 41.7 Q115.2 47.4 114.9 53.7 Z" fill="url(#wrg)"/><path d="M114.6 60.0 Q114.6 60.0 112.3 65.7 Q110.0 71.4 110.0 77.7 Q110.0 84.1 104.6 87.7 Q99.2 91.3 95.0 95.0 Q90.9 98.7 88.3 106.0 Q85.7 113.3 78.6 112.1 Q71.6 110.9 65.8 111.2 Q60.0 111.4 53.9 112.6 Q47.7 113.8 41.9 111.7 Q36.1 109.6 32.5 104.3 Q28.9 99.0 24.5 95.4 Q20.1 91.8 17.5 86.8 Q15.0 81.7 11.9 76.7 Q8.7 71.7 6.8 65.9 Q4.8 60.0 7.6 54.3 Q10.3 48.7 10.7 42.5 Q11.0 36.4 16.5 33.0 Q21.9 29.6 23.9 23.5 Q26.0 17.3 32.1 16.1 Q38.3 14.9 43.2 11.3 Q48.1 7.7 54.0 7.4 Q60.0 7.0 65.4 9.7 Q70.9 12.4 76.5 13.3 Q82.1 14.2 87.6 16.4 Q93.1 18.5 98.1 22.1 Q103.2 25.6 106.6 30.8 Q110.0 35.9 112.6 41.7 Q115.2 47.4 114.9 53.7 Z" fill="none" stroke="rgba(255,170,150,.22)" stroke-width="1.2" transform="translate(-.6 -.6)"/><circle cx="60" cy="60" r="44" fill="none" stroke="rgba(255,170,150,.18)" stroke-width="3"/><circle cx="60" cy="60" r="41.5" fill="none" stroke="rgba(30,2,1,.45)" stroke-width="2.4"/><circle cx="60" cy="60" r="39" fill="url(#wri)" stroke="rgba(40,4,2,.55)" stroke-width="2.4"/><circle cx="60" cy="60" r="35.5" fill="none" stroke="rgba(30,2,1,.5)" stroke-width="1.2"/><circle cx="60.6" cy="60.6" r="35.5" fill="none" stroke="rgba(255,175,155,.25)" stroke-width=".8"/><circle cx="60.8" cy="60.8" r="39" fill="none" stroke="rgba(255,175,155,.35)" stroke-width="1"/><circle cx="60" cy="60" r="32" fill="none" stroke="rgba(255,190,170,.32)" stroke-width="1.4" stroke-dasharray="1.2 3.6"/><text x="61" y="70.6" text-anchor="middle" font-family="Georgia,Times New Roman,serif" font-weight="700" font-size="29" fill="rgba(255,175,155,.45)">VC</text><text x="60" y="69.4" text-anchor="middle" font-family="Georgia,Times New Roman,serif" font-weight="700" font-size="29" fill="#4e0806">VC</text><ellipse cx="38" cy="30" rx="14" ry="7" fill="rgba(255,235,225,.22)" transform="rotate(-35 38 30)"/></svg>' + '<span class="wx-cap">ได้รับการตรวจสอบแล้ว<small>VERIFIED · VELLUM CHECK</small></span>';
-    clone.appendChild(st);
-    /* ฉากบังคับ: ทั้งหน้ามืดลงและเบลอ โฟกัสที่เอกสารอย่างเดียว กดอะไรไม่ได้จนจบ */
+    clone.appendChild(st); st.style.opacity = 0;
     var dim = document.createElement('div'); dim.className = 'auth-focus'; document.body.appendChild(dim); document.documentElement.classList.add('vc-ritual');
-    dim.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 450, easing: 'ease-out', fill: 'both' });
-    var cs = document.createElement('i'); cs.className = 'gh-contact'; cs.setAttribute('aria-hidden', 'true'); g.insertBefore(cs, g.firstChild);
-    var rk = document.createElement('i'); rk.className = 'gh-rake'; rk.setAttribute('aria-hidden', 'true'); clone.appendChild(rk);
-    var pen = document.createElement('div'); pen.className = 'gh-pen'; pen.setAttribute('aria-hidden', 'true');
-    pen.innerHTML = '<svg viewBox="0 0 320 40"><defs><linearGradient id="gpB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a4a42"/><stop offset=".35" stop-color="#15110e"/><stop offset="1" stop-color="#030202"/></linearGradient><linearGradient id="gpG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0b8"/><stop offset=".5" stop-color="#c9a24c"/><stop offset="1" stop-color="#6b4d17"/></linearGradient></defs><rect x="40" y="12" width="200" height="17" rx="8.5" fill="url(#gpB)"/><rect x="62" y="12" width="7" height="17" fill="url(#gpG)"/><rect x="206" y="12" width="5" height="17" fill="url(#gpG)"/><path d="M240 13 H262 L292 20.5 L262 28 H240 Z" fill="url(#gpG)"/><path d="M292 20.5 L310 20.5" stroke="#8a6a28" stroke-width="2"/><path d="M54 10 L34 10 Q28 10 28 14 L28 16 L40 16 L40 14 L54 14 Z" fill="url(#gpG)"/><path d="M72 15 H198" stroke="rgba(255,255,255,.28)" stroke-width="2" stroke-linecap="round"/></svg>';
-    g.appendChild(pen);
-    pen.animate([{ opacity: 0, transform: 'translate(40px,30px) rotate(-30deg)' }, { opacity: 1, transform: 'rotate(-26deg)' }], { duration: 900, delay: 200, easing: 'cubic-bezier(.2,.8,.25,1)', fill: 'both' });
-    document.body.appendChild(g); sfx('paper');
-    rk.animate([{ backgroundPosition: '-60% 0' }, { backgroundPosition: '40% 0' }], { duration: 1600, easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'both' });
-    /* กระดาษซ้อน: แผ่นล่างแต่ละแผ่นเลื่อนเข้าที่ช้ากว่าแผ่นบนเล็กน้อย คนละมุม */
-    try {
-      ['::before', '::after'].forEach(function (pe, n) {
-        var fin = getComputedStyle(clone, pe).transform; if (!fin || fin === 'none') return;
-        clone.animate([{ transform: fin + (n ? ' translate(-26px,46px) rotate(-3deg)' : ' translate(22px,34px) rotate(3deg)'), opacity: .4 }, { transform: fin, opacity: 1 }],
-          { duration: 900 + n * 160, delay: 60 + n * 90, easing: 'cubic-bezier(.2,.8,.25,1)', fill: 'both', pseudoElement: pe });
-      });
-    } catch (e) {}
-    /* Parallax เบาๆ ตามเมาส์: ฉากหลังขยับน้อยกว่าเอกสาร ให้รู้สึกมีความลึก */
-    var onMove = function (e) {
-      if (e.pointerType && e.pointerType !== 'mouse') return;
-      var nx = e.clientX / innerWidth - .5, ny = e.clientY / innerHeight - .5;
-      g.style.translate = (nx * -10).toFixed(1) + 'px ' + (ny * -7).toFixed(1) + 'px';
-      dim.style.setProperty('--px', (nx * 18).toFixed(1) + 'px'); dim.style.setProperty('--py', (ny * 12).toFixed(1) + 'px');
-    };
-    window.addEventListener('pointermove', onMove);
-    setTimeout(function () { window.removeEventListener('pointermove', onMove); }, 15000);
-    cs.animate([{ opacity: 0, transform: 'scale(1.12) translateY(40px)' }, { opacity: 1, transform: 'none' }], { duration: 700, easing: 'cubic-bezier(.2,.8,.25,1)', fill: 'both' });
-    var E = 'cubic-bezier(.16,1,.3,1)';
-    g.style.transformOrigin = '50% 60%';
-    g.animate([{ opacity: 0, transform: 'translateY(70px) rotate(3.5deg) scale(.96)', filter: 'brightness(.35)' },
-               { opacity: 1, transform: 'translateY(-4px) rotate(-.4deg) scale(1)', filter: 'brightness(.9)', offset: .7 },
-               { opacity: 1, transform: 'none', filter: 'none' }], { duration: 700, easing: 'cubic-bezier(.2,.8,.25,1)', fill: 'both' });
-    /* ปุ่มข้าม (ผู้ใช้ไม่ต้องรอ) */
+    var cs = document.createElement('i'); cs.className = 'gh-contact'; g.insertBefore(cs, g.firstChild);
+    document.body.appendChild(g);
     var skip = document.createElement('button'); skip.type = 'button'; skip.className = 'auth-skip'; skip.textContent = 'ข้าม ›';
-    skip.addEventListener('click', function () { document.documentElement.classList.remove('vc-ritual'); Array.prototype.forEach.call(document.querySelectorAll('.auth-focus,.auth-ghost,.auth-skip,.auth-welcome,.auth-sound'), function (n) { if (n.parentNode) n.parentNode.removeChild(n); }); });
-    document.body.appendChild(skip);
+    skip.addEventListener('click', kill); document.body.appendChild(skip);
     var snd = document.createElement('button'); snd.type = 'button'; snd.className = 'auth-sound';
     var lab = function () { snd.textContent = sndOn() ? 'เสียง: เปิด' : 'เสียง: ปิด'; snd.setAttribute('aria-pressed', sndOn() ? 'true' : 'false'); }; lab();
     snd.addEventListener('click', function () { try { localStorage.setItem('vc_sfx', sndOn() ? '0' : '1'); } catch (e) {} lab(); if (sndOn()) ac(); });
     document.body.appendChild(snd);
 
-    /* มือเขียนอีเมลลงในช่องอีเมล แล้วเซ็นลายเซ็นบนเส้น "ลงชื่อ" แล้วถอนมือ */
+    /* ---------- วัดตำแหน่ง (อ่าน layout ครั้งเดียวก่อนเริ่ม) ---------- */
     function offs(el, root) { var x = 0, y = 0; while (el && el !== root) { x += el.offsetLeft; y += el.offsetTop; el = el.offsetParent; } return { x: x, y: y }; }
-    var email = (info.email || '').trim(), WRITE = 0, SIG = 1100, GAP = 380, handSvg = null, gv = clone.querySelector('.gv');
+    var CW = clone.offsetWidth, CH = clone.offsetHeight;
+    var email = (info.email || '').trim(), gv = clone.querySelector('.gv');
     var signLine = clone.querySelector('.ad-sign i') || clone.querySelector('.ad-sign');
-    var sgn = signLine ? offs(signLine, clone) : { x: 90, y: clone.offsetHeight - 70 };
-    var lineW = signLine ? Math.max(signLine.offsetWidth, 120) : clone.offsetWidth * .6;
-    var NSV = 'http://www.w3.org/2000/svg';
-    var sigW = Math.min(lineW - 16, 230), sigH = sigW * .24, sig = document.createElementNS(NSV, 'svg');
-    sig.setAttribute('viewBox', '0 0 260 62'); sig.setAttribute('aria-hidden', 'true');
-    sig.style.cssText = 'position:absolute;left:' + (sgn.x + 10) + 'px;top:' + (sgn.y - sigH - 2) + 'px;width:' + sigW + 'px;height:' + sigH + 'px;overflow:visible;pointer-events:none;z-index:4';
-    sig.innerHTML = '<path d="M6 44 C14 6 30 4 34 34 S46 58 54 26 S70 2 78 32 C83 52 96 46 100 24 S118 6 126 34 C130 52 144 44 150 28 S168 14 178 26 M4 54 C64 60 140 56 214 46" fill="none" stroke="#2a1a3a" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>';
+    var sgn = signLine ? offs(signLine, clone) : { x: 90, y: CH - 70 };
+    var lineW = signLine ? Math.max(signLine.offsetWidth, 120) : CW * .6;
+    var sigW = Math.min(lineW - 16, 230), sigH = sigW * .24, sigX = sgn.x + 10, sigY = sgn.y - sigH - 2, k = sigW / 260;
+    var sig = document.createElementNS(NSV, 'svg'); sig.setAttribute('viewBox', '0 0 260 62'); sig.setAttribute('class', 'gh-sig');
+    sig.style.cssText = 'left:' + sigX + 'px;top:' + sigY + 'px;width:' + sigW + 'px;height:' + sigH + 'px';
+    sig.innerHTML = '<path d="M6 44 C14 6 30 4 34 34 S46 58 54 26 S70 2 78 32 C83 52 96 46 100 24 S118 6 126 34 C130 52 144 44 150 28 S168 14 178 26 M4 54 C64 60 140 56 214 46" fill="none" stroke="#2a1a3a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>';
     clone.appendChild(sig);
     var sp = sig.firstChild, SL = sp.getTotalLength ? sp.getTotalLength() : 0;
     sp.style.strokeDasharray = SL; sp.style.strokeDashoffset = SL;
-    /* The Focus Pull: ระยะชัดตื้น จุดคมชัดตามปลายปากกา ส่วนอื่นของกระดาษนุ่มเบลอ (กล้องแทบไม่ขยับ) */
-    var fp = document.createElement('i'); fp.className = 'fp-blur'; clone.appendChild(fp);
-    var fpAt = function (x, y, r) { fp.style.setProperty('--fx', x.toFixed(0) + 'px'); fp.style.setProperty('--fy', y.toFixed(0) + 'px'); if (r) fp.style.setProperty('--fr', r + 'px'); };
-    fpAt(clone.offsetWidth * .5, clone.offsetHeight * .35, 150);
-    fp.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 900, delay: 300, easing: 'ease-out', fill: 'both' });
-    var gw = null, tw = 0, bead = document.createElement('i'); bead.className = 'ink-bead'; bead.style.opacity = 0; clone.appendChild(bead);
+    var PTS = []; for (var pi = 0; pi <= 240; pi++) { var q0 = sp.getPointAtLength(SL * pi / 240); PTS.push([q0.x, q0.y]); }   /* อ่านเส้นทางครั้งเดียว ไม่เรียกระหว่างเล่น */
+    function ptAt(f) { var s = Math.min(240, Math.max(0, f * 240)), i0 = Math.floor(s), i1 = Math.min(240, i0 + 1), fr = s - i0; return { x: PTS[i0][0] + (PTS[i1][0] - PTS[i0][0]) * fr, y: PTS[i0][1] + (PTS[i1][1] - PTS[i0][1]) * fr }; }
+    var gw = null, tw = 0, go = { x: sgn.x, y: sgn.y - 60 }, gh = 20;
     if (gv && email) {
       gv.innerHTML = '<span class="gw"></span>'; gw = gv.firstChild; gw.textContent = email;
-      tw = gw.offsetWidth || 120; inkMask(gw, 0);
+      tw = gw.offsetWidth || 120;
       if (tw > gv.offsetWidth - 10) { gw.style.fontSize = (parseFloat(getComputedStyle(gw).fontSize) * (gv.offsetWidth - 10) / tw).toFixed(1) + 'px'; tw = gw.offsetWidth; }
-      WRITE = Math.max(1200, Math.min(2200, 700 + email.length * 60));
+      go = offs(gw, clone); gh = gw.offsetHeight; inkMask(gw, 0);
     }
-    var src2 = document.querySelector('#authLoggedOut .ad-hand .ah-rot'), defs = document.querySelector('#authLoggedOut .ad-hand defs');
-    if (src2 && defs && SL) {
-      var go = gw ? offs(gw, clone) : { x: sgn.x, y: sgn.y - 40 };
-      var sx = go.x, sy = go.y + (gw ? gw.offsetHeight * .78 : 20);
-      var sc2 = Math.max(.5, Math.min(.8, clone.offsetWidth / 450));
-      var rn = function (s) { return s.replace(/vcSkin2/g, 'ghSkin2').replace(/vcSkin/g, 'ghSkin').replace(/vcSleeve/g, 'ghSleeve').replace(/vcCuff/g, 'ghCuff').replace(/vcPen/g, 'ghPen').replace(/vcShade/g, 'ghShade'); };
-      handSvg = document.createElementNS(NSV, 'svg'); handSvg.setAttribute('class', 'gh-hand gh-real'); handSvg.setAttribute('aria-hidden', 'true');
-      handSvg.innerHTML = rn(defs.outerHTML) + '<g class="gh-g">' + rn(src2.outerHTML) + '</g>';
-      clone.appendChild(handSvg);
-      var hg = handSvg.querySelector('.gh-g'); hg.style.opacity = 0;
-      var put = function (x, y) { fpAt(x, y, 120); hg.setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ') rotate(52) scale(' + sc2 + ')'); };
-      var k = sigW / 260, sigX = sgn.x + 10, sigY = sgn.y - sigH - 2;
-      var T1 = WRITE, T2 = T1 + GAP, T3 = T2 + SIG, T4 = T3 + 600, t0 = performance.now() + 900, lastEmail = { x: sx + 4 + tw, y: sy };
-      (function fr(now) {
-        var t = now - t0; if (t < 0) { requestAnimationFrame(fr); return; }
-        var wob = Math.sin(t / 40) * 1.8 + Math.sin(t / 130) * 1;
-        hg.style.opacity = Math.min(1, t / 250);
-        if (t < T1 && gw) {
-          var p = t / T1, e = inkPace(p);
-          inkMask(gw, e * tw); bead.style.left = (go.x + e * tw) + 'px'; bead.style.top = (go.y + gw.offsetHeight * .62) + 'px'; bead.style.opacity = .85; put(sx + 4 + e * tw, sy + wob);
-          if (!fr.s1) { fr.s1 = 1; sfx('scratch', T1); }
-        } else if (t < T2) {
-          if (gw) { gw.style.webkitMaskImage = gw.style.maskImage = 'none'; gw.classList.add('dry'); } bead.style.opacity = 0; if (!fr.b1) { fr.b1 = 1; blot(sigX + sp.getPointAtLength(0).x * k, sigY + sp.getPointAtLength(0).y * k, 3.2); }
-          var q = (t - T1) / GAP, f = q * q * (3 - 2 * q), p0 = sp.getPointAtLength(0);
-          put(lerp2(lastEmail.x, sigX + p0.x * k, f), lerp2(lastEmail.y, sigY + p0.y * k, f) - Math.sin(q * Math.PI) * 26);
-        } else if (t < T3) {
-          var p2 = (t - T2) / SIG, e2 = inkPace(p2), pt = sp.getPointAtLength(e2 * SL);
-          sp.style.strokeDashoffset = SL * (1 - e2); sp.style.strokeWidth = (2.1 + Math.abs(Math.sin(e2 * 23)) * 1.3 + (1 - p2) * .4).toFixed(2); put(sigX + pt.x * k, sigY + pt.y * k + wob);
-          if (!fr.s2) { fr.s2 = 1; sfx('scratch', SIG); }
-        } else if (t < T4) {
-          var r = (t - T3) / 600, pe = sp.getPointAtLength(SL);
-          if (!fr.b2) { fr.b2 = 1; blot(sigX + pe.x * k, sigY + pe.y * k, 2.6); sp.style.strokeWidth = '2.6'; }
-          sp.style.strokeDashoffset = 0; put(sigX + pe.x * k + r * 260, sigY + pe.y * k + r * 320); hg.style.opacity = 1 - r;
-        } else { if (handSvg.parentNode) handSvg.parentNode.removeChild(handSvg); return; }
-        requestAnimationFrame(fr);
-      })(performance.now());
-      WRITE = T3 + 150;   /* ตราลงตอนมือกำลังถอยออก */
-    } else { if (gw) { gw.style.webkitMaskImage = gw.style.maskImage = 'none'; } sp.style.strokeDashoffset = 0; WRITE = 0; }
-    function lerp2(a, b, t) { return a + (b - a) * t; }
-    /* ความเร็วเขียนแบบคนจริง: เร่ง-ชะลอ-หยุดสั้นๆ เป็นช่วงๆ */
-    function inkPace(p) { var N = 5, s = Math.min(N - 1e-6, p * N), i = Math.floor(s), f = s - i, sm = f * f * (3 - 2 * f); return (i + sm * .92 + f * .08) / N; }
-    function blot(x, y, r) { var b = document.createElement('i'); b.className = 'ink-blot'; b.style.cssText = 'left:' + x.toFixed(1) + 'px;top:' + y.toFixed(1) + 'px;width:' + (r * 2) + 'px;height:' + (r * 2) + 'px'; clone.appendChild(b);
-      b.animate([{ transform: 'scale(.2)', opacity: .9 }, { transform: 'scale(1.15)', opacity: .9, offset: .5 }, { transform: 'scale(1)', opacity: .75 }], { duration: 700, easing: 'ease-out', fill: 'both' }); }
-    function inkMask(el, x) { var m = 'linear-gradient(90deg,#000 ' + Math.max(0, x - 10).toFixed(1) + 'px,rgba(0,0,0,.35) ' + x.toFixed(1) + 'px,transparent ' + (x + 6).toFixed(1) + 'px)'; el.style.webkitMaskImage = m; el.style.maskImage = m; }
-    /* ตราลงตรงเส้นลงชื่อ ด้านขวา */
-    var stX = Math.min(clone.offsetWidth * .68, clone.offsetWidth - 95), stY = Math.max(110, sgn.y - 150);
+    var stX = Math.min(CW * .68, CW - 95), stY = Math.max(110, sgn.y - 150);
     st.style.left = stX + 'px'; st.style.top = stY + 'px';
-    /* Contract Scan: เส้นแสงสีเงินบางๆ กวาดลงผ่านเอกสาร ไฮไลต์บรรทัดสำคัญ (อีเมล ลายเซ็น) แบบนุ่มๆ ไม่ใช่แสงนีออน */
-    var SC = 900, scAt = 750 + (WRITE ? WRITE + 120 : 100);
-    var scan = document.createElement('i'); scan.className = 'gh-scan'; scan.setAttribute('aria-hidden', 'true'); clone.appendChild(scan);
-    scan.animate([{ top: '4%', opacity: 0 }, { opacity: 1, offset: .12 }, { opacity: 1, offset: .85 }, { top: '96%', opacity: 0 }], { duration: SC, delay: scAt, easing: 'cubic-bezier(.45,0,.4,1)', fill: 'both' });
-    [gv && gv.parentNode, signLine && signLine.parentNode].forEach(function (row, n) {
-      if (!row) return; var hl = document.createElement('i'); hl.className = 'gh-hl'; var o = offs(row, clone);
-      hl.style.cssText = 'left:' + (o.x - 6) + 'px;top:' + (o.y - 4) + 'px;width:' + (row.offsetWidth + 12) + 'px;height:' + (row.offsetHeight + (n ? 30 : 8)) + 'px' + (n ? ';margin-top:-26px' : '');
-      clone.appendChild(hl);
-      var at = scAt + SC * ((o.y + row.offsetHeight / 2) / clone.offsetHeight);
-      hl.animate([{ opacity: 0 }, { opacity: 1, offset: .25 }, { opacity: .35 }], { duration: 900, delay: at, easing: 'ease-out', fill: 'both' });
-    });
-    var D = scAt + SC + 150;   /* เวลาที่ตราจะลงประทับ */
+
+    /* ---------- ปากกา: วัตถุแข็งชิ้นเดียวที่ขยับได้จริง (แทนมือที่งอข้อต่อไม่ได้) ----------
+       ปากกาวางบนโต๊ะ → ถูกยกขึ้น → เขียนอีเมล → ยกข้ามไปเซ็น → วางกลับที่เดิม
+       ปลายปากกาอยู่ที่จุด (0,0) ของชิ้น เคลื่อนด้วย transform อย่างเดียว (ไม่กระทบ layout) */
+    var PS = mob ? .62 : .8;
+    var pen = document.createElement('div'); pen.className = 'gh-penw';
+    pen.innerHTML = '<svg viewBox="-4 -14 214 28" class="pn"><defs><linearGradient id="gpB2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5c4d45"/><stop offset=".38" stop-color="#16120f"/><stop offset="1" stop-color="#030202"/></linearGradient><linearGradient id="gpG2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0b8"/><stop offset=".5" stop-color="#c9a24c"/><stop offset="1" stop-color="#6b4d17"/></linearGradient></defs>' +
+      '<path d="M0 0 L20 -4.6 L20 4.6 Z" fill="url(#gpG2)"/><path d="M2 0 L18 0" stroke="#5a4214" stroke-width=".8"/><rect x="20" y="-6.5" width="22" height="13" rx="3" fill="#121010"/><rect x="40" y="-7.5" width="6" height="15" fill="url(#gpG2)"/>' +
+      '<rect x="46" y="-8" width="150" height="16" rx="8" fill="url(#gpB2)"/><rect x="170" y="-8" width="5" height="16" fill="url(#gpG2)"/><path d="M52 -4 H186" stroke="rgba(255,255,255,.3)" stroke-width="1.6" stroke-linecap="round"/></svg>';
+    var psh = document.createElement('div'); psh.className = 'gh-pensh';
+    clone.appendChild(psh); clone.appendChild(pen);
+    var REST = { x: CW + (mob ? 6 : 26), y: CH * .70, rot: -22, lift: 0 }, HOLD = -38;
+    function penAt(x, y, rot, lift) {
+      var s = PS * (1 + lift * .05);
+      pen.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + (y - lift * 10).toFixed(1) + 'px,0) rotate(' + rot.toFixed(2) + 'deg) scale(' + s.toFixed(3) + ')';
+      psh.style.transform = 'translate3d(' + (x + 4 + lift * 16).toFixed(1) + 'px,' + (y + 5 + lift * 14).toFixed(1) + 'px,0) rotate(' + rot.toFixed(2) + 'deg) scale(' + PS.toFixed(3) + ')';
+      psh.style.opacity = (.55 - lift * .3).toFixed(2);
+    }
+    penAt(REST.x, REST.y, REST.rot, 0);
+    var bead = document.createElement('i'); bead.className = 'ink-bead'; bead.style.left = go.x + 'px'; bead.style.top = (go.y + gh * .64) + 'px'; clone.appendChild(bead);
+
+    /* จังหวะเขียน: ความเร็วแกว่งตามธรรมชาติแต่ไม่หยุดนิ่ง (ไม่ใช่ linear และไม่สะดุด) */
+    function smooth(p) { return .5 - .5 * Math.cos(Math.PI * Math.min(1, Math.max(0, p))); }
+    function pace(p) { var b0 = smooth(p), n = 5, a = .28; return Math.min(1, Math.max(0, b0 + a * Math.sin(2 * Math.PI * n * b0) / (2 * Math.PI * n))); }
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function inkMask(el, x) { var m = 'linear-gradient(90deg,#000 ' + Math.max(0, x - 8).toFixed(1) + 'px,rgba(0,0,0,.4) ' + x.toFixed(1) + 'px,transparent ' + (x + 5).toFixed(1) + 'px)'; el.style.webkitMaskImage = m; el.style.maskImage = m; }
+    function blot(x, y, rr) { var bb = document.createElement('i'); bb.className = 'ink-blot'; bb.style.cssText = 'left:' + x.toFixed(1) + 'px;top:' + y.toFixed(1) + 'px;width:' + (rr * 2) + 'px;height:' + (rr * 2) + 'px'; clone.appendChild(bb);
+      A(bb, [{ transform: 'scale(.3)', opacity: .85 }, { transform: 'scale(1)', opacity: .7 }], { duration: 500, easing: EASE_OUT, fill: 'both' }); }
+
+    /* ---------- ลำดับเวลา (ms จากจุดเริ่ม) ---------- */
+    var P0 = 800, PICK = 650;                                   /* ยกปากกาจากโต๊ะไปจุดเริ่มอีเมล */
+    var W0 = P0 + PICK, WRITE = gw ? Math.max(1300, Math.min(2300, 700 + email.length * 62)) : 0;
+    var G0 = W0 + WRITE, GAP = 460;                            /* ยกข้ามไปที่ลายเซ็น */
+    var S0 = G0 + GAP, SIG = SL ? 1250 : 0;
+    var R0 = S0 + SIG, RET = 700;                              /* วางปากกากลับที่เดิม */
+    var D = R0 + 320;                                          /* ตราเริ่มลง (หลังปากกาพ้นบริเวณลายเซ็นแล้ว) */
+    var CONTACT = D + 520, LK = D + 950, TF = LK + 950, WL = TF + 520, EXIT = TF + 1900;
+    var e1 = { x: go.x + 2, y: go.y + gh * .8 }, s0 = SL ? sp.getPointAtLength(0) : { x: 0, y: 0 }, sEnd = SL ? sp.getPointAtLength(SL) : { x: 0, y: 0 };
+    var sigStart = { x: sigX + s0.x * k, y: sigY + s0.y * k }, sigEnd = { x: sigX + sEnd.x * k, y: sigY + sEnd.y * k };
+    var lastX = 0, rotC = REST.rot;
+
+    function frame(t) {                                          /* เรียกจาก rAF เดียว */
+      var x, y, rot = HOLD, lift = 0, u;
+      if (t < P0) { x = REST.x; y = REST.y; rot = REST.rot; lift = 0; }
+      else if (t < W0) { u = smooth((t - P0) / PICK); x = lerp(REST.x, e1.x, u); y = lerp(REST.y, e1.y, u); rot = lerp(REST.rot, HOLD, u); lift = Math.sin(Math.PI * u) * .9 + (u > .85 ? 0 : 0); }
+      else if (t < G0 && gw) {
+        var pr = pace((t - W0) / WRITE), xx = pr * tw;
+        inkMask(gw, xx); bead.style.transform = 'translate3d(' + xx.toFixed(1) + 'px,0,0)'; bead.style.opacity = .85;
+        x = e1.x + xx; y = e1.y + Math.sin(pr * Math.PI * 9) * .8; lift = 0;
+        if (!frame.s1) { frame.s1 = 1; sfx('scratch', WRITE); }
+      }
+      else if (t < S0) {
+        if (gw && !frame.d1) { frame.d1 = 1; gw.style.webkitMaskImage = gw.style.maskImage = 'none'; gw.classList.add('dry'); bead.style.opacity = 0; }
+        u = smooth((t - G0) / GAP); x = lerp(e1.x + tw, sigStart.x, u); y = lerp(e1.y, sigStart.y, u); lift = Math.sin(Math.PI * u);
+      }
+      else if (t < R0 && SL) {
+        if (!frame.b1) { frame.b1 = 1; blot(sigStart.x, sigStart.y, 2.6); sfx('scratch', SIG); }
+        var p2 = pace((t - S0) / SIG), pt = ptAt(p2);
+        sp.style.strokeDashoffset = (SL * (1 - p2)).toFixed(1);
+        x = sigX + pt.x * k; y = sigY + pt.y * k; lift = 0;
+      }
+      else if (t < R0 + RET) {
+        if (!frame.b2) { frame.b2 = 1; sp.style.strokeDashoffset = 0; blot(sigEnd.x, sigEnd.y, 2.2); }
+        u = smooth((t - R0) / RET); x = lerp(sigEnd.x, REST.x, u); y = lerp(sigEnd.y, REST.y, u); rot = lerp(HOLD, REST.rot, u); lift = Math.sin(Math.PI * u) * .9;
+      }
+      else { x = REST.x; y = REST.y; rot = REST.rot; lift = 0; }
+      /* ปากกาเอียงตามความเร็วแนวนอนเล็กน้อย (หน่วงนุ่ม ไม่สั่น) */
+      if (rot === HOLD) { var vx = x - lastX; rotC += ((HOLD + Math.max(-4, Math.min(4, -vx * .9))) - rotC) * .18; rot = rotC; } else rotC = rot;
+      lastX = x; penAt(x, y, rot, lift);
+    }
+    function tick(now) {
+      if (TL.dead) return;
+      var t = now - TL.t0;
+      frame(t);
+      for (var i = 0; i < TL.cues.length; i++) { var c = TL.cues[i]; if (!c.done && t >= c.at) { c.done = 1; c.fn(); } }
+      if (t < EXIT + 900) TL.raf = requestAnimationFrame(tick);
+    }
+
+    /* ---------- อนิเมชันทั้งหมด (WAAPI อ้างเวลาเริ่มเดียวกัน) ---------- */
+    A(dim, [{ opacity: 0 }, { opacity: 1 }], { duration: 500, easing: EASE_OUT, fill: 'both' });
+    g.style.transformOrigin = '50% 70%';
+    A(g, [{ opacity: 0, transform: 'translate3d(0,56px,0) rotate(2.5deg)' }, { opacity: 1, transform: 'none' }], { duration: 900, easing: SETTLE, fill: 'both' });
+    A(cs, [{ opacity: 0, transform: 'translate3d(0,40px,0) scale(1.1)' }, { opacity: 1, transform: 'none' }], { duration: 900, easing: SETTLE, fill: 'both' });
+    try { ['::before', '::after'].forEach(function (pe, n) {
+      var fin = getComputedStyle(clone, pe).transform; if (!fin || fin === 'none') return;
+      A(clone, [{ transform: fin + (n ? ' translate(-14px,24px)' : ' translate(12px,18px)') }, { transform: fin }], { duration: 1000, delay: 80 + n * 90, easing: SETTLE, fill: 'both', pseudoElement: pe });
+    }); } catch (e) {}
+    /* แสงเล่าเรื่อง: เริ่มมืด สว่างตามการเขียน สงบหลังประทับตรา */
     var ls = document.createElement('i'); ls.className = 'ls-shade'; clone.appendChild(ls);
-    var tot = D + 900;
-    ls.animate([{ opacity: .62 }, { opacity: .4, offset: 900 / tot }, { opacity: .12, offset: Math.min(.9, (900 + WRITE * .7) / tot) }, { opacity: .05, offset: (D - 100) / tot }, { opacity: .3, offset: (D + 420) / tot }, { opacity: .08 }], { duration: tot, easing: 'ease-in-out', fill: 'both' });
-    var rake = document.createElement('i'); rake.className = 'ls-rake'; clone.appendChild(rake);
-    rake.animate([{ opacity: 0 }, { opacity: 1, offset: .35 }, { opacity: .55 }], { duration: 1400, delay: D + 300, easing: 'ease-out', fill: 'both' });
-    /* ตราขี้ผึ้งลงมาจากด้านบน → กดลง ยุบตัว → เงาสัมผัส → กระดาษสั่นเบาๆ → คำบรรยายตรา */
-    var mob = window.innerWidth < 768;
+    A(ls, [{ opacity: .6 }, { opacity: .1 }], { duration: Math.max(800, G0 - 300), delay: 300, easing: EASE_IO, fill: 'both' });
+    /* ตรา: เคลื่อนลง (เร่งเล็กน้อย) → สัมผัส → กดลงเล็กน้อย → ยกแรงออก ไม่เด้ง */
+    cue(D, function () {
     var sh = document.createElement('i'); sh.className = 'wx-shadow'; sh.style.left = stX + 'px'; sh.style.top = stY + 'px'; clone.appendChild(sh);
-    sh.animate([{ opacity: 0, transform: 'scale(1.9)' }, { opacity: .55, transform: 'scale(1.05)', offset: .75 }, { opacity: .8, transform: 'scale(1)' }],
-      { duration: 520, delay: D, easing: 'ease-in', fill: 'both' });
-    st.animate([
-      { opacity: 0, transform: 'translateY(-130px) scale(1.55) rotate(-18deg)' },
-      { opacity: 1, transform: 'translateY(-10px) scale(1.08) rotate(-9deg)', offset: .72 },
-      { opacity: 1, transform: 'translateY(0) scale(.9,.86) rotate(-8deg)', offset: .84 },
-      { opacity: 1, transform: 'translateY(0) scale(1.03) rotate(-8deg)', offset: .93 },
-      { opacity: 1, transform: 'translateY(0) scale(1) rotate(-8deg)' }
-    ], { duration: 640, delay: D, easing: 'cubic-bezier(.45,0,.2,1)', fill: 'both' });
-    setTimeout(function () { sfx('seal'); }, D + 470);
-    var sp2 = document.createElement('i'); sp2.className = 'wx-spread'; sp2.style.left = stX + 'px'; sp2.style.top = stY + 'px'; clone.appendChild(sp2);
-    sp2.animate([{ opacity: 0, transform: 'scale(.55)' }, { opacity: .9, transform: 'scale(1.06)', offset: .5 }, { opacity: .0, transform: 'scale(1.18)' }], { duration: 520, delay: D + 470, easing: 'ease-out', fill: 'both' });
+    A(sh, [{ opacity: 0, transform: 'scale(1.7)' }, { opacity: .75, transform: 'scale(1)', offset: .8 }, { opacity: .85, transform: 'scale(.98)' }], { duration: 650, delay: 0, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'both' });
+    A(st, [
+      { opacity: 0, transform: 'translate3d(0,-96px,0) scale(1.16) rotate(-11deg)', easing: 'cubic-bezier(.45,0,.8,.6)' },
+      { opacity: 1, transform: 'translate3d(0,-22px,0) scale(1.05) rotate(-8.6deg)', offset: .55, easing: 'cubic-bezier(.3,.3,.6,1)' },
+      { opacity: 1, transform: 'translate3d(0,0,0) scale(1) rotate(-8deg)', offset: .8, easing: 'cubic-bezier(.3,0,.4,1)' },
+      { opacity: 1, transform: 'translate3d(0,.8px,0) scale(.985,.98) rotate(-8deg)', offset: .9, easing: 'cubic-bezier(.2,0,.2,1)' },
+      { opacity: 1, transform: 'translate3d(0,0,0) scale(1) rotate(-8deg)' }
+    ], { duration: 650, delay: 0, fill: 'both' });
+    A(clone, [{ transform: 'translateY(0)' }, { transform: 'translateY(1.5px)', offset: .35 }, { transform: 'translateY(0)' }], { duration: 300, delay: 520, easing: EASE_OUT });
     var gl = document.createElement('i'); gl.className = 'wx-glint'; st.appendChild(gl);
-    gl.animate([{ transform: 'translateX(-120%) rotate(25deg)', opacity: 0 }, { opacity: .9, offset: .3 }, { transform: 'translateX(140%) rotate(25deg)', opacity: 0 }], { duration: 900, delay: D + 780, easing: 'ease-in-out', fill: 'both' });
-    dim.animate([{ opacity: 1 }, { opacity: 1, filter: 'brightness(.75)', offset: .3 }, { opacity: 1, filter: 'none' }], { duration: 600, delay: D + 470, easing: 'ease-out' });
-    g.animate([{ transform: 'none' }, { transform: 'scale(1.018)', offset: .35 }, { transform: 'none' }], { duration: 300, delay: D + 470, easing: 'ease-out', composite: 'add' });
-    clone.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(3px)', offset: .4 }, { transform: 'translateY(-1px)', offset: .7 }, { transform: 'translateY(0)' }],
-      { duration: 280, delay: D + 520, easing: 'ease-out' });
+    A(gl, [{ transform: 'translateX(-120%) rotate(25deg)', opacity: 0 }, { opacity: .7, offset: .35 }, { transform: 'translateX(140%) rotate(25deg)', opacity: 0 }], { duration: 1000, delay: 520 + 260, easing: EASE_IO, fill: 'both' });
     var cap = st.querySelector('.wx-cap');
-    if (cap) cap.animate([{ opacity: 0, transform: 'translateX(-50%) translateY(4px)' }, { opacity: 1, transform: 'translateX(-50%)' }], { duration: 500, delay: D + 760, easing: E, fill: 'both' });
-    /* ปิดฉาก: กล้องเคลื่อนเข้าใกล้ตรา แล้วข้อความต้อนรับ */
-    var Z = D + 640 + 150;
-    /* โฟกัสย้ายไปที่ตรา */
-    setTimeout(function () { var a0 = performance.now(), fx0 = parseFloat(fp.style.getPropertyValue('--fx')) || stX, fy0 = parseFloat(fp.style.getPropertyValue('--fy')) || stY;
-      (function mv(n) { var q = Math.min(1, (n - a0) / 500), e = q * q * (3 - 2 * q); fpAt(fx0 + (stX - fx0) * e, fy0 + (stY - fy0) * e, 120 + 30 * e); if (q < 1) requestAnimationFrame(mv); })(a0); }, Math.max(0, D - 450));
-    /* The Signature Lock: เอกสารหมุนเข้าตรง แผ่นซ้อนเข้าแนวพอดี ปากกาหยุด ทุกอย่างนิ่ง แล้วโฟกัสคลายทั้งแผ่น */
-    var LK = Z;
-    try { pose.animate([{ transform: getComputedStyle(pose).transform === 'none' ? 'rotate(-7deg)' : getComputedStyle(pose).transform }, { transform: 'rotate(0deg)' }], { duration: 750, delay: LK, easing: 'cubic-bezier(.3,0,.15,1)', fill: 'forwards' }); } catch (e) {}
-    try { ['::before', '::after'].forEach(function (pe, n) { clone.animate([{ transform: getComputedStyle(clone, pe).transform }, { transform: 'translate(' + (n ? 3 : 2) + 'px,' + (n ? 6 : 3) + 'px)' }], { duration: 700, delay: LK + 60 + n * 60, easing: 'cubic-bezier(.3,0,.15,1)', fill: 'forwards', pseudoElement: pe }); }); } catch (e) {}
-    fp.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 600, delay: LK + 350, easing: 'ease-out', fill: 'forwards' });
-    Z = LK + 950;
-    g.style.transformOrigin = (stX + 30) + 'px ' + (stY + 30) + 'px';
-    g.animate([{ transform: 'none' }, { transform: 'scale(' + (mob ? 1.04 : 1.08) + ')' }], { duration: 1500, delay: Z, easing: 'cubic-bezier(.3,0,.2,1)', fill: 'forwards' });
-    /* The Paper Transformation: เนื้อหาแบบฟอร์มคลี่กลายเป็นหน้า "พื้นที่ตรวจสัญญา" (ลายเซ็นและตรายังอยู่) แล้วจึงเลื่อนเข้าเว็บ */
-    var rpH = Math.max(160, stY - 25), rp = document.createElement('div'); rp.className = 'gh-report'; rp.setAttribute('aria-hidden', 'true');
-    rp.style.height = rpH + 'px';
+    if (cap) A(cap, [{ opacity: 0, transform: 'translateX(-50%) translateY(4px)' }, { opacity: 1, transform: 'translateX(-50%)' }], { duration: 520, delay: 520 + 180, easing: SETTLE, fill: 'both' });
+    });
+    cue(CONTACT, function () { sfx('seal'); });
+    cue(LK, function () {
+    /* Signature Lock: เอกสารหมุนเข้าตรง แผ่นซ้อนเข้าแนว แล้วนิ่ง */
+    var poseT = getComputedStyle(pose).transform;
+    A(pose, [{ transform: poseT === 'none' ? 'rotate(0deg)' : poseT }, { transform: 'rotate(0deg)' }], { duration: 800, delay: 0, easing: EASE_IO, fill: 'forwards' });
+    try { ['::before', '::after'].forEach(function (pe, n) {
+      var fin = getComputedStyle(clone, pe).transform; if (!fin || fin === 'none') return;
+      A(clone, [{ transform: fin }, { transform: 'translate(' + (n ? 3 : 2) + 'px,' + (n ? 6 : 3) + 'px)' }], { duration: 800, delay: 40 + n * 50, easing: EASE_IO, fill: 'forwards', pseudoElement: pe });
+    }); } catch (e) {}
+    });
+    /* Paper Transformation */
+    var rpH = Math.max(160, stY - 25), rp = document.createElement('div'); rp.className = 'gh-report'; rp.style.height = rpH + 'px';
     rp.innerHTML = '<p class="rp-k">VELLUM CHECK · WORKSPACE</p><h4>พื้นที่ตรวจสัญญาของคุณ</h4><p class="rp-m"></p>' +
       '<div class="rp-row"><b>01</b><span>วางสัญญา</span><i style="--w:62%"></i></div>' +
       '<div class="rp-row"><b>02</b><span>ตรวจข้อความเสี่ยง</span><i style="--w:78%"></i></div>' +
       '<div class="rp-row"><b>03</b><span>สรุปผลเป็นภาษาง่าย</span><i style="--w:54%"></i></div>' +
       '<p class="rp-ok">● บัญชีพร้อมใช้งาน</p><i class="rp-edge"></i>';
     rp.querySelector('.rp-m').textContent = email || '';
-    clone.appendChild(rp);
-    var TF = Z + 250;
-    rp.animate([{ clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)' }], { duration: 760, delay: TF, easing: 'cubic-bezier(.6,0,.2,1)', fill: 'both' });
-    rp.querySelector('.rp-edge').animate([{ top: '0%', opacity: 1 }, { top: '100%', opacity: 1, offset: .95 }, { top: '100%', opacity: 0 }], { duration: 760, delay: TF, easing: 'cubic-bezier(.6,0,.2,1)', fill: 'both' });
-    Array.prototype.forEach.call(rp.querySelectorAll('.rp-row i'), function (b, n) {
-      b.animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: 500, delay: TF + 420 + n * 110, easing: E, fill: 'both' });
+    clone.appendChild(rp); rp.style.clipPath = 'inset(0 0 100% 0)';
+    cue(TF, function () {
+    A(rp, [{ clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)' }], { duration: 800, delay: 0, easing: EASE_IO, fill: 'both' });
+    A(rp.querySelector('.rp-edge'), [{ transform: 'translate3d(0,0,0)', opacity: 1 }, { transform: 'translate3d(0,' + rpH + 'px,0)', opacity: 1, offset: .95 }, { transform: 'translate3d(0,' + rpH + 'px,0)', opacity: 0 }], { duration: 800, delay: 0, easing: EASE_IO, fill: 'both' });
+    Array.prototype.forEach.call(rp.querySelectorAll('.rp-row i'), function (bar, n) {
+      A(bar, [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: 520, delay: 440 + n * 110, easing: SETTLE, fill: 'both' });
+    });
     });
     var wl = document.createElement('div'); wl.className = 'auth-welcome'; wl.setAttribute('aria-hidden', 'true');
     wl.innerHTML = '<small>IDENTITY CONFIRMED · ยืนยันตัวตนแล้ว</small><b class="wl-brand">VELLUM CHECK</b><span></span>';
     wl.querySelector('span').textContent = email || '';
     document.body.appendChild(wl);
-    wl.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 600, delay: Z + 700, easing: E, fill: 'both' });
-    /* เปลี่ยนกลับเข้าเว็บ: กระดาษค่อยๆ เลื่อนขึ้นและจาง เผยหน้าบัญชี */
-    setTimeout(function () {
-      window.removeEventListener('pointermove', onMove);
-      var lines = [];
-      Array.prototype.forEach.call(clone.querySelectorAll('.gv, .ad-sign i, .rp-m'), function (el) {
-        var r = el.getBoundingClientRect(); if (!r.width) return; var ln = document.createElement('i'); ln.className = 'ag-line'; document.body.appendChild(ln); lines.push(ln);
-        ln.style.top = Math.round(r.bottom) + 'px';
-        ln.animate([{ left: r.left + 'px', width: r.width + 'px', opacity: .9 }, { left: '0px', width: innerWidth + 'px', opacity: .8, offset: .6 }, { left: '0px', width: innerWidth + 'px', opacity: 0 }], { duration: 1500, easing: 'cubic-bezier(.65,0,.25,1)', fill: 'forwards' }).onfinish = function () { if (ln.parentNode) ln.parentNode.removeChild(ln); };
-      });
-      var cx = innerWidth / 2, vl = document.createElement('i'); vl.className = 'ag-line ag-v'; document.body.appendChild(vl);
-      vl.animate([{ left: cx + 'px', top: (innerHeight / 2) + 'px', height: '0px', opacity: 0 }, { top: '0px', height: innerHeight + 'px', opacity: .55, offset: .6 }, { top: '0px', height: innerHeight + 'px', opacity: 0 }], { duration: 1500, delay: 150, easing: 'cubic-bezier(.65,0,.25,1)', fill: 'forwards' }).onfinish = function () { if (vl.parentNode) vl.parentNode.removeChild(vl); };
-      var cr = clone.getBoundingClientRect(), vf = document.createElement('i'); vf.className = 'vf-frame'; document.body.appendChild(vf);
-      var ix = cr.width * .04, iy = cr.height * .03, M = innerWidth < 768 ? 8 : 18;
-      vf.animate([
-        { left: (cr.left + ix) + 'px', top: (cr.top + iy) + 'px', width: (cr.width - ix * 2) + 'px', height: (cr.height - iy * 2) + 'px', opacity: 1, transform: 'rotate(-7deg)' },
-        { left: M + 'px', top: M + 'px', width: (innerWidth - M * 2) + 'px', height: (innerHeight - M * 2) + 'px', opacity: 1, transform: 'rotate(0deg)', offset: .7 },
-        { left: M + 'px', top: M + 'px', width: (innerWidth - M * 2) + 'px', height: (innerHeight - M * 2) + 'px', opacity: 0, transform: 'rotate(0deg)' }
-      ], { duration: 1500, easing: 'cubic-bezier(.65,0,.25,1)', fill: 'forwards' }).onfinish = function () { if (vf.parentNode) vf.parentNode.removeChild(vf); };
-      setTimeout(function () { document.documentElement.classList.add('vf-glow'); setTimeout(function () { document.documentElement.classList.remove('vf-glow'); }, 1600); }, 900);
-      var out = g.animate([{ opacity: 1, transform: 'scale(' + (mob ? 1.04 : 1.08) + ')' }, { opacity: 1, offset: .6 }, { opacity: 0, transform: 'scale(' + (mob ? 1.06 : 1.12) + ')', filter: 'blur(3px)' }], { duration: 700, easing: 'cubic-bezier(.55,0,.75,.3)', fill: 'forwards' });
-      out.onfinish = function () { if (g.parentNode) g.parentNode.removeChild(g); };
-      document.documentElement.classList.remove('vc-ritual');
-      [dim, wl, skip, snd].forEach(function (n) { var a2 = n.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 750, easing: 'ease-in', fill: 'forwards' }); a2.onfinish = function () { if (n.parentNode) n.parentNode.removeChild(n); }; });
-    }, Z + 2050);
+    wl.style.opacity = 0;
+    cue(WL, function () {
+    A(wl, [{ opacity: 0, transform: 'translate3d(0,10px,0)' }, { opacity: 1, transform: 'none' }], { duration: 650, delay: 0, easing: SETTLE, fill: 'both' });
+    });
+    cue(EXIT, function () {
+    /* เปลี่ยนเข้าเว็บ: เอกสารจางลงพร้อมความมืด เผยหน้าบัญชี */
+    A(g, [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translate3d(0,-10px,0) scale(1.02)' }], { duration: 700, delay: 0, easing: 'cubic-bezier(.4,0,1,1)', fill: 'forwards' });
+    [dim, wl, skip, snd].forEach(function (n) { A(n, [{ opacity: 1 }, { opacity: 0 }], { duration: 750, delay: 60, easing: 'cubic-bezier(.4,0,1,1)', fill: 'forwards' }); });
+    });
+    cue(EXIT + 840, kill);
+
+    /* ล็อกเวลาเริ่มของทุกอนิเมชันให้ตรงกับนาฬิกาเดียวกัน */
+    TL.t0 = performance.now();
+    var tl0 = document.timeline ? document.timeline.currentTime : null;
+    if (tl0 != null) TL.anims.forEach(function (x) { try { x.startTime = tl0; } catch (e) {} });
+    sfx('paper');
+    TL.raf = requestAnimationFrame(tick);
+    window.__vcRitual = { TL: TL, times: { P0: P0, W0: W0, G0: G0, S0: S0, R0: R0, D: D, CONTACT: CONTACT, LK: LK, TF: TF, EXIT: EXIT } };
   }
 
   function onLoggedIn() {
