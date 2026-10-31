@@ -2010,3 +2010,7 @@ html.vc-art #authLoggedOut .auth-doc .ad-sign{margin-top:46px !important}
 /* มือจากวิดีโอค้างไว้หลังเซ็นเสร็จ */
 .ld-scene .ad-vidlayer.held .ad-sigvid{opacity:1}
 .ld-scene .ad-vidlayer.held .ad-sigstill{opacity:0}
+/* คอม/โน้ตบุ๊ก: มือวิดีโอใหญ่ขึ้น เว้นที่เหนือเส้นลงชื่อเพิ่ม */
+@media (min-width:768px){html.vc-art #authLoggedOut .auth-doc .ad-sign{margin-top:30px !important}}
+/* perspective บน wrap ทำให้ชั้นวิดีโอผสมสีได้แค่บนกระดาษ (นอกกระดาษเป็นแถบขาว) → ปิด */
+html.vc-art .ld-scene .auth-doc-wrap{perspective:none !important}
