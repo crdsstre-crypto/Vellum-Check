@@ -1751,3 +1751,21 @@ html.vc-art .auth-ghost .gh-real .gh-g{filter:drop-shadow(10px 14px 6px rgba(20,
   #08080a !important}
 .auth-welcome small{letter-spacing:.24em}
 .gh-scan{height:46px;margin-top:-44px;background:linear-gradient(180deg,transparent,rgba(150,165,190,.10) 60%,rgba(150,165,190,.22) 92%,rgba(120,135,165,.95) 96%,rgba(255,255,255,.9) 97.5%,transparent 100%) !important;box-shadow:none !important;border-radius:2px}
+
+/* ===== รอบ 5: กระดาษแปลงร่างเป็นหน้าพื้นที่ตรวจสัญญา · ปากกาบนโต๊ะ · ปิดด้วยชื่อแบรนด์ ===== */
+.gh-report{position:absolute;left:4%;right:4%;top:3%;z-index:4;pointer-events:none;border-radius:2px;overflow:hidden;padding:18px 18px 12px;
+  background:linear-gradient(118deg,#fffefb,#f6f2e8 70%,#ece6d8);box-shadow:0 1px 0 rgba(255,255,255,.8) inset;color:#24180e}
+.gh-report .rp-k{margin:0;font:500 .56rem/1 var(--font-mono);letter-spacing:.24em;color:rgba(60,45,30,.6)}
+.gh-report h4{margin:8px 0 2px;font-family:var(--font-display),"Taviraj",serif;font-weight:600;font-size:1.25rem;color:#1d130a}
+.gh-report .rp-m{margin:0 0 12px;font-size:.72rem;color:rgba(40,28,16,.65);padding-bottom:10px;border-bottom:1px solid rgba(70,50,25,.25)}
+.gh-report .rp-row{display:grid;grid-template-columns:26px 1fr;align-items:center;gap:2px 8px;padding:7px 0;border-bottom:1px dashed rgba(70,50,25,.18);font-size:.76rem}
+.gh-report .rp-row b{font:600 .66rem/1 var(--font-mono);color:#7a1712}
+.gh-report .rp-row i{grid-column:2;height:5px;width:var(--w);border-radius:3px;background:linear-gradient(90deg,rgba(60,45,30,.22),rgba(60,45,30,.08));transform-origin:0 50%}
+.gh-report .rp-ok{margin:10px 0 0;font:500 .66rem/1 var(--font-mono);letter-spacing:.12em;color:#2f6b3c}
+.gh-report .rp-edge{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#dfe4ec 25%,#fff 50%,#dfe4ec 75%,transparent);box-shadow:0 0 8px rgba(210,218,230,.7)}
+html.vc-art .auth-ghost .auth-stamp.wax{z-index:6}
+.gh-pen{position:absolute;right:-34%;bottom:4%;width:62%;pointer-events:none;z-index:-1;transform-origin:30% 50%;
+  filter:drop-shadow(8px 16px 6px rgba(0,0,0,.6)) drop-shadow(18px 30px 16px rgba(0,0,0,.4)) brightness(.9)}
+.gh-pen svg{display:block;width:100%;height:auto;overflow:visible}
+.auth-welcome .wl-brand{font-family:var(--font-display),serif;font-weight:500;letter-spacing:.32em;font-size:clamp(1.2rem,2.2vw,1.7rem)}
+@media (max-width:767px){.gh-pen{display:none}.gh-report{padding:14px 14px 10px}.gh-report h4{font-size:1.05rem}}
