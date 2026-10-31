@@ -2024,3 +2024,9 @@ html.vc-art .ld-scene .auth-doc-wrap{perspective:none !important}
 /* มือ 3D: ภาพมีความทึบในตัว ไม่ต้องผสมแบบ multiply */
 .ad-vidlayer.v3d{mix-blend-mode:normal !important}
 .ad-vidlayer.v3d :is(.ad-sigvid,.ad-sigstill){mix-blend-mode:normal !important}
+
+/* มือถือเท่านั้น (31 ต.ค. 2026): แก้วกาแฟใหญ่ขึ้น (มือ 3D ใหญ่ตาม) · เอกสารเข้าสู่ระบบเล็กลง และเลื่อนลงให้พ้นแก้ว */
+@media (max-width:767px){
+  html.vc-art .ld-scene .ld-cup{top:10px;right:3%;width:136px}
+  html.vc-art .ld-scene .auth-doc-wrap{zoom:.86;padding:178px 44px 50px}
+}
