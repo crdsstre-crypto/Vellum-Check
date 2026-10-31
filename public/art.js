@@ -1236,7 +1236,7 @@
     var S0 = G0 + GAP, SIG = SL ? 1250 : 0;
     var R0 = S0 + SIG, RET = 700;                              /* วางปากกากลับที่เดิม */
     var D = R0 + 320;                                          /* ตราเริ่มลง (หลังปากกาพ้นบริเวณลายเซ็นแล้ว) */
-    var CONTACT = D + 520, LK = D + 950, EXIT = LK + 4000;
+    var CONTACT = D + 520, LK = D + 1250, EXIT = LK + 4000;
     var e1 = { x: go.x + 2, y: go.y + gh * .8 }, s0 = SL ? sp.getPointAtLength(0) : { x: 0, y: 0 }, sEnd = SL ? sp.getPointAtLength(SL) : { x: 0, y: 0 };
     var sigStart = { x: sigX + s0.x * k, y: sigY + s0.y * k }, sigEnd = { x: sigX + sEnd.x * k, y: sigY + sEnd.y * k };
     var lastX = 0, rotC = REST.rot;
@@ -1292,18 +1292,31 @@
     A(ls, [{ opacity: .6 }, { opacity: .1 }], { duration: Math.max(800, G0 - 300), delay: 300, easing: EASE_IO, fill: 'both' });
     /* ตรา: เคลื่อนลง (เร่งเล็กน้อย) → สัมผัส → กดลงเล็กน้อย → ยกแรงออก ไม่เด้ง */
     cue(D, function () {
-    var sh = document.createElement('i'); sh.className = 'wx-shadow'; sh.style.left = stX + 'px'; sh.style.top = stY + 'px'; clone.appendChild(sh);
-    A(sh, [{ opacity: 0, transform: 'scale(1.7)' }, { opacity: .75, transform: 'scale(1)', offset: .8 }, { opacity: .85, transform: 'scale(.98)' }], { duration: 650, delay: 0, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'both' });
-    A(st, [
-      { opacity: 0, transform: 'translate3d(0,-96px,0) scale(1.16) rotate(-11deg)', easing: 'cubic-bezier(.45,0,.8,.6)' },
-      { opacity: 1, transform: 'translate3d(0,-22px,0) scale(1.05) rotate(-8.6deg)', offset: .55, easing: 'cubic-bezier(.3,.3,.6,1)' },
-      { opacity: 1, transform: 'translate3d(0,0,0) scale(1) rotate(-8deg)', offset: .8, easing: 'cubic-bezier(.3,0,.4,1)' },
-      { opacity: 1, transform: 'translate3d(0,.8px,0) scale(.985,.98) rotate(-8deg)', offset: .9, easing: 'cubic-bezier(.2,0,.2,1)' },
-      { opacity: 1, transform: 'translate3d(0,0,0) scale(1) rotate(-8deg)' }
-    ], { duration: 650, delay: 0, fill: 'both' });
+    /* พิธีประทับตราจริง: หยดขี้ผึ้งแดงแผ่ตัว → ตราทองเหลืองเลื่อนลงมา (เงาค่อยๆ คมชัด) → กดลง → ยกออก เผยรอยตรา VC ในขี้ผึ้ง */
+    var SZ = st.offsetWidth || 118;
+    var pool = document.createElement('i'); pool.className = 'wx-pool'; pool.style.cssText = 'left:' + stX + 'px;top:' + stY + 'px;width:' + SZ + 'px;height:' + SZ + 'px;margin:-' + SZ / 2 + 'px 0 0 -' + SZ / 2 + 'px'; clone.appendChild(pool);
+    A(pool, [{ opacity: 0, transform: 'scale(.08) rotate(0deg)' }, { opacity: 1, transform: 'scale(.6) rotate(12deg)', offset: .35 }, { opacity: 1, transform: 'scale(.96) rotate(20deg)' }], { duration: 520, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'both' });
+    A(pool, [{ opacity: 1 }, { opacity: 0 }], { duration: 80, delay: 560, fill: 'forwards' });
+    var TS = SZ * 1.18, tool = document.createElement('div'); tool.className = 'wx-tool';
+    tool.style.cssText = 'left:' + stX + 'px;top:' + stY + 'px;width:' + TS + 'px;height:' + TS + 'px;margin:-' + TS / 2 + 'px 0 0 -' + TS / 2 + 'px';
+    tool.innerHTML = '<svg viewBox="0 0 120 120"><defs><radialGradient id="wtB" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="#fbe7ad"/><stop offset=".4" stop-color="#c39a4c"/><stop offset=".8" stop-color="#6e4f1e"/><stop offset="1" stop-color="#3a2a10"/></radialGradient><radialGradient id="wtW" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#7a4f2e"/><stop offset=".6" stop-color="#3b2212"/><stop offset="1" stop-color="#1c0f07"/></radialGradient></defs>' +
+      '<circle cx="60" cy="60" r="56" fill="url(#wtB)"/><circle cx="60" cy="60" r="56" fill="none" stroke="rgba(40,26,8,.6)" stroke-width="1.5"/><circle cx="60" cy="60" r="48" fill="none" stroke="rgba(255,240,200,.35)" stroke-width="1"/>' +
+      '<circle cx="60" cy="60" r="40" fill="url(#wtW)"/><circle cx="60" cy="60" r="40" fill="none" stroke="rgba(0,0,0,.5)" stroke-width="2"/><ellipse cx="48" cy="44" rx="14" ry="8" fill="rgba(255,230,200,.18)" transform="rotate(-30 48 44)"/><path d="M22 40 A42 42 0 0 1 52 16" fill="none" stroke="rgba(255,248,220,.7)" stroke-width="3" stroke-linecap="round"/></svg>';
+    var tsh = document.createElement('i'); tsh.className = 'wx-tsh'; tsh.style.cssText = tool.style.cssText;
+    clone.appendChild(tsh); clone.appendChild(tool);
+    /* ลงมา: ขนาดลดเข้าหาจริง เงาเลื่อนเข้าหาตัวและคมขึ้น (ความสูงจากกระดาษลดลง) */
+    A(tool, [{ opacity: 0, transform: 'translate3d(-26px,-70px,0) scale(1.55)' }, { opacity: 1, transform: 'translate3d(-14px,-38px,0) scale(1.3)', offset: .3 }, { opacity: 1, transform: 'translate3d(0,0,0) scale(1)' }], { duration: 420, delay: 100, easing: 'cubic-bezier(.55,0,.85,.45)', fill: 'both' });
+    A(tsh, [{ opacity: 0, transform: 'translate3d(46px,58px,0) scale(1.25)' }, { opacity: .7, transform: 'translate3d(4px,6px,0) scale(1)' }], { duration: 420, delay: 100, easing: 'cubic-bezier(.55,0,.85,.45)', fill: 'both' });
+    /* กด: ยุบลงเล็กน้อยค้างไว้ครู่หนึ่ง */
+    A(tool, [{ transform: 'scale(1)' }, { transform: 'scale(.965)', offset: .3 }, { transform: 'scale(.965)', offset: .7 }, { transform: 'scale(.98)' }], { duration: 220, delay: 520, easing: 'ease-out', fill: 'none', composite: 'replace' });
+    /* ยกออก: ลอยขึ้นและจาง เงาห่างออก เผยรอยตรา */
+    A(tool, [{ opacity: 1, transform: 'translate3d(0,0,0) scale(.98)' }, { opacity: 0, transform: 'translate3d(30px,-80px,0) scale(1.45)' }], { duration: 520, delay: 760, easing: 'cubic-bezier(.3,0,.2,1)', fill: 'forwards' });
+    A(tsh, [{ opacity: .7, transform: 'translate3d(4px,6px,0) scale(1)' }, { opacity: 0, transform: 'translate3d(60px,70px,0) scale(1.3)' }], { duration: 520, delay: 760, easing: 'cubic-bezier(.3,0,.2,1)', fill: 'forwards' });
+    st.style.transform = 'rotate(-8deg)';
+    A(st, [{ opacity: 0 }, { opacity: 1 }], { duration: 90, delay: 530, easing: 'linear', fill: 'both' });
     A(clone, [{ transform: 'translateY(0)' }, { transform: 'translateY(1.5px)', offset: .35 }, { transform: 'translateY(0)' }], { duration: 300, delay: 520, easing: EASE_OUT });
     var cap = st.querySelector('.wx-cap');
-    if (cap) A(cap, [{ opacity: 0, transform: 'translateX(-50%) translateY(4px)' }, { opacity: 1, transform: 'translateX(-50%)' }], { duration: 520, delay: 520 + 180, easing: SETTLE, fill: 'both' });
+    if (cap) A(cap, [{ opacity: 0, transform: 'translateX(-50%) translateY(4px)' }, { opacity: 1, transform: 'translateX(-50%)' }], { duration: 560, delay: 1000, easing: SETTLE, fill: 'both' });
     });
     cue(CONTACT, function () { sfx('seal'); try { if (navigator.vibrate) navigator.vibrate(18); } catch (e) {} });
     /* เลขที่เอกสารเฉพาะตัว (คำนวณจากอีเมล + เวลาเข้าสู่ระบบจริง) พิมพ์ทีละตัวแบบเครื่องพิมพ์ดีด */
