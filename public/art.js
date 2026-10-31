@@ -1767,13 +1767,14 @@
     await w(4200);
   }
 
-  /* ฉากยกกาแฟจิบ: มือ 3D เอื้อมมาจับหูแก้ว → ยกแก้วขึ้นจิบ (แก้วขยาย = เข้าใกล้กล้อง) → วางคืน → ปล่อยมือ */
+  /* ฉากยกกาแฟจิบ: มือ 3D เอื้อมมาจับหูแก้ว → ยกแก้วขึ้นจากโต๊ะเล็กน้อย (ไม่ซูม) จิบ 2 ครั้ง → วางคืน → ปล่อยมือ */
   async function act2() {
     sc.classList.add('acts-on'); docHand.style.opacity = 0; steam(false);
     var cv = mountCv(640, 480, [-100, 300, -160, 140]);
     await playOn(vid('grasp', GRASP_SRC), cv, 640, 480);
     await w(150);
-    var big = sc.offsetWidth < 600 ? 1.16 : 1.24, lift = { translate: '0 0', scale: 1 }, up = { translate: '-6% 14%', scale: big };
+    /* ไม่ซูมแล้ว: ยกแก้วขึ้นจากโต๊ะเล็กน้อย (เลื่อนขึ้น + เงาใต้แก้วฟุ้งขึ้น) แล้ววางคืน */
+    var lift = { translate: '0 0', filter: 'drop-shadow(0 0 0 rgba(0,0,0,0))' }, up = { translate: '-2% -5%', filter: 'drop-shadow(6px 16px 10px rgba(0,0,0,.55))' };
     function mv(f, t, ms) { var my = tok; return new Promise(function (res, rej) { var an_; try { an_ = cup.animate([f, t], { duration: ms, easing: 'cubic-bezier(.45,0,.25,1)', fill: 'forwards' }); } catch (e) { res(); return; } an_.onfinish = function () { my === tok ? res() : rej(new Error('abort')); }; (function chkA() { if (my !== tok) { try { an_.cancel(); } catch (e) {} rej(new Error('abort')); } else if (an_.playState === 'running') setTimeout(chkA, 100); })(); }); }
     var cu = ctr(cup);
     for (var s = 0; s < 2; s++) {
