@@ -1989,3 +1989,21 @@ html.vc-art .auth-ghost .ad-hand .ah-photo{display:none}
 #authLoggedOut .ad-hand .ah-sleeve{filter:drop-shadow(6px 12px 8px rgba(20,10,4,.45)) brightness(.95)}
 html.vc-art .auth-ghost .ad-hand .ah-sleeve{display:none}
 #authLoggedOut .ad-hand .ah-fimg{filter:none !important}
+
+/* ลายเซ็นจากวิดีโอมือจริง: ชั้นข้างเอกสาร คัดลอกการหมุนของเอกสาร ผสมแบบ multiply */
+.ld-scene .ad-vidlayer{position:absolute;z-index:3;pointer-events:none}
+.ld-scene .ad-vidlayer :is(.ad-sigvid,.ad-sigstill){position:absolute;mix-blend-mode:multiply;object-fit:fill;transition:opacity .7s ease}
+.ld-scene .ad-vidlayer .ad-sigvid{opacity:0}
+.ld-scene .ad-vidlayer.playing .ad-sigvid{opacity:1;transition:opacity .25s}
+.ld-scene .ad-vidlayer .ad-sigstill{opacity:0}
+.ld-scene .ad-vidlayer.done .ad-sigstill{opacity:1}
+.ld-scene .ad-vidlayer.done .ad-sigvid{opacity:0}
+#authLoggedOut .auth-doc.has-sigvid .ad-hand{display:none !important}
+@media (min-width:768px) and (hover:hover){.ld-scene .ad-pose.is-hover + .ad-vidlayer{translate:0 -11px;scale:1.025;transition:translate .45s cubic-bezier(.2,.8,.25,1),scale .45s cubic-bezier(.2,.8,.25,1)}
+  .ld-scene .ad-vidlayer{transition:translate .45s cubic-bezier(.2,.8,.25,1),scale .45s cubic-bezier(.2,.8,.25,1)}}
+/* ให้ชั้นวิดีโอผสมกับโต๊ะได้: ไม่สร้าง stacking context ที่ wrap และให้ layer เป็นตัว multiply */
+html.vc-art .ld-scene .auth-doc-wrap{z-index:auto !important}
+.ld-scene .ad-vidlayer{z-index:auto !important;mix-blend-mode:multiply}
+.ld-scene .ad-vidlayer :is(.ad-sigvid,.ad-sigstill){mix-blend-mode:normal !important}
+/* เว้นที่ให้ลายเซ็นมือจริง (สูงกว่าเส้นเดิม) */
+html.vc-art #authLoggedOut .auth-doc .ad-sign{margin-top:46px !important}
