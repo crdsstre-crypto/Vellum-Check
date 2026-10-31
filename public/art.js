@@ -1510,6 +1510,22 @@
     var sp = document.createElement('i'); sp.className = 'ad-spill'; sp.setAttribute('aria-hidden', 'true'); sp.innerHTML = '<svg viewBox="0 0 100 100" preserveAspectRatio="none"><g fill="#3d1c09"><path d="M58 58 C44 50 46 34 60 32 C76 28 94 42 90 58 C96 74 80 92 64 86 C50 94 38 80 46 70 C40 66 48 62 58 58 Z"/><path d="M30 66 C22 60 26 50 36 52 C46 52 48 64 40 70 C36 76 26 74 30 66 Z"/><path d="M70 22 C64 16 70 8 78 12 C86 14 84 24 76 26 Z"/><path d="M12 40 C8 34 14 28 20 32 C24 36 20 44 14 44 Z"/></g><g fill="#4a2410"><circle cx="26" cy="34" r="2.2"/><circle cx="18" cy="58" r="1.8"/><circle cx="44" cy="18" r="2"/><circle cx="56" cy="10" r="1.4"/><circle cx="90" cy="34" r="2.4"/><circle cx="94" cy="72" r="1.8"/><circle cx="30" cy="88" r="2.2"/><circle cx="52" cy="94" r="1.6"/><circle cx="12" cy="78" r="1.4"/></g><path d="M62 86 C61 92 63 96 62 100" stroke="#3d1c09" stroke-width="3" fill="none"/><path d="M46 70 C45 80 47 88 46 98" stroke="#3d1c09" stroke-width="2.4" fill="none"/></svg>'; face.parentNode.insertBefore(sp, sheet.nextSibling);
   }
 
+  /* มือภาพจริงแบ่งเป็น 2 ชั้น: ข้อมือ (หมุนรอบข้อมือ) และนิ้ว+ปากกา (งอรอบโคนนิ้วโป้ง)
+     คำนวณตำแหน่งย้อนกลับให้ปลายปากกา (จุด 0,0) อยู่บนเส้นลายเซ็นพอดีเสมอ */
+  var HP = { F: [78, -48], W: [131, -41] }, lastFY = null, flexS = 0;
+  function rot(p, c, a) { var r = a * Math.PI / 180, cs = Math.cos(r), sn = Math.sin(r), x = p[0] - c[0], y = p[1] - c[1]; return [c[0] + x * cs - y * sn, c[1] + x * sn + y * cs]; }
+  function poseHand(x, y, prog, rawY) {
+    var hd = document.querySelector('#authLoggedOut .ad-hand .ah-hand'); if (!hd) return;
+    var wr = hd.querySelector('.ah-wrist'), fi = hd.querySelector('.ah-fing');
+    var dy = lastFY == null ? 0 : rawY - lastFY; lastFY = rawY;
+    flexS += (Math.max(-4.5, Math.min(4.5, -dy * 1.1)) - flexS) * .25;     /* นิ้วดันขึ้น/ดึงลงตามทิศเส้น */
+    var a = flexS, b = -5 + (prog || 0) * 9;                                  /* ข้อมือหมุนตามระยะที่มือเลื่อนไปทางขวา */
+    var tip = rot(rot([0, 0], HP.F, a), HP.W, b);
+    if (fi) fi.setAttribute('transform', 'rotate(' + a.toFixed(2) + ' ' + HP.F[0] + ' ' + HP.F[1] + ')');
+    if (wr) wr.setAttribute('transform', 'rotate(' + b.toFixed(2) + ' ' + HP.W[0] + ' ' + HP.W[1] + ')');
+    hd.style.transform = 'translate(' + (x - tip[0]).toFixed(1) + 'px,' + (y - tip[1]).toFixed(1) + 'px) scale(var(--ahs,1))';
+  }
+
   function hand(doc) {
     var svg = doc && doc.querySelector('.ad-hand'); if (!svg || svg.__run) return; svg.__run = true;
     var p1 = svg.querySelector('.ah-ink1'), p2 = svg.querySelector('.ah-ink2'), hd = svg.querySelector('.ah-hand');
@@ -1522,7 +1538,7 @@
       var seg = len <= L1 ? p1 : p2, at = len <= L1 ? len : len - L1;
       var pt = seg.getPointAtLength(Math.max(0, Math.min(at, seg === p1 ? L1 : L2)));
       var wob = Math.sin(p * 90) * 1.2;              /* มือสั่นเบา ๆ ตอนเขียน */
-      hd.style.transform = 'translate(' + (pt.x + 0).toFixed(1) + 'px,' + (pt.y + wob).toFixed(1) + 'px) scale(var(--ahs,1))';
+      poseHand(pt.x, pt.y + wob, p, pt.y);
       p1.style.opacity = p2.style.opacity = String(ink == null ? .9 : ink);
     }
     var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
