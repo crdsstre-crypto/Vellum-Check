@@ -2014,3 +2014,5 @@ html.vc-art #authLoggedOut .auth-doc .ad-sign{margin-top:46px !important}
 @media (min-width:768px){html.vc-art #authLoggedOut .auth-doc .ad-sign{margin-top:30px !important}}
 /* perspective บน wrap ทำให้ชั้นวิดีโอผสมสีได้แค่บนกระดาษ (นอกกระดาษเป็นแถบขาว) → ปิด */
 html.vc-art .ld-scene .auth-doc-wrap{perspective:none !important}
+/* วิดีโอมือใส่น้ำแข็ง (ซ้อนแทนแก้วชั่วคราว) */
+.ld-cup .ld-icevid{position:absolute;pointer-events:none;opacity:0;z-index:3}
