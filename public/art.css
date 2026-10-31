@@ -2007,3 +2007,6 @@ html.vc-art .ld-scene .auth-doc-wrap{z-index:auto !important}
 .ld-scene .ad-vidlayer :is(.ad-sigvid,.ad-sigstill){mix-blend-mode:normal !important}
 /* เว้นที่ให้ลายเซ็นมือจริง (สูงกว่าเส้นเดิม) */
 html.vc-art #authLoggedOut .auth-doc .ad-sign{margin-top:46px !important}
+/* มือจากวิดีโอค้างไว้หลังเซ็นเสร็จ */
+.ld-scene .ad-vidlayer.held .ad-sigvid{opacity:1}
+.ld-scene .ad-vidlayer.held .ad-sigstill{opacity:0}
