@@ -1302,7 +1302,13 @@
     var cap = st.querySelector('.wx-cap');
     if (cap) A(cap, [{ opacity: 0, transform: 'translateX(-50%) translateY(4px)' }, { opacity: 1, transform: 'translateX(-50%)' }], { duration: 520, delay: 520 + 180, easing: SETTLE, fill: 'both' });
     });
-    cue(CONTACT, function () { sfx('seal'); });
+    cue(CONTACT, function () { sfx('seal'); try { if (navigator.vibrate) navigator.vibrate(18); } catch (e) {} });
+    /* เลขที่เอกสารเฉพาะตัว (คำนวณจากอีเมล + เวลาเข้าสู่ระบบจริง) พิมพ์ทีละตัวแบบเครื่องพิมพ์ดีด */
+    var hsh = 0; for (var hi = 0; hi < email.length; hi++) hsh = (hsh * 31 + email.charCodeAt(hi)) >>> 0;
+    var now0 = new Date(), TH = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+    var serial = 'เลขที่ VC-' + now0.getFullYear() + '-' + (hsh % 0xFFFF).toString(16).toUpperCase().padStart(4, '0') + ' · ' + now0.getDate() + ' ' + TH[now0.getMonth()] + ' ' + String(now0.getHours()).padStart(2, '0') + ':' + String(now0.getMinutes()).padStart(2, '0');
+    var serEl = document.createElement('p'); serEl.className = 'gh-serial'; serEl.style.cssText = 'right:' + (mob ? 44 : 30) + 'px;top:' + (mob ? 34 : 40) + 'px;text-align:right' + (mob ? ';font-size:.54rem' : ''); clone.appendChild(serEl);
+    cue(CONTACT + 520, function () { var i0 = 0, t1 = performance.now(); (function ty(n) { if (TL.dead) return; var k2 = Math.min(serial.length, Math.floor((n - t1) / 26)); if (k2 !== i0) { i0 = k2; serEl.textContent = serial.slice(0, k2); } if (k2 < serial.length) requestAnimationFrame(ty); })(t1); });
     cue(LK, function () {
     /* Signature Lock: เอกสารหมุนเข้าตรง แผ่นซ้อนเข้าแนว แล้วนิ่ง */
     var poseT = getComputedStyle(pose).transform;
@@ -1335,6 +1341,8 @@
       /* ---------- Seal Iris: ตราลอยขึ้นจากกระดาษ → ม่านมืดเปิดเป็นวงจากตรา เผยหน้าบัญชีจริง → ตราลอยเข้าปุ่มบัญชี
          ใช้ transform/opacity ล้วน (ม่านเป็นวงกลมที่มีเงาทึบรอบนอก แล้วขยายด้วย scale) ไม่มีแสงจ้า ---------- */
       var tg = target(), sr = st.getBoundingClientRect();
+      var av = document.querySelector('#authLoggedIn .acct-avatar'), avr = av && av.getBoundingClientRect();
+      if (avr && avr.width > 0 && avr.bottom > 0 && avr.top < innerHeight) tg = { el: av, r: { left: avr.right - 16, top: avr.bottom - 16, width: 22, height: 22 }, avatar: true };
       var scx = sr.left + sr.width / 2, scy = sr.top + sr.height / 2;
       var tx = tg ? tg.r.left + tg.r.width / 2 : innerWidth / 2, ty = tg ? tg.r.top + tg.r.height / 2 : (mob ? innerHeight - 30 : 32);
       var far = Math.max(Math.hypot(scx, scy), Math.hypot(innerWidth - scx, scy), Math.hypot(scx, innerHeight - scy), Math.hypot(innerWidth - scx, innerHeight - scy));
@@ -1364,7 +1372,12 @@
                { transform: 'translate3d(' + dx.toFixed(0) + 'px,' + dy.toFixed(0) + 'px,0) rotate(0deg) scale(' + sEnd.toFixed(3) + ')', opacity: 0 }],
         { duration: 800, delay: 700, easing: 'cubic-bezier(.45,0,.25,1)', fill: 'forwards' });
       /* 4) ปุ่มบัญชีรับตรา: ยุบเบาๆ + ขอบเงินจางๆ */
-      if (tg) A(tg.el, [{ transform: 'none', boxShadow: '0 0 0 0 rgba(214,218,226,0)' }, { transform: 'scale(.94)', boxShadow: '0 0 0 3px rgba(214,218,226,.45)', offset: .35 }, { transform: 'none', boxShadow: '0 0 0 8px rgba(214,218,226,0)' }],
+      if (tg && tg.avatar) cue(J0 + LIFT + 1480, function () {
+        var old = tg.el.querySelector('.av-seal'); if (old) old.parentNode.removeChild(old);
+        var mini = document.createElement('i'); mini.className = 'av-seal'; mini.setAttribute('aria-hidden', 'true'); mini.innerHTML = sv ? sv.outerHTML : ''; tg.el.appendChild(mini);
+        mini.animate([{ transform: 'scale(1.35)', opacity: .6 }, { transform: 'scale(.92)', opacity: 1, offset: .55 }, { transform: 'scale(1)', opacity: 1 }], { duration: 420, easing: 'cubic-bezier(.3,0,.2,1)' });
+      });
+      if (tg && !tg.avatar) A(tg.el, [{ transform: 'none', boxShadow: '0 0 0 0 rgba(214,218,226,0)' }, { transform: 'scale(.94)', boxShadow: '0 0 0 3px rgba(214,218,226,.45)', offset: .35 }, { transform: 'none', boxShadow: '0 0 0 8px rgba(214,218,226,0)' }],
         { duration: 600, delay: 1400, easing: EASE_OUT });
       sfx('paper');
       TL.anims.push({ cancel: function () { [iris, seal].forEach(function (n) { if (n.parentNode) n.parentNode.removeChild(n); }); } });
@@ -1372,6 +1385,12 @@
     cue(J0 + LIFT + 420, function () {
       /* หน้าบัญชีจริงค่อยๆ ปรากฏทีละส่วน (แค่ opacity/transform ชั่วคราว ไม่แตะข้อมูล) */
       var li = document.getElementById('authLoggedIn'); if (!li || li.hidden) return;
+      ['walletTotal', 'walletRowCheck', 'walletRowVoice'].forEach(function (id, ix) {
+        var el = document.getElementById(id); if (!el) return; var fin = parseInt((el.textContent || '').replace(/[^\d]/g, ''), 10); if (!(fin > 0)) return;
+        var raw = el.textContent, t1 = performance.now() + 250 + ix * 120, D2 = Math.min(900, 400 + fin * 60);
+        (function cu(nw) { if (TL.dead) { el.textContent = raw; return; } var q = Math.max(0, Math.min(1, (nw - t1) / D2)), e = 1 - Math.pow(1 - q, 3);
+          el.textContent = String(Math.round(fin * e)); if (q < 1) requestAnimationFrame(cu); else el.textContent = raw; })(performance.now());
+      });
       var parts = li.querySelectorAll('.cred-head, .acct-row, .wallet-total, .wallet, .wallet-quick'); var n = 0;
       Array.prototype.forEach.call(parts, function (el) { if (!el.offsetParent || n > 5) return;
         A(el, [{ opacity: 0, transform: 'translate3d(0,10px,0)' }, { opacity: 1, transform: 'none' }], { duration: 520, delay: n++ * 80, easing: SETTLE, fill: 'backwards' }); });
