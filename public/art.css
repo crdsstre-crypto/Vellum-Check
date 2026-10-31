@@ -1284,7 +1284,7 @@ html.vc-art .ad-sign i{border-bottom-color:rgba(58,39,20,.45)}
 /* มือเขียนเอกสาร (SVG ทับเหนือเส้นลงชื่อ) */
 .ad-hand{position:absolute;left:0;right:0;bottom:6px;width:100%;height:112px;overflow:visible;pointer-events:none;z-index:3}
 .ad-hand .ah-ink{fill:none;stroke:#2a1a3a;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;opacity:.9}
-.ad-hand .ah-hand{transform:translate(70px,92px) rotate(52deg) scale(.8)}
+.ad-hand .ah-hand{transform:translate(70px,92px) scale(1)}
 .ad-hand .ah-hand{filter:drop-shadow(0 6px 5px rgba(0,0,0,.45))}
 html.vc-art .auth-ghost .ad-hand{display:none}
 /* ฉากเต็มความกว้างตอนยังไม่ล็อกอิน (เฉพาะจอ ≥768px) */
@@ -1979,3 +1979,10 @@ html.vc-art .auth-ghost .wx-tool img{display:block;width:100%;height:100%;filter
 /* ปากกาในมือที่เซ็นชื่อ: ใช้ภาพปากกาจริง ซ่อนเส้นปากกาที่วาดไว้ */
 #authLoggedOut .ad-hand :is(path[d^="M0 0 L124"],path[d^="M14 -3 L110"],path[d^="M70 -5 L76"],path[d^="M-12 1 L20"]){display:none}
 .ld-lamp .lp-img{pointer-events:none}
+/* กระเป๋าผ้าภาพเรนเดอร์: ให้ดำสนิทขึ้นตามโทนเดิม */
+.ld-bag svg image{filter:brightness(.7) contrast(1.1)}
+
+/* มือเซ็นชื่อบนหน้าเข้าสู่ระบบ: ใช้ภาพมือจริงจับปากกา (ซ่อนมือวาดเดิม) */
+#authLoggedOut .ad-hand .ah-rot{display:none}
+#authLoggedOut .ad-hand .ah-photo{filter:drop-shadow(8px 12px 8px rgba(30,15,5,.4)) brightness(.95)}
+html.vc-art .auth-ghost .ad-hand .ah-photo{display:none}
