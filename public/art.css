@@ -2016,3 +2016,11 @@ html.vc-art #authLoggedOut .auth-doc .ad-sign{margin-top:46px !important}
 html.vc-art .ld-scene .auth-doc-wrap{perspective:none !important}
 /* วิดีโอมือใส่น้ำแข็ง (ซ้อนแทนแก้วชั่วคราว) */
 .ld-cup .ld-icevid{position:absolute;pointer-events:none;opacity:0;z-index:3}
+
+/* เครดิตโมเดลมือ 3D (CC BY-SA) */
+.faq-foot.hand-credit{font-size:11px;opacity:.6;margin-top:4px;line-height:1.5}
+.faq-foot.hand-credit a{color:inherit;text-decoration:underline}
+
+/* มือ 3D: ภาพมีความทึบในตัว ไม่ต้องผสมแบบ multiply */
+.ad-vidlayer.v3d{mix-blend-mode:normal !important}
+.ad-vidlayer.v3d :is(.ad-sigvid,.ad-sigstill){mix-blend-mode:normal !important}
