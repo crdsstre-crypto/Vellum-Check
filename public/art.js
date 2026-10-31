@@ -1231,7 +1231,7 @@
     var S0 = G0 + GAP, SIG = SL ? 1250 : 0;
     var R0 = S0 + SIG, RET = 700;                              /* วางปากกากลับที่เดิม */
     var D = R0 + 320;                                          /* ตราเริ่มลง (หลังปากกาพ้นบริเวณลายเซ็นแล้ว) */
-    var CONTACT = D + 520, LK = D + 950, TF = LK + 950, WL = TF + 520, EXIT = TF + 1900;
+    var CONTACT = D + 520, LK = D + 950, EXIT = LK + 4000;
     var e1 = { x: go.x + 2, y: go.y + gh * .8 }, s0 = SL ? sp.getPointAtLength(0) : { x: 0, y: 0 }, sEnd = SL ? sp.getPointAtLength(SL) : { x: 0, y: 0 };
     var sigStart = { x: sigX + s0.x * k, y: sigY + s0.y * k }, sigEnd = { x: sigX + sEnd.x * k, y: sigY + sEnd.y * k };
     var lastX = 0, rotC = REST.rot;
@@ -1312,36 +1312,54 @@
       A(clone, [{ transform: fin }, { transform: 'translate(' + (n ? 3 : 2) + 'px,' + (n ? 6 : 3) + 'px)' }], { duration: 800, delay: 40 + n * 50, easing: EASE_IO, fill: 'forwards', pseudoElement: pe });
     }); } catch (e) {}
     });
-    /* Paper Transformation */
-    var rpH = Math.max(160, stY - 25), rp = document.createElement('div'); rp.className = 'gh-report'; rp.style.height = rpH + 'px';
-    rp.innerHTML = '<p class="rp-k">VELLUM CHECK · WORKSPACE</p><h4>พื้นที่ตรวจสัญญาของคุณ</h4><p class="rp-m"></p>' +
-      '<div class="rp-row"><b>01</b><span>วางสัญญา</span><i style="--w:62%"></i></div>' +
-      '<div class="rp-row"><b>02</b><span>ตรวจข้อความเสี่ยง</span><i style="--w:78%"></i></div>' +
-      '<div class="rp-row"><b>03</b><span>สรุปผลเป็นภาษาง่าย</span><i style="--w:54%"></i></div>' +
-      '<p class="rp-ok">● บัญชีพร้อมใช้งาน</p><i class="rp-edge"></i>';
-    rp.querySelector('.rp-m').textContent = email || '';
-    clone.appendChild(rp); rp.style.clipPath = 'inset(0 0 100% 0)';
-    cue(TF, function () {
-    A(rp, [{ clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)' }], { duration: 800, delay: 0, easing: EASE_IO, fill: 'both' });
-    A(rp.querySelector('.rp-edge'), [{ transform: 'translate3d(0,0,0)', opacity: 1 }, { transform: 'translate3d(0,' + rpH + 'px,0)', opacity: 1, offset: .95 }, { transform: 'translate3d(0,' + rpH + 'px,0)', opacity: 0 }], { duration: 800, delay: 0, easing: EASE_IO, fill: 'both' });
-    Array.prototype.forEach.call(rp.querySelectorAll('.rp-row i'), function (bar, n) {
-      A(bar, [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: 520, delay: 440 + n * 110, easing: SETTLE, fill: 'both' });
+    /* ---------- The Document Journey: เอกสารที่ประทับตราแล้วเดินทางเข้าไปที่ "บัญชีของฉัน" ----------
+       1) ตราเสร็จ ทุกอย่างนิ่ง (ช่วงล็อกด้านบน)  2) ยกกระดาษขึ้นจากโต๊ะ เงาห่างออก ปากกาอยู่บนโต๊ะ
+       3) เคลื่อนไปที่ปุ่มบัญชี (คอม: เมนูบนสุด / มือถือ: แถบล่าง) ย่อขนาดระหว่างทาง ไม่หมุนแบบการ์ด
+       4) ถึงปุ่มแล้วปุ่มรับแรงกดเบาๆ หน้าบัญชีจริง (ไม่ใช่ภาพจำลอง) ค่อยๆ ปรากฏทีละส่วน */
+    function target() {
+      var cands = mob ? ['#bottomNav [data-nav="acct"]', '#authToggle'] : ['.dx-nav a[href="#authCard"]', '#authToggle'];
+      for (var i = 0; i < cands.length; i++) { var el = document.querySelector(cands[i]); if (el) { var rr = el.getBoundingClientRect(); if (rr.width > 0 && rr.height > 0) return { el: el, r: rr }; } }
+      return null;
+    }
+    var J0 = LK + 900, LIFT = 650, TRAVEL = 850, ARRIVE = 700;
+    EXIT = J0 + LIFT + TRAVEL + ARRIVE;
+    cue(J0, function () {
+      /* ปากกาและเงาปากกาอยู่บนโต๊ะ: จางลงแทนการติดไปกับกระดาษ */
+      A(pen, [{ opacity: 1 }, { opacity: 0 }], { duration: 300, easing: EASE_OUT, fill: 'forwards' });
+      A(psh, [{ opacity: .55 }, { opacity: 0 }], { duration: 300, easing: EASE_OUT, fill: 'forwards' });
+      /* ยกขึ้น: กระดาษ (pose) ขยายนิด เงาสัมผัสห่างและนุ่มลง */
+      A(wrap, [{ transform: 'none' }, { transform: 'translate3d(0,-12px,0) scale(1.03)' }], { duration: LIFT, easing: EASE_IO, fill: 'forwards' });
+      A(cs, [{ opacity: 1, transform: 'none' }, { opacity: .55, transform: 'translate3d(10px,22px,0) scale(1.04)' }], { duration: LIFT, easing: EASE_IO, fill: 'forwards' });
     });
+    cue(J0 + LIFT, function () {
+      var tg = target(), gr = g.getBoundingClientRect();
+      var gx = gr.left + gr.width / 2, gy = gr.top + gr.height / 2;
+      var tx = tg ? tg.r.left + tg.r.width / 2 : innerWidth / 2, ty = tg ? tg.r.top + tg.r.height / 2 : (mob ? innerHeight - 30 : 32);
+      var sEnd = Math.max(.04, Math.min(.2, (tg ? Math.max(tg.r.width, 40) : 48) / gr.width));
+      var dx = tx - gx, dy = ty - gy;
+      /* ความมืดจางเผยหน้าบัญชีจริงด้านหลัง ขณะกระดาษเดินทาง */
+      A(dim, [{ opacity: 1 }, { opacity: 0 }], { duration: TRAVEL, easing: EASE_IO, fill: 'forwards' });
+      [skip, snd].forEach(function (n) { A(n, [{ opacity: 1 }, { opacity: 0 }], { duration: 300, easing: EASE_OUT, fill: 'forwards' }); });
+      /* เส้นทางโค้งเล็กน้อย (ไม่ตรงแข็ง) ขนาดลดแบบเร่งปลาย รักษามุมกระดาษเดิม */
+      g.style.transformOrigin = '50% 50%';
+      A(g, [
+        { transform: 'translate3d(0,0,0) scale(1)', opacity: 1, offset: 0, easing: 'cubic-bezier(.5,0,.3,1)' },
+        { transform: 'translate3d(' + (dx * .45).toFixed(1) + 'px,' + (dy * .38 - 30).toFixed(1) + 'px,0) scale(' + (.62 + sEnd * .2).toFixed(3) + ')', opacity: 1, offset: .5, easing: 'cubic-bezier(.4,0,.2,1)' },
+        { transform: 'translate3d(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px,0) scale(' + sEnd.toFixed(3) + ')', opacity: .9, offset: .92 },
+        { transform: 'translate3d(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px,0) scale(' + (sEnd * .9).toFixed(3) + ')', opacity: 0 }
+      ], { duration: TRAVEL, fill: 'forwards' });
+      A(cs, [{ opacity: .55 }, { opacity: 0 }], { duration: TRAVEL * .6, easing: EASE_OUT, fill: 'forwards' });
+      /* ถึงปุ่มบัญชี: ปุ่มรับแรงกดเบาๆ */
+      if (tg) A(tg.el, [{ transform: 'none' }, { transform: 'scale(.9)', offset: .35 }, { transform: 'none' }], { duration: 420, delay: TRAVEL * .88, easing: EASE_OUT });
     });
-    var wl = document.createElement('div'); wl.className = 'auth-welcome'; wl.setAttribute('aria-hidden', 'true');
-    wl.innerHTML = '<small>IDENTITY CONFIRMED · ยืนยันตัวตนแล้ว</small><b class="wl-brand">VELLUM CHECK</b><span></span>';
-    wl.querySelector('span').textContent = email || '';
-    document.body.appendChild(wl);
-    wl.style.opacity = 0;
-    cue(WL, function () {
-    A(wl, [{ opacity: 0, transform: 'translate3d(0,10px,0)' }, { opacity: 1, transform: 'none' }], { duration: 650, delay: 0, easing: SETTLE, fill: 'both' });
+    cue(J0 + LIFT + TRAVEL * .85, function () {
+      /* หน้าบัญชีจริงค่อยๆ ปรากฏทีละส่วน (แค่ opacity/transform ชั่วคราว ไม่แตะข้อมูล) */
+      var li = document.getElementById('authLoggedIn'); if (!li || li.hidden) return;
+      var parts = li.querySelectorAll('.cred-head, .acct-row, .wallet-total, .wallet, .wallet-quick'); var n = 0;
+      Array.prototype.forEach.call(parts, function (el) { if (!el.offsetParent || n > 5) return;
+        A(el, [{ opacity: 0, transform: 'translate3d(0,10px,0)' }, { opacity: 1, transform: 'none' }], { duration: 520, delay: n++ * 80, easing: SETTLE, fill: 'backwards' }); });
     });
-    cue(EXIT, function () {
-    /* เปลี่ยนเข้าเว็บ: เอกสารจางลงพร้อมความมืด เผยหน้าบัญชี */
-    A(g, [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translate3d(0,-10px,0) scale(1.02)' }], { duration: 700, delay: 0, easing: 'cubic-bezier(.4,0,1,1)', fill: 'forwards' });
-    [dim, wl, skip, snd].forEach(function (n) { A(n, [{ opacity: 1 }, { opacity: 0 }], { duration: 750, delay: 60, easing: 'cubic-bezier(.4,0,1,1)', fill: 'forwards' }); });
-    });
-    cue(EXIT + 840, kill);
+    cue(EXIT + 200, kill);
 
     /* ล็อกเวลาเริ่มของทุกอนิเมชันให้ตรงกับนาฬิกาเดียวกัน */
     TL.t0 = performance.now();
@@ -1349,7 +1367,7 @@
     if (tl0 != null) TL.anims.forEach(function (x) { try { x.startTime = tl0; } catch (e) {} });
     sfx('paper');
     TL.raf = requestAnimationFrame(tick);
-    window.__vcRitual = { TL: TL, times: { P0: P0, W0: W0, G0: G0, S0: S0, R0: R0, D: D, CONTACT: CONTACT, LK: LK, TF: TF, EXIT: EXIT } };
+    window.__vcRitual = { TL: TL, times: { P0: P0, W0: W0, G0: G0, S0: S0, R0: R0, D: D, CONTACT: CONTACT, LK: LK, J0: LK + 900, EXIT: EXIT } };
   }
 
   function onLoggedIn() {
