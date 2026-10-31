@@ -1102,7 +1102,7 @@
   function reduce() { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
 
   function cleanupFx() {
-    Array.prototype.forEach.call(document.querySelectorAll('.auth-focus,.auth-ghost'), function (n) { if (n.parentNode) n.parentNode.removeChild(n); });
+    Array.prototype.forEach.call(document.querySelectorAll('.auth-focus,.auth-ghost,.auth-skip,.auth-welcome'), function (n) { if (n.parentNode) n.parentNode.removeChild(n); });
   }
   function play(info) {
     if (reduce() || !document.body.animate) return;
@@ -1131,18 +1131,25 @@
     var w = r ? r.width : Math.min(330, vw - 32), h = r ? r.height : 470;
     g.style.width = w + 'px'; g.style.left = (r ? r.left : (vw - w) / 2) + 'px'; g.style.top = (r ? Math.max(r.top, Math.min(100, vh - h - 10)) : Math.max(70, (vh - h) / 2)) + 'px';
     var st = document.createElement('div'); st.className = 'auth-stamp';
-    st.innerHTML = '<span class="as-ring"><b>ได้รับการ<br>ตรวจสอบแล้ว</b><small>VERIFIED · VELLUM CHECK</small></span>';
+    st.className = 'auth-stamp wax'; st.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><defs><radialGradient id="wrg" cx=".36" cy=".3" r=".8"><stop offset="0" stop-color="#c8463c"/><stop offset=".45" stop-color="#8e1d17"/><stop offset="1" stop-color="#4a0a07"/></radialGradient><radialGradient id="wri" cx=".62" cy=".66" r=".75"><stop offset="0" stop-color="#a8302a"/><stop offset="1" stop-color="#651310"/></radialGradient></defs><path d="M114.6 60.0 Q114.6 60.0 112.3 65.7 Q110.0 71.4 110.0 77.7 Q110.0 84.1 104.6 87.7 Q99.2 91.3 95.0 95.0 Q90.9 98.7 88.3 106.0 Q85.7 113.3 78.6 112.1 Q71.6 110.9 65.8 111.2 Q60.0 111.4 53.9 112.6 Q47.7 113.8 41.9 111.7 Q36.1 109.6 32.5 104.3 Q28.9 99.0 24.5 95.4 Q20.1 91.8 17.5 86.8 Q15.0 81.7 11.9 76.7 Q8.7 71.7 6.8 65.9 Q4.8 60.0 7.6 54.3 Q10.3 48.7 10.7 42.5 Q11.0 36.4 16.5 33.0 Q21.9 29.6 23.9 23.5 Q26.0 17.3 32.1 16.1 Q38.3 14.9 43.2 11.3 Q48.1 7.7 54.0 7.4 Q60.0 7.0 65.4 9.7 Q70.9 12.4 76.5 13.3 Q82.1 14.2 87.6 16.4 Q93.1 18.5 98.1 22.1 Q103.2 25.6 106.6 30.8 Q110.0 35.9 112.6 41.7 Q115.2 47.4 114.9 53.7 Z" fill="url(#wrg)"/><path d="M114.6 60.0 Q114.6 60.0 112.3 65.7 Q110.0 71.4 110.0 77.7 Q110.0 84.1 104.6 87.7 Q99.2 91.3 95.0 95.0 Q90.9 98.7 88.3 106.0 Q85.7 113.3 78.6 112.1 Q71.6 110.9 65.8 111.2 Q60.0 111.4 53.9 112.6 Q47.7 113.8 41.9 111.7 Q36.1 109.6 32.5 104.3 Q28.9 99.0 24.5 95.4 Q20.1 91.8 17.5 86.8 Q15.0 81.7 11.9 76.7 Q8.7 71.7 6.8 65.9 Q4.8 60.0 7.6 54.3 Q10.3 48.7 10.7 42.5 Q11.0 36.4 16.5 33.0 Q21.9 29.6 23.9 23.5 Q26.0 17.3 32.1 16.1 Q38.3 14.9 43.2 11.3 Q48.1 7.7 54.0 7.4 Q60.0 7.0 65.4 9.7 Q70.9 12.4 76.5 13.3 Q82.1 14.2 87.6 16.4 Q93.1 18.5 98.1 22.1 Q103.2 25.6 106.6 30.8 Q110.0 35.9 112.6 41.7 Q115.2 47.4 114.9 53.7 Z" fill="none" stroke="rgba(255,170,150,.22)" stroke-width="1.2" transform="translate(-.6 -.6)"/><circle cx="60" cy="60" r="39" fill="url(#wri)" stroke="rgba(40,4,2,.55)" stroke-width="2.4"/><circle cx="60.8" cy="60.8" r="39" fill="none" stroke="rgba(255,175,155,.35)" stroke-width="1"/><circle cx="60" cy="60" r="32" fill="none" stroke="rgba(255,190,170,.32)" stroke-width="1.4" stroke-dasharray="1.2 3.6"/><text x="61" y="70.6" text-anchor="middle" font-family="Georgia,Times New Roman,serif" font-weight="700" font-size="29" fill="rgba(255,175,155,.45)">VC</text><text x="60" y="69.4" text-anchor="middle" font-family="Georgia,Times New Roman,serif" font-weight="700" font-size="29" fill="#4e0806">VC</text><ellipse cx="38" cy="30" rx="14" ry="7" fill="rgba(255,235,225,.22)" transform="rotate(-35 38 30)"/></svg>' + '<span class="wx-cap">ได้รับการตรวจสอบแล้ว<small>VERIFIED · VELLUM CHECK</small></span>';
     clone.appendChild(st);
     /* ฉากบังคับ: ทั้งหน้ามืดลงและเบลอ โฟกัสที่เอกสารอย่างเดียว กดอะไรไม่ได้จนจบ */
     var dim = document.createElement('div'); dim.className = 'auth-focus'; document.body.appendChild(dim);
     dim.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 450, easing: 'ease-out', fill: 'both' });
     document.body.appendChild(g);
     var E = 'cubic-bezier(.16,1,.3,1)';
-    g.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 300, easing: 'ease-out', fill: 'both' });
+    g.style.transformOrigin = '50% 60%';
+    g.animate([{ opacity: 0, transform: 'translateY(70px) rotate(3.5deg) scale(.96)', filter: 'brightness(.35)' },
+               { opacity: 1, transform: 'translateY(-4px) rotate(-.4deg) scale(1)', filter: 'brightness(.9)', offset: .7 },
+               { opacity: 1, transform: 'none', filter: 'none' }], { duration: 850, easing: 'cubic-bezier(.2,.8,.25,1)', fill: 'both' });
+    /* ปุ่มข้าม (ผู้ใช้ไม่ต้องรอ) */
+    var skip = document.createElement('button'); skip.type = 'button'; skip.className = 'auth-skip'; skip.textContent = 'ข้าม ›';
+    skip.addEventListener('click', function () { Array.prototype.forEach.call(document.querySelectorAll('.auth-focus,.auth-ghost,.auth-skip,.auth-welcome'), function (n) { if (n.parentNode) n.parentNode.removeChild(n); }); });
+    document.body.appendChild(skip);
 
     /* มือเขียนอีเมลลงในช่องอีเมล แล้วเซ็นลายเซ็นบนเส้น "ลงชื่อ" แล้วถอนมือ */
     function offs(el, root) { var x = 0, y = 0; while (el && el !== root) { x += el.offsetLeft; y += el.offsetTop; el = el.offsetParent; } return { x: x, y: y }; }
-    var email = (info.email || '').trim(), WRITE = 0, SIG = 1500, GAP = 450, handSvg = null, gv = clone.querySelector('.gv');
+    var email = (info.email || '').trim(), WRITE = 0, SIG = 1100, GAP = 380, handSvg = null, gv = clone.querySelector('.gv');
     var signLine = clone.querySelector('.ad-sign i') || clone.querySelector('.ad-sign');
     var sgn = signLine ? offs(signLine, clone) : { x: 90, y: clone.offsetHeight - 70 };
     var lineW = signLine ? Math.max(signLine.offsetWidth, 120) : clone.offsetWidth * .6;
@@ -1159,7 +1166,7 @@
       gv.innerHTML = '<span class="gw"></span>'; gw = gv.firstChild; gw.textContent = email;
       gw.style.clipPath = 'inset(-8px 100% -8px 0)'; tw = gw.offsetWidth || 120;
       if (tw > gv.offsetWidth - 10) { gw.style.fontSize = (parseFloat(getComputedStyle(gw).fontSize) * (gv.offsetWidth - 10) / tw).toFixed(1) + 'px'; tw = gw.offsetWidth; }
-      WRITE = Math.max(1500, Math.min(3200, 700 + email.length * 85));
+      WRITE = Math.max(1200, Math.min(2200, 700 + email.length * 60));
     }
     var src2 = document.querySelector('#authLoggedOut .ad-hand .ah-rot'), defs = document.querySelector('#authLoggedOut .ad-hand defs');
     if (src2 && defs && SL) {
@@ -1173,7 +1180,7 @@
       var hg = handSvg.querySelector('.gh-g'); hg.style.opacity = 0;
       var put = function (x, y) { hg.setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ') rotate(52) scale(' + sc2 + ')'); };
       var k = sigW / 260, sigX = sgn.x + 10, sigY = sgn.y - sigH - 2;
-      var T1 = WRITE, T2 = T1 + GAP, T3 = T2 + SIG, T4 = T3 + 600, t0 = performance.now() + 450, lastEmail = { x: sx + 4 + tw, y: sy };
+      var T1 = WRITE, T2 = T1 + GAP, T3 = T2 + SIG, T4 = T3 + 600, t0 = performance.now() + 900, lastEmail = { x: sx + 4 + tw, y: sy };
       (function fr(now) {
         var t = now - t0; if (t < 0) { requestAnimationFrame(fr); return; }
         var wob = Math.sin(t / 40) * 1.8 + Math.sin(t / 130) * 1;
@@ -1194,33 +1201,44 @@
         } else { if (handSvg.parentNode) handSvg.parentNode.removeChild(handSvg); return; }
         requestAnimationFrame(fr);
       })(performance.now());
-      WRITE = T4;   /* เวลารวมของมือ */
+      WRITE = T3 + 150;   /* ตราลงตอนมือกำลังถอยออก */
     } else { if (gw) gw.style.clipPath = 'none'; sp.style.strokeDashoffset = 0; WRITE = 0; }
     function lerp2(a, b, t) { return a + (b - a) * t; }
     /* ตราลงตรงเส้นลงชื่อ ด้านขวา */
-    var stX = Math.min(clone.offsetWidth * .68, clone.offsetWidth - 95), stY = Math.max(110, sgn.y - 115);
+    var stX = Math.min(clone.offsetWidth * .68, clone.offsetWidth - 95), stY = Math.max(110, sgn.y - 150);
     st.style.left = stX + 'px'; st.style.top = stY + 'px';
-    var D = 450 + (WRITE ? WRITE + 700 : 200);   /* เวลาที่ตราจะลงประทับ */
-    /* ตราลงมาประทับ: ใหญ่+เอียง → กระแทกลงที่ขนาดจริง → ยุบเล็กน้อย → นิ่ง */
+    var D = 900 + (WRITE ? WRITE + 450 : 200);   /* เวลาที่ตราจะลงประทับ */
+    /* ตราขี้ผึ้งลงมาจากด้านบน → กดลง ยุบตัว → เงาสัมผัส → กระดาษสั่นเบาๆ → คำบรรยายตรา */
+    var mob = window.innerWidth < 768;
+    var sh = document.createElement('i'); sh.className = 'wx-shadow'; sh.style.left = stX + 'px'; sh.style.top = stY + 'px'; clone.appendChild(sh);
+    sh.animate([{ opacity: 0, transform: 'scale(1.9)' }, { opacity: .55, transform: 'scale(1.05)', offset: .75 }, { opacity: .8, transform: 'scale(1)' }],
+      { duration: 520, delay: D, easing: 'ease-in', fill: 'both' });
     st.animate([
-      { opacity: 0, transform: 'translateZ(0) scale(2.8) rotate(-26deg)' },
-      { opacity: .95, transform: 'translateZ(0) scale(.93) rotate(-12deg)', offset: .38 },
-      { opacity: .9, transform: 'translateZ(0) scale(1.04) rotate(-12deg)', offset: .55 },
-      { opacity: .9, transform: 'translateZ(0) scale(1) rotate(-12deg)' }
-    ], { duration: 620, delay: D, easing: 'cubic-bezier(.3,0,.2,1)', fill: 'both' });
-    clone.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(7px)', offset: .5 }, { transform: 'translateY(0)' }],
-      { duration: 260, delay: D + 230, easing: 'ease-out' });
-    var ring = document.createElement('i'); ring.setAttribute('aria-hidden', 'true');
-    ring.style.cssText = 'position:absolute;left:' + stX + 'px;top:' + stY + 'px;width:170px;height:170px;margin:-85px 0 0 -85px;border-radius:50%;border:2px solid rgba(154,47,43,.55);pointer-events:none;opacity:0';
-    clone.appendChild(ring);
-    ring.animate([{ opacity: .7, transform: 'scale(.9)' }, { opacity: 0, transform: 'scale(1.9)' }], { duration: 650, delay: D + 230, easing: E, fill: 'forwards' });
-    /* ค้างให้อ่านครู่หนึ่ง แล้วเลือนทั้งเอกสารและความมืดออก */
+      { opacity: 0, transform: 'translateY(-130px) scale(1.55) rotate(-18deg)' },
+      { opacity: 1, transform: 'translateY(-10px) scale(1.08) rotate(-9deg)', offset: .72 },
+      { opacity: 1, transform: 'translateY(0) scale(.9,.86) rotate(-8deg)', offset: .84 },
+      { opacity: 1, transform: 'translateY(0) scale(1.03) rotate(-8deg)', offset: .93 },
+      { opacity: 1, transform: 'translateY(0) scale(1) rotate(-8deg)' }
+    ], { duration: 640, delay: D, easing: 'cubic-bezier(.45,0,.2,1)', fill: 'both' });
+    clone.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(3px)', offset: .4 }, { transform: 'translateY(-1px)', offset: .7 }, { transform: 'translateY(0)' }],
+      { duration: 280, delay: D + 520, easing: 'ease-out' });
+    var cap = st.querySelector('.wx-cap');
+    if (cap) cap.animate([{ opacity: 0, transform: 'translateX(-50%) translateY(4px)' }, { opacity: 1, transform: 'translateX(-50%)' }], { duration: 500, delay: D + 760, easing: E, fill: 'both' });
+    /* ปิดฉาก: กล้องเคลื่อนเข้าใกล้ตรา แล้วข้อความต้อนรับ */
+    var Z = D + 640 + 250;
+    g.style.transformOrigin = (stX + 30) + 'px ' + (stY + 30) + 'px';
+    g.animate([{ transform: 'none' }, { transform: 'scale(' + (mob ? 1.04 : 1.08) + ')' }], { duration: 1500, delay: Z, easing: 'cubic-bezier(.3,0,.2,1)', fill: 'forwards' });
+    var wl = document.createElement('div'); wl.className = 'auth-welcome'; wl.setAttribute('aria-hidden', 'true');
+    wl.innerHTML = '<small>WELCOME · VELLUM CHECK</small><b>ยินดีต้อนรับ</b><span></span>';
+    wl.querySelector('span').textContent = email || '';
+    document.body.appendChild(wl);
+    wl.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 600, delay: Z + 300, easing: E, fill: 'both' });
+    /* เปลี่ยนกลับเข้าเว็บ: กระดาษค่อยๆ เลื่อนขึ้นและจาง เผยหน้าบัญชี */
     setTimeout(function () {
-      var out = g.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-14px) scale(.985)' }], { duration: 560, easing: 'ease-in', fill: 'forwards' });
+      var out = g.animate([{ opacity: 1 }, { opacity: 0, transform: 'translateY(-26px) scale(' + (mob ? 1.02 : 1.05) + ')' }], { duration: 650, easing: 'ease-in', fill: 'forwards' });
       out.onfinish = function () { if (g.parentNode) g.parentNode.removeChild(g); };
-      var d2 = dim.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 700, easing: 'ease-in', fill: 'forwards' });
-      d2.onfinish = function () { if (dim.parentNode) dim.parentNode.removeChild(dim); };
-    }, D + 620 + 1500);
+      [dim, wl, skip].forEach(function (n) { var a2 = n.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 750, easing: 'ease-in', fill: 'forwards' }); a2.onfinish = function () { if (n.parentNode) n.parentNode.removeChild(n); }; });
+    }, Z + 1900);
   }
 
   function onLoggedIn() {
