@@ -1140,47 +1140,65 @@
     var E = 'cubic-bezier(.16,1,.3,1)';
     g.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 300, easing: 'ease-out', fill: 'both' });
 
-    /* มือเขียนชื่อผู้ใช้ (อีเมล) ลงบนเส้น "ลงชื่อ" ที่ท้ายเอกสาร ตัวอักษรค่อยๆ โผล่ตามปลายปากกา */
+    /* มือเขียนอีเมลลงในช่องอีเมล แล้วเซ็นลายเซ็นบนเส้น "ลงชื่อ" แล้วถอนมือ */
     function offs(el, root) { var x = 0, y = 0; while (el && el !== root) { x += el.offsetLeft; y += el.offsetTop; el = el.offsetParent; } return { x: x, y: y }; }
-    var email = (info.email || '').trim(), WRITE = 0, handSvg = null;
+    var email = (info.email || '').trim(), WRITE = 0, SIG = 1500, GAP = 450, handSvg = null, gv = clone.querySelector('.gv');
     var signLine = clone.querySelector('.ad-sign i') || clone.querySelector('.ad-sign');
     var sgn = signLine ? offs(signLine, clone) : { x: 90, y: clone.offsetHeight - 70 };
     var lineW = signLine ? Math.max(signLine.offsetWidth, 120) : clone.offsetWidth * .6;
-    if (email) {
-      var gw = document.createElement('span'); gw.className = 'gw gw2'; gw.textContent = email;
-      gw.style.cssText = 'position:absolute;left:' + (sgn.x + 6) + 'px;top:' + (sgn.y - 38) + 'px;pointer-events:none;z-index:4;clip-path:inset(-8px 100% -8px 0)';
-      clone.appendChild(gw);
-      var tw = gw.offsetWidth || 120;
-      if (tw > lineW - 12) { gw.style.fontSize = (parseFloat(getComputedStyle(gw).fontSize) * (lineW - 12) / tw).toFixed(1) + 'px'; tw = gw.offsetWidth; }
+    var NSV = 'http://www.w3.org/2000/svg';
+    var sigW = Math.min(lineW - 16, 230), sigH = sigW * .24, sig = document.createElementNS(NSV, 'svg');
+    sig.setAttribute('viewBox', '0 0 260 62'); sig.setAttribute('aria-hidden', 'true');
+    sig.style.cssText = 'position:absolute;left:' + (sgn.x + 10) + 'px;top:' + (sgn.y - sigH - 2) + 'px;width:' + sigW + 'px;height:' + sigH + 'px;overflow:visible;pointer-events:none;z-index:4';
+    sig.innerHTML = '<path d="M6 44 C14 6 30 4 34 34 S46 58 54 26 S70 2 78 32 C83 52 96 46 100 24 S118 6 126 34 C130 52 144 44 150 28 S168 14 178 26 M4 54 C64 60 140 56 214 46" fill="none" stroke="#2a1a3a" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>';
+    clone.appendChild(sig);
+    var sp = sig.firstChild, SL = sp.getTotalLength ? sp.getTotalLength() : 0;
+    sp.style.strokeDasharray = SL; sp.style.strokeDashoffset = SL;
+    var gw = null, tw = 0;
+    if (gv && email) {
+      gv.innerHTML = '<span class="gw"></span>'; gw = gv.firstChild; gw.textContent = email;
+      gw.style.clipPath = 'inset(-8px 100% -8px 0)'; tw = gw.offsetWidth || 120;
+      if (tw > gv.offsetWidth - 10) { gw.style.fontSize = (parseFloat(getComputedStyle(gw).fontSize) * (gv.offsetWidth - 10) / tw).toFixed(1) + 'px'; tw = gw.offsetWidth; }
       WRITE = Math.max(1500, Math.min(3200, 700 + email.length * 85));
-      var src2 = document.querySelector('#authLoggedOut .ad-hand .ah-rot');
-      var defs = document.querySelector('#authLoggedOut .ad-hand defs');
-      if (src2 && defs) {
-        var sx = sgn.x + 6, sy = sgn.y - 38 + gw.offsetHeight * .78;
-        var sc2 = Math.max(.5, Math.min(.8, clone.offsetWidth / 450));
-        var rn = function (s) { return s.replace(/vcSkin2/g, 'ghSkin2').replace(/vcSkin/g, 'ghSkin').replace(/vcSleeve/g, 'ghSleeve').replace(/vcCuff/g, 'ghCuff').replace(/vcPen/g, 'ghPen').replace(/vcShade/g, 'ghShade'); };
-        handSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); handSvg.setAttribute('class', 'gh-hand'); handSvg.setAttribute('aria-hidden', 'true');
-        handSvg.innerHTML = rn(defs.outerHTML) + '<g class="gh-g">' + rn(src2.outerHTML) + '</g>';
-        clone.appendChild(handSvg);
-        var hg = handSvg.querySelector('.gh-g'); hg.style.opacity = 0;
-        var put = function (x, y) { hg.setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ') rotate(52) scale(' + sc2 + ')'); };
-        var t0 = performance.now() + 450;
-        (function fr(now) {
-          var t = now - t0; if (t < 0) { requestAnimationFrame(fr); return; }
-          var p = Math.min(1, t / WRITE), e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
-          hg.style.opacity = Math.min(1, t / 250);
-          gw.style.clipPath = 'inset(-8px ' + ((1 - e) * 100).toFixed(1) + '% -8px 0)';
-          put(sx + 4 + e * tw, sy + Math.sin(p * 55) * 2.2 + Math.sin(p * 17) * 1.2);
-          if (p < 1) requestAnimationFrame(fr);
-          else {
-            var t1 = performance.now(), lx = sx + 4 + tw, ly = sy;
-            (function ex(n2) { var q = Math.min(1, (n2 - t1) / 600); put(lx + q * 260, ly + q * 320); hg.style.opacity = 1 - q; if (q < 1) requestAnimationFrame(ex); else if (handSvg.parentNode) handSvg.parentNode.removeChild(handSvg); })(t1);
-          }
-        })(performance.now());
-      } else { gw.style.clipPath = 'none'; WRITE = 0; }
     }
-    /* ตราลงตรงเส้นลงชื่อ: ทับปลายลายมือเล็กน้อย */
-    var stX = Math.min(clone.offsetWidth * .66, clone.offsetWidth - 95), stY = Math.max(95, sgn.y - 88);
+    var src2 = document.querySelector('#authLoggedOut .ad-hand .ah-rot'), defs = document.querySelector('#authLoggedOut .ad-hand defs');
+    if (src2 && defs && SL) {
+      var go = gw ? offs(gw, clone) : { x: sgn.x, y: sgn.y - 40 };
+      var sx = go.x, sy = go.y + (gw ? gw.offsetHeight * .78 : 20);
+      var sc2 = Math.max(.5, Math.min(.8, clone.offsetWidth / 450));
+      var rn = function (s) { return s.replace(/vcSkin2/g, 'ghSkin2').replace(/vcSkin/g, 'ghSkin').replace(/vcSleeve/g, 'ghSleeve').replace(/vcCuff/g, 'ghCuff').replace(/vcPen/g, 'ghPen').replace(/vcShade/g, 'ghShade'); };
+      handSvg = document.createElementNS(NSV, 'svg'); handSvg.setAttribute('class', 'gh-hand'); handSvg.setAttribute('aria-hidden', 'true');
+      handSvg.innerHTML = rn(defs.outerHTML) + '<g class="gh-g">' + rn(src2.outerHTML) + '</g>';
+      clone.appendChild(handSvg);
+      var hg = handSvg.querySelector('.gh-g'); hg.style.opacity = 0;
+      var put = function (x, y) { hg.setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ') rotate(52) scale(' + sc2 + ')'); };
+      var k = sigW / 260, sigX = sgn.x + 10, sigY = sgn.y - sigH - 2;
+      var T1 = WRITE, T2 = T1 + GAP, T3 = T2 + SIG, T4 = T3 + 600, t0 = performance.now() + 450, lastEmail = { x: sx + 4 + tw, y: sy };
+      (function fr(now) {
+        var t = now - t0; if (t < 0) { requestAnimationFrame(fr); return; }
+        var wob = Math.sin(t / 40) * 1.8 + Math.sin(t / 130) * 1;
+        hg.style.opacity = Math.min(1, t / 250);
+        if (t < T1 && gw) {
+          var p = t / T1, e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+          gw.style.clipPath = 'inset(-8px ' + ((1 - e) * 100).toFixed(1) + '% -8px 0)'; put(sx + 4 + e * tw, sy + wob);
+        } else if (t < T2) {
+          if (gw) gw.style.clipPath = 'none';
+          var q = (t - T1) / GAP, f = q * q * (3 - 2 * q), p0 = sp.getPointAtLength(0);
+          put(lerp2(lastEmail.x, sigX + p0.x * k, f), lerp2(lastEmail.y, sigY + p0.y * k, f) - Math.sin(q * Math.PI) * 26);
+        } else if (t < T3) {
+          var p2 = (t - T2) / SIG, e2 = p2 < .5 ? 2 * p2 * p2 : 1 - Math.pow(-2 * p2 + 2, 2) / 2, pt = sp.getPointAtLength(e2 * SL);
+          sp.style.strokeDashoffset = SL * (1 - e2); put(sigX + pt.x * k, sigY + pt.y * k + wob);
+        } else if (t < T4) {
+          var r = (t - T3) / 600, pe = sp.getPointAtLength(SL);
+          sp.style.strokeDashoffset = 0; put(sigX + pe.x * k + r * 260, sigY + pe.y * k + r * 320); hg.style.opacity = 1 - r;
+        } else { if (handSvg.parentNode) handSvg.parentNode.removeChild(handSvg); return; }
+        requestAnimationFrame(fr);
+      })(performance.now());
+      WRITE = T4;   /* เวลารวมของมือ */
+    } else { if (gw) gw.style.clipPath = 'none'; sp.style.strokeDashoffset = 0; WRITE = 0; }
+    function lerp2(a, b, t) { return a + (b - a) * t; }
+    /* ตราลงตรงเส้นลงชื่อ ด้านขวา */
+    var stX = Math.min(clone.offsetWidth * .68, clone.offsetWidth - 95), stY = Math.max(110, sgn.y - 115);
     st.style.left = stX + 'px'; st.style.top = stY + 'px';
     var D = 450 + (WRITE ? WRITE + 700 : 200);   /* เวลาที่ตราจะลงประทับ */
     /* ตราลงมาประทับ: ใหญ่+เอียง → กระแทกลงที่ขนาดจริง → ยุบเล็กน้อย → นิ่ง */
