@@ -1312,7 +1312,7 @@
     var hsh = 0; for (var hi = 0; hi < email.length; hi++) hsh = (hsh * 31 + email.charCodeAt(hi)) >>> 0;
     var now0 = new Date(), TH = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
     var serial = 'เลขที่ VC-' + now0.getFullYear() + '-' + (hsh % 0xFFFF).toString(16).toUpperCase().padStart(4, '0') + ' · ' + now0.getDate() + ' ' + TH[now0.getMonth()] + ' ' + String(now0.getHours()).padStart(2, '0') + ':' + String(now0.getMinutes()).padStart(2, '0');
-    var serEl = document.createElement('p'); serEl.className = 'gh-serial'; serEl.style.cssText = 'right:' + (mob ? 44 : 30) + 'px;top:' + (mob ? 34 : 40) + 'px;text-align:right' + (mob ? ';font-size:.54rem' : ''); clone.appendChild(serEl);
+    var serEl = document.createElement('p'); serEl.className = 'gh-serial'; serEl.style.cssText = 'right:' + (mob ? 22 : 30) + 'px;top:' + (mob ? 30 : 40) + 'px;text-align:right' + (mob ? ';font-size:.54rem' : ''); clone.appendChild(serEl);
     cue(CONTACT + 520, function () { var i0 = 0, t1 = performance.now(); (function ty(n) { if (TL.dead) return; var k2 = Math.min(serial.length, Math.floor((n - t1) / 26)); if (k2 !== i0) { i0 = k2; serEl.textContent = serial.slice(0, k2); } if (k2 < serial.length) requestAnimationFrame(ty); })(t1); });
     /* (ตัดออกตามผู้ใช้: ช่วงเอกสารหมุนเข้าตรงก่อนตราลอยขึ้น) */
     /* ---------- The Document Journey: เอกสารที่ประทับตราแล้วเดินทางเข้าไปที่ "บัญชีของฉัน" ----------
