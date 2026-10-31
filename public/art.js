@@ -1208,9 +1208,7 @@
        ปลายปากกาอยู่ที่จุด (0,0) ของชิ้น เคลื่อนด้วย transform อย่างเดียว (ไม่กระทบ layout) */
     var PS = mob ? .62 : .8;
     var pen = document.createElement('div'); pen.className = 'gh-penw';
-    pen.innerHTML = '<svg viewBox="-4 -14 214 28" class="pn"><defs><linearGradient id="gpB2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5c4d45"/><stop offset=".38" stop-color="#16120f"/><stop offset="1" stop-color="#030202"/></linearGradient><linearGradient id="gpG2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0b8"/><stop offset=".5" stop-color="#c9a24c"/><stop offset="1" stop-color="#6b4d17"/></linearGradient></defs>' +
-      '<path d="M0 0 L20 -4.6 L20 4.6 Z" fill="url(#gpG2)"/><path d="M2 0 L18 0" stroke="#5a4214" stroke-width=".8"/><rect x="20" y="-6.5" width="22" height="13" rx="3" fill="#121010"/><rect x="40" y="-7.5" width="6" height="15" fill="url(#gpG2)"/>' +
-      '<rect x="46" y="-8" width="150" height="16" rx="8" fill="url(#gpB2)"/><rect x="170" y="-8" width="5" height="16" fill="url(#gpG2)"/><path d="M52 -4 H186" stroke="rgba(255,255,255,.3)" stroke-width="1.6" stroke-linecap="round"/></svg>';
+    pen.innerHTML = '<img class="pn" src="img/pen.png" alt="" draggable="false" decoding="async">';
     var psh = document.createElement('div'); psh.className = 'gh-pensh';
     clone.appendChild(psh); clone.appendChild(pen);
     var REST = { x: CW + (mob ? 6 : 26), y: CH * .70, rot: -22, lift: 0 }, HOLD = -38;
