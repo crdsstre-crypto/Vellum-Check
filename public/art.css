@@ -1975,3 +1975,7 @@ html.vc-art .auth-ghost .wx-pool{border-radius:0 !important;box-shadow:none !imp
 html.vc-art .auth-stamp.wax .wx-img,.si-seal .wx-img,#authLoggedIn .acct-avatar .av-seal .wx-img{display:block;width:100%;height:100%;-webkit-user-drag:none;user-select:none}
 html.vc-art .auth-stamp.wax .wx-img{filter:drop-shadow(1px 2px 1.5px rgba(40,4,2,.55)) drop-shadow(4px 7px 7px rgba(0,0,0,.28))}
 html.vc-art .auth-ghost .wx-tool img{display:block;width:100%;height:100%;filter:drop-shadow(2px 3px 2px rgba(0,0,0,.45))}
+
+/* ปากกาในมือที่เซ็นชื่อ: ใช้ภาพปากกาจริง ซ่อนเส้นปากกาที่วาดไว้ */
+#authLoggedOut .ad-hand :is(path[d^="M0 0 L124"],path[d^="M14 -3 L110"],path[d^="M70 -5 L76"],path[d^="M-12 1 L20"]){display:none}
+.ld-lamp .lp-img{pointer-events:none}
