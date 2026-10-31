@@ -1106,6 +1106,13 @@
   }
   function play(info) {
     if (reduce() || !document.body.animate) return;
+    /* รอฟอนต์ลายมือ (Charmonman) ก่อนวัดความกว้างอีเมล ไม่เกิน 700ms ถ้าโหลดไม่ได้ใช้ฟอนต์สำรอง */
+    if (document.fonts && document.fonts.load && !play.__f) {
+      play.__f = 1; var done = false, go2 = function () { if (done) return; done = true; play(info); };
+      Promise.race([document.fonts.load('700 22px Charmonman'), new Promise(function (r) { setTimeout(r, 700); })]).then(go2, go2);
+      return;
+    }
+    play.__f = 0;
     try { playInner(info); }
     catch (e) { cleanupFx(); if (window.console) console.warn('stamp fx', e); return; }
     setTimeout(cleanupFx, 14000);   /* กันค้าง: ไม่ว่าเกิดอะไรขึ้น ชั้นมืดต้องหายภายใน 14 วินาที */
