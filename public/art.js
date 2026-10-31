@@ -1205,6 +1205,11 @@
     clone.appendChild(sig);
     var sp = sig.firstChild, SL = sp.getTotalLength ? sp.getTotalLength() : 0;
     sp.style.strokeDasharray = SL; sp.style.strokeDashoffset = SL;
+    /* The Focus Pull: ระยะชัดตื้น จุดคมชัดตามปลายปากกา ส่วนอื่นของกระดาษนุ่มเบลอ (กล้องแทบไม่ขยับ) */
+    var fp = document.createElement('i'); fp.className = 'fp-blur'; clone.appendChild(fp);
+    var fpAt = function (x, y, r) { fp.style.setProperty('--fx', x.toFixed(0) + 'px'); fp.style.setProperty('--fy', y.toFixed(0) + 'px'); if (r) fp.style.setProperty('--fr', r + 'px'); };
+    fpAt(clone.offsetWidth * .5, clone.offsetHeight * .35, 150);
+    fp.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 900, delay: 300, easing: 'ease-out', fill: 'both' });
     var gw = null, tw = 0, bead = document.createElement('i'); bead.className = 'ink-bead'; bead.style.opacity = 0; clone.appendChild(bead);
     if (gv && email) {
       gv.innerHTML = '<span class="gw"></span>'; gw = gv.firstChild; gw.textContent = email;
@@ -1222,7 +1227,7 @@
       handSvg.innerHTML = rn(defs.outerHTML) + '<g class="gh-g">' + rn(src2.outerHTML) + '</g>';
       clone.appendChild(handSvg);
       var hg = handSvg.querySelector('.gh-g'); hg.style.opacity = 0;
-      var put = function (x, y) { hg.setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ') rotate(52) scale(' + sc2 + ')'); };
+      var put = function (x, y) { fpAt(x, y, 120); hg.setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ') rotate(52) scale(' + sc2 + ')'); };
       var k = sigW / 260, sigX = sgn.x + 10, sigY = sgn.y - sigH - 2;
       var T1 = WRITE, T2 = T1 + GAP, T3 = T2 + SIG, T4 = T3 + 600, t0 = performance.now() + 900, lastEmail = { x: sx + 4 + tw, y: sy };
       (function fr(now) {
@@ -1301,6 +1306,15 @@
     if (cap) cap.animate([{ opacity: 0, transform: 'translateX(-50%) translateY(4px)' }, { opacity: 1, transform: 'translateX(-50%)' }], { duration: 500, delay: D + 760, easing: E, fill: 'both' });
     /* ปิดฉาก: กล้องเคลื่อนเข้าใกล้ตรา แล้วข้อความต้อนรับ */
     var Z = D + 640 + 150;
+    /* โฟกัสย้ายไปที่ตรา */
+    setTimeout(function () { var a0 = performance.now(), fx0 = parseFloat(fp.style.getPropertyValue('--fx')) || stX, fy0 = parseFloat(fp.style.getPropertyValue('--fy')) || stY;
+      (function mv(n) { var q = Math.min(1, (n - a0) / 500), e = q * q * (3 - 2 * q); fpAt(fx0 + (stX - fx0) * e, fy0 + (stY - fy0) * e, 120 + 30 * e); if (q < 1) requestAnimationFrame(mv); })(a0); }, Math.max(0, D - 450));
+    /* The Signature Lock: เอกสารหมุนเข้าตรง แผ่นซ้อนเข้าแนวพอดี ปากกาหยุด ทุกอย่างนิ่ง แล้วโฟกัสคลายทั้งแผ่น */
+    var LK = Z;
+    try { pose.animate([{ transform: getComputedStyle(pose).transform === 'none' ? 'rotate(-7deg)' : getComputedStyle(pose).transform }, { transform: 'rotate(0deg)' }], { duration: 750, delay: LK, easing: 'cubic-bezier(.3,0,.15,1)', fill: 'forwards' }); } catch (e) {}
+    try { ['::before', '::after'].forEach(function (pe, n) { clone.animate([{ transform: getComputedStyle(clone, pe).transform }, { transform: 'translate(' + (n ? 3 : 2) + 'px,' + (n ? 6 : 3) + 'px)' }], { duration: 700, delay: LK + 60 + n * 60, easing: 'cubic-bezier(.3,0,.15,1)', fill: 'forwards', pseudoElement: pe }); }); } catch (e) {}
+    fp.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 600, delay: LK + 350, easing: 'ease-out', fill: 'forwards' });
+    Z = LK + 950;
     g.style.transformOrigin = (stX + 30) + 'px ' + (stY + 30) + 'px';
     g.animate([{ transform: 'none' }, { transform: 'scale(' + (mob ? 1.04 : 1.08) + ')' }], { duration: 1500, delay: Z, easing: 'cubic-bezier(.3,0,.2,1)', fill: 'forwards' });
     /* The Paper Transformation: เนื้อหาแบบฟอร์มคลี่กลายเป็นหน้า "พื้นที่ตรวจสัญญา" (ลายเซ็นและตรายังอยู่) แล้วจึงเลื่อนเข้าเว็บ */
@@ -1327,6 +1341,14 @@
     /* เปลี่ยนกลับเข้าเว็บ: กระดาษค่อยๆ เลื่อนขึ้นและจาง เผยหน้าบัญชี */
     setTimeout(function () {
       window.removeEventListener('pointermove', onMove);
+      var lines = [];
+      Array.prototype.forEach.call(clone.querySelectorAll('.gv, .ad-sign i, .rp-m'), function (el) {
+        var r = el.getBoundingClientRect(); if (!r.width) return; var ln = document.createElement('i'); ln.className = 'ag-line'; document.body.appendChild(ln); lines.push(ln);
+        ln.style.top = Math.round(r.bottom) + 'px';
+        ln.animate([{ left: r.left + 'px', width: r.width + 'px', opacity: .9 }, { left: '0px', width: innerWidth + 'px', opacity: .8, offset: .6 }, { left: '0px', width: innerWidth + 'px', opacity: 0 }], { duration: 1500, easing: 'cubic-bezier(.65,0,.25,1)', fill: 'forwards' }).onfinish = function () { if (ln.parentNode) ln.parentNode.removeChild(ln); };
+      });
+      var cx = innerWidth / 2, vl = document.createElement('i'); vl.className = 'ag-line ag-v'; document.body.appendChild(vl);
+      vl.animate([{ left: cx + 'px', top: (innerHeight / 2) + 'px', height: '0px', opacity: 0 }, { top: '0px', height: innerHeight + 'px', opacity: .55, offset: .6 }, { top: '0px', height: innerHeight + 'px', opacity: 0 }], { duration: 1500, delay: 150, easing: 'cubic-bezier(.65,0,.25,1)', fill: 'forwards' }).onfinish = function () { if (vl.parentNode) vl.parentNode.removeChild(vl); };
       var cr = clone.getBoundingClientRect(), vf = document.createElement('i'); vf.className = 'vf-frame'; document.body.appendChild(vf);
       var ix = cr.width * .04, iy = cr.height * .03, M = innerWidth < 768 ? 8 : 18;
       vf.animate([
