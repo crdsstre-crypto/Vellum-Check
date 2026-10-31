@@ -1204,7 +1204,15 @@
     if (!fromForm && !fromGoogle) return;
     var info = fromForm ? intent : { rect: null, email: '' };
     intent = null;
-    play(info);
+    /* ล็อกอินด้วย Google หรือกรอกอัตโนมัติ: ไม่มีอีเมลที่จดไว้ → อ่านจากการ์ดบัญชีที่เพิ่งแสดงขึ้น */
+    function userMail() { var u = document.getElementById('userEmail'); return u ? (u.textContent || '').trim() : ''; }
+    if (info.email) { play(info); return; }
+    var tries = 0;
+    (function wait() {
+      var m = userMail();
+      if (m || tries++ > 12) { play({ rect: info.rect, email: m }); return; }
+      setTimeout(wait, 120);
+    })();
   }
   function init() {
     if (/[?&]stampdemo=1/.test(location.search)) setTimeout(function () { var d = docEl(), r = d && d.getBoundingClientRect(); play({ rect: r && r.width > 50 ? { left: r.left, top: r.top, width: r.width, height: r.height } : null, email: 'somchai@example.com' }); }, 3500);
