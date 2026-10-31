@@ -1155,6 +1155,23 @@
     var rk = document.createElement('i'); rk.className = 'gh-rake'; rk.setAttribute('aria-hidden', 'true'); clone.appendChild(rk);
     document.body.appendChild(g); sfx('paper');
     rk.animate([{ backgroundPosition: '-60% 0' }, { backgroundPosition: '40% 0' }], { duration: 1600, easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'both' });
+    /* กระดาษซ้อน: แผ่นล่างแต่ละแผ่นเลื่อนเข้าที่ช้ากว่าแผ่นบนเล็กน้อย คนละมุม */
+    try {
+      ['::before', '::after'].forEach(function (pe, n) {
+        var fin = getComputedStyle(clone, pe).transform; if (!fin || fin === 'none') return;
+        clone.animate([{ transform: fin + (n ? ' translate(-26px,46px) rotate(-3deg)' : ' translate(22px,34px) rotate(3deg)'), opacity: .4 }, { transform: fin, opacity: 1 }],
+          { duration: 900 + n * 160, delay: 60 + n * 90, easing: 'cubic-bezier(.2,.8,.25,1)', fill: 'both', pseudoElement: pe });
+      });
+    } catch (e) {}
+    /* Parallax เบาๆ ตามเมาส์: ฉากหลังขยับน้อยกว่าเอกสาร ให้รู้สึกมีความลึก */
+    var onMove = function (e) {
+      if (e.pointerType && e.pointerType !== 'mouse') return;
+      var nx = e.clientX / innerWidth - .5, ny = e.clientY / innerHeight - .5;
+      g.style.translate = (nx * -10).toFixed(1) + 'px ' + (ny * -7).toFixed(1) + 'px';
+      dim.style.setProperty('--px', (nx * 18).toFixed(1) + 'px'); dim.style.setProperty('--py', (ny * 12).toFixed(1) + 'px');
+    };
+    window.addEventListener('pointermove', onMove);
+    setTimeout(function () { window.removeEventListener('pointermove', onMove); }, 15000);
     cs.animate([{ opacity: 0, transform: 'scale(1.12) translateY(40px)' }, { opacity: 1, transform: 'none' }], { duration: 700, easing: 'cubic-bezier(.2,.8,.25,1)', fill: 'both' });
     var E = 'cubic-bezier(.16,1,.3,1)';
     g.style.transformOrigin = '50% 60%';
@@ -1197,7 +1214,7 @@
       var sx = go.x, sy = go.y + (gw ? gw.offsetHeight * .78 : 20);
       var sc2 = Math.max(.5, Math.min(.8, clone.offsetWidth / 450));
       var rn = function (s) { return s.replace(/vcSkin2/g, 'ghSkin2').replace(/vcSkin/g, 'ghSkin').replace(/vcSleeve/g, 'ghSleeve').replace(/vcCuff/g, 'ghCuff').replace(/vcPen/g, 'ghPen').replace(/vcShade/g, 'ghShade'); };
-      handSvg = document.createElementNS(NSV, 'svg'); handSvg.setAttribute('class', 'gh-hand'); handSvg.setAttribute('aria-hidden', 'true');
+      handSvg = document.createElementNS(NSV, 'svg'); handSvg.setAttribute('class', 'gh-hand gh-real'); handSvg.setAttribute('aria-hidden', 'true');
       handSvg.innerHTML = rn(defs.outerHTML) + '<g class="gh-g">' + rn(src2.outerHTML) + '</g>';
       clone.appendChild(handSvg);
       var hg = handSvg.querySelector('.gh-g'); hg.style.opacity = 0;
@@ -1233,7 +1250,18 @@
     /* ตราลงตรงเส้นลงชื่อ ด้านขวา */
     var stX = Math.min(clone.offsetWidth * .68, clone.offsetWidth - 95), stY = Math.max(110, sgn.y - 150);
     st.style.left = stX + 'px'; st.style.top = stY + 'px';
-    var D = 750 + (WRITE ? WRITE + 350 : 200);   /* เวลาที่ตราจะลงประทับ */
+    /* Contract Scan: เส้นแสงสีเงินบางๆ กวาดลงผ่านเอกสาร ไฮไลต์บรรทัดสำคัญ (อีเมล ลายเซ็น) แบบนุ่มๆ ไม่ใช่แสงนีออน */
+    var SC = 900, scAt = 750 + (WRITE ? WRITE + 120 : 100);
+    var scan = document.createElement('i'); scan.className = 'gh-scan'; scan.setAttribute('aria-hidden', 'true'); clone.appendChild(scan);
+    scan.animate([{ top: '4%', opacity: 0 }, { opacity: 1, offset: .12 }, { opacity: 1, offset: .85 }, { top: '96%', opacity: 0 }], { duration: SC, delay: scAt, easing: 'cubic-bezier(.45,0,.4,1)', fill: 'both' });
+    [gv && gv.parentNode, signLine && signLine.parentNode].forEach(function (row, n) {
+      if (!row) return; var hl = document.createElement('i'); hl.className = 'gh-hl'; var o = offs(row, clone);
+      hl.style.cssText = 'left:' + (o.x - 6) + 'px;top:' + (o.y - 4) + 'px;width:' + (row.offsetWidth + 12) + 'px;height:' + (row.offsetHeight + (n ? 30 : 8)) + 'px' + (n ? ';margin-top:-26px' : '');
+      clone.appendChild(hl);
+      var at = scAt + SC * ((o.y + row.offsetHeight / 2) / clone.offsetHeight);
+      hl.animate([{ opacity: 0 }, { opacity: 1, offset: .25 }, { opacity: .35 }], { duration: 900, delay: at, easing: 'ease-out', fill: 'both' });
+    });
+    var D = scAt + SC + 150;   /* เวลาที่ตราจะลงประทับ */
     /* ตราขี้ผึ้งลงมาจากด้านบน → กดลง ยุบตัว → เงาสัมผัส → กระดาษสั่นเบาๆ → คำบรรยายตรา */
     var mob = window.innerWidth < 768;
     var sh = document.createElement('i'); sh.className = 'wx-shadow'; sh.style.left = stX + 'px'; sh.style.top = stY + 'px'; clone.appendChild(sh);
@@ -1262,13 +1290,14 @@
     g.style.transformOrigin = (stX + 30) + 'px ' + (stY + 30) + 'px';
     g.animate([{ transform: 'none' }, { transform: 'scale(' + (mob ? 1.04 : 1.08) + ')' }], { duration: 1500, delay: Z, easing: 'cubic-bezier(.3,0,.2,1)', fill: 'forwards' });
     var wl = document.createElement('div'); wl.className = 'auth-welcome'; wl.setAttribute('aria-hidden', 'true');
-    wl.innerHTML = '<small>WELCOME · VELLUM CHECK</small><b>ยินดีต้อนรับ</b><span></span>';
+    wl.innerHTML = '<small>IDENTITY CONFIRMED · ยืนยันตัวตนแล้ว</small><b>ยินดีต้อนรับสู่ Vellum Check</b><span></span>';
     wl.querySelector('span').textContent = email || '';
     document.body.appendChild(wl);
     wl.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 600, delay: Z + 200, easing: E, fill: 'both' });
     /* เปลี่ยนกลับเข้าเว็บ: กระดาษค่อยๆ เลื่อนขึ้นและจาง เผยหน้าบัญชี */
     setTimeout(function () {
-      var out = g.animate([{ opacity: 1 }, { opacity: 0, transform: 'translateY(-26px) scale(' + (mob ? 1.02 : 1.05) + ')' }], { duration: 650, easing: 'ease-in', fill: 'forwards' });
+      window.removeEventListener('pointermove', onMove);
+      var out = g.animate([{ opacity: 1, transform: 'scale(' + (mob ? 1.04 : 1.08) + ')' }, { opacity: 1, offset: .6 }, { opacity: 0, transform: 'translate(' + (mob ? 30 : 120) + 'px,' + Math.round(innerHeight * .9) + 'px) rotate(7deg) scale(.96)' }], { duration: 850, easing: 'cubic-bezier(.55,0,.75,.3)', fill: 'forwards' });
       out.onfinish = function () { if (g.parentNode) g.parentNode.removeChild(g); };
       document.documentElement.classList.remove('vc-ritual');
       [dim, wl, skip, snd].forEach(function (n) { var a2 = n.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 750, easing: 'ease-in', fill: 'forwards' }); a2.onfinish = function () { if (n.parentNode) n.parentNode.removeChild(n); }; });
