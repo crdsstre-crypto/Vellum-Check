@@ -1733,3 +1733,21 @@ html.vc-art .auth-stamp.wax{overflow:visible}
   border:1px solid rgba(240,225,200,.25);background:rgba(20,14,10,.6);color:rgba(241,227,200,.8);font:500 .72rem/1 var(--font-mono);letter-spacing:.1em}
 .auth-sound[aria-pressed="true"]{color:#f1e3c8;border-color:rgba(240,225,200,.5)}
 @media (max-width:767px){html.vc-art .auth-ghost .auth-doc-wrap{transform:perspective(1200px) rotateX(6deg)}}
+
+/* ===== รอบ 4: มือสมจริงขึ้น · สแกนเอกสาร · โต๊ะชาร์โคล + parallax ===== */
+/* มือ: เอาขอบสติกเกอร์ออก ทอดเงาลงบนกระดาษตามทิศแสงซ้ายบน และรับแสงอุ่นเหมือนกระดาษ */
+html.vc-art .auth-ghost .gh-real .ah-out{display:none}
+html.vc-art .auth-ghost .gh-real .gh-g{filter:drop-shadow(10px 14px 6px rgba(20,10,4,.38)) drop-shadow(22px 30px 18px rgba(0,0,0,.28)) saturate(.85) brightness(.96) contrast(1.04)}
+/* เส้นสแกนสีเงิน */
+.gh-scan{position:absolute;left:3%;right:3%;height:2px;z-index:5;pointer-events:none;opacity:0;
+  background:linear-gradient(90deg,transparent,rgba(214,220,230,.95) 20%,#fff 50%,rgba(214,220,230,.95) 80%,transparent);
+  box-shadow:0 0 10px rgba(210,218,230,.6),0 -14px 22px -6px rgba(210,218,230,.18)}
+.gh-hl{position:absolute;z-index:1;pointer-events:none;opacity:0;border-radius:3px;background:linear-gradient(90deg,rgba(214,200,150,.0),rgba(214,200,150,.28) 12%,rgba(214,200,150,.22) 88%,rgba(214,200,150,0));mix-blend-mode:multiply}
+/* เวทีโต๊ะชาร์โคล แสงอุ่นจากด้านซ้าย + parallax */
+.auth-focus{background:
+  radial-gradient(40% 70% at calc(4% + var(--px,0px)) calc(40% + var(--py,0px)),rgba(255,186,110,.16),transparent 70%),
+  radial-gradient(ellipse 72% 80% at calc(48% + var(--px,0px)) calc(52% + var(--py,0px)),rgba(22,22,24,.82),rgba(4,4,5,.97) 100%),
+  url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='900' height='300'><filter id='w' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.0016 .09' numOctaves='4' seed='7'/><feColorMatrix values='0 0 0 0 .05  0 0 0 0 .05  0 0 0 0 .055  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23w)'/></svg>") var(--px,0px) var(--py,0px)/900px 300px,
+  #08080a !important}
+.auth-welcome small{letter-spacing:.24em}
+.gh-scan{height:46px;margin-top:-44px;background:linear-gradient(180deg,transparent,rgba(150,165,190,.10) 60%,rgba(150,165,190,.22) 92%,rgba(120,135,165,.95) 96%,rgba(255,255,255,.9) 97.5%,transparent 100%) !important;box-shadow:none !important;border-radius:2px}
