@@ -1785,3 +1785,12 @@ html.vc-art .auth-ghost .ad-sign ~ svg path,html.vc-art .auth-ghost svg path{str
   box-shadow:0 0 0 4px rgba(0,0,0,0),inset 0 0 0 4px transparent,inset 0 0 0 5px rgba(214,182,110,.4);transform-origin:50% 50%}
 html.vc-art.vf-glow :is(#authCard,#checkCard,#resultCard,.site-header){box-shadow:inset 0 0 0 1px rgba(214,182,110,.6) !important;transition:box-shadow .5s ease}
 html.vc-art :is(#authCard,#checkCard,#resultCard,.site-header){transition:box-shadow 1.1s ease}
+
+/* ===== รอบ 7: The Focus Pull · The Architectural Grid · The Signature Lock ===== */
+.fp-blur{position:absolute;inset:0;z-index:6;pointer-events:none;opacity:0;border-radius:3px;
+  -webkit-backdrop-filter:blur(1.8px);backdrop-filter:blur(1.8px);
+  -webkit-mask-image:radial-gradient(circle var(--fr,140px) at var(--fx,50%) var(--fy,40%),transparent 35%,#000 100%);
+          mask-image:radial-gradient(circle var(--fr,140px) at var(--fx,50%) var(--fy,40%),transparent 35%,#000 100%)}
+.ag-line{position:fixed;z-index:10046;height:1px;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(214,182,110,.8) 12%,rgba(214,182,110,.8) 88%,transparent)}
+.ag-line.ag-v{width:1px;height:0;background:linear-gradient(180deg,transparent,rgba(214,182,110,.6) 15%,rgba(214,182,110,.6) 85%,transparent)}
+@media (prefers-reduced-motion:reduce){.fp-blur{display:none}}
