@@ -1102,7 +1102,7 @@
   function reduce() { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
 
   function cleanupFx() {
-    Array.prototype.forEach.call(document.querySelectorAll('.auth-focus,.auth-ghost,.auth-skip,.auth-welcome'), function (n) { if (n.parentNode) n.parentNode.removeChild(n); });
+    document.documentElement.classList.remove('vc-ritual'); Array.prototype.forEach.call(document.querySelectorAll('.auth-focus,.auth-ghost,.auth-skip,.auth-welcome,.auth-sound'), function (n) { if (n.parentNode) n.parentNode.removeChild(n); });
   }
   function play(info) {
     if (reduce() || !document.body.animate) return;
@@ -1110,6 +1110,21 @@
     catch (e) { cleanupFx(); if (window.console) console.warn('stamp fx', e); return; }
     setTimeout(cleanupFx, 14000);   /* กันค้าง: ไม่ว่าเกิดอะไรขึ้น ชั้นมืดต้องหายภายใน 14 วินาที */
     var d = document.querySelector('.auth-focus'); if (d) d.addEventListener('click', cleanupFx);   /* แตะเพื่อข้ามได้ */
+  }
+  /* เสียงเอกสารแบบเบามาก: สังเคราะห์ด้วย WebAudio (ไม่มีไฟล์เสียง) · ปิดเป็นค่าเริ่มต้น เปิดได้จากปุ่มระหว่างฉาก */
+  var AC = null;
+  function sndOn() { try { return localStorage.getItem('vc_sfx') === '1'; } catch (e) { return false; } }
+  function ac() { if (!AC) { var C = window.AudioContext || window.webkitAudioContext; if (!C) return null; AC = new C(); } if (AC.state === 'suspended') AC.resume(); return AC; }
+  function noise(a, dur) { var b = a.createBuffer(1, Math.max(1, a.sampleRate * dur), a.sampleRate), d = b.getChannelData(0); for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; var s = a.createBufferSource(); s.buffer = b; return s; }
+  function sfx(kind, ms) {
+    if (!sndOn()) return; var a = ac(); if (!a) return; var t = a.currentTime, g = a.createGain(), f = a.createBiquadFilter(); g.connect(a.destination);
+    if (kind === 'paper') { var n = noise(a, .5); f.type = 'bandpass'; f.frequency.setValueAtTime(900, t); f.frequency.linearRampToValueAtTime(2600, t + .45); n.connect(f); f.connect(g);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.05, t + .12); g.gain.linearRampToValueAtTime(0, t + .5); n.start(t); }
+    else if (kind === 'scratch') { var d = (ms || 1000) / 1000, n2 = noise(a, d); f.type = 'bandpass'; f.frequency.value = 3800; f.Q.value = 1.4; n2.connect(f); f.connect(g);
+      g.gain.setValueAtTime(0, t); for (var k = 0; k < d; k += .09) g.gain.linearRampToValueAtTime(.012 + Math.random() * .014, t + k); g.gain.linearRampToValueAtTime(0, t + d); n2.start(t); }
+    else if (kind === 'seal') { var o = a.createOscillator(); o.type = 'sine'; o.frequency.setValueAtTime(110, t); o.frequency.exponentialRampToValueAtTime(42, t + .25); o.connect(g);
+      g.gain.setValueAtTime(.32, t); g.gain.exponentialRampToValueAtTime(.001, t + .35); o.start(t); o.stop(t + .4);
+      var g2 = a.createGain(), n3 = noise(a, .12); f.type = 'lowpass'; f.frequency.value = 1200; n3.connect(f); f.connect(g2); g2.connect(a.destination); g2.gain.setValueAtTime(.12, t); g2.gain.exponentialRampToValueAtTime(.001, t + .12); n3.start(t); }
   }
   function playInner(info) {
     var src = docEl() || document.querySelector('.auth-doc'); if (!src) return;
@@ -1134,18 +1149,26 @@
     st.className = 'auth-stamp wax'; st.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><defs><radialGradient id="wrg" cx=".36" cy=".3" r=".8"><stop offset="0" stop-color="#c8463c"/><stop offset=".45" stop-color="#8e1d17"/><stop offset="1" stop-color="#4a0a07"/></radialGradient><radialGradient id="wri" cx=".62" cy=".66" r=".75"><stop offset="0" stop-color="#a8302a"/><stop offset="1" stop-color="#651310"/></radialGradient></defs><path d="M114.6 60.0 Q114.6 60.0 112.3 65.7 Q110.0 71.4 110.0 77.7 Q110.0 84.1 104.6 87.7 Q99.2 91.3 95.0 95.0 Q90.9 98.7 88.3 106.0 Q85.7 113.3 78.6 112.1 Q71.6 110.9 65.8 111.2 Q60.0 111.4 53.9 112.6 Q47.7 113.8 41.9 111.7 Q36.1 109.6 32.5 104.3 Q28.9 99.0 24.5 95.4 Q20.1 91.8 17.5 86.8 Q15.0 81.7 11.9 76.7 Q8.7 71.7 6.8 65.9 Q4.8 60.0 7.6 54.3 Q10.3 48.7 10.7 42.5 Q11.0 36.4 16.5 33.0 Q21.9 29.6 23.9 23.5 Q26.0 17.3 32.1 16.1 Q38.3 14.9 43.2 11.3 Q48.1 7.7 54.0 7.4 Q60.0 7.0 65.4 9.7 Q70.9 12.4 76.5 13.3 Q82.1 14.2 87.6 16.4 Q93.1 18.5 98.1 22.1 Q103.2 25.6 106.6 30.8 Q110.0 35.9 112.6 41.7 Q115.2 47.4 114.9 53.7 Z" fill="url(#wrg)"/><path d="M114.6 60.0 Q114.6 60.0 112.3 65.7 Q110.0 71.4 110.0 77.7 Q110.0 84.1 104.6 87.7 Q99.2 91.3 95.0 95.0 Q90.9 98.7 88.3 106.0 Q85.7 113.3 78.6 112.1 Q71.6 110.9 65.8 111.2 Q60.0 111.4 53.9 112.6 Q47.7 113.8 41.9 111.7 Q36.1 109.6 32.5 104.3 Q28.9 99.0 24.5 95.4 Q20.1 91.8 17.5 86.8 Q15.0 81.7 11.9 76.7 Q8.7 71.7 6.8 65.9 Q4.8 60.0 7.6 54.3 Q10.3 48.7 10.7 42.5 Q11.0 36.4 16.5 33.0 Q21.9 29.6 23.9 23.5 Q26.0 17.3 32.1 16.1 Q38.3 14.9 43.2 11.3 Q48.1 7.7 54.0 7.4 Q60.0 7.0 65.4 9.7 Q70.9 12.4 76.5 13.3 Q82.1 14.2 87.6 16.4 Q93.1 18.5 98.1 22.1 Q103.2 25.6 106.6 30.8 Q110.0 35.9 112.6 41.7 Q115.2 47.4 114.9 53.7 Z" fill="none" stroke="rgba(255,170,150,.22)" stroke-width="1.2" transform="translate(-.6 -.6)"/><circle cx="60" cy="60" r="39" fill="url(#wri)" stroke="rgba(40,4,2,.55)" stroke-width="2.4"/><circle cx="60.8" cy="60.8" r="39" fill="none" stroke="rgba(255,175,155,.35)" stroke-width="1"/><circle cx="60" cy="60" r="32" fill="none" stroke="rgba(255,190,170,.32)" stroke-width="1.4" stroke-dasharray="1.2 3.6"/><text x="61" y="70.6" text-anchor="middle" font-family="Georgia,Times New Roman,serif" font-weight="700" font-size="29" fill="rgba(255,175,155,.45)">VC</text><text x="60" y="69.4" text-anchor="middle" font-family="Georgia,Times New Roman,serif" font-weight="700" font-size="29" fill="#4e0806">VC</text><ellipse cx="38" cy="30" rx="14" ry="7" fill="rgba(255,235,225,.22)" transform="rotate(-35 38 30)"/></svg>' + '<span class="wx-cap">ได้รับการตรวจสอบแล้ว<small>VERIFIED · VELLUM CHECK</small></span>';
     clone.appendChild(st);
     /* ฉากบังคับ: ทั้งหน้ามืดลงและเบลอ โฟกัสที่เอกสารอย่างเดียว กดอะไรไม่ได้จนจบ */
-    var dim = document.createElement('div'); dim.className = 'auth-focus'; document.body.appendChild(dim);
+    var dim = document.createElement('div'); dim.className = 'auth-focus'; document.body.appendChild(dim); document.documentElement.classList.add('vc-ritual');
     dim.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 450, easing: 'ease-out', fill: 'both' });
-    document.body.appendChild(g);
+    var cs = document.createElement('i'); cs.className = 'gh-contact'; cs.setAttribute('aria-hidden', 'true'); g.insertBefore(cs, g.firstChild);
+    var rk = document.createElement('i'); rk.className = 'gh-rake'; rk.setAttribute('aria-hidden', 'true'); clone.appendChild(rk);
+    document.body.appendChild(g); sfx('paper');
+    rk.animate([{ backgroundPosition: '-60% 0' }, { backgroundPosition: '40% 0' }], { duration: 1600, easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'both' });
+    cs.animate([{ opacity: 0, transform: 'scale(1.12) translateY(40px)' }, { opacity: 1, transform: 'none' }], { duration: 700, easing: 'cubic-bezier(.2,.8,.25,1)', fill: 'both' });
     var E = 'cubic-bezier(.16,1,.3,1)';
     g.style.transformOrigin = '50% 60%';
     g.animate([{ opacity: 0, transform: 'translateY(70px) rotate(3.5deg) scale(.96)', filter: 'brightness(.35)' },
                { opacity: 1, transform: 'translateY(-4px) rotate(-.4deg) scale(1)', filter: 'brightness(.9)', offset: .7 },
-               { opacity: 1, transform: 'none', filter: 'none' }], { duration: 850, easing: 'cubic-bezier(.2,.8,.25,1)', fill: 'both' });
+               { opacity: 1, transform: 'none', filter: 'none' }], { duration: 700, easing: 'cubic-bezier(.2,.8,.25,1)', fill: 'both' });
     /* ปุ่มข้าม (ผู้ใช้ไม่ต้องรอ) */
     var skip = document.createElement('button'); skip.type = 'button'; skip.className = 'auth-skip'; skip.textContent = 'ข้าม ›';
-    skip.addEventListener('click', function () { Array.prototype.forEach.call(document.querySelectorAll('.auth-focus,.auth-ghost,.auth-skip,.auth-welcome'), function (n) { if (n.parentNode) n.parentNode.removeChild(n); }); });
+    skip.addEventListener('click', function () { document.documentElement.classList.remove('vc-ritual'); Array.prototype.forEach.call(document.querySelectorAll('.auth-focus,.auth-ghost,.auth-skip,.auth-welcome,.auth-sound'), function (n) { if (n.parentNode) n.parentNode.removeChild(n); }); });
     document.body.appendChild(skip);
+    var snd = document.createElement('button'); snd.type = 'button'; snd.className = 'auth-sound';
+    var lab = function () { snd.textContent = sndOn() ? 'เสียง: เปิด' : 'เสียง: ปิด'; snd.setAttribute('aria-pressed', sndOn() ? 'true' : 'false'); }; lab();
+    snd.addEventListener('click', function () { try { localStorage.setItem('vc_sfx', sndOn() ? '0' : '1'); } catch (e) {} lab(); if (sndOn()) ac(); });
+    document.body.appendChild(snd);
 
     /* มือเขียนอีเมลลงในช่องอีเมล แล้วเซ็นลายเซ็นบนเส้น "ลงชื่อ" แล้วถอนมือ */
     function offs(el, root) { var x = 0, y = 0; while (el && el !== root) { x += el.offsetLeft; y += el.offsetTop; el = el.offsetParent; } return { x: x, y: y }; }
@@ -1164,7 +1187,7 @@
     var gw = null, tw = 0;
     if (gv && email) {
       gv.innerHTML = '<span class="gw"></span>'; gw = gv.firstChild; gw.textContent = email;
-      gw.style.clipPath = 'inset(-8px 100% -8px 0)'; tw = gw.offsetWidth || 120;
+      tw = gw.offsetWidth || 120; inkMask(gw, 0);
       if (tw > gv.offsetWidth - 10) { gw.style.fontSize = (parseFloat(getComputedStyle(gw).fontSize) * (gv.offsetWidth - 10) / tw).toFixed(1) + 'px'; tw = gw.offsetWidth; }
       WRITE = Math.max(1200, Math.min(2200, 700 + email.length * 60));
     }
@@ -1187,14 +1210,16 @@
         hg.style.opacity = Math.min(1, t / 250);
         if (t < T1 && gw) {
           var p = t / T1, e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
-          gw.style.clipPath = 'inset(-8px ' + ((1 - e) * 100).toFixed(1) + '% -8px 0)'; put(sx + 4 + e * tw, sy + wob);
+          inkMask(gw, e * tw); put(sx + 4 + e * tw, sy + wob);
+          if (!fr.s1) { fr.s1 = 1; sfx('scratch', T1); }
         } else if (t < T2) {
-          if (gw) gw.style.clipPath = 'none';
+          if (gw) { gw.style.webkitMaskImage = gw.style.maskImage = 'none'; gw.classList.add('dry'); }
           var q = (t - T1) / GAP, f = q * q * (3 - 2 * q), p0 = sp.getPointAtLength(0);
           put(lerp2(lastEmail.x, sigX + p0.x * k, f), lerp2(lastEmail.y, sigY + p0.y * k, f) - Math.sin(q * Math.PI) * 26);
         } else if (t < T3) {
           var p2 = (t - T2) / SIG, e2 = p2 < .5 ? 2 * p2 * p2 : 1 - Math.pow(-2 * p2 + 2, 2) / 2, pt = sp.getPointAtLength(e2 * SL);
           sp.style.strokeDashoffset = SL * (1 - e2); put(sigX + pt.x * k, sigY + pt.y * k + wob);
+          if (!fr.s2) { fr.s2 = 1; sfx('scratch', SIG); }
         } else if (t < T4) {
           var r = (t - T3) / 600, pe = sp.getPointAtLength(SL);
           sp.style.strokeDashoffset = 0; put(sigX + pe.x * k + r * 260, sigY + pe.y * k + r * 320); hg.style.opacity = 1 - r;
@@ -1202,12 +1227,13 @@
         requestAnimationFrame(fr);
       })(performance.now());
       WRITE = T3 + 150;   /* ตราลงตอนมือกำลังถอยออก */
-    } else { if (gw) gw.style.clipPath = 'none'; sp.style.strokeDashoffset = 0; WRITE = 0; }
+    } else { if (gw) { gw.style.webkitMaskImage = gw.style.maskImage = 'none'; } sp.style.strokeDashoffset = 0; WRITE = 0; }
     function lerp2(a, b, t) { return a + (b - a) * t; }
+    function inkMask(el, x) { var m = 'linear-gradient(90deg,#000 ' + Math.max(0, x - 10).toFixed(1) + 'px,rgba(0,0,0,.35) ' + x.toFixed(1) + 'px,transparent ' + (x + 6).toFixed(1) + 'px)'; el.style.webkitMaskImage = m; el.style.maskImage = m; }
     /* ตราลงตรงเส้นลงชื่อ ด้านขวา */
     var stX = Math.min(clone.offsetWidth * .68, clone.offsetWidth - 95), stY = Math.max(110, sgn.y - 150);
     st.style.left = stX + 'px'; st.style.top = stY + 'px';
-    var D = 900 + (WRITE ? WRITE + 450 : 200);   /* เวลาที่ตราจะลงประทับ */
+    var D = 750 + (WRITE ? WRITE + 350 : 200);   /* เวลาที่ตราจะลงประทับ */
     /* ตราขี้ผึ้งลงมาจากด้านบน → กดลง ยุบตัว → เงาสัมผัส → กระดาษสั่นเบาๆ → คำบรรยายตรา */
     var mob = window.innerWidth < 768;
     var sh = document.createElement('i'); sh.className = 'wx-shadow'; sh.style.left = stX + 'px'; sh.style.top = stY + 'px'; clone.appendChild(sh);
@@ -1220,25 +1246,33 @@
       { opacity: 1, transform: 'translateY(0) scale(1.03) rotate(-8deg)', offset: .93 },
       { opacity: 1, transform: 'translateY(0) scale(1) rotate(-8deg)' }
     ], { duration: 640, delay: D, easing: 'cubic-bezier(.45,0,.2,1)', fill: 'both' });
+    setTimeout(function () { sfx('seal'); }, D + 470);
+    var sp2 = document.createElement('i'); sp2.className = 'wx-spread'; sp2.style.left = stX + 'px'; sp2.style.top = stY + 'px'; clone.appendChild(sp2);
+    sp2.animate([{ opacity: 0, transform: 'scale(.55)' }, { opacity: .9, transform: 'scale(1.06)', offset: .5 }, { opacity: .0, transform: 'scale(1.18)' }], { duration: 520, delay: D + 470, easing: 'ease-out', fill: 'both' });
+    var gl = document.createElement('i'); gl.className = 'wx-glint'; st.appendChild(gl);
+    gl.animate([{ transform: 'translateX(-120%) rotate(25deg)', opacity: 0 }, { opacity: .9, offset: .3 }, { transform: 'translateX(140%) rotate(25deg)', opacity: 0 }], { duration: 900, delay: D + 780, easing: 'ease-in-out', fill: 'both' });
+    dim.animate([{ opacity: 1 }, { opacity: 1, filter: 'brightness(.75)', offset: .3 }, { opacity: 1, filter: 'none' }], { duration: 600, delay: D + 470, easing: 'ease-out' });
+    g.animate([{ transform: 'none' }, { transform: 'scale(1.018)', offset: .35 }, { transform: 'none' }], { duration: 300, delay: D + 470, easing: 'ease-out', composite: 'add' });
     clone.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(3px)', offset: .4 }, { transform: 'translateY(-1px)', offset: .7 }, { transform: 'translateY(0)' }],
       { duration: 280, delay: D + 520, easing: 'ease-out' });
     var cap = st.querySelector('.wx-cap');
     if (cap) cap.animate([{ opacity: 0, transform: 'translateX(-50%) translateY(4px)' }, { opacity: 1, transform: 'translateX(-50%)' }], { duration: 500, delay: D + 760, easing: E, fill: 'both' });
     /* ปิดฉาก: กล้องเคลื่อนเข้าใกล้ตรา แล้วข้อความต้อนรับ */
-    var Z = D + 640 + 250;
+    var Z = D + 640 + 150;
     g.style.transformOrigin = (stX + 30) + 'px ' + (stY + 30) + 'px';
     g.animate([{ transform: 'none' }, { transform: 'scale(' + (mob ? 1.04 : 1.08) + ')' }], { duration: 1500, delay: Z, easing: 'cubic-bezier(.3,0,.2,1)', fill: 'forwards' });
     var wl = document.createElement('div'); wl.className = 'auth-welcome'; wl.setAttribute('aria-hidden', 'true');
     wl.innerHTML = '<small>WELCOME · VELLUM CHECK</small><b>ยินดีต้อนรับ</b><span></span>';
     wl.querySelector('span').textContent = email || '';
     document.body.appendChild(wl);
-    wl.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 600, delay: Z + 300, easing: E, fill: 'both' });
+    wl.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 600, delay: Z + 200, easing: E, fill: 'both' });
     /* เปลี่ยนกลับเข้าเว็บ: กระดาษค่อยๆ เลื่อนขึ้นและจาง เผยหน้าบัญชี */
     setTimeout(function () {
       var out = g.animate([{ opacity: 1 }, { opacity: 0, transform: 'translateY(-26px) scale(' + (mob ? 1.02 : 1.05) + ')' }], { duration: 650, easing: 'ease-in', fill: 'forwards' });
       out.onfinish = function () { if (g.parentNode) g.parentNode.removeChild(g); };
-      [dim, wl, skip].forEach(function (n) { var a2 = n.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 750, easing: 'ease-in', fill: 'forwards' }); a2.onfinish = function () { if (n.parentNode) n.parentNode.removeChild(n); }; });
-    }, Z + 1900);
+      document.documentElement.classList.remove('vc-ritual');
+      [dim, wl, skip, snd].forEach(function (n) { var a2 = n.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 750, easing: 'ease-in', fill: 'forwards' }); a2.onfinish = function () { if (n.parentNode) n.parentNode.removeChild(n); }; });
+    }, Z + 1450);
   }
 
   function onLoggedIn() {
