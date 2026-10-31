@@ -1146,13 +1146,17 @@
     var w = r ? r.width : Math.min(330, vw - 32), h = r ? r.height : 470;
     g.style.width = w + 'px'; g.style.left = (r ? r.left : (vw - w) / 2) + 'px'; g.style.top = (r ? Math.max(r.top, Math.min(100, vh - h - 10)) : Math.max(70, (vh - h) / 2)) + 'px';
     var st = document.createElement('div'); st.className = 'auth-stamp';
-    st.className = 'auth-stamp wax'; st.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><defs><radialGradient id="wrg" cx=".36" cy=".3" r=".8"><stop offset="0" stop-color="#c8463c"/><stop offset=".45" stop-color="#8e1d17"/><stop offset="1" stop-color="#4a0a07"/></radialGradient><radialGradient id="wri" cx=".62" cy=".66" r=".75"><stop offset="0" stop-color="#a8302a"/><stop offset="1" stop-color="#651310"/></radialGradient></defs><path d="M114.6 60.0 Q114.6 60.0 112.3 65.7 Q110.0 71.4 110.0 77.7 Q110.0 84.1 104.6 87.7 Q99.2 91.3 95.0 95.0 Q90.9 98.7 88.3 106.0 Q85.7 113.3 78.6 112.1 Q71.6 110.9 65.8 111.2 Q60.0 111.4 53.9 112.6 Q47.7 113.8 41.9 111.7 Q36.1 109.6 32.5 104.3 Q28.9 99.0 24.5 95.4 Q20.1 91.8 17.5 86.8 Q15.0 81.7 11.9 76.7 Q8.7 71.7 6.8 65.9 Q4.8 60.0 7.6 54.3 Q10.3 48.7 10.7 42.5 Q11.0 36.4 16.5 33.0 Q21.9 29.6 23.9 23.5 Q26.0 17.3 32.1 16.1 Q38.3 14.9 43.2 11.3 Q48.1 7.7 54.0 7.4 Q60.0 7.0 65.4 9.7 Q70.9 12.4 76.5 13.3 Q82.1 14.2 87.6 16.4 Q93.1 18.5 98.1 22.1 Q103.2 25.6 106.6 30.8 Q110.0 35.9 112.6 41.7 Q115.2 47.4 114.9 53.7 Z" fill="url(#wrg)"/><path d="M114.6 60.0 Q114.6 60.0 112.3 65.7 Q110.0 71.4 110.0 77.7 Q110.0 84.1 104.6 87.7 Q99.2 91.3 95.0 95.0 Q90.9 98.7 88.3 106.0 Q85.7 113.3 78.6 112.1 Q71.6 110.9 65.8 111.2 Q60.0 111.4 53.9 112.6 Q47.7 113.8 41.9 111.7 Q36.1 109.6 32.5 104.3 Q28.9 99.0 24.5 95.4 Q20.1 91.8 17.5 86.8 Q15.0 81.7 11.9 76.7 Q8.7 71.7 6.8 65.9 Q4.8 60.0 7.6 54.3 Q10.3 48.7 10.7 42.5 Q11.0 36.4 16.5 33.0 Q21.9 29.6 23.9 23.5 Q26.0 17.3 32.1 16.1 Q38.3 14.9 43.2 11.3 Q48.1 7.7 54.0 7.4 Q60.0 7.0 65.4 9.7 Q70.9 12.4 76.5 13.3 Q82.1 14.2 87.6 16.4 Q93.1 18.5 98.1 22.1 Q103.2 25.6 106.6 30.8 Q110.0 35.9 112.6 41.7 Q115.2 47.4 114.9 53.7 Z" fill="none" stroke="rgba(255,170,150,.22)" stroke-width="1.2" transform="translate(-.6 -.6)"/><circle cx="60" cy="60" r="39" fill="url(#wri)" stroke="rgba(40,4,2,.55)" stroke-width="2.4"/><circle cx="60.8" cy="60.8" r="39" fill="none" stroke="rgba(255,175,155,.35)" stroke-width="1"/><circle cx="60" cy="60" r="32" fill="none" stroke="rgba(255,190,170,.32)" stroke-width="1.4" stroke-dasharray="1.2 3.6"/><text x="61" y="70.6" text-anchor="middle" font-family="Georgia,Times New Roman,serif" font-weight="700" font-size="29" fill="rgba(255,175,155,.45)">VC</text><text x="60" y="69.4" text-anchor="middle" font-family="Georgia,Times New Roman,serif" font-weight="700" font-size="29" fill="#4e0806">VC</text><ellipse cx="38" cy="30" rx="14" ry="7" fill="rgba(255,235,225,.22)" transform="rotate(-35 38 30)"/></svg>' + '<span class="wx-cap">ได้รับการตรวจสอบแล้ว<small>VERIFIED · VELLUM CHECK</small></span>';
+    st.className = 'auth-stamp wax'; st.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><defs><radialGradient id="wrg" cx=".36" cy=".3" r=".8"><stop offset="0" stop-color="#c8463c"/><stop offset=".45" stop-color="#8e1d17"/><stop offset="1" stop-color="#4a0a07"/></radialGradient><radialGradient id="wri" cx=".62" cy=".66" r=".75"><stop offset="0" stop-color="#a8302a"/><stop offset="1" stop-color="#651310"/></radialGradient></defs><path d="M114.6 60.0 Q114.6 60.0 112.3 65.7 Q110.0 71.4 110.0 77.7 Q110.0 84.1 104.6 87.7 Q99.2 91.3 95.0 95.0 Q90.9 98.7 88.3 106.0 Q85.7 113.3 78.6 112.1 Q71.6 110.9 65.8 111.2 Q60.0 111.4 53.9 112.6 Q47.7 113.8 41.9 111.7 Q36.1 109.6 32.5 104.3 Q28.9 99.0 24.5 95.4 Q20.1 91.8 17.5 86.8 Q15.0 81.7 11.9 76.7 Q8.7 71.7 6.8 65.9 Q4.8 60.0 7.6 54.3 Q10.3 48.7 10.7 42.5 Q11.0 36.4 16.5 33.0 Q21.9 29.6 23.9 23.5 Q26.0 17.3 32.1 16.1 Q38.3 14.9 43.2 11.3 Q48.1 7.7 54.0 7.4 Q60.0 7.0 65.4 9.7 Q70.9 12.4 76.5 13.3 Q82.1 14.2 87.6 16.4 Q93.1 18.5 98.1 22.1 Q103.2 25.6 106.6 30.8 Q110.0 35.9 112.6 41.7 Q115.2 47.4 114.9 53.7 Z" fill="url(#wrg)"/><path d="M114.6 60.0 Q114.6 60.0 112.3 65.7 Q110.0 71.4 110.0 77.7 Q110.0 84.1 104.6 87.7 Q99.2 91.3 95.0 95.0 Q90.9 98.7 88.3 106.0 Q85.7 113.3 78.6 112.1 Q71.6 110.9 65.8 111.2 Q60.0 111.4 53.9 112.6 Q47.7 113.8 41.9 111.7 Q36.1 109.6 32.5 104.3 Q28.9 99.0 24.5 95.4 Q20.1 91.8 17.5 86.8 Q15.0 81.7 11.9 76.7 Q8.7 71.7 6.8 65.9 Q4.8 60.0 7.6 54.3 Q10.3 48.7 10.7 42.5 Q11.0 36.4 16.5 33.0 Q21.9 29.6 23.9 23.5 Q26.0 17.3 32.1 16.1 Q38.3 14.9 43.2 11.3 Q48.1 7.7 54.0 7.4 Q60.0 7.0 65.4 9.7 Q70.9 12.4 76.5 13.3 Q82.1 14.2 87.6 16.4 Q93.1 18.5 98.1 22.1 Q103.2 25.6 106.6 30.8 Q110.0 35.9 112.6 41.7 Q115.2 47.4 114.9 53.7 Z" fill="none" stroke="rgba(255,170,150,.22)" stroke-width="1.2" transform="translate(-.6 -.6)"/><circle cx="60" cy="60" r="44" fill="none" stroke="rgba(255,170,150,.18)" stroke-width="3"/><circle cx="60" cy="60" r="41.5" fill="none" stroke="rgba(30,2,1,.45)" stroke-width="2.4"/><circle cx="60" cy="60" r="39" fill="url(#wri)" stroke="rgba(40,4,2,.55)" stroke-width="2.4"/><circle cx="60" cy="60" r="35.5" fill="none" stroke="rgba(30,2,1,.5)" stroke-width="1.2"/><circle cx="60.6" cy="60.6" r="35.5" fill="none" stroke="rgba(255,175,155,.25)" stroke-width=".8"/><circle cx="60.8" cy="60.8" r="39" fill="none" stroke="rgba(255,175,155,.35)" stroke-width="1"/><circle cx="60" cy="60" r="32" fill="none" stroke="rgba(255,190,170,.32)" stroke-width="1.4" stroke-dasharray="1.2 3.6"/><text x="61" y="70.6" text-anchor="middle" font-family="Georgia,Times New Roman,serif" font-weight="700" font-size="29" fill="rgba(255,175,155,.45)">VC</text><text x="60" y="69.4" text-anchor="middle" font-family="Georgia,Times New Roman,serif" font-weight="700" font-size="29" fill="#4e0806">VC</text><ellipse cx="38" cy="30" rx="14" ry="7" fill="rgba(255,235,225,.22)" transform="rotate(-35 38 30)"/></svg>' + '<span class="wx-cap">ได้รับการตรวจสอบแล้ว<small>VERIFIED · VELLUM CHECK</small></span>';
     clone.appendChild(st);
     /* ฉากบังคับ: ทั้งหน้ามืดลงและเบลอ โฟกัสที่เอกสารอย่างเดียว กดอะไรไม่ได้จนจบ */
     var dim = document.createElement('div'); dim.className = 'auth-focus'; document.body.appendChild(dim); document.documentElement.classList.add('vc-ritual');
     dim.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 450, easing: 'ease-out', fill: 'both' });
     var cs = document.createElement('i'); cs.className = 'gh-contact'; cs.setAttribute('aria-hidden', 'true'); g.insertBefore(cs, g.firstChild);
     var rk = document.createElement('i'); rk.className = 'gh-rake'; rk.setAttribute('aria-hidden', 'true'); clone.appendChild(rk);
+    var pen = document.createElement('div'); pen.className = 'gh-pen'; pen.setAttribute('aria-hidden', 'true');
+    pen.innerHTML = '<svg viewBox="0 0 320 40"><defs><linearGradient id="gpB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a4a42"/><stop offset=".35" stop-color="#15110e"/><stop offset="1" stop-color="#030202"/></linearGradient><linearGradient id="gpG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0b8"/><stop offset=".5" stop-color="#c9a24c"/><stop offset="1" stop-color="#6b4d17"/></linearGradient></defs><rect x="40" y="12" width="200" height="17" rx="8.5" fill="url(#gpB)"/><rect x="62" y="12" width="7" height="17" fill="url(#gpG)"/><rect x="206" y="12" width="5" height="17" fill="url(#gpG)"/><path d="M240 13 H262 L292 20.5 L262 28 H240 Z" fill="url(#gpG)"/><path d="M292 20.5 L310 20.5" stroke="#8a6a28" stroke-width="2"/><path d="M54 10 L34 10 Q28 10 28 14 L28 16 L40 16 L40 14 L54 14 Z" fill="url(#gpG)"/><path d="M72 15 H198" stroke="rgba(255,255,255,.28)" stroke-width="2" stroke-linecap="round"/></svg>';
+    g.appendChild(pen);
+    pen.animate([{ opacity: 0, transform: 'translate(40px,30px) rotate(-30deg)' }, { opacity: 1, transform: 'rotate(-26deg)' }], { duration: 900, delay: 200, easing: 'cubic-bezier(.2,.8,.25,1)', fill: 'both' });
     document.body.appendChild(g); sfx('paper');
     rk.animate([{ backgroundPosition: '-60% 0' }, { backgroundPosition: '40% 0' }], { duration: 1600, easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'both' });
     /* กระดาษซ้อน: แผ่นล่างแต่ละแผ่นเลื่อนเข้าที่ช้ากว่าแผ่นบนเล็กน้อย คนละมุม */
@@ -1289,11 +1293,27 @@
     var Z = D + 640 + 150;
     g.style.transformOrigin = (stX + 30) + 'px ' + (stY + 30) + 'px';
     g.animate([{ transform: 'none' }, { transform: 'scale(' + (mob ? 1.04 : 1.08) + ')' }], { duration: 1500, delay: Z, easing: 'cubic-bezier(.3,0,.2,1)', fill: 'forwards' });
+    /* The Paper Transformation: เนื้อหาแบบฟอร์มคลี่กลายเป็นหน้า "พื้นที่ตรวจสัญญา" (ลายเซ็นและตรายังอยู่) แล้วจึงเลื่อนเข้าเว็บ */
+    var rpH = Math.max(160, stY - 25), rp = document.createElement('div'); rp.className = 'gh-report'; rp.setAttribute('aria-hidden', 'true');
+    rp.style.height = rpH + 'px';
+    rp.innerHTML = '<p class="rp-k">VELLUM CHECK · WORKSPACE</p><h4>พื้นที่ตรวจสัญญาของคุณ</h4><p class="rp-m"></p>' +
+      '<div class="rp-row"><b>01</b><span>วางสัญญา</span><i style="--w:62%"></i></div>' +
+      '<div class="rp-row"><b>02</b><span>ตรวจข้อความเสี่ยง</span><i style="--w:78%"></i></div>' +
+      '<div class="rp-row"><b>03</b><span>สรุปผลเป็นภาษาง่าย</span><i style="--w:54%"></i></div>' +
+      '<p class="rp-ok">● บัญชีพร้อมใช้งาน</p><i class="rp-edge"></i>';
+    rp.querySelector('.rp-m').textContent = email || '';
+    clone.appendChild(rp);
+    var TF = Z + 250;
+    rp.animate([{ clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)' }], { duration: 760, delay: TF, easing: 'cubic-bezier(.6,0,.2,1)', fill: 'both' });
+    rp.querySelector('.rp-edge').animate([{ top: '0%', opacity: 1 }, { top: '100%', opacity: 1, offset: .95 }, { top: '100%', opacity: 0 }], { duration: 760, delay: TF, easing: 'cubic-bezier(.6,0,.2,1)', fill: 'both' });
+    Array.prototype.forEach.call(rp.querySelectorAll('.rp-row i'), function (b, n) {
+      b.animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: 500, delay: TF + 420 + n * 110, easing: E, fill: 'both' });
+    });
     var wl = document.createElement('div'); wl.className = 'auth-welcome'; wl.setAttribute('aria-hidden', 'true');
-    wl.innerHTML = '<small>IDENTITY CONFIRMED · ยืนยันตัวตนแล้ว</small><b>ยินดีต้อนรับสู่ Vellum Check</b><span></span>';
+    wl.innerHTML = '<small>IDENTITY CONFIRMED · ยืนยันตัวตนแล้ว</small><b class="wl-brand">VELLUM CHECK</b><span></span>';
     wl.querySelector('span').textContent = email || '';
     document.body.appendChild(wl);
-    wl.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 600, delay: Z + 200, easing: E, fill: 'both' });
+    wl.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 600, delay: Z + 700, easing: E, fill: 'both' });
     /* เปลี่ยนกลับเข้าเว็บ: กระดาษค่อยๆ เลื่อนขึ้นและจาง เผยหน้าบัญชี */
     setTimeout(function () {
       window.removeEventListener('pointermove', onMove);
@@ -1301,7 +1321,7 @@
       out.onfinish = function () { if (g.parentNode) g.parentNode.removeChild(g); };
       document.documentElement.classList.remove('vc-ritual');
       [dim, wl, skip, snd].forEach(function (n) { var a2 = n.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 750, easing: 'ease-in', fill: 'forwards' }); a2.onfinish = function () { if (n.parentNode) n.parentNode.removeChild(n); }; });
-    }, Z + 1450);
+    }, Z + 2050);
   }
 
   function onLoggedIn() {
@@ -1322,6 +1342,7 @@
     })();
   }
   function init() {
+    if (/[?&]stampdemo=1/.test(location.search)) setTimeout(function () { var tg = document.getElementById('authToggle'); if (innerWidth < 768 && tg && !document.body.classList.contains('auth-open')) tg.click(); }, 2400);
     if (/[?&]stampdemo=1/.test(location.search)) setTimeout(function () { var d = docEl(), r = d && d.getBoundingClientRect(); play({ rect: r && r.width > 50 ? { left: r.left, top: r.top, width: r.width, height: r.height } : null, email: 'somchai@example.com' }); }, 3500);
     var li = document.getElementById('authLoggedIn'); if (!li || !('MutationObserver' in window)) return;
     var wasHidden = li.hidden;
