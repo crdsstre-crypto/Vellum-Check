@@ -1794,3 +1794,7 @@ html.vc-art :is(#authCard,#checkCard,#resultCard,.site-header){transition:box-sh
 .ag-line{position:fixed;z-index:10046;height:1px;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(214,182,110,.8) 12%,rgba(214,182,110,.8) 88%,transparent)}
 .ag-line.ag-v{width:1px;height:0;background:linear-gradient(180deg,transparent,rgba(214,182,110,.6) 15%,rgba(214,182,110,.6) 85%,transparent)}
 @media (prefers-reduced-motion:reduce){.fp-blur{display:none}}
+
+/* ลบ: เบลอบนเอกสาร (Focus Pull) และเส้น/กรอบสีทองตอนจบ */
+.fp-blur,.ag-line,.vf-frame{display:none !important}
+html.vc-art.vf-glow :is(#authCard,#checkCard,#resultCard,.site-header){box-shadow:none !important}
