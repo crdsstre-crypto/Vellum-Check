@@ -1835,3 +1835,10 @@ html.vc-art .auth-ghost .gh-pen{display:none}
   box-shadow:0 0 0 400vmax #060504,inset 0 0 18px 10px #060504}
 .si-seal{position:fixed;z-index:10048;pointer-events:none;will-change:transform,opacity}
 .si-seal svg{display:block;width:100%;height:100%}
+
+/* ===== รายละเอียดพรีเมียม: เลขที่เอกสาร · ตราติดรูปโปรไฟล์ ===== */
+html.vc-art .auth-ghost .gh-serial{position:absolute;z-index:5;margin:0;white-space:nowrap;pointer-events:none;
+  font:500 .62rem/1 var(--font-mono);letter-spacing:.06em;color:rgba(40,28,18,.78)}
+#authLoggedIn .acct-avatar{position:relative;overflow:visible !important}
+#authLoggedIn .acct-avatar .av-seal{position:absolute;right:-7px;bottom:-7px;width:24px;height:24px;pointer-events:none;z-index:2;filter:drop-shadow(0 2px 2px rgba(0,0,0,.5))}
+#authLoggedIn .acct-avatar .av-seal svg{display:block;width:100%;height:100%}
