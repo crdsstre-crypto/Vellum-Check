@@ -1101,8 +1101,17 @@
 
   function reduce() { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
 
+  function cleanupFx() {
+    Array.prototype.forEach.call(document.querySelectorAll('.auth-focus,.auth-ghost'), function (n) { if (n.parentNode) n.parentNode.removeChild(n); });
+  }
   function play(info) {
     if (reduce() || !document.body.animate) return;
+    try { playInner(info); }
+    catch (e) { cleanupFx(); if (window.console) console.warn('stamp fx', e); return; }
+    setTimeout(cleanupFx, 14000);   /* กันค้าง: ไม่ว่าเกิดอะไรขึ้น ชั้นมืดต้องหายภายใน 14 วินาที */
+    var d = document.querySelector('.auth-focus'); if (d) d.addEventListener('click', cleanupFx);   /* แตะเพื่อข้ามได้ */
+  }
+  function playInner(info) {
     var src = docEl() || document.querySelector('.auth-doc'); if (!src) return;
     var g = document.createElement('div'); g.className = 'auth-ghost'; g.setAttribute('aria-hidden', 'true');
     var clone = src.cloneNode(true);
