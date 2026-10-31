@@ -1952,3 +1952,16 @@ html.vc-art #resultCard .empty-art::after{content:"";position:absolute;left:50%;
   border:1.5px dashed rgba(201,191,174,.35);box-shadow:0 0 0 6px transparent,0 0 0 7px rgba(201,191,174,.14);pointer-events:none}
 html.vc-art #authCard .sheet-head h2{flex-wrap:wrap}
 html.vc-art #authCard .sheet-head h2::after{flex-basis:100%;margin-top:2px}
+
+/* ===== พิธีประทับตราจริง: หยดขี้ผึ้ง · ตราทองเหลือง · เงาตามความสูง ===== */
+html.vc-art .auth-ghost .wx-pool{position:absolute;z-index:3;pointer-events:none;opacity:0;border-radius:47% 53% 51% 49%/52% 46% 54% 48%;
+  background:radial-gradient(circle at 38% 32%,#d9574a 0%,#a3241c 38%,#6e120d 78%,#4a0806 100%);
+  box-shadow:inset 0 -3px 6px rgba(0,0,0,.35),inset 0 2px 3px rgba(255,170,150,.35),0 2px 3px rgba(40,4,2,.45)}
+html.vc-art .auth-ghost .wx-tool{position:absolute;z-index:7;pointer-events:none;opacity:0;will-change:transform,opacity}
+html.vc-art .auth-ghost .wx-tool svg{display:block;width:100%;height:100%}
+html.vc-art .auth-ghost .wx-tsh{position:absolute;z-index:6;pointer-events:none;opacity:0;border-radius:50%;will-change:transform,opacity;
+  background:radial-gradient(closest-side,rgba(0,0,0,.55),rgba(0,0,0,.25) 65%,transparent)}
+html.vc-art .auth-ghost .wx-shadow{display:none !important}
+/* เกรนฟิล์ม: ตัดจากพิธี (ผสมสีทั้งจอทุกเฟรมหนักเกินไป) และบนโต๊ะใช้แบบไม่ผสมสี */
+.auth-focus::after{display:none !important}
+.ld-scene::after{mix-blend-mode:normal !important;opacity:.035 !important}
