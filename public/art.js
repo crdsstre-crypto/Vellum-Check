@@ -1314,15 +1314,7 @@
     var serial = 'เลขที่ VC-' + now0.getFullYear() + '-' + (hsh % 0xFFFF).toString(16).toUpperCase().padStart(4, '0') + ' · ' + now0.getDate() + ' ' + TH[now0.getMonth()] + ' ' + String(now0.getHours()).padStart(2, '0') + ':' + String(now0.getMinutes()).padStart(2, '0');
     var serEl = document.createElement('p'); serEl.className = 'gh-serial'; serEl.style.cssText = 'right:' + (mob ? 44 : 30) + 'px;top:' + (mob ? 34 : 40) + 'px;text-align:right' + (mob ? ';font-size:.54rem' : ''); clone.appendChild(serEl);
     cue(CONTACT + 520, function () { var i0 = 0, t1 = performance.now(); (function ty(n) { if (TL.dead) return; var k2 = Math.min(serial.length, Math.floor((n - t1) / 26)); if (k2 !== i0) { i0 = k2; serEl.textContent = serial.slice(0, k2); } if (k2 < serial.length) requestAnimationFrame(ty); })(t1); });
-    cue(LK, function () {
-    /* Signature Lock: เอกสารหมุนเข้าตรง แผ่นซ้อนเข้าแนว แล้วนิ่ง */
-    var poseT = getComputedStyle(pose).transform;
-    A(pose, [{ transform: poseT === 'none' ? 'rotate(0deg)' : poseT }, { transform: 'rotate(0deg)' }], { duration: 800, delay: 0, easing: EASE_IO, fill: 'forwards' });
-    try { ['::before', '::after'].forEach(function (pe, n) {
-      var fin = getComputedStyle(clone, pe).transform; if (!fin || fin === 'none') return;
-      A(clone, [{ transform: fin }, { transform: 'translate(' + (n ? 3 : 2) + 'px,' + (n ? 6 : 3) + 'px)' }], { duration: 800, delay: 40 + n * 50, easing: EASE_IO, fill: 'forwards', pseudoElement: pe });
-    }); } catch (e) {}
-    });
+    /* (ตัดออกตามผู้ใช้: ช่วงเอกสารหมุนเข้าตรงก่อนตราลอยขึ้น) */
     /* ---------- The Document Journey: เอกสารที่ประทับตราแล้วเดินทางเข้าไปที่ "บัญชีของฉัน" ----------
        1) ตราเสร็จ ทุกอย่างนิ่ง (ช่วงล็อกด้านบน)  2) ยกกระดาษขึ้นจากโต๊ะ เงาห่างออก ปากกาอยู่บนโต๊ะ
        3) เคลื่อนไปที่ปุ่มบัญชี (คอม: เมนูบนสุด / มือถือ: แถบล่าง) ย่อขนาดระหว่างทาง ไม่หมุนแบบการ์ด
