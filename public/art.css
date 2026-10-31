@@ -1811,3 +1811,21 @@ html.vc-art .auth-ghost .ink-bead{will-change:transform,opacity;transition:opaci
 .gh-report .rp-edge{top:0}
 html.vc-art .auth-ghost .gh-pen{display:none}
 @media (max-width:767px){.gh-penw,.gh-pensh{z-index:8}}
+
+/* ===== Unlock Burst: เอกสาร → บัญชีของฉัน (แสงรัศมีหลากสี + ดาว + ตราเรืองแสง) ===== */
+.ub-wrap{position:fixed;left:50%;top:50%;width:0;height:0;z-index:10047;pointer-events:none;will-change:transform,opacity}
+.ub-rays{position:absolute;left:-90vmax;top:-90vmax;width:180vmax;height:180vmax;will-change:transform,opacity}
+.ub-ray{position:absolute;inset:0;border-radius:50%;opacity:0;will-change:opacity;
+  background:radial-gradient(circle,var(--c) 0%,color-mix(in srgb,var(--c) 55%,transparent) 8%,transparent 46%),
+  repeating-conic-gradient(from 0deg,color-mix(in srgb,var(--c) 85%,#fff) 0deg 5deg,transparent 5deg 15deg);
+  -webkit-mask-image:radial-gradient(circle,#000 0%,#000 18%,transparent 62%);mask-image:radial-gradient(circle,#000 0%,#000 18%,transparent 62%)}
+.ub-core{position:absolute;left:-120px;top:-120px;width:240px;height:240px;border-radius:50%;opacity:0;background:radial-gradient(circle,#fff 0%,rgba(255,255,255,.7) 25%,transparent 70%)}
+.ub-star{position:absolute;margin:-.5em 0 0 -.5em;line-height:1;color:#fff;text-shadow:0 0 8px #fff,0 0 16px #8ff;opacity:0;will-change:transform,opacity}
+.ub-badge{position:absolute;left:0;top:0;width:150px;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;transform:translate(-50%,-50%)}
+.ub-badge svg{position:relative;width:118px;height:118px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
+.ub-glow{position:absolute;left:50%;top:59px;width:96px;height:96px;margin:-48px 0 0 -48px;border-radius:50%}
+.ub-badge b{position:relative;font-family:var(--font-display),"Taviraj",serif;font-weight:600;font-size:1.25rem;color:#fff;white-space:nowrap}
+.ub-badge span{position:relative;font:500 .7rem/1 var(--font-mono);color:rgba(255,255,255,.75);white-space:nowrap}
+@media (max-width:767px){.ub-badge svg{width:96px;height:96px}.ub-glow{top:48px;width:80px;height:80px;margin:-40px 0 0 -40px}}
+.ub-badge b,.ub-badge span{padding:2px 12px;border-radius:999px;background:radial-gradient(closest-side,rgba(0,0,0,.6),rgba(0,0,0,.35) 70%,transparent)}
+.ub-badge b{text-shadow:0 2px 6px rgba(0,0,0,.8)}
