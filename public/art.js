@@ -1684,6 +1684,7 @@
     arm.style.opacity = 0; tool(null); sc.classList.remove('acts-on'); docHand.style.opacity = docSvg.getAttribute('data-done') ? 0 : '';
     spoon.style.opacity = ''; cup.style.transform = ''; cup.style.zIndex = ''; cup.classList.remove('nosteam');
     Array.prototype.slice.call(cup.querySelectorAll('.ld-hand3d')).forEach(function (n) { n.parentNode.removeChild(n); }); ICECV = null; steam(true);
+    var lg = q('.cp-lift', cup); if (lg) lg.style.transform = '';
     try { cup.getAnimations().forEach(function (a) { a.cancel(); }); } catch (e) {}
     Array.prototype.forEach.call(cofs, function (c) { c.style.opacity = ''; c.style.transform = ''; });
     swirl.style.transform = '';
@@ -1767,27 +1768,35 @@
     await w(4200);
   }
 
-  /* ฉากยกกาแฟจิบ: มือ 3D เอื้อมมาจับหูแก้ว → ยกแก้วขึ้นจากโต๊ะเล็กน้อย (ไม่ซูม) จิบ 2 ครั้ง → วางคืน → ปล่อยมือ */
+  /* ฉากยกกาแฟไปดื่ม: มือ 3D จับหูแก้ว → ยกแก้ว (เฉพาะตัวแก้ว ไม่รวมจานรอง) ออกไปนอกจอทางขวาเหมือนยกไปดื่ม
+     → ถือกลับมาวางบนจานรองที่เดิม → ปล่อยมือ · ไม่มีอิโมจิ ไม่ซูม */
+  function liftGroup() {
+    var svg = q('svg', cup), g = q('.cp-lift', svg); if (g) return g;
+    var imgs = svg.querySelectorAll(':scope > image'); g = document.createElementNS(NS, 'g'); g.setAttribute('class', 'cp-lift');
+    var first = q(':scope > image.cp-cof', svg) || imgs[1]; svg.insertBefore(g, first);
+    var move = [].slice.call(svg.querySelectorAll(':scope > .cp-cof, :scope > .cp-swirl, :scope > .cp-hd'));
+    if (imgs.length > 1) move.push(imgs[imgs.length - 1]);
+    move.forEach(function (n) { g.appendChild(n); }); return g;
+  }
   async function act2() {
     sc.classList.add('acts-on'); docHand.style.opacity = 0; steam(false);
-    var cv = mountCv(640, 480, [-100, 300, -160, 140]);
+    var cv = mountCv(640, 480, [-100, 300, -160, 140]), g = liftGroup();
     await playOn(vid('grasp', GRASP_SRC), cv, 640, 480);
-    await w(150);
-    /* ไม่ซูมแล้ว: ยกแก้วขึ้นจากโต๊ะเล็กน้อย (เลื่อนขึ้น + เงาใต้แก้วฟุ้งขึ้น) แล้ววางคืน */
-    var lift = { translate: '0 0', filter: 'drop-shadow(0 0 0 rgba(0,0,0,0))' }, up = { translate: '-2% -5%', filter: 'drop-shadow(6px 16px 10px rgba(0,0,0,.55))' };
-    function mv(f, t, ms) { var my = tok; return new Promise(function (res, rej) { var an_; try { an_ = cup.animate([f, t], { duration: ms, easing: 'cubic-bezier(.45,0,.25,1)', fill: 'forwards' }); } catch (e) { res(); return; } an_.onfinish = function () { my === tok ? res() : rej(new Error('abort')); }; (function chkA() { if (my !== tok) { try { an_.cancel(); } catch (e) {} rej(new Error('abort')); } else if (an_.playState === 'running') setTimeout(chkA, 100); })(); }); }
-    var cu = ctr(cup);
-    for (var s = 0; s < 2; s++) {
-      await mv(lift, up, 900);
-      emo(s ? '😍' : '😋', cu.x - cu.w * .55, cu.y - cu.h * .2, 54); if (s) setTimeout(function () { emo('😊', cu.x - cu.w * .1, cu.y - cu.h * .55, 38); }, 500);
-      await w(1000); cofScale(s ? .84 : .93);
-      await mv(up, lift, 850);
-      await w(s ? 300 : 650);
+    await w(200);
+    var CW = cup.offsetWidth, U = CW / 240, dx = 430, dy = 110; /* หน่วย viewBox ของแก้ว */
+    function carry(f, t, ms) {
+      return an(ms, function (e) { var k = f + (t - f) * e;
+        g.style.transform = 'translate(' + (dx * k).toFixed(1) + 'px,' + (dy * k).toFixed(1) + 'px)';
+        cv.style.transform = 'translate(' + (dx * k * U).toFixed(1) + 'px,' + (dy * k * U).toFixed(1) + 'px)'; });
     }
+    await carry(0, 1, 1100);
+    await w(1800);
+    await carry(1, 0, 1200);
+    g.style.transform = ''; cv.style.transform = '';
+    await w(250);
     await playOn(vid('rel', REL_SRC), cv, 640, 480);
-    try { cup.getAnimations().forEach(function (a) { a.cancel(); }); } catch (e) {}
     if (cv.parentNode) cv.parentNode.removeChild(cv);
-    steam(true); await w(900); cofScale(1); await w(900);
+    steam(true); await w(1200);
   }
 
   async function act3() {
