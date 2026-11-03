@@ -2036,3 +2036,9 @@ html.vc-art .ld-scene .auth-doc-wrap{perspective:none !important}
 
 /* ลบรอยพับกลางกระดาษเข้าสู่ระบบ (เส้นแนวนอนระหว่างช่องอีเมลกับรหัสผ่าน) */
 html.vc-art .auth-doc .ad-face::before{background:none !important}
+
+/* มือถือเท่านั้น (3 พ.ย. 2026): เอกสารเล็กลงอีก · ตะเกียงใหญ่ขึ้น */
+@media (max-width:767px){
+  html.vc-art .ld-scene .auth-doc-wrap{zoom:.74;padding:205px 80px 56px}
+  html.vc-art .ld-scene .ld-lamp{top:-6px;left:-2%;width:175px}
+}
