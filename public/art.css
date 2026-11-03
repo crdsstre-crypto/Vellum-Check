@@ -2251,3 +2251,45 @@ html:not(.hx-on) .hx-trail{display:none}
 .dx-nav a.hx-dk{text-shadow:0 0 14px rgba(255,214,150,.65)}
 html.hx-docking .vc-cursor i{opacity:0 !important}
 @media (prefers-reduced-motion:reduce){.hx-dock{display:none !important}}
+
+/* ===== ตรงกลาง: วงตราประทับทอง + การ์ดตัวอย่างการตรวจ (คอม+มือถือ) ===== */
+html.vc-art .hx-seal{position:absolute;left:0;top:0;z-index:-1;pointer-events:none;opacity:0;animation:hxSealIn 2.4s .6s ease forwards}
+html:not(.hx-on) .hx-seal{display:none}
+@keyframes hxSealIn{to{opacity:.62}}
+.hx-seal > div{position:absolute;inset:0;will-change:transform}
+.hx-seal svg{display:block;width:100%;height:100%;overflow:visible}
+.hx-seal .hs-a{animation:hxSpin 140s linear infinite}
+.hx-seal .hs-b{animation:hxSpin 200s linear infinite reverse;opacity:.75}
+@keyframes hxSpin{to{transform:rotate(360deg)}}
+.hx-seal::before{content:"";position:absolute;inset:12%;border-radius:50%;background:radial-gradient(closest-side,rgba(255,196,110,.10),rgba(255,180,90,.04) 60%,transparent)}
+html.vc-art .hero .hx-demo{position:relative;margin:22px auto 4px;width:min(460px,92%);padding:11px 16px 12px;border-radius:7px;text-align:left;overflow:hidden;text-shadow:none;
+  background:linear-gradient(180deg,#f1e8d4,#e2d4b7);color:#2c2218;box-shadow:0 22px 44px -14px rgba(0,0,0,.75),0 0 0 1px rgba(214,172,96,.45),inset 0 1px 0 rgba(255,255,255,.6);
+  font-family:Taviraj,Sarabun,serif;opacity:0;animation:hxDemoIn .8s 1.1s cubic-bezier(.2,.8,.3,1) forwards}
+@keyframes hxDemoIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.hx-demo .dm-h{display:flex;justify-content:space-between;align-items:center;font:500 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.1em;color:#8a6d45;margin-bottom:7px}
+.hx-demo .dm-h i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#c0392b;margin-right:7px;vertical-align:0;animation:hxRec 1.2s ease-in-out infinite}
+@keyframes hxRec{50%{opacity:.25}}
+.hx-demo .dm-t{font-size:16px;line-height:1.6;min-height:3.2em;transition:opacity .4s}
+.hx-demo.out :is(.dm-t,.dm-r){opacity:0}
+.hx-demo mark{color:inherit;border-radius:2px;padding:0 1px;background:linear-gradient(rgba(214,58,40,.28),rgba(214,58,40,.28)) no-repeat 0 0/0% 100%;transition:background-size .5s cubic-bezier(.3,.1,.3,1),color .3s}
+.hx-demo mark.m{background-image:linear-gradient(rgba(214,150,30,.32),rgba(214,150,30,.32))}
+.hx-demo mark.on{background-size:100% 100%;color:#7a1a0e}
+.hx-demo mark.m.on{color:#6a4300}
+.hx-demo .dm-c{display:inline-block;width:2px;height:1.05em;margin-left:1px;vertical-align:-.15em;background:#2c2218;animation:hxRec .8s steps(1) infinite}
+.hx-demo .dm-r{display:flex;align-items:center;gap:10px;min-height:24px;margin-top:6px;transition:opacity .4s}
+.hx-demo .dm-b{font:600 12px/1 Prompt,Sarabun,sans-serif;padding:5px 9px;border-radius:99px;color:#fff;background:#b8321f;opacity:0;transform:scale(.6);transition:opacity .25s,transform .45s cubic-bezier(.2,1.6,.4,1)}
+.hx-demo .dm-b.m{background:#b97a12}
+.hx-demo .dm-b.on{opacity:1;transform:none}
+.hx-demo .dm-x{font:400 13px/1.35 Sarabun,sans-serif;color:#5a4630;opacity:0;transition:opacity .4s .15s}
+.hx-demo.done .dm-x{opacity:1}
+.hx-demo .dm-scan{position:absolute;top:0;bottom:0;left:0;width:70px;pointer-events:none;opacity:0;
+  background:linear-gradient(90deg,transparent,rgba(255,196,110,.55),rgba(255,236,190,.8),rgba(255,196,110,.55),transparent)}
+.hx-demo .dm-scan.go{animation:hxScan .9s cubic-bezier(.4,0,.3,1)}
+@keyframes hxScan{0%{opacity:1;transform:translateX(-80px)}90%{opacity:1}100%{opacity:0;transform:translateX(480px)}}
+@media (max-width:767px){
+  html.vc-art .hero .hx-demo{margin-top:16px;padding:10px 13px 11px}
+  .hx-demo .dm-t{font-size:14.5px}
+  .hx-demo .dm-x{font-size:12px}
+}
+html[data-calm] :is(.hx-seal > div,.hx-demo .dm-h i){animation:none}
+@media (prefers-reduced-motion:reduce){.hx-seal > div,.hx-demo .dm-h i{animation:none}.hx-seal{opacity:.62;animation:none}.hx-demo{opacity:1;animation:none}}
