@@ -2135,3 +2135,82 @@ html:not(.vc-art) :is(.vc-dust,.vc-bokeh,.vc-steam){display:none}
 html[data-calm] :is(.vc-dust,.vc-bokeh) i,html[data-calm] .vc-steam .ld-steam{animation:none}
 html[data-calm] .vc-bokeh,html[data-calm] .vc-steam{display:none}
 @media (prefers-reduced-motion:reduce){.vc-dust i{animation:none;opacity:calc(var(--o,.6) * .5)}.vc-bokeh,.vc-steam{display:none}}
+
+/* ===== ฉากเปิด: ไฟฉายส่องข้อความเล็ก + แว่นขยายทอง + แผ่นสัญญาลอย 3D (คอม+มือถือ) ===== */
+:is(.hx-base,.hx-pool,.hx-sheets,.hx-lens){display:none}
+html.vc-art.hx-on :is(.hx-base,.hx-pool,.hx-sheets,.hx-lens){display:block}
+html.vc-art .hx-base,html.vc-art .hx-pool,html.vc-art .hx-sheets,html.vc-art .hx-lens{position:absolute;left:0;top:0;z-index:-1;pointer-events:none}
+html.vc-art main > .hero{overflow:hidden}
+.hx-fine{position:absolute;left:0;top:0;font-family:Taviraj,Sarabun,serif;line-height:1.55;letter-spacing:.01em}
+html.vc-art .hero .hx-fine p{position:absolute;margin:0;padding:0;width:21em;max-width:none;text-align:justify;color:inherit;font:inherit;line-height:1.55;letter-spacing:inherit;opacity:1;text-shadow:inherit;transform:none;animation:none}
+html.vc-art .hero .hx-fine :is(b,em){color:inherit}
+.hx-fine em{font-style:normal;font-weight:600;letter-spacing:.04em}
+.hx-fine b{font-weight:600}
+html.vc-art .hero .hx-base{color:rgba(236,226,206,.07)}
+html.vc-art .hero .hx-base b{color:rgba(255,170,140,.09)}
+/* วงไฟฉาย: หน้าต่างกลมเลื่อนด้วย transform ส่วนข้อความข้างในเลื่อนสวนทาง จึงไม่ต้องวาดใหม่ทุกเฟรม */
+.hx-pool{border-radius:50%;overflow:hidden;will-change:transform;
+  background:radial-gradient(closest-side,rgba(255,226,180,.10),rgba(255,210,160,.04) 55%,transparent);
+  -webkit-mask-image:radial-gradient(closest-side,#000 30%,rgba(0,0,0,.55) 62%,transparent 100%);mask-image:radial-gradient(closest-side,#000 30%,rgba(0,0,0,.55) 62%,transparent 100%)}
+.hx-lit{color:rgba(244,232,210,.5);will-change:transform}
+html.vc-art .hero .hx-lit b{color:#ffb59a;text-decoration:underline wavy rgba(255,110,80,.75);text-decoration-thickness:1px;text-underline-offset:3px}
+html.vc-art .hero .hx-lit em{color:rgba(255,226,170,.75)}
+/* แว่นขยาย */
+.hx-lens{will-change:transform}
+.hx-lin{position:absolute;inset:0;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 50% 50%,rgba(30,24,18,.10),rgba(10,8,6,.28))}
+.hx-big{color:rgba(250,242,226,.92);will-change:transform;text-shadow:0 0 .4em rgba(255,210,150,.25)}
+html.vc-art .hero .hx-big b{color:#ffd2c0;background:linear-gradient(transparent 55%,rgba(255,80,50,.38) 55%,rgba(255,80,50,.38) 92%,transparent 92%)}
+html.vc-art .hero .hx-big em{color:#ffe1a6}
+.hx-glass{position:absolute;inset:0;border-radius:50%;
+  background:
+   radial-gradient(60% 38% at 34% 22%,rgba(255,255,255,.22),rgba(255,255,255,.05) 55%,transparent 70%),
+   radial-gradient(30% 14% at 70% 84%,rgba(255,236,200,.12),transparent 70%),
+   radial-gradient(closest-side,transparent 78%,rgba(255,236,200,.08) 90%,rgba(0,0,0,.35) 100%);
+  box-shadow:inset 0 0 calc(var(--R,100px) * .18) rgba(255,214,150,.18)}
+.hx-rim{position:absolute;inset:calc(var(--R,100px) * -.1);border-radius:50%;
+  background:conic-gradient(from 210deg,#6b4d1c,#f6e2a0 10%,#a77c33 22%,#fff3c8 34%,#8a6424 48%,#e5c271 62%,#5e4318 76%,#d9b463 88%,#6b4d1c);
+  -webkit-mask-image:radial-gradient(closest-side,transparent calc(100% - var(--R,100px) * .1 - 1px),#000 calc(100% - var(--R,100px) * .1),#000 calc(100% - 1.5px),transparent 100%);
+          mask-image:radial-gradient(closest-side,transparent calc(100% - var(--R,100px) * .1 - 1px),#000 calc(100% - var(--R,100px) * .1),#000 calc(100% - 1.5px),transparent 100%)}
+.hx-rim::after{content:"";position:absolute;inset:0;border-radius:50%;background:linear-gradient(160deg,rgba(255,255,255,.35),transparent 40%,rgba(0,0,0,.35))}
+.hx-lsh{position:absolute;inset:calc(var(--R,100px) * -.1);border-radius:50%;box-shadow:0 calc(var(--R,100px) * .28) calc(var(--R,100px) * .45) rgba(0,0,0,.55),0 0 calc(var(--R,100px) * .5) rgba(255,190,110,.12)}
+.hx-handle{position:absolute;left:50%;top:50%;width:calc(var(--R,100px) * .2);height:calc(var(--R,100px) * 1.25);margin-left:calc(var(--R,100px) * -.1);
+  transform-origin:50% 0;transform:rotate(-42deg) translateY(calc(var(--R,100px) * 1.04));border-radius:0 0 calc(var(--R,100px) * .1) calc(var(--R,100px) * .1);
+  background:linear-gradient(90deg,#120c07,#4a3020 35%,#2a1a0f 60%,#0c0805);box-shadow:0 calc(var(--R,100px) * .2) calc(var(--R,100px) * .3) rgba(0,0,0,.5)}
+.hx-handle i{position:absolute;left:-8%;right:-8%;top:0;height:22%;border-radius:2px;background:linear-gradient(90deg,#6b4d1c,#f3dc96 40%,#9c7330 70%,#5a4118)}
+/* แผ่นสัญญาลอย */
+.hx-sheets{width:100%;height:100%;perspective:1100px;perspective-origin:50% 45%;overflow:hidden}
+.hx-stage{position:absolute;inset:0;transform-style:preserve-3d;will-change:transform}
+.hx-sheet{position:absolute;transform-style:preserve-3d}
+.hx-sheet.far{opacity:.5}
+.hx-sheet .hx-pg::after{content:"";position:absolute;inset:0;border-radius:inherit;background:rgba(14,9,5,.16);pointer-events:none}
+html.hx-lite .hx-base,html.hx-lite .hx-sheet.far{display:none !important}
+html.hx-lite .hx-pg{animation:none}
+.hx-pg{position:relative;width:100%;aspect-ratio:1/1.414;border-radius:.12em;will-change:transform;
+  background:
+   linear-gradient(135deg,rgba(255,255,255,.22),transparent 38%,rgba(40,20,0,.22) 100%),
+   radial-gradient(120% 90% at 100% 100%,rgba(255,150,70,.28),transparent 60%),
+   #e6dbc3;
+  box-shadow:0 1.6em 2.4em -.6em rgba(0,0,0,.6),inset 0 0 0 1px rgba(120,90,50,.18);
+  animation:hxFloat var(--d,12s) ease-in-out var(--w,0s) infinite alternate}
+@keyframes hxFloat{0%{transform:translate3d(0,0,0) rotateX(0) rotateY(0)}
+  50%{transform:translate3d(.3em,calc(var(--fy,-18px) * .6),0) rotateX(calc(var(--fr,6deg) * -.6)) rotateY(var(--fr,6deg))}
+  100%{transform:translate3d(-.2em,var(--fy,-18px),0) rotateX(var(--fr,6deg)) rotateY(calc(var(--fr,6deg) * -.8))}}
+.hx-pg .hp-h{position:absolute;left:30%;right:30%;top:7%;height:.42em;border-radius:.1em;background:rgba(50,36,24,.55)}
+.hx-pg .hp-l{position:absolute;left:10%;right:10%;top:16%;height:52%;
+  background:repeating-linear-gradient(180deg,rgba(60,44,30,.32) 0 .16em,transparent .16em .62em);
+  -webkit-mask-image:linear-gradient(90deg,#000 80%,rgba(0,0,0,.6));mask-image:linear-gradient(90deg,#000 80%,rgba(0,0,0,.6))}
+.hx-pg .hp-hl{position:absolute;left:9%;width:62%;height:.42em;background:rgba(230,70,50,.45);border-radius:.1em}
+.hx-pg .hp-sig{position:absolute;left:12%;bottom:8%;width:44%;height:auto}
+.hx-pg .hp-seal{position:absolute;right:10%;bottom:7%;width:1.9em;height:1.9em;border-radius:50%;
+  background:radial-gradient(circle at 38% 35%,#d0503a,#8e1f16 60%,#5a110b);box-shadow:0 .1em .2em rgba(0,0,0,.4)}
+.hx-pg .hp-lt{position:absolute;inset:0;border-radius:inherit;background:linear-gradient(180deg,rgba(255,200,130,.08),transparent 40%,rgba(0,0,0,.18))}
+@media (max-width:767px){
+  html.vc-art .hero .hx-fine p{width:19em}
+  html.vc-art .hero .hx-base{color:rgba(236,226,206,.035)}
+  html.vc-art .hero .hx-lit{color:rgba(244,232,210,.3)}
+  html.vc-art .hero .hx-lit b{color:rgba(255,181,154,.7)}
+  html.vc-art .hero .hx-big{color:rgba(250,242,226,.7)}
+}
+html.vc-art.hx-on .hero-main{text-shadow:0 0 .5em rgba(10,7,5,.85),0 0 1.4em rgba(10,7,5,.6)}
+html[data-calm] .hx-pg{animation:none}
+@media (prefers-reduced-motion:reduce){.hx-pg{animation:none}}
