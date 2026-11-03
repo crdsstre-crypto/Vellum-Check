@@ -2431,3 +2431,127 @@ window.VCStepPlay = function (v, fps, onEnd) {
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
+
+/* ===== ข้อกำหนดการใช้บริการ + นโยบายความเป็นส่วนตัว: ช่องติ๊กยอมรับบนกระดาษล็อกอิน + พลิกกระดาษอ่านด้านหลัง ===== */
+(function () {
+  'use strict';
+  /* ★ แก้ 2 บรรทัดนี้ให้เป็นข้อมูลจริงก่อนเปิดใช้: ชื่อผู้ให้บริการ (บุคคล/บริษัท) และอีเมลติดต่อ */
+  var OWNER = '';
+  var EMAIL = '';
+  var VERSION = '1.0', EFFECTIVE = '3 พฤศจิกายน 2569', KEY = 'vc_terms_ok', OKV = 'v1.0';
+  var who = OWNER || 'ผู้ให้บริการ Vellum Check', mail = EMAIL ? '<a href="mailto:' + EMAIL + '">' + EMAIL + '</a>' : '<mark>[ใส่อีเมลติดต่อ]</mark>';
+  var DOCS = {
+    terms: { t: 'ข้อกำหนดการใช้บริการ', h: [
+      ['1. การยอมรับข้อกำหนด', 'การสมัครหรือเข้าใช้งาน Vellum Check (“บริการ”) ซึ่งให้บริการโดย ' + who + ' (“เรา”) ถือว่าคุณได้อ่าน เข้าใจ และยอมรับข้อกำหนดนี้และนโยบายความเป็นส่วนตัว หากไม่ยอมรับ โปรดอย่าใช้บริการ'],
+      ['2. ลักษณะของบริการ', 'บริการนี้เป็น<b>เครื่องมือคัดกรองข้อความสัญญาเบื้องต้นด้วยระบบปัญญาประดิษฐ์ (AI)</b> เพื่อชี้จุดที่ผู้ใช้ควรอ่านหรือตรวจสอบเพิ่มเติมเท่านั้น<ul><li><b>ไม่ใช่คำปรึกษาทางกฎหมาย</b> และไม่ได้จัดทำหรือตรวจสอบโดยทนายความ</li><li>การใช้บริการไม่ก่อให้เกิดความสัมพันธ์ระหว่างทนายความกับลูกความ</li><li>ผลการตรวจอาจไม่ถูกต้อง ไม่ครบถ้วน หรือไม่เป็นปัจจุบัน และไม่ได้ชี้ขาดว่าสัญญาหรือข้อสัญญาใดชอบด้วยกฎหมายหรือไม่</li><li>ผู้ใช้ต้องอ่านสัญญาฉบับเต็มและตัดสินใจด้วยตนเอง สำหรับเรื่องที่มีผลสำคัญ ควรปรึกษาทนายความหรือผู้เชี่ยวชาญ</li></ul>'],
+      ['3. บัญชีผู้ใช้', 'คุณต้องให้ข้อมูลที่เป็นจริง และรักษารหัสผ่านไว้เป็นความลับ การกระทำผ่านบัญชีของคุณถือเป็นความรับผิดชอบของคุณ ผู้ที่ยังไม่บรรลุนิติภาวะควรได้รับความยินยอมจากผู้ปกครองหรือผู้แทนโดยชอบธรรมก่อนใช้บริการ'],
+      ['4. ข้อความและไฟล์ที่คุณส่ง', 'คุณยืนยันว่ามีสิทธิ์ส่งข้อความหรือไฟล์สัญญาเข้ามาตรวจ และจะไม่ส่งข้อมูลที่ละเมิดสิทธิ์หรือความลับของผู้อื่น เราแนะนำให้ปกปิดข้อมูลส่วนบุคคลที่ไม่จำเป็นก่อนส่ง คุณยังคงเป็นเจ้าของเนื้อหาของคุณ และอนุญาตให้เราประมวลผลเนื้อหานั้นเพื่อให้บริการแก่คุณเท่านั้น'],
+      ['5. เครดิตและการชำระเงิน', 'บริการบางส่วนต้องใช้เครดิต ราคาและจำนวนเครดิตจะแสดงก่อนชำระเงินทุกครั้ง การชำระเงินดำเนินการผ่านผู้ให้บริการรับชำระเงิน (Omise) เราไม่เก็บข้อมูลบัตรของคุณ<ul><li>หากระบบตรวจไม่สำเร็จ เครดิตที่ใช้จะถูกคืนให้อัตโนมัติ</li><li>เครดิตที่ซื้อแล้วไม่สามารถแลกคืนเป็นเงินได้ เว้นแต่กฎหมายกำหนด หรือเกิดจากความผิดพลาดของระบบ</li><li>หากพบปัญหาการชำระเงิน โปรดติดต่อเราตามข้อ 11</li></ul>'],
+      ['6. การใช้งานที่ห้าม', 'ห้ามใช้บริการเพื่อการที่ผิดกฎหมาย ห้ามพยายามเข้าถึงระบบโดยไม่ได้รับอนุญาต ห้ามใช้โปรแกรมอัตโนมัติส่งคำขอจำนวนมาก ห้ามรบกวนการทำงานของระบบ และห้ามนำผลการตรวจไปอ้างว่าเป็นความเห็นของทนายความ'],
+      ['7. ข้อจำกัดความรับผิด', 'บริการให้ไว้ “ตามสภาพที่เป็นอยู่” เราไม่รับประกันว่าผลการตรวจจะถูกต้องครบถ้วน หรือบริการจะพร้อมใช้งานตลอดเวลา ทั้งนี้เท่าที่กฎหมายอนุญาต เราไม่รับผิดต่อความเสียหายที่เกิดจากการตัดสินใจโดยอาศัยผลการตรวจเพียงอย่างเดียว และหากต้องรับผิด ความรับผิดรวมจะไม่เกินจำนวนเงินที่คุณชำระให้เราในช่วง 12 เดือนก่อนเกิดเหตุ <b>ข้อนี้ไม่จำกัดความรับผิดที่เกิดจากการกระทำโดยจงใจหรือประมาทเลินเล่ออย่างร้ายแรงของเรา หรือความรับผิดที่กฎหมายห้ามจำกัด</b>'],
+      ['8. การระงับการใช้งาน', 'เราอาจระงับหรือยกเลิกบัญชีที่ฝ่าฝืนข้อกำหนดนี้ หรือมีพฤติกรรมที่อาจก่อความเสียหายแก่ระบบหรือผู้อื่น คุณสามารถหยุดใช้และขอลบบัญชีได้ทุกเมื่อ'],
+      ['9. การเปลี่ยนแปลง', 'เราอาจปรับปรุงบริการหรือข้อกำหนดนี้ หากเปลี่ยนแปลงในสาระสำคัญ เราจะแจ้งในเว็บไซต์และขอให้คุณยอมรับฉบับใหม่ก่อนใช้งานต่อ'],
+      ['10. กฎหมายที่ใช้บังคับ', 'ข้อกำหนดนี้อยู่ภายใต้กฎหมายไทย และข้อพิพาทอยู่ในเขตอำนาจของศาลไทย'],
+      ['11. ติดต่อเรา', who + ' · อีเมล ' + mail]
+    ] },
+    privacy: { t: 'นโยบายความเป็นส่วนตัว', h: [
+      ['1. ผู้ควบคุมข้อมูลส่วนบุคคล', who + ' เป็นผู้ควบคุมข้อมูลส่วนบุคคลตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA) ติดต่อได้ที่ ' + mail],
+      ['2. ข้อมูลที่เราเก็บ', '<ul><li><b>ข้อมูลบัญชี:</b> อีเมล และรหัสผ่านซึ่งเก็บแบบเข้ารหัสทางเดียว (เราไม่เห็นรหัสผ่านจริง) หากเข้าด้วย Google เราได้รับอีเมล รหัสบัญชี Google และลิงก์รูปโปรไฟล์</li><li><b>เนื้อหาที่ส่งตรวจ:</b> ข้อความหรือไฟล์สัญญาที่คุณส่ง ซึ่งถูกส่งไปประมวลผลเพื่อสร้างผลการตรวจ เราบันทึก<b>ผลการตรวจ</b>ไว้ในประวัติของคุณ ซึ่งอาจมีข้อความบางส่วนจากสัญญา</li><li><b>ข้อมูลการชำระเงิน:</b> รายการเติมเครดิต จำนวนเงิน และสถานะ (ข้อมูลบัตรอยู่กับผู้ให้บริการรับชำระเงิน ไม่ผ่านระบบของเรา)</li><li><b>ข้อมูลทางเทคนิค:</b> คุกกี้เข้าสู่ระบบ และหมายเลข IP ที่ใช้ป้องกันการใช้งานผิดปกติ</li></ul>'],
+      ['3. วัตถุประสงค์และฐานทางกฎหมาย', '<ul><li>ให้บริการตรวจสัญญา จัดการบัญชี เครดิต และประวัติ — เพื่อปฏิบัติตามสัญญาให้บริการ (มาตรา 24(3))</li><li>รักษาความปลอดภัยและป้องกันการใช้งานผิดปกติ — ประโยชน์โดยชอบด้วยกฎหมาย (มาตรา 24(5))</li><li>เก็บหลักฐานการชำระเงินตามกฎหมายบัญชีและภาษี — การปฏิบัติตามกฎหมาย (มาตรา 24(6))</li></ul>เราไม่ขายข้อมูลส่วนบุคคล และไม่ใช้เนื้อหาสัญญาของคุณเพื่อการโฆษณา'],
+      ['4. การปกปิดข้อมูลก่อนส่ง', 'บริการมีระบบปกปิดชื่อ เลขบัตรประชาชน เบอร์โทร และอีเมลในเบราว์เซอร์ของคุณก่อนส่งตรวจ แต่การตรวจจับเป็นแบบอัตโนมัติและ<b>อาจไม่ครบทุกกรณี</b> โปรดตรวจและลบข้อมูลที่ไม่จำเป็นด้วยตนเองก่อนส่ง'],
+      ['5. ผู้ที่เราเปิดเผยข้อมูลให้', 'เราใช้ผู้ให้บริการภายนอกเท่าที่จำเป็นต่อการให้บริการ ได้แก่<ul><li><b>Anthropic</b> — ประมวลผลข้อความสัญญาด้วย AI</li><li><b>ElevenLabs</b> — สร้างเสียงสรุปผล (เฉพาะเมื่อคุณใช้ฟีเจอร์เสียง)</li><li><b>Omise</b> — รับชำระเงิน</li><li><b>Google</b> — เข้าสู่ระบบด้วยบัญชี Google (เมื่อคุณเลือก)</li><li><b>ผู้ให้บริการคลาวด์</b> — โฮสต์เว็บไซต์และฐานข้อมูล</li></ul>และอาจเปิดเผยเมื่อกฎหมายหรือหน่วยงานรัฐที่มีอำนาจกำหนด'],
+      ['6. การส่งข้อมูลไปต่างประเทศ', 'ผู้ให้บริการบางรายข้างต้นประมวลผลข้อมูลบนเซิร์ฟเวอร์นอกประเทศไทย เช่น สหรัฐอเมริกา การส่งข้อมูลดังกล่าวจำเป็นต่อการให้บริการตามที่คุณขอ (มาตรา 28) และเราเลือกใช้ผู้ให้บริการที่มีมาตรการคุ้มครองข้อมูลตามสมควร'],
+      ['7. ระยะเวลาเก็บรักษา', '<ul><li>ผลการตรวจ: เก็บล่าสุดไม่เกิน 50 รายการต่อบัญชี รายการเก่ากว่านั้นถูกลบอัตโนมัติ และคุณลบเองได้ทุกเมื่อ</li><li>ข้อความสัญญาต้นฉบับ: ไม่ถูกบันทึกในฐานข้อมูลของเรา (ผู้ให้บริการ AI อาจเก็บชั่วคราวตามนโยบายของผู้ให้บริการนั้น)</li><li>การเข้าสู่ระบบ: คุกกี้มีอายุ 30 วัน</li><li>ข้อมูลบัญชี: จนกว่าคุณจะขอลบบัญชี</li><li>หลักฐานการชำระเงิน: ตามระยะเวลาที่กฎหมายบัญชีและภาษีกำหนด</li></ul>'],
+      ['8. สิทธิของคุณ', 'คุณมีสิทธิ์ขอเข้าถึงและขอสำเนาข้อมูล ขอให้โอนข้อมูล คัดค้าน ขอลบหรือทำลาย ขอระงับการใช้ ขอแก้ไขให้ถูกต้อง และถอนความยินยอม (ถ้ามี) โดยติดต่อเราตามข้อ 1 เราจะตอบภายในระยะเวลาที่กฎหมายกำหนด และคุณมีสิทธิ์ร้องเรียนต่อสำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล (สคส.)'],
+      ['9. ความปลอดภัย', 'เราเชื่อมต่อผ่าน HTTPS เก็บรหัสผ่านแบบเข้ารหัสทางเดียว ใช้คุกกี้ที่สคริปต์ในหน้าเว็บอ่านไม่ได้ (HttpOnly) และจำกัดการเข้าถึงข้อมูลเท่าที่จำเป็น อย่างไรก็ดี ไม่มีระบบใดปลอดภัยได้ 100% หากเกิดเหตุละเมิดข้อมูล เราจะดำเนินการและแจ้งตามที่กฎหมายกำหนด'],
+      ['10. คุกกี้และการจัดเก็บในเบราว์เซอร์', 'เราใช้เฉพาะคุกกี้ที่จำเป็นต่อการเข้าสู่ระบบ และเก็บการตั้งค่าการแสดงผลบางอย่างไว้ในเบราว์เซอร์ของคุณ เราไม่ใช้คุกกี้โฆษณาหรือคุกกี้ติดตามจากบุคคลที่สาม'],
+      ['11. การเปลี่ยนแปลงนโยบาย', 'หากมีการเปลี่ยนแปลงในสาระสำคัญ เราจะแจ้งในเว็บไซต์ และขอความยินยอมใหม่ในกรณีที่กฎหมายกำหนด']
+    ] }
+  };
+  function docHTML(k) {
+    var d = DOCS[k];
+    return '<p class="vd-meta">ฉบับที่ ' + VERSION + ' · มีผลตั้งแต่ ' + EFFECTIVE + '</p><h4>' + d.t + '</h4>' + d.h.map(function (s) { return '<section><h5>' + s[0] + '</h5><div>' + s[1] + '</div></section>'; }).join('');
+  }
+  function paperHTML(k, inDoc) {
+    return '<div class="vd-tabs" role="tablist"><button type="button" role="tab" data-vd="terms">ข้อกำหนด</button><button type="button" role="tab" data-vd="privacy">ความเป็นส่วนตัว</button></div>' +
+      '<div class="vd-body" tabindex="0"></div>' +
+      '<div class="vd-foot">' + (inDoc ? '<button type="button" class="vd-back">← กลับด้านหน้า</button><button type="button" class="vd-ok">ยอมรับทั้งสองฉบับ</button>' : '<button type="button" class="vd-close">ปิด</button>') + '</div>';
+  }
+  function setTab(paper, k) {
+    Array.prototype.forEach.call(paper.querySelectorAll('[data-vd]'), function (b) { var on = b.getAttribute('data-vd') === k; b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
+    var body = paper.querySelector('.vd-body'); body.innerHTML = docHTML(k); body.scrollTop = 0;
+  }
+  function accepted() { try { return localStorage.getItem(KEY) === OKV; } catch (e) { return false; } }
+  function remember(on) { try { if (on) localStorage.setItem(KEY, OKV); else localStorage.removeItem(KEY); } catch (e) {} }
+
+  /* ---- หน้าต่างอ่านเอกสาร (ใช้จากท้ายเว็บ / เมนูบัญชี / #terms #privacy) ---- */
+  var modal = null;
+  function openModal(k) {
+    if (!modal) {
+      modal = document.createElement('div'); modal.className = 'vd-modal'; modal.setAttribute('role', 'dialog'); modal.setAttribute('aria-modal', 'true'); modal.setAttribute('aria-label', 'ข้อกำหนดและนโยบาย');
+      modal.innerHTML = '<div class="vd-paper">' + paperHTML(k, false) + '</div>'; document.body.appendChild(modal);
+      modal.addEventListener('click', function (e) {
+        var t = e.target.closest('[data-vd]'); if (t) { setTab(modal, t.getAttribute('data-vd')); return; }
+        if (e.target === modal || e.target.closest('.vd-close')) closeModal();
+      });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && modal && modal.classList.contains('on')) closeModal(); });
+    }
+    setTab(modal, k); modal.classList.add('on'); document.documentElement.classList.add('vd-lock');
+    var b = modal.querySelector('.vd-body'); setTimeout(function () { try { b.focus({ preventScroll: true }); } catch (e) {} }, 50);
+  }
+  function closeModal() { if (!modal) return; modal.classList.remove('on'); document.documentElement.classList.remove('vd-lock'); }
+  window.VCLegal = { open: openModal };
+
+  function init() {
+    /* ---- 1) ช่องติ๊กยอมรับบนกระดาษล็อกอิน ---- */
+    var doc = document.querySelector('#authLoggedOut .auth-doc'), btns = doc && doc.querySelector('.btns');
+    var wrap = doc && doc.closest('.auth-doc-wrap'), pose = doc && doc.closest('.ad-pose');
+    var cb = null, row = null, msg = null, back = null;
+    if (doc && btns && wrap && pose) {
+      row = document.createElement('div'); row.className = 'ad-consent';
+      row.innerHTML = '<label><input type="checkbox" id="vcConsent"><span class="ac-box" aria-hidden="true"></span><span class="ac-txt">ฉันได้อ่านและยอมรับ <a href="#terms" data-flip="terms">ข้อกำหนดการใช้บริการ</a> และ <a href="#privacy" data-flip="privacy">นโยบายความเป็นส่วนตัว</a></span></label><p class="ac-msg" role="alert" aria-live="polite"></p>';
+      btns.parentNode.insertBefore(row, btns);
+      cb = row.querySelector('input'); msg = row.querySelector('.ac-msg');
+      cb.checked = accepted();
+      cb.addEventListener('change', function () { remember(cb.checked); row.classList.remove('err'); msg.textContent = ''; });
+      /* กันปุ่มสมัคร/เข้าสู่ระบบ/Google ถ้ายังไม่ติ๊ก (ดักก่อนสคริปต์เดิมทำงาน) */
+      window.addEventListener('click', function (e) {
+        var b = e.target && e.target.closest ? e.target.closest('#signupBtn,#loginBtn,#googleBtn') : null;
+        if (!b || cb.checked) return;
+        e.preventDefault(); e.stopImmediatePropagation();
+        msg.textContent = 'กรุณาติ๊กยอมรับข้อกำหนดและนโยบายความเป็นส่วนตัวก่อน';
+        row.classList.remove('err'); void row.offsetWidth; row.classList.add('err');
+        try { cb.focus({ preventScroll: true }); } catch (x) {}
+      }, true);
+      /* ---- 2) พลิกกระดาษไปอ่านด้านหลัง ---- */
+      back = document.createElement('div'); back.className = 'vd-paper ad-backside'; back.setAttribute('role', 'region'); back.setAttribute('aria-label', 'ข้อกำหนดและนโยบาย');
+      back.innerHTML = paperHTML('terms', true); wrap.appendChild(back);
+      function flip(k) {
+        var pr = pose.getBoundingClientRect(), wr = wrap.getBoundingClientRect(), z = parseFloat(getComputedStyle(wrap).zoom) || 1;
+        var hd = document.querySelector('.site-header'), hb = hd ? Math.max(0, hd.getBoundingClientRect().bottom) : 0, top = Math.max(pr.top, hb + 12), bot = Math.min(pr.bottom, innerHeight - 14);
+        back.style.left = px((pr.left - wr.left) / z); back.style.top = px((top - wr.top) / z); back.style.width = px(pr.width / z); back.style.height = px(Math.max(bot - top, 360) / z);
+        setTab(back, k); wrap.classList.add('vd-flip');
+        setTimeout(function () { var r = back.getBoundingClientRect(); if (r.top < 70 || r.bottom > innerHeight - 10) { try { scrollBy({ top: r.top - 70 - Math.max(0, (innerHeight - 80 - r.height) / 2), behavior: 'smooth' }); } catch (x) { scrollBy(0, r.top - 80); } } }, 420);
+        setTimeout(function () { var b = back.querySelector('.vd-body'); try { b.focus({ preventScroll: true }); } catch (x) {} }, 700);
+      }
+      function unflip() { wrap.classList.remove('vd-flip'); }
+      function px(v) { return v.toFixed(1) + 'px'; }
+      row.addEventListener('click', function (e) { var a = e.target.closest('[data-flip]'); if (!a) return; e.preventDefault(); flip(a.getAttribute('data-flip')); });
+      back.addEventListener('click', function (e) {
+        var t = e.target.closest('[data-vd]'); if (t) { setTab(back, t.getAttribute('data-vd')); return; }
+        if (e.target.closest('.vd-back')) unflip();
+        if (e.target.closest('.vd-ok')) { cb.checked = true; remember(true); row.classList.remove('err'); msg.textContent = ''; unflip(); }
+      });
+    }
+    /* ---- 3) ลิงก์ท้ายเว็บ + เมนูบัญชี + #terms/#privacy ---- */
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('[data-legal],#helpPrivacy,#helpTerms');
+      if (!a) return; e.preventDefault();
+      openModal(a.getAttribute('data-legal') || (a.id === 'helpPrivacy' ? 'privacy' : 'terms'));
+    });
+    ['helpPrivacy', 'helpTerms'].forEach(function (id) { var a = document.getElementById(id); if (a) { a.hidden = false; a.removeAttribute('target'); a.setAttribute('href', id === 'helpPrivacy' ? '#privacy' : '#terms'); } });
+    function fromHash() { var h = location.hash.replace('#', ''); if (h === 'terms' || h === 'privacy') openModal(h); }
+    addEventListener('hashchange', fromHash); fromHash();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
