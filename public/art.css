@@ -2033,3 +2033,6 @@ html.vc-art .ld-scene .auth-doc-wrap{perspective:none !important}
 
 /* ลบเส้นดำใต้แถบหัวเว็บ (เส้นขอบล่าง 1px ของ header) */
 .site-header{border-bottom:0 !important}
+
+/* ลบรอยพับกลางกระดาษเข้าสู่ระบบ (เส้นแนวนอนระหว่างช่องอีเมลกับรหัสผ่าน) */
+html.vc-art .auth-doc .ad-face::before{background:none !important}
