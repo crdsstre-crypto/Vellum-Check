@@ -2078,15 +2078,20 @@ html.vc-art .auth-doc .ad-face::before{background:none !important}
     radial-gradient(ellipse 80% 70% at 50% 50%,rgba(4,3,2,0) 35%,rgba(3,2,1,.45) 75%,rgba(2,1,1,.8) 100%) !important;opacity:1 !important}
 }
 
-/* ฉากเปิด: จุดตะเกียง + กล้องเลื่อน */
-@property --r{syntax:"<percentage>";inherits:false;initial-value:0%}
+/* ฉากเปิด: จุดตะเกียง + กล้องเลื่อน (transform/opacity เท่านั้น) */
 .vc-fadeblack{position:fixed;inset:0;z-index:9998;background:#050302;opacity:0;pointer-events:none;transition:opacity .26s ease}
 .vc-fadeblack.on{opacity:1}
-.ld-scene.vc-intro{overflow:hidden}
-.vc-intro-ov{position:absolute;left:0;right:0;top:0;z-index:40;pointer-events:none;
-  background:radial-gradient(circle at var(--lx) var(--ly),rgba(255,190,110,calc(.10 * var(--fl,0))) 0,rgba(0,0,0,0) calc(var(--r) * .55),rgba(4,3,2,.94) var(--r),rgba(3,2,1,.98) calc(var(--r) + 30%));
-  transition:opacity .8s ease}
+html.vc-art .ld-scene.vc-intro{overflow:hidden;animation:none !important;--on:1}
+.vc-intro-ov{position:absolute;inset:0;z-index:40;pointer-events:none;overflow:hidden;transition:opacity .6s ease}
 .vc-intro-ov.out{opacity:0}
-.vc-intro-ov i{position:absolute;width:3px;height:3px;border-radius:50%;background:rgba(255,226,170,.85);box-shadow:0 0 6px rgba(255,200,120,.8);opacity:0;animation:vcMote 3s ease-out forwards}
+.vc-intro-ov .io-hole{position:absolute;border-radius:50%;will-change:transform;transform:scale(1);
+  background:radial-gradient(circle,rgba(0,0,0,0) 0,rgba(0,0,0,0) 3.2%,rgba(4,3,2,.6) 6%,rgba(3,2,1,.98) 10%);
+  animation:ioHole var(--D) cubic-bezier(.3,.05,.2,1) forwards}
+.vc-intro-ov .io-dark{position:absolute;inset:0;background:#030201;will-change:opacity;animation:ioFlick var(--D) linear forwards}
+.vc-intro-ov.short .io-dark{animation-name:ioFlickS}
+.vc-intro-ov i{position:absolute;width:3px;height:3px;border-radius:50%;background:rgba(255,226,170,.85);box-shadow:0 0 6px rgba(255,200,120,.8);opacity:0;will-change:transform,opacity;animation:vcMote 3s ease-out forwards}
+@keyframes ioHole{0%,22%{transform:scale(1)}100%{transform:scale(11)}}
+@keyframes ioFlick{0%,9%{opacity:1}12%{opacity:.35}15%{opacity:.95}19%{opacity:.15}22%{opacity:.7}27%,100%{opacity:0}}
+@keyframes ioFlickS{0%,4%{opacity:1}8%{opacity:.3}11%{opacity:.85}16%,100%{opacity:0}}
 @keyframes vcMote{0%{opacity:0;transform:translate(0,0)}20%{opacity:.9}100%{opacity:0;transform:translate(var(--dx),var(--dy))}}
 @media (prefers-reduced-motion:reduce){.vc-intro-ov{display:none}}
