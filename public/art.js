@@ -2265,7 +2265,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     }, { passive: true });
 
     /* คอม: ข้อความสั้นๆ วางเว้นที่ตรงเมนู ปุ่ม และหัวเรื่อง (ไม่ทับของสำคัญ) */
-    var KEY = '.site-header a,.site-header button,.site-header .brand,.dx-nav a,.dx-cta,.dx-cta-ghost,.hero-title,.hero-lead,.dx-pill,.hero-cue,.dx-points li';
+    var KEY = '.site-header a,.site-header button,.site-header .brand,.dx-nav a,.dx-cta,.dx-cta-ghost,.hero-title,.hero-lead,.dx-pill,.hero-cue,.dx-points li,.hx-demo';
     function shortPrint() {
       var h = '', cols = 6, rows = 8, k = 0, i, j;
       for (j = 0; j < rows; j++) for (i = 0; i < cols; i++) {
@@ -2366,6 +2366,64 @@ window.VCStepPlay = function (v, fps, onEnd) {
       if (el !== docked) { if (el) dockOn(el); else dockOff(); }
     }, { passive: true });
     addEventListener('scroll', function () { if (docked) btnGeo(docked); }, { passive: true });
+    /* ===== ตรงกลาง 1) วงตราประทับทองหมุนหลังหัวเรื่อง ===== */
+    var seal = layer('hx-seal'), SZ = mob ? 330 : 560;
+    function sealSVG(id, inner) { return '<svg viewBox="-300 -300 600 600" focusable="false"><defs><linearGradient id="' + id + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7a5a22"/><stop offset=".3" stop-color="#f3dc96"/><stop offset=".55" stop-color="#a77c33"/><stop offset=".8" stop-color="#fff1c0"/><stop offset="1" stop-color="#6b4d1c"/></linearGradient></defs>' + inner + '</svg>'; }
+    var ringTxt = 'VELLUM CHECK · อ่านให้ครบ ก่อนเซ็น · VELLUM CHECK · อ่านให้ครบ ก่อนเซ็น · ';
+    var A = sealSVG('hxsA', '<g fill="none" stroke="url(#hxsA)"><circle r="292" stroke-width="2"/><circle r="284" stroke-width=".7"/><circle r="240" stroke-width="1.2"/><circle r="233" stroke-width="5" stroke-dasharray="1.2 6.1" opacity=".8"/></g>' +
+      '<path id="hxsP" d="M0,-262 a262,262 0 1,1 -0.01,0" fill="none"/><text fill="url(#hxsA)" font-family="Prompt,Sarabun,sans-serif" font-size="17" letter-spacing="5"><textPath href="#hxsP" textLength="1630" lengthAdjust="spacing">' + ringTxt + '</textPath></text>');
+    var gl2 = '', ph, kk, pts, th;
+    for (ph = 0; ph < 10; ph++) { pts = []; for (kk = 0; kk <= 360; kk++) { th = kk / 360 * Math.PI * 2; var rr2 = 160 + 46 * Math.sin(9 * th + ph * .63) + 14 * Math.sin(27 * th - ph); pts.push((rr2 * Math.cos(th)).toFixed(1) + ',' + (rr2 * Math.sin(th)).toFixed(1)); } gl2 += '<polyline points="' + pts.join(' ') + '"/>'; }
+    var B = sealSVG('hxsB', '<g fill="none" stroke="url(#hxsB)" stroke-width=".6" opacity=".75">' + gl2 + '</g><circle r="104" fill="none" stroke="url(#hxsB)" stroke-width="1"/><circle r="98" fill="none" stroke="url(#hxsB)" stroke-width=".5"/>');
+    seal.innerHTML = '<div class="hs-a">' + A + '</div><div class="hs-b">' + B + '</div>';
+    hero.insertBefore(seal, sw);
+    function placeSeal() {
+      var t1 = hero.querySelector('.hero-title'); if (!t1) return;
+      var hr = hero.getBoundingClientRect(), tr = t1.getBoundingClientRect();
+      seal.style.width = seal.style.height = SZ + 'px';
+      seal.style.transform = 'translate3d(' + px(tr.left + tr.width / 2 - hr.left - SZ / 2) + ',' + px(tr.top + tr.height / 2 - hr.top - SZ / 2) + ',0)';
+    }
+    placeSeal(); setTimeout(placeSeal, 1200); setTimeout(placeSeal, 3000); addEventListener('resize', function () { setTimeout(placeSeal, 200); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeSeal);
+    /* ===== ตรงกลาง 2) การ์ดตัวอย่าง: พิมพ์ข้อสัญญา → สแกน → ไฮไลต์จุดเสี่ยง ===== */
+    var DEMO = [
+      ['ผู้เช่าตกลงชำระ', 'ค่าปรับร้อยละ 300 ต่อปี', ' หากผิดนัดชำระ', 'h', 'เสี่ยงสูง', 'ค่าปรับสูงผิดปกติ ควรต่อรองก่อนเซ็น'],
+      ['สัญญานี้', 'ต่ออายุอัตโนมัติทุก 12 เดือน', ' หากไม่แจ้งยกเลิกล่วงหน้า 90 วัน', 'm', 'ควรระวัง', 'ตั้งเตือนตัวเองก่อนครบกำหนดแจ้งยกเลิก'],
+      ['เงินประกัน', 'ไม่สามารถขอคืนได้ไม่ว่ากรณีใดๆ', '', 'h', 'เสี่ยงสูง', 'ควรขอเงื่อนไขการคืนเงินประกันให้ชัด'],
+      ['ผู้ให้บริการ', 'มีสิทธิ์แก้ไขเงื่อนไขได้ฝ่ายเดียว', ' โดยไม่ต้องแจ้งล่วงหน้า', 'h', 'เสี่ยงสูง', 'ขอให้แจ้งล่วงหน้าและต้องได้รับความยินยอม']
+    ];
+    var lead = hero.querySelector('.hero-lead'), demo = null;
+    if (lead) {
+      demo = document.createElement('div'); demo.className = 'hx-demo'; demo.setAttribute('aria-hidden', 'true');
+      demo.innerHTML = '<div class="dm-h"><span><i></i>ตัวอย่างการตรวจ</span><span class="dm-n">ข้อ 1/4</span></div><div class="dm-t"></div><div class="dm-r"><b class="dm-b"></b><span class="dm-x"></span></div><i class="dm-scan"></i>';
+      lead.parentNode.insertBefore(demo, lead.nextSibling);
+      var dT = demo.querySelector('.dm-t'), dB = demo.querySelector('.dm-b'), dX = demo.querySelector('.dm-x'), dN = demo.querySelector('.dm-n'), dS = demo.querySelector('.dm-scan');
+      var seg = (window.Intl && Intl.Segmenter) ? new Intl.Segmenter('th', { granularity: 'grapheme' }) : null;
+      function chars(t) { return seg ? Array.from(seg.segment(t), function (x) { return x.segment; }) : Array.from(t); }
+      function esc(t) { return t.replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); }
+      function wait(ms) { return new Promise(function (res) { var left = ms, lt = performance.now(); (function chk() { var n = performance.now(); if (inView && !document.hidden) left -= n - lt; lt = n; if (left <= 0) res(); else setTimeout(chk, Math.min(left, 120)); })(); }); }
+      function show(c, typed, mk) {
+        var a = c[0], m = c[1], b = c[2], all = chars(a + m + b), n = Math.min(typed, all.length), A2 = chars(a).length, M2 = chars(m).length, cut = all.slice(0, n);
+        var h = esc(cut.slice(0, A2).join(''));
+        if (n > A2) h += '<mark class="' + (mk ? 'on ' : '') + c[3] + '">' + esc(cut.slice(A2, A2 + M2).join('')) + '</mark>';
+        if (n > A2 + M2) h += esc(cut.slice(A2 + M2).join(''));
+        dT.innerHTML = h + (n < all.length ? '<span class="dm-c"></span>' : '');
+      }
+      (async function run() {
+        var i = 0;
+        if (calm) { var c0 = DEMO[0]; show(c0, 999, true); dB.textContent = '⚠ ' + c0[4]; dB.className = 'dm-b on ' + c0[3]; dX.textContent = c0[5]; demo.classList.add('done'); return; }
+        await wait(1400);
+        for (;;) {
+          var c = DEMO[i % DEMO.length], total = chars(c[0] + c[1] + c[2]).length;
+          dN.textContent = 'ข้อ ' + (i % DEMO.length + 1) + '/' + DEMO.length; demo.classList.remove('done', 'out'); dB.className = 'dm-b'; dX.textContent = '';
+          for (var n = 0; n <= total; n++) { show(c, n, false); await wait(n % 3 ? 34 : 52); }
+          await wait(250); dS.classList.remove('go'); void dS.offsetWidth; dS.classList.add('go'); await wait(900);
+          show(c, 999, true); await wait(380);
+          dB.textContent = '⚠ ' + c[4]; dB.className = 'dm-b on ' + c[3]; dX.textContent = c[5]; demo.classList.add('done');
+          await wait(3200); demo.classList.add('out'); await wait(450); i++;
+        }
+      })();
+    }
     var raf = 0, inView = true, last = 0, t0 = performance.now();
     function frame(now) {
       raf = 0; if (!inView || document.hidden) { last = 0; return; }
