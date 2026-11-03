@@ -2030,3 +2030,6 @@ html.vc-art .ld-scene .auth-doc-wrap{perspective:none !important}
   html.vc-art .ld-scene .ld-cup{top:10px;right:3%;width:136px}
   html.vc-art .ld-scene .auth-doc-wrap{zoom:.86;padding:178px 44px 50px}
 }
+
+/* ลบเส้นดำใต้แถบหัวเว็บ (เส้นขอบล่าง 1px ของ header) */
+.site-header{border-bottom:0 !important}
