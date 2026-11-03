@@ -2173,7 +2173,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
   function R(a, b) { return a + Math.random() * (b - a); }
   function px(v) { return v.toFixed(1) + 'px'; }
   function finePrint(mob) {
-    var cols = mob ? 2 : 4, rows = mob ? 7 : 5, h = '', k = 0, i, j;
+    var cols = mob ? 2 : 3, rows = mob ? 7 : 4, h = '', k = 0, i, j;
     for (j = 0; j < rows; j++) for (i = 0; i < cols; i++) {
       var c = CL[k % CL.length], f = FILL[k % FILL.length]; k++;
       var x = (i + .08 + Math.random() * .2) / cols * 100 - (mob ? 4 : 1), y = (j + .1 + Math.random() * .25) / rows * 100 - 2;
@@ -2200,7 +2200,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     /* 3) แผ่นสัญญาลอย 3D */
     var sw = layer('hx-sheets'), stage = layer('hx-stage'); sw.appendChild(stage);
     var spots = mob ? [[-6, 26, 74, -120], [78, 30, 66, -300], [-12, 92, 92, 40], [84, 96, 78, -60]]
-      : [[5, 14, 140, -80], [7, 60, 165, 40], [22, 80, 120, -340], [74, 9, 130, -280], [86, 44, 160, 20], [66, 76, 112, -420], [36, 2, 90, -560]];
+      : [[5, 14, 140, -80], [7, 60, 165, 40], [74, 9, 130, -280], [86, 44, 160, 20], [66, 76, 112, -420]];
     var sheets = spots.map(function (p, n) {
       var e = layer('hx-sheet' + (p[3] < -250 ? ' far' : ''), sheetHTML(n));
       e.style.cssText = 'left:' + p[0] + '%;top:' + p[1] + '%;width:' + p[2] + 'px;font-size:' + (p[2] / 12).toFixed(1) + 'px;transform:translateZ(' + p[3] + 'px) rotateZ(' + R(-24, 24).toFixed(0) + 'deg) rotateX(' + R(-18, 18).toFixed(0) + 'deg) rotateY(' + R(-30, 30).toFixed(0) + 'deg)';
@@ -2213,12 +2213,12 @@ window.VCStepPlay = function (v, fps, onEnd) {
     var after = hero.querySelector('.hero-field') || hero.querySelector('.hero-3d');
     var ref = after ? after.nextSibling : hero.firstChild;
     [base, pool, sw, lens].forEach(function (n) { hero.insertBefore(n, ref); });
-    window.VCDomSheets = true; root.classList.add('hx-on');
+    window.VCDomSheets = mob; root.classList.add('hx-on');
 
     var W = 0, H = 0, Rl = 0, Rp = 0;
     function size() {
       W = hero.clientWidth; H = hero.clientHeight; if (!H) return;
-      Rl = .12 * H; Rp = Rl * (mob ? 1.6 : 2.4);
+      Rl = .12 * H; Rp = Rl * (mob ? 1.6 : 1.9);
       [base, poolT].forEach(function (n) { n.style.width = W + 'px'; n.style.height = H + 'px'; n.style.fontSize = BASE + 'px'; });
       big.style.width = px(W * S); big.style.height = px(H * S); big.style.fontSize = px(BASE * S);
       pool.style.width = pool.style.height = px(Rp * 2);
