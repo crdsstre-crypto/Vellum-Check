@@ -2047,7 +2047,7 @@ html.vc-art .auth-doc .ad-face::before{background:none !important}
    ตะเกียงเล็กลงและล้นขอบซ้าย, แก้วเล็กลงและล้นขอบขวาต่ำกว่า, เอกสารเอียงเล็กน้อยและขยับขึ้น */
 @media (max-width:767px){
   html.vc-art .ld-scene .ld-lamp{top:-14px;left:-9%;width:150px}
-  html.vc-art .ld-scene .ld-cup{top:22px;right:-6%;width:124px}
+  html.vc-art .ld-scene .ld-cup{top:16px;right:3%;width:124px}
   html.vc-art .ld-scene .auth-doc-wrap{zoom:.74;padding:196px 74px 64px 84px}
 }
 
@@ -2063,3 +2063,8 @@ html.vc-art .auth-doc .ad-face::before{background:none !important}
   47%{filter:drop-shadow(0 6px 5px rgba(0,0,0,.55)) drop-shadow(0 0 28px rgba(255,185,90,.8))}
   71%{filter:drop-shadow(0 6px 5px rgba(0,0,0,.55)) drop-shadow(0 0 16px rgba(255,170,70,.5))}}
 @keyframes vcGlowBreath{0%,100%{opacity:.85;transform:scale(1)}40%{opacity:1;transform:scale(1.06)}62%{opacity:.78;transform:scale(.98)}}
+
+/* มือถือ: หมุนแก้วทั้งชุด (รวมวิดีโอมือ 3D ที่อยู่ในแก้ว) ให้แขนยื่นออกไปทางขอบบน/ขวาของจอ ไม่พาดทับเอกสาร */
+@media (max-width:767px){html.vc-art .ld-scene .ld-cup{transform:rotate(var(--cupRot,-60deg))}}
+/* มือถือ: mobile-polish.css บีบ canvas ให้กว้างไม่เกินแก้ว (max-width:100%) → ภาพมือ 3D ถูกบีบ/เลื่อน ผิดตำแหน่ง */
+.ld-cup .ld-hand3d,.ld-cup .ld-icevid,.ad-vidlayer canvas,.ad-vidlayer img{max-width:none !important}
