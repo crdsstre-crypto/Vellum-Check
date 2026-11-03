@@ -2274,3 +2274,59 @@ html.vc-art .hero-title .ht-fire{position:absolute;inset:0;pointer-events:none;c
 @keyframes htFlick{0%{opacity:.72}13%{opacity:.86}21%{opacity:.62}34%{opacity:.82}48%{opacity:.58}57%{opacity:.85}71%{opacity:.66}84%{opacity:.9}100%{opacity:.72}}
 @media (prefers-reduced-motion:reduce){html.vc-art .hero-title .ht-fire{animation:none;opacity:.5}.hx-focus{animation:none;opacity:1}}
 html[data-calm] .hero-title .ht-fire{animation:none;opacity:.5}
+
+/* ===== ข้อกำหนด + นโยบายความเป็นส่วนตัว: ช่องติ๊กยอมรับ / พลิกกระดาษ / หน้าต่างอ่าน ===== */
+.ad-consent{margin:4px 0 12px;font:400 13px/1.5 Sarabun,Prompt,sans-serif;color:inherit;text-align:left}
+.ad-consent label{display:flex;gap:9px;align-items:flex-start;cursor:pointer}
+.ad-consent input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.ad-consent .ac-box{flex:none;width:17px;height:17px;margin-top:1px;border:1.6px solid rgba(58,39,20,.7);border-radius:3px;background:rgba(255,255,255,.35);position:relative;transition:background .2s,border-color .2s}
+.ad-consent input:checked + .ac-box{background:#3a2714;border-color:#3a2714}
+.ad-consent input:checked + .ac-box::after{content:"";position:absolute;left:4.5px;top:1px;width:4.5px;height:9px;border:solid #f4ead4;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.ad-consent input:focus-visible + .ac-box{outline:2px solid #b8862f;outline-offset:2px}
+.ad-consent a{color:#7a3b12;text-decoration:underline;text-underline-offset:2px;font-weight:600}
+.ad-consent .ac-msg{margin:4px 0 0 26px;min-height:0;font-size:12px;color:#a3261a}
+.ad-consent .ac-msg:empty{display:none}
+.ad-consent.err{animation:acShake .45s}
+.ad-consent.err .ac-box{border-color:#a3261a;background:rgba(214,58,40,.12)}
+@keyframes acShake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+/* กระดาษเอกสาร (ใช้ทั้งด้านหลังกระดาษล็อกอินและหน้าต่างอ่าน) */
+.vd-paper{display:flex;flex-direction:column;color:#2c2218;text-align:left;border-radius:3px;overflow:hidden;
+  background:linear-gradient(180deg,#f3ead6,#e7dbc0);box-shadow:0 2px 0 rgba(255,255,255,.4) inset,0 24px 50px -12px rgba(0,0,0,.65),0 0 0 1px rgba(150,110,60,.3)}
+.vd-tabs{display:flex;gap:4px;padding:12px 14px 0;border-bottom:1px solid rgba(90,60,30,.25);flex:none}
+.vd-tabs button{flex:1;padding:9px 8px;border:0;border-radius:6px 6px 0 0;background:transparent;color:#7a6142;font:600 13.5px/1.2 Prompt,Sarabun,sans-serif;cursor:pointer}
+.vd-tabs button.on{background:rgba(255,255,255,.55);color:#2c2218;box-shadow:0 -2px 0 #b8862f inset}
+.vd-body{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:14px 20px 18px;font:400 14px/1.65 Sarabun,sans-serif}
+.vd-body:focus{outline:none}
+.vd-body h4{margin:2px 0 10px;font:600 19px/1.3 Prompt,Sarabun,sans-serif}
+.vd-body h5{margin:14px 0 4px;font:600 14.5px/1.35 Prompt,Sarabun,sans-serif;color:#4a3216}
+.vd-body ul{margin:6px 0 0;padding-left:20px}
+.vd-body li{margin:3px 0}
+.vd-body .vd-meta{margin:0 0 4px;font:500 11px/1.3 'IBM Plex Mono',monospace;letter-spacing:.04em;color:#8a6d45}
+.vd-body mark{background:#ffe08a;color:#5a3a00;padding:0 3px}
+.vd-body a{color:#7a3b12}
+.vd-foot{display:flex;gap:10px;justify-content:flex-end;padding:10px 14px 12px;border-top:1px solid rgba(90,60,30,.25);flex:none}
+.vd-foot button{padding:10px 16px;border-radius:6px;font:600 13.5px/1 Prompt,Sarabun,sans-serif;cursor:pointer;border:1px solid rgba(58,39,20,.5);background:transparent;color:#3a2714}
+.vd-foot .vd-ok{background:#3a2714;color:#f4ead4;border-color:#3a2714}
+/* พลิกกระดาษล็อกอิน */
+.ad-pose{transition:rotate .38s cubic-bezier(.55,0,.8,.4),opacity .2s .18s}
+.auth-doc-wrap.vd-flip .ad-pose{rotate:y 90deg;opacity:0;pointer-events:none}
+.auth-doc-wrap.vd-flip .ad-vidlayer{opacity:0;transition:opacity .15s}
+.ad-backside{position:absolute;z-index:20;visibility:hidden;rotate:y -90deg;opacity:0;pointer-events:none;
+  transition:rotate .42s cubic-bezier(.2,.6,.3,1),opacity .15s,visibility 0s .6s}
+.auth-doc-wrap.vd-flip .ad-backside{visibility:visible;rotate:y 0deg;opacity:1;pointer-events:auto;transition:rotate .45s .36s cubic-bezier(.2,.7,.3,1),opacity .15s .36s,visibility 0s}
+.auth-doc-wrap:not(.vd-flip) .ad-pose{transition:rotate .45s .38s cubic-bezier(.2,.7,.3,1),opacity .15s .38s}
+/* หน้าต่างอ่านเอกสาร */
+.vd-modal{position:fixed;inset:0;z-index:10050;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(8,6,4,.72)}
+.vd-modal.on{display:flex;animation:vdIn .3s ease}
+.vd-modal .vd-paper{width:min(640px,100%);height:min(82vh,760px);animation:vdUp .4s cubic-bezier(.2,.8,.3,1)}
+html.vd-lock{overflow:hidden}
+@keyframes vdIn{from{opacity:0}}
+@keyframes vdUp{from{transform:translateY(24px) rotate(-1deg);opacity:0}}
+.vc-legal-links a{color:inherit;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+@media (max-width:767px){
+  .vd-body{padding:12px 15px 16px;font-size:13.5px}
+  .vd-modal{padding:10px}
+  .vd-modal .vd-paper{height:88vh}
+  .vd-foot button{padding:10px 12px}
+}
+@media (prefers-reduced-motion:reduce){.ad-pose,.ad-backside{transition:none !important}.ad-consent.err{animation:none}}
