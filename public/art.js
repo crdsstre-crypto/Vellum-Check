@@ -2252,34 +2252,43 @@ window.VCStepPlay = function (v, fps, onEnd) {
       });
     }, { passive: true });
 
-    /* จุดสำคัญ (เมนู ปุ่ม หัวเรื่อง): ถ้าแว่น/ไฟฉายอยู่ทับ ให้ข้อความเล็กจางหายไป จะได้อ่านปุ่มชัด */
-    var KEY = '.site-header a,.site-header button,.dx-nav a,.dx-cta,.dx-cta-ghost,.hero-title,.hero-lead,.hero-cue,.dx-points li', keys = [], keyAt = 0, quiet = false;
-    function readKeys() {
-      var hr = hero.getBoundingClientRect(); keys = [];
-      Array.prototype.forEach.call(document.querySelectorAll(KEY), function (e) {
-        var r = e.getBoundingClientRect(); if (!r.width || !r.height) return;
-        keys.push([r.left - hr.left, r.top - hr.top, r.right - hr.left, r.bottom - hr.top]);
-      });
-    }
-    addEventListener('scroll', function () { keyAt = 0; }, { passive: true });
-    function overKey(x, y, rad) {
-      for (var i = 0; i < keys.length; i++) {
-        var k = keys[i], cx = Math.max(k[0], Math.min(x, k[2])), cy = Math.max(k[1], Math.min(y, k[3]));
-        if ((x - cx) * (x - cx) + (y - cy) * (y - cy) < rad * rad) return true;
+    /* คอม: ข้อความสั้นๆ วางเว้นที่ตรงเมนู ปุ่ม และหัวเรื่อง (ไม่ทับของสำคัญ) */
+    var KEY = '.site-header a,.site-header button,.site-header .brand,.dx-nav a,.dx-cta,.dx-cta-ghost,.hero-title,.hero-lead,.dx-pill,.hero-cue,.dx-points li';
+    function shortPrint() {
+      var h = '', cols = 6, rows = 8, k = 0, i, j;
+      for (j = 0; j < rows; j++) for (i = 0; i < cols; i++) {
+        var c = CL[(k * 5 + j) % CL.length]; k++;
+        var x = (i + .05 + Math.random() * .3) / cols * 100, y = (j + .1 + Math.random() * .4) / rows * 100;
+        h += '<p class="s" style="left:' + x.toFixed(1) + '%;top:' + y.toFixed(1) + '%;rotate:' + R(-3, 3).toFixed(1) + 'deg"><em>' + c[0] + '</em> <b>' + c[2] + '</b></p>';
       }
-      return false;
+      return h;
     }
+    function layoutPrint() {
+      if (mob || !W) return;
+      var keys = [];
+      Array.prototype.forEach.call(document.querySelectorAll(KEY), function (e) {
+        var rs = [e.getBoundingClientRect()];
+        if (e.matches('.hero-title,.hero-lead,.dx-pill,.dx-points li')) { try { var rg = document.createRange(); rg.selectNodeContents(e); rs = Array.prototype.filter.call(rg.getClientRects(), function (q) { return q.width > 2 && q.width < innerWidth * .7; }); } catch (er) {} }
+        rs.forEach(function (r) { if (r.width && r.height) keys.push([r.left - 26, r.top - 22, r.right + 26, r.bottom + 22]); });
+      });
+      base.innerHTML = shortPrint();
+      Array.prototype.slice.call(base.children).forEach(function (p) {
+        var r = p.getBoundingClientRect();
+        for (var i = 0; i < keys.length; i++) { var k = keys[i]; if (r.left < k[2] && r.right > k[0] && r.top < k[3] && r.bottom > k[1]) { p.remove(); return; } }
+      });
+      poolT.innerHTML = big.innerHTML = base.innerHTML;
+    }
+    var lpT = 0; function relayout() { clearTimeout(lpT); lpT = setTimeout(layoutPrint, 250); }
+    if (!mob) { layoutPrint(); setTimeout(layoutPrint, 1800); if (document.fonts && document.fonts.ready) document.fonts.ready.then(relayout); addEventListener('resize', relayout); }
     var raf = 0, inView = true, last = 0, t0 = performance.now();
     function frame(now) {
       raf = 0; if (!inView || document.hidden) { last = 0; return; }
-      if (now - keyAt > 500) { readKeys(); keyAt = now; }
+
       var dt = last ? Math.min(64, now - last) : 16.7; last = now;
       var k = 1 - Math.pow(1 - .12, dt / 16.7), t = (now - t0) / 1000;
       if (now - moved > 6000 && !calm) { tgt.x = W / 2 + .27 * W * Math.sin(t * .33); tgt.y = H / 2 - .15 * H * Math.cos(t * .21); }
       if (!fine && !ori && !calm) { tilt.tx = Math.sin(t * .27) * .35; tilt.ty = Math.cos(t * .19) * .25; }
       pos.x += (tgt.x - pos.x) * k; pos.y += (tgt.y - pos.y) * k;
-      var q = overKey(pos.x, pos.y, Rl * 1.15);
-      if (q !== quiet) { quiet = q; hero.classList.toggle('hx-quiet', q); }
       tilt.x += (tilt.tx - tilt.x) * k * .5; tilt.y += (tilt.ty - tilt.y) * k * .5;
       pool.style.transform = 'translate3d(' + px(pos.x - Rp) + ',' + px(pos.y - Rp) + ',0)';
       poolT.style.transform = 'translate3d(' + px(Rp - pos.x) + ',' + px(Rp - pos.y) + ',0)';
