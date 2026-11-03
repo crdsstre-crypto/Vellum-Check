@@ -1828,7 +1828,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
       (function wait() { if (my !== tok) { end(false); return; } if (v.readyState >= 1) start(); else if (Date.now() - t0 > 6000) end(true); else setTimeout(wait, 80); })();
     });
   }
-  function steam(on) { Array.prototype.forEach.call(cup.querySelectorAll('.ld-steam'), function (s) { s.style.visibility = on ? '' : 'hidden'; }); }
+  function steam(on) { Array.prototype.forEach.call(document.querySelectorAll('.ld-steam'), function (s) { s.style.visibility = on ? '' : 'hidden'; }); }
   function rip(px, py) { var r = document.createElement('i'); r.className = 'ld-rip'; r.style.cssText = 'left:' + px + '%;top:' + py + '%'; cup.appendChild(r); setTimeout(function () { if (r.parentNode) r.parentNode.removeChild(r); }, 1100); }
   var ICECV = null;
   function playIce() {
@@ -2085,4 +2085,62 @@ window.VCStepPlay = function (v, fps, onEnd) {
     if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { if (es[0].isIntersecting && !done) play(false); }, { threshold: .2 }).observe(sc);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch); else watch();
+})();
+
+/* ===== บรรยากาศลอย: ฝุ่นในแสงตะเกียง + วงแสงโบเก้ + ไอกาแฟ ===== */
+(function () {
+  function R(a, b) { return a + Math.random() * (b - a); }
+  function px(v) { return v.toFixed(1) + 'px'; }
+  function el(cls, css) { var e = document.createElement('i'); if (cls) e.className = cls; if (css) e.style.cssText = css; return e; }
+  function init() {
+    var sc = document.querySelector('.ld-scene'); if (!sc) return false; if (sc.__amb) return true;
+    var cup = sc.querySelector('.ld-cup'), lamp = sc.querySelector('.ld-lamp'); if (!cup || !lamp) return false;
+    sc.__amb = true;
+    var mob = matchMedia('(max-width:767px)').matches, i, k;
+    /* ฝุ่น */
+    var dl = document.createElement('div'); dl.className = 'vc-dust'; dl.setAttribute('aria-hidden', 'true');
+    var N = mob ? 30 : 56;
+    for (i = 0; i < N; i++) {
+      var soft = Math.random() < .26, sz = soft ? R(8, mob ? 14 : 17) : R(mob ? 4 : 3.5, mob ? 7.5 : 7), amp = soft ? 70 : 40;
+      var css = 'left:' + R(0, 100).toFixed(1) + '%;top:' + R(0, 100).toFixed(1) + '%;width:' + px(sz) + ';height:' + px(sz) +
+        ';--x1:' + px(R(-amp, amp)) + ';--y1:' + px(R(-amp, amp * .4)) + ';--x2:' + px(R(-amp, amp)) + ';--y2:' + px(R(-amp * 1.6, -amp * .3)) +
+        ';--x3:' + px(R(-amp, amp)) + ';--y3:' + px(R(-amp * 2.2, -amp * .6)) +
+        ';--o:' + (soft ? R(.25, .5) : R(.55, 1)).toFixed(2) + ';--d:' + R(16, 34).toFixed(1) + 's;--w:-' + R(0, 34).toFixed(1) + 's;--t:' + R(2.6, 6.5).toFixed(1) + 's;--tw:-' + R(0, 6).toFixed(1) + 's';
+      dl.appendChild(el(soft ? 'b' : '', css));
+    }
+    sc.appendChild(dl);
+    /* วงแสงโบเก้ */
+    var bl = document.createElement('div'); bl.className = 'vc-bokeh'; bl.setAttribute('aria-hidden', 'true');
+    var spots = mob ? [[8, 30], [70, 62], [30, 88]] : [[6, 22], [86, 70], [24, 78], [64, 12], [94, 36]];
+    for (i = 0; i < spots.length; i++) {
+      k = mob ? R(56, 110) : R(90, 200);
+      bl.appendChild(el(i % 2 ? 'c' : '', 'left:' + spots[i][0] + '%;top:' + spots[i][1] + '%;width:' + px(k) + ';height:' + px(k) + ';margin:' + px(-k / 2) + ' 0 0 ' + px(-k / 2) +
+        ';--x:' + px(R(-1, 1) * (mob ? 60 : 160)) + ';--y:' + px(R(-1, .4) * (mob ? 70 : 120)) + ';--o:' + R(.5, .85).toFixed(2) + ';--d:' + R(28, 46).toFixed(1) + 's;--w:-' + R(0, 40).toFixed(1) + 's'));
+    }
+    sc.appendChild(bl);
+    /* ไอกาแฟ: ย้ายออกมานอกแก้ว จะได้ไม่โดนเงาแก้วและลอยขึ้นตรงๆ */
+    Array.prototype.slice.call(cup.querySelectorAll('.ld-steam')).forEach(function (n) { n.parentNode.removeChild(n); });
+    var sb = document.createElement('div'); sb.className = 'vc-steam'; sb.setAttribute('aria-hidden', 'true');
+    sb.innerHTML = '<svg width="0" height="0" style="position:absolute" focusable="false"><filter id="vcStF" x="-25%" y="-15%" width="150%" height="130%"><feTurbulence type="fractalNoise" baseFrequency="' + (mob ? '0.05 0.09' : '0.024 0.045') + '" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="' + (mob ? 15 : 26) + '" xChannelSelector="R" yChannelSelector="G"/></filter></svg>';
+    var sbx = document.createElement('div'); sbx.className = 'vc-stbox'; sb.appendChild(sbx);
+    for (i = 0; i < 9; i++) sbx.appendChild(el('ld-steam vc-wisp', 'left:' + (.5 + R(-.07, .07)).toFixed(3) + 'em;--x1:' + R(-.1, .1).toFixed(3) + 'em;--x2:' + R(-.22, .22).toFixed(3) + 'em;--r1:' + R(-12, 12).toFixed(0) + 'deg;--r2:' + R(-26, 26).toFixed(0) + 'deg;--o:' + R(.45, .8).toFixed(2) + ';--d:' + R(4.8, 7.4).toFixed(1) + 's;--w:-' + (i * .75).toFixed(2) + 's'));
+    for (i = 0; i < 3; i++) sbx.appendChild(el('ld-steam vc-curl', '--x2:' + R(-.2, .2).toFixed(3) + 'em;--r0:' + R(0, 360).toFixed(0) + 'deg;--r2:' + (R(.5, 1) * (i % 2 ? 1 : -1) * 220).toFixed(0) + 'deg;--d:' + R(5.5, 7.5).toFixed(1) + 's;--w:-' + (i * 2.3).toFixed(1) + 's'));
+    sc.appendChild(sb);
+    function place() {
+      var s = sc.getBoundingClientRect(); if (!s.width) return;
+      var f = lamp.querySelector('.lp-flame') || lamp, a = f.getBoundingClientRect();
+      if (a.width) { sc.style.setProperty('--lx', px(a.left + a.width / 2 - s.left)); sc.style.setProperty('--ly', px(a.top + a.height / 2 - s.top)); }
+      var c = cup.getBoundingClientRect(), on = c.width > 0 && getComputedStyle(cup).display !== 'none';
+      sb.style.display = on ? '' : 'none'; if (!on) return;
+      var w = cup.offsetWidth || c.width;
+      sb.style.left = px(c.left + c.width / 2 - s.left); sb.style.top = px(c.top + c.height * .47 - s.top); sb.style.fontSize = px(w * 1.05);
+    }
+    place(); setTimeout(place, 600); setTimeout(place, 3200);
+    addEventListener('resize', place);
+    if ('ResizeObserver' in window) new ResizeObserver(place).observe(sc);
+    setInterval(function () { if (!document.hidden && !sc.classList.contains('acts-on')) place(); }, 4000);
+    return true;
+  }
+  function go() { if (init()) return; var n = 0, t = setInterval(function () { if (init() || ++n > 60) clearInterval(t); }, 400); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
 })();
