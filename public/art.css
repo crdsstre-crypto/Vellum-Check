@@ -2225,6 +2225,5 @@ html[data-calm] .hx-pg{animation:none}
   html.vc-art .hero .hx-big{color:rgba(250,242,226,.78)}
 }
 
-/* แว่น/ไฟฉายทับเมนู ปุ่ม หรือหัวเรื่อง: ซ่อนข้อความเล็ก ให้อ่านปุ่มชัด (คอม+มือถือ) */
-.hx-big,.hx-lit{transition:opacity .35s ease}
-.hero.hx-quiet :is(.hx-big,.hx-lit){opacity:0}
+/* คอม: ข้อความสั้นๆ ที่วางเว้นเมนู/ปุ่ม/หัวเรื่อง */
+html.vc-art .hero .hx-fine p.s{width:auto;white-space:nowrap;text-align:left}
