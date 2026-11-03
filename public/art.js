@@ -1,3 +1,20 @@
+/* เล่นวิดีโอแบบเดินเฟรมเอง (สำรอง): iPhone โหมดประหยัดพลังงาน/บางเบราว์เซอร์บล็อก video.play()
+   → เลื่อน currentTime ตามนาฬิกาเอง แล้ววาดเฟรมตอน seeked · คืนฟังก์ชันหยุด */
+window.VCStepPlay = function (v, fps, onEnd) {
+  var t0 = performance.now(), stop = false, busy = false, dur = v.duration || 0;
+  function onSeeked() { busy = false; }
+  v.addEventListener('seeked', onSeeked);
+  try { v.pause(); } catch (e) {}
+  (function tick(now) {
+    if (stop) return;
+    if (!dur || !isFinite(dur)) dur = v.duration || 0;
+    var t = (now - t0) / 1000;
+    if (dur && t >= dur - .02) { stop = true; v.removeEventListener('seeked', onSeeked); try { v.currentTime = Math.max(0, dur - .04); } catch (e) {} v.__stepEnded = true; if (onEnd) onEnd(); return; }
+    if (!busy && Math.abs(v.currentTime - t) > .5 / (fps || 30)) { busy = true; try { v.currentTime = t; } catch (e) { busy = false; } }
+    requestAnimationFrame(tick);
+  })(t0);
+  return function () { stop = true; v.removeEventListener('seeked', onSeeked); };
+};
 /* art.js: รวมจาก art-motion, art-cursor, art-scene, art-field (ตามลำดับ) แต่ละส่วนเป็นฟังก์ชันแยกของตัวเอง */
 
 /* ===== (จาก art-motion.js) ===== */
@@ -1790,11 +1807,18 @@
         cx.putImageData(c, 0, 0); cv.style.opacity = 1;
         if (at) Object.keys(at).forEach(function (t) { if (!fired[t] && v.currentTime >= +t) { fired[t] = 1; try { at[t](); } catch (e) {} } });
       }
-      function end(ok) { cancelAnimationFrame(raf); v.pause(); ok ? res() : rej(new Error('abort')); }
-      function loop() { if (my !== tok) { end(false); return; } draw(); if (v.ended) { end(true); return; } raf = requestAnimationFrame(loop); }
-      function start() { try { v.currentTime = 0; } catch (e) {} var p = v.play(); if (p && p.catch) p.catch(function () { end(true); }); raf = requestAnimationFrame(loop); }
+      var stepStop = null; v.__stepEnded = false;
+      function end(ok) { cancelAnimationFrame(raf); if (stepStop) stepStop(); v.pause(); ok ? res() : rej(new Error('abort')); }
+      function loop() { if (my !== tok) { end(false); return; } draw(); if (v.ended || v.__stepEnded) { draw(); end(true); return; } raf = requestAnimationFrame(loop); }
+      function manual() { if (stepStop) return; stepStop = VCStepPlay(v, 30); }
+      function start() { try { v.currentTime = 0; } catch (e) {} var p; try { p = v.play(); } catch (e) { manual(); }
+        if (p && p.catch) p.catch(function () { manual(); });
+        /* บางเครื่อง play() ไม่ error แต่ก็ไม่เดิน → ถ้า 600ms แล้วเวลายังไม่ขยับ ให้เดินเฟรมเอง */
+        setTimeout(function () { if (!stepStop && my === tok && v.currentTime < .05) manual(); }, 600);
+        raf = requestAnimationFrame(loop); }
       var t0 = Date.now();
-      (function wait() { if (my !== tok) { end(false); return; } if (v.readyState >= 2) start(); else if (Date.now() - t0 > 6000) end(true); else setTimeout(wait, 80); })();
+      try { if (v.readyState < 1 && v.src) v.load(); } catch (e) {}
+      (function wait() { if (my !== tok) { end(false); return; } if (v.readyState >= 1) start(); else if (Date.now() - t0 > 6000) end(true); else setTimeout(wait, 80); })();
     });
   }
   function steam(on) { Array.prototype.forEach.call(cup.querySelectorAll('.ld-steam'), function (s) { s.style.visibility = on ? '' : 'hidden'; }); }
@@ -1982,8 +2006,14 @@
     v.addEventListener('ended', function () { draw(); v.pause(); layer.classList.remove('playing'); layer.classList.add('held');
       /* มือค้างอยู่บนกระดาษ (ไม่จาง) จนกว่ามือจะไปหยิบกาแฟ แล้วจึงเหลือแต่ลายเซ็น */
       var sc = layer.closest('.ld-scene'); if (sc) new MutationObserver(function () { if (sc.classList.contains('acts-on')) finish(); }).observe(sc, { attributes: true, attributeFilter: ['class'] }); });
+    var sigStep = null;
+    function sigManual() { if (sigStep) return; if (!raf) raf = requestAnimationFrame(function fr() { raf = 0; draw(); if (layer.classList.contains('playing')) raf = requestAnimationFrame(fr); });
+      sigStep = VCStepPlay(v, 30, function () { v.dispatchEvent(new Event('ended')); }); }
     function go() { if (played) return; played = true; place(); layer.classList.add('playing');
-      var p = v.play(); if (p && p.catch) p.catch(function () { finish(); }); }
+      try { if (v.readyState < 1 && v.src) v.load(); } catch (e) {}
+      var p; try { p = v.play(); } catch (e) { sigManual(); }
+      if (p && p.catch) p.catch(function () { sigManual(); });
+      setTimeout(function () { if (!sigStep && v.currentTime < .05 && layer.classList.contains('playing')) sigManual(); }, 700); }
     setTimeout(place, 1000);
     if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { if (es[0].isIntersecting && !document.hidden) setTimeout(go, 900); }, { threshold: .3 }).observe(doc);
     else setTimeout(go, 1200);
