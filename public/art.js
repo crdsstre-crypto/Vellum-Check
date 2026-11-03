@@ -2030,66 +2030,51 @@ window.VCStepPlay = function (v, fps, onEnd) {
 })();
 
 
-/* ===== ฉากเปิด: จุดตะเกียง + กล้องเลื่อนเข้าหาโต๊ะ (3 พ.ย. 2026) =====
-   ครั้งแรกที่เห็นฉากโต๊ะ: มืดสนิท → ตะเกียงจุดติด (กะพริบ) → วงแสงแผ่ออกจากตะเกียงเผยโต๊ะ เอกสาร แก้ว + ฝุ่นในแสง
-   พร้อมกล้องค่อยๆ ถอยจากมุมใกล้ (ซูม 1.2) ลงมาที่มุมปกติ · ครั้งแรกของเครื่อง 2.8 วิ ครั้งต่อไป 1.4 วิ · แตะเพื่อข้าม
-   ลดการเคลื่อนไหว = ไม่เล่น · ระหว่างเล่น มือเซ็นชื่อจะรอ (VCDeskIntro.busy) */
+/* ===== ฉากเปิด: จุดตะเกียง + กล้องเลื่อนเข้าหาโต๊ะ (3 พ.ย. 2026 · รุ่นลื่น) =====
+   ทุกอย่างเป็น CSS animation ของ transform/opacity เท่านั้น (การ์ดจอทำ ไม่วาดใหม่ทั้งจอทุกเฟรม) จึงลื่นแม้เครื่องกำลังโหลดของหนัก
+   ชั้นมืด .io-dark กะพริบเปิดให้เห็นตะเกียง → รูแสง .io-hole (วงไล่สีโปร่งใสตรงกลาง) ขยายออกจากตะเกียงเผยทั้งโต๊ะ
+   กล้อง: ลูกของ .ld-scene ซูม 1.14→1 · ครั้งแรก 2.8 วิ ครั้งต่อไป 1.4 วิ · แตะเพื่อข้าม · ลดการเคลื่อนไหว = ไม่เล่น */
 (function () {
   'use strict';
-  var busy = false, done = false, ov = null;
+  var busy = false, done = false, endFn = null;
   function reduced() { return (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) || document.documentElement.hasAttribute('data-calm'); }
   function seen() { try { return localStorage.getItem('vc_intro_seen') === '1'; } catch (e) { return false; } }
   function mark() { try { localStorage.setItem('vc_intro_seen', '1'); } catch (e) {} }
-  function ez(t) { return 1 - Math.pow(1 - t, 3); }
   function play(force) {
-    var sc = document.querySelector('.ld-scene'); if (!sc || busy || (done && !force) || reduced()) return;
-    if (!sc.offsetWidth) return;
+    var sc = document.querySelector('.ld-scene'); if (!sc || busy || (done && !force) || reduced() || !sc.offsetWidth) return;
     done = true; busy = true;
-    var full = !seen(), D = full ? 2800 : 1400, lamp = sc.querySelector('.ld-lamp'), sr = sc.getBoundingClientRect(), lr = lamp ? lamp.getBoundingClientRect() : sr;
-    var lx = ((lr.left + lr.width / 2 - sr.left) / sr.width * 100).toFixed(1) + '%', ly = ((lr.top + lr.height / 2 - sr.top) / Math.max(1, Math.min(sr.height, innerHeight)) * 100).toFixed(1) + '%';
+    var full = !seen(), D = full ? 2800 : 1400;
+    var lamp = sc.querySelector('.ld-lamp'), sr = sc.getBoundingClientRect(), lr = lamp ? lamp.getBoundingClientRect() : sr;
+    var lx = lr.left + lr.width / 2 - sr.left, ly = lr.top + lr.height / 2 - sr.top;
     var doc = sc.querySelector('.auth-doc'), dr = doc ? doc.getBoundingClientRect() : sr;
-    var ox = ((dr.left + dr.width / 2 - sr.left) / sr.width * 100).toFixed(1) + '%', oy = ((dr.top + dr.height * .35 - sr.top) / sr.height * 100).toFixed(1) + '%';
-    var prevLamp = sc.getAttribute('data-lamp');
-    sc.classList.add('vc-intro');
-    ov = document.createElement('div'); ov.className = 'vc-intro-ov'; ov.setAttribute('aria-hidden', 'true');
-    ov.style.setProperty('--lx', lx); ov.style.setProperty('--ly', ly);
-    var hgt = Math.min(sr.height, innerHeight + 200); ov.style.height = hgt + 'px';
-    for (var i = 0; i < 18; i++) { var m = document.createElement('i'); m.style.cssText = 'left:calc(' + lx + ' + ' + (Math.random() * 40 - 10).toFixed(1) + '%);top:calc(' + ly + ' + ' + (Math.random() * 30 - 5).toFixed(1) + '%);--dx:' + (Math.random() * 40 - 20).toFixed(0) + 'px;--dy:' + (-30 - Math.random() * 60).toFixed(0) + 'px;animation-delay:' + (D * .35 + Math.random() * D * .4).toFixed(0) + 'ms;animation-duration:' + (2200 + Math.random() * 1800).toFixed(0) + 'ms'; ov.appendChild(m); }
-    sc.appendChild(ov);
-    sc.style.setProperty('--on', '0'); sc.setAttribute('data-lamp', 'off');
-    var kids = [].slice.call(sc.children).filter(function (k) { return k !== ov; });
-    kids.forEach(function (k) { k.style.transformOrigin = ox + ' ' + oy; });
-    var t0 = performance.now(), stopped = false;
-    /* กะพริบตอนจุดไฟ (สัดส่วนของเวลา → ความสว่าง) */
-    var FL = full ? [[0, 0], [.10, 0], [.13, .55], [.16, .05], [.21, .8], [.24, .3], [.30, 1]] : [[0, 0], [.08, .6], [.12, .2], [.2, 1]];
-    function flick(p) { for (var k = 1; k < FL.length; k++) if (p <= FL[k][0]) { var a = FL[k - 1], b = FL[k], u = (p - a[0]) / (b[0] - a[0]); return a[1] + (b[1] - a[1]) * u; } return 1; }
+    var ox = dr.left + dr.width / 2 - sr.left, oy = dr.top + dr.height * .35 - sr.top;
+    var big = Math.max(sr.width, Math.min(sr.height, innerHeight * 1.6)) * 3;
+    var ov = document.createElement('div'); ov.className = 'vc-intro-ov'; ov.setAttribute('aria-hidden', 'true');
+    ov.style.setProperty('--D', D + 'ms');
+    var html = '<div class="io-hole" style="width:' + big + 'px;height:' + big + 'px;left:' + (lx - big / 2) + 'px;top:' + (ly - big / 2) + 'px"></div><div class="io-dark"></div>';
+    for (var i = 0; i < 16; i++) html += '<i style="left:' + (lx + (Math.random() * 360 - 60)).toFixed(0) + 'px;top:' + (ly + (Math.random() * 260 - 40)).toFixed(0) + 'px;--dx:' + (Math.random() * 40 - 20).toFixed(0) + 'px;--dy:' + (-30 - Math.random() * 60).toFixed(0) + 'px;animation-delay:' + (D * .35 + Math.random() * D * .4).toFixed(0) + 'ms;animation-duration:' + (2200 + Math.random() * 1800).toFixed(0) + 'ms"></i>';
+    ov.innerHTML = html; if (!full) ov.classList.add('short');
+    sc.classList.add('vc-intro'); sc.appendChild(ov);
+    var kids = [].slice.call(sc.children).filter(function (k) { return k !== ov; }), anims = [];
+    kids.forEach(function (k) {
+      k.style.transformOrigin = ox + 'px ' + oy + 'px'; k.style.willChange = 'transform';
+      try { anims.push(k.animate([{ transform: 'translateY(-16px) scale(1.14)' }, { transform: 'none' }], { duration: D, easing: 'cubic-bezier(.22,.7,.2,1)' })); } catch (e) {}
+    });
+    var stopped = false, tmr;
     function end() {
-      if (stopped) return; stopped = true; busy = false; mark();
-      kids.forEach(function (k) { k.style.transform = ''; k.style.transformOrigin = ''; });
-      sc.style.removeProperty('--on'); if (prevLamp) sc.setAttribute('data-lamp', prevLamp); else sc.removeAttribute('data-lamp');
-      sc.classList.remove('vc-intro'); if (ov) { ov.classList.add('out'); var o = ov; setTimeout(function () { o.remove(); }, 900); ov = null; }
-      sc.removeEventListener('pointerdown', skip, true);
+      if (stopped) return; stopped = true; busy = false; mark(); clearTimeout(tmr);
+      anims.forEach(function (a) { try { a.cancel(); } catch (e) {} });
+      kids.forEach(function (k) { k.style.transformOrigin = ''; k.style.willChange = ''; });
+      sc.classList.remove('vc-intro'); ov.classList.add('out'); setTimeout(function () { ov.remove(); }, 700);
+      sc.removeEventListener('pointerdown', end, true);
     }
-    function skip() { end(); }
-    sc.addEventListener('pointerdown', skip, true);
-    (function fr(now) {
-      if (stopped) return;
-      var p = Math.min(1, (now - t0) / D), on = flick(p);
-      sc.style.setProperty('--on', on.toFixed(3));
-      /* วงแสงจากตะเกียง: รัศมีโตตามเวลา */
-      var r = ez(Math.max(0, (p - .12) / .88)); ov.style.setProperty('--r', (r * 150).toFixed(1) + '%'); ov.style.setProperty('--fl', on.toFixed(3));
-      /* กล้อง: เริ่มซูม 1.2 แล้วถอยลงมา 1.0 (ช้าลงตอนท้าย) */
-      var c = ez(p), z = 1.2 - .2 * c, ty = (1 - c) * -18;
-      var tf = 'translateY(' + ty.toFixed(1) + 'px) scale(' + z.toFixed(4) + ')';
-      kids.forEach(function (k) { k.style.transform = tf; });
-      if (p < 1) requestAnimationFrame(fr); else end();
-    })(t0);
+    endFn = end; sc.addEventListener('pointerdown', end, true);
+    tmr = setTimeout(end, D);
   }
   window.VCDeskIntro = { play: play, busy: function () { return busy; } };
-  /* ฉากโต๊ะโผล่ครั้งแรก (โหลดตรงที่ #authCard / มือถือเปิดแผ่นบัญชี) */
   function watch() {
     var sc = document.querySelector('.ld-scene'); if (!sc) return;
-    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { if (es[0].isIntersecting && !done) setTimeout(function () { play(false); }, 60); }, { threshold: .25 }).observe(sc);
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { if (es[0].isIntersecting && !done) play(false); }, { threshold: .2 }).observe(sc);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch); else watch();
 })();
