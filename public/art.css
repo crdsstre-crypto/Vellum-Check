@@ -2214,3 +2214,13 @@ html.hx-lite .hx-pg{animation:none}
 html.vc-art.hx-on .hero-main{text-shadow:0 0 .5em rgba(10,7,5,.85),0 0 1.4em rgba(10,7,5,.6)}
 html[data-calm] .hx-pg{animation:none}
 @media (prefers-reduced-motion:reduce){.hx-pg{animation:none}}
+
+/* คอม: ข้อความพื้นหลังจางลง ไม่ให้ตาลาย (มือถือคงเดิม) */
+@media (min-width:768px){
+  html.vc-art .hero .hx-base{color:rgba(236,226,206,.026)}
+  html.vc-art .hero .hx-base b{color:rgba(255,170,140,.035)}
+  html.vc-art .hero .hx-lit{color:rgba(244,232,210,.24)}
+  html.vc-art .hero .hx-lit b{color:rgba(255,181,154,.5);text-decoration-color:rgba(255,110,80,.45)}
+  html.vc-art .hero .hx-lit em{color:rgba(255,226,170,.4)}
+  html.vc-art .hero .hx-big{color:rgba(250,242,226,.78)}
+}
