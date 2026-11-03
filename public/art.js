@@ -1645,7 +1645,19 @@
     dryer: '<g class="wind"><line x1="-30" y1="-18" x2="-150" y2="-24"/><line x1="-34" y1="-6" x2="-172" y2="-8"/><line x1="-30" y1="6" x2="-160" y2="10"/><line x1="-26" y1="18" x2="-140" y2="26"/></g><rect x="12" y="-28" width="108" height="46" rx="16" fill="#1e1e23" stroke="#4a4a52" stroke-width="1.5"/><path d="M12 -20 L-14 -12 L-14 6 L12 12 Z" fill="#34343a" stroke="#55555d"/><rect x="6" y="-26" width="9" height="42" rx="3" fill="url(#asSp)"/><path d="M30 -22 H104 M30 -14 H104" stroke="rgba(255,255,255,.18)" stroke-width="1.6"/><rect x="72" y="14" width="26" height="62" rx="9" fill="#17171a" stroke="#3a3a40"/><circle cx="52" cy="-4" r="3.5" fill="#c8402f"/>',
     towel: '<path d="M-36 -34 C-10 -44 40 -38 70 -36 L78 38 C44 46 -4 42 -30 44 Z" fill="url(#asTw)" stroke="#8fa0b3" stroke-width="1.5"/><path d="M-24 -24 L66 -28 M-26 -4 L70 -6 M-26 16 L72 14 M-24 34 L68 32" stroke="rgba(70,110,170,.55)" stroke-width="5"/><path d="M10 -40 C14 -10 8 20 14 44" stroke="rgba(0,0,0,.18)" stroke-width="3" fill="none"/>'
   };
-  function tool(n) { toolG.innerHTML = n ? TOOLS[n] : ''; }
+  /* มือ 3D (ภาพนิ่งเรนเดอร์): จุดเครื่องมือ (ปากไดร์ / กลางผ้า) อยู่ที่ (0,0) แขนยื่นไปทาง +x เหมือนแขนเดิม · 1 หน่วย = 1 มม. × K3 */
+  var HAND3D = {};
+  var h3img = null, K3 = .95;
+  function tool(n) {
+    var body = G && G.firstChild;
+    if (n && HAND3D[n]) {
+      if (!h3img) { h3img = document.createElementNS(NS, 'g'); G.appendChild(h3img); }
+      h3img.innerHTML = '<image href="' + HAND3D[n] + '" x="' + (-160 * K3) + '" y="' + (-140 * K3) + '" width="' + (500 * K3) + '" height="' + (280 * K3) + '"/>' + (n === 'dryer' ? '<defs><linearGradient id="hairAir" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#fff6e6" stop-opacity=".42"/><stop offset=".55" stop-color="#fff" stop-opacity=".12"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><g class="wind"><path d="M-2 -10 C-60 -22 -110 -40 -165 -52 L-165 52 C-110 40 -60 22 -2 10 Z" fill="url(#hairAir)"/><line x1="-10" y1="-6" x2="-140" y2="-20" style="stroke:rgba(255,255,255,.22);stroke-width:1.2"/><line x1="-12" y1="2" x2="-160" y2="3" style="stroke:rgba(255,255,255,.18);stroke-width:1"/><line x1="-10" y1="8" x2="-135" y2="24" style="stroke:rgba(255,255,255,.2);stroke-width:1.2"/></g>' : '');
+      if (body) body.style.display = 'none'; toolG.innerHTML = ''; return;
+    }
+    if (h3img) h3img.innerHTML = ''; if (body) body.style.display = '';
+    toolG.innerHTML = n ? TOOLS[n] : '';
+  }
 
   function init() {
     sc = q('.ld-scene'); if (!sc || sc.__acts) return;
@@ -1686,7 +1698,7 @@
     arm.style.opacity = 0; tool(null); sc.classList.remove('acts-on'); docHand.style.opacity = docSvg.getAttribute('data-done') ? 0 : '';
     spoon.style.opacity = ''; cup.style.transform = ''; cup.style.zIndex = ''; cup.classList.remove('nosteam');
     Array.prototype.slice.call(cup.querySelectorAll('.ld-hand3d')).forEach(function (n) { n.parentNode.removeChild(n); }); ICECV = null; steam(true);
-    var lg = q('.cp-lift', cup); if (lg) lg.style.transform = ''; var cln = q('.cp-clean', cup); if (cln) cln.style.opacity = 0;
+    var lg = q('.cp-lift', cup); if (lg) { lg.style.transform = ''; lg.style.opacity = ''; lg.style.transition = ''; } var cln = q('.cp-clean', cup); if (cln) cln.style.opacity = 0;
     try { cup.getAnimations().forEach(function (a) { a.cancel(); }); } catch (e) {}
     Array.prototype.forEach.call(cofs, function (c) { c.style.opacity = ''; c.style.transform = ''; });
     swirl.style.transform = '';
@@ -1854,47 +1866,8 @@
     await w(1300); swirl.style.transition = ''; swirl.style.transform = '';
   }
 
-  async function act3() {
-    begin(); var dc = ctr(doc), cu = ctr(cup), h0 = ctr(hdm), bg = ctr(bag), v = { x: h0.x - cu.x, y: h0.y - cu.y }, base = -8;
-    cup.style.zIndex = 5;
-    function hold(x, y, th) {
-      var d = (th - base) * Math.PI / 180, c = Math.cos(d), s = Math.sin(d), vx = v.x * c - v.y * s, vy = v.x * s + v.y * c;
-      cup.style.transform = 'translate(' + (x - vx - cu.x).toFixed(1) + 'px,' + (y - vy - cu.y).toFixed(1) + 'px) rotate(' + th.toFixed(1) + 'deg)';
-    }
-    function jiggle() { try { bag.animate([{ translate: '0 0' }, { translate: '-7px 4px' }, { translate: '6px -3px' }, { translate: '0 0' }], { duration: 260, iterations: 3 }); } catch (e) {} }
-    await go(h0.x, h0.y, 56, 1400); hold(h0.x, h0.y, base); cup.classList.add('nosteam');
-    await go(dc.x + dc.w * .3, dc.y - dc.h * .02, 70, 1200, { f: function (p, e) { hold(p.x, p.y, base - 14 * e); } });
-    await go(dc.x + dc.w * .14, dc.y - dc.h * .1, 86, 900, { shake: 1.6, f: function (p, e) { hold(p.x, p.y, -22 - 52 * e); } });
-    /* พลาด: มือสะดุด แก้วหลุดตกบนกระดาษ กาแฟหกเต็มเอกสาร */
-    var tx = P.x, ty = P.y, drop = { x: dc.x + dc.w * .08, y: dc.y + dc.h * .2 };
-    spill.classList.add('on'); emo('😱', tx - 30, ty - 120, 56); setTimeout(function () { emo('💦', drop.x, drop.y - 60, 40); }, 350); Array.prototype.forEach.call(cofs, function (c) { c.style.opacity = .08; });
-    await Promise.all([go(tx + 90, ty - 70, 40, 520, { shake: 3 }), an(620, function (e) { hold(lerp(tx, drop.x, e), lerp(ty, drop.y, e), lerp(-74, -150, e)); })]);
-    var dsk = { x: dc.x + dc.w * .62, y: dc.y + dc.h * .6 };
-    var stain = document.createElement('i'); stain.className = 'ld-stain'; stain.style.cssText = 'left:' + dsk.x + 'px;top:' + dsk.y + 'px;width:' + (cu.w * 1.05) + 'px;height:' + (cu.w * .8) + 'px'; sc.appendChild(stain);
-    requestAnimationFrame(function () { stain.style.opacity = 1; });
-    an(900, function (e) { hold(lerp(drop.x, dsk.x, e), lerp(drop.y, dsk.y, e), lerp(-150, -232, e)); });
-    emo('😰', P.x - 40, P.y - 140, 50); await go(P.x + 40, P.y - 90, 30, 700, { shake: 7 }); await w(300);
-    /* รีบไปหยิบไดร์จากกระเป๋า */
-    setTimeout(function () { emo('😵‍💫', bg.x + 40, bg.y - 140, 48); }, 700); await go(bg.x + bg.w * .08, bg.y - bg.h * .05, 40, 1300, { shake: 6 }); jiggle(); await w(800); tool('dryer');
-    await go(dc.x + dc.w * .4, dc.y + dc.h * .42, 38, 1300); var wind = q('.wind', toolG); wind.classList.add('on');
-    spill.classList.add('dry');
-    try { pose.animate([{ rotate: '0deg' }, { rotate: '1.1deg' }, { rotate: '-1deg' }, { rotate: '0deg' }], { duration: 300, iterations: 16 }); } catch (e) {}
-    for (var k = 0; k < 3; k++) { if (k === 1) emo('🥵', dc.x + dc.w * .3, dc.y + dc.h * .25, 44); await go(dc.x + dc.w * .1, dc.y + dc.h * .12, 30, 750, { shake: 3 }); await go(dc.x + dc.w * .38, dc.y + dc.h * .42, 40, 750, { shake: 3 }); }
-    wind.classList.remove('on'); spill.className = 'ad-spill';
-    await go(bg.x + bg.w * .08, bg.y - bg.h * .05, 40, 1100); tool(null); jiggle(); await w(600); tool('towel');
-    await go(dsk.x + 70, dsk.y, 50, 1200);
-    for (var m = 0; m < 4; m++) { stain.style.transition = 'opacity .4s'; stain.style.opacity = 1 - (m + 1) / 4; await go(dsk.x - 70, dsk.y + 8, 50, 420); await go(dsk.x + 70, dsk.y - 8, 50, 420); }
-    if (stain.parentNode) stain.parentNode.removeChild(stain); emo('😮‍💨', dsk.x, dsk.y - 110, 50);
-    await go(OFF.x, OFF.y, 52, 1100); tool(null); await w(400);
-    /* หยิบแก้วที่ตกไปทิ้ง แล้วเอาแก้วใหม่ (กาแฟเต็ม) มาวางที่เดิม */
-    var hd = ctr(hdm); await go(hd.x, hd.y, 58, 1400);
-    await go(OFF.x - 60, OFF.y - 60, 50, 1300, { f: function (p) { hold(p.x, p.y, -232); } });
-    Array.prototype.forEach.call(cofs, function (c) { c.style.opacity = ''; }); Array.prototype.forEach.call(cup.querySelectorAll('.ld-ice'), function (n) { n.parentNode.removeChild(n); });
-    await w(700);
-    await go(h0.x, h0.y, 56, 1500, { f: function (p, e) { hold(p.x, p.y, lerp(-232, base, e)); } });
-    cup.style.transform = ''; cup.classList.remove('nosteam'); emo('😌', h0.x + 10, h0.y - 110, 50); await w(300);
-    await go(OFF.x, OFF.y, 52, 1200);
-  }
+  /* ฉากทำกาแฟหก/ไดร์/ผ้า ถูกลบตามคำขอ (3 พ.ย. 2026) — เหลือฟังก์ชันว่างไว้ให้ VCActs.run(3) ไม่พัง */
+  async function act3() {}
 
   async function runAct(fn) {
     if (busy) return; busy = true; var my = ++tok;
@@ -1910,10 +1883,10 @@
     return !reduced && !document.documentElement.hasAttribute('data-calm') && !document.hidden && inView && sc.offsetParent !== null && sc.offsetWidth > 300 && !(window.VCSigVid && window.VCSigVid.busy()) && (innerWidth >= 768 || document.body.classList.contains('auth-open')) && !userBusy() && !busy && !sc.classList.contains('doc-hover');
   }
   function scheduler() {
-    var acts = [act1, act2, act3, act4], bag = [], lastPick = -1, last = performance.now(), gap = 5500;
+    var acts = [act1, act2, act4], bag = [], lastPick = -1, last = performance.now(), gap = 5500;
     function pick() {   /* ถุงสุ่ม: ครบทั้ง 3 ฉากก่อนถึงจะวนรอบใหม่ และฉากแรกของรอบใหม่ไม่ซ้ำฉากสุดท้ายของรอบก่อน */
       if (!bag.length) {
-        bag = [0, 1, 2, 3]; for (var i = 3; i > 0; i--) { var k = Math.floor(Math.random() * (i + 1)), t = bag[i]; bag[i] = bag[k]; bag[k] = t; }
+        bag = [0, 1, 2]; for (var i = 2; i > 0; i--) { var k = Math.floor(Math.random() * (i + 1)), t = bag[i]; bag[i] = bag[k]; bag[k] = t; }
         if (bag[0] === lastPick) { var t2 = bag[0]; bag[0] = bag[2]; bag[2] = t2; }
       }
       lastPick = bag.shift(); return lastPick;
