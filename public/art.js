@@ -1028,6 +1028,13 @@ window.VCStepPlay = function (v, fps, onEnd) {
     var finish = function () { window.scrollTo(0, 0); apply(view); mark(view); if (after) after(); if (window.VCMotion && VCMotion.replay) VCMotion.replay(document.querySelector('main')); };
     if (reduce() || opts.instant || !window.requestAnimationFrame) { hideWipe(); finish(); return; }
     hideWipe(); busy = true;
+    if (view === 'desk' && window.VCDeskIntro) {   /* เข้าโต๊ะ: จอมืดลงสั้นๆ แล้วให้ฉากจุดตะเกียงเปิดเอง แทนคลื่นม่วง */
+      var fz = document.createElement('div'); fz.className = 'vc-fadeblack'; document.body.appendChild(fz);
+      requestAnimationFrame(function () { fz.classList.add('on'); });
+      setTimeout(function () { if (my !== seq) { fz.remove(); return; } finish(); hideWipe(); VCDeskIntro.play(true);
+        requestAnimationFrame(function () { fz.classList.remove('on'); setTimeout(function () { fz.remove(); }, 400); }); }, 260);
+      return;
+    }
     runTide('up', 640, NAME[view] || '', function () {
       if (my !== seq) return;
       finish();
@@ -2009,7 +2016,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     var sigStep = null;
     function sigManual() { if (sigStep) return; if (!raf) raf = requestAnimationFrame(function fr() { raf = 0; draw(); if (layer.classList.contains('playing')) raf = requestAnimationFrame(fr); });
       sigStep = VCStepPlay(v, 30, function () { v.dispatchEvent(new Event('ended')); }); }
-    function go() { if (played) return; played = true; place(); layer.classList.add('playing');
+    function go() { if (played) return; if (window.VCDeskIntro && VCDeskIntro.busy()) { setTimeout(go, 200); return; } played = true; place(); layer.classList.add('playing');
       try { if (v.readyState < 1 && v.src) v.load(); } catch (e) {}
       var p; try { p = v.play(); } catch (e) { sigManual(); }
       if (p && p.catch) p.catch(function () { sigManual(); });
@@ -2020,4 +2027,69 @@ window.VCStepPlay = function (v, fps, onEnd) {
     window.VCSigVid = { video: v, busy: function () { return layer.classList.contains('playing'); } };
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { setTimeout(init, 300); }); else setTimeout(init, 300);
+})();
+
+
+/* ===== ฉากเปิด: จุดตะเกียง + กล้องเลื่อนเข้าหาโต๊ะ (3 พ.ย. 2026) =====
+   ครั้งแรกที่เห็นฉากโต๊ะ: มืดสนิท → ตะเกียงจุดติด (กะพริบ) → วงแสงแผ่ออกจากตะเกียงเผยโต๊ะ เอกสาร แก้ว + ฝุ่นในแสง
+   พร้อมกล้องค่อยๆ ถอยจากมุมใกล้ (ซูม 1.2) ลงมาที่มุมปกติ · ครั้งแรกของเครื่อง 2.8 วิ ครั้งต่อไป 1.4 วิ · แตะเพื่อข้าม
+   ลดการเคลื่อนไหว = ไม่เล่น · ระหว่างเล่น มือเซ็นชื่อจะรอ (VCDeskIntro.busy) */
+(function () {
+  'use strict';
+  var busy = false, done = false, ov = null;
+  function reduced() { return (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) || document.documentElement.hasAttribute('data-calm'); }
+  function seen() { try { return localStorage.getItem('vc_intro_seen') === '1'; } catch (e) { return false; } }
+  function mark() { try { localStorage.setItem('vc_intro_seen', '1'); } catch (e) {} }
+  function ez(t) { return 1 - Math.pow(1 - t, 3); }
+  function play(force) {
+    var sc = document.querySelector('.ld-scene'); if (!sc || busy || (done && !force) || reduced()) return;
+    if (!sc.offsetWidth) return;
+    done = true; busy = true;
+    var full = !seen(), D = full ? 2800 : 1400, lamp = sc.querySelector('.ld-lamp'), sr = sc.getBoundingClientRect(), lr = lamp ? lamp.getBoundingClientRect() : sr;
+    var lx = ((lr.left + lr.width / 2 - sr.left) / sr.width * 100).toFixed(1) + '%', ly = ((lr.top + lr.height / 2 - sr.top) / Math.max(1, Math.min(sr.height, innerHeight)) * 100).toFixed(1) + '%';
+    var doc = sc.querySelector('.auth-doc'), dr = doc ? doc.getBoundingClientRect() : sr;
+    var ox = ((dr.left + dr.width / 2 - sr.left) / sr.width * 100).toFixed(1) + '%', oy = ((dr.top + dr.height * .35 - sr.top) / sr.height * 100).toFixed(1) + '%';
+    var prevLamp = sc.getAttribute('data-lamp');
+    sc.classList.add('vc-intro');
+    ov = document.createElement('div'); ov.className = 'vc-intro-ov'; ov.setAttribute('aria-hidden', 'true');
+    ov.style.setProperty('--lx', lx); ov.style.setProperty('--ly', ly);
+    var hgt = Math.min(sr.height, innerHeight + 200); ov.style.height = hgt + 'px';
+    for (var i = 0; i < 18; i++) { var m = document.createElement('i'); m.style.cssText = 'left:calc(' + lx + ' + ' + (Math.random() * 40 - 10).toFixed(1) + '%);top:calc(' + ly + ' + ' + (Math.random() * 30 - 5).toFixed(1) + '%);--dx:' + (Math.random() * 40 - 20).toFixed(0) + 'px;--dy:' + (-30 - Math.random() * 60).toFixed(0) + 'px;animation-delay:' + (D * .35 + Math.random() * D * .4).toFixed(0) + 'ms;animation-duration:' + (2200 + Math.random() * 1800).toFixed(0) + 'ms'; ov.appendChild(m); }
+    sc.appendChild(ov);
+    sc.style.setProperty('--on', '0'); sc.setAttribute('data-lamp', 'off');
+    var kids = [].slice.call(sc.children).filter(function (k) { return k !== ov; });
+    kids.forEach(function (k) { k.style.transformOrigin = ox + ' ' + oy; });
+    var t0 = performance.now(), stopped = false;
+    /* กะพริบตอนจุดไฟ (สัดส่วนของเวลา → ความสว่าง) */
+    var FL = full ? [[0, 0], [.10, 0], [.13, .55], [.16, .05], [.21, .8], [.24, .3], [.30, 1]] : [[0, 0], [.08, .6], [.12, .2], [.2, 1]];
+    function flick(p) { for (var k = 1; k < FL.length; k++) if (p <= FL[k][0]) { var a = FL[k - 1], b = FL[k], u = (p - a[0]) / (b[0] - a[0]); return a[1] + (b[1] - a[1]) * u; } return 1; }
+    function end() {
+      if (stopped) return; stopped = true; busy = false; mark();
+      kids.forEach(function (k) { k.style.transform = ''; k.style.transformOrigin = ''; });
+      sc.style.removeProperty('--on'); if (prevLamp) sc.setAttribute('data-lamp', prevLamp); else sc.removeAttribute('data-lamp');
+      sc.classList.remove('vc-intro'); if (ov) { ov.classList.add('out'); var o = ov; setTimeout(function () { o.remove(); }, 900); ov = null; }
+      sc.removeEventListener('pointerdown', skip, true);
+    }
+    function skip() { end(); }
+    sc.addEventListener('pointerdown', skip, true);
+    (function fr(now) {
+      if (stopped) return;
+      var p = Math.min(1, (now - t0) / D), on = flick(p);
+      sc.style.setProperty('--on', on.toFixed(3));
+      /* วงแสงจากตะเกียง: รัศมีโตตามเวลา */
+      var r = ez(Math.max(0, (p - .12) / .88)); ov.style.setProperty('--r', (r * 150).toFixed(1) + '%'); ov.style.setProperty('--fl', on.toFixed(3));
+      /* กล้อง: เริ่มซูม 1.2 แล้วถอยลงมา 1.0 (ช้าลงตอนท้าย) */
+      var c = ez(p), z = 1.2 - .2 * c, ty = (1 - c) * -18;
+      var tf = 'translateY(' + ty.toFixed(1) + 'px) scale(' + z.toFixed(4) + ')';
+      kids.forEach(function (k) { k.style.transform = tf; });
+      if (p < 1) requestAnimationFrame(fr); else end();
+    })(t0);
+  }
+  window.VCDeskIntro = { play: play, busy: function () { return busy; } };
+  /* ฉากโต๊ะโผล่ครั้งแรก (โหลดตรงที่ #authCard / มือถือเปิดแผ่นบัญชี) */
+  function watch() {
+    var sc = document.querySelector('.ld-scene'); if (!sc) return;
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { if (es[0].isIntersecting && !done) setTimeout(function () { play(false); }, 60); }, { threshold: .25 }).observe(sc);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch); else watch();
 })();
