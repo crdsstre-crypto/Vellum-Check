@@ -342,7 +342,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     '#else',
     'precision mediump float;',
     '#endif',
-    'uniform vec2 uRes;uniform float uTime;uniform vec2 uMouse;uniform float uScroll;uniform float uDim;uniform vec2 uLens;uniform float uLensOn;uniform float uLite;uniform float uEx;uniform vec3 uRip;',
+    'uniform vec2 uRes;uniform float uTime;uniform vec2 uMouse;uniform float uScroll;uniform float uDim;uniform vec2 uLens;uniform float uLensOn;uniform float uLR;uniform float uLite;uniform float uEx;uniform vec3 uRip;',
     'uniform vec3 uC[12];uniform vec3 uR[12];uniform vec3 uU[12];',
     'const int N=12;',
     'const vec3 L=vec3(-.35,.7,.62);',
@@ -567,7 +567,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     '  gFig=vec3(-.54*vis*6.1,-1.7+1.7*gSc,-1.0);',
     '  gFire=vec3(.52*vis*6.1,-1.7+1.8*gSc,-1.4);',
     '  gFlick=.86+.10*sin(uTime*7.3)+.06*sin(uTime*13.1+1.7)+uEx*.32;',
-    '  float d=length(uv-uLens);float LR=.12;float inL=uLensOn*step(d,LR);float k=clamp(d/LR,0.,1.);',
+    '  float d=length(uv-uLens);float LR=uLR;float inL=uLensOn*step(d,LR);float k=clamp(d/LR,0.,1.);',
     '  vec2 uvm=uLens+(uv-uLens)*mix(1.,.50+.50*k*k,inL);',
     '  vec3 col=render(uvm);',
     '  col=col/(1.+col*.55);',
@@ -648,7 +648,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     var buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
     var loc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    var U = {}; ['uRes', 'uTime', 'uMouse', 'uScroll', 'uDim', 'uLens', 'uLensOn', 'uLite', 'uEx', 'uRip', 'uC', 'uR', 'uU'].forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
+    var U = {}; ['uRes', 'uTime', 'uMouse', 'uScroll', 'uDim', 'uLens', 'uLensOn', 'uLR', 'uLite', 'uEx', 'uRip', 'uC', 'uR', 'uU'].forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
 
     /* ฉากอยู่ที่ฉากเปิดในหน้าแรก และย้ายไปเป็นฉากหลังคงที่ (#vcBackdrop) ทุกหน้าอื่น: host = องค์ประกอบที่กำหนดขนาดของแคนวาส */
     var back = document.getElementById('vcBackdrop');
@@ -721,6 +721,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
       gl.uniform1f(U.uDim, small ? 0.6 : 0.5);
       gl.uniform2f(U.uLens, lens.x, lens.y);
       gl.uniform1f(U.uLensOn, (onHome() && sc < .6) ? 1 : 0);
+      gl.uniform1f(U.uLR, window.VCLensR || .12);
       gl.uniform1f(U.uLite, tier > 0 ? 1 : 0);
       if (!still && rip.t0 && (now - rip.t0) / 1000 < 3.2) BURST.age = (now - rip.t0) / 1000; else BURST.age = -1;
       gl.uniform3f(U.uRip, rip.x, rip.y, BURST.age);
@@ -2194,6 +2195,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     if (!hero || hero.__hx) return; hero.__hx = true;
     var mob = matchMedia('(max-width:767px)').matches, calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
     var fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+    var LR = mob ? .08 : .12; window.VCLensR = LR;   /* ขนาดแว่น (สัดส่วนของความสูงฉาก): มือถือเล็กลง */
     var S = mob ? 1.7 : 1.8, BASE = mob ? 9.5 : 12.5, fp = finePrint(mob);
     function layer(cls, html) { var d = document.createElement('div'); d.className = cls; d.setAttribute('aria-hidden', 'true'); if (html) d.innerHTML = html; return d; }
     /* 1) ข้อความเล็กจางๆ ทั้งฉาก + วงไฟฉาย */
@@ -2220,7 +2222,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     var W = 0, H = 0, Rl = 0, Rp = 0;
     function size() {
       W = hero.clientWidth; H = hero.clientHeight; if (!H) return;
-      Rl = .12 * H; Rp = Rl * (mob ? 1.6 : 1.9);
+      Rl = LR * H; Rp = Rl * (mob ? 1.6 : 1.9);
       [base, poolT].forEach(function (n) { n.style.width = W + 'px'; n.style.height = H + 'px'; n.style.fontSize = BASE + 'px'; });
       big.style.width = px(W * S); big.style.height = px(H * S); big.style.fontSize = px(BASE * S);
       pool.style.width = pool.style.height = px(Rp * 2);
