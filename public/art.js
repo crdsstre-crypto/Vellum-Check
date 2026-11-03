@@ -586,7 +586,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
   ].join('\n');
 
   /* ตำแหน่งและการหมุนของแผ่นสัญญาแต่ละแผ่น (คำนวณทุกเฟรมเพื่อให้ลอยเบา ๆ) */
-  var AC = new Float32Array(NS * 3), AR = new Float32Array(NS * 3), AU = new Float32Array(NS * 3);
+  var AC = new Float32Array(NS * 3), AR = new Float32Array(NS * 3), AU = new Float32Array(NS * 3), WO = new Float32Array(NS * 3);
   var BURST = { age: -1, x: 0, y: 0 };   /* คลื่นกระแทกจากการคลิก: age = วินาทีนับจากคลิก (-1 = ไม่มี), x/y = ตำแหน่งโดยประมาณในโลก 3 มิติ */
   function layout(t) {
     var amp = BURST.age >= 0 ? 2.2 * Math.exp(-BURST.age * 1.5) * (1 - Math.exp(-BURST.age * 9)) : 0;
@@ -714,13 +714,21 @@ window.VCStepPlay = function (v, fps, onEnd) {
       }
       layout(t);
       if (window.VCDomSheets) for (var hq = 0; hq < NS; hq++) AC[hq * 3 + 1] = 90;
+      if (window.VCWind && !still) {   /* ลมจากเมาส์: แผ่นกระดาษในฉาก 3D ปลิวหลบแล้วค่อยลอยกลับ */
+        var Wd = window.VCWind, fvw = Math.min(2.3, Math.max(1, .9 / asp)), wx = Wd.ux * 1.12 * fvw * 10, wy = .7 + Wd.uy * 1.12 * fvw * 10;
+        for (var wi = 0; wi < NS; wi++) {
+          var bx = AC[wi * 3] - wx, by = AC[wi * 3 + 1] - wy, bd = Math.sqrt(bx * bx + by * by) + .3, wf = Wd.amp * Math.exp(-bd * bd / 7);
+          WO[wi * 3] += (bx / bd * wf * 1.8 - WO[wi * 3]) * .07; WO[wi * 3 + 1] += (by / bd * wf * 1.8 - WO[wi * 3 + 1]) * .07;
+          AC[wi * 3] += WO[wi * 3]; AC[wi * 3 + 1] += WO[wi * 3 + 1];
+        }
+      }
       gl.uniform2f(U.uRes, W, H);
       gl.uniform1f(U.uTime, t);
       gl.uniform2f(U.uMouse, still ? 0 : P.x, still ? 0 : P.y);
       gl.uniform1f(U.uScroll, still ? 0 : sc);
       gl.uniform1f(U.uDim, small ? 0.6 : 0.5);
       gl.uniform2f(U.uLens, lens.x, lens.y);
-      gl.uniform1f(U.uLensOn, (onHome() && sc < .6) ? 1 : 0);
+      gl.uniform1f(U.uLensOn, (onHome() && sc < .6 && !window.VCLensOff) ? 1 : 0);
       gl.uniform1f(U.uLR, window.VCLensR || .12);
       gl.uniform1f(U.uLite, tier > 0 ? 1 : 0);
       if (!still && rip.t0 && (now - rip.t0) / 1000 < 3.2) BURST.age = (now - rip.t0) / 1000; else BURST.age = -1;
@@ -2284,6 +2292,80 @@ window.VCStepPlay = function (v, fps, onEnd) {
     }
     var lpT = 0; function relayout() { clearTimeout(lpT); lpT = setTimeout(layoutPrint, 250); }
     if (!mob) { layoutPrint(); setTimeout(layoutPrint, 1800); if (document.fonts && document.fonts.ready) document.fonts.ready.then(relayout); addEventListener('resize', relayout); }
+    /* ===== 1) ผงทองตามเมาส์/นิ้ว ===== */
+    var tc = document.createElement('canvas'); tc.className = 'hx-trail'; tc.setAttribute('aria-hidden', 'true'); hero.appendChild(tc);
+    var tx2 = tc.getContext('2d'), TD = Math.min(window.devicePixelRatio || 1, 1.5), PT = [], tRaf = 0, tLast = 0;
+    var spr = document.createElement('canvas'); spr.width = spr.height = 32;
+    (function () { var g = spr.getContext('2d'), gr = g.createRadialGradient(16, 16, 0, 16, 16, 16);
+      gr.addColorStop(0, 'rgba(255,250,225,1)'); gr.addColorStop(.18, 'rgba(255,224,140,.95)'); gr.addColorStop(.45, 'rgba(255,170,60,.35)'); gr.addColorStop(1, 'rgba(255,140,40,0)');
+      g.fillStyle = gr; g.fillRect(0, 0, 32, 32); })();
+    function tsize() { if (!W) return; tc.width = Math.round(W * TD); tc.height = Math.round(H * TD); tc.style.width = W + 'px'; tc.style.height = H + 'px'; }
+    tsize(); if ('ResizeObserver' in window) new ResizeObserver(tsize).observe(hero);
+    var ms = { x: -1e4, y: -1e4, t: 0, sp: 0, have: false };
+    function spawn(x, y, vx, vy, sp) {
+      var n = Math.min(mob ? 5 : 9, 2 + Math.floor(sp / 6));
+      for (var i = 0; i < n && PT.length < 280; i++) {
+        var f = Math.random();
+        PT.push({ x: x - vx * f + R(-4, 4), y: y - vy * f + R(-4, 4), vx: vx * R(.05, .25) + R(-40, 40), vy: vy * R(.05, .25) + R(-55, 15),
+          l: 0, m: R(.6, 1.5), s: R(3, mob ? 7 : 10) * (Math.random() < .15 ? 2 : 1), p: R(0, 6.28) });
+      }
+      if (!tRaf) { tLast = 0; tRaf = requestAnimationFrame(tick); }
+    }
+    function tick(now) {
+      tRaf = 0; var dt = tLast ? Math.min(.05, (now - tLast) / 1000) : .016; tLast = now;
+      tx2.setTransform(TD, 0, 0, TD, 0, 0); tx2.clearRect(0, 0, W, H); tx2.globalCompositeOperation = 'lighter';
+      for (var i = PT.length - 1; i >= 0; i--) {
+        var q = PT[i]; q.l += dt; if (q.l >= q.m) { PT.splice(i, 1); continue; }
+        q.vx *= .95; q.vy = q.vy * .95 + 26 * dt; q.x += q.vx * dt; q.y += q.vy * dt;
+        var a = 1 - q.l / q.m, z = q.s * (.45 + .55 * a);
+        tx2.globalAlpha = a * a * (.55 + .45 * Math.sin(now / 55 + q.p));
+        tx2.drawImage(spr, q.x - z, q.y - z, z * 2, z * 2);
+      }
+      tx2.globalAlpha = 1;
+      if (PT.length) tRaf = requestAnimationFrame(tick); else tx2.clearRect(0, 0, W, H);
+    }
+    addEventListener('pointermove', function (e) {
+      if (calm || !onHome() || !inView) return;
+      var r = hero.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, now = performance.now();
+      if (y < 0 || y > r.height) { ms.have = false; return; }
+      if (ms.have && now - ms.t < 250) { var vx = x - ms.x, vy = y - ms.y, sp = Math.sqrt(vx * vx + vy * vy); ms.sp = ms.sp * .6 + sp * .4; if (sp > 1.5) spawn(x, y, vx, vy, sp); }
+      ms.x = x; ms.y = y; ms.t = now; ms.have = true;
+      if (!mob) { window.VCWind = window.VCWind || { ux: 0, uy: 0, amp: 0 }; var Wd = window.VCWind; Wd.ux = (x - W / 2) / H; Wd.uy = .5 - y / H; Wd.amp = Math.min(1.6, Math.max(Wd.amp, ms.sp / 22)); }
+      kick();
+    }, { passive: true });
+    /* ===== 2) แผ่นสัญญาปลิวหลบเมาส์ ===== */
+    var SH = sheets.map(function () { return { cx: 0, cy: 0, ox: 0, oy: 0, r: 0 }; }), shAt = 0;
+    function readSheets() {
+      var hr = hero.getBoundingClientRect();
+      sheets.forEach(function (s, i) { var b = s.getBoundingClientRect(), o = SH[i]; o.cx = b.left + b.width / 2 - hr.left - o.ox; o.cy = b.top + b.height / 2 - hr.top - o.oy; o.w = b.width; });
+    }
+    /* ===== 3) แว่นขยายเกาะปุ่ม: กรอบทองยืดครอบปุ่ม + แสงวิ้ง ===== */
+    var dock = document.createElement('div'); dock.className = 'hx-dock'; dock.setAttribute('aria-hidden', 'true'); dock.innerHTML = '<i></i><b></b>'; document.body.appendChild(dock);
+    var DOCKQ = '.dx-nav a,.dx-cta,.dx-cta-ghost,.site-header .auth-toggle', docked = null, undockT = 0;
+    function geo(l, t, w, h, rr, pad) { dock.style.left = px(l); dock.style.top = px(t); dock.style.width = px(w); dock.style.height = px(h); dock.style.borderRadius = px(rr); dock.style.setProperty('--bw', px(pad)); }
+    function lensGeo() { var hr = hero.getBoundingClientRect(), d = Rl * 2.2; geo(hr.left + pos.x - Rl * 1.1, hr.top + pos.y - Rl * 1.1, d, d, d / 2, Rl * .1); }
+    function btnGeo(el) { var b = el.getBoundingClientRect(), br = parseFloat(getComputedStyle(el).borderTopLeftRadius) || 0, p = 7; geo(b.left - p, b.top - p, b.width + p * 2, b.height + p * 2, Math.min((b.height + p * 2) / 2, br + p), 2.5); }
+    function dockOn(el) {
+      clearTimeout(undockT);
+      if (docked) docked.classList.remove('hx-dk');
+      if (!dock.classList.contains('on')) { dock.classList.add('nt'); lensGeo(); dock.classList.add('on'); void dock.offsetWidth; dock.classList.remove('nt'); }
+      docked = el; el.classList.add('hx-dk'); btnGeo(el);
+      dock.classList.remove('sh'); void dock.offsetWidth; dock.classList.add('sh');
+      hero.classList.add('hx-docked'); root.classList.add('hx-docking'); window.VCLensOff = true;
+      var b = el.getBoundingClientRect(), hr = hero.getBoundingClientRect(); pos.x = tgt.x = b.left + b.width / 2 - hr.left; pos.y = tgt.y = Math.max(Rl, b.top + b.height / 2 - hr.top);
+    }
+    function dockOff() {
+      if (!docked) return; docked.classList.remove('hx-dk'); docked = null; lensGeo();
+      hero.classList.remove('hx-docked'); root.classList.remove('hx-docking');
+      undockT = setTimeout(function () { dock.classList.remove('on'); window.VCLensOff = false; }, 330);
+    }
+    if (fine && !calm) addEventListener('pointermove', function (e) {
+      if (e.pointerType && e.pointerType !== 'mouse') return;
+      var el = e.target && e.target.closest ? e.target.closest(DOCKQ) : null;
+      if (el && (!onHome() || !inView || el.disabled || el.offsetParent === null)) el = null;
+      if (el !== docked) { if (el) dockOn(el); else dockOff(); }
+    }, { passive: true });
+    addEventListener('scroll', function () { if (docked) btnGeo(docked); }, { passive: true });
     var raf = 0, inView = true, last = 0, t0 = performance.now();
     function frame(now) {
       raf = 0; if (!inView || document.hidden) { last = 0; return; }
@@ -2299,10 +2381,22 @@ window.VCStepPlay = function (v, fps, onEnd) {
       lens.style.transform = 'translate3d(' + px(pos.x - Rl) + ',' + px(pos.y - Rl) + ',0)';
       big.style.transform = 'translate3d(' + px(Rl - pos.x * S) + ',' + px(Rl - pos.y * S) + ',0)';
       stage.style.transform = 'rotateX(' + (-tilt.y * 14).toFixed(2) + 'deg) rotateY(' + (tilt.x * 20).toFixed(2) + 'deg)';
+      if (!calm) {
+        if (now - shAt > 900) { readSheets(); shAt = now; }
+        var act = ms.have && now - ms.t < 1500, Rr = mob ? 150 : 250;
+        for (var si = 0; si < sheets.length; si++) {
+          var o = SH[si], tx = 0, ty = 0;
+          if (act) { var dx = o.cx - ms.x, dy = o.cy - ms.y, dd = Math.sqrt(dx * dx + dy * dy) + 1, rr = Rr + o.w * .4; if (dd < rr) { var f = Math.pow(1 - dd / rr, 1.6) * (mob ? 60 : 120) * (1 + Math.min(1.5, ms.sp / 30)); tx = dx / dd * f; ty = dy / dd * f; } }
+          var ke = (tx || ty) ? .14 : .035; o.ox += (tx - o.ox) * ke; o.oy += (ty - o.oy) * ke; o.r = o.ox * .22 - o.oy * .08;
+          if (Math.abs(o.ox) > .05 || Math.abs(o.oy) > .05 || tx) { sheets[si].style.translate = px(o.ox) + ' ' + px(o.oy); sheets[si].style.rotate = o.r.toFixed(2) + 'deg'; }
+        }
+        ms.sp *= .9; if (window.VCWind) window.VCWind.amp *= .94;
+      }
+      if (docked) btnGeo(docked);
       raf = requestAnimationFrame(frame);
     }
     function kick() { if (!raf && inView) raf = requestAnimationFrame(frame); }
-    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { inView = es[0].isIntersecting; if (inView) kick(); }, { threshold: 0 }).observe(hero);
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { inView = es[0].isIntersecting; if (inView) kick(); else dockOff(); }, { threshold: 0 }).observe(hero);
     document.addEventListener('visibilitychange', kick);
     kick();
     /* เครื่องช้า (ฉาก 3D ลดคุณภาพแล้ว): ตัดเลเยอร์ที่หนักออก เหลือแว่นขยายกับไฟฉาย */
