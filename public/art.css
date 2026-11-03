@@ -2042,3 +2042,11 @@ html.vc-art .auth-doc .ad-face::before{background:none !important}
   html.vc-art .ld-scene .auth-doc-wrap{zoom:.74;padding:205px 80px 56px}
   html.vc-art .ld-scene .ld-lamp{top:-6px;left:-2%;width:175px}
 }
+
+/* มือถือเท่านั้น (3 พ.ย. 2026 รอบ 2): จัดองค์ประกอบใหม่ — ไม่ให้ตะเกียงกับแก้วตั้งสมมาตรเท่ากันสองมุม
+   ตะเกียงเล็กลงและล้นขอบซ้าย, แก้วเล็กลงและล้นขอบขวาต่ำกว่า, เอกสารเอียงเล็กน้อยและขยับขึ้น */
+@media (max-width:767px){
+  html.vc-art .ld-scene .ld-lamp{top:-14px;left:-9%;width:150px}
+  html.vc-art .ld-scene .ld-cup{top:22px;right:-6%;width:124px}
+  html.vc-art .ld-scene .auth-doc-wrap{zoom:.74;padding:196px 74px 64px 84px}
+}
