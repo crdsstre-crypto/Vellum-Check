@@ -2437,7 +2437,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
   'use strict';
   /* ★ แก้ 2 บรรทัดนี้ให้เป็นข้อมูลจริงก่อนเปิดใช้: ชื่อผู้ให้บริการ (บุคคล/บริษัท) และอีเมลติดต่อ */
   var OWNER = '';
-  var EMAIL = '';
+  var EMAIL = 'vellumcheck.support@gmail.com';
   var VERSION = '1.0', EFFECTIVE = '3 พฤศจิกายน 2569', KEY = 'vc_terms_ok', OKV = 'v1.0';
   var who = OWNER || 'ผู้ให้บริการ Vellum Check', mail = EMAIL ? '<a href="mailto:' + EMAIL + '">' + EMAIL + '</a>' : '<mark>[ใส่อีเมลติดต่อ]</mark>';
   var DOCS = {
