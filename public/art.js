@@ -575,7 +575,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     '  float cx=abs(gl_FragCoord.x/uRes.x-.5)*2.;float m=mix(uDim,1.,smoothstep(.2,.95,cx));m=mix(m,1.,inL*.85);col*=m;',
     '  col+=inL*vec3(.035,.038,.045)*(1.-k);',
     '  float rim=uLensOn*smoothstep(.0065,0.,abs(d-LR));float halo=uLensOn*smoothstep(.03,0.,abs(d-LR-.006))*.18;',
-    '  col=mix(col,vec3(.93,.94,.96),rim*.92)+halo*vec3(.7,.72,.76);',
+    '  col=mix(col,vec3(.93,.94,.96),rim*.0)+halo*.0*vec3(.7,.72,.76);',
     '  float ra=uRip.z;float rd2=length(uv-uRip.xy);',
     '  float ring=step(0.,ra)*smoothstep(.022,0.,abs(rd2-ra*.6))*exp(-ra*1.3);',
     '  float ring2=step(.12,ra)*smoothstep(.014,0.,abs(rd2-(ra-.12)*.6))*exp(-ra*1.8);',
@@ -707,11 +707,13 @@ window.VCStepPlay = function (v, fps, onEnd) {
       var P = still ? { x: 0, y: 0 } : mp;
       var t = still ? 3.0 : (fixedT !== null ? fixedT : (now - t0) / 1000), asp = W / H;
       if (still) { lens.x = asp * .12; lens.y = .05; }
+      else if (window.VCLensPx && r.height) { lens.x = (window.VCLensPx.x - r.width / 2) / r.height; lens.y = .5 - window.VCLensPx.y / r.height; }
       else {
         if (now - lens.moved > 6000) { lens.tx = Math.sin(t * .33) * .27 * asp; lens.ty = Math.cos(t * .21) * .15; }
         lens.x += (lens.tx - lens.x) * .12; lens.y += (lens.ty - lens.y) * .12;
       }
       layout(t);
+      if (window.VCDomSheets) for (var hq = 0; hq < NS; hq++) AC[hq * 3 + 1] = 90;
       gl.uniform2f(U.uRes, W, H);
       gl.uniform1f(U.uTime, t);
       gl.uniform2f(U.uMouse, still ? 0 : P.x, still ? 0 : P.y);
@@ -2143,4 +2145,135 @@ window.VCStepPlay = function (v, fps, onEnd) {
   }
   function go() { if (init()) return; var n = 0, t = setInterval(function () { if (init() || ++n > 60) clearInterval(t); }, 400); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+})();
+
+/* ===== ฉากเปิด: ไฟฉายส่องข้อความเล็ก + แว่นขยายทอง + แผ่นสัญญาลอย 3D ===== */
+(function () {
+  'use strict';
+  var CL = [
+    ['ข้อ 7.', 'หากผิดนัดชำระแม้เพียงวันเดียว ผู้เช่าตกลงชำระ', 'ค่าปรับร้อยละ 300 ต่อปี', 'ของยอดค้างทั้งหมด'],
+    ['ข้อ 12.', 'สัญญานี้', 'ต่ออายุอัตโนมัติทุก 12 เดือน', 'เว้นแต่จะแจ้งยกเลิกเป็นหนังสือล่วงหน้าไม่น้อยกว่า 90 วัน'],
+    ['ข้อ 4.2', 'ผู้เช่าได้วางเงินประกันไว้แล้ว ซึ่ง', 'ไม่สามารถขอคืนได้ไม่ว่ากรณีใดๆ', ''],
+    ['ข้อ 9.', 'ผู้ให้บริการ', 'มีสิทธิ์แก้ไขเงื่อนไขได้ฝ่ายเดียว', 'โดยไม่ต้องแจ้งให้ผู้ใช้บริการทราบล่วงหน้า'],
+    ['ข้อ 15.', 'ผู้กู้ยินยอมให้', 'หักเงินจากบัญชีเงินเดือนได้ทันที', 'โดยไม่ต้องขอความยินยอมอีก'],
+    ['ข้อ 3.', 'กรณียกเลิกก่อนครบกำหนด', 'ค่าธรรมเนียมเท่ากับค่าบริการคงเหลือทั้งหมด', 'ตามอัตราที่บริษัทกำหนด'],
+    ['ข้อ 18.', 'ข้อมูลส่วนบุคคลของท่าน', 'อาจถูกเปิดเผยแก่บริษัทในเครือและพันธมิตร', 'เพื่อวัตถุประสงค์ทางการตลาด'],
+    ['ข้อ 21.', 'ผู้ค้ำประกัน', 'ต้องรับผิดร่วมกับลูกหนี้อย่างลูกหนี้ร่วม', 'โดยสละสิทธิ์ทุกประการ'],
+    ['ข้อ 6.', 'หากเกิดข้อพิพาท ให้ใช้', 'อนุญาโตตุลาการที่บริษัทเป็นผู้เลือก', 'และให้ถือคำชี้ขาดเป็นที่สุด'],
+    ['ข้อ 11.', 'ผู้รับจ้าง', 'ห้ามทำงานกับคู่แข่งเป็นเวลา 5 ปี', 'นับแต่วันสิ้นสุดสัญญา'],
+    ['ข้อ 2.', 'ค่าบริการค้างชำระ', 'คิดดอกเบี้ยทบต้นรายวัน', 'จนกว่าจะชำระครบถ้วน'],
+    ['ข้อ 14.', 'ผู้เช่าต้อง', 'รับผิดชอบค่าซ่อมแซมโครงสร้างอาคารทั้งหมด', 'แม้ความเสียหายเกิดจากสภาพการใช้งานปกติ'],
+    ['ข้อ 5.', 'บริษัท', 'ไม่รับผิดชอบความเสียหายใดๆ ทั้งสิ้น', 'ไม่ว่าทางตรงหรือทางอ้อม'],
+    ['ข้อ 19.', 'การไม่ใช้สิทธิ์ของบริษัท', 'ไม่ถือเป็นการสละสิทธิ์', 'และบริษัทอาจเรียกร้องย้อนหลังได้ตลอดเวลา']
+  ];
+  var FILL = ['ทั้งสองฝ่ายได้อ่านและเข้าใจข้อความในสัญญานี้โดยตลอดแล้ว จึงลงลายมือชื่อไว้เป็นสำคัญต่อหน้าพยาน',
+    'ภายใต้บังคับแห่งเงื่อนไขในสัญญานี้ คู่สัญญาตกลงปฏิบัติตามข้อกำหนดที่ระบุไว้ในเอกสารแนบท้าย',
+    'ให้ถือว่าเอกสารแนบท้ายเป็นส่วนหนึ่งของสัญญานี้ และมีผลบังคับใช้เช่นเดียวกับข้อความในสัญญา',
+    'การบอกกล่าวใดๆ ให้ทำเป็นหนังสือ และส่งไปยังที่อยู่ของคู่สัญญาตามที่ระบุไว้ข้างต้น'];
+  function R(a, b) { return a + Math.random() * (b - a); }
+  function px(v) { return v.toFixed(1) + 'px'; }
+  function finePrint(mob) {
+    var cols = mob ? 2 : 4, rows = mob ? 7 : 5, h = '', k = 0, i, j;
+    for (j = 0; j < rows; j++) for (i = 0; i < cols; i++) {
+      var c = CL[k % CL.length], f = FILL[k % FILL.length]; k++;
+      var x = (i + .08 + Math.random() * .2) / cols * 100 - (mob ? 4 : 1), y = (j + .1 + Math.random() * .25) / rows * 100 - 2;
+      h += '<p style="left:' + x.toFixed(1) + '%;top:' + y.toFixed(1) + '%;rotate:' + R(-2.5, 2.5).toFixed(1) + 'deg">' + f + ' <em>' + c[0] + '</em> ' + c[1] + ' <b>' + c[2] + '</b> ' + c[3] + '</p>';
+    }
+    return h;
+  }
+  function sheetHTML(n) {
+    var hl = n % 3 === 0 ? '<i class="hp-hl" style="top:' + R(42, 62).toFixed(0) + '%"></i>' : '';
+    var sig = '<svg class="hp-sig" viewBox="0 0 120 40" aria-hidden="true"><path d="M4 30 C14 6 22 6 20 24 S30 34 38 16 S48 10 50 26 S62 30 70 14 S84 8 86 24 S100 30 116 12" fill="none" stroke="#2b2a4a" stroke-width="2.2" stroke-linecap="round"/></svg>';
+    var seal = n % 2 ? '<i class="hp-seal"></i>' : '';
+    return '<div class="hx-pg"><i class="hp-h"></i><i class="hp-l"></i>' + hl + sig + seal + '<i class="hp-lt"></i></div>';
+  }
+  function init() {
+    var root = document.documentElement, hero = document.querySelector('main > .hero');
+    if (!hero || hero.__hx) return; hero.__hx = true;
+    var mob = matchMedia('(max-width:767px)').matches, calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+    var S = mob ? 1.7 : 1.8, BASE = mob ? 9.5 : 12.5, fp = finePrint(mob);
+    function layer(cls, html) { var d = document.createElement('div'); d.className = cls; d.setAttribute('aria-hidden', 'true'); if (html) d.innerHTML = html; return d; }
+    /* 1) ข้อความเล็กจางๆ ทั้งฉาก + วงไฟฉาย */
+    var base = layer('hx-fine hx-base', fp);
+    var pool = layer('hx-pool'), poolT = layer('hx-fine hx-lit', fp); pool.appendChild(poolT);
+    /* 3) แผ่นสัญญาลอย 3D */
+    var sw = layer('hx-sheets'), stage = layer('hx-stage'); sw.appendChild(stage);
+    var spots = mob ? [[-6, 26, 74, -120], [78, 30, 66, -300], [-12, 92, 92, 40], [84, 96, 78, -60]]
+      : [[5, 14, 140, -80], [7, 60, 165, 40], [22, 80, 120, -340], [74, 9, 130, -280], [86, 44, 160, 20], [66, 76, 112, -420], [36, 2, 90, -560]];
+    var sheets = spots.map(function (p, n) {
+      var e = layer('hx-sheet' + (p[3] < -250 ? ' far' : ''), sheetHTML(n));
+      e.style.cssText = 'left:' + p[0] + '%;top:' + p[1] + '%;width:' + p[2] + 'px;font-size:' + (p[2] / 12).toFixed(1) + 'px;transform:translateZ(' + p[3] + 'px) rotateZ(' + R(-24, 24).toFixed(0) + 'deg) rotateX(' + R(-18, 18).toFixed(0) + 'deg) rotateY(' + R(-30, 30).toFixed(0) + 'deg)';
+      var pg = e.firstChild; pg.style.cssText = '--d:' + R(9, 15).toFixed(1) + 's;--w:-' + R(0, 15).toFixed(1) + 's;--fy:' + px(R(-26, -12)) + ';--fr:' + R(4, 9).toFixed(1) + 'deg';
+      stage.appendChild(e); return e;
+    });
+    /* 2) แว่นขยาย: เลนส์ (ข้อความขยาย) + กระจก + ขอบทอง + ด้าม */
+    var lens = layer('hx-lens'), lin = layer('hx-lin'), big = layer('hx-fine hx-big', fp);
+    lin.appendChild(big); lens.appendChild(layer('hx-lsh')); lens.appendChild(layer('hx-handle', '<i></i>')); lens.appendChild(lin); lens.appendChild(layer('hx-glass')); lens.appendChild(layer('hx-rim'));
+    var after = hero.querySelector('.hero-field') || hero.querySelector('.hero-3d');
+    var ref = after ? after.nextSibling : hero.firstChild;
+    [base, pool, sw, lens].forEach(function (n) { hero.insertBefore(n, ref); });
+    window.VCDomSheets = true; root.classList.add('hx-on');
+
+    var W = 0, H = 0, Rl = 0, Rp = 0;
+    function size() {
+      W = hero.clientWidth; H = hero.clientHeight; if (!H) return;
+      Rl = .12 * H; Rp = Rl * (mob ? 1.6 : 2.4);
+      [base, poolT].forEach(function (n) { n.style.width = W + 'px'; n.style.height = H + 'px'; n.style.fontSize = BASE + 'px'; });
+      big.style.width = px(W * S); big.style.height = px(H * S); big.style.fontSize = px(BASE * S);
+      pool.style.width = pool.style.height = px(Rp * 2);
+      lens.style.width = lens.style.height = px(Rl * 2);
+      lens.style.setProperty('--R', px(Rl));
+    }
+    size(); if ('ResizeObserver' in window) new ResizeObserver(size).observe(hero); else addEventListener('resize', size);
+
+    var pos = { x: 0, y: 0 }, tgt = { x: 0, y: 0 }, moved = -1e9, seen = false, tilt = { x: 0, y: 0, tx: 0, ty: 0 }, ori = null;
+    pos.x = tgt.x = W / 2 + .12 * H; pos.y = tgt.y = H / 2 - .05 * H;
+    window.VCLensPx = pos;
+    function onHome() { var v = root.getAttribute('data-view'); return v === null || v === 'home'; }
+    function mv(e) {
+      if (!onHome()) return; var r = hero.getBoundingClientRect();
+      if (e.clientY < r.top || e.clientY > r.bottom) return;
+      tgt.x = e.clientX - r.left; tgt.y = e.clientY - r.top; moved = performance.now();
+      tilt.tx = e.clientX / innerWidth - .5; tilt.ty = e.clientY / innerHeight - .5; kick();
+    }
+    addEventListener('pointermove', mv, { passive: true }); addEventListener('pointerdown', mv, { passive: true });
+    addEventListener('deviceorientation', function (e) {
+      if (e.gamma == null) return; if (!ori) ori = { g: e.gamma, b: e.beta };
+      tilt.tx = Math.max(-.5, Math.min(.5, (e.gamma - ori.g) / 40)); tilt.ty = Math.max(-.5, Math.min(.5, (e.beta - ori.b) / 40)); kick();
+    }, { passive: true });
+    /* คลิกบนฉาก: แผ่นสัญญากระเด็นออกจากจุดคลิกแล้วลอยกลับ */
+    addEventListener('pointerdown', function (e) {
+      if (calm || !onHome() || !document.body.animate) return;
+      var r = hero.getBoundingClientRect(); if (e.clientY < r.top || e.clientY > r.bottom) return;
+      sheets.forEach(function (s) {
+        var b = s.getBoundingClientRect(), dx = b.left + b.width / 2 - e.clientX, dy = b.top + b.height / 2 - e.clientY, d = Math.sqrt(dx * dx + dy * dy) + 60, f = Math.min(1, 380 / d) * (mob ? 70 : 140);
+        try { s.animate([{ translate: '0 0' }, { translate: px(dx / d * f) + ' ' + px(dy / d * f), offset: .22 }, { translate: '0 0' }], { duration: 1600, easing: 'cubic-bezier(.2,.8,.3,1)', composite: 'add' }); } catch (er) {}
+      });
+    }, { passive: true });
+
+    var raf = 0, inView = true, last = 0, t0 = performance.now();
+    function frame(now) {
+      raf = 0; if (!inView || document.hidden) { last = 0; return; }
+      var dt = last ? Math.min(64, now - last) : 16.7; last = now;
+      var k = 1 - Math.pow(1 - .12, dt / 16.7), t = (now - t0) / 1000;
+      if (now - moved > 6000 && !calm) { tgt.x = W / 2 + .27 * W * Math.sin(t * .33); tgt.y = H / 2 - .15 * H * Math.cos(t * .21); }
+      if (!fine && !ori && !calm) { tilt.tx = Math.sin(t * .27) * .35; tilt.ty = Math.cos(t * .19) * .25; }
+      pos.x += (tgt.x - pos.x) * k; pos.y += (tgt.y - pos.y) * k;
+      tilt.x += (tilt.tx - tilt.x) * k * .5; tilt.y += (tilt.ty - tilt.y) * k * .5;
+      pool.style.transform = 'translate3d(' + px(pos.x - Rp) + ',' + px(pos.y - Rp) + ',0)';
+      poolT.style.transform = 'translate3d(' + px(Rp - pos.x) + ',' + px(Rp - pos.y) + ',0)';
+      lens.style.transform = 'translate3d(' + px(pos.x - Rl) + ',' + px(pos.y - Rl) + ',0)';
+      big.style.transform = 'translate3d(' + px(Rl - pos.x * S) + ',' + px(Rl - pos.y * S) + ',0)';
+      stage.style.transform = 'rotateX(' + (-tilt.y * 14).toFixed(2) + 'deg) rotateY(' + (tilt.x * 20).toFixed(2) + 'deg)';
+      raf = requestAnimationFrame(frame);
+    }
+    function kick() { if (!raf && inView) raf = requestAnimationFrame(frame); }
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { inView = es[0].isIntersecting; if (inView) kick(); }, { threshold: 0 }).observe(hero);
+    document.addEventListener('visibilitychange', kick);
+    kick();
+    /* เครื่องช้า (ฉาก 3D ลดคุณภาพแล้ว): ตัดเลเยอร์ที่หนักออก เหลือแว่นขยายกับไฟฉาย */
+    setTimeout(function () { var v = window.VCScene; if (v && (v.tier >= 2 || (v.fps && v.fps < 24))) root.classList.add('hx-lite'); }, 4500);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
