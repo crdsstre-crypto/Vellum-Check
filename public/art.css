@@ -2051,20 +2051,20 @@ html.vc-art .auth-doc .ad-face::before{background:none !important}
   html.vc-art .ld-scene .auth-doc-wrap{zoom:.74;padding:196px 74px 64px 84px}
 }
 
-/* มือถือ: โคมไฟมีชีวิตขึ้น — แสงกะพริบไหวแบบเปลวไฟ + วงแสงบนโต๊ะเต้นเบาๆ (ปิดเมื่อตั้งลดการเคลื่อนไหว) */
-@media (max-width:767px) and (prefers-reduced-motion:no-preference){
-  html.vc-art .ld-scene .ld-lamp{animation:vcLampFlick 3.2s ease-in-out infinite}
-  html.vc-art .ld-scene .ld-glow{animation:vcGlowBreath 4.6s ease-in-out infinite;transform-origin:20% 15%}
-  html.vc-art .ld-scene .ld-lamp .lp-flame,html.vc-art .ld-scene .ld-lamp .lp-core{animation-duration:.9s !important}
-}
-@keyframes vcLampFlick{0%,100%{filter:drop-shadow(0 6px 5px rgba(0,0,0,.55)) drop-shadow(0 0 14px rgba(255,170,70,.45))}
-  18%{filter:drop-shadow(0 6px 5px rgba(0,0,0,.55)) drop-shadow(0 0 24px rgba(255,180,80,.75))}
-  22%{filter:drop-shadow(0 6px 5px rgba(0,0,0,.55)) drop-shadow(0 0 10px rgba(255,160,60,.35))}
-  47%{filter:drop-shadow(0 6px 5px rgba(0,0,0,.55)) drop-shadow(0 0 28px rgba(255,185,90,.8))}
-  71%{filter:drop-shadow(0 6px 5px rgba(0,0,0,.55)) drop-shadow(0 0 16px rgba(255,170,70,.5))}}
-@keyframes vcGlowBreath{0%,100%{opacity:.85;transform:scale(1)}40%{opacity:1;transform:scale(1.06)}62%{opacity:.78;transform:scale(.98)}}
 
 /* มือถือ: หมุนแก้วทั้งชุด (รวมวิดีโอมือ 3D ที่อยู่ในแก้ว) ให้แขนยื่นออกไปทางขอบบน/ขวาของจอ ไม่พาดทับเอกสาร */
 @media (max-width:767px){html.vc-art .ld-scene .ld-cup{transform:rotate(var(--cupRot,-60deg))}}
 /* มือถือ: mobile-polish.css บีบ canvas ให้กว้างไม่เกินแก้ว (max-width:100%) → ภาพมือ 3D ถูกบีบ/เลื่อน ผิดตำแหน่ง */
 .ld-cup .ld-hand3d,.ld-cup .ld-icevid,.ad-vidlayer canvas,.ad-vidlayer img{max-width:none !important}
+/* มือถือ: ใช้รอบตะเกียงแบบเดียวกับคอม (ldLamp 12 วิ: ไฟกระพริบดับ-ติดเอง) · กดตะเกียงเพื่อเปิด/ปิดยังทำงาน (data-lamp ทับ) */
+@media (max-width:767px) and (prefers-reduced-motion:no-preference){
+  html.vc-art .ld-scene:not([data-lamp]){animation:ldLamp 12s linear infinite !important}
+}
+/* มือถือ: เหมือนคอม — กดตะเกียงเปิด/ปิดได้ (ไฟค่อยๆ หรี่ 0.4 วิ) และเอกสารมืดลงตามไฟ */
+@media (max-width:767px){
+  html.vc-art .ld-scene{transition:--on .4s}
+  html.vc-art .ld-scene[data-lamp="on"]{animation:none !important;--on:1}
+  html.vc-art .ld-scene[data-lamp="off"]{animation:none !important;--on:0}
+  html.vc-art .ld-scene .ld-lamp{filter:drop-shadow(0 6px 5px rgba(0,0,0,.55)) drop-shadow(0 0 calc(18px * var(--on)) rgba(255,170,70,calc(.55 * var(--on))))}
+  html.vc-art .ld-scene .ad-pose{filter:drop-shadow(0 2px 2px rgba(0,0,0,.55)) drop-shadow(0 10px 14px rgba(0,0,0,.45)) brightness(calc(.62 + .38 * var(--on)))}
+}
