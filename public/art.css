@@ -2096,7 +2096,3 @@ html.vc-art .ld-scene.vc-intro{overflow:hidden;animation:none !important;--on:1}
 @keyframes vcMote{0%{opacity:0;transform:translate(0,0)}20%{opacity:.9}100%{opacity:0;transform:translate(var(--dx),var(--dy))}}
 @media (prefers-reduced-motion:reduce){.vc-intro-ov{display:none}}
 
-/* กระเป๋าหนังสีดำแบบ 3D (เรนเดอร์จากด้านบน แสงจากตะเกียง) แทนภาพเดิมที่ต้องบีบ/บิดให้ดูเหมือนวางราบ */
-.ld-bag svg image{filter:none !important}
-@media (min-width:768px){html.vc-art .ld-scene .ld-bag{left:-2%;bottom:6%;width:clamp(300px,27vw,420px);transform:rotate(-14deg);transform-origin:50% 50%}}
-@media (max-width:767px){html.vc-art .ld-scene .ld-bag{left:-14%;bottom:2px;width:170px;transform:rotate(-14deg);transform-origin:50% 50%;opacity:1}}
