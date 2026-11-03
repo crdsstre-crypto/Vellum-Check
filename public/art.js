@@ -666,7 +666,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     var weak = !soft && /vega\s*[1-9]\b|intel.*(hd|uhd|iris)|mali|adreno|powervr|radeon\(tm\) graphics/i.test(rend) && !/[?&]hq\b/.test(location.search);   /* การ์ดจอในตัวที่อ่อน: เริ่มที่โหมดเบา */
     var tier = soft ? 2 : (weak ? 1 : 0), fpsNow = 0, minScale = soft ? 0.3 : (weak ? 0.3 : 0.36);
     var scale = soft ? 0.4 : (weak ? 0.4 : (small ? 0.55 : 0.6)), running = false, inView = true, t0 = performance.now(), raf = 0, W = 0, H = 0;
-    var frames = 0, acc = 0, last = 0, lost = false;
+    var frames = 0, acc = 0, last = 0, lost = false, skipF = false;
     var lens = { x: .12, y: .06, tx: .12, ty: .06, moved: -1e9 };
     var mp = { x: 0, y: 0, tx: 0, ty: 0 }, fixedT = null, exH = 0, pulseV = 0, rip = { x: 0, y: 0, t0: 0 };
     /* คลิกบนฉากเปิด: วงคลื่นแผ่ออกจากจุดคลิก และแผ่นสัญญากระเด็นออก (ข้ามถ้าเครื่องช้า/ลดการเคลื่อนไหว) */
@@ -733,6 +733,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     }
     function loop(now) {
       raf = 0; if (!running || lost) return;
+      if (tier === 3) { skipF = !skipF; if (skipF) { raf = requestAnimationFrame(loop); return; } }
       draw(now, false);
       if (last) {
         var dtm = now - last; acc += dtm; frames++;
@@ -740,14 +741,15 @@ window.VCStepPlay = function (v, fps, onEnd) {
           var avg = acc / frames; fpsNow = 1000 / avg;
           if (avg > 36 && scale > minScale) { scale = Math.max(minScale, scale * 0.75); size(); }
           else if (avg > 45 && tier < 2) { tier++; minScale = 0.3; }
-          else if (avg > 110 && tier >= 2) { tier = 3; running = false; draw(performance.now(), true); }   /* ช้ามากแม้โหมดเบา: หยุดฉากเป็นภาพนิ่ง ให้หน้าเว็บยังลื่น */
+          else if (avg > 110 && tier === 2) { tier = 3; minScale = 0.2; scale = Math.min(scale, 0.24); size(); }   /* ช้ามาก: ยังเล่นต่อ แต่ภาพเล็กลงและวาดเฟรมเว้นเฟรม (ฉากไม่หยุดนิ่ง) */
+          else if (avg > 260 && tier === 3) { tier = 4; running = false; draw(performance.now(), true); }   /* ช้ามากแม้โหมดเบา: หยุดฉากเป็นภาพนิ่ง ให้หน้าเว็บยังลื่น */
           frames = 0; acc = 0;
         } else if (acc >= 600 || frames >= 12) { fpsNow = 1000 * frames / acc; frames = 0; acc = 0; }
       }
       last = now; raf = requestAnimationFrame(loop);
     }
     function go() {
-      if (lost || tier === 3) return;
+      if (lost || tier === 4) return;
       if (mq && mq.matches) { running = false; draw(performance.now(), true); return; }
       if (!running && inView && !document.hidden) { running = true; last = 0; if (!raf) raf = requestAnimationFrame(loop); }
     }
