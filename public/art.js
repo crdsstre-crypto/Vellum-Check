@@ -2366,6 +2366,33 @@ window.VCStepPlay = function (v, fps, onEnd) {
       if (el !== docked) { if (el) dockOn(el); else dockOff(); }
     }, { passive: true });
     addEventListener('scroll', function () { if (docked) btnGeo(docked); }, { passive: true });
+    /* ===== หัวเรื่อง: 1) แสงไฟเตาผิงส่องจากขวา  2) โฟกัสแบบกล้อง (ฉากหลังตรงกลางเบลอ+มืดลง) ===== */
+    var title = hero.querySelector('.hero-title'), leadEl = hero.querySelector('.hero-lead'), fire = null;
+    var focus = layer('hx-focus'); hero.insertBefore(focus, sw);
+    function placeFocus() {
+      if (!title) return; var hr = hero.getBoundingClientRect(), a = title.getBoundingClientRect(), b = leadEl ? leadEl.getBoundingClientRect() : a;
+      var rg = document.createRange(); try { rg.selectNodeContents(title); var q = Array.prototype.filter.call(rg.getClientRects(), function (x) { return x.width > 2 && x.width < innerWidth * .8; }); if (q.length) { var L = 1e9, Rr2 = -1e9; q.forEach(function (x) { L = Math.min(L, x.left); Rr2 = Math.max(Rr2, x.right); }); a = { left: L, right: Rr2, top: a.top, bottom: a.bottom }; } } catch (e) {}
+      var l = Math.min(a.left, b.left), r = Math.max(a.right, b.right), t = a.top, bt = Math.max(a.bottom, b.bottom), w = (r - l) * (mob ? 1.15 : 1.45), h = (bt - t) * 1.7;
+      focus.style.width = px(w); focus.style.height = px(h);
+      focus.style.transform = 'translate3d(' + px((l + r) / 2 - hr.left - w / 2) + ',' + px((t + bt) / 2 - hr.top - h / 2) + ',0)';
+    }
+    placeFocus(); setTimeout(placeFocus, 1500); setTimeout(placeFocus, 3500); addEventListener('resize', function () { setTimeout(placeFocus, 200); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeFocus);
+    function makeFire() {
+      if (!title || fire) return;
+      fire = document.createElement('span'); fire.className = 'ht-fire'; fire.setAttribute('aria-hidden', 'true');
+      Array.prototype.forEach.call(title.childNodes, function (n) { if (n !== fire) fire.appendChild(n.cloneNode(true)); });
+      Array.prototype.forEach.call(fire.querySelectorAll('[style]'), function (n) { n.style.transform = 'none'; n.style.translate = 'none'; n.style.opacity = '1'; n.style.transition = 'none'; });
+      Array.prototype.forEach.call(fire.querySelectorAll('[id]'), function (n) { n.removeAttribute('id'); });
+      var cs = getComputedStyle(title);
+      ['display', 'flexDirection', 'flexWrap', 'alignItems', 'justifyContent', 'textAlign', 'rowGap', 'columnGap', 'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft', 'lineHeight', 'letterSpacing', 'gridTemplateColumns', 'justifyItems'].forEach(function (k) { try { fire.style[k] = cs[k]; } catch (e) {} });
+      if (fire.style.display === 'inline') fire.style.display = 'block';
+      title.appendChild(fire); title.classList.add('has-fire');
+    }
+    if (title) {
+      setTimeout(makeFire, 2600);
+      new MutationObserver(function () { if (fire) fire.classList.toggle('off', !!title.querySelector(':scope > [data-split]:not(.is-in)')); }).observe(title, { attributes: true, subtree: true, attributeFilter: ['class'] });
+    }
     var raf = 0, inView = true, last = 0, t0 = performance.now();
     function frame(now) {
       raf = 0; if (!inView || document.hidden) { last = 0; return; }
