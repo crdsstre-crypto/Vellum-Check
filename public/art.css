@@ -2335,3 +2335,6 @@ html.vd-lock{overflow:hidden}
 
 /* ลดแล็กหน้าเข้าสู่ระบบ: ตะเกียงกะพริบเป็นขั้น (4 ขั้นต่อช่วง) แทนไล่ทุกเฟรม — แต่ละขั้นทำให้วาดฉากใหม่ครั้งเดียว ไม่ใช่ทุกเฟรม */
 html.vc-art .ld-scene,html.vc-art .ld-scene:not([data-lamp]){animation-timing-function:steps(4,end) !important}
+
+/* มือถือ: กระดาษเข้าสู่ระบบเล็กลงนิด ให้เห็นลายเซ็นกับมือโดยไม่ต้องเลื่อน */
+@media (max-width:767px){html.vc-art .ld-scene .auth-doc-wrap{zoom:.64;padding:160px 74px 60px 84px}}
