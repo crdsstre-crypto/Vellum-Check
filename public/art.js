@@ -2067,7 +2067,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     if (reduced || document.documentElement.hasAttribute('data-calm')) { finish(); return; }
     v.addEventListener('ended', function () { draw(); v.pause(); layer.classList.remove('playing'); layer.classList.add('held');
       /* มือค้างอยู่บนกระดาษ (ไม่จาง) จนกว่ามือจะไปหยิบกาแฟ แล้วจึงเหลือแต่ลายเซ็น */
-      var sc = layer.closest('.ld-scene'); if (sc) new MutationObserver(function () { if (sc.classList.contains('acts-on')) finish(); }).observe(sc, { attributes: true, attributeFilter: ['class'] }); });
+      var sc = layer.closest('.ld-scene'); if (sc) { if (sc.classList.contains('acts-on')) finish(); new MutationObserver(function () { if (sc.classList.contains('acts-on')) finish(); }).observe(sc, { attributes: true, attributeFilter: ['class'] }); } });
     var sigStep = null;
     function sigManual() { if (sigStep) return; if (!raf) raf = requestAnimationFrame(function fr() { raf = 0; draw(); if (layer.classList.contains('playing')) raf = requestAnimationFrame(fr); });
       sigStep = VCStepPlay(v, 30, function () { v.dispatchEvent(new Event('ended')); }); }
@@ -2079,7 +2079,15 @@ window.VCStepPlay = function (v, fps, onEnd) {
     setTimeout(place, 1000);
     if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { if (es[0].isIntersecting && !document.hidden) setTimeout(go, 900); }, { threshold: .3 }).observe(doc);
     else setTimeout(go, 1200);
-    window.VCSigVid = { video: v, busy: function () { return layer.classList.contains('playing'); } };
+    /* ฉากมือหยิบกาแฟจะเริ่มได้ก็ต่อเมื่อเซ็นชื่อเสร็จแล้ว (ไม่ให้มือ 2 มือโผล่พร้อมกัน) · กันค้าง: ถ้าวิดีโอเซ็นไม่เล่นภายใน 15 วินาทีหลังเห็นฉาก ให้ถือว่าเสร็จ */
+    var sigT0 = 0;
+    window.VCSigVid = { video: v, busy: function () {
+      if (layer.classList.contains('held') || layer.classList.contains('done')) return false;
+      if (layer.classList.contains('playing')) return true;
+      var vis = layer.offsetParent !== null; if (!vis) return true;
+      if (!sigT0) sigT0 = performance.now();
+      return performance.now() - sigT0 < 15000;
+    } };
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { setTimeout(init, 300); }); else setTimeout(init, 300);
 })();
