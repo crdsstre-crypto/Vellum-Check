@@ -2309,8 +2309,8 @@ window.VCStepPlay = function (v, fps, onEnd) {
       if (calm || !onHome() || !document.body.animate) return;
       var r = hero.getBoundingClientRect(); if (e.clientY < r.top || e.clientY > r.bottom) return;
       sheets.forEach(function (s) {
-        var b = s.getBoundingClientRect(), dx = b.left + b.width / 2 - e.clientX, dy = b.top + b.height / 2 - e.clientY, d = Math.sqrt(dx * dx + dy * dy) + 60, f = Math.min(1, 380 / d) * (mob ? 70 : 140);
-        try { s.animate([{ translate: '0 0' }, { translate: px(dx / d * f) + ' ' + px(dy / d * f), offset: .22 }, { translate: '0 0' }], { duration: 1600, easing: 'cubic-bezier(.2,.8,.3,1)', composite: 'add' }); } catch (er) {}
+        var b = s.getBoundingClientRect(), dx = b.left + b.width / 2 - e.clientX, dy = b.top + b.height / 2 - e.clientY, d = Math.sqrt(dx * dx + dy * dy) + 60, f = Math.min(1, 380 / d) * (mob ? 16 : 30);
+        try { s.animate([{ translate: '0 0' }, { translate: px(dx / d * f) + ' ' + px(dy / d * f), offset: .22 }, { translate: '0 0' }], { duration: 1300, easing: 'cubic-bezier(.3,.7,.3,1)', composite: 'add' }); } catch (er) {}
       });
     }, { passive: true });
 
@@ -2384,7 +2384,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
       kick();
     }, { passive: true });
     /* ===== 2) แผ่นสัญญาปลิวหลบเมาส์ ===== */
-    var SH = sheets.map(function () { return { cx: 0, cy: 0, ox: 0, oy: 0, r: 0 }; }), shAt = 0;
+    var SH = sheets.map(function (s, i) { var z = spots[i][3]; return { cx: 0, cy: 0, ox: 0, oy: 0, r: 0, a: 0, v: 0, ax: 1, ay: 0, d: Math.max(.25, Math.min(1.25, (z + 600) / 520)) }; }), shAt = 0;
     function readSheets() {
       var hr = hero.getBoundingClientRect();
       sheets.forEach(function (s, i) { var b = s.getBoundingClientRect(), o = SH[i]; o.cx = b.left + b.width / 2 - hr.left - o.ox; o.cy = b.top + b.height / 2 - hr.top - o.oy; o.w = b.width; });
@@ -2463,12 +2463,18 @@ window.VCStepPlay = function (v, fps, onEnd) {
       stage.style.transform = 'rotateX(' + (-tilt.y * 14).toFixed(2) + 'deg) rotateY(' + (tilt.x * 20).toFixed(2) + 'deg)';
       if (!calm) {
         if (now - shAt > 900) { readSheets(); shAt = now; }
-        var act = ms.have && now - ms.t < 1500, Rr = mob ? 150 : 250;
+        /* แผ่นสัญญา: (2) เลื่อนตามระยะลึก — แผ่นใกล้ขยับมาก แผ่นไกลขยับน้อย ไปทางเดียวกันเสมอ จึงไม่ชน/ไม่กองรวม
+           (1) ลมจากเมาส์ — แผ่นไม่ย้ายที่ แค่เอียงพลิ้วตามแรงลมแล้วสปริงนิ่งกลับ  (4) ขยับได้ไม่เกินระยะที่กำหนด แผ่นอยู่ในโซนขอบตลอด */
+        var act = ms.have && now - ms.t < 900, Rr = mob ? 140 : 230, kd = dt / 16.7, PX = mob ? 18 : 34, PY = mob ? 14 : 24;
         for (var si = 0; si < sheets.length; si++) {
-          var o = SH[si], tx = 0, ty = 0;
-          if (act) { var dx = o.cx - ms.x, dy = o.cy - ms.y, dd = Math.sqrt(dx * dx + dy * dy) + 1, rr = Rr + o.w * .4; if (dd < rr) { var f = Math.pow(1 - dd / rr, 1.6) * (mob ? 60 : 120) * (1 + Math.min(1.5, ms.sp / 30)); tx = dx / dd * f; ty = dy / dd * f; } }
-          var ke = (tx || ty) ? .14 : .035; o.ox += (tx - o.ox) * ke; o.oy += (ty - o.oy) * ke; o.r = o.ox * .22 - o.oy * .08;
-          if (Math.abs(o.ox) > .05 || Math.abs(o.oy) > .05 || tx) { sheets[si].style.translate = px(o.ox) + ' ' + px(o.oy); sheets[si].style.rotate = o.r.toFixed(2) + 'deg'; }
+          var o = SH[si], tgA = 0;
+          if (act) { var dx = o.cx - ms.x, dy = o.cy - ms.y, dd = Math.sqrt(dx * dx + dy * dy) + 1, rr = Rr + o.w * .35;
+            if (dd < rr) { tgA = Math.min(26, Math.pow(1 - dd / rr, 1.3) * (14 + Math.min(14, ms.sp * .5))); o.ax += (dy / dd - o.ax) * .2; o.ay += (-dx / dd - o.ay) * .2; } }
+          o.v += (tgA - o.a) * .07 * kd; o.v *= Math.pow(.86, kd); o.a += o.v * kd;
+          var px2 = -tilt.x * PX * o.d * 2, py2 = -tilt.y * PY * o.d * 2;
+          o.ox += (px2 - o.ox) * .1 * kd; o.oy += (py2 - o.oy) * .1 * kd;
+          sheets[si].style.translate = px(o.ox) + ' ' + px(o.oy);
+          sheets[si].style.rotate = Math.abs(o.a) > .05 ? o.ax.toFixed(3) + ' ' + o.ay.toFixed(3) + ' 0 ' + o.a.toFixed(2) + 'deg' : '0deg';
         }
         ms.sp *= .9; if (window.VCWind) window.VCWind.amp *= .94;
       }
