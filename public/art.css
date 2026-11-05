@@ -2422,3 +2422,11 @@ html.vc-art .hero .hx-row.side .hx-row-lab{position:absolute;left:0;right:0;bott
   .hx-cards .hx-card:nth-child(3){--fx:96px;--fr:9deg}
   .hx-cards .hx-card:nth-child(2){--fr:0deg;--ly:-6px}
 }
+
+/* ===== ตรวจฟรี 2 ครั้ง ===== */
+html.vc-art .hero .hx-free{margin:14px auto 0;font:400 13px/1.5 Sarabun,Prompt,sans-serif;color:rgba(236,226,206,.72);text-align:center}
+html.vc-art .hero .hx-free b{color:#f0cf8f;font-weight:600}
+.ad-freetag{position:absolute;right:-6px;top:-11px;padding:3px 8px;border-radius:99px;background:#a3361f;color:#fff3e0;font:600 11px/1.2 Prompt,Sarabun,sans-serif;font-style:normal;
+  transform:rotate(6deg);box-shadow:0 2px 5px rgba(0,0,0,.35);pointer-events:none;white-space:nowrap}
+@media (max-width:767px){html.vc-art .hero .hx-free{font-size:12.5px;margin-top:12px}}
+.hero.hx-lens-idle :is(.hx-lens,.hx-pool){opacity:0}
