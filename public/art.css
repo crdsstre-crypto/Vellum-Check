@@ -2341,9 +2341,9 @@ html.vc-art .ld-scene,html.vc-art .ld-scene:not([data-lamp]){animation-timing-fu
 
 /* ===== แผ่นตัวอย่างสัญญาหน้าแรก: ชื่อประเภท + สี + ปุ่มดูตัวอย่าง (คอม+มือถือ) ===== */
 .hx-sheet.is-sample{--k:#8a5a2b;transition:scale .45s cubic-bezier(.2,1.3,.4,1)}
-.hx-sheet.k-rent{--k:#2c7a69}
-.hx-sheet.k-loan{--k:#a3362a}
-.hx-sheet.k-employment{--k:#2f5c9c}
+.hx-sheet.k-rent{--k:#3f6b5f}
+.hx-sheet.k-loan{--k:#8a4a3b}
+.hx-sheet.k-employment{--k:#3e5675}
 .hx-sheet.is-sample .hx-pg{background:linear-gradient(180deg,var(--k) 0 15%,transparent 15%),linear-gradient(135deg,rgba(255,255,255,.22),transparent 38%,rgba(40,20,0,.2) 100%),linear-gradient(color-mix(in srgb,var(--k) 9%,#efe6d2),color-mix(in srgb,var(--k) 9%,#efe6d2))}
 .hx-sheet.is-sample .hp-h{display:none}
 .hx-sheet.is-sample .hp-l{top:22%;height:44%;opacity:.7}
@@ -2359,7 +2359,7 @@ html.vc-art main > .hero.hx-smp-hov{cursor:pointer}
 /* หน้าต่างสัญญาตัวอย่าง */
 .sx-modal .vd-paper{width:min(680px,100%)}
 .sx-t{position:relative}
-.sx-t.on.k-rent{box-shadow:0 -3px 0 #2c7a69 inset}.sx-t.on.k-loan{box-shadow:0 -3px 0 #a3362a inset}.sx-t.on.k-employment{box-shadow:0 -3px 0 #2f5c9c inset}
+.sx-t.on.k-rent{box-shadow:0 -3px 0 #3f6b5f inset}.sx-t.on.k-loan{box-shadow:0 -3px 0 #8a4a3b inset}.sx-t.on.k-employment{box-shadow:0 -3px 0 #3e5675 inset}
 .sx-body .sx-free{display:inline-block;margin:0 0 6px;padding:3px 10px;border-radius:99px;background:#2c7a43;color:#fff;font:600 11.5px/1.4 Prompt,Sarabun,sans-serif}
 .sx-body .sx-sum{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
 .sx-b{display:inline-block;padding:3px 9px;border-radius:99px;font:600 12px/1.3 Prompt,Sarabun,sans-serif;color:#fff;background:#b8321f}
@@ -2375,3 +2375,28 @@ html.vc-art main > .hero.hx-smp-hov{cursor:pointer}
 .sx-n .sx-b{margin-right:8px;vertical-align:1px;font-size:11px}
 .sx-body .sx-note{margin:14px 0 2px;font-size:12px;line-height:1.5;color:#7a6142}
 @media (max-width:767px){.sx-n{font-size:12.5px}}
+
+/* ===== แถวแผ่นตัวอย่างใต้ปุ่ม (แทนแผ่นลอยรอบจอ) คอม+มือถือ ===== */
+html.vc-art .hero .hx-row{margin:30px auto 0;text-align:center}
+html.vc-art .hero .hx-row-lab{margin:0 0 12px;font:500 11px/1.4 'IBM Plex Mono',monospace;letter-spacing:.14em;color:rgba(236,226,206,.6)}
+.hx-cards{display:flex;justify-content:center;gap:22px;perspective:900px}
+.hx-card{--k:#8a5a2b;position:relative;width:112px;padding:0;border:0;background:none;cursor:pointer;font-size:9.4px;color:inherit;
+  transform:rotate(var(--tz,0deg));transition:scale .4s cubic-bezier(.2,1.3,.4,1),filter .3s;filter:brightness(.9) saturate(.9)}
+.hx-card:nth-child(1){--tz:-4deg}.hx-card:nth-child(2){--tz:1.5deg}.hx-card:nth-child(3){--tz:4deg}
+.hx-card.k-rent{--k:#3f6b5f}.hx-card.k-loan{--k:#8a4a3b}.hx-card.k-employment{--k:#3e5675}
+.hx-card .hx-pg{background:linear-gradient(180deg,var(--k) 0 15%,transparent 15%),linear-gradient(135deg,rgba(255,255,255,.2),transparent 38%,rgba(40,20,0,.2) 100%),#e9dfc9;
+  box-shadow:0 1.4em 2em -.6em rgba(0,0,0,.65),inset 0 0 0 1px rgba(120,90,50,.18)}
+.hx-card .hp-h,.hx-card .hp-seal{display:none}
+.hx-card .hp-l{top:22%;height:42%;opacity:.6}
+.hx-card .hp-hl{background:color-mix(in srgb,var(--k) 55%,transparent)}
+.hx-card .hp-sig{width:38%}
+.hx-card:hover,.hx-card:focus-visible{scale:1.08;filter:none}
+.hx-card:hover .hx-pg,.hx-card:focus-visible .hx-pg{box-shadow:0 1.8em 2.4em -.6em rgba(0,0,0,.7),0 0 0 2px var(--k),0 0 1.4em color-mix(in srgb,var(--k) 45%,transparent)}
+.hx-card:hover .hp-view{transform:translate(-50%,-50%) scale(1.1)}
+.hx-card:focus{outline:none}
+.hx-card:focus-visible{outline:2px solid rgba(232,196,120,.8);outline-offset:6px;border-radius:4px}
+@media (max-width:767px){
+  html.vc-art .hero .hx-row{margin-top:24px}
+  .hx-cards{gap:14px}
+  .hx-card{width:96px;font-size:8px}
+}
