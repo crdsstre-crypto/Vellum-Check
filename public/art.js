@@ -2306,7 +2306,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     }, { passive: true });
     /* คลิกบนฉาก: แผ่นสัญญากระเด็นออกจากจุดคลิกแล้วลอยกลับ */
     addEventListener('pointerdown', function (e) {
-      if (calm || !onHome() || !document.body.animate) return;
+      if (calm || !onHome() || !document.body.animate || hero.classList.contains('hx-smp-hov')) return;
       var r = hero.getBoundingClientRect(); if (e.clientY < r.top || e.clientY > r.bottom) return;
       sheets.forEach(function (s) {
         var b = s.getBoundingClientRect(), dx = b.left + b.width / 2 - e.clientX, dy = b.top + b.height / 2 - e.clientY, d = Math.sqrt(dx * dx + dy * dy) + 60, f = Math.min(1, 380 / d) * (mob ? 16 : 30);
@@ -2446,6 +2446,55 @@ window.VCStepPlay = function (v, fps, onEnd) {
       setTimeout(makeFire, 2600);
       new MutationObserver(function () { if (fire) fire.classList.toggle('off', !!title.querySelector(':scope > [data-split]:not(.is-in)')); }).observe(title, { attributes: true, subtree: true, attributeFilter: ['class'] });
     }
+    /* ===== แผ่นตัวอย่างสัญญา: ชี้แล้วลอยเข้ามา + ป้ายชื่อ · กดแล้วใส่ข้อความตัวอย่างในหน้าตรวจ (ผู้ใช้กดตรวจเอง เพราะใช้เครดิต) ===== */
+    var SAMPLES = [
+      { type: 'rent', name: 'สัญญาเช่าห้องพัก', text: 'สัญญาเช่าห้องพัก\n\nข้อ 1. ผู้ให้เช่าตกลงให้เช่าและผู้เช่าตกลงเช่าห้องพักเลขที่ 504 มีกำหนดระยะเวลา 1 ปี อัตราค่าเช่าเดือนละ 8,500 บาท ชำระภายในวันที่ 1 ของทุกเดือน\nข้อ 2. ผู้เช่าได้วางเงินประกันการเช่าจำนวน 3 เดือน เป็นเงิน 25,500 บาท ซึ่งผู้ให้เช่าจะไม่คืนให้ไม่ว่ากรณีใดๆ\nข้อ 3. หากผู้เช่าชำระค่าเช่าล่าช้า ผู้เช่าตกลงชำระค่าปรับวันละ 500 บาท และผู้ให้เช่ามีสิทธิ์ตัดน้ำตัดไฟได้ทันทีโดยไม่ต้องแจ้งล่วงหน้า\nข้อ 4. ผู้ให้เช่ามีสิทธิ์ปรับขึ้นค่าเช่าได้ตลอดเวลาตามที่เห็นสมควร\nข้อ 5. ผู้ให้เช่าหรือตัวแทนมีสิทธิ์เข้าตรวจห้องพักได้ทุกเวลาโดยไม่ต้องแจ้งผู้เช่า\nข้อ 6. ค่าซ่อมแซมความเสียหายทุกกรณี รวมถึงความเสื่อมสภาพจากการใช้งานตามปกติ ผู้เช่าเป็นผู้รับผิดชอบทั้งหมด\nข้อ 7. หากผู้เช่าบอกเลิกสัญญาก่อนครบกำหนด ผู้เช่าต้องชำระค่าเช่าจนครบระยะเวลาตามสัญญา\nข้อ 8. สัญญานี้ต่ออายุอัตโนมัติคราวละ 1 ปี หากผู้เช่าไม่แจ้งเป็นหนังสือล่วงหน้า 90 วัน\n\nลงชื่อ ................ ผู้ให้เช่า        ลงชื่อ ................ ผู้เช่า' },
+      { type: 'loan', name: 'สัญญากู้ยืมเงิน', text: 'สัญญากู้ยืมเงิน\n\nข้อ 1. ผู้กู้ได้กู้ยืมเงินจากผู้ให้กู้เป็นจำนวน 50,000 บาท และได้รับเงินไปครบถ้วนแล้วในวันทำสัญญา\nข้อ 2. ผู้กู้ตกลงชำระดอกเบี้ยในอัตราร้อยละ 5 ต่อเดือน โดยคิดทบต้นทุกเดือน\nข้อ 3. ผู้กู้ตกลงผ่อนชำระเดือนละ 6,000 บาท ทุกวันที่ 25 หากผิดนัดงวดใดงวดหนึ่ง ให้ถือว่าผิดนัดทั้งหมด และผู้ให้กู้เรียกเงินคืนทั้งหมดได้ทันที\nข้อ 4. ผู้กู้ยินยอมให้ผู้ให้กู้หักเงินจากบัญชีเงินฝากของผู้กู้ได้ทุกบัญชีโดยไม่ต้องแจ้งให้ทราบ\nข้อ 5. ผู้กู้มอบสมุดบัญชีเงินฝากและบัตร ATM ไว้กับผู้ให้กู้ตลอดอายุสัญญา\nข้อ 6. หากผิดนัด ผู้กู้ยินยอมให้ผู้ให้กู้ติดต่อทวงถามจากที่ทำงาน ญาติ และบุคคลอ้างอิงได้ทุกเวลา\nข้อ 7. ค่าใช้จ่ายในการติดตามทวงถามและค่าทนายความทั้งหมด ผู้กู้เป็นผู้รับผิดชอบ\n\nลงชื่อ ................ ผู้กู้        ลงชื่อ ................ ผู้ให้กู้' },
+      { type: 'employment', name: 'สัญญาจ้างงาน', text: 'สัญญาจ้างงาน\n\nข้อ 1. บริษัทตกลงจ้างลูกจ้างในตำแหน่งเจ้าหน้าที่ขาย อัตราเงินเดือน 15,000 บาท ทดลองงาน 180 วัน\nข้อ 2. ลูกจ้างต้องทำงานวันละ 10 ชั่วโมง สัปดาห์ละ 6 วัน โดยเงินเดือนรวมค่าล่วงเวลาไว้แล้ว\nข้อ 3. ในระหว่างทดลองงาน บริษัทมีสิทธิ์เลิกจ้างได้ทันทีโดยไม่ต้องบอกกล่าวล่วงหน้าและไม่จ่ายค่าชดเชยใดๆ\nข้อ 4. ลูกจ้างต้องวางเงินประกันการทำงาน 20,000 บาท โดยหักจากเงินเดือนเดือนละ 5,000 บาท\nข้อ 5. หากลูกจ้างลาออกภายใน 2 ปี ลูกจ้างต้องชดใช้ค่าฝึกอบรมให้บริษัท 100,000 บาท\nข้อ 6. ภายหลังสิ้นสุดการจ้าง ลูกจ้างห้ามทำงานกับธุรกิจประเภทเดียวกันทั่วประเทศเป็นเวลา 5 ปี\nข้อ 7. บริษัทมีสิทธิ์ย้ายตำแหน่ง สถานที่ทำงาน และปรับลดเงินเดือนได้ตามความเหมาะสม\n\nลงชื่อ ................ นายจ้าง        ลงชื่อ ................ ลูกจ้าง' }
+    ];
+    var smp = [], k3 = 0;
+    sheets.forEach(function (s, i) { if (spots[i][3] < -250 || k3 >= SAMPLES.length) return; var d = SAMPLES[k3++]; s.classList.add('is-sample');
+      var tip = document.createElement('div'); tip.className = 'hx-tip' + (fine ? '' : ' always'); tip.setAttribute('aria-hidden', 'true');
+      tip.innerHTML = '<b>' + d.name + '</b><span>' + (fine ? 'ตัวอย่าง · กดเพื่อลองตรวจ' : 'แตะเพื่อลองตรวจ') + '</span>'; hero.appendChild(tip);
+      smp.push({ el: s, i: i, d: d, tip: tip, r: null }); });
+    var hov = null, smAt = 0;
+    function readSmp() { var hr = hero.getBoundingClientRect(); smp.forEach(function (m) { var b = m.el.getBoundingClientRect(); m.r = b.width ? { l: b.left - hr.left, t: b.top - hr.top, w: b.width, h: b.height } : null; }); }
+    var ptsEl = hero.querySelector('.dx-points');
+    function placeTips() {
+      var pb = 0; if (ptsEl && ptsEl.offsetParent !== null) { var hr = hero.getBoundingClientRect(), q = ptsEl.getBoundingClientRect(); pb = q.bottom - hr.top; }
+      smp.forEach(function (m) { if (!m.r) return; var th = m.tip.offsetHeight || 40, x = Math.max(80, Math.min(W - 80, m.r.l + m.r.w / 2)), top = Math.max(70, m.r.t - 8 - th);
+        /* แผ่นที่อยู่ใต้ข้อความด้านล่าง (มือถือ): ย้ายป้ายลงไปใต้ข้อความ ไม่ให้ทับตัวหนังสือ · ถ้าไม่มีที่ ซ่อนป้าย */
+        if (pb && m.r.t + m.r.h / 2 > pb && top < pb + 6) top = pb + 6;
+        m.tip.style.visibility = top + th > H - 2 ? 'hidden' : '';
+        m.tip.style.transform = 'translate3d(' + px(x) + ',' + px(top) + ',0) translate(-50%,0)'; });
+    }
+    function hit(x, y) { for (var i = 0; i < smp.length; i++) { var r = smp[i].r; if (r && x > r.l - 8 && x < r.l + r.w + 8 && y > r.t - 8 && y < r.t + r.h + 8) return smp[i]; } return null; }
+    function setHov(m) { if (m === hov) return; if (hov) { hov.el.classList.remove('hov'); hov.tip.classList.remove('on'); } hov = m; if (m) { m.el.classList.add('hov'); m.tip.classList.add('on'); } hero.classList.toggle('hx-smp-hov', !!m); }
+    function interactive(t) { return t && t.closest && t.closest('a,button,input,textarea,select,label,.vc-cursor'); }
+    function useSample(m) {
+      var ta = document.getElementById('input'), sel = document.getElementById('contractType'); if (!ta) return;
+      ta.value = m.d.text; ta.dispatchEvent(new Event('input', { bubbles: true }));
+      if (sel) { sel.value = m.d.type; sel.dispatchEvent(new Event('change', { bubbles: true })); }
+      var cta = document.querySelector('.dx-cta'); if (cta) cta.click(); else if (window.VCView) VCView.go('desk');
+      var out = document.getElementById('authLoggedOut'), loggedOut = out && !out.hidden && out.offsetParent !== null;
+      setTimeout(function () {
+        var lo = out && !out.hidden && out.offsetParent !== null;
+        var msg = 'ใส่' + m.d.name + 'ตัวอย่างให้แล้ว · ' + (lo ? 'เข้าสู่ระบบ แล้วกด “ตรวจสัญญา” ได้เลย' : 'กด “ตรวจสัญญา” ได้เลย (ใช้ 1 เครดิต)');
+        if (typeof window.toast === 'function') window.toast(msg);
+      }, 900);
+    }
+    if (smp.length) {
+      addEventListener('pointermove', function (e) {
+        if (!onHome() || !inView) return; var hr = hero.getBoundingClientRect(), x = e.clientX - hr.left, y = e.clientY - hr.top;
+        if (performance.now() - smAt > 150) { readSmp(); smAt = performance.now(); }
+        setHov(interactive(e.target) || docked ? null : hit(x, y));
+      }, { passive: true });
+      hero.addEventListener('click', function (e) {
+        if (!onHome() || interactive(e.target)) return; readSmp();
+        var hr = hero.getBoundingClientRect(), m = hit(e.clientX - hr.left, e.clientY - hr.top); if (!m) return;
+        e.preventDefault(); useSample(m);
+      });
+    }
     var raf = 0, inView = true, last = 0, t0 = performance.now();
     function frame(now) {
       raf = 0; if (!inView || document.hidden) { last = 0; return; }
@@ -2476,6 +2525,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
           sheets[si].style.translate = px(o.ox) + ' ' + px(o.oy);
           sheets[si].style.rotate = Math.abs(o.a) > .05 ? o.ax.toFixed(3) + ' ' + o.ay.toFixed(3) + ' 0 ' + o.a.toFixed(2) + 'deg' : '0deg';
         }
+        if (smp.length && now - smAt > 400) { readSmp(); smAt = now; } if (smp.length) placeTips();
         ms.sp *= .9; if (window.VCWind) window.VCWind.amp *= .94;
       }
       if (docked) btnGeo(docked);
