@@ -754,6 +754,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
       }
       layout(t);
       if (window.VCDomSheets) for (var hq = 0; hq < NS; hq++) AC[hq * 3 + 1] = 90;
+      else for (var hq2 = 1; hq2 < NS; hq2 += 2) AC[hq2 * 3 + 1] = 90;   /* กระดาษในฉาก 3D เหลือครึ่งเดียว ลดความรก */
       if (window.VCWind && !still) {   /* ลมจากเมาส์: แผ่นกระดาษในฉาก 3D ปลิวหลบแล้วค่อยลอยกลับ */
         var Wd = window.VCWind, fvw = Math.min(2.3, Math.max(1, .9 / asp)), wx = Wd.ux * 1.12 * fvw * 10, wy = .7 + Wd.uy * 1.12 * fvw * 10;
         for (var wi = 0; wi < NS; wi++) {
@@ -2261,8 +2262,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     var pool = layer('hx-pool'), poolT = layer('hx-fine hx-lit', fp); pool.appendChild(poolT);
     /* 3) แผ่นสัญญาลอย 3D */
     var sw = layer('hx-sheets'), stage = layer('hx-stage'); sw.appendChild(stage);
-    var spots = mob ? [[2, 25, 84, -120], [80, 31, 62, -300], [3, 93, 88, 40], [71, 94, 86, -60]]
-      : [[5, 14, 140, -80], [7, 60, 165, 40], [74, 9, 130, -280], [80, 44, 150, 20], [66, 76, 112, -420]];
+    var spots = [];   /* แผ่นลอยตกแต่งถูกเอาออก (หน้าแรกรกเกินไป) — เหลือแผ่นตัวอย่างที่เรียงเป็นแถวใต้ปุ่ม */
     var sheets = spots.map(function (p, n) {
       var e = layer('hx-sheet' + (p[3] < -250 ? ' far' : ''), sheetHTML(n)), rz = p[3] < -250 ? 24 : 12;
       e.style.cssText = 'left:' + p[0] + '%;top:' + p[1] + '%;width:' + p[2] + 'px;font-size:' + (p[2] / 12).toFixed(1) + 'px;transform:translateZ(' + p[3] + 'px) rotateZ(' + R(-rz, rz).toFixed(0) + 'deg) rotateX(' + R(-18, 18).toFixed(0) + 'deg) rotateY(' + R(-30, 30).toFixed(0) + 'deg)';
@@ -2309,13 +2309,14 @@ window.VCStepPlay = function (v, fps, onEnd) {
       if (calm || !onHome() || !document.body.animate || hero.classList.contains('hx-smp-hov')) return;
       var r = hero.getBoundingClientRect(); if (e.clientY < r.top || e.clientY > r.bottom) return;
       sheets.forEach(function (s) {
+        if (s.classList.contains('hx-card')) return;
         var b = s.getBoundingClientRect(), dx = b.left + b.width / 2 - e.clientX, dy = b.top + b.height / 2 - e.clientY, d = Math.sqrt(dx * dx + dy * dy) + 60, f = Math.min(1, 380 / d) * (mob ? 16 : 30);
         try { s.animate([{ translate: '0 0' }, { translate: px(dx / d * f) + ' ' + px(dy / d * f), offset: .22 }, { translate: '0 0' }], { duration: 1300, easing: 'cubic-bezier(.3,.7,.3,1)', composite: 'add' }); } catch (er) {}
       });
     }, { passive: true });
 
     /* คอม: ข้อความสั้นๆ วางเว้นที่ตรงเมนู ปุ่ม และหัวเรื่อง (ไม่ทับของสำคัญ) */
-    var KEY = '.site-header a,.site-header button,.site-header .brand,.dx-nav a,.dx-cta,.dx-cta-ghost,.hero-title,.hero-lead,.dx-pill,.hero-cue,.dx-points li';
+    var KEY = '.site-header a,.site-header button,.site-header .brand,.dx-nav a,.dx-cta,.dx-cta-ghost,.hero-title,.hero-lead,.dx-pill,.hero-cue,.dx-points li,.hx-row';
     function shortPrint() {
       var h = '', cols = 6, rows = 8, k = 0, i, j;
       for (j = 0; j < rows; j++) for (i = 0; i < cols; i++) {
@@ -2478,19 +2479,6 @@ window.VCStepPlay = function (v, fps, onEnd) {
         ['บริษัทมีสิทธิ์ย้ายตำแหน่ง สถานที่ทำงาน และ<mark>ปรับลดเงินเดือนได้</mark>ตามความเหมาะสม', H_, 'การลดเงินเดือนฝ่ายเดียวทำให้รายได้ไม่แน่นอน ควรระบุว่าการเปลี่ยนแปลงเงื่อนไขสำคัญต้องได้รับความยินยอมจากคุณ']
       ] }
     ];
-    var smp = [], k3 = 0;
-    sheets.forEach(function (s, i) { if (spots[i][3] < -250 || k3 >= SAMPLES.length) return; var d = SAMPLES[k3++];
-      s.classList.add('is-sample', 'k-' + d.k);
-      var pg = s.querySelector('.hx-pg');
-      var nm = document.createElement('i'); nm.className = 'hp-name'; nm.textContent = d.short; pg.appendChild(nm);
-      var vb = document.createElement('i'); vb.className = 'hp-view'; vb.textContent = 'ดูตัวอย่าง'; pg.appendChild(vb);
-      smp.push({ el: s, i: i, d: d, r: null }); });
-    var hov = null, smAt = 0;
-    function readSmp() { var hr = hero.getBoundingClientRect(); smp.forEach(function (m) { var b = m.el.getBoundingClientRect(); m.r = b.width ? { l: b.left - hr.left, t: b.top - hr.top, w: b.width, h: b.height } : null; }); }
-    function placeTips() {}
-    function hit(x, y) { for (var i = 0; i < smp.length; i++) { var r = smp[i].r; if (r && x > r.l - 8 && x < r.l + r.w + 8 && y > r.t - 8 && y < r.t + r.h + 8) return smp[i]; } return null; }
-    function setHov(m) { if (m === hov) return; if (hov) hov.el.classList.remove('hov'); hov = m; if (m) m.el.classList.add('hov'); hero.classList.toggle('hx-smp-hov', !!m); }
-    function interactive(t) { return t && t.closest && t.closest('a,button,input,textarea,select,label,.vc-cursor'); }
     /* หน้าต่างสัญญาตัวอย่าง */
     var sx = null;
     function sxHTML(d) {
@@ -2518,17 +2506,22 @@ window.VCStepPlay = function (v, fps, onEnd) {
       fill(d); sx.classList.add('on'); root.classList.add('vd-lock');
     }
     window.VCSample = { open: function (k) { SAMPLES.forEach(function (q) { if (q.k === k) openSample(q); }); } };
-    if (smp.length) {
-      addEventListener('pointermove', function (e) {
-        if (!onHome() || !inView) return; var hr = hero.getBoundingClientRect(), x = e.clientX - hr.left, y = e.clientY - hr.top;
-        if (performance.now() - smAt > 150) { readSmp(); smAt = performance.now(); }
-        setHov(interactive(e.target) || docked ? null : hit(x, y));
-      }, { passive: true });
-      hero.addEventListener('click', function (e) {
-        if (!onHome() || interactive(e.target)) return; readSmp();
-        var hr = hero.getBoundingClientRect(), m = hit(e.clientX - hr.left, e.clientY - hr.top); if (!m) return;
-        e.preventDefault(); openSample(m.d);
+    var smp = [], copy = hero.querySelector('.hero-copy'), ctaRow = hero.querySelector('.dx-cta-row');
+    if (copy) {
+      var row = document.createElement('div'); row.className = 'hx-row';
+      row.innerHTML = '<p class="hx-row-lab">ลองดูตัวอย่างผลตรวจ · ฟรี</p><div class="hx-cards"></div>';
+      var cards = row.querySelector('.hx-cards');
+      SAMPLES.forEach(function (d, i) {
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'hx-card k-' + d.k; b.setAttribute('aria-label', 'ดูตัวอย่างผลตรวจ' + d.name);
+        b.innerHTML = sheetHTML(i); var pg = b.firstChild;
+        pg.style.cssText = '--d:' + R(9, 14).toFixed(1) + 's;--w:-' + R(0, 12).toFixed(1) + 's;--fy:' + px(R(-6, -3)) + ';--fr:' + R(2, 4).toFixed(1) + 'deg';
+        pg.insertAdjacentHTML('beforeend', '<i class="hp-name">' + d.short + '</i><i class="hp-view">ดูตัวอย่าง</i>');
+        b.addEventListener('click', function () { openSample(d); });
+        cards.appendChild(b);
+        sheets.push(b); SH.push({ cx: 0, cy: 0, ox: 0, oy: 0, r: 0, a: 0, v: 0, ax: 1, ay: 0, d: 0, card: true });
+        smp.push({ el: b, d: d });
       });
+      if (ctaRow && ctaRow.parentNode === copy) copy.insertBefore(row, ctaRow.nextSibling); else copy.appendChild(row);
     }
     var raf = 0, inView = true, last = 0, t0 = performance.now();
     function frame(now) {
@@ -2555,12 +2548,11 @@ window.VCStepPlay = function (v, fps, onEnd) {
           if (act) { var dx = o.cx - ms.x, dy = o.cy - ms.y, dd = Math.sqrt(dx * dx + dy * dy) + 1, rr = Rr + o.w * .35;
             if (dd < rr) { tgA = Math.min(26, Math.pow(1 - dd / rr, 1.3) * (14 + Math.min(14, ms.sp * .5))); o.ax += (dy / dd - o.ax) * .2; o.ay += (-dx / dd - o.ay) * .2; } }
           o.v += (tgA - o.a) * .07 * kd; o.v *= Math.pow(.86, kd); o.a += o.v * kd;
-          var px2 = -tilt.x * PX * o.d * 2, py2 = -tilt.y * PY * o.d * 2;
+          var px2 = o.card ? 0 : -tilt.x * PX * o.d * 2, py2 = o.card ? 0 : -tilt.y * PY * o.d * 2;
           o.ox += (px2 - o.ox) * .1 * kd; o.oy += (py2 - o.oy) * .1 * kd;
           sheets[si].style.translate = px(o.ox) + ' ' + px(o.oy);
           sheets[si].style.rotate = Math.abs(o.a) > .05 ? o.ax.toFixed(3) + ' ' + o.ay.toFixed(3) + ' 0 ' + o.a.toFixed(2) + 'deg' : '0deg';
         }
-        if (smp.length && now - smAt > 400) { readSmp(); smAt = now; } if (smp.length) placeTips();
         ms.sp *= .9; if (window.VCWind) window.VCWind.amp *= .94;
       }
       if (docked) btnGeo(docked);
