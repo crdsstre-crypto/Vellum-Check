@@ -2261,11 +2261,11 @@ window.VCStepPlay = function (v, fps, onEnd) {
     var pool = layer('hx-pool'), poolT = layer('hx-fine hx-lit', fp); pool.appendChild(poolT);
     /* 3) แผ่นสัญญาลอย 3D */
     var sw = layer('hx-sheets'), stage = layer('hx-stage'); sw.appendChild(stage);
-    var spots = mob ? [[-6, 26, 74, -120], [78, 30, 66, -300], [-12, 92, 92, 40], [84, 96, 78, -60]]
-      : [[5, 14, 140, -80], [7, 60, 165, 40], [74, 9, 130, -280], [86, 44, 160, 20], [66, 76, 112, -420]];
+    var spots = mob ? [[2, 25, 84, -120], [80, 31, 62, -300], [3, 93, 88, 40], [71, 94, 86, -60]]
+      : [[5, 14, 140, -80], [7, 60, 165, 40], [74, 9, 130, -280], [80, 44, 150, 20], [66, 76, 112, -420]];
     var sheets = spots.map(function (p, n) {
-      var e = layer('hx-sheet' + (p[3] < -250 ? ' far' : ''), sheetHTML(n));
-      e.style.cssText = 'left:' + p[0] + '%;top:' + p[1] + '%;width:' + p[2] + 'px;font-size:' + (p[2] / 12).toFixed(1) + 'px;transform:translateZ(' + p[3] + 'px) rotateZ(' + R(-24, 24).toFixed(0) + 'deg) rotateX(' + R(-18, 18).toFixed(0) + 'deg) rotateY(' + R(-30, 30).toFixed(0) + 'deg)';
+      var e = layer('hx-sheet' + (p[3] < -250 ? ' far' : ''), sheetHTML(n)), rz = p[3] < -250 ? 24 : 12;
+      e.style.cssText = 'left:' + p[0] + '%;top:' + p[1] + '%;width:' + p[2] + 'px;font-size:' + (p[2] / 12).toFixed(1) + 'px;transform:translateZ(' + p[3] + 'px) rotateZ(' + R(-rz, rz).toFixed(0) + 'deg) rotateX(' + R(-18, 18).toFixed(0) + 'deg) rotateY(' + R(-30, 30).toFixed(0) + 'deg)';
       var pg = e.firstChild; pg.style.cssText = '--d:' + R(9, 15).toFixed(1) + 's;--w:-' + R(0, 15).toFixed(1) + 's;--fy:' + px(R(-26, -12)) + ';--fr:' + R(4, 9).toFixed(1) + 'deg';
       stage.appendChild(e); return e;
     });
@@ -2446,43 +2446,78 @@ window.VCStepPlay = function (v, fps, onEnd) {
       setTimeout(makeFire, 2600);
       new MutationObserver(function () { if (fire) fire.classList.toggle('off', !!title.querySelector(':scope > [data-split]:not(.is-in)')); }).observe(title, { attributes: true, subtree: true, attributeFilter: ['class'] });
     }
-    /* ===== แผ่นตัวอย่างสัญญา: ชี้แล้วลอยเข้ามา + ป้ายชื่อ · กดแล้วใส่ข้อความตัวอย่างในหน้าตรวจ (ผู้ใช้กดตรวจเอง เพราะใช้เครดิต) ===== */
+    /* ===== แผ่นตัวอย่างสัญญา: ชื่อประเภท+สีบนแผ่น · กด “ดูตัวอย่าง” เปิดสัญญาตัวอย่างพร้อมผลตรวจที่ทำไว้ล่วงหน้า (ดูฟรี ไม่ใช้เครดิต ไม่เรียกระบบตรวจ) ===== */
+    var H_ = 'h', C_ = 'c';
     var SAMPLES = [
-      { type: 'rent', name: 'สัญญาเช่าห้องพัก', text: 'สัญญาเช่าห้องพัก\n\nข้อ 1. ผู้ให้เช่าตกลงให้เช่าและผู้เช่าตกลงเช่าห้องพักเลขที่ 504 มีกำหนดระยะเวลา 1 ปี อัตราค่าเช่าเดือนละ 8,500 บาท ชำระภายในวันที่ 1 ของทุกเดือน\nข้อ 2. ผู้เช่าได้วางเงินประกันการเช่าจำนวน 3 เดือน เป็นเงิน 25,500 บาท ซึ่งผู้ให้เช่าจะไม่คืนให้ไม่ว่ากรณีใดๆ\nข้อ 3. หากผู้เช่าชำระค่าเช่าล่าช้า ผู้เช่าตกลงชำระค่าปรับวันละ 500 บาท และผู้ให้เช่ามีสิทธิ์ตัดน้ำตัดไฟได้ทันทีโดยไม่ต้องแจ้งล่วงหน้า\nข้อ 4. ผู้ให้เช่ามีสิทธิ์ปรับขึ้นค่าเช่าได้ตลอดเวลาตามที่เห็นสมควร\nข้อ 5. ผู้ให้เช่าหรือตัวแทนมีสิทธิ์เข้าตรวจห้องพักได้ทุกเวลาโดยไม่ต้องแจ้งผู้เช่า\nข้อ 6. ค่าซ่อมแซมความเสียหายทุกกรณี รวมถึงความเสื่อมสภาพจากการใช้งานตามปกติ ผู้เช่าเป็นผู้รับผิดชอบทั้งหมด\nข้อ 7. หากผู้เช่าบอกเลิกสัญญาก่อนครบกำหนด ผู้เช่าต้องชำระค่าเช่าจนครบระยะเวลาตามสัญญา\nข้อ 8. สัญญานี้ต่ออายุอัตโนมัติคราวละ 1 ปี หากผู้เช่าไม่แจ้งเป็นหนังสือล่วงหน้า 90 วัน\n\nลงชื่อ ................ ผู้ให้เช่า        ลงชื่อ ................ ผู้เช่า' },
-      { type: 'loan', name: 'สัญญากู้ยืมเงิน', text: 'สัญญากู้ยืมเงิน\n\nข้อ 1. ผู้กู้ได้กู้ยืมเงินจากผู้ให้กู้เป็นจำนวน 50,000 บาท และได้รับเงินไปครบถ้วนแล้วในวันทำสัญญา\nข้อ 2. ผู้กู้ตกลงชำระดอกเบี้ยในอัตราร้อยละ 5 ต่อเดือน โดยคิดทบต้นทุกเดือน\nข้อ 3. ผู้กู้ตกลงผ่อนชำระเดือนละ 6,000 บาท ทุกวันที่ 25 หากผิดนัดงวดใดงวดหนึ่ง ให้ถือว่าผิดนัดทั้งหมด และผู้ให้กู้เรียกเงินคืนทั้งหมดได้ทันที\nข้อ 4. ผู้กู้ยินยอมให้ผู้ให้กู้หักเงินจากบัญชีเงินฝากของผู้กู้ได้ทุกบัญชีโดยไม่ต้องแจ้งให้ทราบ\nข้อ 5. ผู้กู้มอบสมุดบัญชีเงินฝากและบัตร ATM ไว้กับผู้ให้กู้ตลอดอายุสัญญา\nข้อ 6. หากผิดนัด ผู้กู้ยินยอมให้ผู้ให้กู้ติดต่อทวงถามจากที่ทำงาน ญาติ และบุคคลอ้างอิงได้ทุกเวลา\nข้อ 7. ค่าใช้จ่ายในการติดตามทวงถามและค่าทนายความทั้งหมด ผู้กู้เป็นผู้รับผิดชอบ\n\nลงชื่อ ................ ผู้กู้        ลงชื่อ ................ ผู้ให้กู้' },
-      { type: 'employment', name: 'สัญญาจ้างงาน', text: 'สัญญาจ้างงาน\n\nข้อ 1. บริษัทตกลงจ้างลูกจ้างในตำแหน่งเจ้าหน้าที่ขาย อัตราเงินเดือน 15,000 บาท ทดลองงาน 180 วัน\nข้อ 2. ลูกจ้างต้องทำงานวันละ 10 ชั่วโมง สัปดาห์ละ 6 วัน โดยเงินเดือนรวมค่าล่วงเวลาไว้แล้ว\nข้อ 3. ในระหว่างทดลองงาน บริษัทมีสิทธิ์เลิกจ้างได้ทันทีโดยไม่ต้องบอกกล่าวล่วงหน้าและไม่จ่ายค่าชดเชยใดๆ\nข้อ 4. ลูกจ้างต้องวางเงินประกันการทำงาน 20,000 บาท โดยหักจากเงินเดือนเดือนละ 5,000 บาท\nข้อ 5. หากลูกจ้างลาออกภายใน 2 ปี ลูกจ้างต้องชดใช้ค่าฝึกอบรมให้บริษัท 100,000 บาท\nข้อ 6. ภายหลังสิ้นสุดการจ้าง ลูกจ้างห้ามทำงานกับธุรกิจประเภทเดียวกันทั่วประเทศเป็นเวลา 5 ปี\nข้อ 7. บริษัทมีสิทธิ์ย้ายตำแหน่ง สถานที่ทำงาน และปรับลดเงินเดือนได้ตามความเหมาะสม\n\nลงชื่อ ................ นายจ้าง        ลงชื่อ ................ ลูกจ้าง' }
+      { k: 'rent', short: 'สัญญาเช่า', name: 'สัญญาเช่าห้องพัก', c: [
+        ['ผู้ให้เช่าตกลงให้เช่าห้องพักเลขที่ 504 มีกำหนด 1 ปี ค่าเช่าเดือนละ 8,500 บาท ชำระภายในวันที่ 1 ของทุกเดือน'],
+        ['ผู้เช่าวางเงินประกัน 3 เดือน เป็นเงิน 25,500 บาท ซึ่ง<mark>ผู้ให้เช่าจะไม่คืนให้ไม่ว่ากรณีใดๆ</mark>', H_, 'เงินประกันควรคืนเมื่อสิ้นสุดสัญญาหลังหักค่าเสียหายจริง ข้อนี้ทำให้คุณเสียเงินประกันทั้งหมดแม้ไม่ได้ทำผิด ควรขอให้ระบุเงื่อนไขการคืนเงินให้ชัด'],
+        ['หากชำระล่าช้า ผู้เช่าตกลงชำระ<mark>ค่าปรับวันละ 500 บาท</mark> และ<mark>ผู้ให้เช่ามีสิทธิ์ตัดน้ำตัดไฟได้ทันที</mark>โดยไม่ต้องแจ้งล่วงหน้า', H_, 'ค่าปรับสูงมากเมื่อเทียบกับค่าเช่า (เกือบ 6% ต่อวัน) และการตัดน้ำไฟโดยไม่แจ้งกระทบการอยู่อาศัยโดยตรง ควรต่อรองค่าปรับให้สมเหตุสมผลและตัดเงื่อนไขตัดน้ำไฟออก'],
+        ['<mark>ผู้ให้เช่ามีสิทธิ์ปรับขึ้นค่าเช่าได้ตลอดเวลา</mark>ตามที่เห็นสมควร', H_, 'ไม่มีเพดานและไม่ต้องแจ้งล่วงหน้า ควรกำหนดว่าปรับได้ปีละครั้ง ไม่เกินกี่เปอร์เซ็นต์ และแจ้งล่วงหน้าอย่างน้อย 30 วัน'],
+        ['ผู้ให้เช่าหรือตัวแทน<mark>เข้าตรวจห้องได้ทุกเวลาโดยไม่ต้องแจ้ง</mark>', C_, 'กระทบความเป็นส่วนตัว ควรระบุให้แจ้งล่วงหน้าและเข้าได้เฉพาะเวลาที่ตกลงกัน ยกเว้นเหตุฉุกเฉิน'],
+        ['ค่าซ่อมทุกกรณี <mark>รวมถึงความเสื่อมสภาพจากการใช้งานตามปกติ</mark> ผู้เช่ารับผิดชอบทั้งหมด', C_, 'ความเสื่อมจากการใช้งานปกติโดยทั่วไปไม่ควรเป็นภาระของผู้เช่า ควรแยกให้ชัดว่าผู้เช่ารับผิดเฉพาะความเสียหายที่ตนเองก่อ'],
+        ['หากบอกเลิกก่อนครบกำหนด <mark>ผู้เช่าต้องชำระค่าเช่าจนครบระยะเวลาตามสัญญา</mark>', C_, 'ถ้าต้องย้ายออกกลางสัญญาอาจต้องจ่ายหลายหมื่นบาท ควรต่อรองเป็นค่าปรับคงที่ เช่น 1 เดือน หรือให้หาผู้เช่ารายใหม่มาแทนได้'],
+        ['สัญญานี้<mark>ต่ออายุอัตโนมัติคราวละ 1 ปี</mark> หากไม่แจ้งเป็นหนังสือล่วงหน้า 90 วัน', C_, 'ถ้าลืมแจ้ง คุณจะผูกต่ออีก 1 ปี ควรจดวันครบกำหนดแจ้งไว้ หรือขอลดระยะแจ้งเหลือ 30 วัน']
+      ] },
+      { k: 'loan', short: 'สัญญากู้ยืม', name: 'สัญญากู้ยืมเงิน', c: [
+        ['ผู้กู้ได้กู้ยืมเงินจำนวน 50,000 บาท และ<mark>ได้รับเงินไปครบถ้วนแล้ว</mark>ในวันทำสัญญา', C_, 'ตรวจว่าได้รับเงินจริงครบตามจำนวนที่เขียน ไม่ถูกหักดอกเบี้ยหรือค่าธรรมเนียมล่วงหน้า เพราะเซ็นแล้วจะถือว่ารับครบ'],
+        ['ผู้กู้ตกลงชำระ<mark>ดอกเบี้ยร้อยละ 5 ต่อเดือน โดยคิดทบต้นทุกเดือน</mark>', H_, 'เท่ากับร้อยละ 60 ต่อปีก่อนทบต้น สูงกว่าอัตราสูงสุดที่ประมวลกฎหมายแพ่งฯ อนุญาตสำหรับการกู้ยืมระหว่างบุคคล (ร้อยละ 15 ต่อปี) มาก ควรปรึกษาผู้เชี่ยวชาญก่อนเซ็น'],
+        ['ผ่อนเดือนละ 6,000 บาท <mark>หากผิดนัดงวดใดงวดหนึ่ง ให้เรียกเงินคืนทั้งหมดได้ทันที</mark>', C_, 'พลาดงวดเดียวอาจต้องจ่ายคืนทั้งก้อน ควรขอระยะผ่อนผัน เช่น ผิดนัด 2 งวดติดกันและได้รับหนังสือแจ้งก่อน'],
+        ['ผู้กู้ยินยอมให้<mark>หักเงินจากบัญชีเงินฝากทุกบัญชีโดยไม่ต้องแจ้ง</mark>', H_, 'เปิดทางให้ดึงเงินจากบัญชีคุณได้โดยไม่จำกัด ควรตัดออก หรือจำกัดเฉพาะยอดงวดที่ถึงกำหนดจากบัญชีเดียว'],
+        ['ผู้กู้<mark>มอบสมุดบัญชีและบัตร ATM</mark>ไว้กับผู้ให้กู้ตลอดอายุสัญญา', H_, 'ผู้ให้กู้จะควบคุมเงินในบัญชีคุณได้ เป็นรูปแบบที่พบบ่อยในการปล่อยกู้นอกระบบ ไม่ควรมอบบัตรหรือรหัสให้ใคร'],
+        ['หากผิดนัด ยินยอมให้<mark>ทวงถามจากที่ทำงาน ญาติ และบุคคลอ้างอิงได้ทุกเวลา</mark>', H_, 'การทวงถามหนี้มีกฎหมายกำหนดวิธีและเวลาที่ทำได้ ข้อนี้เปิดทางให้ทวงถามแบบรบกวนชีวิตและคนรอบตัว ควรตัดออก'],
+        ['<mark>ค่าติดตามทวงถามและค่าทนายความทั้งหมด</mark> ผู้กู้เป็นผู้รับผิดชอบ', C_, 'ไม่ได้กำหนดเพดาน ยอดหนี้อาจเพิ่มขึ้นมาก ควรขอให้ระบุจำนวนสูงสุดหรือตัดออก']
+      ] },
+      { k: 'employment', short: 'สัญญาจ้างงาน', name: 'สัญญาจ้างงาน', c: [
+        ['บริษัทจ้างในตำแหน่งเจ้าหน้าที่ขาย เงินเดือน 15,000 บาท <mark>ทดลองงาน 180 วัน</mark>', C_, 'ทดลองงานนาน 6 เดือน ควรรู้ว่าระหว่างทดลองงานคุณยังได้รับความคุ้มครองตามกฎหมายแรงงานเหมือนลูกจ้างทั่วไป'],
+        ['ทำงาน<mark>วันละ 10 ชั่วโมง สัปดาห์ละ 6 วัน โดยเงินเดือนรวมค่าล่วงเวลาไว้แล้ว</mark>', H_, 'เกินเวลาทำงานปกติที่กฎหมายแรงงานกำหนด (ไม่เกินวันละ 8 ชั่วโมง สัปดาห์ละ 48 ชั่วโมง) และค่าล่วงเวลาควรจ่ายแยก ควรสอบถามให้ชัดก่อนเซ็น'],
+        ['ระหว่างทดลองงาน <mark>เลิกจ้างได้ทันทีโดยไม่บอกกล่าวและไม่จ่ายค่าชดเชยใดๆ</mark>', H_, 'ลูกจ้างที่ทำงานครบ 120 วันมีสิทธิ์ได้ค่าชดเชยเมื่อถูกเลิกจ้าง แม้ยังอยู่ระหว่างทดลองงาน ข้อนี้อาจตัดสิทธิ์ของคุณ'],
+        ['ลูกจ้างต้อง<mark>วางเงินประกัน 20,000 บาท</mark> โดยหักจากเงินเดือนเดือนละ 5,000 บาท', C_, 'กฎหมายจำกัดประเภทงานที่นายจ้างเรียกเงินประกันได้ ควรถามว่างานนี้เรียกได้หรือไม่ และจะคืนเมื่อไร'],
+        ['หากลาออกภายใน 2 ปี <mark>ต้องชดใช้ค่าฝึกอบรม 100,000 บาท</mark>', H_, 'สูงเกือบ 7 เท่าของเงินเดือน ควรขอดูว่าค่าฝึกอบรมจริงเท่าไร และให้ลดลงตามระยะเวลาที่ทำงานไปแล้ว'],
+        ['หลังสิ้นสุดการจ้าง <mark>ห้ามทำงานกับธุรกิจประเภทเดียวกันทั่วประเทศ 5 ปี</mark>', H_, 'จำกัดการหางานของคุณกว้างและนานมาก ควรต่อรองให้แคบลง เช่น เฉพาะคู่แข่งโดยตรง 6–12 เดือน'],
+        ['บริษัทมีสิทธิ์ย้ายตำแหน่ง สถานที่ทำงาน และ<mark>ปรับลดเงินเดือนได้</mark>ตามความเหมาะสม', H_, 'การลดเงินเดือนฝ่ายเดียวทำให้รายได้ไม่แน่นอน ควรระบุว่าการเปลี่ยนแปลงเงื่อนไขสำคัญต้องได้รับความยินยอมจากคุณ']
+      ] }
     ];
     var smp = [], k3 = 0;
-    sheets.forEach(function (s, i) { if (spots[i][3] < -250 || k3 >= SAMPLES.length) return; var d = SAMPLES[k3++]; s.classList.add('is-sample');
-      var tip = document.createElement('div'); tip.className = 'hx-tip' + (fine ? '' : ' always'); tip.setAttribute('aria-hidden', 'true');
-      tip.innerHTML = '<b>' + d.name + '</b><span>' + (fine ? 'ตัวอย่าง · กดเพื่อลองตรวจ' : 'แตะเพื่อลองตรวจ') + '</span>'; hero.appendChild(tip);
-      smp.push({ el: s, i: i, d: d, tip: tip, r: null }); });
+    sheets.forEach(function (s, i) { if (spots[i][3] < -250 || k3 >= SAMPLES.length) return; var d = SAMPLES[k3++];
+      s.classList.add('is-sample', 'k-' + d.k);
+      var pg = s.querySelector('.hx-pg');
+      var nm = document.createElement('i'); nm.className = 'hp-name'; nm.textContent = d.short; pg.appendChild(nm);
+      var vb = document.createElement('i'); vb.className = 'hp-view'; vb.textContent = 'ดูตัวอย่าง'; pg.appendChild(vb);
+      smp.push({ el: s, i: i, d: d, r: null }); });
     var hov = null, smAt = 0;
     function readSmp() { var hr = hero.getBoundingClientRect(); smp.forEach(function (m) { var b = m.el.getBoundingClientRect(); m.r = b.width ? { l: b.left - hr.left, t: b.top - hr.top, w: b.width, h: b.height } : null; }); }
-    var ptsEl = hero.querySelector('.dx-points');
-    function placeTips() {
-      var pb = 0; if (ptsEl && ptsEl.offsetParent !== null) { var hr = hero.getBoundingClientRect(), q = ptsEl.getBoundingClientRect(); pb = q.bottom - hr.top; }
-      smp.forEach(function (m) { if (!m.r) return; var th = m.tip.offsetHeight || 40, x = Math.max(80, Math.min(W - 80, m.r.l + m.r.w / 2)), top = Math.max(70, m.r.t - 8 - th);
-        /* แผ่นที่อยู่ใต้ข้อความด้านล่าง (มือถือ): ย้ายป้ายลงไปใต้ข้อความ ไม่ให้ทับตัวหนังสือ · ถ้าไม่มีที่ ซ่อนป้าย */
-        if (pb && m.r.t + m.r.h / 2 > pb && top < pb + 6) top = pb + 6;
-        m.tip.style.visibility = top + th > H - 2 ? 'hidden' : '';
-        m.tip.style.transform = 'translate3d(' + px(x) + ',' + px(top) + ',0) translate(-50%,0)'; });
-    }
+    function placeTips() {}
     function hit(x, y) { for (var i = 0; i < smp.length; i++) { var r = smp[i].r; if (r && x > r.l - 8 && x < r.l + r.w + 8 && y > r.t - 8 && y < r.t + r.h + 8) return smp[i]; } return null; }
-    function setHov(m) { if (m === hov) return; if (hov) { hov.el.classList.remove('hov'); hov.tip.classList.remove('on'); } hov = m; if (m) { m.el.classList.add('hov'); m.tip.classList.add('on'); } hero.classList.toggle('hx-smp-hov', !!m); }
+    function setHov(m) { if (m === hov) return; if (hov) hov.el.classList.remove('hov'); hov = m; if (m) m.el.classList.add('hov'); hero.classList.toggle('hx-smp-hov', !!m); }
     function interactive(t) { return t && t.closest && t.closest('a,button,input,textarea,select,label,.vc-cursor'); }
-    function useSample(m) {
-      var ta = document.getElementById('input'), sel = document.getElementById('contractType'); if (!ta) return;
-      ta.value = m.d.text; ta.dispatchEvent(new Event('input', { bubbles: true }));
-      if (sel) { sel.value = m.d.type; sel.dispatchEvent(new Event('change', { bubbles: true })); }
-      var cta = document.querySelector('.dx-cta'); if (cta) cta.click(); else if (window.VCView) VCView.go('desk');
-      var out = document.getElementById('authLoggedOut'), loggedOut = out && !out.hidden && out.offsetParent !== null;
-      setTimeout(function () {
-        var lo = out && !out.hidden && out.offsetParent !== null;
-        var msg = 'ใส่' + m.d.name + 'ตัวอย่างให้แล้ว · ' + (lo ? 'เข้าสู่ระบบ แล้วกด “ตรวจสัญญา” ได้เลย' : 'กด “ตรวจสัญญา” ได้เลย (ใช้ 1 เครดิต)');
-        if (typeof window.toast === 'function') window.toast(msg);
-      }, 900);
+    /* หน้าต่างสัญญาตัวอย่าง */
+    var sx = null;
+    function sxHTML(d) {
+      var nh = 0, nc = 0; d.c.forEach(function (c) { if (c[1] === H_) nh++; else if (c[1] === C_) nc++; });
+      return '<div class="vd-tabs" role="tablist">' + SAMPLES.map(function (q) { return '<button type="button" role="tab" data-sx="' + q.k + '" class="sx-t k-' + q.k + (q === d ? ' on' : '') + '" aria-selected="' + (q === d) + '">' + q.short + '</button>'; }).join('') + '</div>' +
+        '<div class="vd-body sx-body k-' + d.k + '" tabindex="0"><p class="sx-free">ตัวอย่าง · ดูฟรี ไม่ใช้เครดิต</p><h4>' + d.name + '</h4>' +
+        '<p class="sx-sum"><span class="sx-b h">เสี่ยงสูง ' + nh + ' จุด</span><span class="sx-b c">ควรระวัง ' + nc + ' จุด</span></p>' +
+        d.c.map(function (c, i) { return '<section class="sx-c' + (c[1] ? ' f-' + c[1] : '') + '"><p><b>ข้อ ' + (i + 1) + '.</b> ' + c[0] + '</p>' + (c[1] ? '<div class="sx-n"><span class="sx-b ' + c[1] + '">' + (c[1] === H_ ? '⚠ เสี่ยงสูง' : 'ควรระวัง') + '</span>' + c[2] + '</div>' : '') + '</section>'; }).join('') +
+        '<p class="sx-note">ตัวอย่างนี้จัดทำไว้ล่วงหน้าจากสัญญาสมมติ เพื่อให้เห็นรูปแบบผลตรวจ ผลจริงขึ้นกับข้อความในสัญญาของคุณ · เป็นการคัดกรองเบื้องต้น ไม่ใช่คำปรึกษาทางกฎหมาย</p></div>' +
+        '<div class="vd-foot"><button type="button" class="vd-close">ปิด</button><button type="button" class="vd-ok sx-go">ตรวจสัญญาของคุณ →</button></div>';
     }
+    function openSample(d) {
+      if (!sx) {
+        sx = document.createElement('div'); sx.className = 'vd-modal sx-modal'; sx.setAttribute('role', 'dialog'); sx.setAttribute('aria-modal', 'true'); sx.setAttribute('aria-label', 'สัญญาตัวอย่าง');
+        sx.innerHTML = '<div class="vd-paper"></div>'; document.body.appendChild(sx);
+        sx.addEventListener('click', function (e) {
+          var t = e.target.closest('[data-sx]'); if (t) { SAMPLES.forEach(function (q) { if (q.k === t.getAttribute('data-sx')) fill(q); }); return; }
+          if (e.target.closest('.sx-go')) { close(); var cta = document.querySelector('.dx-cta'); if (cta) cta.click(); return; }
+          if (e.target === sx || e.target.closest('.vd-close')) close();
+        });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && sx.classList.contains('on')) close(); });
+      }
+      function fill(q) { sx.firstChild.innerHTML = sxHTML(q); var b = sx.querySelector('.vd-body'); b.scrollTop = 0; try { b.focus({ preventScroll: true }); } catch (x) {} }
+      function close() { sx.classList.remove('on'); root.classList.remove('vd-lock'); }
+      fill(d); sx.classList.add('on'); root.classList.add('vd-lock');
+    }
+    window.VCSample = { open: function (k) { SAMPLES.forEach(function (q) { if (q.k === k) openSample(q); }); } };
     if (smp.length) {
       addEventListener('pointermove', function (e) {
         if (!onHome() || !inView) return; var hr = hero.getBoundingClientRect(), x = e.clientX - hr.left, y = e.clientY - hr.top;
@@ -2492,7 +2527,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
       hero.addEventListener('click', function (e) {
         if (!onHome() || interactive(e.target)) return; readSmp();
         var hr = hero.getBoundingClientRect(), m = hit(e.clientX - hr.left, e.clientY - hr.top); if (!m) return;
-        e.preventDefault(); useSample(m);
+        e.preventDefault(); openSample(m.d);
       });
     }
     var raf = 0, inView = true, last = 0, t0 = performance.now();
