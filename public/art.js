@@ -2513,7 +2513,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
       var cards = row.querySelector('.hx-cards');
       SAMPLES.forEach(function (d, i) {
         var b = document.createElement('button'); b.type = 'button'; b.className = 'hx-card k-' + d.k; b.setAttribute('aria-label', 'ดูตัวอย่างผลตรวจ' + d.name);
-        b.innerHTML = sheetHTML(i); var pg = b.firstChild;
+        b.innerHTML = '<div class="hx-drop">' + sheetHTML(i) + '</div>'; var pg = b.querySelector('.hx-pg');
         pg.style.cssText = '--d:' + R(9, 14).toFixed(1) + 's;--w:-' + R(0, 12).toFixed(1) + 's;--fy:' + px(R(-6, -3)) + ';--fr:' + R(2, 4).toFixed(1) + 'deg';
         pg.insertAdjacentHTML('beforeend', '<i class="hp-name">' + d.short + '</i><i class="hp-view">ดูตัวอย่าง</i>');
         b.addEventListener('click', function () { openSample(d); });
@@ -2521,7 +2521,39 @@ window.VCStepPlay = function (v, fps, onEnd) {
         sheets.push(b); SH.push({ cx: 0, cy: 0, ox: 0, oy: 0, r: 0, a: 0, v: 0, ax: 1, ay: 0, d: 0, card: true });
         smp.push({ el: b, d: d });
       });
-      if (ctaRow && ctaRow.parentNode === copy) copy.insertBefore(row, ctaRow.nextSibling); else copy.appendChild(row);
+      /* จอกว้าง: พัดแผ่นอยู่ทางขวาของหัวเรื่อง (ที่ว่าง ไม่โดนขอบล่างตัด) · จอแคบ/มือถือ: อยู่ใต้ปุ่ม */
+      var wideMq = matchMedia('(min-width:1200px)');
+      var placeRow = function () {
+        if (wideMq.matches) {
+          if (row.parentNode !== hero) hero.appendChild(row); row.classList.add('side');
+          var t1 = hero.querySelector('.hero-title'); if (t1) { var hr = hero.getBoundingClientRect(), tr = t1.getBoundingClientRect(); row.style.top = px(tr.top + tr.height / 2 - hr.top); }
+        } else {
+          row.classList.remove('side'); row.style.top = '';
+          if (ctaRow && ctaRow.parentNode === copy) { if (row.previousSibling !== ctaRow) copy.insertBefore(row, ctaRow.nextSibling); } else if (row.parentNode !== copy) copy.appendChild(row);
+        }
+      };
+      placeRow(); setTimeout(placeRow, 1500); addEventListener('resize', function () { setTimeout(placeRow, 150); });
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeRow);
+      /* เปิดหน้า: แผ่นร่อนลงมาจากด้านบน หมุนกลางอากาศแล้ววางลงทีละแผ่น (ครั้งเดียวต่อการเปิดหน้า) */
+      if (!calm && document.body.animate) {
+        var drops = Array.prototype.map.call(cards.children, function (b) { return b.firstChild; });
+        drops.forEach(function (d) { d.style.opacity = '0'; });
+        setTimeout(function () {
+          var hr = hero.getBoundingClientRect(), vis = hr.bottom > 0 && hr.top < innerHeight && onHome();
+          drops.forEach(function (d, i) {
+            d.style.opacity = '';
+            if (!vis) return;
+            var sx = (i - 1) * 60 + R(-30, 30), r0 = R(-40, 40);
+            try { d.animate([
+              { transform: 'translate(' + px(sx) + ',-95vh) rotate(' + r0.toFixed(0) + 'deg)', opacity: 0 },
+              { transform: 'translate(' + px(-sx * .5) + ',-40vh) rotate(' + (-r0 * .6).toFixed(0) + 'deg)', opacity: 1, offset: .35 },
+              { transform: 'translate(' + px(sx * .25) + ',-12vh) rotate(' + (r0 * .3).toFixed(0) + 'deg)', offset: .65 },
+              { transform: 'translate(0,10px) rotate(' + (-r0 * .08).toFixed(1) + 'deg)', offset: .86 },
+              { transform: 'translate(0,0) rotate(0deg)', opacity: 1 }
+            ], { duration: 1500, delay: i * 280, easing: 'cubic-bezier(.33,.1,.3,1)', fill: 'backwards' }); } catch (er) {}
+          });
+        }, 900);
+      }
     }
     var raf = 0, inView = true, last = 0, t0 = performance.now();
     function frame(now) {
