@@ -2430,3 +2430,20 @@ html.vc-art .hero .hx-free b{color:#f0cf8f;font-weight:600}
   transform:rotate(6deg);box-shadow:0 2px 5px rgba(0,0,0,.35);pointer-events:none;white-space:nowrap}
 @media (max-width:767px){html.vc-art .hero .hx-free{font-size:12.5px;margin-top:12px}}
 .hero.hx-lens-idle :is(.hx-lens,.hx-pool){opacity:0}
+
+/* ===== มือถือ: หน้าแรกไม่ตัดแผ่นตัวอย่าง + จัดให้กระชับ (แถบเมนูล่างไม่บัง) ===== */
+@media (max-width:767px){
+  html.vc-spa[data-view="home"] main > .hero,html.vc-art main > .hero{height:auto !important;min-height:100svh;padding-bottom:calc(92px + env(safe-area-inset-bottom))}
+  html.vc-art .hero-main{padding-top:14px !important}
+  html.vc-art .hero .dx-cta-row[hidden]{flex-wrap:nowrap;justify-content:center;gap:10px;margin-top:22px}
+  html.vc-art .hero .dx-cta-row .dx-cta,html.vc-art .hero .dx-cta-row .dx-cta-ghost{flex:1 1 0;min-width:0;padding:14px 10px;font-size:.95rem;text-align:center;white-space:nowrap}
+  html.vc-art .hero .hx-free{margin-top:12px}
+  html.vc-art .hero .hx-row{margin-top:16px}
+  html.vc-art .hero .hx-row-lab{margin-bottom:4px}
+  .hx-cards{--cw:84px !important;width:calc(var(--cw) + 196px) !important}
+  .hx-cards .hx-card:nth-child(1){--fx:-98px}
+  .hx-cards .hx-card:nth-child(3){--fx:98px}
+}
+html.vc-art.hx-on .hero-main :is(.dx-cta,.dx-cta-ghost){text-shadow:none}
+@media (max-width:767px){html.vc-art .hero .dx-cta-row .dx-cta,html.vc-art .hero .dx-cta-row .dx-cta-ghost{font-size:.9rem;padding:14px 6px;overflow:visible}}
+@media (max-width:767px){html.vc-art .hero .dx-cta-row .dx-cta::after{margin-left:.3em}html.vc-art .hero .dx-cta-row .dx-cta{flex-grow:1.15}}
