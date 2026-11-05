@@ -2400,3 +2400,25 @@ html.vc-art .hero .hx-row-lab{margin:0 0 12px;font:500 11px/1.4 'IBM Plex Mono',
   .hx-cards{gap:14px}
   .hx-card{width:96px;font-size:8px}
 }
+
+/* ===== แผ่นตัวอย่างเป็นพัด (คอม+มือถือ) ===== */
+.hx-cards{--cw:118px;position:relative;display:block;width:calc(var(--cw) + 200px);height:calc(var(--cw) * 1.414 + 34px);margin:0 auto;perspective:none}
+.hx-cards .hx-card{position:absolute;left:50%;bottom:6px;width:var(--cw);margin-left:calc(var(--cw) / -2);font-size:calc(var(--cw) / 12);
+  transform-origin:50% 120%;transform:translateX(var(--fx,0)) translateY(var(--ly,0)) rotate(var(--fr,0));
+  transition:transform .55s cubic-bezier(.2,1.25,.4,1),scale .4s cubic-bezier(.2,1.3,.4,1),filter .3s}
+.hx-cards .hx-card:nth-child(1){--fx:-30px;--fr:-13deg;z-index:1}
+.hx-cards .hx-card:nth-child(2){--fx:0px;--fr:-1deg;z-index:2}
+.hx-cards .hx-card:nth-child(3){--fx:30px;--fr:12deg;z-index:1}
+.hx-cards:hover .hx-card:nth-child(1),.hx-cards:focus-within .hx-card:nth-child(1){--fx:-104px;--fr:-15deg}
+.hx-cards:hover .hx-card:nth-child(2),.hx-cards:focus-within .hx-card:nth-child(2){--fr:0deg}
+.hx-cards:hover .hx-card:nth-child(3),.hx-cards:focus-within .hx-card:nth-child(3){--fx:104px;--fr:15deg}
+.hx-cards .hx-card:hover,.hx-cards .hx-card:focus-visible{--ly:-18px;z-index:5;scale:1.07}
+.hx-drop{will-change:transform}
+html.vc-art .hero .hx-row.side{position:absolute;z-index:2;right:clamp(40px,7vw,150px);top:40%;margin:0;transform:translateY(-50%);width:auto}
+html.vc-art .hero .hx-row.side .hx-row-lab{position:absolute;left:0;right:0;bottom:-30px;margin:0}
+@media (max-width:767px){
+  .hx-cards{--cw:90px;width:calc(var(--cw) + 200px)}
+  .hx-cards .hx-card:nth-child(1){--fx:-96px;--fr:-9deg}
+  .hx-cards .hx-card:nth-child(3){--fx:96px;--fr:9deg}
+  .hx-cards .hx-card:nth-child(2){--fr:0deg;--ly:-6px}
+}
