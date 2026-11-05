@@ -2538,6 +2538,9 @@ window.VCStepPlay = function (v, fps, onEnd) {
     }
     /* ===== ตรวจฟรี 2 ครั้งสำหรับสมาชิกใหม่ (ค่าจริงตั้งที่เซิร์ฟเวอร์ FREE_CREDITS) ===== */
     var FREE_N = 2;
+    /* มือถือ: ปุ่มคลิปสั้นลงให้วางคู่กับปุ่มเริ่มตรวจได้ในแถวเดียว */
+    var gh = hero.querySelector('.dx-cta-ghost');
+    if (gh && mob) { gh.setAttribute('aria-label', gh.textContent.trim()); Array.prototype.forEach.call(gh.childNodes, function (n) { if (n.nodeType === 3 && /มีเสียงพากย์/.test(n.nodeValue)) n.nodeValue = n.nodeValue.replace(/\s*\(มีเสียงพากย์\)/, ''); }); }
     if (copy && ctaRow) {
       var fr = document.createElement('p'); fr.className = 'hx-free'; fr.innerHTML = '<b>สมัครฟรี รับตรวจ ' + FREE_N + ' ครั้ง</b> · ไม่ต้องใช้บัตร';
       ctaRow.parentNode.insertBefore(fr, ctaRow.nextSibling);
