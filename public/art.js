@@ -2542,7 +2542,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     var gh = hero.querySelector('.dx-cta-ghost');
     if (gh && mob) { gh.setAttribute('aria-label', gh.textContent.trim()); Array.prototype.forEach.call(gh.childNodes, function (n) { if (n.nodeType === 3 && /มีเสียงพากย์/.test(n.nodeValue)) n.nodeValue = n.nodeValue.replace(/\s*\(มีเสียงพากย์\)/, ''); }); }
     if (copy && ctaRow) {
-      var fr = document.createElement('p'); fr.className = 'hx-free'; fr.innerHTML = '<b>สมัครฟรี รับตรวจ ' + FREE_N + ' ครั้ง</b> · ไม่ต้องใช้บัตร';
+      var fr = document.createElement('p'); fr.className = 'hx-free'; fr.innerHTML = '<b>สมัครฟรี รับตรวจ ' + FREE_N + ' ครั้ง</b> · ไม่ต้องใช้บัตร<br><span class="hx-price">จากนั้น 3 ครั้ง 49 บาท · <a href="#pricing" data-price="price">ดูราคาและคำถามที่พบบ่อย</a></span>';
       ctaRow.parentNode.insertBefore(fr, ctaRow.nextSibling);
     }
     var sb = document.getElementById('signupBtn');
@@ -2724,4 +2724,59 @@ window.VCStepPlay = function (v, fps, onEnd) {
   function scrubWait() { if (scrub()) return; var k = 0, t = setInterval(function () { if (scrub() || ++k > 40) clearInterval(t); }, 250); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', scrubWait); else scrubWait();
+})();
+
+/* ===== ราคา + คำถามที่พบบ่อย (หน้าต่างเดียว 2 แท็บ) — เปิดจากหน้าแรก, ท้ายเว็บ, #pricing / #faq =====
+   ★ ราคาต้องตรงกับ server/payments.js (PACKAGES) และเครดิตฟรีตรงกับ server/db.js (FREE_CREDITS) */
+(function () {
+  'use strict';
+  var FREE = 2;
+  var PLANS = [
+    ['ทดลองฟรี', 'ฟรี', 'ตรวจสัญญา ' + FREE + ' ครั้ง', 'เมื่อสมัครสมาชิก ไม่ต้องใช้บัตร', 'free'],
+    ['ตรวจสัญญา', '49 บาท', '3 ครั้ง', 'เฉลี่ยครั้งละประมาณ 16 บาท', 'main'],
+    ['สรุปเป็นเสียง', '9 บาท', '1 ครั้ง', 'หรือ 5 ครั้ง 39 บาท · ฟังสรุปผลตรวจเป็นเสียงพากย์', 'voice']
+  ];
+  var FAQ = [
+    ['ข้อมูลในสัญญาของฉันปลอดภัยไหม', 'ระบบปกปิดชื่อ เลขบัตรประชาชน เบอร์โทร และอีเมลในเบราว์เซอร์ของคุณก่อนส่งตรวจ (การตรวจจับเป็นแบบอัตโนมัติ อาจไม่ครบทุกกรณี จึงควรตรวจดูอีกครั้ง) เราไม่บันทึกข้อความสัญญาต้นฉบับไว้ในฐานข้อมูล เก็บเฉพาะผลตรวจล่าสุดไม่เกิน 50 รายการ และคุณลบเองได้ทุกเมื่อ'],
+    ['ตรวจได้ยาวแค่ไหน', 'ครั้งละไม่เกิน 20,000 ตัวอักษร ถ้าสัญญายาวกว่านั้น แบ่งตรวจทีละส่วนได้'],
+    ['ใช้ไฟล์แบบไหนได้บ้าง', 'วางข้อความได้เลย หรืออัปโหลดไฟล์ PDF, Word (.docx), .txt และรูปภาพ JPG, PNG, WEBP ขนาดไม่เกิน 5 MB'],
+    ['ถ้าตรวจไม่สำเร็จจะเสียเครดิตไหม', 'ไม่เสีย ถ้าระบบตรวจไม่สำเร็จ เครดิตที่ใช้จะถูกคืนให้อัตโนมัติ'],
+    ['จ่ายเงินอย่างไร', 'สแกน QR พร้อมเพย์ด้วยแอปธนาคาร เครดิตเข้าบัญชีอัตโนมัติเมื่อชำระสำเร็จ เราไม่เก็บข้อมูลบัตรหรือบัญชีธนาคารของคุณ'],
+    ['ผลตรวจใช้แทนทนายได้ไหม', 'ไม่ได้ Vellum Check เป็นเครื่องมือคัดกรองเบื้องต้น ช่วยชี้จุดที่ควรอ่านหรือถามเพิ่มก่อนเซ็น ไม่ใช่คำปรึกษาทางกฎหมาย สำหรับสัญญาที่มีผลสำคัญ ควรปรึกษาทนายความ'],
+    ['ตรวจสัญญาประเภทไหนได้บ้าง', 'สัญญาภาษาไทยทั่วไป เช่น สัญญาเช่า ซื้อขาย จ้างงาน จ้างบริการ กู้ยืมเงิน หุ้นส่วน และรักษาความลับ ถ้าไม่แน่ใจประเภท เลือก “ไม่แน่ใจ” ระบบจะดูจากข้อความให้เอง']
+  ];
+  function priceHTML() {
+    return '<p class="sx-free">เริ่มต้นฟรี · ไม่มีค่าสมัครรายเดือน</p><h4>ราคา</h4><div class="px-plans">' +
+      PLANS.map(function (p) { return '<div class="px-plan p-' + p[4] + '"><span class="px-n">' + p[0] + '</span><b class="px-p">' + p[1] + '</b><span class="px-q">' + p[2] + '</span><small>' + p[3] + '</small></div>'; }).join('') +
+      '</div><ul class="px-pts"><li>จ่ายเมื่ออยากใช้ ซื้อเครดิตเป็นครั้ง ไม่ผูกรายเดือน</li><li>ตรวจไม่สำเร็จ คืนเครดิตอัตโนมัติ</li><li>ชำระผ่าน QR พร้อมเพย์</li></ul>' +
+      '<p class="sx-note">ใช้คัดกรองก่อน เพื่อรู้ว่าควรอ่านหรือถามข้อไหนเพิ่ม และควรปรึกษาทนายหรือไม่ · ไม่ใช่คำปรึกษาทางกฎหมาย</p>';
+  }
+  function faqHTML() {
+    return '<h4>คำถามที่พบบ่อย</h4>' + FAQ.map(function (q, i) { return '<details class="px-q1"' + (i === 0 ? ' open' : '') + '><summary>' + q[0] + '</summary><p>' + q[1] + '</p></details>'; }).join('');
+  }
+  var m = null;
+  function open(k) {
+    if (!m) {
+      m = document.createElement('div'); m.className = 'vd-modal px-modal'; m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true'); m.setAttribute('aria-label', 'ราคาและคำถามที่พบบ่อย');
+      m.innerHTML = '<div class="vd-paper"><div class="vd-tabs" role="tablist"><button type="button" role="tab" data-px="price">ราคา</button><button type="button" role="tab" data-px="faq">คำถามที่พบบ่อย</button></div><div class="vd-body" tabindex="0"></div><div class="vd-foot"><button type="button" class="vd-close">ปิด</button><button type="button" class="vd-ok px-go">เริ่มตรวจสัญญา · ฟรี ' + FREE + ' ครั้ง →</button></div></div>';
+      document.body.appendChild(m);
+      m.addEventListener('click', function (e) {
+        var t = e.target.closest('[data-px]'); if (t) { tab(t.getAttribute('data-px')); return; }
+        if (e.target.closest('.px-go')) { close(); var c = document.querySelector('.dx-cta'); if (c) c.click(); return; }
+        if (e.target === m || e.target.closest('.vd-close')) close();
+      });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && m.classList.contains('on')) close(); });
+    }
+    tab(k === 'faq' ? 'faq' : 'price'); m.classList.add('on'); document.documentElement.classList.add('vd-lock');
+  }
+  function tab(k) {
+    Array.prototype.forEach.call(m.querySelectorAll('[data-px]'), function (b) { var on = b.getAttribute('data-px') === k; b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
+    var b = m.querySelector('.vd-body'); b.innerHTML = k === 'faq' ? faqHTML() : priceHTML(); b.scrollTop = 0; try { b.focus({ preventScroll: true }); } catch (e) {}
+  }
+  function close() { m.classList.remove('on'); document.documentElement.classList.remove('vd-lock'); if (/^#(pricing|faq)$/.test(location.hash)) try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} }
+  window.VCPrice = { open: open };
+  document.addEventListener('click', function (e) { var a = e.target.closest && e.target.closest('[data-price]'); if (!a) return; e.preventDefault(); e.stopPropagation(); open(a.getAttribute('data-price')); }, true);
+  function fromHash() { if (location.hash === '#pricing') open('price'); else if (location.hash === '#faq') open('faq'); }
+  addEventListener('hashchange', fromHash);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fromHash); else fromHash();
 })();
