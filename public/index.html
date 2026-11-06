@@ -41,7 +41,7 @@
 <link rel="stylesheet" href="ct-sticker.css?v=9" media="(max-width: 767px)">
 <link rel="stylesheet" href="desktop-layout.css?v=5" media="(min-width: 1024px)">
 <link rel="stylesheet" href="silent-clip.css?v=1" media="(min-width: 1024px)">
-<link rel="stylesheet" href="art.css?v=156">
+<link rel="stylesheet" href="art.css?v=159">
 </head>
 <body>
 <svg id="vcStickerDefs" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="vcg-y" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#f4f4f2"/><stop offset="1" stop-color="#a6a9b0"/></linearGradient><linearGradient id="vcg-o" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#dcdcdb"/><stop offset="1" stop-color="#8a8d94"/></linearGradient><linearGradient id="vcg-b" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#e6e8ec"/><stop offset="1" stop-color="#8f949d"/></linearGradient><linearGradient id="vcg-n" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#9a9ea6"/><stop offset="1" stop-color="#43464d"/></linearGradient><linearGradient id="vcg-t" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#eef0f1"/><stop offset="1" stop-color="#9fa3ab"/></linearGradient><linearGradient id="vcg-p" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#e0e0e0"/><stop offset="1" stop-color="#7f8289"/></linearGradient><linearGradient id="vcg-g" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#d6d9db"/><stop offset="1" stop-color="#888c93"/></linearGradient><linearGradient id="vcg-v" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#cdd0d5"/><stop offset="1" stop-color="#60636b"/></linearGradient><linearGradient id="vcg-w" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d5d8dc"/></linearGradient><linearGradient id="vcg-au" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#f7f7f5"/><stop offset="1" stop-color="#b4b7bd"/></linearGradient><linearGradient id="vcg-s" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#b0b4bb"/></linearGradient></defs></svg>
@@ -542,6 +542,15 @@
   <!-- ผลการตรวจ -->
   <section class="card" id="resultCard">
     <h2>ผลการตรวจ</h2>
+    <div class="rs-guide">
+      <p class="rs-title">ผลตรวจจะแสดงตรงนี้</p>
+      <ul class="rs-list">
+        <li><span>1</span><div><b>ระดับความเสี่ยง</b>ภาพรวมของสัญญาว่าน่ากังวลแค่ไหน</div></li>
+        <li><span>2</span><div><b>ข้อที่ควรระวัง</b>ชี้ทีละข้อพร้อมเหตุผลแบบภาษาง่าย</div></li>
+        <li><span>3</span><div><b>สิ่งที่ควรขอแก้</b>รายการที่ควรคุยก่อนเซ็น</div></li>
+      </ul>
+      <button type="button" class="rs-sample" id="rsSample">ดูตัวอย่างผลตรวจฟรี →</button>
+    </div>
     <div id="result">
       <div class="empty-art" aria-hidden="true">
         <svg viewBox="0 0 120 90" fill="none" stroke="url(#goldLineSm)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1943,6 +1952,6 @@ document.addEventListener('click', function (e) {
 <script src="care.js?v=2"></script>
 <script src="video-embed.js?v=1"></script>
 <script src="silent-clip.js?v=1"></script>
-<script src="art.js?v=162"></script>
+<script src="art.js?v=165"></script>
 </body>
 </html>
