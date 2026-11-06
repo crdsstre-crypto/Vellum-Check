@@ -2473,30 +2473,57 @@ window.VCStepPlay = function (v, fps, onEnd) {
         '<g class="sx-needle"><path d="M100 100 L97.5 50 L100 42 L102.5 50 Z" fill="#2a2118"/><circle cx="100" cy="100" r="8" fill="#2a2118"/><circle cx="100" cy="100" r="3" fill="#f6f0e4"/></g></svg>' +
         '<div class="sx-gl"><span>ระดับความเสี่ยง</span><b>' + lv[0] + '</b></div></div>';
     }
+    /* ===== แบบการ์ดทีละข้อ: หน้าสรุป → ข้อ 1..N → ก่อนเซ็น ควรทำ ===== */
+    var deck = { d: null, ids: [], i: 0, f: 'all' };
     function sxHTML(d) {
       var nh = 0, nc = 0; d.c.forEach(function (c) { if (c[1] === H_) nh++; else if (c[1] === C_) nc++; });
-      var todo = TODO[d.k] || [];
+      var todo = TODO[d.k] || [], N = d.c.length;
+      var cover = '<section class="sx-slide sx-cover" data-s="cover"><div class="sx-sin"><p class="sx-free">ตัวอย่าง · ดูฟรี ไม่ใช้เครดิต</p><h4>' + d.name + '</h4>' + gauge(nh, nc, N) +
+        '<div class="sx-sum" role="group" aria-label="ดูเฉพาะระดับ"><button type="button" class="sx-stat h" data-f="h"><b class="vd-count" data-n="' + nh + '">' + nh + '</b><span>เสี่ยงสูง</span></button><button type="button" class="sx-stat c" data-f="c"><b class="vd-count" data-n="' + nc + '">' + nc + '</b><span>ควรระวัง</span></button><button type="button" class="sx-stat n" data-f="all"><b class="vd-count" data-n="' + N + '">' + N + '</b><span>ทั้งหมด</span></button></div>' +
+        '<button type="button" class="sx-start" data-nav="next">เริ่มดูทีละข้อ →</button><p class="sx-hint">' + (window.matchMedia && matchMedia('(hover:none)').matches ? 'ปัดซ้าย–ขวา' : 'กดลูกศร ← → บนคีย์บอร์ด') + ' หรือแตะตัวเลขเพื่อดูเฉพาะระดับ</p></div></section>';
+      var cards = d.c.map(function (c, i) {
+        var lv = c[1] || 'ok';
+        return '<section class="sx-slide sx-card f-' + lv + '" data-s="' + i + '"><div class="sx-sin"><div class="sx-ch"><span class="sx-cn">ข้อ <b>' + (i + 1) + '</b> / ' + N + '</span>' +
+          (c[1] ? '<span class="sx-tag ' + c[1] + '">' + (c[1] === H_ ? '⚠ เสี่ยงสูง' : 'ควรระวัง') + '</span>' : '<span class="sx-tag ok">✓ ปกติ</span>') + '</div>' +
+          '<blockquote class="sx-q">' + c[0] + '</blockquote>' +
+          (c[1] ? '<div class="sx-why"><h6>ทำไมต้องระวัง</h6><p>' + c[2] + '</p></div>' : '<div class="sx-why ok"><p>ไม่พบประเด็นที่ควรกังวลในข้อนี้</p></div>') + '</div></section>';
+      }).join('');
+      var end = '<section class="sx-slide sx-end" data-s="end"><div class="sx-sin">' + (todo.length ? '<div class="sx-todo"><h5>ก่อนเซ็น ควรทำ</h5><ol>' + todo.map(function (t) { return '<li><button type="button" data-go="' + t[0] + '"><span class="sx-ck" aria-hidden="true"></span><span>' + t[1] + '</span><span class="sx-to">ข้อ ' + (t[0] + 1) + ' ↗</span></button></li>'; }).join('') + '</ol></div>' : '') +
+        '<p class="sx-note">ตัวอย่างนี้จัดทำไว้ล่วงหน้าจากสัญญาสมมติ เพื่อให้เห็นรูปแบบผลตรวจ ผลจริงขึ้นกับข้อความในสัญญาของคุณ · เป็นการคัดกรองเบื้องต้น ไม่ใช่คำปรึกษาทางกฎหมาย</p>' +
+        '<button type="button" class="sx-again" data-nav="first">↺ ดูใหม่ตั้งแต่ต้น</button></div></section>';
       return '<div class="vd-tabs" role="tablist">' + SAMPLES.map(function (q) { return '<button type="button" role="tab" data-sx="' + q.k + '" class="sx-t k-' + q.k + (q === d ? ' on' : '') + '" aria-selected="' + (q === d) + '">' + q.short + '</button>'; }).join('') + '</div>' +
-        '<div class="vd-body sx-body k-' + d.k + '" tabindex="0"><p class="sx-free">ตัวอย่าง · ดูฟรี ไม่ใช้เครดิต</p><h4>' + d.name + '</h4>' +
-        '<div class="sx-top">' + gauge(nh, nc, d.c.length) +
-        '<div class="sx-sum" role="group" aria-label="กรองตามระดับ"><button type="button" class="sx-stat h" data-f="h"><b class="vd-count" data-n="' + nh + '">' + nh + '</b><span>เสี่ยงสูง</span></button><button type="button" class="sx-stat c" data-f="c"><b class="vd-count" data-n="' + nc + '">' + nc + '</b><span>ควรระวัง</span></button><button type="button" class="sx-stat n on" data-f="all"><b class="vd-count" data-n="' + d.c.length + '">' + d.c.length + '</b><span>ทั้งหมด</span></button></div></div>' +
-        '<p class="sx-hint">แตะตัวเลขเพื่อกรอง · แตะข้อสัญญาเพื่อดูคำอธิบาย</p>' +
-        '<div class="sx-list">' + d.c.map(function (c, i) {
-          var lvl = c[1] || 'ok', open = c[1] === H_;
-          return '<section class="sx-c vd-rv f-' + lvl + (open ? ' open' : '') + '" data-i="' + i + '"><button type="button" class="sx-hd" aria-expanded="' + open + '"><span class="sx-no">' + (i + 1) + '</span><span class="sx-tx">' + c[0] + '</span>' +
-            '<span class="sx-side">' + (c[1] ? '<span class="sx-tag ' + c[1] + '">' + (c[1] === H_ ? 'เสี่ยงสูง' : 'ระวัง') + '</span><span class="sx-chev" aria-hidden="true"></span>' : '<span class="sx-okt" aria-label="ไม่พบประเด็น">✓</span>') + '</span>' + '</button>' +
-            (c[1] ? '<div class="sx-det"><div class="sx-det-in"><p class="sx-nt">' + c[2] + '</p></div></div>' : '') + '</section>';
-        }).join('') + '</div>' +
-        (todo.length ? '<div class="sx-todo vd-rv"><h5>ก่อนเซ็น ควรทำ</h5><ol>' + todo.map(function (t) { return '<li><button type="button" data-go="' + t[0] + '"><span class="sx-ck" aria-hidden="true"></span><span>' + t[1] + '</span><span class="sx-to">ข้อ ' + (t[0] + 1) + ' ↗</span></button></li>'; }).join('') + '</ol></div>' : '') +
-        '<p class="sx-note">ตัวอย่างนี้จัดทำไว้ล่วงหน้าจากสัญญาสมมติ เพื่อให้เห็นรูปแบบผลตรวจ ผลจริงขึ้นกับข้อความในสัญญาของคุณ · เป็นการคัดกรองเบื้องต้น ไม่ใช่คำปรึกษาทางกฎหมาย</p></div>' +
+        '<div class="vd-body sx-body sx-deckbody k-' + d.k + '" tabindex="0"><div class="sx-deck" aria-live="polite">' + cover + cards + end + '</div></div>' +
+        '<div class="sx-nav"><button type="button" class="sx-arw" data-nav="prev" aria-label="ก่อนหน้า">‹</button><div class="sx-dots"></div><button type="button" class="sx-arw" data-nav="next" aria-label="ถัดไป">›</button></div>' +
         '<div class="vd-foot"><button type="button" class="vd-close">ปิด</button><button type="button" class="vd-ok sx-go">ลองตรวจสัญญาของคุณ · ฟรี 2 ครั้ง →</button></div>';
     }
-    function sxFilter(f) {
-      var body = sx.querySelector('.sx-body'); body.setAttribute('data-flt', f);
-      Array.prototype.forEach.call(sx.querySelectorAll('.sx-stat'), function (b) { var on = b.getAttribute('data-f') === f; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
-      Array.prototype.forEach.call(sx.querySelectorAll('.sx-c'), function (c) { var show = f === 'all' || c.classList.contains('f-' + f); c.classList.toggle('hide', !show); if (show) { c.classList.add('in'); if (f !== 'all') setOpen(c, true); } });
+    function sxBuild(f) {
+      deck.f = f || 'all';
+      var d = deck.d; deck.ids = ['cover'];
+      d.c.forEach(function (c, i) { if (deck.f === 'all' || c[1] === deck.f) deck.ids.push(String(i)); });
+      deck.ids.push('end');
+      Array.prototype.forEach.call(sx.querySelectorAll('.sx-stat'), function (b) { var on = deck.f !== 'all' && b.getAttribute('data-f') === deck.f; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+      var dots = sx.querySelector('.sx-dots');
+      dots.innerHTML = deck.ids.map(function (id, k) { var c = (id === 'cover' || id === 'end') ? '' : (d.c[+id][1] || 'ok'); return '<button type="button" class="sx-dot ' + (id === 'cover' ? 'cv' : id === 'end' ? 'en' : 'd-' + c) + '" data-to="' + k + '" aria-label="' + (id === 'cover' ? 'สรุป' : id === 'end' ? 'ก่อนเซ็น ควรทำ' : 'ข้อ ' + (+id + 1)) + '"></button>'; }).join('');
     }
-    function setOpen(c, on) { c.classList.toggle('open', on); var h = c.querySelector('.sx-hd'); if (h) h.setAttribute('aria-expanded', on); }
+    function sxGo(k, dir) {
+      var n = deck.ids.length; k = Math.max(0, Math.min(n - 1, k)); var old = deck.i; deck.i = k;
+      if (dir == null) dir = k >= old ? 1 : -1;
+      var id = deck.ids[k];
+      Array.prototype.forEach.call(sx.querySelectorAll('.sx-slide'), function (el) {
+        var sid = el.getAttribute('data-s'), idx = deck.ids.indexOf(sid);
+        el.classList.remove('cur', 'l', 'r', 'skip');
+        if (idx < 0) el.classList.add('skip'); else if (idx === k) el.classList.add('cur'); else el.classList.add(idx < k ? 'l' : 'r');
+        if (idx === k) { el.scrollTop = 0; el.setAttribute('aria-hidden', 'false'); } else el.setAttribute('aria-hidden', 'true');
+      });
+      sx.querySelector('.sx-deck').setAttribute('data-dir', dir > 0 ? 'f' : 'b');
+      Array.prototype.forEach.call(sx.querySelectorAll('.sx-dot'), function (b, j) { b.classList.toggle('on', j === k); b.classList.toggle('seen', j < k); });
+      var pv = sx.querySelector('.sx-arw[data-nav="prev"]'), nx = sx.querySelector('.sx-arw[data-nav="next"]');
+      pv.disabled = k === 0; nx.disabled = k === n - 1;
+      var pg = sx.querySelector('.vd-prog'); if (pg) pg.style.transform = 'scaleX(' + (n > 1 ? k / (n - 1) : 1).toFixed(3) + ')';
+      sx.querySelector('.vd-foot').classList.toggle('last', id === 'end');
+    }
+    function sxFilter(f) { sxBuild(f); sxGo(f === 'all' ? 0 : 1, 1); }
+    function setOpen() {}
     function openSample(d) {
       if (!sx) {
         sx = document.createElement('div'); sx.className = 'vd-modal sx-modal'; sx.setAttribute('role', 'dialog'); sx.setAttribute('aria-modal', 'true'); sx.setAttribute('aria-label', 'สัญญาตัวอย่าง');
@@ -2504,15 +2531,19 @@ window.VCStepPlay = function (v, fps, onEnd) {
         sx.addEventListener('click', function (e) {
           var t = e.target.closest('[data-sx]'); if (t) { SAMPLES.forEach(function (q) { if (q.k === t.getAttribute('data-sx')) fill(q); }); return; }
           if (e.target.closest('.sx-go')) { close(); var cta = document.querySelector('.dx-cta'); if (cta) cta.click(); return; }
-          var f = e.target.closest('.sx-stat[data-f]'); if (f) { var cur = f.getAttribute('data-f'); sxFilter(f.classList.contains('on') && cur !== 'all' ? 'all' : cur); return; }
-          var hd = e.target.closest('.sx-hd'); if (hd) { var c = hd.parentNode; if (c.querySelector('.sx-det')) setOpen(c, !c.classList.contains('open')); return; }
-          var g = e.target.closest('[data-go]'); if (g) { sxFilter('all'); var c2 = sx.querySelector('.sx-c[data-i="' + g.getAttribute('data-go') + '"]'); if (c2) { setOpen(c2, true); c2.classList.add('in'); var bd = sx.querySelector('.vd-body'); bd.scrollTo({ top: c2.offsetTop - 14, behavior: 'smooth' }); c2.classList.remove('flash'); void c2.offsetWidth; c2.classList.add('flash'); }
-            g.classList.add('done'); return; }
+          var f = e.target.closest('.sx-stat[data-f]'); if (f) { var cur = f.getAttribute('data-f'); sxFilter(f.classList.contains('on') ? 'all' : cur); return; }
+          var nv = e.target.closest('[data-nav]'); if (nv) { var w = nv.getAttribute('data-nav'); if (w === 'first') { sxBuild('all'); sxGo(0, -1); } else sxGo(deck.i + (w === 'next' ? 1 : -1)); return; }
+          var to = e.target.closest('[data-to]'); if (to) { sxGo(+to.getAttribute('data-to')); return; }
+          var g = e.target.closest('[data-go]'); if (g) { g.classList.add('done'); sxBuild('all'); sxGo(deck.ids.indexOf(g.getAttribute('data-go')), -1); return; }
           if (e.target === sx || e.target.closest('.vd-close')) close();
         });
         document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && sx.classList.contains('on')) close(); });
+        document.addEventListener('keydown', function (e) { if (!sx.classList.contains('on') || !deck.d) return; if (e.key === 'ArrowRight') { sxGo(deck.i + 1); e.preventDefault(); } else if (e.key === 'ArrowLeft') { sxGo(deck.i - 1); e.preventDefault(); } });
+        var tx0 = null, ty0 = 0;
+        sx.addEventListener('touchstart', function (e) { var t = e.target.closest('.sx-deck'); if (!t) { tx0 = null; return; } tx0 = e.touches[0].clientX; ty0 = e.touches[0].clientY; }, { passive: true });
+        sx.addEventListener('touchend', function (e) { if (tx0 == null) return; var dx = e.changedTouches[0].clientX - tx0, dy = e.changedTouches[0].clientY - ty0; tx0 = null; if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.3) sxGo(deck.i + (dx < 0 ? 1 : -1)); }, { passive: true });
       }
-      function fill(q) { sx.firstChild.innerHTML = sxHTML(q); sx.firstChild.className = 'vd-paper sx-paper k-' + q.k; var b = sx.querySelector('.vd-body'); b.scrollTop = 0; window.VCDocFX(b); var gg = sx.querySelector('.sx-gauge'); if (gg) requestAnimationFrame(function () { requestAnimationFrame(function () { gg.classList.add('go'); }); }); try { b.focus({ preventScroll: true }); } catch (x) {} }
+      function fill(q) { sx.firstChild.innerHTML = sxHTML(q); sx.firstChild.className = 'vd-paper sx-paper sx-deckp k-' + q.k; var b = sx.querySelector('.vd-body'); window.VCDocFX(b); deck.d = q; deck.i = 0; sxBuild('all'); sxGo(0, 1); var gg = sx.querySelector('.sx-gauge'); if (gg) requestAnimationFrame(function () { requestAnimationFrame(function () { gg.classList.add('go'); }); }); try { b.focus({ preventScroll: true }); } catch (x) {} }
       function close() { sx.classList.remove('on'); root.classList.remove('vd-lock'); }
       fill(d); sx.classList.add('on'); root.classList.add('vd-lock');
     }
