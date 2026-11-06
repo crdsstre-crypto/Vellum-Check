@@ -2937,14 +2937,15 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
   }
   var VS = 'attribute vec3 p;attribute vec2 u;attribute vec3 n;uniform mat4 M;uniform vec3 mn,sc;varying vec2 vu;varying vec3 vn;varying vec3 vp;' +
     'void main(){vec3 w=mn+p*sc;vp=w;vu=vec2(u.x,1.-u.y);vn=n;gl_Position=M*vec4(w,1.);}';
-  var FS = 'precision mediump float;uniform sampler2D T;uniform float cut,fade;varying vec2 vu;varying vec3 vn;varying vec3 vp;' +
+  var FS = 'precision mediump float;uniform sampler2D T,E;uniform float cut,fade,hasE,uR;varying vec2 vu;varying vec3 vn;varying vec3 vp;' +
     'void main(){vec4 c=texture2D(T,vu);if(c.a<cut)discard;vec3 N=normalize(vn);if(!gl_FrontFacing)N=-N;' +
     'vec3 L=normalize(vec3(-.45,.8,.55));float d=max(dot(N,L),0.);float h=.5+.5*N.y;' +
     'vec3 col=c.rgb*(vec3(.36,.34,.4)*h+vec3(.16,.14,.18)+vec3(1.05,.95,.82)*d*.85);' +
-    'float r=length(vp.xz)/27.;col*=1.-smoothstep(.72,1.02,r)*fade;' +
+    'if(hasE>.5)col+=max(texture2D(E,vu).r-.79,0.)*4.2*vec3(1.,.8,.5);float r=length(vp.xz)/uR;col*=1.-smoothstep(.72,1.02,r)*fade;' +
     'gl_FragColor=vec4(pow(col,vec3(.95)),1.);}';
 
-  window.VCHouseView = function (canvas, H) {
+  window.VCHouseView = function (canvas, H, O) {
+    O = O || {};
     var gl = canvas.getContext('webgl', { antialias: true, alpha: true, premultipliedAlpha: true });
     if (!gl) return null;
     function sh(t, s) { var o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); return o; }
@@ -2957,6 +2958,7 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     function ab(data, loc, size, type, norm, stride) { var b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW); var l = gl.getAttribLocation(pr, loc); gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l, size, type, norm, stride || 0, 0); }
     ab(P, 'p', 3, gl.UNSIGNED_SHORT, false); ab(U, 'u', 2, gl.UNSIGNED_SHORT, true); ab(N, 'n', 3, gl.BYTE, true, 4);
     var ib = gl.createBuffer(); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ib); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, I, gl.STATIC_DRAW);
+    var uE = gl.getUniformLocation(pr, 'hasE'), uR = gl.getUniformLocation(pr, 'uR'); gl.uniform1i(gl.getUniformLocation(pr, 'T'), 0); gl.uniform1i(gl.getUniformLocation(pr, 'E'), 1);
     var uM = gl.getUniformLocation(pr, 'M'), uCut = gl.getUniformLocation(pr, 'cut'), uFade = gl.getUniformLocation(pr, 'fade');
     gl.uniform3fv(gl.getUniformLocation(pr, 'mn'), m.mn); gl.uniform3fv(gl.getUniformLocation(pr, 'sc'), m.sc);
     var tex = {}, pending = 0, alive = true;
@@ -2970,8 +2972,8 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
       }; im.src = H.tex[k].replace(/\s/g, '');
     });
     gl.enable(gl.DEPTH_TEST); 
-    var yaw = -0.75, pitch = 0.48, dist = 74, tYaw = yaw, tPitch = pitch, tDist = dist, auto = true, dirty = true, raf = 0, last = 0, idleT = 0;
-    var tgt = [-3, 4, 0], tTgt = tgt.slice(), sway = null, clock = 0;
+    var yaw = O.y != null ? O.y : -0.75, pitch = O.p || 0.48, dist = O.d || 74, tYaw = yaw, tPitch = pitch, tDist = dist, auto = true, dirty = true, raf = 0, last = 0, idleT = 0;
+    var tgt = (O.c || [-3, 4, 0]).slice(), tTgt = tgt.slice(), sway = null, clock = 0;
     function size() { var r = canvas.getBoundingClientRect(), d = Math.min(window.devicePixelRatio || 1, 1.75); var w = Math.max(1, Math.round(r.width * d)), h = Math.max(1, Math.round(r.height * d)); if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; dirty = true; } }
     function draw() {
       size(); gl.viewport(0, 0, canvas.width, canvas.height);
@@ -2979,8 +2981,9 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
       var e = [tgt[0] + dist * Math.cos(pitch) * Math.sin(yaw), tgt[1] + dist * Math.sin(pitch), tgt[2] + dist * Math.cos(pitch) * Math.cos(yaw)];
       var asp = canvas.width / canvas.height, fy = asp < 1.25 ? 2 * Math.atan(Math.tan(0.31) * 1.25 / asp) : 0.62;
       gl.uniformMatrix4fv(uM, false, m4mul(persp(fy, asp, 1, 300), look(e, tgt)));
-      gl.uniform1f(uFade, 1);
+      gl.uniform1f(uFade, 1); gl.uniform1f(uR, O.r || 27);
       m.g.forEach(function (g) {
+        gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, g.e ? tex[g.e] : tex[g.t]); gl.uniform1f(uE, g.e ? 1 : 0); gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, tex[g.t]); var pl = g.t.indexOf('Plants') === 0; gl.uniform1f(uCut, pl ? 0.5 : -1.); if (pl) gl.disable(gl.CULL_FACE); else gl.enable(gl.CULL_FACE);
         gl.drawElements(gl.TRIANGLES, g.n, gl.UNSIGNED_SHORT, g.i * 2);
       });
@@ -3067,7 +3070,7 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
   box.innerHTML =
     '<div class="vcp-bg" data-x></div>' +
     '<div class="vcp-panel">' +
-      '<div class="vcp-stage"><div class="vcp-floor"></div><canvas class="vcp-cv" aria-label="บ้าน 3D ลากเพื่อหมุน"></canvas><div class="vcp-big" aria-hidden="true"></div>' +
+      '<div class="vcp-stage"><div class="vcp-floor"></div><canvas class="vcp-cv" aria-label="บ้าน 3D ลากเพื่อหมุน"></canvas><canvas class="vcp-cv vcp-cv2" aria-label="คอนโด 3D ลากเพื่อหมุน"></canvas><div class="vcp-big" aria-hidden="true"></div>' +
         '<p class="vcp-load" hidden>กำลังโหลดบ้าน 3D…</p>' +
         '<div class="vcp-cap"><b class="vcp-cn"></b><span class="vcp-cs"></span></div>' +
         '<p class="vcp-drag">ลากเพื่อหมุน</p><div class="vcp-tags" aria-hidden="true"></div>' +
@@ -3084,7 +3087,31 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
   var list = box.querySelector('.vcp-list'), stage = box.querySelector('.vcp-stage'), cv = box.querySelector('.vcp-cv'),
     big = box.querySelector('.vcp-big'), cn = box.querySelector('.vcp-cn'), cs = box.querySelector('.vcp-cs'),
     load = box.querySelector('.vcp-load'), ok = box.querySelector('.vcp-ok');
-  var pending = sel.value, shown = null, view = null, houseState = 0, lastFocus = null;
+  var pending = sel.value, shown = null, view = null, houseState = 0, lastFocus = null,
+    cv2 = box.querySelector('.vcp-cv2'), cview = null, condoState = 0, rentModel = 'house', credit = box.querySelector('.vcp-credit');
+  var CREDIT = { house: 'บ้าน 3D “Autumn House” โดย Zhenya (Sketchfab)', condo: 'คอนโด 3D “Low Rise Modern Condo 2” โดย aitortilla01 (Sketchfab)' };
+  function setCredit(m) { credit.innerHTML = CREDIT[m] + ' · <a href="https://creativecommons.org/licenses/by/4.0/deed.th" target="_blank" rel="noopener">CC BY 4.0</a>'; }
+  function loadCondo(cb) {
+    if (condoState === 2) return cb && cb();
+    if (cb) (loadCondo.q = loadCondo.q || []).push(cb);
+    if (condoState === 1) return;
+    condoState = 1;
+    window.VCCondoReady = function () { condoState = 2; (loadCondo.q || []).forEach(function (f) { f(); }); loadCondo.q = []; };
+    var s = document.createElement('script'); s.src = 'condo3d.js?v=1'; s.async = true;
+    s.onerror = function () { condoState = 0; load.textContent = 'โหลดคอนโด 3D ไม่สำเร็จ'; };
+    document.head.appendChild(s);
+  }
+  function showCondo() {
+    stage.classList.add('is-condo'); setCredit('condo'); if (view) view.pause();
+    if (condoState !== 2) { load.hidden = false; load.textContent = 'กำลังโหลดคอนโด 3D…'; }
+    loadCondo(function () {
+      load.hidden = true;
+      if (!cview) { cview = window.VCHouseView(cv2, window.VCCondo, { y: -0.7, p: 0.4, d: 112, c: [0, 12, 0], r: 40 }); if (!cview) return; }
+      if (shown === 'rent' && rentModel === 'condo' && !box.hidden) { cview.play(); stage.classList.add('condo-ready'); }
+    });
+  }
+  function hideCondo() { stage.classList.remove('is-condo', 'condo-ready'); if (cview) cview.pause(); setCredit('house'); }
+
 
   function buildList() {
     list.innerHTML = '';
@@ -3119,16 +3146,22 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     cn.textContent = o.name; cs.textContent = 'เน้นตรวจ: ' + (FOCUS[v] || o.sub);
     if (shown === v) return; shown = v;
     var h = HOUSE[v], tg = box.querySelector('.vcp-tags');
-    tg.innerHTML = h ? h.tag.map(function (t, i) { return '<span style="--i:' + i + '">' + t + '</span>'; }).join('') : '';
+    tg.innerHTML = h ? h.tag.map(function (t, i) {
+      var m = v === 'rent' ? (i === 0 ? 'house' : i === 1 ? 'condo' : '') : '';
+      if (m) return '<button type="button" class="vcp-tg' + (m === rentModel ? ' is-m' : '') + '" data-m="' + m + '" style="--i:' + i + '">' + t + '</button>';
+      return '<span class="' + (v === 'sale' && i === 0 ? 'is-m' : '') + '" style="--i:' + i + '">' + t + '</span>';
+    }).join('') : '';
     stage.dataset.ct = v;
     stage.classList.toggle('is-house', !!h);
-    if (h) {
+    if (!h || v !== 'rent' || rentModel !== 'condo') hideCondo();
+    if (h && v === 'rent' && rentModel === 'condo') { big.classList.remove('is-in'); showCondo(); }
+    else if (h) {
       big.classList.remove('is-in');
       if (houseState !== 2) { load.hidden = false; load.textContent = 'กำลังโหลดบ้าน 3D…'; }
       loadHouse(function () {
         load.hidden = true;
         if (!view) { view = window.VCHouseView(cv, window.VCHouse); if (!view) { stage.classList.remove('is-house'); return; } }
-        if (shown === v && !box.hidden) { view.play(); view.aim(h.y, h.p, h.d, h.c, h.sw); stage.classList.add('house-ready'); }
+        if (shown === v && !box.hidden && !(v === 'rent' && rentModel === 'condo')) { view.play(); view.aim(h.y, h.p, h.d, h.c, h.sw); stage.classList.add('house-ready'); }
       });
     } else {
       if (view) view.pause();
@@ -3161,7 +3194,7 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     }
     syncTrig();
     box.classList.remove('is-open'); root.classList.remove('vcp-open');
-    if (view) view.pause();
+    if (view) view.pause(); if (cview) cview.pause();
     setTimeout(function () { if (!box.classList.contains('is-open')) box.hidden = true; }, 260);
     try { (lastFocus && lastFocus !== document.body ? lastFocus : trig).focus({ preventScroll: true }); } catch (e) {}
   }
@@ -3171,6 +3204,14 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
   box.addEventListener('click', function (e) {
     if (e.target.closest('[data-x]')) return close(false);
     if (e.target.closest('.vcp-ok')) return close(true);
+    var tb = e.target.closest('.vcp-tg');
+    if (tb && tb.dataset.m !== rentModel) {
+      rentModel = tb.dataset.m;
+      Array.prototype.forEach.call(box.querySelectorAll('.vcp-tg'), function (x) { x.classList.toggle('is-m', x.dataset.m === rentModel); });
+      if (rentModel === 'condo') showCondo(); else { hideCondo(); shown = null; preview('rent'); }
+      return;
+    }
+    if (tb) return;
     var b = e.target.closest('.vcp-opt');
     if (b) { pending = b.dataset.ct; mark(); preview(pending); }
   });
