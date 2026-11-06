@@ -1158,6 +1158,8 @@ window.VCStepPlay = function (v, fps, onEnd) {
   var orig = Element.prototype.scrollIntoView;
   Element.prototype.scrollIntoView = function () {
     var v = viewOf(this), args = arguments, self = this;
+    /* เลื่อนไปส่วนบัญชี/ส่วนตรวจ: สลับให้แสดงส่วนนั้น (คอมแสดงทีละส่วน) */
+    if (v === 'desk' && this.closest) { if (this.closest('#authCard')) root.setAttribute('data-desk', 'acct'); else if (this.closest('#checkCard,#resultCard')) root.setAttribute('data-desk', 'check'); }
     if (v && v !== cur) { go(v, function () { orig.apply(self, args); }, { instant: true }); return; }
     return orig.apply(this, args);
   };
@@ -2904,4 +2906,15 @@ window.VCStepPlay = function (v, fps, onEnd) {
   function all() { Array.prototype.forEach.call(document.querySelectorAll('.vd-paper'), enhance); }
   function go() { all(); new MutationObserver(all).observe(document.body, { childList: true }); setTimeout(all, 2500); setTimeout(all, 6000); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+})();
+
+/* ===== คอม: หน้า “ตรวจสัญญา” ไม่แสดงส่วนบัญชี — ถ้ายังไม่เข้าสู่ระบบ ขึ้นแถบเชิญเข้าสู่ระบบแทน ===== */
+(function () {
+  function init() {
+    var cc = document.getElementById('checkCard'); if (!cc || cc.querySelector('.vc-needlogin')) return;
+    var n = document.createElement('div'); n.className = 'vc-needlogin';
+    n.innerHTML = '<span><b>เข้าสู่ระบบก่อนตรวจสัญญา</b> · สมัครฟรี รับตรวจ 2 ครั้ง</span><a href="#authCard">เข้าสู่ระบบ / สมัคร →</a>';
+    cc.insertBefore(n, cc.firstChild);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
