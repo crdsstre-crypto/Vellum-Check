@@ -1131,6 +1131,8 @@ window.VCStepPlay = function (v, fps, onEnd) {
   }
   function route(h, opts) {
     var view = HASH.hasOwnProperty(h) ? HASH[h] : (h && document.getElementById(h.slice(1)) ? (viewOf(document.getElementById(h.slice(1))) || cur) : 'home');
+    /* เมนู “บัญชี” = แสดงเฉพาะส่วนบัญชี ไม่แสดงส่วนตรวจสัญญา/ผลตรวจ (คอม) */
+    if (view === 'desk') root.setAttribute('data-desk', (h === '#authCard' || h === '#desk') ? 'acct' : 'check'); else root.removeAttribute('data-desk');
     go(view, function () { if (view !== 'home') scrollToHash(h); }, opts);
   }
   window.addEventListener('hashchange', function () { route(location.hash); });
