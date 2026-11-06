@@ -2990,10 +2990,10 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     }
     function frame(t) {
       raf = 0; if (!alive) return;
-      var dt = Math.min(0.05, (t - (last || t)) / 1000); last = t;
+      var dt = last ? Math.min(0.05, Math.max(0, (t - last) / 1000)) : 1 / 60; last = t;
       clock += dt; if (auto) { if (sway === null) tYaw += dt * 0.25; else tYaw = sway + Math.sin(clock * 0.45) * 0.42; }
       var ny = yaw + (tYaw - yaw) * Math.min(1, dt * 6), np = pitch + (tPitch - pitch) * Math.min(1, dt * 6), nd = dist + (tDist - dist) * Math.min(1, dt * 4);
-      var moving = Math.abs(ny - yaw) > 1e-4 || Math.abs(np - pitch) > 1e-4 || Math.abs(nd - dist) > 1e-3 || auto;
+      var moving = Math.abs(tYaw - ny) > 1e-4 || Math.abs(tPitch - np) > 1e-4 || Math.abs(tDist - nd) > 1e-3 || auto || !!down;
       yaw = ny; pitch = np; dist = nd;
       var kt = Math.min(1, dt * 4), mt = 0; for (var q = 0; q < 3; q++) { var dq = tTgt[q] - tgt[q]; tgt[q] += dq * kt; mt += Math.abs(dq); }
       if (mt > 1e-3) moving = true;
@@ -3016,6 +3016,7 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     return {
       pause: function () { auto = false; if (raf) cancelAnimationFrame(raf); raf = 0; },
       play: function () { auto = !reduce; dirty = true; kick(); },
+      dbg: function () { return [+yaw.toFixed(3), +tYaw.toFixed(3), auto, !!down, raf, pending]; },
       aim: function (y, p, d, c, sw) { if (c) tTgt = c.slice(); clock = 0; var k = Math.round((tYaw - y) / (2 * Math.PI)); tYaw = y + k * 2 * Math.PI; tPitch = p; tDist = d; sway = sw ? tYaw : null; dirty = true; kick(); },
       destroy: function () { alive = false; if (raf) cancelAnimationFrame(raf); var x = gl.getExtension('WEBGL_lose_context'); if (x) x.loseContext(); }
     };
@@ -3241,5 +3242,5 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
   document.addEventListener('click', function (e) {
     if (e.target.closest && e.target.closest('#ctTrigger,#detectChange')) { e.preventDefault(); e.stopImmediatePropagation(); open(); }
   }, true);
-  window.VCPicker = { open: open, close: close };
+  window.VCPicker = { open: open, close: close, v: function () { return view; } };
 })();
