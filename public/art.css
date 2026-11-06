@@ -2808,3 +2808,6 @@ button.sx-stat.h.on{background:#fbe9e5}button.sx-stat.c.on{background:#fbf1de}
   .vd-modal .sx-deckp{height:min(88vh,620px)}
   .sx-card .sx-sin{justify-content:center;padding-top:0}
 }
+
+/* ===== คอม: หน้า “บัญชี” ไม่แสดงส่วนตรวจสัญญาและผลตรวจ ===== */
+@media (min-width:768px){html.vc-spa[data-view="desk"][data-desk="acct"] :is(#checkCard,#resultCard){display:none !important}}
