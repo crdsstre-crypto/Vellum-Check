@@ -1,3 +1,29 @@
+/* ===== หน้าต่างเอกสาร (ตัวอย่าง/ราคา/ข้อกำหนด): อนิเมชั่นตอนเปิด/สลับแท็บ/เลื่อนอ่าน ===== */
+(function () {
+  var reduce = function () { return window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches; };
+  window.VCDocFX = function (body) {
+    if (!body) return;
+    var paper = body.closest('.vd-paper');
+    /* แถบความคืบหน้าการอ่าน */
+    if (paper && !paper.querySelector('.vd-prog')) { var pg = document.createElement('i'); pg.className = 'vd-prog'; pg.setAttribute('aria-hidden', 'true'); var tb = paper.querySelector('.vd-tabs'); if (tb) tb.appendChild(pg); else paper.insertBefore(pg, paper.firstChild); }
+    var prog = paper && paper.querySelector('.vd-prog');
+    function upd() { if (!prog) return; var mx = body.scrollHeight - body.clientHeight; prog.style.transform = 'scaleX(' + (mx > 4 ? Math.min(1, body.scrollTop / mx) : 1).toFixed(3) + ')'; }
+    if (!body.__fx) { body.__fx = true; body.addEventListener('scroll', upd, { passive: true }); }
+    upd();
+    body.classList.remove('vd-swap'); void body.offsetWidth; body.classList.add('vd-swap');
+    var items = body.querySelectorAll('.vd-rv');
+    if (reduce() || !('IntersectionObserver' in window)) { Array.prototype.forEach.call(items, function (e) { e.classList.add('in'); }); return; }
+    var n = 0;
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (!e.isIntersecting) return; var el = e.target; io.unobserve(el);
+      el.style.transitionDelay = (Math.min(n++, 6) * 70) + 'ms'; el.classList.add('in'); setTimeout(function () { el.style.transitionDelay = ''; n = Math.max(0, n - 1); }, 700); }); }, { root: body, threshold: .12 });
+    Array.prototype.forEach.call(items, function (e) { io.observe(e); });
+    /* นับตัวเลขขึ้น */
+    Array.prototype.forEach.call(body.querySelectorAll('.vd-count'), function (b, i) {
+      var to = +b.getAttribute('data-n') || 0, t0 = performance.now() + 250 + i * 120; b.textContent = '0';
+      (function step(now) { var k = Math.max(0, Math.min(1, (now - t0) / 700)); b.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); })(performance.now());
+    });
+  };
+})();
 /* ===== โหลดเร็วขึ้น: ของที่ใช้เฉพาะหน้าโต๊ะเข้าสู่ระบบ/คลิป ให้เตรียมทีหลัง ===== */
 (function () {
   var q = [], fired = false;
@@ -2436,8 +2462,8 @@ window.VCStepPlay = function (v, fps, onEnd) {
       var nh = 0, nc = 0; d.c.forEach(function (c) { if (c[1] === H_) nh++; else if (c[1] === C_) nc++; });
       return '<div class="vd-tabs" role="tablist">' + SAMPLES.map(function (q) { return '<button type="button" role="tab" data-sx="' + q.k + '" class="sx-t k-' + q.k + (q === d ? ' on' : '') + '" aria-selected="' + (q === d) + '">' + q.short + '</button>'; }).join('') + '</div>' +
         '<div class="vd-body sx-body k-' + d.k + '" tabindex="0"><p class="sx-free">ตัวอย่าง · ดูฟรี ไม่ใช้เครดิต</p><h4>' + d.name + '</h4>' +
-        '<p class="sx-sum"><span class="sx-b h">เสี่ยงสูง ' + nh + ' จุด</span><span class="sx-b c">ควรระวัง ' + nc + ' จุด</span></p>' +
-        d.c.map(function (c, i) { return '<section class="sx-c' + (c[1] ? ' f-' + c[1] : '') + '"><p><b>ข้อ ' + (i + 1) + '.</b> ' + c[0] + '</p>' + (c[1] ? '<div class="sx-n"><span class="sx-b ' + c[1] + '">' + (c[1] === H_ ? '⚠ เสี่ยงสูง' : 'ควรระวัง') + '</span>' + c[2] + '</div>' : '') + '</section>'; }).join('') +
+        '<div class="sx-sum"><div class="sx-stat h"><b class="vd-count" data-n="' + nh + '">' + nh + '</b><span>เสี่ยงสูง</span></div><div class="sx-stat c"><b class="vd-count" data-n="' + nc + '">' + nc + '</b><span>ควรระวัง</span></div><div class="sx-stat n"><b class="vd-count" data-n="' + d.c.length + '">' + d.c.length + '</b><span>ข้อทั้งหมด</span></div></div>' +
+        d.c.map(function (c, i) { return '<section class="sx-c vd-rv' + (c[1] ? ' f-' + c[1] : '') + '"><span class="sx-no">' + (i + 1) + '</span><div class="sx-cb"><p>' + c[0] + '</p>' + (c[1] ? '<div class="sx-n"><span class="sx-b ' + c[1] + '">' + (c[1] === H_ ? '⚠ เสี่ยงสูง' : 'ควรระวัง') + '</span><span class="sx-nt">' + c[2] + '</span></div>' : '<p class="sx-ok">✓ ไม่พบประเด็นที่ควรกังวล</p>') + '</div></section>'; }).join('') +
         '<p class="sx-note">ตัวอย่างนี้จัดทำไว้ล่วงหน้าจากสัญญาสมมติ เพื่อให้เห็นรูปแบบผลตรวจ ผลจริงขึ้นกับข้อความในสัญญาของคุณ · เป็นการคัดกรองเบื้องต้น ไม่ใช่คำปรึกษาทางกฎหมาย</p></div>' +
         '<div class="vd-foot"><button type="button" class="vd-close">ปิด</button><button type="button" class="vd-ok sx-go">ลองตรวจสัญญาของคุณ · ฟรี 2 ครั้ง →</button></div>';
     }
@@ -2452,7 +2478,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
         });
         document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && sx.classList.contains('on')) close(); });
       }
-      function fill(q) { sx.firstChild.innerHTML = sxHTML(q); var b = sx.querySelector('.vd-body'); b.scrollTop = 0; try { b.focus({ preventScroll: true }); } catch (x) {} }
+      function fill(q) { sx.firstChild.innerHTML = sxHTML(q); sx.firstChild.className = 'vd-paper sx-paper k-' + q.k; var b = sx.querySelector('.vd-body'); b.scrollTop = 0; window.VCDocFX(b); try { b.focus({ preventScroll: true }); } catch (x) {} }
       function close() { sx.classList.remove('on'); root.classList.remove('vd-lock'); }
       fill(d); sx.classList.add('on'); root.classList.add('vd-lock');
     }
@@ -2633,7 +2659,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
   };
   function docHTML(k) {
     var d = DOCS[k];
-    return '<p class="vd-meta">ฉบับที่ ' + VERSION + ' · มีผลตั้งแต่ ' + EFFECTIVE + '</p><h4>' + d.t + '</h4>' + d.h.map(function (s) { return '<section><h5>' + s[0] + '</h5><div>' + s[1] + '</div></section>'; }).join('');
+    return '<p class="vd-meta">ฉบับที่ ' + VERSION + ' · มีผลตั้งแต่ ' + EFFECTIVE + '</p><h4>' + d.t + '</h4>' + d.h.map(function (s) { return '<section class="vd-rv"><h5>' + s[0] + '</h5><div>' + s[1] + '</div></section>'; }).join('');
   }
   function paperHTML(k, inDoc) {
     return '<div class="vd-tabs" role="tablist"><button type="button" role="tab" data-vd="terms">ข้อกำหนด</button><button type="button" role="tab" data-vd="privacy">ความเป็นส่วนตัว</button></div>' +
@@ -2642,7 +2668,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
   }
   function setTab(paper, k) {
     Array.prototype.forEach.call(paper.querySelectorAll('[data-vd]'), function (b) { var on = b.getAttribute('data-vd') === k; b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
-    var body = paper.querySelector('.vd-body'); body.innerHTML = docHTML(k); body.scrollTop = 0;
+    var body = paper.querySelector('.vd-body'); body.innerHTML = docHTML(k); body.scrollTop = 0; window.VCDocFX(body);
   }
   function accepted() { try { return localStorage.getItem(KEY) === OKV; } catch (e) { return false; } }
   function remember(on) { try { if (on) localStorage.setItem(KEY, OKV); else localStorage.removeItem(KEY); } catch (e) {} }
@@ -2747,12 +2773,12 @@ window.VCStepPlay = function (v, fps, onEnd) {
   ];
   function priceHTML() {
     return '<p class="sx-free">เริ่มต้นฟรี · ไม่มีค่าสมัครรายเดือน</p><h4>ราคา</h4><div class="px-plans">' +
-      PLANS.map(function (p) { return '<div class="px-plan p-' + p[4] + '"><span class="px-n">' + p[0] + '</span><b class="px-p">' + p[1] + '</b><span class="px-q">' + p[2] + '</span><small>' + p[3] + '</small></div>'; }).join('') +
+      PLANS.map(function (p) { return '<div class="px-plan vd-rv p-' + p[4] + '"><span class="px-n">' + p[0] + '</span><b class="px-p">' + p[1] + '</b><span class="px-q">' + p[2] + '</span><small>' + p[3] + '</small></div>'; }).join('') +
       '</div><ul class="px-pts"><li>จ่ายเมื่ออยากใช้ ซื้อเครดิตเป็นครั้ง ไม่ผูกรายเดือน</li><li>ตรวจไม่สำเร็จ คืนเครดิตอัตโนมัติ</li><li>ชำระผ่าน QR พร้อมเพย์</li></ul>' +
       '<p class="sx-note">ใช้คัดกรองก่อน เพื่อรู้ว่าควรอ่านหรือถามข้อไหนเพิ่ม และควรปรึกษาทนายหรือไม่ · ไม่ใช่คำปรึกษาทางกฎหมาย</p>';
   }
   function faqHTML() {
-    return '<h4>คำถามที่พบบ่อย</h4>' + FAQ.map(function (q, i) { return '<details class="px-q1"' + (i === 0 ? ' open' : '') + '><summary>' + q[0] + '</summary><p>' + q[1] + '</p></details>'; }).join('');
+    return '<h4>คำถามที่พบบ่อย</h4>' + FAQ.map(function (q, i) { return '<details class="px-q1 vd-rv"' + (i === 0 ? ' open' : '') + '><summary>' + q[0] + '</summary><p>' + q[1] + '</p></details>'; }).join('');
   }
   var m = null;
   function open(k) {
@@ -2771,7 +2797,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
   }
   function tab(k) {
     Array.prototype.forEach.call(m.querySelectorAll('[data-px]'), function (b) { var on = b.getAttribute('data-px') === k; b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
-    var b = m.querySelector('.vd-body'); b.innerHTML = k === 'faq' ? faqHTML() : priceHTML(); b.scrollTop = 0; try { b.focus({ preventScroll: true }); } catch (e) {}
+    var b = m.querySelector('.vd-body'); b.innerHTML = k === 'faq' ? faqHTML() : priceHTML(); b.scrollTop = 0; window.VCDocFX(b); try { b.focus({ preventScroll: true }); } catch (e) {}
   }
   function close() { m.classList.remove('on'); document.documentElement.classList.remove('vd-lock'); if (/^#(pricing|faq)$/.test(location.hash)) try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} }
   window.VCPrice = { open: open };
@@ -2779,4 +2805,36 @@ window.VCStepPlay = function (v, fps, onEnd) {
   function fromHash() { if (location.hash === '#pricing') open('price'); else if (location.hash === '#faq') open('faq'); }
   addEventListener('hashchange', fromHash);
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fromHash); else fromHash();
+})();
+
+/* ===== หน้าต่างเอกสาร (ตัวอย่าง/ราคา/ข้อกำหนด): แถบความคืบหน้าการอ่าน + เนื้อหาค่อยๆ ปรากฏเมื่อเลื่อนถึง + ไฮไลต์ลากเหมือนปากกา ===== */
+(function () {
+  'use strict';
+  if (!('IntersectionObserver' in window)) return;
+  function bind(paper) {
+    var body = paper.querySelector('.vd-body'); if (!body) return;
+    var bar = paper.querySelector(':scope > .vd-prog');
+    if (!bar) { bar = document.createElement('i'); bar.className = 'vd-prog'; bar.setAttribute('aria-hidden', 'true'); paper.insertBefore(bar, body); }
+    if (body.__vb) return; body.__vb = true;
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { root: body, threshold: .12 });
+    function prog() { var m = body.scrollHeight - body.clientHeight; bar.style.transform = 'scaleX(' + (m > 4 ? Math.min(1, body.scrollTop / m) : 1).toFixed(3) + ')'; }
+    function scan() {
+      var i = 0;
+      Array.prototype.forEach.call(body.querySelectorAll(':scope > *, .px-plans > .px-plan'), function (el) {
+        if (el.classList.contains('px-plans') || el.classList.contains('rv')) return;
+        el.classList.add('rv'); el.style.setProperty('--rd', Math.min(i++, 9) * 55 + 'ms'); io.observe(el);
+      });
+      prog();
+    }
+    body.addEventListener('scroll', prog, { passive: true });
+    new MutationObserver(function () { body.classList.remove('fresh'); void body.offsetWidth; body.classList.add('fresh'); scan(); }).observe(body, { childList: true });
+    body.classList.add('fresh'); scan();
+  }
+  function enhance(paper) {
+    if (paper.__vx) return; paper.__vx = true; bind(paper);
+    new MutationObserver(function () { bind(paper); }).observe(paper, { childList: true });
+  }
+  function all() { Array.prototype.forEach.call(document.querySelectorAll('.vd-paper'), enhance); }
+  function go() { all(); new MutationObserver(all).observe(document.body, { childList: true }); setTimeout(all, 2500); setTimeout(all, 6000); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
 })();
