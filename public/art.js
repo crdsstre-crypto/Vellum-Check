@@ -34,7 +34,7 @@
   var mq2 = [], asked = false;
   window.VCMReady = function () { var a = mq2; mq2 = []; a.forEach(function (f) { try { f(window.VCM); } catch (e) {} }); };
   window.VCMedia = function (f) { if (window.VCM) { try { f(window.VCM); } catch (e) {} } else mq2.push(f); };
-  function loadMedia() { if (asked || window.VCM) return; asked = true; var sc = document.createElement('script'); sc.src = 'art-media.js?v=1'; sc.async = true;
+  function loadMedia() { if (asked || window.VCM) return; asked = true; var sc = document.createElement('script'); sc.src = 'art-media.js?v=2'; sc.async = true;
     sc.onerror = function () { asked = false; setTimeout(loadMedia, 3000); }; document.head.appendChild(sc); }
   q.push(loadMedia);
   function watch() {
@@ -59,7 +59,7 @@
 /* ภาพพื้นโต๊ะไม้และเนื้อกระดาษ (ย้ายออกจาก art.css ให้หน้าแรกแสดงผลเร็วขึ้น) ใส่เมื่อจะใช้หน้าโต๊ะ/หน้าตรวจ */
 (function () {
   var IMG0, PAPER;
-  window.VCWhenDesk(function () { window.VCMedia(function (M) { var r = document.documentElement.style; r.setProperty('--vc-img0', M.IMG0); r.setProperty('--vc-paper', M.PAPER); }); });
+  window.VCWhenDesk(function () { window.VCMedia(function (M) { var root0 = document.documentElement, r = root0.style; r.setProperty('--vc-img0', M.IMG0); r.setProperty('--vc-paper', M.PAPER); if (M.ROCK) { r.setProperty('--vc-rock', M.ROCK); r.setProperty('--vc-rock-m', M.ROCKM); root0.classList.add('vc-rock-on'); } }); });
 })();
 /* เล่นวิดีโอแบบเดินเฟรมเอง (สำรอง): iPhone โหมดประหยัดพลังงาน/บางเบราว์เซอร์บล็อก video.play()
    → เลื่อน currentTime ตามนาฬิกาเอง แล้ววาดเฟรมตอน seeked · คืนฟังก์ชันหยุด */
@@ -2920,40 +2920,5 @@ window.VCStepPlay = function (v, fps, onEnd) {
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 
-/* ===== หน้าตรวจสัญญา (คอม) v2: เปิด/ปิดธีมโต๊ะ + แฟ้มประเภทสัญญา + ตราประทับ ===== */
-(function () {
-  var root = document.documentElement, wide = matchMedia('(min-width:1024px)');
-  var COL = { unsure: '#6b5a48', rent: '#3f6b5f', sale: '#7a5a2a', employment: '#3e5675', service: '#5b4a7a', loan: '#8a4a3b', shareholder: '#3c6a7a', nda: '#4a4a52', other: '#6b6b5a' };
-  function sync() { var on = wide.matches && root.getAttribute('data-view') === 'desk' && root.getAttribute('data-desk') === 'check'; root.classList.toggle('ck3d', on); if (on && window.VCMedia) window.VCMedia(function (M) { var r = root.style; if (!r.getPropertyValue('--vc-img0')) { r.setProperty('--vc-img0', M.IMG0); r.setProperty('--vc-paper', M.PAPER); } }); }
-  function init() {
-    var cc = document.getElementById('checkCard'), sel = document.getElementById('contractType'); if (!cc || !sel || cc.querySelector('.ck-tabs')) return;
-    var tabs = document.createElement('div'); tabs.className = 'ck-tabs'; tabs.setAttribute('role', 'tablist'); tabs.setAttribute('aria-label', 'ประเภทสัญญา');
-    var pick = document.createElement('p'); pick.className = 'ck-pick';
-    Array.prototype.forEach.call(sel.options, function (o) {
-      var b = document.createElement('button'); b.type = 'button'; b.className = 'ck-tab'; b.setAttribute('role', 'tab'); b.setAttribute('data-v', o.value);
-      var short = o.value === 'unsure' ? 'ไม่แน่ใจ' : o.textContent.split('(')[0].replace('สัญญา', '').trim(); b.textContent = short; b.title = o.textContent; b.style.setProperty('--c', COL[o.value] || '#6b5a48');
-      b.addEventListener('click', function () { sel.value = o.value; sel.dispatchEvent(new Event('change', { bubbles: true })); });
-      tabs.appendChild(b);
-    });
-    function upd() { var v = sel.value, o = sel.options[sel.selectedIndex]; Array.prototype.forEach.call(tabs.children, function (b) { var on = b.getAttribute('data-v') === v; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
-      pick.style.setProperty('--c', COL[v] || '#6b5a48'); pick.innerHTML = 'ประเภทสัญญา <b>' + (o ? o.textContent.split('(')[0].trim() : '') + '</b>' + (v === 'unsure' ? ' · ระบบจะดูจากข้อความให้เอง' : ''); }
-    sel.addEventListener('change', upd); upd();
-    cc.insertBefore(tabs, cc.firstChild);
-    var fw = cc.querySelector('.field-wrap'); if (fw) fw.parentNode.insertBefore(pick, fw);
-    var btn = document.getElementById('checkBtn');
-    if (btn) btn.addEventListener('pointerdown', function (e) {
-      if (!root.classList.contains('ck3d') || btn.disabled) return;
-      btn.classList.remove('ck-press'); void btn.offsetWidth; btn.classList.add('ck-press');
-      if (document.body.animate) { var r = cc.getBoundingClientRect(), k = document.createElement('i'); k.className = 'ck-ink'; k.style.left = (e.clientX - r.left) + 'px'; k.style.top = (e.clientY - r.top) + 'px'; cc.appendChild(k);
-        k.animate([{ opacity: .9, transform: 'scale(.3)' }, { opacity: 0, transform: 'scale(1.6)' }], { duration: 650, easing: 'cubic-bezier(.2,.8,.3,1)' }).onfinish = function () { k.remove(); }; }
-    });
-    /* รอบ 2: ระหว่างตรวจ — แว่นขยายทองสแกนกระดาษ + ขั้นตอนเขียนด้วยหมึก */
-    var lens = document.createElement('i'); lens.className = 'ck-lens'; lens.setAttribute('aria-hidden', 'true'); lens.innerHTML = '<b></b>';
-    var band = document.createElement('i'); band.className = 'ck-band'; band.setAttribute('aria-hidden', 'true');
-    var ta = cc.querySelector('.ta-wrap'); if (ta) { ta.appendChild(band); ta.appendChild(lens); }
-    if (btn) new MutationObserver(function () { var busy = btn.classList.contains('is-busy'); cc.classList.toggle('ck-scan', busy); var rc = document.getElementById('resultCard'); if (rc) rc.classList.toggle('ck-wait', busy); }).observe(btn, { attributes: true, attributeFilter: ['class'] });
-    new MutationObserver(sync).observe(root, { attributes: true, attributeFilter: ['data-view', 'data-desk'] });
-    if (wide.addEventListener) wide.addEventListener('change', sync); sync();
-  }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
-})();
+/* หน้าตรวจ: ปุ่ม "ดูตัวอย่างผลตรวจฟรี" ในช่องผลตรวจว่าง */
+document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('#rsSample') && window.VCSample) window.VCSample.open('rent'); });
