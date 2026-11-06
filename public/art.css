@@ -2825,118 +2825,136 @@ button.sx-stat.h.on{background:#fbe9e5}button.sx-stat.c.on{background:#fbf1de}
 .vc-needlogin a{padding:8px 16px;border-radius:99px;background:#f0e6d2;color:#2a1d10;font:600 13.5px/1 Prompt,Sarabun,sans-serif;text-decoration:none;white-space:nowrap}
 @media (min-width:1280px){html.vc-art.vc-spa[data-view="desk"][data-desk="check"] main > #checkCard{grid-area:6 / 2 / 7 / 4}html.vc-art.vc-spa[data-view="desk"][data-desk="check"] main > #resultCard{grid-area:6 / 4 / 7 / 5}}
 
-/* ===================================================================
-   หน้าตรวจสัญญา (คอม) v2 — โต๊ะทนาย 3D: รอบที่ 1 หน้าตาโต๊ะ/กระดาษ/แฟ้ม/ตราประทับ
-   ใช้เมื่อ html[data-desk="check"] และจอ ≥1024px · ปุ่ม/ช่อง/ID เดิมครบ (script.js ใช้ต่อได้)
-   =================================================================== */
-@media (min-width:1024px){
-  html.ck3d #vcBackdrop::after{
-    background:
-      radial-gradient(60% 55% at 22% 12%,rgba(255,180,95,.28),transparent 70%),
-      radial-gradient(40% 40% at 88% 85%,rgba(255,140,60,.12),transparent 70%),
-      radial-gradient(120% 90% at 50% 40%,rgba(6,4,2,0) 40%,rgba(4,3,2,.82) 100%),
-      linear-gradient(rgba(10,6,3,.42),rgba(10,6,3,.42)),
-      var(--vc-img0,none) center/cover no-repeat,#1a110a !important}
-  html.ck3d main{perspective:1800px}
-  /* --- กระดาษสัญญา --- */
-  html.ck3d main > #checkCard{
-    --paper:#2a1d10;--paper-dim:#6b5132;--ink:#f6efe0;--silver:#7a6142;--silver-hi:#3a2714;--muted:#7a6142;--text:#2a1d10;
-    --hair:rgba(60,40,20,.16);--hair-strong:rgba(60,40,20,.32);
-    position:relative;color:#2a1d10;margin-top:clamp(88px,12vh,120px) !important;margin-bottom:60px;padding:56px clamp(28px,3vw,46px) 40px !important;border:0 !important;border-radius:3px !important;
-    background:linear-gradient(180deg,rgba(255,255,255,.35),transparent 30%),var(--vc-paper,none) center/cover,#efe5cf !important;
-    box-shadow:0 2px 0 rgba(255,255,255,.5) inset,0 30px 60px -18px rgba(0,0,0,.75),0 70px 90px -40px rgba(0,0,0,.6),-14px 22px 0 -8px #e2d6bc,-14px 22px 24px -6px rgba(0,0,0,.4) !important;
-    transform-origin:50% 0;transform:rotateX(3deg) rotate(-.6deg);transition:transform .8s var(--ease-out),box-shadow .8s;
-    animation:ckPaperIn .9s var(--ease-out) both}
-  html.ck3d main > #checkCard:focus-within{transform:rotateX(0) rotate(0)}
-  @keyframes ckPaperIn{from{opacity:0;transform:translateY(60px) rotateX(18deg) rotate(-3deg)}}
-  html.ck3d #checkCard::before{content:"";position:absolute;left:22px;top:-14px;width:30px;height:74px;border-radius:14px;border:4px solid #b8bdc4;border-bottom:0;
-    background:linear-gradient(90deg,rgba(255,255,255,.4),transparent);clip-path:inset(0 0 40% 0);filter:drop-shadow(0 3px 2px rgba(0,0,0,.35));z-index:2}
-  html.ck3d #checkCard :is(h2,h3){color:#2a1d10 !important;font-family:var(--font-display)}
-  html.ck3d #checkCard .step-head h2{font-size:clamp(1.4rem,2vw,1.8rem) !important}
-  html.ck3d #checkCard .step-head,html.ck3d #checkCard .step-sub{border-color:rgba(60,40,20,.22) !important}
-  html.ck3d #checkCard :is(.field-label,.ta-count,.hint,.step-cost,.check-note,.disclaimer,.ps-fine,.ps-summary,small){color:#6b5132 !important}
-  html.ck3d #checkCard .select-wrap,html.ck3d #checkCard select{color:#2a1d10 !important;background:transparent !important;border-color:rgba(60,40,20,.3) !important}
-  /* ช่องพิมพ์: เส้นบรรทัดบนกระดาษ ตัวหนังสือเหมือนหมึก */
-  html.ck3d #checkCard .ta-wrap{border:0 !important;box-shadow:none !important;background:none !important}
-  html.ck3d #checkCard #input{min-height:300px;padding:6px 4px 6px 54px !important;border:0 !important;border-radius:0 !important;box-shadow:none !important;color:#1d2a52 !important;
-    font:400 17px/32px 'Sarabun',serif !important;caret-color:#1d2a52;
-    background:linear-gradient(90deg,transparent 40px,rgba(190,60,50,.35) 40px,rgba(190,60,50,.35) 41px,transparent 41px),
-      repeating-linear-gradient(180deg,transparent 0 31px,rgba(70,100,150,.22) 31px 32px) !important;background-attachment:local !important}
-  html.ck3d #checkCard #input::placeholder{color:rgba(60,40,20,.38);font-style:italic}
-  html.ck3d #checkCard .sample-btn{color:#5a3a1a !important;border-color:rgba(90,60,30,.4) !important;background:rgba(255,255,255,.35) !important}
-  html.ck3d #checkCard :is(.ps,.voice-opt,.draft-bar){background:rgba(255,255,255,.42) !important;border:1px solid rgba(90,60,30,.18) !important;color:#2a1d10 !important;border-radius:10px !important}
-  html.ck3d #checkCard .ps-badge{background:#2c7a43 !important;color:#fff !important}
-  html.ck3d #checkCard button.ghost{color:#3a2714 !important;border-color:rgba(60,40,20,.35) !important;background:transparent !important}
-  /* --- แฟ้มประเภทสัญญา: แถบหูแฟ้มสีโผล่จากหัวกระดาษ --- */
-  html.ck3d #checkCard .select-wrap{display:none !important}
-  .ck-tabs{display:none}
-  html.ck3d .ck-tabs{display:flex;gap:4px;position:absolute;left:70px;right:24px;top:-30px;height:34px;align-items:flex-end;z-index:1}
-  .ck-tab{position:relative;flex:1 1 0;min-width:0;height:28px;padding:0 6px;border:0;border-radius:8px 8px 0 0;background:var(--c);color:#fff;font:600 12px/28px Prompt,Sarabun,sans-serif;
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;box-shadow:0 -2px 6px rgba(0,0,0,.25) inset,0 -3px 8px rgba(0,0,0,.25);filter:brightness(.82) saturate(.85);
-    transform:translateY(4px);transition:transform .35s cubic-bezier(.2,1.4,.4,1),height .35s,filter .25s}
-  .ck-tab:hover{transform:translateY(0);filter:none}
-  .ck-tab.on{height:34px;transform:translateY(0);filter:none;box-shadow:0 -4px 12px rgba(0,0,0,.35)}
-  .ck-pick{display:none}
-  html.ck3d .ck-pick{display:flex;align-items:center;gap:10px;margin:2px 0 14px;font:400 14px/1.4 Sarabun,sans-serif;color:#6b5132}
-  html.ck3d .ck-pick b{display:inline-block;padding:4px 12px;border-radius:99px;background:var(--c,#6b5132);color:#fff;font:600 13px/1.3 Prompt,sans-serif}
-  /* --- ตราประทับ (ปุ่มตรวจ) --- */
-  html.ck3d #checkCard #checkBtn{position:relative;padding:16px 34px 16px 64px !important;border:0 !important;border-radius:99px !important;color:#fff7e6 !important;font:700 17px/1 Prompt,Sarabun,sans-serif !important;
-    background:radial-gradient(circle at 50% 50%,#f6e2a0 0,#d9b463 38%,#b98a32 62%,#6b4d1c 66%,rgba(0,0,0,.25) 70%,transparent 72%) 14px 50%/38px 38px no-repeat,radial-gradient(circle at 30% 30%,#c4422e,#8c2015 70%) !important;box-shadow:0 2px 0 rgba(255,255,255,.25) inset,0 -3px 0 rgba(0,0,0,.25) inset,0 12px 22px -8px rgba(120,20,10,.6) !important;transition:transform .15s,box-shadow .2s}
-  html.ck3d #checkCard #checkBtn::before{z-index:1 !important;display:block !important;content:"" !important;position:absolute !important;inset:auto !important;left:14px !important;top:50% !important;width:38px !important;height:38px !important;margin-top:-19px !important;border-radius:50% !important;transform:none !important;opacity:1 !important;animation:none !important;
-    background:radial-gradient(circle at 38% 34%,#f6e2a0,#b98a32 60%,#6b4d1c) !important;box-shadow:0 2px 3px rgba(0,0,0,.4),inset 0 0 0 3px rgba(255,255,255,.2) !important}
-  html.ck3d #checkCard #checkBtn:not(.is-busy)::after{z-index:2 !important;display:block !important;content:"VC";position:absolute;left:14px;top:50%;width:38px;margin-top:-8px;text-align:center;font:800 13px/16px Newsreader,serif;color:#5a3b10;letter-spacing:.05em}
-  html.ck3d #checkCard #checkBtn:hover:not(:disabled){transform:translateY(-2px)}
-  html.ck3d #checkCard #checkBtn.ck-press{animation:ckStamp .5s cubic-bezier(.3,.1,.3,1)}
-  @keyframes ckStamp{0%{transform:none}35%{transform:translateY(5px) scale(.95);box-shadow:0 2px 4px rgba(120,20,10,.5)}100%{transform:none}}
-  .ck-ink{position:absolute;pointer-events:none;width:120px;height:120px;margin:-60px 0 0 -60px;border-radius:50%;border:3px solid rgba(160,30,20,.55);opacity:0;z-index:5}
-  /* --- กล่องผลตรวจ: สมุดหนังวางข้างกระดาษ --- */
-  html.ck3d main > #resultCard{margin-top:clamp(88px,12vh,120px) !important;padding:30px 28px !important;border:0 !important;border-radius:12px !important;
-    background:linear-gradient(160deg,rgba(255,255,255,.05),transparent 40%),linear-gradient(180deg,#2d1d12,#1e140c) !important;
-    box-shadow:0 1px 0 rgba(255,220,170,.1) inset,0 0 0 1px rgba(255,210,150,.12),0 30px 60px -20px rgba(0,0,0,.8) !important;margin-left:clamp(18px,2vw,32px);
-    animation:ckPaperIn 1s .15s var(--ease-out) both}
-  html.ck3d main > #resultCard h2{color:#f0dcb4 !important;border-color:rgba(255,210,150,.18) !important}
-  html.ck3d main > #resultCard .empty{color:rgba(240,220,180,.6) !important}
-  html.ck3d .vc-needlogin{margin-top:-8px;background:rgba(160,30,20,.08);border-color:rgba(160,30,20,.3);color:#4a3420}
-  html.ck3d .vc-needlogin b{color:#8c2015}
-  html.ck3d .vc-needlogin a{background:#3a2714;color:#f6efe0}
+/* หน้าตรวจสัญญา: พื้นหินดำ (ภาพเรนเดอร์ขึ้นเองต้นฉบับ) — มาจาก art-media.js เป็น --vc-rock */
+html[data-view="desk"][data-desk="check"] #vcBackdrop{background:#0b0b0c}
+html[data-view="desk"][data-desk="check"] #vcBackdrop .hero-3d{visibility:hidden !important}
+html[data-view="desk"][data-desk="check"] #vcBackdrop::after,
+html[data-view="desk"][data-desk="check"] body:has(#authLoggedOut:not([hidden])) #vcBackdrop::after{
+  background:radial-gradient(ellipse 60% 55% at 50% 48%,rgba(255,255,255,.035),transparent 70%),
+    radial-gradient(ellipse 120% 100% at 50% 50%,transparent 55%,rgba(0,0,0,.55)),
+    var(--vc-rock,none) center/cover no-repeat,#0b0b0c !important;
+  opacity:0;animation:vcRockIn 1.1s ease .05s forwards}
+html:not(.vc-rock-on)[data-view="desk"][data-desk="check"] #vcBackdrop::after{animation:none;opacity:1}
+@keyframes vcRockIn{to{opacity:1}}
+@media (max-width:767px){
+  html[data-view="desk"][data-desk="check"] #vcBackdrop::after,
+  html[data-view="desk"][data-desk="check"] body:has(#authLoggedOut:not([hidden])) #vcBackdrop::after{
+    background:radial-gradient(ellipse 120% 100% at 50% 50%,transparent 50%,rgba(0,0,0,.6)),
+      var(--vc-rock-m,none) center/cover no-repeat,#0b0b0c !important}
 }
-@media (min-width:1024px) and (prefers-reduced-motion:reduce){html.ck3d main > :is(#checkCard,#resultCard){animation:none;transform:none}}
-@media (min-width:1024px){
-  html.ck3d #checkCard .field-wrap > .field-label{display:none !important}
-  html.ck3d #checkCard #checkBtn:disabled{filter:saturate(.7);opacity:.88}
-  html.ck3d #checkCard .btns{align-items:center;gap:14px}
-}
-@media (min-width:1024px){html.ck3d #checkCard #checkBtn::before{display:none !important}}
+@media (prefers-reduced-motion:reduce){html[data-view="desk"][data-desk="check"] #vcBackdrop::after{animation:none;opacity:1}}
 
-/* ===== หน้าตรวจ v2 รอบ 2: ระหว่างตรวจ ===== */
-.ck-lens,.ck-band{display:none}
-@media (min-width:1024px){
-  html.ck3d #checkCard .ta-wrap{position:relative;overflow:hidden}
-  html.ck3d #checkCard.ck-scan .ck-lens,html.ck3d #checkCard.ck-scan .ck-band{display:block}
-  html.ck3d #checkCard.ck-scan #input{filter:sepia(.15)}
-  .ck-band{position:absolute;left:0;right:0;top:0;height:64px;pointer-events:none;z-index:2;
-    background:linear-gradient(180deg,transparent,rgba(255,200,110,.0) 20%,rgba(255,200,110,.38) 50%,rgba(255,200,110,0) 80%,transparent);mix-blend-mode:multiply;
-    animation:ckBand 2.6s cubic-bezier(.45,0,.55,1) infinite}
-  @keyframes ckBand{0%{transform:translateY(-70px)}100%{transform:translateY(320px)}}
-  .ck-lens{position:absolute;width:96px;height:96px;pointer-events:none;z-index:3;border-radius:50%;
-    background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.45),rgba(255,255,255,.08) 45%,rgba(255,236,200,.12) 70%,transparent 72%);
-    box-shadow:0 0 0 7px #c9a24e,0 0 0 9px #6b4d1c,0 14px 22px -6px rgba(0,0,0,.45),inset 0 0 18px rgba(255,214,150,.4);
-    animation:ckLens 5.2s cubic-bezier(.45,0,.55,1) infinite}
-  .ck-lens b{position:absolute;left:50%;top:50%;width:14px;height:70px;margin-left:-7px;border-radius:0 0 7px 7px;transform-origin:50% 0;transform:rotate(-40deg) translateY(54px);
-    background:linear-gradient(90deg,#1a0f08,#5a3a22 40%,#2a1a0f)}
-  @keyframes ckLens{0%{left:6%;top:4%}25%{left:68%;top:22%}50%{left:14%;top:48%}75%{left:62%;top:70%}100%{left:6%;top:4%}}
-  /* ผลการตรวจระหว่างรอ: ขั้นตอนเหมือนจดลงสมุด */
-  html.ck3d #resultCard.ck-wait .loading-box{padding:6px 2px}
-  html.ck3d #resultCard .load-steps{list-style:none;margin:6px 0 10px;padding:0}
-  html.ck3d #resultCard .load-steps li{position:relative;padding:12px 0 12px 38px;color:rgba(240,220,180,.45);font:400 16px/1.5 Sarabun,sans-serif;border-bottom:1px dashed rgba(255,210,150,.14);transition:color .4s}
-  html.ck3d #resultCard .load-steps li .dot{position:absolute;left:4px;top:50%;width:20px;height:20px;margin-top:-10px;border-radius:50%;border:2px solid rgba(240,207,143,.35);background:none !important}
-  html.ck3d #resultCard .load-steps li.now{color:#f6e7c8}
-  html.ck3d #resultCard .load-steps li.now .dot{border-color:#f0cf8f;border-top-color:transparent;animation:vcSpin 1s linear infinite}
-  html.ck3d #resultCard .load-steps li.done{color:rgba(240,220,180,.75)}
-  html.ck3d #resultCard .load-steps li.done .dot{border-color:#5fae73;background:#3f8a5a !important}
-  html.ck3d #resultCard .load-steps li.done .dot::after{content:"";position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
-  html.ck3d #resultCard .load-note{color:rgba(240,220,180,.55) !important;font-size:13px}
-  html.ck3d #resultCard .skel{height:12px;border-radius:6px;margin:10px 0;background:linear-gradient(90deg,rgba(255,210,150,.06),rgba(255,210,150,.18),rgba(255,210,150,.06)) 0 0/200% 100% !important;animation:ckShim 1.4s linear infinite}
-  @keyframes ckShim{to{background-position:-200% 0}}
-}
-@media (min-width:1024px) and (prefers-reduced-motion:reduce){.ck-band,.ck-lens{animation:none}}
+/* ===================================================================
+   หน้าตรวจสัญญา v2: มืดสะอาด อ่านง่าย น่าเชื่อถือ (6 พ.ย. 2026)
+   ใช้เฉพาะ data-desk="check" — หน้าแรกและหน้าบัญชีไม่เปลี่ยน
+   =================================================================== */
+html.vc-art[data-view="desk"][data-desk="check"] {--k-card:rgba(19,19,21,.94);--k-line:rgba(255,255,255,.09);--k-line2:rgba(255,255,255,.15);--k-tx:#ededef;--k-mu:#a3a3aa;--k-fa:#7a7a82;--k-in:#0d0d0f;
+  --k-ff:Prompt,Sarabun,system-ui,sans-serif}
+/* พื้นหลัง: หินเหลือจาง ๆ ที่ขอบ ตรงกลางมืดเรียบ */
+html.vc-art[data-view="desk"][data-desk="check"] #vcBackdrop::after,html.vc-art[data-view="desk"][data-desk="check"] body:has(#authLoggedOut:not([hidden])) #vcBackdrop::after{
+  background:radial-gradient(ellipse 58% 62% at 50% 48%,rgba(11,11,12,.9),rgba(11,11,12,.5) 100%),
+    var(--vc-rock,none) center/cover no-repeat,#0b0b0c !important}
+@media (max-width:767px){html.vc-art[data-view="desk"][data-desk="check"] #vcBackdrop::after,html.vc-art[data-view="desk"][data-desk="check"] body:has(#authLoggedOut:not([hidden])) #vcBackdrop::after{
+  background:linear-gradient(rgba(11,11,12,.72),rgba(11,11,12,.72)),var(--vc-rock-m,none) center/cover no-repeat,#0b0b0c !important}}
+
+/* การ์ด */
+html.vc-art[data-view="desk"][data-desk="check"] main > :is(#checkCard,#resultCard){background:var(--k-card) !important;border:1px solid var(--k-line) !important;border-radius:18px !important;
+  box-shadow:0 30px 80px -40px rgba(0,0,0,.9) !important;padding:28px 30px 30px !important;color:var(--k-tx);font-family:var(--k-ff)}
+@media (min-width:1024px){html.vc-art[data-view="desk"][data-desk="check"] main > #resultCard{margin-left:20px !important;align-self:start;position:sticky;top:76px;margin-top:clamp(70px,10vh,110px) !important}}
+@media (max-width:1023px){html.vc-art[data-view="desk"][data-desk="check"] main > #resultCard{margin-top:16px !important}}
+@media (max-width:767px){html.vc-art[data-view="desk"][data-desk="check"] main > :is(#checkCard,#resultCard){margin-left:10px !important;margin-right:10px !important;padding:20px 16px 22px !important;border-radius:16px !important}
+  html.vc-art[data-view="desk"][data-desk="check"] main > #checkCard{margin-top:12px !important}}
+
+/* หัวข้อ */
+html.vc-art[data-view="desk"][data-desk="check"] :is(#checkCard .step-head h2,#resultCard > h2,#checkCard .step-sub h3){font:600 18px/1.4 var(--k-ff) !important;letter-spacing:0 !important;color:var(--k-tx) !important;
+  border:0 !important;padding:0 !important;margin:0 0 18px !important;text-transform:none !important}
+html.vc-art[data-view="desk"][data-desk="check"] :is(#checkCard .step-head h2,#resultCard > h2)::before,html.vc-art[data-view="desk"][data-desk="check"] :is(#checkCard .step-head h2,#resultCard > h2)::after{display:none !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .step-head{border:0 !important;padding:0 !important;margin:0 !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .step-head::after,html.vc-art[data-view="desk"][data-desk="check"] #checkCard .step-sub::after,html.vc-art[data-view="desk"][data-desk="check"] #checkCard .step-sub::before{display:none !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .step-sub{margin:30px 0 0 !important;padding:26px 0 0 !important;border:0 !important;border-top:1px solid var(--k-line) !important}
+
+/* แถบให้เข้าสู่ระบบ: โทนกลาง ไม่ใช้ทอง */
+html.vc-art[data-view="desk"][data-desk="check"] .vc-needlogin{background:rgba(255,255,255,.04) !important;border:1px solid var(--k-line2) !important;color:var(--k-mu) !important;border-radius:12px !important;margin:0 0 24px !important;padding:12px 14px 12px 16px !important}
+html.vc-art[data-view="desk"][data-desk="check"] .vc-needlogin b{color:var(--k-tx) !important}
+html.vc-art[data-view="desk"][data-desk="check"] .vc-needlogin a{background:#f4f4f5 !important;color:#111 !important;border-radius:10px !important;padding:10px 16px !important}
+
+/* ประเภทสัญญา */
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .field-label{font:500 13.5px/1.4 var(--k-ff) !important;color:var(--k-mu) !important;letter-spacing:0 !important;text-transform:none !important;margin:0 0 8px !important;display:block}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .select-wrap select{background:var(--k-in) !important;border:1px solid var(--k-line2) !important;border-radius:12px !important;padding:13px 42px 13px 14px !important;
+  font:400 15px/1.4 var(--k-ff) !important;color:var(--k-tx) !important;min-height:50px}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .select-wrap select:focus{border-color:rgba(255,255,255,.4) !important;box-shadow:0 0 0 3px rgba(255,255,255,.08) !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .select-wrap::after{right:16px !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ct-trigger{background:var(--k-in) !important;border:1px solid var(--k-line2) !important;border-radius:12px !important;box-shadow:none !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ct-quick button,html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ct-quick > *{background:rgba(255,255,255,.04) !important;border:1px solid var(--k-line2) !important;border-radius:99px !important;
+  color:var(--k-tx) !important;font:500 14px/1.2 var(--k-ff) !important;padding:10px 14px !important;box-shadow:none !important;min-height:0 !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ct-quick :is(button[aria-pressed="true"],.is-on,.on){background:#f4f4f5 !important;color:#111 !important;border-color:#f4f4f5 !important}
+
+/* ช่องวางสัญญา: ช่องกรอกมืดเรียบ ตัวหนังสือชัด */
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap{margin-top:16px;border:0 !important;background:none !important;box-shadow:none !important;padding:0 !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap::before,html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap::after{display:none !important}
+html.vc-art[data-view="desk"][data-desk="check"] #input{background:var(--k-in) !important;background-image:none !important;color:var(--k-tx) !important;border:1px solid var(--k-line2) !important;border-radius:14px !important;
+  box-shadow:none !important;outline:0 !important;padding:18px 20px !important;font:400 16px/1.75 Sarabun,var(--k-ff) !important;min-height:clamp(260px,38vh,440px) !important;
+  transition:border-color .2s,box-shadow .2s}
+html.vc-art[data-view="desk"][data-desk="check"] #input::placeholder{color:var(--k-fa) !important;font-style:normal !important}
+html.vc-art[data-view="desk"][data-desk="check"] #input:focus{border-color:rgba(255,255,255,.38) !important;box-shadow:0 0 0 4px rgba(255,255,255,.07) !important}
+html.vc-art[data-view="desk"][data-desk="check"] #input::selection{background:rgba(255,255,255,.25);color:#fff}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-meta{margin-top:12px !important;align-items:center;gap:10px;flex-wrap:wrap}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-count{font:400 12.5px/1 var(--k-ff) !important;color:var(--k-fa) !important;letter-spacing:0 !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-actions{gap:8px !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .sample-btn{border:1px solid var(--k-line2) !important;border-radius:99px !important;background:rgba(255,255,255,.03) !important;
+  padding:9px 15px !important;color:#dcdce0 !important;font:500 13.5px/1 var(--k-ff) !important;text-decoration:none !important;box-shadow:none !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .sample-btn::before,html.vc-art[data-view="desk"][data-desk="check"] #checkCard .sample-btn::after{display:none !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .sample-btn:hover{background:rgba(255,255,255,.08) !important;color:#fff !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .hint{font:400 13px/1.6 var(--k-ff) !important;color:var(--k-fa) !important;margin:14px 0 0 !important}
+
+/* ขั้น 2: เสียง + ปกป้องข้อมูล */
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .voice-opt{background:rgba(255,255,255,.03) !important;border:1px solid var(--k-line) !important;border-radius:14px !important;padding:14px 16px !important;margin:0 0 12px !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .voice-text{font:500 15px/1.4 var(--k-ff) !important;color:var(--k-tx) !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .voice-text small{color:var(--k-mu) !important;font-size:13px !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps{background:rgba(255,255,255,.03) !important;border:1px solid var(--k-line) !important;border-radius:14px !important;padding:16px !important;margin:0 !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps-title b{font:600 15px/1.3 var(--k-ff) !important;color:var(--k-tx) !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps-title small{font:500 11px/1.3 var(--k-ff) !important;color:var(--k-fa) !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps-badge{background:rgba(120,200,150,.1) !important;color:#9fdcb4 !important;border:1px solid rgba(120,200,150,.35) !important;border-radius:99px !important;
+  padding:5px 10px !important;font:500 12px/1 var(--k-ff) !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps-summary{font:400 14px/1.6 var(--k-ff) !important;color:var(--k-mu) !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps-actions button{border:1px solid var(--k-line2) !important;border-radius:10px !important;background:transparent !important;color:#dcdce0 !important;
+  font:500 13.5px/1 var(--k-ff) !important;padding:10px 14px !important;box-shadow:none !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps-fine{font:400 12.5px/1.6 var(--k-ff) !important;color:var(--k-fa) !important;border:0 !important}
+
+/* ขั้น 3: ปุ่มตรวจ */
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .step-cost{font:400 14px/1.5 var(--k-ff) !important;color:var(--k-mu) !important;margin:-6px 0 14px !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .btns{gap:10px !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard #checkBtn{background:#f4f4f5 !important;color:#111 !important;border:0 !important;border-radius:14px !important;min-height:56px !important;
+  font:600 16.5px/1 var(--k-ff) !important;letter-spacing:0 !important;box-shadow:0 10px 30px -12px rgba(255,255,255,.25) !important;transition:background .2s,transform .15s}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard #checkBtn:hover:not(:disabled){background:#fff !important;color:#000 !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard #checkBtn:active:not(:disabled){transform:translateY(1px)}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard :is(#checkBtn,#clearBtn)::before{display:none !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard #checkBtn:disabled{background:rgba(255,255,255,.08) !important;color:var(--k-fa) !important;box-shadow:none !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard #clearBtn{background:transparent !important;color:#dcdce0 !important;border:1px solid var(--k-line2) !important;border-radius:14px !important;
+  min-height:56px !important;font:500 15px/1 var(--k-ff) !important;box-shadow:none !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard #clearBtn:hover{background:rgba(255,255,255,.06) !important;color:#fff !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .disclaimer{font:400 12.5px/1.6 var(--k-ff) !important;color:var(--k-fa) !important;border:0 !important;margin-top:18px !important;padding:0 !important}
+
+/* ช่องผลตรวจ */
+html.vc-art[data-view="desk"][data-desk="check"] #resultCard > h2{padding-bottom:16px !important;border-bottom:1px solid var(--k-line) !important}
+html.vc-art[data-view="desk"][data-desk="check"] #resultCard .empty-art{display:none !important}
+html.vc-art[data-view="desk"][data-desk="check"] #resultCard #result > .empty:only-child{display:none}
+.rs-guide{display:none}
+html.vc-art[data-view="desk"][data-desk="check"] #resultCard:not(:has(#result > :not(.empty,.empty-art))) .rs-guide{display:block}
+.rs-title{margin:4px 0 14px;font:500 15px/1.5 Prompt,Sarabun,sans-serif;color:#a3a3aa}
+.rs-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.rs-list li{display:flex;gap:12px;align-items:flex-start;padding:14px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.025)}
+.rs-list li > span{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.08);color:#ededef;font:600 13px/1 Prompt,sans-serif}
+.rs-list b{display:block;font:600 14.5px/1.4 Prompt,Sarabun,sans-serif;color:#ededef;margin-bottom:2px}
+.rs-list div{font:400 13.5px/1.55 Prompt,Sarabun,sans-serif;color:#a3a3aa}
+.rs-sample{margin-top:16px;width:100%;min-height:48px;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:transparent;color:#ededef;
+  font:500 14.5px/1 Prompt,Sarabun,sans-serif;cursor:pointer;transition:background .2s}
+.rs-sample:hover{background:rgba(255,255,255,.07)}
+
+html.vc-art[data-view="desk"][data-desk="check"] :is(#checkCard .step-head h2,#resultCard > h2,#checkCard .step-sub h3){background:none !important;background-image:none !important}
+html.vc-art[data-view="desk"][data-desk="check"] #resultCard > h2{border-bottom:1px solid var(--k-line) !important;padding-bottom:16px !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps-title b::after{display:none !important}
+html.vc-art[data-view="desk"][data-desk="check"].vc-specks body::before{opacity:.25 !important}
+html.vc-art[data-view="desk"][data-desk="check"] #resultCard:not(:has(#result > :not(.empty,.empty-art))) #result > .empty{display:none !important}
+html.vc-art[data-view="desk"][data-desk="check"] #checkCard .voice-opt input[type="checkbox"]{accent-color:#f4f4f5}
+@media (min-width:1024px){html.vc-art[data-view="desk"][data-desk="check"] main > #resultCard{margin-top:clamp(70px,10vh,110px) !important}}
