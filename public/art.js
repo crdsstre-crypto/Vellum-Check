@@ -2922,3 +2922,279 @@ window.VCStepPlay = function (v, fps, onEnd) {
 
 /* หน้าตรวจ: ปุ่ม "ดูตัวอย่างผลตรวจฟรี" ในช่องผลตรวจว่าง */
 document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('#rsSample') && window.VCSample) window.VCSample.open('rent'); });
+
+/* ===== บ้าน 3D หมุนได้ (WebGL1, ไม่ใช้ไลบรารี) ===== */
+(function () {
+  function b64(s) { var bs = atob(s), u = new Uint8Array(bs.length); for (var i = 0; i < bs.length; i++) u[i] = bs.charCodeAt(i); return u.buffer; }
+  function m4mul(a, b) { var o = new Float32Array(16); for (var i = 0; i < 4; i++) for (var j = 0; j < 4; j++) { var s = 0; for (var k = 0; k < 4; k++) s += a[k * 4 + j] * b[i * 4 + k]; o[i * 4 + j] = s; } return o; }
+  function persp(f, a, n, fr) { var t = 1 / Math.tan(f / 2), o = new Float32Array(16); o[0] = t / a; o[5] = t; o[10] = (fr + n) / (n - fr); o[11] = -1; o[14] = 2 * fr * n / (n - fr); return o; }
+  function look(e, c) {
+    var z = [e[0] - c[0], e[1] - c[1], e[2] - c[2]], l = Math.hypot(z[0], z[1], z[2]); z = z.map(function (v) { return v / l; });
+    var x = [z[2], 0, -z[0]]; l = Math.hypot(x[0], x[2]); x = [x[0] / l, 0, x[2] / l];
+    var y = [z[1] * x[2] - z[2] * x[1], z[2] * x[0] - z[0] * x[2], z[0] * x[1] - z[1] * x[0]];
+    return new Float32Array([x[0], y[0], z[0], 0, x[1], y[1], z[1], 0, x[2], y[2], z[2], 0,
+      -(x[0] * e[0] + x[1] * e[1] + x[2] * e[2]), -(y[0] * e[0] + y[1] * e[1] + y[2] * e[2]), -(z[0] * e[0] + z[1] * e[1] + z[2] * e[2]), 1]);
+  }
+  var VS = 'attribute vec3 p;attribute vec2 u;attribute vec3 n;uniform mat4 M;uniform vec3 mn,sc;varying vec2 vu;varying vec3 vn;varying vec3 vp;' +
+    'void main(){vec3 w=mn+p*sc;vp=w;vu=vec2(u.x,1.-u.y);vn=n;gl_Position=M*vec4(w,1.);}';
+  var FS = 'precision mediump float;uniform sampler2D T;uniform float cut,fade;varying vec2 vu;varying vec3 vn;varying vec3 vp;' +
+    'void main(){vec4 c=texture2D(T,vu);if(c.a<cut)discard;vec3 N=normalize(vn);if(!gl_FrontFacing)N=-N;' +
+    'vec3 L=normalize(vec3(-.45,.8,.55));float d=max(dot(N,L),0.);float h=.5+.5*N.y;' +
+    'vec3 col=c.rgb*(vec3(.36,.34,.4)*h+vec3(.16,.14,.18)+vec3(1.05,.95,.82)*d*.85);' +
+    'float r=length(vp.xz)/27.;col*=1.-smoothstep(.72,1.02,r)*fade;' +
+    'gl_FragColor=vec4(pow(col,vec3(.95)),1.);}';
+
+  window.VCHouseView = function (canvas, H) {
+    var gl = canvas.getContext('webgl', { antialias: true, alpha: true, premultipliedAlpha: true });
+    if (!gl) return null;
+    function sh(t, s) { var o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); return o; }
+    var pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pr); gl.useProgram(pr);
+    var m = H.meta, buf = b64(H.bin.replace(/\s/g, '')), v = m.v, off = 0;
+    var P = new Uint16Array(buf, 0, v * 3); off = v * 6;
+    var U = new Uint16Array(buf, off, v * 2); off += v * 4;
+    var N = new Int8Array(buf, off, v * 4); off += v * 4;
+    var I = new Uint16Array(buf, off);
+    function ab(data, loc, size, type, norm, stride) { var b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW); var l = gl.getAttribLocation(pr, loc); gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l, size, type, norm, stride || 0, 0); }
+    ab(P, 'p', 3, gl.UNSIGNED_SHORT, false); ab(U, 'u', 2, gl.UNSIGNED_SHORT, true); ab(N, 'n', 3, gl.BYTE, true, 4);
+    var ib = gl.createBuffer(); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ib); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, I, gl.STATIC_DRAW);
+    var uM = gl.getUniformLocation(pr, 'M'), uCut = gl.getUniformLocation(pr, 'cut'), uFade = gl.getUniformLocation(pr, 'fade');
+    gl.uniform3fv(gl.getUniformLocation(pr, 'mn'), m.mn); gl.uniform3fv(gl.getUniformLocation(pr, 'sc'), m.sc);
+    var tex = {}, pending = 0, alive = true;
+    Object.keys(H.tex).forEach(function (k) {
+      var t = gl.createTexture(); tex[k] = t; pending++;
+      gl.bindTexture(gl.TEXTURE_2D, t); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([60, 58, 62, 255]));
+      var im = new Image(); im.onload = function () {
+        if (!alive) return; gl.bindTexture(gl.TEXTURE_2D, t); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, im);
+        gl.generateMipmap(gl.TEXTURE_2D); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+        pending--; dirty = true;
+      }; im.src = H.tex[k].replace(/\s/g, '');
+    });
+    gl.enable(gl.DEPTH_TEST); 
+    var yaw = -0.75, pitch = 0.48, dist = 74, tYaw = yaw, tPitch = pitch, tDist = dist, auto = true, dirty = true, raf = 0, last = 0, idleT = 0;
+    var tgt = [-3, 4, 0];
+    function size() { var r = canvas.getBoundingClientRect(), d = Math.min(window.devicePixelRatio || 1, 1.75); var w = Math.max(1, Math.round(r.width * d)), h = Math.max(1, Math.round(r.height * d)); if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; dirty = true; } }
+    function draw() {
+      size(); gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      var e = [tgt[0] + dist * Math.cos(pitch) * Math.sin(yaw), tgt[1] + dist * Math.sin(pitch), tgt[2] + dist * Math.cos(pitch) * Math.cos(yaw)];
+      var asp = canvas.width / canvas.height, fy = asp < 1.25 ? 2 * Math.atan(Math.tan(0.31) * 1.25 / asp) : 0.62;
+      gl.uniformMatrix4fv(uM, false, m4mul(persp(fy, asp, 1, 300), look(e, tgt)));
+      gl.uniform1f(uFade, 1);
+      m.g.forEach(function (g) {
+        gl.bindTexture(gl.TEXTURE_2D, tex[g.t]); var pl = g.t.indexOf('Plants') === 0; gl.uniform1f(uCut, pl ? 0.5 : -1.); if (pl) gl.disable(gl.CULL_FACE); else gl.enable(gl.CULL_FACE);
+        gl.drawElements(gl.TRIANGLES, g.n, gl.UNSIGNED_SHORT, g.i * 2);
+      });
+    }
+    function frame(t) {
+      raf = 0; if (!alive) return;
+      var dt = Math.min(0.05, (t - (last || t)) / 1000); last = t;
+      if (auto) tYaw += dt * 0.25;
+      var ny = yaw + (tYaw - yaw) * Math.min(1, dt * 6), np = pitch + (tPitch - pitch) * Math.min(1, dt * 6), nd = dist + (tDist - dist) * Math.min(1, dt * 4);
+      var moving = Math.abs(ny - yaw) > 1e-4 || Math.abs(np - pitch) > 1e-4 || Math.abs(nd - dist) > 1e-3 || auto;
+      yaw = ny; pitch = np; dist = nd;
+      if (moving || dirty) { draw(); dirty = false; }
+      if (moving || pending) raf = requestAnimationFrame(frame);
+    }
+    function kick() { if (!raf && alive) { last = 0; raf = requestAnimationFrame(frame); } }
+    var down = null;
+    canvas.addEventListener('pointerdown', function (e) { if (canvas.dataset) canvas.dataset.grab = '1'; down = { x: e.clientX, y: e.clientY, yaw: tYaw, pitch: tPitch }; auto = false; clearTimeout(idleT); try { canvas.setPointerCapture(e.pointerId); } catch (_) {} kick(); });
+    canvas.addEventListener('pointermove', function (e) {
+      if (!down) return;
+      tYaw = down.yaw - (e.clientX - down.x) * 0.008;
+      tPitch = Math.max(0.12, Math.min(1.2, down.pitch + (e.clientY - down.y) * 0.006)); kick();
+    });
+    function up() { if (!down) return; down = null; if (canvas.dataset) delete canvas.dataset.grab; idleT = setTimeout(function () { auto = !reduce; kick(); }, 2500); }
+    canvas.addEventListener('pointerup', up); canvas.addEventListener('pointercancel', up);
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) auto = false;
+    kick();
+    return {
+      pause: function () { auto = false; if (raf) cancelAnimationFrame(raf); raf = 0; },
+      play: function () { auto = !reduce; dirty = true; kick(); },
+      aim: function (y, p, d) { var k = Math.round((tYaw - y) / (2 * Math.PI)); tYaw = y + k * 2 * Math.PI; tPitch = p; tDist = d; dirty = true; kick(); },
+      destroy: function () { alive = false; if (raf) cancelAnimationFrame(raf); var x = gl.getExtension('WEBGL_lose_context'); if (x) x.loseContext(); }
+    };
+  };
+})();
+
+/* ===== หน้าต่างเลือกประเภทสัญญา (คอม + มือถือ) + บ้าน 3D หมุนได้ (7 พ.ย. 2026) =====
+   ค่าจริงยังอยู่ที่ <select id="contractType"> (script.js อ่านเหมือนเดิม)
+   บ้าน 3D: "Autumn House" โดย Zhenya (Sketchfab) สัญญาอนุญาต CC BY 4.0 — โหลดจาก house3d.js เฉพาะตอนเปิดหน้าต่างนี้ */
+(function () {
+  var sel = document.getElementById('contractType');
+  if (!sel) return;
+  var root = document.documentElement;
+  var wrap = sel.closest('.field-wrap') || sel.parentNode;
+  var HOUSE = { rent: { y: -0.75, p: 0.48, d: 74 }, sale: { y: 0.55, p: 0.36, d: 64 } };
+  var FOCUS = {
+    unsure: 'ระบบอ่านข้อความแล้วเลือกประเภทให้เอง',
+    rent: 'ค่าเช่า เงินมัดจำ การคืนเงินประกัน การบอกเลิก',
+    sale: 'ราคา การส่งมอบ การโอน ความรับผิดเมื่อชำรุด',
+    employment: 'ค่าจ้าง ชั่วโมงทำงาน ทดลองงาน การเลิกจ้าง',
+    service: 'ขอบเขตงาน กำหนดส่ง งวดเงิน การแก้งาน',
+    loan: 'ดอกเบี้ย ค่าปรับ วันครบกำหนด หลักประกัน',
+    shareholder: 'สัดส่วนหุ้น การแบ่งกำไร การออกจากหุ้นส่วน',
+    nda: 'ข้อมูลที่ห้ามเปิดเผย ระยะเวลา ค่าเสียหาย',
+    other: 'ตรวจประเด็นทั่วไปที่มักเสียเปรียบ'
+  };
+  function parse(t) { var m = t.match(/^(.*?)\s*\((.*)\)\s*$/); return m ? { name: m[1], sub: m[2] } : { name: t, sub: '' }; }
+  function ico(v, s) {
+    var h = window.VCCtIcon ? window.VCCtIcon(v) : '';
+    return s ? h.replace('width="28" height="28"', 'width="' + s + '" height="' + s + '"') : h;
+  }
+  function opts() { return Array.prototype.map.call(sel.options, function (o) { var p = parse(o.textContent); return { v: o.value, name: p.name, sub: p.sub }; }); }
+
+  /* ปุ่มบนการ์ด */
+  var trig = document.createElement('button');
+  trig.type = 'button'; trig.className = 'vcp-trigger'; trig.id = 'vcpTrigger';
+  trig.setAttribute('aria-haspopup', 'dialog');
+  wrap.insertBefore(trig, wrap.querySelector('.ct-trigger') || sel.closest('.select-wrap') || sel);
+  var lab = wrap.querySelector('label[for="contractType"]'); if (lab) lab.setAttribute('for', 'vcpTrigger');
+  function syncTrig() {
+    var o = sel.options[sel.selectedIndex] || sel.options[0], p = parse(o.textContent);
+    trig.innerHTML = '<span class="vcp-ti">' + ico(o.value, 34) + '</span><span class="vcp-tt"><b>' + p.name + '</b><small>' + (FOCUS[o.value] || p.sub) + '</small></span><span class="vcp-tc">เปลี่ยน</span>';
+  }
+  root.classList.add('vcp-on');
+  syncTrig(); setTimeout(syncTrig, 0);
+  sel.addEventListener('change', syncTrig);
+
+  /* หน้าต่าง */
+  var box = document.createElement('div');
+  box.className = 'vcp'; box.id = 'vcp'; box.hidden = true;
+  box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-labelledby', 'vcpTitle');
+  box.innerHTML =
+    '<div class="vcp-bg" data-x></div>' +
+    '<div class="vcp-panel">' +
+      '<div class="vcp-stage"><div class="vcp-floor"></div><canvas class="vcp-cv" aria-label="บ้าน 3D ลากเพื่อหมุน"></canvas><div class="vcp-big" aria-hidden="true"></div>' +
+        '<p class="vcp-load" hidden>กำลังโหลดบ้าน 3D…</p>' +
+        '<div class="vcp-cap"><b class="vcp-cn"></b><span class="vcp-cs"></span></div>' +
+        '<p class="vcp-drag">ลากเพื่อหมุน</p>' +
+        '<p class="vcp-credit">บ้าน 3D “Autumn House” โดย Zhenya (Sketchfab) · <a href="https://creativecommons.org/licenses/by/4.0/deed.th" target="_blank" rel="noopener">CC BY 4.0</a></p>' +
+      '</div>' +
+      '<div class="vcp-side">' +
+        '<div class="vcp-head"><h3 id="vcpTitle">เลือกประเภทสัญญา</h3><button type="button" class="vcp-x" data-x aria-label="ปิด">✕</button></div>' +
+        '<p class="vcp-sub">เลือกให้ตรง ระบบจะรู้ว่าต้องเน้นตรวจเรื่องไหน ไม่แน่ใจก็ให้ระบบดูเองได้</p>' +
+        '<div class="vcp-list" role="listbox" aria-labelledby="vcpTitle"></div>' +
+        '<div class="vcp-foot"><button type="button" class="vcp-ok">ใช้ประเภทนี้</button></div>' +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(box);
+  var list = box.querySelector('.vcp-list'), stage = box.querySelector('.vcp-stage'), cv = box.querySelector('.vcp-cv'),
+    big = box.querySelector('.vcp-big'), cn = box.querySelector('.vcp-cn'), cs = box.querySelector('.vcp-cs'),
+    load = box.querySelector('.vcp-load'), ok = box.querySelector('.vcp-ok');
+  var pending = sel.value, shown = null, view = null, houseState = 0, lastFocus = null;
+
+  function buildList() {
+    list.innerHTML = '';
+    opts().forEach(function (o, i) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'vcp-opt'; b.dataset.ct = o.v; b.setAttribute('role', 'option');
+      b.style.setProperty('--i', i);
+      b.innerHTML = '<span class="vcp-oi">' + ico(o.v, 30) + '</span><span class="vcp-ot"><b>' + o.name + '</b><small>' + o.sub + '</small></span>' +
+        (HOUSE[o.v] ? '<em class="vcp-3d">3D</em>' : '');
+      list.appendChild(b);
+    });
+  }
+  function mark() {
+    Array.prototype.forEach.call(list.children, function (b) { var on = b.dataset.ct === pending; b.classList.toggle('is-on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
+    var o = opts().filter(function (x) { return x.v === pending; })[0];
+    ok.textContent = o ? 'ใช้ “' + o.name + '”' : 'ใช้ประเภทนี้';
+  }
+
+  function loadHouse(cb) {
+    if (houseState === 2) return cb && cb();
+    if (cb) (loadHouse.q = loadHouse.q || []).push(cb);
+    if (houseState === 1) return;
+    houseState = 1;
+    window.VCHouseReady = function () { houseState = 2; (loadHouse.q || []).forEach(function (f) { f(); }); loadHouse.q = []; };
+    var s = document.createElement('script'); s.src = 'house3d.js?v=1'; s.async = true;
+    s.onerror = function () { houseState = 0; load.textContent = 'โหลดบ้าน 3D ไม่สำเร็จ'; };
+    document.head.appendChild(s);
+  }
+
+  function preview(v) {
+    var o = opts().filter(function (x) { return x.v === v; })[0]; if (!o) return;
+    cn.textContent = o.name; cs.textContent = 'เน้นตรวจ: ' + (FOCUS[v] || o.sub);
+    if (shown === v) return; shown = v;
+    var h = HOUSE[v];
+    stage.classList.toggle('is-house', !!h);
+    if (h) {
+      big.classList.remove('is-in');
+      if (houseState !== 2) { load.hidden = false; load.textContent = 'กำลังโหลดบ้าน 3D…'; }
+      loadHouse(function () {
+        load.hidden = true;
+        if (!view) { view = window.VCHouseView(cv, window.VCHouse); if (!view) { stage.classList.remove('is-house'); return; } }
+        if (shown === v && !box.hidden) { view.play(); view.aim(h.y, h.p, h.d); stage.classList.add('house-ready'); }
+      });
+    } else {
+      if (view) view.pause();
+      load.hidden = true;
+      big.classList.remove('is-in');
+      big.innerHTML = ico(v, 200);
+      void big.offsetWidth; big.classList.add('is-in');
+    }
+  }
+
+  function open() {
+    if (!box.hidden) return;
+    lastFocus = document.activeElement;
+    buildList(); pending = sel.value; shown = null; mark();
+    box.hidden = false; root.classList.add('vcp-open');
+    requestAnimationFrame(function () { box.classList.add('is-open'); });
+    preview(pending);
+    loadHouse();
+    var cur = list.querySelector('.is-on') || list.firstChild;
+    setTimeout(function () { try { cur.focus({ preventScroll: false }); cur.scrollIntoView({ block: 'nearest' }); } catch (e) {} }, 60);
+  }
+  function close(apply) {
+    if (box.hidden) return;
+    if (apply && sel.value !== pending) {
+      sel.value = pending;
+      sel.dispatchEvent(new Event('change', { bubbles: true }));
+      sel.dispatchEvent(new Event('input', { bubbles: true }));
+      try { var a = JSON.parse(localStorage.getItem('vc_recent_ct') || '[]'); if (pending !== 'unsure') { a = [pending].concat(a.filter(function (x) { return x !== pending; })).slice(0, 2); localStorage.setItem('vc_recent_ct', JSON.stringify(a)); } } catch (e) {}
+      trig.classList.remove('is-bump'); void trig.offsetWidth; trig.classList.add('is-bump');
+    }
+    syncTrig();
+    box.classList.remove('is-open'); root.classList.remove('vcp-open');
+    if (view) view.pause();
+    setTimeout(function () { if (!box.classList.contains('is-open')) box.hidden = true; }, 260);
+    try { (lastFocus && lastFocus !== document.body ? lastFocus : trig).focus({ preventScroll: true }); } catch (e) {}
+  }
+
+  trig.addEventListener('click', open);
+  ['pointerenter', 'pointerdown', 'focus'].forEach(function (ev) { trig.addEventListener(ev, function () { loadHouse(); }, { once: true, passive: true }); });
+  box.addEventListener('click', function (e) {
+    if (e.target.closest('[data-x]')) return close(false);
+    if (e.target.closest('.vcp-ok')) return close(true);
+    var b = e.target.closest('.vcp-opt');
+    if (b) { pending = b.dataset.ct; mark(); preview(pending); }
+  });
+  list.addEventListener('dblclick', function (e) { if (e.target.closest('.vcp-opt')) close(true); });
+  list.addEventListener('pointerover', function (e) {
+    if (e.pointerType !== 'mouse') return;
+    var b = e.target.closest('.vcp-opt'); if (b) preview(b.dataset.ct);
+  });
+  list.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') preview(pending); });
+  box.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { e.preventDefault(); close(false); return; }
+    var bs = Array.prototype.slice.call(list.children), i = bs.indexOf(document.activeElement);
+    if (i > -1 && /^Arrow/.test(e.key)) {
+      e.preventDefault();
+      var cols = getComputedStyle(list).gridTemplateColumns.split(' ').length || 1;
+      var d = { ArrowDown: cols, ArrowUp: -cols, ArrowRight: 1, ArrowLeft: -1 }[e.key];
+      var n = bs[Math.max(0, Math.min(bs.length - 1, i + d))]; n.focus(); pending = n.dataset.ct; mark(); preview(pending);
+    }
+    if (e.key === 'Enter' && i > -1) { e.preventDefault(); pending = bs[i].dataset.ct; close(true); }
+    if (e.key === 'Tab') {
+      var f = box.querySelectorAll('button:not([hidden]),a[href]'), first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+  /* ปุ่มเดิมที่ยังเรียกแผนเก่า (มือถือ) หรือ "เปลี่ยนประเภท" ในผลตรวจ: เปิดหน้าต่างใหม่แทน */
+  document.addEventListener('click', function (e) {
+    if (e.target.closest && e.target.closest('#ctTrigger,#detectChange')) { e.preventDefault(); e.stopImmediatePropagation(); open(); }
+  }, true);
+  window.VCPicker = { open: open, close: close };
+})();
