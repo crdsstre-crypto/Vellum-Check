@@ -2971,7 +2971,7 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     });
     gl.enable(gl.DEPTH_TEST); 
     var yaw = -0.75, pitch = 0.48, dist = 74, tYaw = yaw, tPitch = pitch, tDist = dist, auto = true, dirty = true, raf = 0, last = 0, idleT = 0;
-    var tgt = [-3, 4, 0];
+    var tgt = [-3, 4, 0], tTgt = tgt.slice(), sway = null, clock = 0;
     function size() { var r = canvas.getBoundingClientRect(), d = Math.min(window.devicePixelRatio || 1, 1.75); var w = Math.max(1, Math.round(r.width * d)), h = Math.max(1, Math.round(r.height * d)); if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; dirty = true; } }
     function draw() {
       size(); gl.viewport(0, 0, canvas.width, canvas.height);
@@ -2988,10 +2988,12 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     function frame(t) {
       raf = 0; if (!alive) return;
       var dt = Math.min(0.05, (t - (last || t)) / 1000); last = t;
-      if (auto) tYaw += dt * 0.25;
+      clock += dt; if (auto) { if (sway === null) tYaw += dt * 0.25; else tYaw = sway + Math.sin(clock * 0.45) * 0.42; }
       var ny = yaw + (tYaw - yaw) * Math.min(1, dt * 6), np = pitch + (tPitch - pitch) * Math.min(1, dt * 6), nd = dist + (tDist - dist) * Math.min(1, dt * 4);
       var moving = Math.abs(ny - yaw) > 1e-4 || Math.abs(np - pitch) > 1e-4 || Math.abs(nd - dist) > 1e-3 || auto;
       yaw = ny; pitch = np; dist = nd;
+      var kt = Math.min(1, dt * 4), mt = 0; for (var q = 0; q < 3; q++) { var dq = tTgt[q] - tgt[q]; tgt[q] += dq * kt; mt += Math.abs(dq); }
+      if (mt > 1e-3) moving = true;
       if (moving || dirty) { draw(); dirty = false; }
       if (moving || pending) raf = requestAnimationFrame(frame);
     }
@@ -3011,7 +3013,7 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     return {
       pause: function () { auto = false; if (raf) cancelAnimationFrame(raf); raf = 0; },
       play: function () { auto = !reduce; dirty = true; kick(); },
-      aim: function (y, p, d) { var k = Math.round((tYaw - y) / (2 * Math.PI)); tYaw = y + k * 2 * Math.PI; tPitch = p; tDist = d; dirty = true; kick(); },
+      aim: function (y, p, d, c, sw) { if (c) tTgt = c.slice(); clock = 0; var k = Math.round((tYaw - y) / (2 * Math.PI)); tYaw = y + k * 2 * Math.PI; tPitch = p; tDist = d; sway = sw ? tYaw : null; dirty = true; kick(); },
       destroy: function () { alive = false; if (raf) cancelAnimationFrame(raf); var x = gl.getExtension('WEBGL_lose_context'); if (x) x.loseContext(); }
     };
   };
@@ -3025,7 +3027,7 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
   if (!sel) return;
   var root = document.documentElement;
   var wrap = sel.closest('.field-wrap') || sel.parentNode;
-  var HOUSE = { rent: { y: -0.75, p: 0.48, d: 74 }, sale: { y: 0.55, p: 0.36, d: 64 } };
+  var HOUSE = { rent: { y: -0.75, p: 0.48, d: 74, c: [-3, 4, 0], tag: ['บ้าน', 'คอนโด', 'ห้องเช่า', 'อาคาร'] }, sale: { y: 0.8, p: 0.3, d: 26, c: [12.9, 3.5, -11.6], sw: 1, tag: ['รถ', 'บ้าน', 'ที่ดิน', 'สินค้า'] } };
   var FOCUS = {
     unsure: 'ระบบอ่านข้อความแล้วเลือกประเภทให้เอง',
     rent: 'ค่าเช่า เงินมัดจำ การคืนเงินประกัน การบอกเลิก',
@@ -3068,7 +3070,7 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
       '<div class="vcp-stage"><div class="vcp-floor"></div><canvas class="vcp-cv" aria-label="บ้าน 3D ลากเพื่อหมุน"></canvas><div class="vcp-big" aria-hidden="true"></div>' +
         '<p class="vcp-load" hidden>กำลังโหลดบ้าน 3D…</p>' +
         '<div class="vcp-cap"><b class="vcp-cn"></b><span class="vcp-cs"></span></div>' +
-        '<p class="vcp-drag">ลากเพื่อหมุน</p>' +
+        '<p class="vcp-drag">ลากเพื่อหมุน</p><div class="vcp-tags" aria-hidden="true"></div>' +
         '<p class="vcp-credit">บ้าน 3D “Autumn House” โดย Zhenya (Sketchfab) · <a href="https://creativecommons.org/licenses/by/4.0/deed.th" target="_blank" rel="noopener">CC BY 4.0</a></p>' +
       '</div>' +
       '<div class="vcp-side">' +
@@ -3116,7 +3118,9 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     var o = opts().filter(function (x) { return x.v === v; })[0]; if (!o) return;
     cn.textContent = o.name; cs.textContent = 'เน้นตรวจ: ' + (FOCUS[v] || o.sub);
     if (shown === v) return; shown = v;
-    var h = HOUSE[v];
+    var h = HOUSE[v], tg = box.querySelector('.vcp-tags');
+    tg.innerHTML = h ? h.tag.map(function (t, i) { return '<span style="--i:' + i + '">' + t + '</span>'; }).join('') : '';
+    stage.dataset.ct = v;
     stage.classList.toggle('is-house', !!h);
     if (h) {
       big.classList.remove('is-in');
@@ -3124,7 +3128,7 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
       loadHouse(function () {
         load.hidden = true;
         if (!view) { view = window.VCHouseView(cv, window.VCHouse); if (!view) { stage.classList.remove('is-house'); return; } }
-        if (shown === v && !box.hidden) { view.play(); view.aim(h.y, h.p, h.d); stage.classList.add('house-ready'); }
+        if (shown === v && !box.hidden) { view.play(); view.aim(h.y, h.p, h.d, h.c, h.sw); stage.classList.add('house-ready'); }
       });
     } else {
       if (view) view.pause();
