@@ -3074,3 +3074,15 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
 @media (prefers-reduced-motion:reduce){.vcp-panel,.vcp-opt,.vcp-big{transition:none !important;animation:none !important;opacity:1 !important;transform:none !important}.vcp-big{transform:translate(-50%,-50%) !important}}
 .vcp-stage::after{content:"";position:absolute;left:0;right:0;bottom:0;height:42%;pointer-events:none;background:linear-gradient(transparent,rgba(12,12,14,.82))}
 .vcp-stage > :is(.vcp-cap,.vcp-credit,.vcp-drag,.vcp-load){z-index:2}
+.vcp-tags{position:absolute;top:18px;right:18px;z-index:2;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px;max-width:60%;pointer-events:none}
+.vcp-tags span{padding:6px 11px;border-radius:99px;background:rgba(10,10,12,.55);border:1px solid rgba(255,255,255,.14);font:500 12px/1 Prompt,sans-serif;color:#ededef;
+  opacity:0;transform:translateY(-6px);animation:vcpTag .4s cubic-bezier(.2,.9,.3,1) forwards;animation-delay:calc(var(--i) * 70ms + 250ms)}
+.vcp-stage[data-ct="sale"] .vcp-tags span:first-child,.vcp-stage[data-ct="rent"] .vcp-tags span:first-child{background:#f4f4f5;color:#111;border-color:#f4f4f5}
+@keyframes vcpTag{to{opacity:1;transform:none}}
+@media (max-width:767px){.vcp-tags{top:12px;right:12px;gap:5px}.vcp-tags span{padding:5px 9px;font-size:11px}}
+/* ถ้าแอนิเมชันถูกปิด (โหมดประหยัด/ลดการเคลื่อนไหว) ป้ายและการ์ดต้องยังมองเห็น */
+.vcp-tags span{opacity:1;transform:none;animation:vcpTagIn .4s cubic-bezier(.2,.9,.3,1) backwards;animation-delay:calc(var(--i) * 70ms + 250ms)}
+@keyframes vcpTagIn{from{opacity:0;transform:translateY(-6px)}}
+.vcp-opt{opacity:1;transform:none}
+.vcp.is-open .vcp-opt{animation:vcpOptIn .42s cubic-bezier(.2,.9,.3,1) backwards;animation-delay:calc(var(--i) * 28ms + 80ms)}
+@keyframes vcpOptIn{from{opacity:0;transform:translateY(8px)}}
