@@ -2458,15 +2458,45 @@ window.VCStepPlay = function (v, fps, onEnd) {
     ];
     /* หน้าต่างสัญญาตัวอย่าง */
     var sx = null;
+    var TODO = {
+      rent: [[1, 'ขอแก้ข้อ 2 ให้คืนเงินประกันเมื่อสิ้นสุดสัญญา หลังหักค่าเสียหายจริง'], [2, 'ต่อรองค่าปรับข้อ 3 ให้สมเหตุสมผล และตัดเงื่อนไขตัดน้ำตัดไฟ'], [3, 'ขอกำหนดเพดานการขึ้นค่าเช่าในข้อ 4 และให้แจ้งล่วงหน้า'], [7, 'จดวันครบกำหนดแจ้งยกเลิก (90 วันก่อนหมดสัญญา) ตามข้อ 8']],
+      loan: [[1, 'สอบถามอัตราดอกเบี้ยข้อ 2 กับผู้เชี่ยวชาญก่อนเซ็น'], [4, 'ไม่มอบสมุดบัญชีหรือบัตร ATM ให้ใคร (ข้อ 5)'], [3, 'ขอตัดข้อ 4 ที่ให้หักเงินจากบัญชีได้ทุกบัญชี'], [0, 'ตรวจว่าได้รับเงินจริงครบตามจำนวนในข้อ 1']],
+      employment: [[1, 'ถามเวลาทำงานและค่าล่วงเวลาข้อ 2 ให้ชัดเป็นลายลักษณ์อักษร'], [4, 'ขอดูค่าฝึกอบรมจริง และให้ลดลงตามอายุงาน (ข้อ 5)'], [5, 'ต่อรองข้อห้ามทำงานคู่แข่งข้อ 6 ให้แคบและสั้นลง'], [2, 'ทำความเข้าใจสิทธิ์ค่าชดเชยระหว่างทดลองงาน (ข้อ 3)']]
+    };
+    function gauge(nh, nc, n) {
+      var sc = Math.round(Math.min(1, (nh * 2 + nc) / Math.max(1, n * 1.6)) * 100), lv = sc >= 66 ? ['สูง', 'h'] : sc >= 36 ? ['ปานกลาง', 'c'] : ['ต่ำ', 'l'];
+      var ang = -90 + sc * 1.8;
+      return '<div class="sx-gauge g-' + lv[1] + '" style="--ang:' + ang.toFixed(1) + 'deg;--sc:' + sc + '"><svg viewBox="0 0 200 116" aria-hidden="true">' +
+        '<defs><linearGradient id="sxG" x1="0" x2="1"><stop offset="0" stop-color="#3f8a5a"/><stop offset=".5" stop-color="#d39a2a"/><stop offset="1" stop-color="#b8321f"/></linearGradient></defs>' +
+        '<path d="M20 100 A80 80 0 0 1 180 100" fill="none" stroke="rgba(90,60,30,.12)" stroke-width="16" stroke-linecap="round"/>' +
+        '<path class="sx-arc" d="M20 100 A80 80 0 0 1 180 100" fill="none" stroke="url(#sxG)" stroke-width="16" stroke-linecap="round" pathLength="100"/>' +
+        '<g class="sx-needle"><path d="M100 100 L97.5 50 L100 42 L102.5 50 Z" fill="#2a2118"/><circle cx="100" cy="100" r="8" fill="#2a2118"/><circle cx="100" cy="100" r="3" fill="#f6f0e4"/></g></svg>' +
+        '<div class="sx-gl"><span>ระดับความเสี่ยง</span><b>' + lv[0] + '</b></div></div>';
+    }
     function sxHTML(d) {
       var nh = 0, nc = 0; d.c.forEach(function (c) { if (c[1] === H_) nh++; else if (c[1] === C_) nc++; });
+      var todo = TODO[d.k] || [];
       return '<div class="vd-tabs" role="tablist">' + SAMPLES.map(function (q) { return '<button type="button" role="tab" data-sx="' + q.k + '" class="sx-t k-' + q.k + (q === d ? ' on' : '') + '" aria-selected="' + (q === d) + '">' + q.short + '</button>'; }).join('') + '</div>' +
         '<div class="vd-body sx-body k-' + d.k + '" tabindex="0"><p class="sx-free">ตัวอย่าง · ดูฟรี ไม่ใช้เครดิต</p><h4>' + d.name + '</h4>' +
-        '<div class="sx-sum"><div class="sx-stat h"><b class="vd-count" data-n="' + nh + '">' + nh + '</b><span>เสี่ยงสูง</span></div><div class="sx-stat c"><b class="vd-count" data-n="' + nc + '">' + nc + '</b><span>ควรระวัง</span></div><div class="sx-stat n"><b class="vd-count" data-n="' + d.c.length + '">' + d.c.length + '</b><span>ข้อทั้งหมด</span></div></div>' +
-        d.c.map(function (c, i) { return '<section class="sx-c vd-rv' + (c[1] ? ' f-' + c[1] : '') + '"><span class="sx-no">' + (i + 1) + '</span><div class="sx-cb"><p>' + c[0] + '</p>' + (c[1] ? '<div class="sx-n"><span class="sx-b ' + c[1] + '">' + (c[1] === H_ ? '⚠ เสี่ยงสูง' : 'ควรระวัง') + '</span><span class="sx-nt">' + c[2] + '</span></div>' : '<p class="sx-ok">✓ ไม่พบประเด็นที่ควรกังวล</p>') + '</div></section>'; }).join('') +
+        '<div class="sx-top">' + gauge(nh, nc, d.c.length) +
+        '<div class="sx-sum" role="group" aria-label="กรองตามระดับ"><button type="button" class="sx-stat h" data-f="h"><b class="vd-count" data-n="' + nh + '">' + nh + '</b><span>เสี่ยงสูง</span></button><button type="button" class="sx-stat c" data-f="c"><b class="vd-count" data-n="' + nc + '">' + nc + '</b><span>ควรระวัง</span></button><button type="button" class="sx-stat n on" data-f="all"><b class="vd-count" data-n="' + d.c.length + '">' + d.c.length + '</b><span>ทั้งหมด</span></button></div></div>' +
+        '<p class="sx-hint">แตะตัวเลขเพื่อกรอง · แตะข้อสัญญาเพื่อดูคำอธิบาย</p>' +
+        '<div class="sx-list">' + d.c.map(function (c, i) {
+          var lvl = c[1] || 'ok', open = c[1] === H_;
+          return '<section class="sx-c vd-rv f-' + lvl + (open ? ' open' : '') + '" data-i="' + i + '"><button type="button" class="sx-hd" aria-expanded="' + open + '"><span class="sx-no">' + (i + 1) + '</span><span class="sx-tx">' + c[0] + '</span>' +
+            '<span class="sx-side">' + (c[1] ? '<span class="sx-tag ' + c[1] + '">' + (c[1] === H_ ? 'เสี่ยงสูง' : 'ระวัง') + '</span><span class="sx-chev" aria-hidden="true"></span>' : '<span class="sx-okt" aria-label="ไม่พบประเด็น">✓</span>') + '</span>' + '</button>' +
+            (c[1] ? '<div class="sx-det"><div class="sx-det-in"><p class="sx-nt">' + c[2] + '</p></div></div>' : '') + '</section>';
+        }).join('') + '</div>' +
+        (todo.length ? '<div class="sx-todo vd-rv"><h5>ก่อนเซ็น ควรทำ</h5><ol>' + todo.map(function (t) { return '<li><button type="button" data-go="' + t[0] + '"><span class="sx-ck" aria-hidden="true"></span><span>' + t[1] + '</span><span class="sx-to">ข้อ ' + (t[0] + 1) + ' ↗</span></button></li>'; }).join('') + '</ol></div>' : '') +
         '<p class="sx-note">ตัวอย่างนี้จัดทำไว้ล่วงหน้าจากสัญญาสมมติ เพื่อให้เห็นรูปแบบผลตรวจ ผลจริงขึ้นกับข้อความในสัญญาของคุณ · เป็นการคัดกรองเบื้องต้น ไม่ใช่คำปรึกษาทางกฎหมาย</p></div>' +
         '<div class="vd-foot"><button type="button" class="vd-close">ปิด</button><button type="button" class="vd-ok sx-go">ลองตรวจสัญญาของคุณ · ฟรี 2 ครั้ง →</button></div>';
     }
+    function sxFilter(f) {
+      var body = sx.querySelector('.sx-body'); body.setAttribute('data-flt', f);
+      Array.prototype.forEach.call(sx.querySelectorAll('.sx-stat'), function (b) { var on = b.getAttribute('data-f') === f; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+      Array.prototype.forEach.call(sx.querySelectorAll('.sx-c'), function (c) { var show = f === 'all' || c.classList.contains('f-' + f); c.classList.toggle('hide', !show); if (show) { c.classList.add('in'); if (f !== 'all') setOpen(c, true); } });
+    }
+    function setOpen(c, on) { c.classList.toggle('open', on); var h = c.querySelector('.sx-hd'); if (h) h.setAttribute('aria-expanded', on); }
     function openSample(d) {
       if (!sx) {
         sx = document.createElement('div'); sx.className = 'vd-modal sx-modal'; sx.setAttribute('role', 'dialog'); sx.setAttribute('aria-modal', 'true'); sx.setAttribute('aria-label', 'สัญญาตัวอย่าง');
@@ -2474,11 +2504,15 @@ window.VCStepPlay = function (v, fps, onEnd) {
         sx.addEventListener('click', function (e) {
           var t = e.target.closest('[data-sx]'); if (t) { SAMPLES.forEach(function (q) { if (q.k === t.getAttribute('data-sx')) fill(q); }); return; }
           if (e.target.closest('.sx-go')) { close(); var cta = document.querySelector('.dx-cta'); if (cta) cta.click(); return; }
+          var f = e.target.closest('.sx-stat[data-f]'); if (f) { var cur = f.getAttribute('data-f'); sxFilter(f.classList.contains('on') && cur !== 'all' ? 'all' : cur); return; }
+          var hd = e.target.closest('.sx-hd'); if (hd) { var c = hd.parentNode; if (c.querySelector('.sx-det')) setOpen(c, !c.classList.contains('open')); return; }
+          var g = e.target.closest('[data-go]'); if (g) { sxFilter('all'); var c2 = sx.querySelector('.sx-c[data-i="' + g.getAttribute('data-go') + '"]'); if (c2) { setOpen(c2, true); c2.classList.add('in'); var bd = sx.querySelector('.vd-body'); bd.scrollTo({ top: c2.offsetTop - 14, behavior: 'smooth' }); c2.classList.remove('flash'); void c2.offsetWidth; c2.classList.add('flash'); }
+            g.classList.add('done'); return; }
           if (e.target === sx || e.target.closest('.vd-close')) close();
         });
         document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && sx.classList.contains('on')) close(); });
       }
-      function fill(q) { sx.firstChild.innerHTML = sxHTML(q); sx.firstChild.className = 'vd-paper sx-paper k-' + q.k; var b = sx.querySelector('.vd-body'); b.scrollTop = 0; window.VCDocFX(b); try { b.focus({ preventScroll: true }); } catch (x) {} }
+      function fill(q) { sx.firstChild.innerHTML = sxHTML(q); sx.firstChild.className = 'vd-paper sx-paper k-' + q.k; var b = sx.querySelector('.vd-body'); b.scrollTop = 0; window.VCDocFX(b); var gg = sx.querySelector('.sx-gauge'); if (gg) requestAnimationFrame(function () { requestAnimationFrame(function () { gg.classList.add('go'); }); }); try { b.focus({ preventScroll: true }); } catch (x) {} }
       function close() { sx.classList.remove('on'); root.classList.remove('vd-lock'); }
       fill(d); sx.classList.add('on'); root.classList.add('vd-lock');
     }
