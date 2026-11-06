@@ -2777,3 +2777,34 @@ button.sx-stat.h.on{background:#fbe9e5}button.sx-stat.c.on{background:#fbf1de}
 }
 @media (prefers-reduced-motion:reduce){.sx-slide,.sx-why,.sx-q mark{transition:none}.sx-start,.vd-foot.last .sx-go{animation:none}}
 .sx-arw{display:grid;place-items:center;padding:0 0 3px;line-height:1}
+
+/* ===== คอม: หน้าสรุปตัวอย่างสมส่วน (มาตรวัดซ้าย · ตัวเลข+ปุ่มขวา) ไม่ล้นบนจอโน้ตบุ๊กเตี้ย ===== */
+@media (min-width:768px){
+  .vd-modal .sx-deckp{height:min(88vh,720px)}
+  .sx-cover .sx-sin{display:grid;grid-template-columns:minmax(200px,.9fr) 1.1fr;grid-template-areas:"badge badge" "title title" "gauge side";column-gap:clamp(20px,4vw,44px);row-gap:0;align-content:center;align-items:center;text-align:left;max-width:640px}
+  .sx-cover .sx-free{grid-area:badge;justify-self:center;margin:0 0 6px !important}
+  .sx-cover h4{grid-area:title;justify-self:center;margin:0 0 clamp(10px,2.4vh,22px) !important;font-size:clamp(20px,3.2vh,26px) !important}
+  .sx-cover .sx-gauge{grid-area:gauge;width:100%;max-width:min(240px,30vh);margin:0 auto}
+  .sx-cover .sx-gl b{font-size:clamp(18px,2.8vh,24px)}
+  .sx-cside{grid-area:side;display:flex;flex-direction:column;gap:clamp(10px,1.8vh,16px)}
+  .sx-cover .sx-sum{margin:0 !important;grid-template-columns:repeat(3,1fr);gap:8px}
+  .sx-cover .sx-stat{padding:clamp(8px,1.4vh,12px) 6px}
+  .sx-cover .sx-stat b{font-size:clamp(22px,3.6vh,30px)}
+  .sx-cover .sx-start{align-self:flex-start;padding:clamp(10px,1.6vh,13px) 24px}
+  .sx-cover .sx-hint{margin:0 !important;text-align:left;font-size:12px}
+  .sx-slide{padding-top:clamp(14px,2.6vh,22px);padding-bottom:clamp(14px,2.6vh,22px)}
+  .sx-nav{padding-top:6px}
+}
+@media (min-width:768px) and (max-height:700px){
+  .vd-modal .vd-tabs{padding-top:10px}
+  .vd-modal .vd-tabs button{padding:8px 10px}
+  .vd-modal .vd-foot{padding:10px 18px}
+  .sx-arw{width:34px;height:34px}
+  .sx-q{font-size:17px;padding:16px 18px 16px 22px}
+  .sx-why{padding:12px 14px}
+  .sx-why p{font-size:15px}
+}
+@media (min-width:768px){
+  .vd-modal .sx-deckp{height:min(88vh,620px)}
+  .sx-card .sx-sin{justify-content:center;padding-top:0}
+}
