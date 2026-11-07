@@ -3652,6 +3652,8 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     box.innerHTML = '<div class="vsl-bg" data-x></div><div class="vsl-card">' +
       '<div class="vsl-head"><div><h3 id="vslT">เลือกสัญญาตัวอย่าง</h3><p>' + L.length + ' ฉบับ ทุกฉบับมีจุดเสี่ยงซ่อนอยู่ ลองให้ระบบตรวจดู</p></div><button type="button" class="vsl-x" data-x aria-label="ปิด">✕</button></div>' +
       '<div class="vsl-chips" role="tablist"></div><div class="vsl-list"></div>' +
+      '<div class="vsl-view" hidden><div class="vsl-vhead"></div><div class="vsl-doc" tabindex="0"></div>' +
+      '<div class="vsl-vfoot"><button type="button" class="vsl-back">← กลับไปเลือก</button><button type="button" class="vsl-use">ใช้สัญญานี้</button></div></div>' +
       '<p class="vsl-fine">ข้อความสมมติเพื่อทดลองใช้เท่านั้น ไม่ใช่แบบสัญญาที่แนะนำให้ใช้จริง</p></div>';
     document.body.appendChild(box);
     var chips = box.querySelector('.vsl-chips');
@@ -3662,9 +3664,32 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     box.addEventListener('click', function (e) {
       if (e.target.closest('[data-x]')) return close();
       var c = e.target.closest('.vsl-chip'); if (c) { flt = c.dataset.f; render(); return; }
-      var it = e.target.closest('.vsl-item'); if (it) pick(+it.dataset.i);
+      var it = e.target.closest('.vsl-item'); if (it) { view(+it.dataset.i); return; }
+      if (e.target.closest('.vsl-back')) { back(); return; }
+      if (e.target.closest('.vsl-use')) pick(cur);
     });
-    box.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+    box.addEventListener('keydown', function (e) { if (e.key === 'Escape') { if (cur > -1) back(); else close(); } });
+  }
+  var cur = -1, lastScroll = 0;
+  function esc(t) { return t.replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); }
+  function view(i) {
+    var s = L[i]; if (!s) return; cur = i;
+    var list = box.querySelector('.vsl-list'); lastScroll = list.scrollTop;
+    var v = box.querySelector('.vsl-view'); v.style.setProperty('--a', ACC[s[0]] || '#94a3b8');
+    v.querySelector('.vsl-vhead').innerHTML = '<span class="vsl-art" aria-hidden="true"><svg viewBox="0 0 64 64">' + (ART[i] || '') + '</svg></span><span class="vsl-txt"><span class="vsl-tag">' + NAMES[s[0]] + '</span><b>' + s[1] + '</b><small>⚠ จุดที่ควรสังเกต: ' + s[2] + '</small></span>';
+    var lines = s[3].split('\n'), html = '';
+    lines.forEach(function (ln, k) {
+      if (k === 0) { html += '<h4>' + esc(ln) + '</h4>'; return; }
+      var m = /^(ข้อ \d+)\s*(.*)$/.exec(ln);
+      html += m ? '<p><b>' + m[1] + '</b> ' + esc(m[2]) + '</p>' : '<p class="vsl-plain">' + esc(ln) + '</p>';
+    });
+    var d = v.querySelector('.vsl-doc'); d.innerHTML = html; d.scrollTop = 0;
+    box.classList.add('is-view'); v.hidden = false;
+    setTimeout(function () { var u = v.querySelector('.vsl-use'); if (u) u.focus({ preventScroll: true }); }, 50);
+  }
+  function back() {
+    cur = -1; box.classList.remove('is-view'); box.querySelector('.vsl-view').hidden = true;
+    var list = box.querySelector('.vsl-list'); list.scrollTop = lastScroll;
   }
   function render() {
     Array.prototype.forEach.call(box.querySelectorAll('.vsl-chip'), function (c) { c.classList.toggle('is-on', c.dataset.f === flt); });
@@ -3690,6 +3715,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     if (!box) build();
     var sel = document.getElementById('contractType'); var cur = sel && sel.value;
     flt = cur && cur !== 'unsure' && L.some(function (s) { return s[0] === cur; }) ? cur : 'all';
+    cur = -1; box.classList.remove('is-view'); if (box.querySelector('.vsl-view')) box.querySelector('.vsl-view').hidden = true;
     render(); box.hidden = false; requestAnimationFrame(function () { box.classList.add('is-open'); });
     setTimeout(function () { var c = box.querySelector('.vsl-chip.is-on'); if (c) { c.focus(); c.scrollIntoView({ inline: 'center', block: 'nearest' }); } }, 60);
   }
