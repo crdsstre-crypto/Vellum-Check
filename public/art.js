@@ -3090,13 +3090,15 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     big = box.querySelector('.vcp-big'), cn = box.querySelector('.vcp-cn'), cs = box.querySelector('.vcp-cs'),
     load = box.querySelector('.vcp-load'), ok = box.querySelector('.vcp-ok');
   var pending = sel.value, shown = null, view = null, houseState = 0, lastFocus = null,
-    MDL = { rent: 'house', sale: 'car', employment: 'emp' }, BASE = { house: 1, car: 1 }, TAGM = { rent: ['house', 'condo', 'room'], sale: ['car', 'dutch', 'land'] }, credit = box.querySelector('.vcp-credit');
+    MDL = { rent: 'house', sale: 'car', employment: 'bld' }, BASE = { house: 1, car: 1 }, TAGM = { rent: ['house', 'condo', 'room'], sale: ['car', 'dutch', 'land'], employment: ['bld', 'emp', 'hr'] }, credit = box.querySelector('.vcp-credit');
   var CREDIT = { house: 'บ้าน 3D “Autumn House” โดย Zhenya (Sketchfab)', condo: 'คอนโด 3D “Low Rise Modern Condo 2” โดย aitortilla01 (Sketchfab)', room: 'ห้อง 3D “Low Poly Room” โดย IsaacTheMaverick (Sketchfab)', dutch: 'บ้าน 3D “Dutch House” โดย Bjarne Stokhof (Sketchfab)' };
   function setCredit(m) { if (!CREDIT[m]) { credit.innerHTML = ''; return; } credit.innerHTML = CREDIT[m] + ' · <a href="https://creativecommons.org/licenses/by/4.0/deed.th" target="_blank" rel="noopener">CC BY 4.0</a>'; }
   /* โมเดลเสริมของสัญญาเช่า: โหลดเฉพาะตอนแตะป้าย */
   var EXTRA = {
     condo: { src: 'condo3d.js?v=1', key: 'VCCondo', name: 'คอนโด', o: { y: -0.7, p: 0.4, d: 112, c: [0, 12, 0], r: 40 } },
     room: { src: 'room3d.js?v=1', key: 'VCRoom', name: 'ห้อง', o: { y: 0.785, p: 0.5, d: 84, c: [-1, 8, -1], r: 30 }, sw: 1 },
+    bld: { src: 'bld3d.js?v=1', key: 'VCBld', name: 'ตึกสำนักงาน', o: { y: 0.6, p: 0.42, d: 48, c: [0, 5, 0], r: 60 }, sw: 1, nocredit: 1 },
+    hr: { src: 'hr3d.js?v=1', key: 'VCHr', name: 'ห้องฝ่ายบุคคล', o: { y: 0.7, p: 0.5, d: 26, c: [-1, 2.6, -1.4], r: 40 }, sw: 1, nocredit: 1 },
     emp: { src: 'emp3d.js?v=1', key: 'VCEmp', name: 'ออฟฟิศ', o: { y: 0.7, p: 0.5, d: 26, c: [-1, 2.8, -1.6], r: 40 }, sw: 1, nocredit: 1 },
     land: { src: 'land3d.js?v=2', key: 'VCLand', name: 'ที่ดิน', o: { y: -0.62, p: 0.5, d: 40, c: [0, 0.8, 2], r: 60 }, sw: 1, nocredit: 1 },
     dutch: { src: 'dutch3d.js?v=1', key: 'VCDutch', name: 'บ้าน', o: { y: -0.6, p: 0.42, d: 37, c: [-2, 6, 0], r: 16 } }
