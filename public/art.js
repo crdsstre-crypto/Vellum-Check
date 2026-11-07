@@ -2914,7 +2914,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
   function init() {
     var cc = document.getElementById('checkCard'); if (!cc || cc.querySelector('.vc-needlogin')) return;
     var n = document.createElement('div'); n.className = 'vc-needlogin';
-    n.innerHTML = '<span><b>เข้าสู่ระบบก่อนตรวจสัญญา</b> · สมัครฟรี รับตรวจ 2 ครั้ง</span><a href="#authCard">เข้าสู่ระบบ / สมัคร →</a>';
+    n.innerHTML = '<span><b>วางสัญญาได้เลย</b> · สมัครฟรีตอนกดตรวจ รับตรวจ 2 ครั้ง</span><a href="#authCard">เข้าสู่ระบบ / สมัคร →</a>';
     cc.insertBefore(n, cc.firstChild);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
@@ -3498,4 +3498,49 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     if (e.target.closest && e.target.closest('#ctTrigger,#detectChange')) { e.preventDefault(); e.stopImmediatePropagation(); open(); }
   }, true);
   window.VCPicker = { open: open, close: close, v: function () { return view; } };
+})();
+
+/* ===== วางก่อน สมัครทีหลัง: หน้าต่างเชิญสมัครตอนกด "ตรวจ" โดยยังไม่เข้าสู่ระบบ ===== */
+(function () {
+  var box = null;
+  function build() {
+    box = document.createElement('div'); box.className = 'vag'; box.hidden = true;
+    box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-labelledby', 'vagT');
+    box.innerHTML = '<div class="vag-bg" data-x></div><div class="vag-card">' +
+      '<button type="button" class="vag-x" data-x aria-label="ปิด">✕</button>' +
+      '<div class="vag-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3.5h7l4 4v12.4a.6.6 0 0 1-.6.6H7.1a.6.6 0 0 1-.6-.6V4.1a.6.6 0 0 1 .5-.6z"/><path d="M14 3.5V8h4"/><path d="m9.2 14 2 2 3.8-4"/></svg></div>' +
+      '<h3 id="vagT">อีกขั้นเดียวก็ตรวจได้</h3>' +
+      '<p class="vag-sub">สมัครฟรี ไม่ต้องใช้บัตร รับตรวจสัญญา <b>2 ครั้ง</b></p>' +
+      '<ul class="vag-list"><li>ข้อความที่วางไว้ยังอยู่ครบ ไม่ต้องวางใหม่</li><li>เข้าสู่ระบบแล้ว ระบบจะตรวจให้ต่อทันที</li><li>ปกปิดชื่อ เลขบัตร เบอร์โทร ก่อนส่งตรวจ</li></ul>' +
+      '<a class="vag-go" href="#authCard">สมัครฟรี / เข้าสู่ระบบ</a>' +
+      '<button type="button" class="vag-later" data-x>ไว้ทีหลัง</button></div>';
+    document.body.appendChild(box);
+    box.addEventListener('click', function (e) {
+      if (e.target.closest('[data-x]')) { close(); try { sessionStorage.removeItem('vc_pending_check'); } catch (er) {} }
+      else if (e.target.closest('.vag-go')) {
+        close();
+        /* มือถือ: ส่วนบัญชีเป็นแผ่นเลื่อนขึ้น เปิดด้วยปุ่ม "บัญชี" */
+        var t = document.getElementById('authToggle');
+        if (t && t.offsetParent && !document.body.classList.contains('auth-open')) { e.preventDefault(); t.click(); }
+        setTimeout(note, 60); setTimeout(note, 500);
+      }
+    });
+    box.addEventListener('keydown', function (e) { if (e.key === 'Escape') { close(); } });
+  }
+  function open() {
+    if (!box) build();
+    box.hidden = false; requestAnimationFrame(function () { box.classList.add('is-open'); });
+    setTimeout(function () { var g = box.querySelector('.vag-go'); if (g) g.focus(); }, 60);
+  }
+  function close() { if (!box) return; box.classList.remove('is-open'); setTimeout(function () { box.hidden = true; }, 220); }
+  window.VCAuthGate = { open: open, close: close };
+  /* หน้าบัญชี: บอกว่าจะตรวจต่อให้หลังเข้าสู่ระบบ */
+  function note() {
+    var ac = document.getElementById('authCard'); if (!ac) return;
+    var n = ac.querySelector('.vag-note'), on = false;
+    try { on = sessionStorage.getItem('vc_pending_check') === '1'; } catch (e) {}
+    if (on && !n) { n = document.createElement('p'); n.className = 'vag-note'; n.textContent = 'สัญญาที่คุณวางไว้ยังอยู่ — เข้าสู่ระบบหรือสมัครแล้ว ระบบจะตรวจให้ต่อทันที'; ac.insertBefore(n, ac.firstChild); }
+    if (n) n.hidden = !on;
+  }
+  addEventListener('hashchange', function () { setTimeout(note, 30); });
 })();
