@@ -3116,6 +3116,12 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     document.head.appendChild(s);
   }
   /* มือถือ (โดยเฉพาะ iPhone) เปิด WebGL พร้อมกันได้จำกัด: เก็บโมเดลเสริมไว้ทีละตัว ตัวอื่นคืนหน่วยความจำ */
+  /* แสดง canvas ของโมเดลปัจจุบันด้วย inline style (ไม่พึ่ง CSS รายโมเดล — กันกรณีไฟล์ art.css ยังเป็นรุ่นเก่า) */
+  function showCv(k) {
+    Object.keys(EXTRA).forEach(function (o) { var c = EXTRA[o].cv, on = o === k;
+      if (on) { c.style.setProperty('opacity', '1', 'important'); c.style.setProperty('pointer-events', 'auto', 'important'); }
+      else { c.style.removeProperty('opacity'); c.style.removeProperty('pointer-events'); } });
+  }
   function freeExtra(k) {
     var X = EXTRA[k]; if (!X.view && !X.used) return;
     if (X.view) { try { X.view.destroy(); } catch (e) {} X.view = null; }
@@ -3124,7 +3130,7 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
   function pauseExtras() { Object.keys(EXTRA).forEach(function (k) { if (EXTRA[k].view) EXTRA[k].view.pause(); }); }
   function showExtra(k) {
     var X = EXTRA[k];
-    stage.classList.add('is-x'); stage.classList.remove('x-ready'); stage.dataset.m = k; setCredit(k); if (view) view.pause(); pauseExtras();
+    showCv(null); stage.classList.add('is-x'); stage.classList.remove('x-ready'); stage.dataset.m = k; setCredit(k); if (view) view.pause(); pauseExtras();
     if (X.st !== 2) { load.hidden = false; load.textContent = 'กำลังโหลด' + X.name + ' 3D…'; }
     Object.keys(EXTRA).forEach(function (o) { if (o !== k) freeExtra(o); });
     loadExtra(k, function () {
@@ -3134,10 +3140,10 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
         X.used = true; X.view = window.VCHouseView(X.cv, window[X.key], X.o);
         if (!X.view) { load.hidden = false; load.textContent = 'เครื่องนี้แสดง 3D ไม่ได้ตอนนี้ ลองปิดแล้วเปิดหน้าต่างนี้ใหม่'; return; }
       }
-      if (MDL[shown] === k && !box.hidden) { X.view.play(); if (X.sw) X.view.aim(X.o.y, X.o.p, X.o.d, X.o.c, 1); stage.classList.add('x-ready'); }
+      if (MDL[shown] === k && !box.hidden) { X.view.play(); if (X.sw) X.view.aim(X.o.y, X.o.p, X.o.d, X.o.c, 1); stage.classList.add('x-ready'); showCv(k); }
     });
   }
-  function hideCondo() { stage.classList.remove('is-x', 'x-ready'); delete stage.dataset.m; pauseExtras(); setCredit('house'); }
+  function hideCondo() { showCv(null); stage.classList.remove('is-x', 'x-ready'); delete stage.dataset.m; pauseExtras(); setCredit('house'); }
 
 
   function buildList() {
