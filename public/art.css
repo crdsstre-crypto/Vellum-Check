@@ -3089,7 +3089,7 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
 /* สัญญาเช่า: สลับ บ้าน / คอนโด */
 .vcp-cvx{opacity:0 !important;pointer-events:none !important}
 .vcp-stage.is-x .vcp-cv:not(.vcp-cvx){opacity:0 !important;pointer-events:none !important}
-.vcp-stage.is-x.x-ready[data-m="condo"] .vcp-cvx[data-m="condo"],.vcp-stage.is-x.x-ready[data-m="room"] .vcp-cvx[data-m="room"]{opacity:1 !important;pointer-events:auto !important}
+.vcp-stage.is-x.x-ready[data-m="condo"] .vcp-cvx[data-m="condo"],.vcp-stage.is-x.x-ready[data-m="room"] .vcp-cvx[data-m="room"],.vcp-stage.is-x.x-ready[data-m="dutch"] .vcp-cvx[data-m="dutch"]{opacity:1 !important;pointer-events:auto !important}
 .vcp-stage.is-x .vcp-floor{opacity:1;bottom:16%;left:8%;right:8%}
 .vcp-stage.is-x.x-ready .vcp-drag{opacity:1}
 .vcp-tags .vcp-tg{pointer-events:auto;cursor:pointer;display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:99px;
