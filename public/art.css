@@ -3107,3 +3107,4 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   .vcp-credit{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:9.5px}
 }
 .vcp-stage[data-m="land"] .vcp-credit{opacity:0 !important}
+@media (max-width:767px){.vcp-tags{flex-wrap:nowrap;max-width:72%}.vcp-tags .vcp-tg{padding:6px 8px;font-size:11px;white-space:nowrap;gap:4px}}
