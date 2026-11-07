@@ -3171,3 +3171,16 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   background:linear-gradient(145deg,color-mix(in srgb,var(--a) 34%,#1e1e24),color-mix(in srgb,var(--b) 30%,#131317)) !important;
   border-color:color-mix(in srgb,var(--a) 45%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 10px 22px -10px color-mix(in srgb,var(--b) 70%,transparent)}
 .vcp-opt:hover .vcp-li svg,.vcp-opt.is-on .vcp-li svg,.vcp-trigger .vcp-li svg,.vcp-big .vcp-li svg{stroke:#fff;opacity:1}
+/* ===== "ใช้กับ" + คำแนะนำครั้งแรก ===== */
+.vcp-use{font:500 13px/1.45 Prompt,Sarabun,sans-serif;color:#e9d7a8;text-shadow:0 1px 10px rgba(0,0,0,.9)}
+.vcp-use[hidden]{display:none}
+.vcp-hint{position:absolute;z-index:4;pointer-events:none;padding:6px 10px;border-radius:99px;background:#f0b43c;color:#1b1406;
+  font:600 12px/1.2 Prompt,sans-serif;white-space:nowrap;box-shadow:0 6px 16px -6px rgba(0,0,0,.7);animation:vcpHint 1.6s ease-in-out infinite}
+.vcp-hint[hidden]{display:none}
+.vcp-hint-spot{left:0;top:0}
+.vcp-hint-tag{top:60px;right:18px}
+.vcp-hint-tag::before{content:"";position:absolute;top:-5px;right:22px;border:5px solid transparent;border-top:0;border-bottom-color:#f0b43c}
+@keyframes vcpHint{0%,100%{opacity:1}50%{opacity:.72}}
+.vcp-stage:not(.house-ready):not(.x-ready) .vcp-hint{display:none}
+@media (max-width:767px){.vcp-use{font-size:11.5px}.vcp-hint{font-size:11px;padding:5px 9px}.vcp-hint-tag{top:46px;right:12px}}
+@media (prefers-reduced-motion:reduce){.vcp-hint{animation:none}}
