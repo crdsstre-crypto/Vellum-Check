@@ -3563,8 +3563,8 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   function startScene() {
     if (!window.VCHouseView || !window.VCGate3D || gview) return;
     var cv = box.querySelector('.vag-cv'), c2 = cv.cloneNode(false); cv.parentNode.replaceChild(c2, cv);
-    gview = window.VCHouseView(c2, window.VCGate3D, { y: .5, p: .7, d: 13.8, c: [-.3, .6, -.2], r: 99, anim: anim });
-    if (gview) { gview.aim(.5, .7, 13.8, [-.3, .6, -.2], 1); box.classList.add('has-3d'); }
+    gview = window.VCHouseView(c2, window.VCGate3D, { y: .5, p: .7, d: 14.4, c: [-.3, .15, -.2], r: 99, anim: anim });
+    if (gview) { gview.aim(.5, .7, 14.4, [-.3, .15, -.2], 1); box.classList.add('has-3d'); }
   }
   function stopScene() { if (gview) { try { gview.destroy(); } catch (e) {} gview = null; } }
   function open() {
