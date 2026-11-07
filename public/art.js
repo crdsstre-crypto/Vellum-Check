@@ -2935,13 +2935,19 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     return new Float32Array([x[0], y[0], z[0], 0, x[1], y[1], z[1], 0, x[2], y[2], z[2], 0,
       -(x[0] * e[0] + x[1] * e[1] + x[2] * e[2]), -(y[0] * e[0] + y[1] * e[1] + y[2] * e[2]), -(z[0] * e[0] + z[1] * e[1] + z[2] * e[2]), 1]);
   }
-  var VS = 'attribute vec3 p;attribute vec2 u;attribute vec3 n;uniform mat4 M;uniform vec3 mn,sc;uniform vec2 us,uo;varying vec2 vu;varying vec3 vn;varying vec3 vp;' +
-    'void main(){vec3 w=mn+p*sc;vp=w;vec2 uu=u*us+uo;vu=vec2(uu.x,1.-uu.y);vn=n;gl_Position=M*vec4(w,1.);}';
-  var FS = 'precision mediump float;uniform sampler2D T,E;uniform float cut,fade,hasE,uR;varying vec2 vu;varying vec3 vn;varying vec3 vp;' +
-    'void main(){vec4 c=texture2D(T,vu);if(c.a<cut)discard;vec3 N=normalize(vn);if(!gl_FrontFacing&&cut<0.)N=-N;' +
+  var VS = 'attribute vec3 p;attribute vec2 u;attribute vec3 n;uniform mat4 M,W;uniform vec3 mn,sc;uniform vec2 us,uo;uniform mediump float cut,uT;uniform float uSw,uY0,uSH;varying vec2 vu;varying vec3 vn;varying vec3 vp;' +
+    'void main(){vec3 w=(W*vec4(mn+p*sc,1.)).xyz;if(cut>0.&&uSw>0.){float hh=clamp((w.y-uY0)/uSH,0.,1.);w.x+=sin(uT*1.7+w.x*.35+w.z*.25)*uSw*hh;w.z+=cos(uT*1.3+w.x*.2)*uSw*.6*hh;}' +
+    'vp=w;vec2 uu=u*us+uo;vu=vec2(uu.x,1.-uu.y);vn=(W*vec4(n,0.)).xyz;gl_Position=M*vec4(w,1.);}';
+  var FS = 'precision mediump float;uniform sampler2D T,E;uniform float cut,fade,hasE,uR,uN,uK,uT;uniform vec3 uPL;uniform vec4 uCol;varying vec2 vu;varying vec3 vn;varying vec3 vp;' +
+    'void main(){vec4 c=texture2D(T,vu);if(uCol.a>0.)c=vec4(uCol.rgb,1.);if(c.a<cut)discard;vec3 N=normalize(vn);if(!gl_FrontFacing&&cut<0.)N=-N;' +
     'vec3 L=normalize(vec3(-.45,.8,.55));float d=max(dot(N,L),0.);float h=.5+.5*N.y;' +
     'vec3 col=c.rgb*(vec3(.36,.34,.4)*h+vec3(.16,.14,.18)+vec3(1.05,.95,.82)*d*.85);' +
-    'if(hasE>.5)col+=max(texture2D(E,vu).r-.79,0.)*4.2*vec3(1.,.8,.5);float r=length(vp.xz)/uR;col*=1.-smoothstep(.72,1.02,r)*fade;' +
+    'if(hasE>.5)col+=max(texture2D(E,vu).r-.79,0.)*4.2*vec3(1.,.8,.5);' +
+    'if(uN>0.){vec3 Lp=uPL-vp;float att=1./(1.+dot(Lp,Lp)*uK);float dp=max(dot(N,normalize(Lp)),0.);' +
+    'vec3 nc=c.rgb*(vec3(.05,.06,.11)*(.6+.4*h)+vec3(1.,.74,.45)*(dp*.75+.2)*att*1.05);float fg=1.-step(.5,uCol.a);' +
+    'float gm=step(.15,c.b-c.r)*step(.45,c.b)*step(c.g,c.b+.05)*fg;float lm=step(.75,c.r)*step(.55,c.g)*step(c.b,.4)*fg;' +
+    'nc+=(vec3(1.,.82,.5)*gm*.75+vec3(1.,.85,.4)*lm*.9)*(.92+.08*sin(uT*3.+vp.x));if(hasE>.5)nc+=max(texture2D(E,vu).r-.79,0.)*6.*vec3(1.,.8,.5);col=mix(col,nc,uN);}' +
+    'float r=length(vp.xz)/uR;col*=1.-smoothstep(.72,1.02,r)*fade;' +
     'gl_FragColor=vec4(pow(col,vec3(.95)),1.);}';
 
   window.VCHouseView = function (canvas, H, O) {
@@ -2949,15 +2955,48 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     var gl = canvas.getContext('webgl', { antialias: true, alpha: true, premultipliedAlpha: true }) || canvas.getContext('experimental-webgl');
     if (!gl || gl.isContextLost()) return null;
     function sh(t, s) { var o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); return o; }
-    var pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pr); gl.useProgram(pr);
+    var pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pr);
+    if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) { try { console.error('VCHouseView', gl.getProgramInfoLog(pr)); } catch (e) {} return null; }
+    gl.useProgram(pr);
     var m = H.meta, buf = b64(H.bin.replace(/\s/g, '')), v = m.v, off = 0;
     var P = new Uint16Array(buf, 0, v * 3); off = v * 6;
     var U = new Uint16Array(buf, off, v * 2); off += v * 4;
     var N = new Int8Array(buf, off, v * 4); off += v * 4;
     var I = new Uint16Array(buf, off);
-    function ab(data, loc, size, type, norm, stride) { var b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW); var l = gl.getAttribLocation(pr, loc); gl.enableVertexAttribArray(l); gl.vertexAttribPointer(l, size, type, norm, stride || 0, 0); }
-    ab(P, 'p', 3, gl.UNSIGNED_SHORT, false); ab(U, 'u', 2, gl.UNSIGNED_SHORT, true); ab(N, 'n', 3, gl.BYTE, true, 4);
+    var aP = gl.getAttribLocation(pr, 'p'), aU = gl.getAttribLocation(pr, 'u'), aN = gl.getAttribLocation(pr, 'n');
+    [aP, aU, aN].forEach(function (l) { gl.enableVertexAttribArray(l); });
+    function mk(data) { var b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW); return b; }
+    function att(b, l, size, type, norm, stride) { gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.vertexAttribPointer(l, size, type, norm, stride || 0, 0); }
+    var bP = mk(P), bU = mk(U), bN = mk(N);
+    /* ตัวละครตัวเล็ก (สร้างในโค้ด สูง 1 หน่วย หันหน้า +z) */
+    var FIG = (function () {
+      var parts = {}, all = [];
+      function bx(name, x0, x1, y0, y1, z0, z1) {
+        var o = parts[name] = parts[name] || { s: 0, n: 0 }, P = [], Nn = [];
+        var f = [[[x0, y1, z0], [x0, y1, z1], [x1, y1, z1], [x1, y1, z0], [0, 1, 0]], [[x0, y0, z0], [x1, y0, z0], [x1, y0, z1], [x0, y0, z1], [0, -1, 0]],
+          [[x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y1, z1], [0, 0, 1]], [[x1, y0, z0], [x0, y0, z0], [x0, y1, z0], [x1, y1, z0], [0, 0, -1]],
+          [[x1, y0, z1], [x1, y0, z0], [x1, y1, z0], [x1, y1, z1], [1, 0, 0]], [[x0, y0, z0], [x0, y0, z1], [x0, y1, z1], [x0, y1, z0], [-1, 0, 0]]];
+        f.forEach(function (q) { [0, 1, 2, 0, 2, 3].forEach(function (i) { all.push(q[i][0], q[i][1], q[i][2]); Nn.push(q[4][0] * 127, q[4][1] * 127, q[4][2] * 127, 0); }); });
+        if (!o.n) o.s = (all.length - 108) / 3; o.n += 36; o.N = (o.N || []).concat(Nn);
+      }
+      bx('body', -.17, .17, .44, .78, -.1, .1); bx('body', -.22, -.17, .5, .76, -.07, .07); bx('body', .17, .22, .5, .76, -.07, .07);
+      bx('head', -.09, .09, .8, .98, -.09, .09); bx('leg', -.06, .06, -.44, 0, -.065, .065);
+      var Nall = []; ['body', 'head', 'leg'].forEach(function (k) { Nall = Nall.concat(parts[k].N); });
+      return { P: new Float32Array(all), N: new Int8Array(Nall), parts: parts, cnt: all.length / 3 };
+    })();
+    var fP = mk(FIG.P), fN = mk(FIG.N), fU = mk(new Uint16Array(FIG.cnt * 2));
+    function bindModel() { att(bP, aP, 3, gl.UNSIGNED_SHORT, false); att(bU, aU, 2, gl.UNSIGNED_SHORT, true); att(bN, aN, 3, gl.BYTE, true, 4); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ib); }
+    function bindFig() { att(fP, aP, 3, gl.FLOAT, false); att(fU, aU, 2, gl.UNSIGNED_SHORT, true); att(fN, aN, 3, gl.BYTE, true, 4); }
     var ib = gl.createBuffer(); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ib); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, I, gl.STATIC_DRAW);
+    function U_(n) { return gl.getUniformLocation(pr, n); }
+    var uW = U_('W'), uMn = U_('mn'), uSc = U_('sc'), uCol = U_('uCol'), uN = U_('uN'), uK = U_('uK'), uT = U_('uT'), uPL = U_('uPL'), uSw = U_('uSw'), uY0 = U_('uY0'), uSH = U_('uSH');
+    var ID = new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
+    function mT(x, y, z) { var o = new Float32Array(ID); o[12] = x; o[13] = y; o[14] = z; return o; }
+    function mRy(a) { var c = Math.cos(a), s = Math.sin(a), o = new Float32Array(ID); o[0] = c; o[2] = -s; o[8] = s; o[10] = c; return o; }
+    function mRx(a) { var c = Math.cos(a), s = Math.sin(a), o = new Float32Array(ID); o[5] = c; o[6] = s; o[9] = -s; o[10] = c; return o; }
+    function mS(s) { var o = new Float32Array(ID); o[0] = o[5] = o[10] = s; return o; }
+    var R0 = O.r || 27, hasA = H.meta.g.some(function (g) { return g.a || g.t.indexOf('Plants') === 0; });
+    var people = O.people || [], night = O.night ? 1 : 0, tNight = night, time = 0, VP = null;
     var uE = gl.getUniformLocation(pr, 'hasE'), uR = gl.getUniformLocation(pr, 'uR'); gl.uniform1i(gl.getUniformLocation(pr, 'T'), 0); gl.uniform1i(gl.getUniformLocation(pr, 'E'), 1);
     var uM = gl.getUniformLocation(pr, 'M'), uCut = gl.getUniformLocation(pr, 'cut'), uFade = gl.getUniformLocation(pr, 'fade');
     gl.uniform3fv(gl.getUniformLocation(pr, 'mn'), m.mn); gl.uniform3fv(gl.getUniformLocation(pr, 'sc'), m.sc); gl.uniform2fv(gl.getUniformLocation(pr, 'us'), m.us || [1, 1]); gl.uniform2fv(gl.getUniformLocation(pr, 'uo'), m.uo || [0, 0]);
@@ -2980,23 +3019,46 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
       gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
       var e = [tgt[0] + dist * Math.cos(pitch) * Math.sin(yaw), tgt[1] + dist * Math.sin(pitch), tgt[2] + dist * Math.cos(pitch) * Math.cos(yaw)];
       var asp = canvas.width / canvas.height, fy = asp < 1.25 ? 2 * Math.atan(Math.tan(0.31) * 1.25 / asp) : 0.62;
-      gl.uniformMatrix4fv(uM, false, m4mul(persp(fy, asp, 1, 300), look(e, tgt)));
-      gl.uniform1f(uFade, 1); gl.uniform1f(uR, O.r || 27);
+      VP = m4mul(persp(fy, asp, 1, 300), look(e, tgt)); gl.uniformMatrix4fv(uM, false, VP);
+      gl.uniform1f(uFade, 1); gl.uniform1f(uR, R0);
+      bindModel(); gl.uniformMatrix4fv(uW, false, ID); gl.uniform3fv(uMn, m.mn); gl.uniform3fv(uSc, m.sc); gl.uniform4f(uCol, 0, 0, 0, 0);
+      var pl = O.pl || [tgt[0], tgt[1] + R0 * .2, tgt[2]], lr = O.lr || R0 * .25;
+      gl.uniform1f(uN, night); gl.uniform1f(uK, 1 / (lr * lr)); gl.uniform3fv(uPL, pl); gl.uniform1f(uT, time);
+      gl.uniform1f(uSw, hasA && !reduce ? R0 * .006 : 0); gl.uniform1f(uY0, m.mn[1]); gl.uniform1f(uSH, R0 * .4);
       m.g.forEach(function (g) {
         gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, g.e ? tex[g.e] : tex[g.t]); gl.uniform1f(uE, g.e ? 1 : 0); gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, tex[g.t]); var pl = g.a || g.t.indexOf('Plants') === 0; gl.uniform1f(uCut, pl ? 0.5 : -1.); if (pl) gl.disable(gl.CULL_FACE); else gl.enable(gl.CULL_FACE);
         gl.drawElements(gl.TRIANGLES, g.n, gl.UNSIGNED_SHORT, g.i * 2);
       });
+      if (people.length) {
+        bindFig(); gl.enable(gl.CULL_FACE); gl.uniform1f(uCut, -1); gl.uniform3f(uMn, 0, 0, 0); gl.uniform3f(uSc, 1, 1, 1);
+        people.forEach(function (q, qi) {
+          var dx = q.b[0] - q.a[0], dz = q.b[1] - q.a[1], L = Math.hypot(dx, dz) || 1, sp = (q.sp || .42) * q.s, ph = (time * sp / L + (q.o || qi * .37)) % 2, tt = ph < 1 ? ph : 2 - ph, dir = ph < 1 ? 1 : -1;
+          var x = q.a[0] + dx * tt, z = q.a[1] + dz * tt, st = time * sp / q.s * 7, base = m4mul(mT(x, (q.y || 0) + Math.abs(Math.sin(st)) * .025 * q.s + .44 * q.s, z), m4mul(mRy(Math.atan2(dx * dir, dz * dir)), mS(q.s)));
+          function part(name, mat, col) { var o = FIG.parts[name]; gl.uniformMatrix4fv(uW, false, mat); gl.uniform4f(uCol, col[0], col[1], col[2], 1); gl.drawArrays(gl.TRIANGLES, o.s, o.n); }
+          var M0 = m4mul(base, mT(0, -.44, 0));
+          part('body', M0, q.c); part('head', M0, q.k || [.93, .76, .62]);
+          part('leg', m4mul(M0, m4mul(mT(-.08, .44, 0), mRx(Math.sin(st) * .55))), q.l || [.2, .22, .3]);
+          part('leg', m4mul(M0, m4mul(mT(.08, .44, 0), mRx(-Math.sin(st) * .55))), q.l || [.2, .22, .3]);
+        });
+      }
+      if (O.onDraw) O.onDraw(proj);
+    }
+    function proj(p) {
+      if (!VP) return null; var v = [0, 0, 0, 0]; for (var i = 0; i < 4; i++) v[i] = VP[i] * p[0] + VP[4 + i] * p[1] + VP[8 + i] * p[2] + VP[12 + i];
+      if (v[3] <= .01) return null; var r = canvas.getBoundingClientRect();
+      return [(v[0] / v[3] * .5 + .5) * r.width, (1 - (v[1] / v[3] * .5 + .5)) * r.height];
     }
     function frame(t) {
       raf = 0; if (!alive) return;
       var dt = last ? Math.min(0.05, Math.max(0, (t - last) / 1000)) : 1 / 60; last = t;
-      clock += dt; if (auto) { if (sway === null) tYaw += dt * 0.25; else tYaw = sway + Math.sin(clock * 0.45) * 0.42; }
+      clock += dt; if (!reduce) time += dt; night += (tNight - night) * Math.min(1, dt * 5); if (Math.abs(tNight - night) < .003) night = tNight; if (auto) { if (sway === null) tYaw += dt * 0.25; else tYaw = sway + Math.sin(clock * 0.45) * 0.42; }
       var ny = yaw + (tYaw - yaw) * Math.min(1, dt * 6), np = pitch + (tPitch - pitch) * Math.min(1, dt * 6), nd = dist + (tDist - dist) * Math.min(1, dt * 4);
       var moving = Math.abs(tYaw - ny) > 1e-4 || Math.abs(tPitch - np) > 1e-4 || Math.abs(tDist - nd) > 1e-3 || auto || !!down;
       yaw = ny; pitch = np; dist = nd;
       var kt = Math.min(1, dt * 4), mt = 0; for (var q = 0; q < 3; q++) { var dq = tTgt[q] - tgt[q]; tgt[q] += dq * kt; mt += Math.abs(dq); }
       if (mt > 1e-3) moving = true;
+      if (night !== tNight || (!reduce && (people.length || hasA))) moving = true;
       if (moving || dirty) { draw(); dirty = false; }
       if (moving || pending) raf = requestAnimationFrame(frame);
     }
@@ -3018,6 +3080,9 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
       play: function () { auto = !reduce; dirty = true; kick(); },
       dbg: function () { return [+yaw.toFixed(3), +tYaw.toFixed(3), auto, !!down, raf, pending]; },
       aim: function (y, p, d, c, sw) { if (c) tTgt = c.slice(); clock = 0; var k = Math.round((tYaw - y) / (2 * Math.PI)); tYaw = y + k * 2 * Math.PI; tPitch = p; tDist = d; sway = sw ? tYaw : null; dirty = true; kick(); },
+      setNight: function (on) { tNight = on ? 1 : 0; dirty = true; kick(); },
+      setPeople: function (a) { people = a || []; dirty = true; kick(); },
+      redraw: function () { dirty = true; kick(); },
       lost: function () { return !alive || gl.isContextLost(); },
       destroy: function () { alive = false; if (raf) cancelAnimationFrame(raf); var x = gl.getExtension('WEBGL_lose_context'); if (x) x.loseContext(); }
     };
@@ -3134,6 +3199,96 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     document.head.appendChild(s);
   }
   /* มือถือ (โดยเฉพาะ iPhone) เปิด WebGL พร้อมกันได้จำกัด: เก็บโมเดลเสริมไว้ทีละตัว ตัวอื่นคืนหน่วยความจำ */
+  /* ===== จุดชี้อธิบาย (แตะดู) + ตัวละคร + แสงกลางคืน ต่อฉาก ===== */
+  var RM = [-.5, 5.8, -1];
+  var SPOTS = {
+    house: [{ p: [-10, 12, 0], t: 'ถ่ายรูปสภาพบ้านทุกห้องก่อนเข้าอยู่ ใช้เป็นหลักฐานตอนคืนเงินประกัน' }, { p: [4, 2.5, 10], t: 'เงินประกันคืนภายในกี่วัน และหักได้ในกรณีไหนบ้าง' }],
+    condo: [{ p: [0, 27, -4], t: 'ค่าส่วนกลาง ค่าน้ำค่าไฟ ใครเป็นคนจ่าย' }, { p: [10, 8, 21], t: 'สัญญากี่ปี ต่อสัญญาอย่างไร ขึ้นค่าเช่าได้ไหม' }],
+    room: [{ p: [-12, 14, -10], t: 'ข้อห้ามในห้อง เช่น เลี้ยงสัตว์ ทำอาหาร เจาะผนัง' }, { p: [6, 6, 6], t: 'ค่าไฟค่าน้ำคิดหน่วยละเท่าไร ตามมิเตอร์จริงไหม' }],
+    car: [{ p: [12.9, 6.6, -11.6], t: 'ตรวจเล่มทะเบียน ชื่อผู้ขาย และภาระไฟแนนซ์ค้างก่อนจ่าย' }, { p: [10.6, 3.6, -8], t: 'วันส่งมอบและสภาพรถต้องตรงที่ตกลง ระบุในสัญญา' }],
+    dutch: [{ p: [-2, 10, -1], t: 'ตรวจภาระจำนองหรือหนี้ค้างที่สำนักงานที่ดินก่อนโอน' }, { p: [-1, 3, 6], t: 'ค่าธรรมเนียมโอนและภาษี ใครเป็นคนจ่าย' }],
+    land: [{ p: [-5, 4.4, 5.3], t: 'เนื้อที่ต้องตรงกับโฉนด ขอรังวัดก่อนโอนได้' }, { p: [10.2, 1.8, 7.2], t: 'หมุดหลักเขตครบ ไม่มีข้อพิพาทกับเพื่อนบ้าน' }, { p: [5.8, 4.4, -4.1], t: 'สิ่งปลูกสร้างบนที่ดินขายรวมหรือแยก ต้องเขียนให้ชัด' }],
+    bld: [{ p: [0, 4, 2.3], t: 'ชื่อนายจ้างและที่อยู่บริษัท ต้องตรงกับในสัญญา' }, { p: [3.5, 11, 0], t: 'สถานที่ทำงาน ย้ายสาขาได้ไหม ต้องระบุไว้' }],
+    emp: [{ p: [-.6, 3.9, -4.8], t: 'ค่าจ้างและรายการหักต้องตรงตามสัญญา' }, { p: [4.3, 4.7, -5.9], t: 'วันจ่ายเงินเดือนต้องระบุให้ชัด' }, { p: [-6.6, 3.6, -.1], t: 'ชั่วโมงทำงานและค่าโอทีต้องเป็นไปตามกฎหมาย' }],
+    hr: [{ p: [-.6, 2.6, -.9], t: 'อ่านช่วงทดลองงานและเงื่อนไขเลิกจ้างก่อนเซ็น' }, { p: [-1, 4.5, -5.9], t: 'สวัสดิการที่พูดไว้ ต้องเขียนลงในสัญญา' }],
+    tech: [{ p: [-.2, 2.6, -4.2], t: 'ขอบเขตงานและค่าอะไหล่ต้องเขียนชัด' }, { p: [-2.6, 3.5, -4.85], t: 'ถ้าของเสียหายระหว่างซ่อม ใครรับผิดชอบ' }],
+    free: [{ p: [-.5, 3.4, -4.6], t: 'แบ่งจ่ายเป็นงวดตามงานที่ส่ง ไม่ควรรับเงินครั้งเดียวตอนจบ' }, { p: [-.8, 5, -5.9], t: 'แก้งานได้กี่ครั้ง เกินแล้วคิดเงินอย่างไร' }],
+    build: [{ p: [0, 6.2, -3], t: 'จ่ายเงินแต่ละงวดตามงานที่เสร็จจริง' }, { p: [-7.9, 3, -6.8], t: 'ความปลอดภัยและการรับประกันงานเป็นหน้าที่ใคร' }],
+    bank: [{ p: [-1, 3, -3.35], t: 'ดอกเบี้ยคงที่หรือลอยตัว เปลี่ยนได้เมื่อไร' }, { p: [-3.8, 3, -3.1], t: 'ค่าธรรมเนียมถ้าปิดบัญชีก่อนกำหนด' }],
+    lend: [{ p: [-1.7, 1.6, -1.7], t: 'เขียนจำนวนเงินทั้งตัวเลขและตัวหนังสือ กันการแก้' }, { p: [2.5, 4.3, -5.9], t: 'กำหนดวันคืนเงินให้ชัด ไม่ใช่ "คืนเมื่อสะดวก"' }],
+    coll: [{ p: [-3.9, 2.5, -4.4], t: 'หลักประกันคืออะไร และยึดได้เมื่อไร' }, { p: [-4, 1.1, -4.6], t: 'ถ้าผิดนัด จะขายทอดตลาดหรือยึดเลย' }],
+    shop: [{ p: [0, 2.6, -2.1], t: 'แบ่งหน้าที่ให้ชัด ใครทำอะไรในร้าน' }, { p: [0, 5.6, 1.6], t: 'ชื่อร้านและทรัพย์สินเป็นของใคร ถ้าเลิกกัน' }],
+    cafe: [{ p: [-1, 5.2, -5.9], t: 'ใครลงทุนเท่าไร เป็นเงินหรือแรงงาน' }, { p: [-3, 3.9, -4.1], t: 'อุปกรณ์ที่ซื้อร่วมกัน แบ่งอย่างไรตอนแยกทาง' }],
+    meet: [{ p: [-1, 4.8, -5.9], t: 'เขียนสัดส่วนทั้งกำไรและขาดทุน' }, { p: [-.7, 2.6, -1.3], t: 'เงื่อนไขการถอนตัวจากหุ้นส่วน' }],
+    secret: [{ p: [-.6, 2.6, -2], t: 'ข้อมูลแบบไหนนับเป็นความลับ ต้องระบุให้ชัด' }, { p: [3.7, 2.2, 0], t: 'จบงานแล้วต้องคืนหรือทำลายเอกสารอย่างไร' }],
+    recipe: [{ p: [-.8, 2.8, -1], t: 'คุ้มครองนานแค่ไหน หลังเลิกงานยังผูกพันไหม' }, { p: [3.9, 6.2, -5.9], t: 'ค่าปรับถ้าเปิดเผย สูงเกินจริงหรือเปล่า' }],
+    data: [{ p: [-.4, 3.4, -2.4], t: 'ข้อมูลส่วนบุคคลของลูกค้าต้องดูแลตาม PDPA' }, { p: [3.2, 3.2, -4.2], t: 'ถ้าข้อมูลรั่ว ใครรับผิดชอบ' }],
+    consign: [{ p: [2.3, 2.6, -4.85], t: 'ค่าคอมมิชชันกี่เปอร์เซ็นต์ ได้เงินเมื่อไร' }, { p: [1.8, 1.6, -1.5], t: 'ถ้าของหายหรือเสียหายในร้าน ใครชดใช้' }],
+    ins: [{ p: [-.9, 2.6, -3.15], t: 'อ่านข้อยกเว้นความคุ้มครองให้ครบ' }, { p: [-4.4, 4.7, .6], t: 'ทุนประกันเท่าไร มีค่าเสียหายส่วนแรกไหม' }],
+    dealer: [{ p: [4.7, 2.6, -4.7], t: 'เป็นตัวแทนแต่เพียงผู้เดียวไหม ขายได้ในพื้นที่ไหน' }, { p: [-1.3, 2.6, -.5], t: 'เป้ายอดขายขั้นต่ำ และถ้าทำไม่ถึงจะเป็นอย่างไร' }]
+  };
+  function walker(z, c, x0, x1) { return [{ a: [x0 == null ? -3.6 : x0, z], b: [x1 == null ? 3.2 : x1, z], s: 3.3, c: c }]; }
+  var PEOPLE = {
+    emp: walker(2.6, [.26, .42, .72]), hr: walker(2.6, [.2, .5, .45]), tech: walker(3.2, [.85, .45, .2]), free: walker(2.6, [.6, .35, .7], -3.6, 2.2),
+    bank: walker(3.3, [.3, .4, .6]), lend: walker(2.9, [.7, .3, .3]), coll: walker(2.9, [.25, .3, .5]), cafe: walker(2.6, [.55, .38, .25]),
+    meet: walker(2.7, [.3, .4, .65]), secret: walker(3.5, [.22, .24, .3]), recipe: walker(2.6, [.9, .9, .9]), data: walker(2.6, [.25, .45, .4]),
+    consign: walker(2.7, [.75, .45, .55]), ins: walker(2.8, [.25, .45, .75], -2.2, 3.2), dealer: walker(3.0, [.9, .6, .15]),
+    land: [{ a: [-9, 7.2], b: [-2.2, 7.2], y: .1, s: 2.4, c: [.75, .35, .3] }, { a: [2.6, 1.0], b: [6.6, 1.0], y: .1, s: 2.2, c: [.3, .5, .7], o: .6 }],
+    bld: [{ a: [-10, 5.2], b: [-2.4, 5.2], y: .2, s: 2.2, c: [.25, .3, .45] }, { a: [3, 5.0], b: [10, 5.0], y: .2, s: 2.2, c: [.7, .3, .35], o: .5 }],
+    shop: [{ a: [-8, 5.2], b: [8, 5.2], y: .25, s: 2.4, c: [.3, .55, .7] }],
+    build: [{ a: [-3.4, -1.6], b: [3.4, -1.6], y: .5, s: 2.4, c: [.95, .55, .15], k: [.93, .76, .62] }]
+  };
+  var LIGHT = {
+    house: { pl: [-4, 12, 6], lr: 30 }, condo: { pl: [0, 16, 14], lr: 30 }, room: { pl: [0, 16, 0], lr: 26 }, dutch: { pl: [-2, 8, 5], lr: 13 },
+    land: { pl: [5.8, 5, 0], lr: 14 }, bld: { pl: [0, 5, 4], lr: 14 }, shop: { pl: [0, 4.6, 0], lr: 9 }, build: { pl: [0, 7, -2], lr: 12 }
+  };
+  var NIGHT = false;
+  var spotsBox = document.createElement('div'); spotsBox.className = 'vcp-spots';
+  var tip = document.createElement('div'); tip.className = 'vcp-tip'; tip.hidden = true; tip.setAttribute('role', 'status');
+  stage.appendChild(spotsBox); stage.appendChild(tip);
+  var nbtn = document.createElement('button'); nbtn.type = 'button'; nbtn.className = 'vcp-night'; nbtn.setAttribute('aria-pressed', 'false');
+  nbtn.innerHTML = '<span class="vcp-nico" aria-hidden="true"></span><span class="vcp-ntx">กลางคืน</span>';
+  stage.appendChild(nbtn);
+  function curKey() { return HOUSE[shown] ? MDL[shown] : null; }
+  var openSpot = -1;
+  function syncSpots() {
+    var key = curKey(); spotsBox.innerHTML = ''; tip.hidden = true; openSpot = -1;
+    (SPOTS[key] || []).forEach(function (s, i) {
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'vcp-spot'; b.dataset.i = i;
+      b.setAttribute('aria-label', 'จุดที่ควรระวัง: ' + s.t); b.innerHTML = '<i></i>'; spotsBox.appendChild(b);
+    });
+    var v = BASE[key] ? view : (EXTRA[key] && EXTRA[key].view); if (v) v.redraw();
+  }
+  function placeSpots(proj) {
+    var key = curKey(), list = SPOTS[key] || [], W = stage.clientWidth, Hh = stage.clientHeight;
+    Array.prototype.forEach.call(spotsBox.children, function (b, i) {
+      var s = list[i], pt = s && proj(s.p);
+      var ok = pt && pt[0] > 12 && pt[0] < W - 12 && pt[1] > 40 && pt[1] < Hh - 20;
+      b.style.display = ok ? '' : 'none';
+      if (ok) b.style.transform = 'translate(' + pt[0].toFixed(1) + 'px,' + pt[1].toFixed(1) + 'px)';
+      if (i === openSpot) { if (!ok) { tip.hidden = true; openSpot = -1; } else placeTip(pt); }
+    });
+  }
+  function placeTip(pt) {
+    var W = stage.clientWidth, tw = Math.min(240, W - 24), x = Math.max(12, Math.min(W - tw - 12, pt[0] - tw / 2)), up = pt[1] > 150;
+    tip.style.width = tw + 'px'; tip.style.left = x + 'px';
+    tip.style.top = up ? '' : (pt[1] + 20) + 'px'; tip.style.bottom = up ? (stage.clientHeight - pt[1] + 20) + 'px' : '';
+  }
+  function onDrawFor(k) { return function (proj) { var ck = curKey(); if (!ck || box.hidden) return; if ((k === 'base' && BASE[ck]) || k === ck) placeSpots(proj); }; }
+  spotsBox.addEventListener('click', function (e) {
+    var b = e.target.closest('.vcp-spot'); if (!b) return; e.stopPropagation();
+    var i = +b.dataset.i, s = (SPOTS[curKey()] || [])[i]; if (!s) return;
+    if (openSpot === i) { tip.hidden = true; openSpot = -1; return; }
+    openSpot = i; tip.textContent = s.t; tip.hidden = false;
+    Array.prototype.forEach.call(spotsBox.children, function (x) { x.classList.toggle('is-on', x === b); });
+    var m = /translate\(([-\d.]+)px,([-\d.]+)px\)/.exec(b.style.transform || ''); if (m) placeTip([+m[1], +m[2]]);
+  });
+  stage.addEventListener('pointerdown', function (e) { if (!e.target.closest('.vcp-spot,.vcp-tip')) { tip.hidden = true; openSpot = -1; Array.prototype.forEach.call(spotsBox.children, function (x) { x.classList.remove('is-on'); }); } });
+  nbtn.addEventListener('click', function () {
+    NIGHT = !NIGHT; nbtn.setAttribute('aria-pressed', NIGHT ? 'true' : 'false'); nbtn.querySelector('.vcp-ntx').textContent = NIGHT ? 'กลางวัน' : 'กลางคืน';
+    stage.classList.toggle('is-night', NIGHT);
+    if (view) view.setNight(NIGHT); Object.keys(EXTRA).forEach(function (k) { if (EXTRA[k].view) EXTRA[k].view.setNight(NIGHT); });
+  });
   /* แสดง canvas ของโมเดลปัจจุบันด้วย inline style (ไม่พึ่ง CSS รายโมเดล — กันกรณีไฟล์ art.css ยังเป็นรุ่นเก่า) */
   function showCv(k) {
     Object.keys(EXTRA).forEach(function (o) { var c = EXTRA[o].cv, on = o === k;
@@ -3155,7 +3310,8 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
       load.hidden = true;
       if (X.view && X.view.lost()) freeExtra(k);
       if (!X.view) {
-        X.used = true; X.view = window.VCHouseView(X.cv, window[X.key], X.o);
+        X.used = true; var o2 = {}; Object.keys(X.o).forEach(function (q) { o2[q] = X.o[q]; }); o2.people = PEOPLE[k]; o2.night = NIGHT; o2.onDraw = onDrawFor(k); if (LIGHT[k]) { o2.pl = LIGHT[k].pl; o2.lr = LIGHT[k].lr; } else { o2.pl = RM; o2.lr = 9; }
+        X.view = window.VCHouseView(X.cv, window[X.key], o2);
         if (!X.view) { load.hidden = false; load.textContent = 'เครื่องนี้แสดง 3D ไม่ได้ตอนนี้ ลองปิดแล้วเปิดหน้าต่างนี้ใหม่'; return; }
       }
       if (MDL[shown] === k && !box.hidden) { X.view.play(); if (X.sw) X.view.aim(X.o.y, X.o.p, X.o.d, X.o.c, 1); stage.classList.add('x-ready'); showCv(k); }
@@ -3212,7 +3368,7 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
       loadHouse(function () {
         load.hidden = true;
         if (view && view.lost()) { try { view.destroy(); } catch (e) {} view = null; var c2 = cv.cloneNode(false); cv.parentNode.replaceChild(c2, cv); cv = c2; }
-        if (!view) { view = window.VCHouseView(cv, window.VCHouse); if (!view) { stage.classList.remove('is-house'); return; } }
+        if (!view) { view = window.VCHouseView(cv, window.VCHouse, { r: 27, pl: LIGHT.house.pl, lr: LIGHT.house.lr, night: NIGHT, onDraw: onDrawFor('base') }); if (!view) { stage.classList.remove('is-house'); return; } }
         if (shown === v && !box.hidden && BASE[MDL[v]]) { view.play(); view.aim(h.y, h.p, h.d, h.c, h.sw); stage.classList.add('house-ready'); }
       });
     } else {
@@ -3224,6 +3380,7 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     }
   }
 
+  var _preview = preview; preview = function (v) { _preview(v); syncSpots(); };
   function open() {
     if (!box.hidden) return;
     lastFocus = document.activeElement;
@@ -3261,6 +3418,7 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
       MDL[shown] = tb.dataset.m;
       Array.prototype.forEach.call(box.querySelectorAll('.vcp-tg'), function (x) { x.classList.toggle('is-m', x.dataset.m === MDL[shown]); });
       if (!BASE[MDL[shown]]) showExtra(MDL[shown]); else { hideCondo(); var s0 = shown; shown = null; preview(s0); }
+      syncSpots();
       return;
     }
     if (tb) return;
