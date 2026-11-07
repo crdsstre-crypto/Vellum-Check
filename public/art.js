@@ -2946,8 +2946,8 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
 
   window.VCHouseView = function (canvas, H, O) {
     O = O || {};
-    var gl = canvas.getContext('webgl', { antialias: true, alpha: true, premultipliedAlpha: true });
-    if (!gl) return null;
+    var gl = canvas.getContext('webgl', { antialias: true, alpha: true, premultipliedAlpha: true }) || canvas.getContext('experimental-webgl');
+    if (!gl || gl.isContextLost()) return null;
     function sh(t, s) { var o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); return o; }
     var pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pr); gl.useProgram(pr);
     var m = H.meta, buf = b64(H.bin.replace(/\s/g, '')), v = m.v, off = 0;
@@ -3018,6 +3018,7 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
       play: function () { auto = !reduce; dirty = true; kick(); },
       dbg: function () { return [+yaw.toFixed(3), +tYaw.toFixed(3), auto, !!down, raf, pending]; },
       aim: function (y, p, d, c, sw) { if (c) tTgt = c.slice(); clock = 0; var k = Math.round((tYaw - y) / (2 * Math.PI)); tYaw = y + k * 2 * Math.PI; tPitch = p; tDist = d; sway = sw ? tYaw : null; dirty = true; kick(); },
+      lost: function () { return !alive || gl.isContextLost(); },
       destroy: function () { alive = false; if (raf) cancelAnimationFrame(raf); var x = gl.getExtension('WEBGL_lose_context'); if (x) x.loseContext(); }
     };
   };
@@ -3114,14 +3115,25 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     s.onerror = function () { X.st = 0; load.textContent = 'โหลด' + X.name + ' 3D ไม่สำเร็จ'; };
     document.head.appendChild(s);
   }
+  /* มือถือ (โดยเฉพาะ iPhone) เปิด WebGL พร้อมกันได้จำกัด: เก็บโมเดลเสริมไว้ทีละตัว ตัวอื่นคืนหน่วยความจำ */
+  function freeExtra(k) {
+    var X = EXTRA[k]; if (!X.view && !X.used) return;
+    if (X.view) { try { X.view.destroy(); } catch (e) {} X.view = null; }
+    var c = X.cv.cloneNode(false); X.cv.parentNode.replaceChild(c, X.cv); X.cv = c; X.used = false;
+  }
   function pauseExtras() { Object.keys(EXTRA).forEach(function (k) { if (EXTRA[k].view) EXTRA[k].view.pause(); }); }
   function showExtra(k) {
     var X = EXTRA[k];
     stage.classList.add('is-x'); stage.classList.remove('x-ready'); stage.dataset.m = k; setCredit(k); if (view) view.pause(); pauseExtras();
     if (X.st !== 2) { load.hidden = false; load.textContent = 'กำลังโหลด' + X.name + ' 3D…'; }
+    Object.keys(EXTRA).forEach(function (o) { if (o !== k) freeExtra(o); });
     loadExtra(k, function () {
       load.hidden = true;
-      if (!X.view) { X.view = window.VCHouseView(X.cv, window[X.key], X.o); if (!X.view) return; }
+      if (X.view && X.view.lost()) freeExtra(k);
+      if (!X.view) {
+        X.used = true; X.view = window.VCHouseView(X.cv, window[X.key], X.o);
+        if (!X.view) { load.hidden = false; load.textContent = 'เครื่องนี้แสดง 3D ไม่ได้ตอนนี้ ลองปิดแล้วเปิดหน้าต่างนี้ใหม่'; return; }
+      }
       if (MDL[shown] === k && !box.hidden) { X.view.play(); if (X.sw) X.view.aim(X.o.y, X.o.p, X.o.d, X.o.c, 1); stage.classList.add('x-ready'); }
     });
   }
@@ -3175,6 +3187,7 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
       if (houseState !== 2) { load.hidden = false; load.textContent = 'กำลังโหลดบ้าน 3D…'; }
       loadHouse(function () {
         load.hidden = true;
+        if (view && view.lost()) { try { view.destroy(); } catch (e) {} view = null; var c2 = cv.cloneNode(false); cv.parentNode.replaceChild(c2, cv); cv = c2; }
         if (!view) { view = window.VCHouseView(cv, window.VCHouse); if (!view) { stage.classList.remove('is-house'); return; } }
         if (shown === v && !box.hidden && BASE[MDL[v]]) { view.play(); view.aim(h.y, h.p, h.d, h.c, h.sw); stage.classList.add('house-ready'); }
       });
