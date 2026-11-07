@@ -3260,3 +3260,15 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
 @media (max-width:767px){.vsl{place-items:end center}.vsl-card{width:100vw;max-height:88vh;border-radius:20px 20px 0 0;padding:18px 14px calc(12px + env(safe-area-inset-bottom))}
   .vsl-chips{margin:14px -14px 10px;padding:0 14px 4px}.vsl-list{grid-template-columns:1fr}}
 .vsl-chips{flex:none}.vsl-chip{height:auto !important}.vsl-list{grid-auto-rows:min-content}.vsl-item{height:auto !important;max-height:none !important;overflow:visible}.vsl-head,.vsl-fine{flex:none}
+/* ภาพประกอบในคลังสัญญาตัวอย่าง */
+.vsl-item{flex-direction:row !important;align-items:center !important;gap:13px !important}
+.vsl-txt{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0}
+.vsl-art{flex:none;width:72px;height:72px;border-radius:16px;display:grid;place-items:center;
+  background:linear-gradient(145deg,color-mix(in srgb,var(--a) 24%,#1f1f25),color-mix(in srgb,var(--a) 8%,#141418));
+  border:1px solid color-mix(in srgb,var(--a) 32%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);transition:transform .3s cubic-bezier(.3,1.6,.5,1)}
+.vsl-art svg{width:78%;height:78%;overflow:visible}
+.vsl-art .w{fill:#eef0f3}.vsl-art .d{fill:#24242b}.vsl-art .a{fill:var(--a);fill:color-mix(in srgb,var(--a) 80%,#fff)}
+.vsl-art .as{stroke:var(--a);stroke:color-mix(in srgb,var(--a) 80%,#fff);fill:none}
+.vsl-item:hover .vsl-art{transform:translateY(-2px) rotate(-3deg) scale(1.05)}
+@media (max-width:767px){.vsl-art{width:62px;height:62px;border-radius:14px}}
+@media (prefers-reduced-motion:reduce){.vsl-art{transition:none}}
