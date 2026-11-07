@@ -3110,7 +3110,11 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     other: 'ตรวจประเด็นทั่วไปที่มักเสียเปรียบ'
   };
   function parse(t) { var m = t.match(/^(.*?)\s*\((.*)\)\s*$/); return m ? { name: m[1], sub: m[2] } : { name: t, sub: '' }; }
+  /* ภาพย่อจากฉาก 3D จริง (ct-thumbs.webp: 9 ช่อง เรียงตาม TH) — ถ้าไม่มีในรายการใช้สติกเกอร์เดิม */
+  var TH = ['unsure', 'rent', 'sale', 'employment', 'service', 'loan', 'shareholder', 'nda', 'other'];
   function ico(v, s) {
+    var i = TH.indexOf(v);
+    if (i > -1) return '<span class="vcp-th" style="background-position:' + (i / (TH.length - 1) * 100).toFixed(3) + '% 0' + (s >= 100 ? ';width:' + s + 'px;height:' + s + 'px' : '') + '" aria-hidden="true"></span>';
     var h = window.VCCtIcon ? window.VCCtIcon(v) : '';
     return s ? h.replace('width="28" height="28"', 'width="' + s + '" height="' + s + '"') : h;
   }
