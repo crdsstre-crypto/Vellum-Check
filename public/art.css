@@ -3153,6 +3153,21 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   .vcp-big .vcp-th{width:min(150px,40vw) !important;height:min(150px,40vw) !important}}
 @media (prefers-reduced-motion:reduce){.vcp-th{transition:none;animation:none !important}}
 .vcp-opt .vcp-3d{bottom:6px}
-html.vcp-th-ok .vcp-th{background-image:url("ct-thumbs.webp?v=1")}
-html.vcp-th-ok .vcp-th svg{display:none}
 .vcp-th svg{width:60%;height:60%}
+/* ===== ไอคอนเส้น + กล่องไล่สี (แทนภาพย่อ 3D) ===== */
+.vcp-th.vcp-li{display:grid;place-items:center;border-radius:13px;background:linear-gradient(145deg,var(--a),var(--b)) !important;filter:none;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 -2px 6px rgba(0,0,0,.18),0 8px 16px -8px var(--b)}
+.vcp-th.vcp-li svg{width:54% !important;height:54% !important;display:block !important;fill:none;stroke:#fff;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 1px 1px rgba(0,0,0,.25))}
+.vcp-oi:has(.vcp-li),.vcp-ti:has(.vcp-li){background:none !important;border:0 !important;padding:0 !important}
+.vcp-oi:has(.vcp-li){width:48px !important;height:48px !important}
+.vcp-big .vcp-li{border-radius:44px}
+.vcp-big .vcp-li svg{stroke-width:1.5}
+@media (max-width:767px){.vcp-oi:has(.vcp-li){width:42px !important;height:42px !important}.vcp-th.vcp-li{border-radius:11px}.vcp-big .vcp-li{border-radius:32px}}
+/* ===== โทนไอคอน: กราไฟต์ + เส้นพาสเทล / ขึ้นสีประจำเบาๆ ตอนชี้หรือเลือก ===== */
+.vcp-th.vcp-li{background:linear-gradient(145deg,#2b2b32,#1a1a1f) !important;border:1px solid rgba(255,255,255,.08);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 6px 14px -8px rgba(0,0,0,.8);transition:transform .35s cubic-bezier(.3,1.6,.5,1),background .35s,border-color .35s,box-shadow .35s}
+.vcp-th.vcp-li svg{stroke:var(--a);stroke:color-mix(in srgb,var(--a) 62%,#fff);stroke-width:1.7;filter:none;opacity:.92;transition:stroke .35s,opacity .35s}
+.vcp-opt:hover .vcp-li,.vcp-opt:focus-visible .vcp-li,.vcp-opt.is-on .vcp-li,.vcp-trigger .vcp-li,.vcp-big .vcp-li{
+  background:linear-gradient(145deg,color-mix(in srgb,var(--a) 34%,#1e1e24),color-mix(in srgb,var(--b) 30%,#131317)) !important;
+  border-color:color-mix(in srgb,var(--a) 45%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 10px 22px -10px color-mix(in srgb,var(--b) 70%,transparent)}
+.vcp-opt:hover .vcp-li svg,.vcp-opt.is-on .vcp-li svg,.vcp-trigger .vcp-li svg,.vcp-big .vcp-li svg{stroke:#fff;opacity:1}
