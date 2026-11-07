@@ -3272,3 +3272,27 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
 .vsl-item:hover .vsl-art{transform:translateY(-2px) rotate(-3deg) scale(1.05)}
 @media (max-width:767px){.vsl-art{width:62px;height:62px;border-radius:14px}}
 @media (prefers-reduced-motion:reduce){.vsl-art{transition:none}}
+/* ===== ดูสัญญาตัวอย่างก่อนใช้ ===== */
+.vsl.is-view .vsl-chips,.vsl.is-view .vsl-list{display:none}
+.vsl-view{flex:1;min-height:0;display:flex;flex-direction:column;margin-top:14px}
+.vsl-view[hidden]{display:none}
+.vsl-vhead{flex:none;display:flex;align-items:center;gap:13px;padding:0 0 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+.vsl-vhead .vsl-txt b{font:600 17px/1.35 Prompt,sans-serif;color:#fff}
+.vsl-vhead .vsl-txt small{font:400 13px/1.5 Prompt,Sarabun,sans-serif;color:#f0c46a}
+.vsl-doc{flex:1;min-height:120px;overflow:auto;margin:14px 0 0;padding:20px 22px;border-radius:14px;background:#f6f3ec;color:#2a2620;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);font:400 15px/1.75 Sarabun,Prompt,sans-serif;outline:none}
+.vsl-doc h4{margin:0 0 12px;text-align:center;font:600 17px/1.4 Prompt,Sarabun,sans-serif;color:#1d1a15}
+.vsl-doc p{margin:0 0 8px}
+.vsl-doc p b{color:#8a5a10;font-weight:600}
+.vsl-doc .vsl-plain{color:#5a544a}
+.vsl-vfoot{flex:none;display:flex;gap:10px;padding-top:12px}
+.vsl-back,.vsl-use{min-height:50px !important;height:auto !important;border-radius:14px;font:600 15px/1 Prompt,sans-serif;cursor:pointer;padding:0 16px}
+.vsl-back::before,.vsl-back::after,.vsl-use::before,.vsl-use::after{display:none !important}
+.vsl-back{flex:none;background:transparent;border:1px solid rgba(255,255,255,.16);color:#dcdce0}
+.vsl-back:hover{background:rgba(255,255,255,.06)}
+.vsl-use{flex:1;background:#f4f4f5;border:0;color:#111}
+.vsl-use:hover{background:#fff}
+.vsl-item::after{content:"ดูสัญญา ›" !important;display:block !important;position:static;margin-left:auto;align-self:center;flex:none;font:500 12px/1 Prompt,sans-serif;color:#8e8e96;padding-left:6px}
+.vsl-item:hover::after{color:#fff}
+.vsl-card{height:min(760px,86vh)}
+@media (max-width:767px){.vsl-card{height:88vh}.vsl-doc{padding:16px 16px;font-size:14.5px}.vsl-item::after{content:"›" !important;font-size:20px}.vsl-back{padding:0 12px;font-size:14px}}
