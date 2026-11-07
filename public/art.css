@@ -3204,3 +3204,18 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
 .vag-later{margin-top:8px;width:100%;min-height:42px;border:0;background:transparent;color:#9a9aa1;font:500 14px/1 Prompt,sans-serif;cursor:pointer}
 .vag-note{margin:0 0 16px;padding:12px 14px;border-radius:12px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.35);color:#bfeed4;font:500 13.5px/1.5 Prompt,Sarabun,sans-serif}
 .vag-note[hidden]{display:none}
+/* ===== หน้าต่างเชิญสมัคร: ฉาก 3D + การ์ดเอียง ===== */
+.vag{perspective:1100px}
+.vag-card{--rx:0deg;--ry:0deg;--mx:50%;--my:30%;transform-style:preserve-3d;padding-top:10px;overflow:hidden}
+.vag.is-open .vag-card{transform:rotateX(var(--rx)) rotateY(var(--ry));transition:opacity .22s,transform .25s ease-out}
+.vag-stage{position:relative;height:210px;margin:0 -24px 6px;transform:translateZ(40px);
+  background:radial-gradient(ellipse 60% 70% at 50% 55%,rgba(52,211,153,.16),transparent 70%)}
+.vag-cv{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
+.vag-card h3{transform:translateZ(30px)}.vag-sub{transform:translateZ(22px)}.vag-list{transform:translateZ(16px)}.vag-go{transform:translateZ(34px)}
+.vag-sheen{position:absolute;inset:0;pointer-events:none;border-radius:inherit;z-index:2;
+  background:radial-gradient(circle at var(--mx) var(--my),rgba(255,255,255,.09),transparent 45%);mix-blend-mode:screen}
+.vag-card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.vag-x{display:grid;place-items:center;padding:0;min-height:0 !important;min-width:0;width:36px;height:36px;aspect-ratio:1;line-height:1;font-size:14px;z-index:3;transform:translateZ(50px)}
+.vag-x::before,.vag-x::after{display:none !important}
+@media (max-width:767px){.vag-stage{height:196px}}
+@media (prefers-reduced-motion:reduce){.vag.is-open .vag-card{transform:none}}
