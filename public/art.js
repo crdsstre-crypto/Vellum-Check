@@ -3109,6 +3109,17 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     nda: 'ข้อมูลที่ห้ามเปิดเผย ระยะเวลา ค่าเสียหาย',
     other: 'ตรวจประเด็นทั่วไปที่มักเสียเปรียบ'
   };
+  var USE = {
+    unsure: 'สัญญาที่ไม่รู้ว่าเป็นแบบไหน หรือมีหลายเรื่องรวมกัน',
+    rent: 'เช่าบ้าน คอนโด หอพัก ห้องแถว ร้านค้า',
+    sale: 'ซื้อขายรถ บ้าน ที่ดิน สินค้า ของมือสอง',
+    employment: 'พนักงานประจำ รายวัน ทดลองงาน พาร์ตไทม์',
+    service: 'จ้างช่าง ฟรีแลนซ์ รับเหมา จ้างทำเว็บหรือออกแบบ',
+    loan: 'กู้ธนาคาร ยืมเงินคนรู้จัก กู้แบบมีหลักประกัน',
+    shareholder: 'เปิดร้านหรือธุรกิจร่วมกัน แบ่งกำไร ลงทุนร่วม',
+    nda: 'ข้อตกลงห้ามเปิดเผยข้อมูล สูตร หรือข้อมูลลูกค้า',
+    other: 'ฝากขาย กรมธรรม์ ตัวแทนจำหน่าย และสัญญาอื่น ๆ'
+  };
   function parse(t) { var m = t.match(/^(.*?)\s*\((.*)\)\s*$/); return m ? { name: m[1], sub: m[2] } : { name: t, sub: '' }; }
   /* ไอคอนเส้นมินิมอลบนกล่องไล่สีประจำประเภท */
   var TH = ['unsure', 'rent', 'sale', 'employment', 'service', 'loan', 'shareholder', 'nda', 'other'];
@@ -3154,7 +3165,7 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     '<div class="vcp-panel">' +
       '<div class="vcp-stage"><div class="vcp-floor"></div><canvas class="vcp-cv" aria-label="บ้าน 3D ลากเพื่อหมุน"></canvas><div class="vcp-big" aria-hidden="true"></div>' +
         '<p class="vcp-load" hidden>กำลังโหลดบ้าน 3D…</p>' +
-        '<div class="vcp-cap"><b class="vcp-cn"></b><span class="vcp-cs"></span></div>' +
+        '<div class="vcp-cap"><b class="vcp-cn"></b><span class="vcp-use"></span><span class="vcp-cs"></span></div>' +
         '<p class="vcp-drag">ลากเพื่อหมุน</p><div class="vcp-tags" aria-hidden="true"></div>' +
         '<p class="vcp-credit">บ้าน 3D “Autumn House” โดย Zhenya (Sketchfab) · <a href="https://creativecommons.org/licenses/by/4.0/deed.th" target="_blank" rel="noopener">CC BY 4.0</a></p>' +
       '</div>' +
@@ -3273,15 +3284,19 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
       b.setAttribute('aria-label', 'จุดที่ควรระวัง: ' + s.t); b.innerHTML = '<i></i>'; spotsBox.appendChild(b);
     });
     var v = BASE[key] ? view : (EXTRA[key] && EXTRA[key].view); if (v) v.redraw();
+    if (typeof syncHints === 'function') setTimeout(syncHints, 0);
   }
   function placeSpots(proj) {
     var key = curKey(), list = SPOTS[key] || [], W = stage.clientWidth, Hh = stage.clientHeight;
+    var firstVis = -1; Array.prototype.some.call(spotsBox.children, function (b, i) { var pp = list[i] && proj(list[i].p); if (pp && pp[0] > 12 && pp[0] < W - 12 && pp[1] > 40 && pp[1] < Hh - 20) { firstVis = i; return true; } });
+    if (firstVis < 0) hSpot.hidden = true;
     Array.prototype.forEach.call(spotsBox.children, function (b, i) {
       var s = list[i], pt = s && proj(s.p);
       var ok = pt && pt[0] > 12 && pt[0] < W - 12 && pt[1] > 40 && pt[1] < Hh - 20;
       b.style.display = ok ? '' : 'none';
       if (ok) b.style.transform = 'translate(' + pt[0].toFixed(1) + 'px,' + pt[1].toFixed(1) + 'px)';
       if (i === openSpot) { if (!ok) { tip.hidden = true; openSpot = -1; } else placeTip(pt); }
+      if (i === firstVis && !seen('vc_hint_spot')) { hSpot.hidden = false; hSpot.style.transform = 'translate(' + Math.max(8, Math.min(W - 200, pt[0] + 20)).toFixed(0) + 'px,' + (pt[1] - 14).toFixed(0) + 'px)'; }
     });
   }
   function placeTip(pt) {
@@ -3299,6 +3314,21 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     var m = /translate\(([-\d.]+)px,([-\d.]+)px\)/.exec(b.style.transform || ''); if (m) placeTip([+m[1], +m[2]]);
   });
   stage.addEventListener('pointerdown', function (e) { if (!e.target.closest('.vcp-spot,.vcp-tip')) { tip.hidden = true; openSpot = -1; Array.prototype.forEach.call(spotsBox.children, function (x) { x.classList.remove('is-on'); }); } });
+  /* คำแนะนำครั้งแรก (แตะแล้วไม่ขึ้นอีก — เก็บในเครื่องผู้ใช้เท่านั้น) */
+  function seen(k) { try { return localStorage.getItem(k) === '1'; } catch (e) { return false; } }
+  function markSeen(k) { try { localStorage.setItem(k, '1'); } catch (e) {} }
+  var hSpot = document.createElement('div'); hSpot.className = 'vcp-hint vcp-hint-spot'; hSpot.hidden = true; hSpot.textContent = 'แตะ ⊕ เพื่อดูจุดที่ควรระวัง';
+  var hTag = document.createElement('div'); hTag.className = 'vcp-hint vcp-hint-tag'; hTag.hidden = true; hTag.textContent = 'แตะป้ายเพื่อดูแบบอื่น';
+  stage.appendChild(hSpot); stage.appendChild(hTag);
+  function syncHints() {
+    var key = curKey(), hasTg = !!box.querySelector('.vcp-tg');
+    hTag.hidden = !hasTg || seen('vc_hint_tag');
+    if (!(SPOTS[key] || []).length || seen('vc_hint_spot')) hSpot.hidden = true;
+  }
+  stage.addEventListener('click', function (e) {
+    if (e.target.closest('.vcp-tg')) { markSeen('vc_hint_tag'); hTag.hidden = true; }
+    if (e.target.closest('.vcp-spot')) { markSeen('vc_hint_spot'); hSpot.hidden = true; }
+  }, true);
   nbtn.addEventListener('click', function () {
     NIGHT = !NIGHT; nbtn.setAttribute('aria-pressed', NIGHT ? 'true' : 'false'); nbtn.querySelector('.vcp-ntx').textContent = NIGHT ? 'กลางวัน' : 'กลางคืน';
     stage.classList.toggle('is-night', NIGHT);
@@ -3366,6 +3396,7 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
   function preview(v) {
     var o = opts().filter(function (x) { return x.v === v; })[0]; if (!o) return;
     cn.textContent = o.name; cs.textContent = 'เน้นตรวจ: ' + (FOCUS[v] || o.sub);
+    var ue = box.querySelector('.vcp-use'); ue.textContent = USE[v] ? 'ใช้กับ: ' + USE[v] : ''; ue.hidden = !USE[v];
     if (shown === v) return; shown = v;
     var h = HOUSE[v], tg = box.querySelector('.vcp-tags');
     tg.innerHTML = h ? h.tag.map(function (t, i) {
