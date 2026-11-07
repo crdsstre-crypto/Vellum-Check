@@ -3110,14 +3110,23 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     other: 'ตรวจประเด็นทั่วไปที่มักเสียเปรียบ'
   };
   function parse(t) { var m = t.match(/^(.*?)\s*\((.*)\)\s*$/); return m ? { name: m[1], sub: m[2] } : { name: t, sub: '' }; }
-  /* ภาพย่อจากฉาก 3D จริง (ct-thumbs.webp: 9 ช่อง เรียงตาม TH) — ถ้าไม่มีในรายการใช้สติกเกอร์เดิม */
-  (function () { var im = new Image(); im.onload = function () { document.documentElement.classList.add('vcp-th-ok'); }; im.onerror = function () { try { console.warn('ไม่พบไฟล์ ct-thumbs.webp — ใช้สติกเกอร์เดิมแทน'); } catch (e) {} }; im.src = 'ct-thumbs.webp?v=1'; })();
+  /* ไอคอนเส้นมินิมอลบนกล่องไล่สีประจำประเภท */
   var TH = ['unsure', 'rent', 'sale', 'employment', 'service', 'loan', 'shareholder', 'nda', 'other'];
+  var LI = {
+    unsure: ['#94a3b8', '#475569', '<circle cx="12" cy="12" r="8.5"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.5 2.3c-.8.4-1.1.9-1.1 1.8"/><path d="M12 16.6v.2"/>'],
+    rent: ['#34d399', '#047857', '<path d="M4 11.2 12 4.6l8 6.6"/><path d="M6.2 9.6V19.5h11.6V9.6"/><path d="M10 19.5v-5h4v5"/>'],
+    sale: ['#60a5fa', '#1d4ed8', '<path d="M3.5 5h2.2l2 9.8h9.8l2.1-6.8H7"/><circle cx="10" cy="18.6" r="1.2"/><circle cx="16.6" cy="18.6" r="1.2"/>'],
+    employment: ['#fb923c', '#c2410c', '<rect x="3.5" y="7.5" width="17" height="11.5" rx="2"/><path d="M9 7.5V6a1.5 1.5 0 0 1 1.5-1.5h3A1.5 1.5 0 0 1 15 6v1.5"/><path d="M3.5 12.5h17"/>'],
+    service: ['#fbbf24', '#b45309', '<path d="M14.6 5.4a4 4 0 0 0-5 5.1L4.6 15.4a2.1 2.1 0 0 0 3 3l4.9-4.9a4 4 0 0 0 5.1-5l-2.5 2.5-2.4-.6-.6-2.4z"/>'],
+    loan: ['#22d3ee', '#0e7490', '<rect x="3" y="6.5" width="18" height="11" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6.5 9.5v5M17.5 9.5v5"/>'],
+    shareholder: ['#f472b6', '#be185d', '<path d="M11 4.6v8.4h8.4A8.4 8.4 0 1 1 11 4.6z"/><path d="M14 3.4a8.2 8.2 0 0 1 6.6 6.6H14z"/>'],
+    nda: ['#a78bfa', '#6d28d9', '<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/><path d="M12 14.4v2.6"/>'],
+    other: ['#fb7185', '#be123c', '<path d="M7 3.5h7l4 4v12.4a.6.6 0 0 1-.6.6H7.1a.6.6 0 0 1-.6-.6V4.1a.6.6 0 0 1 .5-.6z"/><path d="M14 3.5V8h4M9.4 12h5.2M9.4 15h5.2M9.4 18h3"/>']
+  };
   function ico(v, s) {
-    var i = TH.indexOf(v);
+    var L = LI[v];
+    if (L) return '<span class="vcp-th vcp-li" style="--a:' + L[0] + ';--b:' + L[1] + (s >= 100 ? ';width:' + s + 'px;height:' + s + 'px' : '') + '" aria-hidden="true"><svg viewBox="0 0 24 24">' + L[2] + '</svg></span>';
     var h = window.VCCtIcon ? window.VCCtIcon(v) : '';
-    /* สติกเกอร์เดิมอยู่ข้างใน: แสดงจนกว่าภาพย่อจะโหลดสำเร็จ (ถ้าไฟล์ภาพย่อไม่มีบนเว็บ ก็ยังเห็นสติกเกอร์) */
-    if (i > -1) return '<span class="vcp-th" style="background-position:' + (i / (TH.length - 1) * 100).toFixed(3) + '% 0' + (s >= 100 ? ';width:' + s + 'px;height:' + s + 'px' : '') + '" aria-hidden="true">' + h + '</span>';
     return s ? h.replace('width="28" height="28"', 'width="' + s + '" height="' + s + '"') : h;
   }
   function opts() { return Array.prototype.map.call(sel.options, function (o) { var p = parse(o.textContent); return { v: o.value, name: p.name, sub: p.sub }; }); }
