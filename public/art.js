@@ -3130,7 +3130,7 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     X.st = 1;
     window[X.key + 'Ready'] = function () { X.st = 2; (X.q || []).forEach(function (f) { f(); }); X.q = []; };
     var s = document.createElement('script'); s.src = X.src; s.async = true;
-    s.onerror = function () { X.st = 0; load.textContent = 'โหลด' + X.name + ' 3D ไม่สำเร็จ'; };
+    s.onerror = function () { X.st = 0; s.remove(); if (!X.retry) { X.retry = 1; setTimeout(function () { loadExtra(k); }, 800); return; } load.textContent = 'โหลด' + X.name + ' 3D ไม่สำเร็จ (ไม่พบไฟล์ ' + X.src.split('?')[0] + ')'; };
     document.head.appendChild(s);
   }
   /* มือถือ (โดยเฉพาะ iPhone) เปิด WebGL พร้อมกันได้จำกัด: เก็บโมเดลเสริมไว้ทีละตัว ตัวอื่นคืนหน่วยความจำ */
