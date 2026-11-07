@@ -3296,3 +3296,34 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
 .vsl-item:hover::after{color:#fff}
 .vsl-card{height:min(760px,86vh)}
 @media (max-width:767px){.vsl-card{height:88vh}.vsl-doc{padding:16px 16px;font-size:14.5px}.vsl-item::after{content:"›" !important;font-size:20px}.vsl-back{padding:0 12px;font-size:14px}}
+/* ===== หน้าดูสัญญา: หัวกระชับ + กระดาษ A4 + ไฮไลต์จุดเสี่ยง ===== */
+.vsl-vhead{gap:11px !important;padding-bottom:12px !important}
+.vsl-vhead .vsl-art{width:44px;height:44px;border-radius:12px}
+.vsl-vhead .vsl-txt{flex:1;gap:2px}
+.vsl-vhead .vsl-txt b{font-size:16px !important}
+.vsl-vhead .vsl-txt small{color:#a3a3aa !important;font-size:12.5px !important}
+.vsl-hl{flex:none;display:inline-flex;align-items:center;gap:7px;padding:8px 12px;min-height:0 !important;border-radius:99px;border:1px solid rgba(240,196,106,.45);background:rgba(240,196,106,.1);
+  color:#f0d08a;font:500 12.5px/1 Prompt,sans-serif;cursor:pointer}
+.vsl-hl::before,.vsl-hl::after{display:none !important}
+.vsl-hl i{width:12px;height:12px;border-radius:3px;background:#f6d860;box-shadow:0 0 0 2px rgba(0,0,0,.25) inset}
+.vsl-hl[aria-pressed="false"]{border-color:rgba(255,255,255,.16);background:transparent;color:#a3a3aa}
+.vsl-hl[aria-pressed="false"] i{background:transparent;border:1.5px solid #8e8e96}
+.vsl-paper{position:relative;flex:1;min-height:120px;margin:16px 10px 6px 0;display:flex}
+.vsl-paper::before,.vsl-paper::after{content:"";position:absolute;inset:0;border-radius:6px;background:#ece8df;transform:rotate(1.6deg) translate(6px,5px);box-shadow:0 10px 24px -14px rgba(0,0,0,.8)}
+.vsl-paper::after{background:#e2ddd2;transform:rotate(-1.2deg) translate(4px,8px);z-index:-1}
+.vsl-paper::before{z-index:0}
+.vsl-doc{position:relative;z-index:1;flex:1;margin:0 !important;border-radius:6px !important;background:#fdfcf8 !important;
+  padding:30px 32px 34px !important;box-shadow:0 18px 40px -18px rgba(0,0,0,.9),inset 0 0 0 1px rgba(0,0,0,.05) !important;
+  font:400 15.5px/1.85 Taviraj,Sarabun,serif !important;color:#2a2620 !important}
+.vsl-doc h4{font:600 18px/1.4 Taviraj,Prompt,serif !important;letter-spacing:.01em;padding-bottom:12px;margin:0 0 16px !important;border-bottom:1px solid #d9d2c4;position:relative}
+.vsl-doc h4::after{content:"";position:absolute;left:50%;bottom:-4px;width:46px;margin-left:-23px;border-bottom:1px solid #d9d2c4}
+.vsl-doc p{margin:0 0 10px !important;text-indent:0}
+.vsl-doc p b{font-family:Prompt,Sarabun,sans-serif;font-size:14px;color:#7a5418 !important}
+.vsl-doc mark{background:none;color:inherit;transition:background-size .5s ease}
+.vsl.hl-on .vsl-doc mark{background:linear-gradient(transparent 52%,rgba(250,214,80,.62) 52%,rgba(250,214,80,.62) 92%,transparent 92%);-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.vsl-note{display:none}
+.vsl.hl-on .vsl-note{display:inline-block;margin:4px 0 2px;padding:3px 9px;border-radius:6px;background:#fff1c9;border:1px solid #f0d17a;color:#8a5a00;font:500 12px/1.4 Prompt,Sarabun,sans-serif;text-indent:0}
+.vsl.hl-on .vsl-doc p.is-risk{position:relative}
+.vsl.hl-on .vsl-doc p.is-risk::before{content:"";position:absolute;left:-18px;top:.55em;width:7px;height:7px;border-radius:50%;background:#e2a21c}
+@media (max-width:767px){.vsl-doc{padding:22px 20px 26px 24px !important;font-size:14.5px !important}.vsl-paper{margin:12px 6px 4px 0}.vsl.hl-on .vsl-doc p.is-risk::before{left:-14px}.vsl-hl{padding:7px 10px;font-size:12px}}
+.vsl.hl-on .vsl-note{display:table;margin-top:5px}
