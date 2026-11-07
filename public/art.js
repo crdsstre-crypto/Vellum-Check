@@ -2984,7 +2984,7 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
       gl.uniform1f(uFade, 1); gl.uniform1f(uR, O.r || 27);
       m.g.forEach(function (g) {
         gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, g.e ? tex[g.e] : tex[g.t]); gl.uniform1f(uE, g.e ? 1 : 0); gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, tex[g.t]); var pl = g.t.indexOf('Plants') === 0; gl.uniform1f(uCut, pl ? 0.5 : -1.); if (pl) gl.disable(gl.CULL_FACE); else gl.enable(gl.CULL_FACE);
+        gl.bindTexture(gl.TEXTURE_2D, tex[g.t]); var pl = g.a || g.t.indexOf('Plants') === 0; gl.uniform1f(uCut, pl ? 0.5 : -1.); if (pl) gl.disable(gl.CULL_FACE); else gl.enable(gl.CULL_FACE);
         gl.drawElements(gl.TRIANGLES, g.n, gl.UNSIGNED_SHORT, g.i * 2);
       });
     }
@@ -3089,13 +3089,14 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     big = box.querySelector('.vcp-big'), cn = box.querySelector('.vcp-cn'), cs = box.querySelector('.vcp-cs'),
     load = box.querySelector('.vcp-load'), ok = box.querySelector('.vcp-ok');
   var pending = sel.value, shown = null, view = null, houseState = 0, lastFocus = null,
-    rentModel = 'house', credit = box.querySelector('.vcp-credit');
-  var CREDIT = { house: 'บ้าน 3D “Autumn House” โดย Zhenya (Sketchfab)', condo: 'คอนโด 3D “Low Rise Modern Condo 2” โดย aitortilla01 (Sketchfab)', room: 'ห้อง 3D “Low Poly Room” โดย IsaacTheMaverick (Sketchfab)' };
+    MDL = { rent: 'house', sale: 'car' }, BASE = { house: 1, car: 1 }, TAGM = { rent: ['house', 'condo', 'room'], sale: ['car', 'dutch'] }, credit = box.querySelector('.vcp-credit');
+  var CREDIT = { house: 'บ้าน 3D “Autumn House” โดย Zhenya (Sketchfab)', condo: 'คอนโด 3D “Low Rise Modern Condo 2” โดย aitortilla01 (Sketchfab)', room: 'ห้อง 3D “Low Poly Room” โดย IsaacTheMaverick (Sketchfab)', dutch: 'บ้าน 3D “Dutch House” โดย Bjarne Stokhof (Sketchfab)' };
   function setCredit(m) { credit.innerHTML = CREDIT[m] + ' · <a href="https://creativecommons.org/licenses/by/4.0/deed.th" target="_blank" rel="noopener">CC BY 4.0</a>'; }
   /* โมเดลเสริมของสัญญาเช่า: โหลดเฉพาะตอนแตะป้าย */
   var EXTRA = {
     condo: { src: 'condo3d.js?v=1', key: 'VCCondo', name: 'คอนโด', o: { y: -0.7, p: 0.4, d: 112, c: [0, 12, 0], r: 40 } },
-    room: { src: 'room3d.js?v=1', key: 'VCRoom', name: 'ห้อง', o: { y: 0.785, p: 0.5, d: 84, c: [-1, 8, -1], r: 30 }, sw: 1 }
+    room: { src: 'room3d.js?v=1', key: 'VCRoom', name: 'ห้อง', o: { y: 0.785, p: 0.5, d: 84, c: [-1, 8, -1], r: 30 }, sw: 1 },
+    dutch: { src: 'dutch3d.js?v=1', key: 'VCDutch', name: 'บ้าน', o: { y: -0.6, p: 0.42, d: 37, c: [-2, 6, 0], r: 16 } }
   };
   Object.keys(EXTRA).forEach(function (k) {
     var c = document.createElement('canvas'); c.className = 'vcp-cv vcp-cvx'; c.dataset.m = k; c.setAttribute('aria-label', EXTRA[k].name + ' 3D ลากเพื่อหมุน');
@@ -3120,7 +3121,7 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     loadExtra(k, function () {
       load.hidden = true;
       if (!X.view) { X.view = window.VCHouseView(X.cv, window[X.key], X.o); if (!X.view) return; }
-      if (shown === 'rent' && rentModel === k && !box.hidden) { X.view.play(); if (X.sw) X.view.aim(X.o.y, X.o.p, X.o.d, X.o.c, 1); stage.classList.add('x-ready'); }
+      if (MDL[shown] === k && !box.hidden) { X.view.play(); if (X.sw) X.view.aim(X.o.y, X.o.p, X.o.d, X.o.c, 1); stage.classList.add('x-ready'); }
     });
   }
   function hideCondo() { stage.classList.remove('is-x', 'x-ready'); delete stage.dataset.m; pauseExtras(); setCredit('house'); }
@@ -3160,21 +3161,21 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     if (shown === v) return; shown = v;
     var h = HOUSE[v], tg = box.querySelector('.vcp-tags');
     tg.innerHTML = h ? h.tag.map(function (t, i) {
-      var m = v === 'rent' ? (['house', 'condo', 'room'][i] || '') : '';
-      if (m) return '<button type="button" class="vcp-tg' + (m === rentModel ? ' is-m' : '') + '" data-m="' + m + '" style="--i:' + i + '">' + t + '</button>';
-      return '<span class="' + (v === 'sale' && i === 0 ? 'is-m' : '') + '" style="--i:' + i + '">' + t + '</span>';
+      var m = (TAGM[v] || [])[i] || '';
+      if (m) return '<button type="button" class="vcp-tg' + (m === MDL[v] ? ' is-m' : '') + '" data-m="' + m + '" style="--i:' + i + '">' + t + '</button>';
+      return '<span style="--i:' + i + '">' + t + '</span>';
     }).join('') : '';
     stage.dataset.ct = v;
     stage.classList.toggle('is-house', !!h);
-    if (!h || v !== 'rent' || rentModel === 'house') hideCondo();
-    if (h && v === 'rent' && rentModel !== 'house') { big.classList.remove('is-in'); showExtra(rentModel); }
+    if (!h || BASE[MDL[v]]) hideCondo();
+    if (h && !BASE[MDL[v]]) { big.classList.remove('is-in'); showExtra(MDL[v]); }
     else if (h) {
       big.classList.remove('is-in');
       if (houseState !== 2) { load.hidden = false; load.textContent = 'กำลังโหลดบ้าน 3D…'; }
       loadHouse(function () {
         load.hidden = true;
         if (!view) { view = window.VCHouseView(cv, window.VCHouse); if (!view) { stage.classList.remove('is-house'); return; } }
-        if (shown === v && !box.hidden && !(v === 'rent' && rentModel !== 'house')) { view.play(); view.aim(h.y, h.p, h.d, h.c, h.sw); stage.classList.add('house-ready'); }
+        if (shown === v && !box.hidden && BASE[MDL[v]]) { view.play(); view.aim(h.y, h.p, h.d, h.c, h.sw); stage.classList.add('house-ready'); }
       });
     } else {
       if (view) view.pause();
@@ -3218,10 +3219,10 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     if (e.target.closest('[data-x]')) return close(false);
     if (e.target.closest('.vcp-ok')) return close(true);
     var tb = e.target.closest('.vcp-tg');
-    if (tb && tb.dataset.m !== rentModel) {
-      rentModel = tb.dataset.m;
-      Array.prototype.forEach.call(box.querySelectorAll('.vcp-tg'), function (x) { x.classList.toggle('is-m', x.dataset.m === rentModel); });
-      if (rentModel !== 'house') showExtra(rentModel); else { hideCondo(); shown = null; preview('rent'); }
+    if (tb && tb.dataset.m !== MDL[shown]) {
+      MDL[shown] = tb.dataset.m;
+      Array.prototype.forEach.call(box.querySelectorAll('.vcp-tg'), function (x) { x.classList.toggle('is-m', x.dataset.m === MDL[shown]); });
+      if (!BASE[MDL[shown]]) showExtra(MDL[shown]); else { hideCondo(); var s0 = shown; shown = null; preview(s0); }
       return;
     }
     if (tb) return;
