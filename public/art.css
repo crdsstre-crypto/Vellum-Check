@@ -3219,3 +3219,15 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
 .vag-x::before,.vag-x::after{display:none !important}
 @media (max-width:767px){.vag-stage{height:196px}}
 @media (prefers-reduced-motion:reduce){.vag.is-open .vag-card{transform:none}}
+/* ===== แถบความมั่นใจใต้ปุ่มตรวจ ===== */
+.trust-bar{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.trust-bar li{display:flex}
+.trust-bar li > a{display:flex;flex:1;text-decoration:none;color:inherit}
+.trust-bar li,.trust-bar li > a{align-items:center;gap:9px}
+.trust-bar li{padding:10px 11px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);font:400 12px/1.4 Prompt,Sarabun,sans-serif;color:#a3a3aa;transition:border-color .2s,background .2s}
+.trust-bar li:hover{border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.05)}
+.trust-bar svg{flex:none;width:30px;height:30px;padding:6px;border-radius:9px;background:linear-gradient(145deg,#2b2b32,#1a1a1f);border:1px solid rgba(255,255,255,.08);
+  fill:none;stroke:var(--a);stroke:color-mix(in srgb,var(--a) 65%,#fff);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;box-sizing:border-box}
+.trust-bar span{display:flex;flex-direction:column;min-width:0}
+.trust-bar b{font-weight:600;color:#e6e6ea;font-size:12.5px}
+@media (max-width:767px){.trust-bar{grid-template-columns:1fr;gap:6px}.trust-bar li{padding:9px 11px}.trust-bar span{flex-direction:row;flex-wrap:wrap;gap:0 5px}}
