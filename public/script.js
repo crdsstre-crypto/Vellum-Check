@@ -53,7 +53,7 @@ let lastCredits = null;
 
 // ข้อความปุ่มตรวจ: บอกค่าใช้จ่ายไว้ก่อนกด และเปลี่ยนเป็นเติมเครดิตเมื่อเครดิตหมด
 function checkLabel() {
-  if (!currentUser) return 'ตรวจสัญญา';
+  if (!currentUser) return 'ตรวจสัญญา (ฟรี 2 ครั้ง)';
   if (lastCredits === 0) return 'ดูแพ็กเกจเพื่อตรวจสัญญา';
   return 'ตรวจสัญญา (ใช้ 1 เครดิต)';
 }
@@ -209,6 +209,16 @@ function showLoggedIn(user) {
   showCredits(user.credits, user.voice_credits);
   els.authMsg.textContent = '';
   setBusy(false);
+  resumePendingCheck();
+}
+
+// หลังเข้าสู่ระบบ: ถ้ามีสัญญารอตรวจอยู่ พากลับหน้าตรวจแล้วตรวจให้ทันที
+function resumePendingCheck() {
+  let pending = false;
+  try { pending = sessionStorage.getItem('vc_pending_check') === '1'; sessionStorage.removeItem('vc_pending_check'); } catch (e) {}
+  if (!pending || !els.input.value.trim()) return;
+  if (location.hash !== '#checkCard') location.hash = '#checkCard';
+  setTimeout(() => { if (currentUser && !busyNow) runCheck(); }, 700);
 }
 
 function showLoggedOut(message = '') {
@@ -1078,7 +1088,8 @@ let busyNow = false;
 
 // ปุ่มตรวจกดได้เมื่อล็อกอินแล้ว มีข้อความ และไม่ได้กำลังตรวจอยู่
 function updateCheckState() {
-  els.checkBtn.disabled = busyNow || !currentUser || !els.input.value.trim();
+  // ยังไม่เข้าสู่ระบบก็กดได้: จะขึ้นหน้าต่างเชิญสมัคร แล้วตรวจต่อให้หลังเข้าสู่ระบบ
+  els.checkBtn.disabled = busyNow || !els.input.value.trim();
 }
 
 function setBusy(busy) {
@@ -1170,6 +1181,8 @@ function addCreditNote(credits) {
 
 async function runCheck() {
   if (!currentUser) {
+    // วางก่อน สมัครทีหลัง: จำไว้ว่ารอตรวจ แล้วเปิดหน้าต่างเชิญสมัคร (ข้อความที่วางยังอยู่ในช่องเหมือนเดิม)
+    if (els.input.value.trim() && window.VCAuthGate) { try { sessionStorage.setItem('vc_pending_check', '1'); } catch (e) {} window.VCAuthGate.open(); return; }
     renderEmpty(CONFIG.messages.loginFirst);
     return;
   }
