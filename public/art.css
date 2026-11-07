@@ -3137,7 +3137,7 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
 @media (prefers-reduced-motion:reduce){.vcp-spot::after{animation:none;opacity:.6}}
 
 /* ===== ภาพย่อประเภทสัญญา (จากฉาก 3D) + ขยับ ===== */
-.vcp-th{display:block;width:100%;height:100%;background:url("ct-thumbs.webp?v=1") no-repeat;background-size:900% 100%;
+.vcp-th{display:grid;place-items:center;width:100%;height:100%;background:none no-repeat;background-size:900% 100%;
   filter:drop-shadow(0 4px 6px rgba(0,0,0,.45));transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
 .vcp-oi{width:58px !important;height:58px !important;padding:3px;background:radial-gradient(circle at 50% 40%,#34343c,#18181c) !important}
 .vcp-ti{padding:3px}
@@ -3153,3 +3153,6 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   .vcp-big .vcp-th{width:min(150px,40vw) !important;height:min(150px,40vw) !important}}
 @media (prefers-reduced-motion:reduce){.vcp-th{transition:none;animation:none !important}}
 .vcp-opt .vcp-3d{bottom:6px}
+html.vcp-th-ok .vcp-th{background-image:url("ct-thumbs.webp?v=1")}
+html.vcp-th-ok .vcp-th svg{display:none}
+.vcp-th svg{width:60%;height:60%}
