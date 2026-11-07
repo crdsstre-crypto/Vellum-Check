@@ -3087,11 +3087,11 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
 .vcp.is-open .vcp-opt{animation:vcpOptIn .42s cubic-bezier(.2,.9,.3,1) backwards;animation-delay:calc(var(--i) * 28ms + 80ms)}
 @keyframes vcpOptIn{from{opacity:0;transform:translateY(8px)}}
 /* สัญญาเช่า: สลับ บ้าน / คอนโด */
-.vcp-cv2{opacity:0 !important;pointer-events:none}
-.vcp-stage.is-condo .vcp-cv:not(.vcp-cv2){opacity:0 !important;pointer-events:none}
-.vcp-stage.is-condo.condo-ready .vcp-cv2{opacity:1 !important;pointer-events:auto}
-.vcp-stage.is-condo .vcp-floor{opacity:1;bottom:16%;left:8%;right:8%}
-.vcp-stage.is-condo.condo-ready .vcp-drag{opacity:1}
+.vcp-cvx{opacity:0 !important;pointer-events:none !important}
+.vcp-stage.is-x .vcp-cv:not(.vcp-cvx){opacity:0 !important;pointer-events:none !important}
+.vcp-stage.is-x.x-ready[data-m="condo"] .vcp-cvx[data-m="condo"],.vcp-stage.is-x.x-ready[data-m="room"] .vcp-cvx[data-m="room"]{opacity:1 !important;pointer-events:auto !important}
+.vcp-stage.is-x .vcp-floor{opacity:1;bottom:16%;left:8%;right:8%}
+.vcp-stage.is-x.x-ready .vcp-drag{opacity:1}
 .vcp-tags .vcp-tg{pointer-events:auto;cursor:pointer;display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:99px;
   background:rgba(10,10,12,.55);border:1px solid rgba(255,255,255,.3);font:500 12px/1 Prompt,sans-serif;color:#ededef;
   animation:vcpTagIn .4s cubic-bezier(.2,.9,.3,1) backwards;animation-delay:calc(var(--i) * 70ms + 250ms);transition:background .2s,color .2s}
@@ -3103,6 +3103,6 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
 .vcp-tags span.is-m{background:#f4f4f5 !important;color:#111 !important;border-color:#f4f4f5 !important}
 @media (max-width:767px){.vcp-tags .vcp-tg{padding:6px 10px;font-size:11.5px}}
 @media (max-width:767px){
-  .vcp-tags > :nth-child(n+4){display:none}
+  .vcp-stage[data-ct="sale"] .vcp-tags > :nth-child(n+4),.vcp-stage[data-ct="rent"] .vcp-tags > :nth-child(n+4){display:none}
   .vcp-credit{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:9.5px}
 }
