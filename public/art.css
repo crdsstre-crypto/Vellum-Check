@@ -3112,3 +3112,26 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
 @media (max-width:767px){.vcp-opt .vcp-3d{left:14px;bottom:9px}}
 .vcp-opt:has(.vcp-3d){min-height:96px}
 @media (max-width:767px){.vcp-opt:has(.vcp-3d){min-height:86px}}
+/* ===== ห้อง 3D: จุดชี้อธิบาย / กลางคืน ===== */
+.vcp-spots{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;transition:opacity .4s}
+.vcp-stage.house-ready:not(.is-x) .vcp-spots,.vcp-stage.is-x.x-ready .vcp-spots{opacity:1}
+.vcp-spot{position:absolute;left:0;top:0;width:30px;height:30px;margin:-15px 0 0 -15px;padding:0;border:0;border-radius:50%;background:transparent;cursor:pointer;pointer-events:auto;will-change:transform}
+.vcp-spot::before{content:"";position:absolute;inset:7px;border-radius:50%;background:#fff;box-shadow:0 0 0 3px rgba(240,180,60,.95),0 2px 10px rgba(0,0,0,.6)}
+.vcp-spot::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,214,120,.9);animation:vcpPing 1.8s ease-out infinite}
+.vcp-spot i{position:absolute;left:50%;top:50%;width:8px;height:2px;margin:-1px 0 0 -4px;background:#c47a10;z-index:1}
+.vcp-spot i::after{content:"";position:absolute;left:3px;top:-3px;width:2px;height:8px;background:#c47a10}
+.vcp-spot.is-on::before{background:#f0b43c}.vcp-spot.is-on i,.vcp-spot.is-on i::after{background:#fff}
+@keyframes vcpPing{0%{transform:scale(.55);opacity:1}100%{transform:scale(1.35);opacity:0}}
+.vcp-tip{position:absolute;z-index:4;padding:10px 12px;border-radius:12px;background:rgba(18,18,22,.94);border:1px solid rgba(240,180,60,.55);
+  color:#f2f2f4;font:500 13px/1.5 Prompt,Sarabun,sans-serif;box-shadow:0 12px 30px -10px rgba(0,0,0,.8);pointer-events:auto}
+.vcp-tip[hidden]{display:none}
+.vcp-night{position:absolute;z-index:3;left:20px;top:58px;display:inline-flex;align-items:center;gap:6px;padding:6px 11px 6px 8px;border-radius:99px;cursor:pointer;
+  background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.14);color:#e6e6ea;font:500 12px/1 Prompt,sans-serif;opacity:0;transition:opacity .4s,background .2s}
+.vcp-stage.house-ready:not(.is-x) .vcp-night,.vcp-stage.is-x.x-ready .vcp-night{opacity:1}
+.vcp-stage:not(.is-house) .vcp-night{display:none}
+.vcp-nico{width:14px;height:14px;border-radius:50%;box-shadow:inset -4px -2px 0 0 #f2d27a}
+.vcp-night[aria-pressed="true"] .vcp-nico{background:#f6c64a;box-shadow:0 0 8px #f6c64a}
+.vcp-night[aria-pressed="true"]{background:rgba(255,255,255,.12)}
+.vcp-stage.is-night{background:radial-gradient(ellipse 80% 70% at 50% 42%,#1a1d2b 0%,#0f1018 55%,#08080c 100%)}
+@media (max-width:767px){.vcp-night{left:14px;top:48px;font-size:11px;padding:5px 9px 5px 7px}.vcp-tip{font-size:12px}}
+@media (prefers-reduced-motion:reduce){.vcp-spot::after{animation:none;opacity:.6}}
