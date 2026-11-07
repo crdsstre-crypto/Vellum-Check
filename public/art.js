@@ -2935,8 +2935,8 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     return new Float32Array([x[0], y[0], z[0], 0, x[1], y[1], z[1], 0, x[2], y[2], z[2], 0,
       -(x[0] * e[0] + x[1] * e[1] + x[2] * e[2]), -(y[0] * e[0] + y[1] * e[1] + y[2] * e[2]), -(z[0] * e[0] + z[1] * e[1] + z[2] * e[2]), 1]);
   }
-  var VS = 'attribute vec3 p;attribute vec2 u;attribute vec3 n;uniform mat4 M;uniform vec3 mn,sc;varying vec2 vu;varying vec3 vn;varying vec3 vp;' +
-    'void main(){vec3 w=mn+p*sc;vp=w;vu=vec2(u.x,1.-u.y);vn=n;gl_Position=M*vec4(w,1.);}';
+  var VS = 'attribute vec3 p;attribute vec2 u;attribute vec3 n;uniform mat4 M;uniform vec3 mn,sc;uniform vec2 us,uo;varying vec2 vu;varying vec3 vn;varying vec3 vp;' +
+    'void main(){vec3 w=mn+p*sc;vp=w;vec2 uu=u*us+uo;vu=vec2(uu.x,1.-uu.y);vn=n;gl_Position=M*vec4(w,1.);}';
   var FS = 'precision mediump float;uniform sampler2D T,E;uniform float cut,fade,hasE,uR;varying vec2 vu;varying vec3 vn;varying vec3 vp;' +
     'void main(){vec4 c=texture2D(T,vu);if(c.a<cut)discard;vec3 N=normalize(vn);if(!gl_FrontFacing)N=-N;' +
     'vec3 L=normalize(vec3(-.45,.8,.55));float d=max(dot(N,L),0.);float h=.5+.5*N.y;' +
@@ -2960,7 +2960,7 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     var ib = gl.createBuffer(); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ib); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, I, gl.STATIC_DRAW);
     var uE = gl.getUniformLocation(pr, 'hasE'), uR = gl.getUniformLocation(pr, 'uR'); gl.uniform1i(gl.getUniformLocation(pr, 'T'), 0); gl.uniform1i(gl.getUniformLocation(pr, 'E'), 1);
     var uM = gl.getUniformLocation(pr, 'M'), uCut = gl.getUniformLocation(pr, 'cut'), uFade = gl.getUniformLocation(pr, 'fade');
-    gl.uniform3fv(gl.getUniformLocation(pr, 'mn'), m.mn); gl.uniform3fv(gl.getUniformLocation(pr, 'sc'), m.sc);
+    gl.uniform3fv(gl.getUniformLocation(pr, 'mn'), m.mn); gl.uniform3fv(gl.getUniformLocation(pr, 'sc'), m.sc); gl.uniform2fv(gl.getUniformLocation(pr, 'us'), m.us || [1, 1]); gl.uniform2fv(gl.getUniformLocation(pr, 'uo'), m.uo || [0, 0]);
     var tex = {}, pending = 0, alive = true;
     Object.keys(H.tex).forEach(function (k) {
       var t = gl.createTexture(); tex[k] = t; pending++;
@@ -3071,7 +3071,7 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
   box.innerHTML =
     '<div class="vcp-bg" data-x></div>' +
     '<div class="vcp-panel">' +
-      '<div class="vcp-stage"><div class="vcp-floor"></div><canvas class="vcp-cv" aria-label="บ้าน 3D ลากเพื่อหมุน"></canvas><canvas class="vcp-cv vcp-cv2" aria-label="คอนโด 3D ลากเพื่อหมุน"></canvas><div class="vcp-big" aria-hidden="true"></div>' +
+      '<div class="vcp-stage"><div class="vcp-floor"></div><canvas class="vcp-cv" aria-label="บ้าน 3D ลากเพื่อหมุน"></canvas><div class="vcp-big" aria-hidden="true"></div>' +
         '<p class="vcp-load" hidden>กำลังโหลดบ้าน 3D…</p>' +
         '<div class="vcp-cap"><b class="vcp-cn"></b><span class="vcp-cs"></span></div>' +
         '<p class="vcp-drag">ลากเพื่อหมุน</p><div class="vcp-tags" aria-hidden="true"></div>' +
@@ -3089,29 +3089,41 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     big = box.querySelector('.vcp-big'), cn = box.querySelector('.vcp-cn'), cs = box.querySelector('.vcp-cs'),
     load = box.querySelector('.vcp-load'), ok = box.querySelector('.vcp-ok');
   var pending = sel.value, shown = null, view = null, houseState = 0, lastFocus = null,
-    cv2 = box.querySelector('.vcp-cv2'), cview = null, condoState = 0, rentModel = 'house', credit = box.querySelector('.vcp-credit');
-  var CREDIT = { house: 'บ้าน 3D “Autumn House” โดย Zhenya (Sketchfab)', condo: 'คอนโด 3D “Low Rise Modern Condo 2” โดย aitortilla01 (Sketchfab)' };
+    rentModel = 'house', credit = box.querySelector('.vcp-credit');
+  var CREDIT = { house: 'บ้าน 3D “Autumn House” โดย Zhenya (Sketchfab)', condo: 'คอนโด 3D “Low Rise Modern Condo 2” โดย aitortilla01 (Sketchfab)', room: 'ห้อง 3D “Low Poly Room” โดย IsaacTheMaverick (Sketchfab)' };
   function setCredit(m) { credit.innerHTML = CREDIT[m] + ' · <a href="https://creativecommons.org/licenses/by/4.0/deed.th" target="_blank" rel="noopener">CC BY 4.0</a>'; }
-  function loadCondo(cb) {
-    if (condoState === 2) return cb && cb();
-    if (cb) (loadCondo.q = loadCondo.q || []).push(cb);
-    if (condoState === 1) return;
-    condoState = 1;
-    window.VCCondoReady = function () { condoState = 2; (loadCondo.q || []).forEach(function (f) { f(); }); loadCondo.q = []; };
-    var s = document.createElement('script'); s.src = 'condo3d.js?v=1'; s.async = true;
-    s.onerror = function () { condoState = 0; load.textContent = 'โหลดคอนโด 3D ไม่สำเร็จ'; };
+  /* โมเดลเสริมของสัญญาเช่า: โหลดเฉพาะตอนแตะป้าย */
+  var EXTRA = {
+    condo: { src: 'condo3d.js?v=1', key: 'VCCondo', name: 'คอนโด', o: { y: -0.7, p: 0.4, d: 112, c: [0, 12, 0], r: 40 } },
+    room: { src: 'room3d.js?v=1', key: 'VCRoom', name: 'ห้อง', o: { y: 0.785, p: 0.5, d: 84, c: [-1, 8, -1], r: 30 }, sw: 1 }
+  };
+  Object.keys(EXTRA).forEach(function (k) {
+    var c = document.createElement('canvas'); c.className = 'vcp-cv vcp-cvx'; c.dataset.m = k; c.setAttribute('aria-label', EXTRA[k].name + ' 3D ลากเพื่อหมุน');
+    cv.parentNode.insertBefore(c, cv.nextSibling); EXTRA[k].cv = c; EXTRA[k].st = 0;
+  });
+  function loadExtra(k, cb) {
+    var X = EXTRA[k];
+    if (X.st === 2) return cb && cb();
+    if (cb) (X.q = X.q || []).push(cb);
+    if (X.st === 1) return;
+    X.st = 1;
+    window[X.key + 'Ready'] = function () { X.st = 2; (X.q || []).forEach(function (f) { f(); }); X.q = []; };
+    var s = document.createElement('script'); s.src = X.src; s.async = true;
+    s.onerror = function () { X.st = 0; load.textContent = 'โหลด' + X.name + ' 3D ไม่สำเร็จ'; };
     document.head.appendChild(s);
   }
-  function showCondo() {
-    stage.classList.add('is-condo'); setCredit('condo'); if (view) view.pause();
-    if (condoState !== 2) { load.hidden = false; load.textContent = 'กำลังโหลดคอนโด 3D…'; }
-    loadCondo(function () {
+  function pauseExtras() { Object.keys(EXTRA).forEach(function (k) { if (EXTRA[k].view) EXTRA[k].view.pause(); }); }
+  function showExtra(k) {
+    var X = EXTRA[k];
+    stage.classList.add('is-x'); stage.classList.remove('x-ready'); stage.dataset.m = k; setCredit(k); if (view) view.pause(); pauseExtras();
+    if (X.st !== 2) { load.hidden = false; load.textContent = 'กำลังโหลด' + X.name + ' 3D…'; }
+    loadExtra(k, function () {
       load.hidden = true;
-      if (!cview) { cview = window.VCHouseView(cv2, window.VCCondo, { y: -0.7, p: 0.4, d: 112, c: [0, 12, 0], r: 40 }); if (!cview) return; }
-      if (shown === 'rent' && rentModel === 'condo' && !box.hidden) { cview.play(); stage.classList.add('condo-ready'); }
+      if (!X.view) { X.view = window.VCHouseView(X.cv, window[X.key], X.o); if (!X.view) return; }
+      if (shown === 'rent' && rentModel === k && !box.hidden) { X.view.play(); if (X.sw) X.view.aim(X.o.y, X.o.p, X.o.d, X.o.c, 1); stage.classList.add('x-ready'); }
     });
   }
-  function hideCondo() { stage.classList.remove('is-condo', 'condo-ready'); if (cview) cview.pause(); setCredit('house'); }
+  function hideCondo() { stage.classList.remove('is-x', 'x-ready'); delete stage.dataset.m; pauseExtras(); setCredit('house'); }
 
 
   function buildList() {
@@ -3148,21 +3160,21 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     if (shown === v) return; shown = v;
     var h = HOUSE[v], tg = box.querySelector('.vcp-tags');
     tg.innerHTML = h ? h.tag.map(function (t, i) {
-      var m = v === 'rent' ? (i === 0 ? 'house' : i === 1 ? 'condo' : '') : '';
+      var m = v === 'rent' ? (['house', 'condo', 'room'][i] || '') : '';
       if (m) return '<button type="button" class="vcp-tg' + (m === rentModel ? ' is-m' : '') + '" data-m="' + m + '" style="--i:' + i + '">' + t + '</button>';
       return '<span class="' + (v === 'sale' && i === 0 ? 'is-m' : '') + '" style="--i:' + i + '">' + t + '</span>';
     }).join('') : '';
     stage.dataset.ct = v;
     stage.classList.toggle('is-house', !!h);
-    if (!h || v !== 'rent' || rentModel !== 'condo') hideCondo();
-    if (h && v === 'rent' && rentModel === 'condo') { big.classList.remove('is-in'); showCondo(); }
+    if (!h || v !== 'rent' || rentModel === 'house') hideCondo();
+    if (h && v === 'rent' && rentModel !== 'house') { big.classList.remove('is-in'); showExtra(rentModel); }
     else if (h) {
       big.classList.remove('is-in');
       if (houseState !== 2) { load.hidden = false; load.textContent = 'กำลังโหลดบ้าน 3D…'; }
       loadHouse(function () {
         load.hidden = true;
         if (!view) { view = window.VCHouseView(cv, window.VCHouse); if (!view) { stage.classList.remove('is-house'); return; } }
-        if (shown === v && !box.hidden && !(v === 'rent' && rentModel === 'condo')) { view.play(); view.aim(h.y, h.p, h.d, h.c, h.sw); stage.classList.add('house-ready'); }
+        if (shown === v && !box.hidden && !(v === 'rent' && rentModel !== 'house')) { view.play(); view.aim(h.y, h.p, h.d, h.c, h.sw); stage.classList.add('house-ready'); }
       });
     } else {
       if (view) view.pause();
@@ -3195,7 +3207,7 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     }
     syncTrig();
     box.classList.remove('is-open'); root.classList.remove('vcp-open');
-    if (view) view.pause(); if (cview) cview.pause();
+    if (view) view.pause(); pauseExtras();
     setTimeout(function () { if (!box.classList.contains('is-open')) box.hidden = true; }, 260);
     try { (lastFocus && lastFocus !== document.body ? lastFocus : trig).focus({ preventScroll: true }); } catch (e) {}
   }
@@ -3209,7 +3221,7 @@ document.addEventListener('click', function (e) { if (e.target.closest && e.targ
     if (tb && tb.dataset.m !== rentModel) {
       rentModel = tb.dataset.m;
       Array.prototype.forEach.call(box.querySelectorAll('.vcp-tg'), function (x) { x.classList.toggle('is-m', x.dataset.m === rentModel); });
-      if (rentModel === 'condo') showCondo(); else { hideCondo(); shown = null; preview('rent'); }
+      if (rentModel !== 'house') showExtra(rentModel); else { hideCondo(); shown = null; preview('rent'); }
       return;
     }
     if (tb) return;
