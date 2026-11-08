@@ -7,7 +7,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { analyzeContract, answerFollowup, transcribeImage, MAX_ITEMS_LIMIT, CONTRACT_TYPES } from './ai.js';
 import { extractPdfText, extractDocxText } from './extract.js';
-import { initDb } from './db.js';
+import { initDb, pool } from './db.js';
 import {
   validateCredentials,
   registerUser,
@@ -95,6 +95,14 @@ function cleanResult(raw, sourceText) {
   };
 }
 
+// ---------- แอดมิน ----------
+// อีเมลแอดมินตั้งได้ใน Render ด้วยตัวแปร ADMIN_EMAILS (คั่นด้วยจุลภาค) ถ้าไม่ตั้งจะใช้ค่าเริ่มต้นด้านล่าง
+// อีเมลในระบบไม่ซ้ำกัน (UNIQUE) คนอื่นจึงสมัครด้วยอีเมลนี้ซ้ำไม่ได้
+const ADMIN_EMAILS = new Set(
+  (process.env.ADMIN_EMAILS || 'crdsstre@gmail.com').split(',').map(s => s.trim().toLowerCase()).filter(Boolean)
+);
+const isAdmin = user => !!user && ADMIN_EMAILS.has(String(user.email || '').toLowerCase());
+
 // ---------- บัญชีผู้ใช้ ----------
 
 // ผู้ใช้ที่ล็อกอินอยู่ (หรือ 401 ถ้ายังไม่ได้ล็อกอิน)
@@ -107,9 +115,41 @@ app.get('/api/me', async (req, res) => {
       credits: user.credits,
       avatar: user.avatar ?? null,
       voice_credits: await getVoiceCredits(user.id),
+      is_admin: isAdmin(user),
     });
   } catch (err) {
     console.error('[me] failed:', err.message);
+    res.status(500).json({ error: 'ระบบมีปัญหา ลองใหม่อีกครั้ง' });
+  }
+});
+
+// แอดมินเพิ่ม/ลดเครดิตให้บัญชีใดก็ได้ (ใส่อีเมล) — ยอดไม่ติดลบ และบันทึกประวัติไว้ในตาราง admin_grants
+app.post('/api/admin/credits', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'ยังไม่ได้เข้าสู่ระบบ' });
+    if (!isAdmin(user)) return res.status(403).json({ error: 'บัญชีนี้ไม่มีสิทธิ์แอดมิน' });
+    const email = String(req.body?.email || user.email).trim().toLowerCase();
+    const toInt = v => (Number.isInteger(Number(v)) ? Number(v) : NaN);
+    const dCheck = toInt(req.body?.check ?? 0), dVoice = toInt(req.body?.voice ?? 0);
+    if (!email || Number.isNaN(dCheck) || Number.isNaN(dVoice) || Math.abs(dCheck) > 1000 || Math.abs(dVoice) > 1000) {
+      return res.status(400).json({ error: 'ใส่จำนวนเป็นเลขจำนวนเต็มระหว่าง -1000 ถึง 1000' });
+    }
+    if (!dCheck && !dVoice) return res.status(400).json({ error: 'ใส่จำนวนเครดิตที่ต้องการเพิ่มก่อน' });
+    const { rows } = await pool.query(
+      `UPDATE users SET credits = GREATEST(0, credits + $2), voice_credits = GREATEST(0, voice_credits + $3)
+        WHERE email = $1 RETURNING id, email, credits, voice_credits`,
+      [email, dCheck, dVoice]
+    );
+    if (!rows[0]) return res.status(404).json({ error: 'ไม่พบบัญชีอีเมลนี้' });
+    await pool.query(
+      'INSERT INTO admin_grants (admin_id, target_id, check_delta, voice_delta) VALUES ($1, $2, $3, $4)',
+      [user.id, rows[0].id, dCheck, dVoice]
+    ).catch(err => console.error('[admin] log failed:', err.message));
+    console.log(`[admin] ${user.email} → ${rows[0].email}: check ${dCheck >= 0 ? '+' : ''}${dCheck}, voice ${dVoice >= 0 ? '+' : ''}${dVoice}`);
+    res.json({ email: rows[0].email, credits: rows[0].credits, voice_credits: rows[0].voice_credits, self: rows[0].id === user.id });
+  } catch (err) {
+    console.error('[admin] credits failed:', err.message);
     res.status(500).json({ error: 'ระบบมีปัญหา ลองใหม่อีกครั้ง' });
   }
 });
