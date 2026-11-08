@@ -4393,11 +4393,11 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     if (ta && ta.value) (ta.value.match(/ข้อ\s*([0-9]+)/g) || []).forEach(function (s) { var k = parseInt(s.replace(/\D/g, ''), 10); if (k > maxTa && k < 200) maxTa = k; });
     var N = Math.min(60, Math.max(maxRef, maxTa));
     var wrap = document.createElement('div'); wrap.className = 'vc-map';
-    var h = '<div class="vc-map-h"><span>แผนที่สัญญา</span><small>ข้อ 1–' + N + ' · แตะจุดสีเพื่อเปิดประเด็น</small></div><div class="vc-map-bar" role="list">';
+    var h = '<div class="vc-map-h"><span>แผนที่สัญญา</span><small>ข้อ 1–' + N + ' · แตะช่องสีเพื่อเปิดประเด็น</small></div><div class="vc-map-bar" role="list">';
     for (var k = 1; k <= N; k++) {
       var x = hit[k];
       h += x ? '<button type="button" role="listitem" class="vc-map-c is-hit" style="--c:' + LVC[x.lv] + ';--d:' + (k * 22) + 'ms" data-ix="' + x.i + '" aria-label="ข้อ ' + k + ' มีประเด็น"><i>' + k + '</i></button>'
-             : '<span role="listitem" class="vc-map-c" style="--d:' + (k * 22) + 'ms" aria-label="ข้อ ' + k + '"></span>';
+             : '<span role="listitem" class="vc-map-c" style="--d:' + (k * 22) + 'ms" aria-label="ข้อ ' + k + '"><i>' + k + '</i></span>';
     }
     wrap.innerHTML = h + '</div>';
     var prog = sum.querySelector('.ix-prog'), share = sum.querySelector('.share-bar');
@@ -5430,6 +5430,18 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   if (!card || !res || !ta) return;
   var calm = function () { return document.documentElement.hasAttribute('data-calm') || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
 
+  var TICO = {
+    rent: '<path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
+    sale: '<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.4"/>',
+    employment: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/>',
+    service: '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-.5-.5-2.5z"/>',
+    loan: '<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/>',
+    shareholder: '<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15 14.5c3 0 6 1.8 6 5"/>',
+    nda: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+    other: '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/>',
+    unsure: '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/>'
+  };
+  var TACC = { unsure: '#94a3b8', rent: '#34d399', sale: '#60a5fa', employment: '#fb923c', service: '#fbbf24', loan: '#22d3ee', shareholder: '#f472b6', nda: '#a78bfa', other: '#fb7185' };
   /* 2) แถบสรุปเมื่อพับฟอร์ม */
   var strip = document.createElement('div'); strip.className = 'vc-done'; strip.hidden = true;
   strip.innerHTML = '<span class="vc-done-ic" aria-hidden="true"></span><span class="vc-done-tx"><b></b><small></small></span><button type="button" class="vc-done-edit">แก้ไข<i aria-hidden="true">›</i></button>';
@@ -5445,9 +5457,13 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     if (show && !strip.dataset.k) strip.dataset.k = '';
     if (show && strip.dataset.k !== window.__vcCheckedText + sel.value) {
       strip.dataset.k = window.__vcCheckedText + sel.value;
-      var trig = document.getElementById('vcpTrigger'), ico = trig && trig.querySelector('.vcp-ico, .vcp-trigger-ico, svg');
-      strip.querySelector('.vc-done-ic').innerHTML = ico ? (ico.tagName.toLowerCase() === 'svg' ? ico.outerHTML : ico.innerHTML) : '';
-      var name = sel && sel.selectedOptions[0] ? sel.selectedOptions[0].textContent.replace(/\s*\(.*\)\s*$/, '') : 'สัญญา';
+      var key = sel ? sel.value : 'unsure';
+      if (key === 'unsure') { try { var dt = typeof lastResult !== 'undefined' && lastResult && lastResult.detected_type; if (dt && TICO[dt]) key = dt; } catch (e) {} }
+      var opt = sel && sel.querySelector('option[value="' + key + '"]');
+      strip.querySelector('.vc-done-ic').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + (TICO[key] || TICO.other) + '</svg>';
+      strip.style.setProperty('--da', TACC[key] || TACC.unsure);
+      var name = opt ? opt.textContent.replace(/\s*\(.*\)\s*$/, '') : 'สัญญา';
+      if (key === 'unsure') name = 'สัญญา (ไม่ได้ระบุประเภท)';
       var n = (ta.value.match(/(^|\n)\s*ข้อ\s*[0-9๐-๙]+/g) || []).length;
       strip.querySelector('b').textContent = name;
       strip.querySelector('small').innerHTML = (n ? n + ' ข้อ · ' : '') + ta.value.trim().length.toLocaleString('th-TH') + ' ตัวอักษร · <em>ตรวจแล้ว ✓</em>';
@@ -5609,4 +5625,70 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   new MutationObserver(scan).observe(box, { childList: true, subtree: true, characterData: true });
   new MutationObserver(function () { if ((root.classList.contains('vc-sheet-open') || root.classList.contains('vc-tool-open')) && root.classList.contains('vc-mini-on')) root.classList.remove('vc-mini-on'); }).observe(root, { attributes: true, attributeFilter: ['class'] });
   scan();
+})();
+
+
+/* ===== มือถือ: การ์ดสรุปโล่งขึ้น — หัวการ์ดเด่น, ไอคอนแชร์มุมบน, ปุ่มเริ่มอ่าน, แผนที่สัญญาบอกข้อที่อ่านแล้ว (v223) ===== */
+(function () {
+  var box = document.getElementById('result'); if (!box) return;
+  var mq = window.matchMedia('(max-width:767px)'), sel = document.getElementById('contractType'), queued = false;
+  function done(o) { return !!o.querySelector('.rv-btn.is-on, .rv-btn[aria-pressed="true"]'); }
+  function setTx(el, t) { if (el.textContent !== t) el.textContent = t; }
+  function cls(el, c, on) { if (el.classList.contains(c) !== on) el.classList.toggle(c, on); }
+  function cta(rpt, sum) {
+    var its = [].slice.call(rpt.querySelectorAll('details.item')); if (!its.length) return;
+    var hi = its.filter(function (o) { return o.classList.contains('lv-check_detail'); }), mid = its.filter(function (o) { return o.classList.contains('lv-caution'); });
+    var grp = hi.length ? hi : mid.length ? mid : its, word = hi.length ? 'ข้อสำคัญ' : mid.length ? 'ข้อควรระวัง' : 'ประเด็น';
+    var left = grp.filter(function (o) { return !done(o); }), any = its.filter(function (o) { return !done(o); });
+    var label, target = null;
+    if (left.length) { target = left[0]; label = left.length === grp.length ? 'เริ่มอ่าน ' + left.length + ' ' + word : 'อ่านต่อ · เหลือ ' + left.length + ' ' + word; }
+    else if (any.length) { target = any[0]; label = 'อ่านประเด็นที่เหลือ ' + any.length + ' ข้อ'; }
+    else label = 'อ่านครบทุกประเด็นแล้ว';
+    var b = sum.querySelector('.vc-cta');
+    if (!b) {
+      b = document.createElement('button'); b.type = 'button'; b.className = 'vc-cta'; b.innerHTML = '<span></span><i aria-hidden="true">→</i>';
+      var leg = sum.querySelector('.vc-sum-leg'); if (leg) leg.parentNode.insertBefore(b, leg.nextSibling); else sum.appendChild(b);
+      b.addEventListener('click', function () {
+        if (b.dataset.t === '' || typeof window.focusIssue !== 'function') return;
+        var tab = rpt.querySelector('.vc-tab[data-t="iss"]'); if (tab && !tab.classList.contains('on')) tab.click();
+        window.focusIssue(+b.dataset.t);
+      });
+    }
+    var lv = !target ? 'ok' : target.classList.contains('lv-check_detail') ? 'hi' : target.classList.contains('lv-caution') ? 'mid' : 'lo';
+    setTx(b.querySelector('span'), label);
+    var t = target ? String(its.indexOf(target)) : ''; if (b.dataset.t !== t) b.dataset.t = t;
+    ['hi', 'mid', 'lo', 'ok'].forEach(function (k) { cls(b, 'lv-' + k, k === lv); });
+  }
+  function polish() {
+    queued = false;
+    if (!mq.matches) return;
+    var rpt = box.querySelector('article.rpt.vc-m'); if (!rpt) return;
+    var sum = rpt.querySelector('.vc-sum'); if (!sum) return;
+    var known = !!(sel && sel.value !== 'unsure');
+    cls(sum, 'vc-type-known', known);
+    /* ตราประทับเล็กทับมุมโดนัท */
+    var st = sum.querySelector(':scope > .vc-stamp'), dn = sum.querySelector('.vc-donut');
+    if (st && dn) dn.appendChild(st);
+    /* แถวหัวการ์ด: ชื่อ + ไอคอนคัดลอก/แชร์/PDF */
+    var sb = sum.querySelector('.share-bar');
+    if (sb && !sb.parentNode.classList.contains('vc-sum-hd')) {
+      var hd = document.createElement('div'); hd.className = 'vc-sum-hd';
+      sum.insertBefore(hd, sum.firstChild);
+      var meta = sum.querySelector('.vc-sum-meta'), k = sum.querySelector('.vc-sum-k');
+      if (known && k) hd.appendChild(k); else if (meta) hd.appendChild(meta);
+      hd.appendChild(sb);
+      [].forEach.call(sb.querySelectorAll('button'), function (b) { var sp = b.querySelector('span'); if (sp) { b.setAttribute('aria-label', sp.textContent.trim()); b.title = sp.textContent.trim(); } });
+    }
+    cta(rpt, sum);
+    /* แผนที่สัญญา: ข้อที่อ่านแล้วเป็นติ๊ก */
+    var rows = rpt.querySelectorAll('.ix-row');
+    [].forEach.call(sum.querySelectorAll('.vc-map-c[data-ix]'), function (c) {
+      var i = c.getAttribute('data-ix'), r = rpt.querySelector('.ix-row[data-ixcard="' + i + '"]') || rows[+i];
+      cls(c, 'dn', !!(r && r.classList.contains('is-done')));
+    });
+  }
+  function q() { if (!queued) { queued = true; requestAnimationFrame(polish); } }
+  new MutationObserver(q).observe(box, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'aria-pressed'] });
+  if (sel) sel.addEventListener('change', q);
+  q();
 })();
