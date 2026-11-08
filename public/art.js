@@ -5241,3 +5241,63 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   if (mq.addEventListener) mq.addEventListener('change', all);
   all();
 })();
+
+/* ===== มือถือ: หน้าบัญชี — สถิติการใช้งาน + เตือนเครดิตใกล้หมด + ท้ายหน้า (8 พ.ย. 2026) ===== */
+(function () {
+  var mq = window.matchMedia('(max-width:767px)'), li = document.getElementById('authLoggedIn');
+  if (!li) return;
+  function ago(d) {
+    var s = (Date.now() - d.getTime()) / 1000;
+    if (s < 60) return 'เมื่อสักครู่'; if (s < 3600) return Math.floor(s / 60) + ' นาทีที่แล้ว';
+    if (s < 86400) return Math.floor(s / 3600) + ' ชม.ที่แล้ว'; if (s < 86400 * 7) return Math.floor(s / 86400) + ' วันที่แล้ว';
+    return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
+  }
+  var stat = null, warn = null, foot = null, busy = false, last = 0;
+  function build() {
+    var card = li.querySelector('.vc-wcard'); if (!card) return false;
+    if (!warn) {
+      warn = document.createElement('p'); warn.className = 'vc-wc-warn'; warn.hidden = true;
+      warn.innerHTML = '<i aria-hidden="true"></i><span></span>';
+      card.insertBefore(warn, card.querySelector('.vc-wc-top-up'));
+    }
+    if (!stat) {
+      stat = document.createElement('button'); stat.type = 'button'; stat.className = 'vc-stat'; stat.hidden = true;
+      stat.innerHTML = '<span class="vc-stat-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 4.5v3.7h3.7"/><path d="M12 8.5V12l2.5 1.5"/></svg></span><span class="vc-stat-tx"></span><i aria-hidden="true">›</i>';
+      card.parentNode.insertBefore(stat, card.nextSibling);
+      stat.addEventListener('click', function () { var h = document.querySelector('#bottomNav [data-nav="hist"]'); if (h) h.click(); });
+    }
+    if (!foot) {
+      var out = document.getElementById('logoutBtn');
+      if (out) { foot = document.createElement('p'); foot.className = 'vc-acct-foot'; foot.innerHTML = '<b>Vellum Check</b> · เวอร์ชัน 2026.11<br>เครื่องมือคัดกรองเบื้องต้น ไม่ใช่คำปรึกษาทางกฎหมาย'; out.parentNode.insertBefore(foot, out.nextSibling); }
+    }
+    return true;
+  }
+  function credits() {
+    var b = li.querySelector('.vc-wc-num b'), n = b ? parseInt(b.textContent, 10) : NaN;
+    if (!warn || isNaN(n)) return;
+    var low = n > 0 && n <= 2;
+    warn.hidden = !low;
+    if (low) warn.querySelector('span').textContent = 'เหลืออีก ' + n + ' ครั้ง ใกล้หมดแล้ว เติมไว้ก่อนตรวจครั้งถัดไป';
+    li.querySelector('.vc-wcard').classList.toggle('is-low', low);
+  }
+  function load() {
+    if (busy || !mq.matches || li.hidden || Date.now() - last < 15000) return;
+    busy = true; last = Date.now();
+    fetch('/api/history/inspections', { credentials: 'same-origin' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+      var items = (d && d.items) || [];
+      if (!stat) return;
+      var tx = stat.querySelector('.vc-stat-tx');
+      if (!items.length) { tx.innerHTML = '<b>ยังไม่มีประวัติการตรวจ</b><small>ผลตรวจจะเก็บไว้ที่นี่ให้ดูย้อนหลัง</small>'; }
+      else {
+        var t = items.map(function (x) { return new Date(x.created_at || x.createdAt || x.at); }).filter(function (x) { return !isNaN(x); }).sort(function (a, b) { return b - a; })[0];
+        tx.innerHTML = '<b>ตรวจไปแล้ว ' + items.length + ' ฉบับ</b><small>' + (t ? 'ล่าสุด ' + ago(t) + ' · ' : '') + 'ดูประวัติทั้งหมด</small>';
+      }
+      stat.hidden = false;
+    }).catch(function () {}).then(function () { busy = false; });
+  }
+  function tick() { if (!mq.matches) return; if (build()) { credits(); load(); } }
+  new MutationObserver(tick).observe(li, { attributes: true, attributeFilter: ['hidden'] });
+  new MutationObserver(function () { if (document.body.getAttribute('data-sheet') === 'acct') { last = 0; tick(); } }).observe(document.body, { attributes: true, attributeFilter: ['data-sheet', 'class'] });
+  setInterval(function () { if (mq.matches && !li.hidden) credits(); }, 1000);
+  tick();
+})();
