@@ -4892,3 +4892,64 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   .gl-mine blockquote::before,.gl-mine blockquote::after{display:none !important}
   .gl-mine mark{background:rgba(165,180,252,.2);color:#e0e7ff;border-radius:4px;padding:0 3px}
 }
+
+/* ===== v211 (มือถือ): หน้าบัญชี — หัวชิ้นเดียว, ไม่มีที่ว่างท้าย, ซ่อนแถบเลื่อน, บัตร 3 มิติ, วงแหวนรูปโปรไฟล์, ไอคอนเมนูมีสี ===== */
+.vc-wc-back,.vc-wc-glare,.vc-adm-badge{display:none}
+@media (max-width:767px){
+  /* บั้ก ก: หัวชีตกลืนกับตัวชีต ไม่ซ้อนขอบ */
+  body[data-sheet="acct"] #authCard{background:#0e0e11 !important;padding-top:0 !important}
+  body[data-sheet="acct"] #authCard .sheet-head.vc-prof{background:transparent !important;border-radius:24px 24px 0 0 !important;margin:0 !important;box-shadow:none !important;padding-top:22px !important}
+  body[data-sheet="acct"] #authCard .sheet-body{background:transparent !important}
+  /* บั้ก ข: ไม่มีที่ว่างยาวท้ายชีต */
+  body[data-sheet="acct"] #authCard .sheet-body{padding-bottom:calc(20px + env(safe-area-inset-bottom,0px)) !important}
+  body[data-sheet="acct"] #authMsg:empty{display:none !important}
+  /* บั้ก ค: ซ่อนแถบเลื่อน */
+  body[data-sheet="acct"] #authCard .sheet-body{scrollbar-width:none}
+  body[data-sheet="acct"] #authCard .sheet-body::-webkit-scrollbar{display:none}
+
+  /* ไอเดีย 1: บัตรเครดิต 3 มิติ */
+  body[data-sheet="acct"] #authLoggedIn .cred-card{perspective:900px}
+  body[data-sheet="acct"] #authLoggedIn .vc-wcard.vc-3d{transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transform-style:flat;will-change:transform;cursor:pointer;-webkit-tap-highlight-color:transparent;
+    box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 2px 0 #26262c,0 4px 0 #1f1f24,0 6px 0 #18181c,0 22px 40px -18px rgba(0,0,0,.95) !important;transition:box-shadow .3s ease}
+  body[data-sheet="acct"] #authLoggedIn .vc-wcard.vc-3d.is-tilt{box-shadow:0 1px 0 rgba(255,255,255,.08) inset,0 2px 0 #26262c,0 4px 0 #1f1f24,0 6px 0 #18181c,0 30px 50px -18px rgba(0,0,0,.95) !important}
+  .vc-wc-glare{display:block;position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s ease;
+    background:radial-gradient(circle at var(--gx,50%) var(--gy,50%),rgba(255,255,255,.16),transparent 55%);mix-blend-mode:normal}
+  .vc-wcard.is-tilt .vc-wc-glare{opacity:1}
+  body[data-sheet="acct"] #authLoggedIn .vc-wcard.vc-3d .vc-wc-num b{text-shadow:0 1px 0 rgba(255,255,255,.25),0 2px 0 rgba(0,0,0,.35),0 6px 14px rgba(0,0,0,.45)}
+  /* พลิกบัตร */
+  body[data-sheet="acct"] #authLoggedIn .vc-wcard.vc-flip-out{transition:transform .2s ease-in !important;transform:rotateY(90deg) !important}
+  body[data-sheet="acct"] #authLoggedIn .vc-wcard.vc-flip-in{animation:vcWcIn .23s ease-out}
+  @keyframes vcWcIn{from{transform:rotateY(-90deg)}to{transform:rotateY(0)}}
+  body[data-sheet="acct"] #authLoggedIn .vc-wcard.is-back > :not(.vc-wc-back):not(.vc-wc-glare){visibility:hidden}
+  body[data-sheet="acct"] #authLoggedIn .vc-wcard.is-back .vc-wc-back{display:flex;flex-direction:column;position:absolute;inset:0;padding:18px;font-family:Prompt,Sarabun,sans-serif}
+  .vc-wcb-h{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 10px !important;font:600 14px/1.2 Prompt,Sarabun,sans-serif;color:#f4f4f5}
+  .vc-wcb-h span{font:400 11.5px/1 Prompt,Sarabun,sans-serif;color:#8b8b94}
+  .vc-wc-back dl{margin:0;display:flex;flex-direction:column;gap:0;flex:1 1 auto}
+  .vc-wc-back dl div{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,.08)}
+  .vc-wc-back dt{font:400 12.5px/1.3 Prompt,Sarabun,sans-serif;color:#a3a3aa;flex:0 0 auto}
+  .vc-wc-back dd{margin:0;font:600 13px/1.3 Prompt,Sarabun,sans-serif;color:#ededef;text-align:right;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .vc-wcb-n{margin:auto 0 0 !important;padding-top:8px;font:400 11.5px/1.4 Prompt,Sarabun,sans-serif;color:#8fcfb4}
+
+  /* ไอเดีย 4: วงแหวนรูปโปรไฟล์ + ป้ายแอดมิน */
+  body[data-sheet="acct"] #authCard .sheet-head .acct-avatar{border:0 !important;box-shadow:0 0 0 2px #0e0e11,0 0 0 4px transparent !important}
+  body[data-sheet="acct"] #authCard .sheet-head .acct-avatar::before{content:"" !important;position:absolute !important;inset:-4px !important;border-radius:50% !important;z-index:-1;display:block !important;
+    background:conic-gradient(from 210deg,var(--vc-acc,#34d399),#60a5fa,#a78bfa,var(--vc-acc,#34d399)) !important;opacity:.85;transform:none !important;width:auto !important;height:auto !important}
+  body[data-sheet="acct"] #authCard .sheet-head .acct-avatar{isolation:isolate}
+  body[data-sheet="acct"] #authCard .sheet-head .acct-avatar > span#acctInitial,body[data-sheet="acct"] #authCard .sheet-head .acct-avatar img{position:relative;z-index:1}
+  body[data-sheet="acct"] #authCard .sheet-head .acct-avatar::after{content:"" !important;position:absolute !important;inset:0 !important;border-radius:50% !important;z-index:0;display:block !important;
+    background:linear-gradient(145deg,color-mix(in srgb,var(--vc-acc,#94a3b8) 45%,#3a3a42),#24242a) !important;box-shadow:0 0 0 2px #0e0e11 !important;transform:none !important;width:auto !important;height:auto !important}
+  body[data-sheet="acct"] #authCard .sheet-head .acct-cam{z-index:2}
+  .vc-adm-badge:not([hidden]){display:inline-flex;align-items:center;order:3;margin-left:6px;padding:3px 8px;border-radius:99px;font:600 11px/1 Prompt,Sarabun,sans-serif !important;
+    color:#bfdbfe;background:rgba(96,165,250,.14);border:1px solid rgba(96,165,250,.35)}
+
+  /* ไอเดีย 5: ไอคอนเมนูมีสี */
+  body[data-sheet="acct"] #authLoggedIn .acct-menu .menu-item .vc-mi{--mc:#a1a1aa;color:var(--mc) !important;background:color-mix(in srgb,var(--mc) 14%,#16161a) !important;border:1px solid color-mix(in srgb,var(--mc) 30%,transparent) !important}
+  body[data-sheet="acct"] #authLoggedIn #acctInfoBtn .vc-mi{--mc:#60a5fa}
+  body[data-sheet="acct"] #authLoggedIn #dispBtn .vc-mi{--mc:#a78bfa}
+  body[data-sheet="acct"] #authLoggedIn #privBtn .vc-mi{--mc:#34d399}
+  body[data-sheet="acct"] #authLoggedIn #helpPrivacy .vc-mi{--mc:#2dd4bf}
+  body[data-sheet="acct"] #authLoggedIn #helpTerms .vc-mi{--mc:#fbbf24}
+  body[data-sheet="acct"] #authLoggedIn #helpContact .vc-mi{--mc:#f472b6}
+  body[data-sheet="acct"] #authLoggedIn .vc-stat .vc-stat-ic{color:#fb923c !important;background:color-mix(in srgb,#fb923c 14%,#16161a) !important;border:1px solid color-mix(in srgb,#fb923c 30%,transparent) !important}
+}
+@media (max-width:767px) and (prefers-reduced-motion:reduce){ body[data-sheet="acct"] #authLoggedIn .vc-wcard.vc-3d{transform:none !important} }
