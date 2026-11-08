@@ -3850,9 +3850,12 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   var last = null;
   function sync() {
     var has = !!ta.value.trim();
-    var key = (has ? 1 : 0) + '|' + (document.activeElement === ta ? 1 : 0);
+    /* iPhone ถือว่ายังโฟกัสกล่องอยู่แม้คีย์บอร์ดปิดแล้ว จึงนับว่า "กำลังพิมพ์" เฉพาะตอนคีย์บอร์ดเปิดจริง (จอที่มองเห็นเตี้ยลง) */
+    var vv = window.visualViewport, kb = vv ? (window.innerHeight - vv.height > 140) : true;
+    var typing = document.activeElement === ta && kb;
+    var key = (has ? 1 : 0) + '|' + (typing ? 1 : 0);
     wrap.classList.toggle('vc-has', has);
-    wrap.classList.toggle('vc-focus', document.activeElement === ta);
+    wrap.classList.toggle('vc-focus', typing);
     if (has) say('');
     var res = document.getElementById('result');
     var done3 = !!(res && res.querySelector(':scope > :not(.empty):not(.empty-art)'));
@@ -3861,7 +3864,108 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     if (steps[3]) steps[3].classList.toggle('is-done', done3);
     last = key;
   }
-  ta.addEventListener('input', sync); ta.addEventListener('focus', sync); ta.addEventListener('blur', function () { setTimeout(sync, 50); });
+  ta.addEventListener('input', sync); ta.addEventListener('focus', function () { sync(); setTimeout(sync, 350); });
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', sync); ta.addEventListener('blur', function () { setTimeout(sync, 50); });
   setInterval(function () { if (mq.matches && !document.hidden) sync(); }, 700);   /* เผื่อโค้ดอื่นใส่ข้อความโดยไม่ส่ง input event */
   sync();
+})();
+
+/* ===== มือถือ: หน้าผลตรวจแบบสรุป + แท็บ "ประเด็น · ศัพท์น่ารู้ · ถามต่อ" (8 พ.ย. 2026) — ทำงานเฉพาะ ≤767px ===== */
+(function () {
+  var box = document.getElementById('result');
+  if (!box) return;
+  var mq = window.matchMedia('(max-width:767px)');
+  var LV = [['check_detail', 'สำคัญ', '#f87171'], ['caution', 'ควรระวัง', '#fbbf24'], ['low', 'เสี่ยงต่ำ', '#8b8b94']];
+
+  function setTab(rpt, t) {
+    if (!rpt || rpt.getAttribute('data-vtab') === t) return;
+    rpt.setAttribute('data-vtab', t);
+    [].forEach.call(rpt.querySelectorAll('.vc-tab'), function (b) { var on = b.getAttribute('data-t') === t; b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
+  }
+  function tabOf(el) { var s = el && el.closest && el.closest('[data-vt]'); return s ? s.getAttribute('data-vt') : null; }
+
+  function donut(cnt, total) {
+    var R = 34, C = 2 * Math.PI * R, off = 0, segs = '';
+    if (!total) segs = '<circle cx="42" cy="42" r="' + R + '" stroke="#34d399" stroke-width="9" fill="none"/>';
+    LV.forEach(function (l, i) {
+      var n = cnt[i]; if (!n) return;
+      var len = C * n / total, gap = total > 1 ? 2.5 : 0;
+      segs += '<circle cx="42" cy="42" r="' + R + '" stroke="' + l[2] + '" stroke-width="9" fill="none" stroke-linecap="butt" stroke-dasharray="' + Math.max(0, len - gap).toFixed(2) + ' ' + C.toFixed(2) + '" stroke-dashoffset="' + (-off).toFixed(2) + '" transform="rotate(-90 42 42)"/>';
+      off += len;
+    });
+    return '<svg viewBox="0 0 84 84" width="84" height="84" aria-hidden="true"><circle cx="42" cy="42" r="' + R + '" stroke="rgba(255,255,255,.07)" stroke-width="9" fill="none"/>' + segs + '</svg>';
+  }
+
+  function build() {
+    var rpt = box.querySelector('article.rpt');
+    if (!rpt || rpt.classList.contains('vc-m') || !mq.matches) return;
+    rpt.classList.add('vc-m');
+
+    var rows = rpt.querySelectorAll('.ix-row'), items = rpt.querySelectorAll('details.item');
+    var src = rows.length ? rows : items;
+    var cnt = LV.map(function (l) { return [].filter.call(src, function (r) { return r.classList.contains('lv-' + l[0]); }).length; });
+    var total = src.length;
+    var lvl = cnt[0] ? ['hi', 'ควรระวังมาก', 'มี ' + cnt[0] + ' ประเด็นสำคัญ ควรคุยกับอีกฝ่ายก่อนลงนาม']
+      : cnt[1] ? ['mid', 'ควรระวัง', 'มี ' + cnt[1] + ' ประเด็นที่ควรอ่านให้ละเอียดก่อนลงนาม']
+      : total ? ['lo', 'ความเสี่ยงต่ำ', 'ไม่พบประเด็นสำคัญ แต่ควรอ่านทวนอีกครั้ง']
+      : ['lo', 'ไม่พบจุดเสี่ยง', 'ระบบไม่พบประเด็นที่น่ากังวลในข้อความนี้'];
+
+    var sum = document.createElement('section');
+    sum.className = 'vc-sum lv-' + lvl[0];
+    sum.setAttribute('aria-label', 'สรุปความเสี่ยง');
+    sum.innerHTML = '<div class="vc-sum-top"><div class="vc-donut">' + donut(cnt, total) + '<span><b>' + total + '</b><small>ประเด็น</small></span></div>' +
+      '<div class="vc-sum-tx"><p class="vc-sum-k">ภาพรวมสัญญา</p><h3>' + lvl[1] + '</h3><p>' + lvl[2] + '</p></div></div>' +
+      '<ul class="vc-sum-leg">' + LV.map(function (l, i) { return '<li style="--c:' + l[2] + '"><i></i>' + l[1] + ' <b>' + cnt[i] + '</b></li>'; }).join('') + '</ul>';
+    var head = rpt.querySelector('.rpt-head');
+    if (head && head.nextSibling) rpt.insertBefore(sum, head.nextSibling); else rpt.insertBefore(sum, rpt.firstChild);
+    /* ตัวเลข 3 ช่องเดิม (กดแล้วกระโดดไปประเด็นได้) และแถบแชร์ ย้ายมาไว้ในการ์ดสรุป */
+    var tiles = rpt.querySelector('.cb-tiles'); if (tiles) sum.appendChild(tiles);
+    var share = rpt.querySelector('.share-bar'); if (share) sum.appendChild(share);
+
+    var nGl = rpt.querySelectorAll('.gloss details.gl-term').length;
+    var tabs = document.createElement('div');
+    tabs.className = 'vc-tabs'; tabs.setAttribute('role', 'tablist'); tabs.setAttribute('aria-label', 'ส่วนของผลตรวจ');
+    var T = [['iss', 'ประเด็น', total], ['gl', 'ศัพท์น่ารู้', nGl], ['fu', 'ถามต่อ', 0]].filter(function (t) { return t[0] !== 'gl' || nGl; });
+    tabs.innerHTML = T.map(function (t) {
+      return '<button type="button" role="tab" class="vc-tab" data-t="' + t[0] + '" aria-selected="false">' + t[1] + (t[2] ? '<em>' + t[2] + '</em>' : '') + '</button>';
+    }).join('');
+    rpt.insertBefore(tabs, sum.nextSibling);
+    tabs.addEventListener('click', function (e) {
+      var b = e.target.closest('.vc-tab'); if (!b) return;
+      setTab(rpt, b.getAttribute('data-t'));
+      var y = tabs.getBoundingClientRect().top + window.scrollY - 66;
+      if (window.scrollY > y) window.scrollTo({ top: y, behavior: 'auto' });
+    });
+
+    /* ติดป้ายว่าแต่ละส่วนอยู่แท็บไหน */
+    [].forEach.call(rpt.children, function (c) {
+      if (c === sum || c === tabs || c.classList.contains('rpt-head') || c.classList.contains('disclaimer')) return;
+      c.setAttribute('data-vt', c.classList.contains('gloss') ? 'gl' : (c.id === 'fuBox' || c.classList.contains('fu')) ? 'fu' : 'iss');
+    });
+    setTab(rpt, 'iss');
+  }
+
+  function tagLate() {   /* กล่องถามต่อถูกเติมทีหลัง (extras.js) */
+    var rpt = box.querySelector('article.rpt.vc-m'); if (!rpt) return;
+    [].forEach.call(rpt.children, function (c) {
+      if (c.hasAttribute('data-vt') || /vc-sum|vc-tabs|rpt-head|disclaimer/.test(c.className)) return;
+      c.setAttribute('data-vt', c.classList.contains('gloss') ? 'gl' : (c.id === 'fuBox' || c.classList.contains('fu')) ? 'fu' : 'iss');
+    });
+  }
+  new MutationObserver(function () { build(); tagLate(); }).observe(box, { childList: true, subtree: true });
+  build();
+
+  /* ถ้าโค้ดอื่นเลื่อนไปหาส่วนที่อยู่อีกแท็บ (เช่น กดเลขประเด็น) ให้สลับแท็บก่อน */
+  var orig = Element.prototype.scrollIntoView;
+  Element.prototype.scrollIntoView = function () {
+    var t = tabOf(this), rpt = this.closest && this.closest('article.rpt.vc-m');
+    if (t && rpt) setTab(rpt, t);
+    return orig.apply(this, arguments);
+  };
+  box.addEventListener('click', function (e) {
+    var j = e.target.closest && e.target.closest('[data-jumplv]'); if (j) setTab(box.querySelector('article.rpt.vc-m'), 'iss');
+  }, true);
+  document.addEventListener('focusin', function (e) {
+    var t = tabOf(e.target), rpt = e.target.closest && e.target.closest('article.rpt.vc-m'); if (t && rpt) setTab(rpt, t);
+  });
 })();
