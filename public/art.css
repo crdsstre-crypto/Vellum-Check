@@ -5428,3 +5428,11 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
 @keyframes vslShine{0%{transform:translateX(-100%)}55%,100%{transform:translateX(100%)}}
 @media (prefers-reduced-motion:reduce){.vsl-item,.vsl-hero::after,.vsl-use.is-free::after{animation:none !important}}
 @media (max-width:767px){.vc-demo-note small{font:400 11.5px/1.4 Prompt,sans-serif;opacity:.7}.vsl-use.is-free:focus:not(:focus-visible){outline:none}}
+@media (max-width:767px){
+  .vc-demo-acts{display:flex;gap:8px;margin-top:8px}
+  .vc-demo-acts button{flex:1;min-height:42px !important;height:auto !important;padding:0 10px;border-radius:12px;font:600 13px/1.2 Prompt,sans-serif;cursor:pointer}
+  .vc-demo-acts button::before,.vc-demo-acts button::after{display:none !important}
+  .vc-demo-other{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);color:#e6f7f0}
+  .vc-demo-exit{background:#34d399;border:0;color:#04281b}
+  [data-theme="light"] .vc-demo-other{background:#fff;border-color:#a7f3d0;color:#065f46}
+}
