@@ -31,11 +31,14 @@
       clearTimeout(timer);
       timer = setTimeout(function () {
         var v = input.value;
+        // สัญญาตัวอย่างไม่นับเป็นข้อความที่ผู้ใช้พิมพ์ค้างไว้
+        if (window.VCDemo && window.VCDemo.match(v)) { dropDraft(); return; }
         if (v.trim().length >= MIN_SAVE) setDraft(v); else dropDraft();
       }, 600);
     });
 
     var d = getDraft();
+    if (d && window.VCDemo && window.VCDemo.match(d.t)) { dropDraft(); d = null; }
     if (d && d.t.trim().length >= MIN_SAVE && input.value.trim() === '') {
       bar.hidden = false;
     }
