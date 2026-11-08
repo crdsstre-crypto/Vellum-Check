@@ -3327,3 +3327,74 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
 .vsl.hl-on .vsl-doc p.is-risk::before{content:"";position:absolute;left:-18px;top:.55em;width:7px;height:7px;border-radius:50%;background:#e2a21c}
 @media (max-width:767px){.vsl-doc{padding:22px 20px 26px 24px !important;font-size:14.5px !important}.vsl-paper{margin:12px 6px 4px 0}.vsl.hl-on .vsl-doc p.is-risk::before{left:-14px}.vsl-hl{padding:7px 10px;font-size:12px}}
 .vsl.hl-on .vsl-note{display:table;margin-top:5px}
+
+
+/* ===== มือถือ: หัวเว็บบรรทัดเดียว + กล่องวางสัญญาแบบกระดาษ + ปกป้องข้อมูลแบบพับ (7 พ.ย. 2026) — เฉพาะ ≤767px ไม่แตะคอม ===== */
+@media (max-width:767px){
+  /* 1) หัวเว็บ: หน้าตรวจสัญญาเหลือบรรทัดเดียว (เมนู วิธีอ่าน/คลิป ไปทางโลโก้ → หน้าแรก) */
+  html.vc-art[data-view="desk"]{--art-head:58px}
+  html.vc-art[data-view="desk"] .site-header .dx-nav[hidden]{display:none !important}
+  html.vc-art[data-view="desk"] .site-header .topbar{flex-wrap:nowrap;align-items:center;min-height:58px}
+  html.vc-art .site-header .brand-name{letter-spacing:.14em}
+  /* หน้าอื่นที่ยังมีแถบเมนู: ตัดปุ่ม "ตรวจสัญญา" ออกเมื่อมีแถบเมนูล่างแล้ว */
+  body.has-nav .site-header .dx-nav a[href="#checkCard"]{display:none}
+  /* ปุ่มบัญชี: ล็อกอินแล้วเป็นไอคอนกลม */
+  body.has-nav #authToggle{width:40px;height:40px;min-height:40px;padding:0;border-radius:50%;font-size:0;display:inline-grid;place-items:center;
+    border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.05)}
+  body.has-nav #authToggle .auth-toggle-in{display:none !important}
+  body.has-nav #authToggle::before{content:"";width:20px;height:20px;background:#ededef;
+    -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round'%3E%3Ccircle cx='12' cy='8.5' r='4'/%3E%3Cpath d='M4.5 20c.8-3.8 3.8-6 7.5-6s6.7 2.2 7.5 6'/%3E%3C/svg%3E") center/contain no-repeat;
+            mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round'%3E%3Ccircle cx='12' cy='8.5' r='4'/%3E%3Cpath d='M4.5 20c.8-3.8 3.8-6 7.5-6s6.7 2.2 7.5 6'/%3E%3C/svg%3E") center/contain no-repeat}
+
+  /* 3) กล่องวางสัญญาแบบกระดาษ */
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap{position:relative;margin-top:14px}
+  html.vc-art[data-view="desk"][data-desk="check"] #input{
+    font:400 15px/1.75 var(--k-ff) !important;padding:20px 18px 40px !important;min-height:300px !important;max-height:58vh;
+    border-radius:16px !important;background:var(--k-in) !important;
+    background-image:repeating-linear-gradient(180deg,transparent 0 25.25px,rgba(255,255,255,.035) 25.25px 26.25px) !important;
+    background-attachment:local !important;background-position:0 19px !important;scroll-padding:20px 0 40px}
+  html.vc-art[data-view="desk"][data-desk="check"] #input::placeholder{font-size:15px}
+  /* ขอบบน-ล่างจางลง ให้รู้ว่าเลื่อนอ่านต่อได้ */
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap::before,
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap::after{content:"" !important;display:block !important;position:absolute;left:1px;right:1px;height:22px;pointer-events:none;z-index:1}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap::before{top:1px;border-radius:15px 15px 0 0;background:linear-gradient(var(--k-in),rgba(13,13,15,0))}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap::after{bottom:1px;height:44px;border-radius:0 0 15px 15px;background:linear-gradient(rgba(13,13,15,0),var(--k-in) 70%)}
+  /* ปุ่ม ✕ ชัดขึ้นและไม่ทับตัวหนังสือ */
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-clear{z-index:2;top:10px;right:10px;width:32px;height:32px;border-radius:50%;
+    background:rgba(40,40,44,.92) !important;border:1px solid rgba(255,255,255,.16);color:#ededef !important;font-size:13px;line-height:1;
+    box-shadow:0 4px 12px rgba(0,0,0,.5)}
+  html.vc-art[data-view="desk"][data-desk="check"] #input{padding-right:50px !important}
+  /* ตัวนับอักษรอยู่มุมล่างในกล่อง */
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap > .ta-count{position:absolute;right:12px;bottom:10px;z-index:2;margin:0;
+    font:500 11.5px/1 var(--k-ff) !important;color:var(--k-fa) !important;background:rgba(28,28,31,.9);border:1px solid var(--k-line);
+    padding:5px 9px;border-radius:99px;pointer-events:none}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap > .ta-count.is-over{color:#fca5a5 !important;border-color:rgba(252,165,165,.4)}
+  /* ปุ่มอัปโหลด / ตัวอย่าง เป็นชิปมีไอคอน แบ่งครึ่ง */
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-meta{margin-top:10px !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-actions{display:grid !important;grid-template-columns:1fr 1fr;gap:8px !important;flex:1 1 100%;width:100%}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-actions .sample-btn{display:inline-flex !important;align-items:center;justify-content:center;gap:8px;
+    min-height:46px;padding:0 10px !important;border-radius:14px !important;font:500 14px/1.2 var(--k-ff) !important;color:#e4e4e7 !important;white-space:nowrap}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-actions .sample-btn::before{content:"" !important;display:block !important;position:static !important;
+    flex:0 0 18px;width:18px;height:18px;background:currentColor !important;opacity:.85;border:0 !important;transform:none !important;
+    -webkit-mask:var(--ico) center/contain no-repeat;mask:var(--ico) center/contain no-repeat}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .file-pick{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 15V4M7.5 8.5 12 4l4.5 4.5'/%3E%3Cpath d='M4.5 14.5v3a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-3'/%3E%3C/svg%3E")}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard #sampleBtn{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 3.5h7l4.5 4.5v11a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 19V5A1.5 1.5 0 0 1 7 3.5z'/%3E%3Cpath d='M13.5 3.5V8h5M8.5 12.5h7M8.5 16h4.5'/%3E%3C/svg%3E")}
+
+  /* 4) ปกป้องข้อมูลแบบพับ: บรรทัดเดียว กดแล้วกาง */
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps.ps-fold{padding:0 !important;overflow:hidden}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps.ps-fold .ps-head{cursor:pointer;padding:12px 14px;margin:0 !important;gap:12px;align-items:center;-webkit-tap-highlight-color:transparent;user-select:none}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps.ps-fold .ps-ico{width:38px;height:38px;flex:0 0 38px}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps.ps-fold .ps-ico svg{width:22px;height:22px}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps.ps-fold .ps-title{flex:1 1 auto;min-width:0}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps.ps-fold .ps-title small{display:none}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps-state{display:block;font:400 12.5px/1.35 var(--k-ff);color:var(--k-mu);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps-state.is-hit{color:#9fdcb4}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps.ps-fold .ps-badge{font-size:12px !important;padding:4px 10px !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps.ps-fold .ps-chev{display:block;flex:0 0 20px;width:20px;height:20px;color:var(--k-mu);transition:transform .25s ease}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps.ps-open .ps-chev{transform:rotate(180deg)}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps.ps-fold:not(.ps-open) > :not(.ps-head){display:none !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps.ps-fold.ps-open > :not(.ps-head){margin-left:14px !important;margin-right:14px !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps.ps-fold.ps-open{padding-bottom:14px !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps.ps-fold.ps-open .ps-head{border-bottom:1px solid var(--k-line);margin-bottom:12px !important}
+}
+.ps-state,.ps-chev{display:none}
