@@ -5143,3 +5143,101 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   new MutationObserver(hook).observe(document.body, { childList: true });
   hook();
 })();
+
+/* ===== มือถือ: หน้าบัญชี — หัวโปรไฟล์ · การ์ดกระเป๋าเครดิต · เมนูตั้งค่าแบบใหม่ · แผงแอดมินแบบพับ (8 พ.ย. 2026) ===== */
+(function () {
+  var mq = window.matchMedia('(max-width:767px)'), body = document.body;
+  var li = document.getElementById('authLoggedIn'), head = document.querySelector('#authCard .sheet-head');
+  var row = document.querySelector('#authLoggedIn .acct-row'), wt = document.querySelector('#authLoggedIn .wallet-total');
+  if (!li || !head || !row || !wt) return;
+  var rowHome = row.parentNode, rowNext = row.nextSibling;
+  var calm = function () { return document.documentElement.hasAttribute('data-calm') || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
+  var S = function (d) { return '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>'; };
+
+  /* B) หัวแผ่นเป็นโปรไฟล์: ย้ายแถวบัญชีขึ้นไปในหัว (เฉพาะมือถือ) */
+  function placeRow() {
+    if (mq.matches) { if (row.parentNode !== head) head.insertBefore(row, head.firstChild); head.classList.add('vc-prof'); }
+    else { if (row.parentNode === head) rowHome.insertBefore(row, rowNext); head.classList.remove('vc-prof'); }
+  }
+  /* แตะรูปโปรไฟล์: ถ้ามีรูปแล้ว ให้เลือก เปลี่ยน/ลบ */
+  var av = document.getElementById('acctAvatarBtn'), file = document.getElementById('acctFile'), del = document.getElementById('acctPhotoDel'), pop = null;
+  function closePop() { if (pop) { pop.remove(); pop = null; } }
+  if (av) av.addEventListener('click', function (e) {
+    if (!mq.matches || !del || del.hidden) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    if (pop) { closePop(); return; }
+    pop = document.createElement('div'); pop.className = 'vc-avpop'; pop.setAttribute('role', 'menu');
+    pop.innerHTML = '<button type="button" role="menuitem" data-a="ch">' + S('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>') + 'เปลี่ยนรูป</button>' +
+      '<button type="button" role="menuitem" data-a="rm" class="rm">' + S('<path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 12.5h9L17.5 7"/>') + 'ลบรูป</button>';
+    head.appendChild(pop);
+    pop.addEventListener('click', function (ev) {
+      var b = ev.target.closest('[data-a]'); if (!b) return;
+      var a = b.getAttribute('data-a'); closePop();
+      if (a === 'ch' && file) file.click(); else if (a === 'rm') del.click();
+    });
+  }, true);
+  document.addEventListener('click', function (e) { if (pop && !e.target.closest('.vc-avpop,#acctAvatarBtn')) closePop(); });
+
+  /* A) การ์ดกระเป๋าเครดิต: ตัวเลขใหญ่ = เครดิตตรวจ, เครดิตเสียงอยู่มุม */
+  var card = document.createElement('div'); card.className = 'vc-wcard';
+  card.innerHTML = '<i class="vc-wc-sheen" aria-hidden="true"></i>' +
+    '<div class="vc-wc-top"><span class="vc-wc-lab">' + S('<path d="M3.5 10a2 2 0 0 0 0 4v3a1.5 1.5 0 0 0 1.5 1.5h14a1.5 1.5 0 0 0 1.5-1.5v-3a2 2 0 0 0 0-4V7A1.5 1.5 0 0 0 19 5.5H5A1.5 1.5 0 0 0 3.5 7z"/><path d="M14.5 5.5v13" stroke-dasharray="2 2.2"/>') + 'เครดิตตรวจสัญญา</span>' +
+      '<span class="vc-wc-voice">' + S('<rect x="9" y="3.5" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v2.5"/>') + 'เสียง <b>–</b></span></div>' +
+    '<p class="vc-wc-num"><b>–</b><small>ครั้ง</small></p>' +
+    '<p class="vc-wc-sub">ตรวจได้อีก <span>–</span> ฉบับ · คืนเครดิตถ้าตรวจไม่สำเร็จ</p>' +
+    '<button type="button" class="vc-wc-top-up">' + S('<circle cx="12" cy="12" r="8.5"/><path d="M12 8.5v7M8.5 12h7"/>') + 'เติมเครดิต</button>';
+  wt.parentNode.insertBefore(card, wt);
+  card.querySelector('.vc-wc-top-up').addEventListener('click', function () { var t = wt.querySelector('.wallet-topup'); if (t) t.click(); });
+  var shown = -1;
+  function num(id) { var e = document.getElementById(id); var n = e ? parseInt(String(e.textContent).replace(/[^\d]/g, ''), 10) : NaN; return isNaN(n) ? null : n; }
+  function countTo(el, to) {
+    if (calm() || shown < 0) { el.textContent = to; return; }
+    var from = 0, t0 = null; function st(t) { if (!t0) t0 = t; var p = Math.min(1, (t - t0) / 700), e = 1 - Math.pow(1 - p, 3); el.textContent = Math.round(from + (to - from) * e); if (p < 1) requestAnimationFrame(st); } requestAnimationFrame(st);
+  }
+  function syncCard() {
+    var c = num('walletRowCheck'); if (c == null) c = num('walletCheck'); var v = num('walletRowVoice'); if (v == null) v = num('walletVoice');
+    var nb = card.querySelector('.vc-wc-num b');
+    if (c != null && c !== shown) { var first = shown < 0 && li.hidden === false && mq.matches; if (first) { shown = 0; countTo(nb, c); } else nb.textContent = c; shown = c; card.querySelector('.vc-wc-sub span').textContent = c; card.classList.toggle('is-zero', c === 0); }
+    var vb = card.querySelector('.vc-wc-voice b'), vt = v == null ? '–' : String(v); if (vb.textContent !== vt) vb.textContent = vt;
+  }
+  new MutationObserver(syncCard).observe(wt, { subtree: true, childList: true, characterData: true });
+  syncCard();
+
+  /* C) เมนูตั้งค่า: ไอคอนเส้น ไม่ซ้ำ + แบ่ง 2 กลุ่ม */
+  var ICO = {
+    acctInfoBtn: S('<circle cx="12" cy="8.5" r="3.6"/><path d="M5 19.5c.9-3.6 3.7-5.6 7-5.6s6.1 2 7 5.6"/>'),
+    dispBtn: S('<path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/>'),
+    privBtn: S('<path d="M12 3.5 5 6.2v5.3c0 4.2 2.9 7.6 7 9 4.1-1.4 7-4.8 7-9V6.2z"/><path d="M9.5 12.2 11.3 14l3.4-3.6"/>'),
+    helpPrivacy: S('<rect x="5" y="10.5" width="14" height="9.5" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/><circle cx="12" cy="15" r="1.3"/>'),
+    helpTerms: S('<path d="M7 3.5h7l4.5 4.5v11a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 19V5A1.5 1.5 0 0 1 7 3.5z"/><path d="M13.5 3.5V8h5M8.5 12.5h7M8.5 16h4.5"/>'),
+    helpContact: S('<path d="M4 5.5h16v10H9l-5 4z"/><path d="M8 9.5h8M8 12.5h5"/>')
+  };
+  function menu() {
+    var nav = li.querySelector('.acct-menu'); if (!nav) return;
+    Object.keys(ICO).forEach(function (id) {
+      var m = document.getElementById(id); if (!m || m.querySelector('.vc-mi')) return;
+      var s = document.createElement('span'); s.className = 'vc-mi'; s.innerHTML = ICO[id]; m.insertBefore(s, m.firstChild);
+      var ch = document.createElement('i'); ch.className = 'vc-mchev'; ch.setAttribute('aria-hidden', 'true'); m.appendChild(ch);
+    });
+    if (!nav.querySelector('.vc-mg')) {
+      nav.insertAdjacentHTML('afterbegin', '<p class="vc-mg g1">บัญชีและการแสดงผล</p><p class="vc-mg g2">ข้อมูลและนโยบาย</p>');
+    }
+  }
+
+  /* D) แผงแอดมินแบบพับ */
+  function admin() {
+    var a = document.getElementById('adminPanel'); if (!a || a.classList.contains('vc-fold')) return;
+    var h = a.querySelector('.adm-head'); if (!h) return;
+    a.classList.add('vc-fold');
+    h.setAttribute('role', 'button'); h.setAttribute('tabindex', '0'); h.setAttribute('aria-expanded', 'false');
+    var ch = document.createElement('i'); ch.className = 'vc-adm-chev'; ch.setAttribute('aria-hidden', 'true'); h.appendChild(ch);
+    var t = function () { var o = a.classList.toggle('vc-open'); h.setAttribute('aria-expanded', o ? 'true' : 'false'); };
+    h.addEventListener('click', t);
+    h.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); t(); } });
+  }
+
+  function all() { placeRow(); menu(); admin(); syncCard(); }
+  new MutationObserver(all).observe(li, { childList: true, subtree: true, attributes: true, attributeFilter: ['hidden'] });
+  if (mq.addEventListener) mq.addEventListener('change', all);
+  all();
+})();
