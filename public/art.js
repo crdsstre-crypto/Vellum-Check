@@ -5922,7 +5922,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       while ((m = NUM.exec(t))) {
         var val = m[1].trim(), unit = (/(%|เปอร์เซ็นต์|บาท|วัน|เดือน|ปี|ครั้ง|หน่วย|ชั่วโมง|งวด)$/.exec(val) || [])[1]; if (!unit) continue;
         var before = t.slice(0, m.index).replace(/\s+$/, ''), cut = Math.max(before.lastIndexOf(' '), before.lastIndexOf(','), before.lastIndexOf('·'));
-        var lab = before.slice(cut + 1).trim().replace(/^(และ|หรือ|โดย|แต่|ซึ่ง|กับ|ส่วน|รวม|มี|ให้|ที่)\s*/, ''); if (lab.length < 2 || lab.length > 13 || /ได้|โดย|ให้|ต้อง|จะ/.test(lab)) lab = lab0;
+        var lab = before.slice(cut + 1).trim().replace(/^(และ|หรือ|โดย|แต่|ซึ่ง|กับ|ส่วน|รวม|มี|ให้|ที่)\s*/, ''); if (lab.length < 2 || lab.length > 20 || /ได้|โดย|ให้|ต้อง|จะ/.test(lab)) lab = lab0;
         found.push({ val: val.replace(/\s*(%|เปอร์เซ็นต์|บาท|วัน|เดือน|ปี|ครั้ง|หน่วย|ชั่วโมง|งวด)$/, ''), unit: unit, lab: lab });
       }
     });
@@ -6121,9 +6121,10 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     var cc = r.querySelector('#commandCenter');
     if (cc) { var vis = [].some.call(cc.children, function (ch) { return ch.offsetHeight > 2 && getComputedStyle(ch).display !== 'none'; }); cls(cc, 'vc-cc-empty', !vis); }
     var L = typeof lastResult !== 'undefined' && lastResult ? lastResult : null, items = L && L.items || [], tot = items.length;
-    var m = a.querySelector('.vc-ab-m'), key = tot + '|' + (L && (L.missing_info || []).length);
+    var m = a.querySelector('.vc-ab-m'), key = tot + '|' + r.querySelectorAll('section.miss li').length + '|' + (L && (L.missing_info || []).length);
     if (m.dataset.k === key || !tot) return; m.dataset.k = key;
-    var match = items.filter(function (x) { return x.quote && !x.missing; }).length, ref = items.filter(function (x) { return x.reference && String(x.reference).trim(); }).length, miss = (L.missing_info || []).length;
+    var mlis = r.querySelectorAll('section.miss li').length;
+    var match = items.filter(function (x) { return x.quote && !x.missing; }).length, ref = items.filter(function (x) { return x.reference && String(x.reference).trim(); }).length, miss = mlis || (L.missing_info || []).length;
     function bar(lab, v, max, txt, tone) { var w = max ? Math.round(v / max * 100) : 0; return '<div class="vc-ab-r t-' + tone + '"><div class="vc-ab-rt"><span>' + lab + '</span><b>' + txt + '</b></div><div class="vc-ab-b"><i style="width:' + w + '%"></i></div></div>'; }
     m.innerHTML = bar('ข้อความตรงกับสัญญา', match, tot, match + '/' + tot + ' ประเด็น', match === tot ? 'ok' : 'mid') +
       (ref ? bar('อ้างอิงมาตรากฎหมาย', ref, tot, ref + '/' + tot + ' ประเด็น', 'ok') : '<div class="vc-ab-r vc-ab-note"><div class="vc-ab-rt"><span>อ้างอิงมาตรากฎหมาย</span><b>—</b></div><p>AI ไม่ได้ระบุมาตราในผลนี้ ถ้าต้องการข้อกฎหมายที่แน่ชัด ควรถามผู้เชี่ยวชาญ</p></div>') +
@@ -6467,9 +6468,11 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       rail = document.createElement('nav'); rail.className = 'vc-rail2'; rail.setAttribute('aria-label', 'ไปยังประเด็น'); document.body.appendChild(rail);
       rail.addEventListener('click', function (e) { var b = e.target.closest('i[data-i]'); if (!b) return; var x = rpt(), row = x && x.querySelectorAll('.ix-row')[+b.dataset.i]; if (row) { var top = row.getBoundingClientRect().top + window.scrollY - 150; window.scrollTo({ top: top, behavior: calm() ? 'auto' : 'smooth' }); row.classList.remove('is-flash'); void row.offsetWidth; row.classList.add('is-flash'); } });
     }
-    if (rail.children.length !== rows.length) { rail.innerHTML = ''; [].forEach.call(rows, function (x, k) { var i = document.createElement('i'); i.dataset.i = k; i.setAttribute('role', 'button'); i.setAttribute('aria-label', 'ประเด็นที่ ' + (k + 1)); rail.appendChild(i); }); }
+    if (rail.querySelectorAll('i').length !== rows.length) { rail.innerHTML = ''; [].forEach.call(rows, function (x, k) { var i = document.createElement('i'); i.dataset.i = k; i.setAttribute('role', 'button'); i.setAttribute('aria-label', 'ประเด็นที่ ' + (k + 1)); rail.appendChild(i); });
+      var up = document.createElement('button'); up.type = 'button'; up.className = 'vc-rail-up'; up.setAttribute('aria-label', 'กลับขึ้นบนสุด'); up.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 14 6-6 6 6"/></svg>';
+      up.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: calm() ? 'auto' : 'smooth' }); }); rail.appendChild(up); }
     var its = r.querySelectorAll('details.item');
-    [].forEach.call(rail.children, function (b, k) {
+    [].forEach.call(rail.querySelectorAll('i'), function (b, k) {
       var d = its[+rows[k].getAttribute('data-ixcard')] || its[k], lv = d && d.classList.contains('lv-check_detail') ? 'hi' : d && d.classList.contains('lv-caution') ? 'mid' : 'lo';
       var c = 'lv-' + lv + (rows[k].classList.contains('is-done') ? ' dn' : '') + (rows[k].classList.contains('vc-star') ? ' st' : '') + (b.classList.contains('cur') ? ' cur' : '');
       if (b.className !== c) b.className = c;
@@ -6479,9 +6482,9 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     rtk = false; var r = rpt(); if (!rail || !r) return;
     var rows = r.querySelectorAll('.ix-row'), vh = window.innerHeight, cur = -1, first = rows[0], last = rows[rows.length - 1];
     var tab = r.getAttribute('data-vtab'), onIss = !tab || tab === 'iss';
-    var inZone = first && last && first.getBoundingClientRect().top < vh * .6 && last.getBoundingClientRect().bottom > vh * .35;
+    var inZone = first && first.getBoundingClientRect().top < vh * .6 && window.scrollY > 500;
     [].forEach.call(rows, function (x, k) { var b = x.getBoundingClientRect(); if (cur < 0 && b.bottom > vh * .4) cur = k; });
-    [].forEach.call(rail.children, function (b, k) { cls(b, 'cur', k === cur); });
+    [].forEach.call(rail.querySelectorAll('i'), function (b, k) { cls(b, 'cur', k === cur); });
     cls(root, 'vc-rail2-on', !!(mq.matches && onIss && inZone && rows.length > 1 && !root.classList.contains('vc-sheet-open') && !root.classList.contains('vc-neg-open')));
   }
   window.addEventListener('scroll', function () { if (!rtk) { rtk = true; requestAnimationFrame(railTick); } }, { passive: true });
@@ -6532,5 +6535,117 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   }
   function q() { if (!queued) { queued = true; requestAnimationFrame(run); } }
   new MutationObserver(q).observe(box, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'data-vtab'] });
+  q();
+})();
+
+/* ===== มือถือ v230: อ่านสัญญาฉบับเต็มพร้อมไฮไลต์, การ์ดกระชับ, เปลี่ยนแท็บแบบเลื่อน ===== */
+(function () {
+  var box = document.getElementById('result'); if (!box) return;
+  var mq = window.matchMedia('(max-width:767px)'), root = document.documentElement, queued = false;
+  var calm = function () { return root.hasAttribute('data-calm') || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function rpt() { return box.querySelector('article.rpt.vc-m'); }
+
+  /* ---------- 1) อ่านสัญญาฉบับเต็มพร้อมไฮไลต์ ---------- */
+  var rd = null;
+  function lvOf(d) { return d ? (d.classList.contains('lv-check_detail') ? 'hi' : d.classList.contains('lv-caution') ? 'mid' : 'lo') : 'lo'; }
+  function findRange(text, q) {
+    q = (q || '').trim(); if (q.length < 6) return null;
+    var at = text.indexOf(q); if (at >= 0) return [at, at + q.length];
+    var flex = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+');
+    try { var m = new RegExp(flex).exec(text); if (m) return [m.index, m.index + m[0].length]; } catch (e) {}
+    var head = q.slice(0, 24); at = text.indexOf(head); if (at >= 0) { var end = text.indexOf('\n', at); return [at, end < 0 ? Math.min(text.length, at + q.length) : end]; }
+    return null;
+  }
+  function build(r) {
+    var text = window.__vcCheckedText || ''; if (!text) return '';
+    var its = r.querySelectorAll('details.item'), L = typeof lastResult !== 'undefined' && lastResult && lastResult.items || [], rg = [];
+    L.forEach(function (x, i) {
+      var q = x.quote || ''; var d = its[i]; var tx = d && d.querySelector('.sg-panel .tx-old'); if (tx && tx.textContent.trim()) q = tx.textContent.trim();
+      var R = findRange(text, q); if (!R) return;
+      if (rg.some(function (o) { return R[0] < o[1] && R[1] > o[0]; })) return;
+      rg.push([R[0], R[1], i, lvOf(d)]);
+    });
+    rg.sort(function (a, b) { return a[0] - b[0]; });
+    var out = '', pos = 0;
+    rg.forEach(function (o) { out += esc(text.slice(pos, o[0])) + '<mark class="lv-' + o[3] + '" data-i="' + o[2] + '" role="button" tabindex="0">' + esc(text.slice(o[0], o[1])) + '<sup>' + ('0' + (o[2] + 1)).slice(-2) + '</sup></mark>'; pos = o[1]; });
+    out += esc(text.slice(pos));
+    return out.split('\n').map(function (ln) {
+      var plain = ln.replace(/<[^>]+>/g, ''), m = /^\s*ข้อ\s*([0-9๐-๙]+)/.exec(plain), hit = /<mark class="lv-(\w+)"/.exec(ln);
+      if (!plain.trim()) return '<p class="vc-rd-gap"></p>';
+      return '<p' + (m ? ' data-n="' + m[1] + '"' : '') + (hit ? ' class="has lv-' + hit[1] + '"' : '') + '>' + ln + '</p>';
+    }).join('');
+  }
+  function close() { if (!rd) return; rd.classList.remove('on'); root.classList.remove('vc-rd-open'); document.body.style.overflow = ''; }
+  window.__vcReader = function (n) {
+    var r = rpt(); if (!r) return;
+    if (!rd) {
+      rd = document.createElement('div'); rd.className = 'vc-reader'; rd.setAttribute('role', 'dialog'); rd.setAttribute('aria-label', 'สัญญาฉบับเต็ม');
+      rd.innerHTML = '<div class="vc-rd-card"><div class="vc-rd-hd"><div><b>สัญญาฉบับเต็ม</b><small>ไฮไลต์ = ข้อความที่ระบบตั้งข้อสังเกต · แตะเพื่อดูประเด็น</small></div><button type="button" class="vc-rd-x" aria-label="ปิด">×</button></div><div class="vc-rd-leg"><span class="lv-hi">สำคัญ</span><span class="lv-mid">ควรระวัง</span><span class="lv-lo">เสี่ยงต่ำ</span></div><div class="vc-rd-body"></div></div>';
+      document.body.appendChild(rd);
+      rd.addEventListener('click', function (e) {
+        if (e.target === rd || e.target.closest('.vc-rd-x')) return close();
+        var mk = e.target.closest('mark[data-i]'); if (mk) { close(); var x = rpt(), t = x && x.querySelector('.vc-tab[data-t="iss"]'); if (t && !t.classList.contains('on')) t.click(); setTimeout(function () { if (window.focusIssue) window.focusIssue(+mk.dataset.i); }, 120); }
+      });
+    }
+    var body = rd.querySelector('.vc-rd-body'); body.innerHTML = build(r) || '<p class="vc-rd-empty">ไม่พบข้อความสัญญาที่ตรวจ</p>';
+    document.body.style.overflow = 'hidden'; root.classList.add('vc-rd-open'); void rd.offsetWidth; rd.classList.add('on');
+    body.scrollTop = 0;
+    if (n) { var p = body.querySelector('p[data-n="' + n + '"]'); if (p) { requestAnimationFrame(function () { body.scrollTop = Math.max(0, p.offsetTop - 80); p.classList.add('is-go'); setTimeout(function () { p.classList.remove('is-go'); }, 1800); }); } }
+  };
+  box.addEventListener('click', function (e) {
+    if (!mq.matches) return;
+    var c = e.target.closest('article.rpt.vc-m .ix-row .ix-clause'); if (!c) return;
+    var m = /ข้อ\s*([0-9๐-๙]+)/.exec(c.textContent); e.preventDefault(); e.stopPropagation(); window.__vcReader(m ? m[1] : null);
+  }, true);
+
+  /* ---------- 2) การ์ดกระชับ: ย้าย "ข้อ N" ขึ้นไปเป็นชิป ---------- */
+  function compact(r) {
+    [].forEach.call(r.querySelectorAll('.ix-row'), function (row) {
+      var c = row.querySelector('.ix-tx > .ix-clause, .ix-clause:not(.vc-chip)'), sm = row.querySelector('.ix-tx > small'); if (!c || !sm || c.classList.contains('vc-chip')) return;
+      c.classList.add('vc-chip'); c.setAttribute('role', 'button'); c.setAttribute('aria-label', c.textContent.trim() + ' — เปิดอ่านในสัญญา');
+      var m = /ข้อ\s*([0-9๐-๙]+)/.exec(c.textContent); if (m) c.lastChild && (c.lastChild.nodeType === 3 ? (c.lastChild.textContent = 'ข้อ ' + m[1]) : c.appendChild(document.createTextNode('ข้อ ' + m[1])));
+      sm.appendChild(c);
+    });
+  }
+  /* แผนที่สัญญา: ลิงก์อ่านข้อนั้นในสัญญา */
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('.vc-map-tip-go'); if (!a) return; e.preventDefault(); window.__vcReader(a.dataset.n);
+  });
+  function tipLink(r) {
+    var tip = r.querySelector('.vc-map-tip'); if (!tip || tip.hidden || tip.querySelector('.vc-map-tip-go')) return;
+    var n = tip.dataset.n; if (!n) return; tip.insertAdjacentHTML('beforeend', '<button type="button" class="vc-map-tip-go" data-n="' + n + '">อ่านข้อนี้ในสัญญาฉบับเต็ม ›</button>');
+  }
+
+  /* ---------- 3) เปลี่ยนแท็บแบบเลื่อน ---------- */
+  var ORDER = ['iss', 'gl', 'fu'], lastTab = null;
+  function animTab(r) {
+    var t = r.getAttribute('data-vtab') || 'iss'; if (lastTab === null) { lastTab = t; return; }
+    if (t === lastTab) return;
+    var dir = ORDER.indexOf(t) > ORDER.indexOf(lastTab) ? 'r' : 'l'; lastTab = t;
+    if (calm()) return;
+    r.classList.remove('vc-tab-in-r', 'vc-tab-in-l'); void r.offsetWidth; r.classList.add('vc-tab-in-' + dir);
+    clearTimeout(r.__vcTabT); r.__vcTabT = setTimeout(function () { r.classList.remove('vc-tab-in-r', 'vc-tab-in-l'); }, 380);
+  }
+  var tw = null;
+  box.addEventListener('touchstart', function (e) {
+    if (!mq.matches || e.touches.length !== 1) return; var r = e.target.closest('article.rpt.vc-m'); if (!r) return;
+    if (e.target.closest('.ix-row,.vc-map,.vc-next-g,.vc-stats,input,textarea,select,details.item,.sg-tabs,.vc-sum-hd,pre')) { tw = null; return; }
+    tw = { x: e.touches[0].clientX, y: e.touches[0].clientY, r: r };
+  }, { passive: true });
+  box.addEventListener('touchend', function (e) {
+    if (!tw) return; var t = e.changedTouches[0], dx = t.clientX - tw.x, dy = t.clientY - tw.y, r = tw.r; tw = null;
+    if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 2 || root.classList.contains('vc-sheet-open')) return;
+    var cur = r.getAttribute('data-vtab') || 'iss', k = ORDER.indexOf(cur) + (dx < 0 ? 1 : -1); if (k < 0 || k >= ORDER.length) return;
+    var b = r.querySelector('.vc-tab[data-t="' + ORDER[k] + '"]'); if (b) b.click();
+  });
+
+  function run() {
+    queued = false; if (!mq.matches) return;
+    var r = rpt(); if (!r) { lastTab = null; return; }
+    compact(r); tipLink(r); animTab(r);
+  }
+  function q() { if (!queued) { queued = true; requestAnimationFrame(run); } }
+  new MutationObserver(q).observe(box, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'data-vtab', 'hidden'] });
   q();
 })();
