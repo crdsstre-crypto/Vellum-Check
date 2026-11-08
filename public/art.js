@@ -3656,14 +3656,24 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   }
   /* มือถือ: หน้าการ์ดเป็นกระดาษย่อส่วน — เส้นเหลืองตรงข้อที่มีจุดเสี่ยงจริง (ตาม RISK) */
   function thumb(s, i) {
-    var rk = RISK[i] || {}, ls = s[3].split('\n').slice(1, 10), h = '';
-    ls.forEach(function (ln, k) {
+    var rk = RISK[i] || {}, all = s[3].split('\n'), ls = all.slice(1, 12), h = '';
+    ls.forEach(function (ln) {
       var m = /^ข้อ (\d+)/.exec(ln), r = m ? rk[m[1]] : (/พยาน/.test(ln) && rk.p);
-      var w = Math.max(42, Math.min(100, 30 + ln.length * 1.1)) | 0;
-      h += '<i class="' + (r ? 'r' : '') + '" style="width:' + w + '%"></i>';
+      h += '<span class="' + (r ? 'r' : '') + '">' + (r ? '<mark>' + esc(ln) + '</mark>' : esc(ln)) + '</span>';
     });
-    return '<span class="vsl-thumb" aria-hidden="true"><span class="vsl-th-p"><b></b>' + h + '</span><span class="vsl-th-ic"><svg viewBox="0 0 64 64">' + (ART[i] || '') + '</svg></span></span>';
+    return '<span class="vsl-thumb" aria-hidden="true"><span class="vsl-th-p"><span class="vsl-th-t"><b>' + esc(all[0] || '') + '</b>' + h + '</span></span><span class="vsl-th-ic"><svg viewBox="0 0 64 64">' + (ART[i] || '') + '</svg></span></span>';
   }
+  /* มือถือ: แถบระดับความเสี่ยงพร้อมคำบอก (จากผลตัวอย่างที่เตรียมไว้จริง) */
+  function bar(t) {
+    var c = window.VCDemo && window.VCDemo.counts(t); if (!c) return '';
+    var seg = '', lab = [];
+    [['check_detail', 'h', 'สำคัญ'], ['caution', 'c', 'ควรระวัง'], ['low', 'l', 'เล็กน้อย']].forEach(function (x) {
+      for (var k = 0; k < c[x[0]]; k++) seg += '<i class="' + x[1] + '"></i>';
+      if (c[x[0]]) lab.push('<span class="' + x[1] + '">' + x[2] + ' ' + c[x[0]] + '</span>');
+    });
+    return '<span class="vsl-bar"><span class="vsl-bar-s">' + seg + '</span><span class="vsl-bar-l">' + lab.join('') + '</span></span>';
+  }
+  function topLine(t) { var w = window.VCDemo && window.VCDemo.top && window.VCDemo.top(t); return w ? '<span class="vsl-top">หนักสุด: ' + esc(w) + '</span>' : ''; }
   function build() {
     box = document.createElement('div'); box.className = 'vsl'; box.hidden = true;
     box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-labelledby', 'vslT');
@@ -3690,6 +3700,9 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       if (e.target.closest('.vsl-use')) pick(cur, isM() && window.VCDemo && window.VCDemo.has(L[cur][1]));
     });
     box.addEventListener('keydown', function (e) { if (e.key === 'Escape') { if (cur > -1) back(); else close(); } });
+    /* มือถือ: เลื่อนรายการแล้วหัวยุบ เห็นการ์ดมากขึ้น */
+    var lst = box.querySelector('.vsl-list');
+    lst.addEventListener('scroll', function () { var on = lst.scrollTop > 24; if (box.classList.contains('is-scrolled') !== on) box.classList.toggle('is-scrolled', on); }, { passive: true });
   }
   var cur = -1, lastScroll = 0;
   function esc(t) { return t.replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); }
@@ -3698,7 +3711,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     var list = box.querySelector('.vsl-list'); lastScroll = list.scrollTop;
     var v = box.querySelector('.vsl-view'); v.style.setProperty('--a', ACC[s[0]] || '#94a3b8');
     var rk = RISK[i] || {}, nR = Object.keys(rk).length;
-    v.querySelector('.vsl-vhead').innerHTML = '<span class="vsl-art" aria-hidden="true"><svg viewBox="0 0 64 64">' + (ART[i] || '') + '</svg></span><span class="vsl-txt"><b>' + s[1] + '</b><small>' + NAMES[s[0]] + ' · พบ ' + nR + ' จุดเสี่ยง</small>' + dots(s[1]) + '</span>' +
+    v.querySelector('.vsl-vhead').innerHTML = '<span class="vsl-art" aria-hidden="true"><svg viewBox="0 0 64 64">' + (ART[i] || '') + '</svg></span><span class="vsl-txt"><b>' + s[1] + '</b><small>' + NAMES[s[0]] + ' · พบ ' + nR + ' จุดเสี่ยง</small>' + dots(s[1]) + bar(s[1]) + '</span>' +
       '<button type="button" class="vsl-hl" aria-pressed="true"><i></i>ไฮไลต์</button>';
     box.classList.add('hl-on');
     var lines = s[3].split('\n'), html = '';
@@ -3727,7 +3740,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       var b = document.createElement('button'); b.type = 'button'; b.className = 'vsl-item'; b.dataset.i = i;
       var n = (s[3].match(/ข้อ \d+/g) || []).length;
       b.style.setProperty('--a', ACC[s[0]] || '#94a3b8');
-      b.innerHTML = thumb(s, i) + '<span class="vsl-art" aria-hidden="true"><svg viewBox="0 0 64 64">' + (ART[i] || '') + '</svg></span><span class="vsl-txt"><span class="vsl-tag">' + NAMES[s[0]] + '</span><span class="vsl-free">ฟรี</span><b>' + s[1] + '</b><small>⚠ ' + s[2] + '</small><em>' + (n ? n + ' ข้อ · ' : '') + s[3].length.toLocaleString('th-TH') + ' ตัวอักษร</em>' + dots(s[1]) + '</span>';
+      b.innerHTML = thumb(s, i) + '<span class="vsl-art" aria-hidden="true"><svg viewBox="0 0 64 64">' + (ART[i] || '') + '</svg></span><span class="vsl-txt"><span class="vsl-tag">' + NAMES[s[0]] + '</span><span class="vsl-free">ฟรี</span><b>' + s[1] + '</b><small>⚠ ' + s[2] + '</small><em>' + (n ? n + ' ข้อ · ' : '') + s[3].length.toLocaleString('th-TH') + ' ตัวอักษร</em>' + dots(s[1]) + topLine(s[1]) + bar(s[1]) + '</span>';
       b.style.setProperty('--k', list.children.length);
       list.appendChild(b);
     });
@@ -3746,6 +3759,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     var sel = document.getElementById('contractType'); var cur = sel && sel.value;
     flt = !isM() && cur && cur !== 'unsure' && L.some(function (s) { return s[0] === cur; }) ? cur : 'all';
     cur = -1; box.classList.remove('is-view'); if (box.querySelector('.vsl-view')) box.querySelector('.vsl-view').hidden = true;
+    box.classList.remove('is-scrolled');
     render(); box.hidden = false; requestAnimationFrame(function () { box.classList.add('is-open'); });
     setTimeout(function () { var c = box.querySelector('.vsl-chip.is-on'); if (c) { c.focus(); c.scrollIntoView({ inline: 'center', block: 'nearest' }); } }, 60);
   }
