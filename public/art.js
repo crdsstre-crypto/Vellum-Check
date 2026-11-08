@@ -4915,3 +4915,15 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   setInterval(function () { if (mq.matches && !document.hidden && chip.dataset.v !== ta.value.length + sel.value) { chip.dataset.v = ta.value.length + sel.value; update(); } }, 900);
   update();
 })();
+
+/* ===== มือถือ: หน้าตรวจสัญญาใช้หน้าตาเดียวกันเสมอ ไม่ว่าจะเข้าจากปุ่มหน้าแรกหรือแท็บด้านล่าง (8 พ.ย. 2026) =====
+   ปุ่มบางปุ่มพาเข้าโหมด data-desk="acct" (หรือไม่ตั้งเลย) ทำให้ได้หน้าตาแบบเก่า; โหมด acct มีผลเฉพาะคอม (≥768px) */
+(function () {
+  var root = document.documentElement, mq = window.matchMedia('(max-width:767px)');
+  function fix() {
+    if (mq.matches && root.getAttribute('data-view') === 'desk' && root.getAttribute('data-desk') !== 'check') root.setAttribute('data-desk', 'check');
+  }
+  new MutationObserver(fix).observe(root, { attributes: true, attributeFilter: ['data-view', 'data-desk'] });
+  if (mq.addEventListener) mq.addEventListener('change', fix);
+  fix();
+})();
