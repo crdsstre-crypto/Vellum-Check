@@ -4723,8 +4723,14 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     var busy = btn.classList.contains('is-busy');
     if (busy && pending == null) { pending = ta.value.trim(); showLoader(); }
     if (!busy && pending != null) {
-      if (res.querySelector('article.rpt')) window.__vcCheckedText = pending;
-      pending = null; hideLoader();
+      var txt = pending; pending = null;
+      if (res.querySelector('article.rpt')) window.__vcCheckedText = txt;
+      else {
+        /* บางเครื่องปุ่มเลิกโหลดก่อนผลจะแสดง: รอผลอีกสักครู่แล้วค่อยจำ */
+        var mo = new MutationObserver(function () { if (res.querySelector('article.rpt')) { window.__vcCheckedText = txt; mo.disconnect(); } });
+        mo.observe(res, { childList: true, subtree: true }); setTimeout(function () { mo.disconnect(); }, 8000);
+      }
+      hideLoader();
     }
   }).observe(btn, { attributes: true, attributeFilter: ['class'] });
 
@@ -5329,10 +5335,13 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   function sync() {
     var rpt = res.querySelector('article.rpt');
     var same = rpt && window.__vcCheckedText && window.__vcCheckedText === ta.value.trim();
-    var on = !!(mq.matches && same && dismissedFor !== window.__vcCheckedText && !document.documentElement.classList.contains('vc-ld-open'));
-    if (on && card.classList.contains('vc-collapsed')) return;
-    card.classList.toggle('vc-collapsed', on); strip.hidden = !on;
-    if (on) {
+    var show = !!(mq.matches && same && !document.documentElement.classList.contains('vc-ld-open'));
+    var on = show && dismissedFor !== window.__vcCheckedText;
+    card.classList.toggle('vc-collapsed', on); card.classList.toggle('vc-open-form', show && !on); strip.hidden = !show;
+    var eb = strip.querySelector('.vc-done-edit'); eb.firstChild.nodeValue = on ? 'แก้ไข' : 'ซ่อน'; eb.classList.toggle('is-up', !on);
+    if (show && !strip.dataset.k) strip.dataset.k = '';
+    if (show && strip.dataset.k !== window.__vcCheckedText + sel.value) {
+      strip.dataset.k = window.__vcCheckedText + sel.value;
       var trig = document.getElementById('vcpTrigger'), ico = trig && trig.querySelector('.vcp-ico, .vcp-trigger-ico, svg');
       strip.querySelector('.vc-done-ic').innerHTML = ico ? (ico.tagName.toLowerCase() === 'svg' ? ico.outerHTML : ico.innerHTML) : '';
       var name = sel && sel.selectedOptions[0] ? sel.selectedOptions[0].textContent.replace(/\s*\(.*\)\s*$/, '') : 'สัญญา';
@@ -5342,7 +5351,8 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     }
   }
   strip.querySelector('.vc-done-edit').addEventListener('click', function () {
-    dismissedFor = window.__vcCheckedText; sync();
+    dismissedFor = card.classList.contains('vc-collapsed') ? window.__vcCheckedText : null; sync();
+    if (card.classList.contains('vc-collapsed')) { var r = document.getElementById('resultCard'); if (r) window.scrollTo({ top: Math.max(0, card.getBoundingClientRect().top + window.scrollY - 70), behavior: 'auto' }); return; }
     var t = card.getBoundingClientRect().top + window.scrollY - 70; window.scrollTo({ top: Math.max(0, t), behavior: calm() ? 'auto' : 'smooth' });
   });
   new MutationObserver(sync).observe(res, { childList: true });
@@ -5373,4 +5383,97 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     window.addEventListener('resize', function () { place(false); });
   }
   new MutationObserver(function () { var r = res.querySelector('article.rpt.vc-m'); if (r) wire(r); }).observe(res, { childList: true, subtree: true });
+})();
+
+/* ===== มือถือ: ปัดการ์ดประเด็นเพื่ออ่านแล้ว · การ์ดสรุปย่อติดหัว · เลขลายน้ำ (8 พ.ย. 2026) ===== */
+(function () {
+  var box = document.getElementById('result'), root = document.documentElement;
+  if (!box) return;
+  var mq = window.matchMedia('(max-width:767px)');
+  var calm = function () { return root.hasAttribute('data-calm') || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
+
+  /* 1) ปัดขวาเพื่อทำเครื่องหมายว่าอ่านแล้ว */
+  function markRead(row) {
+    var i = row.getAttribute('data-ixcard'), it = box.querySelectorAll('details.item')[+i];
+    var b = it && it.querySelector('.rv-btn');
+    if (b && b.getAttribute('aria-pressed') !== 'true') { b.click(); if (navigator.vibrate) try { navigator.vibrate(12); } catch (e) {} return true; }
+    return false;
+  }
+  var sw = null;
+  box.addEventListener('touchstart', function (e) {
+    if (!mq.matches) return;
+    var row = e.target.closest('article.rpt.vc-m3 .ix-row'); if (!row || row.classList.contains('is-done')) return;
+    var t = e.touches[0]; sw = { row: row, x: t.clientX, y: t.clientY, dx: 0, on: false, dead: false };
+  }, { passive: true });
+  box.addEventListener('touchmove', function (e) {
+    if (!sw || sw.dead) return;
+    var t = e.touches[0], dx = t.clientX - sw.x, dy = t.clientY - sw.y;
+    if (!sw.on) { if (Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) { sw.dead = true; return; } if (dx > 12 && dx > Math.abs(dy) * 1.3) { sw.on = true; sw.row.classList.add('vc-swiping'); } else return; }
+    sw.dx = Math.max(0, Math.min(dx, 160));
+    var p = Math.min(1, sw.dx / 100);
+    sw.row.style.setProperty('--sw', p.toFixed(3)); sw.row.style.setProperty('--swx', sw.dx + 'px');
+    sw.row.classList.toggle('vc-sw-go', p >= 1);
+  }, { passive: true });
+  box.addEventListener('touchend', function () {
+    if (!sw) return; var s = sw; sw = null;
+    if (!s.on) return;
+    var go = s.dx >= 100;
+    s.row.classList.remove('vc-swiping'); s.row.classList.add('vc-sw-back');
+    s.row.style.setProperty('--swx', '0px'); s.row.style.setProperty('--sw', go ? '1' : '0');
+    s.row.__vcNoClick = Date.now();
+    if (go) markRead(s.row);
+    setTimeout(function () { s.row.classList.remove('vc-sw-back', 'vc-sw-go'); s.row.style.removeProperty('--sw'); s.row.style.removeProperty('--swx'); }, go ? 650 : 320);
+  });
+  box.addEventListener('click', function (e) {
+    var row = e.target.closest('.ix-row'); if (row && row.__vcNoClick && Date.now() - row.__vcNoClick < 450) { e.preventDefault(); e.stopImmediatePropagation(); }
+  }, true);
+
+  /* 2) การ์ดสรุปย่อติดหัวตอนเลื่อน */
+  var mini = null, io = null, cur = null;
+  function setupMini(rpt) {
+    if (cur === rpt) return; cur = rpt;
+    var sum = rpt.querySelector('.vc-sum'); if (!sum) return;
+    if (!mini) {
+      mini = document.createElement('button'); mini.type = 'button'; mini.className = 'vc-mini'; mini.setAttribute('aria-label', 'กลับไปที่สรุปผล');
+      mini.innerHTML = '<span class="vc-mini-d"></span><span class="vc-mini-t"><b></b><small></small></span><span class="vc-mini-bar"><i></i></span>';
+      document.body.appendChild(mini);
+      mini.addEventListener('click', function () { var s = cur && cur.querySelector('.vc-sum'); if (s) window.scrollTo({ top: Math.max(0, s.getBoundingClientRect().top + window.scrollY - 70), behavior: calm() ? 'auto' : 'smooth' }); });
+    }
+    var d = sum.querySelector('.vc-donut svg'); mini.querySelector('.vc-mini-d').innerHTML = d ? d.outerHTML : '';
+    mini.style.setProperty('--st', getComputedStyle(sum).getPropertyValue('--st') || '#f4f4f5');
+    if (io) io.disconnect();
+    var head = parseFloat(getComputedStyle(root).getPropertyValue('--art-head')) || 58;
+    io = new IntersectionObserver(function (en) {
+      var hidden = !en[0].isIntersecting && en[0].boundingClientRect.top < head;
+      root.classList.toggle('vc-mini-on', hidden && mq.matches && !root.classList.contains('vc-sheet-open'));
+      fillMini();
+    }, { rootMargin: '-' + (head + 40) + 'px 0px 0px 0px', threshold: 0 });
+    io.observe(sum);
+    fillMini();
+  }
+  function fillMini() {
+    if (!mini || !cur) return;
+    var sum = cur.querySelector('.vc-sum'); if (!sum) return;
+    var h = sum.querySelector('.vc-sum-tx h3'), n = sum.querySelector('.ix-prog-n'), tot = sum.querySelector('.vc-donut b');
+    mini.querySelector('b').textContent = h ? h.textContent : '';
+    var m = n ? /(\d+)\s*\/\s*(\d+)/.exec(n.textContent) : null;
+    mini.querySelector('small').textContent = (tot ? tot.textContent + ' ประเด็น · ' : '') + (m ? 'อ่านแล้ว ' + m[1] + '/' + m[2] : '');
+    mini.querySelector('.vc-mini-bar i').style.width = m && +m[2] ? (m[1] / m[2] * 100) + '%' : '0%';
+  }
+  /* 3) เลขลายน้ำบนการ์ด */
+  function wm(rpt) {
+    [].forEach.call(rpt.querySelectorAll('.ix-row'), function (r) {
+      if (r.hasAttribute('data-wm')) return;
+      var n = r.querySelector('.vc-no'), m = n && /(\d+)/.exec(n.textContent);
+      if (m) r.setAttribute('data-wm', String(m[1]).padStart(2, '0'));
+    });
+  }
+  function scan() {
+    var rpt = box.querySelector('article.rpt.vc-m3');
+    if (!rpt) { root.classList.remove('vc-mini-on'); cur = null; return; }
+    wm(rpt); setupMini(rpt); fillMini();
+  }
+  new MutationObserver(scan).observe(box, { childList: true, subtree: true, characterData: true });
+  new MutationObserver(function () { if (root.classList.contains('vc-sheet-open') || root.classList.contains('vc-tool-open')) root.classList.remove('vc-mini-on'); }).observe(root, { attributes: true, attributeFilter: ['class'] });
+  scan();
 })();
