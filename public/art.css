@@ -4953,3 +4953,79 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   body[data-sheet="acct"] #authLoggedIn .vc-stat .vc-stat-ic{color:#fb923c !important;background:color-mix(in srgb,#fb923c 14%,#16161a) !important;border:1px solid color-mix(in srgb,#fb923c 30%,transparent) !important}
 }
 @media (max-width:767px) and (prefers-reduced-motion:reduce){ body[data-sheet="acct"] #authLoggedIn .vc-wcard.vc-3d{transform:none !important} }
+
+/* ===== v212 (มือถือ): หน้าผลตรวจ — ตรา, จุดในแถบย่อ, ตัวเลขเด่น, เช็กลิสต์, การ์ดขั้นต่อไป, ปุ่มกลับขึ้นบน ===== */
+.vc-mini-dots,.vc-stats,.vc-end,.vc-ck,.vc-miss-ask{display:none}
+@media (max-width:767px){
+  /* บั้ก ก: ตราย้ายไปมุมซ้ายล่างของโดนัท ไม่ชนข้อความ */
+  html.vc-art .vc-sum .vc-donut .vc-stamp{right:auto !important;left:-16px !important;bottom:-14px !important;width:46px !important;height:46px !important}
+  html.vc-art .vc-sum .vc-sum-tx > p:last-child{text-wrap:wrap}
+
+  /* ไอเดีย 1 + บั้ก ข: จุดความคืบหน้าแทนเส้นเทา */
+  .vc-mini .vc-mini-bar{display:none !important}
+  .vc-mini .vc-mini-dots{display:flex;align-items:center;gap:5px;flex:0 0 auto;margin-left:auto}
+  .vc-mini-dots i{display:block;width:11px;height:11px;border-radius:50%;position:relative;border:1.5px solid var(--c,#8b8b94);background:transparent;transition:background .25s,transform .2s}
+  .vc-mini-dots i::after{content:"";position:absolute;inset:-8px -3px}
+  .vc-mini-dots i.lv-hi{--c:#f87171}.vc-mini-dots i.lv-mid{--c:#fbbf24}.vc-mini-dots i.lv-lo{--c:#8b8b94}
+  .vc-mini-dots i.dn{background:#34d399;border-color:#34d399}
+  .vc-mini-dots i.dn::before{content:"";position:absolute;left:3px;top:1px;width:3px;height:5px;border:solid #06281b;border-width:0 1.5px 1.5px 0;transform:rotate(45deg)}
+  .vc-mini-dots i:active{transform:scale(.85)}
+
+  /* ไอเดีย 2: ตัวเลขเด่นในข้อมูลสัญญา */
+  html.vc-art article.rpt.vc-m .vc-brief .vc-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:8px;margin:4px 0 12px}
+  .vc-st{padding:12px 10px 10px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);min-width:0}
+  .vc-st b{display:flex;align-items:baseline;gap:4px;font:700 21px/1.1 Prompt,Sarabun,sans-serif;color:#f4f4f5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .vc-st b small{font:500 12px/1 Prompt,Sarabun,sans-serif;color:#a3a3aa}
+  .vc-st span{display:block;margin-top:5px;font:400 11.5px/1.35 Prompt,Sarabun,sans-serif;color:#8b8b94;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .vc-st:first-child{background:rgba(52,211,153,.07);border-color:rgba(52,211,153,.22)}
+  .vc-st:first-child b{color:#a7f3d0}
+
+  /* ไอเดีย 5: ตัวเลขในการ์ดประเด็น */
+  html.vc-art article.rpt.vc-m .ix-row .ix-tx > p b.vc-n{font-weight:600;color:#ededef}
+
+  /* ไอเดีย 6: เช็กลิสต์สิ่งที่ยังไม่ระบุ */
+  html.vc-art article.rpt.vc-m section.miss ul{list-style:none !important;padding:0 !important;margin:10px 0 0 !important}
+  html.vc-art article.rpt.vc-m section.miss li{display:flex !important;align-items:flex-start;gap:10px;padding:10px 0 !important;margin:0 !important;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer;-webkit-tap-highlight-color:transparent;list-style:none !important;transition:color .2s}
+  html.vc-art article.rpt.vc-m section.miss li::before,html.vc-art article.rpt.vc-m section.miss li::marker{display:none !important;content:none !important}
+  html.vc-art article.rpt.vc-m section.miss li .vc-ck{display:grid;place-items:center;flex:0 0 20px;width:20px;height:20px;margin-top:2px;border-radius:6px;border:1.5px solid rgba(255,255,255,.28);transition:background .2s,border-color .2s}
+  html.vc-art article.rpt.vc-m section.miss li.is-ck{color:#76767e}
+  html.vc-art article.rpt.vc-m section.miss li.is-ck .vc-ck{background:#34d399;border-color:#34d399}
+  html.vc-art article.rpt.vc-m section.miss li.is-ck .vc-ck::after{content:"";width:5px;height:9px;margin-top:-2px;border:solid #06281b;border-width:0 2px 2px 0;transform:rotate(45deg)}
+  html.vc-art article.rpt.vc-m section.miss .vc-miss-more{display:flex !important;align-items:center;justify-content:center;width:100%;min-height:42px;margin:10px 0 0 !important;padding:0 !important;border-radius:12px !important;
+    border:1px solid rgba(255,255,255,.12) !important;background:rgba(255,255,255,.04) !important;color:#d4d4d8 !important;font:500 13.5px/1 Prompt,Sarabun,sans-serif !important;text-decoration:none !important}
+  html.vc-art article.rpt.vc-m section.miss .vc-miss-more::after{content:" ▾";margin-left:4px;position:static !important;display:inline !important;background:none !important;border:0 !important;width:auto;height:auto;transform:none !important}
+  html.vc-art article.rpt.vc-m section.miss .vc-miss-more[aria-expanded="true"]::after{content:" ▴"}
+  html.vc-art article.rpt.vc-m section.miss .vc-miss-ask{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:46px;margin:10px 0 0;border-radius:12px;cursor:pointer;
+    border:1px solid rgba(251,191,36,.35);background:rgba(251,191,36,.1);color:#fde68a;font:600 14px/1 Prompt,Sarabun,sans-serif}
+  html.vc-art article.rpt.vc-m section.miss .vc-miss-ask:disabled{border-color:rgba(52,211,153,.3);background:rgba(52,211,153,.08);color:#a7f3d0;cursor:default}
+  html.vc-art article.rpt.vc-m section.miss .vc-miss-ask:disabled svg{display:none}
+  html.vc-art article.rpt.vc-m section.miss .vc-miss-ask.ok{background:#34d399;color:#06281b;border-color:#34d399}
+  html.vc-art article.rpt.vc-m section.miss .vc-miss-ask::before,html.vc-art article.rpt.vc-m section.miss .vc-miss-ask::after{display:none !important}
+
+  /* ไอเดีย 8 + บั้ก ง: การ์ดขั้นต่อไป */
+  html.vc-art article.rpt.vc-m > .vc-end{display:block;order:8;margin:16px 0 0;padding:18px 16px 16px;border-radius:18px;background:linear-gradient(160deg,rgba(52,211,153,.08),rgba(24,24,28,.92) 55%);border:1px solid rgba(52,211,153,.2);font-family:Prompt,Sarabun,sans-serif}
+  .vc-end-k{margin:0 0 4px !important;font:500 12px/1 Prompt,Sarabun,sans-serif;color:#6ee7b7;letter-spacing:.02em}
+  .vc-end-h{margin:0 0 12px !important;font:700 18px/1.35 Prompt,Sarabun,sans-serif !important;color:#f4f4f5 !important;background:none !important}
+  .vc-end-h::before,.vc-end-h::after{display:none !important}
+  .vc-end-bar{height:6px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin:0 0 14px}
+  .vc-end-bar i{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#34d399,#6ee7b7);transition:width .5s ease}
+  .vc-end-g{display:flex;flex-direction:column;gap:8px}
+  .vc-end-b{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:0 14px;border-radius:13px;cursor:pointer;text-align:left;
+    border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#ededef;font:600 14.5px/1.2 Prompt,Sarabun,sans-serif;-webkit-tap-highlight-color:transparent}
+  .vc-end-b::before,.vc-end-b::after{display:none !important}
+  .vc-end-b[hidden]{display:none}
+  .vc-end-b.vc-end-send{background:#f4f4f5;color:#111;border-color:#f4f4f5}
+  .vc-end-b.ok{background:#34d399 !important;color:#06281b !important;border-color:#34d399 !important}
+  .vc-end-b:active{transform:scale(.985)}
+  html.vc-art article.rpt.vc-m .vc-end > p.cc-note{margin:14px 0 0 !important;padding:12px 0 0 !important;border-top:1px solid rgba(255,255,255,.07) !important;font:400 12px/1.6 Prompt,Sarabun,sans-serif !important;color:#8b8b94 !important;text-align:left !important}
+  html.vc-art article.rpt.vc-m .vc-end > p.cc-note + p.disclaimer{border-top:0 !important;padding-top:0 !important;margin-top:6px !important}
+  html.vc-art article.rpt.vc-m .vc-end > p.disclaimer{margin:14px 0 0 !important;padding:12px 0 0 !important;border-top:1px solid rgba(255,255,255,.07) !important;font:400 12px/1.6 Prompt,Sarabun,sans-serif !important;color:#8b8b94 !important;text-align:left !important;background:none !important}
+  html.vc-art article.rpt.vc-m > .vc-leg{order:7 !important}
+
+  /* ไอเดีย 9 + บั้ก ค: ปุ่มกลับขึ้นบน เล็กลง วงแหวนระยะ โผล่เมื่อเลื่อนขึ้น */
+  html.vc-art .to-top{width:40px !important;height:40px !important;right:14px !important;bottom:calc(env(safe-area-inset-bottom,0px) + var(--nav-h,60px) + 14px) !important;
+    background:radial-gradient(closest-side,rgba(24,24,28,.96) 82%,transparent 84%),conic-gradient(#6ee7b7 calc(var(--sp,0) * 1%),rgba(255,255,255,.14) 0) !important;
+    border:0 !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;opacity:0;transform:translateY(10px) scale(.9);pointer-events:none;transition:opacity .25s ease,transform .25s ease}
+  html.vc-art.vc-tt-show .to-top{opacity:1;transform:none;pointer-events:auto}
+  html.vc-art .to-top svg{width:18px !important;height:18px !important;flex-basis:18px}
+}
