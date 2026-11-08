@@ -5035,3 +5035,111 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   new MutationObserver(function () { state(); }).observe(card, { subtree: true, attributes: true, attributeFilter: ['class'] });
   if (mq.addEventListener) mq.addEventListener('change', function () { wrap(); state(); });
 })();
+
+/* ===== มือถือ: แผ่นคำศัพท์ — "ในสัญญาของคุณ" · ประเด็นที่เกี่ยวข้อง · การ์ดแหล่งอ้างอิงแยกชัด (8 พ.ย. 2026) ===== */
+(function () {
+  var mq = window.matchMedia('(max-width:767px)');
+  var SRC = {
+    ocpb: { ab: 'สคบ.', c: '#d9a441' }, oja: { ab: 'สกธ.', c: '#6b9fd8' },
+    orst: { ab: 'รบส.', c: '#9b8ad6' }, krisdika: { ab: 'สคก.', c: '#4fb98c' }
+  };
+  var LVN = { check_detail: 'สำคัญ', caution: 'ควรระวัง', low: 'เสี่ยงต่ำ' };
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function terms() { try { return typeof GLOSS_TERMS !== 'undefined' ? GLOSS_TERMS : []; } catch (e) { return []; } }
+  function sources() { try { return typeof GLOSS_SOURCES !== 'undefined' ? GLOSS_SOURCES : {}; } catch (e) { return {}; } }
+  function result() { try { return typeof lastResult !== 'undefined' ? lastResult : null; } catch (e) { return null; } }
+
+  /* ตัดประโยครอบคำค้น แล้วไฮไลต์คำ */
+  function snippet(line, kws) {
+    var at = -1, k = '';
+    kws.forEach(function (w) { var i = line.indexOf(w); if (i > -1 && (at < 0 || i < at)) { at = i; k = w; } });
+    if (at < 0) return null;
+    var s = Math.max(0, at - 45), e = Math.min(line.length, at + k.length + 70);
+    var pre = (s > 0 ? '…' : '') + line.slice(s, at), post = line.slice(at + k.length, e) + (e < line.length ? '…' : '');
+    return esc(pre) + '<mark>' + esc(k) + '</mark>' + esc(post);
+  }
+  function inContract(t) {
+    var kws = (t.kw || []).concat([t.name]).filter(Boolean), out = [];
+    var ta = document.getElementById('input'), txt = ta ? ta.value : '';
+    var lines = txt.split(/\n+/).map(function (l) { return l.trim(); }).filter(Boolean);
+    /* บรรทัดที่ขึ้นต้นด้วย "ข้อ N" แล้วบรรทัดถัดไปไม่ใช่ข้อใหม่ ให้รวมเป็นข้อเดียว */
+    var clauses = [], cur = null;
+    lines.forEach(function (l) { var m = /^ข้อ\s*([0-9๐-๙]+)/.exec(l); if (m) { cur = { n: m[1], t: l }; clauses.push(cur); } else if (cur) cur.t += ' ' + l; else clauses.push({ n: '', t: l }); });
+    clauses.forEach(function (c) { if (out.length >= 2) return; var body = c.n ? c.t.replace(/^ข้อ\s*[0-9๐-๙]+\s*/, '') : c.t; var sn = snippet(body, kws); if (sn) out.push({ n: c.n, h: sn }); });
+    if (!out.length) {
+      var r = result();
+      ((r && r.items) || []).forEach(function (it) { if (out.length >= 2 || !it.quote) return; var sn = snippet(it.quote, kws); if (sn) out.push({ n: '', h: sn }); });
+    }
+    return out;
+  }
+  function related(t) {
+    var r = result(), kws = (t.kw || []).concat([t.name]).filter(Boolean), out = [];
+    ((r && r.items) || []).forEach(function (it, i) {
+      var hay = [it.title, it.explanation, it.quote, it.suggested_fix].join(' ');
+      if (kws.some(function (k) { return hay.indexOf(k) > -1; })) out.push({ i: i, it: it });
+    });
+    return out.slice(0, 3);
+  }
+
+  function enhance(panel) {
+    if (!mq.matches || !panel || panel.querySelector('.vc-gl-in, .vc-gl-none')) return;
+    var h3 = panel.querySelector('#glSheetTitle'); if (!h3) return;
+    var t = terms().filter(function (x) { return x.name === h3.textContent.trim(); })[0]; if (!t) return;
+    var hr = panel.querySelector('.gl-hr'), anchor = hr ? hr.nextSibling : panel.firstChild;
+
+    /* 2) ในสัญญาของคุณ */
+    var hits = inContract(t), box = document.createElement('section');
+    if (hits.length) {
+      box.className = 'vc-gl-in';
+      box.innerHTML = '<h4><i aria-hidden="true"></i>ในสัญญาของคุณ</h4>' + hits.map(function (x) {
+        return '<p>' + (x.n ? '<span class="vc-gl-cl">ข้อ ' + esc(x.n) + '</span>' : '') + '<q>' + x.h + '</q></p>';
+      }).join('');
+    } else { box.className = 'vc-gl-none'; box.hidden = true; }
+    panel.insertBefore(box, anchor);
+
+    /* 3) ประเด็นที่เกี่ยวข้อง (ต่อท้ายตัวอย่าง ก่อนหมายเหตุ) */
+    var rel = related(t);
+    if (rel.length) {
+      var rb = document.createElement('section'); rb.className = 'vc-gl-rel';
+      rb.innerHTML = '<h4>ประเด็นที่เกี่ยวข้องในผลตรวจ</h4>' + rel.map(function (x) {
+        return '<button type="button" data-i="' + x.i + '"><span class="vc-pill lv-' + esc(x.it.level) + '">' + (LVN[x.it.level] || '') + '</span><span class="vc-gl-rt"><small>ประเด็น ' + String(x.i + 1).padStart(2, '0') + '</small><b>' + esc(x.it.title) + '</b></span><i aria-hidden="true">›</i></button>';
+      }).join('');
+      var note = panel.querySelector('.gl-note');
+      panel.insertBefore(rb, note || panel.querySelector('.gl-srcs'));
+      rb.addEventListener('click', function (e) {
+        var b = e.target.closest('[data-i]'); if (!b) return;
+        if (typeof closeGlossSheet === 'function') closeGlossSheet();
+        var tab = document.querySelector('article.rpt.vc-m .vc-tab[data-t="iss"]'); if (tab) tab.click();
+        var i = +b.getAttribute('data-i');
+        setTimeout(function () { if (typeof window.focusIssue === 'function') window.focusIssue(i); }, 280);
+      });
+    }
+
+    /* 4) การ์ดแหล่งอ้างอิง: โลโก้ตัวย่อ + ชื่อหน่วยงาน + ชื่อเว็บ + มาตราที่อ้าง */
+    var S = sources();
+    [].forEach.call(panel.querySelectorAll('.gl-srcbtn'), function (a) {
+      var key = Object.keys(S).filter(function (k) { return a.getAttribute('href') === S[k].url; })[0];
+      if (!key || a.classList.contains('vc-src')) return;
+      var meta = SRC[key] || { ab: '•', c: '#8b8b94' }, law = a.previousElementSibling && a.previousElementSibling.classList.contains('gl-law') ? a.previousElementSibling : null;
+      var host = (S[key].url || '').replace(/^https?:\/\//, '').replace(/\/$/, '');
+      var name = S[key].name.replace(/\s*\(.*\)\s*$/, '');
+      a.classList.add('vc-src'); a.style.setProperty('--sc', meta.c);
+      a.innerHTML = '<span class="vc-src-ab">' + esc(meta.ab) + '</span><span class="vc-src-tx"><b>' + esc(name) + '</b>' +
+        (law ? '<em>' + esc(law.textContent) + '</em>' : '') + '<small>' + esc(host) + ' ↗</small></span><i aria-hidden="true">›</i>';
+      if (law) law.hidden = true;
+    });
+    var srcs = panel.querySelector('.gl-srcs');
+    if (srcs && !panel.querySelector('.vc-gl-srch')) { var hh = document.createElement('h4'); hh.className = 'vc-gl-srch'; hh.textContent = 'อ่านต่อจากแหล่งทางการ'; srcs.parentNode.insertBefore(hh, srcs); }
+  }
+
+  var watched = null;
+  function hook() {
+    var s = document.getElementById('glSheet'); if (!s || s === watched) return;
+    watched = s;
+    var panel = s.querySelector('.gl-panel');
+    new MutationObserver(function () { enhance(panel); }).observe(panel, { childList: true });
+    enhance(panel);
+  }
+  new MutationObserver(hook).observe(document.body, { childList: true });
+  hook();
+})();
