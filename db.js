@@ -3,7 +3,7 @@
 
 import pg from 'pg';
 
-const FREE_CREDITS = Number(process.env.FREE_CREDITS ?? 3);
+const FREE_CREDITS = Number(process.env.FREE_CREDITS ?? 2);   // เครดิตตรวจฟรีสำหรับสมาชิกใหม่ (หน้าเว็บเขียนว่า “ฟรี 2 ครั้ง” ใน art.js FREE_N — แก้ให้ตรงกัน)
 
 if (!process.env.DATABASE_URL) {
   throw new Error('ต้องตั้งค่า DATABASE_URL ก่อนเริ่มระบบ');
@@ -70,8 +70,22 @@ export async function initDb() {
   `);
 
   // ยอดเสียงสรุปแยกจากยอดตรวจสัญญา (เพิ่มให้ฐานข้อมูลที่มีอยู่แล้วโดยไม่ลบข้อมูลเดิม)
+  // ตารางที่สร้างไว้แล้วจะไม่เปลี่ยนค่าเริ่มต้นเอง: ตั้งให้ตรงกับ FREE_CREDITS ทุกครั้งที่เริ่มระบบ (ไม่กระทบเครดิตของสมาชิกเดิม)
+  await pool.query(`ALTER TABLE users ALTER COLUMN credits SET DEFAULT ${FREE_CREDITS}`);
   await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS voice_credits INTEGER NOT NULL DEFAULT 0 CHECK (voice_credits >= 0)`);
   await pool.query(`ALTER TABLE payments ADD COLUMN IF NOT EXISTS kind TEXT NOT NULL DEFAULT 'check'`);
+
+  // ประวัติการปรับเครดิตโดยแอดมิน
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS admin_grants (
+      id          SERIAL PRIMARY KEY,
+      admin_id    INTEGER REFERENCES users(id) ON DELETE SET NULL,
+      target_id   INTEGER REFERENCES users(id) ON DELETE CASCADE,
+      check_delta INTEGER NOT NULL DEFAULT 0,
+      voice_delta INTEGER NOT NULL DEFAULT 0,
+      created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `);
 
   console.log('[db] ตารางผู้ใช้และ session พร้อมใช้งาน');
 }
