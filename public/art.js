@@ -5504,6 +5504,6 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     wm(rpt); setupMini(rpt); fillMini(); swipeHint(rpt);
   }
   new MutationObserver(scan).observe(box, { childList: true, subtree: true, characterData: true });
-  new MutationObserver(function () { if (root.classList.contains('vc-sheet-open') || root.classList.contains('vc-tool-open')) root.classList.remove('vc-mini-on'); }).observe(root, { attributes: true, attributeFilter: ['class'] });
+  new MutationObserver(function () { if ((root.classList.contains('vc-sheet-open') || root.classList.contains('vc-tool-open')) && root.classList.contains('vc-mini-on')) root.classList.remove('vc-mini-on'); }).observe(root, { attributes: true, attributeFilter: ['class'] });
   scan();
 })();
