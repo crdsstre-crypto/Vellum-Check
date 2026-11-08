@@ -5880,7 +5880,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       var it = its[k]; if (!it) return;
       var lv = it.classList.contains('lv-check_detail') ? 'hi' : it.classList.contains('lv-caution') ? 'mid' : 'lo';
       var dn = rows[k] ? rows[k].classList.contains('is-done') : false;
-      var c = 'lv-' + lv + (dn ? ' dn' : ''); if (b.className !== c) b.className = c;
+      var c = 'lv-' + lv + (dn ? ' dn' : '') + (b.classList.contains('pop') ? ' pop' : ''); if (b.className !== c) b.className = c;
     });
   }
 
@@ -5894,7 +5894,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       while ((m = NUM.exec(t))) {
         var val = m[1].trim(), unit = (/(%|เปอร์เซ็นต์|บาท|วัน|เดือน|ปี|ครั้ง|หน่วย|ชั่วโมง|งวด)$/.exec(val) || [])[1]; if (!unit) continue;
         var before = t.slice(0, m.index).replace(/\s+$/, ''), cut = Math.max(before.lastIndexOf(' '), before.lastIndexOf(','), before.lastIndexOf('·'));
-        var lab = before.slice(cut + 1).trim(); if (lab.length > 20) lab = lab.slice(-20); if (lab.length < 2) lab = lab0;
+        var lab = before.slice(cut + 1).trim().replace(/^(และ|หรือ|โดย|แต่|ซึ่ง|กับ|ส่วน|รวม)\s*/, ''); if (lab.length > 20) lab = lab.slice(-20); if (lab.length < 2) lab = lab0;
         found.push({ val: val.replace(/\s*(%|เปอร์เซ็นต์|บาท|วัน|เดือน|ปี|ครั้ง|หน่วย|ชั่วโมง|งวด)$/, ''), unit: unit, lab: lab });
       }
     });
@@ -5913,9 +5913,10 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   /* 5) ตัวเลขเด่นในคำอธิบายการ์ด */
   function nums(r) {
     [].forEach.call(r.querySelectorAll('.ix-row .ix-tx > p'), function (p) {
-      if (p.__vcN || p.children.length) return; p.__vcN = true;
+      if (p.__vcN || (p.children.length && !p.querySelector('b.vc-n'))) return; p.__vcN = true;
+      if (p.querySelector('b.vc-n')) { [].forEach.call(p.querySelectorAll('b.vc-n'), function (b) { var sp = document.createElement('span'); sp.className = 'vc-n'; sp.textContent = b.textContent; b.replaceWith(sp); }); return; }
       var t = p.textContent; NUM.lastIndex = 0; if (!NUM.test(t)) return; NUM.lastIndex = 0;
-      p.innerHTML = esc(t).replace(NUM, '<b class="vc-n">$1</b>');
+      p.innerHTML = esc(t).replace(NUM, '<span class="vc-n">$1</span>');
     });
   }
 
@@ -5933,7 +5934,8 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     [].forEach.call(m.querySelectorAll('li'), function (li) {
       if (li.__vcCk) return; li.__vcCk = true;
       var k = key(missText(li)), ck = document.createElement('span'); ck.className = 'vc-ck'; ck.setAttribute('aria-hidden', 'true');
-      li.insertBefore(ck, li.firstChild); li.setAttribute('role', 'checkbox'); li.tabIndex = 0;
+      var tx = document.createElement('span'); tx.className = 'vc-ck-tx'; while (li.firstChild) tx.appendChild(li.firstChild);
+      li.appendChild(ck); li.appendChild(tx); li.setAttribute('role', 'checkbox'); li.tabIndex = 0;
       function set(v) { cls(li, 'is-ck', v); li.setAttribute('aria-checked', v ? 'true' : 'false'); }
       set(load(k));
       li.addEventListener('click', function (e) { if (e.target.closest('.gl-tap, a, button')) return; var v = !li.classList.contains('is-ck'); set(v); store(k, v); upd(); });
@@ -6004,4 +6006,142 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       lastY = y;
     });
   }, { passive: true });
+})();
+
+
+/* ===== มือถือ v227: หัวเว็บหลบตอนเลื่อน, แตะช่องในแผนที่สัญญา, ไอคอนหมวดบนการ์ด, การ์ด "เกี่ยวกับผลนี้", การ์ดโผล่ทีละใบ + เลขลอย, ฉลองตอนอ่านแล้ว ===== */
+(function () {
+  var box = document.getElementById('result'); if (!box) return;
+  var mq = window.matchMedia('(max-width:767px)'), root = document.documentElement, queued = false;
+  var calm = function () { return root.hasAttribute('data-calm') || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function cls(el, c, on) { if (el.classList.contains(c) !== on) el.classList.toggle(c, on); }
+  function rpt() { return box.querySelector('article.rpt.vc-m'); }
+  function svg(d, w) { return '<svg viewBox="0 0 24 24" width="' + (w || 14) + '" height="' + (w || 14) + '" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>'; }
+
+  /* 1) หัวเว็บหลบตอนเลื่อนลง */
+  var lastY = window.scrollY, tk = false;
+  window.addEventListener('scroll', function () {
+    if (tk) return; tk = true;
+    requestAnimationFrame(function () {
+      tk = false; var y = window.scrollY;
+      var ok = mq.matches && !!rpt() && !root.classList.contains('vc-sheet-open') && !root.classList.contains('vc-tool-open');
+      if (!ok || y < 160) cls(root, 'vc-hd-hide', false);
+      else if (y > lastY + 6) cls(root, 'vc-hd-hide', true);
+      else if (y < lastY - 6) cls(root, 'vc-hd-hide', false);
+      lastY = y;
+    });
+  }, { passive: true });
+
+  /* 2) แตะช่องในแผนที่สัญญา → บอกว่าข้อนั้นเขียนว่าอะไร */
+  function clause(n) {
+    var tx = window.__vcCheckedText || '', re = new RegExp('(^|\\n)\\s*ข้อ\\s*' + n + '(?![0-9])\\s*([^\\n]*)'), m = re.exec(tx);
+    return m ? m[2].trim() : '';
+  }
+  function mapTips(r) {
+    var map = r.querySelector('.vc-sum .vc-map'); if (!map || map.__vcTip) return; map.__vcTip = true;
+    var tip = document.createElement('div'); tip.className = 'vc-map-tip'; tip.hidden = true; map.appendChild(tip);
+    [].forEach.call(map.querySelectorAll('.vc-map-c:not([data-ix])'), function (c) { c.setAttribute('role', 'button'); c.tabIndex = 0; });
+    map.addEventListener('click', function (e) {
+      var c = e.target.closest('.vc-map-c'); if (!c || c.hasAttribute('data-ix')) { tip.hidden = true; return; }
+      var n = [].indexOf.call(c.parentNode.children, c) + 1, t = clause(n);
+      [].forEach.call(map.querySelectorAll('.vc-map-c.is-sel'), function (x) { x.classList.remove('is-sel'); });
+      if (!tip.hidden && tip.dataset.n === String(n)) { tip.hidden = true; return; }
+      c.classList.add('is-sel'); tip.dataset.n = n;
+      tip.innerHTML = '<b>ข้อ ' + n + '</b>' + (t ? esc(t.length > 160 ? t.slice(0, 160) + '…' : t) : 'ไม่พบข้อความของข้อนี้ในข้อความที่ตรวจ') + '<small>ข้อนี้ไม่มีประเด็นที่ระบบตั้งข้อสังเกต (ไม่ได้แปลว่าปลอดภัยเสมอไป)</small>';
+      tip.hidden = false;
+    });
+  }
+
+  /* 3) ไอคอนหมวดบนการ์ดประเด็น */
+  var TOP = [
+    [/ซ่อม|ชำรุด|เฟอร์นิเจอร์|เสียหาย|ทดแทน/, '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-.5-.5-2.5z"/>'],
+    [/สัตว์/, '<circle cx="7" cy="9" r="1.7"/><circle cx="12" cy="6.3" r="1.7"/><circle cx="17" cy="9" r="1.7"/><path d="M8 17.2c0-2.6 1.8-5.2 4-5.2s4 2.6 4 5.2c0 1.5-1.4 2.2-4 2.2s-4-.7-4-2.2z"/>'],
+    [/สาธารณูปโภค|น้ำ|ไฟ|ส่วนกลาง/, '<path d="M13 3 5 14h6l-1 7 8-11h-6z"/>'],
+    [/ปรับ|เบี้ย|โทษ/, '<path d="M12 3 2.5 20h19z"/><path d="M12 10v4M12 17.2v.1"/>'],
+    [/ต่อสัญญา|ต่ออายุ|ระยะ|กำหนด|วัน|เวลา|แจ้ง/, '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>'],
+    [/เลิก|ยกเลิก|สิ้นสุด|ย้ายออก/, '<path d="M14 4h5v16h-5"/><path d="M10 12H3M6 8l-4 4 4 4"/>'],
+    [/ประกัน|มัดจำ|เงิน|ค่าเช่า|ราคา|ชำระ|ดอกเบี้ย|ค่า/, '<rect x="3" y="7" width="18" height="10" rx="2"/><circle cx="12" cy="12" r="2.4"/>']
+  ];
+  function topics(r) {
+    var its = r.querySelectorAll('details.item');
+    [].forEach.call(r.querySelectorAll('.ix-row'), function (row, i) {
+      var no = row.querySelector('.vc-no'); if (!no || no.__vcT) return;
+      var it = its[+row.getAttribute('data-ixcard') || i], sm = it && it.querySelector('.it-title small');
+      var topic = sm ? (sm.textContent.split('·')[1] || '').trim() : ''; if (!topic) return;
+      no.__vcT = true;
+      var hay = topic + ' ' + ((row.querySelector('.ix-tx > b') || {}).textContent || ''), ic = '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/>';
+      for (var k = 0; k < TOP.length; k++) if (TOP[k][0].test(topic)) { ic = TOP[k][1]; break; }
+      if (ic.indexOf('<rect x="5"') === 0) for (var j = 0; j < TOP.length; j++) if (TOP[j][0].test(hay)) { ic = TOP[j][1]; break; }
+      no.classList.add('vc-topic'); no.innerHTML = svg(ic, 13) + '<span>' + esc(topic) + '</span>';
+    });
+  }
+
+  /* 7) การ์ด "เกี่ยวกับผลนี้" = ที่มาของผลตรวจ + วิธีอ่านสี */
+  function about(r) {
+    var src = r.querySelector('details.cb-src'), leg = r.querySelector(':scope > .vc-leg, :scope > details.ix-legend');
+    if (!src && !leg) return;
+    var a = r.querySelector(':scope > .vc-about');
+    if (!a) {
+      a = document.createElement('section'); a.className = 'vc-about'; a.setAttribute('data-vt', 'iss');
+      a.innerHTML = '<div class="vc-ab-h"><span class="vc-ab-ic">' + svg('<path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/><path d="m9 12 2 2 4-4"/>', 20) + '</span><div><h3>เกี่ยวกับผลนี้</h3><p>ผลตรวจอ้างอิงอะไร และควรอ่านอย่างไร</p></div></div><div class="vc-ab-m"></div><div class="vc-ab-f"></div>';
+      var end = r.querySelector(':scope > .vc-end'); r.insertBefore(a, end || null);
+    }
+    var f = a.querySelector('.vc-ab-f');
+    if (src && src.parentNode !== f) f.appendChild(src);
+    if (leg && leg.parentNode !== f) f.appendChild(leg);
+    var cc = r.querySelector('#commandCenter');
+    if (cc) { var vis = [].some.call(cc.children, function (ch) { return ch.offsetHeight > 2 && getComputedStyle(ch).display !== 'none'; }); cls(cc, 'vc-cc-empty', !vis); }
+    var L = typeof lastResult !== 'undefined' && lastResult ? lastResult : null, items = L && L.items || [], tot = items.length;
+    var m = a.querySelector('.vc-ab-m'), key = tot + '|' + (L && (L.missing_info || []).length);
+    if (m.dataset.k === key || !tot) return; m.dataset.k = key;
+    var match = items.filter(function (x) { return x.quote && !x.missing; }).length, ref = items.filter(function (x) { return x.reference && String(x.reference).trim(); }).length, miss = (L.missing_info || []).length;
+    function bar(lab, v, max, txt, tone) { var w = max ? Math.round(v / max * 100) : 0; return '<div class="vc-ab-r t-' + tone + '"><div class="vc-ab-rt"><span>' + lab + '</span><b>' + txt + '</b></div><div class="vc-ab-b"><i style="width:' + w + '%"></i></div></div>'; }
+    m.innerHTML = bar('ข้อความตรงกับสัญญา', match, tot, match + '/' + tot + ' ประเด็น', match === tot ? 'ok' : 'mid') +
+      bar('อ้างอิงมาตรากฎหมาย', ref, tot, ref ? ref + '/' + tot + ' ประเด็น' : 'ไม่มี', ref ? 'ok' : 'lo') +
+      bar('ข้อมูลที่สัญญายังไม่ระบุ', Math.min(miss, 10), 10, miss + ' หัวข้อ', miss ? 'mid' : 'ok');
+  }
+
+  /* 6) การ์ดโผล่ทีละใบ + เลขลายน้ำลอย */
+  var io = 'IntersectionObserver' in window ? new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { var el = e.target; el.style.setProperty('--rd', (Math.min(3, el.__vcQ || 0) * 70) + 'ms'); el.classList.add('vc-in'); io.unobserve(el); } });
+  }, { rootMargin: '0px 0px -6% 0px', threshold: .08 }) : null;
+  function reveal(r) {
+    if (!io || calm()) return;
+    var fresh = [];
+    [].forEach.call(r.querySelectorAll('.ix-row'), function (row) { if (row.__vcRv) return; row.__vcRv = true; var b = row.getBoundingClientRect(); if (b.top < window.innerHeight && b.bottom > 0) return; row.classList.add('vc-rv'); fresh.push(row); });
+    fresh.forEach(function (row, k) { row.__vcQ = k % 4; io.observe(row); });
+  }
+  var ptk = false;
+  window.addEventListener('scroll', function () {
+    if (ptk || !mq.matches || calm()) return; ptk = true;
+    requestAnimationFrame(function () {
+      ptk = false; var r = rpt(); if (!r) return; var vh = window.innerHeight;
+      [].forEach.call(r.querySelectorAll('.ix-row[data-wm]'), function (row) { var b = row.getBoundingClientRect(); if (b.bottom < 0 || b.top > vh) return; var off = ((b.top + b.height / 2) - vh / 2) / vh; row.style.setProperty('--py', (off * -14).toFixed(1) + 'px'); });
+    });
+  }, { passive: true });
+
+  /* 8) ฉลองตอนอ่านแล้ว */
+  var doneSet = null;
+  function celebrate(r) {
+    var rows = [].slice.call(r.querySelectorAll('.ix-row')), now = rows.map(function (x) { return x.classList.contains('is-done'); });
+    if (!doneSet || doneSet.length !== now.length) { doneSet = now; return; }
+    now.forEach(function (d, i) {
+      if (d && !doneSet[i] && !calm()) {
+        var dot = document.querySelectorAll('.vc-mini-dots i')[i]; if (dot) { dot.classList.remove('pop'); void dot.offsetWidth; dot.classList.add('pop'); setTimeout(function () { dot.classList.remove('pop'); }, 700); }
+        [].forEach.call(document.querySelectorAll('.vc-sum .ix-prog-n, .vc-end-h'), function (n) { n.classList.remove('bump'); void n.offsetWidth; n.classList.add('bump'); setTimeout(function () { n.classList.remove('bump'); }, 600); });
+        var row = rows[i], b = document.createElement('i'); b.className = 'vc-burst'; b.setAttribute('aria-hidden', 'true'); row.appendChild(b); setTimeout(function () { b.remove(); }, 800);
+      }
+    });
+    doneSet = now;
+  }
+
+  function run() {
+    queued = false; if (!mq.matches) return;
+    var r = rpt(); if (!r) { doneSet = null; return; }
+    mapTips(r); topics(r); about(r); reveal(r); celebrate(r);
+  }
+  function q() { if (!queued) { queued = true; requestAnimationFrame(run); } }
+  new MutationObserver(q).observe(box, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+  q();
 })();
