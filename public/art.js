@@ -4452,50 +4452,136 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     openSheet('ร่างข้อความถึงอีกฝ่าย', 'เลือกเรื่องที่จะขอปรับ แล้วคัดลอกหรือส่งทาง LINE', el);
   }
 
-  /* ---------- 2) เช็กลิสต์ก่อนเซ็น ---------- */
-  function ckKey(r) { var no = reportNo(); if (no) return 'vc_ck_' + no; var s = (r.items || []).map(function (x) { return x.title; }).join('|'); var h = 0; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return 'vc_ck_' + h; }
+  /* ---------- 2) เช็กลิสต์ก่อนเซ็น (รุ่น 2: ผลการคุย 3 สถานะ, เขียนเป็นสิ่งที่ต้องทำ, พับกลุ่มที่เสร็จ, สรุปท้าย) ---------- */
+  function ckKey(r) { var no = reportNo(); if (no) return 'vc_ck2_' + no; var s = (r.items || []).map(function (x) { return x.title; }).join('|'); var h = 0; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return 'vc_ck2_' + h; }
+  function asTodo(m) {
+    var t = String(m || '').trim().replace(/\s+/g, ' ');
+    var rules = [
+      [/^สัญญา(?:ยัง)?(?:ไม่ได้|ไม่)ระบุ(?:เรื่อง)?\s*/, 'ขอให้ระบุ'],
+      [/^(?:ยัง)?(?:ไม่ได้|ไม่)ระบุ(?:เรื่อง)?\s*/, 'ขอให้ระบุ'],
+      [/^ไม่มีข้อกำหนด(?:เรื่อง|เกี่ยวกับ)?\s*/, 'ขอให้เพิ่มข้อกำหนดเรื่อง'],
+      [/^ไม่มีรายการ\s*/, 'ขอให้แนบรายการ'],
+      [/^ไม่มีเงื่อนไข\s*/, 'ขอให้กำหนดเงื่อนไข'],
+      [/^ไม่มีกำหนด(?:เวลา)?\s*/, 'ขอให้กำหนดเวลา'],
+      [/^ไม่มี\s*/, 'ขอให้ระบุ']
+    ];
+    for (var i = 0; i < rules.length; i++) if (rules[i][0].test(t)) return rules[i][1] + t.replace(rules[i][0], '');
+    return /^ขอ/.test(t) ? t : 'ขอให้ระบุ' + t;
+  }
+  function shortFix(it) {
+    var s = String(it.suggested_fix || it.how_to_negotiate || '').trim().replace(/\s+/g, ' ');
+    return s.length > 110 ? s.slice(0, 108).replace(/\s\S*$/, '') + '…' : s;
+  }
   function ckItems(r) {
     var out = [];
-    (r.items || []).forEach(function (it, i) { var cl = clauseOf(i); out.push({ g: 'คุยกับอีกฝ่าย', t: (cl ? 'ข้อ ' + cl + ' · ' : '') + (it.title || '').replace(/\?$/, ''), lv: it.level }); });
-    (r.missing_info || []).filter(function (s) { return !/unsure|ผู้ใช้ระบุประเภท/i.test(s); }).forEach(function (m) { out.push({ g: 'ขอให้ระบุเพิ่ม', t: m }); });
-    ['อ่านสัญญาทั้งฉบับอีกครั้งก่อนเซ็น', 'ตรวจชื่อ ที่อยู่ และเลขบัตรของคู่สัญญาให้ถูกต้อง', 'ทุกหน้ามีลายเซ็นหรืออักษรย่อของทั้งสองฝ่าย', 'ได้รับสำเนาสัญญาที่เซ็นแล้ว 1 ฉบับ', 'เก็บหลักฐานการโอนเงินทุกครั้ง'].forEach(function (t) { out.push({ g: 'วันเซ็นสัญญา', t: t }); });
+    (r.items || []).forEach(function (it, i) { var cl = clauseOf(i); out.push({ g: 0, tri: 1, t: (it.title || '').replace(/\?$/, ''), sub: shortFix(it), cl: cl, lv: it.level }); });
+    (r.missing_info || []).filter(function (s) { return !/unsure|ผู้ใช้ระบุประเภท/i.test(s); }).forEach(function (m) { out.push({ g: 1, t: asTodo(m) }); });
+    ['อ่านสัญญาทั้งฉบับอีกครั้งก่อนเซ็น', 'ตรวจชื่อ ที่อยู่ และเลขบัตรของคู่สัญญาให้ถูกต้อง', 'ทุกหน้ามีลายเซ็นหรืออักษรย่อของทั้งสองฝ่าย', 'ได้รับสำเนาสัญญาที่เซ็นแล้ว 1 ฉบับ', 'เก็บหลักฐานการโอนเงินทุกครั้ง'].forEach(function (t) { out.push({ g: 2, t: t }); });
     return out;
+  }
+  var GN = ['คุยกับอีกฝ่าย', 'ขอให้ระบุเพิ่ม', 'วันเซ็นสัญญา'];
+  function ckLoad(r) { try { var o = JSON.parse(localStorage.getItem(ckKey(r)) || '{}'); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; } }
+  function ckStats(list, st) {
+    var done = 0, ref = 0, agreed = 0;
+    list.forEach(function (x, i) { var v = +st[i] || 0; if (v) done++; if (x.tri && v === 2) ref++; if (x.tri && v === 1) agreed++; });
+    return { done: done, total: list.length, ref: ref, agreed: agreed };
   }
   function openChecklist() {
     var r = data(); if (!r) return;
-    var key = ckKey(r), st = {}; try { st = JSON.parse(localStorage.getItem(key) || '{}') || {}; } catch (e) {}
-    var list = ckItems(r), el = document.createElement('div'); el.className = 'vc-ck';
-    var g = null, h = '<div class="vc-ck-prog"><span class="vc-ck-n"></span><div class="vc-ck-bar"><i></i></div></div>';
-    list.forEach(function (x, i) {
-      if (x.g !== g) { if (g) h += '</ul>'; g = x.g; h += '<p class="vc-lbl">' + esc(g) + '</p><ul>'; }
-      h += '<li><label><input type="checkbox" data-k="' + i + '"' + (st[i] ? ' checked' : '') + '><span class="vc-ck-box" aria-hidden="true"></span><span class="vc-ck-t">' + (x.lv ? '<i class="vc-ck-dot" style="background:' + LVC[x.lv] + '"></i>' : '') + esc(x.t) + '</span></label></li>';
+    var key = ckKey(r), st = ckLoad(r), list = ckItems(r), el = document.createElement('div'); el.className = 'vc-ck vc-ck2';
+    var h = '<div class="vc-ck-top"><div class="vc-ck-prog"><span class="vc-ck-n"></span><div class="vc-ck-bar"><i></i></div></div><p class="vc-ck-warn" hidden></p></div>';
+    GN.forEach(function (name, g) {
+      var idx = []; list.forEach(function (x, i) { if (x.g === g) idx.push(i); }); if (!idx.length) return;
+      h += '<section class="vc-ck-g" data-g="' + g + '"><button type="button" class="vc-ck-gh" aria-expanded="true"><span>' + name + '</span><em class="vc-ck-gn"></em><i class="vc-ck-chev" aria-hidden="true"></i></button><ul>';
+      idx.forEach(function (i) {
+        var x = list[i];
+        if (x.tri) {
+          h += '<li class="vc-ck-tri" data-k="' + i + '"><div class="vc-ck-q"><span class="vc-ck-meta">' + (x.lv ? '<span class="vc-pill lv-' + esc(x.lv) + '">' + (LVN[x.lv] || '') + '</span>' : '') + (x.cl ? '<span class="vc-no">ข้อ ' + esc(x.cl) + '</span>' : '') + '</span>' +
+            '<b>' + esc(x.t) + '</b>' + (x.sub ? '<small>ขอ: ' + esc(x.sub) + '</small>' : '') + '</div>' +
+            '<div class="vc-ck-seg" role="radiogroup" aria-label="ผลการคุย">' +
+              '<button type="button" role="radio" data-v="0">ยังไม่คุย</button>' +
+              '<button type="button" role="radio" data-v="1" class="ok">ตกลงแก้แล้ว</button>' +
+              '<button type="button" role="radio" data-v="2" class="no">ไม่ยอมแก้</button></div></li>';
+        } else {
+          h += '<li><label><input type="checkbox" data-k="' + i + '"><span class="vc-ck-box" aria-hidden="true"></span><span class="vc-ck-t">' + esc(x.t) + '</span></label></li>';
+        }
+      });
+      h += '</ul></section>';
     });
-    el.innerHTML = h + '</ul><p class="vc-fine">ติ๊กแล้วจำไว้ในเครื่องนี้ เปิดผลตรวจนี้จากประวัติได้ทุกเมื่อ</p><div class="vc-acts"><button type="button" class="vc-a-copy">คัดลอกเป็นข้อความ</button></div>';
-    function upd() {
-      var all = el.querySelectorAll('input'), on = el.querySelectorAll('input:checked').length;
-      el.querySelector('.vc-ck-n').textContent = 'เสร็จแล้ว ' + on + ' / ' + all.length;
-      el.querySelector('.vc-ck-bar i').style.width = (all.length ? on / all.length * 100 : 0) + '%';
-      var b = box.querySelector('.vc-next-ck em'); if (b) b.textContent = on + '/' + all.length;
+    h += '<div class="vc-ck-end" hidden></div><p class="vc-fine">บันทึกไว้ในเครื่องนี้ เปิดผลตรวจนี้จากประวัติได้ทุกเมื่อ</p>' +
+      '<div class="vc-acts"><button type="button" class="vc-a-copy">คัดลอกสรุป</button><button type="button" class="vc-a-line2">ส่งทาง LINE</button></div>';
+    el.innerHTML = h;
+
+    function summaryText() {
+      var s = ckStats(list, st), tn = typeName(), lines = ['สรุปเช็กลิสต์ก่อนเซ็น' + (tn ? ' (' + tn + ')' : ''), ''];
+      GN.forEach(function (name, g) {
+        var rows = list.map(function (x, i) { return [x, i]; }).filter(function (p) { return p[0].g === g; }); if (!rows.length) return;
+        lines.push(name);
+        rows.forEach(function (p) {
+          var v = +st[p[1]] || 0, x = p[0];
+          lines.push((x.tri ? (v === 1 ? '✅ ตกลงแก้แล้ว — ' : v === 2 ? '❌ ไม่ยอมแก้ — ' : '⏳ ยังไม่คุย — ') : (v ? '☑ ' : '☐ ')) + (x.cl ? 'ข้อ ' + x.cl + ' ' : '') + x.t);
+        });
+        lines.push('');
+      });
+      lines.push(s.done === s.total ? (s.ref ? 'สรุป: ครบแล้ว แต่มี ' + s.ref + ' ข้อที่อีกฝ่ายไม่ยอมแก้' : 'สรุป: ครบแล้ว อีกฝ่ายยอมแก้ทุกข้อ พร้อมเซ็น') : 'ความคืบหน้า ' + s.done + '/' + s.total);
+      return lines.join('\n');
     }
+    function paint(changedG) {
+      var s = ckStats(list, st);
+      el.querySelector('.vc-ck-n').textContent = 'เสร็จแล้ว ' + s.done + ' / ' + s.total;
+      el.querySelector('.vc-ck-bar i').style.width = (s.total ? s.done / s.total * 100 : 0) + '%';
+      var w = el.querySelector('.vc-ck-warn');
+      w.hidden = !s.ref; if (s.ref) w.textContent = 'อีกฝ่ายไม่ยอมแก้ ' + s.ref + ' ข้อ ควรคิดให้ดีก่อนเซ็น';
+      [].forEach.call(el.querySelectorAll('.vc-ck-tri'), function (li) {
+        var v = +st[li.getAttribute('data-k')] || 0;
+        li.setAttribute('data-v', v);
+        [].forEach.call(li.querySelectorAll('.vc-ck-seg button'), function (b) { var on = +b.getAttribute('data-v') === v; b.classList.toggle('on', on); b.setAttribute('aria-checked', on ? 'true' : 'false'); });
+      });
+      [].forEach.call(el.querySelectorAll('input[data-k]'), function (c) { c.checked = !!(+st[c.getAttribute('data-k')]); });
+      [].forEach.call(el.querySelectorAll('.vc-ck-g'), function (sec) {
+        var g = +sec.getAttribute('data-g'), n = 0, d = 0;
+        list.forEach(function (x, i) { if (x.g === g) { n++; if (+st[i]) d++; } });
+        sec.querySelector('.vc-ck-gn').textContent = d + '/' + n;
+        sec.classList.toggle('is-done', d === n);
+        /* กลุ่มเพิ่งเสร็จครบ → พับเก็บเอง */
+        if (changedG === g && d === n) setTimeout(function () { fold(sec, true); }, 450);
+      });
+      var end = el.querySelector('.vc-ck-end');
+      if (s.done === s.total && s.total) {
+        end.hidden = false;
+        var refT = list.filter(function (x, i) { return x.tri && +st[i] === 2; }).map(function (x) { return '<li>' + (x.cl ? 'ข้อ ' + esc(x.cl) + ' · ' : '') + esc(x.t) + '</li>'; }).join('');
+        end.className = 'vc-ck-end ' + (s.ref ? 'is-warn' : 'is-ok');
+        end.innerHTML = s.ref
+          ? '<b>เซ็นได้ แต่มี ' + s.ref + ' ข้อที่ต้องยอมรับ</b><p>อีกฝ่ายไม่ยอมแก้ข้อต่อไปนี้ ถ้าเซ็นแปลว่ายอมรับเงื่อนไขเดิม</p><ul>' + refT + '</ul>'
+          : '<b>พร้อมเซ็นแล้ว ✓</b><p>คุยครบทุกข้อ อีกฝ่ายยอมแก้ทั้งหมด อย่าลืมตรวจว่าสัญญาฉบับที่จะเซ็นแก้ตามที่ตกลงจริง</p>';
+      } else end.hidden = true;
+      var b = box.querySelector('.vc-next-ck em'); if (b) { b.textContent = s.done + '/' + s.total; b.classList.toggle('warn', !!s.ref); }
+    }
+    function fold(sec, close) {
+      sec.classList.toggle('is-folded', close);
+      sec.querySelector('.vc-ck-gh').setAttribute('aria-expanded', close ? 'false' : 'true');
+    }
+    function save() { try { localStorage.setItem(key, JSON.stringify(st)); } catch (e) {} }
+    el.addEventListener('click', function (e) {
+      var gh = e.target.closest('.vc-ck-gh'); if (gh) { var sec = gh.closest('.vc-ck-g'); fold(sec, !sec.classList.contains('is-folded')); return; }
+      var b = e.target.closest('.vc-ck-seg button'); if (!b) return;
+      var li = b.closest('.vc-ck-tri'), k = li.getAttribute('data-k'); st[k] = +b.getAttribute('data-v'); save(); paint(list[k].g);
+    });
     el.addEventListener('change', function (e) {
       var c = e.target.closest('input[data-k]'); if (!c) return;
-      st[c.getAttribute('data-k')] = c.checked ? 1 : 0;
-      try { localStorage.setItem(key, JSON.stringify(st)); } catch (err) {}
-      upd();
+      var k = c.getAttribute('data-k'); st[k] = c.checked ? 1 : 0; save(); paint(list[k].g);
     });
-    el.querySelector('.vc-a-copy').addEventListener('click', function () {
-      var g2 = null, txt = 'เช็กลิสต์ก่อนเซ็น' + (typeName() ? ' (' + typeName() + ')' : '') + '\n';
-      list.forEach(function (x, i) { if (x.g !== g2) { g2 = x.g; txt += '\n' + g2 + '\n'; } txt += (st[i] ? '☑ ' : '☐ ') + x.t + '\n'; });
-      copy(txt.trim());
-    });
-    upd();
-    openSheet('เช็กลิสต์ก่อนเซ็น', 'ติ๊กทีละข้อ ระบบจำไว้ให้', el);
+    el.querySelector('.vc-a-copy').addEventListener('click', function () { copy(summaryText()); });
+    el.querySelector('.vc-a-line2').addEventListener('click', function () { window.open('https://line.me/R/share?text=' + encodeURIComponent(summaryText()), '_blank', 'noopener'); });
+    paint(-1);
+    /* กลุ่มที่เสร็จไว้แล้วตั้งแต่ก่อนเปิด → พับไว้ */
+    [].forEach.call(el.querySelectorAll('.vc-ck-g.is-done'), function (sec) { fold(sec, true); });
+    openSheet('เช็กลิสต์ก่อนเซ็น', 'คุยกับอีกฝ่ายแล้วบันทึกผล ระบบสรุปให้ว่าพร้อมเซ็นหรือยัง', el);
   }
   function ckCount() {
     var r = data(); if (!r) return '';
-    var st = {}; try { st = JSON.parse(localStorage.getItem(ckKey(r)) || '{}') || {}; } catch (e) {}
-    var on = 0; for (var k in st) if (st[k]) on++;
-    return on + '/' + ckItems(r).length;
+    var s = ckStats(ckItems(r), ckLoad(r));
+    return s.done + '/' + s.total;
   }
 
   /* ---------- 3) รูปสรุปไว้แชร์ ---------- */
