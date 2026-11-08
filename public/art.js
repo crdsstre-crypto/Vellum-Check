@@ -5441,16 +5441,23 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     }
     var d = sum.querySelector('.vc-donut svg'); mini.querySelector('.vc-mini-d').innerHTML = d ? d.outerHTML : '';
     mini.style.setProperty('--st', getComputedStyle(sum).getPropertyValue('--st') || '#f4f4f5');
-    if (io) io.disconnect();
-    var head = parseFloat(getComputedStyle(root).getPropertyValue('--art-head')) || 58;
-    io = new IntersectionObserver(function (en) {
-      var hidden = !en[0].isIntersecting && en[0].boundingClientRect.top < head;
-      root.classList.toggle('vc-mini-on', hidden && mq.matches && !root.classList.contains('vc-sheet-open'));
-      fillMini();
-    }, { rootMargin: '-' + (head + 40) + 'px 0px 0px 0px', threshold: 0 });
-    io.observe(sum);
+    check();
     fillMini();
   }
+  var ticking = false;
+  function check() {
+    var sum = cur && cur.querySelector('.vc-sum');
+    var head = parseFloat(getComputedStyle(root).getPropertyValue('--art-head')) || 58;
+    var on = false;
+    if (sum && sum.isConnected && mq.matches && !root.classList.contains('vc-sheet-open') && !root.classList.contains('vc-tool-open') && !root.classList.contains('vc-ld-open')) {
+      var r = sum.getBoundingClientRect();
+      on = r.height > 0 && r.bottom < head + 24;
+    }
+    if (root.classList.contains('vc-mini-on') !== on) root.classList.toggle('vc-mini-on', on);
+    if (on) fillMini();
+  }
+  window.addEventListener('scroll', function () { if (ticking) return; ticking = true; requestAnimationFrame(function () { ticking = false; check(); }); }, { passive: true });
+  window.addEventListener('resize', check);
   function fillMini() {
     if (!mini || !cur) return;
     var sum = cur.querySelector('.vc-sum'); if (!sum) return;
@@ -5459,6 +5466,29 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     var m = n ? /(\d+)\s*\/\s*(\d+)/.exec(n.textContent) : null;
     mini.querySelector('small').textContent = (tot ? tot.textContent + ' ประเด็น · ' : '') + (m ? 'อ่านแล้ว ' + m[1] + '/' + m[2] : '');
     mini.querySelector('.vc-mini-bar i').style.width = m && +m[2] ? (m[1] / m[2] * 100) + '%' : '0%';
+    var dn = mini.querySelector('.vc-mini-d em'); if (!dn) { dn = document.createElement('em'); mini.querySelector('.vc-mini-d').appendChild(dn); }
+    dn.textContent = tot ? tot.textContent : '';
+  }
+  /* บอกครั้งแรกว่าปัดได้ */
+  var hinted = false; try { hinted = localStorage.getItem('vc_hint_swipe') === '1'; } catch (e) {}
+  function swipeHint(rpt) {
+    if (hinted || !mq.matches || calm()) return;
+    var row = rpt.querySelector('.ix-row:not(.is-done)'); if (!row || row.__vcHintObs) return;
+    row.__vcHintObs = true;
+    var ob = new IntersectionObserver(function (en) {
+      if (!en[0].isIntersecting || hinted || rpt.classList.contains('vc-reveal') || rpt.getAttribute('data-vtab') !== 'iss') return;
+      hinted = true; ob.disconnect(); try { localStorage.setItem('vc_hint_swipe', '1'); } catch (e) {}
+      setTimeout(function () {
+        var tip = document.createElement('div'); tip.className = 'vc-sw-tip'; tip.innerHTML = '<i aria-hidden="true">→</i>ปัดขวาเพื่อทำเครื่องหมายว่าอ่านแล้ว';
+        row.parentNode.insertBefore(tip, row.nextSibling);
+        row.classList.add('vc-swiping');
+        var t0 = null, D = 1500;
+        function st(t) { if (!t0) t0 = t; var p = Math.min(1, (t - t0) / D), k = Math.sin(p * Math.PI); row.style.setProperty('--swx', (k * 70).toFixed(1) + 'px'); row.style.setProperty('--sw', (k * .7).toFixed(3)); if (p < 1) requestAnimationFrame(st); else { row.classList.remove('vc-swiping'); row.style.removeProperty('--swx'); row.style.removeProperty('--sw'); } }
+        requestAnimationFrame(st);
+        setTimeout(function () { tip.classList.add('out'); setTimeout(function () { tip.remove(); }, 300); }, 3800);
+      }, 500);
+    }, { threshold: .9 });
+    ob.observe(row);
   }
   /* 3) เลขลายน้ำบนการ์ด */
   function wm(rpt) {
@@ -5471,7 +5501,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   function scan() {
     var rpt = box.querySelector('article.rpt.vc-m3');
     if (!rpt) { root.classList.remove('vc-mini-on'); cur = null; return; }
-    wm(rpt); setupMini(rpt); fillMini();
+    wm(rpt); setupMini(rpt); fillMini(); swipeHint(rpt);
   }
   new MutationObserver(scan).observe(box, { childList: true, subtree: true, characterData: true });
   new MutationObserver(function () { if (root.classList.contains('vc-sheet-open') || root.classList.contains('vc-tool-open')) root.classList.remove('vc-mini-on'); }).observe(root, { attributes: true, attributeFilter: ['class'] });
