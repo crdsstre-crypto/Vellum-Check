@@ -3975,3 +3975,51 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
     background:rgba(40,40,44,.96);border:1px solid rgba(255,255,255,.14);color:#ededef;font:500 13.5px/1 Prompt,Sarabun,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.5);animation:vcFadeIn .2s ease both}
   .vc-tt.out{animation:vcFadeOut .25s ease both}
 }
+
+
+/* ===== มือถือ: เช็กลิสต์รุ่น 2 (8 พ.ย. 2026) — เฉพาะ ≤767px ===== */
+@media (max-width:767px){
+  .vc-ck2 .vc-ck-top{position:sticky;top:-14px;z-index:2;margin:-14px -18px 0;padding:14px 18px 10px;background:#17171a}
+  .vc-ck-warn{margin:8px 0 0;padding:9px 12px;border-radius:12px;background:rgba(217,178,90,.1);border:1px solid rgba(217,178,90,.28);color:#e3c67f;font:500 13px/1.45 Prompt,Sarabun,sans-serif}
+  .vc-ck-warn[hidden]{display:none}
+  /* หัวกลุ่ม: กดพับได้ + ตัวนับ */
+  .vc-ck-g{margin-top:16px}
+  .vc-ck-gh{display:flex;align-items:center;gap:8px;width:100%;padding:0 2px;margin:0 0 8px;border:0;background:none;color:#a3a3aa;font:600 13px/1.3 Prompt,Sarabun,sans-serif;text-align:left;cursor:pointer}
+  .vc-ck-gh span{flex:1 1 auto}
+  .vc-ck-gn{font-style:normal;font-weight:600;font-size:12px;padding:3px 8px;border-radius:99px;background:rgba(255,255,255,.06);color:#c4c4ca}
+  .vc-ck-g.is-done .vc-ck-gn{background:rgba(63,185,141,.16);color:#8fcfb4}
+  .vc-ck-g.is-done .vc-ck-gn::before{content:"✓ "}
+  .vc-ck-chev{width:14px;height:14px;transition:transform .25s ease;
+    background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat;
+    mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat}
+  .vc-ck-g.is-folded .vc-ck-chev{transform:rotate(-90deg)}
+  .vc-ck-g.is-folded > ul{display:none}
+  /* ข้อที่เสร็จ: จางลง ไม่ขีดฆ่า */
+  .vc-ck2 input:checked ~ .vc-ck-t{text-decoration:none !important;color:#8b8b94}
+  /* ข้อที่ต้องคุย: คำถาม + สิ่งที่ควรขอ + ปุ่ม 3 สถานะ */
+  .vc-ck-tri{padding:12px 14px}
+  .vc-ck-q b{display:block;margin:6px 0 2px;font:600 14.5px/1.45 Prompt,Sarabun,sans-serif;color:#ededef}
+  .vc-ck-q small{display:block;font:400 12.5px/1.5 Prompt,Sarabun,sans-serif;color:#9a9aa2}
+  .vc-ck-meta{display:flex;align-items:center;gap:8px;font:500 12px/1 Prompt,Sarabun,sans-serif}
+  .vc-ck-meta .vc-no{color:#8b8b94}
+  .vc-ck-seg{display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:4px;margin-top:10px;padding:3px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+  .vc-ck-seg button{min-height:36px;padding:0 4px;border:0;border-radius:9px;background:transparent;color:#a3a3aa;font:500 12.5px/1.1 Prompt,Sarabun,sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .vc-ck-seg button.on{background:rgba(255,255,255,.12);color:#ededef;font-weight:600}
+  .vc-ck-seg button.ok.on{background:rgba(63,185,141,.22);color:#9fe0c4}
+  .vc-ck-seg button.no.on{background:rgba(224,133,133,.2);color:#f0aaaa}
+  .vc-ck-tri[data-v="1"] .vc-ck-q b,.vc-ck-tri[data-v="1"] .vc-ck-q small{color:#8b8b94}
+  .vc-ck-tri[data-v="2"]{background:rgba(224,133,133,.05)}
+  /* สรุปท้าย */
+  .vc-ck-end{margin:16px 0 0;padding:16px;border-radius:16px;font-family:Prompt,Sarabun,sans-serif;animation:vcPop .45s cubic-bezier(.3,1.4,.5,1) both}
+  .vc-ck-end[hidden]{display:none}
+  .vc-ck-end.is-ok{background:rgba(63,185,141,.1);border:1px solid rgba(63,185,141,.3)}
+  .vc-ck-end.is-warn{background:rgba(217,178,90,.09);border:1px solid rgba(217,178,90,.3)}
+  .vc-ck-end b{display:block;font:700 16px/1.35 Prompt,Sarabun,sans-serif}
+  .vc-ck-end.is-ok b{color:#9fe0c4}
+  .vc-ck-end.is-warn b{color:#e3c67f}
+  .vc-ck-end p{margin:4px 0 0;font:400 13px/1.55 Prompt,Sarabun,sans-serif;color:#b4b4bb}
+  .vc-ck-end ul{margin:8px 0 0;padding:0 0 0 18px;border:0;background:none;border-radius:0}
+  .vc-ck-end li{font:500 13.5px/1.5 Prompt,Sarabun,sans-serif;color:#e4e4e7;border:0 !important}
+  .vc-acts .vc-a-line2{background:#06c755;border-color:#06c755;color:#fff}
+  html.vc-art .vc-next-b small em.warn{color:#e3c67f}
+}
