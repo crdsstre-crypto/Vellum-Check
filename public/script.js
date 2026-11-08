@@ -1258,8 +1258,9 @@ async function runDemo(demo) {
   setBusy(true);
   showLoading();
   try {
-    await new Promise((ok) => setTimeout(ok, 2200));
     const result = JSON.parse(JSON.stringify(demo.result));
+    if (typeof window.__vcDemoScene === 'function') await window.__vcDemoScene(text, result);
+    else await new Promise((ok) => setTimeout(ok, 2200));
     viewerSrc = { result, text };
     renderResult(result);
     addDetectBanner(result, document.getElementById('contractType')?.value || 'unsure');
@@ -1267,6 +1268,12 @@ async function runDemo(demo) {
       '<div class="vc-demo-note" role="note"><b>ผลตัวอย่าง · ฟรี</b><span>เตรียมไว้ล่วงหน้า ไม่ได้ตรวจด้วย AI · ไม่ใช้เครดิต · ไม่บันทึกประวัติ</span><small>อยากตรวจจริง วางสัญญาของคุณเองแล้วกดตรวจ</small><div class="vc-demo-acts"><button type="button" class="vc-demo-other">ลองฉบับอื่น</button><button type="button" class="vc-demo-exit">✕ ออกจากผลตัวอย่าง</button></div></div>');
     // ปุ่มย้อนกลับของเบราว์เซอร์/ปัดขอบจอ = ออกจากผลตัวอย่าง (ไม่หลุดออกจากเว็บ)
     try { if (history.state && history.state.vcDemo) history.replaceState({ vcDemo: 1 }, '', location.href); else history.pushState({ vcDemo: 1 }, '', location.href); } catch (e) {}
+    // ชวนลองกับสัญญาจริงท้ายผล
+    const free = !currentUser ? 'สมัครฟรี รับตรวจ 2 ครั้ง ไม่ต้องใช้บัตร' : (lastCredits ? 'คุณมี ' + lastCredits + ' เครดิต · ตรวจครั้งละ 1 เครดิต' : 'ตรวจด้วย AI ทีละข้อแบบนี้');
+    els.result.insertAdjacentHTML('beforeend',
+      '<section class="vc-demo-cta"><span class="vc-dcta-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3h6l1 2h3v16H5V5h3z"/><path d="M9 12l2 2 4-4"/></svg></span>' +
+      '<h3>อยากรู้ว่าสัญญาของคุณมีจุดแบบนี้ไหม?</h3><p>วางสัญญาของคุณ ระบบ AI จะอ่านทีละข้อและสรุปให้แบบเดียวกันนี้</p><p class="vc-dcta-free">' + esc(free) + '</p>' +
+      '<button type="button" class="vc-dcta-go">วางสัญญาของฉัน</button><button type="button" class="vc-demo-other vc-dcta-other">ลองตัวอย่างฉบับอื่น</button></section>');
     toast('ผลตัวอย่าง · ไม่ใช้เครดิต');
     els.result.scrollIntoView({ behavior: 'smooth', block: 'start' });
   } finally {
@@ -1298,8 +1305,11 @@ window.addEventListener('popstate', () => {
   exitDemo(p);
 });
 document.addEventListener('click', (e) => {
-  const t = e.target.closest && e.target.closest('.vc-demo-exit, .vc-demo-other');
-  if (t) { e.preventDefault(); leaveDemo(t.classList.contains('vc-demo-other')); }
+  const t = e.target.closest && e.target.closest('.vc-demo-exit, .vc-demo-other, .vc-dcta-go');
+  if (!t) return;
+  e.preventDefault();
+  leaveDemo(t.classList.contains('vc-demo-other'));
+  if (t.classList.contains('vc-dcta-go')) setTimeout(() => { const pb = document.querySelector('.vc-paste'); if (pb) pb.focus({ preventScroll: true }); }, 350);
 });
 
 /* ---------- 5b. อัปโหลดไฟล์ ---------- */
