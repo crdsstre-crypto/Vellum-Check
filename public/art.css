@@ -3778,3 +3778,90 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   /* การ์ดผลตรวจมีแอนิเมชัน fadeUp (transform) ทำให้ position:fixed ข้างในอิงการ์ดแทนหน้าจอ — ปิดเมื่อแสดงผลแล้ว */
   html.vc-art #resultCard:has(article.rpt.vc-m){animation:none !important}
 }
+
+
+/* ===== มือถือ: ฉากเปิดผลตรวจ + ตราประทับ + แผนที่สัญญา + ฉลองอ่านครบ (8 พ.ย. 2026) — เฉพาะ ≤767px ===== */
+.vc-stamp,.vc-map,.vc-cele{display:none}
+@media (max-width:767px){
+  /* 1) ฉากเปิด */
+  html.vc-art .vc-sum{position:relative;overflow:visible}
+  html.vc-art article.rpt.vc-reveal .vc-sum{animation:vcSumIn .55s cubic-bezier(.2,.8,.3,1) both}
+  html.vc-art article.rpt.vc-reveal .vc-sum-tx > *{animation:vcFadeUp .5s ease both}
+  html.vc-art article.rpt.vc-reveal .vc-sum-tx .vc-sum-k{animation-delay:.35s}
+  html.vc-art article.rpt.vc-reveal .vc-sum-tx h3{animation-delay:.55s}
+  html.vc-art article.rpt.vc-reveal .vc-sum-tx > p:last-child{animation-delay:.75s}
+  html.vc-art article.rpt.vc-reveal :is(.vc-sum-leg,.vc-map,.vc-sum .ix-prog,.vc-sum .share-bar){animation:vcFadeUp .5s ease both;animation-delay:.9s}
+  html.vc-art article.rpt.vc-reveal .vc-tabs{animation:vcFadeUp .5s ease both;animation-delay:1s}
+  html.vc-art article.rpt.vc-reveal .vc-brief{animation:vcFadeUp .5s ease both;animation-delay:1.05s}
+  html.vc-art article.rpt.vc-reveal .ix-row{animation:vcCardIn .5s cubic-bezier(.2,.8,.3,1) both;animation-delay:calc(1.1s + var(--i,0) * 90ms)}
+  html.vc-art article.rpt.vc-reveal .vc-sum-tx h3{text-shadow:0 0 0 transparent}
+  @keyframes vcSumIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+  @keyframes vcFadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  @keyframes vcCardIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  html.vc-art .vc-sum .vc-donut svg{filter:drop-shadow(0 0 10px var(--glow,rgba(255,255,255,.08)))}
+  html.vc-art .vc-sum.lv-hi{--glow:rgba(248,113,113,.35)}
+  html.vc-art .vc-sum.lv-mid{--glow:rgba(251,191,36,.3)}
+  html.vc-art .vc-sum.lv-lo{--glow:rgba(52,211,153,.3)}
+
+  /* 2) ตราประทับ */
+  html.vc-art .vc-stamp{display:block;position:absolute;top:-16px;right:-8px;z-index:4;width:96px;height:96px;pointer-events:none;opacity:0;transform:scale(2.4) rotate(-4deg)}
+  html.vc-art .vc-stamp svg{display:block;width:100%;height:100%;mix-blend-mode:screen}
+  html.vc-art .vc-stamp.lv-hi{color:#f87171}
+  html.vc-art .vc-stamp.lv-mid{color:#fbbf24}
+  html.vc-art .vc-stamp.lv-lo{color:#34d399}
+  html.vc-art .vc-stamp.is-hit{animation:vcStampHit .42s cubic-bezier(.5,0,.75,0) forwards}
+  html.vc-art .vc-stamp.is-set{opacity:.9;transform:rotate(-14deg) scale(1);animation:none}
+  @keyframes vcStampHit{0%{opacity:0;transform:scale(2.4) rotate(-4deg)}55%{opacity:1;transform:scale(.9) rotate(-15deg)}75%{transform:scale(1.04) rotate(-14deg)}100%{opacity:.9;transform:scale(1) rotate(-14deg)}}
+  html.vc-art .vc-sum.vc-thud{animation:vcThud .36s ease}
+  @keyframes vcThud{0%{transform:none}30%{transform:translateY(3px) scale(.995)}60%{transform:translateY(-1px)}100%{transform:none}}
+  html.vc-art .vc-sum .vc-date.vc-date-in-stamp{visibility:hidden}
+  /* เผื่อพื้นที่ให้ตราไม่ทับข้อความ */
+  html.vc-art .vc-sum:has(.vc-stamp) .vc-sum-meta{padding-right:70px}
+  html.vc-art .vc-sum:has(.vc-stamp) .vc-sum-tx{padding-right:6px}
+
+  /* 4) แผนที่สัญญา */
+  html.vc-art .vc-map{display:block;margin:14px 0 0}
+  html.vc-art .vc-map-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:0 0 8px}
+  html.vc-art .vc-map-h span{font:600 12.5px/1.2 Prompt,Sarabun,sans-serif;color:#d4d4d8}
+  html.vc-art .vc-map-h small{font:400 11px/1.2 Prompt,Sarabun,sans-serif;color:#7a7a82;text-align:right}
+  html.vc-art .vc-map-bar{display:flex;gap:3px;align-items:flex-end;height:30px}
+  html.vc-art .vc-map-c{position:relative;flex:1 1 0;min-width:0;height:10px;border-radius:3px;background:rgba(255,255,255,.08);border:0;padding:0;margin:0;display:block}
+  html.vc-art .vc-map-c.is-hit{height:26px;background:var(--c);box-shadow:0 0 12px -2px var(--c);cursor:pointer;-webkit-tap-highlight-color:transparent}
+  html.vc-art .vc-map-c.is-hit::before,html.vc-art .vc-map-c.is-hit::after{display:none !important}
+  html.vc-art .vc-map-c.is-hit:active{transform:scaleY(.85)}
+  html.vc-art .vc-map-c i{position:absolute;left:50%;bottom:calc(100% + 3px);transform:translateX(-50%);font:600 9.5px/1 Prompt,Sarabun,sans-serif;font-style:normal;color:var(--c);white-space:nowrap}
+  html.vc-art .vc-map-bar:has(.vc-map-c:nth-child(25)) .vc-map-c i{display:none}
+  html.vc-art .vc-map{padding-top:2px}
+  html.vc-art .vc-map:has(.vc-map-c i) .vc-map-bar{margin-top:12px}
+  html.vc-art article.rpt.vc-reveal .vc-map-c{animation:vcBarUp .45s cubic-bezier(.2,.8,.3,1) both;animation-delay:calc(1s + var(--d,0ms))}
+  @keyframes vcBarUp{from{transform:scaleY(0);transform-origin:bottom;opacity:0}to{transform:none;opacity:1}}
+
+  /* 5) ฉลองอ่านครบ */
+  .vc-cele{display:grid;place-items:center;position:fixed;inset:0;z-index:10050;padding:24px;background:rgba(0,0,0,.55);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);animation:vcFadeIn .25s ease both}
+  .vc-cele.out{animation:vcFadeOut .25s ease both}
+  @keyframes vcFadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes vcFadeOut{to{opacity:0}}
+  .vc-cele-card{width:100%;max-width:320px;padding:26px 22px 20px;border-radius:24px;text-align:center;font-family:Prompt,Sarabun,sans-serif;
+    background:linear-gradient(160deg,rgba(52,211,153,.14),#17171a 55%);border:1px solid rgba(52,211,153,.35);box-shadow:0 30px 80px rgba(0,0,0,.6);animation:vcPop .5s cubic-bezier(.3,1.5,.5,1) both}
+  @keyframes vcPop{from{opacity:0;transform:scale(.8) translateY(10px)}to{opacity:1;transform:none}}
+  .vc-cele-art{position:relative;width:88px;height:88px;margin:0 auto 12px}
+  .vc-cele-art svg{position:relative;display:block;filter:drop-shadow(0 0 16px rgba(52,211,153,.45))}
+  .vc-cele-sh{stroke-dasharray:1;stroke-dashoffset:1;animation:vcDraw .7s ease .15s forwards}
+  .vc-cele-ck{stroke-dasharray:1;stroke-dashoffset:1;animation:vcDraw .4s ease .7s forwards}
+  @keyframes vcDraw{to{stroke-dashoffset:0}}
+  .vc-cele-sp{position:absolute;left:50%;top:50%}
+  .vc-cele-sp i{position:absolute;left:-3px;top:-3px;width:6px;height:6px;border-radius:50%;background:#6ee7b7;opacity:0;
+    animation:vcSpark .8s ease-out var(--dl) forwards}
+  .vc-cele-sp i:nth-child(3n){background:#fcd34d;width:5px;height:5px}
+  .vc-cele-sp i:nth-child(4n){background:#93c5fd}
+  @keyframes vcSpark{0%{opacity:0;transform:rotate(var(--a)) translateY(0) scale(.4)}25%{opacity:1}100%{opacity:0;transform:rotate(var(--a)) translateY(calc(var(--r) * -1)) scale(1)}}
+  .vc-cele-card b{display:block;font:700 18px/1.35 Prompt,Sarabun,sans-serif;color:#f4f4f5}
+  .vc-cele-card p{margin:6px 0 16px;font:400 13.5px/1.6 Prompt,Sarabun,sans-serif;color:#a3a3aa}
+  .vc-cele-card button{width:100%;min-height:48px;border:0;border-radius:14px;background:#34d399;color:#06281b;font:600 15px/1 Prompt,Sarabun,sans-serif;cursor:pointer}
+  .vc-cele-card button::before,.vc-cele-card button::after{display:none !important}
+}
+@media (max-width:767px) and (prefers-reduced-motion:reduce){
+  html.vc-art .vc-stamp{opacity:.9;transform:rotate(-14deg)}
+  .vc-cele *,.vc-cele{animation:none !important}
+  .vc-cele-sh,.vc-cele-ck{stroke-dashoffset:0}
+}
