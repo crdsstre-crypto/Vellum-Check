@@ -5029,3 +5029,81 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   html.vc-art.vc-tt-show .to-top{opacity:1;transform:none;pointer-events:auto}
   html.vc-art .to-top svg{width:18px !important;height:18px !important;flex-basis:18px}
 }
+
+/* ===== v213 (มือถือ) ===== */
+.vc-map-tip,.vc-about,.vc-burst{display:none}
+@media (max-width:767px){
+  /* บั้ก ก: ตัวเลขในการ์ดเป็นตัวหนาในบรรทัด */
+  html.vc-art article.rpt.vc-m .ix-row .ix-tx > p .vc-n{display:inline !important;font:inherit !important;font-weight:600 !important;color:#ededef !important;margin:0 !important}
+  /* บั้ก ข: รายการเช็กลิสต์ไม่แตกคอลัมน์ */
+  html.vc-art article.rpt.vc-m section.miss li .vc-ck-tx{flex:1 1 auto;min-width:0;display:block}
+  html.vc-art article.rpt.vc-m section.miss li .vc-ck-tx .gl-tap{display:inline !important;padding:0 !important;margin:0 !important;font:inherit !important;width:auto !important}
+  /* บั้ก ง: ฟอนต์หัวการ์ดขั้นต่อไป */
+  html.vc-art article.rpt.vc-m .vc-end .vc-end-h{font-family:Prompt,Sarabun,sans-serif !important;font-variant-numeric:normal !important;font-feature-settings:normal !important}
+  /* บั้ก จ: ตราย้ายมุมซ้ายบนของโดนัท */
+  html.vc-art .vc-sum .vc-donut .vc-stamp{left:-12px !important;top:-10px !important;bottom:auto !important;right:auto !important;width:44px !important;height:44px !important}
+
+  /* ไอเดีย 1: หัวเว็บหลบตอนเลื่อนลง */
+  html.vc-art .site-header{transition:transform .3s cubic-bezier(.2,.8,.3,1),background .35s ease,border-color .35s ease !important}
+  html.vc-art.vc-hd-hide .site-header{transform:translateY(-110%) !important}
+  html.vc-art.vc-hd-hide .vc-mini{top:6px !important;transition:top .3s cubic-bezier(.2,.8,.3,1),transform .35s cubic-bezier(.2,.9,.3,1),opacity .25s ease}
+  html.vc-art.vc-hd-hide.vc-mini-on .vc-tabs{top:58px !important}
+  html.vc-art.vc-hd-hide:not(.vc-mini-on) .vc-tabs{top:4px !important}
+  html.vc-art .vc-mini{transition:top .3s cubic-bezier(.2,.8,.3,1),transform .35s cubic-bezier(.2,.9,.3,1),opacity .25s ease}
+  html.vc-art .vc-tabs{transition:top .3s cubic-bezier(.2,.8,.3,1)}
+
+  /* ไอเดีย 2: แตะช่องในแผนที่สัญญา */
+  html.vc-art .vc-sum .vc-map .vc-map-c:not(.is-hit){cursor:pointer;-webkit-tap-highlight-color:transparent}
+  html.vc-art .vc-sum .vc-map .vc-map-c.is-sel{border-color:rgba(255,255,255,.45) !important;background:rgba(255,255,255,.09) !important}
+  html.vc-art .vc-sum .vc-map .vc-map-c.is-sel i{color:#ededef !important}
+  html.vc-art .vc-sum .vc-map .vc-map-tip:not([hidden]){display:block;margin:10px 0 0;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+    font:400 13.5px/1.6 Sarabun,Prompt,sans-serif;color:#d4d4d8;animation:vcFadeIn .2s ease both}
+  .vc-map-tip b{font:600 13px/1 Prompt,Sarabun,sans-serif;color:#f4f4f5;margin-right:6px}
+  .vc-map-tip small{display:block;margin-top:5px;font:400 11.5px/1.4 Prompt,Sarabun,sans-serif;color:#76767e}
+
+  /* ไอเดีย 3: ไอคอนหมวดบนการ์ด */
+  html.vc-art article.rpt.vc-m .ix-row .vc-no.vc-topic{display:inline-flex !important;align-items:center;gap:5px;max-width:60%;overflow:hidden}
+  html.vc-art article.rpt.vc-m .ix-row .vc-no.vc-topic svg{flex:0 0 13px;opacity:.9}
+  html.vc-art article.rpt.vc-m .ix-row .vc-no.vc-topic span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+  /* ไอเดีย 7: การ์ดเกี่ยวกับผลนี้ */
+  html.vc-art article.rpt.vc-m > .vc-about{display:block;order:7;margin:16px 0 0;padding:16px;border-radius:18px;background:rgba(24,24,28,.92);border:1px solid rgba(255,255,255,.08);font-family:Prompt,Sarabun,sans-serif}
+  html.vc-art article.rpt.vc-m #commandCenter.vc-cc-empty{display:none !important}
+  .vc-ab-h{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+  .vc-ab-ic{display:grid;place-items:center;flex:0 0 40px;width:40px;height:40px;border-radius:12px;color:#6ee7b7;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25)}
+  .vc-ab-h h3{margin:0 !important;font:700 16px/1.3 Prompt,Sarabun,sans-serif !important;color:#f4f4f5 !important;background:none !important}
+  .vc-ab-h h3::before,.vc-ab-h h3::after{display:none !important}
+  .vc-ab-h p{margin:2px 0 0 !important;font:400 12.5px/1.4 Prompt,Sarabun,sans-serif;color:#8b8b94}
+  .vc-ab-m{display:flex;flex-direction:column;gap:12px}
+  .vc-ab-rt{display:flex;justify-content:space-between;gap:10px;margin-bottom:6px;font:400 13px/1.3 Prompt,Sarabun,sans-serif;color:#c4c4ca}
+  .vc-ab-rt b{font-weight:600;color:#ededef;white-space:nowrap}
+  .vc-ab-b{height:6px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+  .vc-ab-b i{display:block;height:100%;border-radius:inherit;background:#6ee7b7;transition:width .6s ease}
+  .vc-ab-r.t-mid .vc-ab-b i{background:#fbbf24}
+  .vc-ab-r.t-lo .vc-ab-b i{background:#8b8b94}
+  html.vc-art article.rpt.vc-m .vc-about .vc-ab-f{margin-top:14px;border-top:1px solid rgba(255,255,255,.07)}
+  html.vc-art article.rpt.vc-m .vc-about .vc-ab-f > details{margin:0 !important;border:0 !important;border-bottom:1px solid rgba(255,255,255,.07) !important;border-radius:0 !important;background:none !important;padding:0 !important;box-shadow:none !important}
+  html.vc-art article.rpt.vc-m .vc-about .vc-ab-f > details:last-child{border-bottom:0 !important}
+  html.vc-art article.rpt.vc-m .vc-about .vc-ab-f > details > summary{padding:13px 0 !important;background:none !important;border:0 !important;min-height:0 !important}
+  html.vc-art article.rpt.vc-m .vc-about .vc-ab-f .cb-src-ico{display:none !important}
+  html.vc-art article.rpt.vc-m .vc-about .vc-ab-f .cb-src-tx b{font:600 14px/1.3 Prompt,Sarabun,sans-serif !important}
+  html.vc-art article.rpt.vc-m .vc-about .vc-ab-f .cb-src-tx small{font-size:12px !important}
+
+  /* ไอเดีย 6: การ์ดโผล่ทีละใบ + เลขลอย */
+  html.vc-art article.rpt.vc-m .ix-row.vc-rv{opacity:0;transform:translateY(18px);transition:opacity .45s ease var(--rd,0ms),transform .5s cubic-bezier(.2,.8,.3,1) var(--rd,0ms)}
+  html.vc-art article.rpt.vc-m .ix-row.vc-rv.vc-in{opacity:1;transform:none}
+  html.vc-art article.rpt.vc-m3 .ix-row[data-wm]:not(.vc-swiping):not(.vc-sw-back)::after{translate:0 var(--py,0px)}
+
+  /* ไอเดีย 8: ฉลองตอนอ่านแล้ว */
+  .vc-mini-dots i.pop{animation:vcDotPop .6s cubic-bezier(.2,1.6,.4,1)}
+  .vc-mini-dots i.pop::after{content:"";position:absolute;inset:-3px;border-radius:50%;border:2px solid #34d399;animation:vcRing .6s ease-out forwards}
+  @keyframes vcDotPop{0%{transform:scale(.6)}60%{transform:scale(1.5)}100%{transform:scale(1)}}
+  @keyframes vcRing{from{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(2.4)}}
+  html.vc-art .bump{display:inline-block;animation:vcBump .5s cubic-bezier(.2,1.6,.4,1)}
+  @keyframes vcBump{40%{transform:scale(1.18);color:#6ee7b7}}
+  html.vc-art article.rpt.vc-m .ix-row .vc-burst{display:block;position:absolute;right:30px;top:50%;width:44px;height:44px;margin-top:-22px;border-radius:50%;pointer-events:none;
+    background:radial-gradient(circle,rgba(52,211,153,.55),transparent 65%);animation:vcBurst .7s ease-out forwards}
+  @keyframes vcBurst{from{opacity:1;transform:scale(.4)}to{opacity:0;transform:scale(2.6)}}
+}
+@media (max-width:767px) and (prefers-reduced-motion:reduce){ html.vc-art article.rpt.vc-m .ix-row.vc-rv{opacity:1;transform:none} }
+@media (max-width:767px){ html.vc-art .vc-end-h.bump{display:block} }
