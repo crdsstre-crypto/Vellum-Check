@@ -4259,9 +4259,10 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       return { n: k + 1, title: t ? t.textContent.trim() : '', quote: q ? q.textContent.trim() : '', fix: p ? p.textContent.trim() : '' };
     }).filter(function (x) { return x && x.fix; });
   }
-  function buildAll() {
+  function buildAll(onlyStar) {
     var L = ['ข้อที่อยากขอแก้ไขในสัญญา', ''];
-    allFixes().forEach(function (x, j) {
+    var its0 = items(), list = allFixes().filter(function (x) { return !onlyStar || (its0[x.n - 1] && its0[x.n - 1].classList.contains('vc-star')); });
+    list.forEach(function (x, j) {
       L.push((j + 1) + ') ' + x.title);
       if (x.quote) L.push('ในสัญญา: “' + (x.quote.length > 160 ? x.quote.slice(0, 160) + '…' : x.quote) + '”');
       L.push('ขอแก้เป็น: ' + x.fix); L.push('');
@@ -5524,27 +5525,33 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   var sw = null;
   box.addEventListener('touchstart', function (e) {
     if (!mq.matches) return;
-    var row = e.target.closest('article.rpt.vc-m3 .ix-row'); if (!row || row.classList.contains('is-done')) return;
-    var t = e.touches[0]; sw = { row: row, x: t.clientX, y: t.clientY, dx: 0, on: false, dead: false };
+    var row = e.target.closest('article.rpt.vc-m3 .ix-row'); if (!row) return;
+    var t = e.touches[0]; sw = { row: row, x: t.clientX, y: t.clientY, dx: 0, on: false, dead: false, dir: 0 };
   }, { passive: true });
   box.addEventListener('touchmove', function (e) {
     if (!sw || sw.dead) return;
     var t = e.touches[0], dx = t.clientX - sw.x, dy = t.clientY - sw.y;
-    if (!sw.on) { if (Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) { sw.dead = true; return; } if (dx > 12 && dx > Math.abs(dy) * 1.3) { sw.on = true; sw.row.classList.add('vc-swiping'); } else return; }
-    sw.dx = Math.max(0, Math.min(dx, 160));
-    var p = Math.min(1, sw.dx / 100);
-    sw.row.style.setProperty('--sw', p.toFixed(3)); sw.row.style.setProperty('--swx', sw.dx + 'px');
+    if (!sw.on) {
+      if (Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) { sw.dead = true; return; }
+      if (dx > 12 && dx > Math.abs(dy) * 1.3 && !sw.row.classList.contains('is-done')) { sw.on = true; sw.dir = 1; sw.row.classList.add('vc-swiping'); }
+      else if (dx < -12 && -dx > Math.abs(dy) * 1.3) { sw.on = true; sw.dir = -1; sw.row.classList.add('vc-swiping', 'vc-swiping-l'); }
+      else return;
+    }
+    sw.dx = sw.dir > 0 ? Math.max(0, Math.min(dx, 160)) : Math.min(0, Math.max(dx, -160));
+    var p = Math.min(1, Math.abs(sw.dx) / 100);
+    sw.row.style.setProperty('--sw', sw.dir > 0 ? p.toFixed(3) : '0'); sw.row.style.setProperty('--swl', sw.dir < 0 ? p.toFixed(3) : '0'); sw.row.style.setProperty('--swx', sw.dx + 'px');
     sw.row.classList.toggle('vc-sw-go', p >= 1);
   }, { passive: true });
   box.addEventListener('touchend', function () {
     if (!sw) return; var s = sw; sw = null;
     if (!s.on) return;
-    var go = s.dx >= 100;
+    var go = Math.abs(s.dx) >= 100;
     s.row.classList.remove('vc-swiping'); s.row.classList.add('vc-sw-back');
-    s.row.style.setProperty('--swx', '0px'); s.row.style.setProperty('--sw', go ? '1' : '0');
+    s.row.style.setProperty('--swx', '0px'); s.row.style.setProperty('--sw', go && s.dir > 0 ? '1' : '0');
     s.row.__vcNoClick = Date.now();
-    if (go) markRead(s.row);
-    setTimeout(function () { s.row.classList.remove('vc-sw-back', 'vc-sw-go'); s.row.style.removeProperty('--sw'); s.row.style.removeProperty('--swx'); }, go ? 650 : 320);
+    if (go && s.dir > 0) markRead(s.row);
+    if (go && s.dir < 0 && typeof window.__vcToggleStar === 'function') { window.__vcToggleStar(+s.row.getAttribute('data-ixcard')); if (navigator.vibrate) try { navigator.vibrate(12); } catch (e) {} }
+    setTimeout(function () { s.row.classList.remove('vc-sw-back', 'vc-sw-go', 'vc-swiping-l'); s.row.style.removeProperty('--sw'); s.row.style.removeProperty('--swl'); s.row.style.removeProperty('--swx'); }, go ? 650 : 320);
   });
   box.addEventListener('click', function (e) {
     var row = e.target.closest('.ix-row'); if (row && row.__vcNoClick && Date.now() - row.__vcNoClick < 450) { e.preventDefault(); e.stopImmediatePropagation(); }
@@ -5670,8 +5677,8 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     var known = !!(sel && sel.value !== 'unsure');
     cls(sum, 'vc-type-known', known);
     /* ตราประทับเล็กทับมุมโดนัท */
-    var st = sum.querySelector(':scope > .vc-stamp'), dn = sum.querySelector('.vc-donut');
-    if (st && dn) dn.appendChild(st);
+    var st = sum.querySelector('.vc-stamp'), stx = sum.querySelector('.vc-sum-tx');
+    if (st && stx && st.parentNode !== stx) stx.insertBefore(st, stx.firstChild);
     /* แถวหัวการ์ด: ชื่อ + ไอคอนคัดลอก/แชร์/PDF */
     var sb = sum.querySelector('.share-bar');
     if (sb && !sb.parentNode.classList.contains('vc-sum-hd')) {
@@ -5894,7 +5901,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       while ((m = NUM.exec(t))) {
         var val = m[1].trim(), unit = (/(%|เปอร์เซ็นต์|บาท|วัน|เดือน|ปี|ครั้ง|หน่วย|ชั่วโมง|งวด)$/.exec(val) || [])[1]; if (!unit) continue;
         var before = t.slice(0, m.index).replace(/\s+$/, ''), cut = Math.max(before.lastIndexOf(' '), before.lastIndexOf(','), before.lastIndexOf('·'));
-        var lab = before.slice(cut + 1).trim().replace(/^(และ|หรือ|โดย|แต่|ซึ่ง|กับ|ส่วน|รวม)\s*/, ''); if (lab.length > 20) lab = lab.slice(-20); if (lab.length < 2) lab = lab0;
+        var lab = before.slice(cut + 1).trim().replace(/^(และ|หรือ|โดย|แต่|ซึ่ง|กับ|ส่วน|รวม|มี|ให้|ที่)\s*/, ''); if (lab.length > 20) lab = lab.slice(-20); if (lab.length < 2) lab = lab0;
         found.push({ val: val.replace(/\s*(%|เปอร์เซ็นต์|บาท|วัน|เดือน|ปี|ครั้ง|หน่วย|ชั่วโมง|งวด)$/, ''), unit: unit, lab: lab });
       }
     });
@@ -6098,7 +6105,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     var match = items.filter(function (x) { return x.quote && !x.missing; }).length, ref = items.filter(function (x) { return x.reference && String(x.reference).trim(); }).length, miss = (L.missing_info || []).length;
     function bar(lab, v, max, txt, tone) { var w = max ? Math.round(v / max * 100) : 0; return '<div class="vc-ab-r t-' + tone + '"><div class="vc-ab-rt"><span>' + lab + '</span><b>' + txt + '</b></div><div class="vc-ab-b"><i style="width:' + w + '%"></i></div></div>'; }
     m.innerHTML = bar('ข้อความตรงกับสัญญา', match, tot, match + '/' + tot + ' ประเด็น', match === tot ? 'ok' : 'mid') +
-      bar('อ้างอิงมาตรากฎหมาย', ref, tot, ref ? ref + '/' + tot + ' ประเด็น' : 'ไม่มี', ref ? 'ok' : 'lo') +
+      (ref ? bar('อ้างอิงมาตรากฎหมาย', ref, tot, ref + '/' + tot + ' ประเด็น', 'ok') : '<div class="vc-ab-r vc-ab-note"><div class="vc-ab-rt"><span>อ้างอิงมาตรากฎหมาย</span><b>—</b></div><p>AI ไม่ได้ระบุมาตราในผลนี้ ถ้าต้องการข้อกฎหมายที่แน่ชัด ควรถามผู้เชี่ยวชาญ</p></div>') +
       bar('ข้อมูลที่สัญญายังไม่ระบุ', Math.min(miss, 10), 10, miss + ' หัวข้อ', miss ? 'mid' : 'ok');
   }
 
@@ -6143,5 +6150,138 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   }
   function q() { if (!queued) { queued = true; requestAnimationFrame(run); } }
   new MutationObserver(q).observe(box, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+  q();
+})();
+
+/* ===== มือถือ v228: ติดดาวข้อที่จะต่อรอง, ปุ่มลอยตอนอ่านครบ, เมนูล่างมีไฮไลต์ + ป้ายจำนวน, ผลตอบกลับปุ่มคัดลอก/แชร์, แตะค้างดูข้อขอแก้ ===== */
+(function () {
+  var box = document.getElementById('result'); if (!box) return;
+  var mq = window.matchMedia('(max-width:767px)'), root = document.documentElement, queued = false;
+  var calm = function () { return root.hasAttribute('data-calm') || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
+  function cls(el, c, on) { if (el.classList.contains(c) !== on) el.classList.toggle(c, on); }
+  function rpt() { return box.querySelector('article.rpt.vc-m'); }
+  function its(r) { return r ? r.querySelectorAll('details.item') : []; }
+  var STAR = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg>';
+  function key(i) { var s = (window.__vcCheckedText || '') + '|star|' + i, h = 0; for (var k = 0; k < s.length; k++) h = (h * 31 + s.charCodeAt(k)) | 0; return 'vc_star_' + h; }
+  function isStar(i) { try { return localStorage.getItem(key(i)) === '1'; } catch (e) { return false; } }
+  function setStar(i, v) { try { if (v) localStorage.setItem(key(i), '1'); else localStorage.removeItem(key(i)); } catch (e) {} }
+  function share(txt, btn, okMsg) {
+    function done() { var sp = btn.querySelector('span') || btn, o = sp.textContent; sp.textContent = okMsg; btn.classList.add('ok'); setTimeout(function () { sp.textContent = o; btn.classList.remove('ok'); }, 1600); }
+    function fb() { var ta = document.createElement('textarea'); ta.value = txt; ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;font-size:16px'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} ta.remove(); done(); }
+    function copy() { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, fb); else fb(); }
+    if (navigator.share) navigator.share({ text: txt }).catch(function (e) { if (!e || e.name !== 'AbortError') copy(); }); else copy();
+  }
+  function starCount(r) { return [].filter.call(its(r), function (d) { return d.classList.contains('vc-star'); }).length; }
+  function sendStar(btn) { var r = rpt(); if (!r || !window.__vcBuildAll) return; var n = starCount(r); share(window.__vcBuildAll(n > 0), btn, 'คัดลอกแล้ว'); }
+
+  /* 1) ติดดาว */
+  window.__vcToggleStar = function (i) {
+    var r = rpt(); if (!r) return; var v = !isStar(i); setStar(i, v); apply(r);
+    var row = r.querySelector('.ix-row[data-ixcard="' + i + '"]'); if (row && v && !calm()) { row.classList.remove('vc-star-pop'); void row.offsetWidth; row.classList.add('vc-star-pop'); setTimeout(function () { row.classList.remove('vc-star-pop'); }, 600); }
+  };
+  function apply(r) {
+    var ds = its(r);
+    [].forEach.call(ds, function (d, i) {
+      var on = isStar(i); cls(d, 'vc-star', on);
+      var row = r.querySelector('.ix-row[data-ixcard="' + i + '"]');
+      if (row) {
+        cls(row, 'vc-star', on);
+        if (!row.querySelector('.vc-swl')) { var l = document.createElement('span'); l.className = 'vc-swl'; l.setAttribute('aria-hidden', 'true'); row.appendChild(l); }
+        var l2 = row.querySelector('.vc-swl'), t = (on ? 'เอาดาวออก' : 'ติดดาว'); if (l2.textContent !== t) l2.innerHTML = STAR + '<em>' + t + '</em>';
+        if (!row.querySelector('.vc-star-ic')) { var s = document.createElement('span'); s.className = 'vc-star-ic'; s.setAttribute('aria-hidden', 'true'); s.innerHTML = STAR; var sm = row.querySelector('.ix-tx > small'); if (sm) sm.appendChild(s); }
+      }
+      /* ปุ่มดาวในชีต */
+      var fa = d.querySelector('.vc-fix-act');
+      if (fa && !fa.querySelector('.vc-fa-star')) {
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'vc-fa-star'; b.setAttribute('aria-label', 'ติดดาวข้อนี้'); b.innerHTML = STAR;
+        b.addEventListener('click', function (e) { e.preventDefault(); window.__vcToggleStar(i); });
+        fa.insertBefore(b, fa.firstChild);
+      }
+      var fb = fa && fa.querySelector('.vc-fa-star'); if (fb) { cls(fb, 'on', on); var al = on ? 'เอาดาวออก' : 'ติดดาวข้อนี้'; if (fb.getAttribute('aria-label') !== al) fb.setAttribute('aria-label', al); }
+    });
+    /* การ์ดขั้นต่อไป: ส่งเฉพาะข้อที่ติดดาว */
+    var end = r.querySelector('.vc-end'), n = starCount(r);
+    if (end) {
+      var g = end.querySelector('.vc-end-g'), bs = end.querySelector('.vc-end-star');
+      if (!bs && g) { bs = document.createElement('button'); bs.type = 'button'; bs.className = 'vc-end-b vc-end-star'; bs.innerHTML = STAR + '<span></span>'; g.insertBefore(bs, g.firstChild); bs.addEventListener('click', function () { if (window.__vcBuildAll) share(window.__vcBuildAll(true), bs, 'คัดลอกแล้ว'); }); }
+      if (bs) { bs.hidden = !n; var tx = 'ส่งเฉพาะข้อที่ติดดาว (' + n + ')'; var sp = bs.querySelector('span'); if (!bs.classList.contains('ok') && sp.textContent !== tx) sp.textContent = tx; }
+      cls(end, 'has-star', n > 0);
+    }
+    return n;
+  }
+
+  /* 3) ปุ่มลอยตอนอ่านครบ */
+  var pill = null, endVis = false, endIO = null;
+  function floater(r) {
+    if (!pill) {
+      pill = document.createElement('button'); pill.type = 'button'; pill.className = 'vc-fpill'; pill.innerHTML = '<span></span><i aria-hidden="true">→</i>'; document.body.appendChild(pill);
+      pill.addEventListener('click', function () { sendStar(pill); });
+    }
+    var end = r.querySelector('.vc-end');
+    if (end && !end.__vcIO && 'IntersectionObserver' in window) { end.__vcIO = true; if (endIO) endIO.disconnect(); endIO = new IntersectionObserver(function (es) { endVis = es[0].isIntersecting; floater(rpt() || r); }); endIO.observe(end); }
+    var rows = r.querySelectorAll('.ix-row'), all = rows.length && [].every.call(rows, function (x) { return x.classList.contains('is-done'); });
+    var nf = window.__vcFixCount ? window.__vcFixCount() : 0, n = starCount(r);
+    var tab = r.getAttribute('data-vtab'); var onIss = !tab || tab === 'iss';
+    var show = !!(all && nf && onIss && !endVis && !root.classList.contains('vc-sheet-open') && !root.classList.contains('vc-tool-open'));
+    var tx = n ? 'ส่งข้อที่ติดดาว (' + n + ') ให้อีกฝ่าย' : 'อ่านครบแล้ว · ส่งข้อขอแก้ให้อีกฝ่าย', sp = pill.querySelector('span');
+    if (!pill.classList.contains('ok') && sp.textContent !== tx) sp.textContent = tx;
+    cls(root, 'vc-fpill-on', show);
+  }
+
+  /* 7) เมนูล่าง: ไฮไลต์เลื่อน + ป้ายจำนวนที่ยังไม่อ่าน */
+  function nav(r) {
+    var bn = document.getElementById('bottomNav'); if (!bn) return;
+    var ind = bn.querySelector('.vc-bn-ind'); if (!ind) { ind = document.createElement('i'); ind.className = 'vc-bn-ind'; ind.setAttribute('aria-hidden', 'true'); bn.insertBefore(ind, bn.firstChild); }
+    var on = bn.querySelector('.bn-item.is-on'), items = bn.querySelectorAll('.bn-item');
+    if (on) { var k = [].indexOf.call(items, on), x = (k * 100) + '%'; if (ind.style.getPropertyValue('--x') !== x) ind.style.setProperty('--x', x); ind.style.setProperty('--n', items.length); }
+    var home = bn.querySelector('[data-nav="home"]'); if (!home) return;
+    var bd = home.querySelector('.vc-bn-badge'); if (!bd) { bd = document.createElement('b'); bd.className = 'vc-bn-badge'; home.appendChild(bd); }
+    var left = r ? [].filter.call(r.querySelectorAll('.ix-row'), function (x) { return !x.classList.contains('is-done'); }).length : 0, t = left ? String(left) : '';
+    if (bd.textContent !== t) bd.textContent = t; if (bd.hidden !== !left) bd.hidden = !left;
+  }
+
+  /* 8) ผลตอบกลับปุ่มคัดลอก/แชร์/PDF ที่หัวการ์ด */
+  box.addEventListener('click', function (e) {
+    var b = e.target.closest('.vc-sum-hd .share-bar button'); if (!b || !mq.matches) return;
+    var lab = { copy: 'คัดลอกแล้ว', share: 'เปิดแชร์แล้ว', pdf: 'กำลังเตรียม PDF' }[b.getAttribute('data-act')] || 'เรียบร้อย';
+    b.classList.remove('vc-done-ok'); void b.offsetWidth; b.classList.add('vc-done-ok'); b.setAttribute('data-tip', lab);
+    clearTimeout(b.__vcT); b.__vcT = setTimeout(function () { b.classList.remove('vc-done-ok'); }, 1500);
+  });
+
+  /* 2) แตะค้างดูข้อขอแก้ */
+  var lp = null, pop = null;
+  function hidePop() { if (pop) { pop.classList.remove('on'); } }
+  box.addEventListener('touchstart', function (e) {
+    if (!mq.matches) return; var row = e.target.closest('article.rpt.vc-m .ix-row'); if (!row) return;
+    var t = e.touches[0]; lp = { row: row, x: t.clientX, y: t.clientY, tm: setTimeout(function () { show(row); }, 480) };
+  }, { passive: true });
+  box.addEventListener('touchmove', function (e) { if (!lp) return; var t = e.touches[0]; if (Math.abs(t.clientX - lp.x) > 8 || Math.abs(t.clientY - lp.y) > 8) { clearTimeout(lp.tm); lp = null; } }, { passive: true });
+  function end() { if (!lp) return; clearTimeout(lp.tm); if (lp.shown) { lp.row.__vcNoClick = Date.now(); hidePop(); } lp = null; }
+  box.addEventListener('touchend', end); box.addEventListener('touchcancel', end);
+  function show(row) {
+    if (!lp || lp.row !== row) return;
+    var r = rpt(), d = r && its(r)[+row.getAttribute('data-ixcard')]; if (!d) return;
+    var f = d.querySelector('.it-fix'), h = f && f.querySelector('h4'), p = f && f.querySelector('p'); if (!p) return;
+    lp.shown = true;
+    if (!pop) { pop = document.createElement('div'); pop.className = 'vc-peek'; pop.setAttribute('role', 'tooltip'); document.body.appendChild(pop); }
+    pop.innerHTML = '<p class="vc-peek-k"></p><p class="vc-peek-t"></p><small>ปล่อยนิ้วเพื่อปิด · แตะการ์ดเพื่อดูรายละเอียด</small>';
+    pop.querySelector('.vc-peek-k').textContent = h ? h.textContent.trim() : 'สิ่งที่ควรขอแก้ไข';
+    pop.querySelector('.vc-peek-t').textContent = p.textContent.trim();
+    var b = row.getBoundingClientRect(), vh = window.innerHeight;
+    pop.style.left = '16px'; pop.style.right = '16px';
+    if (b.top > vh * .45) { pop.style.top = 'auto'; pop.style.bottom = (vh - b.top + 10) + 'px'; pop.classList.add('up'); } else { pop.style.bottom = 'auto'; pop.style.top = (b.bottom + 10) + 'px'; pop.classList.remove('up'); }
+    void pop.offsetWidth; pop.classList.add('on');
+    if (navigator.vibrate) try { navigator.vibrate(10); } catch (e) {}
+  }
+
+  function run() {
+    queued = false; if (!mq.matches) return;
+    var r = rpt(); nav(r); if (!r) { cls(root, 'vc-fpill-on', false); return; }
+    apply(r); floater(r);
+  }
+  function q() { if (!queued) { queued = true; requestAnimationFrame(run); } }
+  new MutationObserver(q).observe(box, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'data-vtab'] });
+  var bn = document.getElementById('bottomNav'); if (bn) new MutationObserver(q).observe(bn, { attributes: true, subtree: true, attributeFilter: ['class'] });
+  new MutationObserver(function () { if (pill) q(); }).observe(root, { attributes: true, attributeFilter: ['class'] });
   q();
 })();
