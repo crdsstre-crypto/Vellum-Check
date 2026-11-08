@@ -4994,3 +4994,44 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     wasOff = off;
   }).observe(btn, { attributes: true, attributeFilter: ['disabled'] });
 })();
+
+/* ===== มือถือ: แบ่งขั้นเป็นการ์ดลอยแยกกัน + พื้นหลังแสงออโรรา (8 พ.ย. 2026) ===== */
+(function () {
+  var root = document.documentElement, mq = window.matchMedia('(max-width:767px)');
+  var card = document.getElementById('checkCard'); if (!card) return;
+
+  /* แสงออโรรา (อยู่หลังเนื้อหา สีตามประเภทสัญญา) */
+  var au = document.createElement('div'); au.className = 'vc-aurora'; au.setAttribute('aria-hidden', 'true');
+  au.innerHTML = '<i></i><i></i><i></i>';
+  document.body.appendChild(au);
+
+  /* แบ่งเป็น 3 การ์ด: ขั้น 1 (หัวข้อแรก → ก่อนหัวข้อ 2), ขั้น 2, ขั้น 3 (ถึงท้าย) */
+  var boxes = [];
+  function wrap() {
+    if (!mq.matches || card.classList.contains('vc-boxed')) return;
+    var heads = [card.querySelector(':scope > .step-head')].concat([].slice.call(card.querySelectorAll(':scope > .step-sub')));
+    if (heads.length < 3 || heads.some(function (h) { return !h; })) return;
+    card.classList.add('vc-boxed');
+    heads.forEach(function (h, k) {
+      var box = document.createElement('div'); box.className = 'vc-box'; box.setAttribute('data-k', k + 1);
+      card.insertBefore(box, h);
+      var n = h, stop = heads[k + 1] || null;
+      while (n && n !== stop && !(n.classList && n.classList.contains('vc-rail'))) { var nx = n.nextSibling; box.appendChild(n); n = nx; }
+      boxes.push(box);
+    });
+  }
+  /* ขั้นที่กำลังทำ = ขั้นแรกที่ยังไม่เสร็จ */
+  function state() {
+    if (!boxes.length) return;
+    var act = -1;
+    boxes.forEach(function (b, i) {
+      var sn = b.querySelector('.vc-sn'), done = sn && sn.classList.contains('is-done');
+      b.classList.toggle('is-done', !!done);
+      if (!done && act < 0) act = i;
+    });
+    boxes.forEach(function (b, i) { b.classList.toggle('is-active', i === act); b.classList.toggle('is-next', act >= 0 && i > act); });
+  }
+  wrap(); state();
+  new MutationObserver(function () { state(); }).observe(card, { subtree: true, attributes: true, attributeFilter: ['class'] });
+  if (mq.addEventListener) mq.addEventListener('change', function () { wrap(); state(); });
+})();
