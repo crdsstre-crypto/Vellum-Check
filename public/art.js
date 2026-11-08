@@ -4337,8 +4337,20 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     var sum = rpt.querySelector('.vc-sum'); if (!sum) return;
     rpt.classList.add('vc-fx');
     contractMap(sum, rpt);
-    stamp(sum, rpt);
     watchDone(rpt);
+    /* หน้ารอตรวจยังเล่นตอนจบอยู่ → รอให้จบก่อนค่อยเปิดฉาก */
+    if (document.documentElement.classList.contains('vc-ld-open')) {
+      rpt.classList.add('vc-hold');
+      var wait = setInterval(function () {
+        if (document.documentElement.classList.contains('vc-ld-open')) return;
+        clearInterval(wait); rpt.classList.remove('vc-hold'); play(rpt, sum);
+      }, 60);
+      return;
+    }
+    play(rpt, sum);
+  }
+  function play(rpt, sum) {
+    stamp(sum, rpt);
     if (!calm()) {
       rpt.classList.add('vc-reveal');
       [].forEach.call(rpt.querySelectorAll('.ix-row'), function (r, i) { r.style.setProperty('--i', i); });
@@ -4716,26 +4728,63 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     }
   }).observe(btn, { attributes: true, attributeFilter: ['class'] });
 
-  /* 2) หน้าระหว่างรอตรวจ */
-  var ld = null, timers = [];
+  /* 2) หน้าระหว่างรอตรวจ — กระดาษ 3D ลอย · กล้องซูมอ่านทีละข้อ · ผลมาแล้วซูมออก เฉลยจุดเสี่ยงจริง ตราประทับ แล้วบินเข้าการ์ดสรุป */
+  var ld = null, timers = [], loopT = 0, cur = -1, lines = [], passDone = false;
+  function escH(s) { return s.replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); }
+  function T(fn, ms) { timers.push(setTimeout(fn, ms)); }
   function showLoader() {
     if (!mq.matches) return;
     hideLoader(true);
-    var lines = ta.value.split(/\n+/).map(function (l) { return l.trim(); }).filter(Boolean).slice(0, 9);
-    var esc = function (s) { return s.replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); };
-    ld = document.createElement('div'); ld.className = 'vc-ld'; ld.setAttribute('role', 'status'); ld.setAttribute('aria-live', 'polite');
+    var raw = ta.value.split(/\n+/).map(function (l) { return l.trim(); }).filter(Boolean).slice(0, 14);
+    var title = raw.length && !/^ข้อ\s*[0-9๐-๙]/.test(raw[0]) ? raw.shift() : 'สัญญา';
+    ld = document.createElement('div'); ld.className = 'vc-ld vc-ld3'; ld.setAttribute('role', 'status'); ld.setAttribute('aria-live', 'polite');
     ld.innerHTML = '<div class="vc-ld-card">' +
-      '<div class="vc-ld-paper" aria-hidden="true"><div class="vc-ld-txt">' + lines.map(function (l) { return '<p>' + esc(l.slice(0, 60)) + '</p>'; }).join('') + '</div><i class="vc-ld-scan"></i></div>' +
-      '<b class="vc-ld-h">กำลังตรวจสัญญา</b>' +
-      '<ol class="vc-ld-steps">' +
-        '<li data-s="0">ปกปิดข้อมูลส่วนตัว</li><li data-s="1">อ่านสัญญาทีละข้อ</li><li data-s="2">หาจุดเสี่ยงและเทียบกับกฎหมาย</li><li data-s="3">สรุปผล</li>' +
-      '</ol><p class="vc-ld-note">ปกติใช้เวลา 10–30 วินาที อย่าเพิ่งปิดหน้านี้</p></div>';
+      '<div class="vc-ld-stage" aria-hidden="true"><div class="vc-ld-cam"><div class="vc-ld-stack">' +
+        '<div class="vc-ld-sheet s2"></div><div class="vc-ld-sheet s1"></div>' +
+        '<div class="vc-ld-paper"><i class="vc-ld-hl"></i><h5>' + escH(title.slice(0, 40)) + '</h5>' +
+          raw.map(function (l, i) { var m = /^ข้อ\s*([0-9]+)/.exec(l); return '<p data-i="' + i + '"' + (m ? ' data-n="' + m[1] + '"' : '') + '>' + escH(l.slice(0, 64)) + '</p>'; }).join('') +
+          '<i class="vc-ld-plane"></i></div>' +
+        '<div class="vc-ld-flip"></div>' +
+      '</div></div></div>' +
+      '<b class="vc-ld-h">กำลังตรวจสัญญา</b><p class="vc-ld-now">เตรียมเอกสาร…</p>' +
+      '<ol class="vc-ld-steps"><li data-s="0">ปกปิดข้อมูลส่วนตัว</li><li data-s="1">อ่านสัญญาทีละข้อ</li><li data-s="2">หาจุดเสี่ยงและเทียบกับกฎหมาย</li><li data-s="3">สรุปผล</li></ol>' +
+      '<p class="vc-ld-note">ปกติใช้เวลา 10–30 วินาที อย่าเพิ่งปิดหน้านี้</p></div>';
     document.body.appendChild(ld);
     document.documentElement.classList.add('vc-ld-open');
+    lines = [].slice.call(ld.querySelectorAll('.vc-ld-paper p')); cur = -1; passDone = false;
     setStep(0);
-    timers.push(setTimeout(function () { setStep(1); }, 900));
-    timers.push(setTimeout(function () { setStep(2); }, 4200));
-    timers.push(setTimeout(function () { var n = ld && ld.querySelector('.vc-ld-note'); if (n) n.textContent = 'สัญญายาว ระบบกำลังตรวจละเอียด อีกสักครู่นะครับ'; }, 20000));
+    if (calm()) { setStep(1); return; }
+    requestAnimationFrame(function () { ld && ld.classList.add('in'); });
+    T(function () { setStep(1); readNext(); }, 1000);
+    T(function () { if (passDone) setStep(2); }, 4200);
+    T(function () { var n = ld && ld.querySelector('.vc-ld-note'); if (n) n.textContent = 'สัญญายาว ระบบกำลังตรวจละเอียด อีกสักครู่นะครับ'; }, 20000);
+  }
+  function focusLine(i, zoom) {
+    if (!ld) return;
+    var cam = ld.querySelector('.vc-ld-cam'), paper = ld.querySelector('.vc-ld-paper'), hl = ld.querySelector('.vc-ld-hl');
+    lines.forEach(function (p, k) { p.classList.toggle('is-reading', k === i); p.classList.toggle('is-read', k < i); });
+    var p = lines[i]; if (!p) return;
+    var cy = p.offsetTop + p.offsetHeight / 2, ph = paper.offsetHeight;
+    hl.style.transform = 'translateY(' + (p.offsetTop - 3) + 'px)'; hl.style.height = (p.offsetHeight + 6) + 'px'; hl.style.opacity = '1';
+    cam.style.transform = 'scale(' + zoom + ') translateY(' + (ph / 2 - cy).toFixed(1) + 'px)';
+    var n = p.getAttribute('data-n'), now = ld.querySelector('.vc-ld-now');
+    var total = lines.filter(function (x) { return x.hasAttribute('data-n'); }).length;
+    if (now) now.textContent = n ? 'กำลังอ่านข้อ ' + n + (total ? ' จาก ' + total : '') : 'กำลังอ่านบรรทัด ' + (i + 1);
+  }
+  function readNext() {
+    if (!ld || ld.classList.contains('fin')) return;
+    cur++;
+    if (cur >= lines.length) {
+      /* อ่านครบหนึ่งรอบ: ซูมออก พลิกหน้า แล้วอ่านซ้ำเร็วขึ้นระหว่างรอผล */
+      passDone = true; setStep(2);
+      var cam = ld.querySelector('.vc-ld-cam'); cam.style.transform = 'scale(1) translateY(0)';
+      ld.querySelector('.vc-ld-hl').style.opacity = '0';
+      var nw = ld.querySelector('.vc-ld-now'); if (nw) nw.textContent = 'กำลังเทียบแต่ละข้อกับกฎหมาย…';
+      var f = ld.querySelector('.vc-ld-flip'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go');
+      cur = -1; loopT = setTimeout(readNext, 1900); timers.push(loopT); return;
+    }
+    focusLine(cur, passDone ? 1.45 : 1.75);
+    loopT = setTimeout(readNext, passDone ? 750 : 1150); timers.push(loopT);
   }
   function setStep(k) {
     if (!ld) return;
@@ -4747,13 +4796,54 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     timers.forEach(clearTimeout); timers = [];
     if (!ld) return;
     var el = ld; ld = null;
-    if (now) { el.remove(); document.documentElement.classList.remove('vc-ld-open'); return; }
-    var ok = !!res.querySelector('article.rpt');
-    [].forEach.call(el.querySelectorAll('.vc-ld-steps li'), function (li) { li.className = ok ? 'done' : li.className; });
+    var done = function () { el.remove(); document.documentElement.classList.remove('vc-ld-open'); };
+    if (now) { done(); return; }
+    var rpt = res.querySelector('article.rpt');
+    if (!rpt || calm()) {
+      [].forEach.call(el.querySelectorAll('.vc-ld-steps li'), function (li) { if (rpt) li.className = 'done'; });
+      el.classList.add('out'); setTimeout(done, 300); return;
+    }
+    finale(el, rpt, done);
+  }
+  /* ตอนจบ: ใช้ผลตรวจจริงเท่านั้น */
+  function finale(el, rpt, done) {
+    el.classList.add('fin');
+    [].forEach.call(el.querySelectorAll('.vc-ld-steps li'), function (li) { li.className = 'done'; });
+    var cam = el.querySelector('.vc-ld-cam'), paper = el.querySelector('.vc-ld-paper');
+    cam.style.transform = 'scale(1) translateY(0)';
+    el.querySelector('.vc-ld-hl').style.opacity = '0';
+    [].forEach.call(el.querySelectorAll('.vc-ld-paper p'), function (p) { p.classList.remove('is-reading', 'is-read'); });
+    /* ข้อที่มีประเด็นจริง (จากรายการผลตรวจ) */
+    var RANK = { check_detail: 3, caution: 2, low: 1 }, hit = {};
+    [].forEach.call(rpt.querySelectorAll('.ix-row'), function (r) {
+      var c = r.querySelector('.ix-clause'), m = c && /ข้อ\s*([0-9]+)/.exec(c.textContent); if (!m) return;
+      var lv = (/lv-(\w+)/.exec(r.className) || [])[1] || 'low';
+      if (!hit[m[1]] || RANK[lv] > RANK[hit[m[1]]]) hit[m[1]] = lv;
+    });
+    var marks = [].filter.call(el.querySelectorAll('.vc-ld-paper p[data-n]'), function (p) { return hit[p.getAttribute('data-n')]; });
+    var nTot = rpt.querySelectorAll('.ix-row').length, now = el.querySelector('.vc-ld-now'), h = el.querySelector('.vc-ld-h');
+    if (h) h.textContent = 'ตรวจเสร็จแล้ว';
+    if (now) now.textContent = nTot ? 'พบ ' + nTot + ' ประเด็นที่ควรดู' : 'ไม่พบประเด็นที่น่ากังวล';
+    marks.forEach(function (p, k) { setTimeout(function () { p.classList.add('is-hit', 'lv-' + hit[p.getAttribute('data-n')]); }, 380 + k * 110); });
+    /* ตราประทับบนกระดาษ */
+    var lv = Object.keys(hit).some(function (k) { return hit[k] === 'check_detail'; }) ? 'hi' : Object.keys(hit).some(function (k) { return hit[k] === 'caution'; }) ? 'mid' : 'lo';
+    var st = document.createElement('div'); st.className = 'vc-ld-stamp lv-' + lv;
+    st.innerHTML = '<span>' + ({ hi: 'พบจุดเสี่ยง', mid: 'ควรระวัง', lo: 'ผ่านเบื้องต้น' }[lv]) + '</span>';
+    paper.appendChild(st);
+    var tStamp = 420 + marks.length * 110 + 200;
+    setTimeout(function () { st.classList.add('hit'); paper.classList.add('thud'); }, tStamp);
+    /* บินเข้าการ์ดสรุป */
     setTimeout(function () {
-      el.classList.add('out'); document.documentElement.classList.remove('vc-ld-open');
-      setTimeout(function () { el.remove(); }, 300);
-    }, ok && !calm() ? 450 : 0);
+      var sum = rpt.querySelector('.vc-sum'), stage = el.querySelector('.vc-ld-stage');
+      if (sum) {
+        var a = stage.getBoundingClientRect(), b = sum.getBoundingClientRect();
+        if (b.top < 50 || b.top > window.innerHeight * .55) { window.scrollTo(0, Math.max(0, b.top + window.scrollY - 70)); b = sum.getBoundingClientRect(); }
+        var dx = (b.left + b.width / 2) - (a.left + a.width / 2), dy = (b.top + b.height / 2) - (a.top + a.height / 2), sc = Math.min(1.6, b.width / a.width);
+        stage.style.transform = 'translate(' + dx.toFixed(0) + 'px,' + dy.toFixed(0) + 'px) scale(' + sc.toFixed(2) + ')';
+      }
+      el.classList.add('fly');
+      setTimeout(done, 520);
+    }, Math.min(tStamp + 650, 1900));
   }
 
   /* 3) เดาประเภทสัญญาจากข้อความ (ในเครื่อง ไม่เสียเครดิต) */
