@@ -4222,7 +4222,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       });
       var all2 = act.querySelector('.vc-fa-all');
       if (all2) all2.addEventListener('click', function (e) {
-        e.preventDefault(); var txt = buildAll(), btn = this;
+        e.preventDefault(); if (window.__vcNeg) { window.__vcNeg(false); return; } var txt = buildAll(), btn = this;
         if (navigator.share) navigator.share({ title: 'ข้อที่อยากขอแก้ในสัญญา', text: txt }).catch(function (er) { if (!er || er.name !== 'AbortError') copyText(txt, btn, 'คัดลอกทุกข้อแล้ว'); });
         else copyText(txt, btn, 'คัดลอกทุกข้อแล้ว');
       });
@@ -4272,7 +4272,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     L.push('(สรุปจาก Vellum Check — ใช้ประกอบการพูดคุย ไม่ใช่คำปรึกษาทางกฎหมาย)');
     return L.join('\n');
   }
-  window.__vcBuildAll = buildAll; window.__vcFixCount = function () { return allFixes().length; };
+  window.__vcBuildAll = buildAll; window.__vcFixCount = function () { return allFixes().length; }; window.__vcFixList = allFixes;
   function copyText(t, btn, msg) {
     function done() { var sp = btn.querySelector('span'), o = sp.textContent; btn.classList.add('ok'); sp.textContent = msg; setTimeout(function () { btn.classList.remove('ok'); sp.textContent = o; }, 1600); }
     function fb() { var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;font-size:16px'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} ta.remove(); done(); }
@@ -4425,6 +4425,26 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     }).observe(n, { childList: true, characterData: true, subtree: true });
   }
   function celebrate(total) {
+    if (!window.matchMedia('(max-width:767px)').matches) return celebrateOld(total);
+    var old = document.querySelector('.vc-cele'); if (old) old.remove();
+    var r = box.querySelector('article.rpt');
+    var stars = r ? r.querySelectorAll('details.item.vc-star').length : 0;
+    var ask = typeof window.__vcMissAsk === 'function' ? window.__vcMissAsk().length : 0;
+    var fixes = window.__vcFixCount ? window.__vcFixCount() : 0;
+    var el = document.createElement('div'); el.className = 'vc-cele vc-ach'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'อ่านครบแล้ว');
+    var sp = ''; for (var i = 0; i < 14; i++) sp += '<i style="--a:' + (i * 360 / 14) + 'deg;--r:' + (64 + (i % 3) * 16) + 'px;--dl:' + (420 + (i % 4) * 40) + 'ms"></i>';
+    el.innerHTML = '<div class="vc-cele-card"><div class="vc-cele-art"><span class="vc-cele-sp">' + sp + '</span>' +
+      '<svg viewBox="0 0 64 64" width="76" height="76" aria-hidden="true"><path class="vc-cele-sh" d="M32 5L54 13V32C54 46 44 54 32 59C20 54 10 46 10 32V13Z" fill="rgba(52,211,153,.14)" stroke="#34d399" stroke-width="2.6" stroke-linejoin="round" pathLength="1"/><path class="vc-cele-ck" d="M22 32l7 7 13-14" fill="none" stroke="#34d399" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/></svg></div>' +
+      '<b>อ่านครบทั้ง ' + total + ' ประเด็นแล้ว</b>' +
+      '<div class="vc-ach-st"><div><strong>' + total + '</strong><span>ประเด็นที่อ่าน</span></div><div><strong>' + stars + '</strong><span>ติดดาวไว้ต่อรอง</span></div><div><strong>' + ask + '</strong><span>เรื่องที่ต้องถาม</span></div></div>' +
+      (fixes ? '<button type="button" class="vc-ach-go">ร่างข้อความถึงอีกฝ่าย →</button>' : '') + '<button type="button" class="vc-ach-later">ไว้ทีหลัง</button></div>';
+    document.body.appendChild(el);
+    if (navigator.vibrate) try { navigator.vibrate([18, 40, 18]); } catch (e) {}
+    var kill = function () { el.classList.add('out'); setTimeout(function () { el.remove(); }, 260); };
+    el.addEventListener('click', function (e) { if (e.target === el || e.target.closest('.vc-ach-later')) kill(); });
+    var go = el.querySelector('.vc-ach-go'); if (go) go.addEventListener('click', function () { kill(); if (window.__vcNeg) window.__vcNeg(stars > 0); });
+  }
+  function celebrateOld(total) {
     var old = document.querySelector('.vc-cele'); if (old) old.remove();
     var el = document.createElement('div'); el.className = 'vc-cele'; el.setAttribute('role', 'status');
     var sp = ''; for (var i = 0; i < 14; i++) sp += '<i style="--a:' + (i * 360 / 14) + 'deg;--r:' + (64 + (i % 3) * 16) + 'px;--dl:' + (420 + (i % 4) * 40) + 'ms"></i>';
@@ -5601,6 +5621,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   /* บอกครั้งแรกว่าปัดได้ */
   var hinted = false; try { hinted = localStorage.getItem('vc_hint_swipe') === '1'; } catch (e) {}
   function swipeHint(rpt) {
+    if (window.__vcCoach) return;
     if (hinted || !mq.matches || calm()) return;
     var row = rpt.querySelector('.ix-row:not(.is-done)'); if (!row || row.__vcHintObs) return;
     row.__vcHintObs = true;
@@ -5901,7 +5922,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       while ((m = NUM.exec(t))) {
         var val = m[1].trim(), unit = (/(%|เปอร์เซ็นต์|บาท|วัน|เดือน|ปี|ครั้ง|หน่วย|ชั่วโมง|งวด)$/.exec(val) || [])[1]; if (!unit) continue;
         var before = t.slice(0, m.index).replace(/\s+$/, ''), cut = Math.max(before.lastIndexOf(' '), before.lastIndexOf(','), before.lastIndexOf('·'));
-        var lab = before.slice(cut + 1).trim().replace(/^(และ|หรือ|โดย|แต่|ซึ่ง|กับ|ส่วน|รวม|มี|ให้|ที่)\s*/, ''); if (lab.length > 20) lab = lab.slice(-20); if (lab.length < 2) lab = lab0;
+        var lab = before.slice(cut + 1).trim().replace(/^(และ|หรือ|โดย|แต่|ซึ่ง|กับ|ส่วน|รวม|มี|ให้|ที่)\s*/, ''); if (lab.length < 2 || lab.length > 13 || /ได้|โดย|ให้|ต้อง|จะ/.test(lab)) lab = lab0;
         found.push({ val: val.replace(/\s*(%|เปอร์เซ็นต์|บาท|วัน|เดือน|ปี|ครั้ง|หน่วย|ชั่วโมง|งวด)$/, ''), unit: unit, lab: lab });
       }
     });
@@ -5971,7 +5992,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
         '<button type="button" class="vc-end-b vc-end-ck"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8 12 3 3 5-6"/></svg><span>เช็กลิสต์ก่อนเซ็น</span></button>' +
         '<button type="button" class="vc-end-b vc-end-new"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>ตรวจฉบับใหม่</span></button></div>';
       r.appendChild(c);
-      c.querySelector('.vc-end-send').addEventListener('click', function () { if (window.__vcBuildAll) share(window.__vcBuildAll(), this, 'คัดลอกทุกข้อแล้ว'); });
+      c.querySelector('.vc-end-send').addEventListener('click', function () { if (window.__vcNeg) return window.__vcNeg(false); if (window.__vcBuildAll) share(window.__vcBuildAll(), this, 'คัดลอกทุกข้อแล้ว'); });
       c.querySelector('.vc-end-ck').addEventListener('click', function () { var b = r.querySelector('.vc-next-ck'); if (b) b.click(); });
       c.querySelector('.vc-end-new').addEventListener('click', function () {
         var card = document.getElementById('checkCard'), ed = card && card.querySelector('.vc-done-edit');
@@ -6203,7 +6224,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     var end = r.querySelector('.vc-end'), n = starCount(r);
     if (end) {
       var g = end.querySelector('.vc-end-g'), bs = end.querySelector('.vc-end-star');
-      if (!bs && g) { bs = document.createElement('button'); bs.type = 'button'; bs.className = 'vc-end-b vc-end-star'; bs.innerHTML = STAR + '<span></span>'; g.insertBefore(bs, g.firstChild); bs.addEventListener('click', function () { if (window.__vcBuildAll) share(window.__vcBuildAll(true), bs, 'คัดลอกแล้ว'); }); }
+      if (!bs && g) { bs = document.createElement('button'); bs.type = 'button'; bs.className = 'vc-end-b vc-end-star'; bs.innerHTML = STAR + '<span></span>'; g.insertBefore(bs, g.firstChild); bs.addEventListener('click', function () { if (window.__vcNeg) return window.__vcNeg(true); if (window.__vcBuildAll) share(window.__vcBuildAll(true), bs, 'คัดลอกแล้ว'); }); }
       if (bs) { bs.hidden = !n; var tx = 'ส่งเฉพาะข้อที่ติดดาว (' + n + ')'; var sp = bs.querySelector('span'); if (!bs.classList.contains('ok') && sp.textContent !== tx) sp.textContent = tx; }
       cls(end, 'has-star', n > 0);
     }
@@ -6211,20 +6232,25 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   }
 
   /* 3) ปุ่มลอยตอนอ่านครบ */
+  function pkey() { var t = (window.__vcCheckedText || ''), h = 0; for (var k = 0; k < t.length; k++) h = (h * 31 + t.charCodeAt(k)) | 0; return 'vc_fp_x_' + h; }
   var pill = null, endVis = false, endIO = null;
   function floater(r) {
     if (!pill) {
-      pill = document.createElement('button'); pill.type = 'button'; pill.className = 'vc-fpill'; pill.innerHTML = '<span></span><i aria-hidden="true">→</i>'; document.body.appendChild(pill);
-      pill.addEventListener('click', function () { sendStar(pill); });
+      pill = document.createElement('div'); pill.className = 'vc-fpill'; pill.innerHTML = '<button type="button" class="vc-fp-go"><span></span><i aria-hidden="true">→</i></button><button type="button" class="vc-fp-x" aria-label="ปิด">×</button>'; document.body.appendChild(pill);
+      pill.querySelector('.vc-fp-go').addEventListener('click', function () { if (window.__vcNeg) window.__vcNeg(starCount(rpt()) > 0); else sendStar(pill.querySelector('.vc-fp-go')); });
+      pill.querySelector('.vc-fp-x').addEventListener('click', function () { try { localStorage.setItem(pkey(), '1'); } catch (e) {} cls(root, 'vc-fpill-on', false); });
+      var ly = window.scrollY, ptk2 = false;
+      window.addEventListener('scroll', function () { if (ptk2) return; ptk2 = true; requestAnimationFrame(function () { ptk2 = false; var y = window.scrollY; if (y > ly + 6) cls(root, 'vc-fp-dn', true); else if (y < ly - 6) cls(root, 'vc-fp-dn', false); ly = y; }); }, { passive: true });
     }
     var end = r.querySelector('.vc-end');
     if (end && !end.__vcIO && 'IntersectionObserver' in window) { end.__vcIO = true; if (endIO) endIO.disconnect(); endIO = new IntersectionObserver(function (es) { endVis = es[0].isIntersecting; floater(rpt() || r); }); endIO.observe(end); }
     var rows = r.querySelectorAll('.ix-row'), all = rows.length && [].every.call(rows, function (x) { return x.classList.contains('is-done'); });
     var nf = window.__vcFixCount ? window.__vcFixCount() : 0, n = starCount(r);
     var tab = r.getAttribute('data-vtab'); var onIss = !tab || tab === 'iss';
-    var show = !!(all && nf && onIss && !endVis && !root.classList.contains('vc-sheet-open') && !root.classList.contains('vc-tool-open'));
-    var tx = n ? 'ส่งข้อที่ติดดาว (' + n + ') ให้อีกฝ่าย' : 'อ่านครบแล้ว · ส่งข้อขอแก้ให้อีกฝ่าย', sp = pill.querySelector('span');
-    if (!pill.classList.contains('ok') && sp.textContent !== tx) sp.textContent = tx;
+    var gone = false; try { gone = localStorage.getItem(pkey()) === '1'; } catch (e) {}
+    var show = !!(all && nf && onIss && !endVis && !gone && !root.classList.contains('vc-sheet-open') && !root.classList.contains('vc-tool-open') && !root.classList.contains('vc-neg-open'));
+    var tx = n ? 'ร่างข้อความ · ข้อที่ติดดาว (' + n + ')' : 'อ่านครบแล้ว · ร่างข้อความถึงอีกฝ่าย', sp = pill.querySelector('.vc-fp-go span');
+    if (sp.textContent !== tx) sp.textContent = tx;
     cls(root, 'vc-fpill-on', show);
   }
 
@@ -6283,5 +6309,228 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   new MutationObserver(q).observe(box, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'data-vtab'] });
   var bn = document.getElementById('bottomNav'); if (bn) new MutationObserver(q).observe(bn, { attributes: true, subtree: true, attributeFilter: ['class'] });
   new MutationObserver(function () { if (pill) q(); }).observe(root, { attributes: true, attributeFilter: ['class'] });
+  q();
+})();
+
+/* ===== มือถือ v229: หน้าร่างข้อความต่อรอง, แนะนำท่าทางครั้งแรก, คำถามแนะนำจากสัญญา, แผนที่ด้านข้าง, ข้ามฉากเปิด, เทียบกับการตรวจครั้งก่อน ===== */
+(function () {
+  var box = document.getElementById('result'); if (!box) return;
+  var mq = window.matchMedia('(max-width:767px)'), root = document.documentElement, queued = false;
+  var calm = function () { return root.hasAttribute('data-calm') || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function cls(el, c, on) { if (el.classList.contains(c) !== on) el.classList.toggle(c, on); }
+  function rpt() { return box.querySelector('article.rpt.vc-m'); }
+  function ls(k, v) { try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { return null; } }
+  window.__vcCoach = true;
+
+  /* ---------- 1) หน้าร่างข้อความต่อรอง ---------- */
+  var neg = null, st = { tone: ls('vc_neg_tone') || 'soft', pp: ls('vc_neg_pp') || 'ครับ', edited: false };
+  function trimQ(q) { q = (q || '').replace(/\s+/g, ' ').trim(); return q.length > 140 ? q.slice(0, 140) + '…' : q; }
+  function compose() {
+    var P = st.pp, sel = [].filter.call(neg.querySelectorAll('.vc-ng-it input:checked'), function () { return true; });
+    var fx = [], ms = [];
+    sel.forEach(function (c) { var d = c.closest('.vc-ng-it'); if (d.dataset.k === 'f') fx.push(JSON.parse(d.dataset.v)); else ms.push(d.dataset.v); });
+    var L = [];
+    if (st.tone === 'soft') { L.push('สวัสดี' + P + ' ขอบคุณที่ส่งร่างสัญญามาให้พิจารณานะ' + (P === 'ครับ' ? 'ครับ' : 'คะ')); L.push('หลังจากอ่านแล้ว มีบางข้อที่อยากขอปรับให้ชัดเจนขึ้นก่อนลงนาม ดังนี้' + P); }
+    else if (st.tone === 'mid') { L.push('สวัสดี' + P + ' เรื่องร่างสัญญา มีข้อที่ขอแก้ไขก่อนลงนาม ดังนี้' + P); }
+    else { L.push('ก่อนลงนาม ขอให้แก้ไขข้อต่อไปนี้' + P); }
+    L.push('');
+    fx.forEach(function (x, i) {
+      if (st.tone === 'direct') { L.push((i + 1) + ') ' + x.title + ' → ' + x.fix); return; }
+      L.push((i + 1) + ') ' + x.title);
+      if (x.quote) L.push('   ในสัญญาเขียนว่า: “' + trimQ(x.quote) + '”');
+      L.push('   ' + (st.tone === 'soft' ? 'ขอปรับเป็น: ' : 'ขอแก้เป็น: ') + x.fix);
+    });
+    if (ms.length) {
+      if (fx.length) L.push('');
+      L.push(st.tone === 'direct' ? 'และขอให้เพิ่มเรื่องเหล่านี้ในสัญญา:' : 'นอกจากนี้ สัญญายังไม่ได้เขียนเรื่องต่อไปนี้ รบกวนช่วยระบุเพิ่มด้วย' + P);
+      ms.forEach(function (m) { L.push('• ' + m); });
+    }
+    L.push('');
+    if (st.tone === 'soft') L.push('ถ้าสะดวก รบกวนพิจารณาปรับแก้ หรือนัดคุยกันก่อนลงนามได้เลย' + P + ' ขอบคุณมาก' + P);
+    else if (st.tone === 'mid') L.push('รบกวนแจ้งกลับด้วย' + P + ' ขอบคุณ' + P);
+    else L.push('ถ้าแก้ไขตามนี้ได้แล้ว ค่อยนัดลงนามกัน' + P);
+    return L.join('\n');
+  }
+  function regen() { if (!neg) return; var ta = neg.querySelector('textarea'); ta.value = compose(); st.edited = false; cls(neg, 'is-edited', false); count(); }
+  function count() { var n = neg.querySelectorAll('.vc-ng-it input:checked').length, b = neg.querySelector('.vc-ng-n'); b.textContent = n + ' ข้อที่เลือก'; neg.querySelector('.vc-ng-send').disabled = !n && !st.edited; }
+  function closeNeg() { if (!neg) return; neg.classList.remove('on'); cls(root, 'vc-neg-open', false); document.body.style.overflow = ''; }
+  window.__vcNeg = function (onlyStar) {
+    var r = rpt(); if (!r || !window.__vcFixList) return;
+    var list = window.__vcFixList(), its = r.querySelectorAll('details.item'), miss = window.__vcMissAsk ? window.__vcMissAsk() : [];
+    if (!neg) {
+      neg = document.createElement('div'); neg.className = 'vc-neg'; neg.setAttribute('role', 'dialog'); neg.setAttribute('aria-label', 'ร่างข้อความถึงอีกฝ่าย');
+      neg.innerHTML = '<div class="vc-ng-card"><div class="vc-ng-hd"><div><b>ร่างข้อความถึงอีกฝ่าย</b><small>เลือกข้อ เลือกน้ำเสียง แล้วแก้คำได้ก่อนส่ง</small></div><button type="button" class="vc-ng-x" aria-label="ปิด">×</button></div>' +
+        '<div class="vc-ng-body"><div class="vc-ng-row"><div class="vc-ng-seg" data-g="tone"><button data-v="soft">สุภาพ</button><button data-v="mid">กลาง ๆ</button><button data-v="direct">ตรงไปตรงมา</button></div><div class="vc-ng-seg vc-ng-pp" data-g="pp"><button data-v="ครับ">ครับ</button><button data-v="ค่ะ">ค่ะ</button></div></div>' +
+        '<p class="vc-ng-l">ใส่ข้อไหนบ้าง <span class="vc-ng-n"></span></p><div class="vc-ng-list"></div>' +
+        '<p class="vc-ng-l">ข้อความ <button type="button" class="vc-ng-re">สร้างใหม่จากที่เลือก</button></p><textarea rows="10" spellcheck="false"></textarea></div>' +
+        '<div class="vc-ng-ft"><button type="button" class="vc-ng-copy"><span>คัดลอก</span></button><button type="button" class="vc-ng-send"><span>ส่ง / แชร์</span></button></div></div>';
+      document.body.appendChild(neg);
+      neg.addEventListener('click', function (e) {
+        if (e.target === neg || e.target.closest('.vc-ng-x')) return closeNeg();
+        var sb = e.target.closest('.vc-ng-seg button');
+        if (sb) { var g = sb.parentNode.dataset.g; st[g] = sb.dataset.v; ls(g === 'tone' ? 'vc_neg_tone' : 'vc_neg_pp', sb.dataset.v); [].forEach.call(sb.parentNode.children, function (b) { cls(b, 'on', b === sb); }); regen(); return; }
+        if (e.target.closest('.vc-ng-re')) return regen();
+      });
+      neg.addEventListener('change', function (e) { if (e.target.matches('.vc-ng-it input')) { if (!st.edited) regen(); else count(); } });
+      neg.querySelector('textarea').addEventListener('input', function () { st.edited = true; cls(neg, 'is-edited', true); count(); });
+      function done(btn, msg) { var sp = btn.querySelector('span'), o = sp.textContent; sp.textContent = msg; btn.classList.add('ok'); setTimeout(function () { sp.textContent = o; btn.classList.remove('ok'); }, 1600); }
+      function copy(btn) { var t = neg.querySelector('textarea').value; var fb = function () { var ta = neg.querySelector('textarea'); ta.select(); try { document.execCommand('copy'); } catch (e) {} done(btn, 'คัดลอกแล้ว'); }; if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function () { done(btn, 'คัดลอกแล้ว'); }, fb); else fb(); }
+      neg.querySelector('.vc-ng-copy').addEventListener('click', function () { copy(this); });
+      neg.querySelector('.vc-ng-send').addEventListener('click', function () { var b = this, t = neg.querySelector('textarea').value; if (navigator.share) navigator.share({ text: t }).catch(function (e) { if (!e || e.name !== 'AbortError') copy(b); }); else copy(b); });
+    }
+    var anyStar = [].some.call(its, function (d) { return d.classList.contains('vc-star'); });
+    var html = list.map(function (x) {
+      var d = its[x.n - 1], on = onlyStar ? (d && d.classList.contains('vc-star')) : true;
+      var lv = d ? (d.classList.contains('lv-check_detail') ? 'hi' : d.classList.contains('lv-caution') ? 'mid' : 'lo') : 'lo';
+      return '<label class="vc-ng-it lv-' + lv + '" data-k="f" data-v="' + esc(JSON.stringify({ title: x.title, quote: x.quote, fix: x.fix })) + '"><input type="checkbox"' + (on ? ' checked' : '') + '><span class="vc-ng-ck"></span><span class="vc-ng-tx"><b>' + (d && d.classList.contains('vc-star') ? '★ ' : '') + esc(x.title) + '</b><small>' + esc(x.fix) + '</small></span></label>';
+    }).join('') + (miss.length ? '<p class="vc-ng-sub">เรื่องที่สัญญายังไม่ระบุ</p>' + miss.map(function (m) { return '<label class="vc-ng-it lv-ms" data-k="m" data-v="' + esc(m) + '"><input type="checkbox"' + (onlyStar && anyStar ? '' : ' checked') + '><span class="vc-ng-ck"></span><span class="vc-ng-tx"><b>' + esc(m) + '</b></span></label>'; }).join('') : '');
+    neg.querySelector('.vc-ng-list').innerHTML = html;
+    [].forEach.call(neg.querySelectorAll('.vc-ng-seg'), function (sg) { var v = st[sg.dataset.g]; [].forEach.call(sg.children, function (b) { cls(b, 'on', b.dataset.v === v); }); });
+    regen();
+    document.body.style.overflow = 'hidden'; cls(root, 'vc-neg-open', true);
+    void neg.offsetWidth; neg.classList.add('on');
+    neg.querySelector('.vc-ng-body').scrollTop = 0;
+  };
+
+  /* ---------- 3) แนะนำท่าทางครั้งแรก ---------- */
+  var coachOn = false;
+  function coach(r) {
+    if (coachOn || ls('vc_coach') === '1' || calm() && false) return;
+    var row = r.querySelector('.ix-row:not(.is-done)'), map = r.querySelector('.vc-sum .vc-map');
+    if (!row || r.classList.contains('vc-reveal') || r.classList.contains('vc-hold') || root.classList.contains('vc-ld-open') || root.classList.contains('vc-sheet-open') || document.querySelector('.vc-cele')) return;
+    if (r.getAttribute('data-vtab') && r.getAttribute('data-vtab') !== 'iss') return;
+    coachOn = true; ls('vc_coach', '1'); ls('vc_hint_swipe', '1');
+    var steps = [
+      { el: row, t: 'ปัดการ์ด', d: 'ปัดขวา = ทำเครื่องหมายว่าอ่านแล้ว · ปัดซ้าย = ติดดาวข้อที่จะต่อรอง' },
+      { el: row, t: 'แตะค้างที่การ์ด', d: 'ดูว่า "ควรขอแก้เป็นอะไร" แบบเร็ว ๆ โดยไม่ต้องเปิดรายละเอียด' }
+    ];
+    if (map) steps.push({ el: map, t: 'แผนที่สัญญา', d: 'แตะช่องสีเพื่อเปิดประเด็น · แตะช่องเทาเพื่อดูว่าข้อนั้นเขียนว่าอะไร' });
+    var ov = document.createElement('div'); ov.className = 'vc-coach'; ov.innerHTML = '<i class="vc-co-hole"></i><div class="vc-co-tip"><p class="vc-co-k"></p><b></b><p class="vc-co-d"></p><div class="vc-co-ft"><button type="button" class="vc-co-skip">ข้าม</button><button type="button" class="vc-co-next">ถัดไป</button></div></div>';
+    document.body.appendChild(ov);
+    var i = -1;
+    function place() {
+      var s = steps[i], b = s.el.getBoundingClientRect(), hole = ov.querySelector('.vc-co-hole'), tip = ov.querySelector('.vc-co-tip'), vh = window.innerHeight;
+      hole.style.cssText = 'top:' + (b.top - 6) + 'px;left:' + (b.left - 6) + 'px;width:' + (b.width + 12) + 'px;height:' + (b.height + 12) + 'px';
+      tip.querySelector('.vc-co-k').textContent = (i + 1) + ' / ' + steps.length; tip.querySelector('b').textContent = s.t; tip.querySelector('.vc-co-d').textContent = s.d;
+      tip.querySelector('.vc-co-next').textContent = i === steps.length - 1 ? 'เข้าใจแล้ว' : 'ถัดไป';
+      if (b.bottom + 190 < vh) { tip.style.top = (b.bottom + 16) + 'px'; tip.style.bottom = 'auto'; } else { tip.style.top = 'auto'; tip.style.bottom = (vh - b.top + 16) + 'px'; }
+      cls(ov, 'demo-l', i === 0); 
+    }
+    function next() {
+      i++; if (i >= steps.length) return end();
+      var s = steps[i], b = s.el.getBoundingClientRect(), head = 130;
+      if (b.top < head || b.bottom > window.innerHeight - 260) { window.scrollTo({ top: window.scrollY + b.top - head, behavior: calm() ? 'auto' : 'smooth' }); setTimeout(place, 420); } else place();
+      if (i === 0 && !calm()) setTimeout(function () { demo(s.el); }, 700);
+    }
+    function demo(el) {
+      el.classList.add('vc-swiping'); var t0 = null, D = 1600;
+      function f(t) { if (!t0) t0 = t; var p = Math.min(1, (t - t0) / D), k = Math.sin(p * Math.PI * 2) * (1 - p * .2); el.style.setProperty('--swx', (k * 56).toFixed(1) + 'px'); el.style.setProperty('--sw', Math.max(0, k * .7).toFixed(3)); el.style.setProperty('--swl', Math.max(0, -k * .7).toFixed(3)); cls(el, 'vc-swiping-l', k < 0); if (p < 1 && coachOn) requestAnimationFrame(f); else { el.classList.remove('vc-swiping', 'vc-swiping-l'); ['--swx', '--sw', '--swl'].forEach(function (v) { el.style.removeProperty(v); }); } }
+      requestAnimationFrame(f);
+    }
+    function end() { coachOn = false; ov.classList.add('out'); setTimeout(function () { ov.remove(); }, 250); window.removeEventListener('resize', place); }
+    ov.querySelector('.vc-co-next').addEventListener('click', next);
+    ov.querySelector('.vc-co-skip').addEventListener('click', end);
+    window.addEventListener('resize', place);
+    requestAnimationFrame(function () { ov.classList.add('on'); next(); });
+  }
+  var coachIO = null;
+  function armCoach(r) {
+    if (ls('vc_coach') === '1' || coachOn || r.__vcCoachArm) return;
+    var row = r.querySelector('.ix-row'); if (!row || !('IntersectionObserver' in window)) return;
+    r.__vcCoachArm = true;
+    coachIO = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { setTimeout(function () { var x = rpt(); if (x) coach(x); if (coachOn || ls('vc_coach') === '1') coachIO.disconnect(); else x && (x.__vcCoachArm = false); }, 900); } }, { threshold: .9 });
+    coachIO.observe(row);
+  }
+
+  /* ---------- 4) คำถามแนะนำจากสัญญา (แท็บถามต่อ) ---------- */
+  function askChips(r) {
+    var fu = r.querySelector('#fuBox'); if (!fu || fu.querySelector('.vc-fu-mine')) return;
+    var its = [].slice.call(r.querySelectorAll('details.item')), qs = [];
+    its.filter(function (d) { return d.classList.contains('lv-check_detail'); }).concat(its.filter(function (d) { return !d.classList.contains('lv-check_detail'); })).slice(0, 3).forEach(function (d, k) {
+      var t = (d.querySelector('.it-title b') || {}).textContent; if (!t) return; t = t.trim().replace(/\?$/, '');
+      qs.push(k === 0 ? 'เรื่อง "' + t + '" ถ้าอีกฝ่ายไม่ยอมแก้ ควรทำอย่างไร?' : k === 1 ? 'เรื่อง "' + t + '" ควรเขียนแบบไหนถึงจะเป็นธรรม?' : 'เรื่อง "' + t + '" มีความเสี่ยงอะไรถ้าเซ็นไปทั้งแบบนี้?');
+    });
+    var miss = window.__vcMissAsk ? window.__vcMissAsk() : [];
+    if (miss[0]) qs.push('ควรเพิ่มเรื่อง "' + miss[0].replace(/^ไม่มี|^ไม่ระบุ/, '').trim() + '" ในสัญญาอย่างไร?');
+    if (!qs.length) return;
+    var w = document.createElement('div'); w.className = 'vc-fu-mine';
+    w.innerHTML = '<p class="vc-fu-l">จากสัญญาของคุณ</p><div class="fu-chips">' + qs.map(function (q) { return '<button type="button" class="fu-chip vc-fu-c" data-q="' + esc(q) + '">' + esc(q) + '</button>'; }).join('') + '</div><p class="vc-fu-l">คำถามทั่วไป</p>';
+    var gen = fu.querySelector('.fu-chips'); fu.insertBefore(w, gen || fu.querySelector('.fu-form'));
+  }
+
+  /* ---------- 5) แผนที่ด้านข้าง ---------- */
+  var rail = null, rtk = false;
+  function railBuild(r) {
+    var rows = r.querySelectorAll('.ix-row'); if (!rows.length) return;
+    if (!rail) {
+      rail = document.createElement('nav'); rail.className = 'vc-rail2'; rail.setAttribute('aria-label', 'ไปยังประเด็น'); document.body.appendChild(rail);
+      rail.addEventListener('click', function (e) { var b = e.target.closest('i[data-i]'); if (!b) return; var x = rpt(), row = x && x.querySelectorAll('.ix-row')[+b.dataset.i]; if (row) { var top = row.getBoundingClientRect().top + window.scrollY - 150; window.scrollTo({ top: top, behavior: calm() ? 'auto' : 'smooth' }); row.classList.remove('is-flash'); void row.offsetWidth; row.classList.add('is-flash'); } });
+    }
+    if (rail.children.length !== rows.length) { rail.innerHTML = ''; [].forEach.call(rows, function (x, k) { var i = document.createElement('i'); i.dataset.i = k; i.setAttribute('role', 'button'); i.setAttribute('aria-label', 'ประเด็นที่ ' + (k + 1)); rail.appendChild(i); }); }
+    var its = r.querySelectorAll('details.item');
+    [].forEach.call(rail.children, function (b, k) {
+      var d = its[+rows[k].getAttribute('data-ixcard')] || its[k], lv = d && d.classList.contains('lv-check_detail') ? 'hi' : d && d.classList.contains('lv-caution') ? 'mid' : 'lo';
+      var c = 'lv-' + lv + (rows[k].classList.contains('is-done') ? ' dn' : '') + (rows[k].classList.contains('vc-star') ? ' st' : '') + (b.classList.contains('cur') ? ' cur' : '');
+      if (b.className !== c) b.className = c;
+    });
+  }
+  function railTick() {
+    rtk = false; var r = rpt(); if (!rail || !r) return;
+    var rows = r.querySelectorAll('.ix-row'), vh = window.innerHeight, cur = -1, first = rows[0], last = rows[rows.length - 1];
+    var tab = r.getAttribute('data-vtab'), onIss = !tab || tab === 'iss';
+    var inZone = first && last && first.getBoundingClientRect().top < vh * .6 && last.getBoundingClientRect().bottom > vh * .35;
+    [].forEach.call(rows, function (x, k) { var b = x.getBoundingClientRect(); if (cur < 0 && b.bottom > vh * .4) cur = k; });
+    [].forEach.call(rail.children, function (b, k) { cls(b, 'cur', k === cur); });
+    cls(root, 'vc-rail2-on', !!(mq.matches && onIss && inZone && rows.length > 1 && !root.classList.contains('vc-sheet-open') && !root.classList.contains('vc-neg-open')));
+  }
+  window.addEventListener('scroll', function () { if (!rtk) { rtk = true; requestAnimationFrame(railTick); } }, { passive: true });
+
+  /* ---------- 6) ข้ามฉากเปิด: แตะเมื่อไหร่ก็ข้าม ---------- */
+  box.addEventListener('pointerdown', function () { var r = box.querySelector('article.rpt.vc-reveal'); if (r) { r.classList.remove('vc-reveal'); r.classList.add('vc-revealed'); } }, true);
+
+  /* ---------- 2) เทียบกับการตรวจครั้งก่อน ---------- */
+  function hash(t) { var h = 0; for (var k = 0; k < t.length; k++) h = (h * 31 + t.charCodeAt(k)) | 0; return h; }
+  function lines(t) { return (t || '').split(/\n+/).map(function (x) { return x.replace(/\s+/g, ' ').trim(); }).filter(function (x) { return x.length > 6; }); }
+  function bigr(s) { s = (s || '').replace(/[\s?？"“”]/g, ''); var o = {}; for (var k = 0; k < s.length - 1; k++) o[s.substr(k, 2)] = 1; return o; }
+  function sim(a, b) { var A = bigr(a), B = bigr(b), i = 0, n = 0, k; for (k in A) { n++; if (B[k]) i++; } for (k in B) if (!A[k]) n++; return n ? i / n : 0; }
+  function snap(r) {
+    var L = typeof lastResult !== 'undefined' && lastResult; if (!L || !L.items) return null;
+    var its = r.querySelectorAll('details.item');
+    return { h: hash(window.__vcCheckedText || ''), ln: lines(window.__vcCheckedText).slice(0, 400), t: Date.now(), items: L.items.map(function (x, i) { var sm = its[i] && its[i].querySelector('.it-title small'); return { title: (its[i] && (its[i].querySelector('.it-title b') || {}).textContent || x.title || '').trim(), topic: sm ? (sm.textContent.split('·')[1] || '').trim() : '', lv: x.level || '' }; }) };
+  }
+  function diff(r) {
+    if (r.__vcDiff) return; var text = window.__vcCheckedText || ''; if (!text || typeof lastResult === 'undefined' || !lastResult || !lastResult.items) return;
+    r.__vcDiff = true;
+    var prev = null; try { prev = JSON.parse(ls('vc_prev_check') || 'null'); } catch (e) {}
+    var now = snap(r); if (!now) return;
+    try { ls('vc_prev_check', JSON.stringify(now)); } catch (e) {}
+    if (!prev || prev.h === now.h || !prev.items || Date.now() - prev.t > 3 * 864e5) return;
+    var pl = {}; prev.ln.forEach(function (x) { pl[x] = 1; }); var share = now.ln.filter(function (x) { return pl[x]; }).length, base = Math.max(1, Math.min(prev.ln.length, now.ln.length));
+    if (share / base < .4) return;
+    var used = {}, matched = [];
+    now.items.forEach(function (x, i) {
+      var best = -1, bs = 0;
+      prev.items.forEach(function (y, j) { if (used[j]) return; var s = (x.topic && y.topic && x.topic === y.topic) ? 1 : sim(x.title, y.title); if (s > bs) { bs = s; best = j; } });
+      if (best >= 0 && bs >= .42) { used[best] = 1; matched.push(i); }
+    });
+    var gone = prev.items.filter(function (y, j) { return !used[j]; }), fresh = now.items.map(function (x, i) { return i; }).filter(function (i) { return matched.indexOf(i) < 0; });
+    var rows = r.querySelectorAll('.ix-row');
+    fresh.forEach(function (i) { var row = r.querySelector('.ix-row[data-ixcard="' + i + '"]') || rows[i]; var sm = row && row.querySelector('.ix-tx > small'); if (sm && !sm.querySelector('.vc-new')) sm.insertAdjacentHTML('beforeend', '<span class="vc-new">ใหม่</span>'); });
+    var d = document.createElement('section'); d.className = 'vc-diff'; d.setAttribute('data-vt', 'iss');
+    d.innerHTML = '<div class="vc-df-h"><span class="vc-df-ic"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 0 1 14-5.3L20 9M20 4v5h-5M20 12a8 8 0 0 1-14 5.3L4 15M4 20v-5h5"/></svg></span><div><b>เทียบกับการตรวจครั้งก่อน</b><small>จากสัญญาฉบับเดียวกันที่แก้ไขแล้ว</small></div></div>' +
+      '<div class="vc-df-st"><div class="t-ok"><strong>' + gone.length + '</strong><span>แก้แล้ว</span></div><div class="t-mid"><strong>' + matched.length + '</strong><span>ยังอยู่</span></div><div class="t-new"><strong>' + fresh.length + '</strong><span>ใหม่</span></div></div>' +
+      (gone.length ? '<ul class="vc-df-l">' + gone.map(function (y) { return '<li><i aria-hidden="true">✓</i><s>' + esc(y.title) + '</s></li>'; }).join('') + '</ul>' : '') +
+      '<p class="vc-df-n">เทียบจากชื่อและหัวข้อของประเด็น อาจไม่ตรงทุกข้อ</p>';
+    var tabs = r.querySelector('.vc-tabs'); r.insertBefore(d, tabs ? tabs.nextSibling : r.firstChild);
+  }
+
+  function run() {
+    queued = false; if (!mq.matches) return;
+    var r = rpt(); if (!r) { cls(root, 'vc-rail2-on', false); return; }
+    askChips(r); railBuild(r); railTick(); diff(r); armCoach(r);
+  }
+  function q() { if (!queued) { queued = true; requestAnimationFrame(run); } }
+  new MutationObserver(q).observe(box, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'data-vtab'] });
   q();
 })();
