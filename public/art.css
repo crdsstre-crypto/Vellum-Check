@@ -3584,3 +3584,28 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
 @media (max-width:767px){
   html.vc-art article.rpt.vc-m :is(details.item,#issueIndex,.gloss,.fu,.miss){scroll-margin-top:calc(var(--art-head,58px) + 62px)}
 }
+
+
+/* ===== แผงแอดมิน (admin.js) — แสดงเฉพาะบัญชีแอดมิน (8 พ.ย. 2026) ===== */
+.adm{margin:16px 0 0;padding:16px;border-radius:16px;font-family:Prompt,Sarabun,sans-serif;color:#ededef;
+  background:linear-gradient(155deg,rgba(96,165,250,.10),rgba(255,255,255,.02) 60%);border:1px solid rgba(96,165,250,.3)}
+.adm[hidden]{display:none !important}
+.adm-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.adm-ico{width:40px;height:40px;flex:0 0 40px;border-radius:12px;display:grid;place-items:center;color:#93c5fd;background:linear-gradient(145deg,#26262c,#18181c);border:1px solid rgba(255,255,255,.1)}
+.adm-head h3{margin:0;font:600 16px/1.3 Prompt,Sarabun,sans-serif !important;color:#f4f4f5 !important;letter-spacing:0 !important}
+.adm-head p{margin:2px 0 0;font:400 12.5px/1.4 Prompt,Sarabun,sans-serif;color:#a3a3aa}
+.adm-f{display:flex;flex-direction:column;gap:6px;font:500 12.5px/1.3 Prompt,Sarabun,sans-serif;color:#a3a3aa;margin:0 0 10px;min-width:0}
+.adm-f input{width:100%;box-sizing:border-box;min-height:44px;padding:0 12px;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:#0d0d0f;color:#f4f4f5;font:400 16px/1.2 Prompt,Sarabun,sans-serif}
+.adm-f input:focus{outline:none;border-color:rgba(147,197,253,.6);box-shadow:0 0 0 3px rgba(96,165,250,.15)}
+.adm-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.adm-quick{display:flex;gap:6px;margin:0 0 12px;flex-wrap:wrap}
+.adm-quick button{flex:1 1 0;min-height:36px;border-radius:99px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:#e4e4e7;font:600 13px/1 Prompt,Sarabun,sans-serif;cursor:pointer}
+.adm-quick button::before,.adm-quick button::after,.adm-go::before,.adm-go::after{display:none !important}
+.adm-go{width:100%;min-height:50px;border:0;border-radius:14px;background:#93c5fd;color:#0b1b33;font:600 16px/1 Prompt,Sarabun,sans-serif;cursor:pointer}
+.adm-go:disabled{opacity:.6}
+.adm-msg{margin:10px 0 0;font:500 13px/1.5 Prompt,Sarabun,sans-serif;min-height:0}
+.adm-msg:empty{display:none}
+.adm-msg.is-ok{color:#6ee7b7}
+.adm-msg.is-err{color:#fca5a5}
+.adm-fine{margin:8px 0 0;font:400 11.5px/1.5 Prompt,Sarabun,sans-serif;color:#7a7a82}
+.adm-head,.adm-head > div{background:none !important;border:0 !important;padding:0 !important;box-shadow:none !important}
