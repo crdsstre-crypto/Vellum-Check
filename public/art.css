@@ -3452,3 +3452,57 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
 }
 .trust-bar .tb-x{font-style:normal}
 @media (max-width:767px){.trust-bar .tb-x{display:none}}
+
+
+/* ===== มือถือ: กล่องว่าง + วงกลมเลขขั้นตอน + เก็บรายละเอียด (8 พ.ย. 2026 รอบ 3) — เฉพาะ ≤767px ===== */
+.vc-empty{display:none}
+@media (max-width:767px){
+  /* 1) กล่องว่าง */
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-empty{display:flex;position:absolute;inset:0;z-index:2;flex-direction:column;align-items:center;justify-content:center;
+    gap:10px;padding:20px;text-align:center;font-family:var(--k-ff);cursor:text}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap:is(.vc-has,.vc-focus) .vc-empty{display:none}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap:not(.vc-has):not(.vc-focus) #input::placeholder{color:transparent !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap:not(.vc-has) > .ta-count{display:none}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-empty-ico{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;color:#d4d4d8;
+    background:linear-gradient(145deg,#26262c,#18181c);border:1px solid rgba(255,255,255,.1);box-shadow:0 10px 24px -10px rgba(0,0,0,.8)}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-empty b{font:600 16px/1.4 var(--k-ff);color:#ededef}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-paste{display:inline-flex;align-items:center;gap:8px;min-height:46px;padding:0 20px;margin-top:4px;
+    border-radius:99px;border:0;background:#f4f4f5;color:#111;font:600 15px/1 var(--k-ff);cursor:pointer;box-shadow:0 8px 20px -8px rgba(0,0,0,.7)}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-paste:active{transform:translateY(1px);background:#fff}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-paste::before,html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-paste::after{display:none !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-empty small{font:400 13px/1.5 var(--k-ff);color:var(--k-fa)}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-empty small label{color:#d4d4d8;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(255,255,255,.3);cursor:pointer}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-paste-msg{display:none;margin:2px 0 0;font:500 12.5px/1.45 var(--k-ff);color:#fcd34d;max-width:260px}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-paste-msg.on{display:block}
+
+  /* 2) วงกลมเลขขั้นตอน ขั้นที่เสร็จเป็นติ๊กเขียว */
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-sh{display:flex !important;align-items:center;gap:10px}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-sn{flex:0 0 28px;width:28px;height:28px;border-radius:50%;display:inline-grid;place-items:center;
+    font-size:0;border:1.5px solid rgba(255,255,255,.28);background:rgba(255,255,255,.04);transition:background .3s,border-color .3s}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-sn::before{content:attr(data-n);font:600 13.5px/1 var(--k-ff);color:#ededef}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-sn.is-done{background:#34d399;border-color:#34d399;box-shadow:0 0 0 4px rgba(52,211,153,.14)}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-sn.is-done::before{content:"";width:14px;height:14px;background:#0b2b1f;
+    -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12.5 4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/contain no-repeat;
+            mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12.5 4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/contain no-repeat;
+    animation:vcSnPop .35s cubic-bezier(.3,1.6,.5,1)}
+  @keyframes vcSnPop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+
+  /* 5) เก็บรายละเอียด: หัวขั้น 1 ตรงกับป้าย, ระยะขั้นเท่ากัน, การ์ดสิทธิ์ไม่มีคำตกบรรทัด */
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .step-head h2{margin:0 !important;padding:0 !important;line-height:1.35 !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .step-head{min-height:36px}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .step-head + .field-wrap{margin-top:16px !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .step-sub{margin:26px 0 0 !important;padding:24px 0 0 !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .step-sub h3{margin:0 0 16px !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps{margin-bottom:0 !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ps + .step-sub{margin-top:26px !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard :is(.vc-zc-txt small,.vc-zc-txt b){text-wrap:balance}
+}
+@media (max-width:767px){
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .step-head{flex-wrap:nowrap !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .step-head h2{flex:1 1 0 !important;font-size:16px !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-sn{display:inline-flex !important;align-items:center;justify-content:center;line-height:0}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-sn::before{display:block;line-height:1 !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .credit-chip{padding:0 9px 0 8px !important;gap:5px}
+}
+/* บนคอม: span เลขไม่สร้างกล่องของตัวเอง หัวข้อจึงแสดงเหมือนเดิมทุกอย่าง (มือถือใช้ inline-flex แทน) */
+.vc-sn{display:contents}
