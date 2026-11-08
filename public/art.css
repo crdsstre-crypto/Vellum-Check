@@ -5554,3 +5554,47 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   html.vc-art #checkCard .ta-actions .file-pick{flex:1 1 100%}
 }
 @media (max-width:767px){html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-actions{grid-template-columns:1fr !important}}
+/* ===== v220 มือถือ: คลังตัวอย่างอ่านง่ายขึ้น ===== */
+.vsl-bar,.vsl-top{display:none}
+@media (max-width:767px){
+  /* (ก) ล่างรายการค่อย ๆ จาง ไม่ตัดกึก */
+  .vsl-list{-webkit-mask-image:linear-gradient(180deg,#000 calc(100% - 34px),transparent);mask-image:linear-gradient(180deg,#000 calc(100% - 34px),transparent);padding-bottom:30px !important}
+  /* (ข) แถวหมวดจางขอบขวา บอกว่าปัดได้ */
+  .vsl-chips{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 44px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 44px),transparent);padding-right:40px !important}
+  /* (2) การ์ดโล่ง: ไม่ซ้ำป้ายฟรี, แทนจำนวนตัวอักษรด้วยจุดหนักสุด */
+  .vsl-item .vsl-free,.vsl-item em,.vsl-item .vsl-dots,.vsl-item .vsl-txt>small{display:none !important}
+  .vsl-item b{padding-right:0 !important}
+  .vsl-item{align-items:flex-start !important;padding:14px 12px 14px 12px !important}
+  .vsl-item::after{align-self:center !important;margin-bottom:0}
+  .vsl-top{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font:400 12.5px/1.45 Prompt,Sarabun,sans-serif;color:#f3c9c9}
+  .vsl-top::first-line{color:#f3c9c9}
+  /* (3)+(ค) แถบระดับความเสี่ยงพร้อมคำบอก */
+  .vsl-bar{display:flex;flex-direction:column;gap:5px;margin-top:5px;width:100%}
+  .vsl-bar-s{display:flex;gap:3px;width:100%;max-width:170px}
+  .vsl-bar-s i{flex:1;height:5px;border-radius:3px}
+  .vsl-bar-s i.h{background:#f87171}.vsl-bar-s i.c{background:#fbbf24}.vsl-bar-s i.l{background:#60a5fa}
+  .vsl-bar-l{display:flex;flex-wrap:wrap;gap:4px 10px;font:500 11.5px/1.2 Prompt,sans-serif}
+  .vsl-bar-l span{display:inline-flex;align-items:center;gap:5px}
+  .vsl-bar-l span::before{content:"";width:7px;height:7px;border-radius:50%}
+  .vsl-bar-l .h{color:#fca5a5}.vsl-bar-l .h::before{background:#f87171}
+  .vsl-bar-l .c{color:#fcd34d}.vsl-bar-l .c::before{background:#fbbf24}
+  .vsl-bar-l .l{color:#93c5fd}.vsl-bar-l .l::before{background:#60a5fa}
+  .vsl-vhead .vsl-dots{display:none !important}
+  .vsl-vhead .vsl-bar{margin-top:6px}
+  /* (4) กระดาษย่อ: ตัวหนังสือจริงขนาดจิ๋ว + ปากกาไฮไลต์ */
+  .vsl-thumb{width:64px;height:80px}
+  .vsl-th-p{padding:0 !important;display:block !important}
+  .vsl-th-p>b,.vsl-th-p>i{display:none}
+  .vsl-th-t{position:absolute;left:0;top:0;width:250%;padding:12px 11px;transform:scale(.4);transform-origin:0 0;color:#5a5346;font:400 8.6px/1.62 Sarabun,Prompt,sans-serif;-webkit-text-size-adjust:none;text-size-adjust:none}
+  .vsl-th-t b{display:block;margin:0 0 5px;padding-bottom:4px;border-bottom:1px solid #ddd5c6;text-align:center;font:700 10px/1.3 Taviraj,Prompt,serif;color:#221e17;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .vsl-th-t span{display:block;white-space:nowrap;overflow:hidden;text-overflow:clip}
+  .vsl-th-t mark{color:#2a2416;background:linear-gradient(transparent 18%,rgba(246,206,64,.85) 18%,rgba(246,206,64,.85) 88%,transparent 88%);border-radius:1px}
+  /* (5) เลื่อนแล้วหัวยุบ */
+  .vsl-head h3{transition:font-size .25s ease}
+  .vsl-head p,.vsl-hero{transition:max-height .3s ease,opacity .2s ease,margin .3s ease,padding .3s ease;max-height:120px}
+  .vsl.is-scrolled .vsl-head h3{font-size:17px}
+  .vsl.is-scrolled .vsl-head p{max-height:0;opacity:0;margin:0;overflow:hidden}
+  .vsl.is-scrolled .vsl-hero{max-height:0;opacity:0;margin:0;padding-top:0;padding-bottom:0;border-width:0}
+  .vsl.is-scrolled .vsl-x{width:32px;height:32px}
+  .vsl.is-scrolled .vsl-chips{margin-top:10px}
+}
