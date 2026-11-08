@@ -1264,7 +1264,9 @@ async function runDemo(demo) {
     renderResult(result);
     addDetectBanner(result, document.getElementById('contractType')?.value || 'unsure');
     els.result.insertAdjacentHTML('afterbegin',
-      '<div class="vc-demo-note" role="note"><b>ผลตัวอย่าง · ฟรี</b><span>เตรียมไว้ล่วงหน้า ไม่ได้ตรวจด้วย AI · ไม่ใช้เครดิต · ไม่บันทึกประวัติ</span><small>อยากตรวจจริง วางสัญญาของคุณเองแล้วกดตรวจ</small></div>');
+      '<div class="vc-demo-note" role="note"><b>ผลตัวอย่าง · ฟรี</b><span>เตรียมไว้ล่วงหน้า ไม่ได้ตรวจด้วย AI · ไม่ใช้เครดิต · ไม่บันทึกประวัติ</span><small>อยากตรวจจริง วางสัญญาของคุณเองแล้วกดตรวจ</small><div class="vc-demo-acts"><button type="button" class="vc-demo-other">ลองฉบับอื่น</button><button type="button" class="vc-demo-exit">✕ ออกจากผลตัวอย่าง</button></div></div>');
+    // ปุ่มย้อนกลับของเบราว์เซอร์/ปัดขอบจอ = ออกจากผลตัวอย่าง (ไม่หลุดออกจากเว็บ)
+    try { if (history.state && history.state.vcDemo) history.replaceState({ vcDemo: 1 }, '', location.href); else history.pushState({ vcDemo: 1 }, '', location.href); } catch (e) {}
     toast('ผลตัวอย่าง · ไม่ใช้เครดิต');
     els.result.scrollIntoView({ behavior: 'smooth', block: 'start' });
   } finally {
@@ -1273,6 +1275,32 @@ async function runDemo(demo) {
     setBusy(false);
   }
 }
+
+// ออกจากผลตัวอย่าง: ล้างผลและข้อความ กลับไปหน้าเริ่มตรวจ
+function exitDemo(openPicker) {
+  els.input.value = '';
+  els.input.dispatchEvent(new Event('input', { bubbles: true }));
+  renderEmpty();
+  viewerSrc = null;
+  const card = document.getElementById('checkCard');
+  if (card) window.scrollTo({ top: Math.max(0, card.getBoundingClientRect().top + window.scrollY - 70), behavior: 'auto' });
+  if (openPicker && window.VCSamples) setTimeout(() => window.VCSamples.open(), 120);
+}
+function leaveDemo(openPicker) {
+  if (history.state && history.state.vcDemo) { window.__vcDemoPick = !!openPicker; history.back(); return; }
+  exitDemo(openPicker);
+}
+window.__vcLeaveDemo = leaveDemo;
+window.addEventListener('popstate', () => {
+  if (!els.result || !document.querySelector('#result .vc-demo-note')) { window.__vcDemoPick = false; return; }
+  const p = window.__vcDemoPick; window.__vcDemoPick = false;
+  window.__vcSkipRoute = true;
+  exitDemo(p);
+});
+document.addEventListener('click', (e) => {
+  const t = e.target.closest && e.target.closest('.vc-demo-exit, .vc-demo-other');
+  if (t) { e.preventDefault(); leaveDemo(t.classList.contains('vc-demo-other')); }
+});
 
 /* ---------- 5b. อัปโหลดไฟล์ ---------- */
 const UPLOAD_MAX_BYTES = 5 * 1024 * 1024;
