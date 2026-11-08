@@ -4213,3 +4213,137 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     return orig.apply(this, arguments);
   };
 })();
+
+/* ===== มือถือ: ฉากเปิดผลตรวจ + ตราประทับ + แผนที่สัญญา + ฉลองอ่านครบ (8 พ.ย. 2026) ===== */
+(function () {
+  var box = document.getElementById('result');
+  if (!box) return;
+  var calm = function () { return document.documentElement.hasAttribute('data-calm') || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
+  var LVC = { check_detail: '#f87171', caution: '#fbbf24', low: '#8b8b94' };
+  var RANK = { check_detail: 3, caution: 2, low: 1 };
+
+  /* 1) วาดวงกลม + นับเลข */
+  function drawDonut(sum) {
+    var segs = [].slice.call(sum.querySelectorAll('.vc-donut svg circle[stroke-dasharray]'));
+    var num = sum.querySelector('.vc-donut b'), total = parseInt(num && num.textContent, 10) || 0;
+    var fin = segs.map(function (c) { return c.getAttribute('stroke-dasharray').split(' ').map(Number); });
+    var offs = segs.map(function (c) { return Number(c.getAttribute('stroke-dashoffset')) || 0; });
+    if (calm()) return;
+    var t0 = null, D = 1000;
+    segs.forEach(function (c) { c.setAttribute('stroke-dasharray', '0 ' + fin[0][1]); });
+    if (num) num.textContent = '0';
+    function step(t) {
+      if (!t0) t0 = t;
+      var p = Math.min(1, (t - t0) / D), e = 1 - Math.pow(1 - p, 3);
+      /* เส้นวิ่งต่อกันเป็นวงเดียว: แต่ละช่วงเริ่มวาดเมื่อเส้นรวมไปถึงจุดเริ่มของมัน */
+      var C = fin.length ? fin[0][1] : 0, head = C * e;
+      segs.forEach(function (c, i) {
+        var st = -offs[i], len = Math.max(0, Math.min(fin[i][0], head - st));
+        c.setAttribute('stroke-dasharray', len.toFixed(2) + ' ' + C.toFixed(2));
+      });
+      if (num) num.textContent = String(Math.round(total * e));
+      if (p < 1) requestAnimationFrame(step);
+      else { segs.forEach(function (c, i) { c.setAttribute('stroke-dasharray', fin[i].join(' ')); }); if (num) num.textContent = String(total); }
+    }
+    requestAnimationFrame(step);
+  }
+
+  /* 2) ตราประทับ */
+  function stamp(sum, rpt) {
+    var lv = sum.classList.contains('lv-hi') ? 'hi' : sum.classList.contains('lv-mid') ? 'mid' : 'lo';
+    var word = { hi: 'พบจุดเสี่ยง', mid: 'ควรระวัง', lo: 'ผ่านเบื้องต้น' }[lv];
+    var dt = sum.querySelector('.vc-date'), date = dt ? dt.textContent.trim() : '';
+    var el = document.createElement('div');
+    el.className = 'vc-stamp lv-' + lv; el.setAttribute('aria-hidden', 'true');
+    el.innerHTML = '<svg viewBox="0 0 120 120" width="96" height="96"><defs><filter id="vcInk" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.6"/><feComponentTransfer><feFuncA type="discrete" tableValues="0 .85 1 1 1"/></feComponentTransfer></filter>' +
+      '<path id="vcStArc" d="M20 60a40 40 0 1 1 80 0"/><path id="vcStArcB" d="M24 64a36 36 0 0 0 72 0"/></defs>' +
+      '<g filter="url(#vcInk)" fill="none" stroke="currentColor"><circle cx="60" cy="60" r="55" stroke-width="3"/><circle cx="60" cy="60" r="48" stroke-width="1.2"/>' +
+      '<text font-family="Prompt,Sarabun,sans-serif" font-size="9.5" font-weight="600" letter-spacing="2.4" fill="currentColor" stroke="none"><textPath href="#vcStArc" startOffset="50%" text-anchor="middle">VELLUM CHECK</textPath></text>' +
+      '<text font-family="Prompt,Sarabun,sans-serif" font-size="8" fill="currentColor" stroke="none"><textPath href="#vcStArcB" startOffset="50%" text-anchor="middle">' + date + '</textPath></text>' +
+      '<rect x="12" y="49" width="96" height="22" rx="3" fill="currentColor" stroke="none"/>' +
+      '<text x="60" y="64.5" text-anchor="middle" font-family="Prompt,Sarabun,sans-serif" font-size="13" font-weight="700" fill="#17171a" stroke="none">' + word + '</text></g></svg>';
+    sum.appendChild(el);
+    if (dt) dt.classList.add('vc-date-in-stamp');
+    if (calm()) { el.classList.add('is-set'); return; }
+    setTimeout(function () {
+      el.classList.add('is-hit');
+      setTimeout(function () { sum.classList.add('vc-thud'); }, 230);
+      setTimeout(function () { sum.classList.remove('vc-thud'); el.classList.add('is-set'); }, 700);
+    }, 1150);
+  }
+
+  /* 4) แผนที่สัญญา */
+  function contractMap(sum, rpt) {
+    var rows = [].slice.call(rpt.querySelectorAll('.ix-row')), hit = {}, maxRef = 0;
+    rows.forEach(function (r, i) {
+      var c = r.querySelector('.ix-clause'), m = c && /ข้อ\s*([0-9๐-๙]+)/.exec(c.textContent);
+      if (!m) return;
+      var n = parseInt(m[1].replace(/[๐-๙]/g, function (d) { return '๐๑๒๓๔๕๖๗๘๙'.indexOf(d); }), 10);
+      var lv = (/lv-(\w+)/.exec(r.className) || [])[1] || 'low';
+      if (!hit[n] || RANK[lv] > RANK[hit[n].lv]) hit[n] = { lv: lv, i: +r.getAttribute('data-ixcard') || i };
+      if (n > maxRef) maxRef = n;
+    });
+    if (!maxRef) return;
+    var ta = document.getElementById('input'), maxTa = 0;
+    if (ta && ta.value) (ta.value.match(/ข้อ\s*([0-9]+)/g) || []).forEach(function (s) { var k = parseInt(s.replace(/\D/g, ''), 10); if (k > maxTa && k < 200) maxTa = k; });
+    var N = Math.min(60, Math.max(maxRef, maxTa));
+    var wrap = document.createElement('div'); wrap.className = 'vc-map';
+    var h = '<div class="vc-map-h"><span>แผนที่สัญญา</span><small>ข้อ 1–' + N + ' · แตะจุดสีเพื่อเปิดประเด็น</small></div><div class="vc-map-bar" role="list">';
+    for (var k = 1; k <= N; k++) {
+      var x = hit[k];
+      h += x ? '<button type="button" role="listitem" class="vc-map-c is-hit" style="--c:' + LVC[x.lv] + ';--d:' + (k * 22) + 'ms" data-ix="' + x.i + '" aria-label="ข้อ ' + k + ' มีประเด็น"><i>' + k + '</i></button>'
+             : '<span role="listitem" class="vc-map-c" style="--d:' + (k * 22) + 'ms" aria-label="ข้อ ' + k + '"></span>';
+    }
+    wrap.innerHTML = h + '</div>';
+    var prog = sum.querySelector('.ix-prog'), share = sum.querySelector('.share-bar');
+    sum.insertBefore(wrap, prog || share || null);
+    wrap.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-ix]'); if (!b || typeof window.focusIssue !== 'function') return;
+      var t = rpt.querySelector('.vc-tab[data-t="iss"]'); if (t) t.click();
+      window.focusIssue(+b.getAttribute('data-ix'));
+    });
+  }
+
+  /* 5) ฉลองอ่านครบ */
+  function watchDone(rpt) {
+    var n = rpt.querySelector('.vc-sum .ix-prog-n'); if (!n) return;
+    var was = /^(\d+)\/(\d+)$/.exec(n.textContent.trim()), done0 = was && was[1] === was[2] && was[2] !== '0';
+    new MutationObserver(function () {
+      var m = /^(\d+)\/(\d+)$/.exec(n.textContent.trim()); if (!m) return;
+      var done = m[1] === m[2] && m[2] !== '0';
+      if (done && !done0) celebrate(+m[2]);
+      done0 = done;
+    }).observe(n, { childList: true, characterData: true, subtree: true });
+  }
+  function celebrate(total) {
+    var old = document.querySelector('.vc-cele'); if (old) old.remove();
+    var el = document.createElement('div'); el.className = 'vc-cele'; el.setAttribute('role', 'status');
+    var sp = ''; for (var i = 0; i < 14; i++) sp += '<i style="--a:' + (i * 360 / 14) + 'deg;--r:' + (64 + (i % 3) * 16) + 'px;--dl:' + (420 + (i % 4) * 40) + 'ms"></i>';
+    el.innerHTML = '<div class="vc-cele-card"><div class="vc-cele-art"><span class="vc-cele-sp">' + sp + '</span>' +
+      '<svg viewBox="0 0 64 64" width="88" height="88" aria-hidden="true"><path class="vc-cele-sh" d="M32 5L54 13V32C54 46 44 54 32 59C20 54 10 46 10 32V13Z" fill="rgba(52,211,153,.14)" stroke="#34d399" stroke-width="2.6" stroke-linejoin="round" pathLength="1"/><path class="vc-cele-ck" d="M21.5 32.5L29 40L43 25" fill="none" stroke="#34d399" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/></svg></div>' +
+      '<b>อ่านครบทั้ง ' + total + ' ประเด็นแล้ว</b><p>พร้อมคุยกับอีกฝ่ายก่อนลงนาม<br>ลองไปที่แท็บ "ถามต่อ" ถ้ายังสงสัยข้อไหน</p><button type="button">เยี่ยมเลย</button></div>';
+    document.body.appendChild(el);
+    if (navigator.vibrate) try { navigator.vibrate([18, 40, 18]); } catch (e) {}
+    var kill = function () { el.classList.add('out'); setTimeout(function () { el.remove(); }, 260); };
+    el.addEventListener('click', kill);
+    setTimeout(kill, 4200);
+  }
+
+  function fx() {
+    var rpt = box.querySelector('article.rpt.vc-m3');
+    if (!rpt || rpt.classList.contains('vc-fx')) return;
+    var sum = rpt.querySelector('.vc-sum'); if (!sum) return;
+    rpt.classList.add('vc-fx');
+    contractMap(sum, rpt);
+    stamp(sum, rpt);
+    watchDone(rpt);
+    if (!calm()) {
+      rpt.classList.add('vc-reveal');
+      [].forEach.call(rpt.querySelectorAll('.ix-row'), function (r, i) { r.style.setProperty('--i', i); });
+      setTimeout(function () { rpt.classList.remove('vc-reveal'); rpt.classList.add('vc-revealed'); }, 2600);
+    }
+    drawDonut(sum);
+  }
+  new MutationObserver(fx).observe(box, { childList: true, subtree: true });
+  fx();
+})();
