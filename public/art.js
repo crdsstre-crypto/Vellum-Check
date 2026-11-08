@@ -4121,3 +4121,95 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   new MutationObserver(polish).observe(box, { childList: true, subtree: true });
   polish();
 })();
+
+/* ===== มือถือ: รายละเอียดประเด็นเป็นแผ่นเลื่อนขึ้นจากด้านล่าง + ก่อนหน้า/ถัดไป + ปุ่มตรวจแล้วชัดๆ (8 พ.ย. 2026) ===== */
+(function () {
+  var box = document.getElementById('result');
+  if (!box) return;
+  var mq = window.matchMedia('(max-width:767px)'), root = document.documentElement;
+  var back = document.createElement('div'); back.className = 'vc-sheet-back'; back.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(back);
+  var cur = null;
+
+  function items() { return [].slice.call(box.querySelectorAll('article.rpt details.item')); }
+  function active() { return mq.matches && box.querySelector('article.rpt.vc-m'); }
+  function close() {
+    if (!cur) return;
+    var b = cur.querySelector('[data-ixnav="back"]');
+    if (b) b.click(); else { cur.classList.remove('is-picked'); sync(); }
+  }
+  function go(d) {
+    if (!cur) return;
+    var all = items(), i = all.indexOf(cur) + d;
+    if (i < 0 || i >= all.length || typeof window.focusIssue !== 'function') return;
+    window.focusIssue(i);
+  }
+
+  function dress(it) {
+    if (it.classList.contains('vc-sheet')) return;
+    it.classList.add('vc-sheet');
+    var sm = it.querySelector('summary');
+    if (sm) {
+      var x = document.createElement('button');
+      x.type = 'button'; x.className = 'vc-sh-x'; x.setAttribute('aria-label', 'ปิด');
+      x.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+      x.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); close(); });
+      sm.appendChild(x);
+      /* แผ่นเปิดอยู่: แตะหัวไม่ให้ <details> พับ */
+      sm.addEventListener('click', function (e) { if (it.classList.contains('is-picked') && active()) e.preventDefault(); }, true);
+      /* ปัดหัวแผ่นลงเพื่อปิด */
+      var y0 = null;
+      sm.addEventListener('touchstart', function (e) { y0 = it.scrollTop <= 0 ? e.touches[0].clientY : null; }, { passive: true });
+      sm.addEventListener('touchmove', function (e) {
+        if (y0 == null) return; var dy = e.touches[0].clientY - y0;
+        if (dy > 0) it.style.transform = 'translateY(' + Math.min(dy, 240) + 'px)';
+      }, { passive: true });
+      sm.addEventListener('touchend', function (e) {
+        if (y0 == null) return; var dy = (e.changedTouches[0] || {}).clientY - y0; y0 = null;
+        it.style.transform = '';
+        if (dy > 90) close();
+      });
+    }
+    var nav = document.createElement('div'); nav.className = 'vc-sh-nav';
+    nav.innerHTML = '<button type="button" class="vc-sh-prev"><span aria-hidden="true">‹</span> ก่อนหน้า</button><span class="vc-sh-n"></span><button type="button" class="vc-sh-next">ถัดไป <span aria-hidden="true">›</span></button>';
+    nav.querySelector('.vc-sh-prev').addEventListener('click', function () { go(-1); });
+    nav.querySelector('.vc-sh-next').addEventListener('click', function () { go(1); });
+    it.appendChild(nav);
+    /* ทำเครื่องหมายว่าตรวจแล้ว → ไปประเด็นถัดไปให้เอง */
+    var rv = it.querySelector('.rv-btn');
+    if (rv) rv.addEventListener('click', function () {
+      if (!active()) return;
+      setTimeout(function () {
+        if (rv.getAttribute('aria-pressed') === 'true' && cur === it) {
+          var all = items(); if (all.indexOf(it) < all.length - 1) go(1);
+        }
+      }, 500);
+    });
+  }
+
+  function sync() {
+    var it = active() ? box.querySelector('article.rpt.vc-m details.item.is-picked') : null;
+    if (it !== cur) {
+      cur = it;
+      if (it) {
+        dress(it); it.scrollTop = 0;
+        var all = items(), i = all.indexOf(it);
+        it.querySelector('.vc-sh-n').textContent = (i + 1) + ' / ' + all.length;
+        it.querySelector('.vc-sh-prev').disabled = i <= 0;
+        it.querySelector('.vc-sh-next').disabled = i >= all.length - 1;
+      }
+    }
+    root.classList.toggle('vc-sheet-open', !!it);
+  }
+  back.addEventListener('click', close);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && cur) close(); });
+  new MutationObserver(sync).observe(box, { subtree: true, childList: true, attributes: true, attributeFilter: ['class'] });
+  if (mq.addEventListener) mq.addEventListener('change', sync);
+
+  /* แผ่นลอยอยู่แล้ว ไม่ต้องเลื่อนหน้าไปหาประเด็น */
+  var orig = Element.prototype.scrollIntoView;
+  Element.prototype.scrollIntoView = function () {
+    if (mq.matches && this.matches && this.matches('details.item') && this.closest('article.rpt.vc-m')) return;
+    return orig.apply(this, arguments);
+  };
+})();
