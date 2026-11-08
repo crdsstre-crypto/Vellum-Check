@@ -4266,9 +4266,12 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       if (x.quote) L.push('ในสัญญา: “' + (x.quote.length > 160 ? x.quote.slice(0, 160) + '…' : x.quote) + '”');
       L.push('ขอแก้เป็น: ' + x.fix); L.push('');
     });
+    var miss = typeof window.__vcMissAsk === 'function' ? window.__vcMissAsk() : [];
+    if (miss.length) { L.push('เรื่องที่สัญญายังไม่ได้ระบุ (ขอให้เขียนเพิ่ม)'); miss.forEach(function (m) { L.push('• ' + m); }); L.push(''); }
     L.push('(สรุปจาก Vellum Check — ใช้ประกอบการพูดคุย ไม่ใช่คำปรึกษาทางกฎหมาย)');
     return L.join('\n');
   }
+  window.__vcBuildAll = buildAll; window.__vcFixCount = function () { return allFixes().length; };
   function copyText(t, btn, msg) {
     function done() { var sp = btn.querySelector('span'), o = sp.textContent; btn.classList.add('ok'); sp.textContent = msg; setTimeout(function () { btn.classList.remove('ok'); sp.textContent = o; }, 1600); }
     function fb() { var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;font-size:16px'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} ta.remove(); done(); }
@@ -5846,4 +5849,159 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   new MutationObserver(run).observe(document.body, { attributes: true, attributeFilter: ['data-sheet'] });
   var t = 0; new MutationObserver(function () { clearTimeout(t); t = setTimeout(run, 120); }).observe(document.body, { childList: true, subtree: true });
   run();
+})();
+
+
+/* ===== มือถือ: หน้าผลตรวจรอบ v226 — จุดความคืบหน้าในแถบย่อ, ตัวเลขเด่นข้อมูลสัญญา, ตัวเลขในการ์ด, เช็กลิสต์สิ่งที่ยังไม่ระบุ, การ์ดขั้นต่อไป, ปุ่มกลับขึ้นบนแบบวงแหวน ===== */
+(function () {
+  var box = document.getElementById('result'); if (!box) return;
+  var mq = window.matchMedia('(max-width:767px)'), root = document.documentElement, queued = false;
+  var NUM = /([0-9๐-๙][0-9๐-๙,.\/]*\s*(?:%|เปอร์เซ็นต์|บาท|วัน|เดือน|ปี|ครั้ง|หน่วย|ชั่วโมง|งวด))/g;
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function cls(el, c, on) { if (el.classList.contains(c) !== on) el.classList.toggle(c, on); }
+  function rpt() { return box.querySelector('article.rpt.vc-m'); }
+  function share(txt, btn, okMsg) {
+    function done() { var sp = btn.querySelector('span') || btn, o = sp.textContent; sp.textContent = okMsg; btn.classList.add('ok'); setTimeout(function () { sp.textContent = o; btn.classList.remove('ok'); }, 1600); }
+    function copy() { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, fb); else fb(); }
+    function fb() { var ta = document.createElement('textarea'); ta.value = txt; ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;font-size:16px'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} ta.remove(); done(); }
+    if (navigator.share) navigator.share({ text: txt }).catch(function (e) { if (!e || e.name !== 'AbortError') copy(); }); else copy();
+  }
+
+  /* 1) จุดความคืบหน้าในแถบย่อ */
+  function dots(r) {
+    var mini = document.querySelector('.vc-mini'); if (!mini) return;
+    var its = [].slice.call(r.querySelectorAll('details.item')), rows = r.querySelectorAll('.ix-row');
+    var d = mini.querySelector('.vc-mini-dots');
+    if (!d) { d = document.createElement('span'); d.className = 'vc-mini-dots'; mini.appendChild(d);
+      d.addEventListener('click', function (e) { var b = e.target.closest('i[data-i]'); if (!b) return; e.preventDefault(); e.stopPropagation(); var x = rpt(); var t = x && x.querySelector('.vc-tab[data-t="iss"]'); if (t) t.click(); if (window.focusIssue) window.focusIssue(+b.getAttribute('data-i')); }); }
+    var n = Math.min(its.length, 12);
+    if (d.children.length !== n) { d.innerHTML = ''; for (var k = 0; k < n; k++) { var i = document.createElement('i'); i.setAttribute('data-i', k); i.setAttribute('role', 'button'); i.setAttribute('aria-label', 'ประเด็นที่ ' + (k + 1)); d.appendChild(i); } }
+    [].forEach.call(d.children, function (b, k) {
+      var it = its[k]; if (!it) return;
+      var lv = it.classList.contains('lv-check_detail') ? 'hi' : it.classList.contains('lv-caution') ? 'mid' : 'lo';
+      var dn = rows[k] ? rows[k].classList.contains('is-done') : false;
+      var c = 'lv-' + lv + (dn ? ' dn' : ''); if (b.className !== c) b.className = c;
+    });
+  }
+
+  /* 2) ตัวเลขเด่นในข้อมูลสัญญา */
+  function stats(r) {
+    var br = r.querySelector('section.vc-brief'); if (!br || br.querySelector('.vc-stats')) return;
+    var found = [];
+    [].forEach.call(br.querySelectorAll('.vc-br-row'), function (row) {
+      var p = row.querySelector('p'), lab0 = (row.querySelector('small') || {}).textContent || ''; if (!p) return;
+      var t = p.textContent, m; NUM.lastIndex = 0;
+      while ((m = NUM.exec(t))) {
+        var val = m[1].trim(), unit = (/(%|เปอร์เซ็นต์|บาท|วัน|เดือน|ปี|ครั้ง|หน่วย|ชั่วโมง|งวด)$/.exec(val) || [])[1]; if (!unit) continue;
+        var before = t.slice(0, m.index).replace(/\s+$/, ''), cut = Math.max(before.lastIndexOf(' '), before.lastIndexOf(','), before.lastIndexOf('·'));
+        var lab = before.slice(cut + 1).trim(); if (lab.length > 20) lab = lab.slice(-20); if (lab.length < 2) lab = lab0;
+        found.push({ val: val.replace(/\s*(%|เปอร์เซ็นต์|บาท|วัน|เดือน|ปี|ครั้ง|หน่วย|ชั่วโมง|งวด)$/, ''), unit: unit, lab: lab });
+      }
+    });
+    var pick = [], seen = {};
+    function take(f) { if (pick.length < 3 && !seen[f.lab + f.val]) { seen[f.lab + f.val] = 1; pick.push(f); } }
+    found.filter(function (f) { return f.unit === 'บาท'; }).forEach(take);
+    found.filter(function (f) { return /เดือน|ปี/.test(f.unit); }).forEach(take);
+    found.filter(function (f) { return f.unit === 'วัน'; }).forEach(take);
+    found.forEach(take);
+    if (pick.length < 2) return;
+    var w = document.createElement('div'); w.className = 'vc-stats';
+    w.innerHTML = pick.slice(0, 3).map(function (f) { return '<div class="vc-st"><b>' + esc(f.val) + '<small>' + esc(f.unit) + '</small></b><span>' + esc(f.lab) + '</span></div>'; }).join('');
+    var h = br.querySelector('h4'); if (h) h.parentNode.insertBefore(w, h.nextSibling); else br.insertBefore(w, br.firstChild);
+  }
+
+  /* 5) ตัวเลขเด่นในคำอธิบายการ์ด */
+  function nums(r) {
+    [].forEach.call(r.querySelectorAll('.ix-row .ix-tx > p'), function (p) {
+      if (p.__vcN || p.children.length) return; p.__vcN = true;
+      var t = p.textContent; NUM.lastIndex = 0; if (!NUM.test(t)) return; NUM.lastIndex = 0;
+      p.innerHTML = esc(t).replace(NUM, '<b class="vc-n">$1</b>');
+    });
+  }
+
+  /* 6) สิ่งที่สัญญานี้ยังไม่ระบุ → เช็กลิสต์ */
+  function key(t) { var s = (window.__vcCheckedText || '') + '|' + t, h = 0; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return 'vc_miss_' + h; }
+  function store(k, v) { try { if (v) localStorage.setItem(k, '1'); else localStorage.removeItem(k); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem(k) === '1'; } catch (e) { return false; } }
+  function missText(li) { var c = li.cloneNode(true); [].forEach.call(c.querySelectorAll('.vc-ck'), function (x) { x.remove(); }); return c.textContent.replace(/\s+/g, ' ').trim(); }
+  window.__vcMissAsk = function () {
+    var r = rpt(), m = r && r.querySelector('section.miss'); if (!m) return [];
+    return [].filter.call(m.querySelectorAll('li'), function (li) { return !li.classList.contains('is-ck'); }).map(missText);
+  };
+  function miss(r) {
+    var m = r.querySelector('section.miss'); if (!m) return;
+    [].forEach.call(m.querySelectorAll('li'), function (li) {
+      if (li.__vcCk) return; li.__vcCk = true;
+      var k = key(missText(li)), ck = document.createElement('span'); ck.className = 'vc-ck'; ck.setAttribute('aria-hidden', 'true');
+      li.insertBefore(ck, li.firstChild); li.setAttribute('role', 'checkbox'); li.tabIndex = 0;
+      function set(v) { cls(li, 'is-ck', v); li.setAttribute('aria-checked', v ? 'true' : 'false'); }
+      set(load(k));
+      li.addEventListener('click', function (e) { if (e.target.closest('.gl-tap, a, button')) return; var v = !li.classList.contains('is-ck'); set(v); store(k, v); upd(); });
+    });
+    var bt = m.querySelector('.vc-miss-ask');
+    if (!bt) {
+      bt = document.createElement('button'); bt.type = 'button'; bt.className = 'vc-miss-ask'; bt.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/></svg><span></span>';
+      m.appendChild(bt);
+      bt.addEventListener('click', function () {
+        var L = window.__vcMissAsk(); if (!L.length) return;
+        share('ขอสอบถามเพิ่มเติม สัญญายังไม่ได้ระบุเรื่องต่อไปนี้ รบกวนช่วยเขียนให้ชัดเจนก่อนลงนามครับ/ค่ะ\n\n' + L.map(function (x, i) { return (i + 1) + ') ' + x; }).join('\n') + '\n\n(สรุปจาก Vellum Check)', bt, 'คัดลอกแล้ว');
+      });
+    }
+    function upd() { var n = window.__vcMissAsk().length, sp = bt.querySelector('span'), t = n ? 'ถามอีกฝ่ายเรื่องที่ยังไม่ติ๊ก (' + n + ')' : 'เช็กครบทุกข้อแล้ว ✓'; if (!bt.classList.contains('ok') && sp.textContent !== t) sp.textContent = t; bt.disabled = !n; }
+    upd();
+  }
+
+  /* 8) การ์ดขั้นต่อไปท้ายหน้า */
+  function endCard(r) {
+    var its = r.querySelectorAll('details.item').length; if (!its) return;
+    var c = r.querySelector(':scope > .vc-end');
+    if (!c) {
+      c = document.createElement('section'); c.className = 'vc-end'; c.setAttribute('data-vt', 'iss');
+      c.innerHTML = '<p class="vc-end-k">ขั้นต่อไป</p><h3 class="vc-end-h"></h3><div class="vc-end-bar"><i></i></div>' +
+        '<div class="vc-end-g"><button type="button" class="vc-end-b vc-end-send"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M12 3v12M7 8l5-5 5 5"/></svg><span>ส่งข้อขอแก้ทุกข้อ</span></button>' +
+        '<button type="button" class="vc-end-b vc-end-ck"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8 12 3 3 5-6"/></svg><span>เช็กลิสต์ก่อนเซ็น</span></button>' +
+        '<button type="button" class="vc-end-b vc-end-new"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>ตรวจฉบับใหม่</span></button></div>';
+      r.appendChild(c);
+      c.querySelector('.vc-end-send').addEventListener('click', function () { if (window.__vcBuildAll) share(window.__vcBuildAll(), this, 'คัดลอกทุกข้อแล้ว'); });
+      c.querySelector('.vc-end-ck').addEventListener('click', function () { var b = r.querySelector('.vc-next-ck'); if (b) b.click(); });
+      c.querySelector('.vc-end-new').addEventListener('click', function () {
+        var card = document.getElementById('checkCard'), ed = card && card.querySelector('.vc-done-edit');
+        if (card && card.classList.contains('vc-collapsed') && ed) ed.click();
+        var ta = document.getElementById('input');
+        if (card) window.scrollTo({ top: Math.max(0, card.getBoundingClientRect().top + window.scrollY - 70), behavior: 'smooth' });
+        setTimeout(function () { if (ta) { ta.focus({ preventScroll: true }); try { ta.select(); } catch (e) {} } }, 450);
+      });
+    }
+    var note = r.querySelector('#commandCenter .cc-note'); if (note && note.parentNode !== c) c.appendChild(note);
+    var disc = r.querySelector(':scope > p.disclaimer'); if (disc && disc.parentNode !== c) c.appendChild(disc);
+    var rows = r.querySelectorAll('.ix-row'), dn = [].filter.call(rows, function (x) { return x.classList.contains('is-done'); }).length, tot = rows.length || its;
+    var h = dn >= tot ? 'อ่านครบ ' + tot + ' ประเด็นแล้ว พร้อมคุยกับอีกฝ่าย' : 'อ่านแล้ว ' + dn + ' จาก ' + tot + ' ประเด็น';
+    var hh = c.querySelector('.vc-end-h'); if (hh.textContent !== h) hh.textContent = h;
+    var bi = c.querySelector('.vc-end-bar i'), w = (tot ? dn / tot * 100 : 0).toFixed(0) + '%'; if (bi.style.width !== w) bi.style.width = w;
+    cls(c, 'is-full', dn >= tot);
+    var send = c.querySelector('.vc-end-send'), nf = window.__vcFixCount ? window.__vcFixCount() : 0; if (send.hidden !== !nf) send.hidden = !nf;
+    var ck = c.querySelector('.vc-end-ck'), has = !!r.querySelector('.vc-next-ck'); if (ck.hidden !== !has) ck.hidden = !has;
+  }
+
+  function run() {
+    queued = false; if (!mq.matches) return;
+    var r = rpt(); if (!r) return;
+    dots(r); stats(r); nums(r); miss(r); endCard(r);
+  }
+  function q() { if (!queued) { queued = true; requestAnimationFrame(run); } }
+  new MutationObserver(q).observe(box, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+  q();
+
+  /* 9) ปุ่มกลับขึ้นบน: วงแหวนบอกระยะ + โผล่เมื่อเลื่อนขึ้น */
+  var lastY = window.scrollY, tk = false;
+  window.addEventListener('scroll', function () {
+    if (tk || !mq.matches) return; tk = true;
+    requestAnimationFrame(function () {
+      tk = false; var y = window.scrollY, max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      var b = document.querySelector('.to-top'); if (b) b.style.setProperty('--sp', Math.min(100, y / max * 100).toFixed(1));
+      var up = y < lastY - 2, down = y > lastY + 2, end = y > max - 40;
+      if (up || end) cls(root, 'vc-tt-show', y > 700); else if (down) cls(root, 'vc-tt-show', false);
+      lastY = y;
+    });
+  }, { passive: true });
 })();
