@@ -4269,3 +4269,71 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   html.vc-art[data-view="desk"][data-desk="check"] #checkCard #checkBtn:not(:disabled)::before{clip-path:none !important;-webkit-clip-path:none !important;z-index:auto !important;transition:none !important}
   html.vc-art[data-view="desk"][data-desk="check"] #checkCard #checkBtn:not(:disabled)::after{clip-path:none !important;-webkit-clip-path:none !important}
 }
+
+
+/* ===== มือถือ: แก้ 3 จุด + การ์ดลอยแยกขั้น + แสงออโรรา (8 พ.ย. 2026) — เฉพาะ ≤767px ===== */
+.vc-aurora{display:none}
+@media (max-width:767px){
+  /* แก้ 1: placeholder ซ้อนกับข้อความกลางกล่อง — แสดงเฉพาะตอนกำลังพิมพ์ */
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap.vc-hl-on #input::placeholder{-webkit-text-fill-color:transparent !important;color:transparent !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap.vc-hl-on.vc-focus #input::placeholder{-webkit-text-fill-color:var(--k-fa,#7a7a82) !important}
+
+  /* แก้ 2: เส้นขั้นตอนบางและจาง เด่นเฉพาะช่วงที่เติมสี */
+  html.vc-art .vc-rail-bg{width:2px;left:.5px;background:rgba(255,255,255,.07) !important}
+  html.vc-art .vc-rail-fill{width:2px;left:.5px;box-shadow:0 0 6px color-mix(in srgb,var(--vc-acc) 30%,transparent)}
+  html.vc-art .vc-rail b{left:-2px;width:7px;height:7px;margin-top:-3.5px;border-width:1.5px;background:#1e1e22;border-color:rgba(255,255,255,.14)}
+  html.vc-art .vc-rail b.on{background:var(--vc-accs);border-color:var(--vc-accs);transform:none}
+
+  /* แก้ 3: แถบ "พบข้อความที่ยังไม่ได้ตรวจ" เป็นการ์ดเตี้ย */
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .draft-bar:not([hidden]){display:grid !important;grid-template-columns:34px 1fr;grid-template-areas:"i t" "b b";gap:10px 12px;align-items:center;
+    margin:12px 0 0 !important;padding:12px !important;border-radius:16px !important;border:1px solid rgba(255,255,255,.1) !important;border-left:1px solid rgba(255,255,255,.1) !important;background:rgba(255,255,255,.035) !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .draft-bar::before{content:"";grid-area:i;width:34px;height:34px;border-radius:10px;background:linear-gradient(145deg,#2a2a30,#1a1a1f);border:1px solid rgba(255,255,255,.09);
+    -webkit-mask:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.02)}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .draft-bar::after{content:"";grid-area:i;justify-self:center;width:18px;height:18px;background:#d4d4d8;
+    -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 12a7.5 7.5 0 1 0 2.2-5.3'/%3E%3Cpath d='M4.5 4.5v3.7h3.7'/%3E%3Cpath d='M12 8.5V12l2.5 1.5'/%3E%3C/svg%3E") center/contain no-repeat;
+            mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 12a7.5 7.5 0 1 0 2.2-5.3'/%3E%3Cpath d='M4.5 4.5v3.7h3.7'/%3E%3Cpath d='M12 8.5V12l2.5 1.5'/%3E%3C/svg%3E") center/contain no-repeat}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .draft-bar > span{grid-area:t;font:400 13px/1.45 Prompt,Sarabun,sans-serif !important;color:#c4c4ca !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .draft-bar > button{grid-row:2;min-height:40px !important;margin:0 !important;border-radius:12px !important;font:600 14px/1 Prompt,Sarabun,sans-serif !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .draft-bar > button[data-draft="restore"]{grid-column:1 / 2;grid-column:1 / span 2;justify-self:stretch;margin-right:84px !important;background:#f4f4f5 !important;color:#111 !important;border:0 !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .draft-bar > button[data-draft="delete"]{grid-column:2;justify-self:end;width:76px;background:transparent !important;color:#c4c4ca !important;border:1px solid rgba(255,255,255,.14) !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .draft-bar > button::before,html.vc-art[data-view="desk"][data-desk="check"] #checkCard .draft-bar > button::after{display:none !important}
+
+  /* 1) แสงออโรราหลังการ์ด (สีตามประเภท) */
+  html.vc-art[data-view="desk"][data-desk="check"] .vc-aurora{display:block;position:fixed;inset:0;z-index:-2;pointer-events:none;overflow:hidden}
+  html.vc-art .vc-aurora i{position:absolute;border-radius:50%;filter:blur(60px);opacity:.22;background:var(--vc-acc);transition:background 1.2s ease}
+  html.vc-art .vc-aurora i:nth-child(1){width:70vw;height:70vw;left:-20vw;top:8vh;animation:vcAu1 22s ease-in-out infinite alternate}
+  html.vc-art .vc-aurora i:nth-child(2){width:60vw;height:60vw;right:-25vw;top:42vh;opacity:.16;background:color-mix(in srgb,var(--vc-acc) 55%,#6d6dff);animation:vcAu2 26s ease-in-out infinite alternate}
+  html.vc-art .vc-aurora i:nth-child(3){width:55vw;height:55vw;left:15vw;bottom:-18vh;opacity:.12;animation:vcAu3 30s ease-in-out infinite alternate}
+  @keyframes vcAu1{to{transform:translate(18vw,12vh) scale(1.15)}}
+  @keyframes vcAu2{to{transform:translate(-20vw,-10vh) scale(.9)}}
+  @keyframes vcAu3{to{transform:translate(-12vw,-14vh) scale(1.2)}}
+  html.vc-art[data-view="desk"][data-desk="check"] #vcBackdrop::after{background:rgba(10,10,12,.86) !important}
+
+  /* 3) การ์ดลอยแยกขั้น: การ์ดหลักโปร่ง แต่ละขั้นเป็นกระจกฝ้า */
+  html.vc-art[data-view="desk"][data-desk="check"] main > #checkCard.vc-boxed{background:transparent !important;border:0 !important;box-shadow:none !important;padding:0 0 0 0 !important;margin-left:10px !important;margin-right:10px !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed > .vc-box{position:relative;z-index:1;margin:0 0 14px 14px;padding:20px 16px 20px;border-radius:20px;
+    background:rgba(22,22,26,.62);border:1px solid rgba(255,255,255,.08);-webkit-backdrop-filter:blur(18px) saturate(140%);backdrop-filter:blur(18px) saturate(140%);
+    box-shadow:0 18px 40px -24px rgba(0,0,0,.9);transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .45s ease,border-color .45s ease,box-shadow .45s ease}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed > .vc-box.is-active{border-color:color-mix(in srgb,var(--vc-acc) 32%,rgba(255,255,255,.1));transform:translateY(-2px);
+    box-shadow:0 24px 50px -24px rgba(0,0,0,.95),0 0 0 4px color-mix(in srgb,var(--vc-acc) 7%,transparent)}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed > .vc-box.is-next{opacity:.62}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed > .vc-box > .step-sub{margin:0 !important;padding:0 !important;border-top:0 !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed > .vc-box > .step-sub h3{margin:0 0 16px !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed > .vc-box > :last-child{margin-bottom:0 !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed > .vc-needlogin{margin:0 0 14px 14px !important}
+  /* ราวขั้นตอนอยู่ในร่องซ้ายของการ์ด */
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed .vc-rail{left:3px}
+}
+@media (max-width:767px) and (prefers-reduced-motion:reduce){ html.vc-art .vc-aurora i{animation:none} }
+@media (max-width:767px){
+  html.vc-art[data-view="desk"][data-desk="check"] main > #checkCard.vc-boxed{margin-left:8px !important;margin-right:8px !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed > .vc-box{margin-left:10px;padding:18px 14px}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed > .vc-needlogin{margin-left:10px !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed .vc-rail{left:2px}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed .step-head h2{font-size:15px !important;white-space:nowrap}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed .step-head .credit-chip{padding:0 8px 0 7px !important;gap:4px;font-size:12.5px !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed .step-head .credit-chip b{font-size:12.5px !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed .ps.ps-fold .ps-head{padding:12px 10px 12px 12px;gap:10px}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed .ps.ps-fold .ps-title b{font-size:14.5px !important;white-space:nowrap}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed .ps.ps-fold .ps-badge{padding:3px 8px !important;font-size:11.5px !important}
+}
