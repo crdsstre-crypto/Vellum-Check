@@ -3969,3 +3969,67 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     var t = tabOf(e.target), rpt = e.target.closest && e.target.closest('article.rpt.vc-m'); if (t && rpt) setTab(rpt, t);
   });
 })();
+
+/* ===== มือถือ: แท็บประเด็นกระชับขึ้น (8 พ.ย. 2026 รอบ 2) — แสดงครบ, สิ่งที่ยังไม่ระบุแบบพับ, ความคืบหน้าในการ์ดสรุป ===== */
+(function () {
+  var box = document.getElementById('result');
+  if (!box) return;
+  function tidy() {
+    var rpt = box.querySelector('article.rpt.vc-m');
+    if (!rpt || rpt.classList.contains('vc-m2')) return;
+    var sum = rpt.querySelector('.vc-sum'); if (!sum) return;
+    rpt.classList.add('vc-m2');
+
+    /* 1) แสดงประเด็นครบ (กดปุ่ม "ดูทั้งหมด" ให้เองครั้งเดียว) และซ่อนช่องค้นหา/ปุ่มกรองเมื่อรายการสั้น */
+    var n = rpt.querySelectorAll('.ix-row').length;
+    var more = rpt.querySelector('.ix-more');
+    if (more && n <= 8 && more.getAttribute('aria-expanded') !== 'true') more.click();
+    if (n <= 8) rpt.classList.add('vc-allrows');
+    if (n <= 6) rpt.classList.add('vc-few');
+
+    /* 3) สิ่งที่ยังไม่ระบุ: ตัดข้อที่เป็นเรื่องภายในระบบ, เปลี่ยนชื่อ, พับเหลือ 2 ข้อ */
+    var miss = rpt.querySelector('.miss');
+    if (miss) {
+      [].forEach.call(miss.querySelectorAll('li'), function (li) {
+        var t = li.textContent || '';
+        if (/unsure|ผู้ใช้ระบุประเภท|ประเภทสัญญาที่เลือก/i.test(t)) li.remove();
+      });
+      var lis = miss.querySelectorAll('li');
+      if (!lis.length) miss.hidden = true;
+      else {
+        var h = miss.querySelector('h3');
+        if (h) h.innerHTML = 'สิ่งที่สัญญานี้ยังไม่ระบุ <em>' + lis.length + '</em>';
+        var note = miss.querySelector('.miss-note'); if (note) note.textContent = 'ระบบอาจอ่านไม่ครบ ควรเช็กกับต้นฉบับอีกครั้ง';
+        if (lis.length > 2) {
+          miss.classList.add('vc-fold');
+          var btn = document.createElement('button');
+          btn.type = 'button'; btn.className = 'vc-miss-more'; btn.setAttribute('aria-expanded', 'false');
+          btn.textContent = 'ดูอีก ' + (lis.length - 2) + ' ข้อ';
+          btn.addEventListener('click', function () {
+            var open = miss.classList.toggle('vc-open');
+            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            btn.textContent = open ? 'ย่อ' : 'ดูอีก ' + (lis.length - 2) + ' ข้อ';
+          });
+          miss.appendChild(btn);
+        }
+      }
+    }
+
+    /* 4) ความคืบหน้าย้ายเข้าการ์ดสรุป · "วิธีอ่านสี" ย้ายไปท้ายแท็บ */
+    var prog = rpt.querySelector('.ix-prog');
+    if (prog) {
+      var lab = prog.querySelector('.ix-prog-l');
+      if (lab && lab.firstChild && lab.firstChild.nodeType === 3) lab.firstChild.nodeValue = 'อ่านแล้ว ';
+      var share = sum.querySelector('.share-bar');
+      sum.insertBefore(prog, share || null);
+    }
+    var leg = rpt.querySelector('.ix-legend');
+    if (leg) {
+      var disc = rpt.querySelector(':scope > .disclaimer');
+      rpt.insertBefore(leg, disc || null);
+      leg.setAttribute('data-vt', 'iss'); leg.classList.add('vc-leg');
+    }
+  }
+  new MutationObserver(tidy).observe(box, { childList: true, subtree: true });
+  tidy();
+})();
