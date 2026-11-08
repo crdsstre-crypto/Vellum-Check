@@ -4537,3 +4537,43 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   body[data-sheet="acct"] #authLoggedIn .vc-wcard.is-low{border-color:rgba(217,178,90,.32)}
   body[data-sheet="acct"] #authLoggedIn .vc-wcard.is-low .vc-wc-sub{display:none}
 }
+
+
+/* ===== มือถือ: แก้กรอบเหลี่ยม/เส้นขั้นตอน + กล่องว่างเตี้ยลง + ขั้นที่ยังไม่ถึง + กล่องว่างเคลื่อนไหว (8 พ.ย. 2026) — เฉพาะ ≤767px ===== */
+.vc-empty-dash{display:none}
+@media (max-width:767px){
+  /* แก้ 1: textarea เป็น block (เดิมมีช่องว่างใต้ 7px ทำให้ชั้นสีล้นเป็นแถบเหลี่ยม) + ชั้นสีมุมมนตามกล่อง */
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard #input{display:block !important;vertical-align:top}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap .vc-mirror{border-radius:16px !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap{border-radius:16px}
+
+  /* แก้ 2: เส้นขั้นตอนวิ่งผ่านแนววงกลมเลข อยู่หลังการ์ด เห็นเป็นเส้นเชื่อมในช่องระหว่างการ์ด */
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed .vc-rail{z-index:0}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed .vc-rail b{display:none}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed .vc-rail-bg{background:rgba(255,255,255,.12) !important;width:2px}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed .vc-rail-fill{width:2px}
+
+  /* 1) กล่องว่างเตี้ยลง ไม่มีเส้นบรรทัด — มีข้อความแล้วค่อยขยาย */
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap:not(.vc-has):not(.vc-focus) #input{min-height:220px !important;height:220px !important;background-image:none !important;resize:none}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap:not(.vc-has):not(.vc-focus) .vc-mirror{background-image:none !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap:not(.vc-has):not(.vc-focus) .vc-empty{gap:8px;padding:14px}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap:not(.vc-has):not(.vc-focus)::after{display:none !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap:not(.vc-has):not(.vc-focus) #input{border-color:transparent !important}
+
+  /* 3) กล่องว่างเคลื่อนไหว: ไอคอนลอย + เส้นประวิ่งรอบกล่อง */
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-empty-dash{display:block;position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+  html.vc-art .vc-empty-dash rect{fill:none;stroke:color-mix(in srgb,var(--vc-acc,#94a3b8) 45%,rgba(255,255,255,.35));stroke-width:1.5;stroke-dasharray:7 7;animation:vcDash 1.4s linear infinite}
+  @keyframes vcDash{to{stroke-dashoffset:-28}}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-empty-ico{animation:vcBob 3s ease-in-out infinite}
+  @keyframes vcBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+  /* 2) ขั้นที่ยังไม่ถึง: ไม่จางทั้งการ์ด แค่วงกลมเลขจาง + ปุ่มตรวจบอก "วางสัญญาก่อน" */
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed > .vc-box.is-next{opacity:1}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed > .vc-box.is-next .vc-sn{opacity:.55}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard:has(.ta-wrap:not(.vc-has)) #checkBtn:disabled{position:relative;color:transparent !important;background:transparent !important;
+    border:1.5px dashed rgba(255,255,255,.18) !important;box-shadow:none !important;opacity:1 !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard:has(.ta-wrap:not(.vc-has)) #checkBtn:disabled::after{content:"วางสัญญาด้านบนก่อน แล้วกดตรวจได้เลย" !important;display:flex !important;align-items:center;justify-content:center;gap:8px;
+    position:absolute !important;inset:0;color:#a3a3aa;font:500 14.5px/1 Prompt,Sarabun,sans-serif;background:none !important;transform:none !important;opacity:1 !important;animation:none !important;width:auto;left:0;clip-path:none !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard:has(.ta-wrap:not(.vc-has)) #checkBtn:disabled::before{display:none !important}
+}
+@media (max-width:767px) and (prefers-reduced-motion:reduce){ html.vc-art .vc-empty-dash rect,html.vc-art .vc-empty-ico{animation:none !important} }
