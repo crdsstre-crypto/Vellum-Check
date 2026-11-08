@@ -3731,3 +3731,54 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   }, true);
   window.VCSamples = { open: open, list: L };
 })();
+
+/* ===== มือถือ: ตัวนับอักษรเข้าไปอยู่ในกล่อง + ปกป้องข้อมูลแบบพับ (7 พ.ย. 2026) — ทำงานเฉพาะ ≤767px ===== */
+(function () {
+  var mq = window.matchMedia ? window.matchMedia('(max-width:767px)') : null;
+  if (!mq) return;
+  var wrap = document.querySelector('#checkCard .ta-wrap'), cnt = document.getElementById('taCount');
+  var meta = document.querySelector('#checkCard .ta-meta');
+  var ps = document.getElementById('privacyShield'), head = ps && ps.querySelector('.ps-head');
+  var sum = document.getElementById('psSummary'), badge = document.getElementById('psBadge');
+  var state = null, chev = null;
+  if (ps && head) {
+    var title = head.querySelector('.ps-title');
+    state = document.createElement('span'); state.className = 'ps-state'; state.setAttribute('aria-hidden', 'true');
+    if (title) title.appendChild(state);
+    chev = document.createElement('span'); chev.className = 'ps-chev'; chev.setAttribute('aria-hidden', 'true');
+    chev.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';
+    head.appendChild(chev);
+    head.addEventListener('click', function () {
+      if (!ps.classList.contains('ps-fold')) return;
+      var open = !ps.classList.contains('ps-open');
+      ps.classList.toggle('ps-open', open); head.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    head.addEventListener('keydown', function (e) { if ((e.key === 'Enter' || e.key === ' ') && ps.classList.contains('ps-fold')) { e.preventDefault(); head.click(); } });
+  }
+  function short() {
+    if (!state) return;
+    var t = (sum && sum.textContent || '').trim(), m = /จะปกปิด\s*(\d+)/.exec(t), off = badge && /ปิดอยู่/.test(badge.textContent);
+    state.classList.toggle('is-hit', !!m && !off);
+    state.textContent = off ? 'ปิดการปกปิดอยู่'
+      : m ? 'จะปกปิด ' + m[1] + ' รายการ'
+      : /ยังไม่พบ/.test(t) ? 'ยังไม่พบข้อมูลส่วนตัว'
+      : 'ปกปิดให้ก่อนส่ง';
+  }
+  if (sum && window.MutationObserver) new MutationObserver(short).observe(sum, { childList: true, characterData: true, subtree: true });
+  if (badge && window.MutationObserver) new MutationObserver(short).observe(badge, { childList: true, characterData: true, subtree: true });
+  function apply() {
+    var on = mq.matches;
+    if (wrap && cnt && meta) {
+      if (on && cnt.parentNode !== wrap) wrap.appendChild(cnt);
+      else if (!on && cnt.parentNode !== meta) meta.insertBefore(cnt, meta.firstChild);
+    }
+    if (ps && head) {
+      ps.classList.toggle('ps-fold', on);
+      if (on) { head.setAttribute('role', 'button'); head.setAttribute('tabindex', '0'); head.setAttribute('aria-expanded', ps.classList.contains('ps-open') ? 'true' : 'false'); }
+      else { ps.classList.remove('ps-open'); head.removeAttribute('role'); head.removeAttribute('tabindex'); head.removeAttribute('aria-expanded'); }
+    }
+    short();
+  }
+  apply();
+  if (mq.addEventListener) mq.addEventListener('change', apply); else if (mq.addListener) mq.addListener(apply);
+})();
