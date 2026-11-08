@@ -1119,6 +1119,7 @@ function openHistoryPanel() {
     (panel || link)?.scrollIntoView({ behavior: calmMotion() ? 'auto' : 'smooth', block: 'start' });
   }, 320);
 }
+window.VCShowCredits = function () { showCreditSheet(); };   /* ให้ป้ายเครดิต/การ์ดสิทธิ์บนมือถือ (art.js) เปิดแผ่นแพ็กเกจได้ */
 function showCreditSheet() {
   if (!creditSheetEl) {
     const el = document.createElement('div');
