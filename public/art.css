@@ -3730,3 +3730,51 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   html.vc-art article.rpt.vc-m3 > [data-vt]{padding-bottom:0 !important}
 }
 @media (max-width:767px){html.vc-art article.rpt.vc-m > .vc-brief{order:3 !important}}
+
+
+/* ===== มือถือ: รายละเอียดประเด็นเป็นแผ่นเลื่อนขึ้น (8 พ.ย. 2026) — เฉพาะ ≤767px ===== */
+.vc-sheet-back,.vc-sh-nav,.vc-sh-x{display:none}
+@media (max-width:767px){
+  /* ให้แผ่น position:fixed อิงหน้าจอได้ (การ์ดผลตรวจมี transform อยู่) */
+  html.vc-sheet-open #resultCard,html.vc-sheet-open #resultCard *:has(details.item.is-picked){transform:none !important;filter:none !important;will-change:auto !important;contain:none !important;z-index:auto !important}
+  html.vc-sheet-open body{overflow:hidden}
+  html.vc-sheet-open .to-top,html.vc-sheet-open .ix-back{display:none !important}
+  .vc-sheet-back{display:block;position:fixed;inset:0;z-index:9990;background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .25s ease}
+  html.vc-sheet-open .vc-sheet-back{opacity:1;pointer-events:auto}
+
+  html.vc-art article.rpt.vc-m details.item.is-picked[open]{position:fixed !important;left:0 !important;right:0 !important;bottom:0 !important;top:auto !important;z-index:9991 !important;
+    margin:0 !important;width:auto !important;max-height:88vh;max-height:88dvh;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+    padding:0 16px calc(16px + env(safe-area-inset-bottom,0px)) !important;border-radius:22px 22px 0 0 !important;
+    background:#17171a !important;border:1px solid rgba(255,255,255,.1) !important;border-bottom:0 !important;box-shadow:0 -20px 60px rgba(0,0,0,.6) !important;
+    animation:vcSheetUp .32s cubic-bezier(.2,.9,.3,1);transition:transform .2s ease;outline:0}
+  @keyframes vcSheetUp{from{transform:translateY(100%)}to{transform:none}}
+  html.vc-art article.rpt.vc-m details.item.is-picked[open]::before,html.vc-art article.rpt.vc-m details.item.is-picked[open]::after{display:none !important}
+  /* หัวแผ่น: ติดด้านบน มีขีดจับ + ปุ่มปิด */
+  html.vc-art article.rpt.vc-m details.item.is-picked[open] > summary{position:sticky !important;top:0;z-index:3;margin:0 -16px 12px !important;padding:22px 56px 14px 16px !important;
+    background:#17171a !important;border-bottom:1px solid rgba(255,255,255,.07) !important;border-radius:22px 22px 0 0;list-style:none;cursor:grab}
+  html.vc-art article.rpt.vc-m details.item.is-picked[open] > summary::-webkit-details-marker{display:none}
+  html.vc-art article.rpt.vc-m details.item.is-picked[open] > summary::before{content:"" !important;position:absolute !important;top:8px !important;left:50% !important;width:40px !important;height:4px !important;margin-left:-20px;border-radius:99px;background:rgba(255,255,255,.22) !important;display:block !important;transform:none !important}
+  html.vc-art article.rpt.vc-m details.item.is-picked[open] .pick-banner{display:none !important}
+  html.vc-art article.rpt.vc-m details.item.is-picked[open] .vc-sh-x{display:grid;place-items:center;position:absolute;top:18px;right:12px;width:36px;height:36px;padding:0;border-radius:50%;
+    border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e4e4e7;cursor:pointer}
+  html.vc-art article.rpt.vc-m details.item.is-picked[open] .vc-sh-x::before,html.vc-art article.rpt.vc-m details.item.is-picked[open] .vc-sh-x::after{display:none !important}
+  /* 3) ปุ่มตรวจแล้ว: ปุ่มเต็ม เห็นชัด */
+  html.vc-art article.rpt.vc-m details.item.is-picked[open] .rv-row{margin:16px 0 0 !important;padding:0 !important;border:0 !important}
+  html.vc-art article.rpt.vc-m details.item.is-picked[open] .rv-btn{display:flex !important;align-items:center;justify-content:center;gap:8px;width:100%;min-height:50px;border-radius:14px !important;
+    border:1px solid rgba(52,211,153,.45) !important;border-style:solid !important;background:rgba(52,211,153,.1) !important;color:#6ee7b7 !important;font:600 15px/1 Prompt,Sarabun,sans-serif !important}
+  html.vc-art article.rpt.vc-m details.item.is-picked[open] .rv-btn.is-on{background:#34d399 !important;border-color:#34d399 !important;color:#06281b !important}
+  html.vc-art article.rpt.vc-m details.item.is-picked[open] .rv-btn svg{width:18px;height:18px}
+  html.vc-art article.rpt.vc-m details.item.is-picked[open] .rv-btn::before,html.vc-art article.rpt.vc-m details.item.is-picked[open] .rv-btn::after{display:none !important}
+  /* 2) ก่อนหน้า / ถัดไป แทนปุ่ม ภาพรวม · กลับหน้าสรุป */
+  html.vc-art article.rpt.vc-m details.item.is-picked[open] .pk-row{display:none !important}
+  html.vc-art article.rpt.vc-m details.item.is-picked[open] .vc-sh-nav{display:flex;align-items:center;gap:8px;margin:10px 0 0}
+  html.vc-art article.rpt.vc-m details.item.is-picked[open] .vc-sh-nav button{flex:1 1 0;min-height:48px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);
+    color:#ededef;font:600 14.5px/1 Prompt,Sarabun,sans-serif;cursor:pointer}
+  html.vc-art article.rpt.vc-m details.item.is-picked[open] .vc-sh-nav button::before,html.vc-art article.rpt.vc-m details.item.is-picked[open] .vc-sh-nav button::after{display:none !important}
+  html.vc-art article.rpt.vc-m details.item.is-picked[open] .vc-sh-nav button:disabled{opacity:.35}
+  html.vc-art article.rpt.vc-m details.item.is-picked[open] .vc-sh-n{flex:0 0 auto;min-width:48px;text-align:center;font:600 13px/1 Prompt,Sarabun,sans-serif;color:#a3a3aa}
+}
+@media (max-width:767px){
+  /* การ์ดผลตรวจมีแอนิเมชัน fadeUp (transform) ทำให้ position:fixed ข้างในอิงการ์ดแทนหน้าจอ — ปิดเมื่อแสดงผลแล้ว */
+  html.vc-art #resultCard:has(article.rpt.vc-m){animation:none !important}
+}
