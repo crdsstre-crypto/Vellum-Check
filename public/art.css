@@ -4844,3 +4844,51 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   html.vc-art .vc-sum .vc-next-b b{align-self:end;font-size:15px !important}
   html.vc-art .vc-sum .vc-next-b small{align-self:start}
 }
+
+/* ===== v210 (มือถือ): ศัพท์น่ารู้ ===== */
+.gl-c-ic,.gl-pv,.gl-chips,.gl-mine{display:none}
+@media (max-width:767px){
+  /* บั้ก ก + ข: หัวการ์ดไม่ใช่กล่องดำ ไม่ซ้ำชื่อแท็บ */
+  html.vc-art article.rpt.vc-m > .gloss{padding:14px 14px 16px !important}
+  html.vc-art article.rpt.vc-m > .gloss .gl-head{background:none !important;border:0 !important;padding:0 2px 10px !important;margin:0 !important;box-shadow:none !important;border-radius:0 !important}
+  html.vc-art article.rpt.vc-m > .gloss .gl-head :is(.gl-ico,.gl-count,h3){display:none !important}
+  html.vc-art article.rpt.vc-m > .gloss .gl-title p{margin:0 !important;font:400 13px/1.5 Prompt,Sarabun,sans-serif !important;color:#a3a3aa !important}
+  html.vc-art article.rpt.vc-m > .gloss .gl-title p::after{content:" · แตะเพื่อดูคำอธิบายเต็ม"}
+  /* บั้ก ค */
+  html.vc-art article.rpt.vc-m > .gloss .gl-note{margin:14px 2px 0 !important;padding:0 !important;font:400 12px/1.6 Prompt,Sarabun,sans-serif !important;color:#76767e !important}
+
+  /* ไอเดีย 1: การ์ดต่อคำ */
+  html.vc-art article.rpt.vc-m > .gloss .gl-term{margin:10px 0 0 !important;padding:0 !important;border:1px solid rgba(255,255,255,.08) !important;border-radius:16px;background:rgba(255,255,255,.025);overflow:hidden;transition:border-color .2s,background .2s}
+  html.vc-art article.rpt.vc-m > .gloss .gl-term[open]{border-color:rgba(255,255,255,.16) !important;background:rgba(255,255,255,.04)}
+  html.vc-art article.rpt.vc-m > .gloss .gl-term > summary{display:flex !important;align-items:flex-start !important;justify-content:flex-start !important;gap:12px !important;padding:14px 14px 14px 14px;position:relative}
+  html.vc-art article.rpt.vc-m > .gloss .gl-term > summary::after{position:absolute;top:14px;right:14px;line-height:1}
+  .gl-c-ic{display:grid;place-items:center;flex:0 0 40px;width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#d4d4d8}
+  .gl-c-ic.c-money{color:#6ee7b7;background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.25)}
+  .gl-c-ic.c-people{color:#93c5fd;background:rgba(96,165,250,.1);border-color:rgba(96,165,250,.25)}
+  .gl-c-ic.c-exit{color:#fca5a5;background:rgba(248,113,113,.1);border-color:rgba(248,113,113,.25)}
+  .gl-c-ic.c-time{color:#fcd34d;background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.25)}
+  .gl-c-ic.c-book{color:#c4b5fd;background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.25)}
+  html.vc-art .gloss .gl-c-b{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1 1 auto;padding-right:18px}
+  html.vc-art .gloss .gl-c-b > b{font:600 16px/1.35 Prompt,Sarabun,sans-serif !important;color:#f4f4f5 !important}
+  html.vc-art .gloss .gl-pv{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font:400 13.5px/1.55 Sarabun,Prompt,sans-serif;color:#a3a3aa}
+  html.vc-art .gloss .gl-term[open] .gl-pv{display:none}
+  html.vc-art article.rpt.vc-m > .gloss .gl-term > :not(summary){margin-left:14px !important;margin-right:14px !important}
+  html.vc-art article.rpt.vc-m > .gloss .gl-term .gl-text{margin-top:0 !important;font:400 14.5px/1.7 Sarabun,Prompt,sans-serif !important;color:#d4d4d8 !important}
+  html.vc-art article.rpt.vc-m > .gloss .gl-term .gl-refs{margin-bottom:14px !important}
+
+  /* ไอเดีย 3 + ป้าย "ในสัญญาของคุณ" */
+  html.vc-art .gloss .gl-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+  .gl-chip{display:inline-flex;align-items:center;min-height:26px;padding:0 10px;border-radius:99px;font:500 12px/1 Prompt,Sarabun,sans-serif;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#c4c4ca}
+  .gl-chip::before,.gl-chip::after{display:none !important}
+  .gl-chip-c{color:#a5b4fc;border-color:rgba(165,180,252,.28);background:rgba(165,180,252,.08)}
+  button.gl-chip-i{cursor:pointer;-webkit-tap-highlight-color:transparent;margin:0}
+  .gl-chip-i.lv-check_detail{color:#fca5a5;border-color:rgba(248,113,113,.35);background:rgba(248,113,113,.08)}
+  .gl-chip-i.lv-caution{color:#fde68a;border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.08)}
+
+  /* ไอเดีย 2: ข้อความจริงในสัญญา */
+  html.vc-art .gloss .gl-mine{display:block;margin-top:12px !important;padding:12px 14px;border-radius:12px;background:rgba(165,180,252,.06);border:1px solid rgba(165,180,252,.18)}
+  .gl-mine-l{margin:0 0 6px !important;font:500 12px/1.3 Prompt,Sarabun,sans-serif;color:#a5b4fc}
+  .gl-mine blockquote{margin:0 !important;padding:0 !important;border:0 !important;background:none !important;font:400 14px/1.7 Sarabun,Prompt,sans-serif;color:#d4d4d8}
+  .gl-mine blockquote::before,.gl-mine blockquote::after{display:none !important}
+  .gl-mine mark{background:rgba(165,180,252,.2);color:#e0e7ff;border-radius:4px;padding:0 3px}
+}
