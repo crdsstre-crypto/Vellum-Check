@@ -1136,7 +1136,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     go(view, function () { if (view !== 'home') scrollToHash(h); }, opts);
   }
   window.addEventListener('hashchange', function () { route(location.hash); });
-  window.addEventListener('popstate', function () { route(location.hash, { instant: true }); });
+  window.addEventListener('popstate', function () { if (window.__vcSkipRoute) { window.__vcSkipRoute = false; return; } /* ย้อนกลับจากผลตัวอย่าง: อยู่หน้าเดิม */ route(location.hash, { instant: true }); });
 
   /* เมนูหลัก / โลโก้ / ปุ่มในฉากเปิด */
   document.addEventListener('click', function (e) {
@@ -6014,6 +6014,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       c.querySelector('.vc-end-send').addEventListener('click', function () { if (window.__vcNeg) return window.__vcNeg(false); if (window.__vcBuildAll) share(window.__vcBuildAll(), this, 'คัดลอกทุกข้อแล้ว'); });
       c.querySelector('.vc-end-ck').addEventListener('click', function () { var b = r.querySelector('.vc-next-ck'); if (b) b.click(); });
       c.querySelector('.vc-end-new').addEventListener('click', function () {
+        if (typeof lastResult !== 'undefined' && lastResult && lastResult.demo && window.__vcLeaveDemo) { window.__vcLeaveDemo(false); return; }
         var card = document.getElementById('checkCard'), ed = card && card.querySelector('.vc-done-edit');
         if (card && card.classList.contains('vc-collapsed') && ed) ed.click();
         var ta = document.getElementById('input');
