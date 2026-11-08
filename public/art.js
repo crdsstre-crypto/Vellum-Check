@@ -3798,11 +3798,70 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   var zc = document.createElement('div');
   zc.className = 'vc-zc'; zc.setAttribute('role', 'group'); zc.setAttribute('aria-label', 'สิทธิ์ตรวจสัญญา');
   zc.innerHTML = '<span class="vc-zc-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5a2 2 0 0 0 0 4v3a1.5 1.5 0 0 0 1.5 1.5h14a1.5 1.5 0 0 0 1.5-1.5v-3a2 2 0 0 0 0-4v-3A1.5 1.5 0 0 0 19 4H5a1.5 1.5 0 0 0-1.5 1.5z" transform="translate(0 1.5)"/><path d="M9.5 9.5h5M9.5 13h3"/></svg></span>' +
-    '<div class="vc-zc-txt"><b>ใช้สิทธิ์ตรวจครบแล้ว</b><small>เลือกแพ็กเกจเพื่อตรวจต่อ ข้อความที่วางไว้ยังอยู่ครบ</small></div>' +
+    '<div class="vc-zc-txt"><b>ใช้สิทธิ์ตรวจครบแล้ว</b><small>ข้อความที่วางไว้ยังอยู่ เลือกแพ็กเกจเพื่อตรวจต่อ</small></div>' +
     '<button type="button" class="vc-zc-btn">ดูแพ็กเกจ<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>';
   var btns = btn.closest('.btns'); if (btns) btns.parentNode.insertBefore(zc, btns);
   zc.querySelector('.vc-zc-btn').addEventListener('click', openPacks);
   function sync() { card.classList.toggle('vc-zero', /ดูแพ็กเกจ/.test(btn.textContent || '')); }
   new MutationObserver(sync).observe(btn, { childList: true, characterData: true, subtree: true });
+  sync();
+})();
+
+/* ===== มือถือ: กล่องว่างมีปุ่มวางจากคลิปบอร์ด + วงกลมเลขขั้นตอนพร้อมติ๊ก (8 พ.ย. 2026) — แสดงผลเฉพาะ ≤767px ผ่าน art.css ===== */
+(function () {
+  var ta = document.getElementById('input'), wrap = ta && ta.closest('.ta-wrap'), card = document.getElementById('checkCard');
+  if (!ta || !wrap || !card) return;
+  var mq = window.matchMedia('(max-width:767px)');
+
+  /* เลขขั้นตอน: ห่อ "1." ไว้ใน span (บนคอมแสดงเหมือนเดิมทุกอย่าง) */
+  var steps = [];
+  [].forEach.call(card.querySelectorAll('.step-head h2, .step-sub h3'), function (h) {
+    var t = h.firstChild; if (!t || t.nodeType !== 3) return;
+    var m = /^\s*(\d+)\.\s*/.exec(t.nodeValue); if (!m) return;
+    var sn = document.createElement('span'); sn.className = 'vc-sn'; sn.setAttribute('data-n', m[1]); sn.textContent = m[1] + '. ';
+    t.nodeValue = t.nodeValue.slice(m[0].length); h.insertBefore(sn, t); h.classList.add('vc-sh');
+    steps[+m[1]] = sn;
+  });
+
+  /* กล่องว่าง */
+  var em = document.createElement('div');
+  em.className = 'vc-empty';
+  em.innerHTML = '<span class="vc-empty-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 4.5H7A1.5 1.5 0 0 0 5.5 6v13A1.5 1.5 0 0 0 7 20.5h10a1.5 1.5 0 0 0 1.5-1.5V6A1.5 1.5 0 0 0 17 4.5h-1.5"/><rect x="8.5" y="3" width="7" height="3.2" rx="1"/><path d="M9 11h6M9 14.5h6M9 18h3.5"/></svg></span>' +
+    '<b>วางข้อความสัญญาที่นี่</b>' +
+    '<button type="button" class="vc-paste"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="11.5" height="12.5" rx="2"/><path d="M15.5 8V5.5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h2"/></svg>วางจากคลิปบอร์ด</button>' +
+    '<small>หรือ <label for="fileIn">อัปโหลด PDF · Word · รูปถ่าย</label></small>' +
+    '<p class="vc-paste-msg" role="status" aria-live="polite"></p>';
+  wrap.appendChild(em);
+  var msg = em.querySelector('.vc-paste-msg');
+  function say(t) { msg.textContent = t; msg.classList.toggle('on', !!t); }
+  em.addEventListener('click', function (e) { if (!e.target.closest('button,label')) ta.focus(); });
+  em.querySelector('.vc-paste').addEventListener('click', function () {
+    say('');
+    var fail = function () { say('เบราว์เซอร์ไม่อนุญาต ลองกดค้างในกล่องแล้วเลือก "วาง" ครับ'); };
+    if (!navigator.clipboard || !navigator.clipboard.readText) { fail(); return; }
+    navigator.clipboard.readText().then(function (t) {
+      t = (t || '').trim();
+      if (!t) { say('ยังไม่มีข้อความในคลิปบอร์ด คัดลอกสัญญามาก่อนนะครับ'); return; }
+      ta.value = t.slice(0, 20000); ta.dispatchEvent(new Event('input', { bubbles: true }));
+      ta.scrollTop = 0; sync();
+    }, fail);
+  });
+
+  var last = null;
+  function sync() {
+    var has = !!ta.value.trim();
+    var key = (has ? 1 : 0) + '|' + (document.activeElement === ta ? 1 : 0);
+    wrap.classList.toggle('vc-has', has);
+    wrap.classList.toggle('vc-focus', document.activeElement === ta);
+    if (has) say('');
+    var res = document.getElementById('result');
+    var done3 = !!(res && res.querySelector(':scope > :not(.empty):not(.empty-art)'));
+    if (steps[1]) steps[1].classList.toggle('is-done', has);
+    if (steps[2]) steps[2].classList.toggle('is-done', has);
+    if (steps[3]) steps[3].classList.toggle('is-done', done3);
+    last = key;
+  }
+  ta.addEventListener('input', sync); ta.addEventListener('focus', sync); ta.addEventListener('blur', function () { setTimeout(sync, 50); });
+  setInterval(function () { if (mq.matches && !document.hidden) sync(); }, 700);   /* เผื่อโค้ดอื่นใส่ข้อความโดยไม่ส่ง input event */
   sync();
 })();
