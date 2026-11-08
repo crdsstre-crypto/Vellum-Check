@@ -3349,11 +3349,11 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   /* 3) กล่องวางสัญญาแบบกระดาษ */
   html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap{position:relative;margin-top:14px}
   html.vc-art[data-view="desk"][data-desk="check"] #input{
-    font:400 15px/1.75 var(--k-ff) !important;padding:20px 18px 40px !important;min-height:300px !important;max-height:58vh;
+    font:400 16px/1.64 var(--k-ff) !important;padding:20px 18px 40px !important;min-height:300px !important;max-height:58vh;
     border-radius:16px !important;background:var(--k-in) !important;
     background-image:repeating-linear-gradient(180deg,transparent 0 25.25px,rgba(255,255,255,.035) 25.25px 26.25px) !important;
     background-attachment:local !important;background-position:0 19px !important;scroll-padding:20px 0 40px}
-  html.vc-art[data-view="desk"][data-desk="check"] #input::placeholder{font-size:15px}
+  html.vc-art[data-view="desk"][data-desk="check"] #input::placeholder{font-size:16px}
   /* ขอบบน-ล่างจางลง ให้รู้ว่าเลื่อนอ่านต่อได้ */
   html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap::before,
   html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap::after{content:"" !important;display:block !important;position:absolute;left:1px;right:1px;height:22px;pointer-events:none;z-index:1}
@@ -3506,3 +3506,81 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
 }
 /* บนคอม: span เลขไม่สร้างกล่องของตัวเอง หัวข้อจึงแสดงเหมือนเดิมทุกอย่าง (มือถือใช้ inline-flex แทน) */
 .vc-sn{display:contents}
+/* iPhone ซูมหน้าเองเมื่อแตะช่องกรอกที่ตัวอักษรเล็กกว่า 16px — บังคับทุกช่องบนมือถือเป็น 16px ขึ้นไป */
+@media (max-width:767px){
+  html.vc-art :is(input[type="text"],input[type="email"],input[type="password"],input[type="search"],input[type="tel"],input:not([type]),textarea,select){font-size:max(16px,1em) !important}
+}
+
+
+/* ===== มือถือ: หน้าผลตรวจแบบสรุป + แท็บ (8 พ.ย. 2026) — เฉพาะ ≤767px; art.js ใส่ .vc-m ให้ article.rpt เฉพาะบนมือถือ ===== */
+@media (max-width:767px){
+  html.vc-art #resultCard:has(article.rpt.vc-m) > h2{display:none !important}
+  html.vc-art #resultCard:has(article.rpt.vc-m){padding-top:16px !important}
+  html.vc-art article.rpt.vc-m{display:flex;flex-direction:column}
+  /* หัวรายงาน: เหลือบรรทัดประเภทเอกสาร ไม่ค้างบนจอ */
+  html.vc-art article.rpt.vc-m > .rpt-head{position:static !important;background:none !important;border:0 !important;padding:0 2px !important;margin:0 0 12px !important;box-shadow:none !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important}
+  html.vc-art article.rpt.vc-m > .rpt-head :is(.rpt-kicker,.rpt-title){display:none !important}
+  html.vc-art article.rpt.vc-m > .rpt-head .rpt-meta{font:400 12.5px/1.5 Prompt,Sarabun,sans-serif !important;color:#8b8b94 !important;margin:0 !important}
+  /* ซ่อนส่วนที่ซ้ำกัน: หัว Contract Brief และรายการ "ควรจัดการก่อน" (มีครบในรายการประเด็นแล้ว) */
+  html.vc-art article.rpt.vc-m #commandCenter :is(.cb-head,.cb-h,.cb-list,.cb-more){display:none !important}
+  html.vc-art article.rpt.vc-m #commandCenter{order:5;margin-top:14px !important}
+
+  /* การ์ดสรุป */
+  html.vc-art .vc-sum{order:1;border-radius:18px;padding:16px;margin:0 0 14px;font-family:Prompt,Sarabun,sans-serif;
+    background:linear-gradient(155deg,var(--sg,rgba(255,255,255,.05)),rgba(255,255,255,.02) 65%);border:1px solid var(--sb,rgba(255,255,255,.1))}
+  html.vc-art .vc-sum.lv-hi{--sg:rgba(248,113,113,.12);--sb:rgba(248,113,113,.3);--st:#fca5a5}
+  html.vc-art .vc-sum.lv-mid{--sg:rgba(251,191,36,.11);--sb:rgba(251,191,36,.3);--st:#fcd34d}
+  html.vc-art .vc-sum.lv-lo{--sg:rgba(52,211,153,.1);--sb:rgba(52,211,153,.28);--st:#6ee7b7}
+  html.vc-art .vc-sum-top{display:flex;align-items:center;gap:16px}
+  html.vc-art .vc-donut{position:relative;flex:0 0 84px;width:84px;height:84px}
+  html.vc-art .vc-donut svg{display:block}
+  html.vc-art .vc-donut span{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+  html.vc-art .vc-donut b{font:700 26px/1 Prompt,Sarabun,sans-serif;color:#f4f4f5}
+  html.vc-art .vc-donut small{font:400 11px/1.2 Prompt,Sarabun,sans-serif;color:#a3a3aa;margin-top:3px}
+  html.vc-art .vc-sum-tx{min-width:0}
+  html.vc-art .vc-sum-k{margin:0;font:500 12px/1.3 Prompt,Sarabun,sans-serif;color:#8b8b94}
+  html.vc-art .vc-sum-tx h3{margin:2px 0 4px;font:700 21px/1.25 Prompt,Sarabun,sans-serif !important;color:var(--st,#f4f4f5) !important;letter-spacing:0 !important;background:none !important}
+  html.vc-art .vc-sum-tx h3::before,html.vc-art .vc-sum-tx h3::after{display:none !important}
+  html.vc-art .vc-sum-tx > p:last-child{margin:0;font:400 13px/1.5 Prompt,Sarabun,sans-serif;color:#c4c4ca;text-wrap:balance}
+  html.vc-art .vc-sum-leg{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px 14px;font:400 12.5px/1.3 Prompt,Sarabun,sans-serif;color:#a3a3aa}
+  html.vc-art .vc-sum-leg li{display:flex;align-items:center;gap:6px}
+  html.vc-art .vc-sum-leg i{width:9px;height:9px;border-radius:50%;background:var(--c)}
+  html.vc-art .vc-sum-leg b{color:#ededef;font-weight:600}
+  /* ตัวเลข 3 ช่องเดิมซ่อนบนมือถือ (คำอธิบายสีด้านบนแทนแล้ว) แต่ยังอยู่ในหน้าให้โค้ดเดิมใช้ได้ */
+  html.vc-art .vc-sum .cb-tiles{display:none !important}
+  /* แถบแชร์: ปุ่มไอคอนแถวเดียวในการ์ดสรุป */
+  html.vc-art .vc-sum .share-bar{display:grid !important;grid-template-columns:repeat(3,1fr);gap:8px !important;margin:14px 0 0 !important;padding:14px 0 0 !important;border-top:1px solid rgba(255,255,255,.08) !important;border-bottom:0 !important;background:none !important}
+  html.vc-art .vc-sum .share-bar button{display:flex !important;flex-direction:row !important;align-items:center;justify-content:center;gap:6px !important;min-height:40px !important;height:40px;padding:0 6px !important;
+    border-radius:12px !important;border:1px solid rgba(255,255,255,.12) !important;background:rgba(255,255,255,.04) !important;color:#e4e4e7 !important;font:500 12.5px/1 Prompt,Sarabun,sans-serif !important;white-space:nowrap}
+  html.vc-art .vc-sum .share-bar button svg{width:16px !important;height:16px !important;flex:0 0 16px}
+  html.vc-art .vc-sum .share-bar button::before,html.vc-art .vc-sum .share-bar button::after{display:none !important}
+
+  /* แท็บ ติดใต้หัวเว็บตอนเลื่อน */
+  html.vc-art .vc-tabs{order:2;position:sticky;top:calc(var(--art-head,58px) + 4px);z-index:20;display:flex;gap:4px;padding:4px;margin:0 0 14px;border-radius:14px;
+    background:rgba(22,22,25,.94);border:1px solid rgba(255,255,255,.09);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 10px 24px -14px rgba(0,0,0,.9)}
+  html.vc-art .vc-tab{flex:1 1 0;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 6px;border:0;border-radius:10px;background:transparent;
+    color:#a3a3aa;font:500 14px/1 Prompt,Sarabun,sans-serif;cursor:pointer;transition:background .2s,color .2s;-webkit-tap-highlight-color:transparent}
+  html.vc-art .vc-tab::before,html.vc-art .vc-tab::after{display:none !important}
+  html.vc-art .vc-tab em{font-style:normal;font-size:11.5px;font-weight:600;min-width:20px;height:20px;padding:0 6px;border-radius:99px;display:inline-grid;place-items:center;background:rgba(255,255,255,.08);color:#d4d4d8}
+  html.vc-art .vc-tab.on{background:#f4f4f5;color:#111}
+  html.vc-art .vc-tab.on em{background:rgba(0,0,0,.1);color:#111}
+
+  /* เนื้อหาแต่ละแท็บ */
+  html.vc-art article.rpt.vc-m > [data-vt]{order:4}
+  html.vc-art article.rpt.vc-m > .brief{order:3}
+  html.vc-art article.rpt.vc-m > #issueIndex{order:4}
+  html.vc-art article.rpt.vc-m > .gloss{order:6}
+  html.vc-art article.rpt.vc-m > .fu{order:7}
+  html.vc-art article.rpt.vc-m > .disclaimer{order:9;margin-top:18px !important}
+  html.vc-art article.rpt.vc-m:not([data-vtab="iss"]) > [data-vt="iss"],
+  html.vc-art article.rpt.vc-m:not([data-vtab="gl"]) > [data-vt="gl"],
+  html.vc-art article.rpt.vc-m:not([data-vtab="fu"]) > [data-vt="fu"]{display:none !important}
+  html.vc-art article.rpt.vc-m > .gloss{margin-top:0 !important}
+  html.vc-art article.rpt.vc-m > .gloss .gl-head{position:static !important}
+  html.vc-art article.rpt.vc-m > .fu{margin-top:0 !important}
+  html.vc-art article.rpt.vc-m > #issueIndex .ix-head{display:none !important}
+  html.vc-art article.rpt.vc-m > #issueIndex{margin-top:0 !important;padding-top:0 !important;border-top:0 !important}
+}
+@media (max-width:767px){
+  html.vc-art article.rpt.vc-m :is(details.item,#issueIndex,.gloss,.fu,.miss){scroll-margin-top:calc(var(--art-head,58px) + 62px)}
+}
