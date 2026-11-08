@@ -3865,3 +3865,113 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   .vc-cele *,.vc-cele{animation:none !important}
   .vc-cele-sh,.vc-cele-ck{stroke-dashoffset:0}
 }
+
+/* ===== มือถือ: ลดแสงให้สบายตา (8 พ.ย. 2026) ===== */
+@media (max-width:767px){
+  /* แผนที่สัญญา: สีหม่นลง ไม่มีแสงฟุ้ง แท่งเตี้ยลง */
+  html.vc-art .vc-map-bar{height:24px}
+  html.vc-art .vc-map-c.is-hit{height:18px;box-shadow:none !important;background:color-mix(in srgb,var(--c) 42%,#1c1c20) !important;border:1px solid color-mix(in srgb,var(--c) 55%,transparent) !important}
+  html.vc-art .vc-map-c{height:8px;background:rgba(255,255,255,.06)}
+  html.vc-art .vc-map-c i{color:color-mix(in srgb,var(--c) 70%,#a3a3aa) !important;font-weight:500}
+  /* วงกลม: แสงเรืองเบาลงมาก สีเส้นหม่นลงนิด */
+  html.vc-art .vc-sum .vc-donut svg{filter:none !important;opacity:.88}
+  /* ตราประทับ: จางลงเหมือนหมึกซึม */
+  html.vc-art .vc-stamp.is-set{opacity:.5 !important}
+  @keyframes vcStampHit{0%{opacity:0;transform:scale(2.4) rotate(-4deg)}55%{opacity:.6;transform:scale(.9) rotate(-15deg)}75%{transform:scale(1.04) rotate(-14deg)}100%{opacity:.5;transform:scale(1) rotate(-14deg)}}
+  html.vc-art .vc-stamp svg{mix-blend-mode:normal}
+  /* พื้นการ์ดสรุป: สีอ่อนลง */
+  html.vc-art .vc-sum.lv-hi{--sg:rgba(248,113,113,.07);--sb:rgba(248,113,113,.2);--st:#f2a3a3}
+  html.vc-art .vc-sum.lv-mid{--sg:rgba(251,191,36,.06);--sb:rgba(251,191,36,.2);--st:#ecc76a}
+  html.vc-art .vc-sum.lv-lo{--sg:rgba(52,211,153,.06);--sb:rgba(52,211,153,.2);--st:#7fd8b4}
+  /* แถบอ่านแล้ว + ป้ายประเด็น สีอ่อนลง */
+  html.vc-art .vc-sum .ix-bar > i{background:#3fb98d !important}
+  html.vc-art .vc-sum .ix-prog-note{color:#8fcfb4 !important}
+  html.vc-art article.rpt.vc-m3 .ix-row.lv-check_detail{--lc:#c96b6b}
+  html.vc-art article.rpt.vc-m3 .ix-row.lv-caution{--lc:#c9a24a}
+}
+@media (max-width:767px) and (prefers-reduced-motion:reduce){ html.vc-art .vc-stamp{opacity:.5} }
+
+
+/* ===== มือถือ: ใช้ผลตรวจต่อ — ร่างข้อความ · เช็กลิสต์ · รูปสรุป (8 พ.ย. 2026) — เฉพาะ ≤767px ===== */
+.vc-next,.vc-tool,.vc-tt{display:none}
+@media (max-width:767px){
+  html.vc-art .vc-next{display:block;margin:14px 0 0;padding:14px 0 0;border-top:1px solid rgba(255,255,255,.08)}
+  html.vc-art .vc-next-h{margin:0 0 8px;font:600 12.5px/1.2 Prompt,Sarabun,sans-serif;color:#d4d4d8}
+  html.vc-art .vc-next-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  html.vc-art .vc-next-b{display:flex;flex-direction:column;align-items:center;gap:3px;padding:12px 4px 10px;border-radius:14px;border:1px solid rgba(255,255,255,.12);
+    background:rgba(255,255,255,.04);color:#ededef;cursor:pointer;-webkit-tap-highlight-color:transparent;min-height:0}
+  html.vc-art .vc-next-b::before,html.vc-art .vc-next-b::after{display:none !important}
+  html.vc-art .vc-next-b:active{background:rgba(255,255,255,.08);transform:scale(.98)}
+  html.vc-art .vc-next-ic{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;margin-bottom:3px;color:#d4d4d8;background:linear-gradient(145deg,#2a2a30,#1a1a1f);border:1px solid rgba(255,255,255,.09)}
+  html.vc-art .vc-next-b b{font:600 13.5px/1.2 Prompt,Sarabun,sans-serif}
+  html.vc-art .vc-next-b small{font:400 11.5px/1.2 Prompt,Sarabun,sans-serif;color:#8b8b94}
+  html.vc-art .vc-next-b small em{font-style:normal;color:#8fcfb4;font-weight:600;margin-left:2px}
+
+  /* แผ่นเครื่องมือ */
+  .vc-tool{display:block;position:fixed;inset:0;z-index:10020}
+  html.vc-tool-open body{overflow:hidden}
+  .vc-tool-back{position:absolute;inset:0;background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:vcFadeIn .25s ease both}
+  .vc-tool-sh{position:absolute;left:0;right:0;bottom:0;max-height:90vh;max-height:90dvh;display:flex;flex-direction:column;border-radius:22px 22px 0 0;background:#17171a;
+    border:1px solid rgba(255,255,255,.1);border-bottom:0;box-shadow:0 -20px 60px rgba(0,0,0,.6);font-family:Prompt,Sarabun,sans-serif;color:#ededef;
+    animation:vcSheetUp .32s cubic-bezier(.2,.9,.3,1) both;transition:transform .2s ease}
+  .vc-tool.out .vc-tool-sh{transform:translateY(100%);transition:transform .25s ease}
+  .vc-tool.out .vc-tool-back{animation:vcFadeOut .25s ease both}
+  .vc-tool-hd{position:relative;flex:0 0 auto;display:flex;align-items:flex-start;gap:12px;padding:24px 60px 14px 18px;border-bottom:1px solid rgba(255,255,255,.07)}
+  .vc-tool-grab{position:absolute;top:8px;left:50%;width:40px;height:4px;margin-left:-20px;border-radius:99px;background:rgba(255,255,255,.22)}
+  .vc-tool-hd h3{margin:0;font:700 17px/1.3 Prompt,Sarabun,sans-serif;color:#f4f4f5;letter-spacing:0}
+  .vc-tool-hd p{margin:3px 0 0;font:400 12.5px/1.45 Prompt,Sarabun,sans-serif;color:#8b8b94}
+  .vc-tool-x{position:absolute;top:18px;right:12px;width:36px;height:36px;padding:0;display:grid;place-items:center;border-radius:50%;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e4e4e7}
+  .vc-tool-x::before,.vc-tool-x::after,.vc-tool button::before,.vc-tool button::after{display:none !important}
+  .vc-tool-bd{flex:1 1 auto;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:14px 18px calc(18px + env(safe-area-inset-bottom,0px))}
+  .vc-lbl{margin:14px 0 8px;font:600 12.5px/1.3 Prompt,Sarabun,sans-serif;color:#a3a3aa}
+  .vc-lbl:first-child{margin-top:4px}
+  .vc-fine{margin:12px 0 0;font:400 11.5px/1.5 Prompt,Sarabun,sans-serif;color:#7a7a82;text-align:center}
+  .vc-acts{display:flex;gap:8px;margin-top:14px}
+  .vc-acts > *{flex:1 1 0;display:flex;align-items:center;justify-content:center;gap:8px;min-height:50px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);
+    color:#ededef;font:600 15px/1 Prompt,Sarabun,sans-serif;text-decoration:none;cursor:pointer}
+  .vc-acts > :first-child{background:#f4f4f5;color:#111;border-color:#f4f4f5}
+  .vc-acts .vc-a-line{background:#06c755;border-color:#06c755;color:#fff}
+
+  /* ร่างข้อความ */
+  .vc-seg{display:inline-flex;padding:3px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}
+  .vc-seg button{min-height:34px;padding:0 18px;border:0;border-radius:9px;background:transparent;color:#a3a3aa;font:600 13.5px/1 Prompt,Sarabun,sans-serif}
+  .vc-seg button.on{background:#f4f4f5;color:#111}
+  .vc-picks{display:flex;flex-direction:column;gap:6px}
+  .vc-pick{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.03);cursor:pointer}
+  .vc-pick input{flex:0 0 18px;width:18px;height:18px;accent-color:#34d399;margin:0}
+  .vc-pick b{flex:1 1 auto;min-width:0;font:500 13.5px/1.4 Prompt,Sarabun,sans-serif;color:#e4e4e7}
+  .vc-pick .vc-pill{flex:0 0 auto}
+  .vc-pick:has(input:not(:checked)){opacity:.55}
+  .vc-draft-ta{width:100%;box-sizing:border-box;min-height:220px;padding:12px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:#0d0d0f;color:#ededef;
+    font:400 16px/1.6 Prompt,Sarabun,sans-serif;resize:vertical}
+  .vc-draft-ta:focus{outline:none;border-color:rgba(255,255,255,.35)}
+
+  /* เช็กลิสต์ */
+  .vc-ck-prog{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.2)}
+  .vc-ck-n{flex:0 0 auto;font:600 13.5px/1 Prompt,Sarabun,sans-serif;color:#8fcfb4}
+  .vc-ck-bar{flex:1 1 auto;height:6px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+  .vc-ck-bar i{display:block;height:100%;width:0;background:#3fb98d;border-radius:99px;transition:width .3s ease}
+  .vc-ck ul{list-style:none;margin:0;padding:0;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.025);overflow:hidden}
+  .vc-ck li + li{border-top:1px solid rgba(255,255,255,.06)}
+  .vc-ck label{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;cursor:pointer}
+  .vc-ck input{position:absolute;opacity:0;pointer-events:none}
+  .vc-ck-box{flex:0 0 22px;width:22px;height:22px;border-radius:7px;border:1.5px solid rgba(255,255,255,.3);margin-top:1px;display:grid;place-items:center;transition:background .2s,border-color .2s}
+  .vc-ck input:checked + .vc-ck-box{background:#3fb98d;border-color:#3fb98d}
+  .vc-ck input:checked + .vc-ck-box::after{content:"";width:12px;height:12px;background:#06281b;
+    -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12.5 4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/contain no-repeat;
+            mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12.5 4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/contain no-repeat}
+  .vc-ck input:focus-visible + .vc-ck-box{outline:2px solid rgba(255,255,255,.5);outline-offset:2px}
+  .vc-ck-t{flex:1 1 auto;font:400 14px/1.5 Prompt,Sarabun,sans-serif;color:#e4e4e7}
+  .vc-ck input:checked ~ .vc-ck-t{color:#7a7a82;text-decoration:line-through;text-decoration-color:rgba(255,255,255,.25)}
+  .vc-ck-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 7px 1px 0;vertical-align:middle}
+
+  /* รูปสรุป */
+  .vc-img-pv{display:grid;place-items:center;min-height:320px;border-radius:16px;background:#0d0d0f;border:1px solid rgba(255,255,255,.08);overflow:hidden}
+  .vc-img-pv img{display:block;width:100%;max-width:300px;height:auto;border-radius:12px;margin:14px auto;box-shadow:0 14px 40px rgba(0,0,0,.6)}
+  .vc-img-ld{font:400 13px/1 Prompt,Sarabun,sans-serif;color:#8b8b94}
+
+  /* แจ้งเตือนสั้น */
+  .vc-tt{display:block;position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));z-index:10060;transform:translateX(-50%);padding:10px 16px;border-radius:99px;
+    background:rgba(40,40,44,.96);border:1px solid rgba(255,255,255,.14);color:#ededef;font:500 13.5px/1 Prompt,Sarabun,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.5);animation:vcFadeIn .2s ease both}
+  .vc-tt.out{animation:vcFadeOut .25s ease both}
+}
