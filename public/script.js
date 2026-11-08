@@ -1181,6 +1181,9 @@ function addCreditNote(credits) {
 }
 
 async function runCheck() {
+  // คลังสัญญาตัวอย่าง (มือถือ): ข้อความตรงกับตัวอย่างทุกตัวอักษร → แสดงผลที่เตรียมไว้ ไม่เรียก AI ไม่หักเครดิต ไม่ต้องเข้าสู่ระบบ
+  const demo = window.VCDemo && window.matchMedia && matchMedia('(max-width:767px)').matches ? window.VCDemo.match(els.input.value) : null;
+  if (demo) { await runDemo(demo); return; }
   if (!currentUser) {
     // วางก่อน สมัครทีหลัง: จำไว้ว่ารอตรวจ แล้วเปิดหน้าต่างเชิญสมัคร (ข้อความที่วางยังอยู่ในช่องเหมือนเดิม)
     if (els.input.value.trim() && window.VCAuthGate) { try { sessionStorage.setItem('vc_pending_check', '1'); } catch (e) {} window.VCAuthGate.open(); return; }
@@ -1244,6 +1247,28 @@ async function runCheck() {
     }
     els.result.scrollIntoView({ behavior: 'smooth', block: 'start' });
   } finally {
+    stopLoading();
+    setBusy(false);
+  }
+}
+
+async function runDemo(demo) {
+  const text = els.input.value.trim();
+  window.__vcDemoRun = true;
+  setBusy(true);
+  showLoading();
+  try {
+    await new Promise((ok) => setTimeout(ok, 2200));
+    const result = JSON.parse(JSON.stringify(demo.result));
+    viewerSrc = { result, text };
+    renderResult(result);
+    addDetectBanner(result, document.getElementById('contractType')?.value || 'unsure');
+    els.result.insertAdjacentHTML('afterbegin',
+      '<div class="vc-demo-note" role="note"><b>ผลตัวอย่าง · ฟรี</b><span>เตรียมไว้ล่วงหน้า ไม่ได้ตรวจด้วย AI · ไม่ใช้เครดิต · ไม่บันทึกประวัติ</span><small>อยากตรวจจริง วางสัญญาของคุณเองแล้วกดตรวจ</small></div>');
+    toast('ผลตัวอย่าง · ไม่ใช้เครดิต');
+    els.result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } finally {
+    window.__vcDemoRun = false;
     stopLoading();
     setBusy(false);
   }
