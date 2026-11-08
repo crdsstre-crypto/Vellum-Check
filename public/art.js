@@ -5313,3 +5313,64 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   setInterval(function () { if (mq.matches && !li.hidden) credits(); }, 1000);
   tick();
 })();
+
+/* ===== มือถือ: พับฟอร์มตรวจหลังผลออก + แท็บมีตัวเลื่อน (8 พ.ย. 2026) ===== */
+(function () {
+  var mq = window.matchMedia('(max-width:767px)');
+  var card = document.getElementById('checkCard'), res = document.getElementById('result'), ta = document.getElementById('input'), sel = document.getElementById('contractType');
+  if (!card || !res || !ta) return;
+  var calm = function () { return document.documentElement.hasAttribute('data-calm') || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
+
+  /* 2) แถบสรุปเมื่อพับฟอร์ม */
+  var strip = document.createElement('div'); strip.className = 'vc-done'; strip.hidden = true;
+  strip.innerHTML = '<span class="vc-done-ic" aria-hidden="true"></span><span class="vc-done-tx"><b></b><small></small></span><button type="button" class="vc-done-edit">แก้ไข<i aria-hidden="true">›</i></button>';
+  card.insertBefore(strip, card.firstChild);
+  var dismissedFor = null;
+  function sync() {
+    var rpt = res.querySelector('article.rpt');
+    var same = rpt && window.__vcCheckedText && window.__vcCheckedText === ta.value.trim();
+    var on = !!(mq.matches && same && dismissedFor !== window.__vcCheckedText && !document.documentElement.classList.contains('vc-ld-open'));
+    if (on && card.classList.contains('vc-collapsed')) return;
+    card.classList.toggle('vc-collapsed', on); strip.hidden = !on;
+    if (on) {
+      var trig = document.getElementById('vcpTrigger'), ico = trig && trig.querySelector('.vcp-ico, .vcp-trigger-ico, svg');
+      strip.querySelector('.vc-done-ic').innerHTML = ico ? (ico.tagName.toLowerCase() === 'svg' ? ico.outerHTML : ico.innerHTML) : '';
+      var name = sel && sel.selectedOptions[0] ? sel.selectedOptions[0].textContent.replace(/\s*\(.*\)\s*$/, '') : 'สัญญา';
+      var n = (ta.value.match(/(^|\n)\s*ข้อ\s*[0-9๐-๙]+/g) || []).length;
+      strip.querySelector('b').textContent = name;
+      strip.querySelector('small').innerHTML = (n ? n + ' ข้อ · ' : '') + ta.value.trim().length.toLocaleString('th-TH') + ' ตัวอักษร · <em>ตรวจแล้ว ✓</em>';
+    }
+  }
+  strip.querySelector('.vc-done-edit').addEventListener('click', function () {
+    dismissedFor = window.__vcCheckedText; sync();
+    var t = card.getBoundingClientRect().top + window.scrollY - 70; window.scrollTo({ top: Math.max(0, t), behavior: calm() ? 'auto' : 'smooth' });
+  });
+  new MutationObserver(sync).observe(res, { childList: true });
+  new MutationObserver(sync).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  ta.addEventListener('input', sync);
+  setInterval(function () { if (mq.matches && !document.hidden) sync(); }, 800);
+  if (mq.addEventListener) mq.addEventListener('change', sync);
+
+  /* 3) แท็บมีตัวเลื่อน + เนื้อหาเลื่อนเข้ามาจากด้านข้าง */
+  var ORDER = { iss: 0, gl: 1, fu: 2 };
+  function wire(rpt) {
+    var tabs = rpt.querySelector('.vc-tabs'); if (!tabs || tabs.querySelector('.vc-tab-ind')) return;
+    var ind = document.createElement('i'); ind.className = 'vc-tab-ind'; ind.setAttribute('aria-hidden', 'true'); tabs.insertBefore(ind, tabs.firstChild);
+    tabs.classList.add('vc-has-ind');
+    var prev = rpt.getAttribute('data-vtab') || 'iss';
+    function place(animate) {
+      var on = tabs.querySelector('.vc-tab.on'); if (!on) return;
+      ind.style.transition = animate && !calm() ? '' : 'none';
+      ind.style.width = on.offsetWidth + 'px'; ind.style.transform = 'translateX(' + on.offsetLeft + 'px)';
+    }
+    place(false); setTimeout(function () { place(false); }, 400);
+    new MutationObserver(function () {
+      var cur = rpt.getAttribute('data-vtab'); if (cur === prev) return;
+      var dir = (ORDER[cur] || 0) > (ORDER[prev] || 0) ? 1 : -1; prev = cur;
+      place(true);
+      if (!calm()) { rpt.style.setProperty('--vc-dir', dir); rpt.classList.remove('vc-slide'); void rpt.offsetWidth; rpt.classList.add('vc-slide'); }
+    }).observe(rpt, { attributes: true, attributeFilter: ['data-vtab'] });
+    window.addEventListener('resize', function () { place(false); });
+  }
+  new MutationObserver(function () { var r = res.querySelector('article.rpt.vc-m'); if (r) wire(r); }).observe(res, { childList: true, subtree: true });
+})();
