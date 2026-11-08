@@ -3782,3 +3782,27 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   apply();
   if (mq.addEventListener) mq.addEventListener('change', apply); else if (mq.addListener) mq.addListener(apply);
 })();
+
+/* ===== มือถือ: ป้ายเครดิตกดได้ + การ์ดเมื่อใช้สิทธิ์ครบ (8 พ.ย. 2026) — แสดงผลเฉพาะ ≤767px ผ่าน art.css ===== */
+(function () {
+  var chip = document.getElementById('creditChip'), btn = document.getElementById('checkBtn'), card = document.getElementById('checkCard');
+  function openPacks() {
+    if (window.VCShowCredits) { window.VCShowCredits(); return; }
+    var a = document.querySelector('#bottomNav [data-nav="acct"]') || document.getElementById('authToggle'); if (a) a.click();
+  }
+  if (chip) chip.addEventListener('click', function () {
+    if (chip.classList.contains('is-zero')) openPacks();
+    else { var a = document.querySelector('#bottomNav [data-nav="acct"]') || document.getElementById('authToggle'); if (a) a.click(); }
+  });
+  if (!btn || !card) return;
+  var zc = document.createElement('div');
+  zc.className = 'vc-zc'; zc.setAttribute('role', 'group'); zc.setAttribute('aria-label', 'สิทธิ์ตรวจสัญญา');
+  zc.innerHTML = '<span class="vc-zc-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5a2 2 0 0 0 0 4v3a1.5 1.5 0 0 0 1.5 1.5h14a1.5 1.5 0 0 0 1.5-1.5v-3a2 2 0 0 0 0-4v-3A1.5 1.5 0 0 0 19 4H5a1.5 1.5 0 0 0-1.5 1.5z" transform="translate(0 1.5)"/><path d="M9.5 9.5h5M9.5 13h3"/></svg></span>' +
+    '<div class="vc-zc-txt"><b>ใช้สิทธิ์ตรวจครบแล้ว</b><small>เลือกแพ็กเกจเพื่อตรวจต่อ ข้อความที่วางไว้ยังอยู่ครบ</small></div>' +
+    '<button type="button" class="vc-zc-btn">ดูแพ็กเกจ<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>';
+  var btns = btn.closest('.btns'); if (btns) btns.parentNode.insertBefore(zc, btns);
+  zc.querySelector('.vc-zc-btn').addEventListener('click', openPacks);
+  function sync() { card.classList.toggle('vc-zero', /ดูแพ็กเกจ/.test(btn.textContent || '')); }
+  new MutationObserver(sync).observe(btn, { childList: true, characterData: true, subtree: true });
+  sync();
+})();
