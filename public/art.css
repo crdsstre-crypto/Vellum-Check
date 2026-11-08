@@ -4577,3 +4577,59 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   html.vc-art[data-view="desk"][data-desk="check"] #checkCard:has(.ta-wrap:not(.vc-has)) #checkBtn:disabled::before{display:none !important}
 }
 @media (max-width:767px) and (prefers-reduced-motion:reduce){ html.vc-art .vc-empty-dash rect,html.vc-art .vc-empty-ico{animation:none !important} }
+
+
+/* ===== มือถือ: แก้กล่องสัญญา/กรอบซ้อน + ผลตรวจการ์ดกระจก + พับฟอร์ม + แท็บตัวเลื่อน (8 พ.ย. 2026) — เฉพาะ ≤767px ===== */
+.vc-done{display:none}
+@media (max-width:767px){
+  /* แก้ 1: ไม่มีเส้นบรรทัดตอนมีข้อความ + ป้าย "ข้อ N" บางลง */
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap.vc-has #input,
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap.vc-hl-on #input{background-image:none !important}
+  html.vc-art .vc-mirror .hk{background:linear-gradient(transparent 18%,rgba(96,165,250,.14) 18%,rgba(96,165,250,.14) 86%,transparent 86%) !important;box-shadow:none !important;border-radius:0 !important;font-weight:inherit}
+  /* แก้ 2: ตัวนับอยู่ในแถบทึบท้ายกล่อง ไม่ทับข้อความ */
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap.vc-has #input{padding-bottom:58px !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap.vc-has::after{height:56px !important;background:linear-gradient(rgba(13,13,15,0),var(--k-in,#0d0d0f) 42%) !important;border-radius:0 0 15px 15px}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap > .ta-count{z-index:3 !important}
+  /* แก้ 3: ไม่มีกรอบนอกซ้อนการ์ดผลตรวจ */
+  html.vc-art main > #resultCard:has(article.rpt.vc-m){background:transparent !important;border:0 !important;box-shadow:none !important;padding:0 !important;margin-left:8px !important;margin-right:8px !important;
+    -webkit-backdrop-filter:none !important;backdrop-filter:none !important}
+  html.vc-art main > #resultCard:has(article.rpt.vc-m)::before,html.vc-art main > #resultCard:has(article.rpt.vc-m)::after{display:none !important}
+
+  /* 1) ผลตรวจเป็นการ์ดกระจกลอย (ชุดเดียวกับขั้นตรวจ) */
+  html.vc-art article.rpt.vc-m :is(.vc-brief,.ix-row,.miss,.cb-src,.vc-leg,.gloss,.fu){background:rgba(22,22,26,.62) !important;-webkit-backdrop-filter:blur(16px) saturate(140%);backdrop-filter:blur(16px) saturate(140%)}
+  html.vc-art .vc-sum{-webkit-backdrop-filter:blur(18px) saturate(140%);backdrop-filter:blur(18px) saturate(140%);box-shadow:0 24px 50px -26px rgba(0,0,0,.95)}
+  html.vc-art .vc-sum::after{display:none}
+  html.vc-art article.rpt.vc-m > .vc-tabs{background:rgba(22,22,26,.78) !important}
+  html.vc-art main > #resultCard:has(article.rpt.vc-m) ~ * .vc-aurora{display:block}
+  html.vc-art[data-view="desk"] .vc-aurora{display:block}
+
+  /* 2) พับฟอร์มตรวจหลังผลออก */
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-collapsed > .vc-box,
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-collapsed > .vc-rail,
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-collapsed > .vc-needlogin{display:none !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-collapsed > .vc-done:not([hidden]){display:flex;align-items:center;gap:12px;margin:0 0 14px;padding:12px 12px 12px 14px;border-radius:18px;
+    background:rgba(22,22,26,.62);border:1px solid color-mix(in srgb,var(--vc-acc,#94a3b8) 25%,rgba(255,255,255,.09));-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+    font-family:Prompt,Sarabun,sans-serif;animation:vcFadeUp .35s ease both}
+  html.vc-art .vc-done-ic{flex:0 0 40px;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#f4f4f5;
+    background:linear-gradient(145deg,color-mix(in srgb,var(--vc-acc,#94a3b8) 45%,#2a2a30),color-mix(in srgb,var(--vc-acc,#94a3b8) 18%,#18181c));border:1px solid rgba(255,255,255,.1)}
+  html.vc-art .vc-done-ic svg{width:22px;height:22px}
+  html.vc-art .vc-done-tx{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
+  html.vc-art .vc-done-tx b{font:600 15px/1.3 Prompt,Sarabun,sans-serif;color:#f4f4f5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  html.vc-art .vc-done-tx small{font:400 12px/1.35 Prompt,Sarabun,sans-serif;color:#8b8b94;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  html.vc-art .vc-done-tx em{font-style:normal;color:var(--vc-accs,#8fcfb4)}
+  html.vc-art .vc-done-edit{flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;min-height:36px;padding:0 12px;border-radius:99px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:#ededef;font:600 13px/1 Prompt,Sarabun,sans-serif}
+  html.vc-art .vc-done-edit i{font-style:normal;font-size:16px}
+  html.vc-art .vc-done-edit::before,html.vc-art .vc-done-edit::after{display:none !important}
+  html.vc-art[data-view="desk"][data-desk="check"] main > #checkCard.vc-collapsed{margin-bottom:0 !important}
+
+  /* 3) แท็บมีตัวเลื่อน + เนื้อหาเลื่อนเข้า */
+  html.vc-art .vc-tabs.vc-has-ind{position:sticky}
+  html.vc-art .vc-tabs.vc-has-ind .vc-tab{position:relative;z-index:1}
+  html.vc-art .vc-tabs.vc-has-ind .vc-tab.on{background:transparent !important}
+  html.vc-art .vc-tab-ind{position:absolute;left:0;top:4px;bottom:4px;z-index:0;border-radius:10px;background:#f4f4f5;box-shadow:0 4px 14px -6px rgba(0,0,0,.6);
+    transition:transform .38s cubic-bezier(.3,1.2,.4,1),width .38s cubic-bezier(.3,1.2,.4,1)}
+  html.vc-art .vc-tab{transition:color .3s ease}
+  html.vc-art article.rpt.vc-m.vc-slide > [data-vt]:not(.vc-leg){animation:vcTabIn .38s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes vcTabIn{from{opacity:0;transform:translateX(calc(var(--vc-dir,1) * 28px))}to{opacity:1;transform:none}}
+}
+@media (max-width:767px) and (prefers-reduced-motion:reduce){ html.vc-art .vc-tab-ind{transition:none} html.vc-art article.rpt.vc-m.vc-slide > [data-vt]{animation:none} }
