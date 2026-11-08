@@ -3609,3 +3609,52 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
 .adm-msg.is-err{color:#fca5a5}
 .adm-fine{margin:8px 0 0;font:400 11.5px/1.5 Prompt,Sarabun,sans-serif;color:#7a7a82}
 .adm-head,.adm-head > div{background:none !important;border:0 !important;padding:0 !important;box-shadow:none !important}
+
+
+/* ===== มือถือ: แท็บประเด็นกระชับ (8 พ.ย. 2026 รอบ 2) — เฉพาะ ≤767px ===== */
+@media (max-width:767px){
+  /* 1) แสดงครบ ไม่ต้องกด "ดูทั้งหมด", รายการสั้นไม่ต้องมีช่องค้นหา/ปุ่มกรอง, มีบรรทัดเหตุผลใต้หัวข้อ */
+  html.vc-art article.rpt.vc-allrows .ix-more{display:none !important}
+  html.vc-art article.rpt.vc-few :is(.ix-search-w,.ix-seg,.ix-sub){display:none !important}
+  html.vc-art article.rpt.vc-m .ix-list{margin-top:0 !important}
+  html.vc-art article.rpt.vc-m .ix-row .ix-tx > p{display:-webkit-box !important;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
+    margin:4px 0 0 !important;font:400 13px/1.5 Prompt,Sarabun,sans-serif !important;color:#a3a3aa !important}
+  html.vc-art article.rpt.vc-m .ix-row .ix-tx > b{display:block}
+
+  /* 3) สิ่งที่ยังไม่ระบุ: การ์ดเรียบ พับเหลือ 2 ข้อ */
+  html.vc-art article.rpt.vc-m > .miss{border:1px solid rgba(255,255,255,.09) !important;border-style:solid !important;background:rgba(255,255,255,.025) !important;border-radius:16px !important;padding:14px 16px !important;margin:14px 0 0 !important}
+  html.vc-art article.rpt.vc-m > .miss[hidden]{display:none !important}
+  html.vc-art article.rpt.vc-m > .miss h3{display:flex;align-items:center;gap:8px;margin:0 0 4px !important;font:600 15px/1.35 Prompt,Sarabun,sans-serif !important;color:#ededef !important;letter-spacing:0 !important}
+  html.vc-art article.rpt.vc-m > .miss h3 em{font-style:normal;font-size:11.5px;font-weight:600;min-width:20px;height:20px;padding:0 6px;border-radius:99px;display:inline-grid;place-items:center;background:rgba(251,191,36,.14);color:#fcd34d}
+  html.vc-art article.rpt.vc-m > .miss .miss-note{margin:0 0 8px !important;font:400 12.5px/1.5 Prompt,Sarabun,sans-serif !important;color:#8b8b94 !important}
+  html.vc-art article.rpt.vc-m > .miss ul{margin:0 !important;padding:0 0 0 18px !important}
+  html.vc-art article.rpt.vc-m > .miss li{font:400 14px/1.55 Prompt,Sarabun,sans-serif !important;color:#d4d4d8 !important;margin:0 0 4px !important}
+  html.vc-art article.rpt.vc-m > .miss.vc-fold:not(.vc-open) li:nth-child(n+3){display:none}
+  html.vc-art .vc-miss-more{margin:6px 0 0;padding:0;border:0;background:none;color:#e4e4e7;font:600 13.5px/1.4 Prompt,Sarabun,sans-serif;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(255,255,255,.3);cursor:pointer}
+  html.vc-art .vc-miss-more::before,html.vc-art .vc-miss-more::after{display:none !important}
+
+  /* 4) ความคืบหน้าในการ์ดสรุป */
+  html.vc-art .vc-sum .ix-prog{margin:14px 0 0 !important;padding:0 !important;background:none !important;border:0 !important}
+  html.vc-art .vc-sum .ix-prog-row{display:flex !important;align-items:center;gap:12px}
+  html.vc-art .vc-sum .ix-prog-l{flex:0 0 auto;font:500 12.5px/1 Prompt,Sarabun,sans-serif !important;color:#a3a3aa !important;white-space:nowrap}
+  html.vc-art .vc-sum .ix-prog-n{color:#ededef !important;font-weight:600 !important;font-size:12.5px !important;margin-left:2px}
+  html.vc-art .vc-sum .ix-bar{flex:1 1 auto;height:6px !important;border-radius:99px !important;background:rgba(255,255,255,.08) !important;overflow:hidden}
+  html.vc-art .vc-sum .ix-bar > i{display:block;height:100%;border-radius:99px;background:#34d399 !important;transition:width .4s ease}
+  html.vc-art .vc-sum .ix-prog-note{margin:6px 0 0 !important;font:400 12px/1.5 Prompt,Sarabun,sans-serif !important;color:#6ee7b7 !important}
+  /* การ์ดเดิมด้านล่าง: เหลือแถว "ที่มาของผลตรวจสอบ" กับหมายเหตุ AI */
+  html.vc-art article.rpt.vc-m #commandCenter{background:none !important;border:0 !important;padding:0 !important;box-shadow:none !important}
+  html.vc-art article.rpt.vc-m #commandCenter::before,html.vc-art article.rpt.vc-m #commandCenter::after{display:none !important}
+  html.vc-art article.rpt.vc-m #commandCenter .cc-status{display:none !important}
+  html.vc-art article.rpt.vc-m #commandCenter .cb-src{margin:0 !important;border:1px solid rgba(255,255,255,.09) !important;border-radius:16px !important;background:rgba(255,255,255,.025) !important;padding:0 !important}
+  html.vc-art article.rpt.vc-m #commandCenter .cb-src > summary{padding:12px 14px !important;border:0 !important}
+  html.vc-art article.rpt.vc-m #commandCenter .cb-src > :not(summary){padding:0 14px 12px !important}
+  html.vc-art article.rpt.vc-m #commandCenter .cc-note{margin:10px 2px 0 !important;padding:0 !important;border:0 !important;font:400 12px/1.6 Prompt,Sarabun,sans-serif !important;color:#7a7a82 !important}
+  /* วิธีอ่านสี ย้ายมาท้ายแท็บ */
+  html.vc-art article.rpt.vc-m > .vc-leg{order:6;margin:14px 0 0 !important;border:1px solid rgba(255,255,255,.07) !important;border-radius:14px !important;padding:0 14px !important;background:rgba(255,255,255,.015) !important}
+  html.vc-art article.rpt.vc-m > .vc-leg > summary{padding:12px 0 !important;font:500 13.5px/1.4 Prompt,Sarabun,sans-serif !important;color:#a3a3aa !important}
+  html.vc-art article.rpt.vc-m > .vc-leg[open]{padding-bottom:12px !important}
+}
+@media (max-width:767px){
+  html.vc-art .vc-sum .ix-prog-l{display:inline-flex !important;flex-direction:row !important;align-items:baseline;gap:4px}
+  html.vc-art .vc-sum .ix-prog-n{display:inline !important;margin:0 !important}
+}
