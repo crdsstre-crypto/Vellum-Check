@@ -5692,3 +5692,91 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   if (sel) sel.addEventListener('change', q);
   q();
 })();
+
+/* ===== มือถือ: ศัพท์น่ารู้ — การ์ดอ่านได้ทันที + "ในสัญญาของคุณ" + โยงไปประเด็น (v224) ===== */
+(function () {
+  var box = document.getElementById('result'); if (!box) return;
+  var mq = window.matchMedia('(max-width:767px)'), queued = false;
+  var ICO = {
+    money: '<path d="M3 7h18v10H3z"/><circle cx="12" cy="12" r="2.5"/><path d="M6 10v4M18 10v4"/>',
+    people: '<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15 14.5c3 0 6 1.8 6 5"/>',
+    exit: '<path d="M14 4h5v16h-5"/><path d="M10 12H3M6 8l-4 4 4 4"/>',
+    time: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+    book: '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 7h6"/>'
+  };
+  function cat(t) {
+    if (/เงิน|ค่า|เบี้ย|ดอกเบี้ย|ราคา|ชำระ|มัดจำ|ประกัน/.test(t)) return 'money';
+    if (/ผู้|คู่สัญญา|ฝ่าย|ลูกจ้าง|นายจ้าง|หุ้นส่วน/.test(t)) return 'people';
+    if (/เลิก|บอก|ยกเลิก|สิ้นสุด|ผิดสัญญา/.test(t)) return 'exit';
+    if (/วัน|ระยะ|กำหนด|อายุ|ต่อสัญญา|เวลา/.test(t)) return 'time';
+    return 'book';
+  }
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function variants(name) {
+    return name.replace(/^\s*\d+\.\s*/, '').split(/\s*[\/、,]\s*|\s+หรือ\s+/).map(function (s) { return s.replace(/\(.*?\)/g, '').trim(); }).filter(function (s) { return s.length >= 2; });
+  }
+  function findInContract(vs) {
+    var tx = window.__vcCheckedText || ''; if (!tx) return null;
+    var lines = tx.split(/\n+/), best = null;
+    lines.forEach(function (ln) {
+      if (best && /^\s*ข้อ/.test(best.ln)) return;
+      for (var j = 0; j < vs.length; j++) { var at = ln.indexOf(vs[j]); if (at >= 0) { if (!best || (/^\s*ข้อ/.test(ln) && !/^\s*ข้อ/.test(best.ln))) best = { ln: ln.trim(), v: vs[j] }; break; } }
+    });
+    if (!best) return null;
+    var ln = best.ln, m = /^ข้อ\s*([0-9๐-๙]+)/.exec(ln), at = ln.indexOf(best.v), a = Math.max(0, at - 45), z = Math.min(ln.length, at + best.v.length + 55);
+    var head = m && a > 0 ? 'ข้อ ' + m[1] + ' … ' : '', snip = ln.slice(m && a > 0 ? a : 0, z);
+    if (!(m && a > 0) && a > 0) snip = '…' + ln.slice(a, z);
+    if (z < ln.length) snip += '…';
+    var re = new RegExp(vs.map(function (v) { return v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('|'), 'g');
+    return { no: m ? m[1] : '', html: esc(head) + esc(snip).replace(re, '<mark>$&</mark>') };
+  }
+  function relatedIssues(rpt, vs) {
+    var out = [];
+    [].forEach.call(rpt.querySelectorAll('details.item'), function (it, i) {
+      var t = (it.querySelector('summary') || it).textContent + ' ' + [].map.call(it.querySelectorAll('.it-reason, .it-fix, .tx-old'), function (e) { return e.textContent; }).join(' ');
+      if (vs.some(function (v) { return t.indexOf(v) >= 0; })) out.push({ i: i, lv: (/lv-(\w+)/.exec(it.className) || [])[1] || 'low' });
+    });
+    return out;
+  }
+  function dress(rpt, g) {
+    [].forEach.call(g.querySelectorAll('details.gl-term'), function (d) {
+      if (d.__vcGl) return; d.__vcGl = true;
+      var sm = d.querySelector('summary'), b = sm && sm.querySelector('b'), tx = d.querySelector('.gl-text'); if (!sm || !b) return;
+      var name = b.textContent.replace(/^\s*\d+\.\s*/, '').trim(), vs = variants(name);
+      b.textContent = name;
+      var ic = document.createElement('span'); ic.className = 'gl-c-ic c-' + cat(name); ic.setAttribute('aria-hidden', 'true');
+      ic.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + ICO[cat(name)] + '</svg>';
+      var body = document.createElement('span'); body.className = 'gl-c-b';
+      sm.insertBefore(ic, b); sm.insertBefore(body, b); body.appendChild(b);
+      if (tx) { var pv = document.createElement('span'); pv.className = 'gl-pv'; pv.textContent = tx.textContent.trim(); body.appendChild(pv); }
+      var hit = findInContract(vs), rel = relatedIssues(rpt, vs);
+      if (hit || rel.length) {
+        var ch = document.createElement('span'); ch.className = 'gl-chips';
+        if (hit) ch.insertAdjacentHTML('beforeend', '<span class="gl-chip gl-chip-c">ในสัญญาของคุณ' + (hit.no ? ' · ข้อ ' + esc(hit.no) : '') + '</span>');
+        var more = rel.length > 3 ? rel.length - 3 : 0; rel = rel.slice(0, 3);
+        rel.forEach(function (r) { ch.insertAdjacentHTML('beforeend', '<button type="button" class="gl-chip gl-chip-i lv-' + r.lv + '" data-gi="' + r.i + '">ประเด็น ' + ('0' + (r.i + 1)).slice(-2) + ' ›</button>'); });
+        if (more) ch.insertAdjacentHTML('beforeend', '<span class="gl-chip">+' + more + ' ประเด็น</span>');
+        body.appendChild(ch);
+      }
+      if (hit && tx) {
+        var q = document.createElement('div'); q.className = 'gl-mine';
+        q.innerHTML = '<p class="gl-mine-l">ในสัญญาของคุณเขียนว่า</p><blockquote>' + hit.html + '</blockquote>';
+        tx.parentNode.insertBefore(q, tx.nextSibling);
+      }
+    });
+  }
+  box.addEventListener('click', function (e) {
+    var c = e.target.closest('.gl-chip-i'); if (!c || !mq.matches) return;
+    e.preventDefault(); e.stopPropagation();
+    var rpt = c.closest('article.rpt'), tab = rpt && rpt.querySelector('.vc-tab[data-t="iss"]');
+    if (tab) tab.click();
+    if (typeof window.focusIssue === 'function') window.focusIssue(+c.getAttribute('data-gi'));
+  }, true);
+  function run() {
+    queued = false; if (!mq.matches) return;
+    var rpt = box.querySelector('article.rpt.vc-m'), g = rpt && rpt.querySelector('section.gloss'); if (!g) return;
+    dress(rpt, g);
+  }
+  new MutationObserver(function () { if (!queued) { queued = true; requestAnimationFrame(run); } }).observe(box, { childList: true, subtree: true });
+  run();
+})();
