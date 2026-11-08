@@ -4033,3 +4033,91 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   new MutationObserver(tidy).observe(box, { childList: true, subtree: true });
   tidy();
 })();
+
+/* ===== มือถือ: เก็บรายละเอียดหน้าผลตรวจ (8 พ.ย. 2026 รอบ 3) — ป้ายประเภท, ชื่อระดับเดียวกัน, การ์ดข้อมูลสัญญา, ประเด็นแบบการ์ด ===== */
+(function () {
+  var box = document.getElementById('result');
+  if (!box) return;
+  var LVN = { check_detail: 'สำคัญ', caution: 'ควรระวัง', low: 'เสี่ยงต่ำ' };
+  var ICO = {
+    job: '<path d="M8 4.5H6.5A1.5 1.5 0 0 0 5 6v13.5A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H16"/><rect x="8" y="3" width="8" height="3.2" rx="1"/><path d="M8.5 11h7M8.5 14.5h7M8.5 18h4"/>',
+    money: '<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6.5 9.5v5M17.5 9.5v5"/>',
+    time: '<circle cx="12" cy="12.5" r="8"/><path d="M12 8.5v4.2l2.8 1.8M9.5 2.5h5"/>'
+  };
+  var svg = function (k) { return '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICO[k] + '</svg>'; };
+  var NUM = /([0-9๐-๙][0-9๐-๙,.]*\s*(?:ล้านบาท|บาท|เปอร์เซ็นต์|%|วันทำการ|วัน|สัปดาห์|เดือน|ปี)?)/g;
+  function boldNums(el) {
+    var w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null), list = [], n;
+    while ((n = w.nextNode())) if (NUM.test(n.nodeValue)) list.push(n);
+    list.forEach(function (t) {
+      NUM.lastIndex = 0;
+      var f = document.createElement('span');
+      f.innerHTML = t.nodeValue.replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }).replace(NUM, '<b class="vc-num">$1</b>');
+      while (f.firstChild) t.parentNode.insertBefore(f.firstChild, t);
+      t.remove();
+    });
+  }
+
+  function polish() {
+    var rpt = box.querySelector('article.rpt.vc-m2');
+    if (!rpt || rpt.classList.contains('vc-m3')) return;
+    var sum = rpt.querySelector('.vc-sum'); if (!sum) return;
+    rpt.classList.add('vc-m3');
+
+    /* 1) ป้ายประเภท + วันที่ บนการ์ดสรุป */
+    var meta = rpt.querySelector('.rpt-meta'), banner = box.querySelector(':scope > .detect-banner');
+    var mt = meta ? meta.textContent.trim() : '', parts = mt.split('·').map(function (s) { return s.trim(); });
+    var date = parts.length > 1 ? parts[parts.length - 1] : (/ประเภท/.test(mt) ? '' : mt);
+    var tname = '';
+    var m = /ประเภทเอกสาร\s*:\s*([^(·]+)/.exec(mt); if (m) tname = m[1].trim();
+    var row = document.createElement('div'); row.className = 'vc-sum-meta';
+    if (banner) {
+      var b = banner.querySelector('b'); tname = b ? b.textContent.trim() : tname;
+      var chg = banner.querySelector('.detect-change');
+      row.innerHTML = '<span class="vc-type"><i aria-hidden="true"></i>' + (tname || 'ไม่ระบุประเภท') + '</span>';
+      if (chg) { chg.textContent = 'เปลี่ยน'; chg.classList.add('vc-type-chg'); row.appendChild(chg); }
+      banner.hidden = true; banner.classList.add('vc-moved');
+    } else if (tname) {
+      row.innerHTML = '<span class="vc-type"><i aria-hidden="true"></i>' + tname + '</span>';
+    }
+    if (date) { var d = document.createElement('span'); d.className = 'vc-date'; d.textContent = date; row.appendChild(d); }
+    if (row.childNodes.length) { sum.insertBefore(row, sum.firstChild); rpt.classList.add('vc-nohead'); }
+
+    /* 2) ชื่อระดับเดียวกันทั้งหน้า */
+    [].forEach.call(rpt.querySelectorAll('.ix-chip, details.item .tag'), function (e) {
+      e.childNodes.forEach && [].forEach.call(e.childNodes, function (t) { if (t.nodeType === 3) t.nodeValue = t.nodeValue.replace('ควรตรวจละเอียด', 'สำคัญ'); });
+    });
+
+    /* 6) ประเด็นแบบการ์ด: ป้ายสีระดับ + เลขประเด็น */
+    [].forEach.call(rpt.querySelectorAll('.ix-row'), function (r) {
+      var sm = r.querySelector('.ix-tx > small'); if (!sm || sm.querySelector('.vc-pill')) return;
+      var lv = (/lv-(\w+)/.exec(r.className) || [])[1] || 'caution';
+      var t = sm.firstChild, mm = t && t.nodeType === 3 ? /ประเด็น\s*(\d+)/.exec(t.nodeValue) : null;
+      if (!mm) return;
+      t.nodeValue = '';
+      var pill = document.createElement('span'); pill.className = 'vc-pill lv-' + lv; pill.textContent = LVN[lv] || lv;
+      var no = document.createElement('span'); no.className = 'vc-no'; no.textContent = 'ประเด็น ' + mm[1];
+      sm.insertBefore(no, sm.firstChild); sm.insertBefore(pill, sm.firstChild);
+    });
+
+    /* 5) การ์ดข้อมูลสัญญา */
+    var brief = rpt.querySelector(':scope > .brief');
+    if (brief && !rpt.querySelector('.vc-brief')) {
+      var keys = ['job', 'money', 'time'], labs = ['งาน', 'เงิน', 'ระยะเวลา'];
+      var card = document.createElement('section'); card.className = 'vc-brief'; card.setAttribute('data-vt', 'iss');
+      card.innerHTML = '<h4>ข้อมูลสัญญา</h4>';
+      [].forEach.call(brief.querySelectorAll('p'), function (p, i) {
+        var c = p.cloneNode(true), bb = c.querySelector('b'); if (bb) bb.remove();
+        var html = c.innerHTML.replace(/^[\s\S]*?(?=\S)/, '').replace(/^(📋|💰|⏰)\s*/u, '').trim();
+        var rowEl = document.createElement('div'); rowEl.className = 'vc-br-row';
+        rowEl.innerHTML = '<span class="vc-br-ico">' + svg(keys[i] || 'job') + '</span><div><small>' + (labs[i] || '') + '</small><p>' + (html || '—') + '</p></div>';
+        boldNums(rowEl.querySelector('p'));
+        card.appendChild(rowEl);
+      });
+      brief.parentNode.insertBefore(card, brief);
+      brief.classList.add('vc-moved');
+    }
+  }
+  new MutationObserver(polish).observe(box, { childList: true, subtree: true });
+  polish();
+})();
