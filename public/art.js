@@ -3647,14 +3647,22 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   var RISK = [{"2": "ค่าปรับวันละ 500 บาท สูงเกินสมควร", "3": "ขึ้นค่าเช่าได้ตลอด ไม่ต้องแจ้ง", "4": "หักเงินประกัน \"ตามที่ผู้ให้เช่าเห็นสมควร\"", "5": "ไม่คืนเงินประกันทุกกรณี", "6": "ต้องซ่อมแม้เสื่อมสภาพตามปกติ", "7": "เข้าห้องได้โดยไม่แจ้ง"}, {"3": "ค่าไฟหน่วยละ 9 บาท สูงกว่าอัตราปกติมาก", "4": "คืนเงินประกันช้าถึง 90 วัน", "5": "ค่าปรับสูง", "6": "ต่อสัญญาอัตโนมัติ 1 ปี", "7": "ต้องซื้อใหม่ในราคาปัจจุบัน"}, {"2": "ขึ้นค่าเช่าปีละ 10%", "3": "เงินกินเปล่าไม่คืนทุกกรณี", "4": "ของที่ต่อเติมตกเป็นของผู้ให้เช่าฟรี", "5": "ผู้ให้เช่าบอกเลิกได้ฝ่ายเดียวใน 15 วัน"}, {"3": "ไม่รับผิดชอบความชำรุดใด ๆ", "4": "ไม่กำหนดวันโอนกรรมสิทธิ์", "5": "ริบมัดจำเร็วเกินไป", "6": "ภาษีค้างให้ผู้ซื้อจ่าย"}, {"3": "ผิดนัดงวดเดียว ริบเงินทั้งหมด", "5": "เนื้อที่ขาด เรียกร้องไม่ได้", "6": "ไม่รับรองว่าปลอดภาระจำนอง"}, {"2": "ยกเลิกไม่ได้ แม้ยังไม่ได้รับของ", "3": "ไม่ระบุอัตราดอกเบี้ย", "4": "รับประกันแคบมาก", "5": "ล็อกเครื่องจากระยะไกลได้"}, {"2": "ไม่มีค่าล่วงเวลา", "3": "ทดลองงานนาน 180 วัน เลิกจ้างได้ทันที", "4": "ลาออกต้องจ่ายค่าปรับ", "5": "นายจ้างประเมินหักเงินเอง", "6": "ลาป่วยน้อยกว่าที่กฎหมายกำหนด"}, {"2": "ไม่ระบุวันจ่ายค่าจ้าง", "3": "หักค่าชุดจากค่าจ้าง", "4": "ชดใช้ราคาเต็ม", "5": "แจ้งเปลี่ยนกะล่วงหน้าแค่ 1 ชั่วโมง", "6": "ทิปทั้งหมดเป็นของร้าน"}, {"2": "เปลี่ยนค่าคอมย้อนหลังได้", "3": "เลิกจ้างโดยไม่จ่ายค่าชดเชย", "4": "ห้ามทำงาน 5 ปีทั่วประเทศ ค่าปรับล้านบาท", "5": "ย้ายได้ทั่วประเทศ"}, {"2": "จ่ายล่วงหน้าถึง 70%", "3": "ขยายเวลาได้ไม่จำกัด", "4": "ไม่ระบุสเปกวัสดุ", "5": "ไม่รับประกันงาน", "6": "ค่าแก้แบบไม่ระบุราคา"}, {"2": "จ่ายเงินเมื่อ \"พอใจ\" ไม่มีเกณฑ์", "3": "แก้งานไม่จำกัดครั้ง", "4": "ต้องยกโค้ดเดิมของตัวเองให้ด้วย", "5": "ปรับวันละ 5% สูงมาก", "6": "ยกเลิกแล้วไม่จ่ายค่างานที่ทำไป"}, {"2": "ต่ออายุและตัดบัตรอัตโนมัติ", "3": "ยกเลิกต้องจ่ายเต็มปี", "4": "ราคาอะไหล่ไม่ระบุ", "5": "ไม่รับผิดชอบความเสียหาย"}, {"1": "ไม่ระบุวันคืนเงินที่ชัดเจน", "p": "ไม่มีพยานรับรอง"}, {"2": "ดอกเบี้ยเดือนละ 10% เกินกฎหมายกำหนดมาก", "3": "หักเงินไว้ก่อน ได้รับเงินไม่ครบ", "4": "ผิดนัดครั้งเดียว ต้องคืนเงินต้นทันที", "5": "ยึดทรัพย์โดยไม่ผ่านศาล", "6": "ยึดบัตร ATM และสมุดบัญชี"}, {"2": "เซ็นโอนรถไว้ล่วงหน้า", "3": "ผิดนัดงวดเดียว ยึดรถได้ทันที", "4": "ขายได้เกินหนี้ ส่วนเกินไม่คืนผู้กู้", "5": "ค่าปิดบัญชีก่อนกำหนด 5%"}, {"2": "แบ่งกำไร \"ตามความเหมาะสม\" ไม่ชัด", "3": "อีกฝ่ายคุมเงินคนเดียว", "4": "ถอนตัวต้องสละเงินลงทุนทั้งหมด", "5": "ชื่อร้านเป็นของฝ่ายเดียว", "6": "ไม่กำหนดเรื่องหนี้สิน"}, {"3": "หนี้สินตกเป็นของฝ่ายเดียว", "4": "บัญชีร้านเป็นชื่อฝ่ายเดียว", "5": "ห้ามขายตลอดไป"}, {"1": "นิยามความลับกว้างเกินไป", "2": "ผูกพันตลอดชีวิต", "3": "ค่าปรับสูงมาก", "4": "ห้ามใช้ความรู้และทักษะของตัวเอง", "5": "ละเมิดความเป็นส่วนตัว"}, {"2": "ห้ามใส่ผลงานในพอร์ต", "3": "เปิดเผยข้อมูลได้ฝ่ายเดียว", "4": "ไม่มีวันสิ้นสุด", "5": "ค่าเสียหายตามที่อีกฝ่ายเรียก"}, {"2": "ค่าคอม 40% สูง", "3": "ได้เงินช้า 60 วัน", "4": "ของหายร้านไม่รับผิดชอบ", "5": "ร้านลดราคาเองได้", "6": "ไม่มารับของ ของตกเป็นของร้าน"}, {"2": "บังคับสต็อกขั้นต่ำสูง", "3": "คืนสินค้าไม่ได้ทุกกรณี", "4": "ไม่ใช่ตัวแทนแต่ผู้เดียว", "5": "เปลี่ยนราคาโดยไม่แจ้ง", "6": "ยกเลิกต้องจ่ายค่าปรับ"}, {"2": "ยกเลิกไม่ได้ แม้ป่วยหรือย้ายบ้าน", "3": "ต่ออายุอัตโนมัติ ต้องแจ้งล่วงหน้า 90 วัน", "4": "ปิดสาขาไม่คืนเงิน", "5": "ไม่รับผิดชอบการบาดเจ็บทุกกรณี"}, {"2": "ทำงานไม่มีวันหยุด", "3": "หักหนี้จากค่าแรง", "4": "ค่าปรับเท่าตัว", "5": "ยึดบัตรประชาชน ซึ่งผิดกฎหมาย"}];
   var NAMES = { all: 'ทั้งหมด', rent: 'เช่า', sale: 'ซื้อขาย', employment: 'จ้างงาน', service: 'จ้างบริการ', loan: 'กู้ยืม', shareholder: 'หุ้นส่วน', nda: 'รักษาความลับ', other: 'อื่น ๆ', unsure: 'ไม่แน่ใจ' };
   var box = null, flt = 'all';
+  function isM() { return !!(window.matchMedia && matchMedia('(max-width:767px)').matches); }
+  /* มือถือ: จุดสีบอกจำนวนประเด็นแต่ละระดับ (จากผลตัวอย่างที่เตรียมไว้จริง) */
+  function dots(t) {
+    var c = window.VCDemo && window.VCDemo.counts(t); if (!c) return '';
+    return '<span class="vsl-dots" aria-label="ต้องตรวจละเอียด ' + c.check_detail + ' ควรระวัง ' + c.caution + ' เล็กน้อย ' + c.low + '">' +
+      (c.check_detail ? '<i class="h">' + c.check_detail + '</i>' : '') + (c.caution ? '<i class="c">' + c.caution + '</i>' : '') + (c.low ? '<i class="l">' + c.low + '</i>' : '') + '</span>';
+  }
   function build() {
     box = document.createElement('div'); box.className = 'vsl'; box.hidden = true;
     box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-labelledby', 'vslT');
     box.innerHTML = '<div class="vsl-bg" data-x></div><div class="vsl-card">' +
       '<div class="vsl-head"><div><h3 id="vslT">เลือกสัญญาตัวอย่าง</h3><p>' + L.length + ' ฉบับ ทุกฉบับมีจุดเสี่ยงซ่อนอยู่ ลองให้ระบบตรวจดู</p></div><button type="button" class="vsl-x" data-x aria-label="ปิด">✕</button></div>' +
+      '<div class="vsl-hero" aria-hidden="true"><span class="vsl-hero-ic"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span><span><b>ดูผลตรวจตัวอย่างได้ฟรี</b><small>ไม่ใช้เครดิต · ไม่ต้องเข้าสู่ระบบ · เห็นผลใน 2 วินาที</small></span></div>' +
       '<div class="vsl-chips" role="tablist"></div><div class="vsl-list"></div>' +
       '<div class="vsl-view" hidden><div class="vsl-vhead"></div><div class="vsl-paper"><div class="vsl-doc" tabindex="0"></div></div>' +
-      '<div class="vsl-vfoot"><button type="button" class="vsl-back">← กลับไปเลือก</button><button type="button" class="vsl-use">ใช้สัญญานี้</button></div></div>' +
+      '<div class="vsl-vfoot"><button type="button" class="vsl-back">← กลับไปเลือก</button><button type="button" class="vsl-fill">แก้เอง</button><button type="button" class="vsl-use">ใช้สัญญานี้</button></div></div>' +
       '<p class="vsl-fine">ข้อความสมมติเพื่อทดลองใช้เท่านั้น ไม่ใช่แบบสัญญาที่แนะนำให้ใช้จริง</p></div>';
     document.body.appendChild(box);
     var chips = box.querySelector('.vsl-chips');
@@ -3668,7 +3676,8 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       var it = e.target.closest('.vsl-item'); if (it) { view(+it.dataset.i); return; }
       if (e.target.closest('.vsl-back')) { back(); return; }
       var hl = e.target.closest('.vsl-hl'); if (hl) { var on = !box.classList.contains('hl-on'); box.classList.toggle('hl-on', on); hl.setAttribute('aria-pressed', on ? 'true' : 'false'); return; }
-      if (e.target.closest('.vsl-use')) pick(cur);
+      if (e.target.closest('.vsl-fill')) { pick(cur); return; }
+      if (e.target.closest('.vsl-use')) pick(cur, isM() && window.VCDemo && window.VCDemo.has(L[cur][1]));
     });
     box.addEventListener('keydown', function (e) { if (e.key === 'Escape') { if (cur > -1) back(); else close(); } });
   }
@@ -3679,7 +3688,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     var list = box.querySelector('.vsl-list'); lastScroll = list.scrollTop;
     var v = box.querySelector('.vsl-view'); v.style.setProperty('--a', ACC[s[0]] || '#94a3b8');
     var rk = RISK[i] || {}, nR = Object.keys(rk).length;
-    v.querySelector('.vsl-vhead').innerHTML = '<span class="vsl-art" aria-hidden="true"><svg viewBox="0 0 64 64">' + (ART[i] || '') + '</svg></span><span class="vsl-txt"><b>' + s[1] + '</b><small>' + NAMES[s[0]] + ' · พบ ' + nR + ' จุดเสี่ยง</small></span>' +
+    v.querySelector('.vsl-vhead').innerHTML = '<span class="vsl-art" aria-hidden="true"><svg viewBox="0 0 64 64">' + (ART[i] || '') + '</svg></span><span class="vsl-txt"><b>' + s[1] + '</b><small>' + NAMES[s[0]] + ' · พบ ' + nR + ' จุดเสี่ยง</small>' + dots(s[1]) + '</span>' +
       '<button type="button" class="vsl-hl" aria-pressed="true"><i></i>ไฮไลต์</button>';
     box.classList.add('hl-on');
     var lines = s[3].split('\n'), html = '';
@@ -3690,6 +3699,9 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       html += '<p class="' + (m ? '' : 'vsl-plain') + (note ? ' is-risk' : '') + '">' + body + (note ? '<span class="vsl-note">⚠ ' + esc(note) + '</span>' : '') + '</p>';
     });
     var d = v.querySelector('.vsl-doc'); d.innerHTML = html; d.scrollTop = 0;
+    var use = v.querySelector('.vsl-use'), free = isM() && window.VCDemo && window.VCDemo.has(s[1]);
+    use.classList.toggle('is-free', !!free);
+    use.innerHTML = free ? '<span>ดูผลตรวจทันที</span><small>ฟรี · ไม่ใช้เครดิต</small>' : 'ใช้สัญญานี้';
     box.classList.add('is-view'); v.hidden = false;
     setTimeout(function () { var u = v.querySelector('.vsl-use'); if (u) u.focus({ preventScroll: true }); }, 50);
   }
@@ -3705,16 +3717,18 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       var b = document.createElement('button'); b.type = 'button'; b.className = 'vsl-item'; b.dataset.i = i;
       var n = (s[3].match(/ข้อ \d+/g) || []).length;
       b.style.setProperty('--a', ACC[s[0]] || '#94a3b8');
-      b.innerHTML = '<span class="vsl-art" aria-hidden="true"><svg viewBox="0 0 64 64">' + (ART[i] || '') + '</svg></span><span class="vsl-txt"><span class="vsl-tag">' + NAMES[s[0]] + '</span><b>' + s[1] + '</b><small>⚠ ' + s[2] + '</small><em>' + (n ? n + ' ข้อ · ' : '') + s[3].length.toLocaleString('th-TH') + ' ตัวอักษร</em></span>';
+      b.innerHTML = '<span class="vsl-art" aria-hidden="true"><svg viewBox="0 0 64 64">' + (ART[i] || '') + '</svg></span><span class="vsl-txt"><span class="vsl-tag">' + NAMES[s[0]] + '</span><span class="vsl-free">ฟรี</span><b>' + s[1] + '</b><small>⚠ ' + s[2] + '</small><em>' + (n ? n + ' ข้อ · ' : '') + s[3].length.toLocaleString('th-TH') + ' ตัวอักษร</em>' + dots(s[1]) + '</span>';
+      b.style.setProperty('--k', list.children.length);
       list.appendChild(b);
     });
     list.scrollTop = 0;
   }
-  function pick(i) {
+  function pick(i, run) {
     var s = L[i], input = document.getElementById('input'), sel = document.getElementById('contractType'); if (!s || !input) return;
     input.value = s[3]; input.dispatchEvent(new Event('input', { bubbles: true }));
     if (sel && sel.value !== s[0]) { sel.value = s[0]; sel.dispatchEvent(new Event('change', { bubbles: true })); }
     close();
+    if (run && typeof runCheck === 'function') { setTimeout(function () { runCheck(); }, 240); return; }
     setTimeout(function () { try { input.focus({ preventScroll: true }); input.setSelectionRange(0, 0); input.scrollTop = 0; input.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {} }, 240);
   }
   function open() {
@@ -4896,10 +4910,15 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     document.documentElement.classList.add('vc-ld-open');
     lines = [].slice.call(ld.querySelectorAll('.vc-ld-paper p')); cur = -1; round = 0;
     setStep(0); scene('privacy'); say('ปกปิดชื่อ เลขบัตร และเบอร์โทรก่อนส่ง');
+    if (window.__vcDemoRun) { /* ผลตัวอย่าง: บอกตรง ๆ ว่าไม่ได้ส่งไปตรวจ */
+      ld.classList.add('vc-ld-demo'); ld.querySelector('.vc-ld-h').textContent = 'กำลังเปิดผลตัวอย่าง';
+      ld.querySelector('.vc-ld-note').textContent = 'ผลที่เตรียมไว้ล่วงหน้า · ไม่ใช้เครดิต';
+      say('เตรียมผลตัวอย่าง…');
+    }
     if (calm()) { setStep(1); scene('read'); return; }
     requestAnimationFrame(function () { ld && ld.classList.add('in'); });
     T(function () { setStep(1); scene('read'); readNext(); }, 1700);
-    T(function () { var n = ld && ld.querySelector('.vc-ld-note'); if (n) n.textContent = 'สัญญายาว ระบบกำลังตรวจละเอียด อีกสักครู่นะครับ'; }, 20000);
+    T(function () { var n = ld && !window.__vcDemoRun && ld.querySelector('.vc-ld-note'); if (n) n.textContent = 'สัญญายาว ระบบกำลังตรวจละเอียด อีกสักครู่นะครับ'; }, 20000);
   }
   function focusLine(i, zoom) {
     if (!ld) return;
@@ -6505,6 +6524,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   function diff(r) {
     if (r.__vcDiff) return; var text = window.__vcCheckedText || ''; if (!text || typeof lastResult === 'undefined' || !lastResult || !lastResult.items) return;
     r.__vcDiff = true;
+    if (lastResult.demo) return; /* ผลตัวอย่างไม่นับเป็นการตรวจครั้งก่อน */
     var prev = null; try { prev = JSON.parse(ls('vc_prev_check') || 'null'); } catch (e) {}
     var now = snap(r); if (!now) return;
     try { ls('vc_prev_check', JSON.stringify(now)); } catch (e) {}
