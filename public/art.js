@@ -4172,29 +4172,132 @@ if (window.VCGate3DReady) window.VCGate3DReady();
         if (dy > 90) close();
       });
     }
+    /* ไอเดีย 1: ขีดความคืบหน้าแบบสตอรี่ (สีตามระดับเสี่ยง, เต็มเมื่ออ่านแล้ว, แตะเพื่อข้าม) */
+    if (sm) {
+      var bars = document.createElement('span'); bars.className = 'vc-sh-bars';
+      items().forEach(function (o, k) {
+        var b = document.createElement('i'); b.setAttribute('role', 'button'); b.setAttribute('aria-label', 'ไปประเด็นที่ ' + (k + 1));
+        b.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); var all = items(), me = all.indexOf(it); if (k !== me) { dir = k > me ? 1 : -1; window.focusIssue(k); } });
+        bars.appendChild(b);
+      });
+      sm.insertBefore(bars, sm.firstChild);
+    }
+    /* ปัดซ้าย/ขวาเพื่อเปลี่ยนประเด็น */
+    var hx = null, hy = 0, hdx = 0;
+    it.addEventListener('touchstart', function (e) { if (e.touches.length !== 1 || e.target.closest('.sg-tabs,.vc-sh-bars,textarea,input')) { hx = null; return; } hx = e.touches[0].clientX; hy = e.touches[0].clientY; hdx = 0; }, { passive: true });
+    it.addEventListener('touchmove', function (e) {
+      if (hx == null) return; var dx = e.touches[0].clientX - hx, dy = e.touches[0].clientY - hy;
+      if (Math.abs(dy) > 14 && Math.abs(dy) > Math.abs(dx)) { hx = null; it.style.removeProperty('--shx'); return; }
+      hdx = dx; if (Math.abs(dx) > 10) it.style.setProperty('--shx', (dx * .35).toFixed(1) + 'px');
+    }, { passive: true });
+    it.addEventListener('touchend', function () {
+      if (hx == null) return; hx = null; it.style.removeProperty('--shx');
+      var all = items(), i = all.indexOf(it);
+      if (hdx < -70 && i < all.length - 1) { dir = 1; go(1); } else if (hdx > 70 && i > 0) { dir = -1; go(-1); }
+    });
+    /* ไอเดีย 2: ข้อความจริงในสัญญา เทียบกับสิ่งที่ควรขอแก้ (แสดงเฉพาะเมื่อมีข้อความต้นฉบับจริง) */
+    var old = it.querySelector('.sg-panel .tx-old'), fix = it.querySelector('.it-fix');
+    var qt = old ? old.textContent.trim() : '';
+    if (qt && fix) {
+      var cmp = document.createElement('div'); cmp.className = 'vc-cmp';
+      cmp.innerHTML = '<p class="vc-cmp-l"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M7 7h4v4H7zM7 11c0 3-1 5-3 6M15 7h4v4h-4zM15 11c0 3-1 5-3 6"/></svg>ในสัญญาเขียนว่า</p><blockquote></blockquote><button type="button" class="vc-cmp-more" hidden>อ่านทั้งข้อ</button>';
+      var bq = cmp.querySelector('blockquote');
+      bq.innerHTML = esc(qt).replace(/([0-9๐-๙][0-9๐-๙,.]*\s*(?:%|เปอร์เซ็นต์|บาท|วัน|เดือน|ปี|ครั้ง|หน่วย|ชั่วโมง)?)/g, '<mark>$1</mark>').replace(/(ข้อ\s*)<mark>([^<]*)<\/mark>/g, '$1$2');
+      var more = cmp.querySelector('.vc-cmp-more');
+      more.addEventListener('click', function (e) { e.preventDefault(); bq.classList.toggle('open'); more.textContent = bq.classList.contains('open') ? 'ย่อ' : 'อ่านทั้งข้อ'; });
+      fix.parentNode.insertBefore(cmp, fix);
+      requestAnimationFrame(function () { if (bq.scrollHeight > bq.clientHeight + 4) more.hidden = false; });
+      var arrow = document.createElement('p'); arrow.className = 'vc-cmp-arrow'; arrow.innerHTML = '<span aria-hidden="true">↓</span> ขอแก้เป็น';
+      fix.parentNode.insertBefore(arrow, fix);
+      fix.classList.add('vc-fix-cmp');
+    }
+    /* ไอเดีย 3: คัดลอกข้อนี้ / รวมทุกข้อส่งให้อีกฝ่าย */
+    if (fix) {
+      var act = document.createElement('div'); act.className = 'vc-fix-act';
+      var nAll = allFixes().length;
+      act.innerHTML = '<button type="button" class="vc-fa-copy"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg><span>คัดลอก</span></button>' +
+        (nAll > 1 ? '<button type="button" class="vc-fa-all"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M12 3v12M7 8l5-5 5 5"/></svg><span>ส่งทุกข้อ (' + nAll + ')</span></button>' : '');
+      act.querySelector('.vc-fa-copy').addEventListener('click', function (e) {
+        e.preventDefault(); var p = fix.querySelector('p'); copyText(p ? p.textContent.trim() : '', this, 'คัดลอกแล้ว');
+      });
+      var all2 = act.querySelector('.vc-fa-all');
+      if (all2) all2.addEventListener('click', function (e) {
+        e.preventDefault(); var txt = buildAll(), btn = this;
+        if (navigator.share) navigator.share({ title: 'ข้อที่อยากขอแก้ในสัญญา', text: txt }).catch(function (er) { if (!er || er.name !== 'AbortError') copyText(txt, btn, 'คัดลอกทุกข้อแล้ว'); });
+        else copyText(txt, btn, 'คัดลอกทุกข้อแล้ว');
+      });
+      fix.appendChild(act);
+    }
+    /* บั้ก ก: ปุ่มล่างติดขอบล่างเสมอ */
+    var foot = document.createElement('div'); foot.className = 'vc-sh-foot';
+    var rvr = it.querySelector(':scope > .rv-row'); if (rvr) foot.appendChild(rvr);
     var nav = document.createElement('div'); nav.className = 'vc-sh-nav';
     nav.innerHTML = '<button type="button" class="vc-sh-prev"><span aria-hidden="true">‹</span> ก่อนหน้า</button><span class="vc-sh-n"></span><button type="button" class="vc-sh-next">ถัดไป <span aria-hidden="true">›</span></button>';
-    nav.querySelector('.vc-sh-prev').addEventListener('click', function () { go(-1); });
-    nav.querySelector('.vc-sh-next').addEventListener('click', function () { go(1); });
-    it.appendChild(nav);
+    nav.querySelector('.vc-sh-prev').addEventListener('click', function () { dir = -1; go(-1); });
+    nav.querySelector('.vc-sh-next').addEventListener('click', function () { dir = 1; go(1); });
+    foot.appendChild(nav); it.appendChild(foot);
+    var sg = it.querySelector('details.sg-more'); if (sg) sg.addEventListener('toggle', function () { fit(it); });
     /* ทำเครื่องหมายว่าตรวจแล้ว → ไปประเด็นถัดไปให้เอง */
     var rv = it.querySelector('.rv-btn');
     if (rv) rv.addEventListener('click', function () {
       if (!active()) return;
       setTimeout(function () {
         if (rv.getAttribute('aria-pressed') === 'true' && cur === it) {
-          var all = items(); if (all.indexOf(it) < all.length - 1) go(1);
+          var all = items(); if (all.indexOf(it) < all.length - 1) { dir = 1; go(1); }
         }
       }, 500);
     });
   }
 
+  var dir = 0;
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function allFixes() {
+    return items().map(function (o, k) {
+      var f = o.querySelector('.it-fix'), h = f && f.querySelector('h4');
+      if (!f || !h || h.textContent.indexOf('ขอแก้') < 0) return null;
+      var t = o.querySelector('.it-title b'), q = o.querySelector('.sg-panel .tx-old'), p = f.querySelector('p');
+      return { n: k + 1, title: t ? t.textContent.trim() : '', quote: q ? q.textContent.trim() : '', fix: p ? p.textContent.trim() : '' };
+    }).filter(function (x) { return x && x.fix; });
+  }
+  function buildAll() {
+    var L = ['ข้อที่อยากขอแก้ไขในสัญญา', ''];
+    allFixes().forEach(function (x, j) {
+      L.push((j + 1) + ') ' + x.title);
+      if (x.quote) L.push('ในสัญญา: “' + (x.quote.length > 160 ? x.quote.slice(0, 160) + '…' : x.quote) + '”');
+      L.push('ขอแก้เป็น: ' + x.fix); L.push('');
+    });
+    L.push('(สรุปจาก Vellum Check — ใช้ประกอบการพูดคุย ไม่ใช่คำปรึกษาทางกฎหมาย)');
+    return L.join('\n');
+  }
+  function copyText(t, btn, msg) {
+    function done() { var sp = btn.querySelector('span'), o = sp.textContent; btn.classList.add('ok'); sp.textContent = msg; setTimeout(function () { btn.classList.remove('ok'); sp.textContent = o; }, 1600); }
+    function fb() { var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;font-size:16px'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} ta.remove(); done(); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, fb); else fb();
+  }
+  function fit(it) {
+    var f = it && it.querySelector('.vc-sh-foot'); if (!f) return;
+    f.style.marginTop = '0px';
+    var gap = it.clientHeight - it.scrollHeight; f.style.marginTop = (gap > 0 ? gap : 0) + 'px';
+  }
+  function bars(it) {
+    var all = items();
+    [].forEach.call(it.querySelectorAll('.vc-sh-bars i'), function (b, k) {
+      var o = all[k]; if (!o) return;
+      var lv = o.classList.contains('lv-check_detail') ? 'hi' : o.classList.contains('lv-caution') ? 'mid' : 'lo';
+      var dn = !!o.querySelector('.rv-btn.is-on, .rv-btn[aria-pressed="true"]'), on = o === it;
+      var c = 'lv-' + lv + (dn ? ' dn' : '') + (on ? ' on' : '');
+      if (b.className !== c) b.className = c;
+    });
+  }
   function sync() {
     var it = active() ? box.querySelector('article.rpt.vc-m details.item.is-picked') : null;
+    if (it) bars(it);
     if (it !== cur) {
       cur = it;
       if (it) {
-        dress(it); it.scrollTop = 0;
+        dress(it); bars(it); it.scrollTop = 0;
+        if (dir) { var c = dir > 0 ? 'vc-sh-from-r' : 'vc-sh-from-l'; it.classList.add(c); setTimeout(function () { it.classList.remove(c); }, 320); dir = 0; }
+        requestAnimationFrame(function () { fit(it); });
         var all = items(), i = all.indexOf(it);
         it.querySelector('.vc-sh-n').textContent = (i + 1) + ' / ' + all.length;
         it.querySelector('.vc-sh-prev').disabled = i <= 0;
