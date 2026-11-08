@@ -4702,7 +4702,7 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   html.vc-art .vc-aurora i:nth-child(2){background:radial-gradient(closest-side,color-mix(in srgb,var(--vc-acc) 55%,#6d6dff),transparent) !important}
   /* ขยับการ์ดเฉพาะตอนกำลังปัด (ไม่สร้างเลเยอร์ค้างทุกการ์ด) */
   html.vc-art article.rpt.vc-m3 .ix-row > :not(.vc-sw){transform:none}
-  html.vc-art article.rpt.vc-m3 .ix-row:is(.vc-swiping,.vc-sw-back,.vc-sw-go) > :not(.vc-sw){transform:translateX(var(--swx,0))}
+  html.vc-art article.rpt.vc-m3 .ix-row:is(.vc-swiping,.vc-sw-back,.vc-sw-go) > :not(.vc-sw):not(.vc-swl):not(.vc-burst){transform:translateX(var(--swx,0))}
 
   /* ไอเดีย 1: ตัวเลขกลางโดนัท + แถบสีตามระดับเสี่ยง */
   .vc-mini-d{position:relative}
@@ -5107,3 +5107,86 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
 }
 @media (max-width:767px) and (prefers-reduced-motion:reduce){ html.vc-art article.rpt.vc-m .ix-row.vc-rv{opacity:1;transform:none} }
 @media (max-width:767px){ html.vc-art .vc-end-h.bump{display:block} }
+
+/* ===== v214 (มือถือ) ===== */
+.vc-fpill,.vc-peek,.vc-swl,.vc-star-ic,.vc-bn-ind,.vc-bn-badge{display:none}
+@media (max-width:767px){
+  /* บั้ก ข: ตราเล็กข้างหัวข้อ */
+  html.vc-art .vc-sum .vc-sum-tx{position:relative}
+  html.vc-art .vc-sum .vc-sum-tx .vc-stamp{top:-14px !important;right:-6px !important;left:auto !important;bottom:auto !important;width:50px !important;height:50px !important}
+  html.vc-art .vc-sum .vc-sum-tx:has(.vc-stamp) h3{padding-right:48px}
+  /* บั้ก ค: แถวในการ์ดเกี่ยวกับผลนี้หน้าตาเดียวกัน */
+  html.vc-art article.rpt.vc-m .vc-about .vc-ab-f > details > summary{display:flex !important;align-items:center;justify-content:space-between;gap:10px;list-style:none;cursor:pointer;
+    font:600 14px/1.3 Prompt,Sarabun,sans-serif !important;color:#f4f4f5 !important}
+  html.vc-art article.rpt.vc-m .vc-about .vc-ab-f > details > summary::-webkit-details-marker{display:none}
+  html.vc-art article.rpt.vc-m .vc-about .vc-ab-f > details > summary::before{display:none !important;content:none !important}
+  html.vc-art article.rpt.vc-m .vc-about .vc-ab-f > details > summary::after{content:"›" !important;position:static !important;display:block !important;transform:none !important;font:400 20px/1 Prompt,sans-serif !important;color:#8b8b94 !important;transition:transform .2s ease;background:none !important;border:0 !important;width:auto !important;height:auto !important;margin:0 !important}
+  html.vc-art article.rpt.vc-m .vc-about .vc-ab-f > details[open] > summary::after{transform:rotate(90deg) !important}
+  html.vc-art article.rpt.vc-m .vc-about .vc-ab-f .cb-src-go{display:none !important}
+  /* บั้ก ง */
+  .vc-ab-note p{margin:2px 0 0 !important;font:400 12.5px/1.55 Prompt,Sarabun,sans-serif;color:#8b8b94}
+
+  /* ไอเดีย 6: พื้นการ์ดสรุปตามระดับเสี่ยง */
+  html.vc-art .vc-sum.lv-hi{background:radial-gradient(120% 70% at 0% 0%,rgba(248,113,113,.11),transparent 60%),rgba(24,24,28,.92) !important}
+  html.vc-art .vc-sum.lv-mid{background:radial-gradient(120% 70% at 0% 0%,rgba(251,191,36,.10),transparent 60%),rgba(24,24,28,.92) !important}
+  html.vc-art .vc-sum.lv-lo{background:radial-gradient(120% 70% at 0% 0%,rgba(52,211,153,.10),transparent 60%),rgba(24,24,28,.92) !important}
+
+  /* ไอเดีย 1: ติดดาว */
+  html.vc-art article.rpt.vc-m .ix-row{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+  html.vc-art article.rpt.vc-m .ix-row .vc-swl{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;position:absolute;right:0;top:0;bottom:0;width:110px;pointer-events:none;
+    color:#fde68a;opacity:var(--swl,0);border-radius:0 inherit inherit 0;background:linear-gradient(270deg,rgba(251,191,36,.22),transparent);font:600 12px/1 Prompt,Sarabun,sans-serif}
+  html.vc-art article.rpt.vc-m .ix-row:not(.vc-swiping-l) .vc-swl{opacity:0}
+  .vc-swl svg{width:22px;height:22px}
+  .vc-swl em{font-style:normal}
+  html.vc-art article.rpt.vc-m .ix-row .vc-star-ic{display:none}
+  html.vc-art article.rpt.vc-m .ix-row.vc-star .vc-star-ic{display:inline-grid;place-items:center;margin-left:6px;color:#fbbf24}
+  html.vc-art article.rpt.vc-m .ix-row.vc-star .vc-star-ic svg{width:15px;height:15px;fill:#fbbf24}
+  html.vc-art article.rpt.vc-m .ix-row.vc-star{box-shadow:inset 0 0 0 1px rgba(251,191,36,.35) !important}
+  html.vc-art article.rpt.vc-m .ix-row.vc-star-pop .vc-star-ic{animation:vcDotPop .55s cubic-bezier(.2,1.6,.4,1)}
+  .vc-fix-act .vc-fa-star{flex:0 0 44px !important;width:44px;padding:0 !important;color:#fde68a !important;border-color:rgba(251,191,36,.3) !important;background:rgba(251,191,36,.08) !important}
+  .vc-fix-act .vc-fa-star svg{width:18px;height:18px}
+  .vc-fix-act .vc-fa-star.on{background:rgba(251,191,36,.2) !important;border-color:#fbbf24 !important}
+  .vc-fix-act .vc-fa-star.on svg{fill:#fbbf24}
+  .vc-end-b.vc-end-star{background:rgba(251,191,36,.14) !important;border-color:rgba(251,191,36,.45) !important;color:#fde68a !important}
+  .vc-end-b.vc-end-star svg{fill:#fbbf24}
+  .vc-end.has-star .vc-end-send{background:rgba(255,255,255,.04) !important;color:#ededef !important;border-color:rgba(255,255,255,.12) !important}
+
+  /* ไอเดีย 3: ปุ่มลอยตอนอ่านครบ */
+  .vc-fpill{display:flex;align-items:center;gap:10px;position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + var(--nav-h,60px) + 14px);z-index:44;transform:translate(-50%,20px);opacity:0;pointer-events:none;
+    max-width:calc(100% - 32px);min-height:48px;padding:0 20px;border-radius:99px;border:0;background:#f4f4f5;color:#111;font:600 14.5px/1.2 Prompt,Sarabun,sans-serif;white-space:nowrap;
+    box-shadow:0 12px 30px -8px rgba(0,0,0,.7),0 0 0 6px rgba(52,211,153,.12);transition:transform .35s cubic-bezier(.2,.9,.3,1),opacity .25s ease;-webkit-tap-highlight-color:transparent}
+  .vc-fpill::before,.vc-fpill::after{display:none !important}
+  .vc-fpill span{overflow:hidden;text-overflow:ellipsis}
+  .vc-fpill i{font-style:normal;font-size:17px}
+  .vc-fpill.ok{background:#34d399}
+  html.vc-fpill-on .vc-fpill{transform:translate(-50%,0);opacity:1;pointer-events:auto}
+  html.vc-fpill-on.vc-art .to-top{opacity:0 !important;pointer-events:none !important}
+
+  /* ไอเดีย 7: เมนูล่าง */
+
+  .bottom-nav .vc-bn-ind{display:block;position:absolute;top:6px;left:0;width:calc(100% / var(--n,3));height:calc(100% - 12px - env(safe-area-inset-bottom,0px));pointer-events:none;
+    transform:translateX(var(--x,0%));transition:transform .35s cubic-bezier(.2,.9,.3,1);z-index:0}
+  .bottom-nav .vc-bn-ind::before{content:"";position:absolute;inset:0 18%;border-radius:16px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08)}
+  .bottom-nav .bn-item{position:relative;z-index:1}
+  .bottom-nav .bn-item .vc-bn-badge:not([hidden]){display:grid;place-items:center;position:absolute;top:4px;left:calc(50% + 8px);min-width:18px;height:18px;padding:0 5px;border-radius:99px;
+    background:#f87171;color:#fff;font:700 11px/1 Prompt,Sarabun,sans-serif;box-shadow:0 0 0 2px #0e0e11}
+
+  /* ไอเดีย 8: ผลตอบกลับปุ่มหัวการ์ด */
+  html.vc-art .vc-sum .vc-sum-hd .share-bar button{position:relative !important;overflow:visible !important}
+  html.vc-art .vc-sum .vc-sum-hd .share-bar button.vc-done-ok{background:rgba(52,211,153,.18) !important;border-color:#34d399 !important;color:#6ee7b7 !important}
+  html.vc-art .vc-sum .vc-sum-hd .share-bar button.vc-done-ok svg{animation:vcDotPop .45s cubic-bezier(.2,1.6,.4,1)}
+  html.vc-art .vc-sum .vc-sum-hd .share-bar button.vc-done-ok::after{content:attr(data-tip) !important;display:block !important;position:absolute !important;top:calc(100% + 6px) !important;right:0 !important;left:auto !important;width:auto !important;height:auto !important;
+    padding:5px 9px !important;border-radius:8px !important;background:#34d399 !important;color:#06281b !important;font:600 11.5px/1 Prompt,Sarabun,sans-serif !important;white-space:nowrap;z-index:5;transform:none !important;border:0 !important;animation:vcFadeIn .2s ease both}
+
+  /* ไอเดีย 2: แตะค้างดูข้อขอแก้ */
+  .vc-peek{display:block;position:fixed;z-index:9000;padding:14px 16px;border-radius:16px;background:#1d1d22;border:1px solid rgba(110,231,183,.35);box-shadow:0 20px 50px -10px rgba(0,0,0,.9);
+    font-family:Prompt,Sarabun,sans-serif;opacity:0;transform:translateY(8px) scale(.97);transition:opacity .18s ease,transform .22s cubic-bezier(.2,.9,.3,1);pointer-events:none}
+  .vc-peek.up{transform:translateY(-8px) scale(.97)}
+  .vc-peek.on{opacity:1;transform:none}
+  .vc-peek-k{margin:0 0 6px !important;font:600 12.5px/1.2 Prompt,Sarabun,sans-serif;color:#6ee7b7}
+  .vc-peek-t{margin:0 !important;font:400 14.5px/1.65 Sarabun,Prompt,sans-serif;color:#ededef}
+  .vc-peek small{display:block;margin-top:8px;font:400 11px/1.3 Prompt,Sarabun,sans-serif;color:#76767e}
+}
+
+@media (max-width:767px){ html.vc-art article.rpt.vc-m .ix-row.vc-swiping-l.vc-sw-go{border-color:rgba(251,191,36,.6) !important} html.vc-art article.rpt.vc-m .ix-row.vc-swiping-l .vc-sw{opacity:0 !important} }
+@media (max-width:767px){ html.vc-art article.rpt.vc-m3 .ix-row.vc-swiping-l{background:linear-gradient(270deg,rgba(251,191,36,calc(var(--swl,0) * .3)),rgba(251,191,36,calc(var(--swl,0) * .06)) 45%,rgba(24,24,28,.92) 75%) !important} html.vc-art article.rpt.vc-m3 .ix-row.vc-swiping-l::after{opacity:0 !important} }
