@@ -4633,3 +4633,54 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   @keyframes vcTabIn{from{opacity:0;transform:translateX(calc(var(--vc-dir,1) * 28px))}to{opacity:1;transform:none}}
 }
 @media (max-width:767px) and (prefers-reduced-motion:reduce){ html.vc-art .vc-tab-ind{transition:none} html.vc-art article.rpt.vc-m.vc-slide > [data-vt]{animation:none} }
+
+
+/* ===== มือถือ: แก้ตราขาด/ความกว้าง + ปัดอ่านแล้ว + สรุปย่อติดหัว + เลขลายน้ำ (8 พ.ย. 2026) — เฉพาะ ≤767px ===== */
+.vc-mini{display:none}
+@media (max-width:767px){
+  /* แก้: ตราไม่ล้นจอ */
+  html.vc-art .vc-stamp{right:6px !important;top:-10px !important;width:86px !important;height:86px !important}
+  /* แก้: ขอบซ้ายขวาเท่ากันทั้งหน้า (ไม่ต้องเว้นร่องซ้ายแล้ว) */
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed > .vc-box,
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed > .vc-needlogin{margin-left:0 !important}
+  /* แถบสรุปตอนฟอร์มกาง: ปุ่ม "ซ่อน" */
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-open-form > .vc-done:not([hidden]){display:flex;align-items:center;gap:12px;margin:0 0 14px;padding:12px 12px 12px 14px;border-radius:18px;
+    background:rgba(22,22,26,.62);border:1px solid color-mix(in srgb,var(--vc-acc,#94a3b8) 25%,rgba(255,255,255,.09));-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);font-family:Prompt,Sarabun,sans-serif}
+  html.vc-art .vc-done-edit.is-up i{transform:rotate(-90deg);display:inline-block}
+
+  /* 1) ปัดขวาเพื่ออ่านแล้ว */
+  html.vc-art article.rpt.vc-m3 .ix-row{touch-action:pan-y;overflow:hidden}
+  html.vc-art article.rpt.vc-m3 .ix-row > :not(.vc-sw){transform:translateX(var(--swx,0));}
+  html.vc-art article.rpt.vc-m3 .ix-row.vc-sw-back > *{transition:transform .3s cubic-bezier(.3,1.3,.5,1)}
+  html.vc-art article.rpt.vc-m3 .ix-row.vc-swiping,html.vc-art article.rpt.vc-m3 .ix-row.vc-sw-back{
+    background:linear-gradient(90deg,rgba(63,185,141,calc(var(--sw,0) * .32)),rgba(63,185,141,calc(var(--sw,0) * .08)) 55%,rgba(22,22,26,.62) 100%) !important}
+  html.vc-art article.rpt.vc-m3 .ix-row.vc-swiping::after,html.vc-art article.rpt.vc-m3 .ix-row.vc-sw-back::after{content:"✓ อ่านแล้ว" !important;position:absolute !important;left:16px;top:50%;
+    transform:translateY(-50%) scale(calc(.7 + var(--sw,0) * .3));opacity:var(--sw,0);font:700 13px/1 Prompt,Sarabun,sans-serif !important;color:#9fe0c4 !important;letter-spacing:0 !important;z-index:0;
+    -webkit-text-stroke:0;display:block !important;width:auto !important;height:auto !important;background:none !important;right:auto !important}
+  html.vc-art article.rpt.vc-m3 .ix-row.vc-sw-go{border-color:rgba(63,185,141,.5) !important}
+
+  /* 3) เลขลายน้ำ + แสงขอบระดับสำคัญ */
+  html.vc-art article.rpt.vc-m3 .ix-row[data-wm]:not(.vc-swiping):not(.vc-sw-back)::after{content:attr(data-wm) !important;position:absolute !important;right:52px;top:6px;left:auto !important;
+    font:800 64px/1 Prompt,Sarabun,sans-serif !important;letter-spacing:-.04em !important;color:rgba(255,255,255,.035) !important;pointer-events:none;z-index:0;display:block !important;
+    width:auto !important;height:auto !important;background:none !important;transform:none !important;opacity:1}
+  html.vc-art article.rpt.vc-m3 .ix-row > *{position:relative;z-index:1}
+  html.vc-art article.rpt.vc-m3 .ix-row.lv-check_detail{box-shadow:inset 26px 0 40px -30px rgba(224,110,110,.55) !important}
+  html.vc-art article.rpt.vc-m3 .ix-row.lv-caution{box-shadow:inset 26px 0 40px -32px rgba(217,178,90,.4) !important}
+
+  /* 2) การ์ดสรุปย่อติดหัว */
+  .vc-mini{display:flex;align-items:center;gap:10px;position:fixed;left:12px;right:12px;top:calc(var(--art-head,58px) + 6px);z-index:40;padding:8px 12px 8px 8px;border-radius:16px;
+    background:rgba(24,24,28,.86);border:1px solid rgba(255,255,255,.1);-webkit-backdrop-filter:blur(18px) saturate(150%);backdrop-filter:blur(18px) saturate(150%);box-shadow:0 14px 30px -14px rgba(0,0,0,.9);
+    color:#ededef;font-family:Prompt,Sarabun,sans-serif;text-align:left;transform:translateY(-140%);opacity:0;pointer-events:none;transition:transform .35s cubic-bezier(.2,.9,.3,1),opacity .25s ease}
+  html.vc-mini-on .vc-mini{transform:none;opacity:1;pointer-events:auto}
+  .vc-mini::before,.vc-mini::after{display:none !important}
+  .vc-mini-d{flex:0 0 36px;width:36px;height:36px}
+  .vc-mini-d svg{width:36px;height:36px;display:block}
+  .vc-mini-t{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:1px}
+  .vc-mini-t b{font:700 14.5px/1.25 Prompt,Sarabun,sans-serif;color:var(--st,#f4f4f5)}
+  .vc-mini-t small{font:400 11.5px/1.3 Prompt,Sarabun,sans-serif;color:#9a9aa2}
+  .vc-mini-bar{flex:0 0 56px;height:5px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}
+  .vc-mini-bar i{display:block;height:100%;width:0;background:#3fb98d;border-radius:99px;transition:width .4s ease}
+  html.vc-mini-on.vc-art .vc-tabs{top:calc(var(--art-head,58px) + 66px) !important;transition:top .3s ease}
+  html.vc-mini-on.vc-art article.rpt.vc-m :is(details.item,#issueIndex,.gloss,.fu,.miss){scroll-margin-top:calc(var(--art-head,58px) + 124px)}
+}
+@media (max-width:767px) and (prefers-reduced-motion:reduce){ .vc-mini{transition:none} }
