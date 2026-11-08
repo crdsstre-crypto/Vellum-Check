@@ -5780,3 +5780,70 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   new MutationObserver(function () { if (!queued) { queued = true; requestAnimationFrame(run); } }).observe(box, { childList: true, subtree: true });
   run();
 })();
+
+/* ===== มือถือ: หน้าบัญชี — บัตรเครดิต 3 มิติ (เอียงตามนิ้ว + พลิกดูด้านหลัง) + ป้ายแอดมินที่หัวโปรไฟล์ (v225) ===== */
+(function () {
+  var mq = window.matchMedia('(max-width:767px)'), root = document.documentElement;
+  var calm = function () { return root.hasAttribute('data-calm') || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
+  function tx(sel, d) { var e = document.querySelector(sel); return e ? e.textContent.trim() : (d || ''); }
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function back(card) {
+    var b = card.querySelector('.vc-wc-back');
+    if (!b) { b = document.createElement('div'); b.className = 'vc-wc-back'; card.appendChild(b); }
+    var stat = tx('.vc-stat-tx b'), statS = tx('.vc-stat-tx small');
+    var rows = [['บัญชี', tx('#userEmail', '–')], ['เครดิตตรวจ', tx('.vc-wc-num b', '0') + ' ครั้ง'], ['เครดิตเสียง', tx('.vc-wc-voice b', '0') + ' ครั้ง']];
+    if (stat && !/ยังไม่มี/.test(stat)) rows.push(['การใช้งาน', stat + (statS ? ' · ' + statS.replace(/\s*·\s*ดูประวัติทั้งหมด/, '') : '')]);
+    var h = '<p class="vc-wcb-h">ข้อมูลบัตร <span>แตะเพื่อพลิกกลับ</span></p><dl>' + rows.map(function (r) { return '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>'; }).join('') + '</dl><p class="vc-wcb-n">คืนเครดิตอัตโนมัติถ้าตรวจไม่สำเร็จ</p>';
+    if (b.innerHTML !== h) b.innerHTML = h;
+  }
+  function setup(card) {
+    if (card.__vc3d) return; card.__vc3d = true;
+    card.classList.add('vc-3d');
+    var glare = document.createElement('i'); glare.className = 'vc-wc-glare'; glare.setAttribute('aria-hidden', 'true'); card.appendChild(glare);
+    card.setAttribute('aria-label', 'บัตรเครดิต แตะเพื่อพลิกดูรายละเอียด');
+    var raf = 0, tgt = { x: 0, y: 0 }, curv = { x: 0, y: 0 }, active = false, sx = 0, sy = 0, moved = false;
+    function paint() {
+      curv.x += (tgt.x - curv.x) * .18; curv.y += (tgt.y - curv.y) * .18;
+      card.style.setProperty('--rx', curv.x.toFixed(2) + 'deg'); card.style.setProperty('--ry', curv.y.toFixed(2) + 'deg');
+      card.style.setProperty('--gx', (50 + curv.y * 4).toFixed(1) + '%'); card.style.setProperty('--gy', (50 - curv.x * 4).toFixed(1) + '%');
+      if (Math.abs(tgt.x - curv.x) > .05 || Math.abs(tgt.y - curv.y) > .05 || active) raf = requestAnimationFrame(paint); else raf = 0;
+    }
+    function aim(e) {
+      var r = card.getBoundingClientRect(), p = e.touches ? e.touches[0] : e;
+      var nx = (p.clientX - r.left) / r.width - .5, ny = (p.clientY - r.top) / r.height - .5;
+      tgt.y = Math.max(-1, Math.min(1, nx * 2)) * 10; tgt.x = Math.max(-1, Math.min(1, -ny * 2)) * 8;
+      if (!raf) raf = requestAnimationFrame(paint);
+    }
+    card.addEventListener('touchstart', function (e) { if (calm() || e.target.closest('button')) return; active = true; moved = false; sx = e.touches[0].clientX; sy = e.touches[0].clientY; card.classList.add('is-tilt'); aim(e); }, { passive: true });
+    card.addEventListener('touchmove', function (e) { if (!active) return; if (Math.abs(e.touches[0].clientX - sx) + Math.abs(e.touches[0].clientY - sy) > 8) moved = true; aim(e); }, { passive: true });
+    function rel() { if (!active) return; active = false; card.classList.remove('is-tilt'); tgt.x = 0; tgt.y = 0; if (!raf) raf = requestAnimationFrame(paint); }
+    card.addEventListener('touchend', rel); card.addEventListener('touchcancel', rel);
+    /* แตะ = พลิกบัตร */
+    var busy = false;
+    card.addEventListener('click', function (e) {
+      if (e.target.closest('button') || moved || busy) { moved = false; return; }
+      back(card);
+      var to = !card.classList.contains('is-back');
+      if (calm()) { card.classList.toggle('is-back', to); return; }
+      busy = true; card.classList.add('vc-flip-out');
+      setTimeout(function () {
+        card.classList.toggle('is-back', to); card.classList.remove('vc-flip-out'); card.classList.add('vc-flip-in');
+        setTimeout(function () { card.classList.remove('vc-flip-in'); busy = false; }, 230);
+      }, 200);
+    });
+  }
+  function run() {
+    if (!mq.matches || document.body.getAttribute('data-sheet') !== 'acct') return;
+    var card = document.querySelector('#authLoggedIn .vc-wcard'); if (card) { setup(card); if (card.classList.contains('is-back')) back(card); }
+    /* ป้ายแอดมิน */
+    var head = document.querySelector('#authCard .sheet-head.vc-prof'), adm = document.getElementById('adminPanel');
+    if (head) {
+      var isA = !!(adm && !adm.hidden && adm.offsetParent !== null), lab = head.querySelector('.acct-label');
+      if (head.classList.contains('vc-is-admin') !== isA) head.classList.toggle('vc-is-admin', isA);
+      if (lab) { var bd = lab.querySelector('.vc-adm-badge'); if (!bd && isA) { bd = document.createElement('span'); bd.className = 'vc-adm-badge'; bd.textContent = 'แอดมิน'; lab.appendChild(bd); } if (bd && bd.hidden === isA) bd.hidden = !isA; }
+    }
+  }
+  new MutationObserver(run).observe(document.body, { attributes: true, attributeFilter: ['data-sheet'] });
+  var t = 0; new MutationObserver(function () { clearTimeout(t); t = setTimeout(run, 120); }).observe(document.body, { childList: true, subtree: true });
+  run();
+})();
