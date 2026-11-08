@@ -4777,3 +4777,70 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   .vc-fix-act button::before,.vc-fix-act button::after{display:none !important}
   .vc-fix-act button.ok{background:#34d399;color:#06281b;border-color:#34d399}
 }
+
+/* ===== v209 (มือถือ): การ์ดสรุปโล่งขึ้น ===== */
+.vc-cta,.vc-sum-hd{display:none}
+@media (max-width:767px){
+  /* บั้ก ก: ไอคอนเส้นตามประเภทสัญญา */
+  html.vc-art .vc-done-ic{background:color-mix(in srgb,var(--da,#94a3b8) 15%,#1c1c20) !important;border:1px solid color-mix(in srgb,var(--da,#94a3b8) 35%,transparent) !important;color:var(--da,#94a3b8) !important;box-shadow:none !important}
+  html.vc-art .vc-done-ic svg{width:22px !important;height:22px !important}
+  /* บั้ก ข: ไม่แสดงประเภทซ้ำเมื่อผู้ใช้เลือกเอง */
+  html.vc-art .vc-sum.vc-type-known .vc-sum-meta{display:none !important}
+  html.vc-art .vc-sum:has(.vc-stamp) .vc-sum-meta,html.vc-art .vc-sum:has(.vc-stamp) .vc-sum-tx{padding-right:0 !important}
+
+  /* ไอเดีย 3: แถวหัวการ์ด + ไอคอนกลมเล็ก */
+  html.vc-art .vc-sum .vc-sum-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 14px;padding:0 0 12px;border-bottom:1px solid rgba(255,255,255,.07)}
+  html.vc-art .vc-sum .vc-sum-hd .vc-sum-meta{margin:0 !important;padding:0 !important;border:0 !important;min-width:0;flex:1 1 auto}
+  html.vc-art .vc-sum .vc-sum-hd .vc-sum-k{margin:0 !important;font:500 13px/1.2 Prompt,Sarabun,sans-serif !important;color:#a3a3aa !important;flex:1 1 auto}
+  html.vc-art .vc-sum .vc-sum-hd .share-bar{display:flex !important;gap:6px !important;margin:0 !important;padding:0 !important;border:0 !important;flex:0 0 auto}
+  html.vc-art .vc-sum .vc-sum-hd .share-bar button{width:36px !important;height:36px !important;min-height:36px !important;padding:0 !important;border-radius:50% !important;justify-content:center;
+    background:rgba(255,255,255,.05) !important;border:1px solid rgba(255,255,255,.1) !important;color:#d4d4d8 !important}
+  html.vc-art .vc-sum .vc-sum-hd .share-bar button span{position:absolute !important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  html.vc-art .vc-sum .vc-sum-hd .share-bar button svg{width:17px !important;height:17px !important;flex:0 0 17px}
+
+  /* ไอเดีย 1: โดนัทใหญ่ + ตราเล็กทับมุม */
+  html.vc-art .vc-sum .vc-sum-top{gap:18px}
+  html.vc-art .vc-sum .vc-donut{flex:0 0 108px;width:108px;height:108px}
+  html.vc-art .vc-sum .vc-donut > svg{width:108px !important;height:108px !important}
+  html.vc-art .vc-sum .vc-donut b{font-size:34px}
+  html.vc-art .vc-sum .vc-donut small{font-size:12px}
+  html.vc-art .vc-sum .vc-donut .vc-stamp{top:auto !important;bottom:-16px !important;right:-30px !important;left:auto !important;width:52px !important;height:52px !important}
+  html.vc-art .vc-sum .vc-sum-tx h3{font-size:24px !important}
+  html.vc-art .vc-sum .vc-sum-tx > p:last-child{font-size:14px;line-height:1.55;text-wrap:pretty}
+  html.vc-art .vc-sum .vc-sum-leg{margin-top:16px}
+
+  /* ไอเดีย 5: ปุ่มเริ่มอ่าน */
+  html.vc-art .vc-sum .vc-cta{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:50px;margin:14px 0 0;padding:0 16px;border-radius:14px;cursor:pointer;
+    font:600 15.5px/1.2 Prompt,Sarabun,sans-serif;color:#fecaca;background:rgba(248,113,113,.13);border:1px solid rgba(248,113,113,.4);-webkit-tap-highlight-color:transparent;transition:transform .15s ease}
+  html.vc-art .vc-sum .vc-cta::before,html.vc-art .vc-sum .vc-cta::after{display:none !important}
+  html.vc-art .vc-sum .vc-cta i{font-style:normal;font-size:18px;transition:transform .2s ease}
+  html.vc-art .vc-sum .vc-cta:active{transform:scale(.98)}
+  html.vc-art .vc-sum .vc-cta:active i{transform:translateX(3px)}
+  html.vc-art .vc-sum .vc-cta.lv-mid{color:#fde68a;background:rgba(251,191,36,.12);border-color:rgba(251,191,36,.4)}
+  html.vc-art .vc-sum .vc-cta.lv-lo{color:#e4e4e7;background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.18)}
+  html.vc-art .vc-sum .vc-cta.lv-ok{color:#a7f3d0;background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.35);cursor:default}
+  html.vc-art .vc-sum .vc-cta.lv-ok i{display:none}
+  html.vc-art .vc-sum .vc-cta.lv-ok span::before{content:"✓ "}
+
+  /* ไอเดีย 2 + บั้ก ค: แผนที่สัญญา ช่องเท่ากันทุกข้อ มีเลข + รวมกับแถบอ่านแล้ว */
+  html.vc-art .vc-sum .vc-map{margin:16px 0 0 !important;padding:12px 12px 10px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-bottom:0;border-radius:14px 14px 0 0}
+  html.vc-art .vc-sum .vc-map .vc-map-bar{height:auto !important;align-items:stretch;gap:4px;margin-top:10px !important}
+  html.vc-art .vc-sum .vc-map .vc-map-c{height:28px !important;border-radius:7px !important;display:grid !important;place-items:center;background:rgba(255,255,255,.035) !important;border:1px solid rgba(255,255,255,.08) !important;box-shadow:none !important}
+  html.vc-art .vc-sum .vc-map .vc-map-c i{position:static !important;transform:none !important;font:600 11.5px/1 Prompt,Sarabun,sans-serif !important;font-style:normal;color:#5f5f67 !important}
+  html.vc-art .vc-sum .vc-map .vc-map-c.is-hit{background:color-mix(in srgb,var(--c) 22%,#1c1c20) !important;border-color:color-mix(in srgb,var(--c) 60%,transparent) !important}
+  html.vc-art .vc-sum .vc-map .vc-map-c.is-hit i{color:color-mix(in srgb,var(--c) 75%,#fff) !important}
+  html.vc-art .vc-sum .vc-map .vc-map-c.dn{background:rgba(52,211,153,.14) !important;border-color:rgba(52,211,153,.5) !important}
+  html.vc-art .vc-sum .vc-map .vc-map-c.dn i{font-size:0 !important}
+  html.vc-art .vc-sum .vc-map .vc-map-c.dn i::after{content:"✓";font-size:13px;color:#6ee7b7}
+  html.vc-art .vc-sum .vc-map .vc-map-bar:has(.vc-map-c:nth-child(13)) .vc-map-c:not(.is-hit) i{display:none}
+  html.vc-art .vc-sum .vc-map .vc-map-bar:has(.vc-map-c:nth-child(25)) .vc-map-c i{display:none}
+  html.vc-art .vc-sum .vc-map + .ix-prog{margin:0 !important;padding:10px 12px 12px !important;background:rgba(255,255,255,.025) !important;border:1px solid rgba(255,255,255,.07) !important;border-top:1px dashed rgba(255,255,255,.07) !important;border-radius:0 0 14px 14px !important}
+
+  /* ไอเดีย 3: ใช้ผลนี้ต่อ เป็นการ์ดเลื่อนแนวนอน */
+  html.vc-art .vc-sum .vc-next-g{display:flex !important;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 !important;padding:0 0 2px;-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}
+  html.vc-art .vc-sum .vc-next-g::-webkit-scrollbar{display:none}
+  html.vc-art .vc-sum .vc-next-b{flex:0 0 62%;scroll-snap-align:start;display:grid !important;grid-template-columns:44px 1fr;grid-template-rows:auto auto;column-gap:12px;align-items:center;text-align:left;padding:14px !important;min-height:74px}
+  html.vc-art .vc-sum .vc-next-b .vc-next-ic{grid-row:1 / span 2;width:44px;height:44px;margin:0 !important}
+  html.vc-art .vc-sum .vc-next-b b{align-self:end;font-size:15px !important}
+  html.vc-art .vc-sum .vc-next-b small{align-self:start}
+}
