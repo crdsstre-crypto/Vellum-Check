@@ -4722,3 +4722,58 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   @keyframes vcTipNudge{50%{transform:translateX(4px)}}
 }
 @media (max-width:767px) and (prefers-reduced-motion:reduce){ .vc-sw-tip i{animation:none} }
+
+/* ===== v208 (มือถือ): แผ่นรายละเอียดประเด็น — ความสูงคงที่, ข้อความเต็ม, สีจุดตรงระดับ, ขีดสตอรี่, เทียบต้นฉบับ, คัดลอก/ส่งทุกข้อ ===== */
+.vc-sh-bars,.vc-cmp,.vc-cmp-arrow,.vc-fix-act{display:none}
+@media (max-width:767px){
+  /* บั้ก ก: สูงเท่ากันทุกข้อ ปุ่มอยู่ตำแหน่งเดิม */
+  html.vc-art article.rpt.vc-m details.item.is-picked[open]{height:86vh;height:86dvh;max-height:none;translate:var(--shx,0px) 0;transition:transform .2s ease,translate .2s ease}
+  html.vc-art article.rpt.vc-m details.item.is-picked[open] .vc-sh-foot{position:sticky;bottom:0;z-index:3;margin:0 -16px;padding:10px 16px calc(16px + env(safe-area-inset-bottom,0px));
+    background:linear-gradient(180deg,rgba(23,23,26,0),#17171a 14px)}
+  html.vc-art article.rpt.vc-m details.item.is-picked[open] .vc-sh-foot .rv-row{margin:6px 0 0 !important}
+  html.vc-art article.rpt.vc-m details.item.is-picked[open]{padding-bottom:0 !important}
+  html.vc-art article.rpt.vc-m details.item.vc-sh-from-r[open]{animation:vcShR .3s cubic-bezier(.2,.9,.3,1)}
+  html.vc-art article.rpt.vc-m details.item.vc-sh-from-l[open]{animation:vcShL .3s cubic-bezier(.2,.9,.3,1)}
+  @keyframes vcShR{from{opacity:.3;translate:28% 0}}
+  @keyframes vcShL{from{opacity:.3;translate:-28% 0}}
+  /* บั้ก ข: ข้อความขอแก้ไขแสดงเต็ม */
+  html.vc-art details.item.is-picked .it-fix p{display:block !important;-webkit-line-clamp:unset !important;overflow:visible !important}
+  /* บั้ก ค: จุดสีตามระดับเสี่ยงของประเด็น */
+  html.vc-art article.rpt.vc-m details.item.lv-check_detail .ur-chip span{color:#f87171 !important}
+  html.vc-art article.rpt.vc-m details.item.lv-caution .ur-chip span{color:#fbbf24 !important}
+  html.vc-art article.rpt.vc-m details.item.lv-low .ur-chip span{color:#8b8b94 !important}
+
+  /* ไอเดีย 1: ขีดสตอรี่ */
+  html.vc-art article.rpt.vc-m details.item.is-picked[open] > summary{padding-top:34px !important}
+  html.vc-art article.rpt.vc-m details.item.is-picked[open] .vc-sh-bars{display:flex;gap:4px;position:absolute;top:20px;left:16px;right:16px}
+  .vc-sh-bars i{flex:1 1 0;height:4px;border-radius:99px;background:rgba(255,255,255,.1);position:relative;cursor:pointer;overflow:hidden}
+  .vc-sh-bars i::before{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--c,#8b8b94);opacity:.35;transform:scaleX(0);transform-origin:left;transition:transform .35s ease,opacity .2s}
+  .vc-sh-bars i::after{content:"";position:absolute;inset:-10px 0}
+  .vc-sh-bars i.lv-hi{--c:#f87171}.vc-sh-bars i.lv-mid{--c:#fbbf24}.vc-sh-bars i.lv-lo{--c:#8b8b94}
+  .vc-sh-bars i.on::before{transform:none;opacity:.55}
+  .vc-sh-bars i.dn::before{transform:none;opacity:1}
+  .vc-sh-bars i.on{box-shadow:0 0 0 1px rgba(255,255,255,.35)}
+
+  html.vc-art article.rpt.vc-m details.item.is-picked[open] .vc-sh-x{top:36px}
+  .vc-cmp blockquote::before,.vc-cmp blockquote::after{display:none !important}
+  /* ไอเดีย 2: ต้นฉบับ → ขอแก้เป็น */
+  html.vc-art details.item.is-picked .vc-cmp{display:block;margin:14px 0 0;padding:12px 14px 12px 16px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);position:relative}
+  html.vc-art details.item.is-picked .vc-cmp::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:0 3px 3px 0;background:rgba(248,113,113,.6)}
+  html.vc-art details.item.lv-caution.is-picked .vc-cmp::before{background:rgba(251,191,36,.6)}
+  html.vc-art details.item.lv-low.is-picked .vc-cmp::before{background:rgba(139,139,148,.6)}
+  .vc-cmp-l{display:flex;align-items:center;gap:6px;margin:0 0 6px;font:500 12.5px/1.3 Prompt,Sarabun,sans-serif;color:#9a9aa1}
+  .vc-cmp blockquote{margin:0;padding:0 !important;border:0 !important;background:none !important;border-radius:0;font:400 14.5px/1.7 Sarabun,Prompt,sans-serif;color:#d4d4d8;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+  .vc-cmp blockquote.open{display:block}
+  .vc-cmp mark{background:rgba(251,191,36,.16);color:#fde68a;border-radius:4px;padding:0 3px}
+  .vc-cmp-more{margin:6px 0 0;padding:0;border:0;background:none;color:#a5b4fc;font:500 13px/1.3 Prompt,Sarabun,sans-serif;cursor:pointer}
+  .vc-cmp-more[hidden]{display:none}
+  html.vc-art details.item.is-picked .vc-cmp-arrow{display:flex;align-items:center;gap:6px;margin:8px 0 -4px 6px;font:600 12.5px/1 Prompt,Sarabun,sans-serif;color:#6ee7b7}
+  html.vc-art details.item.is-picked .vc-cmp-arrow span{font-size:15px}
+
+  /* ไอเดีย 3: คัดลอก / ส่งทุกข้อ */
+  html.vc-art details.item.is-picked .vc-fix-act{display:flex;gap:8px;margin:12px 0 0}
+  .vc-fix-act button{flex:1 1 auto;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 12px;border-radius:12px;
+    border:1px solid rgba(110,231,183,.28);background:rgba(110,231,183,.08);color:#a7f3d0;font:600 13.5px/1 Prompt,Sarabun,sans-serif;cursor:pointer;transition:background .2s,color .2s}
+  .vc-fix-act button::before,.vc-fix-act button::after{display:none !important}
+  .vc-fix-act button.ok{background:#34d399;color:#06281b;border-color:#34d399}
+}
