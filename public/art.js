@@ -3826,7 +3826,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   /* กล่องว่าง */
   var em = document.createElement('div');
   em.className = 'vc-empty';
-  em.innerHTML = '<span class="vc-empty-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 4.5H7A1.5 1.5 0 0 0 5.5 6v13A1.5 1.5 0 0 0 7 20.5h10a1.5 1.5 0 0 0 1.5-1.5V6A1.5 1.5 0 0 0 17 4.5h-1.5"/><rect x="8.5" y="3" width="7" height="3.2" rx="1"/><path d="M9 11h6M9 14.5h6M9 18h3.5"/></svg></span>' +
+  em.innerHTML = '<svg class="vc-empty-dash" aria-hidden="true"><rect x="1" y="1" rx="15" ry="15" width="calc(100% - 2px)" height="calc(100% - 2px)"/></svg><span class="vc-empty-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 4.5H7A1.5 1.5 0 0 0 5.5 6v13A1.5 1.5 0 0 0 7 20.5h10a1.5 1.5 0 0 0 1.5-1.5V6A1.5 1.5 0 0 0 17 4.5h-1.5"/><rect x="8.5" y="3" width="7" height="3.2" rx="1"/><path d="M9 11h6M9 14.5h6M9 18h3.5"/></svg></span>' +
     '<b>วางข้อความสัญญาที่นี่</b>' +
     '<button type="button" class="vc-paste"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="11.5" height="12.5" rx="2"/><path d="M15.5 8V5.5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h2"/></svg>วางจากคลิปบอร์ด</button>' +
     '<small>หรือ <label for="fileIn">อัปโหลด PDF · Word · รูปถ่าย</label></small>' +
@@ -4950,6 +4950,18 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     var ys = sn.map(function (s) { var r = s.getBoundingClientRect(); return r.top + r.height / 2 - cr.top; });
     var top = ys[0], bot = ys[ys.length - 1];
     rail.style.top = top + 'px'; rail.style.height = Math.max(0, bot - top) + 'px';
+    /* แบ่งการ์ดแล้ว: เส้นวิ่งผ่านแนววงกลมเลขขั้น (มองเห็นในช่องระหว่างการ์ด) */
+    if (card.classList.contains('vc-boxed')) {
+      var r0 = sn[0].getBoundingClientRect(); rail.style.left = (r0.left + r0.width / 2 - cr.left - 1) + 'px';
+      /* แสดงเส้นเฉพาะในช่องว่างระหว่างการ์ด (การ์ดเป็นกระจกโปร่ง เส้นจะทะลุเนื้อหา) */
+      var H = Math.max(1, bot - top), st = [];
+      [].forEach.call(card.querySelectorAll(':scope > .vc-box'), function (bx) {
+        var r = bx.getBoundingClientRect(), a = r.top - cr.top - top, b2 = r.bottom - cr.top - top;
+        st.push('#000 ' + Math.max(0, a - 1) + 'px', 'transparent ' + Math.max(0, a) + 'px', 'transparent ' + Math.min(H, b2) + 'px', '#000 ' + Math.min(H, b2 + 1) + 'px');
+      });
+      var m = 'linear-gradient(180deg,' + st.join(',') + ')';
+      rail.style.webkitMaskImage = m; rail.style.maskImage = m;
+    } else { rail.style.left = ''; rail.style.webkitMaskImage = rail.style.maskImage = ''; }
     [].forEach.call(rail.querySelectorAll('b'), function (b, i) { b.style.top = (ys[i] - top) + 'px'; b.classList.toggle('on', sn[i] && sn[i].classList.contains('is-done')); });
     /* เติมสีถึงขั้นล่าสุดที่เสร็จ (ต่อเนื่องจากขั้น 1) */
     var last = -1; for (var i = 0; i < sn.length; i++) { if (sn[i].classList.contains('is-done')) last = i; else break; }
