@@ -4347,3 +4347,265 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   new MutationObserver(fx).observe(box, { childList: true, subtree: true });
   fx();
 })();
+
+/* ===== มือถือ: ใช้ผลตรวจต่อ — ร่างข้อความถึงอีกฝ่าย · เช็กลิสต์ก่อนเซ็น · รูปสรุปไว้แชร์ (8 พ.ย. 2026) ===== */
+(function () {
+  var box = document.getElementById('result');
+  if (!box) return;
+  var LVN = { check_detail: 'สำคัญ', caution: 'ควรระวัง', low: 'เสี่ยงต่ำ' };
+  var LVC = { check_detail: '#e08585', caution: '#d9b25a', low: '#8b8b94' };
+  function data() { try { return (typeof lastResult !== 'undefined' && lastResult) ? lastResult : null; } catch (e) { return null; } }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function rpt() { return box.querySelector('article.rpt.vc-m'); }
+  function clauseOf(i) { var r = box.querySelector('.ix-row[data-ixcard="' + i + '"] .ix-clause'); var m = r && /ข้อ\s*([0-9๐-๙]+)/.exec(r.textContent); return m ? m[1] : ''; }
+  function typeName() { var t = box.querySelector('.vc-type'); return t ? t.textContent.trim() : ''; }
+  function reportNo() { var k = box.querySelector('.rpt-kicker span'); return k ? k.textContent.replace(/[·\s]/g, '') : ''; }
+  function toast(msg) {
+    var t = document.createElement('div'); t.className = 'vc-tt'; t.textContent = msg; document.body.appendChild(t);
+    setTimeout(function () { t.classList.add('out'); setTimeout(function () { t.remove(); }, 300); }, 1600);
+  }
+  function copy(text) {
+    var done = function () { toast('คัดลอกแล้ว'); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fb); else fb();
+    function fb() { var a = document.createElement('textarea'); a.value = text; a.style.cssText = 'position:fixed;opacity:0'; document.body.appendChild(a); a.select(); try { document.execCommand('copy'); done(); } catch (e) {} a.remove(); }
+  }
+
+  /* แผ่นเครื่องมือ (อยู่ใน body จึงไม่ติดปัญหาการ์ดผลตรวจ) */
+  var sheet = null;
+  function openSheet(title, sub, bodyEl) {
+    closeSheet(true);
+    sheet = document.createElement('div'); sheet.className = 'vc-tool';
+    sheet.innerHTML = '<div class="vc-tool-back"></div><section class="vc-tool-sh" role="dialog" aria-modal="true" aria-label="' + esc(title) + '">' +
+      '<header class="vc-tool-hd"><i class="vc-tool-grab" aria-hidden="true"></i><div><h3>' + esc(title) + '</h3><p>' + esc(sub) + '</p></div>' +
+      '<button type="button" class="vc-tool-x" aria-label="ปิด"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></header>' +
+      '<div class="vc-tool-bd"></div></section>';
+    sheet.querySelector('.vc-tool-bd').appendChild(bodyEl);
+    document.body.appendChild(sheet);
+    document.documentElement.classList.add('vc-tool-open');
+    sheet.querySelector('.vc-tool-back').addEventListener('click', function () { closeSheet(); });
+    sheet.querySelector('.vc-tool-x').addEventListener('click', function () { closeSheet(); });
+    var hd = sheet.querySelector('.vc-tool-hd'), sh = sheet.querySelector('.vc-tool-sh'), y0 = null;
+    hd.addEventListener('touchstart', function (e) { y0 = e.touches[0].clientY; }, { passive: true });
+    hd.addEventListener('touchmove', function (e) { if (y0 == null) return; var d = e.touches[0].clientY - y0; if (d > 0) sh.style.transform = 'translateY(' + d + 'px)'; }, { passive: true });
+    hd.addEventListener('touchend', function (e) { if (y0 == null) return; var d = (e.changedTouches[0] || {}).clientY - y0; y0 = null; sh.style.transform = ''; if (d > 90) closeSheet(); });
+  }
+  function closeSheet(now) {
+    if (!sheet) return; var s = sheet; sheet = null;
+    document.documentElement.classList.remove('vc-tool-open');
+    if (now) { s.remove(); return; }
+    s.classList.add('out'); setTimeout(function () { s.remove(); }, 260);
+  }
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && sheet) closeSheet(); });
+
+  /* ---------- 1) ร่างข้อความถึงอีกฝ่าย ---------- */
+  function draftText(r, picks, polite) {
+    var p = polite === 'ka' ? 'ค่ะ' : 'ครับ', items = r.items || [], tn = typeName();
+    var lines = [];
+    lines.push('สวัสดี' + p);
+    lines.push('ขอบคุณที่ส่ง' + (tn || 'สัญญา') + 'มาให้อ่านนะ' + p + ' ก่อนเซ็นขอหารือและขอปรับรายละเอียด ' + picks.length + ' เรื่องดังนี้' + p);
+    lines.push('');
+    picks.forEach(function (i, k) {
+      var it = items[i] || {}, cl = clauseOf(i);
+      var ask = (it.suggested_fix || it.how_to_negotiate || it.title || '').trim().replace(/\s+/g, ' ');
+      lines.push((k + 1) + '. ' + (cl ? 'ข้อ ' + cl + ' — ' : '') + ask);
+    });
+    var miss = (r.missing_info || []).filter(function (s) { return !/unsure|ผู้ใช้ระบุประเภท/i.test(s); }).slice(0, 3);
+    if (miss.length) {
+      lines.push('');
+      lines.push('และอยากให้ระบุเพิ่มในสัญญาเรื่องต่อไปนี้' + p);
+      miss.forEach(function (m) { lines.push('• ' + m.replace(/^สัญญา(ไม่ได้|ไม่)ระบุ/, '').replace(/^ไม่มี(ข้อกำหนด)?/, '').trim()); });
+    }
+    lines.push('');
+    lines.push('ถ้าสะดวก รบกวนช่วยปรับในสัญญาก่อนวันนัดเซ็นได้ไหม' + p + ' ขอบคุณมาก' + p);
+    return lines.join('\n');
+  }
+  function openDraft() {
+    var r = data(); if (!r || !r.items) return;
+    var items = r.items, picks = items.map(function (it, i) { return i; }).filter(function (i) { return items[i].level !== 'low'; });
+    if (!picks.length) picks = items.map(function (it, i) { return i; });
+    var polite = 'krub';
+    var el = document.createElement('div'); el.className = 'vc-draft';
+    el.innerHTML = '<div class="vc-seg" role="group" aria-label="ลงท้าย"><button type="button" data-p="krub" class="on">ครับ</button><button type="button" data-p="ka">ค่ะ</button></div>' +
+      '<p class="vc-lbl">เลือกเรื่องที่จะขอปรับ</p><div class="vc-picks">' + items.map(function (it, i) {
+        return '<label class="vc-pick"><input type="checkbox" data-i="' + i + '"' + (picks.indexOf(i) > -1 ? ' checked' : '') + '><span class="vc-pill lv-' + esc(it.level) + '">' + (LVN[it.level] || '') + '</span><b>' + esc(it.title) + '</b></label>';
+      }).join('') + '</div>' +
+      '<p class="vc-lbl">ข้อความ (แก้ไขได้)</p><textarea class="vc-draft-ta" rows="10" spellcheck="false"></textarea>' +
+      '<div class="vc-acts"><button type="button" class="vc-a-line"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3C6.5 3 2 6.6 2 11c0 3.9 3.5 7.2 8.3 7.9.3.1.8.2.9.5.1.3.1.7 0 1l-.1.9c0 .3-.2 1 .9.6 1.1-.5 6-3.5 8.2-6.1 1.5-1.6 2-3.2 2-4.8C22 6.6 17.5 3 12 3z"/></svg>ส่งทาง LINE</button>' +
+      '<button type="button" class="vc-a-copy">คัดลอก</button></div>' +
+      '<p class="vc-fine">ข้อความนี้ร่างจากผลตรวจเบื้องต้น ควรอ่านทวนก่อนส่ง</p>';
+    var ta = el.querySelector('textarea'), edited = false;
+    function regen() {
+      if (edited) return;
+      var sel = [].map.call(el.querySelectorAll('.vc-pick input:checked'), function (c) { return +c.getAttribute('data-i'); });
+      ta.value = draftText(r, sel, polite);
+    }
+    ta.addEventListener('input', function () { edited = true; });
+    el.querySelector('.vc-picks').addEventListener('change', function () { edited = false; regen(); });
+    el.querySelector('.vc-seg').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-p]'); if (!b) return; polite = b.getAttribute('data-p');
+      [].forEach.call(el.querySelectorAll('.vc-seg button'), function (x) { x.classList.toggle('on', x === b); });
+      edited = false; regen();
+    });
+    el.querySelector('.vc-a-copy').addEventListener('click', function () { copy(ta.value); });
+    el.querySelector('.vc-a-line').addEventListener('click', function () { window.open('https://line.me/R/share?text=' + encodeURIComponent(ta.value), '_blank', 'noopener'); });
+    regen();
+    openSheet('ร่างข้อความถึงอีกฝ่าย', 'เลือกเรื่องที่จะขอปรับ แล้วคัดลอกหรือส่งทาง LINE', el);
+  }
+
+  /* ---------- 2) เช็กลิสต์ก่อนเซ็น ---------- */
+  function ckKey(r) { var no = reportNo(); if (no) return 'vc_ck_' + no; var s = (r.items || []).map(function (x) { return x.title; }).join('|'); var h = 0; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return 'vc_ck_' + h; }
+  function ckItems(r) {
+    var out = [];
+    (r.items || []).forEach(function (it, i) { var cl = clauseOf(i); out.push({ g: 'คุยกับอีกฝ่าย', t: (cl ? 'ข้อ ' + cl + ' · ' : '') + (it.title || '').replace(/\?$/, ''), lv: it.level }); });
+    (r.missing_info || []).filter(function (s) { return !/unsure|ผู้ใช้ระบุประเภท/i.test(s); }).forEach(function (m) { out.push({ g: 'ขอให้ระบุเพิ่ม', t: m }); });
+    ['อ่านสัญญาทั้งฉบับอีกครั้งก่อนเซ็น', 'ตรวจชื่อ ที่อยู่ และเลขบัตรของคู่สัญญาให้ถูกต้อง', 'ทุกหน้ามีลายเซ็นหรืออักษรย่อของทั้งสองฝ่าย', 'ได้รับสำเนาสัญญาที่เซ็นแล้ว 1 ฉบับ', 'เก็บหลักฐานการโอนเงินทุกครั้ง'].forEach(function (t) { out.push({ g: 'วันเซ็นสัญญา', t: t }); });
+    return out;
+  }
+  function openChecklist() {
+    var r = data(); if (!r) return;
+    var key = ckKey(r), st = {}; try { st = JSON.parse(localStorage.getItem(key) || '{}') || {}; } catch (e) {}
+    var list = ckItems(r), el = document.createElement('div'); el.className = 'vc-ck';
+    var g = null, h = '<div class="vc-ck-prog"><span class="vc-ck-n"></span><div class="vc-ck-bar"><i></i></div></div>';
+    list.forEach(function (x, i) {
+      if (x.g !== g) { if (g) h += '</ul>'; g = x.g; h += '<p class="vc-lbl">' + esc(g) + '</p><ul>'; }
+      h += '<li><label><input type="checkbox" data-k="' + i + '"' + (st[i] ? ' checked' : '') + '><span class="vc-ck-box" aria-hidden="true"></span><span class="vc-ck-t">' + (x.lv ? '<i class="vc-ck-dot" style="background:' + LVC[x.lv] + '"></i>' : '') + esc(x.t) + '</span></label></li>';
+    });
+    el.innerHTML = h + '</ul><p class="vc-fine">ติ๊กแล้วจำไว้ในเครื่องนี้ เปิดผลตรวจนี้จากประวัติได้ทุกเมื่อ</p><div class="vc-acts"><button type="button" class="vc-a-copy">คัดลอกเป็นข้อความ</button></div>';
+    function upd() {
+      var all = el.querySelectorAll('input'), on = el.querySelectorAll('input:checked').length;
+      el.querySelector('.vc-ck-n').textContent = 'เสร็จแล้ว ' + on + ' / ' + all.length;
+      el.querySelector('.vc-ck-bar i').style.width = (all.length ? on / all.length * 100 : 0) + '%';
+      var b = box.querySelector('.vc-next-ck em'); if (b) b.textContent = on + '/' + all.length;
+    }
+    el.addEventListener('change', function (e) {
+      var c = e.target.closest('input[data-k]'); if (!c) return;
+      st[c.getAttribute('data-k')] = c.checked ? 1 : 0;
+      try { localStorage.setItem(key, JSON.stringify(st)); } catch (err) {}
+      upd();
+    });
+    el.querySelector('.vc-a-copy').addEventListener('click', function () {
+      var g2 = null, txt = 'เช็กลิสต์ก่อนเซ็น' + (typeName() ? ' (' + typeName() + ')' : '') + '\n';
+      list.forEach(function (x, i) { if (x.g !== g2) { g2 = x.g; txt += '\n' + g2 + '\n'; } txt += (st[i] ? '☑ ' : '☐ ') + x.t + '\n'; });
+      copy(txt.trim());
+    });
+    upd();
+    openSheet('เช็กลิสต์ก่อนเซ็น', 'ติ๊กทีละข้อ ระบบจำไว้ให้', el);
+  }
+  function ckCount() {
+    var r = data(); if (!r) return '';
+    var st = {}; try { st = JSON.parse(localStorage.getItem(ckKey(r)) || '{}') || {}; } catch (e) {}
+    var on = 0; for (var k in st) if (st[k]) on++;
+    return on + '/' + ckItems(r).length;
+  }
+
+  /* ---------- 3) รูปสรุปไว้แชร์ ---------- */
+  function wrapLines(ctx, text, maxW, maxLines) {
+    var segs = [];
+    try { segs = Array.from(new Intl.Segmenter('th', { granularity: 'word' }).segment(text), function (s) { return s.segment; }); } catch (e) { segs = text.split(''); }
+    var lines = [], cur = '';
+    segs.forEach(function (w) { if (ctx.measureText(cur + w).width > maxW && cur) { lines.push(cur); cur = w.replace(/^\s+/, ''); } else cur += w; });
+    if (cur) lines.push(cur);
+    if (lines.length > maxLines) { lines = lines.slice(0, maxLines); var l = lines[maxLines - 1]; while (ctx.measureText(l + '…').width > maxW && l.length) l = l.slice(0, -1); lines[maxLines - 1] = l + '…'; }
+    return lines;
+  }
+  function rr(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+  function drawCard(r) {
+    var W = 1080, H = 1920, c = document.createElement('canvas'); c.width = W; c.height = H;
+    var x = c.getContext('2d'), F = 'Prompt, Sarabun, "Noto Sans Thai", sans-serif';
+    var items = r.items || [], cnt = { check_detail: 0, caution: 0, low: 0 }; items.forEach(function (it) { cnt[it.level] = (cnt[it.level] || 0) + 1; });
+    var lv = cnt.check_detail ? ['ควรระวังมาก', '#e08585', 'rgba(224,133,133,'] : cnt.caution ? ['ควรระวัง', '#d9b25a', 'rgba(217,178,90,'] : ['ความเสี่ยงต่ำ', '#6fcaa5', 'rgba(111,202,165,'];
+    var g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#141417'); g.addColorStop(1, '#0b0b0d'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+    var rg = x.createRadialGradient(W * .78, 380, 20, W * .78, 380, 700); rg.addColorStop(0, lv[2] + '.16)'); rg.addColorStop(1, lv[2] + '0)'); x.fillStyle = rg; x.fillRect(0, 0, W, H);
+    /* หัว */
+    x.save(); x.translate(90, 120); x.scale(1.1, 1.1);
+    var sh = new Path2D('M32 5L54 13V32C54 46 44 54 32 59C20 54 10 46 10 32V13Z'); x.fillStyle = '#d9dbe0'; x.fill(sh);
+    x.strokeStyle = '#141417'; x.lineWidth = 5.5; x.lineCap = 'round'; x.lineJoin = 'round'; x.stroke(new Path2D('M22 32L29 39L43 24')); x.restore();
+    x.fillStyle = '#ededef'; x.font = '600 46px ' + F; x.textBaseline = 'middle'; x.fillText('Vellum Check', 180, 158);
+    x.fillStyle = '#8b8b94'; x.font = '400 32px ' + F; x.fillText('สรุปผลตรวจสัญญาเบื้องต้น', 180, 212);
+    /* ประเภท */
+    var tn = typeName() || 'สัญญา'; x.font = '600 34px ' + F; var tw = x.measureText(tn).width + 64;
+    rr(x, 90, 290, tw, 72, 36); x.fillStyle = 'rgba(255,255,255,.07)'; x.fill(); x.strokeStyle = 'rgba(255,255,255,.14)'; x.lineWidth = 2; x.stroke();
+    x.fillStyle = '#ededef'; x.fillText(tn, 122, 327);
+    /* วงกลม */
+    var cx = 270, cy = 590, R = 150, tot = items.length, a0 = -Math.PI / 2;
+    x.lineWidth = 34; x.strokeStyle = 'rgba(255,255,255,.07)'; x.beginPath(); x.arc(cx, cy, R, 0, Math.PI * 2); x.stroke();
+    [['check_detail', '#e08585'], ['caution', '#d9b25a'], ['low', '#8b8b94']].forEach(function (s) {
+      var n = cnt[s[0]]; if (!n || !tot) return; var a1 = a0 + Math.PI * 2 * n / tot;
+      x.strokeStyle = s[1]; x.beginPath(); x.arc(cx, cy, R, a0 + (tot > 1 ? .03 : 0), a1 - (tot > 1 ? .03 : 0)); x.stroke(); a0 = a1;
+    });
+    x.textAlign = 'center'; x.fillStyle = '#f4f4f5'; x.font = '700 120px ' + F; x.fillText(String(tot), cx, cy - 8);
+    x.fillStyle = '#a3a3aa'; x.font = '400 34px ' + F; x.fillText('ประเด็น', cx, cy + 74); x.textAlign = 'left';
+    x.fillStyle = '#8b8b94'; x.font = '500 34px ' + F; x.fillText('ภาพรวมสัญญา', 500, 500);
+    x.fillStyle = lv[1]; x.font = '700 76px ' + F; x.fillText(lv[0], 500, 580);
+    x.fillStyle = '#c4c4ca'; x.font = '400 34px ' + F;
+    wrapLines(x, cnt.check_detail ? 'มี ' + cnt.check_detail + ' ประเด็นสำคัญ ควรคุยกับอีกฝ่ายก่อนลงนาม' : cnt.caution ? 'มี ' + cnt.caution + ' ประเด็นที่ควรอ่านให้ละเอียด' : 'ไม่พบประเด็นสำคัญ', 500, 2).forEach(function (l, i) { x.fillText(l, 500, 652 + i * 50); });
+    /* จำนวนแต่ละระดับ */
+    var lx = 90; [['check_detail', 'สำคัญ'], ['caution', 'ควรระวัง'], ['low', 'เสี่ยงต่ำ']].forEach(function (s) {
+      x.fillStyle = LVC[s[0]]; x.beginPath(); x.arc(lx + 12, 840, 12, 0, Math.PI * 2); x.fill();
+      x.fillStyle = '#c4c4ca'; x.font = '400 36px ' + F; x.fillText(s[1], lx + 38, 842); var w = x.measureText(s[1]).width;
+      x.fillStyle = '#f4f4f5'; x.font = '700 36px ' + F; x.fillText(String(cnt[s[0]] || 0), lx + 52 + w, 842); lx += 52 + w + 80;
+    });
+    /* ประเด็นหลัก */
+    x.fillStyle = '#a3a3aa'; x.font = '600 34px ' + F; x.fillText('ประเด็นที่ควรคุยก่อนเซ็น', 90, 960);
+    var y = 1000, order = items.map(function (it, i) { return i; }).sort(function (a, b) { var R2 = { check_detail: 0, caution: 1, low: 2 }; return R2[items[a].level] - R2[items[b].level]; }).slice(0, 4);
+    order.forEach(function (i) {
+      var it = items[i]; x.font = '600 38px ' + F; var ls = wrapLines(x, it.title || '', 760, 2), hh = 96 + ls.length * 50;
+      rr(x, 90, y, 900, hh, 28); x.fillStyle = 'rgba(255,255,255,.035)'; x.fill(); x.strokeStyle = 'rgba(255,255,255,.08)'; x.lineWidth = 2; x.stroke();
+      x.fillStyle = LVC[it.level]; rr(x, 90, y + 24, 8, hh - 48, 4); x.fill();
+      x.font = '600 26px ' + F; var pl = LVN[it.level] || '', pw = x.measureText(pl).width + 36;
+      rr(x, 130, y + 22, pw, 44, 22); x.fillStyle = LVC[it.level] + '33'; x.fill(); x.fillStyle = LVC[it.level]; x.fillText(pl, 148, y + 45);
+      var cl = clauseOf(i); if (cl) { x.fillStyle = '#8b8b94'; x.font = '400 28px ' + F; x.fillText('ข้อ ' + cl, 130 + pw + 18, y + 45); }
+      x.fillStyle = '#f4f4f5'; x.font = '600 38px ' + F; ls.forEach(function (l, k) { x.fillText(l, 130, y + 104 + k * 50); });
+      y += hh + 22;
+    });
+    if (items.length > order.length) { x.fillStyle = '#8b8b94'; x.font = '400 30px ' + F; x.fillText('และอีก ' + (items.length - order.length) + ' ประเด็นในรายงานฉบับเต็ม', 90, y + 30); }
+    /* ท้าย */
+    x.fillStyle = 'rgba(255,255,255,.08)'; x.fillRect(90, H - 230, 900, 2);
+    x.fillStyle = '#c4c4ca'; x.font = '500 32px ' + F; x.fillText('ตรวจสัญญาด้วย Vellum Check', 90, H - 170);
+    x.fillStyle = '#7a7a82'; x.font = '400 26px ' + F; x.fillText(location.host || 'vellum-check-api.onrender.com', 90, H - 124);
+    x.fillText('ผลคัดกรองเบื้องต้นจาก AI ไม่ใช่คำปรึกษาทางกฎหมาย', 90, H - 84);
+    return c;
+  }
+  function openImage() {
+    var r = data(); if (!r) return;
+    var el = document.createElement('div'); el.className = 'vc-img';
+    el.innerHTML = '<div class="vc-img-pv"><span class="vc-img-ld">กำลังสร้างรูป…</span></div>' +
+      '<div class="vc-acts"><button type="button" class="vc-a-share">แชร์รูป</button><a class="vc-a-save" download="vellum-check-summary.png">บันทึกรูป</a></div>' +
+      '<p class="vc-fine">รูปไม่มีชื่อหรือข้อมูลส่วนตัวในสัญญา มีแค่ระดับความเสี่ยงและหัวข้อประเด็น</p>';
+    openSheet('รูปสรุปไว้แชร์', 'ส่งให้ครอบครัวหรือเพื่อนช่วยดูทาง LINE', el);
+    var ready = document.fonts && document.fonts.load ? Promise.all([document.fonts.load('600 40px Prompt'), document.fonts.load('700 40px Prompt'), document.fonts.load('400 40px Prompt')]).catch(function () {}) : Promise.resolve();
+    ready.then(function () {
+      var c = drawCard(r), url = c.toDataURL('image/png');
+      var img = new Image(); img.alt = 'รูปสรุปผลตรวจ'; img.src = url;
+      var pv = el.querySelector('.vc-img-pv'); pv.innerHTML = ''; pv.appendChild(img);
+      el.querySelector('.vc-a-save').href = url;
+      el.querySelector('.vc-a-share').addEventListener('click', function () {
+        c.toBlob(function (b) {
+          var f = b && window.File ? new File([b], 'vellum-check-summary.png', { type: 'image/png' }) : null;
+          if (f && navigator.canShare && navigator.canShare({ files: [f] })) navigator.share({ files: [f], title: 'สรุปผลตรวจสัญญา' }).catch(function () {});
+          else { el.querySelector('.vc-a-save').click(); toast('เบราว์เซอร์นี้แชร์รูปไม่ได้ จึงบันทึกรูปให้แทน'); }
+        }, 'image/png');
+      });
+    });
+  }
+
+  /* ปุ่มบนการ์ดสรุป */
+  function addBar() {
+    var a = rpt(); if (!a || a.classList.contains('vc-nx')) return;
+    var sum = a.querySelector('.vc-sum'); if (!sum || !data()) return;
+    a.classList.add('vc-nx');
+    var bar = document.createElement('div'); bar.className = 'vc-next';
+    bar.innerHTML = '<p class="vc-next-h">ใช้ผลนี้ต่อ</p><div class="vc-next-g">' +
+      '<button type="button" class="vc-next-b vc-next-msg"><span class="vc-next-ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16v10H9l-5 4z"/><path d="M8 9.5h8M8 12.5h5"/></svg></span><b>ร่างข้อความ</b><small>ถึงอีกฝ่าย</small></button>' +
+      '<button type="button" class="vc-next-b vc-next-ck"><span class="vc-next-ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3.5" width="16" height="17" rx="2"/><path d="m8 9 1.6 1.6L12.5 7.7M8 15l1.6 1.6 2.9-2.9M14.5 9.5H17M14.5 15.5H17"/></svg></span><b>เช็กลิสต์</b><small>ก่อนเซ็น <em>' + ckCount() + '</em></small></button>' +
+      '<button type="button" class="vc-next-b vc-next-img"><span class="vc-next-ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="m4 17 5-4.5 4 3.5 2.5-2 4.5 4"/></svg></span><b>รูปสรุป</b><small>ไว้แชร์</small></button>' +
+      '</div>';
+    var share = sum.querySelector('.share-bar');
+    sum.insertBefore(bar, share ? share.nextSibling : null);
+    bar.querySelector('.vc-next-msg').addEventListener('click', openDraft);
+    bar.querySelector('.vc-next-ck').addEventListener('click', openChecklist);
+    bar.querySelector('.vc-next-img').addEventListener('click', openImage);
+  }
+  new MutationObserver(addBar).observe(box, { childList: true, subtree: true });
+  addBar();
+})();
