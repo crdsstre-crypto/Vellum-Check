@@ -4684,3 +4684,41 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   html.vc-mini-on.vc-art article.rpt.vc-m :is(details.item,#issueIndex,.gloss,.fu,.miss){scroll-margin-top:calc(var(--art-head,58px) + 124px)}
 }
 @media (max-width:767px) and (prefers-reduced-motion:reduce){ .vc-mini{transition:none} }
+
+/* ===== v207 (มือถือ): แก้การ์ดว่างบน iPhone + แถบย่อรวมแท็บ + ตัวเลขในโดนัท + คำใบ้ปัด ===== */
+@media (max-width:767px){
+  /* บั้ก 1: เลิกใช้กระจกฝ้าซ้อนหลายชั้น (iOS วาดไม่ทัน → การ์ดว่าง/บล็อกดำ) ใช้พื้นทึบเกือบทั้งหมดแทน */
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed > .vc-box,
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard > .vc-done,
+  html.vc-art .vc-sum,
+  html.vc-art article.rpt.vc-m :is(.vc-brief,.ix-row,.miss,.cb-src,.vc-leg,.gloss,.fu){
+    -webkit-backdrop-filter:none !important;backdrop-filter:none !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard.vc-boxed > .vc-box,
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard > .vc-done,
+  html.vc-art .vc-sum{background:rgba(24,24,28,.92) !important}
+  html.vc-art article.rpt.vc-m :is(.vc-brief,.ix-row,.miss,.cb-src,.vc-leg,.gloss,.fu){background:rgba(24,24,28,.9) !important}
+  /* แสงพื้นหลัง: ไล่สีแบบวงกลมแทน filter:blur ขนาดใหญ่ */
+  html.vc-art .vc-aurora i{filter:none !important;background:radial-gradient(closest-side,var(--vc-acc),transparent) !important;will-change:auto}
+  html.vc-art .vc-aurora i:nth-child(2){background:radial-gradient(closest-side,color-mix(in srgb,var(--vc-acc) 55%,#6d6dff),transparent) !important}
+  /* ขยับการ์ดเฉพาะตอนกำลังปัด (ไม่สร้างเลเยอร์ค้างทุกการ์ด) */
+  html.vc-art article.rpt.vc-m3 .ix-row > :not(.vc-sw){transform:none}
+  html.vc-art article.rpt.vc-m3 .ix-row:is(.vc-swiping,.vc-sw-back,.vc-sw-go) > :not(.vc-sw){transform:translateX(var(--swx,0))}
+
+  /* ไอเดีย 1: ตัวเลขกลางโดนัท + แถบสีตามระดับเสี่ยง */
+  .vc-mini-d{position:relative}
+  .vc-mini-d em{position:absolute;inset:0;display:grid;place-items:center;font:700 .8rem/1 Prompt,Sarabun,sans-serif;font-style:normal;color:#f4f4f5}
+  .vc-mini-bar i{background:var(--st,#3fb98d)}
+
+  /* ไอเดีย 2: แถบย่อ + แท็บ ต่อกันเป็นชิ้นเดียว */
+  .vc-mini{left:8px;right:8px;height:52px;box-sizing:border-box;border-radius:16px 16px 0 0;border-bottom-color:rgba(255,255,255,.05);box-shadow:none}
+  html.vc-mini-on.vc-art .vc-tabs{top:calc(var(--art-head,58px) + 58px) !important;border-top-color:transparent !important;border-radius:0 0 14px 14px !important;
+    background:rgba(24,24,28,.86) !important;box-shadow:0 14px 30px -14px rgba(0,0,0,.9)}
+
+  /* ไอเดีย 3: คำใบ้ปัดขวา (ครั้งเดียว) */
+  .vc-sw-tip{display:flex;align-items:center;gap:6px;width:max-content;max-width:100%;margin:-4px auto 12px;padding:6px 12px;border-radius:99px;
+    background:rgba(63,185,141,.12);border:1px solid rgba(63,185,141,.3);color:#7fd9b4;font:500 .8rem/1.3 Prompt,Sarabun,sans-serif;animation:vcFadeIn .3s ease both;transition:opacity .3s ease,transform .3s ease}
+  .vc-sw-tip i{font-style:normal;animation:vcTipNudge 1s ease-in-out infinite}
+  .vc-sw-tip.out{opacity:0;transform:translateY(-4px)}
+  @keyframes vcTipNudge{50%{transform:translateX(4px)}}
+}
+@media (max-width:767px) and (prefers-reduced-motion:reduce){ .vc-sw-tip i{animation:none} }
