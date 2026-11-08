@@ -5436,3 +5436,121 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   .vc-demo-exit{background:#34d399;border:0;color:#04281b}
   [data-theme="light"] .vc-demo-other{background:#fff;border-color:#a7f3d0;color:#065f46}
 }
+/* ===== v219 มือถือ: การ์ดลองตัวอย่าง · กระดาษย่อส่วน · ฉากเปิดผลตัวอย่าง · การ์ดชวนตรวจจริง ===== */
+.vc-try,.vsl-thumb,.vc-dsc,.vc-demo-cta{display:none}
+@media (max-width:767px){
+  /* (ข) iPhone จำสถานะ hover หลังแตะ — ไม่ใช้ hover บนจอสัมผัส */
+  .vsl-item:hover .vsl-art{transform:none}
+  .vsl-item:hover::after{color:#8e8e96}
+  /* (1) การ์ดลองตัวอย่าง */
+  #sampleBtn{display:none !important}
+  .ta-actions .file-pick{flex:1}
+  .vc-try{display:block;margin:12px 0 2px;padding:4px;border-radius:20px;position:relative;
+    background:linear-gradient(140deg,rgba(52,211,153,.2),rgba(34,211,238,.08) 45%,rgba(167,139,250,.14));border:1px solid rgba(52,211,153,.34);
+    box-shadow:0 18px 40px -26px rgba(52,211,153,.7),inset 0 1px 0 rgba(255,255,255,.07)}
+  .vc-try[hidden]{display:none}
+  .vc-try-main{display:flex;align-items:center;gap:14px;width:100%;min-height:0 !important;height:auto !important;padding:12px 12px 12px 10px;border:0;border-radius:16px;
+    background:transparent;color:#eafff6;text-align:left;font-family:Prompt,sans-serif;cursor:pointer;position:relative;overflow:hidden}
+  .vc-try-main::before{display:none !important}
+  .vc-try-main::after{content:"" !important;display:block !important;position:absolute;inset:0;background:linear-gradient(100deg,transparent 35%,rgba(255,255,255,.1) 50%,transparent 65%);transform:translateX(-100%);animation:vslShine 4.2s ease-in-out 1.2s infinite;pointer-events:none}
+  .vc-try-main:active{transform:scale(.985)}
+  .vc-try-fan{flex:none;position:relative;width:62px;height:62px}
+  .vc-try-fan i{position:absolute;left:12px;top:4px;width:38px;height:50px;border-radius:4px;background:#e9e5dc;box-shadow:0 6px 14px -6px rgba(0,0,0,.7);transform-origin:50% 100%;transition:transform .45s cubic-bezier(.3,1.5,.5,1)}
+  .vc-try-fan .f3{transform:rotate(-16deg) translateX(-6px);background:#cfc9bd}
+  .vc-try-fan .f2{transform:rotate(9deg) translateX(5px);background:#ddd8cd}
+  .vc-try-fan .f1{background:#fdfcf8;padding:6px 5px;display:flex;flex-direction:column;gap:3px;animation:vcTryBob 3.4s ease-in-out infinite}
+  .vc-try-fan .f1 b{display:block;height:3px;width:60%;margin:0 auto 2px;border-radius:2px;background:#9c937f}
+  .vc-try-fan .f1 em{display:block;height:2.5px;border-radius:2px;background:#cfc8b8}
+  .vc-try-fan .f1 em.hl{background:#f6d860;box-shadow:0 0 0 1px rgba(226,162,28,.3)}
+  .vc-try-fan .f1 em.s{width:70%}
+  .vc-try-main:active .vc-try-fan .f3{transform:rotate(-22deg) translateX(-9px)}
+  .vc-try-main:active .vc-try-fan .f2{transform:rotate(15deg) translateX(8px)}
+  .vc-try-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+  .vc-try-tx b{font:600 15.5px/1.35 Prompt,sans-serif;color:#f2fff9}
+  .vc-try-tx small{font:400 12px/1.4 Prompt,sans-serif;color:#9fe6c9}
+  .vc-try-free{flex:none;align-self:flex-start;padding:4px 10px;border-radius:99px;background:#34d399;color:#04281b;font:700 11.5px/1.1 Prompt,sans-serif;box-shadow:0 4px 14px -4px rgba(52,211,153,.9)}
+  .vc-try-q{padding:2px 10px 10px;border-top:1px dashed rgba(255,255,255,.1);margin:0 6px}
+  .vc-try-q>span{display:block;margin:9px 0 7px;font:500 11.5px/1 Prompt,sans-serif;color:#86d8b8;letter-spacing:.02em}
+  .vc-try-chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -10px;padding:0 10px}
+  .vc-try-chips::-webkit-scrollbar{display:none}
+  .vc-try-c,.vc-try-all{flex:none;display:inline-flex;align-items:center;gap:6px;min-height:38px !important;height:auto !important;padding:0 12px 0 9px;border-radius:99px;
+    border:1px solid color-mix(in srgb,var(--qa,#fff) 40%,transparent);background:color-mix(in srgb,var(--qa,#fff) 12%,rgba(10,10,12,.6));color:#f0f0f2;font:500 13px/1 Prompt,sans-serif;cursor:pointer}
+  .vc-try-c::before,.vc-try-c::after,.vc-try-all::before,.vc-try-all::after{display:none !important}
+  .vc-try-c svg{width:17px;height:17px;fill:none;stroke:var(--qa);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  .vc-try-all{padding:0 12px;border-color:rgba(255,255,255,.14);background:transparent;color:#bfeee0}
+  .vc-try-c:active,.vc-try-all:active{transform:scale(.95)}
+  [data-theme="light"] .vc-try{background:linear-gradient(140deg,#ecfdf5,#f0fdfa 50%,#f5f3ff);border-color:#a7f3d0}
+  [data-theme="light"] .vc-try-main,[data-theme="light"] .vc-try-tx b{color:#064e3b}
+  [data-theme="light"] .vc-try-tx small,[data-theme="light"] .vc-try-q>span{color:#047857}
+  [data-theme="light"] .vc-try-c{background:#fff;color:#1f2937}
+  [data-theme="light"] .vc-try-all{color:#047857;border-color:#a7f3d0}
+  /* (4) กระดาษย่อส่วนในคลังตัวอย่าง */
+  .vsl-list .vsl-item>.vsl-art{display:none}
+  .vsl-thumb{display:block;flex:none;position:relative;width:60px;height:74px;margin:2px 4px 2px 2px}
+  .vsl-thumb::before{content:"";position:absolute;inset:0;border-radius:4px;background:#d9d3c6;transform:rotate(-5deg) translate(-3px,2px)}
+  .vsl-th-p{position:absolute;inset:0;border-radius:4px;background:#fdfcf8;padding:7px 6px 6px;display:flex;flex-direction:column;gap:3.5px;overflow:hidden;
+    box-shadow:0 8px 16px -8px rgba(0,0,0,.8);border-top:4px solid var(--a);transition:transform .3s cubic-bezier(.3,1.6,.5,1)}
+  .vsl-th-p b{display:block;height:3px;width:62%;margin:0 auto 2px;border-radius:2px;background:#8d8472}
+  .vsl-th-p i{display:block;flex:none;height:2.6px;border-radius:2px;background:#d6cfc0}
+  .vsl-th-p i.r{background:#f4cf4d;box-shadow:0 0 0 1.2px rgba(226,162,28,.25)}
+  .vsl-th-ic{position:absolute;right:-7px;bottom:-6px;width:26px;height:26px;border-radius:9px;display:grid;place-items:center;
+    background:linear-gradient(145deg,color-mix(in srgb,var(--a) 40%,#1f1f25),#16161a);border:1px solid color-mix(in srgb,var(--a) 45%,transparent);box-shadow:0 4px 10px -3px rgba(0,0,0,.8)}
+  .vsl-th-ic svg{width:21px;height:21px;overflow:visible}
+  .vsl-th-ic .w{fill:#eef0f3}.vsl-th-ic .d{fill:#24242b}.vsl-th-ic .a{fill:color-mix(in srgb,var(--a) 80%,#fff)}.vsl-th-ic .as{stroke:color-mix(in srgb,var(--a) 80%,#fff);fill:none}
+  .vsl-item:active .vsl-th-p{transform:rotate(-3deg) translateY(-2px)}
+  /* (7) ฉากเปิดผลตัวอย่าง */
+  .vc-dsc{display:grid;place-items:center;position:fixed;inset:0;z-index:2147483060;background:rgba(6,7,8,.6);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);
+    opacity:0;transition:opacity .28s;font-family:Prompt,Sarabun,sans-serif;color:#ededef}
+  .vc-dsc.in{opacity:1}.vc-dsc.out{opacity:0}
+  .vc-dsc-card{width:min(340px,86vw);display:flex;flex-direction:column;align-items:center;gap:18px}
+  .vc-dsc-paper{position:relative;width:100%;padding:20px 20px 18px 22px;border-radius:8px;background:#fdfcf8;color:#2a2620;overflow:hidden;
+    box-shadow:0 30px 60px -24px rgba(0,0,0,.95),0 0 0 1px rgba(0,0,0,.05);transform:translateY(40px) rotateX(18deg) scale(.92);opacity:0;
+    transition:transform .55s cubic-bezier(.2,.9,.25,1.1),opacity .3s}
+  .vc-dsc.in .vc-dsc-paper{transform:none;opacity:1}
+  .vc-dsc.end .vc-dsc-paper{transform:scale(.96);transition-duration:.4s}
+  .vc-dsc-paper h5{margin:0 0 10px;padding-bottom:8px;border-bottom:1px solid #e1dbcf;text-align:center;font:600 14px/1.3 Taviraj,Prompt,serif;color:#1d1a15}
+  .vc-dsc-paper p{position:relative;margin:0 0 5px;padding-right:22px;font:400 11.5px/1.55 Sarabun,Prompt,sans-serif;color:#6b6457;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .2s}
+  .vc-dsc-paper p span{background-image:linear-gradient(transparent 55%,rgba(250,214,80,.75) 55%,rgba(250,214,80,.75) 92%,transparent 92%);background-repeat:no-repeat;background-size:0% 100%;transition:background-size .35s ease}
+  .vc-dsc-paper p.seen{color:#2a2620}
+  .vc-dsc-paper p.hit span{background-size:100% 100%}
+  .vc-dsc-st{position:absolute;right:0;top:50%;width:18px;height:18px;margin-top:-9px;border-radius:50%;display:grid;place-items:center;font:700 11px/1 Prompt,sans-serif;font-style:normal;color:#fff;
+    transform:scale(2.4) rotate(-25deg);opacity:0;transition:transform .32s cubic-bezier(.3,1.7,.5,1),opacity .15s}
+  .vc-dsc-st.h{background:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.2)}.vc-dsc-st.c{background:#f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,.2)}.vc-dsc-st.l{background:#3b82f6}
+  .vc-dsc-paper p.hit .vc-dsc-st{transform:none;opacity:1}
+  .vc-dsc-scan{position:absolute;left:0;right:0;top:0;height:46px;margin-top:-46px;pointer-events:none;
+    background:linear-gradient(180deg,transparent,rgba(52,211,153,.16) 70%,rgba(52,211,153,.55) 96%,transparent);border-bottom:2px solid #34d399;filter:drop-shadow(0 0 6px rgba(52,211,153,.8));opacity:0}
+  .vc-dsc.in .vc-dsc-scan{animation:vcScan 1.5s cubic-bezier(.45,.05,.55,.95) .38s both}
+  .vc-dsc-h{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+  .vc-dsc-h b{font:600 18px/1.3 Prompt,sans-serif;color:#fff}
+  .vc-dsc-cnt{padding:5px 14px;border-radius:99px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);font:500 13px/1.2 Prompt,sans-serif;color:#d4d4d8}
+  .vc-dsc-cnt em{font-style:normal;font-weight:700;color:#fca5a5;display:inline-block;min-width:.7em}
+  .vc-dsc-cnt.pop em{animation:vcPop .3s cubic-bezier(.3,1.8,.5,1)}
+  .vc-dsc.end .vc-dsc-cnt{background:rgba(52,211,153,.14);border-color:rgba(52,211,153,.4)}
+  .vc-dsc-note{margin:0;font:400 11.5px/1.4 Prompt,sans-serif;color:#8b8b93}
+  html.vc-dsc-open .vc-bn,html.vc-dsc-open .vc-fpill{opacity:0;pointer-events:none}
+  /* (8) การ์ดชวนตรวจจริงท้ายผลตัวอย่าง */
+  .vc-demo-cta{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;margin:18px 0 8px;padding:22px 18px 18px;border-radius:22px;position:relative;overflow:hidden;
+    background:radial-gradient(120% 80% at 50% 0%,rgba(52,211,153,.2),transparent 65%),#141417;border:1px solid rgba(52,211,153,.32)}
+  .vc-dcta-ic{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(145deg,#34d399,#22d3ee);box-shadow:0 10px 24px -10px rgba(52,211,153,.9);margin-bottom:6px}
+  .vc-dcta-ic svg{width:26px;height:26px;fill:none;stroke:#04281b;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .vc-demo-cta h3{margin:0;font:600 18px/1.35 Prompt,sans-serif;color:#fff}
+  .vc-demo-cta p{margin:0;font:400 13px/1.55 Prompt,Sarabun,sans-serif;color:#b4b4bb}
+  .vc-demo-cta .vc-dcta-free{margin-top:4px;padding:4px 12px;border-radius:99px;background:rgba(240,196,106,.12);border:1px solid rgba(240,196,106,.35);color:#f3d48c;font-size:12px}
+  .vc-dcta-go,.vc-dcta-other{width:100%;min-height:52px !important;height:auto !important;border-radius:15px;font:600 15px/1.2 Prompt,sans-serif;cursor:pointer}
+  .vc-dcta-go::before,.vc-dcta-go::after,.vc-dcta-other::before,.vc-dcta-other::after{display:none !important}
+  .vc-dcta-go{margin-top:12px;border:0;background:#f4f4f5;color:#111}
+  .vc-dcta-other{min-height:46px !important;background:transparent !important;border:1px solid rgba(255,255,255,.14) !important;color:#d4d4d8 !important;font-size:14px}
+  .vc-dcta-go:active,.vc-dcta-other:active{transform:scale(.98)}
+  [data-theme="light"] .vc-demo-cta{background:#f0fdf4;border-color:#a7f3d0}
+  [data-theme="light"] .vc-demo-cta h3{color:#064e3b}[data-theme="light"] .vc-demo-cta p{color:#374151}
+  [data-theme="light"] .vc-dcta-go{background:#111;color:#fff}
+}
+@keyframes vcScan{0%{top:0;opacity:0}8%{opacity:1}92%{opacity:1}100%{top:100%;opacity:0}}
+@keyframes vcPop{0%{transform:scale(1)}50%{transform:scale(1.6)}100%{transform:scale(1)}}
+@keyframes vcTryBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px) rotate(-1.5deg)}}
+@media (prefers-reduced-motion:reduce){.vc-try-main::after,.vc-try-fan .f1,.vc-dsc-scan{animation:none !important}}
+@media (max-width:767px){
+  html.vc-art #checkCard .ta-actions #sampleBtn.sample-btn,html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-actions #sampleBtn.sample-btn{display:none !important}
+  html.vc-art #checkCard .ta-actions .file-pick{flex:1 1 100%}
+}
+@media (max-width:767px){html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-actions{grid-template-columns:1fr !important}}
