@@ -4927,3 +4927,70 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   if (mq.addEventListener) mq.addEventListener('change', fix);
   fix();
 })();
+
+/* ===== มือถือ: สีประจำประเภท · เส้นทางขั้นตอน · เน้นคำในกล่องสัญญา · ปุ่มตรวจแบบเด่น (8 พ.ย. 2026) ===== */
+(function () {
+  var root = document.documentElement, mq = window.matchMedia('(max-width:767px)');
+  var card = document.getElementById('checkCard'), sel = document.getElementById('contractType'), ta = document.getElementById('input'), btn = document.getElementById('checkBtn');
+  if (!card || !sel || !ta || !btn) return;
+  var ACC = { unsure: '#94a3b8', rent: '#34d399', sale: '#60a5fa', employment: '#fb923c', service: '#fbbf24', loan: '#22d3ee', shareholder: '#f472b6', nda: '#a78bfa', other: '#fb7185' };
+
+  /* 4) สีประจำประเภทสัญญา */
+  function accent() { root.style.setProperty('--vc-acc', ACC[sel.value] || ACC.unsure); }
+  sel.addEventListener('change', accent); accent();
+
+  /* 1) เส้นทางขั้นตอน (ราวด้านซ้ายของการ์ด) */
+  var rail = document.createElement('div'); rail.className = 'vc-rail'; rail.setAttribute('aria-hidden', 'true');
+  rail.innerHTML = '<i class="vc-rail-bg"></i><i class="vc-rail-fill"></i><b data-k="1"></b><b data-k="2"></b><b data-k="3"></b>';
+  card.appendChild(rail);
+  function railPos() {
+    if (!mq.matches) return;
+    var sn = [].slice.call(card.querySelectorAll('.vc-sn')); if (sn.length < 2) return;
+    var cr = card.getBoundingClientRect();
+    var ys = sn.map(function (s) { var r = s.getBoundingClientRect(); return r.top + r.height / 2 - cr.top; });
+    var top = ys[0], bot = ys[ys.length - 1];
+    rail.style.top = top + 'px'; rail.style.height = Math.max(0, bot - top) + 'px';
+    [].forEach.call(rail.querySelectorAll('b'), function (b, i) { b.style.top = (ys[i] - top) + 'px'; b.classList.toggle('on', sn[i] && sn[i].classList.contains('is-done')); });
+    /* เติมสีถึงขั้นล่าสุดที่เสร็จ (ต่อเนื่องจากขั้น 1) */
+    var last = -1; for (var i = 0; i < sn.length; i++) { if (sn[i].classList.contains('is-done')) last = i; else break; }
+    var fillTo = last < 0 ? 0 : ys[last] - top;
+    rail.querySelector('.vc-rail-fill').style.height = fillTo + 'px';
+  }
+  if (window.ResizeObserver) new ResizeObserver(railPos).observe(card);
+  new MutationObserver(function () { requestAnimationFrame(railPos); }).observe(card, { subtree: true, attributes: true, attributeFilter: ['class', 'hidden'] });
+  window.addEventListener('resize', railPos);
+  setTimeout(railPos, 300);
+
+  /* 2) เน้นคำในกล่องสัญญา: ชั้นเงาใต้กล่องข้อความ ใส่สีเฉพาะ (ไม่เปลี่ยนขนาดตัวอักษร ตำแหน่งจึงตรงกัน) */
+  var wrap = ta.closest('.ta-wrap');
+  var mir = document.createElement('div'); mir.className = 'vc-mirror'; mir.setAttribute('aria-hidden', 'true');
+  var inner = document.createElement('div'); inner.className = 'vc-mirror-in'; mir.appendChild(inner);
+  wrap.insertBefore(mir, ta);
+  var NUM = /([0-9๐-๙][0-9๐-๙,.]*\s*(?:ล้านบาท|บาท|เปอร์เซ็นต์|%|วันทำการ|วัน|สัปดาห์|เดือน|ปี))/g;
+  function paint() {
+    if (!mq.matches || root.getAttribute('data-desk') !== 'check') { wrap.classList.remove('vc-hl-on'); return; }
+    wrap.classList.add('vc-hl-on');
+    var s = ta.value.replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; });
+    s = s.replace(/(^|\n)(\s*)(ข้อ\s*[0-9๐-๙]+(?:\.[0-9๐-๙]+)*)/g, '$1$2<span class="hk">$3</span>').replace(NUM, '<span class="hn">$1</span>');
+    inner.innerHTML = s + '\n​';
+    sync();
+  }
+  function sync() {
+    var cs = getComputedStyle(ta);
+    ['paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft', 'fontFamily', 'fontSize', 'lineHeight', 'letterSpacing', 'borderTopWidth', 'borderLeftWidth', 'borderRightWidth', 'borderBottomWidth', 'borderRadius'].forEach(function (k) { mir.style[k] = cs[k]; });
+    mir.style.borderStyle = 'solid'; mir.style.borderColor = 'transparent';
+    inner.style.transform = 'translateY(' + (-ta.scrollTop) + 'px)';
+  }
+  ta.addEventListener('input', paint); ta.addEventListener('scroll', sync, { passive: true });
+  new MutationObserver(paint).observe(root, { attributes: true, attributeFilter: ['data-desk'] });
+  setInterval(function () { if (mq.matches && !document.hidden && inner.dataset.n !== String(ta.value.length)) { inner.dataset.n = String(ta.value.length); paint(); } }, 700);
+  paint();
+
+  /* 3) ปุ่มตรวจ: เรืองแสงครั้งหนึ่งเมื่อพร้อมกด */
+  var wasOff = btn.disabled;
+  new MutationObserver(function () {
+    var off = btn.disabled;
+    if (wasOff && !off && mq.matches) { btn.classList.remove('vc-ready'); void btn.offsetWidth; btn.classList.add('vc-ready'); }
+    wasOff = off;
+  }).observe(btn, { attributes: true, attributeFilter: ['disabled'] });
+})();
