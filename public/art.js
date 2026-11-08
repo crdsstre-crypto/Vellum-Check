@@ -3858,7 +3858,9 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     wrap.classList.toggle('vc-focus', typing);
     if (has) say('');
     var res = document.getElementById('result');
-    var done3 = !!(res && res.querySelector(':scope > :not(.empty):not(.empty-art)'));
+    /* ขั้น 3 ติ๊กเฉพาะเมื่อผลตรวจที่แสดงอยู่ ตรวจจากข้อความที่อยู่ในกล่องตอนนี้ */
+    var hasRes = !!(res && res.querySelector('article.rpt'));
+    var done3 = hasRes && has && window.__vcCheckedText === ta.value.trim();
     if (steps[1]) steps[1].classList.toggle('is-done', has);
     if (steps[2]) steps[2].classList.toggle('is-done', has);
     if (steps[3]) steps[3].classList.toggle('is-done', done3);
@@ -4694,4 +4696,114 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   }
   new MutationObserver(addBar).observe(box, { childList: true, subtree: true });
   addBar();
+})();
+
+/* ===== มือถือ: จำข้อความที่ตรวจ (ขั้น 3) + หน้าระหว่างรอตรวจ + เดาประเภทสัญญาจากข้อความ (8 พ.ย. 2026) ===== */
+(function () {
+  var ta = document.getElementById('input'), btn = document.getElementById('checkBtn'), res = document.getElementById('result');
+  if (!ta || !btn || !res) return;
+  var mq = window.matchMedia('(max-width:767px)');
+  var calm = function () { return document.documentElement.hasAttribute('data-calm') || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); };
+
+  /* 1) ตอนกดตรวจ จำข้อความไว้ — ผลที่ออกมาเป็นของข้อความนี้ */
+  var pending = null;
+  new MutationObserver(function () {
+    var busy = btn.classList.contains('is-busy');
+    if (busy && pending == null) { pending = ta.value.trim(); showLoader(); }
+    if (!busy && pending != null) {
+      if (res.querySelector('article.rpt')) window.__vcCheckedText = pending;
+      pending = null; hideLoader();
+    }
+  }).observe(btn, { attributes: true, attributeFilter: ['class'] });
+
+  /* 2) หน้าระหว่างรอตรวจ */
+  var ld = null, timers = [];
+  function showLoader() {
+    if (!mq.matches) return;
+    hideLoader(true);
+    var lines = ta.value.split(/\n+/).map(function (l) { return l.trim(); }).filter(Boolean).slice(0, 9);
+    var esc = function (s) { return s.replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); };
+    ld = document.createElement('div'); ld.className = 'vc-ld'; ld.setAttribute('role', 'status'); ld.setAttribute('aria-live', 'polite');
+    ld.innerHTML = '<div class="vc-ld-card">' +
+      '<div class="vc-ld-paper" aria-hidden="true"><div class="vc-ld-txt">' + lines.map(function (l) { return '<p>' + esc(l.slice(0, 60)) + '</p>'; }).join('') + '</div><i class="vc-ld-scan"></i></div>' +
+      '<b class="vc-ld-h">กำลังตรวจสัญญา</b>' +
+      '<ol class="vc-ld-steps">' +
+        '<li data-s="0">ปกปิดข้อมูลส่วนตัว</li><li data-s="1">อ่านสัญญาทีละข้อ</li><li data-s="2">หาจุดเสี่ยงและเทียบกับกฎหมาย</li><li data-s="3">สรุปผล</li>' +
+      '</ol><p class="vc-ld-note">ปกติใช้เวลา 10–30 วินาที อย่าเพิ่งปิดหน้านี้</p></div>';
+    document.body.appendChild(ld);
+    document.documentElement.classList.add('vc-ld-open');
+    setStep(0);
+    timers.push(setTimeout(function () { setStep(1); }, 900));
+    timers.push(setTimeout(function () { setStep(2); }, 4200));
+    timers.push(setTimeout(function () { var n = ld && ld.querySelector('.vc-ld-note'); if (n) n.textContent = 'สัญญายาว ระบบกำลังตรวจละเอียด อีกสักครู่นะครับ'; }, 20000));
+  }
+  function setStep(k) {
+    if (!ld) return;
+    [].forEach.call(ld.querySelectorAll('.vc-ld-steps li'), function (li) {
+      var s = +li.getAttribute('data-s'); li.className = s < k ? 'done' : s === k ? 'on' : '';
+    });
+  }
+  function hideLoader(now) {
+    timers.forEach(clearTimeout); timers = [];
+    if (!ld) return;
+    var el = ld; ld = null;
+    if (now) { el.remove(); document.documentElement.classList.remove('vc-ld-open'); return; }
+    var ok = !!res.querySelector('article.rpt');
+    [].forEach.call(el.querySelectorAll('.vc-ld-steps li'), function (li) { li.className = ok ? 'done' : li.className; });
+    setTimeout(function () {
+      el.classList.add('out'); document.documentElement.classList.remove('vc-ld-open');
+      setTimeout(function () { el.remove(); }, 300);
+    }, ok && !calm() ? 450 : 0);
+  }
+
+  /* 3) เดาประเภทสัญญาจากข้อความ (ในเครื่อง ไม่เสียเครดิต) */
+  var sel = document.getElementById('contractType'), meta = document.querySelector('#checkCard .ta-meta');
+  if (!sel || !meta) return;
+  var KW = {
+    rent: ['ผู้เช่า', 'ผู้ให้เช่า', 'ค่าเช่า', 'เงินประกัน', 'ห้องชุด', 'ห้องพัก', 'ย้ายออก'],
+    sale: ['ผู้ซื้อ', 'ผู้ขาย', 'ซื้อขาย', 'ราคาซื้อ', 'โอนกรรมสิทธิ์', 'มัดจำ'],
+    employment: ['ลูกจ้าง', 'นายจ้าง', 'เงินเดือน', 'ทดลองงาน', 'เลิกจ้าง', 'วันลา', 'เวลาทำงาน'],
+    service: ['ผู้รับจ้าง', 'ผู้ว่าจ้าง', 'ค่าจ้าง', 'งวดงาน', 'ส่งมอบงาน', 'ขอบเขตงาน', 'แก้ไขงาน'],
+    loan: ['ผู้กู้', 'ผู้ให้กู้', 'กู้ยืม', 'ดอกเบี้ย', 'ชำระคืน', 'เงินต้น'],
+    shareholder: ['หุ้นส่วน', 'ผู้ถือหุ้น', 'แบ่งกำไร', 'ผลกำไร', 'เงินลงทุน', 'สัดส่วนหุ้น'],
+    nda: ['ข้อมูลลับ', 'ความลับ', 'ห้ามเปิดเผย', 'ผู้รับข้อมูล', 'ผู้เปิดเผยข้อมูล']
+  };
+  var chip = document.createElement('div'); chip.className = 'vc-guess'; chip.hidden = true;
+  meta.parentNode.insertBefore(chip, meta.nextSibling);
+  var dismissed = '', tm = 0;
+  function guess(t) {
+    var best = null, second = 0;
+    Object.keys(KW).forEach(function (k) {
+      var sc = 0, kinds = 0;
+      KW[k].forEach(function (w) { var n = t.split(w).length - 1; if (n) { sc += Math.min(n, 4); kinds++; } });
+      if (kinds < 2) sc = 0;
+      if (!best || sc > best.sc) { second = best ? best.sc : 0; best = { k: k, sc: sc }; } else if (sc > second) second = sc;
+    });
+    return best && best.sc >= 3 && best.sc >= second * 1.6 ? best.k : null;
+  }
+  function nameOf(v) { var o = sel.querySelector('option[value="' + v + '"]'); return o ? o.textContent.replace(/\s*\(.*\)\s*$/, '') : v; }
+  function update() {
+    if (!mq.matches) { chip.hidden = true; return; }
+    var t = ta.value, n = (t.match(/ข้อ\s*[0-9๐-๙]+/g) || []).length, g = t.trim().length > 60 ? guess(t) : null;
+    if (!t.trim()) { chip.hidden = true; return; }
+    var parts = [];
+    if (n) parts.push('<span class="vc-g-n">พบ ' + n + ' ข้อ</span>');
+    var cur = sel.value;
+    if (g && g !== cur && dismissed !== g && cur === 'unsure') {
+      parts.push('<span class="vc-g-t">ดูเหมือน<b>' + nameOf(g) + '</b></span><button type="button" class="vc-g-use" data-v="' + g + '">ใช้ประเภทนี้ ›</button><button type="button" class="vc-g-x" aria-label="ไม่ใช่">✕</button>');
+    } else if (g && g === cur) {
+      parts.push('<span class="vc-g-ok">✓ ประเภทตรงกับเนื้อหา</span>');
+    }
+    chip.innerHTML = parts.join('');
+    chip.hidden = !parts.length;
+  }
+  chip.addEventListener('click', function (e) {
+    var u = e.target.closest('.vc-g-use');
+    if (u) { sel.value = u.getAttribute('data-v'); sel.dispatchEvent(new Event('change', { bubbles: true })); update(); return; }
+    var x = e.target.closest('.vc-g-x'); if (x) { dismissed = guess(ta.value) || ''; update(); }
+  });
+  ta.addEventListener('input', function () { clearTimeout(tm); tm = setTimeout(update, 350); });
+  sel.addEventListener('change', update);
+  setInterval(function () { if (mq.matches && !document.hidden && chip.dataset.v !== ta.value.length + sel.value) { chip.dataset.v = ta.value.length + sel.value; update(); } }, 900);
+  update();
 })();
