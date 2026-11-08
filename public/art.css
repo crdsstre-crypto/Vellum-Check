@@ -3658,3 +3658,75 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   html.vc-art .vc-sum .ix-prog-l{display:inline-flex !important;flex-direction:row !important;align-items:baseline;gap:4px}
   html.vc-art .vc-sum .ix-prog-n{display:inline !important;margin:0 !important}
 }
+
+
+/* ===== มือถือ: เก็บรายละเอียดหน้าผลตรวจ (8 พ.ย. 2026 รอบ 3) — เฉพาะ ≤767px ===== */
+@media (max-width:767px){
+  /* 1) ป้ายประเภท + วันที่ บนการ์ดสรุป; ซ่อนแถบเดิม */
+  html.vc-art #result > .detect-banner.vc-moved{display:none !important}
+  html.vc-art article.rpt.vc-nohead > .rpt-head{display:none !important}
+  html.vc-art .vc-sum-meta{display:flex;align-items:center;flex-wrap:wrap;gap:6px 8px;margin:0 0 14px;padding:0 0 12px;border-bottom:1px solid rgba(255,255,255,.08)}
+  html.vc-art .vc-type{display:inline-flex;align-items:center;gap:6px;min-height:28px;padding:0 11px 0 9px;border-radius:99px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+    font:600 12.5px/1 Prompt,Sarabun,sans-serif;color:#ededef;white-space:nowrap}
+  html.vc-art .vc-type i{width:14px;height:14px;background:#d4d4d8;
+    -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 3.5h7l4.5 4.5v11a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 19V5A1.5 1.5 0 0 1 7 3.5z'/%3E%3Cpath d='M13.5 3.5V8h5M8.5 12.5h7M8.5 16h4.5'/%3E%3C/svg%3E") center/contain no-repeat;
+            mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 3.5h7l4.5 4.5v11a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 19V5A1.5 1.5 0 0 1 7 3.5z'/%3E%3Cpath d='M13.5 3.5V8h5M8.5 12.5h7M8.5 16h4.5'/%3E%3C/svg%3E") center/contain no-repeat}
+  html.vc-art .vc-sum-meta .vc-type-chg{display:inline-flex !important;align-items:center;min-height:28px !important;height:28px;padding:0 10px !important;margin:0 !important;border-radius:99px !important;
+    background:transparent !important;border:1px dashed rgba(255,255,255,.25) !important;color:#d4d4d8 !important;font:500 12.5px/1 Prompt,Sarabun,sans-serif !important;box-shadow:none !important}
+  html.vc-art .vc-sum-meta .vc-type-chg::after{content:"›";margin-left:4px;font-size:14px;position:static !important;display:inline !important;background:none !important;border:0 !important;transform:none !important;width:auto;height:auto}
+  html.vc-art .vc-sum-meta .vc-type-chg::before{display:none !important}
+  html.vc-art .vc-date{margin-left:auto;font:400 12px/1 Prompt,Sarabun,sans-serif;color:#8b8b94;white-space:nowrap}
+
+  /* 3) บรรทัดเหตุผล 2 บรรทัดพร้อม … */
+  html.vc-art article.rpt.vc-m .ix-row .ix-tx > p{white-space:normal !important;text-overflow:ellipsis !important;word-break:break-word}
+
+  /* 6) ประเด็นแบบการ์ด */
+  html.vc-art article.rpt.vc-m3 .ix-list{display:flex !important;flex-direction:column;gap:10px;border:0 !important}
+  html.vc-art article.rpt.vc-m3 .ix-row{position:relative;display:flex !important;align-items:center;gap:10px;width:100%;margin:0 !important;padding:14px 14px 14px 16px !important;
+    border-radius:16px !important;border:1px solid rgba(255,255,255,.09) !important;background:rgba(255,255,255,.03) !important;box-shadow:none !important;text-align:left}
+  html.vc-art article.rpt.vc-m3 .ix-row[hidden]{display:none !important}
+  html.vc-art article.rpt.vc-m3 .ix-row::before{content:"" !important;position:absolute !important;left:0 !important;top:16px !important;bottom:16px !important;width:3px !important;border-radius:0 3px 3px 0;background:var(--lc,#8b8b94) !important;display:block !important;transform:none !important}
+  html.vc-art article.rpt.vc-m3 .ix-row.lv-check_detail{--lc:#f87171}
+  html.vc-art article.rpt.vc-m3 .ix-row.lv-caution{--lc:#fbbf24}
+  html.vc-art article.rpt.vc-m3 .ix-row.lv-low{--lc:#8b8b94}
+  html.vc-art article.rpt.vc-m3 .ix-row:active{background:rgba(255,255,255,.06) !important}
+  html.vc-art article.rpt.vc-m3 .ix-row .ix-tx{flex:1 1 auto;min-width:0;border:0 !important;padding:0 !important}
+  html.vc-art article.rpt.vc-m3 .ix-row .ix-tx > small{display:flex !important;align-items:center;gap:8px;margin:0 0 6px !important;font:500 12px/1 Prompt,Sarabun,sans-serif !important;color:#8b8b94 !important}
+  html.vc-art .vc-pill{display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:99px;font:600 11.5px/1 Prompt,Sarabun,sans-serif;white-space:nowrap}
+  html.vc-art .vc-pill.lv-check_detail{background:rgba(248,113,113,.15);color:#fca5a5;border:1px solid rgba(248,113,113,.35)}
+  html.vc-art .vc-pill.lv-caution{background:rgba(251,191,36,.13);color:#fcd34d;border:1px solid rgba(251,191,36,.32)}
+  html.vc-art .vc-pill.lv-low{background:rgba(255,255,255,.06);color:#c4c4ca;border:1px solid rgba(255,255,255,.14)}
+  html.vc-art .vc-no{color:#8b8b94}
+  html.vc-art article.rpt.vc-m3 .ix-row .ix-tx > b{font:600 15.5px/1.4 Prompt,Sarabun,sans-serif !important;color:#f4f4f5 !important}
+  html.vc-art article.rpt.vc-m3 .ix-row .ix-clause{display:inline-flex !important;align-items:center;gap:5px;margin-top:8px !important;font:400 12px/1 Prompt,Sarabun,sans-serif !important;color:#8b8b94 !important}
+  html.vc-art article.rpt.vc-m3 .ix-row .ix-clause svg{width:13px;height:13px}
+  html.vc-art article.rpt.vc-m3 .ix-row .ix-arrow{flex:0 0 28px;width:28px;height:28px;border-radius:50%;display:grid !important;place-items:center;background:rgba(255,255,255,.06);color:#d4d4d8 !important;font-size:14px !important}
+  html.vc-art article.rpt.vc-m3 .ix-row .ix-ico{display:none !important}
+  /* อ่านแล้ว: ✓ เขียวที่มุม */
+  html.vc-art article.rpt.vc-m3 .ix-row .ix-done-chip{display:none !important}
+  html.vc-art article.rpt.vc-m3 .ix-row.is-done{border-color:rgba(52,211,153,.3) !important}
+  html.vc-art article.rpt.vc-m3 .ix-row.is-done .ix-arrow{background:#34d399;color:transparent !important;position:relative}
+  html.vc-art article.rpt.vc-m3 .ix-row.is-done .ix-arrow::after{content:"";position:absolute;inset:0;margin:auto;width:14px;height:14px;background:#0b2b1f;
+    -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12.5 4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/contain no-repeat;
+            mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12.5 4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/contain no-repeat}
+
+  /* 5) การ์ดข้อมูลสัญญา */
+  html.vc-art article.rpt.vc-m3 > .brief.vc-moved{display:none !important}
+  html.vc-art .vc-brief{order:3;margin:0 0 14px;padding:14px 16px 6px;border-radius:16px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.03);font-family:Prompt,Sarabun,sans-serif}
+  html.vc-art .vc-brief h4{margin:0 0 4px;font:600 13px/1.3 Prompt,Sarabun,sans-serif;color:#a3a3aa;letter-spacing:0}
+  html.vc-art .vc-br-row{display:flex;gap:12px;padding:10px 0;border-top:1px solid rgba(255,255,255,.06)}
+  html.vc-art .vc-br-row:first-of-type{border-top:0}
+  html.vc-art .vc-br-ico{flex:0 0 34px;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#d4d4d8;background:linear-gradient(145deg,#26262c,#18181c);border:1px solid rgba(255,255,255,.09)}
+  html.vc-art .vc-br-row small{display:block;font:500 11.5px/1.3 Prompt,Sarabun,sans-serif;color:#8b8b94;margin:1px 0 2px}
+  html.vc-art .vc-br-row p{margin:0;font:400 14.5px/1.55 Prompt,Sarabun,sans-serif;color:#e4e4e7}
+  html.vc-art .vc-br-row .vc-num{font-weight:600;color:#fff}
+
+  /* 4) ระยะห่างเท่ากันทั้งแท็บ */
+  html.vc-art article.rpt.vc-m3 > #issueIndex{padding-bottom:0 !important;margin-bottom:0 !important;border-bottom:0 !important}
+  html.vc-art article.rpt.vc-m3 > #issueIndex > :last-child{margin-bottom:0 !important}
+  html.vc-art article.rpt.vc-m3 > :is(.miss,#commandCenter,.vc-leg){margin-top:14px !important;margin-bottom:0 !important}
+  html.vc-art article.rpt.vc-m3 #commandCenter > :last-child{margin-bottom:0 !important}
+  html.vc-art article.rpt.vc-m3 > .disclaimer{margin-top:16px !important;padding-top:14px !important}
+  html.vc-art article.rpt.vc-m3 > [data-vt]{padding-bottom:0 !important}
+}
+@media (max-width:767px){html.vc-art article.rpt.vc-m > .vc-brief{order:3 !important}}
