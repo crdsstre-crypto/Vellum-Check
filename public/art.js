@@ -3648,6 +3648,9 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   var NAMES = { all: 'ทั้งหมด', rent: 'เช่า', sale: 'ซื้อขาย', employment: 'จ้างงาน', service: 'จ้างบริการ', loan: 'กู้ยืม', shareholder: 'หุ้นส่วน', nda: 'รักษาความลับ', other: 'อื่น ๆ', unsure: 'ไม่แน่ใจ' };
   var box = null, flt = 'all';
   function isM() { return !!(window.matchMedia && matchMedia('(max-width:767px)').matches); }
+  /* คอมจอกว้าง: หน้าต่างแบ่งสองฝั่ง (รายการซ้าย · สัญญาขวา) */
+  function isSplit() { return !!(window.matchMedia && matchMedia('(min-width:1024px)').matches); }
+  var LV = { check_detail: ['h', 'สำคัญ'], caution: ['c', 'ควรระวัง'], low: ['l', 'เล็กน้อย'] };
   /* มือถือ: จุดสีบอกจำนวนประเด็นแต่ละระดับ (จากผลตัวอย่างที่เตรียมไว้จริง) */
   function dots(t) {
     var c = window.VCDemo && window.VCDemo.counts(t); if (!c) return '';
@@ -3681,8 +3684,9 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       '<div class="vsl-head"><div><h3 id="vslT">เลือกสัญญาตัวอย่าง</h3><p>' + L.length + ' ฉบับ ทุกฉบับมีจุดเสี่ยงซ่อนอยู่ ลองให้ระบบตรวจดู</p></div><button type="button" class="vsl-x" data-x aria-label="ปิด">✕</button></div>' +
       '<div class="vsl-hero" aria-hidden="true"><span class="vsl-hero-ic"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span><span><b>ดูผลตรวจตัวอย่างได้ฟรี</b><small>ไม่ใช้เครดิต · ไม่ต้องเข้าสู่ระบบ · เห็นผลใน 2 วินาที</small></span></div>' +
       '<div class="vsl-chips" role="tablist"></div><div class="vsl-list"></div>' +
-      '<div class="vsl-view" hidden><div class="vsl-vhead"></div><div class="vsl-paper"><div class="vsl-doc" tabindex="0"></div></div>' +
-      '<div class="vsl-vfoot"><button type="button" class="vsl-back">← กลับไปเลือก</button><button type="button" class="vsl-fill">แก้เอง</button><button type="button" class="vsl-use">ใช้สัญญานี้</button></div></div>' +
+      '<div class="vsl-view" hidden><div class="vsl-vhead"></div><div class="vsl-vbody"><div class="vsl-paper"><div class="vsl-doc" tabindex="0"></div></div><aside class="vsl-rail" aria-label="จุดเสี่ยงในสัญญานี้"></aside></div>' +
+      '<div class="vsl-vfoot"><span class="vsl-sum"></span><button type="button" class="vsl-back">← กลับไปเลือก</button><button type="button" class="vsl-fill">แก้เอง</button><button type="button" class="vsl-use">ใช้สัญญานี้</button></div>' +
+      '<div class="vsl-keys" aria-hidden="true"><span><kbd>↑</kbd><kbd>↓</kbd> เปลี่ยนฉบับ</span><span><kbd>Enter</kbd> ดูผลทันที</span><span><kbd>Esc</kbd> ปิด</span></div></div>' +
       '<p class="vsl-fine">ข้อความสมมติเพื่อทดลองใช้เท่านั้น ไม่ใช่แบบสัญญาที่แนะนำให้ใช้จริง</p></div>';
     document.body.appendChild(box);
     var chips = box.querySelector('.vsl-chips');
@@ -3696,36 +3700,81 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       var it = e.target.closest('.vsl-item'); if (it) { view(+it.dataset.i); return; }
       if (e.target.closest('.vsl-back')) { back(); return; }
       var hl = e.target.closest('.vsl-hl'); if (hl) { var on = !box.classList.contains('hl-on'); box.classList.toggle('hl-on', on); hl.setAttribute('aria-pressed', on ? 'true' : 'false'); return; }
+      var rc = e.target.closest('.vsl-rc'); if (rc) { jump(rc.getAttribute('data-c')); return; }
       if (e.target.closest('.vsl-fill')) { pick(cur); return; }
       if (e.target.closest('.vsl-use')) pick(cur, !!window.VCDemo && window.VCDemo.has(L[cur][1]));
     });
-    box.addEventListener('keydown', function (e) { if (e.key === 'Escape') { if (cur > -1) back(); else close(); } });
+    box.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { if (cur > -1 && !box.classList.contains('vsl-split')) back(); else close(); return; }
+      if (!box.classList.contains('vsl-split') || e.altKey || e.ctrlKey || e.metaKey) return;
+      var t = e.target, typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA');
+      if (typing) return;
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        if (t && t.classList && t.classList.contains('vsl-doc') && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) return; /* เลื่อนกระดาษ */
+        var ids = [].map.call(box.querySelectorAll('.vsl-item'), function (b) { return +b.dataset.i; }), k = ids.indexOf(cur);
+        if (!ids.length) return; e.preventDefault();
+        k = (e.key === 'ArrowDown' || e.key === 'ArrowRight') ? Math.min(ids.length - 1, k + 1) : Math.max(0, k - 1);
+        view(ids[k], true); return;
+      }
+      if (e.key === 'Enter' && cur > -1 && !(t && t.closest && t.closest('button, a'))) { e.preventDefault(); box.querySelector('.vsl-use').click(); }
+    });
+    /* คอม: ชี้การ์ดจุดเสี่ยง ↔ ข้อในกระดาษสว่างพร้อมกัน */
+    box.addEventListener('mouseover', function (e) {
+      var el = e.target.closest && e.target.closest('.vsl-rc, .vsl-doc p[data-c]'); var c = el ? el.getAttribute('data-c') : null;
+      [].forEach.call(box.querySelectorAll('.is-hot'), function (x) { if (x.getAttribute('data-c') !== c) x.classList.remove('is-hot'); });
+      if (c) [].forEach.call(box.querySelectorAll('[data-c="' + c + '"]'), function (x) { if (!x.classList.contains('is-hot')) x.classList.add('is-hot'); });
+    });
     /* มือถือ: เลื่อนรายการแล้วหัวยุบ เห็นการ์ดมากขึ้น */
     var lst = box.querySelector('.vsl-list');
     lst.addEventListener('scroll', function () { var on = lst.scrollTop > 24; if (box.classList.contains('is-scrolled') !== on) box.classList.toggle('is-scrolled', on); }, { passive: true });
   }
   var cur = -1, lastScroll = 0;
   function esc(t) { return t.replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); }
-  function view(i) {
+  function jump(c) {
+    var p = box.querySelector('.vsl-doc p[data-c="' + c + '"]'), d = box.querySelector('.vsl-doc'); if (!p || !d) return;
+    d.scrollTo({ top: Math.max(0, p.offsetTop - 40), behavior: 'smooth' });
+    p.classList.remove('is-flash'); void p.offsetWidth; p.classList.add('is-flash');
+  }
+  function view(i, fromKey) {
     var s = L[i]; if (!s) return; cur = i;
+    [].forEach.call(box.querySelectorAll('.vsl-item'), function (b) { var on = +b.dataset.i === i; if (b.classList.contains('is-cur') !== on) b.classList.toggle('is-cur', on); if (on) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
     var list = box.querySelector('.vsl-list'); lastScroll = list.scrollTop;
     var v = box.querySelector('.vsl-view'); v.style.setProperty('--a', ACC[s[0]] || '#94a3b8');
     var rk = RISK[i] || {}, nR = Object.keys(rk).length;
     v.querySelector('.vsl-vhead').innerHTML = '<span class="vsl-art" aria-hidden="true"><svg viewBox="0 0 64 64">' + (ART[i] || '') + '</svg></span><span class="vsl-txt"><b>' + s[1] + '</b><small>' + NAMES[s[0]] + ' · พบ ' + nR + ' จุดเสี่ยง</small>' + dots(s[1]) + bar(s[1]) + '</span>' +
       '<button type="button" class="vsl-hl" aria-pressed="true"><i></i>ไฮไลต์</button>';
     box.classList.add('hl-on');
-    var lines = s[3].split('\n'), html = '';
+    var lines = s[3].split('\n'), html = '', ordr = [];
+    lines.forEach(function (ln, k) { if (!k) return; var m = /^ข้อ (\d+)/.exec(ln); if (m && rk[m[1]]) ordr.push(m[1]); else if (!m && /พยาน/.test(ln) && rk.p) ordr.push('p'); });
     lines.forEach(function (ln, k) {
       if (k === 0) { html += '<h4>' + esc(ln) + '</h4>'; return; }
       var m = /^ข้อ (\d+)\s*(.*)$/.exec(ln), note = m ? rk[m[1]] : (/พยาน/.test(ln) ? rk.p : null);
       var body = m ? '<b>ข้อ ' + m[1] + '</b> ' + (note ? '<mark>' + esc(m[2]) + '</mark>' : esc(m[2])) : (note ? '<mark>' + esc(ln) + '</mark>' : esc(ln));
-      html += '<p class="' + (m ? '' : 'vsl-plain') + (note ? ' is-risk' : '') + '">' + body + (note ? '<span class="vsl-note">⚠ ' + esc(note) + '</span>' : '') + '</p>';
+      var cid = m ? m[1] : (note ? 'p' : ''), num = note ? (ordr.indexOf(cid) + 1) : 0;
+      html += '<p class="' + (m ? '' : 'vsl-plain') + (note ? ' is-risk' : '') + '"' + (note ? ' data-c="' + cid + '"' : '') + '>' + (num ? '<i class="vsl-pn">' + num + '</i>' : '') + body + (note ? '<span class="vsl-note">⚠ ' + esc(note) + '</span>' : '') + '</p>';
     });
+    /* คอลัมน์จุดเสี่ยง (คอม) จากผลตัวอย่างที่เตรียมไว้จริง — เรียงตามลำดับข้อในสัญญา */
+    var its = (window.VCDemo && window.VCDemo.items) ? window.VCDemo.items(s[1]) : [], byC = {};
+    its.forEach(function (x) { byC[x.clause] = x; });
+    var rail = ordr.map(function (c, k) {
+      var x = byC[c], lv = LV[(x && x.level) || 'caution'];
+      return '<button type="button" class="vsl-rc ' + lv[0] + '" data-c="' + c + '"><i class="vsl-rc-n">' + (k + 1) + '</i><span class="vsl-rc-m">' + (c === 'p' ? 'ท้ายสัญญา' : 'ข้อ ' + c) + ' · ' + lv[1] + '</span><b>' + esc(x ? x.title : rk[c]) + '</b>' + (x ? '<small>' + esc(x.impact) + '</small>' : '') + '</button>';
+    }).join('');
+    v.querySelector('.vsl-rail').innerHTML = '<h5>จุดที่ระบบจะชี้ <span>' + ordr.length + '</span></h5>' + (rail || '<p class="vsl-rc-none">ไม่มีจุดเสี่ยงที่เตรียมไว้</p>');
+    var cc = window.VCDemo && window.VCDemo.counts(s[1]), sm = [];
+    if (cc) ['check_detail', 'caution', 'low'].forEach(function (k) { if (cc[k]) sm.push('<span class="' + LV[k][0] + '">' + LV[k][1] + ' ' + cc[k] + '</span>'); });
+    v.querySelector('.vsl-sum').innerHTML = sm.length ? '<small>ระบบจะพบ</small>' + sm.join('') : '';
     var d = v.querySelector('.vsl-doc'); d.innerHTML = html; d.scrollTop = 0;
     var use = v.querySelector('.vsl-use'), free = window.VCDemo && window.VCDemo.has(s[1]);
     use.classList.toggle('is-free', !!free);
-    use.innerHTML = free ? '<span>ดูผลตรวจทันที</span><small>ฟรี · ไม่ใช้เครดิต</small>' : 'ใช้สัญญานี้';
+    use.innerHTML = free ? '<span>ดูผลตรวจทันที</span><small>ฟรี · ไม่ใช้เครดิต</small>' + (box.classList.contains('vsl-split') ? '<kbd class="vsl-ent">Enter ⏎</kbd>' : '') : 'ใช้สัญญานี้';
+    var fl = v.querySelector('.vsl-fill'); fl.textContent = box.classList.contains('vsl-split') ? 'ใส่ในช่องเพื่อแก้เอง' : 'แก้เอง';
     box.classList.add('is-view'); v.hidden = false;
+    if (box.classList.contains('vsl-split')) {
+      v.classList.remove('vsl-swap'); void v.offsetWidth; v.classList.add('vsl-swap');
+      var ci = box.querySelector('.vsl-item.is-cur'); if (ci && fromKey) ci.scrollIntoView({ block: 'nearest' });
+      if (fromKey) return;
+    }
     setTimeout(function () { var u = v.querySelector('.vsl-use'); if (u) u.focus({ preventScroll: true }); }, 50);
   }
   function back() {
@@ -3745,6 +3794,10 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       list.appendChild(b);
     });
     list.scrollTop = 0;
+    if (box.classList.contains('vsl-split')) {
+      var first = list.querySelector('.vsl-item'), keep = list.querySelector('.vsl-item[data-i="' + cur + '"]');
+      if (keep) view(cur, true); else if (first) view(+first.dataset.i, true);
+    }
   }
   function pick(i, run) {
     var s = L[i], input = document.getElementById('input'), sel = document.getElementById('contractType'); if (!s || !input) return;
@@ -3760,6 +3813,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     flt = false && cur && cur !== 'unsure' && L.some(function (s) { return s[0] === cur; }) ? cur : 'all';
     cur = -1; box.classList.remove('is-view'); if (box.querySelector('.vsl-view')) box.querySelector('.vsl-view').hidden = true;
     box.classList.remove('is-scrolled');
+    box.classList.toggle('vsl-split', isSplit());
     render(); box.hidden = false; requestAnimationFrame(function () { box.classList.add('is-open'); });
     setTimeout(function () { var c = box.querySelector('.vsl-chip.is-on'); if (c) { c.focus(); c.scrollIntoView({ inline: 'center', block: 'nearest' }); } }, 60);
   }
