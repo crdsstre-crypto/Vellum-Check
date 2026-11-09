@@ -87,5 +87,34 @@ export async function initDb() {
     )
   `);
 
+  // บันทึกการตรวจแต่ละครั้งเพื่อนับสถิติ (ไม่มีเนื้อหาสัญญาหรือผลตรวจ) — แยกจาก inspections เพราะผู้ใช้ลบประวัติได้
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS check_log (
+      id            SERIAL PRIMARY KEY,
+      user_id       INTEGER REFERENCES users(id) ON DELETE SET NULL,
+      contract_type TEXT NOT NULL DEFAULT 'unsure',
+      n_items       INTEGER NOT NULL DEFAULT 0,
+      created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `);
+  await pool.query(`CREATE INDEX IF NOT EXISTS check_log_time_idx ON check_log (created_at)`);
+
+  // ความเห็นต่อผลตรวจ (👍/👎 + เหตุผล) — ไม่เก็บข้อความสัญญา
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS feedback (
+      id            SERIAL PRIMARY KEY,
+      user_id       INTEGER REFERENCES users(id) ON DELETE CASCADE,
+      inspection_id INTEGER REFERENCES inspections(id) ON DELETE SET NULL,
+      rating        SMALLINT NOT NULL CHECK (rating IN (-1, 1)),
+      reasons       TEXT[] NOT NULL DEFAULT '{}',
+      note          TEXT,
+      contract_type TEXT NOT NULL DEFAULT 'unsure',
+      created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+      updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `);
+  await pool.query(`CREATE UNIQUE INDEX IF NOT EXISTS feedback_one_per_insp ON feedback (user_id, inspection_id) WHERE inspection_id IS NOT NULL`);
+  await pool.query(`CREATE INDEX IF NOT EXISTS feedback_time_idx ON feedback (created_at)`);
+
   console.log('[db] ตารางผู้ใช้และ session พร้อมใช้งาน');
 }
