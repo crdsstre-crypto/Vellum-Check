@@ -6067,3 +6067,82 @@ html.vc-art main > .hero{overflow:clip}
   .hx-live.side .hxl-own textarea{height:40px;min-height:40px;max-height:40px;padding:9px 12px}
   .hx-live.side.own-on .hxl-own textarea{height:72px;max-height:72px}
 }
+/* ===== v231 หน้าแรกรอบ 3 ===== */
+/* (ง) คำใบ้แตะตรา อยู่มุมล่างของกระดาษ โผล่ตอนสแกนจบ */
+.hxl-hint{position:absolute;right:10px;bottom:6px;font:600 10.5px/1 Prompt,sans-serif;font-style:normal;color:#a16207;background:#fdf3d7;border:1px solid #f1d68f;border-radius:99px;padding:4px 8px;opacity:0;transform:translateY(4px);transition:opacity .3s .5s,transform .3s .5s;pointer-events:none}
+.hx-live.done:not(.held) .hxl-hint{opacity:1;transform:none}
+.hxl-paper{padding-bottom:26px !important}
+html.vc-art .hero .hx-live .hxl-note{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center !important}
+/* (2) เข็มวัดความเสี่ยง */
+.hxl-foot{gap:10px}
+.hxl-meter{flex:none;width:56px;height:33px;display:block}
+.hxl-meter svg{display:block;width:100%;height:100%;overflow:visible}
+.hxm-trk,.hxm-arc{fill:none;stroke-width:9;stroke-linecap:round}
+.hxm-trk{stroke:rgba(255,255,255,.1)}
+.hxm-arc{stroke:url(#hxlG);stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--f,0));transition:stroke-dashoffset .5s cubic-bezier(.3,1.4,.5,1)}
+.hxm-ndl{transform-origin:50px 52px;transform:rotate(calc(-90deg + var(--f,0) * 180deg));transition:transform .55s cubic-bezier(.3,1.6,.5,1)}
+.hxm-ndl line{stroke:#f5f5f4;stroke-width:3.5;stroke-linecap:round}
+.hxm-ndl circle{fill:#f5f5f4}
+.hxl-cnt{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.hxl-lv{display:block;font:600 11.5px/1.2 Prompt,sans-serif;opacity:0;transform:translateY(3px);transition:opacity .3s,transform .3s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hxl-lv.on{opacity:1;transform:none}
+.hxl-lv.r-h{color:#fca5a5}.hxl-lv.r-c{color:#fcd34d}.hxl-lv.r-l{color:#93c5fd}
+/* (3) พลิกหน้ากระดาษ */
+.hx-live{perspective:1100px}
+.hx-live .hxl-paper{transform-origin:left center;backface-visibility:hidden}
+.hx-live.out .hxl-paper{opacity:0 !important;transform:rotateY(-95deg) !important;transition:transform .42s cubic-bezier(.55,0,.8,.4),opacity .25s .2s !important}
+.hxl-paper.flipin{animation:hxlFlipIn .6s cubic-bezier(.2,.8,.25,1.05) both}
+@keyframes hxlFlipIn{0%{transform:rotateY(75deg);opacity:0;filter:brightness(.6)}55%{opacity:1}100%{transform:none;opacity:1;filter:none}}
+.hxl-paper.flipin:hover{transform:none}
+/* (1) แถบเทียบ ก่อน/หลัง */
+.hxl-cmp{position:relative;margin:2px 0 4px;border-radius:12px;overflow:hidden;min-height:96px;background:#fbf8f1;color:#2a2620;isolation:isolate;touch-action:pan-y}
+.hxl-cmp > div{padding:10px 12px 12px;font:400 13px/1.5 Sarabun,Prompt,sans-serif}
+.hxl-cmp em{display:block;font:700 10.5px/1.3 Prompt,sans-serif;font-style:normal;letter-spacing:.02em;margin-bottom:3px}
+.hxc-a em{color:#b91c1c}
+.hxc-a span{background:linear-gradient(transparent 60%,rgba(248,113,113,.3) 60%)}
+.hxc-b{position:absolute;inset:0;background:#ecfdf5;color:#064e3b;clip-path:inset(0 calc(100% - var(--v) * 1%) 0 0)}
+.hxc-b em{color:#047857}
+.hxc-hd{position:absolute;top:0;bottom:0;left:calc(var(--v) * 1%);width:2px;margin-left:-1px;background:#10b981;pointer-events:none;z-index:2}
+.hxc-hd b{position:absolute;top:50%;left:50%;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;background:#10b981;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.hxc-hd b::before{content:"‹ ›";position:absolute;inset:0;display:grid;place-items:center;color:#fff;font:700 13px/1 Prompt,sans-serif;letter-spacing:2px}
+.hxl-cmp input{position:absolute;inset:0;z-index:3;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize;-webkit-appearance:none;appearance:none}
+.hxl-cmp:has(input:focus-visible){outline:2px solid #10b981;outline-offset:2px}
+html.vc-art .hero .hx-live .hxl-pop p.hxc-tip{margin:0 0 8px !important;font:500 11px/1.3 Prompt,sans-serif !important;color:#78716c !important;text-align:center !important}
+.hxl-pop{max-height:calc(100% - 52px);overflow:auto;overscroll-behavior:contain}
+/* (ค) ชิปแว่นบนมือถือ: อยู่ในเนื้อหา */
+@media (max-width:767px){
+  .hx-hunt.flow{position:static !important;transform:none !important;margin:14px auto 0 !important;width:fit-content;opacity:.0;transition:opacity .4s}
+  .hx-hunt.flow.on{opacity:1}
+  .hero.hx-holding .hx-hunt.flow{border-color:rgba(233,194,122,.5) !important}
+  /* (ข) ใต้หัวเว็บไม่มีตัวหนังสือแว่นโผล่ */
+  html.vc-art .hero :is(.hx-pool,.hx-lens){-webkit-mask-image:none}
+  html.vc-art .hero .hx-tip{max-width:220px}
+}
+/* (จ)+(5) การ์ดความน่าเชื่อถือ */
+html.vc-art .hero .dx-points.tp-cards{display:grid !important;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px !important;border-top:0 !important;padding:18px 0 0 !important;max-width:1080px;margin:0 auto !important;width:100%}
+html.vc-art .hero .dx-points.tp-cards li{position:relative;display:flex;align-items:center;gap:12px;padding:12px 14px !important;border-radius:16px;background:linear-gradient(160deg,rgba(255,255,255,.055),rgba(255,255,255,.015));border:1px solid rgba(233,194,122,.16);color:#a8a29e;font-size:12.5px !important;line-height:1.45;text-align:left;
+  opacity:0;transform:translateY(14px);transition:opacity .5s calc(var(--i) * .12s),transform .6s cubic-bezier(.2,.9,.3,1.15) calc(var(--i) * .12s),border-color .3s}
+html.vc-art .hero .dx-points.tp-cards li::before{display:none !important}
+html.vc-art .hero .dx-points.tp-cards.tp-in li{opacity:1;transform:none}
+html.vc-art .hero .dx-points.tp-cards li:hover{border-color:rgba(233,194,122,.4)}
+.tp-ic{flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:radial-gradient(circle at 30% 25%,rgba(233,194,122,.28),rgba(233,194,122,.06));border:1px solid rgba(233,194,122,.25)}
+.tp-ic svg{width:22px;height:22px;fill:none;stroke:#e9c27a;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.tp-ic svg *{stroke-dasharray:80;stroke-dashoffset:80}
+.tp-in .tp-ic svg *{animation:tpDraw 1.1s ease-out forwards;animation-delay:calc(var(--i) * .12s + .25s)}
+@keyframes tpDraw{to{stroke-dashoffset:0}}
+.tp-tx{min-width:0}
+.tp-tx b{display:block;font:600 13.5px/1.3 Prompt,sans-serif;color:#f1e6d0;margin-bottom:1px}
+.tp-tx span{display:block}
+@media (min-width:1200px){html.vc-art .hero .dx-points.tp-cards li{padding:10px 12px !important}.tp-ic{width:36px;height:36px}}
+@media (max-width:767px){
+  html.vc-art .hero .dx-points.tp-cards{grid-template-columns:1fr;gap:10px !important;padding:22px 2px 0 !important}
+  html.vc-art .hero .dx-points.tp-cards li{font-size:12.5px !important}
+}
+html[data-calm] .tp-ic svg *,.tp-cards.tp-in .tp-ic svg *{}
+@media (prefers-reduced-motion:reduce){.tp-ic svg *{stroke-dashoffset:0 !important;animation:none !important}html.vc-art .hero .dx-points.tp-cards li{opacity:1;transform:none;transition:none}.hxl-paper.flipin{animation:none}}
+html[data-calm] .tp-ic svg *{stroke-dashoffset:0;animation:none}
+.hxl-cnt{display:block !important}
+.hxl-lv{margin-top:3px}
+.hxl-cmp{display:grid}
+.hxl-cmp > .hxc-a,.hxl-cmp > .hxc-b{grid-area:1/1;position:relative;inset:auto}
+.hxl-cmp > .hxc-b{z-index:1}
