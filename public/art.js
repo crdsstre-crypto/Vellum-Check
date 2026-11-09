@@ -2921,7 +2921,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
 })();
 
 /* หน้าตรวจ: ปุ่ม "ดูตัวอย่างผลตรวจฟรี" ในช่องผลตรวจว่าง */
-document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('#rsSample') && window.VCSample) window.VCSample.open('rent'); });
+document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('#rsSample')) { if (window.VCSamples) window.VCSamples.open(); else if (window.VCSample) window.VCSample.open('rent'); } });
 
 /* ===== บ้าน 3D หมุนได้ (WebGL1, ไม่ใช้ไลบรารี) ===== */
 (function () {
@@ -3697,7 +3697,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       if (e.target.closest('.vsl-back')) { back(); return; }
       var hl = e.target.closest('.vsl-hl'); if (hl) { var on = !box.classList.contains('hl-on'); box.classList.toggle('hl-on', on); hl.setAttribute('aria-pressed', on ? 'true' : 'false'); return; }
       if (e.target.closest('.vsl-fill')) { pick(cur); return; }
-      if (e.target.closest('.vsl-use')) pick(cur, isM() && window.VCDemo && window.VCDemo.has(L[cur][1]));
+      if (e.target.closest('.vsl-use')) pick(cur, !!window.VCDemo && window.VCDemo.has(L[cur][1]));
     });
     box.addEventListener('keydown', function (e) { if (e.key === 'Escape') { if (cur > -1) back(); else close(); } });
     /* มือถือ: เลื่อนรายการแล้วหัวยุบ เห็นการ์ดมากขึ้น */
@@ -3722,7 +3722,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       html += '<p class="' + (m ? '' : 'vsl-plain') + (note ? ' is-risk' : '') + '">' + body + (note ? '<span class="vsl-note">⚠ ' + esc(note) + '</span>' : '') + '</p>';
     });
     var d = v.querySelector('.vsl-doc'); d.innerHTML = html; d.scrollTop = 0;
-    var use = v.querySelector('.vsl-use'), free = isM() && window.VCDemo && window.VCDemo.has(s[1]);
+    var use = v.querySelector('.vsl-use'), free = window.VCDemo && window.VCDemo.has(s[1]);
     use.classList.toggle('is-free', !!free);
     use.innerHTML = free ? '<span>ดูผลตรวจทันที</span><small>ฟรี · ไม่ใช้เครดิต</small>' : 'ใช้สัญญานี้';
     box.classList.add('is-view'); v.hidden = false;
@@ -3757,7 +3757,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   function open() {
     if (!box) build();
     var sel = document.getElementById('contractType'); var cur = sel && sel.value;
-    flt = !isM() && cur && cur !== 'unsure' && L.some(function (s) { return s[0] === cur; }) ? cur : 'all';
+    flt = false && cur && cur !== 'unsure' && L.some(function (s) { return s[0] === cur; }) ? cur : 'all';
     cur = -1; box.classList.remove('is-view'); if (box.querySelector('.vsl-view')) box.querySelector('.vsl-view').hidden = true;
     box.classList.remove('is-scrolled');
     render(); box.hidden = false; requestAnimationFrame(function () { box.classList.add('is-open'); });
@@ -3868,6 +3868,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     '<b>วางข้อความสัญญาที่นี่</b>' +
     '<button type="button" class="vc-paste"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="11.5" height="12.5" rx="2"/><path d="M15.5 8V5.5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h2"/></svg>วางจากคลิปบอร์ด</button>' +
     '<small>หรือ <label for="fileIn">อัปโหลด PDF · Word · รูปถ่าย</label></small>' +
+    '<span class="vc-empty-kbd" aria-hidden="true">คลิกในกล่องแล้วกด <kbd>' + (/Mac|iPhone|iPad/.test(navigator.platform || '') ? '⌘' : 'Ctrl') + '</kbd> + <kbd>V</kbd> ก็ได้</span>' +
     '<p class="vc-paste-msg" role="status" aria-live="polite"></p>';
   wrap.appendChild(em);
   var msg = em.querySelector('.vc-paste-msg');
@@ -3889,7 +3890,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   function sync() {
     var has = !!ta.value.trim();
     /* iPhone ถือว่ายังโฟกัสกล่องอยู่แม้คีย์บอร์ดปิดแล้ว จึงนับว่า "กำลังพิมพ์" เฉพาะตอนคีย์บอร์ดเปิดจริง (จอที่มองเห็นเตี้ยลง) */
-    var vv = window.visualViewport, kb = vv ? (window.innerHeight - vv.height > 140) : true;
+    var vv = window.visualViewport, kb = !mq.matches ? true : (vv ? (window.innerHeight - vv.height > 140) : true); /* คอม: โฟกัส = กำลังพิมพ์ */
     var typing = document.activeElement === ta && kb;
     var key = (has ? 1 : 0) + '|' + (typing ? 1 : 0);
     wrap.classList.toggle('vc-has', has);
@@ -3906,7 +3907,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   }
   ta.addEventListener('input', sync); ta.addEventListener('focus', function () { sync(); setTimeout(sync, 350); });
   if (window.visualViewport) window.visualViewport.addEventListener('resize', sync); ta.addEventListener('blur', function () { setTimeout(sync, 50); });
-  setInterval(function () { if (mq.matches && !document.hidden) sync(); }, 700);   /* เผื่อโค้ดอื่นใส่ข้อความโดยไม่ส่ง input event */
+  setInterval(function () { if (!document.hidden) sync(); }, 700);   /* เผื่อโค้ดอื่นใส่ข้อความโดยไม่ส่ง input event */
   sync();
 })();
 
@@ -6696,7 +6697,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   q();
 })();
 
-/* ===== v233 มือถือ: การ์ดลองตัวอย่างฟรี + ทางลัดแตะเดียว + ฉากเปิดผลตัวอย่าง (9 พ.ย. 2026) — ทำงานเฉพาะ ≤767px ===== */
+/* ===== v233 การ์ดลองตัวอย่างฟรี + ทางลัดแตะเดียว + ฉากเปิดผลตัวอย่าง (9 พ.ย. 2026) — v235: ทั้งมือถือและคอม ===== */
 (function () {
   var mq = window.matchMedia ? window.matchMedia('(max-width:767px)') : null; if (!mq) return;
   var ta = document.getElementById('input'), meta = document.querySelector('#checkCard .ta-meta');
@@ -6729,13 +6730,12 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     if (c) { var i = find(c.getAttribute('data-t')); if (i > -1 && window.VCSamples && VCSamples.run) VCSamples.run(i); return; }
     if (e.target.closest('.vc-try-main, .vc-try-all') && window.VCSamples) VCSamples.open();
   });
-  function sync() { var on = mq.matches && !ta.value.trim(); if (tc.hidden === on) tc.hidden = !on; }
+  function sync() { var on = !ta.value.trim(); if (tc.hidden === on) tc.hidden = !on; }
   ta.addEventListener('input', sync); setInterval(function () { if (!document.hidden) sync(); }, 700); sync();
 
   /* ---------- 7) ฉากเปิดผลตัวอย่าง: สแกน → ประทับตราทีละจุดเสี่ยง ---------- */
   window.__vcDemoScene = function (text, result) {
     return new Promise(function (done) {
-      if (!mq.matches) { setTimeout(done, 1800); return; }
       var lines = text.split('\n').map(function (l) { return l.trim(); }).filter(Boolean).slice(0, 11);
       var title = lines.shift() || 'สัญญา';
       var lv = {}; (result.items || []).forEach(function (it) {
