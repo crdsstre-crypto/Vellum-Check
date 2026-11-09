@@ -6850,7 +6850,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   function calm() { return root.hasAttribute('data-calm') || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); }
   function onHome() { var v = root.getAttribute('data-view'); return v === null || v === 'home'; }
   function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
-  var DEMOS = [['เช่าห้องพักรายปี', 'เช่าห้อง', 'สัญญาเช่า'], ['กู้เงินดอกเบี้ยสูง', 'กู้เงิน', 'สัญญากู้เงิน'], ['พนักงานประจำ (ออฟฟิศ)', 'จ้างงาน', 'สัญญาจ้างงาน']];
+  var DEMOS = [['เช่าห้องพักรายปี', 'เช่าห้อง', 'สัญญาเช่า', 'ผู้เช่า', 'ผู้ให้เช่า'], ['กู้เงินดอกเบี้ยสูง', 'กู้เงิน', 'สัญญากู้เงิน', 'ผู้กู้', 'ผู้ให้กู้'], ['พนักงานประจำ (ออฟฟิศ)', 'จ้างงาน', 'สัญญาจ้างงาน', 'ลูกจ้าง', 'นายจ้าง']];
   function idx(t) { var L = (window.VCSamples && VCSamples.list) || []; for (var i = 0; i < L.length; i++) if (L[i][1] === t) return i; return -1; }
   /* เปิดผลตัวอย่างฟรีจากหน้าแรก: ไปหน้าตรวจ แล้วเล่นฉากสแกน (ไม่เรียก AI ไม่หักเครดิต) */
   function tryDemo(t) {
@@ -6890,7 +6890,13 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   fig.innerHTML =
     '<div class="hxl-top"><span class="hxl-live"><i></i>ตัวอย่างสด</span><span class="hxl-tabs" role="tablist">' +
       DEMOS.map(function (d, i) { return '<button type="button" role="tab" data-i="' + i + '">' + d[1] + '</button>'; }).join('') + '</span></div>' +
-    '<button type="button" class="hxl-paper" aria-label="เปิดผลตรวจตัวอย่างฉบับนี้ ฟรี"><span class="hxl-h"></span><span class="hxl-lines"></span><i class="hxl-scan"></i><i class="hxl-hint" aria-hidden="true">แตะตราเพื่อดูเหตุผล</i></button>' +
+    '<div class="hxl-stack"><i class="hxl-clip" aria-hidden="true"><svg viewBox="0 0 24 60"><path d="M7 52V12a5 5 0 0 1 10 0v38a8 8 0 0 1-16 0V16"/></svg></i>' +
+    '<button type="button" class="hxl-paper" aria-label="เปิดผลตรวจตัวอย่างฉบับนี้ ฟรี"><span class="hxl-wm" aria-hidden="true">ตัวอย่าง</span><span class="hxl-h"></span>' +
+      '<span class="hxl-meta" aria-hidden="true">ทำที่ ……………… วันที่ …… เดือน ………… พ.ศ. ……</span><span class="hxl-lines"></span>' +
+      '<span class="hxl-sign" aria-hidden="true"><span class="hxs"><i></i><em class="hxs-a"></em></span><span class="hxs"><i></i><em class="hxs-b"></em></span>' +
+      '<i class="hxl-pen"><svg viewBox="0 0 120 24"><path class="pb" d="M18 6h86a6 6 0 0 1 0 12H18z"/><path class="pc" d="M86 6h6v12h-6z"/><path class="pn" d="M18 6 2 12l16 6z"/><path class="pt" d="M2 12l6-1.6v3.2z"/></svg></i>' +
+      '<i class="hxl-bigst">อ่านก่อนเซ็น!</i></span>' +
+      '<i class="hxl-curl" aria-hidden="true"></i><i class="hxl-scan"></i><i class="hxl-hint" aria-hidden="true">แตะตราเพื่อดูเหตุผล</i></button></div>' +
     '<div class="hxl-foot"><span class="hxl-meter" aria-hidden="true"><svg viewBox="0 0 100 58"><defs><linearGradient id="hxlG" x1="0" x2="1"><stop offset="0" stop-color="#60a5fa"/><stop offset=".5" stop-color="#fbbf24"/><stop offset="1" stop-color="#ef4444"/></linearGradient></defs>' +
       '<path class="hxm-trk" d="M10 52 A40 40 0 0 1 90 52" pathLength="1"/><path class="hxm-arc" d="M10 52 A40 40 0 0 1 90 52" pathLength="1"/><g class="hxm-ndl"><line x1="50" y1="52" x2="50" y2="20"/><circle cx="50" cy="52" r="5"/></g></svg></span>' +
       '<span class="hxl-cnt">พบ <em>0</em> จุดที่ควรดู<small class="hxl-lv"></small></span><button type="button" class="hxl-go">ดูผลเต็ม · ฟรี <b aria-hidden="true">→</b></button></div>' +
@@ -6912,9 +6918,10 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   function render(i, final) {
     var d = linesOf(DEMOS[i][0]); if (!d) return null;
     fig.querySelector('.hxl-h').textContent = d.title;
+    fig.querySelector('.hxs-a').textContent = DEMOS[i][3]; fig.querySelector('.hxs-b').textContent = DEMOS[i][4];
     fig.querySelector('.hxl-lines').innerHTML = d.rows.map(function (r, k) {
       var lv = r.it ? ({ check_detail: 'h', caution: 'c', low: 'l' }[r.it.level] || 'c') : '';
-      return '<span class="hxl-ln' + (lv ? ' r-' + lv : '') + (final && lv ? ' hit' : '') + (final ? ' seen' : '') + '" data-k="' + k + '"><span class="hxl-tx">' + esc(r.t.length > 60 ? r.t.slice(0, 58) + '…' : r.t) + '</span>' +
+      return '<span class="hxl-ln' + (lv ? ' r-' + lv : '') + (final && lv ? ' hit' : '') + (final ? ' seen' : '') + '" data-k="' + k + '">' + (lv === 'h' ? '<i class="hxl-mk" aria-hidden="true">!</i>' : '') + '<span class="hxl-tx">' + esc(r.t.length > 60 ? r.t.slice(0, 58) + '…' : r.t) + '</span>' +
         (lv ? '<i class="hxl-st" role="button" tabindex="0" aria-label="ดูเหตุผล: ' + esc(r.it.topic) + '">' + esc(r.it.topic) + '</i>' : '') + '</span>';
     }).join('');
     [].forEach.call(fig.querySelectorAll('.hxl-tabs button'), function (b) { var on = +b.dataset.i === i; b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
@@ -6939,14 +6946,14 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   }
   var flipped = false;
   function play(i) {
-    clear(); cur = i; fig.classList.remove('done', 'out', 'scan');
-    /* (3) เปลี่ยนสัญญาแบบพลิกหน้ากระดาษ */
+    clear(); cur = i; fig.classList.remove('done', 'out', 'scan', 'pen', 'slam');
+    /* (3) พลิกหน้ากระดาษ — ถอดคลาสเองเมื่อครบเวลา กันกระดาษค้างล่องหน (เจอบน iPhone) */
     var pp = fig.querySelector('.hxl-paper');
-    if (flipped && !calm()) { pp.classList.remove('flipin'); void pp.offsetWidth; pp.classList.add('flipin'); }
+    if (flipped && !calm()) { pp.classList.remove('flipin'); void pp.offsetWidth; pp.classList.add('flipin'); clearTimeout(pp.__ft); pp.__ft = setTimeout(function () { pp.classList.remove('flipin'); }, 900); }
     flipped = true;
     var d = render(i, calm()); if (!d) return;
     tally(calm());
-    if (calm()) { fig.classList.add('done'); return; }
+    if (calm()) { fig.classList.add('done', 'slam'); return; }
     playing = true;
     var lines = fig.querySelectorAll('.hxl-ln'), step = 520, hits = 0, cnt = fig.querySelector('.hxl-cnt em');
     fig.style.setProperty('--scan', (lines.length * step + 300) + 'ms');
@@ -6957,9 +6964,12 @@ if (window.VCGate3DReady) window.VCGate3DReady();
         if (/\br-/.test(ln.className)) { ln.classList.add('hit'); hits++; cnt.textContent = hits; var c = cnt.parentNode; c.classList.remove('pop'); void c.offsetWidth; c.classList.add('pop'); tally(false); }
       }, 260 + k * step);
     });
-    T(function () { fig.classList.add('done'); tally(true); }, 260 + lines.length * step + 200);
-    T(function () { if (!visible) { playing = false; return; } fig.classList.add('out'); }, 260 + lines.length * step + 3600);
-    T(function () { if (visible) play((cur + 1) % DEMOS.length); else playing = false; }, 260 + lines.length * step + 4000);
+    var end = 260 + lines.length * step;
+    T(function () { fig.classList.add('done'); tally(true); }, end + 200);
+    T(function () { fig.classList.add('pen'); }, end + 500);          /* (7) ปากกาลอยมาจ่อเส้นลงชื่อ */
+    T(function () { fig.classList.add('slam'); }, end + 1500);        /* ตรา "อ่านก่อนเซ็น!" ปั๊มทับ */
+    T(function () { if (!visible) { playing = false; return; } fig.classList.add('out'); }, end + 4400);
+    T(function () { if (visible) play((cur + 1) % DEMOS.length); else { playing = false; fig.classList.remove('out'); } }, end + 4800);
   }
   /* (5) แตะตรา → แผ่นอธิบายจากผลตัวอย่างจริง (หยุดวนระหว่างอ่าน) */
   var pop = fig.querySelector('.hxl-pop'), held = false;
@@ -6969,7 +6979,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     var r = d.rows[+ln.dataset.k]; if (!r || !r.it) return;
     var full = ((window.VCDemo && VCDemo.items) ? VCDemo.items(DEMOS[cur][0]) : []).filter(function (x) { return x.clause === r.it.clause; })[0] || r.it;
     var lv = LVN[full.level] || LVN.caution;
-    clear(); playing = false; held = true; fig.classList.add('done', 'held'); fig.classList.remove('out');
+    clear(); playing = false; held = true; fig.classList.add('done', 'held', 'slam'); fig.classList.remove('out', 'pen');
     [].forEach.call(fig.querySelectorAll('.hxl-ln'), function (x) { x.classList.add('seen'); if (/\br-/.test(x.className)) x.classList.add('hit'); });
     fig.querySelector('.hxl-cnt em').textContent = d.rows.filter(function (x) { return x.it; }).length; tally(true);
     pop.className = 'hxl-pop r-' + lv[1];
