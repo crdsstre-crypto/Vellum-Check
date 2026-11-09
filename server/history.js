@@ -7,8 +7,8 @@ import { PACKAGES } from './payments.js';
 const KEEP_INSPECTIONS = 50;
 
 export async function saveInspection(userId, contractType, result) {
-  await pool.query(
-    'INSERT INTO inspections (user_id, contract_type, result) VALUES ($1, $2, $3)',
+  const { rows } = await pool.query(
+    'INSERT INTO inspections (user_id, contract_type, result) VALUES ($1, $2, $3) RETURNING id',
     [userId, contractType, JSON.stringify(result)]
   );
   // ลบรายการที่เก่าเกินเพดาน
@@ -21,6 +21,7 @@ export async function saveInspection(userId, contractType, result) {
         )`,
     [userId, KEEP_INSPECTIONS]
   );
+  return rows[0]?.id ?? null;
 }
 
 export async function listInspections(userId) {
