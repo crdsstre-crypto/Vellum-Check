@@ -5374,12 +5374,9 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   @keyframes vcTabR{from{opacity:0;transform:translateX(28px)}}
   @keyframes vcTabL{from{opacity:0;transform:translateX(-28px)}}
 }
-/* ===== v217 คลังสัญญาตัวอย่างแบบฟรี (มือถือเท่านั้น — คอมไม่เห็นส่วนเหล่านี้) ===== */
+/* ===== v217 คลังสัญญาตัวอย่างแบบฟรี (v221: ใช้ทั้งมือถือและคอม) ===== */
 .vsl-hero,.vsl-free,.vsl-dots,.vsl-fill,.vc-demo-note{display:none}
-@media (max-width:767px){
-  .vsl-card{background:radial-gradient(120% 60% at 50% -10%,rgba(52,211,153,.13),transparent 60%),#141417}
-  .vsl-card::before{content:"";position:absolute;top:7px;left:50%;width:38px;height:4px;margin-left:-19px;border-radius:4px;background:rgba(255,255,255,.18)}
-  .vsl-head h3{font-size:21px;letter-spacing:.01em}
+@media all{
   .vsl-hero{display:flex;align-items:center;gap:12px;flex:none;margin:14px 0 2px;padding:12px 14px;border-radius:16px;
     background:linear-gradient(120deg,rgba(52,211,153,.18),rgba(34,211,238,.1) 60%,rgba(167,139,250,.12));border:1px solid rgba(52,211,153,.35);
     box-shadow:inset 0 1px 0 rgba(255,255,255,.07);position:relative;overflow:hidden}
@@ -5409,8 +5406,6 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   .vsl-vfoot{gap:8px !important}
   .vsl-fill{display:block;flex:none;min-height:54px !important;height:auto !important;padding:0 14px;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);color:#dcdce0;font:500 14px/1 Prompt,sans-serif}
   .vsl-fill::before,.vsl-fill::after{display:none !important}
-  .vsl-back{font-size:0 !important;width:54px;min-height:54px !important;padding:0 !important}
-  .vsl-back::before{content:"←" !important;display:block !important;position:static;font-size:19px;color:#dcdce0;background:none;width:auto;height:auto}
   .vsl-use.is-free{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:54px !important;
     background:linear-gradient(135deg,#34d399,#22d3ee) !important;color:#04281b !important;box-shadow:0 10px 26px -10px rgba(52,211,153,.85);position:relative;overflow:hidden}
   .vsl-use.is-free span{font:700 15.5px/1.1 Prompt,sans-serif}
@@ -5427,8 +5422,8 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
 @keyframes vslIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @keyframes vslShine{0%{transform:translateX(-100%)}55%,100%{transform:translateX(100%)}}
 @media (prefers-reduced-motion:reduce){.vsl-item,.vsl-hero::after,.vsl-use.is-free::after{animation:none !important}}
-@media (max-width:767px){.vc-demo-note small{font:400 11.5px/1.4 Prompt,sans-serif;opacity:.7}.vsl-use.is-free:focus:not(:focus-visible){outline:none}}
-@media (max-width:767px){
+@media all{.vc-demo-note small{font:400 11.5px/1.4 Prompt,sans-serif;opacity:.7}.vsl-use.is-free:focus:not(:focus-visible){outline:none}}
+@media all{
   .vc-demo-acts{display:flex;gap:8px;margin-top:8px}
   .vc-demo-acts button{flex:1;min-height:42px !important;height:auto !important;padding:0 10px;border-radius:12px;font:600 13px/1.2 Prompt,sans-serif;cursor:pointer}
   .vc-demo-acts button::before,.vc-demo-acts button::after{display:none !important}
@@ -5436,15 +5431,11 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   .vc-demo-exit{background:#34d399;border:0;color:#04281b}
   [data-theme="light"] .vc-demo-other{background:#fff;border-color:#a7f3d0;color:#065f46}
 }
-/* ===== v219 มือถือ: การ์ดลองตัวอย่าง · กระดาษย่อส่วน · ฉากเปิดผลตัวอย่าง · การ์ดชวนตรวจจริง ===== */
+/* ===== v219 (v221: ทุกขนาดจอ): การ์ดลองตัวอย่าง · กระดาษย่อส่วน · ฉากเปิดผลตัวอย่าง · การ์ดชวนตรวจจริง ===== */
 .vc-try,.vsl-thumb,.vc-dsc,.vc-demo-cta{display:none}
-@media (max-width:767px){
+@media all{
   /* (ข) iPhone จำสถานะ hover หลังแตะ — ไม่ใช้ hover บนจอสัมผัส */
-  .vsl-item:hover .vsl-art{transform:none}
-  .vsl-item:hover::after{color:#8e8e96}
   /* (1) การ์ดลองตัวอย่าง */
-  #sampleBtn{display:none !important}
-  .ta-actions .file-pick{flex:1}
   .vc-try{display:block;margin:12px 0 2px;padding:4px;border-radius:20px;position:relative;
     background:linear-gradient(140deg,rgba(52,211,153,.2),rgba(34,211,238,.08) 45%,rgba(167,139,250,.14));border:1px solid rgba(52,211,153,.34);
     box-shadow:0 18px 40px -26px rgba(52,211,153,.7),inset 0 1px 0 rgba(255,255,255,.07)}
@@ -5554,9 +5545,9 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   html.vc-art #checkCard .ta-actions .file-pick{flex:1 1 100%}
 }
 @media (max-width:767px){html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-actions{grid-template-columns:1fr !important}}
-/* ===== v220 มือถือ: คลังตัวอย่างอ่านง่ายขึ้น ===== */
+/* ===== v220 (v221: ทุกขนาดจอ): คลังตัวอย่างอ่านง่ายขึ้น ===== */
 .vsl-bar,.vsl-top{display:none}
-@media (max-width:767px){
+@media all{
   /* (ก) ล่างรายการค่อย ๆ จาง ไม่ตัดกึก */
   .vsl-list{-webkit-mask-image:linear-gradient(180deg,#000 calc(100% - 34px),transparent);mask-image:linear-gradient(180deg,#000 calc(100% - 34px),transparent);padding-bottom:30px !important}
   /* (ข) แถวหมวดจางขอบขวา บอกว่าปัดได้ */
@@ -5598,3 +5589,76 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
   .vsl.is-scrolled .vsl-x{width:32px;height:32px}
   .vsl.is-scrolled .vsl-chips{margin-top:10px}
 }
+
+/* v221: ส่วนที่เป็นของมือถือเท่านั้น */
+@media (max-width:767px){
+  .vsl-card{background:radial-gradient(120% 60% at 50% -10%,rgba(52,211,153,.13),transparent 60%),#141417}
+  .vsl-card::before{content:"";position:absolute;top:7px;left:50%;width:38px;height:4px;margin-left:-19px;border-radius:4px;background:rgba(255,255,255,.18)}
+  .vsl-head h3{font-size:21px;letter-spacing:.01em}
+  .vsl-back{font-size:0 !important;width:54px;min-height:54px !important;padding:0 !important}
+  .vsl-back::before{content:"←" !important;display:block !important;position:static;font-size:19px;color:#dcdce0;background:none;width:auto;height:auto}
+  .vsl-item:hover .vsl-art{transform:none}
+  .vsl-item:hover::after{color:#8e8e96}
+  #sampleBtn{display:none !important}
+  .ta-actions .file-pick{flex:1}
+}
+/* ===== v221 คอม/โน้ตบุ๊ก: การ์ดลองตัวอย่างฟรีแทนปุ่มเล็ก + คลังตัวอย่างแบบเดียวกับมือถือ ===== */
+@media (min-width:768px){
+  html.vc-art #checkCard .ta-actions #sampleBtn.sample-btn,#checkCard #sampleBtn{display:none !important}
+  .vc-try{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:6px 14px;margin:14px 0 4px;padding:6px 14px 6px 6px}
+  .vc-try[hidden]{display:none}
+  .vc-try-main{padding:10px 12px 10px 8px}
+  .vc-try-main:hover::after{animation-duration:1.6s}
+  .vc-try-main:hover .vc-try-fan .f3{transform:rotate(-22deg) translateX(-9px)}
+  .vc-try-main:hover .vc-try-fan .f2{transform:rotate(15deg) translateX(8px)}
+  .vc-try-free{align-self:center}
+  .vc-try-q{border-top:0;border-left:1px dashed rgba(255,255,255,.12);margin:0;padding:6px 0 6px 14px}
+  .vc-try-q>span{margin:0 0 8px}
+  .vc-try-chips{flex-wrap:wrap;overflow:visible;margin:0;padding:0;max-width:330px}
+  .vc-try-c:hover{background:color-mix(in srgb,var(--qa,#fff) 22%,rgba(10,10,12,.6));transform:translateY(-1px)}
+  .vc-try-all:hover{color:#fff;border-color:rgba(255,255,255,.3)}
+  .vsl-card .vsl-hero{margin:12px 0 4px}
+  .vsl-item{padding:14px 14px !important}
+  .vsl-item:hover .vsl-th-p{transform:rotate(-3deg) translateY(-2px)}
+  .vsl-top{font-size:12.5px}
+  .vsl-use.is-free:hover{filter:brightness(1.07)}
+  .vc-demo-acts button:hover{filter:brightness(1.1)}
+  .vc-dcta-go:hover{background:#fff}
+  .vc-demo-cta{margin-top:16px}
+}
+@media (min-width:768px) and (max-width:1100px){
+  .vc-try{grid-template-columns:1fr}
+  .vc-try-q{border-left:0;border-top:1px dashed rgba(255,255,255,.12);padding:10px 4px 6px}
+  .vc-try-chips{max-width:none}
+}
+
+/* ===== v221 คอม: กล่องว่างแบบเดียวกับมือถือ (ปุ่มวางจากคลิปบอร์ด) ===== */
+.vc-empty-kbd{display:none}
+@media (min-width:768px){
+  /* 1) กล่องว่าง */
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-empty{display:flex;position:absolute;inset:0;z-index:2;flex-direction:column;align-items:center;justify-content:center;
+    gap:10px;padding:20px;text-align:center;font-family:var(--k-ff);cursor:text}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap:is(.vc-has,.vc-focus) .vc-empty{display:none}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap:not(.vc-has):not(.vc-focus) #input::placeholder{color:transparent !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap:not(.vc-has) > .ta-count{display:none}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-empty-ico{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;color:#d4d4d8;
+    background:linear-gradient(145deg,#26262c,#18181c);border:1px solid rgba(255,255,255,.1);box-shadow:0 10px 24px -10px rgba(0,0,0,.8)}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-empty b{font:600 16px/1.4 var(--k-ff);color:#ededef}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-paste{display:inline-flex;align-items:center;gap:8px;min-height:46px;padding:0 20px;margin-top:4px;
+    border-radius:99px;border:0;background:#f4f4f5;color:#111;font:600 15px/1 var(--k-ff);cursor:pointer;box-shadow:0 8px 20px -8px rgba(0,0,0,.7)}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-paste:hover{background:#fff}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-paste::before,html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-paste::after{display:none !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-empty small{font:400 13px/1.5 var(--k-ff);color:var(--k-fa)}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-empty small label{color:#d4d4d8;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(255,255,255,.3);cursor:pointer}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-paste-msg{display:none;margin:2px 0 0;font:500 12.5px/1.45 var(--k-ff);color:#fcd34d;max-width:260px}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-paste-msg.on{display:block}
+
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap:not(.vc-has):not(.vc-focus) #input{min-height:260px !important;height:260px !important}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-empty-dash{display:block;position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-empty-dash rect{fill:none;stroke:rgba(52,211,153,.45);stroke-width:1.5;stroke-dasharray:8 7}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-empty:hover .vc-empty-dash rect{stroke:rgba(52,211,153,.8)}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-empty-kbd{display:block;font:400 12px/1.4 var(--k-ff);color:#77777f}
+  html.vc-art[data-view="desk"][data-desk="check"] #checkCard .vc-empty-kbd kbd{display:inline-block;min-width:20px;padding:1px 6px;border-radius:5px;border:1px solid rgba(255,255,255,.18);border-bottom-width:2px;background:rgba(255,255,255,.05);color:#d4d4d8;font:600 11px/1.5 var(--k-ff)}
+}
+.vc-try .vc-try-main{background:transparent !important;box-shadow:none !important;border:0 !important}
+@media (min-width:768px){html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap:not(.vc-has):not(.vc-focus) #input{resize:none}}
