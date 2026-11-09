@@ -1181,8 +1181,8 @@ function addCreditNote(credits) {
 }
 
 async function runCheck() {
-  // คลังสัญญาตัวอย่าง (มือถือ): ข้อความตรงกับตัวอย่างทุกตัวอักษร → แสดงผลที่เตรียมไว้ ไม่เรียก AI ไม่หักเครดิต ไม่ต้องเข้าสู่ระบบ
-  const demo = window.VCDemo && window.matchMedia && matchMedia('(max-width:767px)').matches ? window.VCDemo.match(els.input.value) : null;
+  // คลังสัญญาตัวอย่าง (ทุกขนาดจอ): ข้อความตรงกับตัวอย่างทุกตัวอักษร → แสดงผลที่เตรียมไว้ ไม่เรียก AI ไม่หักเครดิต ไม่ต้องเข้าสู่ระบบ
+  const demo = window.VCDemo ? window.VCDemo.match(els.input.value) : null;
   if (demo) { await runDemo(demo); return; }
   if (!currentUser) {
     // วางก่อน สมัครทีหลัง: จำไว้ว่ารอตรวจ แล้วเปิดหน้าต่างเชิญสมัคร (ข้อความที่วางยังอยู่ในช่องเหมือนเดิม)
@@ -1269,7 +1269,7 @@ async function runDemo(demo) {
     // ปุ่มย้อนกลับของเบราว์เซอร์/ปัดขอบจอ = ออกจากผลตัวอย่าง (ไม่หลุดออกจากเว็บ)
     try { if (history.state && history.state.vcDemo) history.replaceState({ vcDemo: 1 }, '', location.href); else history.pushState({ vcDemo: 1 }, '', location.href); } catch (e) {}
     // ชวนลองกับสัญญาจริงท้ายผล
-    const free = !currentUser ? 'สมัครฟรี รับตรวจ 2 ครั้ง ไม่ต้องใช้บัตร' : (lastCredits ? 'คุณมี ' + lastCredits + ' เครดิต · ตรวจครั้งละ 1 เครดิต' : 'ตรวจด้วย AI ทีละข้อแบบนี้');
+    const free = !currentUser ? 'สมัครฟรี รับตรวจ 2 ครั้ง' : (lastCredits ? 'คุณมี ' + lastCredits + ' เครดิต · ตรวจครั้งละ 1 เครดิต' : 'ตรวจด้วย AI ทีละข้อแบบนี้');
     els.result.insertAdjacentHTML('beforeend',
       '<section class="vc-demo-cta"><span class="vc-dcta-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3h6l1 2h3v16H5V5h3z"/><path d="M9 12l2 2 4-4"/></svg></span>' +
       '<h3>อยากรู้ว่าสัญญาของคุณมีจุดแบบนี้ไหม?</h3><p>วางสัญญาของคุณ ระบบ AI จะอ่านทีละข้อและสรุปให้แบบเดียวกันนี้</p><p class="vc-dcta-free">' + esc(free) + '</p>' +
