@@ -29,6 +29,7 @@ import {
 import { isBlocked, recordFailure, clearFailures } from './rateLimit.js';
 import { buildSpokenSummary, synthesizeSpeech, VOICE_CREDIT_COST } from './voice.js';
 import { createPromptPayPayment, confirmAndCredit, getPaymentStatus, PACKAGES } from './payments.js';
+import { logCheck, saveFeedback, adminStats, FEEDBACK_REASONS } from './stats.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -580,10 +581,44 @@ app.post('/api/check', async (req, res) => {
 
   const credits = await getCredits(user.id).catch(() => null);
   const voiceCredits = await getVoiceCredits(user.id).catch(() => null);
-  // บันทึกผลตรวจไว้ดูย้อนหลัง ถ้าบันทึกไม่สำเร็จไม่กระทบผลที่ส่งให้ผู้ใช้
-  saveInspection(user.id, contractType, result)
-    .catch(e => console.error('[history] save failed:', e.message));
-  res.json({ ok: true, result, credits, voiceCredits, audio, voiceError });
+  // บันทึกผลตรวจไว้ดูย้อนหลัง ถ้าบันทึกไม่สำเร็จไม่กระทบผลที่ส่งให้ผู้ใช้ (รอเพื่อส่ง id กลับไปผูกความเห็น)
+  const inspectionId = await saveInspection(user.id, contractType, result)
+    .catch(e => { console.error('[history] save failed:', e.message); return null; });
+  logCheck(user.id, contractType, result.items.length).catch(e => console.error('[stats] log failed:', e.message));
+  res.json({ ok: true, result, credits, voiceCredits, audio, voiceError, inspectionId });
+});
+
+// ---------- ความเห็นต่อผลตรวจ ----------
+const feedbackHits = new Map(); // userId -> { count, resetAt } กันส่งรัว
+app.get('/api/feedback/reasons', (req, res) => res.json(FEEDBACK_REASONS));
+app.post('/api/feedback', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน' });
+    const now = Date.now(), h = feedbackHits.get(user.id);
+    if (h && h.resetAt > now && h.count >= 30) return res.status(429).json({ error: 'ส่งความเห็นบ่อยเกินไป ลองใหม่ภายหลัง' });
+    feedbackHits.set(user.id, h && h.resetAt > now ? { count: h.count + 1, resetAt: h.resetAt } : { count: 1, resetAt: now + 3600e3 });
+    const b = req.body || {};
+    const r = await saveFeedback(user.id, { inspectionId: Number(b.inspectionId), rating: Number(b.rating), reasons: b.reasons, note: b.note });
+    if (r.error) return res.status(r.status || 400).json({ error: r.error });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('[feedback] failed:', err.message);
+    res.status(500).json({ error: 'ส่งความเห็นไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+
+// ---------- สถิติสำหรับแอดมิน ----------
+app.get('/api/admin/stats', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'ยังไม่ได้เข้าสู่ระบบ' });
+    if (!isAdmin(user)) return res.status(403).json({ error: 'บัญชีนี้ไม่มีสิทธิ์แอดมิน' });
+    res.json(await adminStats(Number(req.query.days) || 30));
+  } catch (err) {
+    console.error('[admin] stats failed:', err.message);
+    res.status(500).json({ error: 'โหลดสถิติไม่สำเร็จ' });
+  }
 });
 
 // ---------- อัปโหลดไฟล์ ----------
