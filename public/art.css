@@ -5973,3 +5973,97 @@ html.vc-art .hero .hx-live .hxl-note{font:400 11px/1.45 Prompt,sans-serif !impor
   html.vc-art body .site-header .topbar .dx-nav a[href="#checkCard"]{position:static !important}
 }
 @media (max-width:767px){.hx-hunt{white-space:nowrap;font-size:11.5px;padding:6px 11px;max-width:calc(100vw - 32px)}}
+/* ===== v230 หน้าแรกรอบ 2: แก้บน iPhone จริง + แตะตรา + วางสัญญาเอง + ปุ่มติดล่าง ===== */
+/* (5) ตราแตะได้ */
+.hxl-ln.hit .hxl-st{pointer-events:auto;cursor:pointer;position:relative}
+.hxl-ln.hit .hxl-st::after{content:"";position:absolute;inset:-9px -6px}
+.hxl-ln.hit .hxl-st:hover,.hxl-ln.hit .hxl-st:focus-visible{background:currentColor;outline:none}
+.hxl-ln.hit .hxl-st:hover,.hxl-ln.hit .hxl-st:focus-visible{-webkit-text-fill-color:#fff}
+.hx-live.done:not(.held) .hxl-ln.hit .hxl-st{animation:hxlTapme 2.4s ease-in-out .6s 1}
+@keyframes hxlTapme{0%,100%{transform:rotate(-6deg)}20%{transform:rotate(-6deg) scale(1.14)}40%{transform:rotate(-6deg)}}
+.hxl-note b{font-weight:600;color:#d6c3a0}
+.hxl-pop{position:absolute;left:10px;right:10px;top:46px;z-index:5;padding:14px 14px 12px;border-radius:14px;background:#1b1714;border:1px solid rgba(233,194,122,.3);
+  box-shadow:0 24px 50px -18px rgba(0,0,0,.95);opacity:0;transform:translateY(8px) scale(.98);transition:opacity .2s,transform .22s cubic-bezier(.2,.9,.3,1.2);font-family:Prompt,Sarabun,sans-serif;text-align:left}
+.hxl-pop.on{opacity:1;transform:none}
+.hxl-pop.r-h{border-color:rgba(248,113,113,.5)}.hxl-pop.r-c{border-color:rgba(251,191,36,.45)}.hxl-pop.r-l{border-color:rgba(96,165,250,.45)}
+.hxl-pl{display:block;font:600 11.5px/1.3 Prompt,sans-serif;letter-spacing:.02em;color:#a8a29e;padding-right:30px}
+.hxl-pop.r-h .hxl-pl{color:#fca5a5}.hxl-pop.r-c .hxl-pl{color:#fcd34d}.hxl-pop.r-l .hxl-pl{color:#93c5fd}
+.hxl-pt{display:block;margin:4px 0 8px;padding-right:24px;font:600 15px/1.4 Prompt,sans-serif;color:#f5f5f4}
+html.vc-art .hero .hx-live .hxl-pop p{margin:0 0 8px !important;font:400 13px/1.55 Sarabun,Prompt,sans-serif !important;color:#d6d3d1 !important;max-width:none !important;text-align:left !important}
+.hxl-pop p em{display:block;font-style:normal;font:600 11px/1.3 Prompt,sans-serif;color:#a8a29e;margin-bottom:1px}
+.hxl-x{position:absolute;top:6px;right:6px;width:34px;height:34px;min-height:0 !important;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.07);color:#e7e5e4;font:400 20px/1 Prompt,sans-serif;cursor:pointer}
+.hxl-x::before,.hxl-x::after,.hxl-pgo::before,.hxl-pgo::after,.hxl-own-go::before,.hxl-own-go::after{display:none !important}
+.hxl-pgo{width:100%;min-height:42px !important;height:auto !important;margin-top:2px;border:0;border-radius:11px;background:linear-gradient(135deg,#34d399,#22d3ee);color:#04281b;font:700 13.5px/1 Prompt,sans-serif;cursor:pointer}
+/* (2) วางสัญญาของตัวเอง */
+.hxl-own{position:relative;display:flex;gap:8px;align-items:stretch;margin:10px 0 0}
+.hxl-own textarea{flex:1;min-width:0;height:44px;min-height:44px;max-height:44px;padding:11px 14px;border-radius:12px;border:1px dashed rgba(233,194,122,.38);background:rgba(255,255,255,.04);color:#f5f5f4;
+  font:400 16px/1.35 Prompt,Sarabun,sans-serif;resize:none;overflow:hidden;transition:max-height .25s,height .25s,border-color .2s,background .2s}
+.hxl-own textarea::placeholder{color:#b8a98d}
+.hxl-own textarea:focus{outline:none;border-style:solid;border-color:#e9c27a;background:rgba(255,255,255,.07)}
+.hx-live.own-on .hxl-own textarea{height:96px;max-height:96px;overflow:auto}
+.hxl-own-go{flex:none;align-self:flex-end;min-height:44px !important;height:44px !important;padding:0 14px;border:0;border-radius:12px;background:#f5ead6;color:#2a2116;font:700 13.5px/1 Prompt,sans-serif;cursor:pointer;white-space:nowrap}
+.hxl-own-go[hidden]{display:none}
+/* (8) ปุ่มติดล่างจอ */
+.vc-stick{display:none}
+@media (max-width:767px){
+  .vc-stick{position:fixed;left:16px;right:16px;bottom:calc(var(--nb,0px) + 10px + (var(--nb,0px) > 0px ? 0px : env(safe-area-inset-bottom)));z-index:45;display:flex;align-items:center;justify-content:center;gap:10px;height:50px;border-radius:16px;
+    background:linear-gradient(135deg,#f7ecd6,#e9c27a);color:#21190f;font:700 15.5px/1 Prompt,sans-serif;text-decoration:none;box-shadow:0 16px 34px -14px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.25) inset;
+    opacity:0;transform:translateY(16px);pointer-events:none;transition:opacity .25s,transform .3s cubic-bezier(.2,.9,.3,1.2)}
+  .vc-stick{bottom:calc(var(--nb,0px) + 10px)}
+  .vc-stick.on{opacity:1;transform:none;pointer-events:auto}
+  .vc-stick b{transition:transform .2s}.vc-stick:active b{transform:translateX(3px)}
+}
+@media (max-width:767px){
+  /* (ก) ข้อความพื้นหลังจางลงมาก + เว้นแถบบนสุดและกลางจอ */
+  html.vc-art .hero .hx-base{color:rgba(236,226,206,.016) !important}
+  html.vc-art .hero .hx-base b{color:rgba(255,170,140,.03) !important}
+  html.vc-art .hero .hx-lit{color:rgba(244,232,210,.16) !important}
+  html.vc-art .hero .hx-lit b{color:rgba(255,181,154,.45) !important}
+  html.vc-art .hero .hx-base{-webkit-mask-image:linear-gradient(180deg,transparent 0,transparent 120px,#000 220px);mask-image:linear-gradient(180deg,transparent 0,transparent 120px,#000 220px)}
+  /* (ข) ปุ่มเริ่มตรวจ: ลูกศรอยู่ในปุ่ม ไม่ล้น */
+  html.vc-art .hero .dx-cta-row{gap:10px !important}
+  html.vc-art .hero .dx-cta-row .dx-cta,html.vc-art .hero .dx-cta-row .dx-cta-ghost{padding:13px 16px !important;font-size:15px !important;white-space:nowrap;min-width:0;justify-content:center;display:inline-flex !important;align-items:center}
+  html.vc-art .hero .dx-cta-row .dx-cta::after{position:static !important;margin-left:.35em !important;flex:none}
+  /* (1)+(ค) จอแรกกระชับ: หัวข้อเล็กลง ตัวอย่างสดขึ้นมาอยู่ใต้หัวข้อทันที */
+  html.vc-art .hero .dx-pill{display:none !important}
+  html.vc-art .hero .hero-title{font-size:clamp(40px,11.5vw,50px) !important;line-height:1.08 !important;margin:0 !important}
+  html.vc-art .hero .hero-main{padding-top:calc(var(--hd,58px) + 14px) !important}
+  html.vc-art .hero{min-height:0 !important;padding-bottom:calc(84px + env(safe-area-inset-bottom)) !important}
+  .hx-live{margin:16px auto 18px !important;padding:10px !important}
+  .hxl-paper{padding:12px 12px 9px !important}
+  .hxl-h{font-size:13px !important;margin-bottom:5px !important;padding-bottom:5px !important}
+  .hxl-ln{min-height:20px !important;font-size:11px !important}
+  .hxl-top{margin-bottom:8px !important}
+  html.vc-art .hero .hero-lead{font-size:14.5px !important;margin-top:4px !important}
+  /* (ง) ป้ายส่องแว่น: ไม่ลอยติดหัวเว็บ — ย้ายไปล่างสุดของฉาก ตัวเล็ก จางกว่า */
+  .hx-hunt{top:auto !important;bottom:calc(76px + env(safe-area-inset-bottom)) !important;background:rgba(20,18,16,.55) !important;border-color:rgba(233,194,122,.18) !important;font-size:11px !important;padding:5px 10px !important}
+  .hx-hunt i{width:11px;height:11px;border-width:1.5px}
+}
+@media (max-width:767px){
+  html.vc-art body main > .hero{padding-top:calc(var(--hd,58px) + 18px) !important}
+  html.vc-art body main > .hero .hero-main{padding-top:0 !important}
+  html.vc-art body main > .hero .hero-copy .dx-pill{display:inline-block !important;margin:0 auto 6px !important;font-size:10.5px !important}
+}
+/* มือถือ: หน้าแรกเลื่อนได้ (เดิมล็อกไว้ 1 จอ ทำให้ตัวอย่างสดโดนแถบเมนูล่างตัด) */
+@media (max-width:767px){
+  html.vc-spa[data-view="home"],html.vc-spa[data-view="home"] body{overflow-x:hidden !important;overflow-y:auto !important;height:auto !important}
+  html.vc-spa[data-view="home"] main > .hero{height:auto !important;min-height:100svh !important}
+}
+/* กันฉากเลื่อนแนวนอนเองเมื่อแตะช่องวาง/ตรา (overflow:hidden ยังเลื่อนด้วยโค้ดได้ → ใช้ clip) */
+html.vc-art main > .hero{overflow:clip}
+@supports not (overflow:clip){html.vc-art main > .hero{overflow:hidden}}
+/* ป้ายแว่นขยายอยู่ใต้การ์ดตัวอย่างสด ไม่ทับแผ่นอธิบาย */
+.hx-tip{z-index:5}
+.hero:has(.hx-live.held) :is(.hx-lens,.hx-pool,.hx-tip){opacity:0 !important}
+/* จอ 768–1199: ตัวอย่างสดอยู่ใต้ปุ่ม จึงให้หน้าแรกเลื่อนได้ (เดิมล็อก 1 จอ ทำให้การ์ดโดนตัด) */
+@media (min-width:768px) and (max-width:1199px){
+  html.vc-spa[data-view="home"],html.vc-spa[data-view="home"] body{overflow-x:hidden !important;overflow-y:auto !important;height:auto !important}
+  html.vc-spa[data-view="home"] main > .hero{height:auto !important;min-height:100svh !important;padding-bottom:48px !important}
+}
+/* จอกว้างแต่เตี้ย: การ์ดด้านขวากระชับลง */
+@media (min-width:1200px) and (max-height:820px){
+  .hx-live.side .hxl-note{display:none}
+  .hx-live.side .hxl-ln{min-height:19px}
+  .hx-live.side .hxl-own textarea{height:40px;min-height:40px;max-height:40px;padding:9px 12px}
+  .hx-live.side.own-on .hxl-own textarea{height:72px;max-height:72px}
+}
