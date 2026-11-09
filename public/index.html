@@ -42,7 +42,7 @@
 <link rel="stylesheet" href="ct-sticker.css?v=9" media="(max-width: 767px)">
 <link rel="stylesheet" href="desktop-layout.css?v=5" media="(min-width: 1024px)">
 <link rel="stylesheet" href="silent-clip.css?v=1" media="(min-width: 1024px)">
-<link rel="stylesheet" href="art.css?v=221">
+<link rel="stylesheet" href="art.css?v=224">
 </head>
 <body>
 <svg id="vcStickerDefs" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="vcg-y" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#f4f4f2"/><stop offset="1" stop-color="#a6a9b0"/></linearGradient><linearGradient id="vcg-o" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#dcdcdb"/><stop offset="1" stop-color="#8a8d94"/></linearGradient><linearGradient id="vcg-b" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#e6e8ec"/><stop offset="1" stop-color="#8f949d"/></linearGradient><linearGradient id="vcg-n" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#9a9ea6"/><stop offset="1" stop-color="#43464d"/></linearGradient><linearGradient id="vcg-t" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#eef0f1"/><stop offset="1" stop-color="#9fa3ab"/></linearGradient><linearGradient id="vcg-p" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#e0e0e0"/><stop offset="1" stop-color="#7f8289"/></linearGradient><linearGradient id="vcg-g" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#d6d9db"/><stop offset="1" stop-color="#888c93"/></linearGradient><linearGradient id="vcg-v" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#cdd0d5"/><stop offset="1" stop-color="#60636b"/></linearGradient><linearGradient id="vcg-w" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d5d8dc"/></linearGradient><linearGradient id="vcg-au" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#f7f7f5"/><stop offset="1" stop-color="#b4b7bd"/></linearGradient><linearGradient id="vcg-s" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#b0b4bb"/></linearGradient></defs></svg>
@@ -1467,7 +1467,7 @@ if (/[?&]google=error/.test(location.search)) {
   setTimeout(function () { alert('เข้าสู่ระบบด้วย Google ไม่สำเร็จ ลองใหม่อีกครั้ง'); }, 300);
 }
 /* ปุ่มเติมเครดิตด่วน: ปิดแผนบัญชี แล้วเลื่อนไปหมวด 3 */
-/* หน้าต่างเติมเครดิต (มือถือ): ใช้การ์ด #paymentCard เดิม แค่แสดงเป็นหน้าต่างเด้ง */
+/* หน้าต่างเติมเครดิต (ทุกขนาดจอ): ใช้การ์ด #paymentCard เดิม แค่แสดงเป็นหน้าต่างเด้ง */
 function openPayModal() {
   var card = document.getElementById('paymentCard');
   if (!card || card.hidden) return;
@@ -1488,12 +1488,8 @@ document.addEventListener('click', function (e) {
   if (!e.target.closest('.wallet-topup')) return;
   document.body.classList.remove('auth-open');
   document.getElementById('authToggle').setAttribute('aria-expanded', 'false');
-  if (window.matchMedia('(max-width: 767px)').matches) {
-    openPayModal();
-  } else {
-    var card = document.getElementById('paymentCard');
-    if (card) setTimeout(function () { card.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 250);
-  }
+  /* ทุกขนาดจอ: เปิดเป็นหน้าต่างเด้ง (บนคอมไม่วางการ์ดเติมเครดิตไว้ในหน้าแล้ว) */
+  openPayModal();
 });
 (function () {
   var body = document.body;
@@ -1961,7 +1957,7 @@ document.addEventListener('click', function (e) {
 <script src="care.js?v=4"></script>
 <script src="video-embed.js?v=1"></script>
 <script src="silent-clip.js?v=1"></script>
-<script src="demo-results.js?v=2"></script>
-<script src="art.js?v=235"></script>
+<script src="demo-results.js?v=3"></script>
+<script src="art.js?v=236"></script>
 </body>
 </html>
