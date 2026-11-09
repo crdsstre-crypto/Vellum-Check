@@ -2638,7 +2638,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     var gh = hero.querySelector('.dx-cta-ghost');
     if (gh && mob) { gh.setAttribute('aria-label', gh.textContent.trim()); Array.prototype.forEach.call(gh.childNodes, function (n) { if (n.nodeType === 3 && /มีเสียงพากย์/.test(n.nodeValue)) n.nodeValue = n.nodeValue.replace(/\s*\(มีเสียงพากย์\)/, ''); }); }
     if (copy && ctaRow) {
-      var fr = document.createElement('p'); fr.className = 'hx-free'; fr.innerHTML = '<b>สมัครฟรี รับตรวจ ' + FREE_N + ' ครั้ง</b> · ไม่ต้องใช้บัตร<br><span class="hx-price">จากนั้น 3 ครั้ง 49 บาท · <a href="#pricing" data-price="price">ดูราคาและคำถามที่พบบ่อย</a></span>';
+      var fr = document.createElement('p'); fr.className = 'hx-free'; fr.innerHTML = '<b>สมัครฟรี รับตรวจ ' + FREE_N + ' ครั้ง</b><br><span class="hx-price">จากนั้น 3 ครั้ง 49 บาท · <a href="#pricing" data-price="price">ดูราคาและคำถามที่พบบ่อย</a></span>';
       ctaRow.parentNode.insertBefore(fr, ctaRow.nextSibling);
     }
     var sb = document.getElementById('signupBtn');
@@ -3521,7 +3521,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       '<button type="button" class="vag-x" data-x aria-label="ปิด">✕</button>' +
       '<div class="vag-stage" aria-hidden="true"><canvas class="vag-cv"></canvas></div><div class="vag-sheen" aria-hidden="true"></div>' +
       '<h3 id="vagT">อีกขั้นเดียวก็ตรวจได้</h3>' +
-      '<p class="vag-sub">สมัครฟรี ไม่ต้องใช้บัตร รับตรวจสัญญา <b>2 ครั้ง</b></p>' +
+      '<p class="vag-sub">สมัครฟรี รับตรวจสัญญา <b>2 ครั้ง</b></p>' +
       '<ul class="vag-list"><li>ข้อความที่วางไว้ยังอยู่ครบ ไม่ต้องวางใหม่</li><li>เข้าสู่ระบบแล้ว ระบบจะตรวจให้ต่อทันที</li><li>ปกปิดชื่อ เลขบัตร เบอร์โทร ก่อนส่งตรวจ</li></ul>' +
       '<a class="vag-go" href="#authCard">สมัครฟรี / เข้าสู่ระบบ</a>' +
       '<button type="button" class="vag-later" data-x>ไว้ทีหลัง</button></div>';
@@ -6824,4 +6824,196 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       setTimeout(fin, t0 + span + 800);
     });
   };
+})();
+
+
+/* ===== v239 หน้าแรกแบบว้าว: หัวข้อลายเซ็น · ตัวอย่างสดสแกนสัญญา · แตะเดียวดูผลฟรี · แว่นขยายชี้จุดเสี่ยง (9 พ.ย. 2026) ===== */
+(function () {
+  'use strict';
+  var hero = document.querySelector('main > .hero'); if (!hero) return;
+  var root = document.documentElement;
+  function calm() { return root.hasAttribute('data-calm') || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); }
+  function onHome() { var v = root.getAttribute('data-view'); return v === null || v === 'home'; }
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  var DEMOS = [['เช่าห้องพักรายปี', 'เช่าห้อง', 'สัญญาเช่า'], ['กู้เงินดอกเบี้ยสูง', 'กู้เงิน', 'สัญญากู้เงิน'], ['พนักงานประจำ (ออฟฟิศ)', 'จ้างงาน', 'สัญญาจ้างงาน']];
+  function idx(t) { var L = (window.VCSamples && VCSamples.list) || []; for (var i = 0; i < L.length; i++) if (L[i][1] === t) return i; return -1; }
+  /* เปิดผลตัวอย่างฟรีจากหน้าแรก: ไปหน้าตรวจ แล้วเล่นฉากสแกน (ไม่เรียก AI ไม่หักเครดิต) */
+  function tryDemo(t) {
+    var i = idx(t); if (i < 0 || !window.VCSamples || !VCSamples.run) return;
+    if (location.hash !== '#checkCard') location.hash = '#checkCard';
+    setTimeout(function () { VCSamples.run(i); }, 380);
+  }
+  window.VCTryDemo = tryDemo;
+
+  /* (ค) การ์ดตัวอย่าง 3 ใบเดิม → เปิดผลตัวอย่างฟรีชุดใหม่ */
+  var KMAP = { rent: DEMOS[0][0], loan: DEMOS[1][0], employment: DEMOS[2][0] };
+  document.addEventListener('click', function (e) {
+    var c = e.target.closest && e.target.closest('.hx-card'); if (!c) return;
+    var k = (/k-(\w+)/.exec(c.className) || [])[1]; if (!KMAP[k]) return;
+    e.preventDefault(); e.stopImmediatePropagation(); tryDemo(KMAP[k]);
+  }, true);
+
+  /* (2) หัวข้อ: "ก่อนเซ็น" เขียนเป็นลายเซ็นหมึก + เส้นใต้ลากด้วยปากกา */
+  var l2 = hero.querySelector('.ht-l2');
+  var sigTry = 0;
+  function sig() {
+    if (!l2 || l2.querySelector('.hs-ink')) return;
+    if (l2.hasAttribute('data-split') && !l2.getAttribute('data-split-done') && sigTry++ < 40) { setTimeout(sig, 100); return; }
+    var txt = 'ก่อนเซ็น';
+    var ink = document.createElement('span'); ink.className = 'hs-ink'; ink.setAttribute('aria-hidden', 'true');
+    ink.innerHTML = '<span class="hs-word">' + txt + '</span><i class="hs-nib"></i>' +
+      '<svg class="hs-line" viewBox="0 0 300 24" preserveAspectRatio="none"><path d="M3 15 C 40 9, 70 19, 110 13 S 190 7, 230 14 S 280 17, 297 9" pathLength="1"/></svg>';
+    l2.appendChild(ink); l2.classList.add('hs-on');
+    var go = function () { if (calm()) { l2.classList.add('hs-done'); return; } requestAnimationFrame(function () { l2.classList.add('hs-play'); }); setTimeout(function () { l2.classList.add('hs-done'); }, 2600); };
+    setTimeout(go, 650);
+  }
+  sig();
+
+  /* (1)+(4) ตัวอย่างสด: กระดาษสัญญาจริงจากชุดตัวอย่าง สแกนแล้วประทับตราทีละข้อ วนเช่า → กู้ → จ้างงาน */
+  var copy = hero.querySelector('.hero-copy'); if (!copy) return;
+  var fig = document.createElement('figure'); fig.className = 'hx-live'; fig.setAttribute('aria-label', 'ตัวอย่างผลตรวจสัญญา');
+  fig.innerHTML =
+    '<div class="hxl-top"><span class="hxl-live"><i></i>ตัวอย่างสด</span><span class="hxl-tabs" role="tablist">' +
+      DEMOS.map(function (d, i) { return '<button type="button" role="tab" data-i="' + i + '">' + d[1] + '</button>'; }).join('') + '</span></div>' +
+    '<button type="button" class="hxl-paper" aria-label="เปิดผลตรวจตัวอย่างฉบับนี้ ฟรี"><span class="hxl-h"></span><span class="hxl-lines"></span><i class="hxl-scan"></i></button>' +
+    '<div class="hxl-foot"><span class="hxl-cnt">พบ <em>0</em> จุดที่ควรดู</span><button type="button" class="hxl-go">ดูผลเต็ม · ฟรี <b aria-hidden="true">→</b></button></div>' +
+    '<p class="hxl-note">ผลจากสัญญาตัวอย่างที่เตรียมไว้ · ไม่ใช้เครดิต ไม่ต้องสมัคร</p>';
+  var cur = 0, timers = [], playing = false, visible = true;
+  function clear() { timers.forEach(clearTimeout); timers = []; }
+  function T(f, ms) { timers.push(setTimeout(f, ms)); }
+  function linesOf(t) {
+    var L = (window.VCSamples && VCSamples.list) || [], s = L[idx(t)]; if (!s) return null;
+    var its = (window.VCDemo && VCDemo.items) ? VCDemo.items(t) : [], by = {};
+    its.forEach(function (x) { by[x.clause] = x; });
+    var rows = s[3].split('\n').filter(function (l) { return /^ข้อ \d+/.test(l); }).slice(0, 6).map(function (l) {
+      var c = (/^ข้อ (\d+)/.exec(l) || [])[1]; return { t: l, it: by[c] || null };
+    });
+    return { title: s[3].split('\n')[0], rows: rows };
+  }
+  function render(i, final) {
+    var d = linesOf(DEMOS[i][0]); if (!d) return null;
+    fig.querySelector('.hxl-h').textContent = d.title;
+    fig.querySelector('.hxl-lines').innerHTML = d.rows.map(function (r, k) {
+      var lv = r.it ? ({ check_detail: 'h', caution: 'c', low: 'l' }[r.it.level] || 'c') : '';
+      return '<span class="hxl-ln' + (lv ? ' r-' + lv : '') + (final && lv ? ' hit' : '') + (final ? ' seen' : '') + '" data-k="' + k + '"><span class="hxl-tx">' + esc(r.t.length > 60 ? r.t.slice(0, 58) + '…' : r.t) + '</span>' +
+        (lv ? '<i class="hxl-st">' + esc(r.it.topic) + '</i>' : '') + '</span>';
+    }).join('');
+    [].forEach.call(fig.querySelectorAll('.hxl-tabs button'), function (b) { var on = +b.dataset.i === i; b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
+    var n = d.rows.filter(function (r) { return r.it; }).length;
+    fig.querySelector('.hxl-cnt em').textContent = final ? n : 0;
+    return d;
+  }
+  function play(i) {
+    clear(); cur = i; fig.classList.remove('done', 'out', 'scan');
+    var d = render(i, calm()); if (!d) return;
+    if (calm()) { fig.classList.add('done'); return; }
+    playing = true;
+    var lines = fig.querySelectorAll('.hxl-ln'), step = 520, hits = 0, cnt = fig.querySelector('.hxl-cnt em');
+    fig.style.setProperty('--scan', (lines.length * step + 300) + 'ms');
+    void fig.offsetWidth; fig.classList.add('scan');
+    [].forEach.call(lines, function (ln, k) {
+      T(function () {
+        ln.classList.add('seen');
+        if (/\br-/.test(ln.className)) { ln.classList.add('hit'); hits++; cnt.textContent = hits; var c = cnt.parentNode; c.classList.remove('pop'); void c.offsetWidth; c.classList.add('pop'); }
+      }, 260 + k * step);
+    });
+    T(function () { fig.classList.add('done'); }, 260 + lines.length * step + 200);
+    T(function () { if (!visible) { playing = false; return; } fig.classList.add('out'); }, 260 + lines.length * step + 3600);
+    T(function () { if (visible) play((cur + 1) % DEMOS.length); else playing = false; }, 260 + lines.length * step + 4000);
+  }
+  fig.addEventListener('click', function (e) {
+    var tb = e.target.closest('.hxl-tabs button'); if (tb) { play(+tb.dataset.i); return; }
+    if (e.target.closest('.hxl-paper, .hxl-go')) tryDemo(DEMOS[cur][0]);
+  });
+  /* วาง: จอกว้าง ≥1200 อยู่ขวาของหัวข้อ · อื่น ๆ อยู่ใต้ปุ่ม/ข้อความฟรี */
+  var wide = matchMedia('(min-width:1200px)');
+  function place() {
+    if (wide.matches) {
+      if (fig.parentNode !== hero) hero.appendChild(fig); fig.classList.add('side');
+      var t1 = hero.querySelector('.hero-title'); if (t1) { var hr = hero.getBoundingClientRect(), tr = t1.getBoundingClientRect(); fig.style.top = Math.max(90, tr.top + tr.height / 2 - hr.top - 40).toFixed(0) + 'px'; }
+    } else {
+      fig.classList.remove('side'); fig.style.top = '';
+      var a = copy.querySelector('.hx-free') || copy.querySelector('.dx-cta-row');
+      if (a && a.parentNode === copy) { if (fig.previousSibling !== a) copy.insertBefore(fig, a.nextSibling); } else if (fig.parentNode !== copy) copy.appendChild(fig);
+    }
+  }
+  function start() {
+    if (!window.VCSamples || !window.VCDemo) { setTimeout(start, 300); return; }
+    place(); setTimeout(place, 1500); addEventListener('resize', function () { setTimeout(place, 150); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(place);
+    hero.classList.add('hx-wow');
+    T(function () { play(0); }, 900);
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) {
+      var v = es[0].isIntersecting && onHome() && !document.hidden;
+      if (v && !visible) { visible = true; if (!playing) play(cur); } else if (!v) visible = false;
+    }, { threshold: .2 }).observe(fig);
+    document.addEventListener('visibilitychange', function () { visible = !document.hidden && onHome(); if (visible && !playing) play(cur); });
+  }
+  start();
+})();
+
+/* ===== v239 แว่นขยายชี้จุดเสี่ยง: ส่องโดนข้อความตัวหนาในฉาก → ป้ายอธิบายผุดข้างแว่น + นับจุดที่เจอ ===== */
+(function () {
+  'use strict';
+  var hero = document.querySelector('main > .hero'); if (!hero) return;
+  var root = document.documentElement;
+  var WHY = {
+    'ค่าปรับร้อยละ 300 ต่อปี': 'ค่าปรับสูงผิดปกติ ควรถามก่อนเซ็น',
+    'ต่ออายุอัตโนมัติทุก 12 เดือน': 'ลืมแจ้งยกเลิก อาจถูกผูกต่ออีกปี',
+    'ไม่สามารถขอคืนได้ไม่ว่ากรณีใดๆ': 'เงินประกันอาจไม่ได้คืนเลย',
+    'มีสิทธิ์แก้ไขเงื่อนไขได้ฝ่ายเดียว': 'อีกฝ่ายเปลี่ยนกติกาได้โดยไม่ถามคุณ',
+    'หักเงินจากบัญชีเงินเดือนได้ทันที': 'อาจถูกหักเงินโดยไม่ได้ยินยอมแต่ละครั้ง',
+    'ค่าธรรมเนียมเท่ากับค่าบริการคงเหลือทั้งหมด': 'เลิกก่อนกำหนด อาจต้องจ่ายเต็มจำนวน',
+    'อาจถูกเปิดเผยแก่บริษัทในเครือและพันธมิตร': 'ข้อมูลของคุณอาจถูกส่งต่อเป็นวงกว้าง',
+    'ต้องรับผิดร่วมกับลูกหนี้อย่างลูกหนี้ร่วม': 'ผู้ค้ำอาจถูกเรียกเก็บเหมือนเป็นลูกหนี้เอง',
+    'อนุญาโตตุลาการที่บริษัทเป็นผู้เลือก': 'คนตัดสินข้อพิพาทถูกเลือกโดยอีกฝ่าย',
+    'ห้ามทำงานกับคู่แข่งเป็นเวลา 5 ปี': 'จำกัดการทำงานนานกว่าที่พบทั่วไป',
+    'คิดดอกเบี้ยทบต้นรายวัน': 'ยอดหนี้อาจโตเร็วกว่าที่คิด',
+    'รับผิดชอบค่าซ่อมแซมโครงสร้างอาคารทั้งหมด': 'งานโครงสร้างโดยทั่วไปเป็นภาระเจ้าของ',
+    'ไม่รับผิดชอบความเสียหายใดๆ ทั้งสิ้น': 'เรียกร้องค่าเสียหายได้ยากมาก',
+    'ไม่ถือเป็นการสละสิทธิ์': 'อาจถูกเรียกร้องย้อนหลังได้'
+  };
+  var tip = null, chip = null, found = {}, nFound = 0, last = '', tick = 0, armed = false;
+  var mob = matchMedia('(max-width:767px)').matches;
+  function onHome() { var v = root.getAttribute('data-view'); return v === null || v === 'home'; }
+  function build() {
+    tip = document.createElement('div'); tip.className = 'hx-tip'; tip.setAttribute('role', 'status'); tip.setAttribute('aria-live', 'polite');
+    tip.innerHTML = '<b></b><span></span>';
+    chip = document.createElement('div'); chip.className = 'hx-hunt'; chip.setAttribute('aria-hidden', 'true');
+    chip.innerHTML = '<i></i><span>' + (mob ? 'แตะค้างแล้วลากแว่น ส่องหาจุดเสี่ยง' : 'ขยับเมาส์ ส่องหาจุดเสี่ยงในสัญญา') + '</span>';
+    hero.appendChild(tip); hero.appendChild(chip);
+  }
+  var cache = [], cacheSz = '';
+  function check() {
+    if (!onHome() || document.hidden) return;
+    var pos = window.VCLensPx, R = (window.VCLensR || .1) * hero.clientHeight; if (!pos || !R) return;
+    if (!tip) build();
+    var idleMob = hero.classList.contains('hx-lens-idle');
+    var hr = hero.getBoundingClientRect(), best = null, bd = 1e9;
+    /* ตำแหน่งวลีเสี่ยง (เทียบกับฉาก) — เก็บไว้ตอนชั้นข้อความยังแสดง เพราะโหมดประหยัด (hx-lite) ซ่อนชั้นนี้ แต่แว่นยังขยายข้อความเดิมอยู่ */
+    var bs = hero.querySelectorAll('.hx-base b');
+    if (bs.length && bs[0].getBoundingClientRect().width) {
+      var sz = hero.clientWidth + 'x' + hero.clientHeight;
+      if (sz !== cacheSz || !cache.length) { cacheSz = sz; cache = [].map.call(bs, function (b) { var r = b.getBoundingClientRect(); return { l: r.left - hr.left, r: r.right - hr.left, y: (r.top + r.bottom) / 2 - hr.top, k: b.textContent.trim() }; }); }
+    } else if (cacheSz !== hero.clientWidth + 'x' + hero.clientHeight) cache = [];
+    if (!idleMob) cache.forEach(function (c) {
+      var cx = Math.max(c.l, Math.min(c.r, pos.x));
+      var d = Math.hypot(cx - pos.x, c.y - pos.y); if (d < R * .55 && d < bd) { bd = d; best = c; }
+    });
+    var key = best ? best.k : '';
+    if (key && WHY[key]) {
+      if (key !== last) {
+        last = key;
+        tip.querySelector('b').textContent = '⚠ ' + key; tip.querySelector('span').textContent = WHY[key];
+        if (!found[key]) { found[key] = 1; nFound++; armed = true; chip.querySelector('span').textContent = 'ส่องเจอแล้ว ' + nFound + ' จุด · ลองหาต่อ'; chip.classList.add('got'); }
+      }
+      var right = pos.x < hero.clientWidth * .6, tw = tip.offsetWidth || 240;
+      var x = right ? pos.x + R * 1.05 : pos.x - R * 1.05 - tw, y = pos.y - R * .9;
+      x = Math.max(10, Math.min(hero.clientWidth - tw - 10, x)); y = Math.max(70, Math.min(hero.clientHeight - 90, y));
+      tip.style.transform = 'translate3d(' + x.toFixed(0) + 'px,' + y.toFixed(0) + 'px,0)';
+      tip.classList.add('on');
+    } else { last = ''; tip.classList.remove('on'); }
+  }
+  setInterval(function () { if (root.classList.contains('hx-on')) check(); }, 110);
+  setTimeout(function () { if (!tip) build(); chip.classList.add('on'); }, 2600);
 })();
