@@ -1238,6 +1238,8 @@ async function runCheck() {
     if (typeof r.data.credits === 'number') toast('ใช้ 1 เครดิต · เหลือ ' + r.data.credits + ' เครดิต');
     addDetectBanner(r.data.result, contractType);
     addCreditNote(r.data.credits);
+    // ความเห็นต่อผลตรวจ (ผูกกับผลตรวจที่บันทึกในประวัติ)
+    if (r.data.inspectionId && window.VCFeedback) window.VCFeedback.attach(r.data.inspectionId);
     if (r.data.audio) {
       els.result.insertAdjacentHTML('afterbegin',
         `<audio controls src="data:audio/mpeg;base64,${r.data.audio}" style="width:100%;margin-bottom:12px"></audio>`);
