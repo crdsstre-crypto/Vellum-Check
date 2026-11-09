@@ -6877,7 +6877,9 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       DEMOS.map(function (d, i) { return '<button type="button" role="tab" data-i="' + i + '">' + d[1] + '</button>'; }).join('') + '</span></div>' +
     '<button type="button" class="hxl-paper" aria-label="เปิดผลตรวจตัวอย่างฉบับนี้ ฟรี"><span class="hxl-h"></span><span class="hxl-lines"></span><i class="hxl-scan"></i></button>' +
     '<div class="hxl-foot"><span class="hxl-cnt">พบ <em>0</em> จุดที่ควรดู</span><button type="button" class="hxl-go">ดูผลเต็ม · ฟรี <b aria-hidden="true">→</b></button></div>' +
-    '<p class="hxl-note">ผลจากสัญญาตัวอย่างที่เตรียมไว้ · ไม่ใช้เครดิต ไม่ต้องสมัคร</p>';
+    '<p class="hxl-note">ผลจากสัญญาตัวอย่างที่เตรียมไว้ · ไม่ใช้เครดิต ไม่ต้องสมัคร · <b>แตะตราเพื่อดูเหตุผล</b></p>' +
+    '<div class="hxl-own"><textarea rows="1" aria-label="วางข้อความสัญญาของคุณ" placeholder="หรือวางสัญญาของคุณตรงนี้…"></textarea><button type="button" class="hxl-own-go" hidden>ตรวจฉบับนี้ <b aria-hidden="true">→</b></button></div>' +
+    '<div class="hxl-pop" role="dialog" aria-modal="false" aria-label="รายละเอียดจุดเสี่ยง" hidden></div>';
   var cur = 0, timers = [], playing = false, visible = true;
   function clear() { timers.forEach(clearTimeout); timers = []; }
   function T(f, ms) { timers.push(setTimeout(f, ms)); }
@@ -6896,7 +6898,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     fig.querySelector('.hxl-lines').innerHTML = d.rows.map(function (r, k) {
       var lv = r.it ? ({ check_detail: 'h', caution: 'c', low: 'l' }[r.it.level] || 'c') : '';
       return '<span class="hxl-ln' + (lv ? ' r-' + lv : '') + (final && lv ? ' hit' : '') + (final ? ' seen' : '') + '" data-k="' + k + '"><span class="hxl-tx">' + esc(r.t.length > 60 ? r.t.slice(0, 58) + '…' : r.t) + '</span>' +
-        (lv ? '<i class="hxl-st">' + esc(r.it.topic) + '</i>' : '') + '</span>';
+        (lv ? '<i class="hxl-st" role="button" tabindex="0" aria-label="ดูเหตุผล: ' + esc(r.it.topic) + '">' + esc(r.it.topic) + '</i>' : '') + '</span>';
     }).join('');
     [].forEach.call(fig.querySelectorAll('.hxl-tabs button'), function (b) { var on = +b.dataset.i === i; b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
     var n = d.rows.filter(function (r) { return r.it; }).length;
@@ -6921,8 +6923,57 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     T(function () { if (!visible) { playing = false; return; } fig.classList.add('out'); }, 260 + lines.length * step + 3600);
     T(function () { if (visible) play((cur + 1) % DEMOS.length); else playing = false; }, 260 + lines.length * step + 4000);
   }
+  /* (5) แตะตรา → แผ่นอธิบายจากผลตัวอย่างจริง (หยุดวนระหว่างอ่าน) */
+  var pop = fig.querySelector('.hxl-pop'), held = false;
+  var LVN = { check_detail: ['ควรตรวจละเอียด', 'h'], caution: ['ควรระวัง', 'c'], low: ['ข้อสังเกต', 'l'] };
+  function openPop(st) {
+    var ln = st.closest('.hxl-ln'), d = linesOf(DEMOS[cur][0]); if (!ln || !d) return;
+    var r = d.rows[+ln.dataset.k]; if (!r || !r.it) return;
+    var full = ((window.VCDemo && VCDemo.items) ? VCDemo.items(DEMOS[cur][0]) : []).filter(function (x) { return x.clause === r.it.clause; })[0] || r.it;
+    var lv = LVN[full.level] || LVN.caution;
+    clear(); playing = false; held = true; fig.classList.add('done', 'held'); fig.classList.remove('out');
+    [].forEach.call(fig.querySelectorAll('.hxl-ln'), function (x) { x.classList.add('seen'); if (/\br-/.test(x.className)) x.classList.add('hit'); });
+    fig.querySelector('.hxl-cnt em').textContent = d.rows.filter(function (x) { return x.it; }).length;
+    pop.className = 'hxl-pop r-' + lv[1];
+    pop.innerHTML = '<button type="button" class="hxl-x" aria-label="ปิด">×</button>' +
+      '<span class="hxl-pl">ข้อ ' + esc(full.clause) + ' · ' + lv[0] + '</span>' +
+      '<b class="hxl-pt">' + esc(full.title) + '</b>' +
+      (full.impact ? '<p><em>ผลกระทบ</em>' + esc(full.impact) + '</p>' : '') +
+      (full.ask ? '<p><em>ลองคุยว่า</em>' + esc(full.ask) + '</p>' : (full.fix ? '<p><em>ทางแก้</em>' + esc(full.fix) + '</p>' : '')) +
+      '<button type="button" class="hxl-pgo">ดูผลเต็มทั้งฉบับ · ฟรี <b aria-hidden="true">→</b></button>';
+    pop.hidden = false; requestAnimationFrame(function () { pop.classList.add('on'); });
+    var x = pop.querySelector('.hxl-x'); if (x && x.focus) x.focus({ preventScroll: true });
+  }
+  function closePop(resume) {
+    if (pop.hidden) return; pop.classList.remove('on'); held = false; fig.classList.remove('held');
+    setTimeout(function () { if (!pop.classList.contains('on')) pop.hidden = true; }, 220);
+    if (resume) T(function () { if (visible && !held) play((cur + 1) % DEMOS.length); }, 2500);
+  }
+  fig.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { closePop(true); return; }
+    var st = e.target.closest && e.target.closest('.hxl-st'); if (st && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); e.stopPropagation(); openPop(st); }
+  });
+  document.addEventListener('click', function (e) { if (!pop.hidden && !fig.contains(e.target)) closePop(true); });
+  /* (2) วางสัญญาของตัวเองได้จากหน้าแรก → ส่งไปช่องตรวจ (ไม่กดตรวจให้เอง เพราะการตรวจจริงใช้เครดิต) */
+  var own = fig.querySelector('.hxl-own textarea'), ownGo = fig.querySelector('.hxl-own-go');
+  function ownSync() { var ok = own.value.trim().length >= 20; ownGo.hidden = !ok; fig.classList.toggle('own-on', ok || document.activeElement === own); }
+  own.addEventListener('input', ownSync); own.addEventListener('focus', function () { clear(); playing = false; held = true; fig.classList.add('done'); ownSync(); });
+  own.addEventListener('blur', function () { setTimeout(function () { ownSync(); if (!own.value.trim()) { held = false; if (visible) T(function () { if (!held) play(cur); }, 1200); } }, 150); });
+  own.addEventListener('paste', function () { setTimeout(ownSync, 0); });
+  ownGo.addEventListener('click', function (e) {
+    e.stopPropagation();
+    var inp = document.getElementById('input'); if (!inp) return;
+    inp.value = own.value; inp.dispatchEvent(new Event('input', { bubbles: true }));
+    own.value = ''; ownSync(); held = false;
+    if (location.hash !== '#checkCard') location.hash = '#checkCard';
+    setTimeout(function () { try { inp.focus({ preventScroll: true }); inp.setSelectionRange(0, 0); } catch (er) {} var cc = document.getElementById('checkCard'); if (cc && cc.scrollIntoView) cc.scrollIntoView({ block: 'start' }); }, 420);
+  });
   fig.addEventListener('click', function (e) {
-    var tb = e.target.closest('.hxl-tabs button'); if (tb) { play(+tb.dataset.i); return; }
+    var st = e.target.closest('.hxl-st'); if (st) { e.preventDefault(); e.stopPropagation(); openPop(st); return; }
+    if (e.target.closest('.hxl-x')) { closePop(true); return; }
+    if (e.target.closest('.hxl-pgo')) { closePop(false); tryDemo(DEMOS[cur][0]); return; }
+    if (e.target.closest('.hxl-pop, .hxl-own')) return;
+    var tb = e.target.closest('.hxl-tabs button'); if (tb) { closePop(false); held = false; play(+tb.dataset.i); return; }
     if (e.target.closest('.hxl-paper, .hxl-go')) tryDemo(DEMOS[cur][0]);
   });
   /* วาง: จอกว้าง ≥1200 อยู่ขวาของหัวข้อ · อื่น ๆ อยู่ใต้ปุ่ม/ข้อความฟรี */
@@ -6931,6 +6982,9 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     if (wide.matches) {
       if (fig.parentNode !== hero) hero.appendChild(fig); fig.classList.add('side');
       var t1 = hero.querySelector('.hero-title'); if (t1) { var hr = hero.getBoundingClientRect(), tr = t1.getBoundingClientRect(); fig.style.top = Math.max(90, tr.top + tr.height / 2 - hr.top - 40).toFixed(0) + 'px'; }
+    } else if (matchMedia('(max-width:767px)').matches) {
+      fig.classList.remove('side'); fig.style.top = '';
+      var ti = copy.querySelector('.hero-title'); if (ti && ti.nextSibling !== fig) copy.insertBefore(fig, ti.nextSibling);
     } else {
       fig.classList.remove('side'); fig.style.top = '';
       var a = copy.querySelector('.hx-free') || copy.querySelector('.dx-cta-row');
@@ -6945,11 +6999,37 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     T(function () { play(0); }, 900);
     if ('IntersectionObserver' in window) new IntersectionObserver(function (es) {
       var v = es[0].isIntersecting && onHome() && !document.hidden;
-      if (v && !visible) { visible = true; if (!playing) play(cur); } else if (!v) visible = false;
+      if (v && !visible) { visible = true; if (!playing && !held) play(cur); } else if (!v) visible = false;
     }, { threshold: .2 }).observe(fig);
-    document.addEventListener('visibilitychange', function () { visible = !document.hidden && onHome(); if (visible && !playing) play(cur); });
+    document.addEventListener('visibilitychange', function () { visible = !document.hidden && onHome(); if (visible && !playing && !held) play(cur); });
   }
   start();
+})();
+
+/* ===== v242 ปุ่มติดล่างจอ (มือถือ): เลื่อนพ้นจอแรกแล้วมีปุ่ม "ตรวจสัญญาของฉัน" ลอยเหนือแถบเมนู ===== */
+(function () {
+  'use strict';
+  var hero = document.querySelector('main > .hero'); if (!hero || !('IntersectionObserver' in window)) return;
+  var root = document.documentElement, mq = matchMedia('(max-width:767px)'), past = false;
+  var b = document.createElement('a'); b.href = '#checkCard'; b.className = 'vc-stick'; b.setAttribute('aria-hidden', 'true'); b.tabIndex = -1;
+  b.innerHTML = '<span>ตรวจสัญญาของฉัน</span><b aria-hidden="true">→</b>';
+  document.body.appendChild(b);
+  function navH() { var n = document.querySelector('.bottom-nav'); return n && !n.hidden && n.offsetHeight ? n.getBoundingClientRect().height : 0; }
+  function upd() {
+    var v = root.getAttribute('data-view'), home = v === null || v === 'home';
+    var on = mq.matches && home && past && !document.body.classList.contains('auth-open');
+    b.style.setProperty('--nb', navH() + 'px');
+    b.classList.toggle('on', on); b.setAttribute('aria-hidden', on ? 'false' : 'true'); b.tabIndex = on ? 0 : -1;
+  }
+  /* โชว์เมื่อเลื่อนลงมาแล้ว และปุ่ม "เริ่มตรวจสัญญา" ในฉากไม่อยู่ในจอ (หน้าแรกบนมือถือเลื่อนได้แค่ภายในฉากนี้) */
+  var cta = hero.querySelector('.dx-cta-row') || hero, ctaIn = true;
+  function scr() { past = !ctaIn && (window.scrollY || document.documentElement.scrollTop || 0) > 50 && document.activeElement !== hero.querySelector('.hxl-own textarea'); upd(); }
+  new IntersectionObserver(function (es) { ctaIn = es[0].isIntersecting; scr(); }, { threshold: 0, rootMargin: '0px 0px -90px 0px' }).observe(cta);
+  addEventListener('scroll', scr, { passive: true });
+  new MutationObserver(upd).observe(root, { attributes: true, attributeFilter: ['data-view'] });
+  new MutationObserver(upd).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  addEventListener('resize', upd);
+  b.addEventListener('click', function () { b.classList.remove('on'); });
 })();
 
 /* ===== v239 แว่นขยายชี้จุดเสี่ยง: ส่องโดนข้อความตัวหนาในฉาก → ป้ายอธิบายผุดข้างแว่น + นับจุดที่เจอ ===== */
