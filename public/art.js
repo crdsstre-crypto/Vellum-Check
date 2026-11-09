@@ -2275,8 +2275,23 @@ window.VCStepPlay = function (v, fps, onEnd) {
     pos.x = tgt.x = W / 2 + .12 * H; pos.y = tgt.y = H / 2 - .05 * H;
     window.VCLensPx = pos;
     function onHome() { var v = root.getAttribute('data-view'); return v === null || v === 'home'; }
+    /* (ก) มือถือ: นิ้วที่เลื่อนหน้าไม่ลากแว่นตาม — ต้องแตะค้าง ~0.28 วิ ก่อน แว่นถึงโผล่และลากได้ (ระหว่างนั้นกันหน้าเลื่อน) */
+    var hold = false, holdT = 0, hx0 = 0, hy0 = 0;
+    function holdOff() { clearTimeout(holdT); if (hold) { hold = false; hero.classList.remove('hx-holding'); } }
+    addEventListener('pointerdown', function (e) {
+      if (e.pointerType !== 'touch' || !mob || !onHome()) return;
+      if (e.target.closest && e.target.closest('a,button,input,textarea,select,label,.hx-live,.site-header,.bottom-nav')) return;
+      hx0 = e.clientX; hy0 = e.clientY; clearTimeout(holdT);
+      holdT = setTimeout(function () { hold = true; hero.classList.add('hx-holding'); try { if (navigator.vibrate) navigator.vibrate(8); } catch (er) {} mv({ clientX: hx0, clientY: hy0, pointerType: 'touch' }); }, 280);
+    }, { passive: true });
+    addEventListener('pointermove', function (e) { if (!hold && e.pointerType === 'touch' && Math.hypot(e.clientX - hx0, e.clientY - hy0) > 10) clearTimeout(holdT); }, { passive: true });
+    ['pointerup', 'pointercancel'].forEach(function (t) { addEventListener(t, function (e) { if (e.pointerType === 'touch') holdOff(); }, { passive: true }); });
+    document.addEventListener('touchmove', function (e) { if (hold) { e.preventDefault(); var t = e.touches[0]; if (t) mv({ clientX: t.clientX, clientY: t.clientY, pointerType: 'touch' }); } }, { passive: false });
+    document.addEventListener('touchend', holdOff, { passive: true });
     function mv(e) {
-      if (!onHome()) return; var r = hero.getBoundingClientRect();
+      if (!onHome()) return;
+      if (mob && e.pointerType === 'touch' && !hold) return;
+      var r = hero.getBoundingClientRect();
       if (e.clientY < r.top || e.clientY > r.bottom) return;
       tgt.x = e.clientX - r.left; tgt.y = e.clientY - r.top; moved = performance.now();
       tilt.tx = e.clientX / innerWidth - .5; tilt.ty = e.clientY / innerHeight - .5; kick();
@@ -2649,7 +2664,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
 
       var dt = last ? Math.min(64, now - last) : 16.7; last = now;
       var k = 1 - Math.pow(1 - .12, dt / 16.7), t = (now - t0) / 1000;
-      var idle = now - moved > 6000;
+      var idle = now - moved > (mob ? (hold ? 1e9 : 1800) : 6000);
       if (idle && !calm && !mob) idlePath(t, now);
       /* มือถือ: ไม่ให้แว่นเดินเองทับข้อความ — ซ่อนตอนไม่ได้แตะ แล้วโผล่ตรงนิ้วเมื่อแตะ/ลากในฉาก */
       if (mob && idle !== hero.classList.contains('hx-lens-idle')) { hero.classList.toggle('hx-lens-idle', idle); window.VCLensOff = idle; }
@@ -6875,9 +6890,11 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   fig.innerHTML =
     '<div class="hxl-top"><span class="hxl-live"><i></i>ตัวอย่างสด</span><span class="hxl-tabs" role="tablist">' +
       DEMOS.map(function (d, i) { return '<button type="button" role="tab" data-i="' + i + '">' + d[1] + '</button>'; }).join('') + '</span></div>' +
-    '<button type="button" class="hxl-paper" aria-label="เปิดผลตรวจตัวอย่างฉบับนี้ ฟรี"><span class="hxl-h"></span><span class="hxl-lines"></span><i class="hxl-scan"></i></button>' +
-    '<div class="hxl-foot"><span class="hxl-cnt">พบ <em>0</em> จุดที่ควรดู</span><button type="button" class="hxl-go">ดูผลเต็ม · ฟรี <b aria-hidden="true">→</b></button></div>' +
-    '<p class="hxl-note">ผลจากสัญญาตัวอย่างที่เตรียมไว้ · ไม่ใช้เครดิต ไม่ต้องสมัคร · <b>แตะตราเพื่อดูเหตุผล</b></p>' +
+    '<button type="button" class="hxl-paper" aria-label="เปิดผลตรวจตัวอย่างฉบับนี้ ฟรี"><span class="hxl-h"></span><span class="hxl-lines"></span><i class="hxl-scan"></i><i class="hxl-hint" aria-hidden="true">แตะตราเพื่อดูเหตุผล</i></button>' +
+    '<div class="hxl-foot"><span class="hxl-meter" aria-hidden="true"><svg viewBox="0 0 100 58"><defs><linearGradient id="hxlG" x1="0" x2="1"><stop offset="0" stop-color="#60a5fa"/><stop offset=".5" stop-color="#fbbf24"/><stop offset="1" stop-color="#ef4444"/></linearGradient></defs>' +
+      '<path class="hxm-trk" d="M10 52 A40 40 0 0 1 90 52" pathLength="1"/><path class="hxm-arc" d="M10 52 A40 40 0 0 1 90 52" pathLength="1"/><g class="hxm-ndl"><line x1="50" y1="52" x2="50" y2="20"/><circle cx="50" cy="52" r="5"/></g></svg></span>' +
+      '<span class="hxl-cnt">พบ <em>0</em> จุดที่ควรดู<small class="hxl-lv"></small></span><button type="button" class="hxl-go">ดูผลเต็ม · ฟรี <b aria-hidden="true">→</b></button></div>' +
+    '<p class="hxl-note">สัญญาตัวอย่างที่เตรียมไว้ · ไม่ใช้เครดิต · ไม่ต้องสมัคร</p>' +
     '<div class="hxl-own"><textarea rows="1" aria-label="วางข้อความสัญญาของคุณ" placeholder="หรือวางสัญญาของคุณตรงนี้…"></textarea><button type="button" class="hxl-own-go" hidden>ตรวจฉบับนี้ <b aria-hidden="true">→</b></button></div>' +
     '<div class="hxl-pop" role="dialog" aria-modal="false" aria-label="รายละเอียดจุดเสี่ยง" hidden></div>';
   var cur = 0, timers = [], playing = false, visible = true;
@@ -6905,9 +6922,30 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     fig.querySelector('.hxl-cnt em').textContent = final ? n : 0;
     return d;
   }
+  /* (2) เข็มวัด: ขยับตามตราที่ปั๊ม (น้ำหนัก ตรวจละเอียด 3 · ระวัง 2 · สังเกต 1 · เต็มสเกล 18 = 6 ข้อระดับตรวจละเอียด) ระดับสุดท้ายใช้กติกาเดียวกับหน้าผล */
+  var W8 = { h: 3, c: 2, l: 1 };
+  function meter(sc, lvs, final) {
+    var f = Math.min(1, sc / 18), m = fig.querySelector('.hxl-meter');
+    m.style.setProperty('--f', f.toFixed(3));
+    var lv = fig.querySelector('.hxl-lv');
+    if (!final) { lv.textContent = ''; lv.className = 'hxl-lv'; return; }
+    var t = lvs.h ? ['ควรตรวจละเอียดก่อนเซ็น', 'h'] : lvs.c ? ['ควรอ่านให้ละเอียด', 'c'] : ['ความเสี่ยงต่ำ', 'l'];
+    lv.textContent = t[0]; lv.className = 'hxl-lv on r-' + t[1];
+  }
+  function tally(final) {
+    var sc = 0, lvs = { h: 0, c: 0, l: 0 };
+    [].forEach.call(fig.querySelectorAll('.hxl-ln.hit'), function (x) { var k = (/r-(\w)/.exec(x.className) || [])[1]; if (k) { sc += W8[k]; lvs[k]++; } });
+    meter(sc, lvs, final);
+  }
+  var flipped = false;
   function play(i) {
     clear(); cur = i; fig.classList.remove('done', 'out', 'scan');
+    /* (3) เปลี่ยนสัญญาแบบพลิกหน้ากระดาษ */
+    var pp = fig.querySelector('.hxl-paper');
+    if (flipped && !calm()) { pp.classList.remove('flipin'); void pp.offsetWidth; pp.classList.add('flipin'); }
+    flipped = true;
     var d = render(i, calm()); if (!d) return;
+    tally(calm());
     if (calm()) { fig.classList.add('done'); return; }
     playing = true;
     var lines = fig.querySelectorAll('.hxl-ln'), step = 520, hits = 0, cnt = fig.querySelector('.hxl-cnt em');
@@ -6916,10 +6954,10 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     [].forEach.call(lines, function (ln, k) {
       T(function () {
         ln.classList.add('seen');
-        if (/\br-/.test(ln.className)) { ln.classList.add('hit'); hits++; cnt.textContent = hits; var c = cnt.parentNode; c.classList.remove('pop'); void c.offsetWidth; c.classList.add('pop'); }
+        if (/\br-/.test(ln.className)) { ln.classList.add('hit'); hits++; cnt.textContent = hits; var c = cnt.parentNode; c.classList.remove('pop'); void c.offsetWidth; c.classList.add('pop'); tally(false); }
       }, 260 + k * step);
     });
-    T(function () { fig.classList.add('done'); }, 260 + lines.length * step + 200);
+    T(function () { fig.classList.add('done'); tally(true); }, 260 + lines.length * step + 200);
     T(function () { if (!visible) { playing = false; return; } fig.classList.add('out'); }, 260 + lines.length * step + 3600);
     T(function () { if (visible) play((cur + 1) % DEMOS.length); else playing = false; }, 260 + lines.length * step + 4000);
   }
@@ -6933,15 +6971,26 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     var lv = LVN[full.level] || LVN.caution;
     clear(); playing = false; held = true; fig.classList.add('done', 'held'); fig.classList.remove('out');
     [].forEach.call(fig.querySelectorAll('.hxl-ln'), function (x) { x.classList.add('seen'); if (/\br-/.test(x.className)) x.classList.add('hit'); });
-    fig.querySelector('.hxl-cnt em').textContent = d.rows.filter(function (x) { return x.it; }).length;
+    fig.querySelector('.hxl-cnt em').textContent = d.rows.filter(function (x) { return x.it; }).length; tally(true);
     pop.className = 'hxl-pop r-' + lv[1];
     pop.innerHTML = '<button type="button" class="hxl-x" aria-label="ปิด">×</button>' +
       '<span class="hxl-pl">ข้อ ' + esc(full.clause) + ' · ' + lv[0] + '</span>' +
       '<b class="hxl-pt">' + esc(full.title) + '</b>' +
       (full.impact ? '<p><em>ผลกระทบ</em>' + esc(full.impact) + '</p>' : '') +
-      (full.ask ? '<p><em>ลองคุยว่า</em>' + esc(full.ask) + '</p>' : (full.fix ? '<p><em>ทางแก้</em>' + esc(full.fix) + '</p>' : '')) +
+      (full.fix ? '<div class="hxl-cmp" style="--v:0"><div class="hxc-a"><em>ข้อความเดิมในสัญญา</em><span>' + esc(r.t) + '</span></div>' +
+        '<div class="hxc-b" aria-hidden="true"><em>สิ่งที่ควรขอแก้</em><span>' + esc(full.fix) + '</span></div><i class="hxc-hd" aria-hidden="true"><b></b></i>' +
+        '<input type="range" min="0" max="100" value="0" aria-label="เลื่อนเทียบ ข้อความเดิม กับ สิ่งที่ควรขอแก้: ' + esc(full.fix) + '"></div>' +
+        '<p class="hxc-tip">ลากแถบ ← → เพื่อเทียบ</p>' : '') +
+      (full.ask ? '<p><em>ลองคุยว่า</em>' + esc(full.ask) + '</p>' : '') +
       '<button type="button" class="hxl-pgo">ดูผลเต็มทั้งฉบับ · ฟรี <b aria-hidden="true">→</b></button>';
     pop.hidden = false; requestAnimationFrame(function () { pop.classList.add('on'); });
+    var cmp = pop.querySelector('.hxl-cmp');
+    if (cmp) {
+      var rg = cmp.querySelector('input'), setV = function (v) { cmp.style.setProperty('--v', v); cmp.classList.toggle('past', v > 55); };
+      rg.addEventListener('input', function () { cmp.classList.add('touched'); setV(+rg.value); });
+      /* โชว์ให้เห็นว่าลากได้: เลื่อนเองไป-กลับครั้งเดียว */
+      if (!calm()) setTimeout(function () { var a0 = performance.now(); requestAnimationFrame(function anim(n) { if (cmp.classList.contains('touched') || pop.hidden) return; var t = (n - a0) / 1700; if (t >= 1) { setV(0); rg.value = 0; return; } var v = Math.round(Math.sin(t * Math.PI) * 64); setV(v); rg.value = v; requestAnimationFrame(anim); }); }, 650);
+    }
     var x = pop.querySelector('.hxl-x'); if (x && x.focus) x.focus({ preventScroll: true });
   }
   function closePop(resume) {
@@ -7062,6 +7111,8 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     chip = document.createElement('div'); chip.className = 'hx-hunt'; chip.setAttribute('aria-hidden', 'true');
     chip.innerHTML = '<i></i><span>' + (mob ? 'แตะค้างแล้วลากแว่น ส่องหาจุดเสี่ยง' : 'ขยับเมาส์ ส่องหาจุดเสี่ยงในสัญญา') + '</span>';
     hero.appendChild(tip); hero.appendChild(chip);
+    /* (ค) มือถือ: ชิปอยู่ในเนื้อหา (ใต้ข้อความสมัครฟรี) ไม่ลอยทับข้อความอื่น */
+    if (matchMedia('(max-width:767px)').matches) { var fr = hero.querySelector('.hx-free'); if (fr && fr.parentNode) { fr.parentNode.insertBefore(chip, fr.nextSibling); chip.classList.add('flow'); } }
   }
   var cache = [], cacheSz = '';
   function check() {
@@ -7096,4 +7147,25 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   }
   setInterval(function () { if (root.classList.contains('hx-on')) check(); }, 110);
   setTimeout(function () { if (!tip) build(); chip.classList.add('on'); }, 2600);
+})();
+
+/* ===== v243 แถบความน่าเชื่อถือ: 3 บรรทัดล่าง → การ์ดไอคอน วาดเส้นตอนเลื่อนมาถึง ===== */
+(function () {
+  'use strict';
+  var ul = document.querySelector('main > .hero .dx-points'); if (!ul || ul.__tp) return; ul.__tp = 1;
+  var IC = [
+    /* ไม่ใช่คำปรึกษากฎหมาย: ตาชั่ง */ '<path d="M12 3v18M7 21h10M5 7h14M5 7l-3 7a3.2 3.2 0 0 0 6 0zM19 7l-3 7a3.2 3.2 0 0 0 6 0z"/>',
+    /* ปกปิดข้อมูล: โล่ + ตา */ '<path d="M12 3l8 3v6c0 4.6-3.4 8-8 9-4.6-1-8-4.4-8-9V6z"/><path d="M8 12.5s1.6-2.5 4-2.5 4 2.5 4 2.5-1.6 2.5-4 2.5-4-2.5-4-2.5z"/><path d="M6 18L18 7"/>',
+    /* คืนเครดิต: ลูกศรวน + เหรียญ */ '<path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/><circle cx="12" cy="12" r="3.2"/>'
+  ];
+  var HEAD = ['คัดกรองเบื้องต้น', 'ปกปิดข้อมูลก่อนส่ง', 'ตรวจพลาด คืนเครดิต'];
+  [].forEach.call(ul.querySelectorAll('li'), function (li, i) {
+    if (!IC[i]) return; var txt = li.textContent.trim();
+    li.innerHTML = '<i class="tp-ic" aria-hidden="true"><svg viewBox="0 0 24 24">' + IC[i] + '</svg></i><span class="tp-tx"><b>' + HEAD[i] + '</b><span>' + txt + '</span></span>';
+    li.style.setProperty('--i', i);
+  });
+  ul.classList.add('tp-cards');
+  var go = function () { ul.classList.add('tp-in'); };
+  if (!('IntersectionObserver' in window) || document.documentElement.hasAttribute('data-calm')) { go(); return; }
+  var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { go(); io.disconnect(); } }, { threshold: .25 }); io.observe(ul);
 })();
