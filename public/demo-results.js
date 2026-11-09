@@ -172,6 +172,7 @@
       return null;
     },
     has: function (title) { return !!DATA[title]; },
+    items: function (title) { var d = DATA[title]; return d ? d.i.map(function (x) { return { clause: x[0], level: x[1], title: x[2], topic: x[3], impact: x[5] }; }) : []; },
     top: function (title) { var d = DATA[title]; if (!d) return ''; var r = { check_detail: 0, caution: 1, low: 2 }, b = null; d.i.forEach(function (x) { if (!b || r[x[1]] < r[b[1]]) b = x; }); return b ? b[2] : ''; },
     counts: function (title) { var d = DATA[title], c = { check_detail: 0, caution: 0, low: 0 }; if (d) d.i.forEach(function (x) { c[x[1]]++; }); return d ? c : null; }
   };
