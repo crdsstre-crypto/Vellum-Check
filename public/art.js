@@ -5508,7 +5508,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       stat = document.createElement('button'); stat.type = 'button'; stat.className = 'vc-stat'; stat.hidden = true;
       stat.innerHTML = '<span class="vc-stat-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 4.5v3.7h3.7"/><path d="M12 8.5V12l2.5 1.5"/></svg></span><span class="vc-stat-tx"></span><i aria-hidden="true">›</i>';
       card.parentNode.insertBefore(stat, card.nextSibling);
-      stat.addEventListener('click', function () { var h = document.querySelector('#bottomNav [data-nav="hist"]'); if (h) h.click(); });
+      stat.addEventListener('click', function () { var h = document.querySelector('#bottomNav [data-nav="hist"]'); if (h && h.offsetParent) { h.click(); return; } var w = document.getElementById('walletHist'); if (w) { if (w.getAttribute('aria-expanded') !== 'true') w.click(); setTimeout(function () { try { w.scrollIntoView({ block: 'start', behavior: 'smooth' }); } catch (e) {} }, 120); } }); /* คอม: กางประวัติในหน้าบัญชี */
     }
     if (!foot) {
       var out = document.getElementById('logoutBtn');
@@ -5525,7 +5525,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     li.querySelector('.vc-wcard').classList.toggle('is-low', low);
   }
   function load() {
-    if (busy || !mq.matches || li.hidden || Date.now() - last < 15000) return;
+    if (busy || li.hidden || Date.now() - last < 15000) return; /* v238: คอมก็แสดงสถิติด้วย */
     busy = true; last = Date.now();
     fetch('/api/history/inspections', { credentials: 'same-origin' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
       var items = (d && d.items) || [];
@@ -5539,10 +5539,11 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       stat.hidden = false;
     }).catch(function () {}).then(function () { busy = false; });
   }
-  function tick() { if (!mq.matches) return; if (build()) { credits(); load(); } }
+  function tick() { if (build()) { credits(); load(); } } /* v238: ทุกขนาดจอ */
   new MutationObserver(tick).observe(li, { attributes: true, attributeFilter: ['hidden'] });
   new MutationObserver(function () { if (document.body.getAttribute('data-sheet') === 'acct') { last = 0; tick(); } }).observe(document.body, { attributes: true, attributeFilter: ['data-sheet', 'class'] });
-  setInterval(function () { if (mq.matches && !li.hidden) credits(); }, 1000);
+  setInterval(function () { if (!li.hidden) credits(); }, 1000);
+  new MutationObserver(function () { if (document.documentElement.getAttribute('data-desk') === 'acct') { last = 0; tick(); } }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-desk'] });
   tick();
 })();
 
