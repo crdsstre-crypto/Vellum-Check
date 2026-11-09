@@ -5662,3 +5662,134 @@ html.vcp-open,html.vcp-open body{overflow:hidden}
 }
 .vc-try .vc-try-main{background:transparent !important;box-shadow:none !important;border:0 !important}
 @media (min-width:768px){html.vc-art[data-view="desk"][data-desk="check"] #checkCard .ta-wrap:not(.vc-has):not(.vc-focus) #input{resize:none}}
+/* ===== v222 คอม: เอาการ์ดเติมเครดิตออกจากหน้า — เปิดเป็นหน้าต่างเด้งจากปุ่ม "เติมเครดิต" เท่านั้น (เหมือนมือถือ) ===== */
+@media (min-width:768px){
+  html.vc-art main > #paymentCard,#paymentCard{display:none !important}
+  #payBackdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);z-index:1000}
+  #payBackdrop[hidden]{display:none}
+  body.pay-open{overflow:hidden}
+  html.vc-art body.pay-open main > #paymentCard:not([hidden]),body.pay-open #paymentCard:not([hidden]){display:block !important;position:fixed !important;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:min(92vw,540px);max-height:calc(100vh - 48px);overflow-y:auto;overscroll-behavior:contain;margin:0 !important;z-index:1001;background:#15161b;opacity:1;
+    box-shadow:0 24px 70px rgba(0,0,0,.7),0 0 0 1px rgba(168,171,176,.22);animation:vcPayIn .25s cubic-bezier(.2,.8,.2,1)}
+  #paymentCard .pay-close{position:absolute;top:14px;right:14px;z-index:2;width:34px;height:34px;min-width:34px;min-height:34px;padding:0;display:grid;place-items:center;border-radius:50%;
+    border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:#ededef;font-size:.95rem;line-height:1;cursor:pointer}
+  #paymentCard .pay-close:hover{background:rgba(255,255,255,.12)}
+  #paymentCard .pay-close[hidden]{display:none}
+  #paymentCard .pay-head{padding-right:44px}
+}
+@keyframes vcPayIn{from{opacity:0;transform:translate(-50%,-46%) scale(.98)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@media (prefers-reduced-motion:reduce){body.pay-open #paymentCard:not([hidden]){animation:none !important}}
+/* v222 คอม: toast ไม่มี CSS บนคอม (อยู่ใน mobile.css) จึงโผล่เป็นตัวหนังสือล่างซ้าย — ทำเป็นป้ายลอยกลางล่าง */
+@media (min-width:768px){
+  .toast{position:fixed;left:50%;bottom:28px;z-index:2147483000;max-width:min(520px,90vw);padding:12px 20px;border-radius:14px;
+    background:rgba(24,24,28,.96);border:1px solid rgba(255,255,255,.12);color:#ededef;font:500 14px/1.45 Prompt,Sarabun,sans-serif;text-align:center;
+    box-shadow:0 18px 40px -16px rgba(0,0,0,.85);opacity:0;transform:translate(-50%,10px);pointer-events:none;transition:opacity .22s ease,transform .22s ease}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+}
+@media (min-width:768px) and (prefers-reduced-motion:reduce){.toast{transition:none}}
+/* ===== v224 คอม: หน้าต่างสัญญาตัวอย่างแบบสองฝั่ง + คอลัมน์จุดเสี่ยง + คีย์ลัด ===== */
+.vsl-rail,.vsl-sum,.vsl-keys,.vsl-pn,.vsl-ent{display:none}
+.vsl-vbody{flex:1;min-height:0;display:flex;flex-direction:column}
+@media (min-width:768px){
+  /* (ก) แถบเลื่อนกระดาษบาง สีกลืนกระดาษ */
+  .vsl-doc{scrollbar-width:thin;scrollbar-color:#cfc6b4 transparent}
+  .vsl-doc::-webkit-scrollbar{width:8px}.vsl-doc::-webkit-scrollbar-track{background:transparent}
+  .vsl-doc::-webkit-scrollbar-thumb{background:#d6cdbb;border-radius:8px;border:2px solid #fdfcf8}
+  .vsl-doc::-webkit-scrollbar-thumb:hover{background:#bfb49f}
+  .vsl-list{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.18) transparent}
+  /* (ข) กระดาษที่ซ้อนอยู่ไม่ล้นขอบ */
+  .vsl-paper{margin:16px 12px 10px 4px}
+  .vsl-paper::before{transform:rotate(1deg) translate(4px,4px);inset:4px 6px 0 6px}
+  .vsl-paper::after{transform:rotate(-.8deg) translate(2px,7px);inset:6px 10px 0 8px}
+}
+@media (min-width:1024px){
+  /* (ค)+(1) หน้าต่างกว้าง แบ่งสองฝั่ง */
+  .vsl.vsl-split .vsl-card{width:min(1280px,95vw);height:min(880px,90vh);max-height:none;display:grid;padding:22px 24px 14px;
+    grid-template-columns:minmax(300px,360px) minmax(0,1fr);grid-template-rows:auto auto auto minmax(0,1fr) auto;column-gap:22px}
+  .vsl.vsl-split .vsl-head{grid-column:1 / -1;grid-row:1}
+  .vsl.vsl-split .vsl-hero{grid-column:1;grid-row:2;margin:14px 0 0;padding:10px 12px}
+  .vsl.vsl-split .vsl-hero b{font-size:14px}.vsl.vsl-split .vsl-hero small{font-size:11.5px}
+  .vsl.vsl-split .vsl-hero-ic{width:32px;height:32px}
+  .vsl.vsl-split .vsl-chips{grid-column:1;grid-row:3;display:flex !important;flex-wrap:wrap;overflow:visible;margin:12px 0 10px;padding:0 !important;-webkit-mask-image:none;mask-image:none}
+  .vsl.vsl-split .vsl-chip{padding:6px 11px;font-size:12.5px}
+  .vsl.vsl-split .vsl-list{grid-column:1;grid-row:4;display:flex !important;flex-direction:column;gap:6px;overflow:auto;margin:0 -6px 0 -2px;padding:2px 6px 30px 2px !important}
+  .vsl.vsl-split .vsl-fine{grid-column:1;grid-row:5;text-align:left;margin-top:8px}
+  .vsl.vsl-split .vsl-view{grid-column:2;grid-row:2 / 6;display:flex !important;margin-top:14px;min-height:0;padding-left:22px;border-left:1px solid rgba(255,255,255,.07)}
+  .vsl.vsl-split.is-scrolled .vsl-hero{max-height:none;opacity:1;margin:14px 0 0;padding:10px 12px;border-width:1px}
+  .vsl.vsl-split.is-scrolled .vsl-head p{max-height:none;opacity:1;margin:4px 0 0}
+  .vsl.vsl-split.is-scrolled .vsl-head h3{font-size:20px}
+  /* รายการซ้ายแบบกะทัดรัด */
+  .vsl.vsl-split .vsl-item{flex-direction:row !important;align-items:center !important;gap:12px !important;padding:10px 12px !important;border-radius:14px !important;animation:none}
+  .vsl.vsl-split .vsl-item .vsl-thumb{width:46px;height:58px;margin:0 4px 0 0}
+  .vsl.vsl-split .vsl-th-ic{width:21px;height:21px;border-radius:7px;right:-6px;bottom:-5px}.vsl.vsl-split .vsl-th-ic svg{width:17px;height:17px}
+  .vsl.vsl-split .vsl-item .vsl-tag{display:none}
+  .vsl.vsl-split .vsl-item b{font-size:14px;line-height:1.35}
+  .vsl.vsl-split .vsl-item .vsl-top{-webkit-line-clamp:1;font-size:12px}
+  .vsl.vsl-split .vsl-item .vsl-bar{margin-top:3px}
+  .vsl.vsl-split .vsl-item .vsl-bar-l{display:none}
+  .vsl.vsl-split .vsl-item .vsl-bar-s{max-width:120px}.vsl.vsl-split .vsl-item .vsl-bar-s i{height:4px}
+  .vsl.vsl-split .vsl-item::after{content:"" !important;display:none !important}
+  .vsl.vsl-split .vsl-item.is-cur{background:rgba(255,255,255,.08) !important;border-color:color-mix(in srgb,var(--a) 60%,transparent) !important;box-shadow:inset 3px 0 0 var(--a)}
+  .vsl.vsl-split .vsl-item.is-cur::before{opacity:0 !important}
+  /* หัวฝั่งขวา */
+  .vsl.vsl-split .vsl-vhead{align-items:center}
+  .vsl.vsl-split .vsl-vhead .vsl-txt b{font-size:19px}
+  /* (2) กระดาษ + คอลัมน์จุดเสี่ยง */
+  .vsl.vsl-split .vsl-vbody{flex-direction:row;gap:18px}
+  .vsl.vsl-split .vsl-paper{flex:1;min-width:0}
+  .vsl.vsl-split .vsl-doc{padding:30px 40px 34px 46px !important;font-size:15px !important;line-height:1.85 !important}
+  .vsl.vsl-split .vsl-note,.vsl.vsl-split.hl-on .vsl-note{display:none !important}
+  .vsl.vsl-split.hl-on .vsl-doc p.is-risk::before{display:none}
+  .vsl.vsl-split .vsl-doc p[data-c]{position:relative;border-radius:6px;transition:background .2s,box-shadow .2s;margin-left:-8px !important;padding:2px 8px}
+  .vsl.vsl-split .vsl-pn{display:none;position:absolute;left:-26px;top:.35em;width:20px;height:20px;border-radius:50%;place-items:center;background:#e2a21c;color:#fff;font:700 11px/1 Prompt,sans-serif;font-style:normal;box-shadow:0 2px 6px -2px rgba(0,0,0,.4)}
+  .vsl.vsl-split.hl-on .vsl-pn{display:grid}
+  .vsl.vsl-split .vsl-doc p.is-hot{background:rgba(250,214,80,.22);box-shadow:0 0 0 1px rgba(226,162,28,.35)}
+  .vsl.vsl-split .vsl-doc p.is-hot .vsl-pn{transform:scale(1.15)}
+  .vsl.vsl-split .vsl-doc p.is-flash{animation:vslFlash 1.1s ease}
+  .vsl.vsl-split .vsl-rail{display:flex;flex-direction:column;gap:8px;flex:none;width:300px;min-height:0;overflow:auto;margin:16px 0 10px;padding:0 4px 0 0;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.18) transparent}
+  .vsl-rail h5{margin:0 0 4px;font:600 13px/1.3 Prompt,sans-serif;color:#a3a3aa;letter-spacing:.02em}
+  .vsl-rail h5 span{display:inline-grid;place-items:center;min-width:20px;height:20px;margin-left:4px;padding:0 6px;border-radius:99px;background:rgba(255,255,255,.08);color:#ededef;font-size:11.5px}
+  .vsl-rc{display:grid;grid-template-columns:24px 1fr;column-gap:10px;row-gap:3px;align-items:start;text-align:left;width:100%;min-height:0 !important;height:auto !important;padding:12px 12px 12px 10px;border-radius:14px;
+    background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);color:#ededef;font-family:Prompt,Sarabun,sans-serif;cursor:pointer;transition:background .18s,border-color .18s,transform .18s}
+  .vsl-rc::before,.vsl-rc::after{display:none !important}
+  .vsl-rc-n{grid-row:1 / span 3;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:700 12px/1 Prompt,sans-serif;font-style:normal;color:#fff;background:#e2a21c}
+  .vsl-rc.h .vsl-rc-n{background:#ef4444}.vsl-rc.l .vsl-rc-n{background:#3b82f6}
+  .vsl-rc-m{font:500 11.5px/1.2 Prompt,sans-serif;color:#fcd34d}.vsl-rc.h .vsl-rc-m{color:#fca5a5}.vsl-rc.l .vsl-rc-m{color:#93c5fd}
+  .vsl-rc b{font:600 14px/1.4 Prompt,sans-serif;color:#fff}
+  .vsl-rc small{font:400 12px/1.5 Prompt,Sarabun,sans-serif;color:#a1a1aa}
+  .vsl-rc:hover,.vsl-rc.is-hot{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.2);transform:translateX(-2px)}
+  .vsl-rc.h:hover,.vsl-rc.h.is-hot{border-color:rgba(248,113,113,.5)}.vsl-rc.c:hover,.vsl-rc.c.is-hot{border-color:rgba(251,191,36,.5)}
+  .vsl-rc-none{margin:0;font-size:13px;color:#8b8b93}
+  .vsl.vsl-split:not(.hl-on) .vsl-rail{opacity:.45}
+  /* (5) แถบปุ่มล่าง */
+  .vsl.vsl-split .vsl-back{display:none !important}
+  .vsl.vsl-split .vsl-vfoot{align-items:center;gap:10px;padding-top:12px;border-top:1px solid rgba(255,255,255,.07)}
+  .vsl.vsl-split .vsl-sum{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;margin-right:auto;font:500 13px/1.3 Prompt,sans-serif}
+  .vsl-sum small{color:#8b8b93;font-size:12.5px}
+  .vsl-sum span{display:inline-flex;align-items:center;gap:6px}
+  .vsl-sum span::before{content:"";width:8px;height:8px;border-radius:50%}
+  .vsl-sum .h{color:#fca5a5}.vsl-sum .h::before{background:#f87171}.vsl-sum .c{color:#fcd34d}.vsl-sum .c::before{background:#fbbf24}.vsl-sum .l{color:#93c5fd}.vsl-sum .l::before{background:#60a5fa}
+  .vsl.vsl-split .vsl-fill{flex:none;min-height:52px !important;padding:0 18px}
+  .vsl.vsl-split .vsl-use{flex:none;min-width:280px}
+  .vsl.vsl-split .vsl-use.is-free{flex-direction:row;gap:12px;padding:0 18px 0 22px;justify-content:space-between}
+  .vsl.vsl-split .vsl-use.is-free span{font-size:16px}
+  .vsl.vsl-split .vsl-use.is-free small{margin-right:auto}
+  .vsl.vsl-split .vsl-ent{display:inline-block;padding:3px 8px;border-radius:7px;background:rgba(4,40,27,.16);border:1px solid rgba(4,40,27,.28);color:#04281b;font:600 11.5px/1.3 Prompt,sans-serif;font-style:normal}
+  /* (4) คีย์ลัด */
+  .vsl.vsl-split .vsl-keys{display:flex;justify-content:flex-end;gap:16px;margin-top:8px;font:400 11.5px/1.4 Prompt,sans-serif;color:#77777f}
+  .vsl-keys kbd{display:inline-block;min-width:18px;margin-right:3px;padding:0 5px;border-radius:5px;border:1px solid rgba(255,255,255,.16);border-bottom-width:2px;background:rgba(255,255,255,.04);color:#cfcfd4;font:600 10.5px/1.6 Prompt,sans-serif;text-align:center}
+  .vsl.vsl-split .vsl-view.vsl-swap .vsl-paper,.vsl.vsl-split .vsl-view.vsl-swap .vsl-rail{animation:vslSwap .28s cubic-bezier(.2,.9,.25,1)}
+}
+@media (min-width:1024px) and (max-width:1280px){
+  .vsl.vsl-split .vsl-card{grid-template-columns:300px minmax(0,1fr)}
+  .vsl.vsl-split .vsl-rail{width:250px}
+  .vsl.vsl-split .vsl-doc{padding:24px 26px 28px 36px !important}
+  .vsl.vsl-split .vsl-use{min-width:240px}
+}
+@keyframes vslFlash{0%,100%{background:transparent}25%,60%{background:rgba(250,214,80,.45)}}
+@keyframes vslSwap{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.vsl.vsl-split .vsl-view.vsl-swap .vsl-paper,.vsl.vsl-split .vsl-view.vsl-swap .vsl-rail,.vsl.vsl-split .vsl-doc p.is-flash{animation:none !important}}
+@media (min-width:1024px){
+  .vsl.vsl-split .vsl-list>.vsl-item,.vsl.vsl-split .vsl-rail>*{flex:none}
+  .vsl.vsl-split.is-view .vsl-hero{display:flex}
+}
