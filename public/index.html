@@ -42,7 +42,8 @@
 <link rel="stylesheet" href="ct-sticker.css?v=9" media="(max-width: 767px)">
 <link rel="stylesheet" href="desktop-layout.css?v=5" media="(min-width: 1024px)">
 <link rel="stylesheet" href="silent-clip.css?v=1" media="(min-width: 1024px)">
-<link rel="stylesheet" href="art.css?v=225">
+<link rel="stylesheet" href="art.css?v=226">
+<link rel="stylesheet" href="account-desk.css?v=5" media="(min-width: 768px)">
 </head>
 <body>
 <svg id="vcStickerDefs" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="vcg-y" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#f4f4f2"/><stop offset="1" stop-color="#a6a9b0"/></linearGradient><linearGradient id="vcg-o" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#dcdcdb"/><stop offset="1" stop-color="#8a8d94"/></linearGradient><linearGradient id="vcg-b" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#e6e8ec"/><stop offset="1" stop-color="#8f949d"/></linearGradient><linearGradient id="vcg-n" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#9a9ea6"/><stop offset="1" stop-color="#43464d"/></linearGradient><linearGradient id="vcg-t" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#eef0f1"/><stop offset="1" stop-color="#9fa3ab"/></linearGradient><linearGradient id="vcg-p" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#e0e0e0"/><stop offset="1" stop-color="#7f8289"/></linearGradient><linearGradient id="vcg-g" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#d6d9db"/><stop offset="1" stop-color="#888c93"/></linearGradient><linearGradient id="vcg-v" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#cdd0d5"/><stop offset="1" stop-color="#60636b"/></linearGradient><linearGradient id="vcg-w" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d5d8dc"/></linearGradient><linearGradient id="vcg-au" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#f7f7f5"/><stop offset="1" stop-color="#b4b7bd"/></linearGradient><linearGradient id="vcg-s" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#b0b4bb"/></linearGradient></defs></svg>
@@ -1157,13 +1158,23 @@
       document.body.classList.remove('auth-open');
       if (typeof renderResult === 'function') renderResult(data.result);
       if (window.VCFeedback) window.VCFeedback.attach(Number(id));
+      // คอม: ผลตรวจอยู่หน้าตรวจสัญญา ต้องสลับออกจากหน้าบัญชีก่อนจึงจะเห็น
+      if (window.matchMedia('(min-width: 768px)').matches && document.documentElement.getAttribute('data-desk') === 'acct') {
+        document.documentElement.setAttribute('data-desk', 'check');
+        setTimeout(function () { var rc = document.getElementById('resultCard'); if (rc) rc.scrollIntoView({ block: 'start' }); }, 60);
+      }
       var res = document.getElementById('result');
       if (res) {
         res.insertAdjacentHTML('afterbegin', '<button type="button" class="vault-back" data-vault-back>‹ กลับไปคลังรายงาน</button>');
         var vb = res.querySelector('[data-vault-back]');
         vb.addEventListener('click', function () {
           var nb = document.querySelector('#bottomNav [data-nav="hist"]');
-          if (nb) nb.click();
+          if (nb && nb.offsetParent) { nb.click(); return; }
+          /* คอม: กลับหน้าบัญชีแล้วกางคลังรายงาน */
+          document.documentElement.setAttribute('data-desk', 'acct');
+          var wh = document.getElementById('walletHist');
+          if (wh && wh.getAttribute('aria-expanded') !== 'true') wh.click();
+          setTimeout(function () { if (wh) wh.scrollIntoView({ block: 'start' }); }, 80);
         });
       }
     } catch (e) { alert(e.message); }
@@ -1961,6 +1972,6 @@ document.addEventListener('click', function (e) {
 <script src="video-embed.js?v=1"></script>
 <script src="silent-clip.js?v=1"></script>
 <script src="demo-results.js?v=3"></script>
-<script src="art.js?v=237"></script>
+<script src="art.js?v=238"></script>
 </body>
 </html>
