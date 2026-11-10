@@ -6850,3 +6850,17 @@ html.vc-dsc-open :is(.vc-bn,.vc-fpill,.vc-stick,.hx-lens,.hx-pool,.hx-tip,.hx-hu
 .vsl-thumb.v2 .vsl-th-p > .tdeco.t-sig{display:flex !important;height:auto !important;background:none !important}
 .vsl-thumb.v2.b-tape .tbind{background:repeating-linear-gradient(90deg,rgba(205,200,185,.9) 0 3px,rgba(225,220,205,.9) 3px 6px) !important;border:.6px solid rgba(110,95,60,.35) !important}
 .vsl-thumb.v2 .vsl-th-p > .tdeco.t-secret{top:auto !important;bottom:6px;right:4px;font-size:8px;background:rgba(255,255,255,.6) !important}
+/* ===== v254 สติกเกอร์ประเภทมุมขวาบนของการ์ด (แทนป้ายเทา) ===== */
+.vsl-item{position:relative}
+.vsl-item .vsl-tag{position:absolute !important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;padding:0 !important;margin:-1px !important;border:0 !important}
+.vsl-stk{position:absolute;top:-9px;right:16px;z-index:3;display:inline-flex;align-items:center;gap:5px;padding:4px 10px 4px 6px;border-radius:9px;background:var(--sk);color:#fff;
+  font:700 12px/1.2 Prompt,sans-serif;white-space:nowrap;box-shadow:0 0 0 2px #fff,0 4px 8px 1px rgba(0,0,0,.45);transform:rotate(var(--sr,3deg));pointer-events:none}
+.vsl-stk svg{width:16px;height:16px;flex:none;padding:2px;box-sizing:content-box;border-radius:50%;background:#fff;overflow:visible}
+.vsl-stk svg .w{fill:#eef0f3}.vsl-stk svg .d{fill:#24242b}.vsl-stk svg .a{fill:var(--sk)}.vsl-stk svg .as{stroke:var(--sk);fill:none}
+.vsl-stk.k-rent{--sk:#14b892}.vsl-stk.k-sale{--sk:#8b5cf6}.vsl-stk.k-employment{--sk:#2f5f9e}.vsl-stk.k-service{--sk:#0e9fb0}
+.vsl-stk.k-loan{--sk:#c99a2e}.vsl-stk.k-shareholder{--sk:#d6408f}.vsl-stk.k-nda{--sk:#4b4f58}.vsl-stk.k-other,.vsl-stk.k-unsure{--sk:#8a8f99}
+.vsl-item:hover .vsl-stk,.vsl-item.is-cur .vsl-stk{transform:rotate(var(--sr,3deg)) translateY(-1px)}
+/* ให้มีที่ด้านบนการ์ดสำหรับสติกเกอร์ที่โผล่ขอบ */
+.vsl-list{padding-top:12px !important}
+.vsl-list > .vsl-item + .vsl-item{margin-top:6px}
+@media (min-width:1024px){.vsl-stk{top:8px;right:12px;font-size:11.5px;padding:3px 9px 3px 5px}.vsl-stk svg{width:14px;height:14px}}
