@@ -1077,6 +1077,8 @@ function renderResult(result) {
       <p class="disclaimer">${esc(CONFIG.messages.disclaimer)}</p>
     </article>`;
   if (typeof linkifyGlossary === 'function') linkifyGlossary(els.result);
+  // วันสำคัญในสัญญา (reminders.js): อ่านวันที่จากข้อความในเครื่อง ถ้าไม่มีข้อความ (เปิดจากประวัติ) ใช้สรุปเวลาในผลตรวจ
+  if (window.VCRemind) window.VCRemind.attach(result, hasViewer() ? viewerSrc.text : '');
   watchIssueIndex();
 }
 
@@ -1240,6 +1242,7 @@ async function runCheck() {
     addCreditNote(r.data.credits);
     // ความเห็นต่อผลตรวจ (ผูกกับผลตรวจที่บันทึกในประวัติ)
     if (r.data.inspectionId && window.VCFeedback) window.VCFeedback.attach(r.data.inspectionId);
+    if (window.VCRemind) window.VCRemind.link(r.data.inspectionId);
     if (r.data.audio) {
       els.result.insertAdjacentHTML('afterbegin',
         `<audio controls src="data:audio/mpeg;base64,${r.data.audio}" style="width:100%;margin-bottom:12px"></audio>`);
