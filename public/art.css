@@ -6229,3 +6229,144 @@ html.vc-art .hx-live .hxl-h{font:700 15px/1.3 Taviraj,Prompt,serif !important;le
   html.vc-art main > .hero .hero-main{flex:0 0 auto !important}
   html.vc-art main > .hero{justify-content:flex-start !important}
 }
+/* ===== v233 ไฮไลต์ + ตราแบบใหม่ ===== */
+/* (1)+(ข) คอลัมน์ตรากว้างเท่ากัน ทุกบรรทัดตัดคำตรงแนวเดียว */
+.hx-live{--sc:92px}
+.hxl-ln{display:grid !important;grid-template-columns:minmax(0,1fr) var(--sc);align-items:center;column-gap:6px}
+.hxl-ln .hxl-tx{grid-column:1}
+.hxl-ln .hxl-st{grid-column:2;justify-self:center;max-width:100% !important;margin:0 !important}
+/* ตราพื้นฐาน */
+.hxl-st{display:inline-flex !important;align-items:center;justify-content:center;gap:3px;width:100%;box-sizing:border-box;padding:2px 5px !important;font:700 10px/1.25 Prompt,sans-serif !important;
+  border-width:1.2px !important;box-shadow:inset 0 0 0 1.3px #faf4e6,inset 0 0 0 2.1px currentColor !important;transform:rotate(var(--rot,-6deg));
+  filter:drop-shadow(0 .5px .4px color-mix(in srgb,currentColor 45%,transparent))}
+.hxl-st > span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hxl-si{flex:none;width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.hxl-ln.hit .hxl-st{transform:rotate(var(--rot,-6deg));animation:hxlStamp2 .45s cubic-bezier(.3,1.5,.5,1)}
+@keyframes hxlStamp2{0%{transform:scale(1.8) rotate(calc(var(--rot,-6deg) - 9deg));opacity:0}55%{transform:scale(.9) rotate(calc(var(--rot,-6deg) + 1deg));opacity:1}78%{transform:scale(1.05) rotate(var(--rot,-6deg))}100%{transform:rotate(var(--rot,-6deg));opacity:1}}
+.hx-live.done:not(.held) .hxl-ln.hit .hxl-st{animation:hxlTap2 2.4s ease-in-out .6s 1}
+@keyframes hxlTap2{0%,40%,100%{transform:rotate(var(--rot,-6deg))}20%{transform:rotate(var(--rot,-6deg)) scale(1.12)}}
+/* (2) แบบตามระดับ: ตรวจละเอียด = ตรารีวงคู่แดง · ระวัง = สี่เหลี่ยมอำพัน · สังเกต = ป้ายน้ำเงิน */
+.hxl-st.s-h{color:#c81e1e !important;border-radius:50% / 50% !important;padding:3px 7px !important;border-width:1.4px !important;
+  box-shadow:inset 0 0 0 1.4px #faf4e6,inset 0 0 0 2.4px currentColor,0 0 0 0 transparent !important;letter-spacing:.01em}
+.hxl-st.s-c{color:#b45309 !important;border-radius:3px !important;border-style:solid !important}
+.hxl-st.s-l{color:#1d4ed8 !important;border-radius:99px !important;box-shadow:none !important;border-width:1px !important;background:rgba(59,130,246,.08) !important;font-weight:600 !important}
+.hxl-ln.hit .hxl-st:hover,.hxl-ln.hit .hxl-st:focus-visible{background:currentColor !important;-webkit-text-fill-color:#fff}
+.hxl-ln.hit .hxl-st:hover .hxl-si,.hxl-ln.hit .hxl-st:focus-visible .hxl-si{stroke:#fff}
+/* (3) ปากกาไฮไลต์: หัวปากกาวิ่งตามแถบ · ปลายแถบเข้มขึ้น */
+.hxl-ln.r-h{--hl:rgba(255,110,110,.5);--hd:rgba(235,70,70,.7);--nb:#f87171}
+.hxl-ln.r-c{--hl:rgba(255,212,50,.6);--hd:rgba(240,180,0,.8);--nb:#facc15}
+.hxl-ln.r-l{--hl:rgba(110,170,255,.42);--hd:rgba(70,130,240,.6);--nb:#60a5fa}
+.hxl-tx::before{background:linear-gradient(90deg,var(--hd) 0,var(--hl) 6px,var(--hl) calc(100% - 9px),var(--hd) 100%) !important;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 22%,#000 80%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 22%,#000 80%,transparent 100%)}
+.hxl-tx::after{content:"";position:absolute;z-index:2;top:12%;left:0;width:7px;height:78%;border-radius:2px 2px 1px 1px;background:linear-gradient(180deg,var(--nb),color-mix(in srgb,var(--nb) 60%,#000));transform:skewX(-14deg);opacity:0;pointer-events:none;box-shadow:1px 1px 2px rgba(0,0,0,.25)}
+.hx-live.scan .hxl-ln.hit .hxl-tx::after{animation:hxlNib2 .55s cubic-bezier(.45,.05,.3,1)}
+@keyframes hxlNib2{0%{left:0;opacity:1}88%{opacity:1}100%{left:calc(100% - 6px);opacity:0}}
+/* (6) แถบอธิบายสี */
+.hxl-key{display:flex;align-items:center;justify-content:center;gap:5px;margin:7px 0 0;font:500 9.5px/1 Prompt,Sarabun,sans-serif;color:#7a6f5c;white-space:nowrap}
+.hxl-key i{width:8px;height:8px;border-radius:50%;margin-left:6px}
+.hxl-key i:first-child{margin-left:0}
+.hxl-key .k-h{background:#ef4444}.hxl-key .k-c{background:#f59e0b}.hxl-key .k-l{background:#3b82f6}
+/* (ก) ปากกาจ่อที่เส้นลงชื่อ ไม่ทับข้อ 6 */
+.hxl-pen{right:auto !important;left:20%;bottom:-2px !important;width:84px !important;height:17px !important;transform:translate(110px,-24px) rotate(-26deg)}
+.hx-live.pen .hxl-pen{transform:translate(0,2px) rotate(-7deg)}
+@keyframes hxlBob{0%,100%{transform:translate(0,2px) rotate(-7deg)}50%{transform:translate(-3px,-1px) rotate(-5deg)}}
+.hx-live.slam .hxl-pen{transform:translate(60px,-26px) rotate(-30deg)}
+@media (max-width:767px){
+  .hx-live{--sc:84px}
+  .hxl-st{font-size:9.5px !important}
+  .hxl-si{width:10px;height:10px}
+}
+@media (prefers-reduced-motion:reduce){.hxl-tx::after{display:none}}
+.hxl-hint{transition:opacity .15s,transform .15s !important}
+.hx-live.slam:not(.held) .hxl-hint{transition:opacity .3s .5s,transform .3s .5s !important}
+/* ===== v235 ผลตรวจแบบกว้าง (คอม ≥1024 · มือถือไม่แตะ) ===== */
+.vc-ck-mini,.vc-rbar,.vc-cpane{display:none}
+@media (min-width:1024px){
+  /* (ข)+(1) ผังใหม่: แถบสัญญาเล็กด้านบน · ผลตรวจเต็มแถวด้านล่าง */
+  html.vc-art.vc-spa.vc-wide[data-view="desk"][data-desk="check"] main > #checkCard{grid-area:6 / 2 / 7 / 5 !important;margin-top:clamp(64px,8vh,90px) !important;padding:14px 18px !important}
+  html.vc-art.vc-spa.vc-wide[data-view="desk"][data-desk="check"] main > #resultCard{grid-area:7 / 2 / 8 / 5 !important;margin:16px 0 48px !important;width:auto !important}
+  html.vc-wide:not(.vc-ck-open) #checkCard > :not(.vc-ck-mini){display:none !important}
+  html.vc-wide.vc-ck-open #checkCard{padding:22px 28px 26px !important}
+  html.vc-wide.vc-ck-open #checkCard > .vc-ck-mini{margin-bottom:18px}
+  html.vc-wide .vc-ck-mini:not([hidden]){display:flex;align-items:center;gap:14px}
+  .vcm-ic{flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid var(--k-line,rgba(255,255,255,.1))}
+  .vcm-ic svg{width:20px;height:20px;fill:none;stroke:#d6d3d1;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .vcm-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;font-family:var(--k-ff,Prompt),sans-serif}
+  .vcm-tx b{font:600 14.5px/1.3 var(--k-ff,Prompt),sans-serif;color:var(--k-tx,#ededef)}
+  .vcm-meta{font-size:12.5px;color:var(--k-mu,#a3a3aa)}
+  .vcm-edit{flex:none;display:inline-flex;align-items:center;gap:8px;min-height:40px !important;height:auto !important;padding:0 16px !important;border-radius:11px !important;border:1px solid var(--k-line2,rgba(255,255,255,.16)) !important;background:rgba(255,255,255,.04) !important;color:var(--k-tx,#ededef) !important;font:500 13.5px/1 var(--k-ff,Prompt),sans-serif !important;cursor:pointer}
+  .vcm-edit::before,.vcm-edit::after{display:none !important}
+  .vcm-edit i{font-style:normal;transition:transform .2s}
+  .vc-ck-open .vcm-edit i{transform:rotate(180deg)}
+  /* (ก) ไม่มีแถบเลื่อนซ้อน */
+  html.vc-art.vc-wide[data-view="desk"][data-desk="check"] main > #resultCard{position:relative !important;top:auto !important;max-height:none !important;overflow:visible !important;padding:0 0 28px !important}
+  html.vc-wide #resultCard{display:grid !important;grid-template-columns:minmax(0,1fr);column-gap:28px;align-items:start}
+  html.vc-wide.vc-has-pane #resultCard{grid-template-columns:minmax(0,1fr) clamp(340px,30vw,440px)}
+  html.vc-wide #resultCard > h2{display:none !important}
+  html.vc-wide #resultCard > #result{grid-column:1;min-width:0;padding:0 0 0 30px}
+  html.vc-wide:not(.vc-has-pane) #resultCard > #result{padding:0 30px;max-width:900px;justify-self:center;width:100%}
+  /* (2) แถบหัวติดบน */
+  html.vc-wide .vc-rbar:not([hidden]){display:flex;grid-column:1 / -1;position:sticky;top:64px;z-index:20;align-items:center;gap:16px;margin:0 0 22px;padding:12px 18px 12px 30px;
+    background:rgba(17,17,19,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--k-line,rgba(255,255,255,.09));border-radius:18px 18px 0 0;font-family:var(--k-ff,Prompt),sans-serif}
+  .vcb-t{display:flex;align-items:baseline;gap:8px;min-width:0}
+  .vcb-t b{font:600 16px/1.2 var(--k-ff,Prompt),sans-serif;color:var(--k-tx,#ededef)}
+  .vcb-t span{font-size:13px;color:var(--k-mu,#a3a3aa);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .vcb-chips{display:flex;gap:8px;margin-left:auto}
+  .vcb-c{display:inline-flex !important;align-items:center;gap:6px;min-height:32px !important;height:32px !important;padding:0 12px !important;border-radius:99px !important;border:1px solid transparent !important;font:500 12.5px/1 var(--k-ff,Prompt),sans-serif !important;cursor:pointer}
+  .vcb-c::before,.vcb-c::after,.vcb-act button::before,.vcb-act button::after{display:none !important}
+  .vcb-c b{font-size:14px;font-weight:700}
+  .vcb-c.c-h{background:rgba(239,68,68,.13) !important;color:#fca5a5 !important;border-color:rgba(239,68,68,.3) !important}
+  .vcb-c.c-c{background:rgba(245,158,11,.12) !important;color:#fcd34d !important;border-color:rgba(245,158,11,.3) !important}
+  .vcb-c.c-i{background:rgba(59,130,246,.12) !important;color:#93c5fd !important;border-color:rgba(59,130,246,.3) !important}
+  .vcb-act{display:flex;gap:6px;padding-left:14px;border-left:1px solid var(--k-line,rgba(255,255,255,.09))}
+  .vcb-act button{min-height:34px !important;height:34px !important;padding:0 13px !important;border-radius:9px !important;border:1px solid var(--k-line2,rgba(255,255,255,.16)) !important;background:transparent !important;color:var(--k-tx,#ededef) !important;font:500 13px/1 var(--k-ff,Prompt),sans-serif !important;cursor:pointer}
+  .vcb-act button:hover{background:rgba(255,255,255,.06) !important}
+  /* (ค)+(4) หัวรายงานใหญ่: ข้อความชิดซ้าย · เข็มวัดด้านขวา */
+  html.vc-wide #result .rpt-head{display:grid !important;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"k g" "t g" "m g";column-gap:28px;align-items:center;text-align:left !important;padding:26px 28px !important;border-radius:18px !important;
+    background:radial-gradient(120% 140% at 100% 0%,rgba(233,194,122,.1),transparent 55%),rgba(255,255,255,.025) !important;border:1px solid var(--k-line,rgba(255,255,255,.09)) !important;margin-bottom:18px !important}
+  html.vc-wide #result .rpt-head > .rpt-kicker{grid-area:k;text-align:left !important;margin:0 !important;justify-content:flex-start !important}
+  html.vc-wide #result .rpt-head > .rpt-title{grid-area:t;text-align:left !important;font-size:28px !important;margin:6px 0 !important;line-height:1.25 !important}
+  html.vc-wide #result .rpt-head > .rpt-meta{grid-area:m;text-align:left !important;margin:0 !important;font-size:14px !important;max-width:none !important}
+  .vc-rg{grid-area:g;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:180px}
+  .vc-rg svg{width:150px;height:88px;overflow:visible}
+  .vc-rg .t,.vc-rg .a{fill:none;stroke-width:9;stroke-linecap:round}
+  .vc-rg .t{stroke:rgba(255,255,255,.1)}
+  .vc-rg .a{stroke:url(#vcRgG);stroke-dasharray:1;stroke-dashoffset:1;animation:vcRgA 1.1s cubic-bezier(.3,1.2,.5,1) .2s forwards}
+  .vc-rg .n{transform-origin:50px 52px;transform:rotate(-90deg);animation:vcRgN 1.2s cubic-bezier(.3,1.5,.5,1) .2s forwards}
+  .vc-rg .n line{stroke:#f5f5f4;stroke-width:3.2;stroke-linecap:round}.vc-rg .n circle{fill:#f5f5f4}
+  @keyframes vcRgA{to{stroke-dashoffset:calc(1 - var(--f,0))}}
+  @keyframes vcRgN{to{transform:rotate(calc(-90deg + var(--f,0) * 180deg))}}
+  .vc-rg-l{font:700 15px/1.2 var(--k-ff,Prompt),sans-serif}
+  .vc-rg.r-h .vc-rg-l{color:#fca5a5}.vc-rg.r-c .vc-rg-l{color:#fcd34d}.vc-rg.r-l .vc-rg-l{color:#93c5fd}
+  .vc-rg-s{font-size:12px;color:var(--k-mu,#a3a3aa)}
+  html.vc-wide #result .cb-tiles{gap:14px !important}
+  html.vc-wide #result .cb-tile{padding:18px 18px 16px !important;min-height:112px}
+  html.vc-wide #result .cb-tile b{font-size:40px !important;line-height:1.05 !important}
+  html.vc-wide #result .vc-demo-note{margin-bottom:18px !important}
+  /* (3) ช่องสัญญาด้านขวา ติดอยู่กับที่ */
+  html.vc-wide .vc-cpane:not([hidden]){display:flex;flex-direction:column;grid-column:2;grid-row:2 / span 2;position:sticky;top:136px;max-height:calc(100vh - 160px);margin-right:24px;border-radius:16px;overflow:hidden;
+    background:#f8f3e8;color:#2a2620;box-shadow:0 24px 50px -24px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.06)}
+  .vcp-hd{display:flex;flex-direction:column;gap:2px;padding:14px 18px 12px;border-bottom:1px solid #e6dcc8;background:#f3ecdc}
+  .vcp-hd b{font:700 15px/1.3 Taviraj,Prompt,serif;color:#1e1a14}
+  .vcp-hd span{font:400 12px/1.3 Prompt,sans-serif;color:#8a7f6a}
+  .vcp-body{flex:1;overflow:auto;padding:12px 14px 16px;overscroll-behavior:contain}
+  .vcp-ln{position:relative;margin:0 0 2px !important;padding:6px 8px;border-radius:8px;font:400 14px/1.65 Sarabun,Prompt,sans-serif !important;color:#3a342a !important;transition:background .25s,box-shadow .25s}
+  .vcp-ln.cont{padding-top:0}
+  .vcp-ln.has{cursor:pointer;background:linear-gradient(transparent 0,transparent 100%)}
+  .vcp-ln.has.r-h{background:rgba(248,113,113,.16);box-shadow:inset 3px 0 0 #ef4444}
+  .vcp-ln.has.r-c{background:rgba(251,191,36,.2);box-shadow:inset 3px 0 0 #f59e0b}
+  .vcp-ln.has.r-l{background:rgba(96,165,250,.16);box-shadow:inset 3px 0 0 #3b82f6}
+  .vcp-ln.has:hover,.vcp-ln.has:focus-visible{outline:none;filter:brightness(.97);box-shadow:inset 3px 0 0 currentColor,0 0 0 2px rgba(0,0,0,.08)}
+  .vcp-ln.on{animation:vcpFlash 1.4s ease-out}
+  @keyframes vcpFlash{0%,30%{box-shadow:inset 3px 0 0 #1f2937,0 0 0 3px rgba(16,185,129,.55)}100%{}}
+  .vcp-tag{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:99px;background:rgba(0,0,0,.07);font:600 10.5px/1.5 Prompt,sans-serif;font-style:normal;color:#6b5f4a;vertical-align:1px}
+  .vcp-ft{margin:0 !important;padding:8px 16px 10px;border-top:1px solid #e6dcc8;font:400 11px/1.3 Prompt,sans-serif !important;color:#9a8f7a !important}
+}
+@media (min-width:1024px) and (max-width:1199px){
+  html.vc-wide.vc-has-pane #resultCard{grid-template-columns:minmax(0,1fr)}
+  html.vc-wide .vc-cpane:not([hidden]){display:none}
+}
+@media (prefers-reduced-motion:reduce){.vc-rg .a{animation:none;stroke-dashoffset:calc(1 - var(--f,0))}.vc-rg .n{animation:none;transform:rotate(calc(-90deg + var(--f,0) * 180deg))}}
+@media (min-width:1024px){html.vc-art.vc-wide[data-view="desk"][data-desk="check"] main > #resultCard > :is(h2,.rs-guide){display:none !important}}
+@media (min-width:1024px){html.vc-wide #result :is(details.item,#issueIndex,.miss,.rpt-head){scroll-margin-top:140px}}
+@media (min-width:1024px) and (max-width:1199px){html.vc-wide #resultCard > #result{padding:0 30px !important}}
