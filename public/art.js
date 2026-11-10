@@ -6901,15 +6901,15 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       '<rect x="35" y="2.8" width="68" height="10.4" rx="2.4" fill="url(#hxpB)"/><rect x="38" y="4" width="60" height="1.3" rx=".6" fill="#fff" opacity=".32"/>' +
       '<path d="M103 2.8 h3 a5.2 5.2 0 0 1 0 10.4 h-3z" fill="url(#hxpB)"/><rect x="101" y="2.8" width="2.2" height="10.4" fill="url(#hxpG)"/>' +
       '<rect x="72" y="1.2" width="27" height="1.8" rx=".9" fill="url(#hxpG)"/><circle cx="73" cy="2.1" r="1.6" fill="url(#hxpG)"/></svg></i>' +
-      '</i><em class="hxs-a"></em></span><span class="hxs"><i></i><em class="hxs-b"></em></span>' +
+      '</i><em class="hxs-a"></em></span><span class="hxs"><i></i><em class="hxs-b"></em></span></span>' +
       '<i class="hxl-bigst">อ่านก่อนเซ็น!</i><i class="hxl-splat"></i>' +
       '<i class="hxl-tsh"></i><i class="hxl-tool"><svg viewBox="0 0 60 70"><defs><linearGradient id="hxtW" x1="0" x2="1"><stop offset="0" stop-color="#6b3f1f"/><stop offset=".45" stop-color="#b9783f"/><stop offset="1" stop-color="#5a3318"/></linearGradient>' +
         '<linearGradient id="hxtM" x1="0" x2="1"><stop offset="0" stop-color="#7a7a80"/><stop offset=".5" stop-color="#e4e4e8"/><stop offset="1" stop-color="#6a6a70"/></linearGradient></defs>' +
         '<ellipse cx="30" cy="11" rx="13" ry="10" fill="url(#hxtW)"/><ellipse cx="26" cy="7" rx="5" ry="2.6" fill="#fff" opacity=".22"/>' +
         '<path d="M25 19 h10 l2 22 h-14z" fill="url(#hxtW)"/><rect x="8" y="41" width="44" height="13" rx="2.5" fill="url(#hxtW)"/>' +
-        '<rect x="7" y="53" width="46" height="4" rx="1" fill="url(#hxtM)"/><rect x="9" y="57" width="42" height="6" rx="1.2" fill="#b3202a"/><rect x="9" y="61.5" width="42" height="1.5" fill="#7d1219"/></svg></i></span>' +
+        '<rect x="7" y="53" width="46" height="4" rx="1" fill="url(#hxtM)"/><rect x="9" y="57" width="42" height="6" rx="1.2" fill="#b3202a"/><rect x="9" y="61.5" width="42" height="1.5" fill="#7d1219"/></svg></i>' +
       '<span class="hxl-key" aria-hidden="true"><i class="k-h"></i>ตรวจละเอียด<i class="k-c"></i>ควรระวัง<i class="k-l"></i>ข้อสังเกต</span>' +
-      '<i class="hxl-curl" aria-hidden="true"></i><i class="hxl-scan"></i><i class="hxl-hint" aria-hidden="true">แตะสติกเกอร์เพื่อดูเหตุผล</i></button></div>' +
+      '<i class="hxl-curl" aria-hidden="true"></i><i class="hxl-scan"></i><i class="hxl-hint" aria-hidden="true">แตะแถบสีเพื่อดูเหตุผล</i></button></div>' +
     '<div class="hxl-foot"><span class="hxl-meter" aria-hidden="true"><svg viewBox="0 0 100 58"><defs><linearGradient id="hxlG" x1="0" x2="1"><stop offset="0" stop-color="#60a5fa"/><stop offset=".5" stop-color="#fbbf24"/><stop offset="1" stop-color="#ef4444"/></linearGradient></defs>' +
       '<path class="hxm-trk" d="M10 52 A40 40 0 0 1 90 52" pathLength="1"/><path class="hxm-arc" d="M10 52 A40 40 0 0 1 90 52" pathLength="1"/><g class="hxm-ndl"><line x1="50" y1="52" x2="50" y2="20"/><circle cx="50" cy="52" r="5"/></g></svg></span>' +
       '<span class="hxl-cnt">พบ <em>0</em> จุดที่ควรดู<small class="hxl-lv"></small></span><button type="button" class="hxl-go">ดูผลเต็ม · ฟรี <b aria-hidden="true">→</b></button></div>' +
