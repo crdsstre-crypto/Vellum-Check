@@ -6896,6 +6896,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       '<span class="hxl-sign" aria-hidden="true"><span class="hxs"><i></i><em class="hxs-a"></em></span><span class="hxs"><i></i><em class="hxs-b"></em></span>' +
       '<i class="hxl-pen"><svg viewBox="0 0 120 24"><path class="pb" d="M18 6h86a6 6 0 0 1 0 12H18z"/><path class="pc" d="M86 6h6v12h-6z"/><path class="pn" d="M18 6 2 12l16 6z"/><path class="pt" d="M2 12l6-1.6v3.2z"/></svg></i>' +
       '<i class="hxl-bigst">อ่านก่อนเซ็น!</i></span>' +
+      '<span class="hxl-key" aria-hidden="true"><i class="k-h"></i>ตรวจละเอียด<i class="k-c"></i>ควรระวัง<i class="k-l"></i>ข้อสังเกต</span>' +
       '<i class="hxl-curl" aria-hidden="true"></i><i class="hxl-scan"></i><i class="hxl-hint" aria-hidden="true">แตะตราเพื่อดูเหตุผล</i></button></div>' +
     '<div class="hxl-foot"><span class="hxl-meter" aria-hidden="true"><svg viewBox="0 0 100 58"><defs><linearGradient id="hxlG" x1="0" x2="1"><stop offset="0" stop-color="#60a5fa"/><stop offset=".5" stop-color="#fbbf24"/><stop offset="1" stop-color="#ef4444"/></linearGradient></defs>' +
       '<path class="hxm-trk" d="M10 52 A40 40 0 0 1 90 52" pathLength="1"/><path class="hxm-arc" d="M10 52 A40 40 0 0 1 90 52" pathLength="1"/><g class="hxm-ndl"><line x1="50" y1="52" x2="50" y2="20"/><circle cx="50" cy="52" r="5"/></g></svg></span>' +
@@ -6915,6 +6916,22 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     });
     return { title: s[3].split('\n')[0], rows: rows };
   }
+  /* (5) ตราแต่ละอันเอียงไม่เท่ากัน (คงที่ทุกรอบ) · (2) ไอคอนตามหัวข้อ */
+  var ROT = [-7, -3, -9, -4, -6, -2];
+  var ICO = {
+    money: '<circle cx="8" cy="8" r="6"/><path d="M8 4.5v7M10 6H7a1.2 1.2 0 0 0 0 2.4h2a1.2 1.2 0 0 1 0 2.4H6"/>',
+    lock: '<rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/>',
+    cut: '<circle cx="4" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><path d="M5.5 10.5 12 3M10.5 10.5 4 3"/>',
+    tool: '<path d="M10 2.5a3.5 3.5 0 0 0-3.3 4.6L2.5 11.3l2.2 2.2 4.2-4.2A3.5 3.5 0 0 0 13.5 6l-2 .5-1-1 .5-2z"/>',
+    home: '<path d="M2.5 8 8 3l5.5 5M4 7v6.5h8V7"/>',
+    time: '<circle cx="8" cy="8" r="6"/><path d="M8 4.5V8l2.5 1.5"/>',
+    doc: '<path d="M4 2h6l2.5 2.5V14H4z"/><path d="M6 7h4M6 10h4"/>',
+    warn: '<path d="M8 2.5 14 13H2z"/><path d="M8 6.5v3M8 11.3v.2"/>'
+  };
+  function icon(t) {
+    var k = /ปรับ|ดอกเบี้ย|เงิน(?!ประกัน)|ค่าจ้าง|ค่าเช่า|ชำระ|ค่า(?!ซ่อม)|หัก|ล่วงเวลา|โบนัส/.test(t) ? 'money' : /ประกัน|มัดจำ|ค้ำ/.test(t) ? 'lock' : /เลิก|ยกเลิก|ออก|เลิกจ้าง/.test(t) ? 'cut' : /ซ่อม|เสียหาย/.test(t) ? 'tool' : /ยึด|ทรัพย์|บ้าน|ห้อง/.test(t) ? 'home' : /วัน|เวลา|ระยะ|ทดลองงาน|ต่ออายุ/.test(t) ? 'time' : /สัญญา|เงื่อนไข|ลายเซ็น|เอกสาร|ข้อมูล|ATM/.test(t) ? 'doc' : 'warn';
+    return '<svg class="hxl-si" viewBox="0 0 16 16" aria-hidden="true">' + ICO[k] + '</svg>';
+  }
   function render(i, final) {
     var d = linesOf(DEMOS[i][0]); if (!d) return null;
     fig.querySelector('.hxl-h').textContent = d.title;
@@ -6922,7 +6939,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     fig.querySelector('.hxl-lines').innerHTML = d.rows.map(function (r, k) {
       var lv = r.it ? ({ check_detail: 'h', caution: 'c', low: 'l' }[r.it.level] || 'c') : '';
       return '<span class="hxl-ln' + (lv ? ' r-' + lv : '') + (final && lv ? ' hit' : '') + (final ? ' seen' : '') + '" data-k="' + k + '">' + (lv === 'h' ? '<i class="hxl-mk" aria-hidden="true">!</i>' : '') + '<span class="hxl-tx">' + esc(r.t.length > 60 ? r.t.slice(0, 58) + '…' : r.t) + '</span>' +
-        (lv ? '<i class="hxl-st" role="button" tabindex="0" aria-label="ดูเหตุผล: ' + esc(r.it.topic) + '">' + esc(r.it.topic) + '</i>' : '') + '</span>';
+        (lv ? '<i class="hxl-st s-' + lv + '" style="--rot:' + ROT[k % ROT.length] + 'deg" role="button" tabindex="0" aria-label="ดูเหตุผล: ' + esc(r.it.topic) + '">' + icon(r.it.topic) + '<span>' + esc(r.it.topic) + '</span></i>' : '') + '</span>';
     }).join('');
     [].forEach.call(fig.querySelectorAll('.hxl-tabs button'), function (b) { var on = +b.dataset.i === i; b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
     var n = d.rows.filter(function (r) { return r.it; }).length;
@@ -7178,4 +7195,124 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   var go = function () { ul.classList.add('tp-in'); };
   if (!('IntersectionObserver' in window) || document.documentElement.hasAttribute('data-calm')) { go(); return; }
   var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { go(); io.disconnect(); } }, { threshold: .25 }); io.observe(ul);
+})();
+
+/* ===== v246 ผลตรวจแบบกว้าง (คอม ≥1024 เท่านั้น — มือถือไม่แตะ) =====
+   ผลออก → html.vc-wide: ช่องวางสัญญายุบเป็นแถบเล็ก · ผลตรวจกว้างเต็มแถว ไม่มีแถบเลื่อนซ้อน
+   + แถบหัวติดบน (จำนวนประเด็น/คัดลอก/แชร์/PDF) + หัวรายงานพร้อมเข็มวัด + ช่องสัญญาด้านขวา ไฮไลต์ข้อที่มีประเด็น */
+(function () {
+  'use strict';
+  var root = document.documentElement, mq = matchMedia('(min-width:1024px)');
+  var rc = document.getElementById('resultCard'), res = document.getElementById('result'), ck = document.getElementById('checkCard'), inp = document.getElementById('input');
+  if (!rc || !res || !ck) return;
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  var LV = { check_detail: 'h', caution: 'c', low: 'l', info: 'l' };
+  var snap = '', lastRpt = null;
+
+  /* (1) แถบเล็กแทนช่องวางสัญญา */
+  var mini = document.createElement('div'); mini.className = 'vc-ck-mini'; mini.hidden = true;
+  mini.innerHTML = '<span class="vcm-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg></span>' +
+    '<span class="vcm-tx"><b>สัญญาที่ตรวจ</b><span class="vcm-meta"></span></span>' +
+    '<button type="button" class="vcm-edit" aria-expanded="false"><span>แก้ไข / ตรวจฉบับใหม่</span><i aria-hidden="true">⌄</i></button>';
+  ck.insertBefore(mini, ck.firstChild);
+  mini.querySelector('.vcm-edit').addEventListener('click', function () {
+    var on = !root.classList.contains('vc-ck-open'); root.classList.toggle('vc-ck-open', on);
+    this.setAttribute('aria-expanded', on ? 'true' : 'false'); this.querySelector('span').textContent = on ? 'ย่อช่องวางสัญญา' : 'แก้ไข / ตรวจฉบับใหม่';
+    if (on && inp) setTimeout(function () { try { inp.focus({ preventScroll: true }); } catch (e) {} ck.scrollIntoView({ block: 'start', behavior: 'smooth' }); }, 60);
+  });
+
+  /* (2) แถบหัวติดบน */
+  var bar = document.createElement('div'); bar.className = 'vc-rbar'; bar.hidden = true;
+  rc.insertBefore(bar, rc.firstChild);
+  bar.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-proxy]'); if (b) { var t = res.querySelector('.share-bar [data-act="' + b.getAttribute('data-proxy') + '"]'); if (t) t.click(); return; }
+    var c = e.target.closest('[data-goto]'); if (c) { var el = res.querySelector(c.getAttribute('data-goto')); if (el) el.scrollIntoView({ block: 'start', behavior: 'smooth' }); }
+  });
+
+  /* (3) ช่องสัญญาด้านขวา */
+  var pane = document.createElement('aside'); pane.className = 'vc-cpane'; pane.hidden = true; pane.setAttribute('aria-label', 'ข้อความสัญญาที่ตรวจ');
+  rc.appendChild(pane);
+
+  function counts() {
+    var o = { h: 0, c: 0, i: 0 };
+    [].forEach.call(res.querySelectorAll('.cb-tile'), function (t) { var n = +((t.querySelector('b') || {}).textContent || 0); if (t.classList.contains('lv-check_detail')) o.h = n; else if (t.classList.contains('lv-caution')) o.c = n; else if (t.classList.contains('lv-info')) o.i = n; });
+    return o;
+  }
+  /* เลขข้อของแต่ละประเด็น จาก "อ้างอิงข้อ N" ในรายการประเด็น */
+  function issues() {
+    return [].map.call(res.querySelectorAll('.ix-row'), function (r) {
+      var m = /ข้อ(?:ที่)?\s*(\d+)/.exec((r.querySelector('.ix-clause') || {}).textContent || '');
+      var lv = 'l'; Object.keys(LV).forEach(function (k) { if (r.classList.contains('lv-' + k)) lv = LV[k]; });
+      return { row: r, idx: r.getAttribute('data-ixcard'), clause: m ? m[1] : '', lv: lv, title: ((r.querySelector('.ix-tx b') || {}).textContent || '').trim() };
+    });
+  }
+  function typeName() { var m = /ประเภทเอกสาร:\s*([^(·\n]+)/.exec((res.querySelector('.rpt-meta') || {}).textContent || ''); return m ? m[1].trim() : 'สัญญา'; }
+
+  function buildBar(c) {
+    bar.innerHTML = '<span class="vcb-t"><b>ผลตรวจ</b><span>' + esc(typeName()) + '</span></span>' +
+      '<span class="vcb-chips"><button type="button" class="vcb-c c-h" data-goto="#issueIndex"><b>' + c.h + '</b>สำคัญ</button><button type="button" class="vcb-c c-c" data-goto="#issueIndex"><b>' + c.c + '</b>ควรระวัง</button>' +
+      (c.i ? '<button type="button" class="vcb-c c-i" data-goto=".miss"><b>' + c.i + '</b>ข้อมูลยังไม่ครบ</button>' : '') + '</span>' +
+      '<span class="vcb-act">' + (res.querySelector('.share-bar') ? '<button type="button" data-proxy="copy">คัดลอก</button><button type="button" data-proxy="share">แชร์</button><button type="button" data-proxy="pdf">PDF</button>' : '') + '</span>';
+    bar.hidden = false;
+  }
+  /* (4) หัวรายงาน: เข็มวัด (น้ำหนักเดียวกับหน้าแรก: สำคัญ 3 · ควรระวัง 2 · เต็มสเกล 18) */
+  function buildHero(c) {
+    var hd = res.querySelector('.rpt-head'); if (!hd || hd.querySelector('.vc-rg')) return;
+    var f = Math.min(1, (c.h * 3 + c.c * 2) / 18), lv = c.h ? ['ควรตรวจละเอียดก่อนเซ็น', 'h'] : c.c ? ['ควรอ่านให้ละเอียด', 'c'] : ['ไม่พบจุดเสี่ยงสำคัญ', 'l'];
+    var g = document.createElement('div'); g.className = 'vc-rg r-' + lv[1]; g.style.setProperty('--f', f.toFixed(3));
+    g.innerHTML = '<svg viewBox="0 0 100 58" aria-hidden="true"><defs><linearGradient id="vcRgG" x1="0" x2="1"><stop offset="0" stop-color="#60a5fa"/><stop offset=".5" stop-color="#fbbf24"/><stop offset="1" stop-color="#ef4444"/></linearGradient></defs>' +
+      '<path class="t" d="M10 52 A40 40 0 0 1 90 52" pathLength="1"/><path class="a" d="M10 52 A40 40 0 0 1 90 52" pathLength="1"/><g class="n"><line x1="50" y1="52" x2="50" y2="18"/><circle cx="50" cy="52" r="5"/></g></svg>' +
+      '<span class="vc-rg-l">' + lv[0] + '</span><span class="vc-rg-s">สำคัญ ' + c.h + ' · ควรระวัง ' + c.c + '</span>';
+    g.title = 'ตำแหน่งเข็มคิดจากจำนวนและระดับของประเด็นที่พบ (ไม่ใช่คะแนนจาก AI)';
+    hd.appendChild(g);
+  }
+  function buildPane(list) {
+    var txt = snap || (inp && inp.value) || '';
+    if (!txt.trim()) { pane.hidden = true; root.classList.remove('vc-has-pane'); return; }
+    var by = {}; list.forEach(function (it) { if (!it.clause) return; (by[it.clause] = by[it.clause] || []).push(it); });
+    var cur = '', html = '';
+    txt.split(/\r?\n/).forEach(function (ln) {
+      if (!ln.trim()) return;
+      var m = /^\s*ข้อ(?:ที่)?\s*(\d+)/.exec(ln); if (m) cur = m[1];
+      var its = m ? by[cur] : null, lv = its ? its.reduce(function (a, b) { return 'hcl'.indexOf(b.lv) < 'hcl'.indexOf(a) ? b.lv : a; }, 'l') : '';
+      html += '<p class="vcp-ln' + (its ? ' has r-' + lv : '') + (m ? '' : ' cont') + '"' + (m ? ' data-c="' + cur + '"' : '') + (its ? ' role="button" tabindex="0" title="ดูประเด็น: ' + esc(its.map(function (x) { return x.title; }).join(' / ')) + '"' : '') + '>' +
+        esc(ln.trim()) + (its ? '<i class="vcp-tag">' + its.length + ' ประเด็น</i>' : '') + '</p>';
+    });
+    pane.innerHTML = '<div class="vcp-hd"><b>สัญญาที่ตรวจ</b><span>แตะข้อที่ไฮไลต์เพื่อไปที่ประเด็น</span></div><div class="vcp-body">' + html + '</div>' +
+      '<p class="vcp-ft">ข้อความนี้แสดงจากเครื่องของคุณ · เลขข้ออ้างอิงจากผลตรวจ</p>';
+    pane.hidden = false; root.classList.add('vc-has-pane');
+  }
+  function flashClause(c) {
+    if (!c) return; var el = pane.querySelector('.vcp-ln[data-c="' + c + '"]'); if (!el) return;
+    [].forEach.call(pane.querySelectorAll('.vcp-ln.on'), function (x) { x.classList.remove('on'); });
+    el.classList.add('on'); var body = pane.querySelector('.vcp-body');
+    if (body) body.scrollTo({ top: el.offsetTop - body.clientHeight / 3, behavior: 'smooth' });
+  }
+  res.addEventListener('click', function (e) {
+    if (!root.classList.contains('vc-wide')) return;
+    var r = e.target.closest('.ix-row, details.item > summary'); if (!r) return;
+    var row = r.classList.contains('ix-row') ? r : res.querySelector('.ix-row[data-ixcard="' + (/issue-(\d+)/.exec(r.parentNode.id) || [])[1] + '"]');
+    var it = row && issues().filter(function (x) { return x.row === row; })[0]; if (it) flashClause(it.clause);
+  });
+  function goClause(el) {
+    var c = el.getAttribute('data-c'), it = issues().filter(function (x) { return x.clause === c; })[0]; if (!it) return;
+    flashClause(c); it.row.click();
+  }
+  pane.addEventListener('click', function (e) { var l = e.target.closest('.vcp-ln.has'); if (l) goClause(l); });
+  pane.addEventListener('keydown', function (e) { var l = e.target.closest && e.target.closest('.vcp-ln.has'); if (l && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); goClause(l); } });
+
+  function sync() {
+    var rpt = res.querySelector('.rpt'), on = !!(mq.matches && rpt && root.getAttribute('data-view') === 'desk' && root.getAttribute('data-desk') === 'check');
+    if (rpt && rpt !== lastRpt) { lastRpt = rpt; snap = inp ? inp.value : ''; root.classList.remove('vc-ck-open'); var eb = mini.querySelector('.vcm-edit'); eb.setAttribute('aria-expanded', 'false'); eb.querySelector('span').textContent = 'แก้ไข / ตรวจฉบับใหม่'; pane.dataset.built = ''; }
+    root.classList.toggle('vc-wide', on); mini.hidden = !on; if (!on) { bar.hidden = true; pane.hidden = true; root.classList.remove('vc-has-pane', 'vc-ck-open'); return; }
+    var c = counts();
+    mini.querySelector('.vcm-meta').textContent = typeName() + ' · ' + (snap.length || 0).toLocaleString('th-TH') + ' ตัวอักษร' + (res.querySelector('.vc-demo-note') ? ' · ผลตัวอย่าง' : '');
+    buildBar(c); buildHero(c);
+    if (pane.dataset.built !== '1') { buildPane(issues()); pane.dataset.built = '1'; }
+  }
+  var tmr = 0; function later() { clearTimeout(tmr); tmr = setTimeout(sync, 60); }
+  new MutationObserver(function (ms) { for (var i = 0; i < ms.length; i++) if (ms[i].target === res || ms[i].type === 'childList' && ms[i].target.closest && !ms[i].target.closest('.vc-rg')) { later(); return; } }).observe(res, { childList: true });
+  new MutationObserver(later).observe(root, { attributes: true, attributeFilter: ['data-view', 'data-desk'] });
+  (mq.addEventListener ? mq.addEventListener('change', later) : mq.addListener(later));
+  later();
 })();
