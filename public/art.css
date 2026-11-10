@@ -6622,3 +6622,61 @@ html.vc-art .hx-live .hxl-h{text-align:left !important}
 .hx-live .hxl-st > span{font-size:8.4px;max-width:calc(var(--fo) - 9px)}
 .hx-live .hxl-ln .hxl-st.s-long > span{font-size:7.8px !important}
 .hx-live .hxl-ln .hxl-st.s-xl > span{font-size:7.2px !important}
+/* ===== v247 หน้าแรกบนโน้ตบุ๊ก/คอม (≥1024 · มือถือไม่แตะ) ===== */
+.vc-scue{display:none}
+@media (min-width:1024px){
+  /* (ค)+(3) เลื่อนลงได้ */
+  html.vc-spa[data-view="home"],html.vc-spa[data-view="home"] body{overflow-x:hidden !important;overflow-y:auto !important;height:auto !important}
+  html.vc-spa[data-view="home"] main > .hero{height:auto !important;min-height:100svh !important;padding-bottom:56px !important}
+  /* (ฉ)+(1) สองคอลัมน์: ข้อความชิดซ้าย · การ์ดขวา */
+  .hero.hx-wow{--cw:clamp(370px,31vw,440px);--gx:max(4vw,calc((100vw - 1320px) / 2))}
+  html.vc-art .hero.hx-wow .hero-copy{text-align:left !important;align-items:flex-start !important;margin-left:var(--gx) !important;margin-right:0 !important;width:auto !important;max-width:calc(100vw - var(--gx) * 2 - var(--cw) - 56px) !important;padding-left:0 !important;padding-right:0 !important}
+  html.vc-art .hero.hx-wow .hero-copy > *{margin-left:0 !important;text-align:left !important}
+  html.vc-art .hero.hx-wow .hero-title{font-size:clamp(54px,6.4vw,96px) !important;text-align:left !important}
+  html.vc-art .hero.hx-wow .hero-title .ht-l2.hs-on{margin-left:0 !important}
+  html.vc-art .hero.hx-wow .hero-title .hs-ink{left:0;transform:translate(0,-52%)}
+  html.vc-art .hero.hx-wow .dx-cta-row{justify-content:flex-start !important}
+  html.vc-art .hero.hx-wow .hx-free,html.vc-art .hero.hx-wow .hero-lead{text-align:left !important;max-width:520px}
+  html.vc-art .hero.hx-wow .dx-kicker,html.vc-art .hero.hx-wow .hero-kicker{justify-content:flex-start !important}
+  .hero.hx-wow .hx-live.side{position:absolute;right:var(--gx);width:var(--cw);margin:0;--fo:64px}
+  /* (5) ตัวหนังสือในการ์ดใหญ่ขึ้น */
+  .hx-live.side .hxl-ln{font-size:12.6px !important;min-height:24px}
+  html.vc-art .hx-live.side .hxl-h{font-size:17px !important}
+  .hx-live.side .hxl-st > span{font-size:9.4px}
+  .hx-live.side .hxl-ln .hxl-st.s-long > span{font-size:8.6px !important}
+  .hx-live.side .hxl-ln .hxl-st.s-xl > span{font-size:8px !important}
+  .hx-live.side .hxl-ln .hxl-st{height:20px !important;margin-top:-10px !important}
+  /* (2) แบบกระชับเมื่อจอเตี้ย */
+  .hx-live.side.compact{padding:10px !important}
+  .hx-live.side.compact :is(.hxl-own,.hxl-note,.hxl-key,.hxl-meta){display:none !important}
+  .hx-live.side.compact .hxl-top{margin-bottom:6px}
+  html.vc-art .hx-live.side.compact .hxl-paper{padding-top:12px !important;padding-bottom:18px !important}
+  .hx-live.side.compact .hxl-ln{min-height:21px;font-size:12px !important}
+  .hx-live.side.compact .hxl-foot{margin-top:8px}
+  .hx-live.side.compact .hxl-sign{margin-top:6px !important}
+  /* (ง)+(4) ป้ายแว่นขยาย: มุมล่างซ้ายของจอแรก ใกล้แว่น */
+  .hero.hx-wow .hx-hunt{left:var(--gx) !important;right:auto !important;top:calc(100svh - 64px) !important;bottom:auto !important;transform:translateY(6px) !important}
+  .hero.hx-wow .hx-hunt.on{transform:none !important}
+  /* (3) ลูกศรเลื่อนดูต่อ */
+  .vc-scue{display:flex;position:absolute;left:50%;top:calc(100svh - 58px);z-index:5;flex-direction:column;align-items:center;gap:4px;min-height:0 !important;height:auto !important;padding:4px 10px !important;border:0 !important;background:none !important;color:#a8a29e !important;font:500 12px/1 Prompt,sans-serif !important;cursor:pointer;transform:translateX(-50%);transition:opacity .3s}
+  .vc-scue::before,.vc-scue::after{display:none !important}
+  .vc-scue i{width:18px;height:18px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) scale(.6);animation:vcScue 1.6s ease-in-out infinite}
+  .vc-scue.gone{opacity:0;pointer-events:none}
+  @keyframes vcScue{0%,100%{transform:translateY(-2px) rotate(45deg) scale(.6);opacity:.5}50%{transform:translateY(3px) rotate(45deg) scale(.6);opacity:1}}
+  html:not([data-view="home"]) .vc-scue,html[data-view="desk"] .vc-scue{display:none}
+  /* การ์ด 3 ใบเว้นจากจอแรก */
+  html.vc-art .hero.hx-wow .dx-points.tp-cards{margin-top:max(24px,calc(100svh - 100% )) !important}
+}
+@media (min-width:1024px) and (prefers-reduced-motion:reduce){.vc-scue i{animation:none}}
+@media (min-width:1024px){
+  html.vc-art .hero.hx-wow .hero-main{justify-items:start !important;justify-content:start !important}
+  html.vc-art .hero.hx-wow .hero-copy{margin-left:max(0px,calc(var(--gx) - 64px)) !important;width:min(660px,calc(100vw - var(--gx) * 2 - var(--cw) - 56px)) !important;justify-self:start !important}
+}
+@media (min-width:1024px){
+  html.vc-art .hero.hx-wow .hero-title :is(.ht-l,.ht-l2){display:block !important;text-align:left !important;margin-left:0 !important;margin-right:auto !important;justify-content:flex-start !important;transform:none}
+}
+@media (min-width:1024px){
+  .hero.hx-wow .hx-hunt.flow{position:static !important;margin:16px 0 0 !important;transform:none !important;width:fit-content;opacity:0;transition:opacity .4s}
+  .hero.hx-wow .hx-hunt.flow.on{opacity:1}
+}
+@media (min-width:1024px){.hero.hx-wow .hx-tip{transition:opacity .18s !important}}
