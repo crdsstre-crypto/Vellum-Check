@@ -6870,9 +6870,6 @@ html.vc-dsc-open :is(.vc-bn,.vc-fpill,.vc-stick,.hx-lens,.hx-pool,.hx-tip,.hx-hu
 .vsl-doc p.is-risk.lv-h{--hl:rgba(255,140,128,.5);--ul:rgba(220,70,60,.34);--dot:#e5484d;--nb:#fde6e3;--nl:#f3b0a8;--nc:#a12a20}
 .vsl-doc p.is-risk.lv-l{--hl:rgba(147,197,253,.55);--ul:rgba(59,130,246,.32);--dot:#3b82f6;--nb:#e6f0fe;--nl:#a9c8f5;--nc:#1e4e9c}
 .vsl.hl-on .vsl-doc p.is-risk mark{background:linear-gradient(transparent 50%,var(--hl) 50%,var(--hl) 94%,transparent 94%);color:#1d1a15;font-weight:500;padding:0 1px;border-radius:1px}
-/* ส่วนที่เหลือของข้อ: เส้นใต้บางๆ สีเดียวกับระดับ — ยังรู้ว่าทั้งข้อมีปัญหา แต่ตาไปหยุดที่คำไฮไลต์ */
-.vsl.hl-on .vsl-doc .vsl-cl{text-decoration:underline;text-decoration-color:var(--ul);text-decoration-thickness:1px;text-underline-offset:.42em;-webkit-text-decoration-skip-ink:none;text-decoration-skip-ink:none}
-.vsl.hl-on .vsl-doc .vsl-cl mark{text-decoration:none}
 .vsl.hl-on .vsl-doc p.is-risk::before{background:var(--dot)}
 .vsl.hl-on .vsl-doc p.is-risk .vsl-note{background:var(--nb);border-color:var(--nl);color:var(--nc)}
 @media (min-width:1024px){
@@ -6880,3 +6877,27 @@ html.vc-dsc-open :is(.vc-bn,.vc-fpill,.vc-stick,.hx-lens,.hx-pool,.hx-tip,.hx-hu
   .vsl.vsl-split .vsl-doc p.is-risk.lv-h.is-hot{background:rgba(255,140,128,.16);box-shadow:0 0 0 1px rgba(229,72,77,.32)}
   .vsl.vsl-split .vsl-doc p.is-risk.lv-l.is-hot{background:rgba(147,197,253,.18);box-shadow:0 0 0 1px rgba(59,130,246,.3)}
 }
+
+/* ===== v260 กระดาษ: แถบสีขอบซ้ายแทนจุด/เส้นใต้ · โน้ตปากกาลายมือแทนป้าย · ท้ายสัญญามีเส้นลงชื่อ + ตรา "ตัวอย่าง" ===== */
+.vsl-doc p.is-risk{--ink:#a8650a}
+.vsl-doc p.is-risk.lv-h{--ink:#c2302a}
+.vsl-doc p.is-risk.lv-l{--ink:#2a5aa8}
+/* 1) แถบแนวตั้งสีตามระดับ ครอบทั้งข้อและโน้ต */
+.vsl.hl-on .vsl-doc p.is-risk::before{left:-13px;top:.45em;bottom:.3em;width:3px;height:auto;border-radius:3px;opacity:.85}
+/* 2) โน้ตปากกาลายมือ: ไม่มีกรอบ เอียงนิดๆ มีลูกศรชี้ขึ้นไปที่คำไฮไลต์ */
+.vsl.hl-on .vsl-doc p.is-risk .vsl-note{display:block;width:max-content;max-width:100%;margin:2px 0 4px 4px;padding:0 0 0 22px;position:relative;
+  background:none !important;border:0 !important;border-radius:0;color:var(--ink) !important;
+  font:400 16px/1.4 Sriracha,Charmonman,cursive !important;letter-spacing:.005em;transform:rotate(-1.4deg);transform-origin:0 50%}
+.vsl.hl-on .vsl-doc p.is-risk .vsl-note::before{content:"";position:absolute;left:4px;top:-5px;width:12px;height:14px;border-left:1.6px solid currentColor;border-bottom:1.6px solid currentColor;border-bottom-left-radius:9px;opacity:.85}
+.vsl.hl-on .vsl-doc p.is-risk .vsl-note::after{content:"";position:absolute;left:1px;top:-6px;width:6px;height:6px;border-left:1.6px solid currentColor;border-top:1.6px solid currentColor;transform:rotate(45deg);transform-origin:50% 50%;opacity:.85}
+/* 3) ท้ายสัญญา */
+.vsl-sign{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:26px 22px;margin:30px 0 6px;padding-top:22px;border-top:1px dashed #ddd5c5;font-family:Taviraj,Sarabun,serif;color:#5a544a}
+.vsl-sg{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}
+.vsl-sl{display:block;width:100%;height:30px;border-bottom:1px solid #b9b0a0}
+.vsl-sg small{font-size:12.5px;white-space:nowrap}
+.vsl-sd{grid-column:1/-1;text-align:center;font-size:12.5px;color:#8a8273;letter-spacing:.02em}
+.vsl-stamp{position:absolute;right:4%;top:-6px;display:flex;flex-direction:column;align-items:center;padding:6px 14px 5px;border:2.5px double rgba(194,48,42,.55);border-radius:8px;
+  color:rgba(194,48,42,.6);font-style:normal;transform:rotate(-9deg);pointer-events:none;mix-blend-mode:multiply}
+.vsl-stamp b{font:700 17px/1.1 Prompt,Sarabun,sans-serif;letter-spacing:.12em}
+.vsl-stamp small{font:500 9.5px/1.3 Prompt,Sarabun,sans-serif;letter-spacing:.08em}
+@media (max-width:767px){.vsl-sign{gap:22px 16px;margin-top:26px}.vsl-stamp{right:0;top:-12px}}
