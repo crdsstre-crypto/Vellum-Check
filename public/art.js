@@ -3759,6 +3759,9 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     d.scrollTo({ top: Math.max(0, p.offsetTop - 40), behavior: 'smooth' });
     p.classList.remove('is-flash'); void p.offsetWidth; p.classList.add('is-flash');
   }
+  /* v260 ชื่อคู่สัญญาสำหรับเส้นลงชื่อ: เลือกคู่แรกที่ทั้งสองคำมีในข้อความสัญญา */
+  var PARTY = [['ผู้ให้เช่า', 'ผู้เช่า'], ['ผู้จะขาย', 'ผู้จะซื้อ'], ['ผู้ขาย', 'ผู้ซื้อ'], ['บริษัท', 'ผู้ซื้อ'], ['ผู้ให้กู้', 'ผู้กู้'], ['นายจ้าง', 'ลูกจ้าง'], ['บริษัท', 'พนักงาน'], ['ร้าน', 'พนักงาน'], ['ผู้ว่าจ้าง', 'ผู้รับจ้าง'], ['ผู้ให้บริการ', 'ผู้ใช้บริการ'], ['สถานออกกำลังกาย', 'สมาชิก'], ['ร้าน', 'ผู้ฝากขาย'], ['บริษัท', 'ตัวแทน'], ['ฝ่าย ก.', 'ฝ่าย ข.']];
+  function partyOf(t) { for (var k = 0; k < PARTY.length; k++) if (t.indexOf(PARTY[k][0]) > -1 && t.indexOf(PARTY[k][1]) > -1) return PARTY[k]; return ['คู่สัญญาฝ่ายที่หนึ่ง', 'คู่สัญญาฝ่ายที่สอง']; }
   function view(i, fromKey) {
     var s = L[i]; if (!s) return; cur = i;
     [].forEach.call(box.querySelectorAll('.vsl-item'), function (b) { var on = +b.dataset.i === i; if (b.classList.contains('is-cur') !== on) b.classList.toggle('is-cur', on); if (on) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
@@ -3785,7 +3788,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       var cid = m ? m[1] : (note ? 'p' : ''), num = note ? (ordr.indexOf(cid) + 1) : 0;
       var body = m ? '<b>ข้อ ' + m[1] + '</b> ' + (note ? hl(m[2], cid) : esc(m[2])) : (note ? hl(ln, cid) : esc(ln));
       var lvc = note ? ' lv-' + LV[(byC[cid] && byC[cid].level) || 'caution'][0] : '';
-      html += '<p class="' + (m ? '' : 'vsl-plain') + (note ? ' is-risk' + lvc : '') + '"' + (note ? ' data-c="' + cid + '"' : '') + '>' + (num ? '<i class="vsl-pn">' + num + '</i>' : '') + body + (note ? '<span class="vsl-note">⚠ ' + esc(note) + '</span>' : '') + '</p>';
+      html += '<p class="' + (m ? '' : 'vsl-plain') + (note ? ' is-risk' + lvc : '') + '"' + (note ? ' data-c="' + cid + '"' : '') + '>' + (num ? '<i class="vsl-pn">' + num + '</i>' : '') + body + (note ? '<span class="vsl-note">' + esc(note) + '</span>' : '') + '</p>';
     });
     /* คอลัมน์จุดเสี่ยง (คอม) จากผลตัวอย่างที่เตรียมไว้จริง — เรียงตามลำดับข้อในสัญญา */
     var rail = ordr.map(function (c, k) {
@@ -3796,6 +3799,10 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     var cc = window.VCDemo && window.VCDemo.counts(s[1]), sm = [];
     if (cc) ['check_detail', 'caution', 'low'].forEach(function (k) { if (cc[k]) sm.push('<span class="' + LV[k][0] + '">' + LV[k][1] + ' ' + cc[k] + '</span>'); });
     v.querySelector('.vsl-sum').innerHTML = sm.length ? '<small>ระบบจะพบ</small>' + sm.join('') : '';
+    /* v260 ท้ายสัญญา: เส้นลงชื่อของคู่สัญญา (ดึงชื่อฝ่ายจากข้อความจริง) + วันที่ + ตรา "ตัวอย่าง" */
+    var pr = partyOf(s[3]);
+    html += '<div class="vsl-sign" aria-hidden="true"><div class="vsl-sg"><span class="vsl-sl"></span><small>ลงชื่อ ' + esc(pr[0]) + '</small></div><div class="vsl-sg"><span class="vsl-sl"></span><small>ลงชื่อ ' + esc(pr[1]) + '</small></div>' +
+      '<div class="vsl-sd">วันที่ ______ / ______ / ______</div><i class="vsl-stamp"><b>ตัวอย่าง</b><small>ห้ามใช้จริง</small></i></div>';
     var d = v.querySelector('.vsl-doc'); d.innerHTML = html; d.scrollTop = 0;
     var use = v.querySelector('.vsl-use'), free = window.VCDemo && window.VCDemo.has(s[1]);
     use.classList.toggle('is-free', !!free);
