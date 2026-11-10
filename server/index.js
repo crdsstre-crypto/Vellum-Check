@@ -30,6 +30,7 @@ import { isBlocked, recordFailure, clearFailures } from './rateLimit.js';
 import { buildSpokenSummary, synthesizeSpeech, VOICE_CREDIT_COST } from './voice.js';
 import { createPromptPayPayment, confirmAndCredit, getPaymentStatus, PACKAGES } from './payments.js';
 import { logCheck, saveFeedback, adminStats, FEEDBACK_REASONS } from './stats.js';
+import { getDaily, checkIn, redeem } from './daily.js';
 import { listReminders, addReminders, updateReminder, deleteReminder, cleanReminder, buildIcs, MAX_BATCH, MAX_REMINDERS } from './reminders.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -693,6 +694,42 @@ app.post('/api/extract', async (req, res) => {
   const credits = await getCredits(user.id).catch(() => null);
   const voiceCredits = await getVoiceCredits(user.id).catch(() => null);
   res.json({ ok: true, text, credits, voiceCredits });
+});
+
+// ---------- เช็กอินรายวัน + แต้มแลกเครดิต (server/daily.js) ----------
+app.get('/api/daily', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน' });
+    res.json(await getDaily(user.id));
+  } catch (err) {
+    console.error('[daily] get failed:', err.message);
+    res.status(500).json({ error: 'โหลดข้อมูลเช็กอินไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+
+app.post('/api/daily/checkin', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน' });
+    res.json(await checkIn(user.id));
+  } catch (err) {
+    console.error('[daily] checkin failed:', err.message);
+    res.status(500).json({ error: 'เช็กอินไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+
+app.post('/api/daily/redeem', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน' });
+    const r = await redeem(user.id);
+    if (!r.ok) return res.status(400).json(r);
+    res.json(r);
+  } catch (err) {
+    console.error('[daily] redeem failed:', err.message);
+    res.status(500).json({ error: 'แลกแต้มไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
 });
 
 // ---------- แจ้งเตือนวันสำคัญในสัญญา ----------
