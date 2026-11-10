@@ -42,7 +42,8 @@
 <link rel="stylesheet" href="ct-sticker.css?v=9" media="(max-width: 767px)">
 <link rel="stylesheet" href="desktop-layout.css?v=5" media="(min-width: 1024px)">
 <link rel="stylesheet" href="silent-clip.css?v=1" media="(min-width: 1024px)">
-<link rel="stylesheet" href="art.css?v=254">
+<link rel="stylesheet" href="art.css?v=260">
+<link rel="stylesheet" href="remind-ui.css?v=1">
 <link rel="stylesheet" href="account-desk.css?v=5" media="(min-width: 768px)">
 </head>
 <body>
@@ -1158,6 +1159,7 @@
       document.body.classList.remove('auth-open');
       if (typeof renderResult === 'function') renderResult(data.result);
       if (window.VCFeedback) window.VCFeedback.attach(Number(id));
+      if (window.VCRemind) window.VCRemind.link(Number(id));
       // คอม: ผลตรวจอยู่หน้าตรวจสัญญา ต้องสลับออกจากหน้าบัญชีก่อนจึงจะเห็น
       if (window.matchMedia('(min-width: 768px)').matches && document.documentElement.getAttribute('data-desk') === 'acct') {
         document.documentElement.setAttribute('data-desk', 'check');
@@ -1962,7 +1964,7 @@ document.addEventListener('click', function (e) {
 })();
 </script>
 <script src="glossary.js?v=5"></script>
-<script src="script.js?v=42"></script>
+<script src="script.js?v=43"></script>
 <script src="admin.js?v=2"></script>
 <script src="extras.js?v=4"></script>
 <script src="pay-ui.js?v=3"></script>
@@ -1972,6 +1974,7 @@ document.addEventListener('click', function (e) {
 <script src="video-embed.js?v=1"></script>
 <script src="silent-clip.js?v=1"></script>
 <script src="demo-results.js?v=4"></script>
-<script src="art.js?v=259"></script>
+<script src="art.js?v=260"></script>
+<script src="remind-ui.js?v=1"></script>
 </body>
 </html>
