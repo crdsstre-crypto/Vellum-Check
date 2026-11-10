@@ -6893,8 +6893,15 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     '<div class="hxl-stack"><i class="hxl-clip" aria-hidden="true"><svg viewBox="0 0 24 60"><path d="M7 52V12a5 5 0 0 1 10 0v38a8 8 0 0 1-16 0V16"/></svg></i>' +
     '<button type="button" class="hxl-paper" aria-label="เปิดผลตรวจตัวอย่างฉบับนี้ ฟรี"><span class="hxl-wm" aria-hidden="true">ตัวอย่าง</span><span class="hxl-h"></span>' +
       '<span class="hxl-meta" aria-hidden="true">ทำที่ ……………… วันที่ …… เดือน ………… พ.ศ. ……</span><span class="hxl-lines"></span>' +
-      '<span class="hxl-sign" aria-hidden="true"><span class="hxs"><i></i><em class="hxs-a"></em></span><span class="hxs"><i></i><em class="hxs-b"></em></span>' +
-      '<i class="hxl-pen"><svg viewBox="0 0 120 24"><path class="pb" d="M18 6h86a6 6 0 0 1 0 12H18z"/><path class="pc" d="M86 6h6v12h-6z"/><path class="pn" d="M18 6 2 12l16 6z"/><path class="pt" d="M2 12l6-1.6v3.2z"/></svg></i>' +
+      '<span class="hxl-sign" aria-hidden="true"><span class="hxs"><i class="hxs-ln"><svg class="hxl-sig" viewBox="0 0 120 24" preserveAspectRatio="none"><path pathLength="1" d="M4 17 C7 7 13 3 14 9 C15 15 8 19 9 13 C10 7 19 3 21 11 C22 17 25 19 28 12 C30 7 32 7 33 13 C34 18 37 18 40 11 L43 5 C44 12 45 17 49 15 C55 12 59 7 65 11 C70 15 74 17 79 12 C84 7 88 9 91 13 C95 17 101 14 106 11 C110 9 114 10 117 8"/></svg>' +
+      '<i class="hxl-pen"><svg viewBox="0 0 112 16"><defs><linearGradient id="hxpB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a4a50"/><stop offset=".35" stop-color="#16161a"/><stop offset=".75" stop-color="#08080a"/><stop offset="1" stop-color="#26262b"/></linearGradient>' +
+      '<linearGradient id="hxpG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbe7b0"/><stop offset=".5" stop-color="#d6a64e"/><stop offset="1" stop-color="#8f6a26"/></linearGradient></defs>' +
+      '<path class="pn" d="M0 8 L13 4.8 L19 4.6 L19 11.4 L13 11.2 Z" fill="url(#hxpG)"/><path d="M1.5 8 H12" stroke="#5b4214" stroke-width=".6"/><circle cx="12.6" cy="8" r=".9" fill="#5b4214"/>' +
+      '<rect x="19" y="4.2" width="13" height="7.6" rx="1" fill="url(#hxpB)"/><rect x="32" y="3.4" width="3.2" height="9.2" fill="url(#hxpG)"/>' +
+      '<rect x="35" y="2.8" width="68" height="10.4" rx="2.4" fill="url(#hxpB)"/><rect x="38" y="4" width="60" height="1.3" rx=".6" fill="#fff" opacity=".32"/>' +
+      '<path d="M103 2.8 h3 a5.2 5.2 0 0 1 0 10.4 h-3z" fill="url(#hxpB)"/><rect x="101" y="2.8" width="2.2" height="10.4" fill="url(#hxpG)"/>' +
+      '<rect x="72" y="1.2" width="27" height="1.8" rx=".9" fill="url(#hxpG)"/><circle cx="73" cy="2.1" r="1.6" fill="url(#hxpG)"/></svg></i>' +
+      '</i><em class="hxs-a"></em></span><span class="hxs"><i></i><em class="hxs-b"></em></span>' +
       '<i class="hxl-bigst">อ่านก่อนเซ็น!</i></span>' +
       '<span class="hxl-key" aria-hidden="true"><i class="k-h"></i>ตรวจละเอียด<i class="k-c"></i>ควรระวัง<i class="k-l"></i>ข้อสังเกต</span>' +
       '<i class="hxl-curl" aria-hidden="true"></i><i class="hxl-scan"></i><i class="hxl-hint" aria-hidden="true">แตะตราเพื่อดูเหตุผล</i></button></div>' +
@@ -6938,7 +6945,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     fig.querySelector('.hxs-a').textContent = DEMOS[i][3]; fig.querySelector('.hxs-b').textContent = DEMOS[i][4];
     fig.querySelector('.hxl-lines').innerHTML = d.rows.map(function (r, k) {
       var lv = r.it ? ({ check_detail: 'h', caution: 'c', low: 'l' }[r.it.level] || 'c') : '';
-      return '<span class="hxl-ln' + (lv ? ' r-' + lv : '') + (final && lv ? ' hit' : '') + (final ? ' seen' : '') + '" data-k="' + k + '">' + (lv === 'h' ? '<i class="hxl-mk" aria-hidden="true">!</i>' : '') + '<span class="hxl-tx">' + esc(r.t.length > 60 ? r.t.slice(0, 58) + '…' : r.t) + '</span>' +
+      return '<span class="hxl-ln' + (lv ? ' r-' + lv : '') + (final && lv ? ' hit' : '') + (final ? ' seen' : '') + '" data-k="' + k + '">' + (lv === 'h' ? '<i class="hxl-mk" aria-hidden="true">!</i>' : '') + '<span class="hxl-tx"><span class="hxl-tt">' + esc(r.t.length > 60 ? r.t.slice(0, 58) + '…' : r.t) + '</span></span>' +
         (lv ? '<i class="hxl-st s-' + lv + '" style="--rot:' + ROT[k % ROT.length] + 'deg" role="button" tabindex="0" aria-label="ดูเหตุผล: ' + esc(r.it.topic) + '">' + icon(r.it.topic) + '<span>' + esc(r.it.topic) + '</span></i>' : '') + '</span>';
     }).join('');
     [].forEach.call(fig.querySelectorAll('.hxl-tabs button'), function (b) { var on = +b.dataset.i === i; b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
@@ -6961,16 +6968,32 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     [].forEach.call(fig.querySelectorAll('.hxl-ln.hit'), function (x) { var k = (/r-(\w)/.exec(x.className) || [])[1]; if (k) { sc += W8[k]; lvs[k]++; } });
     meter(sc, lvs, final);
   }
+  /* (2) ลายเซ็นครึ่งทาง: หัวปากกาวิ่งตามเส้นจริง (getPointAtLength) พร้อมหมึกที่ค่อยๆ ปรากฏ */
+  var SIGN_STOP = .54, signRaf = 0;
+  function sigEls() { return { ln: fig.querySelector('.hxs-ln'), svg: fig.querySelector('.hxl-sig'), p: fig.querySelector('.hxl-sig path'), pen: fig.querySelector('.hxl-pen') }; }
+  function penAt(t) {
+    var e = sigEls(); if (!e.p || !e.ln) return;
+    var L = e.p.getTotalLength(), pt = e.p.getPointAtLength(L * t), lr = e.ln.getBoundingClientRect(), sr = e.svg.getBoundingClientRect();
+    var sc = (fig.querySelector('.hxl-paper').getBoundingClientRect().width / fig.querySelector('.hxl-paper').offsetWidth) || 1; /* เผื่อกระดาษกำลังถูกแปลงขนาด */
+    e.pen.style.left = ((sr.left - lr.left) + pt.x / 120 * sr.width) / sc + 'px';
+    e.pen.style.top = ((sr.top - lr.top) + pt.y / 24 * sr.height) / sc + 'px';
+  }
+  function signSet(t) { var e = sigEls(); if (e.p) e.p.style.strokeDashoffset = String(1 - t); }
+  function signReset() { cancelAnimationFrame(signRaf); signSet(0); var e = sigEls(); if (e.p) e.p.parentNode.classList.remove('dry'); }
+  function signRun() {
+    var t0 = performance.now(), D = 900;
+    (function f(n) { var k = Math.min(1, (n - t0) / D), t = SIGN_STOP * (k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2); signSet(t); penAt(t); if (k < 1 && fig.classList.contains('sign')) signRaf = requestAnimationFrame(f); else { var e = sigEls(); if (e.svg) setTimeout(function () { e.svg.classList.add('dry'); }, 900); } })(t0);
+  }
   var flipped = false;
   function play(i) {
-    clear(); cur = i; fig.classList.remove('done', 'out', 'scan', 'pen', 'slam');
+    clear(); cur = i; fig.classList.remove('done', 'out', 'scan', 'pen', 'sign', 'slam'); signReset();
     /* (3) พลิกหน้ากระดาษ — ถอดคลาสเองเมื่อครบเวลา กันกระดาษค้างล่องหน (เจอบน iPhone) */
     var pp = fig.querySelector('.hxl-paper');
     if (flipped && !calm()) { pp.classList.remove('flipin'); void pp.offsetWidth; pp.classList.add('flipin'); clearTimeout(pp.__ft); pp.__ft = setTimeout(function () { pp.classList.remove('flipin'); }, 900); }
     flipped = true;
     var d = render(i, calm()); if (!d) return;
     tally(calm());
-    if (calm()) { fig.classList.add('done', 'slam'); return; }
+    if (calm()) { signSet(SIGN_STOP); fig.classList.add('done', 'slam'); return; }
     playing = true;
     var lines = fig.querySelectorAll('.hxl-ln'), step = 520, hits = 0, cnt = fig.querySelector('.hxl-cnt em');
     fig.style.setProperty('--scan', (lines.length * step + 300) + 'ms');
@@ -6983,10 +7006,11 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     });
     var end = 260 + lines.length * step;
     T(function () { fig.classList.add('done'); tally(true); }, end + 200);
-    T(function () { fig.classList.add('pen'); }, end + 500);          /* (7) ปากกาลอยมาจ่อเส้นลงชื่อ */
-    T(function () { fig.classList.add('slam'); }, end + 1500);        /* ตรา "อ่านก่อนเซ็น!" ปั๊มทับ */
-    T(function () { if (!visible) { playing = false; return; } fig.classList.add('out'); }, end + 4400);
-    T(function () { if (visible) play((cur + 1) % DEMOS.length); else { playing = false; fig.classList.remove('out'); } }, end + 4800);
+    T(function () { penAt(0); fig.classList.add('pen'); }, end + 400);  /* (7) ปากกาลอยลงมาที่ต้นเส้นลงชื่อ */
+    T(function () { fig.classList.add('sign'); signRun(); }, end + 900); /* เริ่มเซ็น… */
+    T(function () { fig.classList.add('slam'); }, end + 1850);           /* …ตรา "อ่านก่อนเซ็น!" ปั๊มขัด ปากกาสะดุ้งออกขวา */
+    T(function () { if (!visible) { playing = false; return; } fig.classList.add('out'); }, end + 4700);
+    T(function () { if (visible) play((cur + 1) % DEMOS.length); else { playing = false; fig.classList.remove('out'); } }, end + 5100);
   }
   /* (5) แตะตรา → แผ่นอธิบายจากผลตัวอย่างจริง (หยุดวนระหว่างอ่าน) */
   var pop = fig.querySelector('.hxl-pop'), held = false;
@@ -6996,7 +7020,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     var r = d.rows[+ln.dataset.k]; if (!r || !r.it) return;
     var full = ((window.VCDemo && VCDemo.items) ? VCDemo.items(DEMOS[cur][0]) : []).filter(function (x) { return x.clause === r.it.clause; })[0] || r.it;
     var lv = LVN[full.level] || LVN.caution;
-    clear(); playing = false; held = true; fig.classList.add('done', 'held', 'slam'); fig.classList.remove('out', 'pen');
+    clear(); playing = false; held = true; cancelAnimationFrame(signRaf); signSet(SIGN_STOP); fig.classList.add('done', 'held', 'slam'); fig.classList.remove('out', 'pen', 'sign');
     [].forEach.call(fig.querySelectorAll('.hxl-ln'), function (x) { x.classList.add('seen'); if (/\br-/.test(x.className)) x.classList.add('hit'); });
     fig.querySelector('.hxl-cnt em').textContent = d.rows.filter(function (x) { return x.it; }).length; tally(true);
     pop.className = 'hxl-pop r-' + lv[1];
