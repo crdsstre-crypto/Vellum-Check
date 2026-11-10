@@ -30,6 +30,7 @@ import { isBlocked, recordFailure, clearFailures } from './rateLimit.js';
 import { buildSpokenSummary, synthesizeSpeech, VOICE_CREDIT_COST } from './voice.js';
 import { createPromptPayPayment, confirmAndCredit, getPaymentStatus, PACKAGES } from './payments.js';
 import { logCheck, saveFeedback, adminStats, FEEDBACK_REASONS } from './stats.js';
+import { listReminders, addReminders, updateReminder, deleteReminder, cleanReminder, buildIcs, MAX_BATCH, MAX_REMINDERS } from './reminders.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -692,6 +693,90 @@ app.post('/api/extract', async (req, res) => {
   const credits = await getCredits(user.id).catch(() => null);
   const voiceCredits = await getVoiceCredits(user.id).catch(() => null);
   res.json({ ok: true, text, credits, voiceCredits });
+});
+
+// ---------- แจ้งเตือนวันสำคัญในสัญญา ----------
+app.get('/api/reminders', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน' });
+    res.json({ items: await listReminders(user.id) });
+  } catch (err) {
+    console.error('[reminders] list failed:', err.message);
+    res.status(500).json({ error: 'โหลดรายการแจ้งเตือนไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+
+app.post('/api/reminders', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน' });
+    const raw = Array.isArray(req.body?.items) ? req.body.items : [];
+    if (!raw.length) return res.status(400).json({ error: 'ไม่มีรายการที่จะบันทึก' });
+    if (raw.length > MAX_BATCH) return res.status(400).json({ error: `บันทึกได้ครั้งละไม่เกิน ${MAX_BATCH} รายการ` });
+    const items = raw.map(cleanReminder);
+    if (items.some(x => !x)) return res.status(400).json({ error: 'มีรายการที่ชื่อหรือวันที่ไม่ถูกต้อง' });
+    const r = await addReminders(user.id, items);
+    if (r.full) return res.status(409).json({ error: `เก็บแจ้งเตือนได้สูงสุด ${MAX_REMINDERS} รายการ ลบรายการเก่าก่อนนะครับ` });
+    res.json({ ok: true, items: r.items });
+  } catch (err) {
+    console.error('[reminders] add failed:', err.message);
+    res.status(500).json({ error: 'บันทึกไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+
+app.patch('/api/reminders/:id', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน' });
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id) || id < 1) return res.status(400).json({ error: 'รหัสไม่ถูกต้อง' });
+    const body = req.body || {}, patch = {};
+    if (typeof body.done === 'boolean') patch.done = body.done;
+    if (body.title !== undefined || body.dueDate !== undefined) {
+      const c = cleanReminder({ title: body.title ?? 'x', dueDate: body.dueDate ?? '2000-01-01' });
+      if (!c) return res.status(400).json({ error: 'ชื่อหรือวันที่ไม่ถูกต้อง' });
+      if (body.title !== undefined) patch.title = c.title;
+      if (body.dueDate !== undefined) patch.dueDate = c.dueDate;
+    }
+    const item = await updateReminder(user.id, id, patch);
+    if (!item) return res.status(404).json({ error: 'ไม่พบรายการนี้' });
+    res.json({ ok: true, item });
+  } catch (err) {
+    console.error('[reminders] update failed:', err.message);
+    res.status(500).json({ error: 'บันทึกไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+
+app.delete('/api/reminders/:id', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน' });
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id) || id < 1) return res.status(400).json({ error: 'รหัสไม่ถูกต้อง' });
+    if (!(await deleteReminder(user.id, id))) return res.status(404).json({ error: 'ไม่พบรายการนี้' });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('[reminders] delete failed:', err.message);
+    res.status(500).json({ error: 'ลบไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+
+// ไฟล์ปฏิทิน: หน้าเว็บส่งฟอร์ม (field "events" = JSON) แล้ว iPhone/คอมเปิดหน้าต่างเพิ่มลงปฏิทินเอง
+// ไม่ต้องเข้าสู่ระบบ (ใช้กับผลตัวอย่างได้) ไม่บันทึกอะไรในเซิร์ฟเวอร์
+app.post('/api/ics', express.urlencoded({ extended: false, limit: '40kb' }), (req, res) => {
+  let raw;
+  try { raw = JSON.parse(String(req.body?.events || '[]')); } catch { raw = null; }
+  const items = Array.isArray(raw) ? raw.slice(0, 50).map(x => {
+    const c = cleanReminder(x);
+    if (c && Number.isInteger(x.id) && x.id > 0) c.id = x.id;
+    return c;
+  }).filter(Boolean) : [];
+  if (!items.length) return res.status(400).type('text/plain; charset=utf-8').send('ไม่มีวันที่ที่ใช้ได้');
+  res.setHeader('Content-Type', 'text/calendar; charset=utf-8');
+  res.setHeader('Content-Disposition', `attachment; filename="vellum-${items.length === 1 ? items[0].dueDate : 'reminders'}.ics"`);
+  res.setHeader('Cache-Control', 'no-store');
+  res.send(buildIcs(items, req.hostname || 'vellum-check'));
 });
 
 // ---------- หน้าเว็บ ----------
