@@ -7316,3 +7316,88 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   (mq.addEventListener ? mq.addEventListener('change', later) : mq.addListener(later));
   later();
 })();
+
+/* ===== v247 หน้าตรวจบนคอม (≥1024) ไม่โล่ง: แถบขั้นตอน · ตัวอย่างหน้าตาผลตรวจ · การ์ดก่อนวาง · พื้นหลังมีมิติ ===== */
+(function () {
+  'use strict';
+  var root = document.documentElement, mq = matchMedia('(min-width:1024px)');
+  var main = document.querySelector('main'), ck = document.getElementById('checkCard'), rc = document.getElementById('resultCard'), res = document.getElementById('result'), inp = document.getElementById('input');
+  if (!main || !ck || !rc || !res || !inp) return;
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+
+  /* (2) แถบขั้นตอน */
+  var STEPS = ['วางสัญญา', 'เลือกสิ่งที่ต้องการ', 'กดตรวจ', 'อ่านผล'];
+  var rail = document.createElement('nav'); rail.className = 'vc-steps'; rail.setAttribute('aria-label', 'ขั้นตอนการตรวจสัญญา');
+  rail.innerHTML = STEPS.map(function (t, i) { return '<button type="button" class="vcs-s" data-s="' + (i + 1) + '"><i>' + (i + 1) + '</i><span>' + t + '</span></button>' + (i < 3 ? '<b class="vcs-ln" aria-hidden="true"></b>' : ''); }).join('');
+  main.insertBefore(rail, ck);
+  function stepNow() {
+    if (res.querySelector('.rpt')) return 4;
+    if (res.querySelector('.loading-box')) return 3;
+    return inp.value.trim().length >= 20 ? 2 : 1;
+  }
+  function paint() {
+    var n = stepNow();
+    [].forEach.call(rail.querySelectorAll('.vcs-s'), function (b) { var s = +b.dataset.s; b.classList.toggle('done', s < n); b.classList.toggle('on', s === n); if (s === n) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
+    [].forEach.call(rail.querySelectorAll('.vcs-ln'), function (l, i) { l.classList.toggle('done', i + 1 < n); });
+  }
+  rail.addEventListener('click', function (e) {
+    var b = e.target.closest('.vcs-s'); if (!b) return; var s = +b.dataset.s;
+    if (s === 1) { if (root.classList.contains('vc-wide') && !root.classList.contains('vc-ck-open')) { var ed = document.querySelector('.vcm-edit'); if (ed) ed.click(); } else { ck.scrollIntoView({ block: 'start', behavior: 'smooth' }); try { inp.focus({ preventScroll: true }); } catch (er) {} } return; }
+    var heads = ck.querySelectorAll('.step-head'), t = s === 2 ? heads[1] : s === 3 ? document.getElementById('checkBtn') : rc;
+    if (t) t.scrollIntoView({ block: s === 3 ? 'center' : 'start', behavior: 'smooth' });
+  });
+
+  /* (1) ตัวอย่างหน้าตาผลตรวจ (ข้อมูลจริงจากผลตัวอย่าง "เช่าห้องพักรายปี") */
+  var SAMPLE = 'เช่าห้องพักรายปี';
+  var prev = document.createElement('div'); prev.className = 'vc-rprev';
+  var tips = document.createElement('div'); tips.className = 'vc-tips';
+  function buildPrev() {
+    if (prev.dataset.ok || !window.VCDemo || !VCDemo.items) return;
+    var it = VCDemo.items(SAMPLE) || [], c = VCDemo.counts(SAMPLE) || { check_detail: 0, caution: 0, low: 0 }; if (!it.length) return;
+    var order = { check_detail: 0, caution: 1, low: 2 }, top = it.slice().sort(function (a, b) { return order[a.level] - order[b.level]; }).slice(0, 3);
+    var f = Math.min(1, (c.check_detail * 3 + c.caution * 2) / 18);
+    var LV = { check_detail: ['สำคัญ', 'h'], caution: ['ควรระวัง', 'c'], low: ['ข้อสังเกต', 'l'] };
+    prev.innerHTML = '<div class="vrp-hd"><span class="vrp-tag">ตัวอย่างหน้าตาผลตรวจ</span><span class="vrp-src">จากสัญญาเช่าห้องตัวอย่าง</span></div>' +
+      '<div class="vrp-card"><div class="vrp-top"><div><span class="vrp-k">ANALYSIS REPORT</span><b class="vrp-t">สัญญาเช่าห้องพัก</b></div>' +
+      '<span class="vrp-g" style="--f:' + f.toFixed(3) + '"><svg viewBox="0 0 100 58" aria-hidden="true"><defs><linearGradient id="vrpG" x1="0" x2="1"><stop offset="0" stop-color="#60a5fa"/><stop offset=".5" stop-color="#fbbf24"/><stop offset="1" stop-color="#ef4444"/></linearGradient></defs><path class="t" d="M10 52 A40 40 0 0 1 90 52" pathLength="1"/><path class="a" d="M10 52 A40 40 0 0 1 90 52" pathLength="1"/><g class="n"><line x1="50" y1="52" x2="50" y2="20"/><circle cx="50" cy="52" r="5"/></g></svg><em>' + (c.check_detail ? 'ควรตรวจละเอียด' : 'ควรระวัง') + '</em></span></div>' +
+      '<div class="vrp-tiles"><span class="t-h"><b>' + c.check_detail + '</b>สำคัญ</span><span class="t-c"><b>' + c.caution + '</b>ควรระวัง</span><span class="t-l"><b>' + c.low + '</b>ข้อสังเกต</span></div>' +
+      '<ul class="vrp-list">' + top.map(function (x) { var l = LV[x.level] || LV.caution; return '<li class="r-' + l[1] + '"><span class="vrp-lv">ข้อ ' + esc(x.clause) + ' · ' + l[0] + '</span><b>' + esc(x.title) + '</b>' + (x.fix ? '<span class="vrp-fx">ขอแก้: ' + esc(x.fix) + '</span>' : '') + '</li>'; }).join('') + '</ul>' +
+      '<div class="vrp-more">+ อีก ' + Math.max(0, it.length - top.length) + ' ประเด็น · คำแนะนำ · ร่างข้อความไปคุย</div></div>' +
+      '<button type="button" class="vrp-go">เปิดผลตัวอย่างเต็ม · ฟรี <b aria-hidden="true">→</b></button>';
+    prev.dataset.ok = '1';
+  }
+  prev.addEventListener('click', function (e) {
+    if (!e.target.closest('.vrp-go, .vrp-card')) return;
+    if (window.VCTryDemo) VCTryDemo(SAMPLE);
+  });
+  /* (4) การ์ดก่อนวางสัญญา (ข้อความตามฟีเจอร์ที่มีจริงในเว็บ) */
+  tips.innerHTML = '<b class="vct-h">ก่อนวางสัญญา</b><ul>' +
+    '<li><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M9 12h6M9 16h4"/></svg></i><span><b>ใส่ให้ครบทุกหน้า</b>รวมเอกสารแนบท้าย ระบบจะเห็นเงื่อนไขครบกว่า</span></li>' +
+    '<li><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.6-3.4 8-8 9-4.6-1-8-4.4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></i><span><b>ปกปิดข้อมูลส่วนตัวให้ก่อนส่ง</b>ทำในเบราว์เซอร์ของคุณก่อนส่งไปวิเคราะห์</span></li>' +
+    '<li><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg></i><span><b>ตรวจไม่สำเร็จ คืนเครดิตอัตโนมัติ</b>ไม่ต้องแจ้งเอง</span></li>' +
+    '<li><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v18M7 21h10M5 7h14M5 7l-3 7a3.2 3.2 0 0 0 6 0zM19 7l-3 7a3.2 3.2 0 0 0 6 0z"/></svg></i><span><b>เป็นเครื่องมือคัดกรองเบื้องต้น</b>เรื่องสำคัญมากควรปรึกษาผู้เชี่ยวชาญ</span></li></ul>';
+
+  /* (3) พื้นหลังมีมิติ: แสงทอง + ตัวหนังสือสัญญาจางมากที่ขอบ */
+  var bg = document.createElement('div'); bg.className = 'vc-deskbg'; bg.setAttribute('aria-hidden', 'true');
+  var FP = 'ข้อ 1 คู่สัญญาตกลงทำสัญญาฉบับนี้ด้วยความสมัครใจ ข้อ 2 ผู้เช่าตกลงชำระค่าเช่าภายในวันที่ห้าของทุกเดือน หากชำระล่าช้าต้องเสียค่าปรับ ข้อ 3 ผู้ให้เช่ามีสิทธิ์แก้ไขเงื่อนไขได้ฝ่ายเดียว ข้อ 4 เงินประกันจะคืนให้เมื่อสิ้นสุดสัญญาหลังหักค่าเสียหาย ข้อ 5 หากยกเลิกก่อนครบกำหนดจะไม่ได้รับเงินประกันคืน ข้อ 6 ผู้เช่าต้องรับผิดชอบค่าซ่อมแซมทุกกรณี ข้อ 7 สัญญาต่ออายุอัตโนมัติหากไม่แจ้งล่วงหน้าเก้าสิบวัน ';
+  bg.innerHTML = '<i class="g1"></i><i class="g2"></i><p class="fp l">' + FP + FP + FP + '</p><p class="fp r">' + FP + FP + FP + '</p>';
+  document.body.appendChild(bg);
+
+  function sync() {
+    var on = mq.matches && root.getAttribute('data-view') === 'desk' && root.getAttribute('data-desk') === 'check';
+    root.classList.toggle('vc-deskck', on);
+    if (!on) return;
+    buildPrev();
+    var guide = rc.querySelector('.rs-guide');
+    if (prev.dataset.ok && !prev.parentNode) { if (guide) guide.parentNode.insertBefore(prev, guide.nextSibling); else rc.insertBefore(prev, res); }
+    if (!tips.parentNode) rc.insertBefore(tips, res);
+    root.classList.toggle('vc-ck-hasres', !!res.querySelector('.rpt'));
+    paint();
+  }
+  var t = 0; function later() { clearTimeout(t); t = setTimeout(sync, 50); }
+  inp.addEventListener('input', paint);
+  new MutationObserver(later).observe(res, { childList: true });
+  new MutationObserver(later).observe(root, { attributes: true, attributeFilter: ['data-view', 'data-desk'] });
+  (mq.addEventListener ? mq.addEventListener('change', later) : mq.addListener(later));
+  later(); setTimeout(later, 800);
+})();
