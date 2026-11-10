@@ -378,17 +378,29 @@
     s.innerHTML = '<span class="vrm-ic">' + ICO_BELL + '</span><button type="button" class="vrs-main"><b>' + leftText(n) + '</b><span>' + h(x.title) + '</span>' +
       (due.length > 1 ? '<em>+' + (due.length - 1) + ' รายการ</em>' : '') + '<i aria-hidden="true">›</i></button><button type="button" class="vrs-x" aria-label="ซ่อนจนกว่าจะเปิดเว็บใหม่">✕</button>';
   }
+  /* การ์ดในหน้าบัญชี: วางต่อจากการ์ดเช็กอินรายวัน (ถ้ามี) หรือต่อจากการ์ดเครดิต/แถวประวัติ */
+  function acctAnchor(li) { return document.getElementById('vdcAcct') || li.querySelector('.vc-stat') || li.querySelector('.vc-wcard') || li.querySelector('.wallet-total'); }
+  function placeAfter(el, anchor) { if (anchor && anchor.parentNode && anchor !== el && el.previousElementSibling !== anchor) anchor.parentNode.insertBefore(el, anchor.nextSibling); }
   function renderMenu() {
-    var nav = document.querySelector('#authLoggedIn .acct-menu'); if (!nav) return;
-    var b = document.getElementById('vrmMenu');
-    if (!b) {
-      b = document.createElement('button'); b.type = 'button'; b.id = 'vrmMenu'; b.className = 'menu-item vrm-menu';
-      b.innerHTML = '<span class="menu-ico" aria-hidden="true">' + ICO_BELL + '</span><span class="menu-txt"><b>แจ้งเตือนวันสำคัญ</b><small>วันสิ้นสุด วันแจ้งล่วงหน้า วันชำระเงิน</small></span><span class="vrm-badge" hidden></span>';
-      nav.insertBefore(b, nav.firstChild);
-      b.addEventListener('click', openHub);
+    var li = document.getElementById('authLoggedIn'); if (!li) return;
+    var old = document.getElementById('vrmMenu'); if (old) old.remove();
+    var c = document.getElementById('vrmAcct');
+    if (!c) {
+      c = document.createElement('button'); c.type = 'button'; c.id = 'vrmAcct'; c.className = 'vrm-acct';
+      c.addEventListener('click', openHub);
+      new MutationObserver(function () { var x = document.getElementById('vrmAcct'); if (x) placeAfter(x, acctAnchor(li)); }).observe(li, { childList: true, subtree: true });
     }
-    var due = items.filter(function (x) { return !x.done && daysLeft(x.dueDate) <= 30; }).length, bd = b.querySelector('.vrm-badge');
-    bd.hidden = !due; bd.textContent = due;
+    placeAfter(c, acctAnchor(li));
+    c.hidden = !user();
+    var open = items.filter(function (x) { return !x.done; }), due = open.filter(function (x) { return daysLeft(x.dueDate) <= 30; });
+    var first = open[0], n = first ? daysLeft(first.dueDate) : 0;
+    var sub = !loaded ? 'วันสิ้นสุด วันแจ้งล่วงหน้า วันชำระเงิน'
+      : first ? '<span class="vra-when' + (n < 0 ? ' is-over' : n <= 7 ? ' is-near' : '') + '">' + leftText(n) + '</span> · ' + h(first.title)
+      : 'ยังไม่มีรายการ · บันทึกได้จากท้ายผลตรวจ';
+    c.className = 'vrm-acct' + (due.length ? ' has-due' : '');
+    c.innerHTML = '<span class="vra-ic">' + ICO_BELL + '</span><span class="vra-tx"><b>แจ้งเตือนวันสำคัญ</b><small>' + sub + '</small></span>' +
+      (due.length ? '<span class="vra-pill">' + due.length + '</span>' : (loaded && open.length ? '<span class="vra-pill is-dim">' + open.length + '</span>' : '')) +
+      '<i class="vra-chev" aria-hidden="true"></i>';
   }
 
   // ต่อจาก onAuthChange เดิม (pay-ui.js) — script.js เรียกตามชื่อนี้ทุกครั้งที่สถานะล็อกอินเปลี่ยน
