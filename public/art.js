@@ -7081,12 +7081,17 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     var tb = e.target.closest('.hxl-tabs button'); if (tb) { closePop(false); held = false; play(+tb.dataset.i); return; }
     if (e.target.closest('.hxl-paper, .hxl-go')) tryDemo(DEMOS[cur][0]);
   });
-  /* วาง: จอกว้าง ≥1200 อยู่ขวาของหัวข้อ · อื่น ๆ อยู่ใต้ปุ่ม/ข้อความฟรี */
-  var wide = matchMedia('(min-width:1200px)');
+  /* วาง: คอม ≥1024 คอลัมน์ขวา · มือถือใต้หัวข้อ · แท็บเล็ตใต้ปุ่ม */
+  var wide = matchMedia('(min-width:1024px)');
   function place() {
     if (wide.matches) {
       if (fig.parentNode !== hero) hero.appendChild(fig); fig.classList.add('side');
-      var t1 = hero.querySelector('.hero-title'); if (t1) { var hr = hero.getBoundingClientRect(), tr = t1.getBoundingClientRect(); fig.style.top = Math.max(90, tr.top + tr.height / 2 - hr.top - 40).toFixed(0) + 'px'; }
+      /* (1)+(2) คอลัมน์ขวา กึ่งกลางกับคอลัมน์ข้อความ · จอเตี้ยกว่าการ์ด → แบบกระชับ ทั้งใบอยู่ในจอ */
+      var hr = hero.getBoundingClientRect(), cr = copy.getBoundingClientRect(), hd = 76, vh = innerHeight;
+      fig.classList.remove('compact');
+      if (fig.offsetHeight > vh - hd - 24) fig.classList.add('compact');
+      var fh = fig.offsetHeight, mid = cr.top - hr.top + cr.height / 2;
+      fig.style.top = Math.max(hd + 8, Math.min(mid - fh / 2, vh - fh - 16)).toFixed(0) + 'px';
     } else if (matchMedia('(max-width:767px)').matches) {
       fig.classList.remove('side'); fig.style.top = '';
       var ti = copy.querySelector('.hero-title'); if (ti && ti.nextSibling !== fig) copy.insertBefore(fig, ti.nextSibling);
@@ -7168,7 +7173,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     chip.innerHTML = '<i></i><span>' + (mob ? 'แตะค้างแล้วลากแว่น ส่องหาจุดเสี่ยง' : 'ขยับเมาส์ ส่องหาจุดเสี่ยงในสัญญา') + '</span>';
     hero.appendChild(tip); hero.appendChild(chip);
     /* (ค) มือถือ: ชิปอยู่ในเนื้อหา (ใต้ข้อความสมัครฟรี) ไม่ลอยทับข้อความอื่น */
-    if (matchMedia('(max-width:767px)').matches) { var fr = hero.querySelector('.hx-free'); if (fr && fr.parentNode) { fr.parentNode.insertBefore(chip, fr.nextSibling); chip.classList.add('flow'); } }
+    if (matchMedia('(max-width:767px)').matches || matchMedia('(min-width:1024px)').matches) { var fr = hero.querySelector('.hx-free'); if (fr && fr.parentNode) { fr.parentNode.insertBefore(chip, fr.nextSibling); chip.classList.add('flow'); } }
   }
   var cache = [], cacheSz = '';
   function check() {
@@ -7194,8 +7199,15 @@ if (window.VCGate3DReady) window.VCGate3DReady();
         tip.querySelector('b').textContent = '⚠ ' + key; tip.querySelector('span').textContent = WHY[key];
         if (!found[key]) { found[key] = 1; nFound++; armed = true; chip.querySelector('span').textContent = 'ส่องเจอแล้ว ' + nFound + ' จุด · ลองหาต่อ'; chip.classList.add('got'); }
       }
-      var right = pos.x < hero.clientWidth * .6, tw = tip.offsetWidth || 240;
+      var right = pos.x < hero.clientWidth * .6, tw = tip.offsetWidth || 240, th = tip.offsetHeight || 56;
       var x = right ? pos.x + R * 1.05 : pos.x - R * 1.05 - tw, y = pos.y - R * .9;
+      /* (จ) คอม: เลือกตำแหน่งที่ไม่ทับหัวข้อ/ปุ่ม/การ์ดตัวอย่าง ถ้าไม่มีที่ว่างก็ไม่แสดง */
+      if (innerWidth >= 1024) {
+        var avoid = ['.hero-title', '.dx-cta-row', '.hx-live', '.hero-lead'].map(function (q) { var e = hero.querySelector(q); if (!e) return null; var r = e.getBoundingClientRect(); return { l: r.left - hr.left - 8, t: r.top - hr.top - 8, r: r.right - hr.left + 8, b: r.bottom - hr.top + 8 }; }).filter(Boolean);
+        var cands = [[pos.x + R * 1.05, pos.y - th / 2], [pos.x - R * 1.05 - tw, pos.y - th / 2], [pos.x - tw / 2, pos.y + R * 1.08], [pos.x - tw / 2, pos.y - R * 1.08 - th]];
+        var ok = cands.map(function (c) { return [Math.max(10, Math.min(hero.clientWidth - tw - 10, c[0])), Math.max(70, c[1])]; }).filter(function (c) { return !avoid.some(function (a) { return c[0] < a.r && c[0] + tw > a.l && c[1] < a.b && c[1] + th > a.t; }); })[0];
+        if (ok) { x = ok[0]; y = ok[1]; } else { tip.classList.remove('on'); return; }
+      }
       x = Math.max(10, Math.min(hero.clientWidth - tw - 10, x)); y = Math.max(70, Math.min(hero.clientHeight - 90, y));
       tip.style.transform = 'translate3d(' + x.toFixed(0) + 'px,' + y.toFixed(0) + 'px,0)';
       tip.classList.add('on');
@@ -7467,4 +7479,16 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   setInterval(function () { if (on() && !document.hidden && inner.dataset.v !== ta.value) { inner.dataset.v = ta.value; paint(); } }, 600);
   (mq.addEventListener ? mq.addEventListener('change', paint) : mq.addListener(paint));
   paint();
+})();
+
+/* ===== v253 คอม: ลูกศร "เลื่อนดูต่อ" ใต้ฉากแรก (หายเมื่อเลื่อนลง) ===== */
+(function () {
+  'use strict';
+  var hero = document.querySelector('main > .hero'); if (!hero) return;
+  var a = document.createElement('button'); a.type = 'button'; a.className = 'vc-scue'; a.innerHTML = '<span>เลื่อนดูต่อ</span><i aria-hidden="true"></i>';
+  hero.appendChild(a);
+  a.addEventListener('click', function () { var t = hero.querySelector('.dx-points'); (t || hero).scrollIntoView({ behavior: 'smooth', block: 'center' }); });
+  function upd() { var t = hero.querySelector('.dx-points'), seen = t && t.getBoundingClientRect().top < innerHeight - 70; a.classList.toggle('gone', seen || (scrollY || document.documentElement.scrollTop) > 40); }
+  addEventListener('resize', upd); setTimeout(upd, 1200);
+  addEventListener('scroll', upd, { passive: true }); upd();
 })();
