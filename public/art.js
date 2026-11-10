@@ -7401,3 +7401,41 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   (mq.addEventListener ? mq.addEventListener('change', later) : mq.addListener(later));
   later(); setTimeout(later, 800);
 })();
+
+/* ===== v248 คอม (≥768): เน้น "ข้อ N" และตัวเลข+หน่วยในกล่องสัญญา เหมือนมือถือ (ชั้นเงาใต้ textarea — ไม่เปลี่ยนตัวอักษร ตำแหน่งจึงตรง) ===== */
+(function () {
+  'use strict';
+  var root = document.documentElement, mq = matchMedia('(min-width:768px)');
+  var ta = document.getElementById('input'), wrap = ta && ta.closest('.ta-wrap'); if (!wrap) return;
+  var mir = document.createElement('div'); mir.className = 'vc-dmir'; mir.setAttribute('aria-hidden', 'true');
+  var inner = document.createElement('div'); inner.className = 'vc-dmir-in'; mir.appendChild(inner);
+  wrap.insertBefore(mir, ta);
+  var NUM = /([0-9๐-๙][0-9๐-๙,.]*\s*(?:ล้านบาท|บาท|เปอร์เซ็นต์|%|วันทำการ|วัน|สัปดาห์|เดือน|ปี|ชั่วโมง|หน่วย))/g;
+  var bg0 = '';
+  function on() { return mq.matches && root.getAttribute('data-view') === 'desk' && root.getAttribute('data-desk') === 'check'; }
+  function paint() {
+    var ok = on() && ta.value.trim().length > 0;
+    wrap.classList.toggle('vc-dhl', ok); if (!ok) return;
+    var s = ta.value.replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; });
+    s = s.replace(/(^|\n)(\s*)(ข้อ(?:ที่)?\s*[0-9๐-๙]+(?:\.[0-9๐-๙]+)*)/g, '$1$2<span class="hk">$3</span>').replace(NUM, '<span class="hn">$1</span>');
+    inner.innerHTML = s + '\n​';
+    sync();
+  }
+  function sync() {
+    if (!wrap.classList.contains('vc-dhl')) return;
+    var cs = getComputedStyle(ta);
+    ['paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft', 'fontFamily', 'fontSize', 'fontWeight', 'lineHeight', 'letterSpacing', 'wordSpacing', 'textIndent', 'tabSize', 'borderTopWidth', 'borderLeftWidth', 'borderRightWidth', 'borderBottomWidth', 'borderTopLeftRadius', 'borderTopRightRadius', 'borderBottomLeftRadius', 'borderBottomRightRadius'].forEach(function (k) { mir.style[k] = cs[k]; });
+    mir.style.top = ta.offsetTop + 'px'; mir.style.left = ta.offsetLeft + 'px'; mir.style.width = ta.offsetWidth + 'px'; mir.style.height = ta.offsetHeight + 'px';
+    /* เผื่อแถบเลื่อนของ textarea: ความกว้างเนื้อหาต้องเท่ากัน */
+    inner.style.width = ta.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight) + 'px';
+    inner.style.transform = 'translate(' + (-ta.scrollLeft) + 'px,' + (-ta.scrollTop) + 'px)';
+  }
+  ta.addEventListener('input', paint); ta.addEventListener('scroll', sync, { passive: true });
+  new MutationObserver(paint).observe(root, { attributes: true, attributeFilter: ['data-view', 'data-desk'] });
+  if (window.ResizeObserver) new ResizeObserver(sync).observe(ta);
+  addEventListener('resize', sync);
+  /* ค่าที่ใส่ด้วยโค้ด (ตัวอย่าง/ร่าง) ไม่ยิง input — ตรวจเป็นระยะ */
+  setInterval(function () { if (on() && !document.hidden && inner.dataset.v !== ta.value) { inner.dataset.v = ta.value; paint(); } }, 600);
+  (mq.addEventListener ? mq.addEventListener('change', paint) : mq.addListener(paint));
+  paint();
+})();
