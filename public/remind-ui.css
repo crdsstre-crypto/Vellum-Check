@@ -1,0 +1,155 @@
+/* ===== แจ้งเตือนวันสำคัญในสัญญา (remind-ui.js) — ใช้ได้ทั้งคอมและมือถือ ===== */
+.vrm-card,.vrh,.vrm-strip{--vr-bg:#151517;--vr-bg2:#1d1d20;--vr-line:rgba(236,233,226,.12);--vr-line2:rgba(236,233,226,.22);--vr-tx:#ece9e2;--vr-dim:#a9a6a0;--vr-mute:#77746f;
+  --vr-acc:#e8c46a;--vr-red:#f0857c;--vr-amb:#f2be5c;--vr-ok:#5fd3a6;font-family:'Prompt','Sarabun',system-ui,sans-serif}
+.vrm-ic{display:inline-grid;place-items:center;flex:0 0 auto;width:38px;height:38px;border-radius:11px;background:rgba(232,196,106,.12);border:1px solid rgba(232,196,106,.28);color:var(--vr-acc)}
+.vrm-ic svg,.vrm-ics svg,.vrm-save svg,.vrm-ics-saved svg,.vrh-allcal svg,.vrh-cal svg,.vrm-menu .menu-ico svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.vrm-ic svg .f,.vrh-cal svg .f,.vrm-ics svg .f,.vrh-allcal svg .f,.vrm-ics-saved svg .f{fill:currentColor;stroke:none}
+
+/* ---------- การ์ดในผลตรวจ ---------- */
+.vrm-card{margin:22px 0 16px;padding:18px 18px 14px;border-radius:16px;background:var(--vr-bg);border:1px solid var(--vr-line);color:var(--vr-tx);text-align:left}
+.vrm-head{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;text-align:left}
+.vrm-head h4{margin:1px 0 3px;font:600 1.02rem/1.35 'Prompt',sans-serif;color:var(--vr-tx)}
+.vrm-head p{margin:0;font-size:.82rem;line-height:1.6;color:var(--vr-dim)}
+.vrm-list{display:flex;flex-direction:column;gap:8px}
+.vrm-row{display:flex;gap:10px;align-items:flex-start;padding:11px 10px 11px 12px;border-radius:12px;background:var(--vr-bg2);border:1px solid var(--vr-line);opacity:.62;transition:opacity .2s,border-color .2s}
+.vrm-row.is-on{opacity:1;border-color:var(--vr-line2)}
+.vrm-tick{position:relative;flex:0 0 auto;width:22px;height:22px;margin-top:5px;cursor:pointer}
+.vrm-tick input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.vrm-tick i{position:absolute;inset:0;border-radius:7px;border:1.5px solid var(--vr-line2);background:transparent;transition:background .15s,border-color .15s}
+.vrm-tick input:checked+i{background:var(--vr-acc);border-color:var(--vr-acc)}
+.vrm-tick input:checked+i::after{content:"";position:absolute;left:7px;top:3px;width:5px;height:10px;border:solid #1a1608;border-width:0 2.2px 2.2px 0;transform:rotate(45deg)}
+.vrm-tick input:focus-visible+i{outline:2px solid var(--vr-acc);outline-offset:2px}
+.vrm-main{flex:1;min-width:0}
+.vrm-title{display:block;width:100%;box-sizing:border-box;margin:0;padding:4px 6px;resize:none;overflow:hidden;min-height:0;border:1px solid transparent;border-radius:7px;background:transparent;color:var(--vr-tx);font:500 .95rem/1.45 'Prompt',sans-serif}
+.vrm-title:hover{border-color:var(--vr-line)}
+.vrm-title:focus{outline:none;border-color:var(--vr-acc);background:rgba(0,0,0,.25)}
+.vrm-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:5px 0 0 6px}
+.vrm-date{padding:5px 8px;border-radius:8px;border:1px solid var(--vr-line2);background:#0f0f11;color:var(--vr-tx);font:500 .84rem/1.2 'Prompt',sans-serif;color-scheme:dark;min-height:32px}
+.vrm-date:focus{outline:none;border-color:var(--vr-acc)}
+.vrm-left{font-size:.8rem;color:var(--vr-dim)}
+.vrm-left.is-near{color:var(--vr-amb)}
+.vrm-left.is-past{color:var(--vr-mute);text-decoration:line-through}
+.vrm-tag{padding:2px 8px;border-radius:99px;font-size:.7rem;line-height:1.5;color:var(--vr-acc);background:rgba(232,196,106,.1);border:1px solid rgba(232,196,106,.25)}
+.vrm-tag.is-calc{color:#9cc3ff;background:rgba(120,170,255,.08);border-color:rgba(120,170,255,.25);cursor:help}
+.vrm-src{display:block;margin:6px 0 0 6px;font:400 .76rem/1.55 'Taviraj','Sarabun',serif;color:var(--vr-mute);overflow-wrap:anywhere}
+.vrm-x{flex:0 0 auto;width:30px;height:30px;margin-top:2px;border:0;border-radius:8px;background:transparent;color:var(--vr-mute);font-size:13px;cursor:pointer}
+.vrm-x:hover{background:rgba(255,255,255,.06);color:var(--vr-tx)}
+.vrm-acts{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px}
+.vrm-sp{flex:1}
+.vrm-acts button{display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--vr-line2);background:transparent;color:var(--vr-tx);font:500 .86rem/1 'Prompt',sans-serif;cursor:pointer;transition:background .15s,border-color .15s}
+.vrm-acts button:hover{border-color:var(--vr-tx)}
+.vrm-acts .vrm-add{border-style:dashed;color:var(--vr-dim)}
+.vrm-acts .vrm-save,.vrm-acts .vrm-open{background:var(--vr-acc);border-color:var(--vr-acc);color:#1a1608;font-weight:600}
+.vrm-acts .vrm-save:hover,.vrm-acts .vrm-open:hover{filter:brightness(1.06)}
+.vrm-acts button:disabled{opacity:.5;cursor:default}
+.vrm-done{color:var(--vr-ok);font-weight:500;font-size:.88rem}
+.vrm-card.is-saved .vrm-row{opacity:.8}
+.vrm-card.is-saved .vrm-x,.vrm-card.is-saved .vrm-tick{display:none}
+.vrm-fine{margin:10px 0 0;font-size:.72rem;line-height:1.6;color:var(--vr-mute)}
+
+/* ---------- แถบเตือนบนหน้าตรวจ ---------- */
+.vrm-strip{display:flex;align-items:center;gap:10px;width:100%;box-sizing:border-box;margin:0 0 16px;padding:8px 8px 8px 10px;border-radius:14px;background:var(--vr-bg);border:1px solid var(--vr-line2);color:var(--vr-tx)}
+.vrm-strip .vrm-ic{width:34px;height:34px;border-radius:10px}
+.vrm-strip.is-near{border-color:rgba(242,190,92,.45)}
+.vrm-strip.is-near .vrm-ic{color:var(--vr-amb);background:rgba(242,190,92,.12);border-color:rgba(242,190,92,.35)}
+.vrm-strip.is-over{border-color:rgba(240,133,124,.45)}
+.vrm-strip.is-over .vrm-ic{color:var(--vr-red);background:rgba(240,133,124,.12);border-color:rgba(240,133,124,.35)}
+.vrs-main{flex:1;min-width:0;display:flex;align-items:center;gap:8px;padding:6px 2px;border:0;background:transparent;color:inherit;text-align:left;font:inherit;cursor:pointer}
+.vrs-main b{flex:0 0 auto;font-weight:600;font-size:.88rem}
+.vrm-strip.is-near .vrs-main b{color:var(--vr-amb)}
+.vrm-strip.is-over .vrs-main b{color:var(--vr-red)}
+.vrs-main span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.86rem;color:var(--vr-dim)}
+.vrs-main em{flex:0 0 auto;font-style:normal;font-size:.74rem;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,.07);color:var(--vr-dim)}
+.vrs-main i{font-style:normal;color:var(--vr-mute);font-size:1.2rem;line-height:1}
+.vrs-x{flex:0 0 auto;width:32px;height:32px;border:0;border-radius:8px;background:transparent;color:var(--vr-mute);cursor:pointer}
+.vrs-x:hover{background:rgba(255,255,255,.06);color:var(--vr-tx)}
+
+/* ---------- ปุ่มในเมนูบัญชี ---------- */
+.vrm-menu{position:relative}
+.vrm-menu .menu-ico{color:#e8c46a}
+.vrm-badge{margin-left:auto;min-width:22px;height:22px;padding:0 7px;box-sizing:border-box;display:inline-grid;place-items:center;border-radius:99px;background:#f2be5c;color:#1a1608;font:700 .72rem/1 'Prompt',sans-serif}
+.vrm-badge[hidden]{display:none}
+
+/* ---------- หน้าต่างรวมแจ้งเตือน: คอม = กลางจอ · มือถือ = แผ่นเลื่อนขึ้นจากล่าง ---------- */
+html.vrh-open,html.vrh-open body{overflow:hidden}
+.vrh{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:24px}
+.vrh[hidden]{display:none}
+.vrh-bg{position:absolute;inset:0;background:rgba(0,0,0,.62);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);animation:vrhFade .2s ease}
+.vrh-card{position:relative;display:flex;flex-direction:column;width:min(600px,100%);max-height:min(760px,calc(100vh - 48px));box-sizing:border-box;padding:20px 20px 14px;border-radius:20px;background:#121214;border:1px solid var(--vr-line2);color:var(--vr-tx);box-shadow:0 30px 80px -20px rgba(0,0,0,.8);animation:vrhIn .26s cubic-bezier(.16,1,.3,1)}
+.vrh-grip{display:none}
+.vrh-head{display:flex;gap:12px;align-items:flex-start;text-align:left}
+.vrh-head>div{flex:1;min-width:0}
+.vrh-head h3{margin:2px 0 3px;font:600 1.18rem/1.3 'Prompt',sans-serif;color:var(--vr-tx)}
+.vrh-head p{margin:0;font-size:.82rem;line-height:1.55;color:var(--vr-dim)}
+.vrh-x{flex:0 0 auto;width:38px;height:38px;border-radius:50%;border:1px solid var(--vr-line2);background:transparent;color:var(--vr-tx);cursor:pointer;font-size:14px}
+.vrh-x:hover{border-color:var(--vr-tx)}
+.vrh-tools{display:flex;gap:8px;margin:16px 0 10px}
+.vrh-tools button{display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--vr-line2);background:transparent;color:var(--vr-tx);font:500 .86rem/1 'Prompt',sans-serif;cursor:pointer}
+.vrh-tools button:hover{border-color:var(--vr-tx)}
+.vrh-tools button:disabled{opacity:.45;cursor:default}
+.vrh-new{border-style:dashed !important}
+.vrh-form{display:flex;flex-direction:column;gap:8px;margin:0 0 10px;padding:12px;border-radius:12px;background:var(--vr-bg2);border:1px solid var(--vr-line2)}
+.vrh-form[hidden]{display:none}
+.vrh-form input,.vrh-form select{box-sizing:border-box;min-height:40px;padding:0 10px;border-radius:9px;border:1px solid var(--vr-line2);background:#0f0f11;color:var(--vr-tx);font:400 .9rem 'Prompt',sans-serif;color-scheme:dark}
+.vrh-form input:focus,.vrh-form select:focus{outline:none;border-color:var(--vr-acc)}
+.vrh-form-r{display:flex;gap:8px}
+.vrh-form-r input{flex:1;min-width:0}
+.vrh-form button{min-height:40px;padding:0 16px;border-radius:9px;border:0;background:var(--vr-acc);color:#1a1608;font:600 .88rem 'Prompt',sans-serif;cursor:pointer}
+.vrh-body{flex:1;min-height:120px;overflow:auto;margin:0 -6px;padding:0 6px;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.vrh-g{margin:6px 0 14px}
+.vrh-g h5{display:flex;align-items:center;gap:8px;margin:0 0 8px;font:600 .78rem/1 'Prompt',sans-serif;color:var(--vr-dim);letter-spacing:.01em}
+.vrh-g h5 span{padding:3px 8px;border-radius:99px;background:rgba(255,255,255,.07);font-weight:500}
+.vrh-over h5{color:var(--vr-red)}
+.vrh-soon h5{color:var(--vr-amb)}
+.vrh-g ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.vrh-row{display:flex;align-items:center;gap:12px;padding:10px 8px 10px 10px;border-radius:12px;background:var(--vr-bg2);border:1px solid var(--vr-line)}
+.vrh-day{flex:0 0 auto;width:48px;padding:6px 0 5px;border-radius:10px;background:#0f0f11;border:1px solid var(--vr-line2);text-align:center}
+.vrh-day b{display:block;font:600 1.15rem/1.05 'Prompt',sans-serif}
+.vrh-day small{display:block;margin-top:2px;font-size:.66rem;color:var(--vr-dim)}
+.vrh-row.is-near .vrh-day{border-color:rgba(242,190,92,.5)}
+.vrh-row.is-near .vrh-day b{color:var(--vr-amb)}
+.vrh-row.is-over .vrh-day{border-color:rgba(240,133,124,.5)}
+.vrh-row.is-over .vrh-day b{color:var(--vr-red)}
+.vrh-txt{flex:1;min-width:0}
+.vrh-txt b{display:block;font:500 .9rem/1.45 'Prompt',sans-serif;color:var(--vr-tx);overflow-wrap:anywhere}
+.vrh-txt small{display:block;margin-top:2px;font-size:.76rem;color:var(--vr-dim)}
+.vrh-row.is-near .vrh-txt small{color:var(--vr-amb)}
+.vrh-row.is-over .vrh-txt small{color:var(--vr-red)}
+.vrh-row.is-done{opacity:.55}
+.vrh-row.is-done .vrh-txt b{text-decoration:line-through}
+.vrh-acts{flex:0 0 auto;display:flex;gap:4px}
+.vrh-acts button{display:inline-grid;place-items:center;min-width:36px;height:36px;padding:0 6px;border-radius:9px;border:1px solid transparent;background:transparent;color:var(--vr-dim);font:600 .82rem 'Prompt',sans-serif;cursor:pointer}
+.vrh-acts button:hover{background:rgba(255,255,255,.06);color:var(--vr-tx)}
+.vrh-acts .vrh-done:hover{color:var(--vr-ok)}
+.vrh-row.is-done .vrh-done{color:var(--vr-ok)}
+.vrh-acts .vrh-del.is-arm{color:#1a0b09;background:var(--vr-red)}
+.vrh-empty{padding:26px 10px;text-align:center;color:var(--vr-dim);font-size:.88rem;line-height:1.7}
+.vrh-empty .vrm-ic{margin:0 auto 10px}
+.vrh-empty b{display:block;color:var(--vr-tx);font-weight:600;margin-bottom:4px}
+.vrh-empty p{margin:0 auto;max-width:34em}
+.vrh-fine{margin:8px 0 0;font-size:.72rem;line-height:1.55;color:var(--vr-mute)}
+@keyframes vrhFade{from{opacity:0}}
+@keyframes vrhIn{from{opacity:0;transform:translateY(14px) scale(.98)}}
+@keyframes vrhUp{from{transform:translateY(100%)}}
+
+@media (max-width:767px){
+  .vrm-card{margin:18px 0 14px;padding:16px 14px 12px}
+  .vrm-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .vrm-acts .vrm-sp{display:none}
+  .vrm-acts .vrm-add{grid-column:1/-1;justify-content:center}
+  .vrm-acts button{justify-content:center;min-height:44px;padding:0 10px}
+  .vrm-acts .vrm-done{grid-column:1/-1}
+  .vrm-date{min-height:36px;font-size:16px}  /* 16px กัน iPhone ซูมเข้าเองตอนแตะ */
+  .vrm-title{font-size:16px}
+  .vrh{align-items:flex-end;padding:0}
+  .vrh-card{width:100%;max-height:88vh;max-height:88dvh;border-radius:22px 22px 0 0;padding:8px 16px calc(14px + env(safe-area-inset-bottom));border-bottom:0;animation:vrhUp .3s cubic-bezier(.16,1,.3,1)}
+  .vrh-grip{display:block;width:40px;height:5px;margin:2px auto 12px;border-radius:9px;background:rgba(255,255,255,.18)}
+  .vrh-tools button{flex:1;justify-content:center;min-height:44px}
+  .vrh-form input,.vrh-form select{font-size:16px;min-height:44px}
+  .vrh-form-r{flex-wrap:wrap}
+  .vrh-form-r input{flex:1 1 100%}
+  .vrh-form-r select,.vrh-form-r button{flex:1}
+  .vrh-row{gap:10px;padding:9px 6px 9px 9px}
+  .vrh-acts button{min-width:38px;height:38px}
+}
+@media (prefers-reduced-motion:reduce){.vrh-bg,.vrh-card{animation:none !important}}
