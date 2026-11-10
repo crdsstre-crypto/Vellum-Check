@@ -6800,3 +6800,53 @@ html.vc-dsc-open :is(.vc-bn,.vc-fpill,.vc-stick,.hx-lens,.hx-pool,.hx-tip,.hx-hu
 .vsl-thumb.v2 .vsl-th-t b{display:block !important;height:auto !important;width:auto !important;background:none !important;border-radius:0 !important}
 .vsl-thumb.v2 .tl{height:auto !important}
 .vsl-thumb.v2 .tl em{display:inline !important;font:inherit !important;color:inherit !important;margin:0 !important;letter-spacing:0 !important}
+/* ===== v253 กระดาษย่อแต่ละใบไม่ซ้ำ + แก้ตัดคำ/แถบ/ชื่อ/กรอบปุ่ม ===== */
+/* (ง) กล่องเลือกไม่โฟกัสปุ่มเองตอนเปิด → ไม่มีกรอบซ้อน · การ์ดรับโฟกัสแทน */
+.vsl-card:focus{outline:none}
+/* (ก) ข้อความจางที่ขอบขวา ไม่ตัดกึก */
+.vsl-thumb.v2 .tl{-webkit-mask-image:linear-gradient(90deg,#000 78%,transparent 98%);mask-image:linear-gradient(90deg,#000 78%,transparent 98%);overflow:hidden !important;padding-left:12px;margin-left:-12px}
+/* (ข) แถบขอบซ้ายเห็นเป็นเส้นชัด */
+.vsl-thumb.v2 .tl[class*="r-"] > i{left:2px !important;top:1px !important;bottom:1px !important;width:6px !important;border-radius:3px}
+/* (ค) ชื่อสัญญาสองบรรทัดได้ · เว้นที่ด้านบนให้ตัวยึด */
+.vsl-thumb.v2 .vsl-th-t{padding-top:22px !important}
+.vsl-thumb.v2 .vsl-th-t b{white-space:normal !important;display:-webkit-box !important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:13px !important;line-height:1.25 !important}
+.vsl-thumb.v2 .tclip{display:none}
+/* (4) จำนวนแผ่น + องศาต่างกัน */
+.vsl-thumb.v2 .vsl-th-p{transform:rotate(var(--tr,1deg)) !important}
+.vsl-thumb.v2.n1::before{display:none !important}
+.vsl-thumb.v2.n3::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:4px;background:#ddd2bc;transform:rotate(4deg) translate(3px,2px);box-shadow:0 6px 12px -8px rgba(0,0,0,.8)}
+.vsl-thumb.v2{isolation:isolate}
+.vsl-thumb.v2::before{z-index:-1}
+/* (3) สีกระดาษ */
+.vsl-thumb.v2{--pp:#fbf6ea;--pp2:#f1e7d2}
+.vsl-thumb.v2.p-white{--pp:#ffffff;--pp2:#f2f1ee}
+.vsl-thumb.v2.p-mist{--pp:#f3f6fa;--pp2:#e3e9f1}
+.vsl-thumb.v2.p-kraft{--pp:#f6ead2;--pp2:#e8d6b2}
+.vsl-thumb.v2.p-ledger{--pp:#f2f8ef;--pp2:#dfebd8}
+.vsl-thumb.v2 .vsl-th-p{background:linear-gradient(180deg,var(--pp),var(--pp2)) !important}
+/* (1) แบบเอกสารตามประเภท */
+.vsl-thumb.v2.c-rent .vsl-th-p{background:repeating-linear-gradient(180deg,transparent 0 8.5px,rgba(120,140,170,.18) 8.5px 9px) 0 14px/100% calc(100% - 14px) no-repeat,linear-gradient(180deg,var(--pp),var(--pp2)) !important}
+.vsl-thumb.v2.c-sale .vsl-th-p{box-shadow:inset 0 0 0 2.5px var(--pp),inset 0 0 0 3.2px rgba(120,95,55,.45),inset 0 0 0 4.5px var(--pp),inset 0 0 0 5px rgba(120,95,55,.35),0 10px 18px -10px rgba(0,0,0,.9) !important}
+.vsl-thumb.v2.c-employment .vsl-th-p{background:linear-gradient(180deg,#2f4f6f 0 7px,#c9a24a 7px 8px,transparent 8px),linear-gradient(180deg,var(--pp),var(--pp2)) !important}
+.vsl-thumb.v2.c-service .vsl-th-p{background:linear-gradient(rgba(90,130,170,.12) 1px,transparent 1px) 0 0/6px 6px,linear-gradient(90deg,rgba(90,130,170,.12) 1px,transparent 1px) 0 0/6px 6px,linear-gradient(180deg,var(--pp),var(--pp2)) !important}
+.vsl-thumb.v2.c-loan .vsl-th-p{background:repeating-linear-gradient(45deg,rgba(150,110,60,.07) 0 2px,transparent 2px 5px),repeating-linear-gradient(-45deg,rgba(150,110,60,.07) 0 2px,transparent 2px 5px),linear-gradient(180deg,var(--pp),var(--pp2)) !important}
+.vsl-thumb.v2.c-other .vsl-th-p,.vsl-thumb.v2.c-unsure .vsl-th-p{border-left:3px double rgba(200,80,80,.35) !important}
+.tdeco{position:absolute;pointer-events:none;font-style:normal}
+.tdeco.t-secret{right:3px;top:9px;padding:1px 4px;border:1.2px solid rgba(200,40,50,.55);border-radius:2px;color:rgba(200,40,50,.65);font:800 7px/1.1 Prompt,sans-serif;transform:rotate(12deg)}
+.tdeco.t-sig{left:6px;right:6px;bottom:5px;display:flex;gap:6px}
+.tdeco.t-sig i{flex:1;height:0;border-bottom:1px dotted rgba(90,70,40,.55)}
+/* (2) ตัวยึดกระดาษคนละแบบ */
+.vsl-thumb.v2 .tbind{position:absolute;z-index:4;pointer-events:none}
+.vsl-thumb.v2.b-clip .tbind{top:-6px;left:10px;width:5px;height:14px;border:1.6px solid #d8b46a;border-bottom:0;border-radius:3px 3px 0 0;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4))}
+.vsl-thumb.v2.b-staple .tbind{top:4px;left:6px;width:9px;height:2px;background:#a7a9b0;box-shadow:0 0 0 .4px #6b6e75,6px 4px 0 0 #a7a9b0;transform:rotate(-35deg)}
+.vsl-thumb.v2.b-binder .tbind{top:-5px;left:50%;width:18px;height:8px;margin-left:-9px;border-radius:2px 2px 1px 1px;background:linear-gradient(180deg,#2a2a2e,#111);box-shadow:0 1px 2px rgba(0,0,0,.5)}
+.vsl-thumb.v2.b-binder .tbind::before{content:"";position:absolute;left:3px;right:3px;top:-6px;height:7px;border:1.3px solid #9aa0a8;border-bottom:0;border-radius:4px 4px 0 0}
+.vsl-thumb.v2.b-pin .tbind{top:-2px;left:50%;width:9px;height:9px;margin-left:-4.5px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ff8a8a,#d62f3a 60%,#8f1720);box-shadow:1px 2px 2px rgba(0,0,0,.45)}
+.vsl-thumb.v2.b-tape .tbind{top:-4px;left:-5px;width:22px;height:8px;background:rgba(235,230,210,.6);border:.5px solid rgba(0,0,0,.06);transform:rotate(-30deg);box-shadow:0 1px 1px rgba(0,0,0,.12)}
+.vsl-thumb.v2.b-fold .vsl-th-p{clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%)}
+.vsl-thumb.v2.b-fold .tbind{top:0;right:0;width:12px;height:12px;background:linear-gradient(225deg,transparent 50%,#e2d6bd 50%,#f4ecda);box-shadow:-1px 1px 2px rgba(0,0,0,.2);transform:rotate(var(--tr,0deg));transform-origin:-200% 300%}
+.vsl-thumb.v2.b-tape .tbind{background:rgba(250,245,225,.85) !important;border:.6px solid rgba(120,100,60,.25) !important;width:24px;height:9px;box-shadow:0 1px 2px rgba(0,0,0,.25) !important}
+.vsl-thumb.v2 .vsl-th-p > .tdeco.t-secret{display:block !important;height:auto !important;background:none !important;z-index:3}
+.vsl-thumb.v2 .vsl-th-p > .tdeco.t-sig{display:flex !important;height:auto !important;background:none !important}
+.vsl-thumb.v2.b-tape .tbind{background:repeating-linear-gradient(90deg,rgba(205,200,185,.9) 0 3px,rgba(225,220,205,.9) 3px 6px) !important;border:.6px solid rgba(110,95,60,.35) !important}
+.vsl-thumb.v2 .vsl-th-p > .tdeco.t-secret{top:auto !important;bottom:6px;right:4px;font-size:8px;background:rgba(255,255,255,.6) !important}
