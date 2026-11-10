@@ -3682,7 +3682,11 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       var m = /^ข้อ (\d+)/.exec(ln), r = m ? lv[m[1]] : (/พยาน/.test(ln) ? lv.p : '');
       h += '<span class="tl' + (r ? ' r-' + r : '') + '"><i></i><em>' + esc(ln) + '</em></span>';
     });
-    return '<span class="vsl-thumb v2" aria-hidden="true"><i class="tclip"></i><span class="vsl-th-p"><span class="vsl-th-t"><b>' + esc(all[0] || '') + '</b>' + h + '</span></span></span>';
+    /* v258 แต่ละใบไม่ซ้ำ: แบบเอกสารตามประเภท · ตัวยึด · สีกระดาษ · จำนวนแผ่น/องศา (คงที่ตามลำดับฉบับ) */
+    var BIND = ['clip', 'staple', 'binder', 'pin', 'tape', 'fold'], TONE = ['cream', 'white', 'mist', 'kraft', 'ledger'], ROTS = [1.5, -1.2, 2.2, -2, .6, -.6, 1.8];
+    var cat = s[0] || 'other', deco = { nda: '<i class="tdeco t-secret">ลับ</i>', shareholder: '<i class="tdeco t-sig"><i></i><i></i></i>' }[cat] || '';
+    var cls = 'vsl-thumb v2 c-' + cat + ' b-' + BIND[i % 6] + ' p-' + TONE[(i * 3 + 1) % 5] + ' n' + (1 + i % 3);
+    return '<span class="' + cls + '" style="--tr:' + ROTS[i % 7] + 'deg" aria-hidden="true"><i class="tbind"></i><span class="vsl-th-p"><span class="vsl-th-t"><b>' + esc(all[0] || '') + '</b>' + h + '</span>' + deco + '</span></span>';
   }
   /* มือถือ: แถบระดับความเสี่ยงพร้อมคำบอก (จากผลตัวอย่างที่เตรียมไว้จริง) */
   function bar(t) {
@@ -3833,7 +3837,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     box.classList.remove('is-scrolled');
     box.classList.toggle('vsl-split', isSplit());
     render(); box.hidden = false; requestAnimationFrame(function () { box.classList.add('is-open'); });
-    setTimeout(function () { var c = box.querySelector('.vsl-chip.is-on'); if (c) { c.focus(); c.scrollIntoView({ inline: 'center', block: 'nearest' }); } }, 60);
+    setTimeout(function () { var c = box.querySelector('.vsl-chip.is-on'); if (c) { c.scrollIntoView({ inline: 'center', block: 'nearest' }); } var cd = box.querySelector('.vsl-card') || box; if (!cd.hasAttribute('tabindex')) cd.setAttribute('tabindex', '-1'); try { cd.focus({ preventScroll: true }); } catch (er) {} }, 60);
   }
   function close() { if (!box) return; box.classList.remove('is-open'); setTimeout(function () { box.hidden = true; }, 220); }
   document.addEventListener('click', function (e) {
