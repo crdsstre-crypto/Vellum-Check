@@ -6805,38 +6805,45 @@ if (window.VCGate3DReady) window.VCGate3DReady();
 
   /* ---------- 7) ฉากเปิดผลตัวอย่าง: สแกน → ประทับตราทีละจุดเสี่ยง ---------- */
   window.__vcDemoScene = function (text, result) {
+    /* v256: กระดาษแบบเดียวกับหน้าแรก · ใหญ่เกือบเต็มจอ · ขั้นตอนใต้กระดาษ · จบแล้วกระดาษลอยขึ้น ผลเลื่อนขึ้นมาแทน (ไม่ค้าง) */
     return new Promise(function (done) {
-      var lines = text.split('\n').map(function (l) { return l.trim(); }).filter(Boolean).slice(0, 11);
+      var lines = text.split('\n').map(function (l) { return l.trim(); }).filter(Boolean).slice(0, 10);
       var title = lines.shift() || 'สัญญา';
-      var lv = {}; (result.items || []).forEach(function (it) {
+      var lv = {}, tp = {}, RK = { check_detail: 0, caution: 1, low: 2 };
+      (result.items || []).forEach(function (it) {
         var q = (it.quote || '').trim(); if (!q) return;
-        for (var k = 0; k < lines.length; k++) if (lines[k] === q || q.indexOf(lines[k]) === 0 || lines[k].indexOf(q) === 0) { if (!lv[k] || it.level === 'check_detail') lv[k] = it.level; break; }
+        for (var k = 0; k < lines.length; k++) if (lines[k] === q || q.indexOf(lines[k]) === 0 || lines[k].indexOf(q) === 0) { if (!lv[k] || RK[it.level] < RK[lv[k]]) { lv[k] = it.level; tp[k] = it.topic || it.title || ''; } break; }
       });
-      var tot = Object.keys(lv).length;
-      var el = document.createElement('div'); el.className = 'vc-dsc'; el.setAttribute('role', 'status'); el.setAttribute('aria-live', 'polite');
-      el.innerHTML = '<div class="vc-dsc-card">' +
-        '<div class="vc-dsc-paper"><h5>' + esc(title.slice(0, 36)) + '</h5>' +
-          lines.map(function (l, k) { return '<p data-k="' + k + '"><span>' + esc(l.slice(0, 60)) + '</span>' + (lv[k] ? '<i class="vc-dsc-st ' + ({ check_detail: 'h', caution: 'c', low: 'l' }[lv[k]]) + '">!</i>' : '') + '</p>'; }).join('') +
-          '<i class="vc-dsc-scan"></i></div>' +
-        '<div class="vc-dsc-h"><b>กำลังเปิดผลตัวอย่าง</b><span class="vc-dsc-cnt">พบ <em>0</em> จุดเสี่ยง</span></div>' +
-        '<p class="vc-dsc-note">ผลที่เตรียมไว้ล่วงหน้า · ไม่ใช้เครดิต</p></div>';
+      var L = { check_detail: 'h', caution: 'c', low: 'l' }, tot = Object.keys(lv).length;
+      var el = document.createElement('div'); el.className = 'vc-ds2'; el.setAttribute('role', 'status'); el.setAttribute('aria-live', 'polite');
+      el.innerHTML = '<div class="d2-card">' +
+        '<div class="d2-stack"><i class="d2-clip" aria-hidden="true"></i><div class="d2-paper"><span class="d2-wm" aria-hidden="true">ตัวอย่าง</span><h5>' + esc(title.slice(0, 40)) + '</h5>' +
+          lines.map(function (l, k) { var c = L[lv[k]] || ''; return '<p data-k="' + k + '"' + (c ? ' class="r-' + c + '"' : '') + '>' + (c ? '<i class="d2-mk"></i>' : '') + '<span class="d2-tx"><span>' + esc(l.slice(0, 70)) + '</span></span>' + (c ? '<i class="d2-fl' + (String(tp[k]).length > 9 ? ' lg' : '') + '"><span>' + esc(String(tp[k]).slice(0, 14)) + '</span></i>' : '') + '</p>'; }).join('') +
+          '<i class="d2-scan"></i></div></div>' +
+        '<div class="d2-h"><b>กำลังเปิดผลตัวอย่าง</b><span class="d2-cnt">พบ <em>0</em> จุดที่ควรดู</span></div>' +
+        '<ol class="d2-steps"><li>อ่านข้อความ</li><li>หาจุดเสี่ยง</li><li>เตรียมคำแนะนำ</li></ol>' +
+        '<p class="d2-note">ผลที่เตรียมไว้ล่วงหน้า · ไม่ใช้เครดิต</p></div>';
       document.body.appendChild(el); document.documentElement.classList.add('vc-dsc-open');
-      var ps = [].slice.call(el.querySelectorAll('.vc-dsc-paper p')), cnt = el.querySelector('.vc-dsc-cnt em'), hits = 0;
+      var ps = [].slice.call(el.querySelectorAll('.d2-paper p')), cnt = el.querySelector('.d2-cnt em'), st = el.querySelectorAll('.d2-steps li'), hits = 0;
+      function step(i) { [].forEach.call(st, function (x, j) { x.classList.toggle('done', j < i); x.classList.toggle('on', j === i); }); }
       var fin = function () {
+        step(3); el.querySelector('.d2-h b').textContent = 'พร้อมแล้ว';
         el.classList.add('out'); document.documentElement.classList.remove('vc-dsc-open');
-        setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 320); done();
+        done();   /* ผลเริ่มแสดงทันทีใต้ฉาก ระหว่างที่กระดาษลอยขึ้นและจางหาย */
+        setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 560);
       };
-      if (calm()) { ps.forEach(function (p) { p.classList.add('hit'); }); cnt.textContent = tot; el.classList.add('in', 'end'); setTimeout(fin, 900); return; }
-      requestAnimationFrame(function () { el.classList.add('in'); });
-      var t0 = 380, span = 1500;
+      if (calm()) { ps.forEach(function (p) { p.classList.add('seen', 'hit'); }); cnt.textContent = tot; step(3); el.classList.add('in'); setTimeout(fin, 900); return; }
+      requestAnimationFrame(function () { el.classList.add('in'); step(0); });
+      var t0 = 420, span = 1700;
+      setTimeout(function () { step(1); }, t0 + span * .3);
       ps.forEach(function (p, k) {
         setTimeout(function () {
           p.classList.add('seen');
-          if (lv[k]) { p.classList.add('hit'); hits++; cnt.textContent = hits; el.querySelector('.vc-dsc-cnt').classList.remove('pop'); void el.offsetWidth; el.querySelector('.vc-dsc-cnt').classList.add('pop'); try { navigator.vibrate && navigator.vibrate(8); } catch (e) {} }
+          if (lv[k]) { p.classList.add('hit'); hits++; cnt.textContent = hits; var c = el.querySelector('.d2-cnt'); c.classList.remove('pop'); void c.offsetWidth; c.classList.add('pop'); try { navigator.vibrate && navigator.vibrate(8); } catch (e) {} }
         }, t0 + span * (k + .6) / Math.max(1, ps.length));
       });
-      setTimeout(function () { el.classList.add('end'); el.querySelector('.vc-dsc-h b').textContent = 'กำลังเปิดผล…'; }, t0 + span + 80);
-      setTimeout(fin, t0 + span + 800);
+      setTimeout(function () { step(2); }, t0 + span + 60);
+      setTimeout(fin, t0 + span + 520);
     });
   };
 })();
