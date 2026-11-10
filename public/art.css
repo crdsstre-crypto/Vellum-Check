@@ -6370,3 +6370,93 @@ html.vc-art .hx-live .hxl-h{font:700 15px/1.3 Taviraj,Prompt,serif !important;le
 @media (min-width:1024px){html.vc-art.vc-wide[data-view="desk"][data-desk="check"] main > #resultCard > :is(h2,.rs-guide){display:none !important}}
 @media (min-width:1024px){html.vc-wide #result :is(details.item,#issueIndex,.miss,.rpt-head){scroll-margin-top:140px}}
 @media (min-width:1024px) and (max-width:1199px){html.vc-wide #resultCard > #result{padding:0 30px !important}}
+/* ===== v237 หน้าตรวจบนคอมไม่โล่ง (≥1024 · มือถือไม่แตะ) ===== */
+.vc-steps,.vc-rprev,.vc-tips,.vc-deskbg{display:none}
+@media (min-width:1024px){
+  /* (2)+(ข) แถบขั้นตอนแทนช่องว่างใต้หัวเว็บ */
+  html.vc-deskck main > .vc-steps{display:flex;grid-row:5;grid-column:2 / -2;align-items:center;justify-content:center;gap:0;margin:calc(64px + 22px) 0 0;padding:10px 14px;border-radius:99px;justify-self:center;
+    background:rgba(255,255,255,.03);border:1px solid var(--k-line,rgba(255,255,255,.08));font-family:var(--k-ff,Prompt),sans-serif;position:relative;z-index:2}
+  html.vc-deskck.vc-spa[data-view="desk"][data-desk="check"] #checkCard{margin-top:18px !important}
+  html.vc-deskck.vc-spa[data-view="desk"][data-desk="check"] main > #resultCard{margin-top:18px !important}
+  html.vc-art.vc-spa.vc-wide.vc-deskck[data-view="desk"][data-desk="check"] main > #checkCard{margin-top:18px !important}
+  .vcs-s{display:inline-flex !important;align-items:center;gap:8px;min-height:36px !important;height:36px !important;padding:0 12px 0 6px !important;border:0 !important;border-radius:99px !important;background:transparent !important;color:var(--k-mu,#8f8f96) !important;font:500 13.5px/1 var(--k-ff,Prompt),sans-serif !important;cursor:pointer;transition:background .2s,color .2s}
+  .vcs-s::before,.vcs-s::after{display:none !important}
+  .vcs-s i{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;border:1.5px solid currentColor;font:700 12px/1 var(--k-ff,Prompt),sans-serif;font-style:normal;transition:all .25s}
+  .vcs-s:hover{color:var(--k-tx,#ededef) !important;background:rgba(255,255,255,.04) !important}
+  .vcs-s.on{color:#f5f5f4 !important;background:rgba(255,255,255,.07) !important}
+  .vcs-s.on i{background:#f0e6d2;border-color:#f0e6d2;color:#1c1712;box-shadow:0 0 0 4px rgba(240,230,210,.12)}
+  .vcs-s.done{color:#6ee7b7 !important}
+  .vcs-s.done i{background:rgba(52,211,153,.16);border-color:#34d399;color:transparent;position:relative}
+  .vcs-s.done i::after{content:"";position:absolute;width:9px;height:5px;border:2px solid #34d399;border-top:0;border-right:0;transform:translateY(-1px) rotate(-45deg)}
+  .vcs-ln{display:block;width:clamp(24px,4vw,64px);height:2px;margin:0 4px;border-radius:2px;background:rgba(255,255,255,.1);position:relative;overflow:hidden}
+  .vcs-ln::after{content:"";position:absolute;inset:0;background:#34d399;transform:scaleX(0);transform-origin:left;transition:transform .5s ease}
+  .vcs-ln.done::after{transform:none}
+  /* (1)+(ก) ตัวอย่างหน้าตาผลตรวจแทนรายการ 1-2-3 */
+  html.vc-deskck:not(.vc-ck-hasres) #resultCard > .rs-guide{display:none !important}
+  html.vc-deskck:not(.vc-ck-hasres) #resultCard > .vc-rprev{display:block;margin:4px 0 16px}
+  html.vc-deskck:not(.vc-ck-hasres) #resultCard > .vc-tips{display:block}
+  html.vc-deskck:not(.vc-ck-hasres) #resultCard > #result:has(> .empty-art){display:none}
+  .vrp-hd{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 10px}
+  .vrp-tag{padding:4px 10px;border-radius:99px;background:rgba(240,207,143,.12);border:1px solid rgba(240,207,143,.3);color:#f0cf8f;font:600 11.5px/1 var(--k-ff,Prompt),sans-serif}
+  .vrp-src{font-size:11.5px;color:var(--k-mu,#8f8f96)}
+  .vrp-card{position:relative;padding:16px;border-radius:16px;background:linear-gradient(170deg,rgba(255,255,255,.05),rgba(255,255,255,.015));border:1px solid var(--k-line,rgba(255,255,255,.09));cursor:pointer;transition:border-color .2s,transform .25s;overflow:hidden}
+  .vrp-card::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46px;background:linear-gradient(transparent,rgba(17,17,19,.95));pointer-events:none}
+  .vrp-card:hover{border-color:rgba(240,207,143,.35);transform:translateY(-2px)}
+  .vrp-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .vrp-k{display:block;font:500 10px/1.2 'IBM Plex Mono',monospace;letter-spacing:.14em;color:var(--k-mu,#8f8f96)}
+  .vrp-t{display:block;margin-top:4px;font:600 17px/1.3 var(--k-ff,Prompt),sans-serif;color:var(--k-tx,#ededef)}
+  .vrp-g{display:flex;flex-direction:column;align-items:center;gap:2px}
+  .vrp-g svg{width:78px;height:46px;overflow:visible}
+  .vrp-g .t,.vrp-g .a{fill:none;stroke-width:9;stroke-linecap:round}
+  .vrp-g .t{stroke:rgba(255,255,255,.1)}
+  .vrp-g .a{stroke:url(#vrpG);stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--f,0))}
+  .vrp-g .n{transform-origin:50px 52px;transform:rotate(calc(-90deg + var(--f,0) * 180deg))}
+  .vrp-g .n line{stroke:#f5f5f4;stroke-width:3.5;stroke-linecap:round}.vrp-g .n circle{fill:#f5f5f4}
+  .vrp-g em{font:700 11px/1 var(--k-ff,Prompt),sans-serif;font-style:normal;color:#fca5a5}
+  .vrp-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+  .vrp-tiles span{display:flex;flex-direction:column;gap:1px;padding:8px 10px;border-radius:10px;font:500 11.5px/1.2 var(--k-ff,Prompt),sans-serif}
+  .vrp-tiles b{font-size:22px;font-weight:700;line-height:1.1}
+  .vrp-tiles .t-h{background:rgba(239,68,68,.12);color:#fca5a5}.vrp-tiles .t-c{background:rgba(245,158,11,.12);color:#fcd34d}.vrp-tiles .t-l{background:rgba(59,130,246,.12);color:#93c5fd}
+  .vrp-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+  .vrp-list li{display:flex;flex-direction:column;gap:2px;padding:9px 11px 10px 13px;border-radius:10px;background:rgba(255,255,255,.03);box-shadow:inset 3px 0 0 var(--c)}
+  .vrp-list li.r-h{--c:#ef4444}.vrp-list li.r-c{--c:#f59e0b}.vrp-list li.r-l{--c:#3b82f6}
+  .vrp-lv{font:600 10.5px/1.2 var(--k-ff,Prompt),sans-serif;color:var(--c)}
+  .vrp-list b{font:600 13.5px/1.35 var(--k-ff,Prompt),sans-serif;color:var(--k-tx,#ededef)}
+  .vrp-fx{font-size:12px;line-height:1.45;color:var(--k-mu,#a3a3aa);display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+  .vrp-more{position:relative;z-index:1;margin-top:10px;font-size:12px;color:var(--k-mu,#8f8f96);text-align:center}
+  .vrp-go{display:flex !important;align-items:center;justify-content:center;gap:8px;width:100%;min-height:46px !important;height:auto !important;margin-top:12px;border:0 !important;border-radius:13px !important;background:linear-gradient(135deg,#34d399,#22d3ee) !important;color:#04281b !important;font:700 14px/1 var(--k-ff,Prompt),sans-serif !important;cursor:pointer;box-shadow:0 12px 26px -14px rgba(52,211,153,.9)}
+  .vrp-go::before,.vrp-go::after{display:none !important}
+  .vrp-go b{transition:transform .2s}.vrp-go:hover b{transform:translateX(3px)}
+  /* (4) การ์ดก่อนวางสัญญา */
+  .vc-tips{padding:16px 16px 6px;border-radius:16px;background:rgba(255,255,255,.025);border:1px solid var(--k-line,rgba(255,255,255,.08))}
+  .vct-h{display:block;margin:0 0 10px;font:600 14px/1.3 var(--k-ff,Prompt),sans-serif;color:var(--k-tx,#ededef)}
+  .vc-tips ul{list-style:none;margin:0;padding:0}
+  .vc-tips li{display:flex;gap:11px;padding:0 0 12px}
+  .vc-tips li > i{flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:rgba(240,207,143,.1);border:1px solid rgba(240,207,143,.22)}
+  .vc-tips li svg{width:16px;height:16px;fill:none;stroke:#e9c27a;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .vc-tips li > span{display:flex;flex-direction:column;gap:1px;font-size:12px;line-height:1.45;color:var(--k-mu,#a3a3aa)}
+  .vc-tips li > span b{font:600 13px/1.35 var(--k-ff,Prompt),sans-serif;color:var(--k-tx,#ededef)}
+  /* (3) พื้นหลังมีมิติ */
+  html.vc-deskck .vc-deskbg{display:block;position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  html.vc-deskck main{position:relative;z-index:1}
+  .vc-deskbg .g1,.vc-deskbg .g2{position:absolute;border-radius:50%;filter:blur(20px)}
+  .vc-deskbg .g1{width:900px;height:620px;left:50%;top:6%;transform:translateX(-62%);background:radial-gradient(closest-side,rgba(233,194,122,.075),transparent)}
+  .vc-deskbg .g2{width:700px;height:520px;right:-6%;bottom:-10%;background:radial-gradient(closest-side,rgba(52,211,153,.045),transparent)}
+  .vc-deskbg .fp{position:absolute;top:90px;bottom:0;width:calc((100vw - 1400px) / 2 - 20px);min-width:0;margin:0;overflow:hidden;font:400 13px/2.1 Sarabun,Prompt,sans-serif;color:rgba(236,226,206,.045);text-align:justify;
+    -webkit-mask-image:linear-gradient(180deg,transparent,#000 15%,#000 70%,transparent);mask-image:linear-gradient(180deg,transparent,#000 15%,#000 70%,transparent)}
+  .vc-deskbg .fp.l{left:24px}.vc-deskbg .fp.r{right:24px}
+  /* (ค) การ์ดลองตัวอย่าง: ป้ายฟรีชิดชื่อ · ชิปบรรทัดเดียว */
+  html.vc-deskck #checkCard .vc-try{grid-template-columns:minmax(0,1fr) auto !important}
+  html.vc-deskck #checkCard .vc-try-main{justify-content:flex-start !important}
+  html.vc-deskck #checkCard .vc-try-tx{flex:0 1 auto !important}
+  html.vc-deskck #checkCard .vc-try-free{align-self:center !important;margin-left:4px}
+  html.vc-deskck #checkCard .vc-try-chips{flex-wrap:nowrap !important;max-width:none !important}
+  html.vc-deskck #checkCard .vc-try-c,html.vc-deskck #checkCard .vc-try-all{padding-left:11px !important;padding-right:11px !important;white-space:nowrap}
+  /* (ง) ปุ่มอัปโหลดซ้ำ: ซ่อนตอนกล่องว่าง (มีลิงก์อัปโหลดในกล่องแล้ว) */
+  html.vc-deskck #checkCard:has(#input:placeholder-shown) .ta-actions .file-pick{display:none !important}
+}
+@media (min-width:1024px) and (max-width:1279px){
+  html.vc-deskck #checkCard .vc-try{grid-template-columns:1fr !important}
+  .vc-deskbg .fp{display:none}
+}
+@media (prefers-reduced-motion:reduce){.vrp-card,.vcs-ln::after{transition:none}}
