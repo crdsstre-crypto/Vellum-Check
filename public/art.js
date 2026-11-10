@@ -3811,7 +3811,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       var b = document.createElement('button'); b.type = 'button'; b.className = 'vsl-item'; b.dataset.i = i;
       var n = (s[3].match(/ข้อ \d+/g) || []).length;
       b.style.setProperty('--a', ACC[s[0]] || '#94a3b8');
-      b.innerHTML = thumb(s, i) + '<span class="vsl-art" aria-hidden="true"><svg viewBox="0 0 64 64">' + (ART[i] || '') + '</svg></span><span class="vsl-txt"><span class="vsl-tag"><svg class="vsl-tag-ic" viewBox="0 0 64 64" aria-hidden="true">' + (ART[i] || '') + '</svg>' + NAMES[s[0]] + '</span><span class="vsl-free">ฟรี</span><b>' + s[1] + '</b><small>⚠ ' + s[2] + '</small><em>' + (n ? n + ' ข้อ · ' : '') + s[3].length.toLocaleString('th-TH') + ' ตัวอักษร</em>' + dots(s[1]) + topLine(s[1]) + bar(s[1]) + '</span>';
+      b.innerHTML = thumb(s, i) + '<span class="vsl-art" aria-hidden="true"><svg viewBox="0 0 64 64">' + (ART[i] || '') + '</svg></span><span class="vsl-txt"><span class="vsl-tag">' + NAMES[s[0]] + '</span><span class="vsl-stk k-' + s[0] + '" style="--sr:' + [3, -3, 4, -2, 2][i % 5] + 'deg" aria-hidden="true"><svg viewBox="0 0 64 64">' + (ART[i] || '') + '</svg>' + NAMES[s[0]] + '</span><span class="vsl-free">ฟรี</span><b>' + s[1] + '</b><small>⚠ ' + s[2] + '</small><em>' + (n ? n + ' ข้อ · ' : '') + s[3].length.toLocaleString('th-TH') + ' ตัวอักษร</em>' + dots(s[1]) + topLine(s[1]) + bar(s[1]) + '</span>';
       b.style.setProperty('--k', list.children.length);
       list.appendChild(b);
     });
