@@ -6864,3 +6864,19 @@ html.vc-dsc-open :is(.vc-bn,.vc-fpill,.vc-stick,.hx-lens,.hx-pool,.hx-tip,.hx-hu
 .vsl-list{padding-top:12px !important}
 .vsl-list > .vsl-item + .vsl-item{margin-top:6px}
 @media (min-width:1024px){.vsl-stk{top:8px;right:12px;font-size:11.5px;padding:3px 9px 3px 5px}.vsl-stk svg{width:14px;height:14px}}
+
+/* ===== v259 กระดาษสัญญาตัวอย่าง: สีตามระดับจริง (สำคัญ=แดง · ควรระวัง=เหลือง · เล็กน้อย=ฟ้า) + ไฮไลต์เฉพาะคำที่เป็นกับดัก ===== */
+.vsl-doc p.is-risk{--hl:rgba(250,214,80,.62);--ul:rgba(214,158,30,.4);--dot:#e2a21c;--nb:#fff1c9;--nl:#f0d17a;--nc:#8a5a00}
+.vsl-doc p.is-risk.lv-h{--hl:rgba(255,140,128,.5);--ul:rgba(220,70,60,.34);--dot:#e5484d;--nb:#fde6e3;--nl:#f3b0a8;--nc:#a12a20}
+.vsl-doc p.is-risk.lv-l{--hl:rgba(147,197,253,.55);--ul:rgba(59,130,246,.32);--dot:#3b82f6;--nb:#e6f0fe;--nl:#a9c8f5;--nc:#1e4e9c}
+.vsl.hl-on .vsl-doc p.is-risk mark{background:linear-gradient(transparent 50%,var(--hl) 50%,var(--hl) 94%,transparent 94%);color:#1d1a15;font-weight:500;padding:0 1px;border-radius:1px}
+/* ส่วนที่เหลือของข้อ: เส้นใต้บางๆ สีเดียวกับระดับ — ยังรู้ว่าทั้งข้อมีปัญหา แต่ตาไปหยุดที่คำไฮไลต์ */
+.vsl.hl-on .vsl-doc .vsl-cl{text-decoration:underline;text-decoration-color:var(--ul);text-decoration-thickness:1px;text-underline-offset:.42em;-webkit-text-decoration-skip-ink:none;text-decoration-skip-ink:none}
+.vsl.hl-on .vsl-doc .vsl-cl mark{text-decoration:none}
+.vsl.hl-on .vsl-doc p.is-risk::before{background:var(--dot)}
+.vsl.hl-on .vsl-doc p.is-risk .vsl-note{background:var(--nb);border-color:var(--nl);color:var(--nc)}
+@media (min-width:1024px){
+  .vsl.vsl-split .vsl-doc p.is-risk .vsl-pn{background:var(--dot)}
+  .vsl.vsl-split .vsl-doc p.is-risk.lv-h.is-hot{background:rgba(255,140,128,.16);box-shadow:0 0 0 1px rgba(229,72,77,.32)}
+  .vsl.vsl-split .vsl-doc p.is-risk.lv-l.is-hot{background:rgba(147,197,253,.18);box-shadow:0 0 0 1px rgba(59,130,246,.3)}
+}
