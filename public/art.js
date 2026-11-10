@@ -3674,12 +3674,15 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   }
   /* มือถือ: หน้าการ์ดเป็นกระดาษย่อส่วน — เส้นเหลืองตรงข้อที่มีจุดเสี่ยงจริง (ตาม RISK) */
   function thumb(s, i) {
-    var rk = RISK[i] || {}, all = s[3].split('\n'), ls = all.slice(1, 12), h = '';
-    ls.forEach(function (ln) {
-      var m = /^ข้อ (\d+)/.exec(ln), r = m ? rk[m[1]] : (/พยาน/.test(ln) && rk.p);
-      h += '<span class="' + (r ? 'r' : '') + '">' + (r ? '<mark>' + esc(ln) + '</mark>' : esc(ln)) + '</span>';
+    /* v257 กระดาษย่อแบบหน้าแรก: 5 บรรทัดแรก · ระดับจากผลตัวอย่างจริง (สำคัญ=ไฮไลต์ · ระวัง/สังเกต=ขีดเส้นใต้) */
+    var all = s[3].split('\n'), lv = {}, RK = { check_detail: 'h', caution: 'c', low: 'l' }, ORD = { h: 0, c: 1, l: 2 };
+    ((window.VCDemo && VCDemo.items) ? VCDemo.items(s[1]) : []).forEach(function (x) { var k = String(x.clause), v = RK[x.level]; if (v && (!lv[k] || ORD[v] < ORD[lv[k]])) lv[k] = v; });
+    var h = '';
+    all.slice(1, 6).forEach(function (ln) {
+      var m = /^ข้อ (\d+)/.exec(ln), r = m ? lv[m[1]] : (/พยาน/.test(ln) ? lv.p : '');
+      h += '<span class="tl' + (r ? ' r-' + r : '') + '"><i></i><em>' + esc(ln) + '</em></span>';
     });
-    return '<span class="vsl-thumb" aria-hidden="true"><span class="vsl-th-p"><span class="vsl-th-t"><b>' + esc(all[0] || '') + '</b>' + h + '</span></span><span class="vsl-th-ic"><svg viewBox="0 0 64 64">' + (ART[i] || '') + '</svg></span></span>';
+    return '<span class="vsl-thumb v2" aria-hidden="true"><i class="tclip"></i><span class="vsl-th-p"><span class="vsl-th-t"><b>' + esc(all[0] || '') + '</b>' + h + '</span></span></span>';
   }
   /* มือถือ: แถบระดับความเสี่ยงพร้อมคำบอก (จากผลตัวอย่างที่เตรียมไว้จริง) */
   function bar(t) {
@@ -3804,7 +3807,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       var b = document.createElement('button'); b.type = 'button'; b.className = 'vsl-item'; b.dataset.i = i;
       var n = (s[3].match(/ข้อ \d+/g) || []).length;
       b.style.setProperty('--a', ACC[s[0]] || '#94a3b8');
-      b.innerHTML = thumb(s, i) + '<span class="vsl-art" aria-hidden="true"><svg viewBox="0 0 64 64">' + (ART[i] || '') + '</svg></span><span class="vsl-txt"><span class="vsl-tag">' + NAMES[s[0]] + '</span><span class="vsl-free">ฟรี</span><b>' + s[1] + '</b><small>⚠ ' + s[2] + '</small><em>' + (n ? n + ' ข้อ · ' : '') + s[3].length.toLocaleString('th-TH') + ' ตัวอักษร</em>' + dots(s[1]) + topLine(s[1]) + bar(s[1]) + '</span>';
+      b.innerHTML = thumb(s, i) + '<span class="vsl-art" aria-hidden="true"><svg viewBox="0 0 64 64">' + (ART[i] || '') + '</svg></span><span class="vsl-txt"><span class="vsl-tag"><svg class="vsl-tag-ic" viewBox="0 0 64 64" aria-hidden="true">' + (ART[i] || '') + '</svg>' + NAMES[s[0]] + '</span><span class="vsl-free">ฟรี</span><b>' + s[1] + '</b><small>⚠ ' + s[2] + '</small><em>' + (n ? n + ' ข้อ · ' : '') + s[3].length.toLocaleString('th-TH') + ' ตัวอักษร</em>' + dots(s[1]) + topLine(s[1]) + bar(s[1]) + '</span>';
       b.style.setProperty('--k', list.children.length);
       list.appendChild(b);
     });
