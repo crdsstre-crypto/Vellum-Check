@@ -6904,7 +6904,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       '</i><em class="hxs-a"></em></span><span class="hxs"><i></i><em class="hxs-b"></em></span>' +
       '<i class="hxl-bigst">อ่านก่อนเซ็น!</i></span>' +
       '<span class="hxl-key" aria-hidden="true"><i class="k-h"></i>ตรวจละเอียด<i class="k-c"></i>ควรระวัง<i class="k-l"></i>ข้อสังเกต</span>' +
-      '<i class="hxl-curl" aria-hidden="true"></i><i class="hxl-scan"></i><i class="hxl-hint" aria-hidden="true">แตะตราเพื่อดูเหตุผล</i></button></div>' +
+      '<i class="hxl-curl" aria-hidden="true"></i><i class="hxl-scan"></i><i class="hxl-hint" aria-hidden="true">แตะสติกเกอร์เพื่อดูเหตุผล</i></button></div>' +
     '<div class="hxl-foot"><span class="hxl-meter" aria-hidden="true"><svg viewBox="0 0 100 58"><defs><linearGradient id="hxlG" x1="0" x2="1"><stop offset="0" stop-color="#60a5fa"/><stop offset=".5" stop-color="#fbbf24"/><stop offset="1" stop-color="#ef4444"/></linearGradient></defs>' +
       '<path class="hxm-trk" d="M10 52 A40 40 0 0 1 90 52" pathLength="1"/><path class="hxm-arc" d="M10 52 A40 40 0 0 1 90 52" pathLength="1"/><g class="hxm-ndl"><line x1="50" y1="52" x2="50" y2="20"/><circle cx="50" cy="52" r="5"/></g></svg></span>' +
       '<span class="hxl-cnt">พบ <em>0</em> จุดที่ควรดู<small class="hxl-lv"></small></span><button type="button" class="hxl-go">ดูผลเต็ม · ฟรี <b aria-hidden="true">→</b></button></div>' +
@@ -6924,7 +6924,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     return { title: s[3].split('\n')[0], rows: rows };
   }
   /* (5) ตราแต่ละอันเอียงไม่เท่ากัน (คงที่ทุกรอบ) · (2) ไอคอนตามหัวข้อ */
-  var ROT = [-7, -3, -9, -4, -6, -2];
+  var ROT = [-2.5, -1, -2, 1, -1.5, 1.5]; /* ±3° ไม่ชนกัน */
   var ICO = {
     money: '<circle cx="8" cy="8" r="6"/><path d="M8 4.5v7M10 6H7a1.2 1.2 0 0 0 0 2.4h2a1.2 1.2 0 0 1 0 2.4H6"/>',
     lock: '<rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/>',
@@ -6946,7 +6946,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     fig.querySelector('.hxl-lines').innerHTML = d.rows.map(function (r, k) {
       var lv = r.it ? ({ check_detail: 'h', caution: 'c', low: 'l' }[r.it.level] || 'c') : '';
       return '<span class="hxl-ln' + (lv ? ' r-' + lv : '') + (final && lv ? ' hit' : '') + (final ? ' seen' : '') + '" data-k="' + k + '">' + (lv === 'h' ? '<i class="hxl-mk" aria-hidden="true">!</i>' : '') + '<span class="hxl-tx"><span class="hxl-tt">' + esc(r.t.length > 60 ? r.t.slice(0, 58) + '…' : r.t) + '</span></span>' +
-        (lv ? '<i class="hxl-st s-' + lv + '" style="--rot:' + ROT[k % ROT.length] + 'deg" role="button" tabindex="0" aria-label="ดูเหตุผล: ' + esc(r.it.topic) + '">' + icon(r.it.topic) + '<span>' + esc(r.it.topic) + '</span></i>' : '') + '</span>';
+        (lv ? '<i class="hxl-st s-' + lv + (r.it.topic.length > 9 ? ' s-long' : '') + (r.it.topic.length > 12 ? ' s-xl' : '') + '" style="--rot:' + ROT[k % ROT.length] + 'deg" role="button" tabindex="0" aria-label="ดูเหตุผล: ' + esc(r.it.topic) + '">' + icon(r.it.topic) + '<span>' + esc(r.it.topic) + '</span></i>' : '') + '</span>';
     }).join('');
     [].forEach.call(fig.querySelectorAll('.hxl-tabs button'), function (b) { var on = +b.dataset.i === i; b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
     var n = d.rows.filter(function (r) { return r.it; }).length;
