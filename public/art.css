@@ -6481,14 +6481,14 @@ html.vc-art .hx-live .hxl-h{font:700 15px/1.3 Taviraj,Prompt,serif !important;le
 .hxl-sig.dry path{stroke:#1d2550;filter:none}
 /* (1)+(ก) ปากกาหมึกซึม: หัวทองอยู่ที่จุด (left,top) · ด้ามเอียงลงขวา (ไม่บังข้อความด้านบน) */
 .hx-live .hxl-sign .hxl-pen{position:absolute !important;left:0;top:0;right:auto !important;bottom:auto !important;width:88px !important;height:13px !important;margin:-6.5px 0 0 0;z-index:4;pointer-events:none;
-  transform-origin:0 50% !important;opacity:0;transform:translate(60px,30px) rotate(14deg) scale(1.06) !important;animation:none !important;
+  transform-origin:0 50% !important;opacity:0;transform:translate(60px,30px) rotate(14deg) scale(1.06);animation:none !important;
   transition:transform .5s cubic-bezier(.2,.85,.3,1),opacity .3s,filter .5s !important;filter:drop-shadow(9px 12px 5px rgba(0,0,0,.16)) !important}
 .hx-live .hxl-sign .hxl-pen svg{display:block;width:100%;height:100%;overflow:visible}
 /* (4) เงาตามความสูง: ลอย = เงาห่าง/จาง · แตะกระดาษ = เงาชิด/คม */
-.hx-live.pen .hxl-sign .hxl-pen{opacity:1;transform:translate(3px,-5px) rotate(14deg) !important;filter:drop-shadow(5px 7px 3px rgba(0,0,0,.24)) !important}
-.hx-live.sign .hxl-sign .hxl-pen{transform:translate(0,0) rotate(14deg) !important;filter:drop-shadow(1.5px 2px 1px rgba(0,0,0,.42)) !important;transition:transform .18s ease-out,filter .2s,opacity .2s !important}
+.hx-live.pen .hxl-sign .hxl-pen{opacity:1;transform:translate(3px,-5px) rotate(14deg);filter:drop-shadow(5px 7px 3px rgba(0,0,0,.24)) !important}
+.hx-live.sign .hxl-sign .hxl-pen{transform:translate(0,0) rotate(14deg);filter:drop-shadow(1.5px 2px 1px rgba(0,0,0,.42)) !important;transition:transform .18s ease-out,filter .2s,opacity .2s !important}
 /* (3)+(ข) ตราปั๊ม: สะดุ้งยกขึ้นนิดเดียว แล้วเลื่อนออกขวาตามแนวเส้นลงชื่อ */
-.hx-live.slam .hxl-sign .hxl-pen{opacity:0;transform:translate(150px,8px) rotate(10deg) !important;filter:drop-shadow(10px 13px 6px rgba(0,0,0,.12)) !important;animation:hxlPenJolt .75s cubic-bezier(.3,.6,.4,1) forwards !important;transition:none !important}
+.hx-live.slam .hxl-sign .hxl-pen{opacity:0;transform:translate(150px,8px) rotate(10deg);filter:drop-shadow(10px 13px 6px rgba(0,0,0,.12)) !important;animation:hxlPenJolt .75s cubic-bezier(.3,.6,.4,1) forwards !important;transition:none !important}
 @keyframes hxlPenJolt{0%{opacity:1;transform:translate(0,0) rotate(14deg)}16%{opacity:1;transform:translate(-3px,-9px) rotate(5deg)}55%{opacity:1;transform:translate(60px,-4px) rotate(9deg)}100%{opacity:0;transform:translate(150px,8px) rotate(10deg)}}
 .hx-live.held .hxl-sign .hxl-pen{opacity:0 !important;animation:none !important}
 /* (5)+(ค) หัวปากกาไฮไลต์: ปากกาเน้นข้อความหัวตัดเฉียง ฝาสีตามระดับ */
@@ -6535,3 +6535,38 @@ html.vc-art .hx-live .hxl-h{font:700 15px/1.3 Taviraj,Prompt,serif !important;le
 /* สระ/วรรณยุกต์บนไม่โดนตัด (เช่น "ดอกเบี้ย") */
 .hx-live .hxl-ln .hxl-st{line-height:1.6 !important}
 .hx-live .hxl-st > span{line-height:1.6;padding-top:1px}
+/* ===== v243 ตรา "อ่านก่อนเซ็น!" แบบตรายางจริง (มือถือ + คอม) ===== */
+/* (3)+(ก) แถวลงชื่อสูงขึ้น ตราอยู่ทับลายเซ็นครึ่งทาง ไม่ทับแถบอธิบายสี */
+.hx-live .hxl-sign{min-height:34px;align-items:flex-end;margin-top:12px !important;margin-bottom:4px !important}
+.hx-live .hxl-sign .hxl-bigst{left:27% !important;top:auto !important;bottom:3px;z-index:3;font-size:16px !important;padding:5px 12px 6px !important;border-width:2.2px !important;border-radius:7px !important;color:#c4202c !important;
+  box-shadow:inset 0 0 0 2px #fbf6ea,inset 0 0 0 3.4px currentColor !important;mix-blend-mode:multiply;transform:translate(-50%,0) rotate(-8deg);opacity:0;animation:none;
+  /* (2)+(ค) หมึกเข้มจางไม่เท่ากัน (มาสก์ไล่ระดับ) — ไม่ใช้ลายจุด */
+  -webkit-mask-image:linear-gradient(104deg,#000 0%,rgba(0,0,0,.72) 22%,#000 41%,rgba(0,0,0,.82) 63%,#000 80%,rgba(0,0,0,.7) 100%);mask-image:linear-gradient(104deg,#000 0%,rgba(0,0,0,.72) 22%,#000 41%,rgba(0,0,0,.82) 63%,#000 80%,rgba(0,0,0,.7) 100%);
+  text-shadow:0 0 .6px currentColor;filter:blur(1.2px)}
+.hx-live .hxl-sign .hxl-bigst::before{content:none !important;display:none !important}
+/* (1) ตรายางด้ามไม้ลงมากด: ลอยลง → กด (ยุบ) → ยกออก · หมึกปรากฏตอนแตะกระดาษ */
+.hxl-tool,.hxl-tsh,.hxl-splat{position:absolute;pointer-events:none;opacity:0}
+.hxl-tool{left:27%;bottom:2px;width:54px;height:63px;margin-left:-27px;z-index:5;transform-origin:50% 100%}
+.hxl-tool svg{display:block;width:100%;height:100%;overflow:visible}
+.hxl-tsh{left:27%;bottom:0;width:62px;height:16px;margin-left:-31px;border-radius:50%;background:radial-gradient(closest-side,rgba(40,25,10,.45),transparent);z-index:2}
+.hx-live.slam .hxl-tool{animation:hxlTool 1.25s cubic-bezier(.4,0,.2,1) forwards}
+.hx-live.slam .hxl-tsh{animation:hxlTsh 1.25s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes hxlTool{0%{opacity:0;transform:translate(26px,-96px) rotate(10deg) scale(1.12)}14%{opacity:1}34%{transform:translate(4px,-26px) rotate(-4deg) scale(1.04)}42%{transform:translate(0,0) rotate(-8deg) scaleY(.9) scaleX(1.04)}56%{transform:translate(0,0) rotate(-8deg) scaleY(.94)}68%{opacity:1;transform:translate(-2px,-22px) rotate(-10deg)}100%{opacity:0;transform:translate(-14px,-110px) rotate(-14deg) scale(1.1)}}
+@keyframes hxlTsh{0%{opacity:0;transform:scale(1.9)}34%{opacity:.5;transform:scale(1.3)}42%,56%{opacity:.95;transform:scale(.95)}70%{opacity:.4;transform:scale(1.4)}100%{opacity:0;transform:scale(2.1)}}
+.hx-live.slam .hxl-sign .hxl-bigst{animation:hxlInk .7s ease-out .52s forwards !important}
+@keyframes hxlInk{0%{opacity:.5;filter:blur(1.2px);transform:translate(-50%,0) rotate(-8deg) scale(1.03)}35%{opacity:.98;filter:blur(.5px)}100%{opacity:.92;filter:blur(0);transform:translate(-50%,0) rotate(-8deg)}}
+/* (4) จังหวะกระแทก: จุดหมึกกระเด็น + กระดาษสะเทือนตอนแตะ */
+.hxl-splat{left:27%;bottom:15px;width:3px;height:3px;margin-left:-1.5px;border-radius:50%;z-index:2;color:rgba(196,32,44,.7);
+  box-shadow:-62px -10px 0 0 currentColor,-54px 8px 0 -.5px currentColor,-47px -16px 0 .4px currentColor,58px -8px 0 0 currentColor,66px 6px 0 -.5px currentColor,49px 14px 0 .3px currentColor,-8px -20px 0 -.4px currentColor,12px 19px 0 -.6px currentColor,72px -14px 0 -.8px currentColor,-70px 12px 0 -.8px currentColor}
+.hx-live.slam .hxl-splat{animation:hxlSplat .55s ease-out .52s forwards}
+@keyframes hxlSplat{0%{opacity:0;transform:scale(.45)}40%{opacity:1}100%{opacity:.75;transform:scale(1)}}
+.hx-live.slam .hxl-stack{animation:hxlThud2 .35s ease-out .52s !important}
+@keyframes hxlThud2{0%,100%{transform:none}30%{transform:translateY(2.5px) scale(.993)}60%{transform:translateY(-1px)}}
+/* ปากกาสะดุ้งตอนตราแตะกระดาษพอดี */
+.hx-live.slam .hxl-sign .hxl-pen{animation:hxlPenJolt .75s cubic-bezier(.3,.6,.4,1) .48s both !important}
+/* แผ่นอธิบายเปิดอยู่ / โหมดลดการเคลื่อนไหว: เห็นแค่รอยตรา */
+.hx-live.held .hxl-tool,.hx-live.held .hxl-tsh,html[data-calm] .hxl-tool,html[data-calm] .hxl-tsh{display:none}
+.hx-live.held .hxl-sign .hxl-bigst,html[data-calm] .hx-live.slam .hxl-sign .hxl-bigst{animation:none !important;opacity:.92 !important;filter:none}
+.hx-live.held .hxl-splat,html[data-calm] .hx-live.slam .hxl-splat{animation:none;opacity:.75}
+@media (prefers-reduced-motion:reduce){.hxl-tool,.hxl-tsh{display:none}.hx-live.slam .hxl-sign .hxl-bigst{animation:none !important;opacity:.92 !important;filter:none}.hx-live.slam .hxl-splat{animation:none;opacity:.75}}
+@media (max-width:767px){.hx-live .hxl-sign .hxl-bigst{font-size:15px !important}}
