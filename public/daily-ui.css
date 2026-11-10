@@ -1,0 +1,148 @@
+/* ===== เช็กอินรายวัน (daily-ui.js) — คอมและมือถือ ===== */
+.vdc,.vdc-strip,.vdc-pop{--dc-bg:#151517;--dc-bg2:#1d1d20;--dc-line:rgba(236,233,226,.12);--dc-line2:rgba(236,233,226,.22);--dc-tx:#ece9e2;--dc-dim:#a9a6a0;--dc-mute:#77746f;
+  --dc-acc:#e8c46a;--dc-fire:#ff9a4d;--dc-ok:#5fd3a6;font-family:'Prompt','Sarabun',system-ui,sans-serif}
+.vdc-ic{display:inline-grid;place-items:center;flex:0 0 auto;width:38px;height:38px;border-radius:11px;background:rgba(232,196,106,.12);border:1px solid rgba(232,196,106,.3);color:var(--dc-acc)}
+.vdc svg:not(.vdg-art),.vdc-strip svg,.vdc-menu .menu-ico svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- แถบบนหน้าตรวจ ---------- */
+.vdc-strip{display:flex;align-items:center;gap:10px;width:100%;box-sizing:border-box;margin:0 0 12px;padding:8px 8px 8px 10px;border-radius:14px;
+  background:linear-gradient(100deg,rgba(232,196,106,.13),rgba(232,196,106,.03) 60%),var(--dc-bg);border:1px solid rgba(232,196,106,.38);color:var(--dc-tx);transition:opacity .35s,transform .35s}
+.vdc-strip .vdc-ic{width:34px;height:34px;border-radius:10px}
+.vds-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;padding:4px 2px;border:0;background:transparent;color:inherit;text-align:left;font:inherit;cursor:pointer}
+.vds-txt b{font-weight:600;font-size:.9rem;color:var(--dc-acc)}
+.vds-txt small{font-size:.75rem;color:var(--dc-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vds-go{flex:0 0 auto;min-height:38px;padding:0 16px;border:0;border-radius:10px;background:var(--dc-acc);color:#1a1608;font:600 .86rem/1 'Prompt',sans-serif;cursor:pointer}
+.vds-go:disabled{opacity:.6}
+.vds-x{flex:0 0 auto;width:30px;height:30px;border:0;border-radius:8px;background:transparent;color:var(--dc-mute);cursor:pointer}
+.vds-x:hover{background:rgba(255,255,255,.06);color:var(--dc-tx)}
+.vdc-strip.is-done{border-color:rgba(255,154,77,.4);background:linear-gradient(100deg,rgba(255,154,77,.12),transparent 60%),var(--dc-bg)}
+.vdc-strip.is-done .vdc-ic{color:var(--dc-fire);background:rgba(255,154,77,.12);border-color:rgba(255,154,77,.35)}
+.vdc-strip.is-done .vds-txt b{color:var(--dc-tx)}
+.vdc-strip.is-out{opacity:0;transform:translateY(-6px)}
+
+/* ---------- เมนูบัญชี ---------- */
+.vdc-menu .menu-ico{color:#e8c46a}
+.vdc-badge{margin-left:auto;padding:3px 9px;border-radius:99px;background:#e8c46a;color:#1a1608;font:600 .7rem/1.2 'Prompt',sans-serif}
+.vdc-badge[hidden]{display:none}
+
+/* ---------- หน้าต่างรับรางวัล 7 วัน (สไตล์หน้ารับรางวัลเกม) ---------- */
+html.vdc-open,html.vdc-open body{overflow:hidden}
+.vdc{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:24px}
+.vdc[hidden]{display:none}
+.vdc-bg{position:absolute;inset:0;background:rgba(0,0,0,.7);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);animation:vdcFade .2s ease}
+.vdc-grip{display:none}
+.vdc-wait{padding:40px 0;text-align:center;color:var(--dc-dim)}
+.vdg-frame{position:relative;width:min(980px,100%);max-height:calc(100vh - 48px);overflow:auto;box-sizing:border-box;padding:26px 26px 24px;border-radius:22px;color:var(--dc-tx);text-align:left;
+  border:3px solid transparent;
+  background:radial-gradient(120% 70% at 70% 0%,rgba(244,197,66,.22),transparent 60%),radial-gradient(80% 60% at 0% 100%,rgba(140,90,255,.16),transparent 60%),linear-gradient(160deg,#1d1810,#121214 55%,#0e0e12) padding-box,
+    linear-gradient(135deg,#fff0a8,#e8b53a 30%,#8a5a12 55%,#f4c542 80%,#fff0a8) border-box;
+  box-shadow:0 0 0 1px rgba(0,0,0,.6),0 40px 90px -20px rgba(0,0,0,.85),inset 0 0 60px rgba(244,197,66,.06);animation:vdcIn .3s cubic-bezier(.16,1,.3,1);overscroll-behavior:contain}
+.vdg-x{position:absolute;top:14px;right:14px;z-index:2;width:42px;height:42px;border-radius:12px;border:2px solid #fff0a8;background:linear-gradient(160deg,#ff6b6b,#c0242c);color:#fff;font:800 16px/1 'Prompt',sans-serif;cursor:pointer;box-shadow:0 4px 0 #7a1016,0 6px 14px rgba(0,0,0,.5);transform:rotate(45deg)}
+.vdg-x::first-line{}
+.vdg-x{transform:none}
+.vdg-x:active{transform:translateY(2px);box-shadow:0 2px 0 #7a1016}
+.vdg-title{margin:0 56px 18px 0;font:800 clamp(1.5rem,3.4vw,2.3rem)/1.15 'Prompt',sans-serif;letter-spacing:.01em;color:#fff;
+  text-shadow:0 3px 0 #3a2606,0 0 18px rgba(244,197,66,.35);-webkit-text-stroke:1px rgba(58,38,6,.6)}
+.vdg-title span{color:#ffd75a;-webkit-text-stroke:0}
+.vdg-in{display:grid;grid-template-columns:250px 1fr;gap:20px;align-items:start}
+
+/* ด้านซ้าย: streak + แต้ม + แลก */
+.vdg-side{display:flex;flex-direction:column;gap:12px}
+.vdg-panel{padding:14px;border-radius:16px;background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(244,197,66,.28)}
+.vdg-fire{display:flex;align-items:center;gap:12px}
+.vdc .vdg-fire svg{width:40px;height:40px;color:#ff9a4d;fill:rgba(255,154,77,.22);stroke-width:1.6;filter:drop-shadow(0 0 8px rgba(255,154,77,.45))}
+.vdg-fire b{display:block;font:800 1.9rem/1 'Prompt',sans-serif}
+.vdg-fire span,.vdg-wallet>span{font-size:.78rem;color:var(--dc-dim)}
+.vdg-wallet b{display:block;margin:2px 0 10px;font:800 2rem/1 'Prompt',sans-serif;background:linear-gradient(180deg,#fff6c8,#f4c542 60%,#c88a12);-webkit-background-clip:text;background-clip:text;color:transparent}
+.vdg-bar{height:10px;border-radius:99px;background:rgba(0,0,0,.45);box-shadow:inset 0 1px 2px rgba(0,0,0,.6);overflow:hidden}
+.vdg-bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#c88a12,#f4c542,#fff0a8);transition:width .7s cubic-bezier(.16,1,.3,1)}
+.vdg-wallet small{display:block;margin:7px 0 12px;font-size:.74rem;color:var(--dc-dim)}
+.vdg-redeem{width:100%;min-height:44px;border-radius:12px;border:0;background:linear-gradient(180deg,#ffe28a,#e8b53a);color:#2a1a02;font:700 .9rem/1 'Prompt',sans-serif;cursor:pointer;box-shadow:0 4px 0 #8a5a12}
+.vdg-redeem:active:not(:disabled){transform:translateY(2px);box-shadow:0 2px 0 #8a5a12}
+.vdg-redeem:disabled{background:rgba(255,255,255,.06);color:var(--dc-mute);box-shadow:none;cursor:default;font-weight:500}
+.vdg-rules{margin:0;padding:0 0 0 16px;font-size:.72rem;line-height:1.7;color:var(--dc-mute)}
+
+/* ด้านขวา: แถบสถานะ + การ์ด 7 วัน */
+.vdg-bar2{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-bottom:14px}
+.vdg-chip{padding:7px 14px;border-radius:99px;background:rgba(0,0,0,.5);border:1px solid rgba(244,197,66,.35);font-size:.86rem;color:var(--dc-dim)}
+.vdg-chip b{color:#f4c542;font-weight:800}
+.vdg-next{font-size:.88rem;color:var(--dc-tx)}
+.vdg-next b{color:#f4c542;font-weight:700;font-variant-numeric:tabular-nums}
+.vdg-claim{margin-left:auto;min-height:42px;padding:0 22px;border-radius:99px;border:2px solid #b9ffcf;background:linear-gradient(180deg,#5cf08f,#1fae55);color:#06351a;font:800 .92rem/1 'Prompt',sans-serif;letter-spacing:.02em;cursor:pointer;box-shadow:0 4px 0 #0d6b31,0 0 18px rgba(92,240,143,.35)}
+.vdg-claim:active:not(:disabled){transform:translateY(2px);box-shadow:0 2px 0 #0d6b31}
+.vdg-claim:disabled{border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:var(--dc-mute);box-shadow:none;cursor:default}
+.vdg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.vdg-c{position:relative;display:flex;flex-direction:column;align-items:center;min-height:168px;padding:30px 10px 0;border-radius:16px;overflow:hidden;font:inherit;color:inherit;text-align:center;
+  border:2px solid rgba(244,197,66,.45);background:radial-gradient(90% 70% at 50% 40%,rgba(244,197,66,.2),transparent 70%),linear-gradient(180deg,#2c2414,#17140e);box-shadow:inset 0 1px 0 rgba(255,240,168,.15),0 6px 16px -6px rgba(0,0,0,.7)}
+.vdg-day{position:absolute;top:8px;left:11px;font:800 .95rem/1 'Prompt',sans-serif;color:#ffd75a;text-shadow:0 2px 0 #3a2606}
+.vdc .vdg-art{flex:0 0 auto;width:76px;height:76px;fill:initial;stroke:none;filter:drop-shadow(0 6px 8px rgba(0,0,0,.5))}
+.vdg-amt{margin:4px 0 10px;font:800 1.05rem/1.1 'Prompt',sans-serif;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.6)}
+.vdg-amt small{font-size:.72rem;font-weight:600;color:var(--dc-dim)}
+.vdg-st{display:flex;align-items:center;justify-content:center;gap:6px;width:calc(100% + 20px);margin-top:auto;padding:8px 6px;box-sizing:border-box;font:800 .82rem/1 'Prompt',sans-serif;letter-spacing:.03em;
+  background:repeating-linear-gradient(-55deg,rgba(255,255,255,.05) 0 6px,transparent 6px 12px),rgba(0,0,0,.45);color:#e9e2cf}
+.vdg-st svg{width:15px;height:15px;stroke-width:2.2}
+.vdg-st.is-cd i{font-style:normal;font-weight:600;font-variant-numeric:tabular-nums;font-size:.74rem}
+/* รับได้วันนี้ */
+.vdg-c.is-open{cursor:pointer;border-color:#fff0a8;background:radial-gradient(90% 75% at 50% 40%,rgba(255,226,120,.45),transparent 70%),linear-gradient(180deg,#5a4413,#241b0b);animation:vdgGlow 1.8s ease-in-out infinite}
+.vdg-c.is-open .vdg-art{animation:vdgBob 1.8s ease-in-out infinite}
+.vdg-c.is-open .vdg-st{background:linear-gradient(180deg,#5cf08f,#1fae55);color:#06351a}
+.vdg-c.is-open:hover{transform:translateY(-2px)}
+.vdg-c.is-open:focus-visible{outline:3px solid #fff;outline-offset:3px}
+/* รับแล้ว */
+.vdg-c.is-done{border-color:rgba(95,211,166,.55);background:linear-gradient(180deg,#16261f,#101512)}
+.vdg-c.is-done .vdg-art{opacity:.18}
+.vdg-c.is-done .vdg-st{background:rgba(95,211,166,.18);color:var(--dc-ok)}
+.vdg-c.is-done::after{content:"";position:absolute;top:45px;left:50%;width:46px;height:46px;margin-left:-23px;border-radius:50%;background:#5fd3a6 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m5.5 12.5 4.2 4.2L18.5 8' fill='none' stroke='%2306231a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/26px no-repeat;box-shadow:0 0 0 4px rgba(95,211,166,.25),0 6px 14px rgba(0,0,0,.5)}
+.vdg-c.just-claimed::after{animation:vdgStamp .55s cubic-bezier(.2,1.6,.4,1)}
+/* ล็อก */
+.vdg-c.is-lock{border-color:rgba(255,255,255,.12);background:linear-gradient(180deg,#1e1d1b,#141413)}
+.vdg-c.is-lock .vdg-art{filter:grayscale(1) brightness(.55);opacity:.7}
+.vdg-c.is-lock .vdg-day{color:#a8a294;text-shadow:none}
+.vdg-c.is-lock .vdg-amt{color:#b7b2a6}
+/* วันที่ 7: การ์ดใหญ่เต็มแถว */
+.vdg-c.is-big{grid-column:1/-1;min-height:0;flex-direction:row;flex-wrap:wrap;justify-content:center;column-gap:16px;padding-top:28px}
+.vdc .vdg-c.is-big .vdg-art{width:100px;height:100px}
+.vdg-c.is-big .vdg-amt{align-self:center;font-size:1.35rem;margin:0}
+.vdg-c.is-big .vdg-st{flex-basis:calc(100% + 20px);margin-top:10px}
+.vdg-c.is-big:not(.is-lock){border-color:#fff0a8;box-shadow:inset 0 0 40px rgba(244,197,66,.15),0 6px 16px -6px rgba(0,0,0,.7)}
+.vdg-c.is-big.is-done::after{top:50%;margin-top:-30px}
+
+.vdc-pop{position:fixed;z-index:2147483001;transform:translateX(-50%);font:800 1.5rem 'Prompt',sans-serif;color:#ffe28a;text-shadow:0 3px 0 #3a2606,0 0 14px rgba(244,197,66,.6);pointer-events:none;animation:vdcPop 1.25s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes vdcFade{from{opacity:0}}
+@keyframes vdcIn{from{opacity:0;transform:translateY(16px) scale(.97)}}
+@keyframes vdcUp{from{transform:translateY(100%)}}
+@keyframes vdcPop{0%{opacity:0;transform:translate(-50%,6px) scale(.8)}20%{opacity:1;transform:translate(-50%,-8px) scale(1.15)}100%{opacity:0;transform:translate(-50%,-54px)}}
+@keyframes vdgGlow{0%,100%{box-shadow:0 0 0 0 rgba(255,226,120,.45),0 6px 16px -6px rgba(0,0,0,.7)}50%{box-shadow:0 0 0 6px rgba(255,226,120,0),0 0 26px rgba(255,214,90,.45)}}
+@keyframes vdgBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes vdgStamp{0%{transform:scale(2.2);opacity:0}100%{transform:scale(1);opacity:1}}
+
+@media (max-width:767px){
+  .vdc{align-items:flex-end;padding:0}
+  .vdg-frame{width:100%;max-height:92vh;max-height:92dvh;border-radius:22px 22px 0 0;border-bottom-width:0;padding:8px 12px calc(16px + env(safe-area-inset-bottom));animation:vdcUp .32s cubic-bezier(.16,1,.3,1)}
+  .vdc-grip{display:block;width:40px;height:5px;margin:2px auto 10px;border-radius:9px;background:rgba(255,255,255,.2)}
+  .vdg-x{top:16px;right:12px;width:38px;height:38px}
+  .vdg-title{margin:4px 50px 14px 2px;font-size:1.45rem}
+  .vdg-in{grid-template-columns:1fr;gap:14px}
+  .vdg-main{order:1}
+  .vdg-side{order:2;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .vdg-side .vdg-wallet{grid-column:1/-1;grid-row:2}
+  .vdg-side .vdg-fire{grid-column:1/-1;grid-row:1;padding:10px 14px}
+  .vdg-side .vdg-rules{grid-column:1/-1;grid-row:3}
+  .vdc .vdg-fire svg{width:32px;height:32px}
+  .vdg-fire b{font-size:1.5rem}
+  .vdg-bar2{gap:8px}
+  .vdg-claim{min-height:40px;padding:0 16px}
+  .vdg-next{flex-basis:100%;order:3;font-size:.82rem}
+  .vdg-grid{gap:8px}
+  .vdg-c{min-height:140px;padding-top:26px;border-radius:13px}
+  .vdg-day{top:7px;left:8px;font-size:.8rem}
+  .vdc .vdg-art{width:58px;height:58px}
+  .vdg-amt{font-size:.92rem;margin:2px 0 8px}
+  .vdg-st{font-size:.72rem;padding:7px 4px}
+  .vdg-st.is-cd i{font-size:.62rem}
+  .vdg-c.is-done::after{top:36px;width:38px;height:38px;margin-left:-19px;background-size:22px}
+  .vdc .vdg-c.is-big .vdg-art{width:76px;height:76px}
+  .vdg-c.is-big .vdg-amt{font-size:1.1rem}
+  .vdg-c.is-big.is-done::after{margin-top:-24px}
+}
+@media (prefers-reduced-motion:reduce){.vdc-bg,.vdg-frame,.vdg-c,.vdg-art,.vdc-pop,.vdg-c::after{animation:none !important}}
