@@ -24,6 +24,31 @@ export function cleanReminder(x) {
   return { title, dueDate: due, kind, repeat, note, inspectionId };
 }
 
+// สร้างตารางเองครั้งแรกที่ใช้งาน (ไม่ต้องพึ่ง db.js) — ปลอดภัยถ้ามีตารางอยู่แล้ว
+let ready = null;
+function ensureTable() {
+  if (!ready) {
+    ready = (async () => {
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS reminders (
+          id            SERIAL PRIMARY KEY,
+          user_id       INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+          inspection_id INTEGER REFERENCES inspections(id) ON DELETE SET NULL,
+          title         TEXT NOT NULL,
+          due_date      DATE NOT NULL,
+          kind          TEXT NOT NULL DEFAULT 'other',
+          repeat        TEXT NOT NULL DEFAULT 'none',
+          note          TEXT,
+          done          BOOLEAN NOT NULL DEFAULT false,
+          created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+        )
+      `);
+      await pool.query(`CREATE INDEX IF NOT EXISTS reminders_user_due_idx ON reminders (user_id, due_date)`);
+    })().catch(err => { ready = null; throw err; });
+  }
+  return ready;
+}
+
 const COLS = `id, inspection_id, title, to_char(due_date, 'YYYY-MM-DD') AS due_date, kind, repeat, note, done, created_at`;
 const toApi = r => ({
   id: r.id, inspectionId: r.inspection_id, title: r.title, dueDate: r.due_date,
@@ -31,6 +56,7 @@ const toApi = r => ({
 });
 
 export async function listReminders(userId) {
+  await ensureTable();
   const { rows } = await pool.query(
     `SELECT ${COLS} FROM reminders WHERE user_id = $1 ORDER BY done, due_date, id LIMIT $2`,
     [userId, MAX_REMINDERS]
@@ -40,6 +66,7 @@ export async function listReminders(userId) {
 
 // บันทึกหลายรายการพร้อมกัน · ถ้าเกินเพดานต่อบัญชีจะไม่บันทึกเลย (คืน { full: true })
 export async function addReminders(userId, items) {
+  await ensureTable();
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
@@ -69,6 +96,7 @@ export async function addReminders(userId, items) {
 }
 
 export async function updateReminder(userId, id, patch) {
+  await ensureTable();
   const sets = [], vals = [id, userId];
   if (typeof patch.done === 'boolean') { vals.push(patch.done); sets.push(`done = $${vals.length}`); }
   if (patch.title !== undefined) { vals.push(patch.title); sets.push(`title = $${vals.length}`); }
@@ -81,6 +109,7 @@ export async function updateReminder(userId, id, patch) {
 }
 
 export async function deleteReminder(userId, id) {
+  await ensureTable();
   const { rowCount } = await pool.query('DELETE FROM reminders WHERE id = $1 AND user_id = $2', [id, userId]);
   return rowCount;
 }
