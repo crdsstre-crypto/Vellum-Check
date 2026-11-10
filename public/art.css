@@ -6570,3 +6570,55 @@ html.vc-art .hx-live .hxl-h{font:700 15px/1.3 Taviraj,Prompt,serif !important;le
 .hx-live.held .hxl-splat,html[data-calm] .hx-live.slam .hxl-splat{animation:none;opacity:.75}
 @media (prefers-reduced-motion:reduce){.hxl-tool,.hxl-tsh{display:none}.hx-live.slam .hxl-sign .hxl-bigst{animation:none !important;opacity:.92 !important;filter:none}.hx-live.slam .hxl-splat{animation:none;opacity:.75}}
 @media (max-width:767px){.hx-live .hxl-sign .hxl-bigst{font-size:15px !important}}
+/* ===== v245 แถบดัชนีโผล่ขอบกระดาษ + ตราย้ายมุมขวาบน (มือถือ + คอม) ===== */
+/* เว้นที่ขวาของกระดาษให้แถบโผล่ · กระดาษไม่ตัดของที่ล้นขอบ */
+.hx-live{--fo:48px}
+.hx-live .hxl-stack{margin-right:var(--fo)}
+html.vc-art .hx-live .hxl-paper{overflow:visible !important;--pr:16px;padding-right:var(--pr) !important}
+.hx-live .hxl-wm{overflow:hidden;max-width:100%}
+/* บรรทัด: ข้อความเต็มความกว้าง เหลือที่ให้ส่วนโปร่งของแถบ */
+.hx-live .hxl-ln{display:flex !important;position:relative;padding-right:26px !important}
+.hx-live .hxl-ln .hxl-tx{flex:1;min-width:0}
+/* (1) แถบดัชนี: ส่วนกาวโปร่งแสงทับขอบกระดาษ + ปลายทึบมีไอคอนกับคำ โผล่ออกนอกกระดาษ */
+.hx-live .hxl-ln .hxl-st,.hx-live .hxl-ln .hxl-st.s-h,.hx-live .hxl-ln .hxl-st.s-c,.hx-live .hxl-ln .hxl-st.s-l{
+  position:absolute !important;top:50%;right:calc(-1 * (var(--pr) + var(--fo) - 3px));width:calc(var(--fo) + var(--pr) + 22px) !important;max-width:none !important;height:18px !important;margin:-9px 0 0 !important;
+  display:flex !important;align-items:center;justify-content:flex-end;gap:3px;padding:0 6px 0 0 !important;border-radius:2px 4px 4px 2px !important;box-shadow:none !important;
+  background:linear-gradient(90deg,var(--ft) 0,var(--ft) calc(100% - var(--fo) - 2px),var(--fs) calc(100% - var(--fo) - 2px)) !important;
+  filter:drop-shadow(0 1px 1.2px rgba(60,40,20,.28)) !important;font:700 9px/1.5 Prompt,sans-serif !important;color:#fff !important;-webkit-text-fill-color:#fff;text-shadow:none !important;overflow:hidden;
+  transform:rotate(var(--rot,0deg)) !important;transform-origin:100% 50%;grid-column:auto !important;justify-self:auto !important}
+.hx-live .hxl-ln .hxl-st.s-h{--ft:rgba(239,68,68,.22);--fs:#e5484d}
+.hx-live .hxl-ln .hxl-st.s-c{--ft:rgba(245,158,11,.26);--fs:#e8920c}
+.hx-live .hxl-ln .hxl-st.s-l{--ft:rgba(59,130,246,.22);--fs:#3b7cf0}
+.hx-live .hxl-st > span{flex:0 1 auto;max-width:calc(var(--fo) - 8px);text-align:left;font-size:8.6px;letter-spacing:-.01em;padding-top:1px}
+.hx-live .hxl-ln .hxl-st.s-long > span,.hx-live .hxl-ln .hxl-st.s-xl > span{font-size:7.6px !important;letter-spacing:-.03em}
+.hx-live .hxl-st .hxl-si{display:none}
+.hx-live .hxl-ln .hxl-st::after{left:auto;right:100%}
+/* แปะ: เลื่อนเข้าจากขวาแล้วติด */
+@keyframes hxlStick{0%{opacity:0;transform:translateX(14px) rotate(calc(var(--rot,0deg) + 4deg))}60%{opacity:1;transform:translateX(-2px) rotate(var(--rot,0deg))}100%{opacity:1;transform:rotate(var(--rot,0deg))}}
+@keyframes hxlTapSk{0%,40%,100%{transform:rotate(var(--rot,0deg))}20%{transform:translateX(-3px) rotate(var(--rot,0deg))}}
+.hx-live .hxl-ln.hit .hxl-st:hover,.hx-live .hxl-ln.hit .hxl-st:focus-visible{background:linear-gradient(90deg,var(--ft) 0,var(--ft) calc(100% - var(--fo) - 2px),var(--fs) calc(100% - var(--fo) - 2px)) !important;filter:drop-shadow(0 1px 1.2px rgba(60,40,20,.28)) brightness(1.08) !important;outline:none}
+/* หัวกระดาษชิดซ้าย เปิดที่ว่างมุมขวาบนให้ตรา */
+html.vc-art .hx-live .hxl-h{text-align:left !important}
+.hx-live .hxl-meta{text-align:left !important;max-width:62%}
+.hx-live .hxl-hint{left:var(--pl,20px) !important;transform:translate(0,4px) !important}
+.hx-live.slam:not(.held) .hxl-hint{transform:none !important}
+/* (ก) ตรา "อ่านก่อนเซ็น!" มุมขวาบน */
+.hx-live .hxl-paper > .hxl-bigst{position:absolute;left:auto !important;right:10px;top:12px !important;bottom:auto !important;font-size:13px !important;padding:4px 9px 5px !important;
+  transform:rotate(9deg);opacity:0;animation:none}
+.hx-live.slam .hxl-paper > .hxl-bigst{animation:hxlInk2 .7s ease-out .52s forwards !important}
+@keyframes hxlInk2{0%{opacity:.5;filter:blur(1.2px);transform:rotate(9deg) scale(1.04)}35%{opacity:.98;filter:blur(.5px)}100%{opacity:.92;filter:blur(0);transform:rotate(9deg)}}
+.hx-live .hxl-paper > .hxl-tool{left:auto;right:calc(10px + 34px);bottom:auto;top:-30px;margin-left:0;margin-right:-27px}
+.hx-live .hxl-paper > .hxl-tsh{left:auto;right:calc(10px + 20px);bottom:auto;top:20px;margin:0}
+.hx-live .hxl-paper > .hxl-splat{left:auto;right:58px;bottom:auto;top:24px}
+.hx-live.slam .hxl-paper > .hxl-tool{animation:hxlTool2 1.25s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes hxlTool2{0%{opacity:0;transform:translate(-20px,-80px) rotate(-6deg) scale(1.12)}14%{opacity:1}34%{transform:translate(-4px,-20px) rotate(4deg) scale(1.04)}42%{transform:translate(0,0) rotate(9deg) scaleY(.9) scaleX(1.04)}56%{transform:translate(0,0) rotate(9deg) scaleY(.94)}68%{opacity:1;transform:translate(4px,-20px) rotate(11deg)}100%{opacity:0;transform:translate(24px,-100px) rotate(16deg) scale(1.1)}}
+.hx-live.held .hxl-paper > .hxl-bigst,html[data-calm] .hx-live.slam .hxl-paper > .hxl-bigst{animation:none !important;opacity:.92 !important;filter:none}
+@media (prefers-reduced-motion:reduce){.hx-live.slam .hxl-paper > .hxl-bigst{animation:none !important;opacity:.92 !important;filter:none}}
+/* แถวลงชื่อกลับมาเตี้ยเท่าเดิม (ตราไม่อยู่ตรงนี้แล้ว) */
+.hx-live .hxl-sign{min-height:0 !important;margin-top:10px !important;margin-bottom:2px !important}
+@media (max-width:767px){.hx-live{--fo:44px} html.vc-art .hx-live .hxl-paper{--pr:12px}}
+.hx-live{--fo:60px}
+@media (max-width:767px){.hx-live{--fo:58px}}
+.hx-live .hxl-st > span{font-size:8.4px;max-width:calc(var(--fo) - 9px)}
+.hx-live .hxl-ln .hxl-st.s-long > span{font-size:7.8px !important}
+.hx-live .hxl-ln .hxl-st.s-xl > span{font-size:7.2px !important}
