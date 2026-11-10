@@ -58,34 +58,45 @@
   function stopTick() { if (tick) { clearInterval(tick); tick = null; } }
 
   function cardHtml(w, i) {
-    var st = w.done ? 'is-done' : w.today ? 'is-open' : 'is-lock', next = S.checkedToday && i === S.week.filter(function (x) { return x.done; }).length;
-    var foot = w.done ? '<span class="vdg-st">' + ICO_OK + 'รับแล้ว</span>'
-      : w.today ? '<span class="vdg-st">กดรับ</span>'
-      : next ? '<span class="vdg-st is-cd">' + ICO_LOCK + '<i data-cd="s">' + hms2(msToMidnight()) + '</i></span>'
-      : '<span class="vdg-st">' + ICO_LOCK + 'ล็อก</span>';
-    var tag = w.today ? 'button type="button"' : 'div';
-    return '<' + tag + ' class="vdg-c ' + st + (i === 6 ? ' is-big' : '') + '" data-i="' + i + '"' + (w.today ? ' aria-label="รับรางวัลวันที่ ' + w.day + ' +' + w.reward + ' แต้ม"' : '') + '>' +
-      '<span class="vdg-day">วันที่ ' + w.day + '</span>' +
+    var done = S.week.filter(function (x) { return x.done; }).length;
+    var st = w.done ? 'is-done' : w.today ? 'is-open' : 'is-lock', soon = S.checkedToday && i === done;
+    var foot = w.done ? 'รับแล้ว' : w.today ? 'วันนี้' : soon ? 'พรุ่งนี้' : '';
+    var tag = w.today ? 'button' : 'div';
+    return '<' + tag + (w.today ? ' type="button"' : '') + ' class="vdg-c ' + st + (soon ? ' is-soon' : '') + (i === 6 ? ' is-big' : '') + '" data-i="' + i + '"' +
+      (w.today ? ' aria-label="รับรางวัลวันที่ ' + w.day + ' +' + w.reward + ' แต้ม"' : ' aria-label="วันที่ ' + w.day + ' +' + w.reward + ' แต้ม ' + (w.done ? 'รับแล้ว' : 'ยังไม่ถึง') + '"') + '>' +
+      '<span class="vdg-day">' + (i === 6 ? 'วันที่ 7 · กล่องสมบัติ' : 'วัน ' + w.day) + '</span>' +
       '<svg class="vdg-art" viewBox="0 0 64 64" aria-hidden="true">' + ART[i] + '</svg>' +
-      '<span class="vdg-amt">' + (i === 6 ? 'รางวัลใหญ่ ' : '') + '+' + w.reward + ' <small>แต้ม</small></span>' + foot +
-      '</' + (w.today ? 'button' : 'div') + '>';
+      '<span class="vdg-amt">+' + w.reward + '</span>' +
+      (foot ? '<span class="vdg-tag">' + foot + '</span>' : '') +
+      (w.done ? '<span class="vdg-ok" aria-hidden="true">' + ICO_OK + '</span>' : '') +
+      (!w.done && !w.today ? '<span class="vdg-lk" aria-hidden="true">' + ICO_LOCK + '</span>' : '') +
+      '</' + tag + '>';
   }
   function render() {
     if (!box || !S) return;
     var r = S.redeem, pct = Math.min(100, Math.round(S.points / r.cost * 100)), done = S.week.filter(function (x) { return x.done; }).length;
-    var reason = r.canRedeem ? '' : r.usedThisMonth >= r.perMonth ? 'เดือนนี้แลกครบ ' + r.perMonth + ' ครั้งแล้ว' : 'อีก ' + fmt(r.cost - S.points) + ' แต้ม';
-    box.querySelector('.vdg-side').innerHTML =
-      '<div class="vdg-panel vdg-fire">' + ICO_FIRE + '<div><b>' + S.streak + '</b><span>วันติดต่อกัน</span></div></div>' +
-      '<div class="vdg-panel vdg-wallet"><span>แต้มสะสม</span><b>' + fmt(S.points) + '</b>' +
-      '<div class="vdg-bar" role="progressbar" aria-label="ความคืบหน้าสู่การแลก" aria-valuemin="0" aria-valuemax="' + r.cost + '" aria-valuenow="' + Math.min(S.points, r.cost) + '"><i style="width:' + pct + '%"></i></div>' +
-      '<small>' + fmt(r.cost) + ' แต้ม = ตรวจสัญญาฟรี 1 ครั้ง</small>' +
-      '<button type="button" class="vdg-redeem"' + (r.canRedeem ? '' : ' disabled') + '>' + (r.canRedeem ? 'แลกตรวจฟรี 1 ครั้ง' : h(reason)) + '</button></div>' +
-      '<ul class="vdg-rules"><li>รับได้วันละ 1 ช่อง ขึ้นวันใหม่ตอนเที่ยงคืน (เวลาไทย)</li><li>ขาดวันไหน เริ่มวันที่ 1 ใหม่ แต้มที่สะสมไม่หาย</li><li>แลกได้เดือนละ ' + r.perMonth + ' ครั้ง · ใช้แล้ว ' + r.usedThisMonth + '</li></ul>';
-    box.querySelector('.vdg-main').innerHTML =
-      '<div class="vdg-bar2"><span class="vdg-chip"><b>' + done + '/7</b> วัน</span>' +
-      (S.checkedToday ? '<span class="vdg-next">รับครั้งถัดไปใน <b data-cd>' + hms(msToMidnight()) + '</b></span>' : '<span class="vdg-next">วันนี้รับได้ <b>+' + S.todayReward + ' แต้ม</b></span>') +
-      '<button type="button" class="vdg-claim"' + (S.checkedToday ? ' disabled' : '') + '>' + (S.checkedToday ? 'รับแล้ววันนี้' : 'รับรางวัล') + '</button></div>' +
-      '<div class="vdg-grid">' + S.week.map(cardHtml).join('') + '</div>';
+    // อีกกี่วันถึงกล่องสมบัติ (วันที่ 7)
+    var toChest = S.checkedToday ? 7 - done : 6 - done;
+    var hint = S.week[6].done ? 'ครบรอบ 7 วันแล้ว! พรุ่งนี้เริ่มรอบใหม่' : S.week[6].today ? 'วันนี้เปิดกล่องสมบัติได้!' : 'อีก ' + toChest + ' วัน เปิดกล่องสมบัติ +' + S.week[6].reward + ' แต้ม';
+    var need = r.cost - S.points;
+    var redeemRow = r.canRedeem
+      ? '<button type="button" class="vdg-redeem">แลกตรวจฟรี 1 ครั้ง</button>'
+      : '<span class="vdg-need">' + (r.usedThisMonth >= r.perMonth ? 'เดือนนี้แลกครบ ' + r.perMonth + ' ครั้งแล้ว' : 'อีก <b>' + fmt(need) + '</b> แต้ม แลกตรวจฟรี 1 ครั้ง') + '</span>';
+    box.querySelector('.vdg-body').innerHTML =
+      '<div class="vdg-sum">' +
+        '<div class="vdg-fire' + (S.streak ? '' : ' is-zero') + '">' + ICO_FIRE + '<b>' + S.streak + '</b><span>' + (S.streak ? 'วันติด' : 'เริ่มวันแรก') + '</span></div>' +
+        '<div class="vdg-wallet"><div class="vdg-wl"><svg class="vdg-coin" viewBox="0 0 64 64" aria-hidden="true">' + COIN(32, 30, 22) + '</svg><b data-pts>' + fmt(S.points) + '</b><span>/ ' + fmt(r.cost) + ' แต้ม</span></div>' +
+          '<div class="vdg-bar" role="progressbar" aria-label="แต้มสะสมสู่การแลกตรวจฟรี" aria-valuemin="0" aria-valuemax="' + r.cost + '" aria-valuenow="' + Math.min(S.points, r.cost) + '"><i style="width:' + pct + '%"></i></div>' +
+          redeemRow + '</div>' +
+      '</div>' +
+      '<div class="vdg-grid">' + S.week.map(cardHtml).join('') + '</div>' +
+      '<p class="vdg-hint">' + hint + '</p>' +
+      '<details class="vdg-rules"><summary>กติกา</summary><ul><li>รับได้วันละ 1 ครั้ง ขึ้นวันใหม่ตอนเที่ยงคืน (เวลาไทย)</li><li>ขาดวันไหน เริ่มวันที่ 1 ใหม่ แต่แต้มที่สะสมไว้ไม่หาย</li><li>' + fmt(r.cost) + ' แต้ม แลกตรวจสัญญาฟรีได้ 1 ครั้ง · เดือนละไม่เกิน ' + r.perMonth + ' ครั้ง (ใช้แล้ว ' + r.usedThisMonth + ')</li></ul></details>';
+    var sub = box.querySelector('.vdg-sub'), foot = box.querySelector('.vdg-foot');
+    sub.innerHTML = S.checkedToday ? 'รับของวันนี้แล้ว · รอบถัดไปใน <b data-cd>' + hms(msToMidnight()) + '</b>' : 'วันนี้รับได้ <b>+' + S.todayReward + ' แต้ม</b>';
+    foot.innerHTML = S.checkedToday
+      ? '<button type="button" class="vdg-claim" disabled><span>กลับมาพรุ่งนี้ รับ +' + S.tomorrowReward + '</span><small data-cd="s">' + hms2(msToMidnight()) + '</small></button>'
+      : '<button type="button" class="vdg-claim"><span>รับ +' + S.todayReward + ' แต้ม</span></button>';
     startTick();
   }
   function build() {
@@ -93,12 +104,12 @@
     box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-labelledby', 'vdcT');
     box.innerHTML = DEFS + '<div class="vdc-bg" data-x></div><div class="vdg-frame"><div class="vdc-grip" aria-hidden="true"></div>' +
       '<button type="button" class="vdg-x" data-x aria-label="ปิด">✕</button>' +
-      '<h3 class="vdg-title" id="vdcT"><span>7 วัน</span> รับรางวัลรายวัน!</h3>' +
-      '<div class="vdg-in"><aside class="vdg-side"></aside><section class="vdg-main"><p class="vdc-wait">กำลังโหลด…</p></section></div></div>';
+      '<div class="vdg-hd"><h3 id="vdcT">เช็กอินรายวัน</h3><p class="vdg-sub"></p></div>' +
+      '<div class="vdg-body"><p class="vdc-wait">กำลังโหลด…</p></div><div class="vdg-foot"></div></div>';
     document.body.appendChild(box);
     box.addEventListener('click', function (e) {
       if (e.target.closest('[data-x]')) { close(); return; }
-      if (e.target.closest('.vdg-c.is-open, .vdg-claim')) { checkin(); return; }
+      if (e.target.closest('.vdg-c.is-open, .vdg-claim:not([disabled])')) { checkin(); return; }
       if (e.target.closest('.vdg-redeem')) redeem();
     });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && box && !box.hidden) close(); });
@@ -111,31 +122,82 @@
     box.hidden = false; document.documentElement.classList.add('vdc-open');
     if (S) render();
     load();
-    setTimeout(function () { var x = box.querySelector('.vdg-c.is-open') || box.querySelector('.vdg-x'); if (x) x.focus({ preventScroll: true }); }, 40);
+    setTimeout(function () { var x = box.querySelector('.vdg-claim:not([disabled])') || box.querySelector('.vdg-x'); if (x) x.focus({ preventScroll: true }); }, 40);
   }
   function close() {
     if (!box) return; box.hidden = true; document.documentElement.classList.remove('vdc-open'); stopTick();
     if (lastFocus && lastFocus.focus) try { lastFocus.focus({ preventScroll: true }); } catch (e) {}
   }
 
+  /* ---------- ฉลองตอนรับรางวัล: เหรียญบินจากการ์ดเข้ากระเป๋า แล้วตัวเลขนับขึ้น ---------- */
+  var calm = function () { return !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); };
+  function celebrate(card, from, to, gained, bonus) {
+    var num = box && box.querySelector('[data-pts]'), dst = box && box.querySelector('.vdg-coin');
+    if (!num) return;
+    if (calm() || !card || !dst || !card.animate) { num.textContent = fmt(to); return; }
+    num.textContent = fmt(from);
+    var a = card.getBoundingClientRect(), b = dst.getBoundingClientRect();
+    var n = bonus ? 12 : Math.min(9, 3 + Math.round(gained / 10));
+    for (var k = 0; k < n; k++) (function (k) {
+      var c = document.createElement('span'); c.className = 'vdg-fly';
+      c.innerHTML = '<svg viewBox="0 0 64 64">' + COIN(32, 30, 22) + '</svg>';
+      var x0 = a.left + a.width / 2 - 12 + (Math.random() - .5) * a.width * .5, y0 = a.top + a.height * .45 + (Math.random() - .5) * 20;
+      var x1 = b.left + b.width / 2 - 12, y1 = b.top + b.height / 2 - 12, mx = (x0 + x1) / 2 + (Math.random() - .5) * 120, my = Math.min(y0, y1) - 60 - Math.random() * 80;
+      document.body.appendChild(c);
+      var an = c.animate([
+        { transform: 'translate(' + x0 + 'px,' + y0 + 'px) scale(.4)', opacity: 0 },
+        { transform: 'translate(' + x0 + 'px,' + (y0 - 18) + 'px) scale(1.1)', opacity: 1, offset: .15 },
+        { transform: 'translate(' + mx + 'px,' + my + 'px) scale(1)', opacity: 1, offset: .55 },
+        { transform: 'translate(' + x1 + 'px,' + y1 + 'px) scale(.7)', opacity: .9 }
+      ], { duration: 780 + Math.random() * 160, delay: k * 55, easing: 'cubic-bezier(.45,0,.3,1)', fill: 'forwards' });
+      an.onfinish = function () {
+        c.remove();
+        if (dst.animate) dst.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.25)' }, { transform: 'scale(1)' }], { duration: 220 });
+      };
+    })(k);
+    // ตัวเลขนับขึ้นระหว่างเหรียญกำลังเข้า
+    var t0 = performance.now() + 520, dur = 700;
+    (function step(t) {
+      var p = Math.max(0, Math.min(1, (t - t0) / dur));
+      num.textContent = fmt(Math.round(from + (to - from) * (1 - Math.pow(1 - p, 3))));
+      if (p < 1) requestAnimationFrame(step);
+    })(performance.now());
+    if (bonus) setTimeout(burst, 300);
+  }
+  // ประกายเมื่อครบ 7 วัน
+  function burst() {
+    var big = box && box.querySelector('.vdg-c.is-big'); if (!big || calm()) return;
+    var r = big.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    for (var k = 0; k < 26; k++) {
+      var d = document.createElement('i'); d.className = 'vdg-spark'; document.body.appendChild(d);
+      var ang = Math.random() * Math.PI * 2, dist = 60 + Math.random() * 120;
+      d.style.background = ['#ffe28a', '#f4c542', '#fff', '#5fd3a6', '#ff9a4d'][k % 5];
+      d.animate([{ transform: 'translate(' + cx + 'px,' + cy + 'px) scale(1)', opacity: 1 }, { transform: 'translate(' + (cx + Math.cos(ang) * dist) + 'px,' + (cy + Math.sin(ang) * dist + 40) + 'px) scale(.3)', opacity: 0 }],
+        { duration: 900 + Math.random() * 400, easing: 'cubic-bezier(.2,.8,.3,1)', fill: 'forwards' }).onfinish = (function (d) { return function () { d.remove(); }; })(d);
+    }
+  }
+
   /* ---------- การทำงาน ---------- */
   function apply(d) { S = d; render(); strip(); menu(); }
   function load() {
     if (!user()) { S = null; strip(); menu(); return Promise.resolve(); }
-    return call('/api/daily').then(function (r) { if (r.ok) apply(r.data); else if (box && !box.hidden && !S) box.querySelector('.vdg-main').innerHTML = '<p class="vdc-wait">' + h(r.data.error || 'โหลดไม่สำเร็จ') + '</p>'; });
+    return call('/api/daily').then(function (r) { if (r.ok) apply(r.data); else if (box && !box.hidden && !S) box.querySelector('.vdg-body').innerHTML = '<p class="vdc-wait">' + h(r.data.error || 'โหลดไม่สำเร็จ') + '</p>'; });
   }
   function checkin() {
-    if (busy) return; busy = true;
-    [].forEach.call(document.querySelectorAll('.vdg-claim, .vdg-c.is-open, .vds-go'), function (b) { b.disabled = true; });
+    if (busy || (S && S.checkedToday)) return; busy = true;
+    var btns = document.querySelectorAll('.vdg-claim, .vdg-c.is-open, .vds-go');
+    [].forEach.call(btns, function (b) { b.disabled = true; });
+    var before = S ? S.points : 0, k = S ? S.week.filter(function (x) { return x.done; }).length : 0;
     call('/api/daily/checkin', 'POST').then(function (r) {
       busy = false;
-      if (!r.ok) { say(r.data.error || 'เช็กอินไม่สำเร็จ'); [].forEach.call(document.querySelectorAll('.vdg-claim, .vdg-c.is-open, .vds-go'), function (b) { b.disabled = false; }); return; }
-      var k = S ? S.week.filter(function (x) { return x.done; }).length : 0;
+      if (!r.ok) { say(r.data.error || 'เช็กอินไม่สำเร็จ'); [].forEach.call(btns, function (b) { b.disabled = false; }); return; }
       apply(r.data);
-      if (box && !box.hidden) { var jc = box.querySelector('.vdg-c[data-i="' + k + '"]'); if (jc) jc.classList.add('just-claimed'); }
+      var open = box && !box.hidden, card = open && box.querySelector('.vdg-c[data-i="' + k + '"]');
+      if (card) card.classList.add('just-claimed');
       if (r.data.gained) {
-        say((r.data.bonus ? 'ครบ 7 วัน! ' : '') + 'เช็กอินแล้ว +' + r.data.gained + ' แต้ม');
-        pop(r.data.gained);
+        if (open) celebrate(card, before, r.data.points, r.data.gained, r.data.bonus);
+        else pop(r.data.gained);
+        say(r.data.bonus ? 'ครบ 7 วัน! เปิดกล่องสมบัติ +' + r.data.gained + ' แต้ม' : 'เช็กอินแล้ว +' + r.data.gained + ' แต้ม');
       }
     });
   }
@@ -154,7 +216,7 @@
   // แต้มลอยขึ้นเล็กน้อยตอนเช็กอินสำเร็จ
   function pop(n) {
     if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    var t = document.querySelector('.vdc:not([hidden]) .vdg-c.just-claimed') || document.querySelector('.vdc:not([hidden]) .vdg-wallet') || document.getElementById('vdcStrip');
+    var t = document.getElementById('vdcStrip');
     if (!t) return;
     var r = t.getBoundingClientRect(), p = document.createElement('span');
     p.className = 'vdc-pop'; p.textContent = '+' + n;
@@ -192,18 +254,35 @@
   }
 
   /* ---------- ปุ่มในเมนูบัญชี ---------- */
+  /* ---------- การ์ดในหน้าบัญชี: เห็นตลอด ทั้งก่อนและหลังรับรางวัลวันนี้ ----------
+     วางต่อจากการ์ดเครดิต (.vc-wcard) / แถวประวัติ (.vc-stat) · การ์ดแจ้งเตือน (remind-ui.js) จะวางต่อจากการ์ดนี้ */
+  function acctAnchor(li) { return li.querySelector('.vc-stat') || li.querySelector('.vc-wcard') || li.querySelector('.wallet-total'); }
+  function placeAfter(el, anchor) { if (anchor && anchor.parentNode && el.previousElementSibling !== anchor) anchor.parentNode.insertBefore(el, anchor.nextSibling); }
   function menu() {
-    var nav = document.querySelector('#authLoggedIn .acct-menu'); if (!nav) return;
-    var b = document.getElementById('vdcMenu');
-    if (!b) {
-      b = document.createElement('button'); b.type = 'button'; b.id = 'vdcMenu'; b.className = 'menu-item vdc-menu';
-      b.innerHTML = '<span class="menu-ico" aria-hidden="true">' + ICO_GIFT + '</span><span class="menu-txt"><b>เช็กอินรายวัน</b><small>สะสมแต้มแลกตรวจสัญญาฟรี</small></span><span class="vdc-badge" hidden></span>';
-      nav.insertBefore(b, nav.firstChild);
-      b.addEventListener('click', open);
+    var li = document.getElementById('authLoggedIn'); if (!li) return;
+    var old = document.getElementById('vdcMenu'); if (old) old.remove();
+    var c = document.getElementById('vdcAcct');
+    if (!c) {
+      c = document.createElement('button'); c.type = 'button'; c.id = 'vdcAcct'; c.className = 'vdc-acct';
+      c.addEventListener('click', open);
+      // หน้าบัญชีสร้างการ์ดเครดิต/แถวประวัติทีหลัง → คอยจัดตำแหน่งให้ถูกเสมอ
+      new MutationObserver(function () { var x = document.getElementById('vdcAcct'); if (x) placeAfter(x, acctAnchor(li)); }).observe(li, { childList: true, subtree: true });
     }
-    var bd = b.querySelector('.vdc-badge'), sm = b.querySelector('small');
-    if (S) sm.textContent = 'แต้มสะสม ' + fmt(S.points) + (S.streak ? ' · ' + S.streak + ' วันติด' : '');
-    bd.hidden = !(S && !S.checkedToday); bd.textContent = 'ใหม่';
+    placeAfter(c, acctAnchor(li));
+    c.hidden = !user();
+    if (!S) { c.className = 'vdc-acct'; c.innerHTML = '<span class="vda-ic">' + ICO_GIFT + '</span><span class="vda-tx"><b>เช็กอินรายวัน</b><small>สะสมแต้มแลกตรวจสัญญาฟรี</small></span><i class="vda-chev" aria-hidden="true"></i>'; return; }
+    var done = S.week.filter(function (x) { return x.done; }).length;
+    var dots = S.week.map(function (w) { return '<i class="' + (w.done ? 'is-done' : w.today ? 'is-today' : '') + '"></i>'; }).join('');
+    c.className = 'vdc-acct' + (S.checkedToday ? ' is-claimed' : ' is-ready');
+    c.setAttribute('aria-label', 'เช็กอินรายวัน ' + (S.checkedToday ? 'รับของวันนี้แล้ว' : 'วันนี้รับได้ ' + S.todayReward + ' แต้ม') + ' แต้มสะสม ' + S.points);
+    c.innerHTML = '<span class="vda-ic">' + ICO_GIFT + '</span>' +
+      '<span class="vda-tx"><b>เช็กอินรายวัน</b>' +
+      '<small><span class="vda-fire">' + ICO_FIRE + S.streak + ' วันติด</span> · ' + fmt(S.points) + ' แต้ม</small>' +
+      '<span class="vda-dots" aria-hidden="true">' + dots + '<em>' + done + '/7</em></span></span>' +
+      (S.checkedToday
+        ? '<span class="vda-pill is-ok">✓ รับแล้ว<small>พรุ่งนี้ +' + S.tomorrowReward + '</small></span>'
+        : '<span class="vda-pill">รับ +' + S.todayReward + '</span>') +
+      '<i class="vda-chev" aria-hidden="true"></i>';
   }
 
   // ต่อจาก onAuthChange เดิม (pay-ui.js / remind-ui.js)
