@@ -7096,3 +7096,42 @@ html body :is(#authClose,.ct-close,.pay-close,.cs-x,.vrh-x,.vdg-x,.vsl-x,.vcp-x,
 
 /* ปุ่มบัญชี (วงกลม) บนแถบหัว: สูงเท่าปุ่ม "ตรวจสัญญา" (38px) และกลมพอดี */
 html.vc-art body.has-nav #authToggle{width:38px !important;height:38px !important;min-width:38px !important;min-height:38px !important;max-width:38px;padding:0 !important;border-radius:50% !important;flex:0 0 38px !important;box-sizing:border-box}
+
+/* ===== v275 เปลี่ยนหน้า: ไม่มีจอดำ (art.js go: View Transitions / Web Animations) ===== */
+@keyframes vtOut{to{opacity:0;transform:translateY(16px)}}
+@keyframes vtIn{from{opacity:0;transform:translateY(-20px)}}
+html.vc-vt::view-transition-old(root){animation:vtOut .22s cubic-bezier(.4,0,1,1) both}
+html.vc-vt::view-transition-new(root){animation:vtIn .42s cubic-bezier(.2,.8,.2,1) .05s both}
+/* แถบหัวกับเมนูล่างอยู่นิ่ง ไม่ขยับตามหน้า */
+html.vc-vt .site-header{view-transition-name:vc-head}
+html.vc-vt #bottomNav{view-transition-name:vc-nav}
+html.vc-vt .vhp-fab{view-transition-name:vc-fab}
+::view-transition-group(vc-head),::view-transition-group(vc-nav),::view-transition-group(vc-fab){animation:none}
+::view-transition-old(vc-head),::view-transition-old(vc-nav),::view-transition-old(vc-fab){display:none}
+::view-transition-new(vc-head),::view-transition-new(vc-nav),::view-transition-new(vc-fab){animation:none}
+/* ข้อ 2: กระดาษตรวจสัญญา → กระดาษตัวอย่างหน้าแรก */
+::view-transition-group(vc-paper){animation-duration:.6s;animation-timing-function:cubic-bezier(.3,.9,.25,1);z-index:5}
+::view-transition-image-pair(vc-paper){overflow:hidden;border-radius:16px}
+::view-transition-old(vc-paper){animation:vtPaperOut .3s ease both}
+::view-transition-new(vc-paper){animation:vtPaperIn .4s ease .1s both}
+@keyframes vtPaperOut{to{opacity:0}}
+@keyframes vtPaperIn{from{opacity:0}}
+@media (prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}}
+
+/* ===== ข้อ 3: หน้าแรกค่อย ๆ เข้ามาทีละส่วน (data-entering="home") ===== */
+@keyframes vhRise{from{opacity:0;transform:translateY(22px)}}
+@keyframes vhDrop{0%{opacity:0;transform:translateY(-34px) rotate(-2.5deg) scale(.97)}70%{opacity:1;transform:translateY(3px) rotate(.3deg)}100%{transform:none}}
+html.vc-motion[data-entering="home"] main > .hero .hero-title{animation:vhRise .55s cubic-bezier(.2,.8,.2,1) .04s both}
+html.vc-motion[data-entering="home"] main > .hero .hero-lead{animation:vhRise .5s cubic-bezier(.2,.8,.2,1) .16s both}
+html.vc-motion[data-entering="home"] main > .hero .hx-live{animation:vhDrop .7s cubic-bezier(.2,.8,.2,1) .22s both}
+html.vc-motion.vc-vt[data-entering="home"] main > .hero .hx-live{animation:none}   /* กำลังบินกระดาษ: ไม่ต้องหล่นซ้ำ */
+html.vc-motion[data-entering="home"] main > .hero :is(.dx-cta-row,.hero-cue,.svx-entry,.hx-cta,.hero-ctas){animation:vhRise .5s cubic-bezier(.2,.8,.2,1) .4s both}
+@media (prefers-reduced-motion:reduce){html[data-entering="home"] main > .hero *{animation:none !important}}
+
+/* ===== ข้อ 4: เมนูล่างตอบสนองทันที ===== */
+@keyframes bnPop{0%{transform:scale(.82)}55%{transform:scale(1.16) translateY(-2px)}100%{transform:none}}
+.bottom-nav .bn-item.vc-tap svg{animation:bnPop .42s cubic-bezier(.3,1.5,.5,1)}
+.bottom-nav .bn-item:active svg{transform:scale(.88)}
+.bottom-nav .bn-item svg{transition:transform .2s}
+.bottom-nav .vc-bn-ind{transition:transform .38s cubic-bezier(.3,1.25,.5,1) !important}
+@media (prefers-reduced-motion:reduce){.bottom-nav .bn-item.vc-tap svg{animation:none}}
