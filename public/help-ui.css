@@ -1,0 +1,120 @@
+/* ===== ปุ่ม "ติดปัญหา?" + หน้าต่างวิธีแก้ (help-ui.js) ===== */
+.vhp-fab{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:9990;display:flex;align-items:center;gap:6px;
+  height:48px;padding:0 16px 0 4px;border-radius:999px;border:1px solid rgba(214,182,110,.55);cursor:pointer;
+  background:linear-gradient(180deg,#2a1d12,#1a120b);color:#f3e6c8;font-weight:600;font-size:.9rem;line-height:1;font-family:inherit;
+  box-shadow:0 10px 24px -8px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,236,190,.12);transition:transform .2s,border-color .2s}
+.vhp-fab:hover{transform:translateY(-2px);border-color:rgba(232,196,120,.9)}
+.vhp-fab:focus-visible{outline:2px solid #e8c478;outline-offset:3px}
+.vhp-fab-m{display:grid;place-items:center;width:44px;height:44px;margin-top:-14px}
+.vhp-fab-m svg.vm{width:40px;height:auto;overflow:visible;filter:drop-shadow(0 3px 3px rgba(0,0,0,.4))}
+.vhp-fab-t{white-space:nowrap;letter-spacing:.01em}
+@media (hover:hover) and (prefers-reduced-motion:no-preference){.vhp-fab:hover .vhp-fab-m{animation:vhpWave .6s ease-in-out}}
+@keyframes vhpWave{30%{transform:rotate(-10deg)}60%{transform:rotate(8deg)}}
+/* มือถือ: เหลือแค่ปุ่มกลม ไม่บังเนื้อหา · ยกขึ้นเหนือแถบเมนูล่าง */
+@media (max-width:767px){
+  .vhp-fab{right:12px;width:52px;height:52px;padding:0;justify-content:center;bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+  body:has(#bottomNav:not([hidden])) .vhp-fab{bottom:calc(var(--nav-h,64px) + 12px + env(safe-area-inset-bottom,0px))}
+  .vhp-fab-m{margin-top:-6px}
+  .vhp-fab-t{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+}
+/* ซ่อนปุ่มตอนมีหน้าต่างอื่นเปิดทับ (ยกเว้นหน้าเข้าสู่ระบบ เพราะคนติดล็อกอินต้องกดได้) */
+html.vhp-open .vhp-fab,
+:is(html,body):is(.cs-open,.pay-open,.vw-open,.vdc-open,.vrh-open,.vcp-open,.vc-tool-open,.vc-ld-open,.vc-rd-open,.vc-dsc-open) .vhp-fab{display:none}
+@media print{.vhp-fab,.vhp{display:none !important}}
+
+/* ---------- หน้าต่าง ---------- */
+.vhp{position:fixed;inset:0;z-index:100000;display:flex;align-items:flex-end;justify-content:flex-end;padding:18px}
+.vhp[hidden]{display:none}
+.vhp-bg{position:absolute;inset:0;background:rgba(12,8,4,.55)}
+.vhp-panel{position:relative;width:min(440px,100%);max-height:min(720px,calc(100svh - 36px));overflow:auto;overscroll-behavior:contain;
+  padding:22px 20px 18px;border-radius:20px;color:#3a2714;
+  background:#f6f0e2 linear-gradient(180deg,#fbf7ee,#f1e8d4);
+  box-shadow:0 30px 60px -20px rgba(0,0,0,.7),0 0 0 1px rgba(120,90,50,.18),inset 0 1px 0 #fff}
+@media (max-width:767px){
+  .vhp{padding:0}
+  .vhp-panel{width:100%;max-height:88svh;border-radius:22px 22px 0 0;padding:26px 16px calc(18px + env(safe-area-inset-bottom,0px))}
+  .vhp-panel::before{content:"";position:absolute;top:9px;left:50%;width:42px;height:4px;margin-left:-21px;border-radius:4px;background:rgba(58,39,20,.2)}
+}
+.vhp-x{position:absolute;top:12px;right:12px;z-index:2;width:38px;height:38px;border-radius:50%;border:0;cursor:pointer;display:grid;place-items:center;
+  background:rgba(58,39,20,.08);color:#3a2714}
+.vhp-x:hover{background:rgba(58,39,20,.15)}
+.vhp-x svg,.vhp-back svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.vhp :focus-visible{outline:2px solid #b07a1e;outline-offset:2px}
+.vhp h2{margin:0;font-size:1.3rem;line-height:1.35;font-weight:700;color:#2a1a0c}
+.vhp h2:focus{outline:none}
+.vhp b{font-weight:700}
+
+/* หน้าแรก: เลือกปัญหา */
+.vhp-hd{display:flex;align-items:center;gap:12px;margin:0 40px 16px 0}
+.vhp-hm svg.vm{width:64px;height:auto;display:block;overflow:visible}
+.vhp-hd p{margin:4px 0 0;font-size:.9rem;line-height:1.5;color:rgba(58,39,20,.72)}
+.vhp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.vhp-card{display:flex;flex-direction:column;align-items:flex-start;gap:8px;min-height:112px;padding:14px 12px;text-align:left;cursor:pointer;
+  border-radius:14px;border:1px solid rgba(120,90,50,.18);background:#fffdf8;color:inherit;font:inherit;position:relative;
+  box-shadow:0 2px 0 rgba(120,90,50,.08);transition:transform .15s,border-color .15s,box-shadow .15s}
+.vhp-card:hover{transform:translateY(-2px);border-color:rgba(176,122,30,.55);box-shadow:0 8px 18px -10px rgba(90,60,20,.45)}
+.vhp-card:active{transform:scale(.98)}
+.vhp-card.is-wide{grid-column:1/-1;flex-direction:row;align-items:center;min-height:0;background:linear-gradient(90deg,#fff6dc,#fffdf8);border-color:rgba(214,170,80,.5)}
+.vhp-ic{font-size:1.7rem;line-height:1}
+.vhp-ct{display:flex;flex-direction:column;gap:3px;flex:1}
+.vhp-ct b{font-size:.98rem;line-height:1.35;color:#2a1a0c}
+.vhp-ct small{font-size:.78rem;line-height:1.45;color:rgba(58,39,20,.62)}
+.vhp-go{position:absolute;right:12px;top:12px;font-size:1.3rem;line-height:1;color:rgba(176,122,30,.8)}
+.vhp-card.is-wide .vhp-go{position:static}
+@media (prefers-reduced-motion:no-preference){.vhp-card{animation:vhpIn .34s cubic-bezier(.2,.8,.25,1) both;animation-delay:calc(var(--k) * 35ms)}}
+@keyframes vhpIn{from{opacity:0;transform:translateY(10px)}}
+.vhp-mail{display:block;margin:14px 0 0;padding:12px;border-radius:12px;text-align:center;font-size:.88rem;color:#5a3d1c;text-decoration:none;background:rgba(58,39,20,.06)}
+.vhp-mail:hover{background:rgba(58,39,20,.1)}
+.vhp-mail b{text-decoration:underline;text-underline-offset:3px}
+
+/* หน้าวิธีแก้ */
+.vhp-dh{display:flex;align-items:center;gap:10px;margin:0 44px 18px 0}
+.vhp-back{flex:none;width:38px;height:38px;border-radius:50%;border:1px solid rgba(120,90,50,.25);background:#fffdf8;color:#3a2714;cursor:pointer;display:grid;place-items:center}
+.vhp-dic{font-size:1.6rem;line-height:1}
+.vhp-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;position:relative}
+.vhp-steps::before{content:"";position:absolute;left:17px;top:22px;bottom:22px;width:2px;background:repeating-linear-gradient(180deg,rgba(176,122,30,.45) 0 5px,transparent 5px 10px)}
+.vhp-steps li{display:flex;gap:12px;align-items:flex-start;position:relative}
+.vhp-n{flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:1rem;color:#fff;
+  background:linear-gradient(180deg,#c99234,#9a6a1c);box-shadow:0 0 0 4px #f6f0e2,0 3px 6px rgba(90,60,20,.35)}
+.vhp-steps li>div{flex:1;padding:10px 12px;border-radius:12px;background:#fffdf8;border:1px solid rgba(120,90,50,.14)}
+.vhp-st{display:block;font-weight:700;font-size:1rem;line-height:1.4;color:#2a1a0c}
+.vhp-steps li>div>span{display:block;margin-top:3px;font-size:.88rem;line-height:1.6;color:rgba(58,39,20,.78)}
+@media (prefers-reduced-motion:no-preference){.vhp-steps li{animation:vhpIn .4s cubic-bezier(.2,.8,.25,1) both;animation-delay:calc(80ms + var(--k) * 90ms)}}
+.vhp-r,.vhp-y,.vhp-g{display:inline-block;padding:1px 9px;border-radius:999px;font-size:.9em}
+.vhp-r{background:rgba(220,80,80,.14);color:#a3302f;box-shadow:inset 0 0 0 1px rgba(200,70,70,.35)}
+.vhp-y{background:rgba(230,170,40,.18);color:#8a5a00;box-shadow:inset 0 0 0 1px rgba(210,150,30,.4)}
+.vhp-g{background:rgba(90,150,100,.15);color:#2f6b3c;box-shadow:inset 0 0 0 1px rgba(80,140,90,.35)}
+.vhp-note{margin:14px 0 0;padding:10px 12px;border-radius:10px;font-size:.8rem;line-height:1.6;color:rgba(58,39,20,.7);background:rgba(58,39,20,.06)}
+.vhp-acts{display:flex;flex-direction:column;gap:8px;margin:18px 0 0}
+.vhp-btn{min-height:48px;padding:0 18px;border-radius:12px;border:0;cursor:pointer;font-weight:700;font-size:1rem;line-height:1.2;font-family:inherit;color:#fff8e8;
+  background:linear-gradient(180deg,#4a3018,#2e1d0e);box-shadow:0 6px 14px -6px rgba(40,25,10,.6),inset 0 1px 0 rgba(255,230,180,.18)}
+.vhp-btn:hover{filter:brightness(1.12)}
+.vhp-btn.is-ghost{background:transparent;color:#3a2714;box-shadow:inset 0 0 0 1.5px rgba(58,39,20,.3)}
+.vhp-fb{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:16px 0 0;padding:14px 0 0;border-top:1px dashed rgba(120,90,50,.3);font-size:.86rem;color:rgba(58,39,20,.75)}
+.vhp-fb>span{flex-basis:100%}
+.vhp-chip{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border-radius:999px;border:1px solid rgba(120,90,50,.28);background:#fffdf8;color:#3a2714;font-weight:600;font-size:.86rem;line-height:1;font-family:inherit;cursor:pointer;text-decoration:none}
+.vhp-chip:hover{border-color:rgba(176,122,30,.6)}
+.vhp-chip.is-no{color:#7a4a12}
+
+/* ขอบคุณ */
+.vhp-thx{text-align:center;padding:10px 0 4px}
+.vhp-thx svg.vm{width:110px;height:auto;display:block;margin:0 auto 6px;overflow:visible}
+.vhp-thx p{margin:6px 0 16px;color:rgba(58,39,20,.75)}
+.vhp-thx .vhp-btn{min-width:140px}
+.vhp-emo{font-size:2rem}
+
+/* ไฮไลต์ช่องตรวจสัญญาตอนพาไป */
+#checkCard.vhp-glow{animation:vhpGlow 2s ease-out}
+@keyframes vhpGlow{0%,30%{box-shadow:0 0 0 3px rgba(232,196,120,.9),0 0 30px rgba(232,196,120,.5)}100%{box-shadow:0 0 0 0 rgba(232,196,120,0)}}
+@media (prefers-reduced-motion:reduce){#checkCard.vhp-glow{animation:none}}
+/* กันสไตล์ h2 ทั่วเว็บ (เส้นทองหน้าหัวข้อ / ฟอนต์หัวเรื่อง) */
+.vhp .vhp-panel h2{display:block;font-family:inherit;font-size:1.3rem;letter-spacing:0;text-transform:none;text-shadow:none;margin:0;color:#2a1a0c;background:none}
+.vhp .vhp-panel h2::before,.vhp .vhp-panel h2::after{content:none;display:none}
+.vhp-panel{font-family:inherit}
+/* กันกฎไอคอน svg ของมือถือทับปุ่มปิด/ย้อนกลับ */
+.vhp .vhp-x svg,.vhp .vhp-back svg{display:block !important;width:18px !important;height:18px !important;fill:none !important;stroke:#3a2714 !important;stroke-width:2.4 !important;opacity:1 !important;visibility:visible !important}
+.vhp .vhp-x svg path,.vhp .vhp-back svg path{fill:none !important;stroke:#3a2714 !important;stroke-width:2.4 !important}
+.vhp .vhp-x,.vhp .vhp-back{padding:0 !important;min-width:38px;min-height:38px;flex:none;box-sizing:border-box}
+.vhp .vhp-card{padding:14px 12px}
+.vhp .vhp-btn{padding:0 18px}
+.vhp .vhp-chip{padding:0 14px}
