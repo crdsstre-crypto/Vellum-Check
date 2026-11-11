@@ -1,0 +1,126 @@
+/* ===== หน้า "วิธีอ่าน": กระดาษเล่าเรื่อง (read-story.js) — ขยับตาม --p ของ .mf ===== */
+.rs{display:none}
+html.vc-art .mf-pin.rs-on .rs{display:flex;justify-content:center;align-items:center;min-height:0;width:100%}
+.rs-doc{
+  --s:clamp(0,calc((var(--p,1) - .38) / .22),1);
+  --scanOn:min(clamp(0,calc((var(--p,1) - .36) / .02),1),clamp(0,calc((.62 - var(--p,1)) / .02),1));
+  --st:clamp(0,calc((var(--p,1) - .86) / .05),1);
+  position:relative;width:min(100%,500px);padding:26px 30px 22px;box-sizing:border-box;text-align:left;
+  color:#2a1a0c;font-size:.9rem;line-height:1.75;border-radius:3px;rotate:-1.2deg;
+  background:#f4efe3 linear-gradient(180deg,#fbf8f0,#efe7d5);
+  box-shadow:0 2px 0 #d9cfb8,0 4px 0 #e9e1cd,0 30px 50px -18px rgba(0,0,0,.75);
+}
+/* แผ่นซ้อนด้านหลัง */
+.rs-doc::before{content:"";position:absolute;inset:6px -6px -6px 6px;z-index:-1;border-radius:3px;background:#e2d8c2;rotate:2.4deg;box-shadow:0 18px 30px -16px rgba(0,0,0,.6)}
+.rs-hd{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:0 0 12px;padding:0 0 8px;border-bottom:1px solid rgba(58,39,20,.22)}
+.rs-hd b{font-family:var(--font-display,serif);font-size:1.15rem;font-weight:600}
+.rs-hd span{font-size:.62rem;letter-spacing:.12em;color:rgba(58,39,20,.5);border:1px solid rgba(58,39,20,.3);padding:1px 7px;border-radius:2px}
+.rs-l{position:relative;margin:0 0 7px;padding-right:22px;color:rgba(42,26,12,.88)}
+.rs-l b{font-weight:700;color:#2a1a0c}
+.rs-party{font-size:.84em;color:rgba(42,26,12,.75)}
+
+/* 01 · คาดดำ */
+.rs-rx{position:relative;display:inline-block;margin:0 .35em;--r:clamp(0,calc((var(--p,1) - var(--d)) / .06),1)}
+.rs-rx::after{content:"";position:absolute;left:-3px;right:-3px;top:18%;bottom:12%;border-radius:2px;background:#16120e;
+  transform:scaleX(var(--r));transform-origin:0 50%;
+  clip-path:polygon(0 8%,100% 0,99% 92%,1% 100%)}
+.rs-rx>span{opacity:calc(1 - var(--r) * .9)}
+
+/* 02 · สแกน + ติ๊ก */
+.rs-scan{position:absolute;left:10px;right:10px;top:calc(14% + var(--s) * 78%);height:2px;opacity:var(--scanOn);pointer-events:none;
+  background:linear-gradient(90deg,transparent,#e0a63a 15%,#f3cc6e 50%,#e0a63a 85%,transparent)}
+.rs-scan::before{content:"";position:absolute;left:0;right:0;bottom:2px;height:34px;background:linear-gradient(0deg,rgba(243,204,110,.28),transparent)}
+.rs-scan b{position:absolute;right:-16px;top:-15px;font-size:1.3rem;line-height:1;filter:drop-shadow(0 2px 2px rgba(0,0,0,.35))}
+.rs-tick{--rd:clamp(0,calc((var(--s) - var(--y)) / .05),1);position:absolute;right:0;top:.15em;width:16px;height:16px;border-radius:50%;
+  display:grid;place-items:center;font-style:normal;font-size:.62rem;font-weight:800;color:#fff;background:#4f8a5c;
+  opacity:var(--rd);transform:scale(calc(.4 + var(--rd) * .6))}
+.rs-risk .rs-tick{opacity:calc(var(--rd) * (1 - var(--hh,0)))}
+
+/* 03 · ไฮไลต์ + ป้าย */
+.rs-mk{--h:clamp(0,calc((var(--p,1) - var(--d)) / .07),1);padding:1px 1px;
+  background:linear-gradient(100deg,transparent 0,var(--mc) 3%,var(--mc) 97%,transparent 100%) no-repeat 0 60%/calc(var(--h) * 100%) 78%;
+  box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.rs-risk.lv-h{--mc:rgba(232,92,80,.36);--tc:#c4443c}
+.rs-risk.lv-c{--mc:rgba(240,176,50,.42);--tc:#c58a14}
+.rs-risk{--hh:clamp(0,calc((var(--p,1) - var(--hd,.7)) / .05),1)}
+.rs-risk::after{content:var(--tg);position:absolute;right:-44px;top:.1em;padding:2px 8px;border-radius:3px 10px 10px 3px;white-space:nowrap;
+  font-size:.66rem;font-weight:700;line-height:1.5;color:#fff;background:var(--tc);box-shadow:0 3px 6px rgba(0,0,0,.25);
+  opacity:var(--hh,0);transform:translateX(calc((1 - var(--hh,0)) * -12px)) rotate(2deg)}
+
+.rs-sign{display:flex;justify-content:space-between;gap:10px;margin:14px 0 0;font-size:.68rem;color:rgba(58,39,20,.5)}
+
+/* ตราสรุป */
+.rs-stamp{position:absolute;right:22%;bottom:-30px;width:92px;height:92px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  color:#b5362e;border:2.5px solid currentColor;box-shadow:inset 0 0 0 4px rgba(244,239,227,.9),inset 0 0 0 5.5px currentColor;text-align:center;
+  opacity:calc(var(--st) * .9);transform:rotate(-14deg) scale(calc(1.7 - var(--st) * .7));pointer-events:none;mix-blend-mode:multiply}
+.rs-stamp b{font-size:1.7rem;line-height:1;font-family:var(--font-display,serif)}
+.rs-stamp span{font-size:.56rem;font-weight:700;line-height:1.3}
+
+/* ป้ายขั้นบนหัวกระดาษ */
+.rs-ph{position:absolute;left:50%;top:-14px;translate:-50% 0;display:grid}
+.rs-ph i{grid-area:1/1;justify-self:center;padding:3px 12px;border-radius:999px;font-style:normal;font-size:.7rem;font-weight:700;white-space:nowrap;
+  color:#2a1a0c;background:#f1d58a;box-shadow:0 4px 10px -4px rgba(0,0,0,.5)}
+.rs-ph .on1{opacity:clamp(0,calc((.36 - var(--p,1)) / .03),1)}
+.rs-ph .on2{opacity:min(clamp(0,calc((var(--p,1) - .36) / .03),1),clamp(0,calc((.62 - var(--p,1)) / .03),1))}
+.rs-ph .on3{opacity:clamp(0,calc((var(--p,1) - .62) / .03),1)}
+
+/* ---------- วางคู่กับข้อความ ---------- */
+@media (min-width:1024px){
+  html.vc-spa .mf-pin.rs-on{grid-template-columns:minmax(0,5fr) minmax(0,6fr) !important;grid-template-rows:none;justify-items:stretch;text-align:left;gap:clamp(32px,5vw,90px);padding-inline:clamp(40px,7vw,120px)}
+  html.vc-spa .mf-pin.rs-on .mf-copy{align-items:flex-start;max-width:30rem;justify-self:end}
+  html.vc-spa .mf-pin.rs-on .mf-title{text-align:left}
+  html.vc-spa .mf-pin.rs-on .sec-label{justify-content:flex-start}
+  html.vc-spa .mf-pin.rs-on .mf-steps li{text-align:left}
+  html.vc-spa .mf-pin.rs-on .mf-steps span{margin-inline:0}
+  html.vc-spa .mf-pin.rs-on .rs{justify-content:flex-start}
+  .rs-doc{font-size:clamp(.82rem,1.05vw,.95rem);width:min(100%,520px)}
+}
+/* แท็บเล็ต/มือถือ: หัวข้อ → กระดาษ → คำอธิบายขั้น (สลับลำดับด้วย grid) */
+@media (max-width:1023px){
+  html.vc-spa .mf-pin.rs-on{grid-template-rows:none;grid-auto-rows:auto;align-content:center;gap:clamp(10px,2vh,20px)}
+  html.vc-spa .mf-pin.rs-on .mf-copy{display:contents}
+  html.vc-spa .mf-pin.rs-on .sec-label{order:1;margin-bottom:0}
+  html.vc-spa .mf-pin.rs-on .mf-title{order:2;font-size:clamp(1.4rem,6vw,2rem)}
+  html.vc-spa .mf-pin.rs-on .rs{order:3}
+  html.vc-spa .mf-pin.rs-on .mf-steps{order:4;margin:4px 0 0;min-height:5.6em}
+  .rs-doc{width:min(100%,420px);padding:20px 20px 16px;font-size:.74rem;line-height:1.65}
+  .rs-hd b{font-size:.98rem}
+  .rs-stamp{width:74px;height:74px;right:20%;bottom:-24px}
+  .rs-stamp b{font-size:1.35rem}
+  .rs-risk::after{right:-30px;font-size:.58rem;padding:1px 6px}
+}
+@media (max-width:767px){
+  .rs-doc{width:calc(100% - 26px);margin-right:26px;padding:18px 16px 14px;font-size:.68rem}
+  .rs-l{margin-bottom:5px}
+  .rs-sign{display:none}
+  .rs-scan b{font-size:1rem;right:-10px;top:-11px}
+}
+@media (max-height:700px) and (max-width:1023px){
+  .rs-party{display:none}
+  .rs-doc{padding-block:14px 10px}
+}
+
+/* ===== ข้อ 4: สามขั้น — ตัวเลขเติมหมึกทอง + เส้นประเชื่อมขั้น ===== */
+.rs-ch{--chg:clamp(28px,6vh,64px)}
+.rs-ch .ch-item{position:relative}
+.rs-ch .ch-n{
+  background:linear-gradient(180deg,#e9c46a,#b8862c) no-repeat 0 100%/100% 0%;-webkit-background-clip:text;background-clip:text;
+  transition:background-size 1.1s cubic-bezier(.3,.7,.2,1),-webkit-text-stroke-color .6s}
+.rs-ch .ch-item.is-lit .ch-n{background-size:100% 100%;-webkit-text-stroke-color:#a87a26}
+/* เส้นทองวาดตามขอบบนของแต่ละขั้น */
+.rs-ch .ch-item::before{content:"";position:absolute;left:0;right:0;top:-1px;height:2px;background:linear-gradient(90deg,#c99234,#e9c46a 60%,rgba(233,196,106,0));
+  transform:scaleX(0);transform-origin:0 50%;transition:transform 1s cubic-bezier(.3,.7,.2,1) .15s}
+.rs-ch .ch-item.is-lit::before{transform:scaleX(1)}
+.rs-ch .ch-tag{transition:color .5s .6s,border-color .5s .6s,background .5s .6s}
+.rs-ch .ch-item.is-lit .ch-tag{color:#8a5a12;border-color:rgba(176,122,30,.6);background:rgba(233,196,106,.14)}
+/* คอม: เส้นประรูปตัว L จากใต้ตัวเลข ลงไปหาขั้นถัดไป (ขั้นถัดไปเยื้องขวา 10%) */
+@media (min-width:1024px){
+  .rs-ch .ch-item:not(:last-child)::after{content:"";position:absolute;left:.55em;top:calc(26px + clamp(3rem,5.6vw,5rem) * .95 + 12px);bottom:calc(var(--chg) * -1 - 1px);
+    width:calc(10% - .55em);border-left:2px dashed #c99234;border-bottom:2px dashed #c99234;border-bottom-left-radius:14px;
+    font-size:clamp(3rem,5.6vw,5rem);clip-path:inset(0 100% 100% 0);transition:clip-path 1.2s cubic-bezier(.4,.1,.2,1) .7s}
+  .rs-ch .ch-item:nth-child(2):not(:last-child)::after{width:calc(100% / 9 - .55em)}
+  .rs-ch .ch-item.is-lit:not(:last-child)::after{clip-path:inset(0 0 0 0)}
+}
+@media (prefers-reduced-motion:reduce){
+  .rs-ch .ch-n,.rs-ch .ch-item::before,.rs-ch .ch-item::after,.rs-ch .ch-tag{transition:none !important}
+}
