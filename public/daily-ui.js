@@ -130,6 +130,7 @@
       '<div class="vdg-stage"><p class="vdg-sub"></p><div class="vdg-body"><p class="vdc-wait">กำลังโหลด…</p></div><div class="vdg-foot"></div></div></div>';
     document.body.appendChild(box);
     box.addEventListener('click', function (e) {
+      if (e.target.closest('.vdg-retry')) { box.querySelector('.vdg-body').innerHTML = '<p class="vdc-wait">กำลังโหลด…</p>'; load(); return; }
       if (e.target.closest('[data-x]')) { close(); return; }
       if (e.target.closest('.vdg-c.is-open, .vdg-claim:not([disabled])')) { checkin(); return; }
       if (e.target.closest('.vdg-redeem')) redeem();
@@ -204,7 +205,10 @@
   function apply(d) { S = d; render(); strip(); menu(); }
   function load() {
     if (!user()) { S = null; strip(); menu(); return Promise.resolve(); }
-    return call('/api/daily').then(function (r) { if (r.ok) apply(r.data); else if (box && !box.hidden && !S) box.querySelector('.vdg-body').innerHTML = '<p class="vdc-wait">' + h(r.data.error || 'โหลดไม่สำเร็จ') + '</p>'; });
+    /* v11: ไม่ค้าง "กำลังโหลด…" — เกิน 9 วินาที (เซิร์ฟเวอร์ตื่นช้า) หรือผิดพลาด → ขึ้นปุ่มลองใหม่ */
+    var done = false, fail = function (m) { if (done) return; done = true; if (box && !box.hidden && !S) box.querySelector('.vdg-body').innerHTML = '<p class="vdc-wait">' + h(m || 'โหลดไม่สำเร็จ') + '</p><p class="vdc-wait"><button type="button" class="vdg-retry">ลองใหม่</button></p>'; };
+    setTimeout(function () { fail('เซิร์ฟเวอร์กำลังตื่น ใช้เวลานานกว่าปกติ'); }, 9000);
+    return call('/api/daily').then(function (r) { if (r.ok) { done = true; try { apply(r.data); } catch (e) { fail('แสดงผลไม่สำเร็จ'); } } else fail(r.data && r.data.error); }, function () { fail('เชื่อมต่อไม่ได้'); });
   }
   function checkin() {
     if (busy || (S && S.checkedToday)) return; busy = true;
