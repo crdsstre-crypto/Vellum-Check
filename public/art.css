@@ -7062,3 +7062,15 @@ html.vc-dsc-open :is(.vc-bn,.vc-fpill,.vc-stick,.hx-lens,.hx-pool,.hx-tip,.hx-hu
   /* แก้วกาแฟลงมาใต้ปุ่มปิด ไม่ทับกัน */
   html.vc-art body.auth-open .ld-scene .ld-cup{top:66px}
 }
+
+/* ===== v272 มือถือ: หน้าเข้าสู่ระบบ — ฉากเต็มจอ (ไม่มีแถบดำด้านล่าง) · ไม่มีวงแสงทับกระดาษ · ไอน้ำไม่ม้วนเป็นเลข 3 ===== */
+@media (max-width:767px){
+  html.vc-art body.auth-open .ld-scene{min-height:100vh !important;min-height:100dvh !important}
+  html.vc-art body.auth-open #authCard:has(#authLoggedOut:not([hidden])) .sheet-body{overflow-x:hidden}
+  html.vc-art .ld-scene .vc-bokeh{display:none}
+  html.vc-art .ld-scene .vc-steam .vc-curl{display:none}
+  html.vc-art body.auth-open .ld-scene .ld-cup{top:74px}
+  /* กระดาษอยู่กลางจอ ไม่ลอยค้างด้านบนจนเหลือพื้นโต๊ะว่างด้านล่าง */
+  html.vc-art body.auth-open .ld-scene{display:flex !important;flex-direction:column;justify-content:center}
+  html.vc-art body.auth-open .ld-scene .auth-doc-wrap{padding-top:150px !important;padding-bottom:90px !important}
+}
