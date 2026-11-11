@@ -1263,7 +1263,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     /* รอฟอนต์ลายมือ (Charmonman) ก่อนวัดความกว้างอีเมล ไม่เกิน 700ms ถ้าโหลดไม่ได้ใช้ฟอนต์สำรอง */
     if (document.fonts && document.fonts.load && !play.__f) {
       play.__f = 1; var done = false, go2 = function () { if (done) return; done = true; play(info); };
-      Promise.race([document.fonts.load('700 22px Charmonman'), new Promise(function (r) { setTimeout(r, 700); })]).then(go2, go2);
+      Promise.race([document.fonts.load('700 22px Charmonman'), new Promise(function (r) { setTimeout(r, 350); })]).then(go2, go2);
       return;
     }
     play.__f = 0;
@@ -1415,9 +1415,13 @@ window.VCStepPlay = function (v, fps, onEnd) {
       if (t < P0) { x = REST.x; y = REST.y; rot = REST.rot; lift = 0; }
       else if (t < W0) { u = smooth((t - P0) / PICK); x = lerp(REST.x, e1.x, u); y = lerp(REST.y, e1.y, u); rot = lerp(REST.rot, HOLD, u); lift = Math.sin(Math.PI * u) * .9 + (u > .85 ? 0 : 0); }
       else if (t < G0 && gw) {
-        var pr = pace((t - W0) / WRITE), xx = pr * tw;
-        inkMask(gw, xx); bead.style.transform = 'translate3d(' + xx.toFixed(1) + 'px,0,0)'; bead.style.opacity = .85;
-        x = e1.x + xx; y = e1.y + Math.sin(pr * Math.PI * 9) * .8; lift = 0;
+        /* v272 ปากกาสมจริง: ปลายปากกาวาดขึ้น-ลงทีละตัวอักษร (ห่วงเล็ก ๆ) · ยกปากกานิดหนึ่งตรง @ และ . · เอียงตามทิศเส้น */
+        var pr = pace((t - W0) / WRITE), xx = pr * tw, NC = Math.max(1, email.length), cp = pr * NC, ci = Math.min(NC - 1, Math.floor(cp)), lf = cp - ci;
+        var ch = email.charAt(ci), hop = /[@.]/.test(ch) ? Math.sin(Math.PI * lf) : 0;
+        inkMask(gw, xx); bead.style.transform = 'translate3d(' + xx.toFixed(1) + 'px,0,0)'; bead.style.opacity = hop > .3 ? .2 : .85;
+        var loopY = -Math.sin(lf * Math.PI * 2) * gh * .2 - Math.max(0, Math.sin(lf * Math.PI)) * gh * .12, loopX = Math.sin(lf * Math.PI * 4) * gh * .07;
+        x = e1.x + xx + loopX; y = e1.y + loopY * (1 - hop) - hop * gh * .35; lift = hop * .55;
+        frame.wob = (frame.wob || 0) * .82 + (-Math.cos(lf * Math.PI * 2) * 4) * .18;
         if (!frame.s1) { frame.s1 = 1; sfx('scratch', WRITE); }
       }
       else if (t < S0) {
@@ -1429,6 +1433,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
         var p2 = pace((t - S0) / SIG), pt = ptAt(p2);
         sp.style.strokeDashoffset = (SL * (1 - p2)).toFixed(1);
         x = sigX + pt.x * k; y = sigY + pt.y * k; lift = 0;
+        var pt2 = ptAt(Math.min(1, p2 + .01)); frame.wob = Math.max(-6, Math.min(6, (pt2.y - pt.y) * k * 1.6));
       }
       else if (t < R0 + RET) {
         if (!frame.b2) { frame.b2 = 1; sp.style.strokeDashoffset = 0; blot(sigEnd.x, sigEnd.y, 2.2); }
@@ -1436,7 +1441,8 @@ window.VCStepPlay = function (v, fps, onEnd) {
       }
       else { x = REST.x; y = REST.y; rot = REST.rot; lift = 0; }
       /* ปากกาเอียงตามความเร็วแนวนอนเล็กน้อย (หน่วงนุ่ม ไม่สั่น) */
-      if (rot === HOLD) { var vx = x - lastX; rotC += ((HOLD + Math.max(-4, Math.min(4, -vx * .9))) - rotC) * .18; rot = rotC; } else rotC = rot;
+      if (rot === HOLD) { var vx = x - lastX; rotC += ((HOLD + (frame.wob || 0) + Math.max(-4, Math.min(4, -vx * .9))) - rotC) * .25; rot = rotC; } else rotC = rot;
+      if (t >= G0) frame.wob = 0;
       lastX = x; penAt(x, y, rot, lift);
     }
     function tick(now) {
@@ -1581,7 +1587,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
       var env = document.createElement('div'); env.className = 'vc-env'; env.setAttribute('aria-hidden', 'true');
       env.style.cssText = 'left:' + cx.toFixed(0) + 'px;top:' + cy.toFixed(0) + 'px;width:' + EW.toFixed(0) + 'px;height:' + EH.toFixed(0) + 'px;margin:-' + (EH / 2).toFixed(0) + 'px 0 0 -' + (EW / 2).toFixed(0) + 'px';
       var sv = st.querySelector('.wx-img');
-      env.innerHTML = '<i class="ev-back"></i><i class="ev-sheet"></i><i class="ev-front"></i><i class="ev-flap"></i><div class="ev-seal">' + (sv ? sv.outerHTML : '') + '</div>';
+      env.innerHTML = '<i class="ev-back"></i><i class="ev-sheet"></i><i class="ev-front"></i><i class="ev-flap"></i><div class="ev-seal"><b>VC</b></div>';
       document.body.appendChild(env);
       var flap = env.querySelector('.ev-flap'), es = env.querySelector('.ev-seal'), sheet = env.querySelector('.ev-sheet');
       A(env, [{ opacity: 0, transform: 'scale(.86)' }, { opacity: 1, transform: 'scale(1)' }], { duration: 420, delay: FOLD - 200, easing: SETTLE, fill: 'both' });
@@ -7315,6 +7321,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   }
   var flipped = false;
   function play(i) {
+    if (window.VCPause && VCPause.on()) { clear(); playing = false; T(function () { play(i); }, 1200); return; }   /* v272 ฉากล็อกอิน/หน้าต่างเปิดทับอยู่: พักไว้ก่อน ไม่แย่งเครื่อง */
     clear(); cur = i; fig.classList.remove('done', 'out', 'scan', 'scan2', 'pen', 'sign', 'slam'); signReset();
     /* (3) พลิกหน้ากระดาษ — ถอดคลาสเองเมื่อครบเวลา กันกระดาษค้างล่องหน (เจอบน iPhone) */
     var pp = fig.querySelector('.hxl-paper');
