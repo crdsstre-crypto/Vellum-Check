@@ -19,6 +19,22 @@
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, status: r.status, data: d }; }); })
       .catch(function () { return { ok: false, status: 0, data: { error: 'เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง' } }; });
   }
+  // มาสคอตเวลลัม (mascot.js) — ถ้าโหลดไม่ได้ใช้ไอคอนเดิมแทน
+  var justClaimed = null;   // 'happy' | 'party' หลังกดรับในรอบนี้
+  function mood() {
+    if (!S) return 'wave';
+    if (S.checkedToday) return justClaimed || 'sleep';
+    return S.streak === 0 && S.totalDays > 0 ? 'sad' : 'wave';
+  }
+  function mascot(m, size, fallback) { return window.VCMascot ? window.VCMascot.svg(m, size) : (fallback || ''); }
+  function line(m) {
+    if (!S) return '';
+    if (m === 'party') return 'ครบ 7 วันแล้ว! เปิดกล่องสมบัติได้ +' + S.week[6].reward + ' แต้ม';
+    if (m === 'happy') return 'เย่! เก็บแต้มแล้ว พรุ่งนี้มารับ +' + S.tomorrowReward + ' นะ';
+    if (m === 'sleep') return 'วันนี้รับไปแล้ว เจอกันพรุ่งนี้นะ… zzz';
+    if (m === 'sad') return 'เมื่อวานพลาดไปนิด ไม่เป็นไร แต้มยังอยู่ครบ เริ่มใหม่กัน!';
+    return S.week[6].today ? 'วันนี้เปิดกล่องสมบัติได้แล้ว!' : 'วันนี้มีของรออยู่นะ! กดรับ +' + S.todayReward + ' แต้มเลย';
+  }
   function fmt(n) { return Number(n || 0).toLocaleString('th-TH'); }
   function slot() { if (!S) return 0; for (var i = 0; i < S.week.length; i++) if (S.week[i].today) return i + 1; return 0; }
 
@@ -92,8 +108,14 @@
       '<div class="vdg-grid">' + S.week.map(cardHtml).join('') + '</div>' +
       '<p class="vdg-hint">' + hint + '</p>' +
       '<details class="vdg-rules"><summary>กติกา</summary><ul><li>รับได้วันละ 1 ครั้ง ขึ้นวันใหม่ตอนเที่ยงคืน (เวลาไทย)</li><li>ขาดวันไหน เริ่มวันที่ 1 ใหม่ แต่แต้มที่สะสมไว้ไม่หาย</li><li>' + fmt(r.cost) + ' แต้ม แลกตรวจสัญญาฟรีได้ 1 ครั้ง · เดือนละไม่เกิน ' + r.perMonth + ' ครั้ง (ใช้แล้ว ' + r.usedThisMonth + ')</li></ul></details>';
-    var sub = box.querySelector('.vdg-sub'), foot = box.querySelector('.vdg-foot');
-    sub.innerHTML = S.checkedToday ? 'รับของวันนี้แล้ว · รอบถัดไปใน <b data-cd>' + hms(msToMidnight()) + '</b>' : 'วันนี้รับได้ <b>+' + S.todayReward + ' แต้ม</b>';
+    var sub = box.querySelector('.vdg-sub'), foot = box.querySelector('.vdg-foot'), md = mood();
+    var ms = box.querySelector('.vdg-mascot');
+    if (ms.getAttribute('data-m') !== md) { ms.setAttribute('data-m', md); ms.innerHTML = mascot(md, 260, ICO_GIFT); }
+    box.querySelector('.vdg-say').textContent = line(md);
+    sub.className = 'vdg-sub' + (S.checkedToday ? ' is-wait' : '');
+    sub.innerHTML = S.checkedToday
+      ? '<span><i aria-hidden="true">⏱</i>รอบถัดไปใน <b data-cd>' + hms(msToMidnight()) + '</b></span>'
+      : '<span><i aria-hidden="true">+</i>วันที่ ' + (done + 1) + ' · รับได้ <b>' + S.todayReward + ' แต้ม</b></span>';
     foot.innerHTML = S.checkedToday
       ? '<button type="button" class="vdg-claim" disabled><span>กลับมาพรุ่งนี้ รับ +' + S.tomorrowReward + '</span><small data-cd="s">' + hms2(msToMidnight()) + '</small></button>'
       : '<button type="button" class="vdg-claim"><span>รับ +' + S.todayReward + ' แต้ม</span></button>';
@@ -104,8 +126,8 @@
     box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-labelledby', 'vdcT');
     box.innerHTML = DEFS + '<div class="vdc-bg" data-x></div><div class="vdg-frame"><div class="vdc-grip" aria-hidden="true"></div>' +
       '<button type="button" class="vdg-x" data-x aria-label="ปิด">✕</button>' +
-      '<div class="vdg-hd"><h3 id="vdcT">เช็กอินรายวัน</h3><p class="vdg-sub"></p></div>' +
-      '<div class="vdg-body"><p class="vdc-wait">กำลังโหลด…</p></div><div class="vdg-foot"></div></div>';
+      '<div class="vdg-hd"><div class="vdg-hdt"><h3 id="vdcT"><span>ล็อกอิน</span><span>รายวัน</span><em>ฟรี!</em></h3><p class="vdg-say"></p></div><span class="vdg-mascot" aria-hidden="true"></span></div>' +
+      '<div class="vdg-stage"><p class="vdg-sub"></p><div class="vdg-body"><p class="vdc-wait">กำลังโหลด…</p></div><div class="vdg-foot"></div></div></div>';
     document.body.appendChild(box);
     box.addEventListener('click', function (e) {
       if (e.target.closest('[data-x]')) { close(); return; }
@@ -126,6 +148,7 @@
   }
   function close() {
     if (!box) return; box.hidden = true; document.documentElement.classList.remove('vdc-open'); stopTick();
+    if (justClaimed) { justClaimed = null; menu(); }   // เปิดครั้งหน้าเป็นท่าหลับรอพรุ่งนี้
     if (lastFocus && lastFocus.focus) try { lastFocus.focus({ preventScroll: true }); } catch (e) {}
   }
 
@@ -191,6 +214,7 @@
     call('/api/daily/checkin', 'POST').then(function (r) {
       busy = false;
       if (!r.ok) { say(r.data.error || 'เช็กอินไม่สำเร็จ'); [].forEach.call(btns, function (b) { b.disabled = false; }); return; }
+      if (r.data.gained) justClaimed = r.data.bonus ? 'party' : 'happy';
       apply(r.data);
       var open = box && !box.hidden, card = open && box.querySelector('.vdg-c[data-i="' + k + '"]');
       if (card) card.classList.add('just-claimed');
@@ -233,7 +257,7 @@
       if (s && S && S.checkedToday && !s.classList.contains('is-done')) {
         // เพิ่งเช็กอิน: เปลี่ยนเป็นข้อความยืนยันสั้นๆ แล้วค่อยหายไป
         s.classList.add('is-done');
-        s.innerHTML = '<span class="vdc-ic">' + ICO_FIRE + '</span><span class="vds-txt"><b>เช็กอินแล้ว · ' + S.streak + ' วันติด</b><small>แต้มสะสม ' + fmt(S.points) + ' · พรุ่งนี้ +' + S.tomorrowReward + '</small></span>';
+        s.innerHTML = '<span class="vdc-ic vdc-mini">' + mascot(justClaimed || 'happy', 40, ICO_FIRE) + '</span><span class="vds-txt"><b>เช็กอินแล้ว · ' + S.streak + ' วันติด</b><small>แต้มสะสม ' + fmt(S.points) + ' · พรุ่งนี้ +' + S.tomorrowReward + '</small></span>';
         setTimeout(function () { if (s.isConnected) { s.classList.add('is-out'); setTimeout(function () { s.remove(); }, 400); } }, 3500);
       } else if (s && !(s.classList.contains('is-done'))) s.remove();
       return;
@@ -248,7 +272,7 @@
       });
     }
     var k = slot();
-    s.innerHTML = '<span class="vdc-ic">' + ICO_GIFT + '</span>' +
+    s.innerHTML = '<span class="vdc-ic vdc-mini">' + mascot(mood(), 40, ICO_GIFT) + '</span>' +
       '<button type="button" class="vds-txt"><b>เช็กอินวันนี้ +' + S.todayReward + ' แต้ม</b><small>วันที่ ' + k + '/7 · สะสม ' + fmt(S.points) + ' แต้ม</small></button>' +
       '<button type="button" class="vds-go">เช็กอิน</button><button type="button" class="vds-x" aria-label="ซ่อนวันนี้">✕</button>';
   }
@@ -270,12 +294,12 @@
     }
     placeAfter(c, acctAnchor(li));
     c.hidden = !user();
-    if (!S) { c.className = 'vdc-acct'; c.innerHTML = '<span class="vda-ic">' + ICO_GIFT + '</span><span class="vda-tx"><b>เช็กอินรายวัน</b><small>สะสมแต้มแลกตรวจสัญญาฟรี</small></span><i class="vda-chev" aria-hidden="true"></i>'; return; }
+    if (!S) { c.className = 'vdc-acct'; c.innerHTML = '<span class="vda-ic vdc-mini">' + mascot('wave', 44, ICO_GIFT) + '</span><span class="vda-tx"><b>เช็กอินรายวัน</b><small>สะสมแต้มแลกตรวจสัญญาฟรี</small></span><i class="vda-chev" aria-hidden="true"></i>'; return; }
     var done = S.week.filter(function (x) { return x.done; }).length;
     var dots = S.week.map(function (w) { return '<i class="' + (w.done ? 'is-done' : w.today ? 'is-today' : '') + '"></i>'; }).join('');
     c.className = 'vdc-acct' + (S.checkedToday ? ' is-claimed' : ' is-ready');
     c.setAttribute('aria-label', 'เช็กอินรายวัน ' + (S.checkedToday ? 'รับของวันนี้แล้ว' : 'วันนี้รับได้ ' + S.todayReward + ' แต้ม') + ' แต้มสะสม ' + S.points);
-    c.innerHTML = '<span class="vda-ic">' + ICO_GIFT + '</span>' +
+    c.innerHTML = '<span class="vda-ic vdc-mini">' + mascot(mood(), 44, ICO_GIFT) + '</span>' +
       '<span class="vda-tx"><b>เช็กอินรายวัน</b>' +
       '<small><span class="vda-fire">' + ICO_FIRE + S.streak + ' วันติด</span> · ' + fmt(S.points) + ' แต้ม</small>' +
       '<span class="vda-dots" aria-hidden="true">' + dots + '<em>' + done + '/7</em></span></span>' +
