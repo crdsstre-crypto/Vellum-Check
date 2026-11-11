@@ -17,6 +17,8 @@
 <meta name="apple-mobile-web-app-title" content="Vellum Check">
 <!-- Vellum Art Direction: "vc-art" = ชั้นสไตล์ใหม่ (ลบสคริปต์บรรทัดนี้เพื่อย้อนกลับ) · "vc-spa" = หน้าแรกหน้าเดียว ส่วนอื่นเปิดจากเมนู (ลบเฉพาะ vc-spa เพื่อกลับไปเป็นหน้ายาวหน้าเดียว) -->
 <script>document.documentElement.classList.add("vc-art","vc-spa");</script>
+<script>/* v269: เพิ่งกลับจากล็อกอิน Google → ปิดหน้าแรกไว้ก่อน (ไม่ให้เห็นแวบ) จนฉากประทับตราเริ่ม · กันค้าง 6 วินาที */
+(function(){try{var t=+sessionStorage.getItem("vc_stamp_google"),h=document.documentElement;if(t&&Date.now()-t<180000&&!/[?&]google=error/.test(location.search)&&!matchMedia("(prefers-reduced-motion: reduce)").matches){h.classList.add("vc-gin");window.__vcGinOff=function(){if(!h.classList.contains("vc-gin"))return;h.classList.add("vc-gin-out");setTimeout(function(){h.classList.remove("vc-gin","vc-gin-out")},450)};setTimeout(window.__vcGinOff,6000)}}catch(e){}})();</script>
 <title>เช็กสัญญา | Vellum Check</title>
 
 <!-- ฟอนต์ -->
@@ -42,7 +44,7 @@
 <link rel="stylesheet" href="ct-sticker.css?v=9" media="(max-width: 767px)">
 <link rel="stylesheet" href="desktop-layout.css?v=5" media="(min-width: 1024px)">
 <link rel="stylesheet" href="silent-clip.css?v=1" media="(min-width: 1024px)">
-<link rel="stylesheet" href="art.css?v=276">
+<link rel="stylesheet" href="art.css?v=277">
 <link rel="stylesheet" href="remind-ui.css?v=2">
 <link rel="stylesheet" href="mascot.css?v=1">
 <link rel="stylesheet" href="help-ui.css?v=1">
@@ -1982,7 +1984,7 @@ document.addEventListener('click', function (e) {
 <script src="silent-clip.js?v=1"></script>
 <script src="demo-results.js?v=4"></script>
 <script src="perf-guard.js?v=2"></script>
-<script src="art.js?v=268"></script>
+<script src="art.js?v=269"></script>
 <script src="remind-ui.js?v=2"></script>
 <script src="mascot.js?v=1"></script>
 <script src="daily-ui.js?v=10"></script>
