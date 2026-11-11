@@ -1,0 +1,22 @@
+/* ===== ท่าขยับของมาสคอตเวลลัม (mascot.js) ===== */
+.vm{overflow:visible;display:block}
+.vm .vm-body{transform-origin:60px 128px;animation:vmBob 2.6s ease-in-out infinite}
+.vm-wave .vm-arm-r{transform-origin:89px 72px;animation:vmWave 1.2s ease-in-out infinite}
+.vm-happy .vm-body{animation:vmHop .9s cubic-bezier(.3,0,.3,1) infinite}
+.vm-happy .vm-coin{transform-origin:102px 40px;animation:vmSpin 1.8s linear infinite}
+.vm-sleep .vm-body{animation:vmBreathe 3.2s ease-in-out infinite}
+.vm-sleep .vm-z path{animation:vmZ 3s ease-in-out infinite}
+.vm-sleep .vm-z .z2{animation-delay:1s}.vm-sleep .vm-z .z3{animation-delay:2s}
+.vm-party .vm-body{animation:vmHop .7s cubic-bezier(.3,0,.3,1) infinite}
+.vm-party .vm-conf{animation:vmTwinkle 1.4s ease-in-out infinite}
+.vm-sad .vm-body{transform:rotate(-3deg);animation:none}
+.vm-sad .vm-heart path:first-child{transform-origin:0 0;animation:vmBeat 1.6s ease-in-out infinite}
+@keyframes vmBeat{0%,100%{transform:scale(1)}15%{transform:scale(1.12)}30%{transform:scale(1)}}
+@keyframes vmBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes vmWave{0%,100%{transform:rotate(0)}50%{transform:rotate(-22deg)}}
+@keyframes vmHop{0%,100%{transform:translateY(0) scale(1,1)}15%{transform:translateY(0) scale(1.04,.95)}45%{transform:translateY(-10px) scale(.98,1.03)}75%{transform:translateY(0) scale(1.03,.97)}}
+@keyframes vmSpin{0%{transform:scaleX(1)}50%{transform:scaleX(-1)}100%{transform:scaleX(1)}}
+@keyframes vmBreathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.02,.98)}}
+@keyframes vmZ{0%{opacity:0;transform:translateY(4px)}30%{opacity:1}100%{opacity:0;transform:translateY(-8px)}}
+@keyframes vmTwinkle{0%,100%{opacity:1}50%{opacity:.45}}
+@media (prefers-reduced-motion:reduce){.vm *{animation:none !important}}
