@@ -4,7 +4,7 @@
 (function () {
   'use strict';
   var root = document.documentElement;
-  var CLS = ['auth-open', 'cs-open', 'pay-open', 'vw-open', 'vdc-open', 'vrh-open', 'vcp-open', 'vc-tool-open', 'vc-ld-open', 'vc-rd-open', 'vc-dsc-open', 'vhp-open'];
+  var CLS = ['auth-open', 'cs-open', 'pay-open', 'vw-open', 'vdc-open', 'vrh-open', 'vcp-open', 'vc-tool-open', 'vc-ld-open', 'vc-rd-open', 'vc-dsc-open', 'vhp-open', 'vc-ritual', 'vc-gin'];
   function has(el) { if (!el) return false; for (var i = 0; i < CLS.length; i++) if (el.classList.contains(CLS[i])) return true; return false; }
   var paused = false;
   function on() { return paused; }
