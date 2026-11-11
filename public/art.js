@@ -1269,7 +1269,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     play.__f = 0;
     try { playInner(info); }
     catch (e) { cleanupFx(); if (window.console) console.warn('stamp fx', e); return; }
-    setTimeout(cleanupFx, 14000);   /* กันค้าง: ไม่ว่าเกิดอะไรขึ้น ชั้นมืดต้องหายภายใน 14 วินาที */
+    setTimeout(cleanupFx, 19000);   /* กันค้าง: ไม่ว่าเกิดอะไรขึ้น ชั้นมืดต้องหายภายใน 14 วินาที */
     var d = document.querySelector('.auth-focus'); if (d) d.addEventListener('click', cleanupFx);   /* แตะเพื่อข้ามได้ */
   }
   /* เสียงเอกสารแบบเบามาก: สังเคราะห์ด้วย WebAudio (ไม่มีไฟล์เสียง) · ปิดเป็นค่าเริ่มต้น เปิดได้จากปุ่มระหว่างฉาก */
@@ -1393,21 +1393,25 @@ window.VCStepPlay = function (v, fps, onEnd) {
 
     /* ---------- ลำดับเวลา (ms จากจุดเริ่ม) ---------- */
     /* v269: กระชับขึ้น (เดิม ~9 วินาที) · ล็อกอินครั้งถัดไปเร็วขึ้นอีก */
+    /* v271: ช้าลงให้ดูทัน (ผู้ใช้ขอ) · มาจาก Google: รอม่านโหลดหายก่อนค่อยเริ่มเขียน */
     var SEEN = 0; try { SEEN = Number(localStorage.getItem('vc_rit_n') || 0); localStorage.setItem('vc_rit_n', String(SEEN + 1)); } catch (x) {}
-    var SP = SEEN ? .72 : 1;
-    var P0 = Math.round(300 * SP), PICK = Math.round(400 * SP);  /* ยกปากกาจากโต๊ะไปจุดเริ่มอีเมล */
-    var W0 = P0 + PICK, WRITE = gw ? Math.round(SP * Math.max(700, Math.min(1100, 350 + email.length * 38))) : 0;
-    var G0 = W0 + WRITE, GAP = Math.round(280 * SP);           /* ยกข้ามไปที่ลายเซ็น */
-    var S0 = G0 + GAP, SIG = SL ? Math.round(700 * SP) : 0;
-    var R0 = S0 + SIG, RET = 420;                              /* วางปากกากลับที่เดิม */
-    var D = R0 + 60;                                          /* ตราเริ่มลง */
-    var CONTACT = D + 520, WEL = CONTACT + 380, LK = WEL + (SEEN ? 800 : 1050), EXIT = LK + 4000;
+    var fromGin = document.documentElement.classList.contains('vc-gin');
+    var P0 = fromGin ? 1150 : 650, PICK = 620;                 /* ยกปากกาจากโต๊ะไปจุดเริ่มอีเมล */
+    var W0 = P0 + PICK, WRITE = gw ? Math.max(1300, Math.min(2200, 650 + email.length * 55)) : 0;
+    var G0 = W0 + WRITE, GAP = 440;                            /* ยกข้ามไปที่ลายเซ็น */
+    var S0 = G0 + GAP, SIG = SL ? 1150 : 0;
+    var R0 = S0 + SIG, RET = 600;                              /* วางปากกากลับที่เดิม */
+    var D = R0 + 220;                                          /* ตราเริ่มลง */
+    var CONTACT = D + 520, WEL = CONTACT + 650, LK = WEL + 2000, EXIT = LK + 6000;
     var e1 = { x: go.x + 2, y: go.y + gh * .8 }, s0 = SL ? sp.getPointAtLength(0) : { x: 0, y: 0 }, sEnd = SL ? sp.getPointAtLength(SL) : { x: 0, y: 0 };
     var sigStart = { x: sigX + s0.x * k, y: sigY + s0.y * k }, sigEnd = { x: sigX + sEnd.x * k, y: sigY + sEnd.y * k };
     var lastX = 0, rotC = REST.rot;
 
     function frame(t) {                                          /* เรียกจาก rAF เดียว */
       var x, y, rot = HOLD, lift = 0, u;
+      /* v271: ถ้าเฟรมกระตุกจนข้ามช่วงเวลา (เช่น มือถือโหลดหนัก) ยังต้องเห็นหมึกอีเมล/ลายเซ็นครบ */
+      if (gw && t >= G0 && !frame.d1) { frame.d1 = 1; gw.style.webkitMaskImage = gw.style.maskImage = 'none'; gw.classList.add('dry'); bead.style.opacity = 0; }
+      if (SL && t >= R0 && !frame.b2) { frame.b2 = 1; sp.style.strokeDashoffset = 0; }
       if (t < P0) { x = REST.x; y = REST.y; rot = REST.rot; lift = 0; }
       else if (t < W0) { u = smooth((t - P0) / PICK); x = lerp(REST.x, e1.x, u); y = lerp(REST.y, e1.y, u); rot = lerp(REST.rot, HOLD, u); lift = Math.sin(Math.PI * u) * .9 + (u > .85 ? 0 : 0); }
       else if (t < G0 && gw) {
@@ -1499,21 +1503,22 @@ window.VCStepPlay = function (v, fps, onEnd) {
       return null;
     }
     /* ---------- v269 (1) ป้ายต้อนรับด้วยชื่อ: ลายมือทอง "ยินดีต้อนรับ คุณ …" + รูปโปรไฟล์ประทับข้างชื่อ ---------- */
-    function niceName(m) { var n = String(m || '').split('@')[0].replace(/[._-]+/g, ' ').trim(); if (!n) return 'ผู้ใช้ใหม่'; n = n.charAt(0).toUpperCase() + n.slice(1); return n.length > 16 ? n.slice(0, 15) + '…' : n; }
+    function niceName(m) { var n = String(m || '').split('@')[0].replace(/[._-]+/g, ' ').trim().split(/\s+/)[0] || ''; n = n.replace(/\d+$/, '') || n; if (!n) return 'ผู้ใช้ใหม่'; n = n.charAt(0).toUpperCase() + n.slice(1); return n.length > 14 ? n.slice(0, 13) + '…' : n; }
     var ph = document.getElementById('acctPhoto'), phSrc = ph && !ph.hidden && ph.getAttribute('src') && ph.naturalWidth ? ph.currentSrc || ph.src : '';
     var wel = document.createElement('div'); wel.className = 'gh-welcome' + (mob ? ' m' : '');
     wel.innerHTML = '<span class="gw-l1">ยินดีต้อนรับ</span><span class="gw-l2"><b class="gw-name"></b>' + (phSrc ? '<i class="gw-av"><img alt="" src="' + phSrc.replace(/"/g, '&quot;') + '"></i>' : '') + '</span>';
     wel.querySelector('.gw-name').textContent = 'คุณ ' + niceName(email);
     wel.style.top = Math.round(CH * (mob ? .41 : .43)) + 'px';
     clone.appendChild(wel);
+    (function () { var nm = wel.querySelector('.gw-name'), mx = CW * .86; if (wel.offsetWidth > mx) { var f = parseFloat(getComputedStyle(nm).fontSize); nm.style.fontSize = Math.max(14, f * mx / wel.offsetWidth).toFixed(1) + 'px'; } })();
     cue(WEL, function () {
-      A(wel, [{ opacity: 0, transform: 'translate(-50%,10px) rotate(-5deg) scale(.92)' }, { opacity: 1, transform: 'translate(-50%,0) rotate(-2deg) scale(1)' }], { duration: 420, easing: SETTLE, fill: 'both' });
-      var l1 = wel.querySelector('.gw-l1'), l2 = wel.querySelector('.gw-name'), WD = SEEN ? 460 : 640;
+      A(wel, [{ opacity: 0, transform: 'translate(-50%,10px) rotate(-5deg) scale(.92)' }, { opacity: 1, transform: 'translate(-50%,0) rotate(-2deg) scale(1)' }], { duration: 600, easing: SETTLE, fill: 'both' });
+      var l1 = wel.querySelector('.gw-l1'), l2 = wel.querySelector('.gw-name'), WD = 900;
       [l1, l2].forEach(function (el, ix) {
-        A(el, [{ clipPath: 'inset(-20% 100% -20% 0)' }, { clipPath: 'inset(-20% 0 -20% 0)' }], { duration: WD, delay: 180 + ix * (WD * .7), easing: 'cubic-bezier(.5,.1,.35,1)', fill: 'both' });
+        A(el, [{ clipPath: 'inset(-20% 100% -20% 0)' }, { clipPath: 'inset(-20% 0 -20% 0)' }], { duration: WD, delay: 300 + ix * (WD * .8), easing: 'cubic-bezier(.5,.1,.35,1)', fill: 'both' });
       });
       var av = wel.querySelector('.gw-av');
-      if (av) A(av, [{ opacity: 0, transform: 'scale(1.9) rotate(-18deg)' }, { opacity: 1, transform: 'scale(.92) rotate(-6deg)', offset: .7 }, { opacity: 1, transform: 'scale(1) rotate(-8deg)' }], { duration: 380, delay: 180 + WD * 1.7, easing: 'cubic-bezier(.5,0,.7,.4)', fill: 'both' });
+      if (av) A(av, [{ opacity: 0, transform: 'scale(1.9) rotate(-18deg)' }, { opacity: 1, transform: 'scale(.92) rotate(-6deg)', offset: .7 }, { opacity: 1, transform: 'scale(1) rotate(-8deg)' }], { duration: 460, delay: 300 + WD * 1.9, easing: 'cubic-bezier(.5,0,.7,.4)', fill: 'both' });
       sfx('scratch', WD * 1.6);
     });
 
@@ -1528,9 +1533,9 @@ window.VCStepPlay = function (v, fps, onEnd) {
         document.body.appendChild(ms);
         var up = below ? 1 : -1;
         ms.animate([{ transform: 'translate(-50%,' + (below ? '0%' : '-100%') + ') translateY(' + (-up * 10) + 'px) scale(.3)', opacity: 0 }, { transform: 'translate(-50%,' + (below ? '0%' : '-100%') + ') translateY(' + (up * 26) + 'px) scale(1.08)', opacity: 1, offset: .55 }, { transform: 'translate(-50%,' + (below ? '0%' : '-100%') + ') translateY(' + (up * 18) + 'px) scale(1)', opacity: 1 }], { duration: 520, easing: 'cubic-bezier(.3,1.4,.5,1)', fill: 'forwards' });
-        setTimeout(function () { ms.animate([{ opacity: 1 }, { opacity: 0, transform: 'translate(-50%,' + (below ? '0%' : '-100%') + ') translateY(' + (up * 8) + 'px) scale(.85)' }], { duration: 320, fill: 'forwards' }).onfinish = function () { ms.remove(); }; }, 2300);
+        setTimeout(function () { ms.animate([{ opacity: 1 }, { opacity: 0, transform: 'translate(-50%,' + (below ? '0%' : '-100%') + ') translateY(' + (up * 8) + 'px) scale(.85)' }], { duration: 320, fill: 'forwards' }).onfinish = function () { ms.remove(); }; }, 3200);
       }
-      setTimeout(card, 650);
+      setTimeout(card, 900);
     }
     function card() {
       var old = document.querySelector('.vc-hello'); if (old) old.remove();
@@ -1545,7 +1550,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
       document.body.appendChild(c);
       var gone = false, close = function () { if (gone) return; gone = true; c.animate([{ opacity: 1, transform: 'translate(-50%,0)' }, { opacity: 0, transform: 'translate(-50%,24px)' }], { duration: 260, easing: 'ease-in', fill: 'forwards' }).onfinish = function () { c.remove(); }; };
       c.animate([{ opacity: 0, transform: 'translate(-50%,40px) scale(.96)' }, { opacity: 1, transform: 'translate(-50%,0) scale(1)' }], { duration: 480, easing: 'cubic-bezier(.2,1.2,.3,1)' });
-      var bar = c.querySelector('.vh-bar'); bar.animate([{ transform: 'scaleX(1)' }, { transform: 'scaleX(0)' }], { duration: 8000, easing: 'linear', fill: 'forwards' }).onfinish = close;
+      var bar = c.querySelector('.vh-bar'); bar.animate([{ transform: 'scaleX(1)' }, { transform: 'scaleX(0)' }], { duration: 10000, easing: 'linear', fill: 'forwards' }).onfinish = close;
       c.addEventListener('pointerenter', function () { bar.getAnimations().forEach(function (a) { a.pause(); }); });
       c.addEventListener('click', function (e) {
         if (e.target.closest('.vh-x')) { close(); return; }
@@ -1555,8 +1560,8 @@ window.VCStepPlay = function (v, fps, onEnd) {
       });
     }
     skip.addEventListener('click', function () { if (!document.querySelector('.vc-hello')) setTimeout(card, 250); });   /* กดข้ามก็ยังได้การ์ดต้อนรับ */
-    var J0 = LK, FOLD = 400, FLY0 = 980, FLY = 700;
-    EXIT = J0 + FLY0 + FLY + 500;
+    var J0 = LK, FOLD = 650, FLY0 = 1750, FLY = 1150;
+    EXIT = J0 + FLY0 + FLY + 700;
     cue(J0, function () {
       var tg = target();
       var av0 = document.querySelector('#authLoggedIn .acct-avatar'), avr = av0 && av0.getBoundingClientRect();
@@ -1579,11 +1584,11 @@ window.VCStepPlay = function (v, fps, onEnd) {
       env.innerHTML = '<i class="ev-back"></i><i class="ev-sheet"></i><i class="ev-front"></i><i class="ev-flap"></i><div class="ev-seal">' + (sv ? sv.outerHTML : '') + '</div>';
       document.body.appendChild(env);
       var flap = env.querySelector('.ev-flap'), es = env.querySelector('.ev-seal'), sheet = env.querySelector('.ev-sheet');
-      A(env, [{ opacity: 0, transform: 'scale(.86)' }, { opacity: 1, transform: 'scale(1)' }], { duration: 300, delay: FOLD - 140, easing: SETTLE, fill: 'both' });
-      A(sheet, [{ transform: 'translateY(-46%)' }, { transform: 'translateY(0)' }], { duration: 300, delay: FOLD - 60, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'both' });
-      A(flap, [{ transform: 'rotateX(180deg)' }, { transform: 'rotateX(0deg)' }], { duration: 300, delay: FOLD + 230, easing: 'cubic-bezier(.5,0,.3,1)', fill: 'both' });
-      A(es, [{ opacity: 0, transform: 'translate(-50%,-50%) scale(1.9) rotate(-20deg)' }, { opacity: 1, transform: 'translate(-50%,-50%) scale(.9) rotate(-6deg)', offset: .7 }, { opacity: 1, transform: 'translate(-50%,-50%) scale(1) rotate(-8deg)' }], { duration: 300, delay: FOLD + 520, easing: 'cubic-bezier(.5,0,.7,.4)', fill: 'both' });
-      cue(J0 + FOLD + 730, function () { sfx('seal'); try { if (navigator.vibrate) navigator.vibrate(14); } catch (e) {} A(env, [{ transform: 'translateY(0)' }, { transform: 'translateY(2px)', offset: .35 }, { transform: 'translateY(0)' }], { duration: 220, easing: EASE_OUT }); });
+      A(env, [{ opacity: 0, transform: 'scale(.86)' }, { opacity: 1, transform: 'scale(1)' }], { duration: 420, delay: FOLD - 200, easing: SETTLE, fill: 'both' });
+      A(sheet, [{ transform: 'translateY(-46%)' }, { transform: 'translateY(0)' }], { duration: 460, delay: FOLD - 80, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'both' });
+      A(flap, [{ transform: 'rotateX(180deg)' }, { transform: 'rotateX(0deg)' }], { duration: 420, delay: FOLD + 420, easing: 'cubic-bezier(.5,0,.3,1)', fill: 'both' });
+      A(es, [{ opacity: 0, transform: 'translate(-50%,-50%) scale(1.9) rotate(-20deg)' }, { opacity: 1, transform: 'translate(-50%,-50%) scale(.9) rotate(-6deg)', offset: .7 }, { opacity: 1, transform: 'translate(-50%,-50%) scale(1) rotate(-8deg)' }], { duration: 360, delay: FOLD + 880, easing: 'cubic-bezier(.5,0,.7,.4)', fill: 'both' });
+      cue(J0 + FOLD + 1130, function () { sfx('seal'); try { if (navigator.vibrate) navigator.vibrate(14); } catch (e) {} A(env, [{ transform: 'translateY(0)' }, { transform: 'translateY(2px)', offset: .35 }, { transform: 'translateY(0)' }], { duration: 220, easing: EASE_OUT }); });
       /* บินโค้งไปที่ปุ่มบัญชี ย่อลงจนเท่าปุ่ม */
       var dx = tx - cx, dy = ty - cy, sEnd = Math.max(.08, Math.min(.3, (tg ? Math.max(tg.r.width, tg.r.height) + 4 : 30) / EW));
       A(env, [{ transform: 'translate3d(0,0,0) rotate(0) scale(1)', opacity: 1 },
@@ -1606,7 +1611,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
           requestAnimationFrame(trail);
         })(performance.now());
       });
-      A(dim, [{ opacity: 1 }, { opacity: 0 }], { duration: 520, delay: FLY0 + 80, easing: 'linear', fill: 'forwards' });
+      A(dim, [{ opacity: 1 }, { opacity: 0 }], { duration: 700, delay: FLY0 + 120, easing: 'linear', fill: 'forwards' });
       cue(J0 + FLY0 + FLY - 60, function () {
         var ring = document.createElement('i'); ring.className = 'vc-env-ring'; ring.style.left = tx.toFixed(0) + 'px'; ring.style.top = ty.toFixed(0) + 'px'; document.body.appendChild(ring);
         ring.animate([{ transform: 'translate(-50%,-50%) scale(.4)', opacity: .95 }, { transform: 'translate(-50%,-50%) scale(2.6)', opacity: 0 }], { duration: 700, easing: 'cubic-bezier(.2,.7,.3,1)' }).onfinish = function () { ring.remove(); };
