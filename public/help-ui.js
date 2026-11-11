@@ -43,6 +43,7 @@
     check: goCheck,
     hist: openHist,
     credits: function () { if (window.VCShowCredits) window.VCShowCredits(); else openAcct(); },
+    solve: function () { if (document.getElementById('solve')) location.hash = '#solve'; else goCheck(); },
     sample: function () { if (window.VCSamples && window.VCSamples.open) window.VCSamples.open(); else goCheck(); }
   };
 
@@ -54,7 +55,7 @@
         ['กด <b>ตรวจสัญญา</b>', 'รอไม่ถึง 1 นาที'],
         ['อ่านข้อ <b class="vhp-r">สำคัญ</b> ก่อน', 'แตะแต่ละข้อเพื่อดูว่าทำไมเสี่ยง และควรขอแก้อะไร']
       ],
-      acts: [['sample', 'ลองดูสัญญาตัวอย่าง'], ['check', 'ไปที่ช่องตรวจสัญญา']] },
+      acts: [['solve', 'ดูว่าเว็บช่วยปัญหาอะไรได้บ้าง'], ['sample', 'ลองดูสัญญาตัวอย่าง']] },
     { id: 'login', ico: '🔑', t: 'เข้าสู่ระบบไม่ได้', s: 'รหัสผิด / กด Google แล้วไม่ไปต่อ',
       steps: [
         ['เช็กอีเมลกับรหัสผ่าน', 'รหัสผ่านต้องยาว <b>อย่างน้อย 8 ตัว</b>'],
