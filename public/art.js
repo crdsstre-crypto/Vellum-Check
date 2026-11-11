@@ -1129,13 +1129,44 @@ window.VCStepPlay = function (v, fps, onEnd) {
         requestAnimationFrame(function () { fz.classList.remove('on'); setTimeout(function () { fz.remove(); }, 400); }); }, 260);
       return;
     }
-    runTide('up', 640, NAME[view] || '', function () {
-      if (my !== seq) return;
-      finish();
-      root.setAttribute('data-entering', view);
-      runTide('out', 700, NAME[view] || '', function () { if (my === seq) { hideWipe(); } }, my);
-      setTimeout(function () { if (my === seq) root.removeAttribute('data-entering'); }, 1500);
-    }, my);
+    /* v267: เลิกใช้ม่านหมึก (จอดำเกือบ 1 วินาที) → เปลี่ยนหน้าแบบเลื่อนซ้อน ~0.4 วินาที
+       เบราว์เซอร์ที่มี View Transitions (Chrome/Android, Safari 18+): กระดาษตรวจสัญญาบินไปวางเป็นกระดาษตัวอย่างหน้าแรก
+       ที่เหลือ: หน้าเก่าจางลง หน้าใหม่เลื่อนขึ้นมา (Web Animations) */
+    var from = cur, enter = function () { finish(); root.setAttribute('data-entering', view); if (view === 'home') heroReplay(); setTimeout(function () { if (my === seq) root.removeAttribute('data-entering'); }, 1400); };
+    if (document.startViewTransition) {
+      var oldP = from === 'desk' && view === 'home' ? document.querySelector('#checkCard') : null, newP = null;
+      if (oldP && oldP.offsetParent) oldP.style.viewTransitionName = 'vc-paper'; else oldP = null;
+      root.classList.add('vc-vt');
+      var vt;
+      try {
+        vt = document.startViewTransition(function () {
+          if (oldP) oldP.style.viewTransitionName = '';
+          enter();
+          if (oldP) { newP = document.querySelector('main > .hero .hxl-paper'); if (newP) newP.style.viewTransitionName = 'vc-paper'; }
+          /* รอให้หน้าแรกจัดวางเสร็จก่อนถ่ายภาพปลายทาง (ไม่งั้นกระดาษบินไปผิดที่แล้วกระโดดตอนจบ) */
+          return new Promise(function (ok) { setTimeout(ok, 90); });
+        });
+      } catch (err) { if (oldP) oldP.style.viewTransitionName = ''; root.classList.remove('vc-vt'); enter(); hideWipe(); return; }
+      var done = function () { if (newP) newP.style.viewTransitionName = ''; if (oldP) oldP.style.viewTransitionName = ''; root.classList.remove('vc-vt'); if (my === seq) hideWipe(); };
+      vt.finished.then(done, done);
+      return;
+    }
+    var m = document.querySelector('main');
+    if (!m || !m.animate) { enter(); hideWipe(); return; }
+    var a1 = m.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(18px)' }], { duration: 170, easing: 'cubic-bezier(.4,0,1,1)', fill: 'forwards' });
+    a1.onfinish = function () {
+      if (my !== seq) { a1.cancel(); return; }
+      enter(); a1.cancel();
+      m.animate([{ opacity: 0, transform: 'translateY(-22px)' }, { opacity: 1, transform: 'none' }], { duration: 380, easing: 'cubic-bezier(.2,.8,.2,1)' });
+      hideWipe();
+    };
+  }
+  /* หน้าแรก: เล่นลายมือ "ก่อนเซ็น" + เส้นทองใต้ชื่อใหม่ทุกครั้งที่กลับมา */
+  function heroReplay() {
+    var l2 = document.querySelector('main > .hero .ht-l2.hs-on'); if (!l2 || reduce()) return;
+    l2.classList.remove('hs-play', 'hs-done'); void l2.offsetWidth;
+    requestAnimationFrame(function () { l2.classList.add('hs-play'); });
+    clearTimeout(l2.__hr); l2.__hr = setTimeout(function () { l2.classList.add('hs-done'); }, 2400);
   }
   function scrollToHash(h) {
     var el = h && h.length > 1 ? document.getElementById(h.slice(1)) : null;
@@ -7716,4 +7747,16 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   function upd() { var t = hero.querySelector('.dx-points'), seen = t && t.getBoundingClientRect().top < innerHeight - 70; a.classList.toggle('gone', seen || (scrollY || document.documentElement.scrollTop) > 40); }
   addEventListener('resize', upd); setTimeout(upd, 1200);
   addEventListener('scroll', upd, { passive: true }); upd();
+})();
+
+/* ===== v267 เมนูล่าง: ตอบสนองทันทีที่แตะ — ไอคอนเด้ง + แถบไฮไลต์เลื่อนไปปุ่มที่แตะเลย (ไม่ต้องรอหน้าเปลี่ยน) ===== */
+(function () {
+  var bn = document.getElementById('bottomNav'); if (!bn) return;
+  bn.addEventListener('pointerdown', function (e) {
+    var it = e.target.closest && e.target.closest('.bn-item'); if (!it) return;
+    it.classList.remove('vc-tap'); void it.offsetWidth; it.classList.add('vc-tap');
+    clearTimeout(it.__tp); it.__tp = setTimeout(function () { it.classList.remove('vc-tap'); }, 480);
+    var items = bn.querySelectorAll('.bn-item'), k = [].indexOf.call(items, it), ind = bn.querySelector('.vc-bn-ind');
+    if (ind && k > -1) ind.style.setProperty('--x', (k * 100) + '%');
+  }, { passive: true });
 })();
