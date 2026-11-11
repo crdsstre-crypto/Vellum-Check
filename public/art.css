@@ -7151,3 +7151,43 @@ html.vc-vt.vc-morph::view-transition-old(root){animation:vtOut .25s cubic-bezier
 @keyframes vtLift{0%{transform:none;filter:drop-shadow(0 0 0 rgba(0,0,0,0))}35%{transform:rotate(-3deg) scale(1.03);filter:drop-shadow(0 26px 28px rgba(0,0,0,.6))}80%{transform:rotate(.8deg) scale(.995);filter:drop-shadow(0 8px 10px rgba(0,0,0,.4))}100%{transform:none;filter:drop-shadow(0 0 0 rgba(0,0,0,0))}}
 ::view-transition-image-pair(vc-paper){animation:vtLift .7s cubic-bezier(.3,.7,.3,1) both;overflow:visible !important}
 @media (prefers-reduced-motion:reduce){html.vc-vt::view-transition-new(root),::view-transition-image-pair(vc-paper){animation:none !important}}
+
+/* ===== v277 ฉากล็อกอิน: ม่านกันแวบ · ป้ายต้อนรับ · ซองจดหมายบินไปหาบัญชี ===== */
+/* (4) กลับจาก Google: ปิดหน้าแรกไว้ด้วยพื้นโต๊ะมืด + ข้อความเล็ก ๆ จนฉากเริ่ม */
+html.vc-gin::after{content:"กำลังเข้าสู่ระบบ…";position:fixed;inset:0;z-index:10030;display:grid;place-items:center;
+  font:500 14px/1.4 Prompt,sans-serif;letter-spacing:.06em;color:rgba(241,213,138,.7);
+  background:radial-gradient(ellipse 70% 60% at 50% 45%,#2a1a0e 0%,#140c06 60%,#0a0603 100%);transition:opacity .4s ease;pointer-events:auto}
+html.vc-gin.vc-gin-out::after{opacity:0;pointer-events:none}
+
+/* (1) ป้ายต้อนรับ */
+.gh-welcome{position:absolute;left:50%;z-index:6;transform:translate(-50%,0) rotate(-2deg);display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:12px 22px 14px;border-radius:6px;white-space:nowrap;pointer-events:none;opacity:0;
+  background:linear-gradient(180deg,#fbf5e6,#f1e6cc);border:1.5px dashed rgba(176,122,30,.55);
+  box-shadow:0 10px 22px -10px rgba(40,22,6,.55),inset 0 0 0 4px rgba(251,245,230,.9)}
+.gh-welcome .gw-l1{font:700 15px/1.3 Charmonman,'Taviraj',cursive;color:#9a6a1c;letter-spacing:.02em}
+.gh-welcome .gw-l2{display:flex;align-items:center;gap:10px}
+.gh-welcome .gw-name{font:700 30px/1.25 Charmonman,'Taviraj',cursive;color:#7a4e12;
+  background:linear-gradient(180deg,#c9922e,#8a5a12);-webkit-background-clip:text;background-clip:text;color:transparent}
+.gh-welcome .gw-av{display:block;width:38px;height:38px;border-radius:50%;overflow:hidden;flex:none;
+  box-shadow:0 0 0 2px #fbf5e6,0 0 0 3.5px #b07a1e,0 4px 8px rgba(40,22,6,.4)}
+.gh-welcome .gw-av img{display:block;width:100%;height:100%;object-fit:cover;filter:sepia(.25) saturate(.9)}
+.gh-welcome.m{padding:10px 16px 12px}
+.gh-welcome.m .gw-l1{font-size:14px}
+.gh-welcome.m .gw-name{font-size:25px}
+.gh-welcome.m .gw-av{width:32px;height:32px}
+
+/* (2) ซองจดหมาย */
+.vc-env{position:fixed;z-index:10046;pointer-events:none;perspective:700px;filter:drop-shadow(0 18px 22px rgba(0,0,0,.55));will-change:transform,opacity}
+.vc-env > i{position:absolute;display:block}
+.vc-env .ev-back{inset:0;border-radius:6px;background:linear-gradient(180deg,#d9c79f,#c6b083)}
+.vc-env .ev-sheet{left:7%;right:7%;top:6%;height:80%;border-radius:3px;background:repeating-linear-gradient(180deg,#f8f1df 0 9px,#e9dcc0 9px 10px);box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.vc-env .ev-front{inset:0;border-radius:6px;background:linear-gradient(160deg,#ecdcb6,#d8c294);
+  clip-path:polygon(0 30%,50% 64%,100% 30%,100% 100%,0 100%);box-shadow:inset 0 -2px 0 rgba(0,0,0,.08)}
+.vc-env .ev-front::after{content:"";position:absolute;inset:0;background:linear-gradient(28deg,transparent 49.4%,rgba(120,86,40,.35) 50%,transparent 50.6%),linear-gradient(-28deg,transparent 49.4%,rgba(120,86,40,.35) 50%,transparent 50.6%)}
+.vc-env .ev-flap{left:0;right:0;top:0;height:64%;transform-origin:50% 0;backface-visibility:visible;
+  background:linear-gradient(180deg,#e7d5ab,#cfb685);clip-path:polygon(0 0,100% 0,50% 100%);filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
+.vc-env .ev-seal{position:absolute;left:50%;top:60%;width:30%;aspect-ratio:1;transform:translate(-50%,-50%) rotate(-8deg);opacity:0;z-index:2}
+.vc-env .ev-seal img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 3px 3px rgba(60,10,6,.5))}
+.vc-env-ring{position:fixed;z-index:10047;width:44px;height:44px;border-radius:50%;pointer-events:none;
+  border:2px solid rgba(241,213,138,.9);box-shadow:0 0 18px rgba(241,213,138,.6),inset 0 0 12px rgba(241,213,138,.4)}
+@media (prefers-reduced-motion:reduce){html.vc-gin::after{display:none}}
