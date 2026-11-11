@@ -7160,15 +7160,8 @@ html.vc-gin::after{content:"";position:fixed;inset:0;z-index:10030;pointer-event
     radial-gradient(ellipse 80% 70% at 50% 50%,#3a2414 0%,#1d1209 55%,#0b0704 100%),
     repeating-linear-gradient(94deg,rgba(255,220,170,.025) 0 2px,transparent 2px 9px);
   animation:ginLamp 1.6s cubic-bezier(.3,.6,.3,1) both}
-html.vc-gin::before{content:"กำลังเปิดแฟ้มของคุณ…";position:fixed;z-index:10031;left:50%;top:50%;
-  width:min(330px,calc(100vw - 40px));aspect-ratio:.72;box-sizing:border-box;padding-top:58%;text-align:center;
-  font:600 14px/1.4 Prompt,sans-serif;color:rgba(80,52,22,.75);letter-spacing:.04em;pointer-events:none;transition:opacity .45s ease;
-  background:
-    linear-gradient(180deg,transparent 15%,rgba(80,52,22,.18) 15%,rgba(80,52,22,.18) calc(15% + 2px),transparent calc(15% + 2px)),
-    repeating-linear-gradient(180deg,transparent 0 30px,rgba(80,52,22,.1) 30px 31px) 0 70%/100% 30% no-repeat,
-    linear-gradient(180deg,#f3ead6,#e3d4b2);
-  border-radius:3px;box-shadow:0 2px 0 #d5c39c,0 4px 0 #e7dbc0,0 30px 50px -18px rgba(0,0,0,.8);
-  transform:translate(-50%,-50%) rotate(-1.5deg)}   /* ไม่ใช้ animation: Safari บน iPhone ไม่เล่นบน ::before ของ html แล้วค้างที่ล่องหน */
+html.vc-gin::before{content:"กำลังเข้าสู่ระบบ";position:fixed;z-index:10031;left:50%;bottom:calc(18% + env(safe-area-inset-bottom,0px));transform:translateX(-50%);
+  font:500 13px/1 Prompt,sans-serif;letter-spacing:.14em;color:rgba(241,213,138,.55);pointer-events:none;transition:opacity .3s ease}
 html.vc-gin.vc-gin-out::after,html.vc-gin.vc-gin-out::before{opacity:0;pointer-events:none}
 @keyframes ginLamp{0%{filter:brightness(.25)}35%{filter:brightness(.7)}42%{filter:brightness(.45)}55%{filter:brightness(.95)}100%{filter:brightness(1)}}
 @keyframes ginPaper{from{opacity:0;transform:translate(-50%,-44%) rotate(4deg) scale(.96)}to{opacity:1;transform:translate(-50%,-50%) rotate(-1.5deg)}}
@@ -7249,3 +7242,6 @@ body:has(#bottomNav:not([hidden])) .vc-hello{--nav-h:64px}
   box-shadow:0 0 0 2px rgba(124,18,16,.55),0 3px 5px rgba(60,10,6,.55),inset 0 -3px 5px rgba(0,0,0,.3),inset 0 2px 3px rgba(255,170,160,.35);
   clip-path:polygon(50% 0,61% 6%,74% 4%,80% 15%,93% 20%,92% 33%,100% 45%,95% 57%,99% 70%,88% 78%,84% 91%,71% 93%,60% 100%,49% 95%,37% 100%,27% 92%,14% 90%,11% 77%,1% 68%,5% 56%,0 43%,8% 33%,7% 19%,20% 15%,27% 4%,39% 6%)}
 .vc-env .ev-seal b{font:700 italic 22px/1 Georgia,'Newsreader',serif;color:rgba(255,200,190,.85);text-shadow:0 1px 0 rgba(0,0,0,.35);letter-spacing:-.04em}
+
+/* v281 หลังฉากล็อกอิน: ซ่อนแว่นขยายหน้าแรกชั่วครู่ (กันภาพค้างที่มุมจอ) */
+html:is(.vc-ritual,.vc-post) main > .hero :is(.hx-lens,.hx-lin,.hx-fine,.hx-big){opacity:0 !important;transition:none !important}
