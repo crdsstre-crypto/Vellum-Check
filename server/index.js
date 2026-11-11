@@ -20,7 +20,7 @@ import {
 } from './auth.js';
 import { saveInspection, listInspections, getInspection, listPayments, deleteAllInspections, deleteInspection, updateInspection } from './history.js';
 import {
-  googleConfigured, makeState, buildAuthUrl, readCookieValue, exchangeCodeForProfile,
+  googleConfigured, makeState, buildAuthUrl, readCookieValue, exchangeCodeForProfile, redirectUriFor,
 } from './googleAuth.js';
 import {
   getCredits, reserveCredits, refundCredits,
@@ -41,6 +41,19 @@ const MAX_CHARS = 20000;
 
 // อยู่หลัง proxy ของ Render จึงต้องบอก Express ให้รู้ว่าเป็น https (ใช้ตั้งคุกกี้แบบ Secure)
 app.set('trust proxy', 1);
+// ใช้โดเมนหลักโดเมนเดียว (vellumcheck.com): เข้าทาง onrender.com หรือ www → ย้ายไปโดเมนหลัก
+// ล็อกอิน/คุกกี้จะได้อยู่ที่เดียว (ล็อกอินที่โดเมนหนึ่ง อีกโดเมนจะไม่เห็น) · ไม่ย้าย /api/* (webhook Omise, ล็อกอินที่ค้างอยู่) และ /healthz
+// ปิดได้ด้วย env CANONICAL_HOST= (ว่าง)
+const CANONICAL_HOST = (process.env.CANONICAL_HOST ?? 'vellumcheck.com').trim().toLowerCase();
+app.use((req, res, next) => {
+  if (!CANONICAL_HOST || (req.method !== 'GET' && req.method !== 'HEAD')) return next();
+  const host = String(req.hostname || '').toLowerCase();
+  if (!host || host === CANONICAL_HOST || host === 'localhost' || host === '127.0.0.1') return next();
+  if (req.path.startsWith('/api/') || req.path === '/healthz') return next();
+  if (host !== `www.${CANONICAL_HOST}` && !host.endsWith('.onrender.com')) return next();
+  res.redirect(301, `https://${CANONICAL_HOST}${req.originalUrl}`);
+});
+
 // ไฟล์อัปโหลดส่งเป็น base64 ใน JSON จึงให้ /api/extract รับขนาดใหญ่กว่าเส้นทางอื่น
 app.use((req, res, next) => (
   req.path === '/api/extract' ? express.json({ limit: '8mb' }) : express.json({ limit: '200kb' })
@@ -171,7 +184,7 @@ app.get('/api/auth/google', (req, res) => {
     'Set-Cookie',
     `${OAUTH_STATE_COOKIE}=${state}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=600`
   );
-  res.redirect(buildAuthUrl(state));
+  res.redirect(buildAuthUrl(state, redirectUriFor(req)));
 });
 
 app.get('/api/auth/google/callback', async (req, res) => {
@@ -187,7 +200,7 @@ app.get('/api/auth/google/callback', async (req, res) => {
       return fail();
     }
 
-    const profile = await exchangeCodeForProfile(code);
+    const profile = await exchangeCodeForProfile(code, redirectUriFor(req));
     const user = await findOrCreateGoogleUser(profile);
     if (!user) return fail();
 
