@@ -153,3 +153,6 @@ html.vrh-open,html.vrh-open body{overflow:hidden}
   .vrh-acts button{min-width:38px;height:38px}
 }
 @media (prefers-reduced-motion:reduce){.vrh-bg,.vrh-card{animation:none !important}}
+
+/* ประสิทธิภาพ: ไม่เบลอฉากหลังทั้งจอ (ภาพแทบเหมือนเดิม แต่ไม่ต้องคำนวณเบลอทุกเฟรม) */
+.vrh-bg{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(0,0,0,.8)}
