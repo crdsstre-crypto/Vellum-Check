@@ -3730,6 +3730,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       var it = e.target.closest('.vsl-item'); if (it) { view(+it.dataset.i); return; }
       if (e.target.closest('.vsl-back')) { back(); return; }
       var mb = e.target.closest('.vsl-mode button'); if (mb) { setMode(mb.getAttribute('data-mode')); return; }
+      var po = e.target.closest('.vsl-post'); if (po) { var pc = po.getAttribute('data-c'); jump(pc); if (box.classList.contains('vsl-split')) toCard(pc); return; }
       var rp = e.target.closest('.vsl-doc p[data-c]'); if (rp && box.classList.contains('vsl-split')) { toCard(rp.getAttribute('data-c')); return; }
       var rc = e.target.closest('.vsl-rc'); if (rc) { jump(rc.getAttribute('data-c')); return; }
       if (e.target.closest('.vsl-fill')) { pick(cur); return; }
@@ -3816,6 +3817,36 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     svg.setAttribute('data-lv', rc.classList.contains('h') ? 'h' : rc.classList.contains('l') ? 'l' : 'c');
     svg.classList.add('is-on');
   }
+
+  /* ===== v263 ของตกแต่งบนกระดาษ: สติกเกอร์ตามประเภทสัญญา (มุมขวาบน) · คลิปหนีบ · โพสต์อิทชี้ข้อที่หนักสุด =====
+     วางบนขอบกระดาษ ไม่ทับตัวหนังสือ · วาดเอง (SVG) · มือถือแสดงแค่สติกเกอร์ */
+  var INKD = '#3a2a12';
+  var STK = {
+    rent: '<circle cx="40" cy="40" r="30" fill="#34d399"/><circle cx="31" cy="34" r="10" fill="#fde68a" stroke="' + INKD + '" stroke-width="3"/><circle cx="31" cy="34" r="3.6" fill="#34d399" stroke="' + INKD + '" stroke-width="2"/><path d="M38 40l17 17M48 50l5-5M52 54l4-4" stroke="' + INKD + '" stroke-width="4" stroke-linecap="round"/><path d="M38 40l17 17" stroke="#fde68a" stroke-width="1.6" stroke-linecap="round"/>',
+    sale: '<circle cx="40" cy="40" r="30" fill="#60a5fa"/><path d="M18 46l5-11c1-2.4 3-3.5 5.5-3.5h23c2.5 0 4.5 1.1 5.5 3.5l5 11v7a2 2 0 0 1-2 2H20a2 2 0 0 1-2-2z" fill="#fff" stroke="' + INKD + '" stroke-width="3" stroke-linejoin="round"/><path d="M25 42l3.5-7h23l3.5 7z" fill="#bfdbfe" stroke="' + INKD + '" stroke-width="2.4" stroke-linejoin="round"/><circle cx="27" cy="55" r="5" fill="' + INKD + '"/><circle cx="53" cy="55" r="5" fill="' + INKD + '"/><circle cx="27" cy="55" r="2" fill="#fff"/><circle cx="53" cy="55" r="2" fill="#fff"/>',
+    employment: '<circle cx="40" cy="40" r="30" fill="#fb923c"/><rect x="23" y="24" width="34" height="38" rx="5" fill="#fff" stroke="' + INKD + '" stroke-width="3"/><rect x="34" y="18" width="12" height="9" rx="3" fill="#fed7aa" stroke="' + INKD + '" stroke-width="2.6"/><circle cx="40" cy="38" r="6" fill="#fed7aa" stroke="' + INKD + '" stroke-width="2.4"/><path d="M30 54c1.5-5 5-7.5 10-7.5s8.5 2.5 10 7.5" fill="none" stroke="' + INKD + '" stroke-width="2.6" stroke-linecap="round"/>',
+    service: '<circle cx="40" cy="40" r="30" fill="#fbbf24"/><path d="M50 22a9 9 0 0 0-11.5 11.5L22 50a4.2 4.2 0 0 0 6 6l16.5-16.5A9 9 0 0 0 56 28l-5.5 5.5-5-1-1-5z" fill="#fff" stroke="' + INKD + '" stroke-width="3" stroke-linejoin="round"/>',
+    loan: '<circle cx="40" cy="40" r="30" fill="#22d3ee"/><path d="M33 22h14l-4 7h-6z" fill="#fde68a" stroke="' + INKD + '" stroke-width="2.6" stroke-linejoin="round"/><path d="M36 29c-10 4-15 12-15 19 0 7 7 11 19 11s19-4 19-11c0-7-5-15-15-19z" fill="#fde68a" stroke="' + INKD + '" stroke-width="3" stroke-linejoin="round"/><text x="40" y="52" text-anchor="middle" font-family="Prompt,sans-serif" font-weight="800" font-size="15" fill="' + INKD + '">฿</text>',
+    shareholder: '<circle cx="40" cy="40" r="30" fill="#f472b6"/><path d="M16 40l10-10 9 4 9-4 10 10-6 6-4-3-9 9a3 3 0 0 1-4-4" fill="#fff" stroke="' + INKD + '" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><path d="M27 47l-4 4M32 50l-4 4M37 52l-3 3" stroke="' + INKD + '" stroke-width="2.6" stroke-linecap="round"/>',
+    nda: '<circle cx="40" cy="40" r="30" fill="#a78bfa"/><rect x="25" y="37" width="30" height="22" rx="5" fill="#fde68a" stroke="' + INKD + '" stroke-width="3"/><path d="M31 37v-6a9 9 0 0 1 18 0v6" fill="none" stroke="' + INKD + '" stroke-width="3.4"/><circle cx="40" cy="46" r="3" fill="' + INKD + '"/><path d="M40 48v5" stroke="' + INKD + '" stroke-width="3" stroke-linecap="round"/>',
+    other: '<circle cx="40" cy="40" r="30" fill="#fb7185"/><path d="M28 20h18l9 9v31H28z" fill="#fff" stroke="' + INKD + '" stroke-width="3" stroke-linejoin="round"/><path d="M46 20v9h9" fill="none" stroke="' + INKD + '" stroke-width="2.6" stroke-linejoin="round"/><path d="M33 38h16M33 45h16M33 52h10" stroke="#fb7185" stroke-width="3" stroke-linecap="round"/>',
+    unsure: '<circle cx="40" cy="40" r="30" fill="#94a3b8"/><circle cx="40" cy="40" r="17" fill="#fff" stroke="' + INKD + '" stroke-width="3"/><text x="40" y="47" text-anchor="middle" font-family="Prompt,sans-serif" font-weight="800" font-size="20" fill="' + INKD + '">?</text>'
+  };
+  var CLIP = '<svg viewBox="0 0 30 64" aria-hidden="true"><path d="M10 50V14a6 6 0 0 1 12 0v40a9 9 0 0 1-18 0V20" fill="none" stroke="#9aa3ad" stroke-width="3.2" stroke-linecap="round"/><path d="M10 50V14a6 6 0 0 1 12 0v40a9 9 0 0 1-18 0V20" fill="none" stroke="#e6ebf0" stroke-width="1.2" stroke-linecap="round" transform="translate(-.6 -.6)"/></svg>';
+  function deco(s, ordr, byC) {
+    var k = STK[s[0]] ? s[0] : 'other';
+    var html = '<span class="vsl-stick" aria-hidden="true"><svg viewBox="0 0 80 80">' + STK[k] + '</svg></span><span class="vsl-clip">' + CLIP + '</span>';
+    // โพสต์อิท: ข้อที่ระดับสูงสุด (เจอข้อแรกที่ "สำคัญ")
+    var top = null; ordr.forEach(function (c) { var x = byC[c]; if (!top && x && x.level === 'check_detail') top = c; });
+    if (!top) top = ordr[0];
+    if (top) {
+      var x = byC[top], t = x ? x.title : '';
+      html += '<button type="button" class="vsl-post" data-c="' + top + '" aria-label="ไปที่ข้อที่ควรระวังที่สุด">' +
+        '<b>ระวัง' + (top === 'p' ? 'ท้ายสัญญา' : 'ข้อ ' + top) + '!!</b>' + (t ? '<span>' + esc(t) + '</span>' : '') +
+        '<em class="ok">แก้แล้ว ✓</em></button>';
+    }
+    return html;
+  }
   function jump(c) {
     var p = box.querySelector('.vsl-doc p[data-c="' + c + '"]'), d = box.querySelector('.vsl-doc'); if (!p || !d) return;
     d.scrollTo({ top: Math.max(0, p.offsetTop - d.clientHeight / 3), behavior: 'smooth' });
@@ -3872,6 +3903,9 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     /* v262 หัวกระดาษ + เลขหน้า ให้เหมือนเอกสารจริง */
     html = '<div class="vsl-dhead" aria-hidden="true"><span>เลขที่ VC-2569/' + ('00' + (i + 1)).slice(-3) + '</span><span>หน้า 1 / 1</span></div>' + html + '<div class="vsl-dfoot" aria-hidden="true">— 1 —</div>';
     var d = v.querySelector('.vsl-doc'); d.innerHTML = html; d.scrollTop = 0; hotC = null; edge(d); link();
+    var pap = v.querySelector('.vsl-paper'), dc = pap.querySelector('.vsl-deco');
+    if (!dc) { dc = document.createElement('div'); dc.className = 'vsl-deco'; pap.appendChild(dc); }
+    dc.innerHTML = deco(s, ordr, byC);
     var use = v.querySelector('.vsl-use'), free = window.VCDemo && window.VCDemo.has(s[1]);
     use.classList.toggle('is-free', !!free);
     use.innerHTML = free ? '<span>ดูผลตรวจทันที</span><small>ฟรี · ไม่ใช้เครดิต</small>' + (box.classList.contains('vsl-split') ? '<kbd class="vsl-ent">Enter ⏎</kbd>' : '') : 'ใช้สัญญานี้';
