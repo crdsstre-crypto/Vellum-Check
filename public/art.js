@@ -1393,16 +1393,16 @@ window.VCStepPlay = function (v, fps, onEnd) {
 
     /* ---------- ลำดับเวลา (ms จากจุดเริ่ม) ---------- */
     /* v269: กระชับขึ้น (เดิม ~9 วินาที) · ล็อกอินครั้งถัดไปเร็วขึ้นอีก */
-    /* v271: ช้าลงให้ดูทัน (ผู้ใช้ขอ) · มาจาก Google: รอม่านโหลดหายก่อนค่อยเริ่มเขียน */
-    var SEEN = 0; try { SEEN = Number(localStorage.getItem('vc_rit_n') || 0); localStorage.setItem('vc_rit_n', String(SEEN + 1)); } catch (x) {}
+    /* v273 จังหวะใหม่ทั้งฉาก ~6 วินาที ไม่มีช่วงว่าง: เขียน → เซ็น → (ปากกาถอยออก พร้อมตราลง) → ชื่อทอง → ซอง → บินเข้าบัญชี */
+    try { localStorage.setItem('vc_rit_n', String(Number(localStorage.getItem('vc_rit_n') || 0) + 1)); } catch (x) {}
     var fromGin = document.documentElement.classList.contains('vc-gin');
-    var P0 = fromGin ? 1150 : 650, PICK = 620;                 /* ยกปากกาจากโต๊ะไปจุดเริ่มอีเมล */
-    var W0 = P0 + PICK, WRITE = gw ? Math.max(1300, Math.min(2200, 650 + email.length * 55)) : 0;
-    var G0 = W0 + WRITE, GAP = 440;                            /* ยกข้ามไปที่ลายเซ็น */
-    var S0 = G0 + GAP, SIG = SL ? 1150 : 0;
-    var R0 = S0 + SIG, RET = 600;                              /* วางปากกากลับที่เดิม */
-    var D = R0 + 220;                                          /* ตราเริ่มลง */
-    var CONTACT = D + 520, WEL = CONTACT + 650, LK = WEL + 2000, EXIT = LK + 6000;
+    var P0 = fromGin ? 420 : 260, PICK = 360;                  /* ยกปากกาไปจุดเริ่มอีเมล */
+    var W0 = P0 + PICK, WRITE = gw ? Math.max(820, Math.min(1250, 420 + email.length * 32)) : 0;
+    var G0 = W0 + WRITE, GAP = 240;                            /* ยกข้ามไปที่ลายเซ็น */
+    var S0 = G0 + GAP, SIG = SL ? 620 : 0;
+    var R0 = S0 + SIG, RET = 380;                              /* ปากกาถอยออก */
+    var D = R0 + 40;                                           /* ตราลงทันทีที่ปากกาพ้น */
+    var CONTACT = D + 520, WEL = CONTACT + 120, LK = WEL + 1450, EXIT = LK + 4000;
     var e1 = { x: go.x + 2, y: go.y + gh * .8 }, s0 = SL ? sp.getPointAtLength(0) : { x: 0, y: 0 }, sEnd = SL ? sp.getPointAtLength(SL) : { x: 0, y: 0 };
     var sigStart = { x: sigX + s0.x * k, y: sigY + s0.y * k }, sigEnd = { x: sigX + sEnd.x * k, y: sigY + sEnd.y * k };
     var lastX = 0, rotC = REST.rot;
@@ -1437,9 +1437,9 @@ window.VCStepPlay = function (v, fps, onEnd) {
       }
       else if (t < R0 + RET) {
         if (!frame.b2) { frame.b2 = 1; sp.style.strokeDashoffset = 0; blot(sigEnd.x, sigEnd.y, 2.2); }
-        u = smooth((t - R0) / RET); x = lerp(sigEnd.x, REST.x, u); y = lerp(sigEnd.y, REST.y, u); rot = lerp(HOLD, REST.rot, u); lift = Math.sin(Math.PI * u) * .9;
+        u = smooth((t - R0) / RET); x = lerp(sigEnd.x, REST.x, u); y = lerp(sigEnd.y, REST.y, u); rot = lerp(HOLD, REST.rot, u); lift = Math.sin(Math.PI * u) * .9; pen.style.opacity = (1 - u).toFixed(2); psh.style.opacity = 0;
       }
-      else { x = REST.x; y = REST.y; rot = REST.rot; lift = 0; }
+      else { x = REST.x; y = REST.y; rot = REST.rot; lift = 0; if (t >= R0 + RET) { pen.style.opacity = 0; psh.style.opacity = 0; lastX = x; return; } }
       /* ปากกาเอียงตามความเร็วแนวนอนเล็กน้อย (หน่วงนุ่ม ไม่สั่น) */
       if (rot === HOLD) { var vx = x - lastX; rotC += ((HOLD + (frame.wob || 0) + Math.max(-4, Math.min(4, -vx * .9))) - rotC) * .25; rot = rotC; } else rotC = rot;
       if (t >= G0) frame.wob = 0;
@@ -1456,7 +1456,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     /* ---------- อนิเมชันทั้งหมด (WAAPI อ้างเวลาเริ่มเดียวกัน) ---------- */
     A(dim, [{ opacity: 0 }, { opacity: 1 }], { duration: 500, easing: EASE_OUT, fill: 'both' });
     g.style.transformOrigin = '50% 70%';
-    A(g, [{ opacity: 0, transform: 'translate3d(0,56px,0) rotate(2.5deg)' }, { opacity: 1, transform: 'none' }], { duration: 900, easing: SETTLE, fill: 'both' });
+    A(g, [{ opacity: 0, transform: 'translate3d(0,40px,0) rotate(2deg) scale(.97)' }, { opacity: 1, transform: 'none' }], { duration: 520, easing: SETTLE, fill: 'both' });
     A(cs, [{ opacity: 0, transform: 'translate3d(0,40px,0) scale(1.1)' }, { opacity: 1, transform: 'none' }], { duration: 900, easing: SETTLE, fill: 'both' });
     try { ['::before', '::after'].forEach(function (pe, n) {
       var fin = getComputedStyle(clone, pe).transform; if (!fin || fin === 'none') return;
@@ -1518,13 +1518,13 @@ window.VCStepPlay = function (v, fps, onEnd) {
     clone.appendChild(wel);
     (function () { var nm = wel.querySelector('.gw-name'), mx = CW * .86; if (wel.offsetWidth > mx) { var f = parseFloat(getComputedStyle(nm).fontSize); nm.style.fontSize = Math.max(14, f * mx / wel.offsetWidth).toFixed(1) + 'px'; } })();
     cue(WEL, function () {
-      A(wel, [{ opacity: 0, transform: 'translate(-50%,10px) rotate(-5deg) scale(.92)' }, { opacity: 1, transform: 'translate(-50%,0) rotate(-2deg) scale(1)' }], { duration: 600, easing: SETTLE, fill: 'both' });
-      var l1 = wel.querySelector('.gw-l1'), l2 = wel.querySelector('.gw-name'), WD = 900;
+      A(wel, [{ opacity: 0, transform: 'translate(-50%,10px) rotate(-5deg) scale(.92)' }, { opacity: 1, transform: 'translate(-50%,0) rotate(-2deg) scale(1)' }], { duration: 380, easing: SETTLE, fill: 'both' });
+      var l1 = wel.querySelector('.gw-l1'), l2 = wel.querySelector('.gw-name'), WD = 520;
       [l1, l2].forEach(function (el, ix) {
-        A(el, [{ clipPath: 'inset(-20% 100% -20% 0)' }, { clipPath: 'inset(-20% 0 -20% 0)' }], { duration: WD, delay: 300 + ix * (WD * .8), easing: 'cubic-bezier(.5,.1,.35,1)', fill: 'both' });
+        A(el, [{ clipPath: 'inset(-20% 100% -20% 0)' }, { clipPath: 'inset(-20% 0 -20% 0)' }], { duration: WD, delay: 140 + ix * (WD * .75), easing: 'cubic-bezier(.5,.1,.35,1)', fill: 'both' });
       });
       var av = wel.querySelector('.gw-av');
-      if (av) A(av, [{ opacity: 0, transform: 'scale(1.9) rotate(-18deg)' }, { opacity: 1, transform: 'scale(.92) rotate(-6deg)', offset: .7 }, { opacity: 1, transform: 'scale(1) rotate(-8deg)' }], { duration: 460, delay: 300 + WD * 1.9, easing: 'cubic-bezier(.5,0,.7,.4)', fill: 'both' });
+      if (av) A(av, [{ opacity: 0, transform: 'scale(1.9) rotate(-18deg)' }, { opacity: 1, transform: 'scale(.92) rotate(-6deg)', offset: .7 }, { opacity: 1, transform: 'scale(1) rotate(-8deg)' }], { duration: 360, delay: 140 + WD * 1.75, easing: 'cubic-bezier(.5,0,.7,.4)', fill: 'both' });
       sfx('scratch', WD * 1.6);
     });
 
@@ -1532,7 +1532,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     /* v270 (3)+(4) มาสคอตทักทายที่ปุ่มบัญชี แล้วการ์ดรางวัลเลื่อนขึ้นจากด้านล่าง (อยู่ต่อหลังฉากจบ ปิดเองใน 8 วินาที) */
     function hello(tx, ty) {
       var below = ty < innerHeight / 2;
-      if (window.VCMascot) {
+      if (false) {
         var ms = document.createElement('div'); ms.className = 'vc-hi-m' + (below ? ' dn' : ''); ms.setAttribute('aria-hidden', 'true');
         ms.innerHTML = window.VCMascot.svg('wave', mob ? 64 : 72) + '<span class="vc-hi-say">ยินดีต้อนรับ!</span>';
         ms.style.left = Math.min(innerWidth - 50, Math.max(50, tx)).toFixed(0) + 'px'; ms.style.top = ty.toFixed(0) + 'px';
@@ -1541,7 +1541,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
         ms.animate([{ transform: 'translate(-50%,' + (below ? '0%' : '-100%') + ') translateY(' + (-up * 10) + 'px) scale(.3)', opacity: 0 }, { transform: 'translate(-50%,' + (below ? '0%' : '-100%') + ') translateY(' + (up * 26) + 'px) scale(1.08)', opacity: 1, offset: .55 }, { transform: 'translate(-50%,' + (below ? '0%' : '-100%') + ') translateY(' + (up * 18) + 'px) scale(1)', opacity: 1 }], { duration: 520, easing: 'cubic-bezier(.3,1.4,.5,1)', fill: 'forwards' });
         setTimeout(function () { ms.animate([{ opacity: 1 }, { opacity: 0, transform: 'translate(-50%,' + (below ? '0%' : '-100%') + ') translateY(' + (up * 8) + 'px) scale(.85)' }], { duration: 320, fill: 'forwards' }).onfinish = function () { ms.remove(); }; }, 3200);
       }
-      setTimeout(card, 900);
+      setTimeout(card, 380);
     }
     function card() {
       var old = document.querySelector('.vc-hello'); if (old) old.remove();
@@ -1566,8 +1566,8 @@ window.VCStepPlay = function (v, fps, onEnd) {
       });
     }
     skip.addEventListener('click', function () { if (!document.querySelector('.vc-hello')) setTimeout(card, 250); });   /* กดข้ามก็ยังได้การ์ดต้อนรับ */
-    var J0 = LK, FOLD = 650, FLY0 = 1750, FLY = 1150;
-    EXIT = J0 + FLY0 + FLY + 700;
+    var J0 = LK, FOLD = 380, FLY0 = 980, FLY = 760;
+    EXIT = J0 + FLY0 + FLY + 350;
     cue(J0, function () {
       var tg = target();
       var av0 = document.querySelector('#authLoggedIn .acct-avatar'), avr = av0 && av0.getBoundingClientRect();
@@ -1590,11 +1590,11 @@ window.VCStepPlay = function (v, fps, onEnd) {
       env.innerHTML = '<i class="ev-back"></i><i class="ev-sheet"></i><i class="ev-front"></i><i class="ev-flap"></i><div class="ev-seal"><b>VC</b></div>';
       document.body.appendChild(env);
       var flap = env.querySelector('.ev-flap'), es = env.querySelector('.ev-seal'), sheet = env.querySelector('.ev-sheet');
-      A(env, [{ opacity: 0, transform: 'scale(.86)' }, { opacity: 1, transform: 'scale(1)' }], { duration: 420, delay: FOLD - 200, easing: SETTLE, fill: 'both' });
-      A(sheet, [{ transform: 'translateY(-46%)' }, { transform: 'translateY(0)' }], { duration: 460, delay: FOLD - 80, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'both' });
-      A(flap, [{ transform: 'rotateX(180deg)' }, { transform: 'rotateX(0deg)' }], { duration: 420, delay: FOLD + 420, easing: 'cubic-bezier(.5,0,.3,1)', fill: 'both' });
-      A(es, [{ opacity: 0, transform: 'translate(-50%,-50%) scale(1.9) rotate(-20deg)' }, { opacity: 1, transform: 'translate(-50%,-50%) scale(.9) rotate(-6deg)', offset: .7 }, { opacity: 1, transform: 'translate(-50%,-50%) scale(1) rotate(-8deg)' }], { duration: 360, delay: FOLD + 880, easing: 'cubic-bezier(.5,0,.7,.4)', fill: 'both' });
-      cue(J0 + FOLD + 1130, function () { sfx('seal'); try { if (navigator.vibrate) navigator.vibrate(14); } catch (e) {} A(env, [{ transform: 'translateY(0)' }, { transform: 'translateY(2px)', offset: .35 }, { transform: 'translateY(0)' }], { duration: 220, easing: EASE_OUT }); });
+      A(env, [{ opacity: 0, transform: 'scale(.86)' }, { opacity: 1, transform: 'scale(1)' }], { duration: 300, delay: FOLD - 160, easing: SETTLE, fill: 'both' });
+      A(sheet, [{ transform: 'translateY(-46%)' }, { transform: 'translateY(0)' }], { duration: 300, delay: FOLD - 120, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'both' });
+      A(flap, [{ transform: 'rotateX(180deg)' }, { transform: 'rotateX(0deg)' }], { duration: 260, delay: FOLD + 140, easing: 'cubic-bezier(.5,0,.3,1)', fill: 'both' });
+      A(es, [{ opacity: 0, transform: 'translate(-50%,-50%) scale(1.9) rotate(-20deg)' }, { opacity: 1, transform: 'translate(-50%,-50%) scale(.9) rotate(-6deg)', offset: .7 }, { opacity: 1, transform: 'translate(-50%,-50%) scale(1) rotate(-8deg)' }], { duration: 260, delay: FOLD + 380, easing: 'cubic-bezier(.5,0,.7,.4)', fill: 'both' });
+      cue(J0 + FOLD + 560, function () { sfx('seal'); try { if (navigator.vibrate) navigator.vibrate(14); } catch (e) {} A(env, [{ transform: 'translateY(0)' }, { transform: 'translateY(2px)', offset: .35 }, { transform: 'translateY(0)' }], { duration: 220, easing: EASE_OUT }); });
       /* บินโค้งไปที่ปุ่มบัญชี ย่อลงจนเท่าปุ่ม */
       var dx = tx - cx, dy = ty - cy, sEnd = Math.max(.08, Math.min(.3, (tg ? Math.max(tg.r.width, tg.r.height) + 4 : 30) / EW));
       A(env, [{ transform: 'translate3d(0,0,0) rotate(0) scale(1)', opacity: 1 },
@@ -1617,7 +1617,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
           requestAnimationFrame(trail);
         })(performance.now());
       });
-      A(dim, [{ opacity: 1 }, { opacity: 0 }], { duration: 700, delay: FLY0 + 120, easing: 'linear', fill: 'forwards' });
+      A(dim, [{ opacity: 1 }, { opacity: 0 }], { duration: 520, delay: FLY0 + 60, easing: 'linear', fill: 'forwards' });
       cue(J0 + FLY0 + FLY - 60, function () {
         var ring = document.createElement('i'); ring.className = 'vc-env-ring'; ring.style.left = tx.toFixed(0) + 'px'; ring.style.top = ty.toFixed(0) + 'px'; document.body.appendChild(ring);
         ring.animate([{ transform: 'translate(-50%,-50%) scale(.4)', opacity: .95 }, { transform: 'translate(-50%,-50%) scale(2.6)', opacity: 0 }], { duration: 700, easing: 'cubic-bezier(.2,.7,.3,1)' }).onfinish = function () { ring.remove(); };
@@ -1647,7 +1647,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
       Array.prototype.forEach.call(parts, function (el) { if (!el.offsetParent || n > 5) return;
         A(el, [{ opacity: 0, transform: 'translate3d(0,10px,0)' }, { opacity: 1, transform: 'none' }], { duration: 520, delay: n++ * 80, easing: SETTLE, fill: 'backwards' }); });
     });
-    cue(EXIT + 200, kill);
+    cue(EXIT + 200, function () { var h = document.documentElement; h.classList.add('vc-post'); setTimeout(function () { h.classList.remove('vc-post'); }, 1600); kill(); });
 
     /* ล็อกเวลาเริ่มของทุกอนิเมชันให้ตรงกับนาฬิกาเดียวกัน */
     TL.t0 = performance.now();
@@ -7321,7 +7321,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   }
   var flipped = false;
   function play(i) {
-    if (window.VCPause && VCPause.on()) { clear(); playing = false; T(function () { play(i); }, 1200); return; }   /* v272 ฉากล็อกอิน/หน้าต่างเปิดทับอยู่: พักไว้ก่อน ไม่แย่งเครื่อง */
+    if (window.VCPause && VCPause.on()) { clear(); playing = false; cur = i; if (render(i, true)) { tally(true); fig.classList.remove('out'); fig.classList.add('done', 'slam'); signSet(SIGN_STOP); } T(function () { play((i + 1) % DEMOS.length); }, 2500); return; }   /* v272 ฉากล็อกอิน/หน้าต่างเปิดทับอยู่: พักไว้ก่อน ไม่แย่งเครื่อง */
     clear(); cur = i; fig.classList.remove('done', 'out', 'scan', 'scan2', 'pen', 'sign', 'slam'); signReset();
     /* (3) พลิกหน้ากระดาษ — ถอดคลาสเองเมื่อครบเวลา กันกระดาษค้างล่องหน (เจอบน iPhone) */
     var pp = fig.querySelector('.hxl-paper');
