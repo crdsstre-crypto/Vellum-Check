@@ -7135,3 +7135,19 @@ html.vc-motion[data-entering="home"] main > .hero :is(.dx-cta-row,.hero-cue,.svx
 .bottom-nav .bn-item svg{transition:transform .2s}
 .bottom-nav .vc-bn-ind{transition:transform .38s cubic-bezier(.3,1.25,.5,1) !important}
 @media (prefers-reduced-motion:reduce){.bottom-nav .bn-item.vc-tap svg{animation:none}}
+
+/* ===== v276 ข้อ 3: กลับหน้าแรก — วาดเส้นทองใต้ "ก่อนเซ็น" ใหม่ (ลายมือเขียนครั้งแรกครั้งเดียว) ===== */
+@keyframes hsReline{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+.ht-l2.hs-done.hs-reline .hs-line path{animation:hsReline .75s cubic-bezier(.6,.1,.3,1) .25s both !important}
+/* แผ่นที่ถูกดึงออก (ข้อ 2) */
+.hxl-peel{will-change:transform,opacity}
+.hxl-peel .hxl-scan,.hxl-peel .hxl-pen,.hxl-peel .hxl-hint{display:none !important}
+
+/* ===== ข้อ 4: กระดาษบินกลับหน้าแรกให้เห็นชัด — พื้นหลังมืดลงระหว่างบิน · กระดาษยก เอียง มีเงา · วางลงเด้งเบา ๆ ===== */
+@keyframes vtInDim{0%{opacity:0;filter:brightness(.4)}45%{opacity:1;filter:brightness(.45)}100%{opacity:1;filter:none}}
+html.vc-vt.vc-morph::view-transition-new(root){animation:vtInDim .75s ease .05s both}
+html.vc-vt.vc-morph::view-transition-old(root){animation:vtOut .25s cubic-bezier(.4,0,1,1) both}
+::view-transition-group(vc-paper){animation-duration:.7s !important;animation-timing-function:cubic-bezier(.34,1.22,.5,1) !important}
+@keyframes vtLift{0%{transform:none;filter:drop-shadow(0 0 0 rgba(0,0,0,0))}35%{transform:rotate(-3deg) scale(1.03);filter:drop-shadow(0 26px 28px rgba(0,0,0,.6))}80%{transform:rotate(.8deg) scale(.995);filter:drop-shadow(0 8px 10px rgba(0,0,0,.4))}100%{transform:none;filter:drop-shadow(0 0 0 rgba(0,0,0,0))}}
+::view-transition-image-pair(vc-paper){animation:vtLift .7s cubic-bezier(.3,.7,.3,1) both;overflow:visible !important}
+@media (prefers-reduced-motion:reduce){html.vc-vt::view-transition-new(root),::view-transition-image-pair(vc-paper){animation:none !important}}
