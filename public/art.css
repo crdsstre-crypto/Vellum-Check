@@ -7010,3 +7010,32 @@ html.vc-dsc-open :is(.vc-bn,.vc-fpill,.vc-stick,.hx-lens,.hx-pool,.hx-tip,.hx-hu
 /* ปิดแอนิเมชันเดิม (vsl-swap) ที่ซ้ำซ้อน */
 .vsl.vsl-split .vsl-view.vsl-swap .vsl-paper,.vsl.vsl-split .vsl-view.vsl-swap .vsl-rail{animation:none}
 @media (prefers-reduced-motion:reduce){.vsl.hl-on .vsl-doc p.is-risk mark{transition:none}}
+
+/* ===== v270 เส้นสแกนทองบนกระดาษตัวอย่างหน้าแรก (art.js play: scan2) =====
+   2) เส้นทองบาง + แสงฟุ้งด้านบน ไม่บังตัวหนังสือ  3) บรรทัดที่ยังไม่อ่านจาง อ่านแล้วเข้ม
+   4) ข้อเสี่ยง: เส้นหยุดค้าง เปลี่ยนสีตามระดับ + บรรทัดวาบ + ตราปั๊ม + ตัวนับเด้ง */
+.hx-live.scan2 .hxl-scan{animation:none !important;top:0;margin-top:-1px;left:8px;right:8px;height:2px;border:0;filter:none;border-radius:2px;
+  --sk:#d9a441;--sk2:#f7dc92;--gl:rgba(233,190,100,.26);
+  background:linear-gradient(90deg,transparent,var(--sk) 10%,var(--sk2) 50%,var(--sk) 90%,transparent);
+  opacity:0;transition-property:transform,opacity;transition-timing-function:cubic-bezier(.45,.05,.25,1);will-change:transform}
+.hx-live.scan2 .hxl-scan::before{content:"";position:absolute;left:6%;right:6%;bottom:2px;height:22px;pointer-events:none;
+  background:linear-gradient(0deg,var(--gl),transparent);transition:height .25s,background .25s}
+.hx-live.scan2 .hxl-scan::after{content:"";position:absolute;right:-3px;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--sk2);
+  box-shadow:0 0 0 3px var(--gl);transition:background .25s}
+.hx-live.scan2:not(.done) .hxl-scan.on{opacity:1}
+.hx-live.scan2 .hxl-scan.k-h{--sk:#e5484d;--sk2:#ff8f8f;--gl:rgba(229,72,77,.3)}
+.hx-live.scan2 .hxl-scan.k-c{--sk:#e8920c;--sk2:#ffc65a;--gl:rgba(232,146,12,.3)}
+.hx-live.scan2 .hxl-scan.k-l{--sk:#3b7df0;--sk2:#93b8ff;--gl:rgba(59,125,240,.26)}
+.hx-live.scan2 .hxl-scan.hold::before{height:30px}
+.hx-live.scan2 .hxl-scan.hold::after{animation:hxsPing .56s ease-out}
+@keyframes hxsPing{0%{box-shadow:0 0 0 0 var(--gl),0 0 0 0 var(--sk)}60%{box-shadow:0 0 0 3px var(--gl),0 0 0 9px transparent}100%{box-shadow:0 0 0 3px var(--gl),0 0 0 9px transparent}}
+/* 3) หมึกปรากฏตามที่อ่าน */
+.hx-live.scan2 .hxl-ln{transition:opacity .28s ease,color .25s}
+.hx-live.scan2:not(.done) .hxl-ln:not(.seen){opacity:.3}
+/* 4) บรรทัดที่เจอข้อเสี่ยงวาบสีตามระดับ */
+.hx-live.scan2 .hxl-ln.found{animation:hxsFound .7s ease-out}
+.hx-live.scan2 .hxl-ln.found.r-h{--fx:rgba(229,72,77,.2)}
+.hx-live.scan2 .hxl-ln.found.r-c{--fx:rgba(232,146,12,.2)}
+.hx-live.scan2 .hxl-ln.found.r-l{--fx:rgba(59,125,240,.16)}
+@keyframes hxsFound{0%{background:var(--fx,rgba(233,190,100,.2))}100%{background:transparent}}
+@media (prefers-reduced-motion:reduce){.hx-live.scan2 .hxl-scan{display:none}.hx-live.scan2 .hxl-ln{opacity:1 !important;animation:none !important}}
