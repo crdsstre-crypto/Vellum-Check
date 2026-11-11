@@ -7186,7 +7186,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
   }
   var flipped = false;
   function play(i) {
-    clear(); cur = i; fig.classList.remove('done', 'out', 'scan', 'pen', 'sign', 'slam'); signReset();
+    clear(); cur = i; fig.classList.remove('done', 'out', 'scan', 'scan2', 'pen', 'sign', 'slam'); signReset();
     /* (3) พลิกหน้ากระดาษ — ถอดคลาสเองเมื่อครบเวลา กันกระดาษค้างล่องหน (เจอบน iPhone) */
     var pp = fig.querySelector('.hxl-paper');
     if (flipped && !calm()) { pp.classList.remove('flipin'); void pp.offsetWidth; pp.classList.add('flipin'); clearTimeout(pp.__ft); pp.__ft = setTimeout(function () { pp.classList.remove('flipin'); }, 900); }
@@ -7195,16 +7195,34 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     tally(calm());
     if (calm()) { signSet(SIGN_STOP); fig.classList.add('done', 'slam'); return; }
     playing = true;
-    var lines = fig.querySelectorAll('.hxl-ln'), step = 520, hits = 0, cnt = fig.querySelector('.hxl-cnt em');
-    fig.style.setProperty('--scan', (lines.length * step + 300) + 'ms');
-    void fig.offsetWidth; fig.classList.add('scan');
+    /* v265 เส้นสแกนทอง: JS พาเส้นไปทีละบรรทัด · ข้อปกติผ่านเร็ว · ข้อเสี่ยงหยุดค้าง เปลี่ยนสีตามระดับ แล้วปั๊มตรา */
+    var lines = fig.querySelectorAll('.hxl-ln'), hits = 0, cnt = fig.querySelector('.hxl-cnt em');
+    var sb = fig.querySelector('.hxl-scan'), par = sb.offsetParent || pp, MOVE = 300, HOLD = 560;
+    /* ใช้ offsetTop (ไม่โดนผลของการพลิก/ย่อกระดาษ) แทน getBoundingClientRect */
+    var ys = [].map.call(lines, function (ln) { var y = ln.offsetHeight + 1, e = ln; while (e && e !== par) { y += e.offsetTop; e = e.offsetParent; } return y; });
+    function goY(y, ms) { sb.style.transitionDuration = ms + 'ms'; sb.style.transform = 'translate3d(0,' + y.toFixed(1) + 'px,0)'; }
+    sb.className = 'hxl-scan'; sb.style.transitionDuration = '0ms'; sb.style.transform = 'translate3d(0,' + ((ys[0] || 0) - 26).toFixed(1) + 'px,0)';
+    void fig.offsetWidth; fig.classList.add('scan', 'scan2');
+    T(function () { sb.classList.add('on'); }, 160);
+    var t = 260;
     [].forEach.call(lines, function (ln, k) {
+      var risk = (/\br-(\w)/.exec(ln.className) || [])[1];
+      T(function () { sb.classList.remove('hold', 'k-h', 'k-c', 'k-l'); goY(ys[k], MOVE); }, t);
+      t += MOVE;
       T(function () {
         ln.classList.add('seen');
-        if (/\br-/.test(ln.className)) { ln.classList.add('hit'); hits++; cnt.textContent = hits; var c = cnt.parentNode; c.classList.remove('pop'); void c.offsetWidth; c.classList.add('pop'); tally(false); }
-      }, 260 + k * step);
+        if (risk) {
+          sb.classList.add('hold', 'k-' + risk); ln.classList.add('found');
+          ln.classList.add('hit'); hits++; cnt.textContent = hits; var c = cnt.parentNode; c.classList.remove('pop'); void c.offsetWidth; c.classList.add('pop'); tally(false);
+          try { if (navigator.vibrate && navigator.userActivation && navigator.userActivation.hasBeenActive) navigator.vibrate(risk === 'h' ? [14, 40, 14] : 10); } catch (e) {}
+        }
+      }, t);
+      if (risk) t += HOLD;
     });
-    var end = 260 + lines.length * step;
+    var last = ys.length ? ys[ys.length - 1] : 0;
+    T(function () { sb.classList.remove('hold', 'k-h', 'k-c', 'k-l'); goY(last + 30, 260); }, t);
+    T(function () { sb.classList.remove('on'); }, t + 200);
+    var end = t + 60;
     T(function () { fig.classList.add('done'); tally(true); }, end + 200);
     T(function () { penAt(0); fig.classList.add('pen'); }, end + 400);  /* (7) ปากกาลอยลงมาที่ต้นเส้นลงชื่อ */
     T(function () { fig.classList.add('sign'); signRun(); }, end + 900); /* เริ่มเซ็น… */
