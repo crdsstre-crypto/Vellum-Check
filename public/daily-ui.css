@@ -2,7 +2,7 @@
 .vdc,.vdc-strip,.vdc-pop{--dc-bg:#151517;--dc-bg2:#1d1d20;--dc-line:rgba(236,233,226,.12);--dc-line2:rgba(236,233,226,.22);--dc-tx:#ece9e2;--dc-dim:#a9a6a0;--dc-mute:#77746f;
   --dc-acc:#e8c46a;--dc-fire:#ff9a4d;--dc-ok:#5fd3a6;font-family:'Prompt','Sarabun',system-ui,sans-serif}
 .vdc-ic{display:inline-grid;place-items:center;flex:0 0 auto;width:38px;height:38px;border-radius:11px;background:rgba(232,196,106,.12);border:1px solid rgba(232,196,106,.3);color:var(--dc-acc)}
-.vdc svg:not(.vdg-art),.vdc-strip svg,.vdc-menu .menu-ico svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.vdc svg:not(.vdg-art):not(.vm),.vdc-strip svg:not(.vm),.vdc-menu .menu-ico svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 
 /* ---------- แถบบนหน้าตรวจ ---------- */
 .vdc-strip{display:flex;align-items:center;gap:10px;width:100%;box-sizing:border-box;margin:0 0 12px;padding:8px 8px 8px 10px;border-radius:14px;
@@ -175,8 +175,8 @@ html.vdc-open,html.vdc-open body{overflow:hidden}
 #authLoggedIn .vdc-acct:hover,#authLoggedIn .vrm-acct:hover{background:rgba(255,255,255,.06) !important}
 #authLoggedIn .vdc-acct:focus-visible,#authLoggedIn .vrm-acct:focus-visible{outline:2px solid #ffe08a;outline-offset:2px}
 .vda-ic,.vra-ic{flex:0 0 40px;width:40px;height:40px;border-radius:12px;display:grid;place-items:center}
-.vda-ic svg,.vra-ic svg,.vda-fire svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.vda-ic svg,.vra-ic svg{width:21px;height:21px}
+.vda-ic svg:not(.vm),.vra-ic svg,.vda-fire svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.vda-ic svg:not(.vm),.vra-ic svg{width:21px;height:21px}
 .vda-ic{color:#f4c542;background:linear-gradient(145deg,rgba(244,197,66,.22),rgba(244,197,66,.06));border:1px solid rgba(244,197,66,.35)}
 .vra-ic{color:#9cc3ff;background:linear-gradient(145deg,rgba(120,170,255,.2),rgba(120,170,255,.05));border:1px solid rgba(120,170,255,.3)}
 .vda-tx,.vra-tx{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:3px}
@@ -200,3 +200,118 @@ html.vdc-open,html.vdc-open body{overflow:hidden}
 .vra-pill.is-dim{background:rgba(255,255,255,.08);color:#c9c9cf}
 .vda-chev,.vra-chev{flex:0 0 auto;width:8px;height:8px;margin:0 4px 0 2px;border-right:2px solid #6f6f77;border-bottom:2px solid #6f6f77;transform:rotate(-45deg)}
 @media (prefers-reduced-motion:reduce){.vda-pill{animation:none}}
+
+/* ---------- มาสคอตเวลลัม ---------- */
+.vdg-hd{display:flex;align-items:flex-start;gap:12px;padding-left:18px !important}
+.vdg-mascot{flex:0 0 auto;width:84px;margin-top:-4px}
+.vdg-mascot svg{width:84px;height:auto}
+.vdg-hdt{flex:1;min-width:0;padding-top:4px}
+.vdg-say{position:relative;display:inline-block;max-width:100%;margin:8px 0 2px;padding:9px 13px;border-radius:14px;background:#f7efdc;color:#2a1d08;font:600 .86rem/1.45 'Prompt',sans-serif;box-shadow:0 6px 18px -8px rgba(0,0,0,.6);animation:vdgSay .35s cubic-bezier(.2,1.4,.4,1)}
+.vdg-say::before{content:"";position:absolute;left:-7px;top:12px;border:7px solid transparent;border-right-color:#f7efdc;border-left:0}
+.vdg-say:empty{display:none}
+.vdg-sub{margin-top:6px !important}
+@keyframes vdgSay{from{opacity:0;transform:scale(.9) translateX(-6px)}}
+/* มาสคอตตัวเล็กในแถบหน้าตรวจ + การ์ดบัญชี */
+.vdc-mini{overflow:visible !important}
+.vdc-mini svg.vm{width:100%;height:auto;margin-top:-4px}
+.vdc-strip .vdc-ic.vdc-mini{width:40px;height:40px;background:rgba(247,239,220,.08);border-color:rgba(247,239,220,.2)}
+.vda-ic.vdc-mini{background:rgba(247,239,220,.07) !important;border-color:rgba(247,239,220,.18) !important;padding:0 3px}
+@media (max-width:767px){
+  .vdg-hd{gap:8px;padding-left:12px !important}
+  .vdg-mascot,.vdg-mascot svg{width:70px}
+  .vdg-say{font-size:.82rem;padding:8px 11px}
+}
+@media (prefers-reduced-motion:reduce){.vdg-say{animation:none}}
+
+/* ===== แบบโล่ง: ไม่มีพื้นหลังหน้าต่าง · มาสคอตตัวใหญ่มุมขวาบน · หัวข้อ "ล็อกอินรายวัน ฟรี!" ===== */
+.vdc .vdc-bg{background:radial-gradient(90% 60% at 70% 10%,rgba(244,197,66,.14),transparent 60%),rgba(6,6,8,.86);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.vdc .vdg-frame{background:none;border:0;box-shadow:none;width:min(640px,100%);overflow:visible;max-height:calc(100vh - 32px)}
+.vdc .vdg-body{overflow:auto;padding-top:4px}
+.vdc .vdg-x{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);top:0;right:0}
+.vdc .vdg-hd{position:relative;display:flex;align-items:flex-end;gap:0;padding:6px 0 0 24px !important;min-height:170px}
+.vdc .vdg-hdt{flex:1;min-width:0;padding:30px 0 10px;position:relative;z-index:1}
+.vdc .vdg-hd h3{font:800 clamp(2rem,5vw,2.9rem)/1.12 'Prompt',sans-serif;color:#fff;letter-spacing:0}
+.vdc .vdg-hd h3 span{display:block}
+.vdc .vdg-hd h3 em{display:inline-block;margin-top:2px;padding:0 14px 4px;border-radius:14px;font-style:normal;color:#2a1a02;background:linear-gradient(180deg,#ffe28a,#f0b93a);transform:rotate(-3deg);box-shadow:0 8px 24px -8px rgba(244,197,66,.7)}
+.vdc .vdg-sub{margin:12px 0 0 !important;font-size:.9rem}
+.vdc .vdg-say{margin:10px 0 0;max-width:300px}
+.vdc .vdg-say::before{left:auto;right:-7px;top:14px;border:7px solid transparent;border-left-color:#f7efdc;border-right:0}
+.vdc .vdg-mascot{flex:0 0 auto;width:190px;margin:0 6px -18px -20px;position:relative;z-index:2;filter:drop-shadow(0 18px 30px rgba(0,0,0,.6))}
+.vdc .vdg-mascot svg{width:190px}
+/* การ์ดและส่วนต่างๆ ลอยอยู่บนพื้นมืด ให้มีขอบชัดขึ้นเล็กน้อย */
+.vdc .vdg-wallet,.vdc .vdg-c:not(.is-open):not(.is-done){background:rgba(28,27,24,.92)}
+.vdc .vdg-foot{background:none}
+@media (max-width:767px){
+  .vdc{align-items:flex-end}
+  .vdc .vdg-frame{border-radius:0;max-height:100vh;max-height:100dvh;animation:vdcIn .3s cubic-bezier(.16,1,.3,1)}
+  .vdc .vdc-grip{display:none}
+  .vdc .vdg-x{top:8px;right:12px}
+  .vdc .vdg-hd{min-height:150px;padding:4px 0 0 16px !important}
+  .vdc .vdg-hdt{padding:34px 0 8px}
+  .vdc .vdg-hd h3{font-size:2rem}
+  .vdc .vdg-sub{font-size:.8rem}
+  .vdc .vdg-say{max-width:210px;font-size:.8rem}
+  .vdc .vdg-mascot,.vdc .vdg-mascot svg{width:138px}
+  .vdc .vdg-mascot{margin:0 4px -14px -26px}
+}
+@media (max-width:360px){.vdc .vdg-mascot,.vdc .vdg-mascot svg{width:112px}.vdc .vdg-hd h3{font-size:1.75rem}}
+
+/* ===== เวอร์ชันล่าสุด: มาสคอตใหญ่ขึ้น · หัวข้อ "ล็อกอินรายวัน" เอียงอยู่กลางชิดมาสคอต · ส่วนรับของมีภาพพื้นหลัง ===== */
+.vdc .vdg-frame{width:min(660px,100%)}
+.vdc .vdg-hd{justify-content:center;align-items:center;min-height:250px;padding:0 !important;margin-bottom:-26px}
+.vdc .vdg-hdt{flex:0 1 auto;display:flex;flex-direction:column;align-items:center;text-align:center;padding:24px 0 0;margin-right:-34px;z-index:3}
+.vdc .vdg-hd h3{display:flex;flex-direction:column;align-items:center;transform:rotate(-7deg);font:800 clamp(2.3rem,6.4vw,3.6rem)/1 'Prompt',sans-serif;color:#fff;
+  filter:drop-shadow(0 4px 0 #5c3a06) drop-shadow(0 10px 22px rgba(0,0,0,.55))}
+.vdc .vdg-hd h3 span{display:block}
+.vdc .vdg-hd h3 span+span{color:#ffd75a;font-size:1.12em;margin-top:2px}
+.vdc .vdg-hd h3 em{margin-top:8px;font-size:.5em;padding:2px 16px 6px;transform:rotate(4deg)}
+.vdc .vdg-say{margin:22px 0 0;max-width:270px;text-align:left}
+.vdc .vdg-say::before{right:auto;left:auto;top:auto;bottom:-7px;left:calc(100% - 46px);border:7px solid transparent;border-top-color:#f7efdc;border-bottom:0}
+.vdc .vdg-sub{margin:8px 0 0 !important;font-size:.84rem}
+.vdc .vdg-mascot{width:260px;margin:0 -18px 0 0}
+.vdc .vdg-mascot svg{width:260px}
+/* ส่วนรับของ: แผงมีภาพพื้นหลัง (แสงทองแผ่ + เหรียญ + ประกาย) */
+.vdg-stage{position:relative;z-index:1;display:flex;flex-direction:column;min-height:0;flex:1 1 auto;border-radius:24px;overflow:hidden;
+  border:1.5px solid rgba(255,226,138,.55);box-shadow:0 30px 70px -20px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,240,180,.25);
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 640' preserveAspectRatio='xMidYMin slice'%3E%3Cdefs%3E%3CradialGradient id='g' cx='50%25' cy='0%25' r='95%25'%3E%3Cstop offset='0' stop-color='%235a4210'/%3E%3Cstop offset='.45' stop-color='%232a1f0b'/%3E%3Cstop offset='1' stop-color='%23110e08'/%3E%3C/radialGradient%3E%3CradialGradient id='h' cx='50%25' cy='0%25' r='45%25'%3E%3Cstop offset='0' stop-color='%23ffe28a' stop-opacity='.35'/%3E%3Cstop offset='1' stop-color='%23ffe28a' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='600' height='640' fill='url%28%23g%29'/%3E%3Cpath d='M300 -40 L1194.2 61.9 L1175.1 170.1 Z' fill='%23ffd75a' opacity='0.035'/%3E%3Cpath d='M300 -40 L1153.5 245.6 L1112.3 347.5 Z' fill='%23ffd75a' opacity='0.070'/%3E%3Cpath d='M300 -40 L1075.5 416.8 L1014.0 507.9 Z' fill='%23ffd75a' opacity='0.035'/%3E%3Cpath d='M300 -40 L963.5 568.0 L884.5 644.4 Z' fill='%23ffd75a' opacity='0.070'/%3E%3Cpath d='M300 -40 L822.6 692.7 L729.4 750.9 Z' fill='%23ffd75a' opacity='0.035'/%3E%3Cpath d='M300 -40 L658.9 785.4 L555.6 822.9 Z' fill='%23ffd75a' opacity='0.070'/%3E%3Cpath d='M300 -40 L479.4 841.9 L370.6 857.2 Z' fill='%23ffd75a' opacity='0.035'/%3E%3Cpath d='M300 -40 L292.1 860.0 L182.5 852.3 Z' fill='%23ffd75a' opacity='0.070'/%3E%3Cpath d='M300 -40 L105.2 838.7 L-0.4 808.4 Z' fill='%23ffd75a' opacity='0.035'/%3E%3Cpath d='M300 -40 L-73.2 779.0 L-170.2 727.4 Z' fill='%23ffd75a' opacity='0.070'/%3E%3Cpath d='M300 -40 L-235.3 683.5 L-319.5 612.8 Z' fill='%23ffd75a' opacity='0.035'/%3E%3Cpath d='M300 -40 L-374.1 556.4 L-441.7 469.8 Z' fill='%23ffd75a' opacity='0.070'/%3E%3Cpath d='M300 -40 L-483.3 403.2 L-531.5 304.4 Z' fill='%23ffd75a' opacity='0.035'/%3E%3Cpath d='M300 -40 L-558.3 230.6 L-584.9 124.0 Z' fill='%23ffd75a' opacity='0.070'/%3E%3Cpath d='M300 -40 L-595.9 46.3 L-599.7 -63.6 Z' fill='%23ffd75a' opacity='0.035'/%3E%3Crect width='600' height='640' fill='url%28%23h%29'/%3E%3Cg opacity='0.35' transform='translate%2840 520%29'%3E%3Cellipse cy='5.5' rx='22' ry='18.7' fill='%237a5410'/%3E%3Cellipse rx='22' ry='18.7' fill='%23e8b53a'/%3E%3Cellipse rx='13.6' ry='11.4' fill='none' stroke='%23fff1b0' stroke-width='2' opacity='.6'/%3E%3C/g%3E%3Cg opacity='0.28' transform='translate%2890 560%29'%3E%3Cellipse cy='4.0' rx='16' ry='13.6' fill='%237a5410'/%3E%3Cellipse rx='16' ry='13.6' fill='%23e8b53a'/%3E%3Cellipse rx='9.9' ry='8.3' fill='none' stroke='%23fff1b0' stroke-width='2' opacity='.6'/%3E%3C/g%3E%3Cg opacity='0.33' transform='translate%28560 500%29'%3E%3Cellipse cy='6.0' rx='24' ry='20.4' fill='%237a5410'/%3E%3Cellipse rx='24' ry='20.4' fill='%23e8b53a'/%3E%3Cellipse rx='14.9' ry='12.5' fill='none' stroke='%23fff1b0' stroke-width='2' opacity='.6'/%3E%3C/g%3E%3Cg opacity='0.25' transform='translate%28520 560%29'%3E%3Cellipse cy='3.8' rx='15' ry='12.8' fill='%237a5410'/%3E%3Cellipse rx='15' ry='12.8' fill='%23e8b53a'/%3E%3Cellipse rx='9.3' ry='7.8' fill='none' stroke='%23fff1b0' stroke-width='2' opacity='.6'/%3E%3C/g%3E%3Cg opacity='0.18' transform='translate%2830 300%29'%3E%3Cellipse cy='3.0' rx='12' ry='10.2' fill='%237a5410'/%3E%3Cellipse rx='12' ry='10.2' fill='%23e8b53a'/%3E%3Cellipse rx='7.4' ry='6.2' fill='none' stroke='%23fff1b0' stroke-width='2' opacity='.6'/%3E%3C/g%3E%3Cg opacity='0.2' transform='translate%28575 280%29'%3E%3Cellipse cy='3.5' rx='14' ry='11.9' fill='%237a5410'/%3E%3Cellipse rx='14' ry='11.9' fill='%23e8b53a'/%3E%3Cellipse rx='8.7' ry='7.3' fill='none' stroke='%23fff1b0' stroke-width='2' opacity='.6'/%3E%3C/g%3E%3Cg opacity='0.22' transform='translate%28470 600%29'%3E%3Cellipse cy='5.0' rx='20' ry='17.0' fill='%237a5410'/%3E%3Cellipse rx='20' ry='17.0' fill='%23e8b53a'/%3E%3Cellipse rx='12.4' ry='10.4' fill='none' stroke='%23fff1b0' stroke-width='2' opacity='.6'/%3E%3C/g%3E%3Cg opacity='0.2' transform='translate%28140 610%29'%3E%3Cellipse cy='4.5' rx='18' ry='15.3' fill='%237a5410'/%3E%3Cellipse rx='18' ry='15.3' fill='%23e8b53a'/%3E%3Cellipse rx='11.2' ry='9.4' fill='none' stroke='%23fff1b0' stroke-width='2' opacity='.6'/%3E%3C/g%3E%3Cpath transform='translate%2870 120%29 scale%281.2%29' d='M0-10l2.6 7.4L10 0l-7.4 2.6L0 10l-2.6-7.4L-10 0l7.4-2.6z' fill='%23fff4c2' opacity='0.5'/%3E%3Cpath transform='translate%28530 90%29 scale%281%29' d='M0-10l2.6 7.4L10 0l-7.4 2.6L0 10l-2.6-7.4L-10 0l7.4-2.6z' fill='%23fff4c2' opacity='0.45'/%3E%3Cpath transform='translate%28460 200%29 scale%280.7%29' d='M0-10l2.6 7.4L10 0l-7.4 2.6L0 10l-2.6-7.4L-10 0l7.4-2.6z' fill='%23fff4c2' opacity='0.4'/%3E%3Cpath transform='translate%28120 260%29 scale%280.8%29' d='M0-10l2.6 7.4L10 0l-7.4 2.6L0 10l-2.6-7.4L-10 0l7.4-2.6z' fill='%23fff4c2' opacity='0.35'/%3E%3Cpath transform='translate%28560 400%29 scale%280.9%29' d='M0-10l2.6 7.4L10 0l-7.4 2.6L0 10l-2.6-7.4L-10 0l7.4-2.6z' fill='%23fff4c2' opacity='0.35'/%3E%3Cpath transform='translate%2840 430%29 scale%280.6%29' d='M0-10l2.6 7.4L10 0l-7.4 2.6L0 10l-2.6-7.4L-10 0l7.4-2.6z' fill='%23fff4c2' opacity='0.3'/%3E%3Cpath transform='translate%28300 40%29 scale%280.8%29' d='M0-10l2.6 7.4L10 0l-7.4 2.6L0 10l-2.6-7.4L-10 0l7.4-2.6z' fill='%23fff4c2' opacity='0.4'/%3E%3C/svg%3E") center top/cover no-repeat,#15110a}
+.vdg-stage::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 0,rgba(0,0,0,.12) 60%,rgba(0,0,0,.35));pointer-events:none}
+.vdc .vdg-stage .vdg-body{position:relative;padding:34px 20px 6px}
+.vdc .vdg-stage .vdg-foot{position:relative;padding:10px 20px 18px}
+.vdc .vdg-wallet,.vdc .vdg-fire{-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.vdc .vdg-wallet{background:rgba(20,16,9,.72)}
+.vdc .vdg-c:not(.is-open):not(.is-done){background:rgba(24,20,13,.82)}
+.vdc .vdg-c.is-done{background:rgba(14,30,23,.82)}
+.vdc .vdg-hint{color:#ffe7a6}
+@media (max-width:767px){
+  .vdc .vdg-frame{padding:0 10px}
+  .vdc .vdg-hd{min-height:200px;margin:0 -10px -22px 0}
+  .vdc .vdg-hdt{margin-right:-30px;padding-top:30px}
+  .vdc .vdg-hd h3{font-size:2.15rem}
+  .vdc .vdg-say{max-width:190px;margin-top:16px;font-size:.78rem}
+  .vdc .vdg-mascot,.vdc .vdg-mascot svg{width:186px}
+  .vdc .vdg-mascot{margin:0 -16px 0 0}
+  .vdc .vdg-x{top:10px;right:10px;z-index:5}
+  .vdg-stage{border-radius:22px 22px 0 0;border-bottom:0}
+  .vdc .vdg-stage .vdg-body{padding:30px 12px 4px}
+  .vdc .vdg-stage .vdg-foot{padding:8px 12px calc(12px + env(safe-area-inset-bottom))}
+}
+@media (max-width:360px){.vdc .vdg-mascot,.vdc .vdg-mascot svg{width:150px}.vdc .vdg-hd h3{font-size:1.8rem}}
+
+.vdc .vdg-stage .vdg-sub{position:relative;margin:0 !important;padding:30px 20px 0;text-align:center;font-size:.86rem;color:#f3e3b8}
+.vdc .vdg-stage .vdg-body{padding-top:12px}
+@media (max-width:767px){.vdc .vdg-stage .vdg-sub{padding:28px 12px 0;font-size:.8rem}.vdc .vdg-stage .vdg-body{padding-top:10px}}
+
+/* ===== แก้ตามที่วงไว้: ปุ่มปิดแยกจากตัวการ์ตูน · บรรทัดสถานะเป็นป้ายชัดๆ ===== */
+/* ปุ่มปิดลอยมุมขวาบนของจอ ไม่ทับตัวการ์ตูน */
+.vdc .vdg-x{position:fixed;top:calc(14px + env(safe-area-inset-top));right:14px;z-index:2147483003;width:42px;height:42px;
+  background:rgba(20,20,22,.85);border:1px solid rgba(255,255,255,.22);font-size:15px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+/* หางกล่องคำพูดชี้ไปทางขวาหาตัวการ์ตูน แทนการชี้ลงไปชนบรรทัดสถานะ */
+.vdc .vdg-say::before{left:auto;right:-7px;top:50%;bottom:auto;margin-top:-7px;border:7px solid transparent;border-left-color:#f7efdc;border-right:0}
+/* บรรทัดสถานะ → ป้ายเม็ดยาจัดกลาง มีพื้นทึบ ไม่โดนลายพื้นหลังทับ */
+.vdc .vdg-stage .vdg-sub{display:flex;justify-content:center;padding:26px 16px 0}
+.vdc .vdg-stage .vdg-sub>span{display:inline-flex;align-items:center;gap:8px;padding:7px 16px 7px 12px;border-radius:99px;background:rgba(14,11,6,.82);border:1px solid rgba(255,226,138,.45);
+  box-shadow:0 6px 18px -8px rgba(0,0,0,.7);font:500 .86rem/1.3 'Prompt',sans-serif;color:#f3e3b8}
+.vdc .vdg-stage .vdg-sub>span b{color:#ffd75a;font-weight:700}
+.vdc .vdg-stage .vdg-sub i{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:linear-gradient(180deg,#ffe28a,#e8b53a);color:#2a1a02;font:700 12px/1 'Prompt',sans-serif;font-style:normal}
+.vdc .vdg-stage .vdg-sub.is-wait i{background:rgba(255,255,255,.12);color:#f3e3b8}
+@media (max-width:767px){.vdc .vdg-stage .vdg-sub>span{font-size:.8rem;padding:6px 14px 6px 10px}}
