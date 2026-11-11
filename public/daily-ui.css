@@ -315,3 +315,21 @@ html.vdc-open,html.vdc-open body{overflow:hidden}
 .vdc .vdg-stage .vdg-sub i{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:linear-gradient(180deg,#ffe28a,#e8b53a);color:#2a1a02;font:700 12px/1 'Prompt',sans-serif;font-style:normal}
 .vdc .vdg-stage .vdg-sub.is-wait i{background:rgba(255,255,255,.12);color:#f3e3b8}
 @media (max-width:767px){.vdc .vdg-stage .vdg-sub>span{font-size:.8rem;padding:6px 14px 6px 10px}}
+
+/* ===== ประสิทธิภาพ: ลดงานวาดซ้ำทุกเฟรม (ภาพเหมือนเดิม) =====
+   - ไม่ใช้ backdrop-filter (เบลอทั้งจอทุกเฟรมเมื่อพื้นหลังขยับ) → ใช้พื้นทึบขึ้นแทน
+   - แสงกะพริบใช้ชั้นแยก + opacity (ทำบนการ์ดจอ) แทนการแอนิเมต box-shadow ที่ต้องวาดใหม่ทุกเฟรม
+   - มาสคอตตัวเล็กในการ์ดบัญชี/แถบหน้าตรวจเป็นภาพนิ่ง (เห็นอยู่ตลอดหลังล็อกอิน) */
+.vdc .vdc-bg{-webkit-backdrop-filter:none;backdrop-filter:none;background:radial-gradient(90% 60% at 70% 10%,rgba(244,197,66,.14),transparent 60%),rgba(6,6,8,.97)}
+.vdc .vdg-wallet,.vdc .vdg-fire,.vdc .vdg-x{-webkit-backdrop-filter:none;backdrop-filter:none}
+.vdc .vdg-wallet{background:rgba(20,16,9,.9)}
+.vdc-mini .vm *,.vdc-mini .vm{animation:none !important}
+.vda-pill{position:relative;animation:none}
+.vda-pill:not(.is-ok)::after{content:"";position:absolute;inset:-4px;border-radius:15px;border:2px solid rgba(255,226,138,.6);opacity:0;animation:vdcRingO 2s ease-out infinite;pointer-events:none;will-change:opacity,transform}
+.vdc .vdg-c.is-open{animation:none;box-shadow:0 0 22px rgba(255,214,90,.28)}
+.vdc .vdg-c.is-open::before{content:"";position:absolute;inset:-5px;border-radius:20px;border:2px solid rgba(255,224,138,.55);opacity:0;animation:vdcRingO 1.8s ease-out infinite;pointer-events:none;will-change:opacity,transform}
+.vdc .vdg-redeem{position:relative;animation:none}
+.vdc .vdg-redeem::after{content:"";position:absolute;inset:-4px;border-radius:13px;border:2px solid rgba(255,226,138,.55);opacity:0;animation:vdcRingO 2s ease-out infinite;pointer-events:none}
+.vdc .vdg-art,.vdc .vdg-mascot{will-change:transform}
+@keyframes vdcRingO{0%{opacity:.9;transform:scale(.97)}100%{opacity:0;transform:scale(1.06)}}
+@media (prefers-reduced-motion:reduce){.vda-pill::after,.vdc .vdg-c.is-open::before,.vdc .vdg-redeem::after{animation:none}}
