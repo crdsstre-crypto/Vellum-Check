@@ -6997,3 +6997,16 @@ html.vc-dsc-open :is(.vc-bn,.vc-fpill,.vc-stick,.hx-lens,.hx-pool,.hx-tip,.hx-hu
 }
 @media (prefers-reduced-motion:reduce){.vsl-post{transition:none}}
 @media (min-width:1024px){.vsl.vsl-split .vsl-dhead{justify-content:flex-end;gap:18px}.vsl.vsl-split.fix-on .vsl-doc::before{margin-top:34px}}
+
+/* ===== v264 แอนิเมชันเปลี่ยนสัญญา: ไฮไลต์ขีดทีละจุดเหมือนปากกา · โน้ต/เลขข้อค่อยๆ โผล่ ===== */
+.vsl.hl-on .vsl-doc p.is-risk mark{background-repeat:no-repeat;background-size:100% 100%;-webkit-box-decoration-break:slice;box-decoration-break:slice;transition:background-size .5s cubic-bezier(.65,0,.35,1)}
+.vsl-doc.vsl-drawing p.is-risk mark{background-size:0% 100% !important;transition:none !important}
+.vsl-doc p.is-risk .vsl-note,.vsl-doc p.is-risk .vsl-pn{transition:opacity .35s ease,transform .35s cubic-bezier(.3,1.4,.5,1)}
+.vsl-doc.vsl-drawing p.is-risk .vsl-note{opacity:0 !important;transform:translateY(-4px) rotate(-1.4deg) !important;transition:none !important}
+.vsl-doc.vsl-drawing p.is-risk .vsl-pn{opacity:0 !important;transform:scale(.3) !important;transition:none !important}
+.vsl-ghost{transform-origin:50% 100%;will-change:transform,opacity}
+.vsl-ghost .vsl-post,.vsl-ghost .vsl-link{display:none}
+.vsl-view .vsl-paper{transform-origin:50% 0}
+/* ปิดแอนิเมชันเดิม (vsl-swap) ที่ซ้ำซ้อน */
+.vsl.vsl-split .vsl-view.vsl-swap .vsl-paper,.vsl.vsl-split .vsl-view.vsl-swap .vsl-rail{animation:none}
+@media (prefers-reduced-motion:reduce){.vsl.hl-on .vsl-doc p.is-risk mark{transition:none}}
