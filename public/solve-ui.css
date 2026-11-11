@@ -1,0 +1,90 @@
+/* ===== III · เราช่วยอะไรได้ (solve-ui.js) — อยู่ในส่วนกระดาษ #chapters ===== */
+.svx{margin:clamp(64px,12vh,140px) 0 0;padding-top:clamp(40px,7vh,72px);border-top:1px solid rgba(25,25,27,.28);color:#19191b}
+.svx .sec-label{color:rgba(25,25,27,.62)}
+.svx .sec-label::after{background:rgba(25,25,27,.28)}
+.svx .svx-h{display:block;margin:0;font-family:var(--font-display,serif);font-weight:400;font-size:var(--t-display,clamp(2rem,5vw,3.4rem));line-height:1.22;color:#19191b}
+.svx .svx-h::before{display:none}
+.svx-lead{margin:14px 0 0;font-size:1rem;line-height:1.7;color:rgba(25,25,27,.72)}
+.svx h3{margin:0;font-size:inherit}
+.svx h3::before{display:none}
+
+.svx-body{display:grid;grid-template-columns:240px 1fr;gap:clamp(20px,3vw,40px);margin:clamp(28px,5vh,48px) 0 0;align-items:start}
+.svx-tabs{display:flex;flex-direction:column;gap:6px;position:sticky;top:90px}
+.svx-tab{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:10px 14px;border-radius:12px;border:1px solid transparent;
+  background:transparent;color:rgba(25,25,27,.78);font:inherit;font-size:.98rem;font-weight:600;text-align:left;cursor:pointer;transition:background .2s,border-color .2s,color .2s}
+.svx-tab:hover{background:rgba(25,25,27,.05);color:#19191b}
+.svx-tab[aria-selected="true"]{background:#fffdf8;border-color:rgba(25,25,27,.2);color:#19191b;box-shadow:0 6px 16px -10px rgba(40,30,15,.45)}
+.svx-tab:focus-visible,.svx-btn:focus-visible,.svx-pane:focus-visible{outline:2px solid #b07a1e;outline-offset:2px}
+.svx-ti{font-size:1.35rem;line-height:1;width:28px;text-align:center}
+
+.svx-pane{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;min-height:340px}
+.svx-col{padding:20px 18px;border-radius:16px;background:#fffdf8;border:1px solid rgba(25,25,27,.12);box-shadow:0 2px 0 rgba(25,25,27,.05)}
+.svx-k{display:block;margin:0 0 14px !important;font-size:.74rem !important;font-weight:700;letter-spacing:.08em;color:rgba(25,25,27,.55)}
+.svx-pain{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.svx-pain li{position:relative;padding:0 0 0 30px;font-size:1rem;line-height:1.55;font-weight:600;color:#2a1a0c}
+.svx-pain li::before{content:"✕";position:absolute;left:0;top:1px;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:.7rem;font-weight:800;color:#fff;background:#c4443c}
+
+.svx-doc{background:#fbf7ec linear-gradient(transparent 31px,rgba(120,90,50,.1) 32px) 0 6px/100% 32px;font-family:var(--font-display,serif)}
+.svx-trap{margin:0;font-size:1rem;line-height:2}
+.svx-trap mark{color:#7a1f1a;padding:2px 2px;background:linear-gradient(transparent 52%,rgba(232,96,80,.32) 52%);box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.svx-arrow{margin:12px 0 6px;font-family:inherit;font-size:.78rem;font-weight:700;color:#8a5a00;font-family:system-ui,inherit}
+.svx-fix{margin:0;padding:10px 12px;border-radius:10px;font-size:.98rem;line-height:1.75;color:#1f4d2b;background:rgba(80,150,95,.12);box-shadow:inset 3px 0 0 #3f8a52}
+.svx-fine{margin:12px 0 0;font-size:.7rem;line-height:1.5;color:rgba(25,25,27,.5);font-family:system-ui,inherit}
+
+.svx-help{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;counter-reset:h}
+.svx-help li{position:relative;padding:0 0 0 38px;font-size:.95rem;line-height:1.6;color:rgba(25,25,27,.82);counter-increment:h}
+.svx-help li::before{content:counter(h);position:absolute;left:0;top:-1px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:.82rem;font-weight:800;color:#fff;background:linear-gradient(180deg,#c99234,#9a6a1c)}
+.svx-help b{color:#19191b}
+.svx-acts{display:flex;flex-direction:column;gap:8px;margin:20px 0 0}
+.svx-btn{min-height:48px;padding:10px 16px;border-radius:12px;border:0;cursor:pointer;font:inherit;font-size:.95rem;font-weight:700;line-height:1.35;color:#fff8e8;text-align:center;
+  background:linear-gradient(180deg,#2c2c30,#141416);box-shadow:0 8px 18px -10px rgba(0,0,0,.6);transition:transform .15s,filter .15s}
+.svx-btn:hover{transform:translateY(-1px);filter:brightness(1.15)}
+.svx-btn.is-ghost{background:transparent;color:#19191b;box-shadow:inset 0 0 0 1.5px rgba(25,25,27,.35)}
+.svx-free{font-size:.74rem;color:rgba(25,25,27,.55);text-align:center}
+
+/* ตรงไปตรงมา: ช่วยได้ / ไม่ได้ทำ */
+.svx-honest{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:clamp(28px,5vh,48px) 0 0}
+.svx-honest>div{padding:18px 20px;border-radius:16px;border:1px dashed rgba(25,25,27,.25)}
+.svx-honest h3{font-size:1rem !important;font-weight:700;margin:0 0 10px !important}
+.svx-can h3{color:#2f6b3c}
+.svx-cant h3{color:#8a3a2a}
+.svx-honest ul{margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:6px;font-size:.92rem;line-height:1.6;color:rgba(25,25,27,.78)}
+
+/* ภาพเคลื่อนไหว */
+@media (prefers-reduced-motion:no-preference){
+  .svx.svx-wait .svx-head,.svx.svx-wait .svx-body,.svx.svx-wait .svx-honest{opacity:0;transform:translateY(24px)}
+  .svx.svx-show :is(.svx-head,.svx-body,.svx-honest){transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.25,1)}
+  .svx.svx-show .svx-body{transition-delay:.12s}
+  .svx.svx-show .svx-honest{transition-delay:.24s}
+  .svx-pane.is-in .svx-col{animation:svxIn .45s cubic-bezier(.2,.8,.25,1) both}
+  .svx-pane.is-in .svx-col:nth-child(2){animation-delay:.07s}
+  .svx-pane.is-in .svx-col:nth-child(3){animation-delay:.14s}
+  .svx-pane.is-in .svx-trap mark{animation:svxMark .8s .3s ease-out both;background-size:100% 100%;background-repeat:no-repeat}
+}
+@keyframes svxIn{from{opacity:0;transform:translateY(12px)}}
+@keyframes svxMark{from{background-size:0% 100%}to{background-size:100% 100%}}
+
+/* แท็บเล็ต */
+@media (max-width:1099px){
+  .svx-body{grid-template-columns:1fr}
+  .svx-tabs{position:static;flex-direction:row;flex-wrap:wrap}
+  .svx-tab{width:auto;min-height:44px;border-color:rgba(25,25,27,.16)}
+  .svx-pane{grid-template-columns:1fr 1fr}
+  .svx-pane .svx-col:last-child{grid-column:1/-1}
+}
+/* มือถือ */
+@media (max-width:767px){
+  .svx-lead{font-size:.95rem}
+  .svx-tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 calc(var(--gutter,20px) * -1);padding:4px var(--gutter,20px) 8px;scroll-snap-type:x proximity}
+  .svx-tabs::-webkit-scrollbar{display:none}
+  .svx-tab{flex:none;scroll-snap-align:start;border-radius:999px;padding:8px 14px;font-size:.92rem;background:rgba(255,253,248,.6)}
+  .svx-pane{grid-template-columns:1fr;min-height:0;gap:10px}
+  .svx-col{padding:16px}
+  .svx-honest{grid-template-columns:1fr;gap:10px}
+}
+/* ลิงก์ทางเข้าบนหน้าแรก */
+.svx-entry{display:inline-flex;align-items:center;gap:6px;margin:14px auto 0;padding:8px 14px;border-radius:999px;font-size:.86rem;line-height:1.3;
+  color:rgba(236,233,226,.86);text-decoration:none;background:rgba(20,16,12,.45);border:1px solid rgba(236,233,226,.22);transition:background .2s,border-color .2s}
+.svx-entry b{color:#f1d58a;font-weight:700}
+.svx-entry:hover{background:rgba(20,16,12,.7);border-color:rgba(241,213,138,.6)}
+.svx-entry:focus-visible{outline:2px solid #f1d58a;outline-offset:3px}
