@@ -7039,3 +7039,26 @@ html.vc-dsc-open :is(.vc-bn,.vc-fpill,.vc-stick,.hx-lens,.hx-pool,.hx-tip,.hx-hu
 .hx-live.scan2 .hxl-ln.found.r-l{--fx:rgba(59,125,240,.16)}
 @keyframes hxsFound{0%{background:var(--fx,rgba(233,190,100,.2))}100%{background:transparent}}
 @media (prefers-reduced-motion:reduce){.hx-live.scan2 .hxl-scan{display:none}.hx-live.scan2 .hxl-ln{opacity:1 !important;animation:none !important}}
+
+/* ===== v271 มือถือ: หน้าเข้าสู่ระบบ — ปุ่มปิดลอยบนฉาก (ไม่มีแถบดำด้านบน) + แก้วกาแฟหลบปุ่ม ===== */
+@media (max-width:767px){
+  html.vc-art body.auth-open #authCard:has(#authLoggedOut:not([hidden]))::before{display:none !important}
+  html.vc-art body.auth-open #authCard:has(#authLoggedOut:not([hidden])) .sheet-head{
+    position:absolute !important;top:0;left:0;right:0;z-index:30;margin:0 !important;border:0 !important;background:transparent !important;
+    padding:calc(12px + env(safe-area-inset-top)) 14px 0 !important;display:flex !important;justify-content:flex-end;pointer-events:none}
+  html.vc-art body.auth-open #authCard:has(#authLoggedOut:not([hidden])) .sheet-head h2{display:none !important}
+  html.vc-art body.auth-open #authCard:has(#authLoggedOut:not([hidden])) #authClose{
+    pointer-events:auto;position:static;width:42px;height:42px;min-height:42px;padding:0 !important;border-radius:50%;
+    display:grid;place-items:center;font-size:0;color:#f3e6c8;
+    background:rgba(24,14,7,.62);border:1px solid rgba(241,213,138,.42);
+    box-shadow:0 6px 16px -6px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,236,190,.14);
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:transform .15s,background .15s}
+  html.vc-art body.auth-open #authCard:has(#authLoggedOut:not([hidden])) #authClose::before{content:"";width:16px;height:16px;
+    background:
+      linear-gradient(45deg,transparent calc(50% - 1.2px),currentColor calc(50% - 1.2px),currentColor calc(50% + 1.2px),transparent calc(50% + 1.2px)),
+      linear-gradient(-45deg,transparent calc(50% - 1.2px),currentColor calc(50% - 1.2px),currentColor calc(50% + 1.2px),transparent calc(50% + 1.2px))}
+  html.vc-art body.auth-open #authCard:has(#authLoggedOut:not([hidden])) #authClose:active{transform:scale(.92);background:rgba(24,14,7,.85)}
+  html.vc-art body.auth-open #authCard:has(#authLoggedOut:not([hidden])) #authClose:focus-visible{outline:2px solid #f1d58a;outline-offset:3px}
+  /* แก้วกาแฟลงมาใต้ปุ่มปิด ไม่ทับกัน */
+  html.vc-art body.auth-open .ld-scene .ld-cup{top:66px}
+}
