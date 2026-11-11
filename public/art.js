@@ -1256,7 +1256,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
   function reduce() { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
 
   function cleanupFx() {
-    document.documentElement.classList.remove('vc-ritual'); Array.prototype.forEach.call(document.querySelectorAll('.auth-focus,.auth-ghost,.auth-skip,.auth-welcome,.auth-sound,.vc-env,.vc-env-ring'), function (n) { if (n.parentNode) n.parentNode.removeChild(n); });
+    document.documentElement.classList.remove('vc-ritual'); Array.prototype.forEach.call(document.querySelectorAll('.auth-focus,.auth-ghost,.auth-skip,.auth-welcome,.auth-sound,.vc-env,.vc-env-ring,.vc-spark'), function (n) { if (n.parentNode) n.parentNode.removeChild(n); });
   }
   function play(info) {
     if (reduce() || !document.body.animate) { if (window.__vcGinOff) window.__vcGinOff(); return; }
@@ -1297,7 +1297,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     function cue(at, fn) { TL.cues.push({ at: at, fn: fn }); }
     function kill() { if (TL.dead) return; TL.dead = true; cancelAnimationFrame(TL.raf); TL.anims.forEach(function (x) { try { x.cancel(); } catch (e) {} });
       document.documentElement.classList.remove('vc-ritual');
-      Array.prototype.forEach.call(document.querySelectorAll('.auth-focus,.auth-ghost,.auth-skip,.auth-welcome,.auth-sound,.vc-env,.vc-env-ring'), function (n) { if (n.parentNode) n.parentNode.removeChild(n); }); }
+      Array.prototype.forEach.call(document.querySelectorAll('.auth-focus,.auth-ghost,.auth-skip,.auth-welcome,.auth-sound,.vc-env,.vc-env-ring,.vc-spark'), function (n) { if (n.parentNode) n.parentNode.removeChild(n); }); }
     var EASE_OUT = 'cubic-bezier(.22,.61,.36,1)', EASE_IO = 'cubic-bezier(.45,0,.25,1)', SETTLE = 'cubic-bezier(.16,1,.3,1)';
 
     /* ---------- สร้างเอกสาร (สำเนาแบบฟอร์ม ไม่มี id/ช่องกรอกจริง) ---------- */
@@ -1325,6 +1325,13 @@ window.VCStepPlay = function (v, fps, onEnd) {
     if (window.__vcGinOff) setTimeout(window.__vcGinOff, 520);   /* ม่านฉากมืดขึ้นเต็มแล้ว ค่อยเอาม่านกันแวบออก */
     var cs = document.createElement('i'); cs.className = 'gh-contact'; g.insertBefore(cs, g.firstChild);
     document.body.appendChild(g);
+    /* v270 (2) กระดาษพอดีจอทั้งแผ่น: ย่อทั้งชุด (กระดาษ ปากกา ตรา ป้าย) ด้วย scale ที่ wrap แล้ววางกึ่งกลางจอ */
+    (function fit() {
+      var gh0 = g.offsetHeight || h, gw0 = g.offsetWidth || w, room = vh - (mob ? 70 : 110), sc = Math.min(1, room / gh0, (vw - 20) / gw0);
+      if (sc < .999) { wrap.style.transformOrigin = '50% 0'; wrap.style.transform = 'scale(' + sc.toFixed(3) + ')'; cs.style.transformOrigin = '50% 0'; cs.style.scale = sc.toFixed(3); }
+      g.style.top = Math.max(mob ? 34 : 56, (vh - gh0 * sc) / 2) + 'px';
+      if (!r) g.style.left = ((vw - gw0) / 2) + 'px';
+    })();
     var skip = document.createElement('button'); skip.type = 'button'; skip.className = 'auth-skip'; skip.textContent = 'ข้าม ›';
     skip.addEventListener('click', kill); document.body.appendChild(skip);
     var snd = document.createElement('button'); snd.type = 'button'; snd.className = 'auth-sound';
@@ -1511,6 +1518,43 @@ window.VCStepPlay = function (v, fps, onEnd) {
     });
 
     /* ---------- v269 (2) พับใส่ซอง ปิดผนึก แล้วซองบินไปหาปุ่มบัญชี (ปุ่มเด้ง + เรืองแสงทอง) ---------- */
+    /* v270 (3)+(4) มาสคอตทักทายที่ปุ่มบัญชี แล้วการ์ดรางวัลเลื่อนขึ้นจากด้านล่าง (อยู่ต่อหลังฉากจบ ปิดเองใน 8 วินาที) */
+    function hello(tx, ty) {
+      var below = ty < innerHeight / 2;
+      if (window.VCMascot) {
+        var ms = document.createElement('div'); ms.className = 'vc-hi-m' + (below ? ' dn' : ''); ms.setAttribute('aria-hidden', 'true');
+        ms.innerHTML = window.VCMascot.svg('wave', mob ? 64 : 72) + '<span class="vc-hi-say">ยินดีต้อนรับ!</span>';
+        ms.style.left = Math.min(innerWidth - 50, Math.max(50, tx)).toFixed(0) + 'px'; ms.style.top = ty.toFixed(0) + 'px';
+        document.body.appendChild(ms);
+        var up = below ? 1 : -1;
+        ms.animate([{ transform: 'translate(-50%,' + (below ? '0%' : '-100%') + ') translateY(' + (-up * 10) + 'px) scale(.3)', opacity: 0 }, { transform: 'translate(-50%,' + (below ? '0%' : '-100%') + ') translateY(' + (up * 26) + 'px) scale(1.08)', opacity: 1, offset: .55 }, { transform: 'translate(-50%,' + (below ? '0%' : '-100%') + ') translateY(' + (up * 18) + 'px) scale(1)', opacity: 1 }], { duration: 520, easing: 'cubic-bezier(.3,1.4,.5,1)', fill: 'forwards' });
+        setTimeout(function () { ms.animate([{ opacity: 1 }, { opacity: 0, transform: 'translate(-50%,' + (below ? '0%' : '-100%') + ') translateY(' + (up * 8) + 'px) scale(.85)' }], { duration: 320, fill: 'forwards' }).onfinish = function () { ms.remove(); }; }, 2300);
+      }
+      setTimeout(card, 650);
+    }
+    function card() {
+      var old = document.querySelector('.vc-hello'); if (old) old.remove();
+      var cn = document.getElementById('creditNum'), wt = document.getElementById('walletTotal');
+      var cr = parseInt(((cn && cn.textContent) || (wt && wt.textContent) || '').replace(/[^\d]/g, ''), 10);
+      var c = document.createElement('div'); c.className = 'vc-hello'; c.setAttribute('role', 'status');
+      c.innerHTML = '<button type="button" class="vh-x" aria-label="ปิด"></button>' +
+        '<div class="vh-top"><span class="vh-seal">' + (st.querySelector('.wx-img') ? st.querySelector('.wx-img').outerHTML : '') + '</span><div><b class="vh-hi"></b><small class="vh-cr"></small></div></div>' +
+        '<div class="vh-acts"><button type="button" class="vh-btn" data-a="daily">🪙 เช็กอินรับแต้มวันนี้</button><button type="button" class="vh-btn is-ghost" data-a="check">เริ่มตรวจสัญญา →</button></div><i class="vh-bar"></i>';
+      c.querySelector('.vh-hi').textContent = 'สวัสดี คุณ ' + niceName(email);
+      c.querySelector('.vh-cr').textContent = cr > 0 ? 'มีสิทธิ์ตรวจ ' + cr + ' ครั้ง · พร้อมใช้งาน' : cr === 0 ? 'สิทธิ์ตรวจหมดแล้ว · เช็กอินสะสมแต้มแลกตรวจฟรีได้' : 'เข้าสู่ระบบเรียบร้อย';
+      document.body.appendChild(c);
+      var gone = false, close = function () { if (gone) return; gone = true; c.animate([{ opacity: 1, transform: 'translate(-50%,0)' }, { opacity: 0, transform: 'translate(-50%,24px)' }], { duration: 260, easing: 'ease-in', fill: 'forwards' }).onfinish = function () { c.remove(); }; };
+      c.animate([{ opacity: 0, transform: 'translate(-50%,40px) scale(.96)' }, { opacity: 1, transform: 'translate(-50%,0) scale(1)' }], { duration: 480, easing: 'cubic-bezier(.2,1.2,.3,1)' });
+      var bar = c.querySelector('.vh-bar'); bar.animate([{ transform: 'scaleX(1)' }, { transform: 'scaleX(0)' }], { duration: 8000, easing: 'linear', fill: 'forwards' }).onfinish = close;
+      c.addEventListener('pointerenter', function () { bar.getAnimations().forEach(function (a) { a.pause(); }); });
+      c.addEventListener('click', function (e) {
+        if (e.target.closest('.vh-x')) { close(); return; }
+        var b = e.target.closest('[data-a]'); if (!b) return; close();
+        if (b.getAttribute('data-a') === 'daily') { if (window.VCDaily && VCDaily.open) VCDaily.open(); }
+        else { if (document.body.classList.contains('auth-open')) { var t = document.getElementById('authToggle'); if (t) t.click(); } location.hash = '#checkCard'; }
+      });
+    }
+    skip.addEventListener('click', function () { if (!document.querySelector('.vc-hello')) setTimeout(card, 250); });   /* กดข้ามก็ยังได้การ์ดต้อนรับ */
     var J0 = LK, FOLD = 400, FLY0 = 980, FLY = 700;
     EXIT = J0 + FLY0 + FLY + 500;
     cue(J0, function () {
@@ -1544,14 +1588,37 @@ window.VCStepPlay = function (v, fps, onEnd) {
       var dx = tx - cx, dy = ty - cy, sEnd = Math.max(.08, Math.min(.3, (tg ? Math.max(tg.r.width, tg.r.height) + 4 : 30) / EW));
       A(env, [{ transform: 'translate3d(0,0,0) rotate(0) scale(1)', opacity: 1 },
                { transform: 'translate3d(' + (dx * .22).toFixed(0) + 'px,' + (dy * .22 - 60).toFixed(0) + 'px,0) rotate(' + (dx > 0 ? -7 : 7) + 'deg) scale(.78)', opacity: 1, offset: .35 },
-               { transform: 'translate3d(' + dx.toFixed(0) + 'px,' + dy.toFixed(0) + 'px,0) rotate(' + (dx > 0 ? 10 : -10) + 'deg) scale(' + sEnd.toFixed(3) + ')', opacity: .15 }],
+               { transform: 'translate3d(' + dx.toFixed(0) + 'px,' + dy.toFixed(0) + 'px,0) rotate(' + (dx > 0 ? 10 : -10) + 'deg) scale(' + sEnd.toFixed(3) + ')', opacity: 1 }],
         { duration: FLY, delay: FLY0, easing: 'cubic-bezier(.55,0,.3,1)', fill: 'forwards', composite: 'replace' });
+      A(env, [{ opacity: 1 }, { opacity: 0 }], { duration: 140, delay: FLY0 + FLY - 40, fill: 'forwards' });   /* เห็นซองตลอดทาง หายตอนเข้าปุ่มพอดี */
+      /* v270 (3) หางประกายทองตามทางบิน */
+      cue(J0 + FLY0, function () {
+        var tEnd = performance.now() + FLY - 60, last = 0;
+        (function trail(n) {
+          if (TL.dead || n > tEnd || !env.parentNode) return;
+          if (n - last > 38) {
+            last = n; var er = env.getBoundingClientRect(), sp = document.createElement('i'); sp.className = 'vc-spark';
+            var jx = (Math.random() - .5) * er.width * .35, jy = (Math.random() - .5) * er.height * .35;
+            sp.style.left = (er.left + er.width / 2 + jx).toFixed(0) + 'px'; sp.style.top = (er.top + er.height / 2 + jy).toFixed(0) + 'px';
+            document.body.appendChild(sp);
+            sp.animate([{ transform: 'translate(-50%,-50%) scale(1)', opacity: .95 }, { transform: 'translate(-50%,-50%) translateY(' + (8 + Math.random() * 14).toFixed(0) + 'px) scale(.2)', opacity: 0 }], { duration: 520 + Math.random() * 200, easing: 'ease-out' }).onfinish = function () { sp.remove(); };
+          }
+          requestAnimationFrame(trail);
+        })(performance.now());
+      });
       A(dim, [{ opacity: 1 }, { opacity: 0 }], { duration: 520, delay: FLY0 + 80, easing: 'linear', fill: 'forwards' });
       cue(J0 + FLY0 + FLY - 60, function () {
         var ring = document.createElement('i'); ring.className = 'vc-env-ring'; ring.style.left = tx.toFixed(0) + 'px'; ring.style.top = ty.toFixed(0) + 'px'; document.body.appendChild(ring);
         ring.animate([{ transform: 'translate(-50%,-50%) scale(.4)', opacity: .95 }, { transform: 'translate(-50%,-50%) scale(2.6)', opacity: 0 }], { duration: 700, easing: 'cubic-bezier(.2,.7,.3,1)' }).onfinish = function () { ring.remove(); };
         if (tg) tg.el.animate([{ transform: 'scale(1)', boxShadow: '0 0 0 0 rgba(241,213,138,0)' }, { transform: 'scale(1.22)', boxShadow: '0 0 0 5px rgba(241,213,138,.6),0 0 24px 6px rgba(241,213,138,.45)', offset: .3 }, { transform: 'scale(.96)', offset: .6 }, { transform: 'scale(1)', boxShadow: '0 0 0 12px rgba(241,213,138,0)' }], { duration: 760, easing: 'cubic-bezier(.3,.6,.3,1)' });
         if (tg && tg.avatar) { var old = tg.el.querySelector('.av-seal'); if (old) old.remove(); var mini = document.createElement('i'); mini.className = 'av-seal'; mini.setAttribute('aria-hidden', 'true'); mini.innerHTML = sv ? sv.outerHTML : ''; tg.el.appendChild(mini); }
+        /* v270 (3) ประกายดาวแตกออกจากปุ่ม + มาสคอตโผล่โบกมือ */
+        for (var bi = 0; bi < 10; bi++) {
+          var st2 = document.createElement('i'); st2.className = 'vc-star'; st2.textContent = bi % 3 ? '✦' : '✧'; st2.style.left = tx.toFixed(0) + 'px'; st2.style.top = ty.toFixed(0) + 'px'; document.body.appendChild(st2);
+          var ang = (bi / 10) * Math.PI * 2 + Math.random() * .4, dist = 34 + Math.random() * 30;
+          st2.animate([{ transform: 'translate(-50%,-50%) scale(.3)', opacity: 1 }, { transform: 'translate(calc(-50% + ' + (Math.cos(ang) * dist).toFixed(0) + 'px),calc(-50% + ' + (Math.sin(ang) * dist).toFixed(0) + 'px)) scale(1) rotate(90deg)', opacity: 0 }], { duration: 650 + Math.random() * 250, easing: 'cubic-bezier(.2,.7,.3,1)' }).onfinish = function () { this.effect.target.remove(); };
+        }
+        hello(tx, ty);
       });
       sfx('paper');
       TL.anims.push({ cancel: function () { if (env.parentNode) env.parentNode.removeChild(env); } });
