@@ -7168,7 +7168,7 @@ html.vc-gin::before{content:"กำลังเปิดแฟ้มของค
     repeating-linear-gradient(180deg,transparent 0 30px,rgba(80,52,22,.1) 30px 31px) 0 70%/100% 30% no-repeat,
     linear-gradient(180deg,#f3ead6,#e3d4b2);
   border-radius:3px;box-shadow:0 2px 0 #d5c39c,0 4px 0 #e7dbc0,0 30px 50px -18px rgba(0,0,0,.8);
-  animation:ginPaper .9s cubic-bezier(.2,.8,.25,1) .35s both, ginDots 1.2s ease-in-out 1.3s infinite}
+  transform:translate(-50%,-50%) rotate(-1.5deg)}   /* ไม่ใช้ animation: Safari บน iPhone ไม่เล่นบน ::before ของ html แล้วค้างที่ล่องหน */
 html.vc-gin.vc-gin-out::after,html.vc-gin.vc-gin-out::before{opacity:0;pointer-events:none}
 @keyframes ginLamp{0%{filter:brightness(.25)}35%{filter:brightness(.7)}42%{filter:brightness(.45)}55%{filter:brightness(.95)}100%{filter:brightness(1)}}
 @keyframes ginPaper{from{opacity:0;transform:translate(-50%,-44%) rotate(4deg) scale(.96)}to{opacity:1;transform:translate(-50%,-50%) rotate(-1.5deg)}}
