@@ -1136,7 +1136,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     if (document.startViewTransition) {
       var oldP = from === 'desk' && view === 'home' ? document.querySelector('#checkCard') : null, newP = null;
       if (oldP && oldP.offsetParent) oldP.style.viewTransitionName = 'vc-paper'; else oldP = null;
-      root.classList.add('vc-vt');
+      root.classList.add('vc-vt'); root.classList.toggle('vc-morph', !!oldP);
       var vt;
       try {
         vt = document.startViewTransition(function () {
@@ -1147,7 +1147,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
           return new Promise(function (ok) { setTimeout(ok, 90); });
         });
       } catch (err) { if (oldP) oldP.style.viewTransitionName = ''; root.classList.remove('vc-vt'); enter(); hideWipe(); return; }
-      var done = function () { if (newP) newP.style.viewTransitionName = ''; if (oldP) oldP.style.viewTransitionName = ''; root.classList.remove('vc-vt'); if (my === seq) hideWipe(); };
+      var done = function () { if (newP) newP.style.viewTransitionName = ''; if (oldP) oldP.style.viewTransitionName = ''; root.classList.remove('vc-vt', 'vc-morph'); if (my === seq) hideWipe(); };
       vt.finished.then(done, done);
       return;
     }
@@ -1163,10 +1163,10 @@ window.VCStepPlay = function (v, fps, onEnd) {
   }
   /* หน้าแรก: เล่นลายมือ "ก่อนเซ็น" + เส้นทองใต้ชื่อใหม่ทุกครั้งที่กลับมา */
   function heroReplay() {
-    var l2 = document.querySelector('main > .hero .ht-l2.hs-on'); if (!l2 || reduce()) return;
-    l2.classList.remove('hs-play', 'hs-done'); void l2.offsetWidth;
-    requestAnimationFrame(function () { l2.classList.add('hs-play'); });
-    clearTimeout(l2.__hr); l2.__hr = setTimeout(function () { l2.classList.add('hs-done'); }, 2400);
+    /* v268: ลายมือ "ก่อนเซ็น" เขียนแค่ครั้งแรกที่เข้าเว็บ · กลับมาหน้าแรกครั้งต่อไปแค่วาดเส้นทองใต้ชื่อใหม่ */
+    var l2 = document.querySelector('main > .hero .ht-l2.hs-on'); if (!l2 || reduce() || !l2.classList.contains('hs-done')) return;
+    l2.classList.remove('hs-reline'); void l2.offsetWidth; l2.classList.add('hs-reline');
+    clearTimeout(l2.__hr); l2.__hr = setTimeout(function () { l2.classList.remove('hs-reline'); }, 1600);
   }
   function scrollToHash(h) {
     var el = h && h.length > 1 ? document.getElementById(h.slice(1)) : null;
@@ -7232,7 +7232,20 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     clear(); cur = i; fig.classList.remove('done', 'out', 'scan', 'scan2', 'pen', 'sign', 'slam'); signReset();
     /* (3) พลิกหน้ากระดาษ — ถอดคลาสเองเมื่อครบเวลา กันกระดาษค้างล่องหน (เจอบน iPhone) */
     var pp = fig.querySelector('.hxl-paper');
-    if (flipped && !calm()) { pp.classList.remove('flipin'); void pp.offsetWidth; pp.classList.add('flipin'); clearTimeout(pp.__ft); pp.__ft = setTimeout(function () { pp.classList.remove('flipin'); }, 900); }
+    /* v268: ดึงแผ่นบนออก เผยฉบับถัดไปที่อยู่ข้างใต้ (แทนการพลิกหน้า ซึ่งบน iPhone เห็นเป็นกระดาษเปล่าแวบหนึ่ง) */
+    if (flipped && !calm() && pp.animate && pp.offsetWidth) {
+      var host = pp.parentNode, old = host.querySelector('.hxl-peel'); if (old) old.remove();
+      if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
+      var cl = pp.cloneNode(true); cl.className = pp.className.replace(/\bflipin\b/, '') + ' hxl-peel'; cl.removeAttribute('aria-label'); cl.setAttribute('aria-hidden', 'true'); cl.tabIndex = -1;
+      cl.style.cssText = 'position:absolute;left:' + pp.offsetLeft + 'px;top:' + pp.offsetTop + 'px;width:' + pp.offsetWidth + 'px;height:' + pp.offsetHeight + 'px;margin:0;z-index:4;pointer-events:none;transform-origin:15% 100%';
+      host.appendChild(cl);
+      var pa = cl.animate([{ transform: 'none', opacity: 1, filter: 'drop-shadow(0 0 0 rgba(0,0,0,0))' },
+        { transform: 'translate(-8%,-6px) rotate(-4deg)', opacity: 1, filter: 'drop-shadow(0 14px 14px rgba(0,0,0,.45))', offset: .35 },
+        { transform: 'translate(-118%,10px) rotate(-14deg)', opacity: 0, filter: 'drop-shadow(0 14px 14px rgba(0,0,0,.3))' }],
+        { duration: 620, easing: 'cubic-bezier(.45,.05,.4,1)', fill: 'forwards' });
+      pa.onfinish = function () { cl.remove(); };
+      setTimeout(function () { if (cl.parentNode) cl.remove(); }, 1200);
+    }
     flipped = true;
     var d = render(i, calm()); if (!d) return;
     tally(calm());
@@ -7270,7 +7283,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     T(function () { penAt(0); fig.classList.add('pen'); }, end + 400);  /* (7) ปากกาลอยลงมาที่ต้นเส้นลงชื่อ */
     T(function () { fig.classList.add('sign'); signRun(); }, end + 900); /* เริ่มเซ็น… */
     T(function () { fig.classList.add('slam'); }, end + 1850);           /* …ตรา "อ่านก่อนเซ็น!" ปั๊มขัด ปากกาสะดุ้งออกขวา */
-    T(function () { if (!visible) { playing = false; return; } fig.classList.add('out'); }, end + 4700);
+    T(function () { if (!visible) { playing = false; return; } }, end + 4700);   /* v268: ไม่จางกระดาษออก — ฉบับถัดไปใช้การดึงแผ่นบนออกแทน */
     T(function () { if (visible) play((cur + 1) % DEMOS.length); else { playing = false; fig.classList.remove('out'); } }, end + 5100);
   }
   /* (5) แตะตรา → แผ่นอธิบายจากผลตัวอย่างจริง (หยุดวนระหว่างอ่าน) */
@@ -7357,6 +7370,15 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       if (a && a.parentNode === copy) { if (fig.previousSibling !== a) copy.insertBefore(fig, a.nextSibling); } else if (fig.parentNode !== copy) copy.appendChild(fig);
     }
   }
+  /* v268: กลับมาเห็นอีกครั้ง → ถ้าฉบับเดิมตรวจเสร็จแล้ว ค้างผลไว้ให้เห็นก่อน 2.6 วินาที แล้วค่อยไปฉบับถัดไป (ไม่เริ่มใหม่เป็นกระดาษเปล่า) */
+  var resumeT = 0;
+  function resume() {
+    if (playing || held || resumeT) return;
+    if (fig.classList.contains('done')) {
+      fig.classList.remove('out');
+      resumeT = setTimeout(function () { resumeT = 0; if (visible && !playing && !held) play((cur + 1) % DEMOS.length); }, 2600);
+    } else play(cur);
+  }
   function start() {
     if (!window.VCSamples || !window.VCDemo) { setTimeout(start, 300); return; }
     place(); setTimeout(place, 1500); addEventListener('resize', function () { setTimeout(place, 150); });
@@ -7365,9 +7387,9 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     T(function () { play(0); }, 900);
     if ('IntersectionObserver' in window) new IntersectionObserver(function (es) {
       var v = es[0].isIntersecting && onHome() && !document.hidden;
-      if (v && !visible) { visible = true; if (!playing && !held) play(cur); } else if (!v) visible = false;
+      if (v && !visible) { visible = true; resume(); } else if (!v) visible = false;
     }, { threshold: .2 }).observe(fig);
-    document.addEventListener('visibilitychange', function () { visible = !document.hidden && onHome(); if (visible && !playing && !held) play(cur); });
+    document.addEventListener('visibilitychange', function () { visible = !document.hidden && onHome(); if (visible) resume(); });
   }
   start();
 })();
