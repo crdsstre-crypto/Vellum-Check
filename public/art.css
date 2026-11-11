@@ -7242,3 +7242,10 @@ body:has(#bottomNav:not([hidden])) .vc-hello{--nav-h:64px}
 .vc-env-ring{position:fixed;z-index:10047;width:44px;height:44px;border-radius:50%;pointer-events:none;
   border:2px solid rgba(241,213,138,.9);box-shadow:0 0 18px rgba(241,213,138,.6),inset 0 0 12px rgba(241,213,138,.4)}
 @media (prefers-reduced-motion:reduce){html.vc-gin::after{display:none}}
+
+/* v280 ตราครั่งบนซองวาดด้วย CSS (ไม่พึ่งรูป — Safari บางเครื่องไม่แสดงรูปทันที) */
+.vc-env .ev-seal{border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle at 38% 32%,#e0504a 0,#b3231e 45%,#7c1210 100%);
+  box-shadow:0 0 0 2px rgba(124,18,16,.55),0 3px 5px rgba(60,10,6,.55),inset 0 -3px 5px rgba(0,0,0,.3),inset 0 2px 3px rgba(255,170,160,.35);
+  clip-path:polygon(50% 0,61% 6%,74% 4%,80% 15%,93% 20%,92% 33%,100% 45%,95% 57%,99% 70%,88% 78%,84% 91%,71% 93%,60% 100%,49% 95%,37% 100%,27% 92%,14% 90%,11% 77%,1% 68%,5% 56%,0 43%,8% 33%,7% 19%,20% 15%,27% 4%,39% 6%)}
+.vc-env .ev-seal b{font:700 italic 22px/1 Georgia,'Newsreader',serif;color:rgba(255,200,190,.85);text-shadow:0 1px 0 rgba(0,0,0,.35);letter-spacing:-.04em}
