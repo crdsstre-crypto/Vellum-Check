@@ -31,6 +31,7 @@ import { buildSpokenSummary, synthesizeSpeech, VOICE_CREDIT_COST } from './voice
 import { createPromptPayPayment, confirmAndCredit, getPaymentStatus, PACKAGES } from './payments.js';
 import { logCheck, saveFeedback, adminStats, FEEDBACK_REASONS } from './stats.js';
 import { getDaily, checkIn, redeem } from './daily.js';
+import { fastStatic, cacheHeader } from './fastStatic.js';
 import { listReminders, addReminders, updateReminder, deleteReminder, cleanReminder, buildIcs, MAX_BATCH, MAX_REMINDERS } from './reminders.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -823,8 +824,13 @@ app.use('/videos', express.static(path.join(__dirname, '..', 'public', 'videos')
   maxAge: '30d',
   immutable: true,
 }));
+// ไฟล์ข้อความ (js/css/html/svg) ส่งแบบบีบอัด brotli/gzip ผ่าน fastStatic · ไฟล์อื่น (รูป ฟอนต์) ใช้ express.static เหมือนเดิม
+// แคช: ไฟล์ที่เรียกพร้อม ?v= เก็บในเบราว์เซอร์ 30 วัน · ไฟล์ที่ไม่มี ?v= (เช่นหน้าแรก) ตรวจกับเซิร์ฟเวอร์ทุกครั้ง
+// จุดเช็กว่าเซิร์ฟเวอร์ตื่นอยู่ (ไม่แตะฐานข้อมูล) — ใช้กับบริการ ping กันเซิร์ฟเวอร์ฟรีของ Render หลับ
+app.get('/healthz', (req, res) => { res.setHeader('Cache-Control', 'no-store'); res.type('text/plain').send('ok'); });
+app.use(fastStatic(path.join(__dirname, '..', 'public')));
 app.use(express.static(path.join(__dirname, '..', 'public'), {
-  setHeaders: (res) => res.setHeader('Cache-Control', 'no-cache'),
+  setHeaders: (res) => res.setHeader('Cache-Control', cacheHeader(res.req)),
 }));
 
 // เริ่มรับคำขอหลังเชื่อมฐานข้อมูลและสร้างตารางสำเร็จเท่านั้น
