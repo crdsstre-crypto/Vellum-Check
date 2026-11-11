@@ -7074,3 +7074,30 @@ html.vc-dsc-open :is(.vc-bn,.vc-fpill,.vc-stick,.hx-lens,.hx-pool,.hx-tip,.hx-hu
   html.vc-art body.auth-open .ld-scene{display:flex !important;flex-direction:column;justify-content:center}
   html.vc-art body.auth-open .ld-scene .auth-doc-wrap{padding-top:150px !important;padding-bottom:90px !important}
 }
+
+/* ===== v273 ปุ่มปิดหน้าต่างแบบเดียวกันทั้งเว็บ: วงกลม 42px ขอบทอง กากบาทวาดเอง (อยู่กึ่งกลางพอดีทุกปุ่ม) =====
+   เข้าสู่ระบบ · เลือกประเภทสัญญา · เติมเครดิต · เครดิตหมด · ล็อกอินรายวัน · สัญญาตัวอย่าง · ตัวเลือก · เครื่องมือ · อ่านผล · ประวัติแจ้งเตือน · หน้าต่างทั่วไป */
+html body :is(#authClose,.ct-close,.pay-close,.cs-x,.vrh-x,.vdg-x,.vsl-x,.vcp-x,.vc-tool-x,.vc-rd-x,.vw-close){
+  --cx:42px;
+  width:var(--cx) !important;height:var(--cx) !important;min-width:var(--cx) !important;min-height:var(--cx) !important;max-width:var(--cx);flex:0 0 var(--cx) !important;
+  padding:0 !important;margin:0;border-radius:50% !important;box-sizing:border-box !important;
+  display:inline-grid !important;place-items:center !important;
+  font-size:0 !important;line-height:0 !important;color:#f3e6c8 !important;
+  background:rgba(24,16,10,.62) !important;border:1px solid rgba(241,213,138,.42) !important;
+  box-shadow:0 6px 16px -8px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,236,190,.12) !important;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .15s,background .15s,border-color .15s}
+html body :is(#authClose,.ct-close,.pay-close,.cs-x,.vrh-x,.vdg-x,.vsl-x,.vcp-x,.vc-tool-x,.vc-rd-x,.vw-close)[hidden]{display:none !important}
+html body :is(#authClose,.ct-close,.pay-close,.cs-x,.vrh-x,.vdg-x,.vsl-x,.vcp-x,.vc-tool-x,.vc-rd-x,.vw-close) > *{display:none !important}
+html body :is(#authClose,.ct-close,.pay-close,.cs-x,.vrh-x,.vdg-x,.vsl-x,.vcp-x,.vc-tool-x,.vc-rd-x,.vw-close)::before{
+  content:"" !important;display:block !important;position:static !important;width:16px !important;height:16px !important;margin:0 !important;opacity:1 !important;transform:none !important;
+  background:
+    linear-gradient(45deg,transparent calc(50% - 1.1px),currentColor calc(50% - 1.1px),currentColor calc(50% + 1.1px),transparent calc(50% + 1.1px)),
+    linear-gradient(-45deg,transparent calc(50% - 1.1px),currentColor calc(50% - 1.1px),currentColor calc(50% + 1.1px),transparent calc(50% + 1.1px)) !important;
+  border:0 !important;border-radius:0 !important;box-shadow:none !important;-webkit-mask:none !important;mask:none !important}
+html body :is(#authClose,.ct-close,.pay-close,.cs-x,.vrh-x,.vdg-x,.vsl-x,.vcp-x,.vc-tool-x,.vc-rd-x,.vw-close)::after{content:none !important;display:none !important}
+@media (hover:hover){html body :is(#authClose,.ct-close,.pay-close,.cs-x,.vrh-x,.vdg-x,.vsl-x,.vcp-x,.vc-tool-x,.vc-rd-x,.vw-close):hover{background:rgba(40,27,15,.85) !important;border-color:rgba(241,213,138,.75) !important}}
+html body :is(#authClose,.ct-close,.pay-close,.cs-x,.vrh-x,.vdg-x,.vsl-x,.vcp-x,.vc-tool-x,.vc-rd-x,.vw-close):active{transform:scale(.92)}
+html body :is(#authClose,.ct-close,.pay-close,.cs-x,.vrh-x,.vdg-x,.vsl-x,.vcp-x,.vc-tool-x,.vc-rd-x,.vw-close):focus-visible{outline:2px solid #f1d58a !important;outline-offset:3px}
+
+/* ปุ่มบัญชี (วงกลม) บนแถบหัว: สูงเท่าปุ่ม "ตรวจสัญญา" (38px) และกลมพอดี */
+html.vc-art body.has-nav #authToggle{width:38px !important;height:38px !important;min-width:38px !important;min-height:38px !important;max-width:38px;padding:0 !important;border-radius:50% !important;flex:0 0 38px !important;box-sizing:border-box}
