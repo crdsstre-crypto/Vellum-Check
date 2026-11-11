@@ -806,6 +806,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     }
     function loop(now) {
       raf = 0; if (!running || lost) return;
+      if (window.VCPause && window.VCPause.on()) { running = false; return; }   /* มีหน้าต่างเปิดทับ: หยุดวาด (perf-guard.js) */
       if (tier === 3) { skipF = !skipF; if (skipF) { raf = requestAnimationFrame(loop); return; } }
       /* ไม่มีใครขยับเมาส์: วาดฉาก 3D ทีละเว้นเฟรม (30 ภาพ/วินาที) ลดภาระการ์ดจอครึ่งหนึ่ง พอขยับเมาส์กลับเป็นเต็มความลื่นทันที */
       else if (now - lastIn > 400 && !/[?&]hq\b/.test(location.search)) { skH = !skH; if (skH) { sk++; raf = requestAnimationFrame(loop); return; } }
@@ -829,6 +830,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
       if (!running && inView && !document.hidden) { running = true; last = 0; if (!raf) raf = requestAnimationFrame(loop); }
     }
     size(); draw(performance.now(), mq && mq.matches); go();
+    window.addEventListener('vc:resume', go);
     window.VCScene = { ok: true, get scale() { return scale; }, get tier() { return tier; }, get burst() { return BURST.age; }, get ex() { return exH + pulseV * .9; }, get fps() { return fpsNow; }, get renderer() { return rend; }, freeze: function (t) { fixedT = (typeof t === 'number') ? t : null; } };   /* freeze(t): ตรึงเวลาของฉาก ใช้ทดสอบ */
 
     if (/[?&]fps\b/.test(location.search)) {
@@ -964,13 +966,14 @@ window.VCStepPlay = function (v, fps, onEnd) {
         g.beginPath(); g.arc(x, y, p.r * p.z * 1.2, 0, 6.283); g.fill();
       }
     }
-    function loop(now) { if (!running) return; draw(now); requestAnimationFrame(loop); }
+    function loop(now) { if (!running) return; if (window.VCPause && window.VCPause.on()) { running = false; return; } draw(now); requestAnimationFrame(loop); }
     function go() {
       var reduced = mq && mq.matches;
       if (reduced) { running = false; draw(t0 + 4000); return; }
       if (!running && inView && !document.hidden) { running = true; requestAnimationFrame(loop); }
     }
     size(); draw(performance.now()); go();
+    window.addEventListener('vc:resume', go);
     if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { inView = es[0].isIntersecting; if (!inView) running = false; else go(); }, { threshold: 0 }).observe(hero);
     document.addEventListener('visibilitychange', function () { if (document.hidden) running = false; else go(); });
     var rt; window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { small = window.innerWidth < 768; size(); draw(performance.now()); }, 150); });
@@ -2043,7 +2046,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     window.addEventListener('resize', place);
     new MutationObserver(function () { if (layer.isConnected) place(); }).observe(pose, { attributes: true, attributeFilter: ['class', 'style'] });
     pose.addEventListener('transitionend', function () { if (layer.isConnected) place(); });
-    var lastTf = ''; (function sync() { var tf = getComputedStyle(pose).transform; if (tf !== lastTf) { lastTf = tf; place(); } if (layer.isConnected && !layer.classList.contains('done')) setTimeout(function () { requestAnimationFrame(sync); }, 120); })();
+    var lastTf = ''; (function sync() { var tf = getComputedStyle(pose).transform; if (tf !== lastTf) { lastTf = tf; place(); } if (layer.isConnected && !layer.classList.contains('done')) setTimeout(function () { requestAnimationFrame(sync); }, ((window.VCPause && window.VCPause.on()) || document.documentElement.getAttribute('data-view') === 'desk') ? 1000 : 120); })();
     var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var played = false;
     function finish() { layer.classList.remove('playing', 'held'); layer.classList.add('done'); }
@@ -2660,7 +2663,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     if (sb && sb.parentNode) { var tag = document.createElement('i'); tag.className = 'ad-freetag'; tag.setAttribute('aria-hidden', 'true'); tag.textContent = 'ฟรี ' + FREE_N + ' ครั้ง'; sb.parentNode.style.position = 'relative'; sb.parentNode.appendChild(tag); sb.setAttribute('aria-label', 'สมัครใหม่ รับตรวจฟรี ' + FREE_N + ' ครั้ง'); }
     var raf = 0, inView = true, last = 0, t0 = performance.now();
     function frame(now) {
-      raf = 0; if (!inView || document.hidden) { last = 0; return; }
+      raf = 0; if (!inView || document.hidden || (window.VCPause && window.VCPause.on())) { last = 0; return; }
 
       var dt = last ? Math.min(64, now - last) : 16.7; last = now;
       var k = 1 - Math.pow(1 - .12, dt / 16.7), t = (now - t0) / 1000;
@@ -2699,6 +2702,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     function kick() { if (!raf && inView) raf = requestAnimationFrame(frame); }
     if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { inView = es[0].isIntersecting; if (inView) kick(); else dockOff(); }, { threshold: 0 }).observe(hero);
     document.addEventListener('visibilitychange', kick);
+    window.addEventListener('vc:resume', kick);
     kick();
     /* เครื่องช้า (ฉาก 3D ลดคุณภาพแล้ว): ตัดเลเยอร์ที่หนักออก เหลือแว่นขยายกับไฟฉาย */
     setTimeout(function () { var v = window.VCScene; if (v && (v.tier >= 2 || (v.fps && v.fps < 24))) root.classList.add('hx-lite'); }, 4500);
@@ -7244,7 +7248,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       tip.classList.add('on');
     } else { last = ''; tip.classList.remove('on'); }
   }
-  setInterval(function () { if (root.classList.contains('hx-on')) check(); }, 110);
+  setInterval(function () { if (root.classList.contains('hx-on') && !(window.VCPause && window.VCPause.on())) check(); }, 110);
   setTimeout(function () { if (!tip) build(); chip.classList.add('on'); }, 2600);
 })();
 
