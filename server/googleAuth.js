@@ -1,13 +1,25 @@
 // ล็อกอินด้วย Google (OAuth 2.0 แบบ authorization code)
 // ต้องตั้ง env ใน Render: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET
-// GOOGLE_REDIRECT_URI เป็นตัวเลือก (ค่าเริ่มต้นคือ URL ของบริการนี้)
+// GOOGLE_REDIRECT_URI เป็นตัวเลือก (ใช้เมื่อเข้าเว็บจากโดเมนที่ไม่อยู่ในรายการ ALLOWED_HOSTS)
+// ลิงก์กลับจาก Google = โดเมนเดียวกับที่ผู้ใช้กดเริ่ม (vellumcheck.com / www / onrender) → คุกกี้กัน CSRF กับคุกกี้ล็อกอินอยู่โดเมนเดียวกัน
+// ⚠ ทุกลิงก์ด้านล่างต้องใส่ไว้ใน Google Cloud Console → Credentials → OAuth client → Authorized redirect URIs
 
 import crypto from 'node:crypto';
 
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-const REDIRECT_URI = process.env.GOOGLE_REDIRECT_URI
+const DEFAULT_REDIRECT = process.env.GOOGLE_REDIRECT_URI
   || 'https://vellum-check-api.onrender.com/api/auth/google/callback';
+export const ALLOWED_HOSTS = new Set(
+  (process.env.ALLOWED_HOSTS || 'vellumcheck.com,www.vellumcheck.com,vellum-check-api.onrender.com')
+    .split(',').map(h => h.trim().toLowerCase()).filter(Boolean)
+);
+
+// ลิงก์กลับของคำขอนี้: โดเมนที่อยู่ในรายการ → https://<โดเมนนั้น>/api/auth/google/callback
+export function redirectUriFor(req) {
+  const host = String(req.hostname || '').toLowerCase();
+  return ALLOWED_HOSTS.has(host) ? `https://${host}/api/auth/google/callback` : DEFAULT_REDIRECT;
+}
 
 export function googleConfigured() {
   return Boolean(CLIENT_ID && CLIENT_SECRET);
@@ -18,10 +30,10 @@ export function makeState() {
   return crypto.randomBytes(24).toString('base64url');
 }
 
-export function buildAuthUrl(state) {
+export function buildAuthUrl(state, redirectUri = DEFAULT_REDIRECT) {
   const params = new URLSearchParams({
     client_id: CLIENT_ID,
-    redirect_uri: REDIRECT_URI,
+    redirect_uri: redirectUri,
     response_type: 'code',
     scope: 'openid email profile',
     state,
@@ -42,7 +54,7 @@ export function readCookieValue(req, name) {
 }
 
 // แลก code เป็น access token แล้วอ่านข้อมูลผู้ใช้จาก Google
-export async function exchangeCodeForProfile(code) {
+export async function exchangeCodeForProfile(code, redirectUri = DEFAULT_REDIRECT) {
   const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -50,7 +62,7 @@ export async function exchangeCodeForProfile(code) {
       code,
       client_id: CLIENT_ID,
       client_secret: CLIENT_SECRET,
-      redirect_uri: REDIRECT_URI,
+      redirect_uri: redirectUri,
       grant_type: 'authorization_code',
     }),
   });
