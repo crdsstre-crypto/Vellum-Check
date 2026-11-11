@@ -7153,11 +7153,62 @@ html.vc-vt.vc-morph::view-transition-old(root){animation:vtOut .25s cubic-bezier
 @media (prefers-reduced-motion:reduce){html.vc-vt::view-transition-new(root),::view-transition-image-pair(vc-paper){animation:none !important}}
 
 /* ===== v277 ฉากล็อกอิน: ม่านกันแวบ · ป้ายต้อนรับ · ซองจดหมายบินไปหาบัญชี ===== */
-/* (4) กลับจาก Google: ปิดหน้าแรกไว้ด้วยพื้นโต๊ะมืด + ข้อความเล็ก ๆ จนฉากเริ่ม */
-html.vc-gin::after{content:"กำลังเข้าสู่ระบบ…";position:fixed;inset:0;z-index:10030;display:grid;place-items:center;
-  font:500 14px/1.4 Prompt,sans-serif;letter-spacing:.06em;color:rgba(241,213,138,.7);
-  background:radial-gradient(ellipse 70% 60% at 50% 45%,#2a1a0e 0%,#140c06 60%,#0a0603 100%);transition:opacity .4s ease;pointer-events:auto}
-html.vc-gin.vc-gin-out::after{opacity:0;pointer-events:none}
+/* (4)→v278 (1) กลับจาก Google: ฉากรอ = โต๊ะมืด ตะเกียงค่อย ๆ จุดสว่าง + กระดาษเลื่อนมาวางรอ (แทนข้อความบนจอว่าง) */
+html.vc-gin::after{content:"";position:fixed;inset:0;z-index:10030;pointer-events:auto;transition:opacity .45s ease;
+  background:
+    radial-gradient(42% 34% at 16% 12%,rgba(255,196,110,.5),rgba(255,170,80,.12) 45%,transparent 70%),
+    radial-gradient(ellipse 80% 70% at 50% 50%,#3a2414 0%,#1d1209 55%,#0b0704 100%),
+    repeating-linear-gradient(94deg,rgba(255,220,170,.025) 0 2px,transparent 2px 9px);
+  animation:ginLamp 1.6s cubic-bezier(.3,.6,.3,1) both}
+html.vc-gin::before{content:"กำลังเปิดแฟ้มของคุณ…";position:fixed;z-index:10031;left:50%;top:50%;
+  width:min(330px,calc(100vw - 40px));aspect-ratio:.72;box-sizing:border-box;padding-top:58%;text-align:center;
+  font:600 14px/1.4 Prompt,sans-serif;color:rgba(80,52,22,.75);letter-spacing:.04em;pointer-events:none;transition:opacity .45s ease;
+  background:
+    linear-gradient(180deg,transparent 15%,rgba(80,52,22,.18) 15%,rgba(80,52,22,.18) calc(15% + 2px),transparent calc(15% + 2px)),
+    repeating-linear-gradient(180deg,transparent 0 30px,rgba(80,52,22,.1) 30px 31px) 0 70%/100% 30% no-repeat,
+    linear-gradient(180deg,#f3ead6,#e3d4b2);
+  border-radius:3px;box-shadow:0 2px 0 #d5c39c,0 4px 0 #e7dbc0,0 30px 50px -18px rgba(0,0,0,.8);
+  animation:ginPaper .9s cubic-bezier(.2,.8,.25,1) .35s both, ginDots 1.2s ease-in-out 1.3s infinite}
+html.vc-gin.vc-gin-out::after,html.vc-gin.vc-gin-out::before{opacity:0;pointer-events:none}
+@keyframes ginLamp{0%{filter:brightness(.25)}35%{filter:brightness(.7)}42%{filter:brightness(.45)}55%{filter:brightness(.95)}100%{filter:brightness(1)}}
+@keyframes ginPaper{from{opacity:0;transform:translate(-50%,-44%) rotate(4deg) scale(.96)}to{opacity:1;transform:translate(-50%,-50%) rotate(-1.5deg)}}
+@keyframes ginDots{0%,100%{color:rgba(80,52,22,.75)}50%{color:rgba(80,52,22,.4)}}
+
+/* v278 (2) ระหว่างฉากล็อกอิน: พื้นหลังมืดทึบ ไม่เห็นหน้าเว็บด้านหลัง */
+html.vc-ritual .auth-focus{background:
+  radial-gradient(40% 32% at 18% 14%,rgba(255,190,110,.16),transparent 70%),
+  radial-gradient(ellipse 80% 75% at 50% 50%,#2c1b0e 0%,#170e07 60%,#080503 100%) !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important}
+
+/* v278 (3) หางประกาย · ดาวแตก · มาสคอตทักทาย */
+.vc-spark{position:fixed;z-index:10045;width:7px;height:7px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,#fff6d8 0,#f1d58a 40%,rgba(241,213,138,0) 72%);box-shadow:0 0 8px 2px rgba(241,213,138,.55)}
+.vc-star{position:fixed;z-index:10048;pointer-events:none;font-size:14px;line-height:1;color:#f7dc92;text-shadow:0 0 8px rgba(241,213,138,.9)}
+.vc-hi-m{position:fixed;z-index:10048;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:4px;transform:translate(-50%,-100%)}
+.vc-hi-m.dn{flex-direction:column-reverse;transform:translate(-50%,0)}
+.vc-hi-m svg.vm{display:block;width:auto;height:auto;overflow:visible;filter:drop-shadow(0 6px 8px rgba(0,0,0,.5))}
+.vc-hi-say{order:-1;padding:6px 12px;border-radius:12px;white-space:nowrap;font:700 13px/1.2 Prompt,sans-serif;color:#2a1a0c;background:#fbf3df;box-shadow:0 6px 14px -6px rgba(0,0,0,.6)}
+.vc-hi-m.dn .vc-hi-say{order:1}
+
+/* v278 (4) การ์ดต้อนรับ + ปุ่มทำต่อ */
+.vc-hello{position:fixed;left:50%;bottom:calc(var(--nav-h,0px) + 18px + env(safe-area-inset-bottom,0px));z-index:9995;transform:translate(-50%,0);
+  width:min(380px,calc(100vw - 24px));box-sizing:border-box;padding:16px 16px 14px;border-radius:18px;overflow:hidden;color:#f3e6c8;
+  background:linear-gradient(160deg,rgba(46,31,17,.97),rgba(22,14,8,.97));border:1px solid rgba(241,213,138,.4);
+  box-shadow:0 24px 50px -16px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,236,190,.12)}
+body:has(#bottomNav:not([hidden])) .vc-hello{--nav-h:64px}
+.vc-hello .vh-x{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;border:0;padding:0;cursor:pointer;
+  background:linear-gradient(45deg,transparent calc(50% - 1px),#d9c79f calc(50% - 1px),#d9c79f calc(50% + 1px),transparent calc(50% + 1px)) center/12px 12px no-repeat,linear-gradient(-45deg,transparent calc(50% - 1px),#d9c79f calc(50% - 1px),#d9c79f calc(50% + 1px),transparent calc(50% + 1px)) center/12px 12px no-repeat,rgba(255,255,255,.06)}
+.vc-hello .vh-top{display:flex;align-items:center;gap:12px;padding-right:34px}
+.vc-hello .vh-seal{flex:none;width:46px;height:46px;display:block}
+.vc-hello .vh-seal img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 3px 4px rgba(0,0,0,.5))}
+.vc-hello .vh-hi{display:block;font:700 17px/1.3 Prompt,sans-serif;color:#fbefd2}
+.vc-hello .vh-cr{display:block;margin-top:2px;font:400 13px/1.4 Prompt,sans-serif;color:rgba(241,213,138,.85)}
+.vc-hello .vh-acts{display:flex;gap:8px;margin-top:12px}
+.vc-hello .vh-btn{flex:1;min-height:44px;padding:0 10px;border-radius:12px;border:0;cursor:pointer;font:700 13.5px/1.2 Prompt,sans-serif;color:#2a1a0c;
+  background:linear-gradient(180deg,#f7dc92,#d9a441);box-shadow:0 6px 14px -6px rgba(217,164,65,.7)}
+.vc-hello .vh-btn.is-ghost{background:transparent;color:#f3e6c8;box-shadow:inset 0 0 0 1.5px rgba(241,213,138,.45)}
+.vc-hello .vh-btn:focus-visible,.vc-hello .vh-x:focus-visible{outline:2px solid #f1d58a;outline-offset:2px}
+.vc-hello .vh-bar{position:absolute;left:0;right:0;bottom:0;height:3px;transform-origin:0 50%;background:linear-gradient(90deg,#d9a441,#f7dc92)}
+@media (prefers-reduced-motion:reduce){html.vc-gin::after,html.vc-gin::before{animation:none}}
 
 /* (1) ป้ายต้อนรับ */
 .gh-welcome{position:absolute;left:50%;z-index:6;transform:translate(-50%,0) rotate(-2deg);display:flex;flex-direction:column;align-items:center;gap:2px;
