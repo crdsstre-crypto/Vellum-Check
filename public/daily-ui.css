@@ -333,3 +333,4 @@ html.vdc-open,html.vdc-open body{overflow:hidden}
 .vdc .vdg-art,.vdc .vdg-mascot{will-change:transform}
 @keyframes vdcRingO{0%{opacity:.9;transform:scale(.97)}100%{opacity:0;transform:scale(1.06)}}
 @media (prefers-reduced-motion:reduce){.vda-pill::after,.vdc .vdg-c.is-open::before,.vdc .vdg-redeem::after{animation:none}}
+.vdg-retry{min-height:40px;padding:0 18px;border-radius:999px;border:1px solid rgba(241,213,138,.5);background:rgba(241,213,138,.12);color:#f3e6c8;font:600 14px/1 Prompt,sans-serif;cursor:pointer}
