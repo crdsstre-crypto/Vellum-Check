@@ -6964,3 +6964,36 @@ html.vc-dsc-open :is(.vc-bn,.vc-fpill,.vc-stick,.hx-lens,.hx-pool,.hx-tip,.hx-hu
   .vsl.fix-on .vsl-doc::before{font-size:11px}
 }
 @media (prefers-reduced-motion:reduce){.vsl-rc.is-flash{animation:none}}
+
+/* ===== v263 ของตกแต่งบนกระดาษ (สติกเกอร์ · คลิป · โพสต์อิท) — อยู่บนขอบกระดาษ ไม่เลื่อนตามเนื้อหา ไม่ทับตัวหนังสือ ===== */
+.vsl-deco{position:absolute;inset:0;z-index:3;pointer-events:none}
+.vsl-stick{position:absolute;top:-20px;right:-16px;width:70px;height:70px;transform:rotate(12deg);filter:drop-shadow(0 4px 6px rgba(0,0,0,.35))}
+.vsl-stick svg{width:100%;height:100%;display:block;overflow:visible}
+.vsl-stick svg circle:first-child{stroke:#fff;stroke-width:5;paint-order:stroke}
+.vsl-clip{position:absolute;top:-24px;left:30px;width:22px;height:46px;transform:rotate(-8deg);filter:drop-shadow(0 2px 2px rgba(0,0,0,.3))}
+.vsl-clip svg{width:100%;height:100%;display:block}
+/* ห้อยจากขอบบนกระดาษ ข้างคลิป (ทับแค่แถบหัวกระดาษซึ่งย้ายไปชิดขวาแล้ว) · เลื่อนอ่านลงไปแล้วเก็บออก */
+.vsl-post{pointer-events:auto;position:absolute;left:62px;top:-12px;width:150px;display:flex;flex-direction:column;gap:2px;padding:12px 12px 11px;border:0;border-radius:2px;
+  background:linear-gradient(180deg,#fff27a,#ffe55c);color:#4a3a06;text-align:left;cursor:pointer;transform:rotate(-3deg);
+  box-shadow:0 10px 18px -8px rgba(0,0,0,.55),inset 0 -14px 18px -14px rgba(160,120,0,.35);transition:transform .2s,opacity .25s}
+.vsl-post::before{content:"";position:absolute;top:-7px;left:50%;width:46px;height:18px;margin-left:-23px;background:rgba(255,255,255,.55);transform:rotate(-3deg);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.vsl-post b{font:400 17px/1.15 Sriracha,Charmonman,cursive;color:#c2302a}
+.vsl-post span{font:500 11.5px/1.35 Prompt,Sarabun,sans-serif;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.vsl-post .ok{display:none;font:400 16px/1.2 Sriracha,cursive;color:#17683f;font-style:normal}
+.vsl-post:hover{transform:rotate(-2deg) translateY(-3px)}
+.vsl-post:focus-visible{outline:2px solid #c2302a;outline-offset:3px}
+/* เลื่อนกระดาษลง หรือเลือกต้นฉบับ → เก็บโพสต์อิท */
+.vsl-paper.fade-top .vsl-post,.vsl:not(.hl-on) .vsl-post{opacity:0;pointer-events:none;transform:rotate(-10deg) translateY(-10px)}
+/* ฉบับแก้: โพสต์อิทสีเขียว "แก้แล้ว ✓" */
+.vsl.fix-on .vsl-post{background:linear-gradient(180deg,#c8f5d9,#a7ecc3);color:#14532d}
+.vsl.fix-on .vsl-post b,.vsl.fix-on .vsl-post span{display:none}
+.vsl.fix-on .vsl-post .ok{display:block}
+.vsl.fix-on .vsl-post{width:auto}
+/* หัวกระดาษเว้นที่ให้สติกเกอร์มุมขวา */
+.vsl-dhead span:last-child{margin-right:30px}
+@media (max-width:1023px){
+  .vsl-clip,.vsl-post{display:none}
+  .vsl-stick{width:52px;height:52px;top:-14px;right:-8px}
+}
+@media (prefers-reduced-motion:reduce){.vsl-post{transition:none}}
+@media (min-width:1024px){.vsl.vsl-split .vsl-dhead{justify-content:flex-end;gap:18px}.vsl.vsl-split.fix-on .vsl-doc::before{margin-top:34px}}
