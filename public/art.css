@@ -7346,3 +7346,9 @@ html.vc-lite .auth-ghost,html.vc-lite .auth-ghost .gh-pen,html.vc-lite .vc-env{w
 html.vc-lite .auth-ghost .gh-pen *{filter:none !important}
 /* เงารอยพับ: ขอบล่างของส่วนที่ยังเห็น (เส้นพับ) */
 .gh-foldshade{background:linear-gradient(180deg,rgba(0,0,0,0) 0,rgba(0,0,0,0) 28%,rgba(40,24,8,.35) 33.5%,rgba(0,0,0,0) 34%,rgba(0,0,0,0) 61%,rgba(40,24,8,.35) 66.5%,rgba(0,0,0,0) 67%) !important}
+
+/* v286 หยดครั่งที่หล่นลงมาก่อนแผ่ตัว */
+.wx-drop{position:absolute;z-index:7;width:20px;height:26px;pointer-events:none;opacity:0;
+  border-radius:50% 50% 50% 50% / 62% 62% 40% 40%;
+  background:radial-gradient(circle at 38% 34%,#ff8a7e 0,#c9302a 42%,#7c1210 100%);
+  box-shadow:0 4px 6px rgba(60,10,6,.4)}
