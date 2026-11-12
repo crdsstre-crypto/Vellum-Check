@@ -5,6 +5,27 @@
 // ⚠ ทุกลิงก์ด้านล่างต้องใส่ไว้ใน Google Cloud Console → Credentials → OAuth client → Authorized redirect URIs
 
 import crypto from 'node:crypto';
+import dns from 'node:dns';
+import net from 'node:net';
+
+// "fetch failed" บน Render มักเกิดจากเครื่องลองต่อ Google ผ่าน IPv6 ก่อนแล้วค้าง → ให้ใช้ IPv4 ก่อน + สลับเองถ้าช้า
+try { dns.setDefaultResultOrder('ipv4first'); } catch {}
+try { net.setDefaultAutoSelectFamily?.(true); } catch {}
+
+// เรียก Google ซ้ำได้สูงสุด 3 ครั้ง (เฉพาะเครือข่ายล้ม/หมดเวลา) แต่ละครั้งรอไม่เกิน 8 วินาที
+async function gfetch(url, opts, tries = 3) {
+  let last;
+  for (let i = 0; i < tries; i++) {
+    try { return await fetch(url, { ...opts, signal: AbortSignal.timeout(8000) }); }
+    catch (e) {
+      last = e;
+      console.warn('[google] fetch retry', i + 1, url.split('/')[2], e.cause?.code || e.name || e.message);
+      if (i < tries - 1) await new Promise(r => setTimeout(r, 400 * (i + 1)));
+    }
+  }
+  const err = new Error('fetch failed (' + (last?.cause?.code || last?.name || 'network') + ')');
+  err.cause = last; throw err;
+}
 
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
@@ -55,7 +76,7 @@ export function readCookieValue(req, name) {
 
 // แลก code เป็น access token แล้วอ่านข้อมูลผู้ใช้จาก Google
 export async function exchangeCodeForProfile(code, redirectUri = DEFAULT_REDIRECT) {
-  const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
+  const tokenRes = await gfetch('https://oauth2.googleapis.com/token', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
@@ -69,7 +90,7 @@ export async function exchangeCodeForProfile(code, redirectUri = DEFAULT_REDIREC
   if (!tokenRes.ok) throw new Error(`token exchange ${tokenRes.status}`);
   const { access_token } = await tokenRes.json();
 
-  const infoRes = await fetch('https://openidconnect.googleapis.com/v1/userinfo', {
+  const infoRes = await gfetch('https://openidconnect.googleapis.com/v1/userinfo', {
     headers: { Authorization: `Bearer ${access_token}` },
   });
   if (!infoRes.ok) throw new Error(`userinfo ${infoRes.status}`);
