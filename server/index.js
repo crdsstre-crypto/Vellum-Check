@@ -207,6 +207,8 @@ app.get('/api/auth/google/callback', async (req, res) => {
     // startSession ตั้ง Set-Cookie ใหม่ จึงต้องล้างคุกกี้ state หลังจากนั้น
     await startSession(req, res, user.id);
     res.append('Set-Cookie', CLEAR_STATE_COOKIE);
+    // ชื่อจาก Google ไว้ให้ฉากต้อนรับใช้ (อ่านได้จากหน้าเว็บ · หมดอายุใน 5 นาที · ไม่ใช้ยืนยันตัวตน)
+    if (profile.name) res.append('Set-Cookie', `vc_gname=${encodeURIComponent(profile.name)}; Path=/; Max-Age=300; SameSite=Lax; Secure`);
     res.redirect('/');
   } catch (err) {
     console.error('[google] failed:', err.message);
