@@ -39,18 +39,20 @@
     'มีข้อไหนที่ควรถามอีกฝ่ายก่อนเซ็น',
   ];
 
+  /* v2: ถามต่อแบบห้องแชต — มาสคอตผู้ช่วย · ชิปคำถาม · ช่องพิมพ์เต็มแถว + ปุ่มส่ง · ฟองข้อความ */
+  var ICO_SEND = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>';
   function followupHtml() {
-    return '<section class="fu" id="fuBox" aria-label="ถามต่อจากผลตรวจ">' +
-      '<h3 class="fu-title">ถามต่อจากผลตรวจนี้</h3>' +
+    var av = window.VCMascot ? window.VCMascot.svg('wave', 40) : '<span aria-hidden="true">💬</span>';
+    return '<section class="fu fu2" id="fuBox" aria-label="ถามต่อจากผลตรวจ">' +
+      '<div class="fu-head"><span class="fu-av">' + av + '</span><div><h3 class="fu-title">ถามต่อจากผลตรวจนี้</h3><p class="fu-sub">สงสัยข้อไหน ถามได้เลย · ฟรี ชั่วโมงละ 15 คำถาม</p></div></div>' +
+      '<div class="fu-log" id="fuLog" aria-live="polite"><div class="fu-a fu-hi">สวัสดีครับ ผมอ่านผลตรวจฉบับนี้แล้ว อยากให้อธิบายตรงไหนเพิ่มไหมครับ?</div></div>' +
       '<div class="fu-chips">' + QUICK.map(function (q) {
         return '<button type="button" class="fu-chip" data-q="' + esc(q) + '">' + esc(q) + '</button>';
       }).join('') + '</div>' +
       '<form class="fu-form" id="fuForm">' +
-        '<input id="fuInput" type="text" maxlength="300" placeholder="พิมพ์คำถามของคุณ" autocomplete="off" enterkeyhint="send">' +
-        '<button type="submit" class="primary" id="fuSend">ถาม</button>' +
+        '<input id="fuInput" type="text" maxlength="300" placeholder="พิมพ์คำถาม เช่น ข้อ 3 แปลว่าอะไร" autocomplete="off" enterkeyhint="send" aria-label="พิมพ์คำถาม">' +
+        '<button type="submit" class="fu-send" id="fuSend" aria-label="ส่งคำถาม">' + ICO_SEND + '</button>' +
       '</form>' +
-      '<div class="fu-log" id="fuLog" aria-live="polite"></div>' +
-      '<p class="fu-note">ตอบจากผลตรวจด้านบนเท่านั้น · ถามต่อฟรี (จำกัดชั่วโมงละ 15 ครั้ง) · ไม่ใช่คำปรึกษาทางกฎหมาย</p>' +
     '</section>';
   }
 
@@ -63,12 +65,12 @@
     var send = document.getElementById('fuSend');
     if (send) send.disabled = true;
     log.insertAdjacentHTML('beforeend',
-      '<div class="fu-q">' + esc(q) + '</div><div class="fu-a is-wait" id="fuWait">กำลังหาคำตอบจากผลตรวจ...</div>');
+      '<div class="fu-q">' + esc(q) + '</div><div class="fu-a is-wait" id="fuWait" aria-label="กำลังหาคำตอบ"><i></i><i></i><i></i></div>');
     var wait = document.getElementById('fuWait');
     try {
       var r = await api('/api/followup', 'POST', { question: q, result: lastResult });
       if (r.status === 401 && typeof showLoggedOut === 'function') showLoggedOut(CONFIG.messages.sessionEnded);
-      wait.classList.remove('is-wait');
+      wait.classList.remove('is-wait'); wait.removeAttribute('aria-label');
       if (r.ok && r.data.answer) {
         wait.textContent = r.data.answer;
         var inp = document.getElementById('fuInput'); if (inp) inp.value = '';
