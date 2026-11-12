@@ -7337,3 +7337,12 @@ html body #fuBox.fu2 :is(.fu-chip,.fu-send):focus-visible{outline:2px solid #f1d
 .vc-dcta-go{display:inline-flex !important;align-items:center;justify-content:center;gap:8px}
 @media (prefers-reduced-motion:no-preference){.vc-dcta-go{animation:dctaGlow 2.8s ease-in-out infinite}}
 @keyframes dctaGlow{0%,100%{box-shadow:0 0 0 0 rgba(241,213,138,0)}50%{box-shadow:0 0 0 4px rgba(241,213,138,.18),0 0 22px rgba(241,213,138,.25)}}
+
+/* ===== v285 ฉากล็อกอิน: เงารอยพับ + มือถือลื่นขึ้น ===== */
+.gh-foldshade{position:absolute;inset:0;z-index:20;pointer-events:none;opacity:0;
+  background:linear-gradient(180deg,rgba(0,0,0,0) 0,rgba(0,0,0,0) 31%,rgba(40,24,8,.55) 33%,rgba(255,240,210,.25) 34.5%,rgba(0,0,0,0) 37%,rgba(0,0,0,0) 64%,rgba(40,24,8,.5) 66%,rgba(255,240,210,.22) 67.5%,rgba(0,0,0,0) 70%),
+             linear-gradient(180deg,rgba(255,255,255,0),rgba(30,18,6,.35))}
+html.vc-lite .auth-ghost,html.vc-lite .auth-ghost .gh-pen,html.vc-lite .vc-env{will-change:transform,opacity}
+html.vc-lite .auth-ghost .gh-pen *{filter:none !important}
+/* เงารอยพับ: ขอบล่างของส่วนที่ยังเห็น (เส้นพับ) */
+.gh-foldshade{background:linear-gradient(180deg,rgba(0,0,0,0) 0,rgba(0,0,0,0) 28%,rgba(40,24,8,.35) 33.5%,rgba(0,0,0,0) 34%,rgba(0,0,0,0) 61%,rgba(40,24,8,.35) 66.5%,rgba(0,0,0,0) 67%) !important}
