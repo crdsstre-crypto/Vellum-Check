@@ -1278,7 +1278,7 @@ async function runDemo(demo) {
     els.result.insertAdjacentHTML('beforeend',
       '<section class="vc-demo-cta"><span class="vc-dcta-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3h6l1 2h3v16H5V5h3z"/><path d="M9 12l2 2 4-4"/></svg></span>' +
       '<h3>อยากรู้ว่าสัญญาของคุณมีจุดแบบนี้ไหม?</h3><p>วางสัญญาของคุณ ระบบ AI จะอ่านทีละข้อและสรุปให้แบบเดียวกันนี้</p><p class="vc-dcta-free">' + esc(free) + '</p>' +
-      '<button type="button" class="vc-dcta-go">วางสัญญาของฉัน</button><button type="button" class="vc-demo-other vc-dcta-other">ลองตัวอย่างฉบับอื่น</button></section>');
+      '<button type="button" class="vc-dcta-go"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 14l2 2 4-4"/></svg><span>วางสัญญาของฉัน</span></button><button type="button" class="vc-demo-other vc-dcta-other">ลองตัวอย่างฉบับอื่น</button></section>');
     toast('ผลตัวอย่าง · ไม่ใช้เครดิต');
     els.result.scrollIntoView({ behavior: 'smooth', block: 'start' });
   } finally {
