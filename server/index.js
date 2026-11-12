@@ -179,30 +179,40 @@ app.get('/api/auth/google', (req, res) => {
   if (!googleConfigured()) {
     return res.status(503).send('ยังไม่ได้ตั้งค่าการเข้าสู่ระบบด้วย Google');
   }
+  // จำ state ไว้ได้ 3 อันล่าสุด: กดปุ่ม Google ซ้ำ / เปิดหลายแท็บ แล้วกลับมาที่แท็บเก่า ก็ยังเข้าได้
   const state = makeState();
+  const prev = String(readCookieValue(req, OAUTH_STATE_COOKIE) || '').split('.').filter(Boolean).slice(-2);
   res.setHeader(
     'Set-Cookie',
-    `${OAUTH_STATE_COOKIE}=${state}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=600`
+    `${OAUTH_STATE_COOKIE}=${[...prev, state].join('.')}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=900`
   );
   res.redirect(buildAuthUrl(state, redirectUriFor(req)));
 });
 
 app.get('/api/auth/google/callback', async (req, res) => {
-  const fail = () => {
-    res.append('Set-Cookie', CLEAR_STATE_COOKIE);
-    res.redirect('/?google=error');
+  const fail = async (why) => {
+    console.warn('[google] login failed:', why, '· host', req.hostname);
+    // ล็อกอินอยู่แล้ว (เช่น กดย้อนกลับ/รีเฟรชหน้านี้ซ้ำ) → ไม่ต้องขึ้นว่าไม่สำเร็จ
+    try { if (await getUserFromRequest(req)) return res.redirect('/'); } catch {}
+    res.redirect(why === 'cancelled' ? '/' : '/?google=error');
   };
   try {
     const { code, state, error } = req.query;
-    const expected = readCookieValue(req, OAUTH_STATE_COOKIE);
-    if (error || typeof code !== 'string' || typeof state !== 'string'
-        || !expected || expected !== state) {
-      return fail();
-    }
+    if (error) return fail(error === 'access_denied' ? 'cancelled' : 'google:' + error);
+    const saved = String(readCookieValue(req, OAUTH_STATE_COOKIE) || '').split('.').filter(Boolean);
+    if (typeof code !== 'string' || typeof state !== 'string') return fail('missing code/state');
+    if (!saved.length) return fail('no state cookie');
+    if (!saved.includes(state)) return fail('state mismatch');
 
-    const profile = await exchangeCodeForProfile(code, redirectUriFor(req));
+    let profile;
+    try { profile = await exchangeCodeForProfile(code, redirectUriFor(req)); }
+    catch (e) {   // เครือข่ายสะดุดชั่วคราว (เซิร์ฟเวอร์เพิ่งตื่น) → ลองอีกครั้งเดียว
+      if (/invalid_grant|token exchange 4/i.test(e.message)) throw e;
+      await new Promise(r => setTimeout(r, 600));
+      profile = await exchangeCodeForProfile(code, redirectUriFor(req));
+    }
     const user = await findOrCreateGoogleUser(profile);
-    if (!user) return fail();
+    if (!user) return fail('no user');
 
     // startSession ตั้ง Set-Cookie ใหม่ จึงต้องล้างคุกกี้ state หลังจากนั้น
     await startSession(req, res, user.id);
@@ -212,7 +222,7 @@ app.get('/api/auth/google/callback', async (req, res) => {
     res.redirect('/');
   } catch (err) {
     console.error('[google] failed:', err.message);
-    fail();
+    fail('exception: ' + err.message);
   }
 });
 
