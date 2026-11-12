@@ -7245,3 +7245,95 @@ body:has(#bottomNav:not([hidden])) .vc-hello{--nav-h:64px}
 
 /* v281 หลังฉากล็อกอิน: ซ่อนแว่นขยายหน้าแรกชั่วครู่ (กันภาพค้างที่มุมจอ) */
 html:is(.vc-ritual,.vc-post) main > .hero :is(.hx-lens,.hx-lin,.hx-fine,.hx-big){opacity:0 !important;transition:none !important}
+
+/* ===== v282 ล็อกอินสำเร็จแบบสั้น: ตราครั่งปั๊มกลางจอ + ชื่อทอง → ลอยเข้าปุ่มบัญชี ===== */
+.qs-dim{position:fixed;inset:0;z-index:10040;cursor:pointer;
+  background:radial-gradient(ellipse 70% 60% at 50% 46%,rgba(30,18,8,.72),rgba(6,4,2,.9) 100%)}
+.qs-wax{border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle at 38% 32%,#e0504a 0,#b3231e 45%,#7c1210 100%);
+  box-shadow:inset 0 -4px 7px rgba(0,0,0,.32),inset 0 3px 4px rgba(255,170,160,.35),0 0 0 3px rgba(124,18,16,.45);
+  clip-path:polygon(50% 0,61% 6%,74% 4%,80% 15%,93% 20%,92% 33%,100% 45%,95% 57%,99% 70%,88% 78%,84% 91%,71% 93%,60% 100%,49% 95%,37% 100%,27% 92%,14% 90%,11% 77%,1% 68%,5% 56%,0 43%,8% 33%,7% 19%,20% 15%,27% 4%,39% 6%)}
+.qs-wax b{font:700 italic 1em/1 Georgia,'Newsreader',serif;color:rgba(255,205,195,.9);letter-spacing:-.04em;text-shadow:0 1px 0 rgba(0,0,0,.35)}
+.qs-seal{position:fixed;left:50%;top:44%;z-index:10042;width:128px;height:128px;font-size:44px;opacity:0;pointer-events:none;
+  filter:drop-shadow(0 10px 14px rgba(0,0,0,.55));will-change:transform}
+.qs-seal::after{content:"";position:absolute;inset:16%;border-radius:50%;border:2px solid rgba(255,190,180,.28)}
+.qs-ring{position:fixed;left:50%;top:44%;z-index:10041;width:140px;height:140px;border-radius:50%;pointer-events:none;opacity:0;
+  border:2px solid rgba(241,213,138,.85);box-shadow:0 0 22px rgba(241,213,138,.5)}
+.qs-name{position:fixed;left:50%;top:calc(44% + 84px);z-index:10042;margin:0;transform:translate(-50%,0);opacity:0;pointer-events:none;
+  display:flex;flex-direction:column;align-items:center;gap:2px;white-space:nowrap;text-align:center}
+.qs-name small{font:600 13px/1.2 Prompt,sans-serif;letter-spacing:.18em;color:rgba(241,213,138,.75)}
+.qs-name span{font:700 30px/1.25 Charmonman,'Taviraj',Prompt,cursive;background:linear-gradient(180deg,#fbe7b0,#d9a441);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 2px 6px rgba(0,0,0,.6))}
+.vc-hello .vh-seal.qs-wax{width:44px;height:44px;font-size:15px}
+
+/* ===== v283 มือถือ: ฉากล็อกอินโหมดเบา (html.vc-lite) — ตัด filter/เงาเบลอที่ต้องวาดใหม่ทุกเฟรม ===== */
+html.vc-lite .auth-ghost .gh-real .gh-g{filter:none !important;box-shadow:0 14px 24px -10px rgba(0,0,0,.6)}
+html.vc-lite .auth-ghost .auth-doc{box-shadow:0 10px 20px -8px rgba(0,0,0,.5) !important}
+html.vc-lite .auth-ghost .wx-tool img,html.vc-lite .auth-ghost .ad-pose{filter:none !important}
+html.vc-lite .auth-ghost .gv .gw{text-shadow:none}
+html.vc-lite .auth-ghost{contain:layout paint}
+html.vc-lite .vc-env{filter:none !important}
+html.vc-lite .vc-env .ev-back{box-shadow:0 14px 22px -8px rgba(0,0,0,.6)}
+html.vc-lite .gh-welcome{box-shadow:0 6px 12px -6px rgba(40,22,6,.5)}
+html.vc-lite .auth-focus{background:#0d0804 !important}
+/* ปุ่มข้ามใหญ่ขึ้น กดง่ายบนมือถือ */
+html.vc-lite .auth-skip{min-height:44px;padding:0 20px;font-size:15px}
+
+/* ===== v284 ท้ายหน้าผลตรวจ ===== */
+/* (1) ถามต่อแบบห้องแชต */
+html body #fuBox.fu2{margin:22px 0 10px !important;padding:18px 18px 16px !important;border-radius:18px !important;
+  border:1px solid rgba(241,213,138,.28) !important;background:linear-gradient(180deg,rgba(38,28,18,.72),rgba(20,16,12,.78)) !important;box-shadow:0 18px 40px -24px rgba(0,0,0,.8)}
+#fuBox.fu2 .fu-head{display:flex;align-items:center;gap:12px;margin:0 0 14px}
+#fuBox.fu2 .fu-av{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(241,213,138,.1);box-shadow:inset 0 0 0 1px rgba(241,213,138,.3)}
+#fuBox.fu2 .fu-av svg.vm{width:34px;height:auto;overflow:visible}
+html body #fuBox.fu2 .fu-title{margin:0 !important;font:700 16px/1.3 Prompt,sans-serif !important;color:#f3e6c8 !important}
+#fuBox.fu2 .fu-title::before,#fuBox.fu2 .fu-title::after{display:none !important}
+#fuBox.fu2 .fu-sub{margin:2px 0 0;font:400 12.5px/1.4 Prompt,sans-serif;color:rgba(243,230,200,.55)}
+#fuBox.fu2 .fu-log{display:flex;flex-direction:column;gap:8px;margin:0 0 12px}
+html body #fuBox.fu2 .fu-q{align-self:flex-end;max-width:85%;padding:9px 14px;border-radius:16px 16px 4px 16px;background:linear-gradient(180deg,#e9c46a,#c9922e);color:#24180a;font:500 14px/1.55 Prompt,sans-serif}
+html body #fuBox.fu2 .fu-a{align-self:flex-start;max-width:92%;padding:10px 14px;border-radius:16px 16px 16px 4px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);color:#ece6da;font:400 14px/1.65 Prompt,sans-serif;white-space:pre-line}
+#fuBox.fu2 .fu-a.fu-hi{color:rgba(236,230,218,.82)}
+#fuBox.fu2 .fu-a.is-err{border-color:rgba(229,72,77,.5)}
+#fuBox.fu2 .fu-a.is-wait{display:flex;gap:5px;padding:13px 16px}
+#fuBox.fu2 .fu-a.is-wait i{width:7px;height:7px;border-radius:50%;background:#f1d58a;animation:fuDot 1s ease-in-out infinite}
+#fuBox.fu2 .fu-a.is-wait i:nth-child(2){animation-delay:.15s}
+#fuBox.fu2 .fu-a.is-wait i:nth-child(3){animation-delay:.3s}
+@keyframes fuDot{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-4px)}}
+@media (prefers-reduced-motion:reduce){#fuBox.fu2 .fu-a.is-wait i{animation:none;opacity:.7}}
+html body #fuBox.fu2 .fu-chips{display:flex !important;flex-wrap:wrap;gap:8px !important;margin:0 0 12px !important}
+html body #fuBox.fu2 .fu-chip{min-height:38px !important;height:auto !important;padding:8px 14px !important;border-radius:999px !important;margin:0 !important;
+  border:1px solid rgba(241,213,138,.38) !important;background:rgba(241,213,138,.07) !important;color:#f3e6c8 !important;
+  font:500 13.5px/1.35 Prompt,sans-serif !important;text-align:left;cursor:pointer;box-shadow:none !important;transition:background .15s,border-color .15s,transform .1s}
+html body #fuBox.fu2 .fu-chip::before,html body #fuBox.fu2 .fu-chip::after{display:none !important}
+html body #fuBox.fu2 .fu-chip:hover{background:rgba(241,213,138,.15) !important;border-color:rgba(241,213,138,.7) !important}
+html body #fuBox.fu2 .fu-chip:active{transform:scale(.97)}
+html body #fuBox.fu2 .fu-form{display:flex !important;align-items:center;gap:6px !important;padding:5px 5px 5px 16px;border-radius:999px;
+  background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.12);transition:border-color .15s}
+html body #fuBox.fu2 .fu-form:focus-within{border-color:rgba(241,213,138,.6)}
+html body #fuBox.fu2 .fu-form input{flex:1 !important;min-width:0;height:42px !important;min-height:42px !important;margin:0 !important;padding:0 !important;
+  border:0 !important;background:transparent !important;box-shadow:none !important;color:#f3e6c8 !important;font:400 15px/1 Prompt,sans-serif !important;outline:none}
+html body #fuBox.fu2 .fu-form input::placeholder{color:rgba(243,230,200,.4)}
+html body #fuBox.fu2 .fu-send{flex:none;width:42px !important;height:42px !important;min-height:42px !important;padding:0 !important;border-radius:50% !important;border:0 !important;
+  display:grid;place-items:center;cursor:pointer;color:#24180a !important;background:linear-gradient(180deg,#f7dc92,#d9a441) !important;box-shadow:0 6px 14px -6px rgba(217,164,65,.7) !important}
+html body #fuBox.fu2 .fu-send::before,html body #fuBox.fu2 .fu-send::after{display:none !important}
+html body #fuBox.fu2 .fu-send:disabled{opacity:.5;cursor:default}
+html body #fuBox.fu2 :is(.fu-chip,.fu-send):focus-visible{outline:2px solid #f1d58a !important;outline-offset:2px}
+
+/* (2) คอม: ปุ่มคัดลอก/แชร์/PDF อยู่ที่แถบบนแถบเดียว — ซ่อนชุดกลางหน้า (ยังทำงานผ่านแถบบน) */
+@media (min-width:1024px){
+  html.vc-art body:has(.vc-rbar:not([hidden])) #result .share-bar{display:none !important}
+  .vcb-act button{display:inline-flex !important;align-items:center;gap:6px}
+  .vcb-act button svg{flex:none;opacity:.85}
+  .vcb-act button.is-pdf{border-color:rgba(241,213,138,.5) !important;color:#f1d58a !important}
+  .vcb-act button.is-pdf:hover{background:rgba(241,213,138,.1) !important}
+}
+/* มือถือ: แถบแชร์เป็นปุ่มโค้งเรียงสวย */
+@media (max-width:1023px){
+  html.vc-art #result .share-bar{display:grid !important;grid-template-columns:repeat(3,1fr);gap:8px !important}
+  html.vc-art #result .share-bar button{min-height:46px !important;border-radius:12px !important;display:flex !important;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12.5px !important}
+}
+
+/* (5) เก็บรายละเอียด: ปุ่มวางสัญญาของฉันมีไอคอน + เรืองแสงเบา ๆ */
+.vc-dcta-go{display:inline-flex !important;align-items:center;justify-content:center;gap:8px}
+@media (prefers-reduced-motion:no-preference){.vc-dcta-go{animation:dctaGlow 2.8s ease-in-out infinite}}
+@keyframes dctaGlow{0%,100%{box-shadow:0 0 0 0 rgba(241,213,138,0)}50%{box-shadow:0 0 0 4px rgba(241,213,138,.18),0 0 22px rgba(241,213,138,.25)}}
