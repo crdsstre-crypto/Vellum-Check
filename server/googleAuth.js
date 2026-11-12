@@ -81,5 +81,6 @@ export async function exchangeCodeForProfile(code, redirectUri = DEFAULT_REDIREC
     email: info.email,
     emailVerified: info.email_verified === true,
     picture: info.picture ?? null,
+    name: String(info.given_name || info.name || '').slice(0, 40),
   };
 }
