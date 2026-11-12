@@ -7160,9 +7160,19 @@ html.vc-gin::after{content:"";position:fixed;inset:0;z-index:10030;pointer-event
     radial-gradient(ellipse 80% 70% at 50% 50%,#3a2414 0%,#1d1209 55%,#0b0704 100%),
     repeating-linear-gradient(94deg,rgba(255,220,170,.025) 0 2px,transparent 2px 9px);
   animation:ginLamp 1.6s cubic-bezier(.3,.6,.3,1) both}
-html.vc-gin::before{content:"กำลังเข้าสู่ระบบ";position:fixed;z-index:10031;left:50%;bottom:calc(18% + env(safe-area-inset-bottom,0px));transform:translateX(-50%);
-  font:500 13px/1 Prompt,sans-serif;letter-spacing:.14em;color:rgba(241,213,138,.55);pointer-events:none;transition:opacity .3s ease}
-html.vc-gin.vc-gin-out::after,html.vc-gin.vc-gin-out::before{opacity:0;pointer-events:none}
+/* v287 (2) กระดาษแบบฟอร์มเข้าสู่ระบบวางรออยู่บนโต๊ะตั้งแต่จอรอ — ตำแหน่ง/ขนาดใกล้ใบจริง แล้วสลับเป็นใบจริงแบบจางข้าม */
+html.vc-gin::before{content:"เข้าสู่ระบบ";position:fixed;z-index:10031;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-.6deg);
+  width:min(82vw,330px);height:min(86vh,650px);box-sizing:border-box;padding-top:min(13vh,96px);text-align:center;
+  font:700 22px/1.2 Prompt,sans-serif;color:#2a1a0c;pointer-events:none;transition:opacity .45s ease;border-radius:3px;
+  background:
+    linear-gradient(90deg,transparent 10%,rgba(80,52,22,.22) 10%,rgba(80,52,22,.22) 90%,transparent 90%) 0 calc(min(13vh,96px) + 74px)/100% 1px no-repeat,
+    linear-gradient(90deg,transparent 22%,rgba(80,52,22,.14) 22%,rgba(80,52,22,.14) 78%,transparent 78%) 0 calc(min(13vh,96px) + 40px)/100% 5px no-repeat,
+    linear-gradient(90deg,transparent 10%,rgba(80,52,22,.3) 10%,rgba(80,52,22,.3) 90%,transparent 90%) 0 calc(min(13vh,96px) + 160px)/100% 1px no-repeat,
+    linear-gradient(90deg,transparent 10%,rgba(80,52,22,.3) 10%,rgba(80,52,22,.3) 90%,transparent 90%) 0 calc(min(13vh,96px) + 230px)/100% 1px no-repeat,
+    linear-gradient(90deg,transparent 10%,rgba(80,52,22,.12) 10%,rgba(80,52,22,.12) 70%,transparent 70%) 0 calc(min(13vh,96px) + 280px)/100% 8px no-repeat,
+    linear-gradient(90deg,transparent 10%,rgba(80,52,22,.3) 10%,rgba(80,52,22,.3) 60%,transparent 60%) 0 calc(100% - 70px)/100% 1px no-repeat,
+    linear-gradient(180deg,#e6dcc4,#d3c4a2);
+  box-shadow:0 2px 0 #c9b78f,0 4px 0 #dccfb2,0 30px 50px -18px rgba(0,0,0,.8)}
 @keyframes ginLamp{0%{filter:brightness(.25)}35%{filter:brightness(.7)}42%{filter:brightness(.45)}55%{filter:brightness(.95)}100%{filter:brightness(1)}}
 @keyframes ginPaper{from{opacity:0;transform:translate(-50%,-44%) rotate(4deg) scale(.96)}to{opacity:1;transform:translate(-50%,-50%) rotate(-1.5deg)}}
 @keyframes ginDots{0%,100%{color:rgba(80,52,22,.75)}50%{color:rgba(80,52,22,.4)}}
