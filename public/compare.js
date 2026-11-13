@@ -611,8 +611,14 @@
     open(); setTimeout(run, 380);
   }
   function fromResult() {   /* (6) ใช้สัญญาที่เพิ่งตรวจเป็นฉบับเดิม */
-    var src = document.getElementById('input'); saved.o = src ? src.value : ''; saved.n = ''; state.res = null;
-    open(); setTimeout(function () { if (el && saved.o.trim()) { setTab('n'); say('ใส่สัญญาที่เพิ่งตรวจเป็นฉบับเดิมแล้ว วางฉบับใหม่ได้เลย'); } }, 120);
+    /* ผลที่เปิดจากประวัติ: ระบบไม่ได้เก็บข้อความสัญญาเต็มไว้ จึงให้ลูกค้าวางฉบับเดิมเอง */
+    var fromVault = !!document.querySelector('#result [data-vault-back]');
+    var src = document.getElementById('input'); saved.o = !fromVault && src ? src.value : ''; saved.n = ''; state.res = null;
+    open(); setTimeout(function () {
+      if (!el) return;
+      if (saved.o.trim()) { setTab('n'); say('ใส่สัญญาที่เพิ่งตรวจเป็นฉบับเดิมแล้ว วางฉบับใหม่ได้เลย'); }
+      else if (fromVault) say('เพื่อความเป็นส่วนตัว ระบบไม่ได้เก็บข้อความสัญญาเต็มไว้ วางฉบับเดิมได้เลย');
+    }, 120);
   }
 
   /* ---------- (1)+(2) การ์ดเข้า ---------- */
@@ -682,6 +688,8 @@
       ex.innerHTML = MINI + '<span class="ec-tx"><b>อีกฝ่ายส่งฉบับแก้กลับมา?</b><small>เทียบกับสัญญาที่เพิ่งตรวจได้เลย ระบบใส่ฉบับนี้เป็น "ฉบับเดิม" ให้แล้ว · ฟรี ไม่ใช้เครดิต</small></span><button type="button">เทียบฉบับแก้</button>';
       ex.querySelector('button').addEventListener('click', fromResult);
     }
+    var sm = ex.querySelector('.ec-tx small'), vault = !!r.querySelector('[data-vault-back]');
+    sm.textContent = vault ? 'เปิดหน้าเทียบ แล้ววางฉบับเดิมกับฉบับใหม่ ระบบชี้ทุกจุดที่แก้ · ฟรี ไม่ใช้เครดิต' : 'เทียบกับสัญญาที่เพิ่งตรวจได้เลย ระบบใส่ฉบับนี้เป็น "ฉบับเดิม" ให้แล้ว · ฟรี ไม่ใช้เครดิต';
     r.appendChild(ex);
   }
   function watch() {
@@ -689,7 +697,8 @@
     new MutationObserver(function () { if (!pending) { pending = true; setTimeout(promo, 400); } }).observe(r, { childList: true });
     promo();
   }
-  function boot() { entry(); chip(); watch(); }
+  /* v12: ย้ายทางเข้าไปแท็บ "เครื่องมือ" (tools.js) — หน้าตรวจสัญญาเหลืองานเดียว จึงไม่วางการ์ด/ชิปในหน้าแรกแล้ว */
+  function boot() { watch(); }
   window.VCCompare = { open: open, compare: compare, demo: demo, fromResult: fromResult };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
