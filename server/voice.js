@@ -38,7 +38,7 @@ const FALLBACK = [   // เสียงฝรั่งพูดไทยจะ�
 const GENDER = { female: 'ผู้หญิง', male: 'ผู้ชาย' };
 // เสียงที่ให้ลูกค้าเลือก (แก้ที่นี่ที่เดียว ไม่ต้องตั้งค่าใน Render) · ถ้าตั้ง ELEVENLABS_VOICES ใน Render จะใช้ค่านั้นแทน
 const BUILTIN = [
-  { id: 'tKtPl8obOBs5uPMei6yN', name: 'Ohm', gender: 'ผู้ชาย', desc: 'เสียงเล่าเรื่อง อธิบายชัด เป็นธรรมชาติ สไตล์ผู้ประกาศข่าว' },
+  { id: 'tKtPl8obOBs5uPMei6yN', name: 'Ohm', gender: 'ผู้ชาย', desc: 'เสียงเล่าเรื่อง อธิบายชัด เป็นธรรมชาติ สไตล์ผู้ประกาศข่าว', rec: true },   // ⭐ เสียงแนะนำ = ค่าเริ่มต้น
   { id: 'uI1epevl1X6hqrxEciKt', name: 'Kirin', gender: 'ผู้ชาย', desc: 'เสียงพูดสบาย ๆ เป็นกันเอง เหมือนคุยกับเพื่อน' },
   { id: 'u14IW5Q2cGXcEj6L2joU', name: 'Emily', gender: 'ผู้หญิง', desc: 'เสียงนุ่ม สุภาพ เป็นกันเอง สไตล์พอดแคสต์' },
   { id: '7XW5JhaNn90bnFojQ5DA', name: 'Mali', gender: 'ผู้หญิง', desc: 'เสียงชัด อบอุ่น เป็นมิตร ฟังง่าย สไตล์ครูสอน' },
@@ -64,15 +64,17 @@ export async function listVoices() {
     lastSource = 'fallback';
     for (const v of FALLBACK) if (out.length < 7 && v.id !== def && !out.some(x => x.id === v.id)) out.push(v);
   } else lastSource = env ? 'env' : 'builtin';
-  if (def && !out.some(v => v.id === def)) out.unshift({ id: def, name: 'เสียงหลัก', gender: '' });
-  out.sort((a, b) => (b.id === def) - (a.id === def));
+  // ไม่โชว์ "เสียงหลัก" (ELEVENLABS_VOICE_ID) แยกแล้ว · ถ้ายังไม่มีเสียงให้เลือกเลย ค่อยใช้เสียงหลักกันพัง
+  if (!out.length && def) out.push({ id: def, name: 'เสียงหลัก', gender: '' });
+  if (!out.some(v => v.rec) && out[0]) out[0].rec = true;
+  out.sort((a, b) => (b.rec ? 1 : 0) - (a.rec ? 1 : 0));   // เสียงแนะนำขึ้นก่อน
   out = out.filter(v => /^[A-Za-z0-9]{8,40}$/.test(v.id)).slice(0, 8);
   voiceCache = out; voiceAt = bad ? Date.now() - 9.5 * 60 * 1000 : Date.now();   // ดึงไม่สำเร็จ → ลองใหม่ใน 30 วินาที
   return out;
 }
 export async function pickVoice(id) {
   const list = await listVoices();
-  return list.some(v => v.id === id) ? id : (process.env.ELEVENLABS_VOICE_ID || list[0]?.id || '');
+  return list.some(v => v.id === id) ? id : ((list.find(v => v.rec) || list[0])?.id || process.env.ELEVENLABS_VOICE_ID || '');   // ไม่ได้เลือก = เสียงแนะนำ (Ohm)
 }
 
 // ตัวอย่างเสียง: ประโยคแบบเดียวกับสรุปจริง ยาวพอให้ฟังออก (~8 วินาที)
