@@ -318,7 +318,7 @@ const followupHits = new Map(); // userId -> { count, resetAt }
 
 // ----- เสียงสรุป: รายการเสียงให้ลูกค้าเลือก + ตัวอย่างเสียง -----
 app.get('/api/voices', async (req, res) => {
-  try { const voices = (await listVoices()).map(v => ({ ...v, sample: previewText(v) })); res.json({ voices, source: voiceSource() }); }
+  try { const voices = (await listVoices()).map(v => ({ ...v, sample: previewText(v) })); res.json({ voices, source: voiceSource() }); warmPreviews(); }   // มีคนเปิดรายการเสียง = เตรียมตัวอย่างทุกเสียงไว้เลย
   catch (err) { console.error('[voice] list failed:', err.message); res.json({ voices: [] }); }
 });
 const previewHits = new Map();
@@ -917,7 +917,7 @@ initDb()
   .then(() => {
     app.listen(PORT, () => {
       console.log(`[เช็กสัญญา] server running on port ${PORT}`);
-      setTimeout(warmPreviews, 5000);   // เตรียมตัวอย่างเสียงทุกเสียงไว้ล่วงหน้า
+      setTimeout(() => warmPreviews(true), 3000);   // เตรียมตัวอย่างเสียงทุกเสียงไว้ล่วงหน้า
     });
   })
   .catch(err => {
