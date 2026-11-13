@@ -24,7 +24,9 @@
     '.vpk-p{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;padding:0}' +
     '.vpk-p svg{width:13px;height:13px;fill:currentColor}' +
     '.vpk-p.is-play{background:#34d399;border-color:#34d399;color:#06281c}' +
-    '.vpk-p.is-load svg{animation:vpkSpin .8s linear infinite}' +
+    '.vpk-ring{width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.25);border-top-color:#34d399;animation:vpkSpin .7s linear infinite}' +
+    '.vpk-p .vpk-ring{display:none}.vpk-p.is-load .vpk-ring{display:block}.vpk-p.is-load svg,.vpk-p.is-load .vpk-bars{display:none !important}' +
+    '.vpk-note{margin:8px 2px 0;font:400 12px/1.4 Prompt,sans-serif;color:#9a9aa3}' +
     '@keyframes vpkSpin{to{transform:rotate(360deg)}}' +
     '.vpk-bars{display:none;gap:2px;align-items:flex-end;height:12px}' +
     '.vpk-p.is-play svg{display:none}.vpk-p.is-play .vpk-bars{display:flex}' +
@@ -39,7 +41,7 @@
 
   var COL = ['#34d399', '#f5c451', '#a78bfa', '#60a5fa', '#f472b6', '#fb923c', '#2dd4bf', '#f87171'];
   var PLAY = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z"/></svg>';
-  var LOAD = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1a7 7 0 1 0 7 7h-2a5 5 0 1 1-5-5z"/></svg>';
+  var LOAD = '<span class="vpk-ring" aria-hidden="true"></span>';
   function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
   function current() { return voices.some(function (v) { return v.id === sel; }) ? sel : (voices[0] ? voices[0].id : ''); }
@@ -56,14 +58,16 @@
     if (playing === id) { stop(); return; }
     stop();
     btn.classList.add('is-load'); btn.innerHTML = LOAD + '<span class="vpk-bars"><i></i><i></i><i></i></span>';
-    var a = new Audio('/api/voices/' + encodeURIComponent(id) + '/preview?t=2');
+    var a = new Audio('/api/voices/' + encodeURIComponent(id) + '/preview?t=3');
     audio = a; playing = id;
     function done() { btn.classList.remove('is-load'); btn.innerHTML = PLAY + '<span class="vpk-bars"><i></i><i></i><i></i></span>'; }
-    a.addEventListener('playing', function () { done(); paintBtns(); });
+    var started = false, slow = setTimeout(function () { if (!started && audio === a) note('กำลังเตรียมเสียงครั้งแรก รอสักครู่…'); }, 1500);
+    a.addEventListener('playing', function () { started = true; clearTimeout(slow); note(''); done(); paintBtns(); });
     a.addEventListener('ended', function () { if (audio === a) stop(); });
-    a.addEventListener('error', function () { done(); if (audio === a) stop(); err('ฟังตัวอย่างไม่ได้ตอนนี้ ลองใหม่อีกครั้ง'); });
+    a.addEventListener('error', function () { clearTimeout(slow); note(''); done(); if (audio === a) stop(); if (!started) err('ฟังตัวอย่างไม่ได้ตอนนี้ ลองใหม่อีกครั้ง'); });
     var p = a.play(); if (p && p.catch) p.catch(function () { done(); if (audio === a) stop(); });
   }
+  function note(t) { var e = box && box.querySelector('.vpk-note'); if (e) { e.textContent = t; e.hidden = !t; } }
   function err(t) { var e = box && box.querySelector('.vpk-err'); if (e) { e.textContent = t; e.hidden = false; setTimeout(function () { e.hidden = true; }, 4000); } }
 
   function render() {
@@ -76,7 +80,7 @@
           '<span class="vpk-av" style="background:' + COL[i % COL.length] + '">' + esc(((v.name || '?').replace(/^[\u0E40-\u0E44]/, '').charAt(0) || '?').toUpperCase()) + '</span>' +
           '<span class="vpk-t"><b>' + esc(v.name) + '</b><small>' + (on ? '✓ เลือกอยู่' : esc(v.gender || 'เลือก')) + '</small></span>' +
           '<button type="button" class="vpk-p" data-id="' + esc(v.id) + '" aria-label="ฟังตัวอย่างเสียง">' + PLAY + '<span class="vpk-bars"><i></i><i></i><i></i></span></button></div>';
-      }).join('') + '</div><p class="vpk-err" hidden></p>';
+      }).join('') + '</div><p class="vpk-note" hidden></p><p class="vpk-err" hidden></p>';
     paintBtns();
   }
   function choose(id) {
