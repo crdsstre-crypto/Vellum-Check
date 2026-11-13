@@ -19,29 +19,37 @@ html[data-view][data-desk]:has(#vacCard:not([hidden])) body #authLoggedIn .acct-
 .vl-kick,.vl-no,.vl-n span,.vl-n small,.vl-stamp,.vl-stamp *,.vl-link,.vl-link *,.vl-nh,.vl-nh span,.vl-close,.vl-cv-in em,.vl-tap{--ff:var(--thai)}
 .vl-ln,.vl-ln u,.vl-snote,.vl-plus,.vl-tmore,.vl-tnone,.vl-ph-in b{--ff:var(--hand)}
 .vl-td.is-d,.vl-td.is-n,.vl-thead span,.vl-lh span,.vl-more,.vl-rstamp,.vl-phmenu button{--ff:var(--mono)}
-.vl-td.is-t{--ff:var(--thai)}
+.vl-td.is-t b{--ff:var(--thai)}
+.vl-ti,.vl-streak,.vl-streak u,.vl-wd em{--ff:var(--hand)}
+.vl-turn,.vl-pno,.vl-legal,.vl-legal button,.vl-tab span,.vl-wd small{--ff:var(--thai)}
+.vl-wd b{--ff:var(--serif)}
 
 .vl-book{position:relative;perspective:1400px;padding-top:4px}
 
 /* ---------- หน้ากระดาษ ---------- */
-.vl-page{position:relative;overflow:hidden;padding:22px 20px 10px 28px;border-radius:3px 12px 12px 3px;color:var(--ink);
+.vl-page{position:relative;z-index:1;overflow:hidden;border-radius:3px 12px 12px 3px;color:var(--ink);background:var(--paper);
+  box-shadow:0 1px 0 #fffaf0 inset,
+    2px 2px 0 -0.5px #eadcbc,4px 4px 0 -1px #dccba5,6px 6px 0 -1.5px #cdb98f,
+    0 22px 36px -18px rgba(0,0,0,.75)}
+/* ใบกระดาษ 2 หน้า (หน้า 1 อยู่บน · หน้า 2 อยู่ข้างใต้) */
+.vl-leaf{position:relative;padding:22px 20px 10px 28px;border-radius:3px 12px 12px 3px;transform-origin:0 50%;backface-visibility:hidden;
   background:
     radial-gradient(130% 70% at 0 0,rgba(255,255,255,.6),transparent 55%),
     radial-gradient(80% 60% at 100% 100%,rgba(170,124,66,.18),transparent 70%),
     radial-gradient(40% 30% at 85% 8%,rgba(170,124,66,.08),transparent 70%),
     linear-gradient(90deg,rgba(90,60,30,.22),rgba(90,60,30,.05) 10px,transparent 22px),
-    var(--paper);
-  box-shadow:0 1px 0 #fffaf0 inset,
-    2px 2px 0 -0.5px #eadcbc,4px 4px 0 -1px #dccba5,6px 6px 0 -1.5px #cdb98f,
-    0 22px 36px -18px rgba(0,0,0,.75)}
+    var(--paper)}
+.vl-leaf.is-p1{z-index:2}
+.vl-leaf.is-p2{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column}
+.vl-page.on-p2 .vl-leaf.is-p1{visibility:hidden}
 /* เส้นกั้นหน้าแดงคู่แบบสมุดบัญชี */
-.vl-page::before{content:"";position:absolute;top:0;bottom:0;left:16px;width:3px;border-left:1px solid rgba(168,35,27,.38);border-right:1px solid rgba(168,35,27,.38);pointer-events:none}
+.vl-leaf::before{content:"";position:absolute;top:0;bottom:0;left:16px;width:3px;border-left:1px solid rgba(168,35,27,.38);border-right:1px solid rgba(168,35,27,.38);pointer-events:none}
 /* รอยกระดาษเก่า */
-.vl-page::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:multiply;
+.vl-page::after{content:"";position:absolute;z-index:3;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:multiply;
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .42 0 0 0 0 .25 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23p)'/%3E%3C/svg%3E")}
 
 /* ริบบิ้นที่คั่นหนังสือ */
-.vl-ribbon{position:absolute;z-index:1;top:0;right:78px;width:16px;height:58px;pointer-events:none;
+.vl-ribbon{position:absolute;z-index:4;top:0;right:78px;width:16px;height:58px;pointer-events:none;
   background:linear-gradient(90deg,#6e1712,#a3281f 45%,#8a1f18);
   clip-path:polygon(0 0,100% 0,100% 100%,50% 82%,0 100%);filter:drop-shadow(0 2px 1.5px rgba(0,0,0,.3))}
 .vl-ribbon::after{content:"";position:absolute;inset:0 0 auto;height:6px;background:rgba(0,0,0,.25)}
@@ -143,9 +151,9 @@ html[data-view][data-desk]:has(#vacCard:not([hidden])) body #authLoggedIn .acct-
 @keyframes vlPen{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
 
 /* เผื่อที่ให้ปุ่มมาสคอตลอยมุมขวาล่างในมือถือ */
-@media (max-width:767px){.vl-ledger{padding-bottom:26px}}
+
 @media (max-width:360px){.vl-n b{font-size:48px}.vl-name{font-size:24px}.vl-ln{font-size:17.5px}.vl-ribbon{right:66px}}
-@media (min-width:768px){.vl-page{padding:26px 26px 10px 34px}.vl-notes{margin:16px -26px 0 -34px;padding-left:34px;padding-right:26px}.vl-page::before{left:20px}}
+@media (min-width:768px){.vl-leaf{padding:26px 26px 10px 34px}.vl-notes{margin:16px -26px 0 -34px;padding-left:34px;padding-right:26px}.vl-leaf::before{left:20px}}
 
 /* ---------- (1) รูปติดหน้ากระดาษ + คลิปทองเหลือง ---------- */
 .vl-head{align-items:flex-start}
@@ -196,9 +204,10 @@ html[data-view][data-desk]:has(#vacCard:not([hidden])) body #authLoggedIn .acct-
 @keyframes vlStroke{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
 
 /* ---------- (3) ตารางบัญชีรายการล่าสุด ---------- */
-.vl-ledger{margin:6px -20px 0 -28px;padding:4px 20px 14px 28px;border-top:1.5px solid var(--ink);box-shadow:0 -3.5px 0 -2.5px var(--ink) inset}
-.vl-lh{display:flex;align-items:flex-end;justify-content:space-between;margin:12px 0 6px}
-.vl-lh span{font-size:11px;letter-spacing:.18em;color:var(--ink2);text-transform:uppercase}
+.vl-ledger{flex:1 1 auto}
+.vl-lh{display:flex;align-items:flex-end;justify-content:space-between;margin:2px 0 8px;padding-bottom:12px;border-bottom:1.5px solid var(--ink);box-shadow:0 3.5px 0 -2.5px var(--ink)}
+.vl-lempty{margin:18px 0 0;font-size:15px;color:var(--ink2)}
+.vl-lh span{font-size:12px;letter-spacing:.18em;color:var(--ink)}
 .vl-more{appearance:none;border:0;background:none;cursor:pointer;padding:2px 0;font-size:11.5px;color:var(--ink);text-decoration:underline;text-decoration-color:rgba(58,38,21,.3);text-underline-offset:3px}
 .vl-thead,.vl-tr{display:grid;grid-template-columns:52px 1fr 30px 54px;align-items:center;column-gap:8px}
 .vl-thead{padding:0 0 5px;border-bottom:1px solid rgba(58,38,21,.45)}
@@ -207,7 +216,9 @@ html[data-view][data-desk]:has(#vacCard:not([hidden])) body #authLoggedIn .acct-
 .vl-tr{width:100%;appearance:none;cursor:pointer;background:none;border:0;border-bottom:1px dotted rgba(58,38,21,.35);padding:10px 0;text-align:left;color:var(--ink);transition:background-color .15s}
 .vl-tr:hover,.vl-tr:active{background:rgba(58,38,21,.05)}
 .vl-td.is-d{font-size:12px;color:var(--ink2);white-space:nowrap}
-.vl-td.is-t{font-size:14.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vl-td.is-t{min-width:0;display:flex;flex-direction:column;gap:2px}
+.vl-td.is-t b{font-size:15px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vl-ti{font-size:13.5px;line-height:1.25;color:var(--blue);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:.9}
 .vl-td.is-n{font-size:13px;font-weight:500}
 .vl-td.is-s{text-align:right}
 .vl-rstamp{display:inline-block;padding:3px 6px 2px;border:1.5px solid currentColor;border-radius:3px;font-style:normal;font-size:11px;font-weight:600;letter-spacing:.08em;line-height:1;
@@ -216,6 +227,71 @@ html[data-view][data-desk]:has(#vacCard:not([hidden])) body #authLoggedIn .acct-
 .vl-rstamp.is-mid{color:#a2620f}
 .vl-rstamp.is-ok{color:#2f6b3a}
 .vl-tr:nth-child(odd) .vl-rstamp{transform:rotate(4deg)}
-@media (min-width:768px){.vl-ledger{margin:6px -26px 0 -34px;padding-left:34px;padding-right:26px}}
+
 @media (max-width:360px){.vl-thead,.vl-tr{grid-template-columns:46px 1fr 24px 50px;column-gap:6px}.vl-photo{width:54px;height:66px}}
 .vl-admin{margin-left:6px;font-size:9.5px;padding:2px 4px 1px;vertical-align:1px;color:var(--red);transform:rotate(-4deg)}
+
+/* ===== v6 ===== */
+/* ซ่อนการ์ดที่ซ้ำกับในสมุด (ประวัติ/เช็กอิน) */
+html:has(#vacCard:not([hidden])) body #authLoggedIn :is(.vc-stat,.vdc-acct){display:none !important}
+
+/* ท้ายหน้า: พลิกหน้า + เลขหน้า */
+.vl-foot{display:flex;align-items:center;justify-content:space-between;margin:10px 0 2px;padding-top:6px}
+.vl-turn{appearance:none;border:0;background:none;cursor:pointer;padding:8px 0;font-size:14px;font-weight:600;color:var(--ink);letter-spacing:.02em}
+.vl-turn:not(.is-back){position:relative;padding-right:4px}
+.vl-turn:not(.is-back)::after{content:"";position:absolute;left:0;right:4px;bottom:4px;height:1px;background:rgba(58,38,21,.3)}
+.vl-pno{font-size:12px;letter-spacing:.2em;color:var(--ink2)}
+/* มุมกระดาษพับ (หน้า 1) */
+.vl-leaf.is-p1::after{content:"";position:absolute;right:0;bottom:0;width:26px;height:26px;border-radius:0 0 12px 0;pointer-events:none;
+  background:linear-gradient(315deg,#2a1d12 0 46%,rgba(0,0,0,.25) 48%,#e9dcbd 50%,#d5c39d 100%);box-shadow:-2px -2px 4px rgba(60,40,20,.18)}
+.vl-legal{margin:16px 0 0;font-size:12px;line-height:1.7;color:var(--ink2)}
+.vl-legal button{appearance:none;border:0;background:none;padding:0;cursor:pointer;font-size:12px;color:var(--ink2);text-decoration:underline;text-decoration-color:rgba(58,38,21,.25);text-underline-offset:3px}
+.vl-leaf.is-p2 .vl-foot{margin-top:auto}
+
+/* ---------- (4) ตราเช็กอิน 7 วัน ---------- */
+.vl-week{margin-top:14px}
+.vl-week .vl-nh{height:auto;padding:0 0 8px;align-items:baseline}
+.vl-streak{font-size:15px;color:var(--blue)}
+.vl-streak u{text-decoration:none;color:var(--red);border-bottom:2px solid rgba(168,35,27,.7);padding:0 2px}
+.vl-wrow{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;justify-items:center}
+.vl-wd{position:relative;display:grid;place-items:center;width:38px;height:38px;border-radius:50%;appearance:none;border:1.5px dashed rgba(58,38,21,.28);background:none;padding:0;color:var(--ink2)}
+.vl-wd em{font-style:normal;font-size:13px;color:rgba(58,38,21,.55)}
+.vl-wd small{position:absolute;bottom:-15px;font-size:10px;color:var(--ink2)}
+.vl-wd.is-last{border-color:rgba(176,125,40,.55)}
+.vl-wd.is-last em{color:#9a6a12}
+.vl-wd.is-done{border:0;transform:rotate(calc(var(--r,0) * 1deg));
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3CradialGradient id='g' cx='.38' cy='.32' r='.75'%3E%3Cstop offset='0' stop-color='%23d0574a'/%3E%3Cstop offset='.55' stop-color='%23991f17'/%3E%3Cstop offset='1' stop-color='%23661009'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cpath d='M50 3c8 0 11 4 18 6s13 3 17 10 1 12 5 19 7 10 6 17-6 9-8 16-1 13-7 17-12 2-19 5-11 6-18 4-9-5-16-8-13-3-17-9-2-12-5-19-7-10-5-17 6-9 9-15 2-12 8-16 11-1 18-4 9-6 14-6z' fill='url(%23g)'/%3E%3Ccircle cx='50' cy='50' r='29' fill='none' stroke='%23620e08' stroke-width='3' opacity='.55'/%3E%3C/svg%3E") center/contain no-repeat;
+  filter:drop-shadow(0 1.5px 1.5px rgba(60,10,5,.3))}
+.vl-wd:nth-child(odd).is-done{--r:-8}.vl-wd:nth-child(even).is-done{--r:6}
+.vl-wd.is-done b{font-size:11px;font-weight:600;color:#7a140d;text-shadow:0 1px 0 rgba(255,190,170,.45),0 -1px 0 rgba(40,0,0,.4)}
+.vl-wd.is-today{cursor:pointer;border:1.8px dashed var(--red);background:rgba(168,35,27,.05)}
+.vl-wd.is-today em{color:var(--red);font-size:14px}
+@media (prefers-reduced-motion:no-preference){.vl-wd.is-today{animation:vlBob 2.4s ease-in-out infinite}}
+.vl-week + .vl-notes{margin-top:22px}
+
+/* ---------- (1) แท็บดัชนีข้างเล่ม (มือถือ) ---------- */
+.vl-tabs{display:none}
+@media (max-width:767px){
+  html:has(#vacCard:not([hidden])) body #authLoggedIn :is(.vrm-acct,.acct-menu,.acct-out){display:none !important}
+  .vl-book{margin-right:20px}
+  .vl-tabs{position:absolute;z-index:0;top:132px;right:-22px;display:flex;flex-direction:column;gap:6px}
+  .vl-tab{position:relative;appearance:none;cursor:pointer;width:46px;height:70px;padding:0 0 0 14px;border:0;border-radius:0 9px 9px 0;
+    display:grid;place-items:center;background:var(--tc);color:#fff8ea;
+    box-shadow:inset -1px 0 0 rgba(255,255,255,.25),inset 0 -3px 6px rgba(0,0,0,.12),2px 3px 5px -2px rgba(0,0,0,.55);transition:transform .18s}
+  .vl-tab span{writing-mode:vertical-rl;font-size:12.5px;font-weight:600;letter-spacing:.06em;text-shadow:0 1px 0 rgba(0,0,0,.25);transform:translateX(5px)}
+  .vl-tab:active{transform:translateX(3px)}
+  .vl-tab.is-hist{--tc:linear-gradient(90deg,#4f6b55,#6d8a72)}
+  .vl-tab.is-remind{--tc:linear-gradient(90deg,#a5772a,#c6974a)}
+  .vl-tab.is-disp{--tc:linear-gradient(90deg,#3d5578,#5b739a)}
+  .vl-tab.is-help{--tc:linear-gradient(90deg,#8a5a6a,#a87788)}
+  .vl-tab.is-admin{--tc:linear-gradient(90deg,#5b4a7a,#7a6a9a)}
+  .vl-tab.is-out{--tc:linear-gradient(90deg,#7a1d16,#9e2b22)}
+  .vl-book:not(.is-open) .vl-tabs{visibility:hidden}
+  @media (prefers-reduced-motion:no-preference){
+    .vl-book.is-open .vl-tab{animation:vlTabIn .45s calc(.5s + var(--i) * 70ms) cubic-bezier(.2,.8,.3,1.2) both}
+  }
+  /* ปุ่มปิดแผ่น: ไม่ต้องมีแถบหัวทึบ */
+  html:has(#vacCard:not([hidden])) body[data-sheet="acct"] #authCard .sheet-head.vc-prof{justify-content:flex-end;padding:10px 14px 0 !important;border-bottom:0 !important;min-height:0;background:transparent !important}
+  html:has(#vacCard:not([hidden])) body[data-sheet="acct"] #authCard .sheet-head.vc-prof .sheet-close{width:38px;height:38px}
+}
+@keyframes vlTabIn{from{transform:translateX(-40px)}}
