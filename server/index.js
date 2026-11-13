@@ -316,6 +316,33 @@ const FOLLOWUP_PER_HOUR = 15;
 const FOLLOWUP_MAX_Q = 300;
 const followupHits = new Map(); // userId -> { count, resetAt }
 
+// ----- ค่าเฉลี่ยคะแนนสุขภาพสัญญา (เทียบกับสัญญาประเภทเดียวกันที่ตรวจในเว็บ) -----
+// คิดสูตรเดียวกับหน้าเว็บ (health.js): 100 − สำคัญ 15 − ควรระวัง 7 − เล็กน้อย 2 (ต่ำสุด 5) · ใช้เฉพาะตัวเลขรวม ไม่ส่งข้อมูลรายฉบับ
+// แสดงเฉพาะกลุ่มที่มีอย่างน้อย 5 ฉบับ · จำผลไว้ 1 ชั่วโมง
+let benchCache = null, benchAt = 0;
+app.get('/api/bench', async (req, res) => {
+  try {
+    if (!benchCache || Date.now() - benchAt > 60 * 60 * 1000) {
+      const { rows } = await pool.query(
+        `SELECT contract_type, result->>'detected_type' AS dt, result->'items' AS items FROM inspections
+          WHERE created_at > now() - interval '365 days' ORDER BY created_at DESC LIMIT 5000`);
+      const W = { check_detail: 15, caution: 7, low: 2 }, acc = {}, all = { s: 0, n: 0 };
+      for (const r of rows) {
+        const items = Array.isArray(r.items) ? r.items : [];
+        let sc = 100; for (const it of items) sc -= W[it && it.level] ?? 2;
+        sc = items.length ? Math.max(5, sc) : 100;
+        const t = r.contract_type && r.contract_type !== 'unsure' ? r.contract_type : (r.dt || 'other');
+        (acc[t] = acc[t] || { s: 0, n: 0 }).s += sc; acc[t].n += 1; all.s += sc; all.n += 1;
+      }
+      const types = {};
+      for (const [k, v] of Object.entries(acc)) if (v.n >= 5) types[k] = { avg: Math.round(v.s / v.n), n: v.n };
+      benchCache = { all: all.n >= 5 ? { avg: Math.round(all.s / all.n), n: all.n } : null, types };
+      benchAt = Date.now();
+    }
+    res.set('Cache-Control', 'public, max-age=600').json(benchCache);
+  } catch (err) { console.error('[bench] failed:', err.message); res.json({ all: null, types: {} }); }
+});
+
 // ----- เสียงสรุป: รายการเสียงให้ลูกค้าเลือก + ตัวอย่างเสียง -----
 app.get('/api/voices', async (req, res) => {
   try { const voices = (await listVoices()).map(v => ({ ...v, sample: previewText(v) })); res.json({ voices, source: voiceSource() }); warmPreviews(); }   // มีคนเปิดรายการเสียง = เตรียมตัวอย่างทุกเสียงไว้เลย
