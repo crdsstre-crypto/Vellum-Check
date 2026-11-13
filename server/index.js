@@ -33,6 +33,7 @@ import { createPromptPayPayment, confirmAndCredit, getPaymentStatus, PACKAGES } 
 import { logCheck, saveFeedback, adminStats, FEEDBACK_REASONS } from './stats.js';
 import { getDaily, checkIn, redeem } from './daily.js';
 import { fastStatic, cacheHeader } from './fastStatic.js';
+import { cleanPayload, createShare, getShare, deleteShare, SHARE_DAYS } from './share.js';
 import { listReminders, addReminders, updateReminder, deleteReminder, cleanReminder, buildIcs, MAX_BATCH, MAX_REMINDERS } from './reminders.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -440,6 +441,57 @@ app.post('/api/explain', async (req, res) => {
     console.error('[explain] failed:', err.message);
     res.status(502).json({ error: 'อธิบายไม่สำเร็จตอนนี้ ลองใหม่อีกครั้ง' });
   }
+});
+
+// ---------- ลิงก์แชร์ผลตรวจ (อ่านอย่างเดียว · หมดอายุ 7 วัน · ปิดบังข้อมูลส่วนตัว) ----------
+const shareHits = new Map();   // userId -> { n, resetAt } จำกัด 30 ลิงก์ต่อวัน
+app.post('/api/share', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'เข้าสู่ระบบก่อนจึงจะสร้างลิงก์แชร์ได้', login: true });
+    const now = Date.now();
+    let h = shareHits.get(user.id); if (!h || h.resetAt <= now) h = { n: 0, resetAt: now + 24 * 60 * 60 * 1000 };
+    if (h.n >= 30) return res.status(429).json({ error: 'วันนี้สร้างลิงก์ครบ 30 ลิงก์แล้ว ลองใหม่พรุ่งนี้' });
+    const payload = cleanPayload(req.body?.result, { quotes: req.body?.quotes !== false, typeText: req.body?.typeText, title: req.body?.title });
+    if (!payload || !payload.items.length) return res.status(400).json({ error: 'ไม่มีผลตรวจที่จะแชร์' });
+    const out = await createShare(user.id, payload);
+    h.n += 1; shareHits.set(user.id, h);
+    res.json({ id: out.id, url: `/s/${out.id}`, expiresAt: out.expiresAt, days: SHARE_DAYS });
+  } catch (err) {
+    console.error('[share] create failed:', err.message);
+    res.status(500).json({ error: 'สร้างลิงก์ไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+app.get('/api/share/:id', async (req, res) => {
+  try {
+    res.setHeader('Cache-Control', 'no-store');
+    res.setHeader('X-Robots-Tag', 'noindex');
+    const s = await getShare(req.params.id);
+    if (!s) return res.status(404).json({ error: 'ไม่พบลิงก์นี้ หรือเจ้าของยกเลิกแล้ว' });
+    if (s.expired) return res.status(410).json({ error: 'ลิงก์นี้หมดอายุแล้ว (เปิดได้ 7 วันหลังสร้าง)' });
+    res.json({ result: s.payload, createdAt: s.createdAt, expiresAt: s.expiresAt });
+  } catch (err) {
+    console.error('[share] get failed:', err.message);
+    res.status(500).json({ error: 'เปิดลิงก์ไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+app.delete('/api/share/:id', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน' });
+    const n = await deleteShare(user.id, String(req.params.id || ''));
+    if (!n) return res.status(404).json({ error: 'ไม่พบลิงก์นี้' });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('[share] delete failed:', err.message);
+    res.status(500).json({ error: 'ยกเลิกลิงก์ไม่สำเร็จ' });
+  }
+});
+// หน้าเปิดลิงก์แชร์
+app.get('/s/:id', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('X-Robots-Tag', 'noindex');
+  res.sendFile(path.join(__dirname, '..', 'public', 'share.html'));
 });
 
 app.post('/api/followup', async (req, res) => {
