@@ -60,7 +60,27 @@
       b.setAttribute('aria-label', on ? 'หยุดฟัง' : 'ฟังตัวอย่างเสียง');
     });
   }
+  var talk = null;
+  function stopTalk() { if (talk) { talk.stop(); if (talk.root && talk.root.parentNode) talk.root.parentNode.removeChild(talk.root); talk = null; } }
+  /* ฟังตัวอย่าง = เวลลัมพูดให้ดู (ตัวละคร + คำบรรยาย) ใต้รายการเสียง */
+  function playTalk(id, btn) {
+    var v = voices.filter(function (x) { return x.id === id; })[0] || {};
+    if (playing === id && talk) { if (talk.audio.paused) talk.play(); else talk.stop(); return; }
+    stop(); stopTalk();
+    var stage = box.querySelector('.vpk-stage');
+    talk = window.VCTalk.mount(stage, { src: blobs[id] || purl(id), text: v.sample || 'ตัวอย่างเสียง', title: 'ตัวอย่างเสียง ' + (v.name || ''), autoplay: true, compact: true });
+    if (!talk) return;
+    playing = id; var a = talk.audio;
+    var started = false, slow = setTimeout(function () { if (!started && playing === id) note('กำลังเตรียมเสียงครั้งแรก รอสักครู่…'); }, 1500);
+    btn.classList.add('is-load');
+    a.addEventListener('playing', function () { started = true; clearTimeout(slow); note(''); btn.classList.remove('is-load'); paintBtns(); });
+    a.addEventListener('pause', function () { if (playing === id) { playing = a.ended ? '' : playing; } paintBtns(); [].forEach.call(box.querySelectorAll('.vpk-p'), function (b) { if (b.getAttribute('data-id') === id && a.paused) b.classList.remove('is-play'); }); });
+    a.addEventListener('ended', function () { playing = ''; paintBtns(); });
+    a.addEventListener('error', function () { clearTimeout(slow); note(''); btn.classList.remove('is-load'); playing = ''; paintBtns(); if (!started) { stopTalk(); err('ฟังตัวอย่างไม่ได้ตอนนี้ ลองใหม่อีกครั้ง'); } });
+    setTimeout(function () { if (talk && talk.root.getBoundingClientRect().bottom > innerHeight) talk.root.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 60);
+  }
   function play(id, btn) {
+    if (window.VCTalk) return playTalk(id, btn);
     if (playing === id) { stop(); return; }
     stop();
     btn.classList.add('is-load'); btn.innerHTML = LOAD + '<span class="vpk-bars"><i></i><i></i><i></i></span>';
@@ -78,6 +98,7 @@
 
   function render() {
     if (!box) return;
+    stopTalk();
     var cur = current();
     box.innerHTML = '<div class="vpk-h"><span>เลือกเสียงที่ใช้สรุป</span><small>กด ▶ เพื่อฟังตัวอย่าง</small></div>' +
       '<div class="vpk-g' + (voices.some(function (v) { return v.desc; }) ? ' has-desc' : '') + '" role="radiogroup" aria-label="เลือกเสียงที่ใช้สรุป">' + voices.map(function (v, i) {
@@ -88,8 +109,8 @@
             (g ? '<i class="vpk-sx ' + g + '">' + (g === 'f' ? '♀ หญิง' : '♂ ชาย') + '</i>' : '') +
             (on ? '<i class="vpk-ok">✓ เลือกอยู่</i>' : '') + '</span>' +
             (v.desc ? '<small>' + esc(v.desc) + '</small>' : (!g && !on ? '<small>แตะเพื่อเลือก</small>' : '')) + '</span>' +
-          '<button type="button" class="vpk-p" data-id="' + esc(v.id) + '" aria-label="ฟังตัวอย่างเสียง">' + PLAY + '<span class="vpk-bars"><i></i><i></i><i></i></span></button></div>';
-      }).join('') + '</div><p class="vpk-note" hidden></p><p class="vpk-err" hidden></p>';
+          '<button type="button" class="vpk-p" data-id="' + esc(v.id) + '" aria-label="ฟังตัวอย่างเสียง">' + LOAD + PLAY + '<span class="vpk-bars"><i></i><i></i><i></i></span></button></div>';
+      }).join('') + '</div><p class="vpk-note" hidden></p><p class="vpk-err" hidden></p><div class="vpk-stage"></div>';
     paintBtns();
   }
   function choose(id) {
@@ -114,7 +135,7 @@
   function sync() {
     var cb = document.getElementById('voiceOpt'); if (!box || !cb) return;
     box.hidden = !(cb.checked && voices.length > 1);
-    if (box.hidden) stop(); else prefetch();
+    if (box.hidden) { stop(); stopTalk(); } else prefetch();
   }
   function mount() {
     var cb = document.getElementById('voiceOpt'); if (!cb) return;
