@@ -10,6 +10,15 @@
   'use strict';
   var LANG = 'th';
   try { LANG = localStorage.getItem('vc_lang') === 'en' ? 'en' : 'th'; } catch (e) {}
+  /* ?lang=en|th ในลิงก์ (ใช้ตอนสลับภาษา) มีผลเหนือค่าที่จำไว้ แล้วลบออกจากแถบที่อยู่ */
+  try {
+    var qm = /[?&]lang=(en|th)\b/.exec(location.search);
+    if (qm) {
+      LANG = qm[1]; localStorage.setItem('vc_lang', LANG);
+      var q = location.search.replace(/([?&])lang=(en|th)(&|$)/, function (m, a, b, c) { return c ? a : ''; }).replace(/([?&])_l=\d+(&|$)/, function (m, a, c) { return c ? a : ''; }).replace(/[?&]$/, '');
+      history.replaceState(history.state, '', location.pathname + q + location.hash);
+    }
+  } catch (e) {}
   var root = document.documentElement;
   root.setAttribute('data-lang', LANG);
   /* สไตล์ของปุ่มสลับภาษา (ฝังไว้ในไฟล์นี้ ไม่ต้องมีไฟล์ CSS เพิ่ม) */
@@ -77,7 +86,15 @@
   if (LANG === 'en') { root.classList.add('i18n-wait'); setTimeout(function () { root.classList.remove('i18n-wait'); }, 1500); }
   window.VCLang = {
     get: function () { return LANG; },
-    set: function (l) { l = l === 'en' ? 'en' : 'th'; if (l === LANG) return; notice(l, function () { try { localStorage.setItem('vc_lang', l); } catch (e) {} location.reload(); }); }
+    set: function (l) {
+      l = l === 'en' ? 'en' : 'th'; if (l === LANG) return;
+      notice(l, function () {
+        try { localStorage.setItem('vc_lang', l); } catch (e) {}
+        /* เปิดหน้าใหม่ด้วย ?lang= (ไม่ใช้ reload: บาง iPhone ไม่ยอมโหลดซ้ำ) */
+        var q = location.search.replace(/[?&](lang=(en|th)|_l=\d+)/g, '').replace(/^&/, '?');
+        location.href = location.pathname + (q ? q + '&' : '?') + 'lang=' + l + '&_l=' + Date.now() + location.hash;
+      });
+    }
   };
 
   /* ---------- แจ้งก่อนเปลี่ยนภาษา: เป็นแค่การแปลเพื่อความสะดวก ฉบับภาษาไทยมีผลเหนือกว่า ใช้กฎหมายไทย ไม่ใช่คำปรึกษากฎหมาย ---------- */
@@ -114,7 +131,7 @@
     document.addEventListener('keydown', esc);
     w.addEventListener('click', function (e) {
       if (e.target === w || e.target.closest('.vc-ln-no')) close();
-      else if (e.target.closest('.vc-ln-ok') && !ok.disabled) close(go);
+      else if (e.target.closest('.vc-ln-ok') && !ok.disabled) { ok.querySelector('span').textContent = 'กำลังเปลี่ยน… · Switching…'; ok.disabled = true; go(); }
     });
     /* ให้อ่านก่อน 3 วินาที: แถบทองวิ่งเต็มปุ่ม แล้วปุ่มถึงกดได้ */
     setTimeout(function () { if (!gone) { ok.disabled = false; ok.classList.add('is-ready'); } }, 3000);
