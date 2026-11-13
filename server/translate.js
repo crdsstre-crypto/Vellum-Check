@@ -18,13 +18,13 @@ function remember(k, v) {
   cache.set(k, v);
 }
 
-// จำกัดต่อ IP: 80 คำขอ / 10 นาที
+// จำกัดต่อ IP: 400 คำขอ / 10 นาที (ข้อความที่จำไว้แล้วไม่เสียค่า AI)
 const hits = new Map();
 export function allowTranslate(ip) {
   const now = Date.now();
   let h = hits.get(ip);
   if (!h || h.resetAt <= now) h = { count: 0, resetAt: now + 10 * 60 * 1000 };
-  if (h.count >= 80) return false;
+  if (h.count >= 400) return false;
   h.count += 1; hits.set(ip, h);
   if (hits.size > 5000) for (const [k, v] of hits) if (v.resetAt <= now) hits.delete(k);
   return true;
@@ -33,6 +33,7 @@ export function allowTranslate(ip) {
 // ตรวจว่าคำแปลเป็นภาษาที่ขอจริง: จีนต้องมีอักษรจีน · อังกฤษต้องไม่มีอักษรไทยเหลือเป็นส่วนใหญ่
 function okLang(v, lang) {
   const thai = (v.match(/[\u0E00-\u0E7F]/g) || []).length;
+  if (!/[A-Za-z\u0E01-\u0E3A\u0E40-\u0E4E\u3400-\u9FFF]/.test(v)) return true;   // มีแต่ตัวเลข/สัญลักษณ์ เช่น ฿199 → ใช้ได้
   if (lang === 'zh') {
     const cjk = (v.match(/[\u3400-\u9FFF]/g) || []).length, latin = (v.match(/[A-Za-z]/g) || []).length;
     if (!cjk && (latin > 3 || thai > 0)) return false;
@@ -49,17 +50,9 @@ function parseArray(raw, n) {
   return arr.map(x => (typeof x === 'string' ? x : ''));
 }
 
-export async function translateTexts(texts, lang) {
-  const out = new Array(texts.length), todo = [];
-  texts.forEach((t, i) => {
-    const hit = cache.get(lang + '\u0000' + t);
-    if (hit != null) out[i] = hit; else todo.push(i);
-  });
-  if (!todo.length) return out;
-
+async function callAI(src, lang) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY is not set');
-  const src = todo.map(i => texts[i]);
   const system = [
     `You translate short Thai user-interface texts of a Thai contract-checking website into ${LANG_NAME[lang]}.`,
     'Input: a JSON array of Thai strings. Output: ONLY a JSON array of the same length and order with the translations. No comments, no markdown.',
@@ -79,7 +72,35 @@ export async function translateTexts(texts, lang) {
   if (!res.ok) throw new Error('translate AI status ' + res.status);
   const data = await res.json();
   const text = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
-  const tr = parseArray(text, src.length);
+  return parseArray(text, src.length);
+}
+
+// แปลเป็นชุดละ 20 พร้อมกัน · ชุดไหนพัง (AI ตอบผิดรูปแบบ) แบ่งครึ่งลองใหม่ ข้อความเดียวที่ยังพังได้ null ไม่ทำให้ข้อความอื่นพังตาม
+async function robust(src, lang, depth = 0) {
+  if (src.length > 20) {
+    const parts = [];
+    for (let i = 0; i < src.length; i += 20) parts.push(src.slice(i, i + 20));
+    return (await Promise.all(parts.map(p => robust(p, lang, depth)))).flat();
+  }
+  try { return await callAI(src, lang); }
+  catch (err) {
+    if (/ANTHROPIC_API_KEY|AI status/.test(err.message)) throw err;   // AI ล่ม/ไม่มีคีย์ → ให้หน้าเว็บรอแล้วลองใหม่เอง
+    if (src.length === 1 || depth > 4) { console.error('[translate] gave up:', err.message); return src.map(() => ''); }
+    const h = Math.ceil(src.length / 2);
+    return [...await robust(src.slice(0, h), lang, depth + 1), ...await robust(src.slice(h), lang, depth + 1)];
+  }
+}
+
+export async function translateTexts(texts, lang) {
+  const out = new Array(texts.length), todo = [];
+  texts.forEach((t, i) => {
+    const hit = cache.get(lang + '\u0000' + t);
+    if (hit != null) out[i] = hit; else todo.push(i);
+  });
+  if (!todo.length) return out;
+
+  const src = todo.map(i => texts[i]);
+  const tr = await robust(src, lang);
   todo.forEach((i, k) => {
     let v = tr[k] && tr[k].trim() ? tr[k] : null;
     if (v && !okLang(v, lang)) v = null;   // ได้ผิดภาษา (เช่น ขอจีนแต่ได้อังกฤษ) → ไม่ใช้และไม่จำ
