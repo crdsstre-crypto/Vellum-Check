@@ -36,6 +36,10 @@ const FALLBACK = [   // เสียงฝรั่งพูดไทยจะ�
   { id: 'JBFqnCBsd6RMkjVDRZzb', name: 'George', gender: 'ผู้ชาย' },
 ];
 const GENDER = { female: 'ผู้หญิง', male: 'ผู้ชาย' };
+// เสียงที่ให้ลูกค้าเลือก (แก้ที่นี่ที่เดียว ไม่ต้องตั้งค่าใน Render) · ถ้าตั้ง ELEVENLABS_VOICES ใน Render จะใช้ค่านั้นแทน
+const BUILTIN = [
+  { id: 'tKtPl8obOBs5uPMei6yN', name: 'Ohm', gender: 'ผู้ชาย', desc: 'เสียงเล่าเรื่อง อธิบายชัด เป็นธรรมชาติ สไตล์ผู้ประกาศข่าว' },
+];
 function shortName(n) { return String(n || '').split(/\s+[-–|]\s+/)[0].trim().slice(0, 24) || 'เสียง'; }
 
 export async function listVoices() {
@@ -48,35 +52,15 @@ export async function listVoices() {
       // รูปแบบ "id:ชื่อ:เพศ:คำอธิบาย" เช่น "abc123:Ohm:ชาย:เสียงเล่าเรื่อง อธิบายชัด" (เพศ/คำอธิบายใส่หรือไม่ก็ได้)
       const [id, name = '', g = '', ...d] = x.split(':').map(y => y.trim());
       const gender = /หญิง|female|^f$|^w$/i.test(g) ? 'ผู้หญิง' : /ชาย|male|^m$/i.test(g) ? 'ผู้ชาย' : '';
-      return { id, name: name || 'เสียง', gender, desc: d.join(':').slice(0, 80) };
+      const b = BUILTIN.find(x => x.id === id) || {};   // ตั้งใน Render ไว้ไม่ครบ → เติมเพศ/คำอธิบายจากรายการในโค้ด
+      return { id, name: name || b.name || 'เสียง', gender: gender || b.gender || '', desc: d.join(':').slice(0, 80) || b.desc || '' };
     });
-  } else if (process.env.ELEVENLABS_API_KEY) {
-    try {
-      const r = await fetch(`${EL}/voices`, { headers: { 'xi-api-key': process.env.ELEVENLABS_API_KEY }, signal: AbortSignal.timeout(10000) });
-      if (r.ok) {
-        const d = await r.json();
-        const map = v => ({ id: v.voice_id, name: shortName(v.name), gender: GENDER[String(v.labels?.gender || '').toLowerCase()] || '' });
-        const all = d.voices || [];
-        out = all.filter(v => v.category !== 'premade' || v.voice_id === def).map(map);
-        // ยังมีเสียงของตัวเองไม่ถึง 2 เสียง → ใช้เสียง Default ของ ElevenLabs ไปก่อน (ใช้ได้ถึงสิ้นปี 2026 แล้วหายเอง)
-        if (out.length < 2 && Date.now() < Date.UTC(2027, 0, 1)) {
-          const pref = ['Sarah', 'George', 'Matilda', 'Will', 'Jessica', 'Brian'];
-          const pre = all.filter(v => v.category === 'premade' && v.voice_id !== def)
-            .sort((a, b) => ((pref.indexOf(shortName(a.name)) + 99) % 99) - ((pref.indexOf(shortName(b.name)) + 99) % 99))
-            .map(map);
-          // สลับหญิง/ชาย ให้มีให้เลือกทั้งสองแบบ
-          const f = pre.filter(v => v.gender === 'ผู้หญิง'), m = pre.filter(v => v.gender !== 'ผู้หญิง'), mix = [];
-          for (let i = 0; mix.length < 6 && (i < f.length || i < m.length); i++) { if (f[i]) mix.push(f[i]); if (m[i] && mix.length < 6) mix.push(m[i]); }
-          out = out.concat(mix);
-        }
-      } else { console.error('[voice] list voices status', r.status); bad = true; lastErr = 'status ' + r.status; }
-    } catch (e) { console.error('[voice] list voices:', e.message); bad = true; lastErr = e.message.slice(0, 60); }
-  }
+  } else out = BUILTIN.slice();
   // คีย์ ElevenLabs บางแบบไม่มีสิทธิ์อ่านรายการเสียง (voices_read) → ใช้รายการเสียง Default ที่รู้จักแทน (ใช้ได้ถึงสิ้นปี 2026)
   if (!env && out.length < 2 && Date.now() < Date.UTC(2027, 0, 1)) {
-    lastSource = bad ? 'fallback (list failed: ' + lastErr + ')' : 'fallback';
+    lastSource = 'fallback';
     for (const v of FALLBACK) if (out.length < 7 && v.id !== def && !out.some(x => x.id === v.id)) out.push(v);
-  } else lastSource = env ? 'env' : 'account';
+  } else lastSource = env ? 'env' : 'builtin';
   if (def && !out.some(v => v.id === def)) out.unshift({ id: def, name: 'เสียงหลัก', gender: '' });
   out.sort((a, b) => (b.id === def) - (a.id === def));
   out = out.filter(v => /^[A-Za-z0-9]{8,40}$/.test(v.id)).slice(0, 8);
@@ -100,7 +84,7 @@ function pvReady() {
   if (!pvTable) pvTable = pool.query('CREATE TABLE IF NOT EXISTS voice_previews (id TEXT NOT NULL, v INTEGER NOT NULL, audio BYTEA NOT NULL, PRIMARY KEY (id, v))').catch(e => { pvTable = null; throw e; });
   return pvTable;
 }
-const pkey = id => id + '|' + (process.env.ELEVENLABS_MODEL || 'eleven_v3');   // เปลี่ยนโมเดลเสียง = สร้างตัวอย่างใหม่
+const pkey = id => id + '|' + (process.env.ELEVENLABS_MODEL || 'eleven_v4_turbo');   // เปลี่ยนโมเดลเสียง = สร้างตัวอย่างใหม่
 const previews = new Map();
 export async function voicePreview(id) {
   if (previews.has(id)) return previews.get(id);
@@ -126,6 +110,7 @@ export async function warmPreviews() {
   catch (e) { console.error('[voice] warm:', e.message); }
 }
 
+const badModel = new Set();
 // คืนค่าเป็น base64 ของไฟล์ mp3
 export async function synthesizeSpeech(text, chosenVoice) {
   const apiKey = process.env.ELEVENLABS_API_KEY;
@@ -134,12 +119,19 @@ export async function synthesizeSpeech(text, chosenVoice) {
     throw new Error('ยังไม่ได้ตั้งค่า ELEVENLABS_API_KEY หรือ ELEVENLABS_VOICE_ID');
   }
 
-  const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voiceId)}`, {
-    method: 'POST',
-    headers: { 'xi-api-key': apiKey, 'Content-Type': 'application/json', Accept: 'audio/mpeg' },
-    // ต้องใช้โมเดลที่รองรับภาษาไทยจริง (eleven_multilingual_v2 ไม่มีภาษาไทยในรายการ)
-    body: JSON.stringify({ text, model_id: process.env.ELEVENLABS_MODEL || 'eleven_v3' }),
-  });
+  // ใช้ Eleven v4 Turbo (เร็วกว่า v3 มาก และเสียงไทยอย่าง Ohm ถูกปรับมาสำหรับ v4) ถ้าบัญชี/เสียงใช้ไม่ได้ ถอยไปใช้ v3 อัตโนมัติ
+  const models = [...new Set([process.env.ELEVENLABS_MODEL || 'eleven_v4_turbo', 'eleven_v3'])];
+  let res;
+  for (const m of models) {
+    if (badModel.has(m) && m !== models[models.length - 1]) continue;
+    res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voiceId)}`, {
+      method: 'POST',
+      headers: { 'xi-api-key': apiKey, 'Content-Type': 'application/json', Accept: 'audio/mpeg' },
+      body: JSON.stringify({ text, model_id: m }),
+    });
+    if (res.ok || res.status === 401 || res.status === 429 || res.status >= 500) break;
+    if (m !== models[models.length - 1]) { console.error(`[voice] model ${m} ใช้ไม่ได้ (${res.status}) → ลอง v3`); badModel.add(m); }
+  }
   if (!res.ok) {
     // บันทึกเฉพาะข้อความสั้น ๆ จากผู้ให้บริการ ไม่บันทึกข้อความสัญญาหรือคีย์
     const body = await res.json().catch(() => ({}));
