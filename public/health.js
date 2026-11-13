@@ -10,11 +10,11 @@
   // ลำดับ = ลำดับการจับคำ (ด้านที่เฉพาะเจาะจงกว่ามาก่อน เช่น "ค่าซ่อม" = ความรับผิด ไม่ใช่การเงิน)
   var ORDER = ['end', 'liab', 'rights', 'money', 'time'];
   var CATS = [
-    { k: 'money', n: 'การเงิน', ic: '<rect x="3" y="6" width="18" height="12" rx="2.5"/><circle cx="12" cy="12" r="2.6"/><path d="M6.5 9.5v5M17.5 9.5v5"/>', re: /ค่าเช่า|เงิน|ค่าปรับ|ดอกเบี้ย|ราคา|ชำระ|จ่าย|มัดจำ|บาท|ค่าจ้าง|ค่าคอม|ค่าธรรมเนียม|ค่าไฟ|ค่าน้ำ|ภาษี|%|ค่า|pay|fee|price|interest|deposit/i },
-    { k: 'end', n: 'การยกเลิก / ต่อสัญญา', ic: '<path d="M4 12a8 8 0 1 0 2.3-5.6"/><path d="M4 4v4.5h4.5"/>', re: /ยกเลิก|เลิกสัญญา|บอกเลิก|ต่อสัญญา|ต่ออายุ|ย้ายออก|สิ้นสุด|หมดสัญญา|ผิดสัญญา|ผิดนัด|cancel|terminat|renew/i },
-    { k: 'liab', n: 'ความรับผิด', ic: '<path d="M12 3.5 5 6.2v5.3c0 4.2 2.9 7.6 7 9 4.1-1.4 7-4.8 7-9V6.2z"/><path d="M12 8.5v4.5M12 15.8v.2"/>', re: /รับผิด|เสียหาย|ซ่อม|ชดใช้|ชดเชย|ค้ำ|ยึด|ฟ้อง|ศาล|หลักประกัน|สูญหาย|ของหาย|liab|damage|indemn/i },
-    { k: 'time', n: 'เวลาและกำหนดส่ง', ic: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>', re: /วัน|เวลา|กำหนด|ล่วงหน้า|ระยะ|ส่งมอบ|ล่าช้า|เกินเวลา|โอที|ชั่วโมง|เดือน|ปี|deadline|delay|notice/i },
-    { k: 'rights', n: 'สิทธิ์ของคุณ', ic: '<circle cx="12" cy="8.5" r="3.5"/><path d="M5 19.5c1.2-3.4 3.8-5 7-5s5.8 1.6 7 5"/>', re: /ความเป็นส่วนตัว|เข้าห้อง|เข้าบ้าน|เข้าตรวจ|ข้อมูลส่วนตัว|ความลับ|เปิดเผย|ห้าม|แข่งขัน|คู่แข่ง|เลี้ยงสัตว์|ลิขสิทธิ์|ทรัพย์สินทางปัญญา|privacy|confiden|compete/i }
+    { k: 'money', n: 'การเงิน', s: 'เงิน', ic: '<rect x="3" y="6" width="18" height="12" rx="2.5"/><circle cx="12" cy="12" r="2.6"/><path d="M6.5 9.5v5M17.5 9.5v5"/>', re: /ค่าเช่า|เงิน|ค่าปรับ|ดอกเบี้ย|ราคา|ชำระ|จ่าย|มัดจำ|บาท|ค่าจ้าง|ค่าคอม|ค่าธรรมเนียม|ค่าไฟ|ค่าน้ำ|ภาษี|%|ค่า|pay|fee|price|interest|deposit/i },
+    { k: 'end', n: 'การยกเลิก / ต่อสัญญา', s: 'ยกเลิก', ic: '<path d="M4 12a8 8 0 1 0 2.3-5.6"/><path d="M4 4v4.5h4.5"/>', re: /ยกเลิก|เลิกสัญญา|บอกเลิก|ต่อสัญญา|ต่ออายุ|ย้ายออก|สิ้นสุด|หมดสัญญา|ผิดสัญญา|ผิดนัด|cancel|terminat|renew/i },
+    { k: 'liab', n: 'ความรับผิด', s: 'รับผิด', ic: '<path d="M12 3.5 5 6.2v5.3c0 4.2 2.9 7.6 7 9 4.1-1.4 7-4.8 7-9V6.2z"/><path d="M12 8.5v4.5M12 15.8v.2"/>', re: /รับผิด|เสียหาย|ซ่อม|ชดใช้|ชดเชย|ค้ำ|ยึด|ฟ้อง|ศาล|หลักประกัน|สูญหาย|ของหาย|liab|damage|indemn/i },
+    { k: 'time', n: 'เวลาและกำหนดส่ง', s: 'เวลา', ic: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>', re: /วัน|เวลา|กำหนด|ล่วงหน้า|ระยะ|ส่งมอบ|ล่าช้า|เกินเวลา|โอที|ชั่วโมง|เดือน|ปี|deadline|delay|notice/i },
+    { k: 'rights', n: 'สิทธิ์ของคุณ', s: 'สิทธิ์', ic: '<circle cx="12" cy="8.5" r="3.5"/><path d="M5 19.5c1.2-3.4 3.8-5 7-5s5.8 1.6 7 5"/>', re: /ความเป็นส่วนตัว|เข้าห้อง|เข้าบ้าน|เข้าตรวจ|ข้อมูลส่วนตัว|ความลับ|เปิดเผย|ห้าม|แข่งขัน|คู่แข่ง|เลี้ยงสัตว์|ลิขสิทธิ์|ทรัพย์สินทางปัญญา|privacy|confiden|compete/i }
   ];
   var BYK = {}; CATS.forEach(function (c) { BYK[c.k] = c; });
   var LV = { check_detail: 'สำคัญ', caution: 'ควรระวัง', low: 'เล็กน้อย' };
@@ -96,15 +96,44 @@
     '.vhs-goal .gi{flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:9px;background:color-mix(in srgb,var(--gc,#34d399) 20%,transparent);font-size:15px}' +
     '.vhs-goal.win{border-style:solid}' +
     '.vhs-bench{margin:10px 2px 0;font:400 12.5px/1.5 Prompt,sans-serif;color:#a1a1aa}.vhs-bench b{color:#e4e4e7;font-weight:600}.vhs-bench .up{color:#34d399}.vhs-bench .dn{color:#f5a3a5}' +
-    '.vhs-list li{display:flex;gap:6px;align-items:stretch}.vhs-list li > button[data-go]{flex:1;min-width:0}' +
-    '.vhs-list .vhs-fix{flex:none;width:auto !important;min-height:0 !important;display:flex;align-items:center;gap:5px;padding:0 10px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:transparent;color:#bdbdc4;font:500 12px/1 Prompt,sans-serif;cursor:pointer;white-space:nowrap;transition:background .2s,color .2s,border-color .2s}' +
+    /* (1) ย่อ-ขยาย */
+    '.vhs-more{display:none}.vhs.open .vhs-more{display:block;animation:vhsIn .35s cubic-bezier(.25,.8,.3,1)}' +
+    '@keyframes vhsIn{0%{opacity:0;transform:translateY(-6px)}100%{opacity:1;transform:none}}' +
+    '.vhs.open .vhs-mini{display:none}' +
+    '.vhs-mini{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:14px;padding:12px 8px 8px;border-radius:14px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06)}' +
+    '.vhs-mb{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}' +
+    '.vhs-mb b{font:700 15px/1 Prompt,sans-serif;color:var(--cc);font-variant-numeric:tabular-nums}' +
+    '.vhs-mb i{position:relative;width:12px;height:44px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden}' +
+    '.vhs-mb u{position:absolute;left:0;right:0;bottom:0;height:0;border-radius:6px;background:var(--cc);transition:height 1s cubic-bezier(.2,.8,.2,1)}' +
+    '.vhs-mb small{font:500 11.5px/1.2 Prompt,sans-serif;color:#a1a1aa;white-space:nowrap}' +
+    '.vhs-acts .vhs-tog{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:0 14px;border-radius:12px;border:1px solid color-mix(in srgb,var(--hc) 45%,transparent);background:color-mix(in srgb,var(--hc) 10%,transparent);color:#ececef;font:600 13.5px/1 Prompt,sans-serif;cursor:pointer}' +
+    '.vhs-tog svg{width:16px !important;height:16px !important;max-width:none !important;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s}' +
+    '.vhs.open .vhs-tog svg{transform:rotate(180deg)}' +
+    '.vhs-acts .vhs-share{flex:none}' +
+    /* (2)+(3) รายการประเด็นแบบการ์ดเล็ก */
+    '.vhs-list li{display:block;padding:9px 10px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.025);transition:opacity .25s,background .25s}' +
+    '.vhs-list li.f{background:rgba(52,211,153,.05);border-color:rgba(52,211,153,.2)}' +
+    '.vhs-it-top{display:flex;align-items:flex-start;gap:8px}' +
+    '.vhs-list .vhs-it-top button[data-go]{flex:1;min-width:0;padding:0 !important;border:0 !important;background:transparent !important;font:500 13.5px/1.4 Prompt,sans-serif}' +
+    '.vhs-list .vhs-it-top button[data-go] i{margin-top:6px}' +
+    '.vhs-pts{flex:none;padding:3px 8px;border-radius:999px;background:color-mix(in srgb,var(--lc) 18%,transparent);color:var(--lc);font:700 12px/1.2 Prompt,sans-serif;font-variant-numeric:tabular-nums}' +
+    '.vhs-list li.f .vhs-pts{background:rgba(52,211,153,.15);color:#34d399}' +
+    '.vhs-it-act{display:flex;align-items:center;gap:6px;margin-top:8px;padding-left:16px}' +
+    '.vhs-it-act small{margin-right:auto;font:500 11.5px/1 Prompt,sans-serif;color:var(--lc)}' +
+    '.vhs-list .vhs-hw,.vhs-list .vhs-fix{min-height:32px !important;padding:0 10px !important;border-radius:9px;border:1px solid rgba(255,255,255,.12);background:transparent;color:#d4d4d8;font:500 12px/1 Prompt,sans-serif;cursor:pointer;white-space:nowrap}' +
+    '.vhs-list .vhs-hw[aria-expanded="true"]{background:rgba(245,196,81,.1);border-color:rgba(245,196,81,.4);color:#f5d27a}' +
+    '.vhs-it-how{margin:8px 0 2px 16px;padding:10px 12px;border-radius:10px;background:rgba(245,196,81,.06);border:1px solid rgba(245,196,81,.2)}' +
+    '.vhs-it-how[hidden]{display:none}' +
+    '.vhs-it-how p{margin:0 0 6px;font:400 13px/1.55 Prompt,sans-serif;color:#e4e4e7}.vhs-it-how p b{display:block;margin-bottom:1px;font:600 11.5px/1.3 Prompt,sans-serif;color:#f5c451}' +
+    '.vhs-it-how .vhs-copy{width:100%;min-height:36px;margin-top:4px;border-radius:9px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:#ececef;font:600 12.5px/1 Prompt,sans-serif;cursor:pointer}' +
+    '.vhs-list .vhs-fix{flex:none;width:auto !important;display:flex;align-items:center;gap:5px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:transparent;color:#bdbdc4;font:500 12px/1 Prompt,sans-serif;cursor:pointer;white-space:nowrap;transition:background .2s,color .2s,border-color .2s}' +
     '.vhs-list .vhs-fix i{width:15px;height:15px;border-radius:5px;border:1.6px solid currentColor;display:grid;place-items:center;font-style:normal;font-size:10px;line-height:1}' +
     '.vhs-list .vhs-fix.on{background:rgba(52,211,153,.14);border-color:rgba(52,211,153,.5);color:#34d399}' +
-    '.vhs-list li.f button[data-go] span{text-decoration:line-through;text-decoration-color:rgba(255,255,255,.35);color:#8d8d96}' +
+    '.vhs-list li.f .vhs-it-top button[data-go] span{text-decoration:line-through;text-decoration-color:rgba(255,255,255,.35);color:#8d8d96}' +
     '.vhs-done{margin-left:6px;font:500 11px/1 Prompt,sans-serif;color:#34d399}' +
     '.vhs-how li.f{opacity:.45}.vhs-how li.f b{color:#34d399 !important}' +
     '.vhs-acts{display:flex;gap:8px;margin-top:12px}' +
-    '.vhs-share{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 14px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:#ececef;font:600 13.5px/1 Prompt,sans-serif;cursor:pointer}' +
+    '.vhs-share{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 14px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:#ececef;font:600 13.5px/1 Prompt,sans-serif;cursor:pointer}' +
     '.vhs-share svg{width:17px !important;height:17px !important;max-width:none !important;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}' +
     '.vhs-conf{position:absolute;left:68px;top:68px;width:0;height:0;pointer-events:none;z-index:3}' +
     '.vhs-conf i{position:absolute;width:6px;height:9px;border-radius:1.5px;opacity:0;animation:vhsConf 1.2s cubic-bezier(.15,.6,.35,1) forwards}' +
@@ -144,19 +173,29 @@
       '<div><p class="vhs-k">คะแนนสุขภาพสัญญา<span class="vhs-done"></span></p><span class="vhs-band"></span><p class="vhs-msg"></p></div></div>' +
       '<p class="vhs-bench" hidden></p>' +
       '<button type="button" class="vhs-goal" hidden></button>' +
-      '<div class="vhs-cats">' + CATS.map(function (c) {
+      '<div class="vhs-mini">' + CATS.map(function (c) {
+        return '<span class="vhs-mb" data-k="' + c.k + '"><b></b><i><u></u></i><small>' + c.s + '</small></span>';
+      }).join('') + '</div>' +
+      '<div class="vhs-more"><div class="vhs-cats">' + CATS.map(function (c) {
         var n = h0.per[c.k].items.length;
         return '<button type="button" class="vhs-cat" data-k="' + c.k + '"' + (n ? ' aria-expanded="false"' : ' disabled') + '>' +
           '<span class="vhs-ci"><svg viewBox="0 0 24 24" aria-hidden="true">' + c.ic + '</svg></span><span class="vhs-cn">' + c.n + '</span>' +
           '<span class="vhs-cs"></span><span class="vhs-bar"><i></i></span></button>' +
-          (n ? '<ul class="vhs-list" data-for="' + c.k + '" hidden>' + h0.per[c.k].items.map(function (x) {
-            return '<li data-i="' + x.i + '"><button type="button" data-go="' + x.i + '" style="--lc:' + LC[x.l] + '"><i></i><span>' + esc(x.it.title || 'ประเด็น') + '</span><b>' + LV[x.l] + '</b></button>' +
-              '<button type="button" class="vhs-fix" data-fix="' + x.i + '" aria-pressed="false"><i></i>แก้แล้ว</button></li>';
+          (n ? '<ul class="vhs-list" data-for="' + c.k + '" hidden>' + h0.per[c.k].items.slice().sort(function (a, b) { return OVR[b.l] - OVR[a.l] || a.i - b.i; }).map(function (x) {
+            var fix = String(x.it.suggested_fix || '').trim(), neg = String(x.it.how_to_negotiate || '').trim();
+            return '<li data-i="' + x.i + '" style="--lc:' + LC[x.l] + '"><div class="vhs-it-top"><button type="button" data-go="' + x.i + '"><i></i><span>' + esc(x.it.title || 'ประเด็น') + '</span></button>' +
+                '<span class="vhs-pts">+' + OVR[x.l] + '</span></div>' +
+              '<div class="vhs-it-act"><small>' + LV[x.l] + '</small>' +
+                (fix || neg ? '<button type="button" class="vhs-hw" data-how="' + x.i + '" aria-expanded="false">💡 ขอแก้ยังไง</button>' : '') +
+                '<button type="button" class="vhs-fix" data-fix="' + x.i + '" aria-pressed="false"><i></i>แก้แล้ว</button></div>' +
+              (fix || neg ? '<div class="vhs-it-how" hidden>' + (fix ? '<p><b>ขอแก้เป็น</b>' + esc(fix) + '</p>' : '') + (neg ? '<p><b>วิธีคุย</b>' + esc(neg) + '</p>' : '') +
+                '<button type="button" class="vhs-copy" data-copy="' + x.i + '">📋 คัดลอกข้อความไปคุย</button></div>' : '') + '</li>';
           }).join('') + '</ul>' : '');
       }).join('') + '</div>' +
       '<details class="vhs-how"><summary>คะแนนนี้คิดยังไง</summary><ol></ol>' +
       '<p>เริ่มที่ 100 แล้วหักตามประเด็นที่ระบบพบ: สำคัญ −15 · ควรระวัง −7 · เล็กน้อย −2 (ต่ำสุด 5) · คะแนนแต่ละด้านหัก −35 / −18 / −6 · ข้อที่ติ๊ก "แก้แล้ว" ไม่หักคะแนน · เป็นตัวช่วยดูภาพรวม ไม่ใช่ความเห็นทางกฎหมาย</p></details>' +
-      '<div class="vhs-acts"><button type="button" class="vhs-share">' + ICON_SHARE + 'แชร์คะแนน (ไม่มีข้อความสัญญา)</button></div>';
+      '</div><div class="vhs-acts"><button type="button" class="vhs-tog" aria-expanded="false"><span>ดูรายละเอียดและวิธีแก้</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>' +
+      '<button type="button" class="vhs-share" aria-label="แชร์คะแนน (ไม่มีข้อความสัญญา)">' + ICON_SHARE + '<span>แชร์</span></button></div>';
     var $ = function (q) { return el.querySelector(q); };
 
     function confetti() {
@@ -190,10 +229,15 @@
         btn.style.setProperty('--cc', cc);
         btn.querySelector('.vhs-cs').innerHTML = p.s + '<em>' + (!n ? 'ไม่พบปัญหา' : open ? open + ' ประเด็น' : 'แก้ครบแล้ว ✓') + '</em>';
         if (started) btn.querySelector('.vhs-bar i').style.width = p.s + '%';
+        var mb = el.querySelector('.vhs-mb[data-k="' + c.k + '"]');
+        mb.style.setProperty('--cc', cc); mb.querySelector('b').textContent = p.s;
+        if (started) mb.querySelector('u').style.height = Math.max(4, p.s) + '%';
+        mb.title = c.n + ' ' + p.s + '/100';
       });
       [].forEach.call(el.querySelectorAll('.vhs-list li'), function (li) {
         var i = li.getAttribute('data-i'), on = !!fixed[i], fb = li.querySelector('.vhs-fix');
         li.classList.toggle('f', on); fb.classList.toggle('on', on); fb.setAttribute('aria-pressed', String(on));
+        var pt = li.querySelector('.vhs-pts'); if (pt) pt.textContent = on ? '✓' : '+' + OVR[lv(result.items[i])];
         fb.innerHTML = '<i>' + (on ? '✓' : '') + '</i>' + (on ? 'แก้แล้ว' : 'แก้แล้ว?');
       });
       // คะแนนนี้คิดยังไง
@@ -251,8 +295,18 @@
         else { var it = document.getElementById('issue-' + ii); if (it) { it.open = true; it.scrollIntoView({ behavior: 'smooth', block: 'center' }); } }
         return;
       }
+      if (e.target.closest('.vhs-tog')) { setOpen(!el.classList.contains('open')); return; }
+      var hw = e.target.closest('[data-how]');
+      if (hw) { var box = hw.closest('li').querySelector('.vhs-it-how'), o = box.hidden; box.hidden = !o; hw.setAttribute('aria-expanded', String(o)); hw.textContent = o ? '💡 ซ่อนวิธีแก้' : '💡 ขอแก้ยังไง'; return; }
+      var cp = e.target.closest('[data-copy]');
+      if (cp) {
+        var it2 = result.items[+cp.getAttribute('data-copy')] || {}, txt = 'ขอปรับแก้เรื่อง "' + (it2.title || '').replace(/\?$/, '') + '" ครับ/ค่ะ' + (it2.suggested_fix ? '\nเสนอให้แก้เป็น: ' + it2.suggested_fix : '');
+        copyText(txt, function (ok) { cp.textContent = ok ? '✓ คัดลอกแล้ว วางในแชตได้เลย' : 'คัดลอกไม่ได้ ลองกดค้างที่ข้อความแทน'; setTimeout(function () { cp.textContent = '📋 คัดลอกข้อความไปคุย'; }, 2200); });
+        return;
+      }
       var gl = e.target.closest('.vhs-goal[data-open]');
-      if (gl) {   // เปิดด้านที่มีข้อที่ควรแก้ให้เห็นทันที
+      if (gl) {
+        setOpen(true);   // เปิดด้านที่มีข้อที่ควรแก้ให้เห็นทันที
         var want = gl.getAttribute('data-open').split(','), cats = {};
         compute(result, fixed).log.forEach(function (x) { if (want.indexOf(String(x.i)) >= 0) cats[x.c] = 1; });
         Object.keys(cats).forEach(function (k) { var b = el.querySelector('.vhs-cat[data-k="' + k + '"]'), l = el.querySelector('.vhs-list[data-for="' + k + '"]'); if (b && l) { b.setAttribute('aria-expanded', 'true'); l.hidden = false; } });
@@ -265,6 +319,16 @@
       c.setAttribute('aria-expanded', String(open)); if (list) list.hidden = !open;
     });
 
+    function setOpen(o) {
+      el.classList.toggle('open', o);
+      var t = el.querySelector('.vhs-tog'); t.setAttribute('aria-expanded', String(o)); t.querySelector('span').textContent = o ? 'ย่อการ์ด' : 'ดูรายละเอียดและวิธีแก้';
+      if (!o) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    function copyText(t, cb) {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function () { cb(true); }, function () { cb(fallback()); });
+      else cb(fallback());
+      function fallback() { try { var a = document.createElement('textarea'); a.value = t; a.style.cssText = 'position:fixed;opacity:0'; document.body.appendChild(a); a.select(); var ok = document.execCommand('copy'); a.remove(); return ok; } catch (e) { return false; } }
+    }
     function play() { if (started) return; started = true; shown = 0; render(); }
     if ('IntersectionObserver' in window) {
       var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { play(); io.disconnect(); } }, { threshold: .3 }); io.observe(el);
