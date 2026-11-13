@@ -3993,7 +3993,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     window.addEventListener('resize', function () { if (!box.hidden) { edge(dEl); link(); } });
     /* มือถือ: เลื่อนรายการแล้วหัวยุบ เห็นการ์ดมากขึ้น */
     var lst = box.querySelector('.vsl-list');
-    lst.addEventListener('scroll', function () { var on = lst.scrollTop > 24; if (box.classList.contains('is-scrolled') !== on) box.classList.toggle('is-scrolled', on); }, { passive: true });
+    /* v289: ไม่ยุบหัวแล้ว — การยุบทำให้ความสูงรายการเปลี่ยนกลางการเลื่อน การ์ดกระตุก/หัวกระพริบ · แถบเขียวเลื่อนไปพร้อมรายการแทน (placeHero) */
   }
   var cur = -1, lastScroll = 0;
   function esc(t) { return t.replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); }
@@ -4213,9 +4213,18 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     cur = -1; box.classList.remove('is-view'); box.querySelector('.vsl-view').hidden = true;
     var list = box.querySelector('.vsl-list'); list.scrollTop = lastScroll;
   }
+  /* แถบ "ดูผลตรวจตัวอย่างได้ฟรี": จอแคบอยู่บนสุดของรายการ (เลื่อนหายไปเองอย่างเป็นธรรมชาติ) · จอกว้างแบ่งสองฝั่งอยู่ที่เดิม */
+  function placeHero() {
+    var hero = box.querySelector('.vsl-hero'), list = box.querySelector('.vsl-list'), chips = box.querySelector('.vsl-chips');
+    if (!hero || !list || !chips) return;
+    if (box.classList.contains('vsl-split')) { if (hero.parentNode !== chips.parentNode) chips.parentNode.insertBefore(hero, chips); }
+    else if (list.firstChild !== hero) list.insertBefore(hero, list.firstChild);
+  }
   function render() {
     Array.prototype.forEach.call(box.querySelectorAll('.vsl-chip'), function (c) { c.classList.toggle('is-on', c.dataset.f === flt); });
-    var list = box.querySelector('.vsl-list'); list.innerHTML = '';
+    var list = box.querySelector('.vsl-list'), hero = box.querySelector('.vsl-hero');
+    if (hero && hero.parentNode === list) list.removeChild(hero);
+    list.innerHTML = '';
     L.forEach(function (s, i) {
       if (flt !== 'all' && s[0] !== flt) return;
       var b = document.createElement('button'); b.type = 'button'; b.className = 'vsl-item'; b.dataset.i = i;
@@ -4225,6 +4234,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       b.style.setProperty('--k', list.children.length);
       list.appendChild(b);
     });
+    placeHero();
     list.scrollTop = 0;
     if (box.classList.contains('vsl-split')) {
       var first = list.querySelector('.vsl-item'), keep = list.querySelector('.vsl-item[data-i="' + cur + '"]');
