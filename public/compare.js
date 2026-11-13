@@ -129,15 +129,58 @@
     '.vcp-side label{display:flex;align-items:center;gap:8px;font:600 13.5px/1.3 Prompt,sans-serif}' +
     '.vcp-side label i{font-style:normal;padding:2px 8px;border-radius:7px;font-size:11.5px}' +
     '.vcp-side.o label i{background:rgba(255,255,255,.08);color:#c9c9cf}.vcp-side.n label i{background:rgba(127,181,255,.16);color:#9cc5ff}' +
-    '.vcp-side textarea{width:100%;min-height:180px;resize:vertical;padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:#0d0e10;color:#ececef;font:400 15px/1.6 Sarabun,Prompt,sans-serif;--ff:Sarabun,Prompt,sans-serif}' +
+    '.vcp-side textarea{display:block;width:100%;min-height:270px;resize:vertical;padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:#0d0e10;color:#ececef;font:400 15px/1.6 Sarabun,Prompt,sans-serif;--ff:Sarabun,Prompt,sans-serif}' +
     '.vcp-side textarea:focus{outline:none;border-color:#7fb5ff}' +
     '.vcp-tools{display:flex;flex-wrap:wrap;gap:6px}' +
     '.vcp-tools button,.vcp-tools label.f{display:inline-flex;align-items:center;gap:5px;min-height:32px !important;padding:0 10px !important;border-radius:9px;border:1px solid rgba(255,255,255,.12);background:transparent;color:#c9c9cf;font:500 12px/1 Prompt,sans-serif;cursor:pointer}' +
     '.vcp-tools input[type=file]{display:none}' +
     '.vcp-tools small{align-self:center;margin-left:auto;font:400 11.5px/1 Prompt,sans-serif;color:#71717a}' +
-    '.vcp-go{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:50px;margin-top:14px;border:0;border-radius:14px;background:linear-gradient(135deg,#9cc5ff,#5b9bff);color:#06142b;font:700 15px/1 Prompt,sans-serif;cursor:pointer}' +
+    '.vcp-top{display:flex;align-items:center;gap:8px;margin-bottom:12px}' +
+    '.vcp-tabs{display:flex;flex:1;gap:4px;padding:4px;border-radius:13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07)}' +
+    '.vcp .vcp-tabs button{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;min-height:38px !important;padding:0 8px !important;border:0;border-radius:10px;background:transparent;color:#9a9aa3;font:600 13.5px/1 Prompt,sans-serif;cursor:pointer;transition:background .2s,color .2s}' +
+    '.vcp .vcp-tabs button[aria-selected="true"]{background:#24262c;color:#fff;box-shadow:0 2px 8px -2px rgba(0,0,0,.6)}' +
+    '.vcp-tabs i{width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(255,255,255,.25);display:grid;place-items:center;font:700 10px/1 Prompt,sans-serif;font-style:normal;transition:all .25s}' +
+    '.vcp-tabs .ok i{border-color:#34d399;background:#34d399;color:#06281b}.vcp-tabs .ok i::before{content:"✓"}' +
+    '.vcp .vcp-demo{flex:none;min-height:46px !important;padding:0 12px !important;border-radius:12px;border:1px dashed rgba(245,196,81,.45);background:rgba(245,196,81,.07);color:#f5d27a;font:600 12.5px/1.25 Prompt,sans-serif;cursor:pointer;max-width:42%}' +
+    '@media (min-width:768px){.vcp-tabs{display:none}.vcp-top{justify-content:flex-end}.vcp .vcp-demo{max-width:none;min-height:36px !important}}' +
+    '@media (max-width:767px){.vcp-in[data-t="o"] .vcp-side.n,.vcp-in[data-t="n"] .vcp-side.o{display:none}.vcp-side label i{display:none}.vcp-side textarea{min-height:46vh}}' +
+    '.vcp-side label .vcp-st{margin-left:auto;color:#34d399;font-weight:700}' +
+    '.vcp-box{position:relative}' +
+    '.vcp-e0{position:absolute;inset:1px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px;border-radius:13px;text-align:center;cursor:text;' +
+      'background:radial-gradient(120% 80% at 50% 0%,rgba(127,181,255,.08),transparent 60%),#0d0e10;border:1.5px dashed rgba(127,181,255,.25)}' +
+    '.vcp-side.n .vcp-e0{border-color:rgba(127,181,255,.4)}' +
+    '.vcp-box.has .vcp-e0,.vcp-box.typing .vcp-e0{display:none}' +
+    '.vcp-e0 .d{display:grid;place-items:center;width:52px;height:52px;border-radius:16px;background:rgba(127,181,255,.12);color:#9cc5ff;margin-bottom:4px;animation:vcpBob 3s ease-in-out infinite}' +
+    '.vcp-e0 .d svg{width:26px;height:26px}@keyframes vcpBob{50%{transform:translateY(-4px)}}' +
+    '.vcp-e0 b{font:700 15px/1.3 Prompt,sans-serif;color:#ececef}.vcp-e0 small{font:400 12px/1.4 Prompt,sans-serif;color:#8a8a93}' +
+    '.vcp-e0 .a{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:8px}' +
+    '.vcp .vcp-e0 .a button,.vcp .vcp-e0 .a label{display:inline-flex;align-items:center;gap:6px;min-height:44px !important;padding:0 16px !important;border-radius:12px;font:600 13.5px/1 Prompt,sans-serif;cursor:pointer}' +
+    '.vcp .vcp-e0 .pp{border:0;background:linear-gradient(135deg,#9cc5ff,#5b9bff);color:#06142b;box-shadow:0 6px 18px -8px rgba(91,155,255,.8)}' +
+    '.vcp .vcp-e0 .a label{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);color:#e4e4e7}.vcp-e0 input[type=file]{display:none}' +
+    '.vcp .vcp-e0 .lk{margin-top:4px;min-height:32px !important;padding:0 8px !important;border:0;background:transparent;color:#7fb5ff;font:500 12.5px/1 Prompt,sans-serif;text-decoration:underline;text-underline-offset:3px;cursor:pointer}' +
+    '.vcp-e0 .lk0{margin-top:6px;font:400 11.5px/1 Prompt,sans-serif;color:#5f5f68}' +
+    '.vcp-side:not(.has) .vcp-tools{display:none}' +
+    '.vcp-tools small{order:-1;margin-left:0 !important;margin-right:auto;color:#9a9aa3 !important}.vcp-tools small b{color:#34d399}' +
+    '.vcp-go{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:52px;margin-top:14px;border:0;border-radius:14px;background:linear-gradient(135deg,#9cc5ff,#5b9bff);color:#06142b;font:700 15px/1 Prompt,sans-serif;cursor:pointer;overflow:hidden;transition:transform .15s,box-shadow .3s,background .3s}' +
+    '.vcp-go .ic{display:inline-flex}' +
+    '.vcp-go.ready{box-shadow:0 0 0 1px rgba(156,197,255,.5),0 10px 30px -8px rgba(91,155,255,.85);animation:vcpRdy .5s cubic-bezier(.3,1.6,.5,1)}' +
+    '.vcp-go.ready::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.45) 50%,transparent 65%);transform:translateX(-100%);animation:vcpShine 2.6s ease-in-out .4s infinite}' +
+    '.vcp-go.ready:active{transform:scale(.97)}' +
+    '@keyframes vcpRdy{0%{transform:scale(.96)}60%{transform:scale(1.03)}100%{transform:none}}@keyframes vcpShine{0%,60%{transform:translateX(-100%)}100%{transform:translateX(100%)}}' +
+    '.vcp-scan{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:rgba(19,20,23,.92);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:0;transition:opacity .25s}' +
+    '.vcp-scan.in{opacity:1}.vcp-scan b{font:600 14px/1 Prompt,sans-serif;color:#cfe2ff}' +
+    '.vcp-scan .pp{position:relative;width:130px;height:120px}' +
+    '.vcp-scan .pg{position:absolute;top:0;width:76px;height:100px;padding:14px 10px;border-radius:9px;background:#f3ecdc;box-shadow:0 10px 24px -8px rgba(0,0,0,.7);display:flex;flex-direction:column;gap:8px}' +
+    '.vcp-scan .pg i{height:5px;border-radius:3px;background:#cfc5ae}.vcp-scan .pg i:nth-child(2n){width:70%}' +
+    '.vcp-scan .pg.a{left:0;transform:rotate(-8deg);animation:vcpPa 1.1s cubic-bezier(.5,0,.3,1) forwards}' +
+    '.vcp-scan .pg.b{right:0;background:#e3eeff;transform:rotate(8deg);animation:vcpPb 1.1s cubic-bezier(.5,0,.3,1) forwards}.vcp-scan .pg.b i{background:#b8cdf0}' +
+    '.vcp-scan .pg.b i:nth-child(3){background:#f5c451}.vcp-scan .pg.b i:nth-child(5){background:#ff8a8e}' +
+    '@keyframes vcpPa{to{left:27px;transform:rotate(-3deg)}}@keyframes vcpPb{to{right:27px;transform:rotate(3deg)}}' +
+    '.vcp-scan .ln{position:absolute;left:10px;right:10px;top:0;height:3px;border-radius:2px;background:#7fb5ff;box-shadow:0 0 14px 3px rgba(127,181,255,.8);animation:vcpLn 1.1s ease-in-out .15s infinite alternate}' +
+    '@keyframes vcpLn{from{top:4px}to{top:104px}}' +
+    '@media (prefers-reduced-motion:reduce){.vcp-go.ready,.vcp-go.ready::after,.vcp-e0 .d{animation:none}}' +
     '.vcp-go svg{width:20px !important;height:20px !important;flex:none}' +
-    '.vcp-go:disabled{opacity:.45;cursor:default}' +
+    '.vcp-go:disabled{opacity:1;background:rgba(255,255,255,.06);color:#8a8a93;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);cursor:default}' +
     '.vcp-note{margin:10px 2px 0;font:400 11.5px/1.5 Prompt,sans-serif;color:#71717a}' +
     /* ผล */
     '.vcp-sum{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}' +
@@ -216,23 +259,26 @@
   var el = null, state = { res: null, f: 'chg' };
 
   function say(m) { if (typeof toast === 'function') toast(m); }
-  function readFile(file, ta) {
+  function readFile(file, ta, k) {
     if (!file) return;
-    if (/\.txt$/i.test(file.name)) { var r = new FileReader(); r.onload = function () { ta.value = String(r.result || ''); upd(); }; r.readAsText(file); return; }
+    if (/\.txt$/i.test(file.name)) { var r = new FileReader(); r.onload = function () { ta.value = String(r.result || ''); filled(k); }; r.readAsText(file); return; }
     var fr = new FileReader();
     fr.onload = function () {
       ta.value = ''; ta.placeholder = 'กำลังอ่านไฟล์…'; upd();
       fetch('/api/extract', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: file.name, data: String(fr.result).split(',')[1] || '' }) })
         .then(function (x) { return x.json().then(function (d) { return { ok: x.ok, d: d }; }); })
-        .then(function (r) { ta.placeholder = 'วางข้อความสัญญา'; if (r.ok && r.d.text) { ta.value = r.d.text; upd(); } else say((r.d && r.d.error) || 'อ่านไฟล์ไม่สำเร็จ'); }, function () { ta.placeholder = 'วางข้อความสัญญา'; say('อ่านไฟล์ไม่สำเร็จ'); });
+        .then(function (r) { ta.placeholder = 'วางข้อความสัญญา'; if (r.ok && r.d.text) { ta.value = r.d.text; filled(k); } else say((r.d && r.d.error) || 'อ่านไฟล์ไม่สำเร็จ'); }, function () { ta.placeholder = 'วางข้อความสัญญา'; say('อ่านไฟล์ไม่สำเร็จ'); });
     };
     fr.readAsDataURL(file);
   }
+  var DOC = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>';
   function side(cls, tag, title, hint) {
-    return '<div class="vcp-side ' + cls + '"><label for="vcp-' + cls + '"><i>' + tag + '</i>' + title + '</label>' +
-      '<textarea id="vcp-' + cls + '" placeholder="วางข้อความสัญญา' + hint + '" spellcheck="false"></textarea>' +
-      '<div class="vcp-tools">' + (cls === 'o' ? '<button type="button" data-fill>ใช้ข้อความในช่องตรวจ</button>' : '') +
-      '<label class="f">เลือกไฟล์<input type="file" accept=".txt,.pdf,.docx,image/*"></label><button type="button" data-clr>ล้าง</button><small></small></div></div>';
+    return '<div class="vcp-side ' + cls + '"><label for="vcp-' + cls + '"><i>' + tag + '</i>' + title + '<span class="vcp-st"></span></label>' +
+      '<div class="vcp-box"><textarea id="vcp-' + cls + '" placeholder="วางข้อความสัญญา' + hint + '" spellcheck="false"></textarea>' +
+      '<div class="vcp-e0" data-focus><span class="d">' + DOC + '</span><b>วางสัญญา' + hint + '</b><small>วางข้อความ หรือเลือกไฟล์ PDF / Word / รูป</small>' +
+      '<div class="a"><button type="button" class="pp" data-paste>📋 วางจากคลิปบอร์ด</button><label class="f">📄 เลือกไฟล์<input type="file" accept=".txt,.pdf,.docx,image/*"></label></div>' +
+      (cls === 'o' ? '<button type="button" class="lk" data-fill>ใช้ข้อความที่อยู่ในช่องตรวจ</button>' : '<span class="lk0">หรือแตะเพื่อพิมพ์เอง</span>') + '</div></div>' +
+      '<div class="vcp-tools"><small></small><label class="f">เปลี่ยนไฟล์<input type="file" accept=".txt,.pdf,.docx,image/*"></label><button type="button" data-clr>ล้าง</button></div></div>';
   }
   function build() {
     el = document.createElement('div'); el.className = 'vcp'; el.hidden = true; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', 'เทียบสัญญา 2 ฉบับ');
@@ -250,30 +296,81 @@
       if (e.target.closest('[data-ncopy]')) { var tx2 = el.querySelector('.vcp-negp textarea').value; if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(tx2).then(function () { say('คัดลอกข้อความต่อรองแล้ว'); }, function () { say('คัดลอกไม่ได้'); }); else say('คัดลอกไม่ได้'); return; }
       if (e.target.closest('[data-nshare]')) { navigator.share({ text: el.querySelector('.vcp-negp textarea').value }).catch(function () {}); return; }
       var s = e.target.closest('.vcp-s'); if (s) { state.f = s.getAttribute('data-f'); list(); return; }
-      var fl = e.target.closest('[data-fill]'); if (fl) { var src = document.getElementById('input'); var ta = el.querySelector('#vcp-o'); if (src && src.value.trim()) { ta.value = src.value; upd(); } else say('ช่องตรวจยังไม่มีข้อความ'); return; }
-      var cl = e.target.closest('[data-clr]'); if (cl) { cl.closest('.vcp-side').querySelector('textarea').value = ''; upd(); }
+      var tb = e.target.closest('[data-tab]'); if (tb) { setTab(tb.getAttribute('data-tab')); return; }
+      if (e.target.closest('[data-vdemo]')) { el.querySelector('#vcp-o').value = SAMPLE_O; el.querySelector('#vcp-n').value = SAMPLE_N; tab = 'n'; upd(); say('ใส่สัญญาเช่าตัวอย่าง (ข้อมูลสมมติ) แล้ว กด "เทียบเลย" ได้เลย'); var g = el.querySelector('.vcp-go'); g && g.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+      var ps = e.target.closest('[data-paste]'); if (ps) { paste(ps.closest('.vcp-side').classList.contains('o') ? 'o' : 'n'); return; }
+      var fl = e.target.closest('[data-fill]'); if (fl) { var src = document.getElementById('input'); var ta = el.querySelector('#vcp-o'); if (src && src.value.trim()) { ta.value = src.value; filled('o'); } else say('ช่องตรวจยังไม่มีข้อความ'); return; }
+      var cl = e.target.closest('[data-clr]'); if (cl) { cl.closest('.vcp-side').querySelector('textarea').value = ''; upd(); return; }
+      var fc = e.target.closest('[data-focus]'); if (fc && !e.target.closest('button,label')) { var bx = fc.closest('.vcp-box'); bx.classList.add('typing'); bx.querySelector('textarea').focus(); }
     });
-    el.addEventListener('change', function (e) { if (e.target.type === 'file') { readFile(e.target.files[0], e.target.closest('.vcp-side').querySelector('textarea')); e.target.value = ''; } });
+    el.addEventListener('change', function (e) { if (e.target.type === 'file') { var sd = e.target.closest('.vcp-side'); readFile(e.target.files[0], sd.querySelector('textarea'), sd.classList.contains('o') ? 'o' : 'n'); e.target.value = ''; } });
+    el.addEventListener('focusout', function (e) { var bx = e.target.closest && e.target.closest('.vcp-box'); if (bx && e.target.tagName === 'TEXTAREA') setTimeout(function () { bx.classList.remove('typing'); }, 150); });
+    el.addEventListener('paste', function (e) { var t = e.target; if (t.id === 'vcp-o') setTimeout(function () { filled('o'); }, 0); });
     el.addEventListener('input', upd);
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && el && !el.hidden) close(); });
   }
   var saved = { o: '', n: '' };
+  var tab = 'o';
+  var SAMPLE_O = 'สัญญาเช่าห้องพัก (ตัวอย่าง)\nข้อ 1 ผู้ให้เช่าตกลงให้ นายตัวอย่าง นามสมมติ เช่าห้องเลขที่ 000 มีกำหนด 1 ปี\nข้อ 2 ค่าเช่าเดือนละ 8,000 บาท ชำระภายในวันที่ 5 ของทุกเดือน\nข้อ 3 หากชำระล่าช้า ผู้เช่าเสียค่าปรับวันละ 100 บาท\nข้อ 4 เงินประกัน 16,000 บาท ผู้ให้เช่าจะคืนภายใน 30 วันหลังย้ายออก โดยหักเฉพาะค่าเสียหายที่เกิดจากผู้เช่า\nข้อ 5 ค่าไฟฟ้าหน่วยละ 7 บาท ค่าน้ำตามจริง\nข้อ 6 ผู้ให้เช่าจะเข้าตรวจห้องได้โดยแจ้งล่วงหน้าอย่างน้อย 24 ชั่วโมง\nข้อ 7 ห้ามนำสัตว์เลี้ยงเข้ามาในห้อง\nข้อ 8 ผู้ให้เช่ารับผิดชอบซ่อมแซมความเสียหายที่เกิดจากการเสื่อมสภาพตามปกติ';
+  var SAMPLE_N = 'สัญญาเช่าห้องพัก (ตัวอย่าง)\nข้อ 1 ผู้ให้เช่าตกลงให้ นายตัวอย่าง นามสมมติ เช่าห้องเลขที่ 000 มีกำหนด 1 ปี\nข้อ 2 ค่าเช่าเดือนละ 8,500 บาท ชำระภายในวันที่ 1 ของทุกเดือน\nข้อ 3 หากชำระล่าช้า ผู้เช่าเสียค่าปรับวันละ 300 บาท\nข้อ 4 เงินประกัน 16,000 บาท ผู้ให้เช่ามีสิทธิ์หักได้ตามที่เห็นสมควร และจะคืนส่วนที่เหลือภายใน 60 วัน\nข้อ 5 ค่าไฟฟ้าหน่วยละ 9 บาท ค่าน้ำตามจริง\nข้อ 6 ผู้ให้เช่าเข้าตรวจห้องได้ทุกเวลาโดยไม่ต้องแจ้งล่วงหน้า\nข้อ 7 ห้ามนำสัตว์เลี้ยงเข้ามาในห้อง\nข้อ 9 สัญญานี้ต่ออายุอัตโนมัติคราวละ 1 ปี หากผู้เช่าไม่แจ้งยกเลิกล่วงหน้า 90 วัน\nข้อ 10 ผู้เช่าต้องทำความสะอาดห้องโดยบริษัทที่ผู้ให้เช่ากำหนดก่อนย้ายออก';
   function input() {
     var bd = el.querySelector('.vcp-bd');
-    bd.innerHTML = '<div class="vcp-in">' + side('o', 'ฉบับเดิม', 'ฉบับที่คุณมีอยู่', ' ฉบับเดิม') + side('n', 'ฉบับใหม่', 'ฉบับที่อีกฝ่ายแก้มา', ' ฉบับใหม่') + '</div>' +
-      '<button type="button" class="vcp-go" disabled>' + ICO + 'เทียบเลย</button><p class="vcp-note">เทียบในเครื่องของคุณ ไม่ใช้เครดิต และไม่ส่งข้อความไปที่ไหน · ไฟล์ PDF/Word/รูปต้องเข้าสู่ระบบเพื่ออ่านข้อความเหมือนช่องตรวจ</p>';
+    bd.innerHTML = '<div class="vcp-top"><div class="vcp-tabs" role="tablist"><button type="button" role="tab" data-tab="o"><i></i>ฉบับเดิม</button><button type="button" role="tab" data-tab="n"><i></i>ฉบับใหม่</button></div>' +
+      '<button type="button" class="vcp-demo" data-vdemo>✨ ลองด้วยสัญญาตัวอย่าง</button></div>' +
+      '<div class="vcp-in">' + side('o', 'ฉบับเดิม', 'ฉบับที่คุณมีอยู่', 'ฉบับเดิม') + side('n', 'ฉบับใหม่', 'ฉบับที่อีกฝ่ายแก้มา', 'ฉบับใหม่') + '</div>' +
+      '<button type="button" class="vcp-go" disabled><span class="ic">' + ICO + '</span><span class="t">เทียบเลย</span></button><p class="vcp-note">เทียบในเครื่องของคุณ ไม่ใช้เครดิต และไม่ส่งข้อความไปที่ไหน · ไฟล์ PDF/Word/รูปต้องเข้าสู่ระบบเพื่ออ่านข้อความเหมือนช่องตรวจ</p>';
     bd.querySelector('#vcp-o').value = saved.o; bd.querySelector('#vcp-n').value = saved.n;
+    tab = saved.o.trim() && !saved.n.trim() ? 'n' : 'o';
     el.querySelector('.vcp-ft').hidden = true; upd(); bd.scrollTop = 0;
   }
+  function setTab(t) {
+    tab = t; var inn = el.querySelector('.vcp-in'); if (!inn) return;
+    inn.setAttribute('data-t', t);
+    [].forEach.call(el.querySelectorAll('[data-tab]'), function (b) { b.setAttribute('aria-selected', String(b.getAttribute('data-tab') === t)); });
+  }
+  var lastFill = { o: false, n: false };
   function upd() {
     if (!el) return; var o = el.querySelector('#vcp-o'), n = el.querySelector('#vcp-n'), go = el.querySelector('.vcp-go'); if (!o || !n) return;
     saved.o = o.value; saved.n = n.value;
-    [o, n].forEach(function (t) { var s = t.closest('.vcp-side').querySelector('small'); s.textContent = t.value.trim() ? t.value.trim().length.toLocaleString() + ' ตัวอักษร' : ''; });
-    go.disabled = !(o.value.trim() && n.value.trim());
+    [o, n].forEach(function (t) {
+      var sd = t.closest('.vcp-side'), k = sd.classList.contains('o') ? 'o' : 'n', v = t.value.trim(), has = !!v;
+      sd.querySelector('.vcp-box').classList.toggle('has', has); sd.classList.toggle('has', has);
+      var cnt = has ? blocks(v).filter(function (b) { return b.no; }).length : 0;
+      sd.querySelector('.vcp-tools small').innerHTML = has ? '<b>✓</b> ' + (cnt ? cnt + ' ข้อ · ' : '') + v.length.toLocaleString() + ' ตัวอักษร' : '';
+      sd.querySelector('.vcp-st').textContent = has ? '✓' : '';
+      var tb = el.querySelector('[data-tab="' + k + '"]'); if (tb) tb.classList.toggle('ok', has);
+      lastFill[k] = has;
+    });
+    setTab(tab);
+    var ok = !!(o.value.trim() && n.value.trim()), miss = (o.value.trim() ? 0 : 1) + (n.value.trim() ? 0 : 1);
+    go.disabled = !ok; go.classList.toggle('ready', ok);
+    go.querySelector('.t').textContent = ok ? 'เทียบเลย' : miss === 2 ? 'วางสัญญาทั้ง 2 ฉบับก่อน' : 'วางอีก 1 ฉบับ (' + (o.value.trim() ? 'ฉบับใหม่' : 'ฉบับเดิม') + ')';
+  }
+  /* ถ้าวางฉบับเดิมเสร็จ และฉบับใหม่ยังว่าง → พาไปแท็บฉบับใหม่ */
+  function filled(k) {
+    upd();
+    if (k === 'o' && !saved.n.trim() && window.matchMedia('(max-width:767px)').matches) setTimeout(function () { setTab('n'); }, 350);
+  }
+  function paste(k) {
+    var ta = el.querySelector('#vcp-' + k);
+    if (!(navigator.clipboard && navigator.clipboard.readText)) { ta.focus(); say('กดค้างในกล่อง แล้วเลือก "วาง"'); return; }
+    navigator.clipboard.readText().then(function (t) {
+      if (t && t.trim()) { ta.value = t; filled(k); } else { ta.focus(); say('คลิปบอร์ดยังว่างอยู่ — คัดลอกข้อความสัญญามาก่อน'); }
+    }, function () { ta.focus(); say('กดค้างในกล่อง แล้วเลือก "วาง"'); });
   }
   function run() {
     var o = saved.o, n = saved.n; if (!o.trim() || !n.trim()) return;
-    state.res = compare(o, n); state.f = 'chg'; result();
+    var bd = el.querySelector('.vcp-bd'), go = el.querySelector('.vcp-go');
+    if (go) go.disabled = true;
+    var ov = document.createElement('div'); ov.className = 'vcp-scan';
+    ov.innerHTML = '<div class="pp"><div class="pg a"><i></i><i></i><i></i><i></i><i></i></div><div class="pg b"><i></i><i></i><i></i><i></i><i></i></div><div class="ln"></div></div><b>กำลังเทียบทีละข้อ…</b>';
+    el.querySelector('.vcp-card').appendChild(ov);
+    requestAnimationFrame(function () { ov.classList.add('in'); });
+    var t0 = Date.now(), res = compare(o, n), wait = Math.max(0, (window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1100) - (Date.now() - t0));
+    setTimeout(function () {
+      state.res = res; state.f = 'chg'; result();
+      ov.classList.remove('in'); setTimeout(function () { ov.remove(); }, 300);
+    }, wait);
   }
   /* ---------- (3) เงินที่เปลี่ยน ---------- */
   function money(r) {
