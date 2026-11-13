@@ -41,6 +41,7 @@ const BUILTIN = [
   { id: 'tKtPl8obOBs5uPMei6yN', name: 'Ohm', gender: 'ผู้ชาย', desc: 'เสียงเล่าเรื่อง อธิบายชัด เป็นธรรมชาติ สไตล์ผู้ประกาศข่าว' },
   { id: 'uI1epevl1X6hqrxEciKt', name: 'Kirin', gender: 'ผู้ชาย', desc: 'เสียงพูดสบาย ๆ เป็นกันเอง เหมือนคุยกับเพื่อน' },
   { id: 'u14IW5Q2cGXcEj6L2joU', name: 'Emily', gender: 'ผู้หญิง', desc: 'เสียงนุ่ม สุภาพ เป็นกันเอง สไตล์พอดแคสต์' },
+  { id: '7XW5JhaNn90bnFojQ5DA', name: 'Mali', gender: 'ผู้หญิง', desc: 'เสียงชัด อบอุ่น เป็นมิตร ฟังง่าย สไตล์ครูสอน' },
 ];
 function shortName(n) { return String(n || '').split(/\s+[-–|]\s+/)[0].trim().slice(0, 24) || 'เสียง'; }
 
