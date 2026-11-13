@@ -48,7 +48,14 @@
     '.vtk.is-play .vm-arm-r{animation:vtkWave 1.6s ease-in-out infinite;transform-origin:89px 72px;transform-box:view-box}' +
     '@keyframes vtkWave{0%,100%{transform:rotate(0)}50%{transform:rotate(-14deg)}}' +
     '.vtk-face-happy{display:none}.vtk.is-done .vtk-face-happy{display:inline}.vtk.is-done .vtk-face-talk{display:none}' +
-    '.vtk-compact{margin:12px 0 0;padding:12px;border-radius:18px}.vtk-compact .vtk-3d{height:126px}.vtk-compact .vtk-top{grid-template-columns:96px minmax(0,1fr)}.vtk-compact .vtk-ctl{margin-top:10px}.vtk-compact .vtk-pp{width:42px;height:42px}' +
+    '.vtk-compact{margin:12px 0 0;padding:12px;border-radius:18px}.vtk-compact .vtk-3d{height:126px}.vtk-compact .vtk-top{grid-template-columns:96px minmax(0,1fr)}.vtk-compact .vtk-ctl{margin-top:10px}' +
+    /* ปุ่มเล่น + ปุ่มฟังใหม่: วงกลมเท่ากันเป๊ะ ไอคอนอยู่กลาง (กันสไตล์ปุ่มของเว็บมาบีบ/ยืด) */
+    '.vtk .vtk-pp,.vtk .vtk-rp{box-sizing:border-box !important;flex:0 0 46px !important;width:46px !important;height:46px !important;min-width:46px !important;min-height:46px !important;max-width:46px !important;max-height:46px !important;' +
+      'padding:0 !important;margin:0 !important;border-radius:50% !important;aspect-ratio:1/1;display:flex !important;align-items:center !important;justify-content:center !important;line-height:0 !important;font-size:0 !important}' +
+    '.vtk .vtk-pp{border:0 !important;box-shadow:0 8px 18px -8px rgba(242,184,28,.8) !important}' +
+    '.vtk .vtk-rp{border:1.5px solid rgba(255,255,255,.18) !important;background:rgba(255,255,255,.06) !important}' +
+    '.vtk .vtk-pp svg{width:20px !important;height:20px !important}.vtk .vtk-rp svg{width:19px !important;height:19px !important}' +
+    '.vtk .vtk-pp.is-p svg{transform:translateX(1.5px)}' +
     '@media (max-width:520px){.vtk{padding:14px 12px 12px}.vtk-top{grid-template-columns:92px minmax(0,1fr);gap:10px}.vtk-3d{height:124px}.vtk-cap{font-size:14.5px}}' +
     '@media (prefers-reduced-motion:reduce){.vtk-fig{transition:none}.vtk-hint,.vtk.is-play .vm-arm-r{animation:none}}' +
     'html[data-theme="light"] .vtk{background:#fbf8f1;color:#2a2116;border-color:rgba(0,0,0,.08)}html[data-theme="light"] .vtk-bar b{background:rgba(0,0,0,.1)}';
@@ -105,7 +112,7 @@
     root.innerHTML = '<div class="vtk-top"><div class="vtk-3d"><span class="vtk-glow"></span><span class="vtk-floor"></span><div class="vtk-fig">' + figure() + '</div><span class="vtk-hint">แตะฟังได้เลย</span></div>' +
       '<div class="vtk-bub"><p class="vtk-who"><i></i>' + esc(o.title || 'เวลลัมสรุปให้ฟัง') + '</p><div class="vtk-cap" data-i18n-skip>' +
       W.map(function (w, i) { return '<span data-k="' + i + '">' + esc(w.t) + '</span>'; }).join('') + '</div></div></div>' +
-      '<div class="vtk-ctl"><button type="button" class="vtk-pp" aria-label="เล่นเสียงสรุป">' + PLAY + '</button>' +
+      '<div class="vtk-ctl"><button type="button" class="vtk-pp is-p" aria-label="เล่นเสียงสรุป">' + PLAY + '</button>' +
       '<div class="vtk-bar" role="slider" aria-label="ตำแหน่งเสียง" tabindex="0"><b><i></i></b><em></em></div>' +
       '<span class="vtk-t">0:00 / 0:00</span><button type="button" class="vtk-rp" aria-label="ฟังใหม่ตั้งแต่ต้น">' + REPLAY + '</button></div>';
     host.insertBefore(root, host.firstChild);   /* วางไว้บนสุดของกล่องผลตรวจ */
@@ -204,7 +211,7 @@
     function sync() {
       var on = !au.paused && !au.ended;
       root.classList.toggle('is-play', on);
-      pp.innerHTML = on ? PAUSE : PLAY; pp.setAttribute('aria-label', on ? 'หยุดชั่วคราว' : 'เล่นเสียงสรุป');
+      pp.innerHTML = on ? PAUSE : PLAY; pp.classList.toggle('is-p', !on); pp.setAttribute('aria-label', on ? 'หยุดชั่วคราว' : 'เล่นเสียงสรุป');
     }
     function play() {
       setupAudio(); root.classList.add('is-started'); root.classList.remove('is-done');
