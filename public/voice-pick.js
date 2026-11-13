@@ -35,9 +35,10 @@
     '@keyframes vpkB{from{height:3px}to{height:12px}}' +
     '@media (max-width:520px){.vpk{padding:12px}.vpk-g{grid-template-columns:1fr 1fr;gap:7px}.vpk-g.has-desc{grid-template-columns:1fr}.vpk-c{gap:8px;padding:9px 8px 9px 11px}.vpk-av{display:none}.vpk-h small{font-size:11px}}' +
     '.vpk-n{display:flex;align-items:center;flex-wrap:wrap;gap:5px 6px}.vpk-n b{display:inline}' +
-    '.vpk-sx,.vpk-ok{font:600 10.5px/1 Prompt,sans-serif;font-style:normal;padding:4px 7px;border-radius:999px;white-space:nowrap;--ff:Prompt,sans-serif}' +
+    '.vpk-sx,.vpk-ok,.vpk-rec{font:600 10.5px/1 Prompt,sans-serif;font-style:normal;padding:4px 7px;border-radius:999px;white-space:nowrap;--ff:Prompt,sans-serif}' +
     '.vpk-sx.m{color:#93c5fd;background:rgba(96,165,250,.14)}.vpk-sx.f{color:#f9a8d4;background:rgba(244,114,182,.14)}' +
     '.vpk-ok{color:#06281c;background:#34d399}' +
+    '.vpk-rec{color:#1a1305;background:linear-gradient(135deg,#ffe28a,#f2b81c)}' +
     '.vpk-t small{white-space:normal;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:4px}' +
     '.vpk-g.has-desc{grid-template-columns:1fr}' +
     '.vpk-err{margin:8px 2px 0;font:400 12px/1.4 Prompt,sans-serif;color:#fca5a5}' +
@@ -50,7 +51,7 @@
   var LOAD = '<span class="vpk-ring" aria-hidden="true"></span>';
   function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
-  function current() { return voices.some(function (v) { return v.id === sel; }) ? sel : (voices[0] ? voices[0].id : ''); }
+  function current() { if (voices.some(function (v) { return v.id === sel; })) return sel; var r = voices.filter(function (v) { return v.rec; })[0] || voices[0]; return r ? r.id : ''; }
   function stop() { if (audio) { try { audio.pause(); } catch (e) {} } audio = null; playing = ''; paintBtns(); }
   function paintBtns() {
     if (!box) return;
@@ -108,7 +109,7 @@
           '<span class="vpk-av" style="background:' + COL[i % COL.length] + '">' + esc(((v.name || '?').replace(/^[\u0E40-\u0E44]/, '').charAt(0) || '?').toUpperCase()) + '</span>' +
           '<span class="vpk-t"><span class="vpk-n"><b>' + esc(v.name) + '</b>' +
             (g ? '<i class="vpk-sx ' + g + '">' + (g === 'f' ? '♀ หญิง' : '♂ ชาย') + '</i>' : '') +
-            (on ? '<i class="vpk-ok">✓ เลือกอยู่</i>' : '') + '</span>' +
+            (v.rec ? '<i class="vpk-rec">⭐ แนะนำ</i>' : '') + (on ? '<i class="vpk-ok">✓ เลือกอยู่</i>' : '') + '</span>' +
             (v.desc ? '<small>' + esc(v.desc) + '</small>' : (!g && !on ? '<small>แตะเพื่อเลือก</small>' : '')) + '</span>' +
           '<button type="button" class="vpk-p" data-id="' + esc(v.id) + '" aria-label="ฟังตัวอย่างเสียง">' + LOAD + PLAY + '<span class="vpk-bars"><i></i><i></i><i></i></span></button></div>';
       }).join('') + '</div><p class="vpk-note" hidden></p><p class="vpk-err" hidden></p><div class="vpk-stage"></div>';
