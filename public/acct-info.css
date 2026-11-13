@@ -40,3 +40,46 @@ button.vai-c:active{background:rgba(255,255,255,.06)}
 .vai-c.is-full .vai-note{color:#ffb070;font-weight:600}
 
 @media (max-width:340px){#authLoggedIn .acct-detail > .vai{grid-template-columns:1fr}.vai-c.is-mail,.vai-c.is-hist{grid-column:auto}}
+
+/* ===== แผง "การแสดงผล" (extras.js v6) =====
+   (1) สวิตช์เลื่อนแทนช่องติ๊ก + ไอคอน · (2) ขนาดตัวอักษรมีคำกำกับ + ประโยคตัวอย่าง
+   (4) สวิตช์เสียงประกอบ · (5) "บันทึกแล้ว ✓" + ปุ่มคืนค่าเริ่มต้น */
+#dispPanel.vds{display:flex;flex-direction:column;gap:4px}
+#dispPanel.vds[hidden]{display:none !important}
+.vds-blk{padding:4px 0 12px;border-bottom:1px solid rgba(255,255,255,.07)}
+.vds-h{margin:0 0 9px;font-size:13px;font-weight:600;color:rgba(236,233,226,.62)}
+#authLoggedIn #dispPanel .vds-seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;border:1px solid rgba(255,255,255,.1) !important;border-radius:12px;background:rgba(0,0,0,.25);overflow:visible}
+#authLoggedIn #dispPanel .vds-seg button{width:auto !important;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:4px 0;border:0;border-radius:9px;
+  background:transparent;color:rgba(236,233,226,.7);font:inherit;cursor:pointer;transition:background-color .2s,color .2s}
+#authLoggedIn #dispPanel .vds-seg button b{font-weight:700;line-height:1.1}
+#authLoggedIn #dispPanel .vds-seg button:nth-child(1) b{font-size:14px}
+#authLoggedIn #dispPanel .vds-seg button:nth-child(2) b{font-size:18px}
+#authLoggedIn #dispPanel .vds-seg button:nth-child(3) b{font-size:23px}
+#authLoggedIn #dispPanel .vds-seg button span{font-size:11.5px;font-weight:500}
+#authLoggedIn #dispPanel .vds-seg button.is-on{background:linear-gradient(180deg,rgba(241,196,106,.22),rgba(241,196,106,.12));color:#f6d48c;box-shadow:inset 0 0 0 1px rgba(241,196,106,.45)}
+.vds-pv{margin:10px 0 0;padding:11px 13px;border-radius:11px;background:rgba(255,255,255,.035);border:1px dashed rgba(255,255,255,.12);color:#ece9e2;font-size:1rem;line-height:1.5;transition:font-size .2s}
+.vds-pv small{display:block;margin-bottom:2px;font-size:11px;letter-spacing:.06em;color:rgba(236,233,226,.45)}
+
+/* แถวสวิตช์ */
+#authLoggedIn #dispPanel .vds-row{display:flex;align-items:center;gap:12px;padding:11px 0 !important;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.06)}
+.vds-row.is-c{--c:#7aa7ff}.vds-row.is-m{--c:#5fd0b5}.vds-row.is-s{--c:#f1c46a}
+.vds-ic{flex:none;width:34px;height:34px;display:grid;place-items:center;border-radius:10px;color:var(--c);background:color-mix(in srgb,var(--c) 14%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 26%,transparent)}
+.vds-tx{flex:1;min-width:0;font-size:15px;font-weight:600;color:#ece9e2}
+.vds-tx small{display:block;margin-top:2px;font-size:12.5px;font-weight:400;color:rgba(236,233,226,.5)}
+.vds-sw{position:relative;flex:none;width:50px;height:30px}
+#authLoggedIn #dispPanel .vds-sw input{position:absolute !important;inset:0 !important;width:100% !important;height:100% !important;margin:0 !important;opacity:0 !important;cursor:pointer;z-index:1}
+.vds-sw i{position:absolute;inset:0;border-radius:99px;background:rgba(255,255,255,.14);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);transition:background-color .25s}
+.vds-sw i::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#f4f1ea;box-shadow:0 2px 5px rgba(0,0,0,.4);transition:transform .28s cubic-bezier(.3,1.4,.5,1)}
+.vds-sw input:checked + i{background:linear-gradient(180deg,#f1c46a,#d6a447)}
+.vds-sw input:checked + i::after{transform:translateX(20px);background:#fffaf0}
+.vds-sw input:focus-visible + i{outline:2px solid #f1c46a;outline-offset:2px}
+.vds-sw input:active + i::after{width:28px}
+.vds-sw input:checked:active + i::after{transform:translateX(16px)}
+
+/* ท้ายแผง: บันทึกแล้ว + คืนค่าเริ่มต้น */
+.vds-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:10px}
+.vds-saved{font-size:12.5px;font-weight:600;color:#5fd0b5;opacity:0;transform:translateY(4px);transition:opacity .25s,transform .25s}
+.vds-saved.is-on{opacity:1;transform:none}
+.vds-reset{appearance:none;cursor:pointer;margin-left:auto;padding:7px 13px;border-radius:99px;border:1px solid rgba(255,255,255,.14);background:transparent;color:rgba(236,233,226,.75);font:inherit;font-size:12.5px;font-weight:600}
+.vds-reset:disabled{opacity:.35;cursor:default}
+@media (prefers-reduced-motion:reduce){.vds-sw i,.vds-sw i::after,.vds-saved{transition:none}}
