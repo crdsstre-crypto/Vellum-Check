@@ -26,7 +26,16 @@ export function buildSpokenSummary(result) {
 // ถ้าไม่ตั้ง ดึงจาก "My Voices" ในบัญชี ElevenLabs เอง (เสียงที่กด Add จาก Voice Library หรือโคลนไว้)
 // ไม่เอาเสียง Default เพราะ ElevenLabs จะปิดเสียงกลุ่มนี้สิ้นปี 2026 · เสียงใน ELEVENLABS_VOICE_ID อยู่ในรายการเสมอเป็นค่าเริ่มต้น
 const EL = 'https://api.elevenlabs.io/v1';
-let voiceCache = null, voiceAt = 0;
+let voiceCache = null, voiceAt = 0, lastSource = '', lastErr = '';
+export function voiceSource() { return lastSource; }
+const FALLBACK = [
+  { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Sarah', gender: 'ผู้หญิง' },
+  { id: 'JBFqnCBsd6RMkjVDRZzb', name: 'George', gender: 'ผู้ชาย' },
+  { id: 'XrExE9yKIg1WjnnlVkGX', name: 'Matilda', gender: 'ผู้หญิง' },
+  { id: 'bIHbv24MWmeRgasZH58o', name: 'Will', gender: 'ผู้ชาย' },
+  { id: 'cgSgspJ2msm6clMCkdW9', name: 'Jessica', gender: 'ผู้หญิง' },
+  { id: 'nPczCjzI2devNBz1zQrb', name: 'Brian', gender: 'ผู้ชาย' },
+];
 const GENDER = { female: 'ผู้หญิง', male: 'ผู้ชาย' };
 function shortName(n) { return String(n || '').split(/\s+[-–|]\s+/)[0].trim().slice(0, 24) || 'เสียง'; }
 
@@ -59,9 +68,14 @@ export async function listVoices() {
           for (let i = 0; mix.length < 6 && (i < f.length || i < m.length); i++) { if (f[i]) mix.push(f[i]); if (m[i] && mix.length < 6) mix.push(m[i]); }
           out = out.concat(mix);
         }
-      } else { console.error('[voice] list voices status', r.status); bad = true; }
-    } catch (e) { console.error('[voice] list voices:', e.message); bad = true; }
+      } else { console.error('[voice] list voices status', r.status); bad = true; lastErr = 'status ' + r.status; }
+    } catch (e) { console.error('[voice] list voices:', e.message); bad = true; lastErr = e.message.slice(0, 60); }
   }
+  // คีย์ ElevenLabs บางแบบไม่มีสิทธิ์อ่านรายการเสียง (voices_read) → ใช้รายการเสียง Default ที่รู้จักแทน (ใช้ได้ถึงสิ้นปี 2026)
+  if (!env && out.length < 2 && Date.now() < Date.UTC(2027, 0, 1)) {
+    lastSource = bad ? 'fallback (list failed: ' + lastErr + ')' : 'fallback';
+    for (const v of FALLBACK) if (out.length < 7 && v.id !== def && !out.some(x => x.id === v.id)) out.push(v);
+  } else lastSource = env ? 'env' : 'account';
   if (def && !out.some(v => v.id === def)) out.unshift({ id: def, name: 'เสียงหลัก', gender: '' });
   out.sort((a, b) => (b.id === def) - (a.id === def));
   out = out.filter(v => /^[A-Za-z0-9]{8,40}$/.test(v.id)).slice(0, 8);
