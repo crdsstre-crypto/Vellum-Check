@@ -1246,7 +1246,11 @@ async function runCheck() {
     if (window.VCRemind) window.VCRemind.link(r.data.inspectionId);
     if (r.data.audio) {
       // เวลลัมพูดสรุป (talk.js) · ถ้าไฟล์ไม่โหลดใช้เครื่องเล่นเสียงธรรมดาแทน
-      if (window.VCTalk) window.VCTalk.mount(els.result, { audio: r.data.audio, text: r.data.audioText, align: r.data.audioAlign });
+      if (window.VCTalk) window.VCTalk.mount(els.result, {
+        audio: r.data.audio, text: r.data.audioText, align: r.data.audioAlign,
+        // การ์ดประเด็นที่เด้งตามเสียง แตะแล้วเลื่อนไปประเด็นนั้น (#issue-N)
+        items: (r.data.result.items || []).map((it, i) => ({ title: it.title, level: it.level, ref: 'ประเด็น ' + pad2(i + 1), target: '#issue-' + i })),
+      });
       else els.result.insertAdjacentHTML('afterbegin',
         `<audio controls src="data:audio/mpeg;base64,${r.data.audio}" style="width:100%;margin-bottom:12px"></audio>`);
     }
