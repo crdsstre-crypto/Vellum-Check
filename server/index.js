@@ -28,7 +28,7 @@ import {
   getVoiceCredits, reserveVoiceCredits, refundVoiceCredits,
 } from './credits.js';
 import { isBlocked, recordFailure, clearFailures } from './rateLimit.js';
-import { buildSpokenSummary, synthesizeSpeech, VOICE_CREDIT_COST } from './voice.js';
+import { buildSpokenSummary, synthesizeSpeech, VOICE_CREDIT_COST, listVoices, pickVoice, voicePreview } from './voice.js';
 import { createPromptPayPayment, confirmAndCredit, getPaymentStatus, PACKAGES } from './payments.js';
 import { logCheck, saveFeedback, adminStats, FEEDBACK_REASONS } from './stats.js';
 import { getDaily, checkIn, redeem } from './daily.js';
@@ -315,6 +315,26 @@ app.delete('/api/history/inspections/:id', async (req, res) => {
 const FOLLOWUP_PER_HOUR = 15;
 const FOLLOWUP_MAX_Q = 300;
 const followupHits = new Map(); // userId -> { count, resetAt }
+
+// ----- เสียงสรุป: รายการเสียงให้ลูกค้าเลือก + ตัวอย่างเสียง -----
+app.get('/api/voices', async (req, res) => {
+  try { res.json({ voices: await listVoices() }); }
+  catch (err) { console.error('[voice] list failed:', err.message); res.json({ voices: [] }); }
+});
+const previewHits = new Map();
+app.get('/api/voices/:id/preview', async (req, res) => {
+  try {
+    const id = String(req.params.id || '');
+    if (!(await listVoices()).some(v => v.id === id)) return res.status(404).end();
+    const ip = req.ip || 'x', now = Date.now();
+    let h = previewHits.get(ip); if (!h || h.resetAt <= now) h = { n: 0, resetAt: now + 10 * 60 * 1000 };
+    if (h.n >= 40) return res.status(429).end();
+    h.n += 1; previewHits.set(ip, h);
+    if (previewHits.size > 5000) for (const [k, v] of previewHits) if (v.resetAt <= now) previewHits.delete(k);
+    const buf = await voicePreview(id);
+    res.set('Content-Type', 'audio/mpeg').set('Cache-Control', 'public, max-age=86400').send(buf);
+  } catch (err) { console.error('[voice] preview failed:', err.message); res.status(502).end(); }
+});
 
 // ----- แปลข้อความหน้าเว็บที่ไม่มีในพจนานุกรม (โหมดภาษาอังกฤษ/จีน) -----
 app.post('/api/translate', async (req, res) => {
@@ -621,7 +641,7 @@ app.post('/api/check', async (req, res) => {
   let voiceError = null;
   if (wantVoice) {
     try {
-      audio = await synthesizeSpeech(buildSpokenSummary(result));
+      audio = await synthesizeSpeech(buildSpokenSummary(result), await pickVoice(String(req.body?.voiceId || '')));
     } catch (err) {
       console.error('[voice] failed:', err.message);
       await refundVoiceCredits(user.id, VOICE_CREDIT_COST)
