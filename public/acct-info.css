@@ -1,0 +1,42 @@
+/* ===== กล่อง "ข้อมูลบัญชี" แบบการ์ดเล็ก (acct-info.js) — โทนเดียวกับหน้าบัญชีเดิม ===== */
+#authLoggedIn .acct-detail.has-vai > div:not(.vai){display:none !important}
+#authLoggedIn .acct-detail.has-vai{padding:12px !important;gap:0 !important}
+#authLoggedIn .acct-detail > .vai{display:grid !important;grid-template-columns:1fr 1fr;gap:10px;justify-content:stretch}
+.vai-c{position:relative;min-width:0;display:flex;flex-direction:column;gap:8px;padding:13px 14px;border-radius:14px;text-align:left;color:#ece9e2;
+  background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08)}
+.vai-c.is-mail,.vai-c.is-hist{grid-column:1 / -1}
+button.vai-c{appearance:none;cursor:pointer;font:inherit;width:100%;transition:border-color .2s,background-color .2s}
+button.vai-c:active{background:rgba(255,255,255,.06)}
+.vai-top{display:flex;align-items:center;gap:8px}
+.vai-ic{flex:none;width:28px;height:28px;display:grid;place-items:center;border-radius:8px;color:var(--c);background:color-mix(in srgb,var(--c) 15%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 28%,transparent)}
+.vai-lab{flex:1;min-width:0;font-size:12.5px;font-weight:500;color:rgba(236,233,226,.62);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vai-go{font-size:20px;line-height:1;color:rgba(236,233,226,.4)}
+.vai-c.is-mail{--c:#7aa7ff}
+.vai-c.is-check{--c:#f1c46a}
+.vai-c.is-voice{--c:#b79cff}
+.vai-c.is-hist{--c:#5fd0b5}
+.vai-mail{margin:0;font-size:15px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* (3) เครดิต: ตัวเลขสีตามประเภท + ปุ่มเติม */
+.vai-num,.vai-cap{margin:0;display:flex;align-items:baseline;gap:6px}
+.vai-num b{font-size:30px;font-weight:700;line-height:1;color:var(--c);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.vai-num small,.vai-cap small{font-size:13px;color:rgba(236,233,226,.55)}
+.vai-c.is-low{--c:#ff7a6e;border-color:rgba(255,122,110,.3)}
+.vai-foot{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.vai-note{font-size:12px;color:rgba(236,233,226,.5)}
+.vai-c.is-low .vai-note{color:#ff8f84;font-weight:600}
+.vai-add{appearance:none;cursor:pointer;flex:none;padding:5px 10px;border-radius:999px;border:1px solid color-mix(in srgb,var(--c) 45%,transparent);
+  background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c);font:inherit;font-size:12px;font-weight:700;transition:background-color .15s}
+.vai-add:active{background:color-mix(in srgb,var(--c) 26%,transparent)}
+
+/* (2) ประวัติ: หลอดความจุ */
+.vai-cap b{font-size:24px;font-weight:700;line-height:1;color:#ece9e2;font-variant-numeric:tabular-nums}
+.vai-bar{position:relative;height:7px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+.vai-bar i{position:absolute;left:0;top:0;bottom:0;width:var(--w);border-radius:inherit;background:linear-gradient(90deg,color-mix(in srgb,var(--c) 70%,#000),var(--c))}
+@media (prefers-reduced-motion:no-preference){.vai-bar i{animation:vaiBar .8s cubic-bezier(.2,.8,.2,1) both}}
+@keyframes vaiBar{from{width:0}}
+.vai-c.is-near{--c:#f5b04a}
+.vai-c.is-full{--c:#ff9a3d;border-color:rgba(255,154,61,.32)}
+.vai-c.is-full .vai-note{color:#ffb070;font-weight:600}
+
+@media (max-width:340px){#authLoggedIn .acct-detail > .vai{grid-template-columns:1fr}.vai-c.is-mail,.vai-c.is-hist{grid-column:auto}}
