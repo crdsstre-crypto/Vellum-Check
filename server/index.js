@@ -28,7 +28,7 @@ import {
   getVoiceCredits, reserveVoiceCredits, refundVoiceCredits,
 } from './credits.js';
 import { isBlocked, recordFailure, clearFailures } from './rateLimit.js';
-import { buildSpokenSummary, synthesizeSpeech, VOICE_CREDIT_COST, listVoices, pickVoice, voicePreview } from './voice.js';
+import { buildSpokenSummary, synthesizeSpeech, VOICE_CREDIT_COST, listVoices, pickVoice, voicePreview, voiceSource } from './voice.js';
 import { createPromptPayPayment, confirmAndCredit, getPaymentStatus, PACKAGES } from './payments.js';
 import { logCheck, saveFeedback, adminStats, FEEDBACK_REASONS } from './stats.js';
 import { getDaily, checkIn, redeem } from './daily.js';
@@ -318,7 +318,7 @@ const followupHits = new Map(); // userId -> { count, resetAt }
 
 // ----- เสียงสรุป: รายการเสียงให้ลูกค้าเลือก + ตัวอย่างเสียง -----
 app.get('/api/voices', async (req, res) => {
-  try { res.json({ voices: await listVoices() }); }
+  try { const voices = await listVoices(); res.json({ voices, source: voiceSource() }); }
   catch (err) { console.error('[voice] list failed:', err.message); res.json({ voices: [] }); }
 });
 const previewHits = new Map();
