@@ -174,6 +174,34 @@
     '.vcp-num span{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:8px;background:rgba(245,196,81,.12);color:#f5d27a;font:600 12px/1.4 Prompt,sans-serif}' +
     '.vcp-num span.cut{background:rgba(251,146,60,.13);color:#fdba74}.vcp-num span.new{background:rgba(52,211,153,.12);color:#86efac}' +
     '.vcp-num s{color:#ff9a9c;text-decoration-color:rgba(255,154,156,.7)}.vcp-num b{color:#a1a1aa;font-weight:500}' +
+    '.vcp-map{margin-top:12px;padding:11px 12px 10px;border-radius:14px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07)}' +
+    '.vcp-mapt{display:flex;align-items:baseline;gap:8px;margin-bottom:8px}.vcp-mapt span{font:600 12.5px/1.3 Prompt,sans-serif}.vcp-mapt small{margin-left:auto;font:400 11px/1.3 Prompt,sans-serif;color:#71717a}' +
+    '.vcp-bar{display:flex;gap:3px;height:22px}' +
+    '.vcp .vcp-seg{flex:1 1 0;min-width:4px;min-height:0 !important;height:100%;padding:0 !important;border:0;border-radius:5px;background:var(--c);cursor:pointer;transition:transform .15s,filter .15s;box-shadow:0 0 10px -2px color-mix(in srgb,var(--c) 60%,transparent)}' +
+    '.vcp .vcp-seg.s{background:rgba(255,255,255,.09);box-shadow:none;cursor:default}' +
+    '.vcp .vcp-seg:not(.s):hover{transform:scaleY(1.25);filter:brightness(1.15)}' +
+    '.vcp-leg{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:8px;font:400 11px/1.3 Prompt,sans-serif;color:#9a9aa3}.vcp-leg span{display:inline-flex;align-items:center;gap:5px}' +
+    '.vcp-leg i{display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--c)}.vcp-leg i.s{background:rgba(255,255,255,.15)}' +
+    '.vcp-it.flash{animation:vcpFl 1.3s ease-out}@keyframes vcpFl{0%,30%{box-shadow:0 0 0 3px #7fb5ff}100%{box-shadow:0 0 0 0 transparent}}' +
+    '.vcp-money{margin-top:12px;padding:12px 12px 10px;border-radius:14px;background:linear-gradient(160deg,rgba(245,196,81,.08),rgba(255,255,255,.02));border:1px solid rgba(245,196,81,.2)}' +
+    '.vcp-mh{font:700 13.5px/1.3 Prompt,sans-serif;margin-bottom:4px;color:#f5d27a}' +
+    '.vcp-mr{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:10px;padding:9px 0;border-top:1px dashed rgba(255,255,255,.08)}.vcp-mh+.vcp-mr{border-top:0}' +
+    '.vcp-mr .l b{display:block;font:600 13.5px/1.3 Prompt,sans-serif}.vcp-mr .l small{font:400 11px/1.3 Prompt,sans-serif;color:#71717a}' +
+    '.vcp-mr .v{display:flex;align-items:baseline;gap:5px;font:500 13px/1.2 Prompt,sans-serif;white-space:nowrap}.vcp-mr .v s{color:#8a8a93}.vcp-mr .v span{color:#71717a}.vcp-mr .v b{font:700 15px/1.2 Prompt,sans-serif}.vcp-mr .v small{font-size:11px;color:#9a9aa3}' +
+    '.vcp-mr em{min-width:50px;text-align:center;padding:3px 8px;border-radius:99px;font:700 12px/1.3 Prompt,sans-serif;font-style:normal}' +
+    '.vcp-mr.up .v b,.vcp-mt.up b{color:#ff8a8e}.vcp-mr.up em{background:rgba(242,85,90,.16);color:#ff8a8e}' +
+    '.vcp-mr.dn .v b,.vcp-mt.dn b{color:#6ee7b7}.vcp-mr.dn em{background:rgba(52,211,153,.15);color:#6ee7b7}' +
+    '.vcp-mt{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;margin-top:4px;padding:10px 12px;border-radius:11px;background:rgba(0,0,0,.25)}.vcp-mt span{font:500 13px/1.3 Prompt,sans-serif}.vcp-mt b{font:800 19px/1.2 Prompt,sans-serif}.vcp-mt small{flex-basis:100%;font:400 11px/1.4 Prompt,sans-serif;color:#71717a}' +
+    '@media (max-width:420px){.vcp-mr{grid-template-columns:minmax(0,1fr) auto;row-gap:4px}.vcp-mr .v{grid-column:1/-1;grid-row:2}.vcp-mr em{grid-column:2;grid-row:1}}' +
+    '.vcp-neg{margin-top:12px;border-radius:14px;border:1px solid rgba(127,181,255,.28);background:rgba(127,181,255,.06);overflow:hidden}' +
+    '.vcp .vcp-negb{display:flex;align-items:center;gap:11px;width:100%;min-height:0 !important;padding:12px !important;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer;font:inherit}' +
+    '.vcp-negb>span{flex:none;display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:rgba(127,181,255,.16);font-size:18px}' +
+    '.vcp-negb b{display:block;font:700 14px/1.3 Prompt,sans-serif;color:#cfe2ff}.vcp-negb small{display:block;font:400 11.5px/1.4 Prompt,sans-serif;color:#9a9aa3}' +
+    '.vcp-negb em{margin-left:auto;font:400 22px/1 Prompt,sans-serif;font-style:normal;color:#7fb5ff;transition:transform .2s}.vcp-neg.on .vcp-negb em{transform:rotate(90deg)}' +
+    '.vcp-negp{padding:0 12px 12px}.vcp-negp[hidden]{display:none}' +
+    '.vcp-negp textarea{width:100%;min-height:160px;resize:vertical;padding:11px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:#0d0e10;color:#ececef;font:400 14px/1.65 Sarabun,Prompt,sans-serif}' +
+    '.vcp-nega{display:flex;gap:8px;margin-top:8px}.vcp .vcp-nega button{flex:1;min-height:42px !important;border-radius:11px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:#ececef;font:600 13.5px/1 Prompt,sans-serif;cursor:pointer}' +
+    '.vcp .vcp-nega button.p{border:0;background:linear-gradient(135deg,#9cc5ff,#5b9bff);color:#06142b}' +
     '.vcp-ft{display:flex;gap:8px;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(255,255,255,.07)}' +
     '.vcp-ft button{flex:1;padding:0 8px;min-height:46px;border-radius:13px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:#ececef;font:600 13.5px/1.2 Prompt,sans-serif;cursor:pointer}' +
     '@media (max-width:420px){.vcp-ft button{font-size:12.5px}}' +
@@ -217,6 +245,10 @@
       if (e.target.closest('[data-copy]')) return copySum();
       if (e.target.closest('[data-check]')) return checkNew();
       if (e.target.closest('.vcp-go')) return run();
+      var sg = e.target.closest('[data-go]'); if (sg) return goTo(+sg.getAttribute('data-go'));
+      if (e.target.closest('[data-neg]')) { var pn = el.querySelector('.vcp-negp'), nb = el.querySelector('.vcp-neg'); pn.hidden = !pn.hidden; nb.classList.toggle('on', !pn.hidden); if (!pn.hidden) { var ta2 = pn.querySelector('textarea'); ta2.style.height = 'auto'; ta2.style.height = Math.min(ta2.scrollHeight + 4, 420) + 'px'; } return; }
+      if (e.target.closest('[data-ncopy]')) { var tx2 = el.querySelector('.vcp-negp textarea').value; if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(tx2).then(function () { say('คัดลอกข้อความต่อรองแล้ว'); }, function () { say('คัดลอกไม่ได้'); }); else say('คัดลอกไม่ได้'); return; }
+      if (e.target.closest('[data-nshare]')) { navigator.share({ text: el.querySelector('.vcp-negp textarea').value }).catch(function () {}); return; }
       var s = e.target.closest('.vcp-s'); if (s) { state.f = s.getAttribute('data-f'); list(); return; }
       var fl = e.target.closest('[data-fill]'); if (fl) { var src = document.getElementById('input'); var ta = el.querySelector('#vcp-o'); if (src && src.value.trim()) { ta.value = src.value; upd(); } else say('ช่องตรวจยังไม่มีข้อความ'); return; }
       var cl = e.target.closest('[data-clr]'); if (cl) { cl.closest('.vcp-side').querySelector('textarea').value = ''; upd(); }
@@ -243,6 +275,76 @@
     var o = saved.o, n = saved.n; if (!o.trim() || !n.trim()) return;
     state.res = compare(o, n); state.f = 'chg'; result();
   }
+  /* ---------- (3) เงินที่เปลี่ยน ---------- */
+  function money(r) {
+    var out = [];
+    (r.num || []).forEach(function (p) {
+      if (p.t !== 'chg' || !/บาท/.test(p.a) || !/บาท/.test(p.b)) return;
+      var a = parseFloat(p.a.replace(/[^\d.]/g, '')), b = parseFloat(p.b.replace(/[^\d.]/g, ''));
+      if (!(a >= 0) || !(b >= 0) || a === b) return;
+      var at = r.b.t.indexOf(p.b.replace(/\s*บาท$/, '')), pre = at > 0 ? r.b.t.slice(Math.max(0, at - 40), at) : '';
+      var lb = (/(ค่า[ก-๙]+|เงิน[ก-๙]+)[^ค]*$/.exec(pre) || [])[1] || 'จำนวนเงิน';
+      lb = lb.replace(/(เดือนละ|วันละ|ปีละ|ครั้งละ|หน่วยละ|ละ)$/, '');
+      var per = /เดือนละ\s*$/.test(pre) ? 'm' : /วันละ\s*$/.test(pre) ? 'd' : /หน่วยละ\s*$/.test(pre) ? 'u' : /ปีละ\s*$/.test(pre) ? 'y' : '';
+      out.push({ no: (r.b && r.b.no) || '', lb: lb, a: a, b: b, per: per });
+    });
+    return out;
+  }
+  function baht(n) { return Math.round(n).toLocaleString('th-TH'); }
+  function moneyCard() {
+    var M = []; state.res.forEach(function (r) { if (r.k === 'mod') M = M.concat(money(r)); });
+    if (!M.length) return '';
+    var yr = 0;
+    var rows = M.map(function (m) {
+      var d = m.b - m.a, up = d > 0, x = m.a > 0 ? m.b / m.a : 0, unit = { m: '/เดือน', d: '/วัน', u: '/หน่วย', y: '/ปี' }[m.per] || '';
+      if (m.per === 'm') yr += d * 12; else if (m.per === 'y') yr += d;
+      var big = x >= 1.9 ? '×' + (Math.round(x * 10) / 10) : (up ? '+' : '−') + (m.a > 0 ? Math.round(Math.abs(d) / m.a * 100) + '%' : '');
+      return '<div class="vcp-mr ' + (up ? 'up' : 'dn') + '"><div class="l"><b>' + esc(m.lb) + '</b><small>' + esc(m.no) + '</small></div>' +
+        '<div class="v"><s>' + baht(m.a) + '</s><span>→</span><b>' + baht(m.b) + '</b><small>บาท' + unit + '</small></div><em>' + big + '</em></div>';
+    }).join('');
+    var tot = yr ? '<div class="vcp-mt ' + (yr > 0 ? 'up' : 'dn') + '"><span>รวมแล้วคุณจ่าย' + (yr > 0 ? 'เพิ่ม' : 'น้อยลง') + 'ประมาณ</span><b>' + baht(Math.abs(yr)) + ' บาท/ปี</b><small>คิดเฉพาะรายการที่จ่ายรายเดือน/รายปี ยังไม่รวมค่าปรับหรือค่าใช้ตามจริง</small></div>' : '';
+    return '<div class="vcp-money"><div class="vcp-mh">💸 เงินที่เปลี่ยน</div>' + rows + tot + '</div>';
+  }
+  /* ---------- (1) แถบภาพรวมทั้งฉบับ ---------- */
+  var LVC = { risk: '#ff6b70', lost: '#fb923c', num: '#f5c451', good: '#34d399' };
+  function mapBar() {
+    if (state.res.length < 2) return '';
+    return '<div class="vcp-map"><div class="vcp-mapt"><span>ภาพรวมทั้งฉบับ</span><small>แตะแถบสีเพื่อไปที่ข้อนั้น</small></div><div class="vcp-bar">' + state.res.map(function (r, i) {
+      var c = r.k === 'same' ? '' : (LVC[r.lv] || C[r.k]), no = (r.b && r.b.no) || (r.a && r.a.no) || '';
+      return '<button type="button" class="vcp-seg' + (r.k === 'same' ? ' s' : '') + '"' + (c ? ' style="--c:' + c + '"' : ' tabindex="-1"') + ' data-go="' + i + '" title="' + esc(no + ' ' + LB[r.k]) + '" aria-label="' + esc(no + ' ' + LB[r.k]) + '"></button>';
+    }).join('') + '</div><div class="vcp-leg"><span><i style="--c:#ff6b70"></i>เสี่ยง</span><span><i style="--c:#fb923c"></i>ถูกลบ</span><span><i style="--c:#f5c451"></i>แก้ไข</span><span><i style="--c:#34d399"></i>เพิ่มใหม่</span><span><i class="s"></i>เหมือนเดิม</span></div></div>';
+  }
+  function goTo(i) {
+    var r = state.res[i]; if (!r || r.k === 'same') return;
+    if (state.f !== 'chg' && state.f !== r.k) { state.f = 'chg'; list(); }
+    var c = el.querySelector('.vcp-it[data-i="' + i + '"]'); if (!c) return;
+    c.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    c.classList.remove('flash'); void c.offsetWidth; c.classList.add('flash');
+  }
+  /* ---------- (5) ร่างข้อความต่อรอง ---------- */
+  function strip(t) { return String(t).replace(CL, '').trim(); }
+  function negText() {
+    var L = state.res.filter(function (r) { return r.lv === 'risk' || r.lv === 'lost' || r.lv === 'num'; });
+    L.sort(function (a, b) { return ORD[a.lv] - ORD[b.lv]; });
+    var n = 0, lines = L.map(function (r) {
+      var no = (r.b && r.b.no) || (r.a && r.a.no) || 'ข้อที่เพิ่มใหม่', t;
+      if (r.k === 'del') t = no + ' (ฉบับเดิม): ขอให้คงข้อนี้ไว้ตามเดิม คือ "' + strip(r.a.t) + '"';
+      else if (r.k === 'add') t = no + ' (เพิ่มใหม่): ขอให้ตัดข้อนี้ออก หรือแก้ให้เป็นธรรมกับทั้งสองฝ่าย';
+      else {
+        var ch = (r.num || []).map(function (p) { return p.t === 'chg' ? p.a + ' เป็น ' + p.b : p.t === 'cut' ? 'ตัด "' + p.a + '" ออก' : 'เพิ่ม ' + p.b; });
+        t = no + ': ' + (r.lv === 'num' ? 'ฉบับใหม่เปลี่ยน ' + ch.join(', ') + ' ขอทราบเหตุผล หรือขอคงไว้ตามเดิม'
+          : 'ขอให้คงข้อความเดิม คือ "' + strip(r.a.t) + '"');
+      }
+      return (++n) + '. ' + t;
+    });
+    if (!lines.length) return '';
+    return 'สวัสดีครับ/ค่ะ\n\nได้อ่านสัญญาฉบับแก้ไขแล้ว ขอปรับบางข้อก่อนเซ็นดังนี้\n\n' + lines.join('\n') + '\n\nหากสะดวก รบกวนส่งฉบับที่ปรับแล้วกลับมาอีกครั้ง ขอบคุณครับ/ค่ะ';
+  }
+  function negPanel() {
+    var t = negText(); if (!t) return '';
+    return '<div class="vcp-neg"><button type="button" class="vcp-negb" data-neg><span>✍️</span><div><b>ร่างข้อความต่อรอง</b><small>รวมข้อที่ควรขอแก้ไว้ในข้อความเดียว แก้คำได้ก่อนส่ง</small></div><em>›</em></button>' +
+      '<div class="vcp-negp" hidden><textarea spellcheck="false">' + esc(t) + '</textarea><div class="vcp-nega"><button type="button" data-ncopy>คัดลอก</button>' + (navigator.share ? '<button type="button" class="p" data-nshare>ส่งต่อ</button>' : '') + '</div></div></div>';
+  }
   function counts() { var c = { add: 0, del: 0, mod: 0, same: 0, risk: 0, lost: 0, num: 0, good: 0 }; state.res.forEach(function (r) { c[r.k]++; if (r.lv) c[r.lv]++; }); return c; }
   var LV = { risk: ['เสี่ยง', 'มีคำที่มักทำให้เสียเปรียบ'], lost: ['เสียสิทธิ์ที่เคยมี?', 'ข้อนี้หายไปจากฉบับใหม่'], num: ['ตัวเลขเปลี่ยน', ''], good: ['อาจเป็นผลดี', 'ตัดเงื่อนไขที่เคยเข้มออก'] };
   var ORD = { risk: 0, lost: 1, num: 2, '': 3, good: 4 };
@@ -257,12 +359,14 @@
             (c.risk ? '<em class="risk"><i></i>' + c.risk + ' ข้อเสี่ยง</em>' : '') + (c.lost ? '<em class="lost"><i></i>' + c.lost + ' ข้อถูกลบ อาจเสียสิทธิ์</em>' : '') + (c.num ? '<em class="num"><i></i>' + c.num + ' ข้อตัวเลขเปลี่ยน</em>' : '') +
             '</span>ข้อที่ "เสี่ยง" มีคำอย่าง ไม่ต้องแจ้ง, อัตโนมัติ, ไม่คืน หรือค่าปรับที่เปลี่ยน เรียงไว้ด้านบนแล้ว</span></div>'
         : '<div class="vcp-alert ok">ไม่พบตัวเลขที่เปลี่ยนหรือคำที่มักทำให้เสียเปรียบในส่วนที่แก้ แต่ควรอ่านทุกข้อที่เปลี่ยนอีกครั้ง</div>') +
+      (chg ? mapBar() + moneyCard() + negPanel() : '') +
       '<div class="vcp-list"></div>';
     el.querySelector('.vcp-ft').hidden = false; list(); bd.scrollTop = 0;
   }
   function list() {
     var box = el.querySelector('.vcp-list'); if (!box) return;
     [].forEach.call(el.querySelectorAll('.vcp-s'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-f') === state.f)); });
+    state.res.forEach(function (r, i) { r.i = i; });
     var L = state.res.filter(function (r) { return state.f === 'chg' ? r.k !== 'same' : r.k === state.f; });
     L = L.map(function (r, i) { return [r, i]; }).sort(function (a, b) { return (ORD[a[0].lv] - ORD[b[0].lv]) || (a[1] - b[1]); }).map(function (x) { return x[0]; });
     box.innerHTML = L.length ? L.map(function (r) {
@@ -270,7 +374,7 @@
       if (r.k === 'mod' && r.d.ratio > 0.45) tx = '<div class="vcp-two"><div class="o"><i>เดิม</i><p class="vcp-tx">' + esc(r.a.t) + '</p></div><div class="n"><i>ใหม่</i><p class="vcp-tx">' + esc(r.b.t) + '</p></div></div>';
       else tx = '<p class="vcp-tx">' + (r.k === 'mod' ? r.d.h : esc(r.k === 'del' ? r.a.t : r.b.t)) + '</p>';
       var why = r.lv && LV[r.lv][1] ? '<p class="vcp-why">' + esc(r.hit || LV[r.lv][1]) + (r.lv === 'lost' ? ' — ถามอีกฝ่ายว่าทำไมตัดออก และสิทธิ์นี้ยังคุ้มครองคุณอยู่ไหม' : '') + '</p>' : '';
-      return '<div class="vcp-it ' + r.k + (r.lv ? ' lv-' + r.lv : '') + '" style="--c:' + C[r.k] + '"><div class="vcp-ih"><span class="vcp-tag">' + LB[r.k] + '</span>' + (no ? '<span class="vcp-no">' + esc(no) + '</span>' : '') + badge(r.lv) + '</div>' +
+      return '<div class="vcp-it ' + r.k + (r.lv ? ' lv-' + r.lv : '') + '" data-i="' + r.i + '" style="--c:' + C[r.k] + '"><div class="vcp-ih"><span class="vcp-tag">' + LB[r.k] + '</span>' + (no ? '<span class="vcp-no">' + esc(no) + '</span>' : '') + badge(r.lv) + '</div>' +
         tx + (r.lv === 'lost' || r.lv === 'risk' ? why : '') +
         (r.num && r.num.length ? '<div class="vcp-num">' + r.num.map(function (p) {
           return '<span class="' + p.t + '">' + (p.t === 'chg' ? '<s>' + esc(p.a) + '</s><b>→</b>' + esc(p.b) : p.t === 'cut' ? 'ถูกตัดออก: <s>' + esc(p.a) + '</s>' : 'ตัวเลขใหม่: ' + esc(p.b)) + '</span>';
