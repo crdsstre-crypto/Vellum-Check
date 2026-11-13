@@ -21,17 +21,50 @@
     '#dispPanel .vds-seg2{grid-template-columns:1fr 1fr !important}' +
     '#authLoggedIn #dispPanel .vds-seg2 button b{font-size:16px !important}' +
     'html[data-lang=en].i18n-wait body{opacity:0}' +
-    '.vc-lnote{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;padding:20px;background:rgba(0,0,0,.66);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}' +
-    '.vc-ln-card{width:min(440px,100%);padding:22px 20px 18px;border-radius:18px;background:#16171b;border:1px solid rgba(241,196,106,.3);box-shadow:0 24px 60px -20px rgba(0,0,0,.9);color:#ece9e2;font:400 14px/1.6 Prompt,system-ui,sans-serif}' +
-    '.vc-ln-ic{margin:0 0 4px;font-size:26px;line-height:1;color:#f1c46a}' +
-    '.vc-ln-card h3{margin:0 0 10px;font-size:17px;font-weight:700;line-height:1.35}' +
-    '.vc-ln-card p{margin:0 0 9px;color:rgba(236,233,226,.82)}' +
-    '.vc-ln-card p b{color:#f1c46a;font-weight:600}' +
-    '.vc-ln-acts{display:flex;gap:8px;margin-top:14px}' +
-    '.vc-ln-acts button{flex:1;min-height:46px;padding:8px 10px;border-radius:12px;font:600 13.5px/1.25 Prompt,system-ui,sans-serif;cursor:pointer}' +
-    '.vc-ln-no{background:transparent;border:1px solid rgba(255,255,255,.18);color:#ece9e2}' +
-    '.vc-ln-ok{background:linear-gradient(180deg,#f1c46a,#d6a447);border:0;color:#1c1408;transition:opacity .25s}' +
-    '.vc-ln-ok.is-wait,.vc-ln-ok:disabled{opacity:.45;cursor:not-allowed}' +
+    '.vc-lnote{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,0);-webkit-backdrop-filter:blur(0);backdrop-filter:blur(0);transition:background-color .26s,backdrop-filter .26s,-webkit-backdrop-filter .26s}' +
+    '.vc-lnote.is-in{background:rgba(0,0,0,.62);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px)}' +
+    '.vc-ln-card{position:relative;width:min(420px,100%);padding:22px 20px 18px;border-radius:22px;background:linear-gradient(180deg,#1b1c21,#141519);border:1px solid rgba(241,196,106,.22);box-shadow:0 30px 70px -24px rgba(0,0,0,.95),inset 0 1px 0 rgba(255,255,255,.05);color:#ece9e2;opacity:0;transform:translateY(14px) scale(.97);transition:transform .32s cubic-bezier(.2,.8,.2,1),opacity .26s}' +
+    '.vc-lnote.is-in .vc-ln-card{opacity:1;transform:none}' +
+    '.vc-ln-grab{display:none}' +
+    '.vc-ln-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}' +
+    '.vc-ln-badge{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:#f1c46a;background:radial-gradient(circle at 35% 30%,rgba(241,196,106,.28),rgba(241,196,106,.08));box-shadow:inset 0 0 0 1px rgba(241,196,106,.35)}' +
+    '.vc-ln-badge svg{width:21px;height:21px}' +
+    '.vc-ln-sw{display:flex;align-items:center;gap:6px;padding:5px;border-radius:99px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}' +
+    '.vc-ln-sw b{min-width:34px;padding:5px 8px;border-radius:99px;text-align:center;font-size:12px;font-weight:700;letter-spacing:.06em}' +
+    '.vc-ln-sw .is-from{color:rgba(236,233,226,.55)}' +
+    '.vc-ln-sw .is-to{color:#1c1408;background:linear-gradient(180deg,#f1c46a,#d6a447)}' +
+    '.vc-ln-sw i{display:grid;color:#f1c46a}.vc-ln-sw i svg{width:15px;height:15px}' +
+    '@media (prefers-reduced-motion:no-preference){.vc-lnote.is-in .vc-ln-sw i{animation:vcLnArrow 1.6s ease-in-out .3s infinite}.vc-lnote.is-in .vc-ln-sw .is-to{animation:vcLnPop .5s cubic-bezier(.3,1.5,.5,1) .25s both}}' +
+    '@keyframes vcLnArrow{50%{transform:translateX(3px)}}@keyframes vcLnPop{from{transform:scale(.6);opacity:0}}' +
+    '.vc-ln-title{font-size:19px;font-weight:700;line-height:1.3;margin:0 0 14px}' +
+    '.vc-ln-title small{display:block;margin-top:2px;font-size:13px;font-weight:500;color:rgba(236,233,226,.5)}' +
+    '.vc-ln-list{list-style:none;margin:0;padding:4px 0;border-top:1px solid rgba(255,255,255,.07)}' +
+    '.vc-ln-list li{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.07)}' +
+    '.vc-ln-ic{flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#f1c46a;background:rgba(241,196,106,.1);box-shadow:inset 0 0 0 1px rgba(241,196,106,.22)}' +
+    '.vc-ln-list b{display:block;font-size:14.5px;font-weight:600;line-height:1.45;color:#ece9e2}' +
+    '.vc-ln-list small{display:block;margin-top:2px;font-size:12.5px;line-height:1.4;color:rgba(236,233,226,.5)}' +
+    '.vc-ln-acts{display:flex;gap:10px;margin-top:16px}' +
+    '.vc-ln-acts button{position:relative;flex:1;min-height:48px;padding:8px 12px;border-radius:14px;font-size:14px;font-weight:600;line-height:1.2;white-space:nowrap;cursor:pointer;overflow:hidden;outline:none;-webkit-tap-highlight-color:transparent}' +
+    '.vc-ln-acts button:focus{outline:none !important;box-shadow:none !important}' +
+    '.vc-ln-acts button:focus-visible{outline:2px solid #f1c46a !important;outline-offset:2px}' +
+    '.vc-ln-no{flex:.8 !important;background:transparent;border:1px solid rgba(255,255,255,.16);color:#ece9e2}' +
+    '.vc-ln-ok{border:0;background:rgba(241,196,106,.16);color:rgba(28,20,8,.85);transition:transform .15s}' +
+    '.vc-ln-ok span{position:relative;z-index:1;color:#fbefd2;text-shadow:0 1px 2px rgba(0,0,0,.45);transition:color .2s,text-shadow .2s}' +
+    '.vc-ln-ok:not(:disabled) span,.vc-ln-ok.is-ready span{text-shadow:none}' +
+    '.vc-ln-fill{position:absolute;inset:0;width:0;background:linear-gradient(180deg,#f1c46a,#d6a447)}' +
+    '.vc-lnote.is-in .vc-ln-fill{animation:vcLnFill 3s linear forwards}' +
+    '@keyframes vcLnFill{to{width:100%}}' +
+    '.vc-ln-ok:not(:disabled) span,.vc-ln-ok.is-ready span{color:#1c1408}' +
+    '.vc-ln-ok.is-ready{box-shadow:0 8px 20px -10px rgba(241,196,106,.8) !important}' +
+    '.vc-ln-ok.is-ready:active{transform:scale(.97)}' +
+    '.vc-ln-ok:disabled{cursor:wait}' +
+    /* มือถือ: เลื่อนขึ้นจากด้านล่าง */
+    '@media (max-width:600px){.vc-lnote{align-items:flex-end;padding:0}' +
+      '.vc-ln-card{width:100%;border-radius:24px 24px 0 0;border-bottom:0;padding:10px 18px calc(18px + env(safe-area-inset-bottom));transform:translateY(100%);opacity:1;transition:transform .34s cubic-bezier(.2,.8,.2,1)}' +
+      '.vc-lnote.is-in .vc-ln-card{transform:none}' +
+      '.vc-ln-grab{display:block;width:40px;height:4px;margin:0 auto 12px;border-radius:99px;background:rgba(255,255,255,.18)}}' +
+    '.vc-lnote.is-out .vc-ln-card{transform:translateY(24px);opacity:0}' +
+    '@media (max-width:600px){.vc-lnote.is-out .vc-ln-card{transform:translateY(100%);opacity:1}}' +
     '.vc-lang-legal{margin:10px 0 0;padding:9px 12px;border-radius:10px;border:1px dashed rgba(241,196,106,.35);background:rgba(241,196,106,.06);color:rgba(236,233,226,.78);font:400 12.5px/1.5 Prompt,system-ui,sans-serif;text-align:left}' +
     'html[data-lang=en] body{transition:opacity .15s}' +
     '@media (max-width:480px){.vc-lang{margin:0 2px 0 auto;font-size:10.5px}.vc-lang span{padding:5px 6px}}' +
@@ -52,30 +85,39 @@
   var NOTE_EN = 'English is a convenience translation only. If the Thai and English versions differ, the Thai version prevails. This service is governed by the laws of Thailand, and results are not legal advice.';
   function notice(to, go) {
     var old = document.querySelector('.vc-lnote'); if (old) old.remove();
+    var S = function (d) { return '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>'; };
+    var en = to === 'en', from = en ? 'TH' : 'EN', dest = en ? 'EN' : 'TH';
+    var items = [
+      [S('<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.5 3.5 5.3 3.5 8.5s-1.1 6-3.5 8.5c-2.4-2.5-3.5-5.3-3.5-8.5s1.1-6 3.5-8.5z"/>'), 'ภาษาอังกฤษเป็นคำแปลเพื่อความสะดวกเท่านั้น', 'English is a convenience translation only'],
+      [S('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="m9 14 2 2 4-4"/>'), 'ถ้าความหมายไม่ตรงกัน ถือภาษาไทยเป็นหลัก และใช้กฎหมายไทย', 'If versions differ, Thai prevails. Governed by Thai law'],
+      [S('<path d="M12 4v16M7 20h10M5 7h14"/><path d="m5 7-2.5 6a2.5 2.5 0 0 0 5 0z"/><path d="m19 7-2.5 6a2.5 2.5 0 0 0 5 0z"/>'), 'ผลตรวจไม่ใช่คำปรึกษาทางกฎหมาย', 'Results are not legal advice']
+    ];
     var w = document.createElement('div');
-    w.className = 'vc-lnote'; w.setAttribute('data-i18n-skip', ''); w.setAttribute('role', 'dialog'); w.setAttribute('aria-modal', 'true');
+    w.className = 'vc-lnote'; w.setAttribute('data-i18n-skip', ''); w.setAttribute('role', 'dialog'); w.setAttribute('aria-modal', 'true'); w.setAttribute('aria-labelledby', 'vcLnT');
     w.innerHTML = '<div class="vc-ln-card">' +
-      '<p class="vc-ln-ic" aria-hidden="true">⚖︎</p>' +
-      '<h3>' + (to === 'en' ? 'เปลี่ยนเป็นภาษาอังกฤษ · Switch to English' : 'Switch to Thai · เปลี่ยนเป็นภาษาไทย') + '</h3>' +
-      '<p><b>ไทย:</b> ' + NOTE_TH + '</p>' +
-      '<p><b>English:</b> ' + NOTE_EN + '</p>' +
+      '<i class="vc-ln-grab" aria-hidden="true"></i>' +
+      '<div class="vc-ln-top"><span class="vc-ln-badge">' + S('<path d="M12 4v16M7 20h10M5 7h14"/><path d="m5 7-2.5 6a2.5 2.5 0 0 0 5 0z"/><path d="m19 7-2.5 6a2.5 2.5 0 0 0 5 0z"/>') + '</span>' +
+        '<div class="vc-ln-sw" aria-hidden="true"><b class="is-from">' + from + '</b><i>' + S('<path d="M5 12h13M13 6l6 6-6 6"/>') + '</i><b class="is-to">' + dest + '</b></div></div>' +
+      '<div class="vc-ln-title" id="vcLnT">' + (en ? 'เปลี่ยนเป็นภาษาอังกฤษ' : 'เปลี่ยนเป็นภาษาไทย') + '<small>' + (en ? 'Switch to English' : 'Switch to Thai') + '</small></div>' +
+      '<ul class="vc-ln-list">' + items.map(function (x) { return '<li><span class="vc-ln-ic">' + x[0] + '</span><span><b>' + x[1] + '</b><small>' + x[2] + '</small></span></li>'; }).join('') + '</ul>' +
       '<div class="vc-ln-acts"><button type="button" class="vc-ln-no">ยกเลิก · Cancel</button>' +
-      '<button type="button" class="vc-ln-ok">' + (to === 'en' ? 'เข้าใจแล้ว เปลี่ยนภาษา · I understand' : 'I understand · เข้าใจแล้ว') + '</button></div></div>';
+      '<button type="button" class="vc-ln-ok" disabled><i class="vc-ln-fill" aria-hidden="true"></i><span>เปลี่ยนภาษา · Switch</span></button></div></div>';
     document.body.appendChild(w);
-    var close = function () { w.remove(); document.removeEventListener('keydown', esc); };
+    requestAnimationFrame(function () { w.classList.add('is-in'); });
+    var ok = w.querySelector('.vc-ln-ok'), gone = false;
+    var close = function (then) {
+      if (gone) return; gone = true; document.removeEventListener('keydown', esc);
+      w.classList.remove('is-in'); w.classList.add('is-out');
+      setTimeout(function () { w.remove(); if (then) then(); }, 260);
+    };
     var esc = function (e) { if (e.key === 'Escape') close(); };
     document.addEventListener('keydown', esc);
-    w.addEventListener('click', function (e) { if (e.target === w || e.target.closest('.vc-ln-no')) close(); else if (e.target.closest('.vc-ln-ok') && !e.target.closest('.vc-ln-ok').disabled) { close(); go(); } });
-    /* นับถอยหลัง 3 วินาทีให้อ่านก่อน แล้วปุ่มยืนยันถึงจะกดได้ */
-    var ok = w.querySelector('.vc-ln-ok'), label = ok.innerHTML, n = 3;
-    ok.disabled = true; ok.classList.add('is-wait');
-    var tick = function () {
-      if (!w.isConnected) return;
-      if (n <= 0) { ok.disabled = false; ok.classList.remove('is-wait'); ok.innerHTML = label; ok.focus(); return; }
-      ok.innerHTML = 'โปรดอ่านก่อน · Please read (' + n + ')'; n--; setTimeout(tick, 1000);
-    };
-    tick();
-    var no = w.querySelector('.vc-ln-no'); if (no) no.focus();
+    w.addEventListener('click', function (e) {
+      if (e.target === w || e.target.closest('.vc-ln-no')) close();
+      else if (e.target.closest('.vc-ln-ok') && !ok.disabled) close(go);
+    });
+    /* ให้อ่านก่อน 3 วินาที: แถบทองวิ่งเต็มปุ่ม แล้วปุ่มถึงกดได้ */
+    setTimeout(function () { if (!gone) { ok.disabled = false; ok.classList.add('is-ready'); } }, 3000);
   }
 
   /* ---------- ปุ่มสลับภาษา (แสดงทั้งสองภาษา) ---------- */
