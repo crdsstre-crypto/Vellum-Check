@@ -6,6 +6,7 @@ import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { analyzeContract, answerFollowup, transcribeImage, MAX_ITEMS_LIMIT, CONTRACT_TYPES } from './ai.js';
+import { translateTexts, allowTranslate, MAX_TEXTS as TR_MAX_TEXTS, MAX_LEN as TR_MAX_LEN, MAX_TOTAL as TR_MAX_TOTAL } from './translate.js';
 import { extractPdfText, extractDocxText } from './extract.js';
 import { initDb, pool } from './db.js';
 import {
@@ -314,6 +315,27 @@ app.delete('/api/history/inspections/:id', async (req, res) => {
 const FOLLOWUP_PER_HOUR = 15;
 const FOLLOWUP_MAX_Q = 300;
 const followupHits = new Map(); // userId -> { count, resetAt }
+
+// ----- แปลข้อความหน้าเว็บที่ไม่มีในพจนานุกรม (โหมดภาษาอังกฤษ/จีน) -----
+app.post('/api/translate', async (req, res) => {
+  try {
+    const lang = String(req.body?.lang || '');
+    const texts = req.body?.texts;
+    if (lang !== 'en' && lang !== 'zh') return res.status(400).json({ error: 'bad lang' });
+    if (!Array.isArray(texts) || !texts.length || texts.length > TR_MAX_TEXTS) return res.status(400).json({ error: 'bad texts' });
+    let total = 0;
+    for (const t of texts) {
+      if (typeof t !== 'string' || !t.trim() || t.length > TR_MAX_LEN || !/[\u0E00-\u0E7F]/.test(t)) return res.status(400).json({ error: 'bad text' });
+      total += t.length;
+    }
+    if (total > TR_MAX_TOTAL) return res.status(400).json({ error: 'too long' });
+    if (!allowTranslate(req.ip || 'x')) return res.status(429).json({ error: 'too many' });
+    res.json({ out: await translateTexts(texts, lang) });
+  } catch (err) {
+    console.error('[translate] failed:', err.message);
+    res.status(502).json({ error: 'translate failed' });
+  }
+});
 
 app.post('/api/followup', async (req, res) => {
   try {
