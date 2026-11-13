@@ -48,6 +48,16 @@ ENGLISH MODE (overrides the language rule above):
 - "title" is a short plain-English question of at most 45 characters, e.g. "Who pays for repairs?" "When is the deposit returned?"
 - "suggested_fix" starts with a verb, e.g. "Ask to state that..."`;
 
+// โหมดภาษาจีน (ตัวย่อ)
+const ZH_RULES = `
+
+CHINESE MODE (overrides the language rule above):
+- The reader reads Simplified Chinese, not Thai. Write every human-readable field (summary, title, topic, explanation, suggested_fix, how_to_negotiate, impact, urgency_note, uncertainty, missing_info) in clear, plain Simplified Chinese (简体中文).
+- The contract itself may be in Thai, English or Chinese. "quote" must still be copied verbatim from the contract in its original language.
+- Keep all enum values (level, urgency, detected_type) and the JSON keys exactly as specified.
+- "title" is a short plain-language question of at most 20 Chinese characters, e.g. "维修费谁来付？" "押金什么时候退？"
+- "suggested_fix" starts with a verb, e.g. "要求写明……"`;
+
 function buildSystemPrompt(maxItems, contractType = 'unsure', lang = 'th') {
   const focus = TYPE_FOCUS[contractType] || TYPE_FOCUS.unsure;
   return `คุณช่วยคัดกรองความเสี่ยงเบื้องต้นของสัญญาภาษาไทย คุณไม่ใช่ทนายและไม่ให้คำปรึกษาทางกฎหมาย
@@ -75,7 +85,7 @@ function buildSystemPrompt(maxItems, contractType = 'unsure', lang = 'th') {
 - "uncertainty" ระบุสิ่งที่ยังไม่รู้หรือข้อมูลที่ขาดซึ่งทำให้ประเมินประเด็นนี้ไม่ได้เต็มที่ เช่น ไม่มีภาคผนวกหรือข้อยกเว้น ถ้าไม่มีให้ใส่ "" ห้ามเดา
 - ไม่เกิน ${maxItems} รายการใน items เรียงจากความเสี่ยงสูงสุดก่อน
 - แต่ละฟิลด์ยาวไม่เกิน 2 ประโยค quote สั้นที่สุดที่ยังระบุจุดนั้นได้ชัด
-- ตอบให้จบ JSON เสมอ แม้ต้องตัดรายละเอียดลง${lang === 'en' ? EN_RULES : ''}
+- ตอบให้จบ JSON เสมอ แม้ต้องตัดรายละเอียดลง${lang === 'en' ? EN_RULES : lang === 'zh' ? ZH_RULES : ''}
 
 รูปแบบ JSON:
 {
@@ -130,7 +140,7 @@ export async function analyzeContract(text, contractType = 'unsure', lang = 'th'
     body: JSON.stringify({
       model: MODEL,
       max_tokens: MAX_TOKENS,
-      system: buildSystemPrompt(itemsFor(text.length), type, lang === 'en' ? 'en' : 'th'),
+      system: buildSystemPrompt(itemsFor(text.length), type, lang === 'en' || lang === 'zh' ? lang : 'th'),
       messages: [{ role: 'user', content: text }],
     }),
   });
@@ -206,7 +216,8 @@ export async function answerFollowup(question, context, lang = 'th') {
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY is not set');
   const system = [
     'คุณช่วยอธิบายผลคัดกรองสัญญาภาษาไทยเบื้องต้นให้คนทั่วไปเข้าใจ',
-    lang === 'en' ? 'Answer in clear, plain English (the user does not read Thai), at most 8 short lines.' : 'ตอบเป็นภาษาไทย กระชับ ไม่เกิน 8 บรรทัด ใช้ภาษาง่าย',
+    lang === 'en' ? 'Answer in clear, plain English (the user does not read Thai), at most 8 short lines.' :
+    lang === 'zh' ? 'Answer in clear, plain Simplified Chinese (简体中文; the user does not read Thai), at most 8 short lines.' : 'ตอบเป็นภาษาไทย กระชับ ไม่เกิน 8 บรรทัด ใช้ภาษาง่าย',
     'ตอบโดยอ้างอิงเฉพาะข้อมูลใน <ผลตรวจ> เท่านั้น ถ้าข้อมูลไม่พอให้บอกตรง ๆ ว่าไม่พอ และบอกว่าควรดูข้อความในสัญญาเพิ่ม ห้ามเดาหรือเพิ่มข้อเท็จจริงเอง',
     'ห้ามฟันธงว่าสัญญาเป็นธรรมหรือไม่เป็นธรรม ห้ามบอกว่าฝ่ายใดจะชนะหรือแพ้',
     'ถ้าเรื่องสำคัญหรือมีมูลค่าสูง ให้แนะนำให้ทนายความตรวจก่อนลงนาม',
