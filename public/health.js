@@ -459,6 +459,6 @@
     new MutationObserver(function () { if (q) return; q = true; setTimeout(function () { q = false; attach(); }, 120); }).observe(res, { childList: true, subtree: true });
     attach();
   }
-  window.VCHealth = { compute: compute };
+  window.VCHealth = { compute: compute, band: band, fixedOf: function (r) { return loadFix(keyOf(r)); } };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
