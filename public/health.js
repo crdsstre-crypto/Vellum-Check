@@ -140,6 +140,30 @@
     '@keyframes vhsConf{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(var(--x),var(--y)) rotate(var(--r))}}' +
     '.vhs-lvup{position:absolute;left:50%;top:10px;transform:translateX(-50%);padding:6px 12px;border-radius:999px;background:var(--hc);color:#141519;font:700 12.5px/1 Prompt,sans-serif;white-space:nowrap;animation:vhsUp 2.2s ease forwards;pointer-events:none;z-index:4}' +
     '@keyframes vhsUp{0%{opacity:0;transform:translate(-50%,8px) scale(.8)}12%{opacity:1;transform:translate(-50%,0) scale(1)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-6px)}}' +
+    '.vhs-ring .tg{opacity:0;stroke-linecap:round;stroke-opacity:.45;transition:opacity .5s .6s}.vhs-ring .tg.on{opacity:1}' +
+    '.vhs-tpin{position:absolute;z-index:2;transform:translate(-50%,-50%);pointer-events:none;animation:vhsPin .5s cubic-bezier(.3,1.6,.5,1) .9s both}' +
+    '.vhs-tpin[hidden]{display:none}' +
+    '.vhs-tpin i{display:block;width:12px;height:12px;border-radius:50%;background:#141519;border:2.5px solid var(--pc);box-shadow:0 0 10px var(--pc)}' +
+    '.vhs-tpin b{position:absolute;left:50%;top:-21px;transform:translateX(-50%);padding:2px 6px;border-radius:6px;background:var(--pc);color:#141519;font:700 11px/1.2 Prompt,sans-serif;white-space:nowrap}' +
+    '@keyframes vhsPin{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}' +
+    '.vhs-ring.hit{animation:vhsHit .45s cubic-bezier(.3,1.6,.5,1)}' +
+    '@keyframes vhsHit{0%{transform:scale(1)}40%{transform:scale(1.08)}100%{transform:scale(1)}}' +
+    '.vhs-fly{position:fixed;z-index:9999;pointer-events:none;padding:4px 10px;border-radius:999px;background:var(--fc);color:#141519;font:800 15px/1.2 Prompt,sans-serif;box-shadow:0 6px 20px -4px var(--fc);transform:translate(-50%,-50%)}' +
+    '.vhs-list li{padding:8px 10px !important}' +
+    '.vhs-lv{font-style:normal;display:inline-block;margin-left:4px;padding:1px 6px;border-radius:5px;font:600 10.5px/1.4 Prompt,sans-serif;color:var(--lc);background:color-mix(in srgb,var(--lc) 14%,transparent);vertical-align:1px}' +
+    '.vhs-it-act{justify-content:flex-end;margin-top:6px !important;padding-left:0 !important}' +
+    '.vhs-list .vhs-hw,.vhs-list .vhs-fix{min-height:28px !important;padding:0 9px !important;font-size:11.5px !important;border-radius:8px !important}' +
+    '.vhs-list .vhs-fix i{width:13px !important;height:13px !important}' +
+    '.vhs-pts{padding:2px 7px !important;font-size:11.5px !important}' +
+    '@media (min-width:600px){.vhs-list li{display:flex !important;flex-wrap:wrap;align-items:center;gap:8px}.vhs-it-top{flex:1;min-width:0;align-items:center}' +
+      '.vhs-it-act{margin-top:0 !important}.vhs-list .vhs-it-top button[data-go] i{margin-top:0}.vhs-it-how{flex-basis:100%;margin-left:16px}}' +
+    '.vhs .vhs-band{position:relative;margin:6px 0 6px 2px !important;padding:3px 12px !important;border-radius:7px !important;background:transparent !important;color:var(--hc) !important;' +
+      'border:2.5px solid var(--hc);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--hc) 35%,transparent);font:800 16px/1.25 Prompt,sans-serif !important;letter-spacing:.06em;transform:rotate(-5deg);' +
+      '-webkit-mask-image:radial-gradient(circle at 15% 25%,transparent 2px,#000 2.5px),radial-gradient(circle at 85% 75%,transparent 1.5px,#000 2px);-webkit-mask-composite:source-in;mask-composite:intersect;' +
+      'text-shadow:0 0 1px color-mix(in srgb,var(--hc) 50%,transparent)}' +
+    '.vhs .vhs-band.slam{animation:vhsSlam .55s cubic-bezier(.2,1.4,.4,1)}' +
+    '@keyframes vhsSlam{0%{opacity:0;transform:rotate(-14deg) scale(2.2)}55%{opacity:1;transform:rotate(-4deg) scale(.92)}75%{transform:rotate(-6deg) scale(1.04)}100%{transform:rotate(-5deg) scale(1)}}' +
+    '@media (prefers-reduced-motion:reduce){.vhs .vhs-band.slam,.vhs-tpin,.vhs-ring.hit{animation:none}}' +
     '.vhs-band,.vhs-ring .fg{transition:background .4s,stroke .4s,stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)}' +
     '';
   var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
@@ -161,14 +185,16 @@
   var benchP = null;
   function bench() { if (!benchP) benchP = fetch('/api/bench', { credentials: 'same-origin' }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }); return benchP; }
 
-  var CIRC = 2 * Math.PI * 46;
+  var CIRC = 2 * Math.PI * 46, RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var ICON_SHARE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3.5M7.5 8 12 3.5 16.5 8"/><path d="M5 12.5v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>';
 
   function build(result) {
     var KEY = keyOf(result), fixed = loadFix(KEY), h0 = compute(result, {}), started = false, lastBand = null;
     var el = document.createElement('section'); el.className = 'vhs';
     el.innerHTML = '<div class="vhs-conf"></div><div class="vhs-top"><div class="vhs-ring"><svg viewBox="0 0 112 112" aria-hidden="true"><circle class="bg" cx="56" cy="56" r="46" fill="none" stroke-width="10"/>' +
+      '<circle class="tg" cx="56" cy="56" r="46" fill="none" stroke-width="10" stroke-dasharray="0 ' + CIRC.toFixed(1) + '"/>' +
       '<circle class="fg" cx="56" cy="56" r="46" fill="none" stroke-width="10" stroke-dasharray="' + CIRC.toFixed(1) + '" stroke-dashoffset="' + CIRC.toFixed(1) + '"/></svg>' +
+      '<span class="vhs-tpin" hidden><i></i><b></b></span>' +
       '<div class="vhs-num"><b>0</b><small>/ 100</small></div></div>' +
       '<div><p class="vhs-k">คะแนนสุขภาพสัญญา<span class="vhs-done"></span></p><span class="vhs-band"></span><p class="vhs-msg"></p></div></div>' +
       '<p class="vhs-bench" hidden></p>' +
@@ -183,9 +209,9 @@
           '<span class="vhs-cs"></span><span class="vhs-bar"><i></i></span></button>' +
           (n ? '<ul class="vhs-list" data-for="' + c.k + '" hidden>' + h0.per[c.k].items.slice().sort(function (a, b) { return OVR[b.l] - OVR[a.l] || a.i - b.i; }).map(function (x) {
             var fix = String(x.it.suggested_fix || '').trim(), neg = String(x.it.how_to_negotiate || '').trim();
-            return '<li data-i="' + x.i + '" style="--lc:' + LC[x.l] + '"><div class="vhs-it-top"><button type="button" data-go="' + x.i + '"><i></i><span>' + esc(x.it.title || 'ประเด็น') + '</span></button>' +
+            return '<li data-i="' + x.i + '" style="--lc:' + LC[x.l] + '"><div class="vhs-it-top"><button type="button" data-go="' + x.i + '"><i></i><span>' + esc(x.it.title || 'ประเด็น') + ' <em class="vhs-lv">' + LV[x.l] + '</em></span></button>' +
                 '<span class="vhs-pts">+' + OVR[x.l] + '</span></div>' +
-              '<div class="vhs-it-act"><small>' + LV[x.l] + '</small>' +
+              '<div class="vhs-it-act">' +
                 (fix || neg ? '<button type="button" class="vhs-hw" data-how="' + x.i + '" aria-expanded="false">💡 ขอแก้ยังไง</button>' : '') +
                 '<button type="button" class="vhs-fix" data-fix="' + x.i + '" aria-pressed="false"><i></i>แก้แล้ว</button></div>' +
               (fix || neg ? '<div class="vhs-it-how" hidden>' + (fix ? '<p><b>ขอแก้เป็น</b>' + esc(fix) + '</p>' : '') + (neg ? '<p><b>วิธีคุย</b>' + esc(neg) + '</p>' : '') +
@@ -245,7 +271,7 @@
         return '<li class="' + (x.f ? 'f ' : '') + (x.l === 'caution' ? 'cau' : x.l === 'low' ? 'low' : '') + '"><b>' + (x.f ? '±0' : '−' + x.d) + '</b><span>' + esc(x.it.title || '') + ' · ' + LV[x.l] + (x.f ? ' · แก้แล้ว' : '') + '</span></li>';
       }).join('') : '<li><b style="color:#34d399">±0</b><span>ไม่พบประเด็นที่ต้องหักคะแนน</span></li>';
       // (1) ถ้าแก้แล้วคะแนนจะเป็นเท่าไร
-      var goal = $('.vhs-goal'), openHi = [], openCau = [];
+      var goal = $('.vhs-goal'), openHi = [], openCau = [], after = null;
       h.log.forEach(function (x) { if (!x.f) (x.l === 'check_detail' ? openHi : x.l === 'caution' ? openCau : []).push(x.i); });
       var tgt = openHi.length ? openHi : openCau;
       if (!h.n) goal.hidden = true;
@@ -255,7 +281,7 @@
         goal.removeAttribute('data-open');
       } else {
         var f2 = {}; for (var k in fixed) f2[k] = fixed[k]; tgt.forEach(function (i) { f2[i] = 1; });
-        var after = compute(result, f2).score, bb = band(after);
+        after = compute(result, f2).score; var bb = band(after);
         goal.hidden = false; goal.className = 'vhs-goal'; goal.style.setProperty('--gc', bb.c);
         goal.setAttribute('data-open', tgt.join(','));
         goal.innerHTML = '<span class="gi">🎯</span><span>ขอแก้ ' + tgt.length + ' ข้อ' + (openHi.length ? 'สำคัญ' : 'ควรระวัง') + ' → คะแนนขึ้นเป็น <b>' + after + ' (' + bb.t + ')</b></span><span class="ar">›</span>';
@@ -267,7 +293,18 @@
           confetti(); var up = document.createElement('span'); up.className = 'vhs-lvup'; up.textContent = '⬆ ขึ้นเป็น "' + b.t + '"'; el.appendChild(up); setTimeout(function () { if (up.parentNode) up.parentNode.removeChild(up); }, 2300);
         }
       }
-      lastBand = b.k;
+      var tgArc = $('.tg'), pin = $('.vhs-tpin');
+      if (started && typeof after === 'number' && after > h.score) {
+        var a0 = CIRC * h.score / 100, a1 = CIRC * (after - h.score) / 100;
+        tgArc.setAttribute('stroke-dasharray', '0 ' + a0.toFixed(1) + ' ' + a1.toFixed(1) + ' ' + CIRC.toFixed(1));
+        tgArc.style.stroke = band(after).c; tgArc.classList.add('on');
+        var ang = (after / 100 * 360 - 90) * Math.PI / 180;
+        pin.style.left = (50 + 41 * Math.cos(ang)).toFixed(1) + '%'; pin.style.top = (50 + 41 * Math.sin(ang)).toFixed(1) + '%';
+        pin.style.setProperty('--pc', band(after).c); pin.querySelector('b').textContent = after; pin.hidden = false;
+      } else { tgArc.classList.remove('on'); pin.hidden = true; }
+      var bd = $('.vhs-band');
+      if (started && lastBand !== b.k) { bd.classList.remove('slam'); void bd.offsetWidth; bd.classList.add('slam'); }
+      if (started) lastBand = b.k;
       return h;
     }
     render(false);
@@ -287,7 +324,13 @@
 
     el.addEventListener('click', function (e) {
       var fx = e.target.closest('[data-fix]');
-      if (fx) { var i = fx.getAttribute('data-fix'); if (fixed[i]) delete fixed[i]; else fixed[i] = 1; saveFix(KEY, fixed); render(); return; }
+      if (fx) {
+        var i = fx.getAttribute('data-fix'), turnOn = !fixed[i];
+        if (turnOn) fixed[i] = 1; else delete fixed[i];
+        saveFix(KEY, fixed);
+        if (turnOn && !RM) fly(fx, '+' + OVR[lv(result.items[i])], LC[lv(result.items[i])]); else render();
+        return;
+      }
       var g = e.target.closest('[data-go]');
       if (g) {
         var ii = g.getAttribute('data-go'), row = document.querySelector('#result .ix-row[data-ixcard="' + ii + '"]');
@@ -319,6 +362,20 @@
       c.setAttribute('aria-expanded', String(open)); if (list) list.hidden = !open;
     });
 
+    function fly(from, txt, col) {
+      var r1 = from.getBoundingClientRect(), ring = $('.vhs-ring'), r2 = ring.getBoundingClientRect();
+      var f = document.createElement('span'); f.className = 'vhs-fly'; f.textContent = txt; f.style.setProperty('--fc', col);
+      f.style.left = (r1.left + r1.width / 2) + 'px'; f.style.top = (r1.top + r1.height / 2) + 'px';
+      document.body.appendChild(f);
+      var dx = (r2.left + r2.width / 2) - (r1.left + r1.width / 2), dy = (r2.top + r2.height / 2) - (r1.top + r1.height / 2);
+      var an = f.animate ? f.animate([
+        { transform: 'translate(-50%,-50%) scale(.6)', opacity: 0 },
+        { transform: 'translate(-50%,-50%) translate(0,-28px) scale(1.25)', opacity: 1, offset: .25 },
+        { transform: 'translate(-50%,-50%) translate(' + dx + 'px,' + dy + 'px) scale(.7)', opacity: .9 }
+      ], { duration: 750, easing: 'cubic-bezier(.5,0,.3,1)' }) : null;
+      var fin = false, done = function () { if (fin) return; fin = true; if (f.parentNode) f.parentNode.removeChild(f); render(); ring.classList.remove('hit'); void ring.offsetWidth; ring.classList.add('hit'); };
+      if (an) { an.onfinish = done; setTimeout(done, 1200); } else done();
+    }
     function setOpen(o) {
       el.classList.toggle('open', o);
       var t = el.querySelector('.vhs-tog'); t.setAttribute('aria-expanded', String(o)); t.querySelector('span').textContent = o ? 'ย่อการ์ด' : 'ดูรายละเอียดและวิธีแก้';
