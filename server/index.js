@@ -28,7 +28,7 @@ import {
   getVoiceCredits, reserveVoiceCredits, refundVoiceCredits,
 } from './credits.js';
 import { isBlocked, recordFailure, clearFailures } from './rateLimit.js';
-import { buildSpokenSummary, synthesizeSpeech, VOICE_CREDIT_COST, listVoices, pickVoice, voicePreview, voiceSource } from './voice.js';
+import { buildSpokenSummary, synthesizeSpeech, VOICE_CREDIT_COST, listVoices, pickVoice, voicePreview, voiceSource, warmPreviews } from './voice.js';
 import { createPromptPayPayment, confirmAndCredit, getPaymentStatus, PACKAGES } from './payments.js';
 import { logCheck, saveFeedback, adminStats, FEEDBACK_REASONS } from './stats.js';
 import { getDaily, checkIn, redeem } from './daily.js';
@@ -332,7 +332,16 @@ app.get('/api/voices/:id/preview', async (req, res) => {
     h.n += 1; previewHits.set(ip, h);
     if (previewHits.size > 5000) for (const [k, v] of previewHits) if (v.resetAt <= now) previewHits.delete(k);
     const buf = await voicePreview(id);
-    res.set('Content-Type', 'audio/mpeg').set('Cache-Control', 'public, max-age=86400').send(buf);
+    // iPhone (Safari) ขอไฟล์เสียงเป็นช่วง ๆ (Range) ถ้าไม่ตอบแบบช่วง จะเล่นได้แค่นิดเดียวแล้วขึ้นผิดพลาด
+    res.set('Content-Type', 'audio/mpeg').set('Accept-Ranges', 'bytes').set('Cache-Control', 'public, max-age=86400');
+    const m = /^bytes=(\d*)-(\d*)$/.exec(String(req.headers.range || ''));
+    if (m && (m[1] || m[2])) {
+      let a = m[1] === '' ? Math.max(0, buf.length - Number(m[2])) : Number(m[1]);
+      let b = m[1] !== '' && m[2] !== '' ? Math.min(Number(m[2]), buf.length - 1) : buf.length - 1;
+      if (a >= buf.length || a > b) return res.status(416).set('Content-Range', `bytes */${buf.length}`).end();
+      return res.status(206).set('Content-Range', `bytes ${a}-${b}/${buf.length}`).set('Content-Length', String(b - a + 1)).end(buf.subarray(a, b + 1));
+    }
+    res.set('Content-Length', String(buf.length)).end(buf);
   } catch (err) { console.error('[voice] preview failed:', err.message); res.status(502).end(); }
 });
 
@@ -906,6 +915,7 @@ initDb()
   .then(() => {
     app.listen(PORT, () => {
       console.log(`[เช็กสัญญา] server running on port ${PORT}`);
+      setTimeout(warmPreviews, 5000);   // เตรียมตัวอย่างเสียงทุกเสียงไว้ล่วงหน้า
     });
   })
   .catch(err => {
