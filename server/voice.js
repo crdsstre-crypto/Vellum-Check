@@ -33,7 +33,7 @@ function shortName(n) { return String(n || '').split(/\s+[-–|]\s+/)[0].trim().
 export async function listVoices() {
   if (voiceCache && Date.now() - voiceAt < 10 * 60 * 1000) return voiceCache;
   const def = process.env.ELEVENLABS_VOICE_ID || '';
-  let out = [];
+  let out = [], bad = false;
   const env = String(process.env.ELEVENLABS_VOICES || '').trim();
   if (env) {
     out = env.split(',').map(x => x.trim()).filter(Boolean).map(x => {
@@ -45,15 +45,27 @@ export async function listVoices() {
       const r = await fetch(`${EL}/voices`, { headers: { 'xi-api-key': process.env.ELEVENLABS_API_KEY }, signal: AbortSignal.timeout(10000) });
       if (r.ok) {
         const d = await r.json();
-        out = (d.voices || []).filter(v => v.category !== 'premade' || v.voice_id === def)
-          .map(v => ({ id: v.voice_id, name: shortName(v.name), gender: GENDER[String(v.labels?.gender || '').toLowerCase()] || '' }));
-      } else console.error('[voice] list voices status', r.status);
-    } catch (e) { console.error('[voice] list voices:', e.message); }
+        const map = v => ({ id: v.voice_id, name: shortName(v.name), gender: GENDER[String(v.labels?.gender || '').toLowerCase()] || '' });
+        const all = d.voices || [];
+        out = all.filter(v => v.category !== 'premade' || v.voice_id === def).map(map);
+        // ยังมีเสียงของตัวเองไม่ถึง 2 เสียง → ใช้เสียง Default ของ ElevenLabs ไปก่อน (ใช้ได้ถึงสิ้นปี 2026 แล้วหายเอง)
+        if (out.length < 2 && Date.now() < Date.UTC(2027, 0, 1)) {
+          const pref = ['Sarah', 'George', 'Matilda', 'Will', 'Jessica', 'Brian'];
+          const pre = all.filter(v => v.category === 'premade' && v.voice_id !== def)
+            .sort((a, b) => ((pref.indexOf(shortName(a.name)) + 99) % 99) - ((pref.indexOf(shortName(b.name)) + 99) % 99))
+            .map(map);
+          // สลับหญิง/ชาย ให้มีให้เลือกทั้งสองแบบ
+          const f = pre.filter(v => v.gender === 'ผู้หญิง'), m = pre.filter(v => v.gender !== 'ผู้หญิง'), mix = [];
+          for (let i = 0; mix.length < 6 && (i < f.length || i < m.length); i++) { if (f[i]) mix.push(f[i]); if (m[i] && mix.length < 6) mix.push(m[i]); }
+          out = out.concat(mix);
+        }
+      } else { console.error('[voice] list voices status', r.status); bad = true; }
+    } catch (e) { console.error('[voice] list voices:', e.message); bad = true; }
   }
   if (def && !out.some(v => v.id === def)) out.unshift({ id: def, name: 'เสียงหลัก', gender: '' });
   out.sort((a, b) => (b.id === def) - (a.id === def));
   out = out.filter(v => /^[A-Za-z0-9]{8,40}$/.test(v.id)).slice(0, 8);
-  voiceCache = out; voiceAt = Date.now();
+  voiceCache = out; voiceAt = bad ? Date.now() - 9.5 * 60 * 1000 : Date.now();   // ดึงไม่สำเร็จ → ลองใหม่ใน 30 วินาที
   return out;
 }
 export async function pickVoice(id) {
