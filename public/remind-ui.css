@@ -156,3 +156,66 @@ html.vrh-open,html.vrh-open body{overflow:hidden}
 
 /* ประสิทธิภาพ: ไม่เบลอฉากหลังทั้งจอ (ภาพแทบเหมือนเดิม แต่ไม่ต้องคำนวณเบลอทุกเฟรม) */
 .vrh-bg{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(0,0,0,.8)}
+
+/* ===== v3 หน้าตาใหม่: แผ่นปฏิทินฉีก · ไทม์ไลน์ · ป้ายนับถอยหลัง · พับข้อความสัญญา · การ์ด "ถัดไป" ===== */
+.vrm-list{position:relative;gap:14px}
+.vrm-list::before{content:"";position:absolute;left:69px;top:14px;bottom:14px;width:2px;border-radius:2px;background:linear-gradient(180deg,rgba(228,200,120,.05),rgba(228,200,120,.35),rgba(228,200,120,.05))}
+.vrm-row{position:relative;align-items:flex-start}
+.vrm-row.is-past{opacity:.5}
+.vrm-row.is-past .vrm-pg{filter:grayscale(1)}
+.vrm-row.vrm-flash{animation:vrmFlash 1.4s ease-out}
+@keyframes vrmFlash{0%,30%{box-shadow:0 0 0 2px #e4c878,0 0 24px rgba(228,200,120,.45)}100%{box-shadow:0 0 0 0 transparent}}
+/* (1) แผ่นปฏิทิน */
+.vrm-pad{position:relative;flex:0 0 52px;width:52px;height:58px;margin:0;cursor:pointer}
+.vrm-pg{position:absolute;inset:0;display:flex;flex-direction:column;border-radius:10px;overflow:hidden;background:#f7efdc;box-shadow:0 6px 14px -6px rgba(0,0,0,.7),inset 0 -3px 0 rgba(0,0,0,.08);transition:transform .2s}
+.vrm-pg::before{content:"";position:absolute;left:0;right:0;top:17px;height:4px;background:repeating-linear-gradient(90deg,rgba(0,0,0,.12) 0 3px,transparent 3px 6px)}
+.vrm-pg b{display:block;padding:3px 0 2px;text-align:center;background:linear-gradient(180deg,#d4553f,#b83f2c);color:#fff;font:700 10.5px/1.2 'Prompt',sans-serif;letter-spacing:.02em}
+.vrm-pg em{flex:1;display:grid;place-items:center;font:700 24px/1 'Prompt',sans-serif;font-style:normal;color:#2a2116;font-variant-numeric:tabular-nums}
+.vrm-pad:hover .vrm-pg{transform:translateY(-2px) rotate(-2deg)}
+.vrm-pad .vrm-date{position:absolute !important;inset:0;width:100% !important;height:100% !important;min-height:0 !important;margin:0;padding:0 !important;opacity:0;border:0;cursor:pointer;font-size:16px !important;z-index:2}
+.vrm-pad .vrm-date::-webkit-calendar-picker-indicator{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.vrm-pad:focus-within .vrm-pg{box-shadow:0 0 0 2px var(--vr-acc,#e4c878),0 6px 14px -6px rgba(0,0,0,.7)}
+.vrm-card.is-saved .vrm-pad{pointer-events:none}
+/* (3) ป้ายนับถอยหลัง */
+.vrm-meta{margin-top:4px !important}
+.vrm-left{display:inline-flex;flex-direction:column;gap:4px;padding:4px 10px 5px;border-radius:9px;font:600 .8rem/1.2 'Prompt',sans-serif !important;text-decoration:none !important;background:rgba(255,255,255,.05);color:var(--vr-dim)}
+.vrm-left.u-hot{background:rgba(242,85,90,.14);color:#ff8d8f}
+.vrm-left.u-near{background:rgba(228,200,120,.14);color:#f0d48a}
+.vrm-left.u-far{background:rgba(255,255,255,.05);color:#b8b8be}
+.vrm-left.u-past{background:rgba(255,255,255,.04);color:var(--vr-mute)}
+.vrm-bar{display:block;width:100%;min-width:56px;height:3px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden}
+.vrm-bar u{display:block;height:100%;border-radius:3px;background:currentColor}
+/* (4) พับข้อความในสัญญา */
+.vrm-qt{display:inline-flex;align-items:center;gap:4px;margin:6px 0 0 6px;padding:0;border:0;background:none;color:var(--vr-mute);font:500 .76rem/1.4 'Prompt',sans-serif;cursor:pointer}
+.vrm-qt i{font-style:normal;display:inline-block;transition:transform .2s}
+.vrm-qt[aria-expanded="true"] i{transform:rotate(90deg)}
+.vrm-qt[aria-expanded="false"] ~ .vc-why{display:none}
+.vrm-src[hidden]{display:none !important}
+.vrm-src{padding:8px 10px;border-left:2px solid rgba(228,200,120,.35);background:rgba(255,255,255,.03);border-radius:0 8px 8px 0}
+/* (2) หมุดวันนี้ */
+.vrm-today{position:relative;display:flex;align-items:center;gap:8px;margin:-4px 0;padding-left:63px;height:18px}
+.vrm-today::before{content:"";position:absolute;left:63px;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:50%;background:#34d399;box-shadow:0 0 0 4px rgba(52,211,153,.2),0 0 12px rgba(52,211,153,.6)}
+.vrm-today::after{content:"";position:absolute;left:84px;right:0;top:50%;height:1px;background:linear-gradient(90deg,rgba(52,211,153,.5),transparent)}
+.vrm-today span{position:relative;z-index:1;margin-left:24px;padding:1px 8px;border-radius:999px;background:#0f1a15;border:1px solid rgba(52,211,153,.4);color:#7fe3bd;font:600 .72rem/1.5 'Prompt',sans-serif}
+/* (5) การ์ดถัดไป */
+.vrm-next{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 14px;padding:12px 14px;border-radius:14px;border:1px solid rgba(228,200,120,.35);text-align:left;cursor:pointer;color:inherit;font:inherit;
+  background:linear-gradient(120deg,rgba(228,200,120,.16),rgba(228,200,120,.04))}
+.vrm-next[hidden]{display:none}
+.vrm-next.u-hot{border-color:rgba(242,85,90,.45);background:linear-gradient(120deg,rgba(242,85,90,.18),rgba(242,85,90,.04))}
+.vrm-next.u-far{border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.03)}
+.vrm-nx-k{flex:none;padding:3px 8px;border-radius:7px;background:rgba(228,200,120,.2);color:#f0d48a;font:700 .72rem/1.3 'Prompt',sans-serif}
+.vrm-next.u-hot .vrm-nx-k{background:rgba(242,85,90,.22);color:#ff8d8f}
+.vrm-nx-t{flex:1;min-width:0}
+.vrm-nx-t b{display:block;font:600 .92rem/1.35 'Prompt',sans-serif;color:var(--vr-tx,#eee);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vrm-nx-t small{display:block;font:400 .76rem/1.3 'Prompt',sans-serif;color:var(--vr-dim)}
+.vrm-nx-n{flex:none;display:flex;flex-direction:column;align-items:center;min-width:46px;line-height:1}
+.vrm-nx-n b{font:800 1.6rem/1 'Prompt',sans-serif;color:#f0d48a;font-variant-numeric:tabular-nums}
+.vrm-next.u-hot .vrm-nx-n b{color:#ff8d8f}.vrm-next.u-far .vrm-nx-n b{color:#d4d4d8}
+.vrm-nx-n small{margin-top:2px;font:500 .7rem/1 'Prompt',sans-serif;color:var(--vr-dim)}
+@media (max-width:767px){
+  .vrm-pad{flex-basis:46px;width:46px;height:52px}
+  .vrm-pg em{font-size:21px}
+  .vrm-list::before{left:66px}
+  .vrm-today{padding-left:59px}.vrm-today::before{left:59px}.vrm-today::after{left:80px}
+}
+@media (prefers-reduced-motion:reduce){.vrm-row.vrm-flash{animation:none}.vrm-pg{transition:none}}
