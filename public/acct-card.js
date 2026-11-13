@@ -1,10 +1,8 @@
-/* ===== สมุดบัญชีหนังในหน้าบัญชี (v5) =====
-   ปกหนังพลิกเปิด → หน้ากระดาษ:
-   (1) รูปโปรไฟล์ติดบนหน้ากระดาษ (มุมกระดาษยึดรูป + คลิปทองเหลือง) แทนแถบอีเมลด้านบน · แตะรูป = เปลี่ยน/ลบรูป
-   (2) เครดิตเป็นขีดนับลายมือ (มัดละ 5) ค่อย ๆ เขียนตอนเปิดสมุด
-   (3) ตารางบัญชี "รายการล่าสุด" 3 ฉบับ + ตรายาง เสี่ยง/ระวัง/ผ่าน · แตะแถว = เปิดรายงาน
-   (5) แตะตราครั่ง = เช็กอินรายวัน (กดตรา ครั่งกระเพื่อม +แต้ม)
-   v6: แท็บดัชนีข้างเล่ม (มือถือ) แทนการ์ด/เมนูเดิม · ตารางย้ายไปหน้า 2 พลิกหน้าได้ (ปัด/แตะ) · ตราครั่ง 7 วันแทนการ์ดเช็กอิน
+/* ===== แฟ้มเอกสารสมาชิก (หน้าบัญชี) v7 =====
+   แฟ้มกระดาษคราฟต์ มีแท็บด้านบน 3 แท็บ: ภาพรวม · ประวัติ · ตั้งค่า (แตะ/ปัดเพื่อสลับ)
+   - ภาพรวม: รูป+ชื่อ · เครดิตคงเหลือ + เติม/แลกแต้ม · เช็กอิน 7 วัน (แตะช่องวันนี้) · สถิติย่อ
+   - ประวัติ: 6 ฉบับล่าสุด (ชื่อ · ประเด็นสำคัญ · ตรายาง เสี่ยง/ระวัง/ผ่าน) แตะ = เปิดรายงาน
+   - ตั้งค่า: เมนูเดิมทั้งหมด (กดปุ่มเดิมที่ซ่อนไว้ให้)
    ข้อมูลจาก /api/me · /api/history/inspections · /api/daily (+ POST /api/daily/checkin) */
 (function () {
   'use strict';
@@ -13,8 +11,9 @@
   var calm = function () { return window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches; };
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function get(u) { return fetch(u, { credentials: 'same-origin', headers: { Accept: 'application/json' } }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }); }
+  var I = function (d) { return '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>'; };
 
-  var box = document.createElement('section'); box.className = 'vac vl'; box.id = 'vacCard'; box.setAttribute('aria-label', 'สมุดบัญชีของคุณ'); box.hidden = true;
+  var box = document.createElement('section'); box.className = 'vac vf'; box.id = 'vacCard'; box.setAttribute('aria-label', 'แฟ้มบัญชีของคุณ'); box.hidden = true;
   pane.insertBefore(box, pane.firstChild);
   document.documentElement.classList.add('vac-on');
 
@@ -22,7 +21,7 @@
     var t = Date.parse(iso); if (!t) return '–';
     var m = Math.round((Date.now() - t) / 60000);
     if (m < 1) return 'เมื่อสักครู่'; if (m < 60) return m + ' นาทีก่อน';
-    var h = Math.round(m / 60); if (h < 24) return h + ' ชม. ก่อน';
+    var h = Math.round(m / 60); if (h < 24) return h + ' ชม.ก่อน';
     var d = Math.round(h / 24); if (d < 30) return d + ' วันก่อน';
     return Math.round(d / 30) + ' เดือนก่อน';
   }
@@ -37,7 +36,7 @@
     var h = document.querySelector('#bottomNav [data-nav="hist"]');
     if (h && h.offsetParent) { h.click(); return; }
     if (window.vcOpenHistory) { window.vcOpenHistory(); return; }
-    var w = document.getElementById('walletHist'); if (w) { if (w.getAttribute('aria-expanded') !== 'true') w.click(); try { w.scrollIntoView({ block: 'start', behavior: 'smooth' }); } catch (e) {} }
+    var w = document.getElementById('walletHist'); if (w) w.click();
   }
   function topup() { var b = document.querySelector('.wallet-topup'); if (b) b.click(); else if (window.VCShowCredits) window.VCShowCredits(); }
   function nm(m) {
@@ -45,247 +44,186 @@
     try { n = localStorage.getItem('vc_gname_' + String(m || '').toLowerCase()) || ''; } catch (e) {}
     n = n.split(/\s+/)[0] || '';
     if (!n) { n = String(m || '').split('@')[0].replace(/[._-]+/g, ' ').trim().split(/\s+/)[0] || ''; n = n.replace(/\d+$/, '') || n; n = n.charAt(0).toUpperCase() + n.slice(1); }
-    return n.length > 14 ? n.slice(0, 13) + '…' : n;
+    return n.length > 16 ? n.slice(0, 15) + '…' : n;
   }
-  function ledgerNo(m) { var h = 7; String(m || '').split('').forEach(function (c) { h = (h * 31 + c.charCodeAt(0)) % 99991; }); return 'VC-' + ('0000' + (h % 10000)).slice(-4); }
+  function fileNo(m) { var h = 7; String(m || '').split('').forEach(function (c) { h = (h * 31 + c.charCodeAt(0)) % 99991; }); return 'VC-' + ('0000' + (h % 10000)).slice(-4); }
   function typeName(v) {
     var o = v && document.querySelector('#contractType option[value="' + String(v).replace(/["\\]/g, '') + '"]');
     if (!o || v === 'unsure') return '';
     return o.textContent.replace(/\s*\(.*$/, '').trim();
   }
-  function setOpen(on, anim) {
-    var bk = box.querySelector('.vl-book'); if (!bk) return;
-    if (!anim || calm()) bk.classList.add('no-anim'); else bk.classList.remove('no-anim');
-    bk.classList.toggle('is-open', on);
-    var cv = bk.querySelector('.vl-cover'); if (cv) { cv.setAttribute('aria-expanded', on ? 'true' : 'false'); cv.tabIndex = on ? -1 : 0; }
-    if (!anim || calm()) { void bk.offsetWidth; bk.classList.remove('no-anim'); }
-  }
 
-  /* (1) รูปติดบนหน้ากระดาษ — ใช้รูปเดียวกับปุ่มรูปโปรไฟล์เดิม */
-  function photoSrc(me) {
-    var ph = document.getElementById('acctPhoto');
-    if (ph && !ph.hidden && ph.getAttribute('src')) return ph.currentSrc || ph.src;
-    return me && typeof me.avatar === 'string' && /^(https:|data:image)/.test(me.avatar) ? me.avatar : '';
-  }
-  function photoHtml(me, email) {
-    var src = photoSrc(me);
-    return src ? '<img alt="" src="' + esc(src) + '">' : '<b>' + esc((nm(email).charAt(0) || '?').toUpperCase()) + '</b>';
-  }
+  /* ---------- รูปโปรไฟล์ (ใช้ปุ่ม/ไฟล์อินพุตเดิม) ---------- */
   var lastMe = null;
+  function photoHtml(me) {
+    var ph = document.getElementById('acctPhoto'), src = '';
+    if (ph && !ph.hidden && ph.getAttribute('src')) src = ph.currentSrc || ph.src;
+    else if (me && typeof me.avatar === 'string' && /^(https:|data:image)/.test(me.avatar)) src = me.avatar;
+    return src ? '<img alt="" src="' + esc(src) + '">' : '<b>' + esc((nm(me && me.email).charAt(0) || '?').toUpperCase()) + '</b>';
+  }
   var ph0 = document.getElementById('acctPhoto');
   if (ph0 && 'MutationObserver' in window) new MutationObserver(function () {
-    var f = box.querySelector('.vl-photo .vl-ph-in'); if (f && lastMe) f.innerHTML = photoHtml(lastMe, lastMe.email);
+    var f = box.querySelector('.vf-av'); if (f && lastMe) f.innerHTML = photoHtml(lastMe) + '<i class="vf-cam" aria-hidden="true">' + I('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>') + '</i>';
   }).observe(ph0, { attributes: true, attributeFilter: ['src', 'hidden'] });
   function photoMenu(btn) {
-    var old = box.querySelector('.vl-phmenu'); if (old) { old.remove(); return; }
+    var old = box.querySelector('.vf-phmenu'); if (old) { old.remove(); return; }
     var del = document.getElementById('acctPhotoDel'), file = document.getElementById('acctFile');
     if (!del || del.hidden) { if (file) file.click(); return; }
-    var m = document.createElement('div'); m.className = 'vl-phmenu'; m.setAttribute('role', 'menu');
+    var m = document.createElement('div'); m.className = 'vf-phmenu'; m.setAttribute('role', 'menu');
     m.innerHTML = '<button type="button" role="menuitem" data-a="ph-ch">เปลี่ยนรูป</button><button type="button" role="menuitem" data-a="ph-rm" class="is-rm">ลบรูป</button>';
     btn.parentNode.appendChild(m);
   }
 
-  /* (2) ขีดนับลายมือ: มัดละ 5 (4 ขีดตั้ง + 1 ขีดเฉียง) */
-  function tally(n) {
-    var MAXG = 6, full = Math.floor(n / 5), rest = n % 5, out = '', k = 0, extra = 0;
-    if (n > MAXG * 5) { full = MAXG; rest = 0; extra = n - MAXG * 5; }
-    var r = function (a) { return (Math.sin(a * 12.9898 + n) * 43758.5453 % 1) * 1.6; };
-    var stroke = function (d) { var s = '<path pathLength="1" style="--d:' + (k * 70) + 'ms" d="' + d + '"/>'; k++; return s; };
-    var group = function (cnt, slash, gi) {
-      var s = '<svg class="vl-tg" viewBox="0 0 34 30" aria-hidden="true">';
-      for (var i = 0; i < cnt; i++) { var x = 5 + i * 6.4 + r(gi * 9 + i); s += stroke('M' + x.toFixed(1) + ' ' + (4 + r(i + 3)).toFixed(1) + ' Q' + (x + .9).toFixed(1) + ' 15 ' + (x - .3 + r(i)).toFixed(1) + ' ' + (26 - r(i + 7)).toFixed(1)); }
-      if (slash) s += stroke('M1.5 ' + (20 + r(gi)).toFixed(1) + ' Q17 14 ' + (32 - r(gi + 2)).toFixed(1) + ' ' + (8 + r(gi + 5)).toFixed(1));
-      return s + '</svg>';
-    };
-    for (var g = 0; g < full; g++) out += group(4, true, g);
-    if (rest) out += group(rest, false, full);
-    if (extra) out += '<span class="vl-tmore">+' + extra + '</span>';
-    return out;
+  /* ---------- เช็กอิน 7 วัน ---------- */
+  var D = null, ckBusy = false;
+  function weekHtml() {
+    if (!D || !D.week || !D.week.length) return '';
+    return D.week.map(function (w, i) {
+      var cls = w.done ? 'is-done' : w.today ? 'is-today' : '';
+      var tag = w.today ? 'button type="button" data-a="checkin"' : 'span';
+      return '<' + tag + ' class="vf-day ' + cls + (i === 6 ? ' is-last' : '') + '" aria-label="วันที่ ' + w.day + (w.done ? ' เช็กอินแล้ว' : ' ได้ ' + w.reward + ' แต้ม') + '">' +
+        '<i>' + (w.done ? I('<path d="m6 12.5 4 4 8-9"/>') : '+' + w.reward) + '</i><small>' + (i === 6 ? 'วัน 7 ★' : 'วัน ' + w.day) + '</small></' + tag.split(' ')[0] + '>';
+    }).join('');
+  }
+  function ckLine() {
+    if (!D) return '';
+    if (D.checkedToday) return 'เช็กอินแล้ววันนี้' + (D.tomorrowReward ? ' · พรุ่งนี้ +' + D.tomorrowReward : '');
+    return 'แตะช่องวันนี้เพื่อรับ +' + (D.todayReward || 0) + ' แต้ม';
+  }
+  function paintCheck() {
+    var r = box.querySelector('.vf-week'); if (r) r.innerHTML = weekHtml();
+    var l = box.querySelector('.vf-ckline'); if (l) { l.textContent = ckLine(); l.classList.toggle('is-ready', !!(D && !D.checkedToday)); }
+    var s = box.querySelector('.vf-streak'); if (s) s.innerHTML = D && D.streak ? 'ต่อเนื่อง <b>' + D.streak + '</b> วัน' : '';
+    var p = box.querySelector('.vf-pts'); if (p && D) p.textContent = D.points >= 300 ? 'แลกตรวจฟรีได้แล้ว' : 'แต้ม ' + D.points + '/300';
+  }
+  function checkin(btn) {
+    if (ckBusy || !D || D.checkedToday) return; ckBusy = true;
+    if (!calm() && btn.animate) btn.animate([{ transform: 'scale(1)' }, { transform: 'scale(.82)' }, { transform: 'scale(1.08)' }, { transform: 'scale(1)' }], { duration: 420, easing: 'cubic-bezier(.3,.7,.3,1)' });
+    fetch('/api/daily/checkin', { method: 'POST', credentials: 'same-origin', headers: { Accept: 'application/json' } })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (r) {
+        ckBusy = false;
+        var l = box.querySelector('.vf-ckline');
+        if (!r.ok || !r.j || !r.j.week) { if (l) l.textContent = (r.j && r.j.error) || 'เช็กอินไม่สำเร็จ ลองใหม่'; return; }
+        D = r.j; paintCheck(); lastKey = '';
+        if (r.j.gained) {
+          var host = box.querySelector('.vf-ckwrap');
+          var p = document.createElement('span'); p.className = 'vf-plus'; p.textContent = '+' + r.j.gained + ' แต้ม'; host.appendChild(p);
+          if (!calm() && p.animate) p.animate([{ transform: 'translate(-50%,6px)', opacity: 0 }, { transform: 'translate(-50%,-6px)', opacity: 1, offset: .25 }, { transform: 'translate(-50%,-26px)', opacity: 0 }], { duration: 1400, easing: 'ease-out' }).onfinish = function () { p.remove(); };
+          else setTimeout(function () { p.remove(); }, 1400);
+          var dn = box.querySelectorAll('.vf-day.is-done'), last = dn[dn.length - 1];
+          if (last && !calm() && last.animate) last.animate([{ transform: 'scale(1.5) rotate(-14deg)', opacity: 0 }, { transform: 'scale(.92) rotate(-6deg)', opacity: 1, offset: .6 }, { transform: 'scale(1) rotate(-6deg)' }], { duration: 420, easing: 'cubic-bezier(.2,.8,.3,1)' });
+        }
+        if (window.VCDaily && VCDaily.refresh) try { VCDaily.refresh(); } catch (e) {}
+      }, function () { ckBusy = false; var l = box.querySelector('.vf-ckline'); if (l) l.textContent = 'เชื่อมต่อไม่ได้ ลองใหม่'; });
   }
 
-  /* (3) ตารางบัญชีรายการล่าสุด */
-  function ledger(items) {
-    if (!items.length) return '<div class="vl-ledger"><p class="vl-lh"><span>รายการล่าสุด</span></p><p class="vl-lempty">ยังไม่มีรายการ — ตรวจสัญญาฉบับแรก แล้วจะถูกบันทึกไว้ที่หน้านี้</p></div>';
+  /* ---------- แท็บ ---------- */
+  var TABS = ['ov', 'hist', 'set'], cur = 'ov';
+  function show(t, anim) {
+    if (TABS.indexOf(t) < 0) return;
+    var from = TABS.indexOf(cur), to = TABS.indexOf(t); cur = t;
+    try { sessionStorage.setItem('vf_tab', t); } catch (e) {}
+    [].forEach.call(box.querySelectorAll('.vf-tab'), function (b) { var on = b.getAttribute('data-t') === t; b.classList.toggle('is-on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); b.tabIndex = on ? 0 : -1; });
+    var nw = null;
+    [].forEach.call(box.querySelectorAll('.vf-panel'), function (p) { var on = p.getAttribute('data-p') === t; p.hidden = !on; if (on) nw = p; });
+    var mn = box.querySelector('.vf-phmenu'); if (mn) mn.remove();
+    if (anim && nw && !calm() && nw.animate && from !== to) {
+      var dx = to > from ? 26 : -26;
+      nw.animate([{ transform: 'translateX(' + dx + 'px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 300, easing: 'cubic-bezier(.2,.8,.2,1)' });
+    }
+  }
+
+  /* ---------- ภาพรวม ---------- */
+  function overview(me, items, risk, last) {
+    var cr = me.credits | 0, vc = me.voice_credits | 0, low = cr <= 2, nIns = items.length;
+    return '<div class="vf-panel" data-p="ov" role="tabpanel" aria-label="ภาพรวม">' +
+      '<div class="vf-who">' +
+        '<div class="vf-avwrap"><button type="button" class="vf-av" data-a="photo" aria-label="เปลี่ยนรูปโปรไฟล์">' + photoHtml(me) + '<i class="vf-cam" aria-hidden="true">' + I('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>') + '</i></button></div>' +
+        '<div class="vf-id"><p class="vf-name">' + esc(nm(me.email)) + (me.is_admin ? ' <i class="vf-badge">แอดมิน</i>' : '') + '</p><p class="vf-mail">' + esc(me.email) + '</p></div>' +
+      '</div>' +
+      '<div class="vf-bal' + (low ? ' is-low' : '') + '">' +
+        '<div class="vf-bnum"><span class="vf-lab">เครดิตตรวจคงเหลือ</span><p><b data-c="' + cr + '">' + cr + '</b><small>ครั้ง</small></p>' +
+          '<span class="vf-sub">' + (cr === 0 ? 'เครดิตหมดแล้ว' : low ? 'ใกล้หมดแล้ว' : 'พร้อมตรวจได้อีก ' + cr + ' ฉบับ') + ' · เสียง ' + vc + ' ครั้ง</span></div>' +
+        '<div class="vf-bact"><button type="button" class="vf-btn" data-a="topup">' + I('<path d="M12 5v14M5 12h14"/>') + 'เติมเครดิต</button>' +
+          '<button type="button" class="vf-link" data-a="redeem"><span class="vf-pts">แลกแต้มเช็กอิน</span> →</button></div>' +
+      '</div>' +
+      (D && D.week ? '<div class="vf-ck"><div class="vf-ckh"><span class="vf-lab">เช็กอินรายวัน</span><span class="vf-streak"></span></div>' +
+        '<div class="vf-ckwrap"><div class="vf-week"></div></div><p class="vf-ckline"></p></div>' : '') +
+      '<div class="vf-stats">' +
+        '<button type="button" class="vf-st" data-a="tab" data-t="hist"><b data-c="' + nIns + '">' + nIns + '</b>' + (nIns >= 50 ? '<em>+</em>' : '') + '<span>ฉบับที่ตรวจ</span></button>' +
+        '<button type="button" class="vf-st is-r" data-a="tab" data-t="hist"><b data-c="' + risk + '">' + risk + '</b><span>จุดน่าสงสัย</span></button>' +
+        '<button type="button" class="vf-st" data-a="tab" data-t="hist"><b class="is-t">' + (last ? esc(ago(last)) : '–') + '</b><span>ใช้ล่าสุด</span></button>' +
+      '</div>' +
+    '</div>';
+  }
+  /* ---------- ประวัติ ---------- */
+  function history(items) {
     var rows = items.slice(0, 6).map(function (it) {
       var sm = it.summary || {}, hi = +sm.check_detail || +it.n_detail || 0, mid = +sm.caution || +it.n_caution || 0;
       var st = hi ? ['is-hi', 'เสี่ยง'] : mid ? ['is-mid', 'ระวัง'] : ['is-ok', 'ผ่าน'];
       var title = (it.title || typeName(it.contractType) || 'สัญญาทั่วไป').replace(/\s*\(.*$/, '');
-      var top = it.topIssue && it.topIssue.title ? '<small class="vl-ti">' + esc(it.topIssue.title) + '</small>' : '';
-      return '<button type="button" class="vl-tr" data-a="open" data-id="' + esc(it.id) + '">' +
-        '<span class="vl-td is-d">' + esc(dshort(it.createdAt || it.created_at)) + '</span>' +
-        '<span class="vl-td is-t"><b>' + esc(title) + '</b>' + top + '</span>' +
-        '<span class="vl-td is-n">' + (hi + mid) + '</span>' +
-        '<span class="vl-td is-s"><i class="vl-rstamp ' + st[0] + '">' + st[1] + '</i></span>' +
+      return '<button type="button" class="vf-row" data-a="open" data-id="' + esc(it.id) + '">' +
+        '<span class="vf-rdoc" aria-hidden="true">' + I('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>') + '</span>' +
+        '<span class="vf-rtx"><b>' + esc(title) + '</b><small>' + esc(dshort(it.createdAt || it.created_at)) + (it.topIssue && it.topIssue.title ? ' · ' + esc(it.topIssue.title) : ' · ' + (hi + mid) + ' จุด') + '</small></span>' +
+        '<i class="vf-stamp ' + st[0] + '">' + st[1] + '</i>' +
       '</button>';
     }).join('');
-    return '<div class="vl-ledger">' +
-      '<p class="vl-lh"><span>รายการล่าสุด</span>' + (items.length > 6 ? '<button type="button" class="vl-more" data-a="hist">ดูทั้งหมด ' + items.length + (items.length >= 50 ? '+' : '') + ' ฉบับ →</button>' : '') + '</p>' +
-      '<div class="vl-thead" aria-hidden="true"><span class="is-d">วันที่</span><span class="is-t">รายการ</span><span class="is-n">จุด</span><span class="is-s"></span></div>' +
-      rows + '</div>';
+    return '<div class="vf-panel" data-p="hist" role="tabpanel" aria-label="ประวัติ" hidden>' +
+      (items.length ? rows + '<button type="button" class="vf-all" data-a="hist">ดูประวัติทั้งหมด ' + items.length + (items.length >= 50 ? '+' : '') + ' ฉบับ →</button>'
+        : '<p class="vf-empty">ยังไม่มีสัญญาในแฟ้ม<br><small>ตรวจฉบับแรกแล้วจะถูกเก็บไว้ที่นี่</small></p>') +
+    '</div>';
+  }
+  /* ---------- ตั้งค่า (กดปุ่มเดิมที่ซ่อนไว้) ---------- */
+  function settings(me) {
+    var L = [
+      ['#vrmAcct', 'แจ้งเตือนวันสำคัญ', '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/>'],
+      ['#dispBtn', 'การแสดงผล', '<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>'],
+      ['#privBtn', 'ความเป็นส่วนตัวของข้อมูล', '<path d="M12 3 4.5 6v5.5c0 4.4 3.1 8.1 7.5 9.5 4.4-1.4 7.5-5.1 7.5-9.5V6z"/><path d="m9 12 2.2 2.2L15.5 10"/>'],
+      ['#helpPrivacy', 'นโยบายความเป็นส่วนตัว', '<rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>'],
+      ['#helpTerms', 'เงื่อนไขการใช้บริการ', '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>'],
+      ['#helpContact', 'ติดต่อผู้ดูแล', '<path d="M4 5h16v11H8l-4 4z"/><path d="M8 10h8M8 13h5"/>']
+    ];
+    if (me.is_admin && document.getElementById('adminPanel')) L.unshift(['#adminPanel .adm-head', 'แผงแอดมิน', '<path d="M12 3 4.5 6v5.5c0 4.4 3.1 8.1 7.5 9.5 4.4-1.4 7.5-5.1 7.5-9.5V6z"/><path d="M12 9v6M9 12h6"/>']);
+    L = L.filter(function (x) { return document.querySelector(x[0]); });
+    return '<div class="vf-panel" data-p="set" role="tabpanel" aria-label="ตั้งค่า" hidden>' +
+      L.map(function (x) { return '<button type="button" class="vf-set" data-a="go" data-sel="' + x[0] + '"><span class="vf-sic">' + I(x[2]) + '</span><span>' + x[1] + '</span><i aria-hidden="true">›</i></button>'; }).join('') +
+      (document.getElementById('logoutBtn') ? '<button type="button" class="vf-set is-out" data-a="go" data-sel="#logoutBtn"><span class="vf-sic">' + I('<path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3"/><path d="M10 17l-5-5 5-5M5 12h11"/>') + '</span><span>ออกจากระบบ</span><i aria-hidden="true">›</i></button>' : '') +
+    '</div>';
   }
 
-  /* (5) ตราครั่ง = เช็กอินรายวัน */
-  var D = null, sealBusy = false;
-  function sealNote() {
-    if (!D) return '';
-    if (D.checkedToday) return 'ประทับแล้ว\n' + (D.tomorrowReward ? 'พรุ่งนี้ +' + D.tomorrowReward : 'วันนี้');
-    return 'แตะตรา\nเช็กอิน' + (D.todayReward ? ' +' + D.todayReward : '');
-  }
-  function week() {
-    if (!D || !D.week || !D.week.length) return '';
-    return D.week.map(function (w, i) {
-      var cls = w.done ? 'is-done' : w.today ? 'is-today' : '';
-      var inner = w.done ? '<b>VC</b>' : '<em>+' + w.reward + '</em>';
-      return '<' + (w.today ? 'button type="button" data-a="seal"' : 'span') + ' class="vl-wd ' + cls + (i === 6 ? ' is-last' : '') + '" aria-label="วันที่ ' + w.day + (w.done ? ' ประทับแล้ว' : ' ได้ ' + w.reward + ' แต้ม') + '">' + inner + '<small>' + (i === 6 ? '★' : w.day) + '</small></' + (w.today ? 'button' : 'span') + '>';
-    }).join('');
-  }
-  function paintSeal() {
-    var wk = box.querySelector('.vl-wrow'); if (wk) wk.innerHTML = week();
-    var sk = box.querySelector('.vl-streak'); if (sk) sk.innerHTML = D && D.streak ? 'ต่อเนื่อง <u>' + D.streak + '</u> วัน' : (D ? 'เริ่มนับวันนี้' : '');
-    var w = box.querySelector('.vl-wax'), n = box.querySelector('.vl-snote'), l = box.querySelector('.vl-link');
-    if (w) { w.classList.toggle('is-ready', !!(D && !D.checkedToday)); w.setAttribute('aria-label', D ? (D.checkedToday ? 'เช็กอินวันนี้แล้ว' : 'แตะตราเพื่อเช็กอินวันนี้') : 'ตรา Vellum Check'); }
-    if (n) { n.textContent = sealNote(); n.classList.toggle('is-done', !!(D && D.checkedToday)); }
-    if (l && D && typeof D.points === 'number') l.innerHTML = (D.points >= 300 ? 'แลกตรวจฟรีได้แล้ว' : 'แต้มเช็กอิน ' + D.points + '/300') + ' <span aria-hidden="true">→</span>';
-  }
-  function press(w, gained) {
-    if (calm() || !w.animate) return;
-    w.animate([{ transform: 'rotate(-10deg) translateY(0) scale(1)' }, { transform: 'rotate(-4deg) translateY(-14px) scale(1.12)', offset: .35 }, { transform: 'rotate(-10deg) translateY(1px) scale(.9,.86)', offset: .62 }, { transform: 'rotate(-10deg) scale(1.04)', offset: .8 }, { transform: 'rotate(-10deg) scale(1)' }], { duration: 640, easing: 'cubic-bezier(.3,.7,.3,1)' });
-    if (!gained) return;
-    var host = w.parentNode;
-    setTimeout(function () {
-      var rg = document.createElement('i'); rg.className = 'vl-ripple'; host.appendChild(rg);
-      rg.animate([{ transform: 'scale(.6)', opacity: .7 }, { transform: 'scale(1.9)', opacity: 0 }], { duration: 700, easing: 'ease-out' }).onfinish = function () { rg.remove(); };
-      for (var i = 0; i < 6; i++) {
-        var d = document.createElement('i'); d.className = 'vl-drop'; host.appendChild(d);
-        var a = (i / 6) * Math.PI * 2 + Math.random() * .6, R = 30 + Math.random() * 16;
-        d.animate([{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: 'translate(' + (Math.cos(a) * R).toFixed(0) + 'px,' + (Math.sin(a) * R).toFixed(0) + 'px) scale(.4)', opacity: 0 }], { duration: 560 + Math.random() * 200, easing: 'cubic-bezier(.2,.8,.3,1)' }).onfinish = (function (x) { return function () { x.remove(); }; })(d);
-      }
-      var p = document.createElement('span'); p.className = 'vl-plus'; p.textContent = '+' + gained + ' แต้ม'; host.appendChild(p);
-      p.animate([{ transform: 'translate(-50%,0) rotate(-6deg)', opacity: 0 }, { transform: 'translate(-50%,-14px) rotate(-6deg)', opacity: 1, offset: .25 }, { transform: 'translate(-50%,-34px) rotate(-6deg)', opacity: 0 }], { duration: 1500, easing: 'ease-out' }).onfinish = function () { p.remove(); };
-    }, 400);
-  }
-  function seal(w) {
-    if (sealBusy) return;
-    if (!D || D.checkedToday) { press(w, 0); var n = box.querySelector('.vl-snote'); if (n && n.animate && !calm()) n.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-3px)' }, { transform: 'translateX(3px)' }, { transform: 'translateX(0)' }], { duration: 300 }); return; }
-    sealBusy = true; press(w, 0);
-    fetch('/api/daily/checkin', { method: 'POST', credentials: 'same-origin', headers: { Accept: 'application/json' } })
-      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
-      .then(function (r) {
-        sealBusy = false;
-        if (!r.ok || !r.j) { var n = box.querySelector('.vl-snote'); if (n) n.textContent = (r.j && r.j.error) || 'เช็กอินไม่สำเร็จ ลองใหม่'; return; }
-        D = r.j; paintSeal();
-        if (r.j.gained) press(w, r.j.gained);
-        lastKey = '';                                   /* ให้รอบหน้ารีเฟรชข้อมูลใหม่ */
-        if (window.VCDaily && VCDaily.refresh) try { VCDaily.refresh(); } catch (e) {}
-      }, function () { sealBusy = false; var n = box.querySelector('.vl-snote'); if (n) n.textContent = 'เชื่อมต่อไม่ได้ ลองใหม่'; });
-  }
-
-  /* (3) พลิกหน้า: หน้า 1 (ยอด/บันทึก) ↔ หน้า 2 (ตารางรายการล่าสุด) */
-  var onP2 = false;
-  function turn(to2) {
-    var pg = box.querySelector('.vl-page'); if (!pg || onP2 === to2) return;
-    onP2 = to2;
-    var l1 = pg.querySelector('.vl-leaf.is-p1');
-    pg.classList.toggle('on-p2', to2);
-    if (!calm() && l1 && l1.animate) {
-      var fr = [{ transform: 'perspective(1800px) rotateY(0deg)', filter: 'brightness(1)' }, { transform: 'perspective(1800px) rotateY(-62deg)', filter: 'brightness(.88)', offset: .55 }, { transform: 'perspective(1800px) rotateY(-100deg)', filter: 'brightness(.7)' }];
-      l1.style.visibility = 'visible';
-      var an = l1.animate(to2 ? fr : fr.slice().reverse(), { duration: 620, easing: to2 ? 'cubic-bezier(.45,.05,.55,.95)' : 'cubic-bezier(.3,.6,.35,1)', fill: 'both' });
-      an.onfinish = function () { l1.style.visibility = ''; an.cancel(); };
-    }
-    try { pg.scrollIntoView({ block: 'start', behavior: calm() ? 'auto' : 'smooth' }); } catch (e) {}
-  }
-  function tab(t) {
-    if (t === 'hist') return goHist();
-    var sel = { remind: '#vrmAcct', disp: '#dispBtn', help: '#helpContact', out: '#logoutBtn', admin: '#adminPanel .adm-head' }[t];
-    var el = sel && document.querySelector(sel); if (!el) return;
-    el.click();
-    if (t === 'admin') try { el.scrollIntoView({ block: 'start', behavior: 'smooth' }); } catch (e) {}
-  }
-  function tabs(me) {
-    var T = [['hist', 'ประวัติ'], ['remind', 'แจ้งเตือน'], ['disp', 'ตั้งค่า'], ['help', 'ติดต่อ']];
-    if (me.is_admin && document.getElementById('adminPanel')) T.push(['admin', 'แอดมิน']);
-    T.push(['out', 'ออก']);
-    return '<nav class="vl-tabs" aria-label="ดัชนีบัญชี">' + T.map(function (x, i) { return '<button type="button" class="vl-tab is-' + x[0] + '" style="--i:' + i + '" data-a="tab" data-t="' + x[0] + '"><span>' + x[1] + '</span></button>'; }).join('') + '</nav>';
-  }
-
-  var busy = false, lastKey = '';
+  var busy = false, lastKey = '', shownOnce = false;
   function render(me, hist, daily) {
-    var email = me.email || '', cr = me.credits | 0, vc = me.voice_credits | 0;
-    var items = (hist && hist.items) || [], nIns = items.length, risk = 0;
+    var items = (hist && hist.items) || [], risk = 0;
     items.forEach(function (it) { var sm = it.summary || {}; risk += (+sm.check_detail || +it.n_detail || 0) + (+sm.caution || +it.n_caution || 0); });
     var last = items[0] && (items[0].createdAt || items[0].created_at);
     D = daily && typeof daily.points === 'number' ? daily : null; lastMe = me;
-    var lowCr = cr <= 2, name = nm(email), wasOpen = false;
-    try { wasOpen = sessionStorage.getItem('vl_open') === '1'; } catch (e) {}
-    var line = function (pre, val, post, cls) { return '<button type="button" class="vl-ln' + (cls ? ' ' + cls : '') + '" data-a="hist">' + pre + ' <u>' + val + '</u> ' + post + '</button>'; };
+    try { var t0 = sessionStorage.getItem('vf_tab'); if (TABS.indexOf(t0) >= 0) cur = t0; } catch (e) {}
+    var tab = function (t, label) { return '<button type="button" class="vf-tab" role="tab" data-a="tab" data-t="' + t + '"><span>' + label + '</span></button>'; };
     box.innerHTML =
-      '<div class="vl-book' + (wasOpen ? ' is-open' : '') + '">' +
-        '<i class="vl-ribbon" aria-hidden="true"></i>' +
-        tabs(me) +
-        '<div class="vl-page">' +
-         '<div class="vl-leaf is-p2">' +
-          ledger(items) +
-          '<p class="vl-legal"><button type="button" data-a="go" data-sel="#privBtn">ความเป็นส่วนตัวของข้อมูล</button> · <button type="button" data-a="go" data-sel="#helpPrivacy">นโยบาย</button> · <button type="button" data-a="go" data-sel="#helpTerms">เงื่อนไขการใช้บริการ</button></p>' +
-          '<div class="vl-foot"><button type="button" class="vl-turn is-back" data-a="turn" data-p="1">← กลับหน้าแรก</button><span class="vl-pno">— ๒ —</span></div>' +
-         '</div>' +
-         '<div class="vl-leaf is-p1">' +
-          '<div class="vl-head">' +
-            '<div class="vl-phwrap"><button type="button" class="vl-photo" data-a="photo" aria-label="เปลี่ยนรูปโปรไฟล์"><span class="vl-ph-in">' + photoHtml(me, email) + '</span><i class="vl-corner is-a" aria-hidden="true"></i><i class="vl-corner is-b" aria-hidden="true"></i></button><i class="vl-clip" aria-hidden="true"></i></div>' +
-            '<div class="vl-id"><small class="vl-kick">สมุดบัญชีสมาชิก</small>' +
-            '<p class="vl-name">' + esc(name) + '</p><p class="vl-no">บัญชีเลขที่ <b>' + ledgerNo(email) + '</b>' + (me.is_admin ? '<i class="vl-rstamp vl-admin">แอดมิน</i>' : '') + '</p></div>' +
-            '<div class="vl-sealwrap"><button type="button" class="vl-wax" data-a="seal"><b>VC</b></button><span class="vl-snote" aria-live="polite"></span></div>' +
-          '</div>' +
-          '<div class="vl-bal">' +
-            '<div class="vl-n"><span>เครดิตตรวจคงเหลือ</span><p><b data-c="' + cr + '">0</b><small>ครั้ง</small></p></div>' +
-            '<div class="vl-n is-v"><span>เครดิตเสียง</span><p><b data-c="' + vc + '">0</b><small>ครั้ง</small></p></div>' +
-          '</div>' +
-          '<div class="vl-tally' + (lowCr ? ' is-low' : '') + '" role="img" aria-label="เหลือเครดิตตรวจ ' + cr + ' ครั้ง">' + (cr ? tally(cr) : '<span class="vl-tnone">หมดแล้ว</span>') + '</div>' +
-          '<p class="vl-hint' + (lowCr ? ' is-low' : '') + '">' + (cr === 0 ? 'เครดิตหมดแล้ว — เติมหรือแลกแต้มเพื่อตรวจต่อ' : lowCr ? 'ใกล้หมดแล้ว เหลืออีก ' + cr + ' ครั้ง' : 'พร้อมตรวจได้อีก ' + cr + ' ฉบับ') + '</p>' +
-          '<div class="vl-acts">' +
-            '<button type="button" class="vl-stamp" data-a="topup">เติมเครดิต</button>' +
-            '<button type="button" class="vl-link" data-a="redeem">แลกแต้มเช็กอิน <span aria-hidden="true">→</span></button>' +
-          '</div>' +
-          (D && D.week ? '<div class="vl-week"><p class="vl-nh"><span>ตราเช็กอิน 7 วัน</span><span class="vl-streak"></span></p><div class="vl-wrow"></div></div>' : '') +
-          '<div class="vl-notes">' +
-            '<p class="vl-nh"><span>บันทึกของฉัน</span><button type="button" class="vl-close" data-a="close" aria-label="ปิดสมุด">ปิดเล่ม</button></p>' +
-            (nIns ? line('ตรวจไปแล้ว', nIns + (nIns >= 50 ? '+' : ''), 'ฉบับ') + line('เจอจุดน่าสงสัย', risk, 'จุด', 'is-r') + (last ? line('ล่าสุดเมื่อ', esc(ago(last)), '') : '')
-                  : '<button type="button" class="vl-ln is-empty" data-a="hist">ยังไม่มีบันทึก — ตรวจสัญญาฉบับแรกได้เลย</button>') +
-          '</div>' +
-          '<div class="vl-foot"><button type="button" class="vl-turn" data-a="turn" data-p="2">รายการล่าสุด ↷</button><span class="vl-pno">— ๑ —</span></div>' +
-         '</div>' +
+      '<div class="vf-folder">' +
+        '<div class="vf-tabs" role="tablist" aria-label="แฟ้มบัญชี">' + tab('ov', 'ภาพรวม') + tab('hist', 'ประวัติ') + tab('set', 'ตั้งค่า') + '</div>' +
+        '<div class="vf-body">' +
+          '<span class="vf-label" aria-hidden="true">แฟ้มสมาชิก <b>' + fileNo(me.email) + '</b></span>' +
+          '<div class="vf-sheet">' + overview(me, items, risk, last) + history(items) + settings(me) + '</div>' +
         '</div>' +
-        '<button type="button" class="vl-cover" data-a="cover" aria-label="เปิดสมุดบัญชี" aria-expanded="' + (wasOpen ? 'true' : 'false') + '"' + (wasOpen ? ' tabindex="-1"' : '') + '>' +
-          '<span class="vl-cv-in">' +
-            '<small>VELLUM CHECK</small>' +
-            '<i class="vl-orn" aria-hidden="true"></i>' +
-            '<b>' + esc(name) + '</b>' +
-            '<em>สมุดบัญชีสมาชิก</em>' +
-            '<span class="vl-tap">แตะเพื่อเปิด</span>' +
-          '</span>' +
-        '</button>' +
       '</div>';
-    paintSeal(); onP2 = false;
+    paintCheck(); show(cur, false);
     var wc = document.querySelector('#authLoggedIn .vc-wcard');
     if (wc && wc.parentNode && box.nextSibling !== wc) wc.parentNode.insertBefore(box, wc);
     box.hidden = false;
-    var nums = function () { [].forEach.call(box.querySelectorAll('[data-c]'), function (el) { count(el, +el.getAttribute('data-c')); }); };
-    if (wasOpen) nums();
-    else {
-      [].forEach.call(box.querySelectorAll('[data-c]'), function (el) { el.textContent = el.getAttribute('data-c'); });
-      var go = function () {
-        setTimeout(function () {
-          if (box.hidden) return;
-          setOpen(true, true);
-          try { sessionStorage.setItem('vl_open', '1'); } catch (e) {}
-          setTimeout(function () { [].forEach.call(box.querySelectorAll('[data-c]'), function (el) { el.textContent = '0'; }); nums(); }, calm() ? 0 : 380);
-        }, calm() ? 0 : 650);
-      };
-      /* พลิกเปิดเมื่อสมุดอยู่บนจอจริง ๆ (ไม่เปิดทิ้งไว้ตอนหน้าบัญชียังซ่อนอยู่) */
-      if ('IntersectionObserver' in window) {
-        var io = new IntersectionObserver(function (es) { if (es.some(function (e) { return e.isIntersecting; })) { io.disconnect(); go(); } }, { threshold: .5 });
-        io.observe(box.querySelector('.vl-book'));
-      } else go();
+    if (!shownOnce && !calm() && 'IntersectionObserver' in window) {
+      shownOnce = true;
+      var io = new IntersectionObserver(function (es) { if (es.some(function (x) { return x.isIntersecting; })) { io.disconnect(); intro(); } }, { threshold: .3 });
+      io.observe(box.querySelector('.vf-folder'));
+    }
+  }
+  function intro() {
+    {
+      var f = box.querySelector('.vf-folder'), s = box.querySelector('.vf-sheet'); if (!f) return;
+      if (f.animate) f.animate([{ opacity: 0, transform: 'translateY(14px)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.2,.8,.2,1)' });
+      if (s.animate) s.animate([{ transform: 'translateY(22px)' }, { transform: 'none' }], { duration: 620, delay: 120, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' });
+      [].forEach.call(box.querySelectorAll('[data-c]'), function (el) { count(el, +el.getAttribute('data-c')); });
     }
   }
   function refresh() {
@@ -302,32 +240,39 @@
   }
   box.addEventListener('click', function (e) {
     var b = e.target.closest('[data-a]');
-    var menu = box.querySelector('.vl-phmenu'); if (menu && !(b && /^ph-|^photo$/.test(b.getAttribute('data-a')))) menu.remove();
+    var menu = box.querySelector('.vf-phmenu'); if (menu && !(b && /^ph-|^photo$/.test(b.getAttribute('data-a')))) menu.remove();
     if (!b) return;
     var a = b.getAttribute('data-a');
-    if (a === 'topup') topup();
+    if (a === 'tab') show(b.getAttribute('data-t'), true);
+    else if (a === 'topup') topup();
     else if (a === 'redeem') { if (window.VCDaily && VCDaily.open) VCDaily.open(); }
     else if (a === 'hist') goHist();
-    else if (a === 'cover') setOpen(true, true);
-    else if (a === 'close') setOpen(false, true);
+    else if (a === 'checkin') checkin(b);
     else if (a === 'photo') photoMenu(b);
     else if (a === 'ph-ch' || a === 'ph-rm') { if (menu) menu.remove(); var t = document.getElementById(a === 'ph-ch' ? 'acctFile' : 'acctPhotoDel'); if (t) t.click(); }
-    else if (a === 'seal') seal(box.querySelector('.vl-wax') || b);
-    else if (a === 'turn') turn(b.getAttribute('data-p') === '2');
-    else if (a === 'tab') tab(b.getAttribute('data-t'));
-    else if (a === 'go') { var g = document.querySelector(b.getAttribute('data-sel')); if (g) g.click(); }
     else if (a === 'open') { var id = b.getAttribute('data-id'); if (window.vcOpenInspection) window.vcOpenInspection(id); else goHist(); }
+    else if (a === 'go') {
+      var g = document.querySelector(b.getAttribute('data-sel')); if (!g) return;
+      g.click();
+      if (/adminPanel/.test(b.getAttribute('data-sel'))) try { document.getElementById('adminPanel').scrollIntoView({ block: 'start', behavior: 'smooth' }); } catch (e2) {}
+    }
   });
-  /* ปัดซ้าย/ขวาเพื่อพลิกหน้า */
+  /* คีย์บอร์ด: ลูกศรซ้าย/ขวาบนแท็บ */
+  box.addEventListener('keydown', function (e) {
+    if (!e.target.closest('.vf-tab') || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')) return;
+    var i = TABS.indexOf(cur) + (e.key === 'ArrowRight' ? 1 : -1); if (i < 0 || i >= TABS.length) return;
+    show(TABS[i], true); var t = box.querySelector('.vf-tab[data-t="' + TABS[i] + '"]'); if (t) t.focus(); e.preventDefault();
+  });
+  /* ปัดซ้าย/ขวาบนแผ่นเพื่อสลับแท็บ */
   var sx = 0, sy = 0, st = 0;
-  box.addEventListener('touchstart', function (e) { if (!e.target.closest('.vl-page')) { st = 0; return; } var t = e.touches[0]; sx = t.clientX; sy = t.clientY; st = Date.now(); }, { passive: true });
+  box.addEventListener('touchstart', function (e) { if (!e.target.closest('.vf-sheet')) { st = 0; return; } var t = e.touches[0]; sx = t.clientX; sy = t.clientY; st = Date.now(); }, { passive: true });
   box.addEventListener('touchend', function (e) {
     if (!st || Date.now() - st > 700) return; var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy; st = 0;
-    if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.6) turn(dx < 0);
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.6) { var i = TABS.indexOf(cur) + (dx < 0 ? 1 : -1); if (i >= 0 && i < TABS.length) show(TABS[i], true); }
   }, { passive: true });
   /* อัปเดตเมื่อเปิดหน้าบัญชี / ล็อกอิน-ออก */
   var lo = document.getElementById('authLoggedIn');
-  if (lo && 'MutationObserver' in window) new MutationObserver(function () { if (lo.hidden) { box.hidden = true; lastKey = ''; } else refresh(); }).observe(lo, { attributes: true, attributeFilter: ['hidden'] });
+  if (lo && 'MutationObserver' in window) new MutationObserver(function () { if (lo.hidden) { box.hidden = true; lastKey = ''; shownOnce = false; } else refresh(); }).observe(lo, { attributes: true, attributeFilter: ['hidden'] });
   new MutationObserver(function () { if (document.body.classList.contains('auth-open')) refresh(); }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
   document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('[data-nav="acct"],#authToggle,[data-tab="acct"]')) setTimeout(refresh, 60); }, true);
   if (lo && !lo.hidden) refresh(); else setTimeout(refresh, 1500);
