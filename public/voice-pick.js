@@ -58,7 +58,7 @@
     if (playing === id) { stop(); return; }
     stop();
     btn.classList.add('is-load'); btn.innerHTML = LOAD + '<span class="vpk-bars"><i></i><i></i><i></i></span>';
-    var a = new Audio('/api/voices/' + encodeURIComponent(id) + '/preview?t=3');
+    var a = new Audio(blobs[id] || purl(id));   /* โหลดไว้ในเครื่องแล้ว = เล่นทันที */
     audio = a; playing = id;
     function done() { btn.classList.remove('is-load'); btn.innerHTML = PLAY + '<span class="vpk-bars"><i></i><i></i><i></i></span>'; }
     var started = false, slow = setTimeout(function () { if (!started && audio === a) note('กำลังเตรียมเสียงครั้งแรก รอสักครู่…'); }, 1500);
@@ -87,10 +87,25 @@
     sel = id; try { localStorage.setItem(KEY, id); } catch (e) {}
     render();
   }
+  /* โหลดตัวอย่างทุกเสียงเก็บไว้ในเครื่องทันทีที่กล่องโผล่ (ทีละเสียง) กด ▶ แล้วเล่นได้เลยไม่ต้องรอเน็ต */
+  var blobs = {}, pre = false;
+  function purl(id) { return '/api/voices/' + encodeURIComponent(id) + '/preview?t=3'; }
+  function prefetch() {
+    if (pre || !window.fetch || !window.URL || !URL.createObjectURL) return; pre = true;
+    var ids = voices.map(function (v) { return v.id; }), cur = current();
+    ids.sort(function (a, b) { return (b === cur) - (a === cur); });
+    (function next(i) {
+      if (i >= ids.length) return;
+      var id = ids[i]; if (blobs[id]) return next(i + 1);
+      fetch(purl(id)).then(function (r) { if (!r.ok) throw 0; return r.blob(); })
+        .then(function (b) { if (b && b.size > 1000) blobs[id] = URL.createObjectURL(b); }, function () {})
+        .then(function () { next(i + 1); });
+    })(0);
+  }
   function sync() {
     var cb = document.getElementById('voiceOpt'); if (!box || !cb) return;
     box.hidden = !(cb.checked && voices.length > 1);
-    if (box.hidden) stop();
+    if (box.hidden) stop(); else prefetch();
   }
   function mount() {
     var cb = document.getElementById('voiceOpt'); if (!cb) return;
