@@ -352,7 +352,7 @@ app.post('/api/followup', async (req, res) => {
     followupHits.set(user.id, hit);
 
     try {
-      const answer = await answerFollowup(question, context);
+      const answer = await answerFollowup(question, context, langOf(req));
       res.json({ ok: true, answer });
     } catch (err) {
       hit.count -= 1; // ล้มเหลวไม่นับโควตา
@@ -518,6 +518,9 @@ app.post('/api/logout', async (req, res) => {
 });
 
 // ---------- ตรวจสัญญา (ต้องล็อกอิน) ----------
+// ภาษาที่ผู้ใช้เลือกบนหน้าเว็บ (i18n.js ส่งมาเป็น header) → ให้ AI เขียนผลตรวจ/คำตอบเป็นภาษานั้น
+function langOf(req) { return String(req.get('x-vc-lang') || '').toLowerCase() === 'en' ? 'en' : 'th'; }
+
 app.post('/api/check', async (req, res) => {
   let user;
   try {
@@ -574,7 +577,7 @@ app.post('/api/check', async (req, res) => {
   // 3) เรียก AI ถ้าล้มเหลวคืนยอดทั้งหมดที่หักไป
   let result;
   try {
-    const raw = await analyzeContract(text, contractType);
+    const raw = await analyzeContract(text, contractType, langOf(req));
     result = cleanResult(raw, text);
   } catch (err) {
     console.error('[check] failed:', err.message);
