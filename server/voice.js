@@ -106,8 +106,11 @@ export async function voicePreview(id) {
   return p;
 }
 // สร้างตัวอย่างทุกเสียงไว้ล่วงหน้า (ทีละเสียง ไม่รบกวนงานอื่น)
-export async function warmPreviews() {
-  try { for (const v of await listVoices()) await voicePreview(v.id).catch(e => console.error('[voice] warm', v.name, e.message)); }
+// ทุกเสียงพร้อมกัน (ไม่ต่อคิวทีละเสียง) · เรียกซ้ำได้ เสียงที่มีแล้วไม่สร้างใหม่
+let warmAt = 0;
+export async function warmPreviews(force) {
+  if (!force && Date.now() - warmAt < 60 * 1000) return; warmAt = Date.now();
+  try { await Promise.all((await listVoices()).map(v => voicePreview(v.id).catch(e => console.error('[voice] warm', v.name, e.message)))); }
   catch (e) { console.error('[voice] warm:', e.message); }
 }
 
