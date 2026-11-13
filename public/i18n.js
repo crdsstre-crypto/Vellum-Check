@@ -838,14 +838,14 @@
     if (!batch.length) return;
     batch.forEach(function (k) { inflight[k] = 1; });
     of.call(window, '/api/translate', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lang: LANG, texts: batch.map(function (k) { var d = dates(k); return TH.test(d) ? d : k; }) }) })
-      .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); }, function () { return Promise.reject(0); })
       .then(function (d) {
         (d.out || []).forEach(function (v, i) { var k = batch[i]; delete inflight[k]; if (v) { TRC[k] = v; TOUT[v.trim().replace(/\s+/g, ' ')] = 1; apply(k, v); } else failed[k] = (failed[k] || 0) + 1; });
         saveTRC(); aiWait = 350;
         if (Object.keys(pend).some(function (k) { return !inflight[k]; })) aiT = setTimeout(flushAI, 150);
       }, function (st) {
-        batch.forEach(function (k) { delete inflight[k]; if (st !== 429) failed[k] = (failed[k] || 0) + 1; });   /* 429 = ส่งถี่ไป รอแล้วลองใหม่ ไม่นับว่าแปลไม่ได้ */
-        aiWait = st === 429 ? 15000 : Math.min(aiWait * 3, 20000); aiT = setTimeout(flushAI, aiWait);
+        batch.forEach(function (k) { delete inflight[k]; if (st === 400) failed[k] = (failed[k] || 0) + 1; });   /* เซิร์ฟเวอร์/AI ยุ่งชั่วคราว (429/5xx/เน็ตหลุด) = รอแล้วลองใหม่เรื่อย ๆ ไม่นับว่าแปลไม่ได้ */
+        aiWait = st === 429 ? 15000 : Math.min(aiWait * 2, 15000); aiT = setTimeout(flushAI, aiWait);
       });
   }
 
