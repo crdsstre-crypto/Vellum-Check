@@ -56,7 +56,7 @@
     if (playing === id) { stop(); return; }
     stop();
     btn.classList.add('is-load'); btn.innerHTML = LOAD + '<span class="vpk-bars"><i></i><i></i><i></i></span>';
-    var a = new Audio('/api/voices/' + encodeURIComponent(id) + '/preview');
+    var a = new Audio('/api/voices/' + encodeURIComponent(id) + '/preview?t=2');
     audio = a; playing = id;
     function done() { btn.classList.remove('is-load'); btn.innerHTML = PLAY + '<span class="vpk-bars"><i></i><i></i><i></i></span>'; }
     a.addEventListener('playing', function () { done(); paintBtns(); });
