@@ -38,7 +38,17 @@ const TYPE_FOCUS = {
   unsure: 'ให้พิจารณาจากข้อความสัญญาเอง ถ้าไม่แน่ใจว่าเป็นสัญญาประเภทใด ให้ระบุไว้ใน missing_info แทนการเดา',
 };
 
-function buildSystemPrompt(maxItems, contractType = 'unsure') {
+// โหมดภาษาอังกฤษ: ให้ AI เขียนทุกข้อความเป็นอังกฤษ (ยกเว้น quote ที่ต้องคัดลอกตามต้นฉบับ) ค่าคงที่ (level/urgency/detected_type) ไม่เปลี่ยน
+const EN_RULES = `
+
+ENGLISH MODE (overrides the language rule above):
+- The reader does not read Thai. Write every human-readable field (summary, title, topic, explanation, suggested_fix, how_to_negotiate, impact, urgency_note, uncertainty, missing_info) in clear, plain English.
+- The contract itself may be in Thai or English. "quote" must still be copied verbatim from the contract in its original language.
+- Keep all enum values (level, urgency, detected_type) and the JSON keys exactly as specified.
+- "title" is a short plain-English question of at most 45 characters, e.g. "Who pays for repairs?" "When is the deposit returned?"
+- "suggested_fix" starts with a verb, e.g. "Ask to state that..."`;
+
+function buildSystemPrompt(maxItems, contractType = 'unsure', lang = 'th') {
   const focus = TYPE_FOCUS[contractType] || TYPE_FOCUS.unsure;
   return `คุณช่วยคัดกรองความเสี่ยงเบื้องต้นของสัญญาภาษาไทย คุณไม่ใช่ทนายและไม่ให้คำปรึกษาทางกฎหมาย
 
@@ -65,7 +75,7 @@ function buildSystemPrompt(maxItems, contractType = 'unsure') {
 - "uncertainty" ระบุสิ่งที่ยังไม่รู้หรือข้อมูลที่ขาดซึ่งทำให้ประเมินประเด็นนี้ไม่ได้เต็มที่ เช่น ไม่มีภาคผนวกหรือข้อยกเว้น ถ้าไม่มีให้ใส่ "" ห้ามเดา
 - ไม่เกิน ${maxItems} รายการใน items เรียงจากความเสี่ยงสูงสุดก่อน
 - แต่ละฟิลด์ยาวไม่เกิน 2 ประโยค quote สั้นที่สุดที่ยังระบุจุดนั้นได้ชัด
-- ตอบให้จบ JSON เสมอ แม้ต้องตัดรายละเอียดลง
+- ตอบให้จบ JSON เสมอ แม้ต้องตัดรายละเอียดลง${lang === 'en' ? EN_RULES : ''}
 
 รูปแบบ JSON:
 {
@@ -102,7 +112,7 @@ function extractJson(raw) {
   return JSON.parse(cleaned.slice(start, end + 1));
 }
 
-export async function analyzeContract(text, contractType = 'unsure') {
+export async function analyzeContract(text, contractType = 'unsure', lang = 'th') {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   // รับเฉพาะค่าที่รู้จัก ค่าอื่นให้ถือว่าไม่แน่ใจ
   const type = CONTRACT_TYPES.has(contractType) ? contractType : 'unsure';
@@ -120,7 +130,7 @@ export async function analyzeContract(text, contractType = 'unsure') {
     body: JSON.stringify({
       model: MODEL,
       max_tokens: MAX_TOKENS,
-      system: buildSystemPrompt(itemsFor(text.length), type),
+      system: buildSystemPrompt(itemsFor(text.length), type, lang === 'en' ? 'en' : 'th'),
       messages: [{ role: 'user', content: text }],
     }),
   });
@@ -191,12 +201,12 @@ export async function transcribeImage(base64, mediaType) {
 
 
 // ตอบคำถามต่อจากผลตรวจ โดยอ้างอิงเฉพาะผลตรวจที่ส่งมา (ไม่มีข้อความสัญญาต้นฉบับ)
-export async function answerFollowup(question, context) {
+export async function answerFollowup(question, context, lang = 'th') {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY is not set');
   const system = [
     'คุณช่วยอธิบายผลคัดกรองสัญญาภาษาไทยเบื้องต้นให้คนทั่วไปเข้าใจ',
-    'ตอบเป็นภาษาไทย กระชับ ไม่เกิน 8 บรรทัด ใช้ภาษาง่าย',
+    lang === 'en' ? 'Answer in clear, plain English (the user does not read Thai), at most 8 short lines.' : 'ตอบเป็นภาษาไทย กระชับ ไม่เกิน 8 บรรทัด ใช้ภาษาง่าย',
     'ตอบโดยอ้างอิงเฉพาะข้อมูลใน <ผลตรวจ> เท่านั้น ถ้าข้อมูลไม่พอให้บอกตรง ๆ ว่าไม่พอ และบอกว่าควรดูข้อความในสัญญาเพิ่ม ห้ามเดาหรือเพิ่มข้อเท็จจริงเอง',
     'ห้ามฟันธงว่าสัญญาเป็นธรรมหรือไม่เป็นธรรม ห้ามบอกว่าฝ่ายใดจะชนะหรือแพ้',
     'ถ้าเรื่องสำคัญหรือมีมูลค่าสูง ให้แนะนำให้ทนายความตรวจก่อนลงนาม',
