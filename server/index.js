@@ -28,7 +28,7 @@ import {
   getVoiceCredits, reserveVoiceCredits, refundVoiceCredits,
 } from './credits.js';
 import { isBlocked, recordFailure, clearFailures } from './rateLimit.js';
-import { buildSpokenSummary, synthesizeSpeech, VOICE_CREDIT_COST, listVoices, pickVoice, voicePreview, voiceSource, warmPreviews } from './voice.js';
+import { buildSpokenSummary, synthesizeSpeech, synthesizeWithTimes, VOICE_CREDIT_COST, listVoices, pickVoice, voicePreview, voiceSource, warmPreviews } from './voice.js';
 import { createPromptPayPayment, confirmAndCredit, getPaymentStatus, PACKAGES } from './payments.js';
 import { logCheck, saveFeedback, adminStats, FEEDBACK_REASONS } from './stats.js';
 import { getDaily, checkIn, redeem } from './daily.js';
@@ -646,11 +646,13 @@ app.post('/api/check', async (req, res) => {
   }
 
   // 4) สร้างเสียงสรุป ถ้าล้มเหลวคืนเฉพาะยอดเสียง ผลการตรวจยังส่งให้ตามปกติ
-  let audio = null;
+  let audio = null, audioText = '', audioAlign = null;
   let voiceError = null;
   if (wantVoice) {
     try {
-      audio = await synthesizeSpeech(buildSpokenSummary(result), await pickVoice(String(req.body?.voiceId || '')));
+      audioText = buildSpokenSummary(result);
+      const sp = await synthesizeWithTimes(audioText, await pickVoice(String(req.body?.voiceId || '')));
+      audio = sp.audio; audioAlign = sp.align;
     } catch (err) {
       console.error('[voice] failed:', err.message);
       await refundVoiceCredits(user.id, VOICE_CREDIT_COST)
@@ -665,7 +667,7 @@ app.post('/api/check', async (req, res) => {
   const inspectionId = await saveInspection(user.id, contractType, result)
     .catch(e => { console.error('[history] save failed:', e.message); return null; });
   logCheck(user.id, contractType, result.items.length).catch(e => console.error('[stats] log failed:', e.message));
-  res.json({ ok: true, result, credits, voiceCredits, audio, voiceError, inspectionId });
+  res.json({ ok: true, result, credits, voiceCredits, audio, audioText: audio ? audioText : '', audioAlign: audio ? audioAlign : null, voiceError, inspectionId });
 });
 
 // ---------- ความเห็นต่อผลตรวจ ----------
