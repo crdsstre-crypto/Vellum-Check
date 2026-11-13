@@ -20,7 +20,7 @@ import {
 } from './auth.js';
 import { saveInspection, listInspections, getInspection, listPayments, deleteAllInspections, deleteInspection, updateInspection } from './history.js';
 import {
-  googleConfigured, makeState, buildAuthUrl, readCookieValue, exchangeCodeForProfile, redirectUriFor,
+  googleConfigured, makeState, buildAuthUrl, readCookieValue, exchangeCodeForProfile, redirectUriFor, warmGoogle,
 } from './googleAuth.js';
 import {
   getCredits, reserveCredits, refundCredits,
@@ -186,6 +186,7 @@ app.get('/api/auth/google', (req, res) => {
     'Set-Cookie',
     `${OAUTH_STATE_COOKIE}=${[...prev, state].join('.')}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=900`
   );
+  warmGoogle();   // อุ่นการเชื่อมต่อไว้ระหว่างที่ผู้ใช้เลือกบัญชี
   res.redirect(buildAuthUrl(state, redirectUriFor(req)));
 });
 
@@ -204,7 +205,9 @@ app.get('/api/auth/google/callback', async (req, res) => {
     if (!saved.length) return fail('no state cookie');
     if (!saved.includes(state)) return fail('state mismatch');
 
-    const profile = await exchangeCodeForProfile(code, redirectUriFor(req));   // ลองซ้ำเองใน googleAuth.js
+    const t0 = Date.now();
+    const profile = await exchangeCodeForProfile(code, redirectUriFor(req));   // ยิงซ้อนเองใน googleAuth.js ถ้าช้า
+    const t1 = Date.now();
     const user = await findOrCreateGoogleUser(profile);
     if (!user) return fail('no user');
 
@@ -213,6 +216,7 @@ app.get('/api/auth/google/callback', async (req, res) => {
     res.append('Set-Cookie', CLEAR_STATE_COOKIE);
     // ชื่อจาก Google ไว้ให้ฉากต้อนรับใช้ (อ่านได้จากหน้าเว็บ · หมดอายุใน 5 นาที · ไม่ใช้ยืนยันตัวตน)
     if (profile.name) res.append('Set-Cookie', `vc_gname=${encodeURIComponent(profile.name)}; Path=/; Max-Age=300; SameSite=Lax; Secure`);
+    console.log(`[google] login ok · google ${t1 - t0}ms · db ${Date.now() - t1}ms`);
     res.redirect('/');
   } catch (err) {
     console.error('[google] failed:', err.message);
