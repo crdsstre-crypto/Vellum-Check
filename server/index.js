@@ -443,7 +443,7 @@ app.post('/api/explain', async (req, res) => {
   }
 });
 
-// ---------- ลิงก์แชร์ผลตรวจ (อ่านอย่างเดียว · หมดอายุ 7 วัน · ปิดบังข้อมูลส่วนตัว) ----------
+// ---------- ลิงก์แชร์ผลตรวจ (อ่านอย่างเดียว · อายุ 1/7/30 วัน · ปิดบังข้อมูลส่วนตัว) ----------
 const shareHits = new Map();   // userId -> { n, resetAt } จำกัด 30 ลิงก์ต่อวัน
 app.post('/api/share', async (req, res) => {
   try {
@@ -454,9 +454,9 @@ app.post('/api/share', async (req, res) => {
     if (h.n >= 30) return res.status(429).json({ error: 'วันนี้สร้างลิงก์ครบ 30 ลิงก์แล้ว ลองใหม่พรุ่งนี้' });
     const payload = cleanPayload(req.body?.result, { quotes: req.body?.quotes !== false, typeText: req.body?.typeText, title: req.body?.title });
     if (!payload || !payload.items.length) return res.status(400).json({ error: 'ไม่มีผลตรวจที่จะแชร์' });
-    const out = await createShare(user.id, payload);
+    const out = await createShare(user.id, payload, req.body?.days);
     h.n += 1; shareHits.set(user.id, h);
-    res.json({ id: out.id, url: `/s/${out.id}`, expiresAt: out.expiresAt, days: SHARE_DAYS });
+    res.json({ id: out.id, url: `/s/${out.id}`, expiresAt: out.expiresAt, days: out.days });
   } catch (err) {
     console.error('[share] create failed:', err.message);
     res.status(500).json({ error: 'สร้างลิงก์ไม่สำเร็จ ลองใหม่อีกครั้ง' });
@@ -468,7 +468,7 @@ app.get('/api/share/:id', async (req, res) => {
     res.setHeader('X-Robots-Tag', 'noindex');
     const s = await getShare(req.params.id);
     if (!s) return res.status(404).json({ error: 'ไม่พบลิงก์นี้ หรือเจ้าของยกเลิกแล้ว' });
-    if (s.expired) return res.status(410).json({ error: 'ลิงก์นี้หมดอายุแล้ว (เปิดได้ 7 วันหลังสร้าง)' });
+    if (s.expired) return res.status(410).json({ error: 'ลิงก์นี้หมดอายุแล้ว' });
     res.json({ result: s.payload, createdAt: s.createdAt, expiresAt: s.expiresAt });
   } catch (err) {
     console.error('[share] get failed:', err.message);
