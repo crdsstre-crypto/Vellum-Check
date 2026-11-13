@@ -94,10 +94,25 @@
     '.vct-soon b{display:block;color:#c4c4cb;font-weight:600}' +
     /* แท็บในแถบล่าง */
     '.bottom-nav .bn-item.vct-nb svg.t{width:22px;height:22px;stroke:url(#vct-g)}' +
-    /* ปุ่มบนหัวเว็บ (มือถือ ยังไม่ล็อกอิน) */
-    '.vct-hb{display:none}' +
-    '@media (max-width:767px){body:not(.has-nav) .vct-hb{display:grid;place-items:center;flex:none;width:36px !important;min-width:36px;height:36px;min-height:0 !important;padding:0 !important;margin-right:8px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:#ececef;cursor:pointer}' +
-      '.vct-hb svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}}' +
+    /* ปุ่มเมนู ☰ บนหัวเว็บ (มือถือ): รวมปุ่มภาษา + เครื่องมือ ไว้ที่เดียว */
+    '.vct-mb{display:none}' +
+    '@media (max-width:767px){.site-header .topbar .vc-lang{display:none !important}' +
+      '.site-header .topbar .vct-mb{display:grid;place-items:center;flex:none;width:38px !important;min-width:38px;height:38px;min-height:0 !important;padding:0 !important;margin:0 8px 0 auto;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:#ececef;cursor:pointer}' +
+      '.vct-mb svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}}' +
+    /* จอแคบ: บีบระยะเล็กน้อยให้ โลโก้ · ☰ · เข้าสู่ระบบ · ตรวจสัญญา อยู่ครบในบรรทัดเดียว */
+    '@media (max-width:420px){html.vc-art .site-header .topbar,.site-header .topbar{gap:6px !important}html.vc-art .site-header .brand,.site-header .brand{gap:7px !important}' +
+      'html.vc-art .site-header .brand-name,.site-header .brand-name{letter-spacing:.01em !important;font-size:14px !important}' +
+      'html.vc-art .site-header .topbar .vct-mb,.site-header .topbar .vct-mb{width:34px !important;min-width:34px;height:34px;margin:0 0 0 auto !important}' +
+      'html.vc-art .site-header #authToggle,.site-header #authToggle{padding:0 10px !important}html.vc-art .site-header .dx-nav a:last-child,.site-header .dx-nav a:last-child{padding:0 11px !important}}' +
+    '.vcm-sec{padding:4px 0}.vcm-h{margin:6px 4px 8px;font:600 11.5px/1 Prompt,sans-serif;letter-spacing:.04em;color:#8a8a93}' +
+    '.vct .vcm-row{display:flex;align-items:center;gap:12px;width:100%;min-height:0 !important;padding:12px !important;margin-bottom:6px;border-radius:14px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);color:#ececef;text-align:left;font:inherit;cursor:pointer}' +
+    '.vcm-row .i{flex:none;display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:color-mix(in srgb,var(--c,#7fb5ff) 16%,transparent);color:var(--c,#7fb5ff)}' +
+    '.vcm-row .i svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}' +
+    '.vcm-row b{display:block;font:600 14px/1.3 Prompt,sans-serif}.vcm-row small{display:block;font:400 11.5px/1.4 Prompt,sans-serif;color:#9a9aa3}.vcm-row em{margin-left:auto;font-style:normal;color:#71717a;font-size:20px}' +
+    '.vcm-lang{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:4px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}' +
+    '.vct .vcm-lang button{min-height:46px !important;padding:0 !important;border:0;border-radius:11px;background:transparent;color:#b4b4bb;font:600 13.5px/1.2 Prompt,sans-serif;cursor:pointer}' +
+    '.vcm-lang button small{display:block;font:400 10.5px/1.2 Prompt,sans-serif;opacity:.7}' +
+    '.vct .vcm-lang button.is-on{background:linear-gradient(180deg,#f1c46a,#d6a447);color:#1c1408}' +
     /* ทางลัดในหน้าภาพรวม */
     '.vct-cc{display:flex;align-items:center;gap:11px;width:100%;margin:10px 0 14px;min-height:0 !important;padding:11px 13px !important;border-radius:14px;border:1px solid rgba(127,181,255,.25);background:rgba(127,181,255,.06);color:#ececef;text-align:left;font:inherit;cursor:pointer}' +
     '.vct-cc span.i{flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:rgba(127,181,255,.16);color:#9cc5ff}' +
@@ -170,13 +185,49 @@
     a.addEventListener('click', function (e) { e.preventDefault(); open(); });
     var last = nav.lastElementChild; nav.insertBefore(a, last);   /* ก่อนปุ่ม "ตรวจสัญญา" ซึ่งเป็นปุ่มเด่นตัวสุดท้าย */
   }
-  function headBtn() {
-    var t = document.getElementById('authToggle'); if (!t || document.querySelector('.vct-hb')) return;
-    var b = document.createElement('button'); b.type = 'button'; b.className = 'vct-hb'; b.setAttribute('aria-label', 'เครื่องมือ');
-    b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' + GRID + '</svg>';
-    b.addEventListener('click', open);
-    t.parentNode.insertBefore(b, t);
+  /* ---------- เมนู ☰ (มือถือ) ---------- */
+  var mel = null;
+  function menuOpen() {
+    if (!mel) {
+      mel = document.createElement('div'); mel.className = 'vct vcm'; mel.hidden = true;
+      mel.setAttribute('role', 'dialog'); mel.setAttribute('aria-modal', 'true'); mel.setAttribute('aria-label', 'เมนู'); mel.setAttribute('data-i18n-skip', '');
+      document.body.appendChild(mel);
+      mel.addEventListener('click', function (e) {
+        if (e.target.closest('[data-x]')) { menuClose(); return; }
+        if (e.target.closest('[data-m="tools"]')) { menuClose(); setTimeout(open, 220); return; }
+        var g = e.target.closest('[data-goto]'); if (g) { menuClose(); var t = document.querySelector(g.getAttribute('data-goto')); if (t) setTimeout(function () { t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 250); return; }
+        var l = e.target.closest('[data-lang]'); if (l && window.VCLang && l.getAttribute('data-lang') !== VCLang.get()) { menuClose(); VCLang.set(l.getAttribute('data-lang')); }
+      });
+    }
+    var L = window.VCLang ? VCLang.get() : 'th';
+    var links = [['#introVideo', 'ดูคลิปแนะนำ', 'เห็นภาพรวมการใช้งาน', '#f5c451', '<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5z"/>'],
+                 ['#manifesto', 'วิธีอ่าน', 'หลักการอ่านสัญญาก่อนเซ็น', '#34d399', '<path d="M4 5h6a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4zM20 5h-6a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h6z"/>']]
+      .filter(function (x) { return document.querySelector(x[0]); });
+    mel.innerHTML = '<div class="vct-bg" data-x></div><div class="vct-card"><div class="vct-hd"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" style="color:#cfe2ff;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></span><div><b>เมนู</b><small>Vellum Check</small></div><button type="button" class="vct-x" data-x aria-label="ปิด">×</button></div>' +
+      '<div class="vct-bd" style="display:block">' +
+      '<div class="vcm-sec"><button type="button" class="vcm-row" data-m="tools" style="--c:#9cc5ff"><span class="i"><svg viewBox="0 0 24 24" aria-hidden="true">' + GRID + '</svg></span><span><b>เครื่องมือ</b><small>' + TOOLS.map(function (t) { return t.name; }).join(' · ') + '</small></span><em>›</em></button></div>' +
+      (links.length ? '<div class="vcm-sec">' + links.map(function (x) { return '<button type="button" class="vcm-row" data-goto="' + x[0] + '" style="--c:' + x[3] + '"><span class="i"><svg viewBox="0 0 24 24" aria-hidden="true">' + x[4] + '</svg></span><span><b>' + x[1] + '</b><small>' + x[2] + '</small></span><em>›</em></button>'; }).join('') + '</div>' : '') +
+      '<div class="vcm-sec"><p class="vcm-h">ภาษา · Language · 语言</p><div class="vcm-lang">' +
+        [['th', 'ไทย', 'Thai'], ['en', 'English', 'อังกฤษ'], ['zh', '中文', 'จีน']].map(function (x) { return '<button type="button" data-lang="' + x[0] + '" class="' + (L === x[0] ? 'is-on' : '') + '">' + x[1] + '<small>' + x[2] + '</small></button>'; }).join('') +
+      '</div></div></div></div>';
+    mel.hidden = false; document.documentElement.style.overflow = 'hidden';
+    requestAnimationFrame(function () { requestAnimationFrame(function () { mel.classList.add('in'); }); });
   }
+  function menuClose() {
+    if (!mel || mel.hidden) return;
+    mel.classList.remove('in'); document.documentElement.style.overflow = '';
+    setTimeout(function () { mel.hidden = true; }, 300);
+  }
+  function headBtn(tries) {
+    var tb = document.querySelector('.site-header .topbar'); if (!tb || tb.querySelector('.vct-mb')) return;
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'vct-mb'; b.setAttribute('aria-label', 'เมนู · เครื่องมือ · ภาษา'); b.setAttribute('data-i18n-skip', '');
+    b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+    b.addEventListener('click', menuOpen);
+    var at = document.getElementById('authToggle');
+    var lg = tb.querySelector('.vc-lang');
+    tb.insertBefore(b, lg || (at && at.parentNode === tb ? at : null));
+  }
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') menuClose(); });
   /* ทางลัดในหน้าภาพรวม (Command Center) ของประวัติ */
   function ccLink() {
     var panel = document.getElementById('historyPanel'); if (!panel) return;
