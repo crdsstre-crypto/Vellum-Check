@@ -57,3 +57,4 @@ html body .vac-st:hover{border-color:rgba(241,213,138,.4) !important;background:
 #authLoggedIn:has(#vacCard:not([hidden])) .vc-wcard{display:none !important}
 #authLoggedIn .vc-wcard + .vac,#authLoggedIn .vac{margin-top:6px}
 html:has(#vacCard:not([hidden])) :is(#acctInfoBtn,#acctDetail){display:none !important}
+.vac-v{display:flex;align-items:baseline;font-style:normal}
