@@ -135,6 +135,26 @@
     '.vng-ft{padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}' +
     '.vng .vng-ft button:disabled{opacity:.4;cursor:default}' +
     '.vng .vng-rb.ok{background:#34d399;border-color:#34d399;color:#06281b}' +
+    /* (1) แถบสรุปการตั้งค่า */
+    '.vng .vng-sum{display:flex;align-items:center;gap:10px;width:100%;min-height:46px !important;padding:0 14px !important;margin:2px 0 4px;border-radius:13px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.035);color:#e4e4e7;font:500 13.5px/1.3 Prompt,sans-serif;text-align:left;cursor:pointer}' +
+    '.vng-sum .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.vng-sum em{flex:none;font-style:normal;font-size:12px;font-weight:600;color:#7fb5ff}' +
+    '.vng-sum[aria-expanded="true"]{border-color:rgba(127,181,255,.4)}.vng-set{padding:0 2px 6px;animation:vngIn .25s ease-out}.vng-set[hidden]{display:none}' +
+    /* (2)+(3) กลุ่มและแถว */
+    '.vng-grp{margin-top:14px}' +
+    '.vng-gh{display:flex;align-items:center;gap:8px;margin:0 2px 8px}.vng-gh i{width:9px;height:9px;border-radius:50%;background:var(--c);box-shadow:0 0 8px var(--c)}' +
+    '.vng-gh b{font:700 13.5px/1.2 Prompt,sans-serif;color:#ececef}.vng-gh .c{font:600 12px/1 Prompt,sans-serif;color:#8a8a93}' +
+    '.vng .vng-gh button{margin-left:auto;min-height:0 !important;padding:4px 10px !important;border-radius:99px;border:1px solid color-mix(in srgb,var(--c) 45%,transparent);background:transparent;color:var(--c);font:600 11.5px/1.3 Prompt,sans-serif;cursor:pointer}' +
+    '.vng-it{position:relative;overflow:hidden;background:#18191d !important;border-color:rgba(255,255,255,.07) !important;opacity:.58;transition:opacity .2s,border-color .2s}' +
+    '.vng-it::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c);opacity:.35;transition:opacity .2s}' +
+    '.vng-it.on{opacity:1;border-color:rgba(255,255,255,.12) !important}.vng-it.on::before{opacity:1}' +
+    '.vng-dot{display:none}.vng-ir{padding:10px 6px 10px 13px}' +
+    '.vng-tx{flex:1;min-width:0}.vng-tx b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}' +
+    '.vng-tx small{display:block;margin-top:2px;font:400 11.5px/1.3 Prompt,sans-serif;color:#8a8a93;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.vng-tx small .d{color:#34d399;font-weight:600}' +
+    /* (6) บับเบิลลอยเหนือปุ่มล่าง */
+    '.vng .vng-mini{display:flex;align-items:center;gap:8px;margin:0 16px -4px;min-height:0 !important;padding:8px 8px 8px 12px !important;border:0;border-radius:14px 14px 4px 14px;background:#8de055;color:#132a0b;text-align:left;cursor:pointer;box-shadow:0 6px 18px -8px rgba(0,0,0,.7);animation:vngIn .3s ease-out}' +
+    '.vng-mini .b{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font:400 13px/1.4 Sarabun,Prompt,sans-serif}' +
+    '.vng-mini em{flex:none;padding:3px 9px;border-radius:99px;background:rgba(19,42,11,.12);font:700 11.5px/1.3 Prompt,sans-serif;font-style:normal}' +
+    '.vng[data-t="r"] .vng-mini{display:none}@media (min-width:900px){.vng .vng-mini{display:none}}' +
     '@media (prefers-reduced-motion:reduce){.vng-l,.vng-r,.vng-tabs i,.vng-bub{transition:none;animation:none}}';
   var sty = document.createElement('style'); sty.textContent = css; document.head.appendChild(sty);
 
@@ -156,12 +176,14 @@
       '<div class="vng-hd"><span class="ic">✍️</span><div><b>ร่างข้อความต่อรอง</b><small>เลือกข้อ เลือกน้ำเสียง แก้คำได้ แล้วส่งให้อีกฝ่าย</small></div><button type="button" class="vng-x" data-x aria-label="ปิด">×</button></div>' +
       '<div class="vng-tabs" role="tablist"><i aria-hidden="true"></i><button type="button" role="tab" data-tab="l" class="on">เลือกข้อ <b class="vng-n">0</b></button><button type="button" role="tab" data-tab="r">ดูข้อความ</button></div>' +
       '<div class="vng-bd"><div class="vng-l">' +
+        '<button type="button" class="vng-sum" aria-expanded="false"><span class="t"></span><em>✎ ปรับ</em></button><div class="vng-set" hidden>' +
         '<p class="vng-h">น้ำเสียง</p><div class="vng-seg" data-g="tone"><button type="button" data-v="soft">สุภาพ</button><button type="button" data-v="mid">กลาง ๆ</button><button type="button" data-v="direct">ตรงไปตรงมา</button></div>' +
-        '<p class="vng-h">ส่งถึง</p><div class="vng-row2"><input class="vng-to" type="text" maxlength="40" placeholder="ชื่อผู้รับ (ไม่ใส่ก็ได้)"><div class="vng-seg" data-g="pp"><button type="button" data-v="ครับ">ครับ</button><button type="button" data-v="ค่ะ">ค่ะ</button></div></div>' +
-        '<p class="vng-h">ใส่ข้อไหนบ้าง<span class="vng-q"><button type="button" data-q="all">ทั้งหมด</button><button type="button" data-q="hi">เฉพาะสำคัญ</button><button type="button" data-q="none">ล้าง</button></span></p><div class="vng-list"></div>' +
+        '<p class="vng-h">ส่งถึง</p><div class="vng-row2"><input class="vng-to" type="text" maxlength="40" placeholder="ชื่อผู้รับ (ไม่ใส่ก็ได้)"><div class="vng-seg" data-g="pp"><button type="button" data-v="ครับ">ครับ</button><button type="button" data-v="ค่ะ">ค่ะ</button></div></div></div>' +
+        '<div class="vng-list"></div>' +
       '</div><div class="vng-r"><div class="vng-chd"><span class="av">?</span><div><b class="vng-who">อีกฝ่าย</b><small>ตัวอย่างหน้าตาตอนส่ง · แตะข้อความเพื่อแก้ได้</small></div><button type="button" class="vng-re" hidden>↺ สร้างใหม่</button></div>' +
         '<div class="vng-chat"><span class="vng-day">วันนี้</span><div class="vng-msg"><span class="vng-meta">อ่านแล้ว<br><span class="vng-tm"></span></span><div class="vng-bub"><textarea spellcheck="false" aria-label="ข้อความต่อรอง"></textarea></div></div>' +
         '<p class="vng-hint">ร่างจากผลตรวจของ AI ใช้ประกอบการพูดคุย ไม่ใช่คำปรึกษาทางกฎหมาย ควรอ่านทวนก่อนส่ง</p></div></div></div>' +
+      '<button type="button" class="vng-mini" data-tab="r" aria-label="ดูข้อความเต็ม"><span class="b"></span><em>ดู ›</em></button>' +
       '<div class="vng-ft"><button type="button" class="vng-main" data-line>' + I.line + 'ส่งทาง LINE <em class="vng-mn"></em></button>' +
         '<button type="button" class="vng-rb" data-copy data-l="คัดลอก" aria-label="คัดลอก">' + I.copy + '</button><button type="button" class="vng-rb" data-mail data-l="อีเมล" aria-label="อีเมล">' + I.mail + '</button>' +
         (share ? '<button type="button" class="vng-rb" data-share data-l="ส่งต่อ" aria-label="ส่งต่อ">' + I.share + '</button>' : '') + '</div></div>';
@@ -172,8 +194,9 @@
       var tb = e.target.closest('[data-tab]'); if (tb) return tab(tb.getAttribute('data-tab'));
       var sb = e.target.closest('.vng-seg button');
       if (sb) { var g = sb.parentNode.getAttribute('data-g'); st[g] = sb.getAttribute('data-v'); ls(g === 'tone' ? 'vc_neg_tone' : 'vc_neg_pp', st[g]); segs(); regen(); fade(); return; }
-      var q = e.target.closest('[data-q]');
-      if (q) { var m = q.getAttribute('data-q'); [].forEach.call(el.querySelectorAll('.vng-it'), function (d) { var on = m === 'all' ? true : m === 'none' ? false : (d.getAttribute('data-k') === 'f' && list[+d.getAttribute('data-n')].lv === 'check_detail'); d.querySelector('input').checked = on; d.classList.toggle('on', on); }); count(true); if (!edited) regen(); return; }
+      var sm = e.target.closest('.vng-sum'); if (sm) { var se = el.querySelector('.vng-set'); se.hidden = !se.hidden; sm.setAttribute('aria-expanded', String(!se.hidden)); return; }
+      var gb = e.target.closest('[data-grp]');
+      if (gb) { var gr = el.querySelectorAll('.vng-it[data-g="' + gb.getAttribute('data-grp') + '"]'), allOn = [].every.call(gr, function (d) { return d.querySelector('input').checked; }); [].forEach.call(gr, function (d) { d.querySelector('input').checked = !allOn; d.classList.toggle('on', !allOn); }); count(true); if (!edited) regen(); return; }
       var mo = e.target.closest('.vng-more'); if (mo) { e.preventDefault(); var it = mo.closest('.vng-it'); it.classList.toggle('open'); mo.setAttribute('aria-expanded', String(it.classList.contains('open'))); return; }
       if (e.target.closest('.vng-re')) { regen(true); fade(); return; }
       var t = ta.value;
@@ -186,7 +209,7 @@
       var it = e.target.closest('.vng-it'); if (!it) return;
       it.classList.toggle('on', e.target.checked); count(true); if (!edited) regen();
     });
-    el.querySelector('.vng-to').addEventListener('input', function () { st.to = this.value; ls('vc_neg_to', st.to); who(); if (!edited) regen(); });
+    el.querySelector('.vng-to').addEventListener('input', function () { st.to = this.value; ls('vc_neg_to', st.to); who(); sumTx(); if (!edited) regen(); });
     ta.addEventListener('input', function () { edited = true; el.querySelector('.vng-re').hidden = false; grow(); count(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && el && !el.hidden) close(); });
   }
@@ -203,7 +226,9 @@
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok, fb); else fb();
     function fb() { var ta = el.querySelector('textarea'); ta.select(); try { document.execCommand('copy'); ok(); } catch (e) {} }
   }
-  function segs() { [].forEach.call(el.querySelectorAll('.vng-seg'), function (sg) { var v = st[sg.getAttribute('data-g')]; [].forEach.call(sg.children, function (b) { b.classList.toggle('on', b.getAttribute('data-v') === v); }); }); }
+  var TONE = { soft: '🙂 สุภาพ', mid: '🤝 กลาง ๆ', direct: '💼 ตรงไปตรงมา' };
+  function sumTx() { var t = el.querySelector('.vng-sum .t'); if (t) t.textContent = TONE[st.tone] + ' · ' + st.pp + ' · ถึง: ' + (st.to.trim() || 'อีกฝ่าย'); }
+  function segs() { sumTx(); [].forEach.call(el.querySelectorAll('.vng-seg'), function (sg) { var v = st[sg.getAttribute('data-g')]; [].forEach.call(sg.children, function (b) { b.classList.toggle('on', b.getAttribute('data-v') === v); }); }); }
   function picked() {
     var fx = [], ms = [];
     [].forEach.call(el.querySelectorAll('.vng-it input:checked'), function (c) { var d = c.closest('.vng-it'), k = d.getAttribute('data-k'), n = +d.getAttribute('data-n'); if (k === 'f') fx.push(list[n]); else ms.push(miss[n]); });
@@ -213,17 +238,28 @@
     var p = picked(), n = p.fx.length + p.ms.length, b = el.querySelector('.vng-n');
     if (b.textContent !== String(n)) { b.textContent = n; if (pop) { b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); } }
     el.querySelector('.vng-mn').textContent = n ? '· ' + n + ' ข้อ' : '';
+    [].forEach.call(el.querySelectorAll('.vng-gh'), function (g) {
+      var k = g.getAttribute('data-gh'), its = el.querySelectorAll('.vng-it[data-g="' + k + '"]'), on = [].filter.call(its, function (d) { return d.querySelector('input').checked; }).length;
+      g.querySelector('.c').textContent = on + '/' + its.length; g.querySelector('[data-grp]').textContent = on === its.length ? 'ล้างกลุ่ม' : 'เลือกทั้งกลุ่ม';
+    });
+    var mb = el.querySelector('.vng-mini .b'); if (mb) { var hs = p.fx.map(function (x) { return x.head.replace(' — ', ' '); }).concat(p.ms); mb.textContent = edited ? 'ข้อความที่คุณแก้เอง · แตะเพื่อดู' : n ? 'ขอแก้ ' + n + ' ข้อ: ' + hs.join(', ') : 'ยังไม่ได้เลือกข้อ · แตะเพื่อพิมพ์เอง'; }
     var can = !!(n || (edited && el.querySelector('textarea').value.trim()));
     [].forEach.call(el.querySelectorAll('.vng-ft button'), function (x) { x.disabled = !can; });
   }
   function regen(force) { var p = picked(); el.querySelector('textarea').value = compose(p.fx, p.ms); if (force || !edited) { edited = false; el.querySelector('.vng-re').hidden = true; } count(); grow(); }
+  var GRP = [['check_detail', '#f2555a', 'ควรแก้ก่อนเซ็น'], ['caution', '#f5c451', 'ควรต่อรอง'], ['low', '#8d8d96', 'ข้อสังเกต'], ['miss', '#7fb5ff', 'ขอให้เขียนเพิ่ม']];
   function renderList() {
-    var row = function (k, n, c, on, title, sub, tag, done) {
-      return '<div class="vng-it' + (on ? ' on' : '') + '" data-k="' + k + '" data-n="' + n + '" style="--c:' + c + '"><label class="vng-ir"><input type="checkbox"' + (on ? ' checked' : '') + '><span class="vng-ck"></span><span class="vng-dot"></span><b>' + esc(title) + '</b>' + (done ? '<span class="d">แก้แล้ว</span>' : '') +
-        '<button type="button" class="vng-more" aria-label="ดูรายละเอียด" aria-expanded="false">' + I.down + '</button></label><div class="vng-dt"><i>' + esc(tag) + '</i>' + esc(sub) + '</div></div>';
+    var row = function (k, n, g, c, on, title, sub, tag, det, done) {
+      return '<div class="vng-it' + (on ? ' on' : '') + '" data-k="' + k + '" data-n="' + n + '" data-g="' + g + '" style="--c:' + c + '"><label class="vng-ir"><input type="checkbox"' + (on ? ' checked' : '') + '><span class="vng-ck"></span><span class="vng-tx"><b>' + esc(title) + '</b>' + (sub ? '<small>' + esc(sub) + (done ? ' · <span class="d">แก้แล้ว</span>' : '') + '</small>' : '') + '</span>' +
+        '<button type="button" class="vng-more" aria-label="ดูรายละเอียด" aria-expanded="false">' + I.down + '</button></label><div class="vng-dt"><i>' + esc(tag) + '</i>' + esc(det) + '</div></div>';
     };
-    var h = list.map(function (x, n) { return row('f', n, LV[x.lv][1], x.on, (x.star ? '⭐ ' : '') + x.title, x.fix, LV[x.lv][0] + (x.ask ? ' · ขอให้ชี้แจง' : ' · ขอแก้เป็น'), x.done); }).join('');
-    if (miss.length) h += '<p class="vng-h">เรื่องที่สัญญายังไม่ระบุ</p>' + miss.map(function (m, n) { return row('m', n, '#7fb5ff', false, m, 'ขอให้เขียนเรื่องนี้เพิ่มในสัญญา', 'ยังไม่ระบุ'); }).join('');
+    var h = GRP.map(function (G) {
+      var rows;
+      if (G[0] === 'miss') rows = miss.map(function (m, n) { return row('m', n, 'miss', G[1], false, m, 'ยังไม่ได้เขียนไว้ในสัญญา', 'ขอให้เพิ่ม', 'ขอให้เขียนเรื่องนี้เพิ่มในสัญญาให้ชัดเจน'); });
+      else rows = list.map(function (x, n) { return x.lv === G[0] ? row('f', n, G[0], G[1], x.on, (x.star ? '⭐ ' : '') + x.title, x.head.replace(' — ', ' · '), x.ask ? 'ขอให้ชี้แจง' : 'ขอแก้เป็น', x.fix, x.done) : ''; }).filter(Boolean);
+      if (!rows.length) return '';
+      return '<div class="vng-grp" style="--c:' + G[1] + '"><div class="vng-gh" data-gh="' + G[0] + '"><i></i><b>' + G[2] + '</b><span class="c"></span><button type="button" data-grp="' + G[0] + '"></button></div>' + rows.join('') + '</div>';
+    }).join('');
     if (!h) h = '<div class="vng-empty">ผลตรวจนี้ไม่มีข้อที่ต้องขอแก้ไข 🎉 ถ้ายังอยากส่งข้อความถึงอีกฝ่าย ไปที่ "ดูข้อความ" แล้วพิมพ์ได้เลย</div>';
     el.querySelector('.vng-list').innerHTML = h;
   }
