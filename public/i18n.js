@@ -21,6 +21,18 @@
     '#dispPanel .vds-seg2{grid-template-columns:1fr 1fr !important}' +
     '#authLoggedIn #dispPanel .vds-seg2 button b{font-size:16px !important}' +
     'html[data-lang=en].i18n-wait body{opacity:0}' +
+    '.vc-lnote{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;padding:20px;background:rgba(0,0,0,.66);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}' +
+    '.vc-ln-card{width:min(440px,100%);padding:22px 20px 18px;border-radius:18px;background:#16171b;border:1px solid rgba(241,196,106,.3);box-shadow:0 24px 60px -20px rgba(0,0,0,.9);color:#ece9e2;font:400 14px/1.6 Prompt,system-ui,sans-serif}' +
+    '.vc-ln-ic{margin:0 0 4px;font-size:26px;line-height:1;color:#f1c46a}' +
+    '.vc-ln-card h3{margin:0 0 10px;font-size:17px;font-weight:700;line-height:1.35}' +
+    '.vc-ln-card p{margin:0 0 9px;color:rgba(236,233,226,.82)}' +
+    '.vc-ln-card p b{color:#f1c46a;font-weight:600}' +
+    '.vc-ln-acts{display:flex;gap:8px;margin-top:14px}' +
+    '.vc-ln-acts button{flex:1;min-height:46px;padding:8px 10px;border-radius:12px;font:600 13.5px/1.25 Prompt,system-ui,sans-serif;cursor:pointer}' +
+    '.vc-ln-no{background:transparent;border:1px solid rgba(255,255,255,.18);color:#ece9e2}' +
+    '.vc-ln-ok{background:linear-gradient(180deg,#f1c46a,#d6a447);border:0;color:#1c1408;transition:opacity .25s}' +
+    '.vc-ln-ok.is-wait,.vc-ln-ok:disabled{opacity:.45;cursor:not-allowed}' +
+    '.vc-lang-legal{margin:10px 0 0;padding:9px 12px;border-radius:10px;border:1px dashed rgba(241,196,106,.35);background:rgba(241,196,106,.06);color:rgba(236,233,226,.78);font:400 12.5px/1.5 Prompt,system-ui,sans-serif;text-align:left}' +
     'html[data-lang=en] body{transition:opacity .15s}' +
     '@media (max-width:480px){.vc-lang{margin:0 2px 0 auto;font-size:10.5px}.vc-lang span{padding:5px 6px}}' +
     /* หัวข้อใหญ่หน้าแรก: ภาษาอังกฤษยาวกว่า ย่อให้พอดีจอ */
@@ -32,8 +44,39 @@
   if (LANG === 'en') { root.classList.add('i18n-wait'); setTimeout(function () { root.classList.remove('i18n-wait'); }, 1500); }
   window.VCLang = {
     get: function () { return LANG; },
-    set: function (l) { try { localStorage.setItem('vc_lang', l === 'en' ? 'en' : 'th'); } catch (e) {} location.reload(); }
+    set: function (l) { l = l === 'en' ? 'en' : 'th'; if (l === LANG) return; notice(l, function () { try { localStorage.setItem('vc_lang', l); } catch (e) {} location.reload(); }); }
   };
+
+  /* ---------- แจ้งก่อนเปลี่ยนภาษา: เป็นแค่การแปลเพื่อความสะดวก ฉบับภาษาไทยมีผลเหนือกว่า ใช้กฎหมายไทย ไม่ใช่คำปรึกษากฎหมาย ---------- */
+  var NOTE_TH = 'ภาษาอังกฤษเป็นคำแปลเพื่อความสะดวกเท่านั้น หากความหมายไม่ตรงกัน ให้ถือข้อความภาษาไทยเป็นหลัก บริการนี้อยู่ภายใต้กฎหมายไทย และผลตรวจไม่ใช่คำปรึกษาทางกฎหมาย';
+  var NOTE_EN = 'English is a convenience translation only. If the Thai and English versions differ, the Thai version prevails. This service is governed by the laws of Thailand, and results are not legal advice.';
+  function notice(to, go) {
+    var old = document.querySelector('.vc-lnote'); if (old) old.remove();
+    var w = document.createElement('div');
+    w.className = 'vc-lnote'; w.setAttribute('data-i18n-skip', ''); w.setAttribute('role', 'dialog'); w.setAttribute('aria-modal', 'true');
+    w.innerHTML = '<div class="vc-ln-card">' +
+      '<p class="vc-ln-ic" aria-hidden="true">⚖︎</p>' +
+      '<h3>' + (to === 'en' ? 'เปลี่ยนเป็นภาษาอังกฤษ · Switch to English' : 'Switch to Thai · เปลี่ยนเป็นภาษาไทย') + '</h3>' +
+      '<p><b>ไทย:</b> ' + NOTE_TH + '</p>' +
+      '<p><b>English:</b> ' + NOTE_EN + '</p>' +
+      '<div class="vc-ln-acts"><button type="button" class="vc-ln-no">ยกเลิก · Cancel</button>' +
+      '<button type="button" class="vc-ln-ok">' + (to === 'en' ? 'เข้าใจแล้ว เปลี่ยนภาษา · I understand' : 'I understand · เข้าใจแล้ว') + '</button></div></div>';
+    document.body.appendChild(w);
+    var close = function () { w.remove(); document.removeEventListener('keydown', esc); };
+    var esc = function (e) { if (e.key === 'Escape') close(); };
+    document.addEventListener('keydown', esc);
+    w.addEventListener('click', function (e) { if (e.target === w || e.target.closest('.vc-ln-no')) close(); else if (e.target.closest('.vc-ln-ok') && !e.target.closest('.vc-ln-ok').disabled) { close(); go(); } });
+    /* นับถอยหลัง 3 วินาทีให้อ่านก่อน แล้วปุ่มยืนยันถึงจะกดได้ */
+    var ok = w.querySelector('.vc-ln-ok'), label = ok.innerHTML, n = 3;
+    ok.disabled = true; ok.classList.add('is-wait');
+    var tick = function () {
+      if (!w.isConnected) return;
+      if (n <= 0) { ok.disabled = false; ok.classList.remove('is-wait'); ok.innerHTML = label; ok.focus(); return; }
+      ok.innerHTML = 'โปรดอ่านก่อน · Please read (' + n + ')'; n--; setTimeout(tick, 1000);
+    };
+    tick();
+    var no = w.querySelector('.vc-ln-no'); if (no) no.focus();
+  }
 
   /* ---------- ปุ่มสลับภาษา (แสดงทั้งสองภาษา) ---------- */
   function addSwitch() {
@@ -653,8 +696,21 @@
   function title() { var v = tr(document.title); if (v) document.title = v; }
 
   root.setAttribute('lang', 'en');
+  /* หมายเหตุภาษาแบบถาวรในโหมดอังกฤษ: ใต้คำเตือนหน้าตรวจ ท้ายผลตรวจ และท้ายหน้า */
+  function legal() {
+    var spots = [document.querySelector('#checkCard .disclaimer:not(#authMsg)'), document.querySelector('#result'), document.querySelector('body > footer, footer')];
+    spots.forEach(function (el, i) {
+      if (!el || (i === 1 && !el.children.length)) return;
+      var host = i === 0 ? el.parentNode : el, after = i === 0 ? el : null;
+      if (!host || host.querySelector(':scope > .vc-lang-legal')) return;
+      var p = document.createElement('p'); p.className = 'vc-lang-legal'; p.setAttribute('data-i18n-skip', '');
+      p.textContent = (i === 1 ? 'This report was written in English by AI for convenience. The original contract text prevails. ' : '') + NOTE_EN;
+      if (after) host.insertBefore(p, after.nextSibling); else host.appendChild(p);
+    });
+  }
   boot(function () {
     title(); try { walk(document.body); } catch (e) {} root.classList.remove('i18n-wait');
+    legal(); setInterval(legal, 2000);
     if (!('MutationObserver' in window)) return;
     var q = [], sched = false;
     function flush() { sched = false; var a = q; q = []; for (var i = 0; i < a.length; i++) { var n = a[i]; if (n.nodeType === 3) doText(n); else if (n.isConnected) walk(n); } }
