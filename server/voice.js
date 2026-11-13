@@ -28,13 +28,11 @@ export function buildSpokenSummary(result) {
 const EL = 'https://api.elevenlabs.io/v1';
 let voiceCache = null, voiceAt = 0, lastSource = '', lastErr = '';
 export function voiceSource() { return lastSource; }
-const FALLBACK = [
+const FALLBACK = [   // เสียงฝรั่งพูดไทยจะฟังคล้ายกัน เลือกเฉพาะ 4 เสียงที่ต่างกันที่สุด
   { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Sarah', gender: 'ผู้หญิง' },
-  { id: 'JBFqnCBsd6RMkjVDRZzb', name: 'George', gender: 'ผู้ชาย' },
-  { id: 'XrExE9yKIg1WjnnlVkGX', name: 'Matilda', gender: 'ผู้หญิง' },
-  { id: 'bIHbv24MWmeRgasZH58o', name: 'Will', gender: 'ผู้ชาย' },
-  { id: 'cgSgspJ2msm6clMCkdW9', name: 'Jessica', gender: 'ผู้หญิง' },
   { id: 'nPczCjzI2devNBz1zQrb', name: 'Brian', gender: 'ผู้ชาย' },
+  { id: 'cgSgspJ2msm6clMCkdW9', name: 'Jessica', gender: 'ผู้หญิง' },
+  { id: 'JBFqnCBsd6RMkjVDRZzb', name: 'George', gender: 'ผู้ชาย' },
 ];
 const GENDER = { female: 'ผู้หญิง', male: 'ผู้ชาย' };
 function shortName(n) { return String(n || '').split(/\s+[-–|]\s+/)[0].trim().slice(0, 24) || 'เสียง'; }
@@ -88,11 +86,16 @@ export async function pickVoice(id) {
 }
 
 // ตัวอย่างเสียง: สร้างครั้งเดียวต่อเสียงแล้วจำไว้ (ประโยคสั้น เสียค่า ElevenLabs ไม่กี่สิบตัวอักษร)
-const PREVIEW_TEXT = 'สวัสดีครับ นี่คือตัวอย่างเสียงสรุปผลตรวจสัญญา';
+// เสียงผู้หญิงลงท้าย "ค่ะ" ผู้ชาย "ครับ" ไม่รู้เพศไม่ใส่คำลงท้าย
+function previewText(v) {
+  const end = v?.gender === 'ผู้หญิง' ? 'ค่ะ' : v?.gender === 'ผู้ชาย' ? 'ครับ' : '';
+  return `สวัสดี${end} นี่คือตัวอย่างเสียงสรุปผลตรวจสัญญา`;
+}
 const previews = new Map();
 export async function voicePreview(id) {
   if (previews.has(id)) return previews.get(id);
-  const p = synthesizeSpeech(PREVIEW_TEXT, id).then(b64 => Buffer.from(b64, 'base64'));
+  const v = (await listVoices()).find(x => x.id === id);
+  const p = synthesizeSpeech(previewText(v), id).then(b64 => Buffer.from(b64, 'base64'));
   previews.set(id, p);
   p.catch(() => previews.delete(id));
   return p;
