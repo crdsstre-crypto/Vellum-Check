@@ -43,6 +43,7 @@
     if (!n) { n = String(m || '').split('@')[0].replace(/[._-]+/g, ' ').trim().split(/\s+/)[0] || ''; n = n.replace(/\d+$/, '') || n; n = n.charAt(0).toUpperCase() + n.slice(1); }
     return n.length > 14 ? n.slice(0, 13) + '…' : n;
   }
+  function ledgerNo(m) { var h = 7; String(m || '').split('').forEach(function (c) { h = (h * 31 + c.charCodeAt(0)) % 99991; }); return 'VC-' + ('0000' + (h % 10000)).slice(-4); }
   function setOpen(on, anim) {
     var bk = box.querySelector('.vl-book'); if (!bk) return;
     if (!anim || calm()) bk.classList.add('no-anim'); else bk.classList.remove('no-anim');
@@ -65,10 +66,11 @@
     box.className = 'vac vl';
     box.innerHTML =
       '<div class="vl-book' + (wasOpen ? ' is-open' : '') + '">' +
+        '<i class="vl-ribbon" aria-hidden="true"></i>' +
         '<div class="vl-page">' +
           '<div class="vl-head">' +
             '<div><small class="vl-kick">สมุดบัญชีสมาชิก' + (me.is_admin ? ' · แอดมิน' : '') + '</small>' +
-            '<p class="vl-name">' + esc(name) + '</p><p class="vl-mail">' + esc(email) + '</p></div>' +
+            '<p class="vl-name">' + esc(name) + '</p><p class="vl-no">บัญชีเลขที่ <b>' + ledgerNo(email) + '</b></p></div>' +
             '<span class="vl-wax" aria-hidden="true"><b>VC</b></span>' +
           '</div>' +
           '<div class="vl-bal">' +
@@ -82,11 +84,10 @@
             '<button type="button" class="vl-link" data-a="redeem">' + (pts == null ? 'แลกแต้มเช็กอิน' : pts >= need ? 'แลกตรวจฟรีได้แล้ว' : 'แต้มเช็กอิน ' + pts + '/' + need) + ' <span aria-hidden="true">→</span></button>' +
           '</div>' +
           '<div class="vl-notes">' +
-            '<p class="vl-nh">บันทึกของฉัน</p>' +
+            '<p class="vl-nh"><span>บันทึกของฉัน</span><button type="button" class="vl-close" data-a="close" aria-label="ปิดสมุด">ปิดเล่ม</button></p>' +
             (nIns ? line('ตรวจไปแล้ว', nIns + (nIns >= 50 ? '+' : ''), 'ฉบับ') + line('เจอจุดน่าสงสัย', risk, 'จุด', 'is-r') + (last ? line('ล่าสุดเมื่อ', esc(ago(last)), '') : '')
                   : '<button type="button" class="vl-ln is-empty" data-a="hist">ยังไม่มีบันทึก — ตรวจสัญญาฉบับแรกได้เลย</button>') +
           '</div>' +
-          '<button type="button" class="vl-close" data-a="close" aria-label="ปิดสมุด">ปิดเล่ม</button>' +
         '</div>' +
         '<button type="button" class="vl-cover" data-a="cover" aria-label="เปิดสมุดบัญชี" aria-expanded="' + (wasOpen ? 'true' : 'false') + '"' + (wasOpen ? ' tabindex="-1"' : '') + '>' +
           '<span class="vl-cv-in">' +
