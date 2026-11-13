@@ -38,16 +38,29 @@
     return na + nb ? (2 * x) / (na + nb) : 0;
   }
   function wordDiff(a, b) {
-    var A = toks(a), B = toks(b), P = lcs(A, B, function (x, y) { return x === y; }), h = '', i = 0, j = 0, del = '', ins = '';
-    function flush() { if (del) h += '<del>' + esc(del) + '</del>'; if (ins) h += '<ins>' + esc(ins) + '</ins>'; del = ins = ''; }
+    var A = toks(a), B = toks(b), P = lcs(A, B, function (x, y) { return x === y; }), h = '', i = 0, j = 0, del = '', ins = '', nd = 0, ni = 0, insAll = [];
+    function flush() { if (del) { h += '<del>' + esc(del) + '</del>'; nd += del.trim().length; } if (ins) { h += '<ins>' + esc(ins) + '</ins>'; ni += ins.trim().length; insAll.push(ins); } del = ins = ''; }
     P.concat([[A.length, B.length]]).forEach(function (p) {
       while (i < p[0]) del += A[i++]; while (j < p[1]) ins += B[j++];
       if (p[0] < A.length) { if (/^\s+$/.test(A[p[0]]) && (del || ins)) { del += A[p[0]]; ins += B[p[1]]; } else { flush(); h += esc(A[p[0]]); } i++; j++; }
     });
-    flush(); return h;
+    flush();
+    var tot = a.replace(/\s/g, '').length + b.replace(/\s/g, '').length;
+    return { h: h, ratio: tot ? (nd + ni) / tot : 0, ins: insAll.join(' ') };
   }
-  var NUMRE = /\d[\d,]*(?:\.\d+)?\s*(?:%|บาท|วัน|เดือน|ปี|ชั่วโมง)?/g;
-  function nums(s) { return (norm(s).match(NUMRE) || []).map(function (x) { return x.trim(); }); }
+  var NUMRE = /(?:(?:วันที่|ร้อยละ|อัตรา)\s*)?\d[\d,]*(?:\.\d+)?\s*(?:%|บาท|วัน|เดือน|ปี|ชั่วโมง|ครั้ง|หน่วย)?/g;
+  function nums(s) { return (norm(s).replace(CL, '').match(NUMRE) || []).map(function (x) { return x.replace(/\s+/g, ' ').trim(); }); }
+  /* จับคู่ตัวเลขเดิม↔ใหม่: ที่เหมือนกันข้าม, ที่อยู่ช่วงเดียวกันจับคู่เป็น "เปลี่ยน", ที่เหลือคือ "ตัดออก" / "เพิ่ม" */
+  function numDiff(na, nb) {
+    var P = lcs(na, nb, function (x, y) { return x === y; }).concat([[na.length, nb.length]]), out = [], i = 0, j = 0;
+    P.forEach(function (p) {
+      var a = na.slice(i, p[0]), b = nb.slice(j, p[1]), k;
+      for (k = 0; k < Math.max(a.length, b.length); k++) out.push(a[k] && b[k] ? { t: 'chg', a: a[k], b: b[k] } : a[k] ? { t: 'cut', a: a[k] } : { t: 'new', b: b[k] });
+      i = p[0] + 1; j = p[1] + 1;
+    });
+    return out.slice(0, 5);
+  }
+  function numTxt(p) { return p.t === 'cut' ? 'ถูกตัดออก: ' + p.a : p.t === 'new' ? 'ตัวเลขใหม่: ' + p.b : p.a + ' → ' + p.b; }
   var RISK = /ปรับ|ยึด|ไม่คืน|ฝ่ายเดียว|ทุกกรณี|ดอกเบี้ย|อัตโนมัติ|ไม่ต้องแจ้ง|ตามที่เห็นสมควร|สละสิทธิ์|ไม่รับผิดชอบ|ห้าม|ทันที/;
 
   function compare(oldT, newT) {
@@ -76,13 +89,18 @@
       i = p[0] + 1; j = p[1] + 1;
     });
     res.forEach(function (r) {
+      r.lv = '';
       if (r.k === 'mod') {
-        var na = nums(r.a.t), nb = nums(r.b.t), ch = [];
-        for (var x = 0; x < Math.max(na.length, nb.length); x++) if (na[x] !== nb[x]) ch.push([na[x] || '—', nb[x] || '—']);
-        r.num = ch.slice(0, 4);
-      }
-      var txt = r.k === 'del' ? r.a.t : r.b.t;
-      r.risk = r.k !== 'same' && (RISK.test(r.k === 'mod' ? r.b.t.replace(r.a.t, '') : txt) || (r.num && r.num.length > 0));
+        r.d = wordDiff(r.a.t, r.b.t);
+        r.num = numDiff(nums(r.a.t), nums(r.b.t));
+        var m = RISK.exec(r.d.ins), rg = new RegExp(RISK.source, 'g'), mm;
+        if (!m) while ((mm = rg.exec(r.b.t))) if (r.a.t.indexOf(mm[0]) < 0) { m = mm; break; }
+        if (m) { r.lv = 'risk'; r.hit = 'เพิ่มคำว่า "' + m[0] + '" เข้ามา'; }
+        else if (r.num.length && (m = /ค่าปรับ|ดอกเบี้ย|ปรับ/.exec(r.b.t))) { r.lv = 'risk'; r.hit = (m[0] === 'ปรับ' ? 'ค่าปรับ' : m[0]) + 'เปลี่ยน — เทียบตัวเลขด้านล่าง'; }
+        else if (r.num.length) r.lv = 'num';
+      } else if (r.k === 'add') { var m2 = RISK.exec(r.b.t); if (m2) { r.lv = 'risk'; r.hit = 'ข้อใหม่มีคำว่า "' + m2[0] + '"'; } }
+      else if (r.k === 'del') { r.lv = RISK.test(r.a.t) ? 'good' : 'lost'; }
+      r.risk = r.lv === 'risk' || r.lv === 'lost';
     });
     return res;
   }
@@ -97,6 +115,9 @@
     '.vcp.in .vcp-card{transform:none;opacity:1}' +
     '@media (min-width:768px){.vcp{align-items:center}.vcp-card{border-radius:22px;height:min(86vh,900px)}}' +
     '.vcp-hd{display:flex;align-items:center;gap:10px;padding:16px 16px 12px;border-bottom:1px solid rgba(255,255,255,.07)}' +
+    '.vcp .vcp-hd{flex-direction:row;background:transparent;border-bottom:1px solid rgba(255,255,255,.07)}.vcp .vcp-hd b{color:#ececef}.vcp .vcp-hd span{font:inherit;color:inherit}' +
+    '.vcp .vcp-side{padding:0;min-height:0}.vcp .vcp-tag{display:inline-block;margin-left:0;border-radius:6px;padding:2px 8px;font:700 11px/1.4 Prompt,sans-serif;background:color-mix(in srgb,var(--c) 18%,transparent);color:var(--c)}' +
+    '.vcp .vcp-ft{margin:0 !important;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(255,255,255,.07);color:inherit !important}' +
     '.vcp-hd .ic{flex:none;display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:rgba(127,181,255,.14);color:#7fb5ff}' +
     '.vcp svg{max-width:none !important;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}' +
     '.vcp-hd .ic svg{width:21px;height:21px}' +
@@ -128,11 +149,21 @@
     '.vcp-alert.ok{border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.07);color:#bff3dc}' +
     '.vcp .vcp-list{display:grid !important;grid-template-columns:minmax(0,1fr) !important;gap:8px;margin-top:12px}' +
     '.vcp-it{padding:11px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02);border-left:3px solid var(--c)}' +
-    '.vcp-it.risk{box-shadow:0 0 0 1px rgba(245,196,81,.25)}' +
+    '.vcp-it.lv-risk{box-shadow:0 0 0 1px rgba(242,85,90,.3)}.vcp-it.lv-lost{box-shadow:0 0 0 1px rgba(251,146,60,.28)}' +
     '.vcp-ih{display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap}' +
     '.vcp-tag{padding:2px 8px;border-radius:6px;font:700 11px/1.4 Prompt,sans-serif;background:color-mix(in srgb,var(--c) 18%,transparent);color:var(--c)}' +
     '.vcp-no{font:600 12px/1.4 Prompt,sans-serif;color:#a1a1aa}' +
-    '.vcp-rk{margin-left:auto;padding:2px 8px;border-radius:6px;font:600 11px/1.4 Prompt,sans-serif;background:rgba(245,196,81,.15);color:#f5c451}' +
+    '.vcp-rk{--k:#f5c451;margin-left:auto;display:inline-flex;align-items:center;gap:5px;padding:2px 9px 2px 7px;border-radius:99px;font:600 11px/1.4 Prompt,sans-serif;background:color-mix(in srgb,var(--k) 15%,transparent);color:var(--k)}' +
+    '.vcp-rk i,.vcp-lvs i{width:7px;height:7px;border-radius:50%;background:var(--k);flex:none}' +
+    '.vcp .risk{--k:#ff6b70}.vcp .lost{--k:#fb923c}.vcp .num{--k:#f5c451}.vcp .good{--k:#34d399}' +
+    '.vcp-lvs{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.vcp-lvs em{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:99px;font:600 12px/1.4 Prompt,sans-serif;font-style:normal;background:color-mix(in srgb,var(--k) 14%,transparent);color:var(--k)}' +
+    '.vcp-alert>span{display:block}' +
+    '.vcp-why{margin:8px 0 0;padding:7px 10px;border-radius:10px;background:color-mix(in srgb,var(--k,#fb923c) 9%,transparent);font:400 12.5px/1.5 Prompt,sans-serif;color:#d6d6db}' +
+    '.vcp-it.lv-risk .vcp-why{--k:#ff6b70}.vcp-it.lv-lost .vcp-why{--k:#fb923c}' +
+    '.vcp-two{display:grid;gap:8px}.vcp-two>div{position:relative;padding:8px 10px 8px 12px;border-radius:11px}' +
+    '.vcp-two i{display:inline-block;margin-bottom:2px;font:700 11px/1.4 Prompt,sans-serif;font-style:normal;letter-spacing:.02em}' +
+    '.vcp-two .o{background:rgba(242,85,90,.07);border-left:2px solid rgba(255,154,156,.55)}.vcp-two .o i{color:#ff9a9c}.vcp-two .o .vcp-tx{color:#c9a9aa}' +
+    '.vcp-two .n{background:rgba(52,211,153,.07);border-left:2px solid rgba(110,231,183,.6)}.vcp-two .n i{color:#6ee7b7}.vcp-two .n .vcp-tx{color:#e4f7ee}' +
     '.vcp-tx{margin:0;font:400 14.5px/1.75 Sarabun,Prompt,sans-serif;--ff:Sarabun,Prompt,sans-serif;color:#dcdce0;white-space:pre-wrap;overflow-wrap:anywhere}' +
     '.vcp-tx del{color:#ff9a9c;background:rgba(242,85,90,.16);text-decoration:line-through;text-decoration-color:rgba(255,154,156,.7);border-radius:3px}' +
     '.vcp-tx ins{color:#a7f3d0;background:rgba(52,211,153,.18);text-decoration:none;border-radius:3px}' +
@@ -140,8 +171,9 @@
     '.vcp-it.add .vcp-tx{color:#c9f2df}' +
     '.vcp-it.same{opacity:.55}.vcp-it.same .vcp-tx{font-size:13.5px;color:#a1a1aa}' +
     '.vcp-num{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}' +
-    '.vcp-num span{padding:3px 9px;border-radius:8px;background:rgba(245,196,81,.12);color:#f5d27a;font:600 12px/1.4 Prompt,sans-serif}' +
-    '.vcp-num s{color:#ff9a9c}' +
+    '.vcp-num span{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:8px;background:rgba(245,196,81,.12);color:#f5d27a;font:600 12px/1.4 Prompt,sans-serif}' +
+    '.vcp-num span.cut{background:rgba(251,146,60,.13);color:#fdba74}.vcp-num span.new{background:rgba(52,211,153,.12);color:#86efac}' +
+    '.vcp-num s{color:#ff9a9c;text-decoration-color:rgba(255,154,156,.7)}.vcp-num b{color:#a1a1aa;font-weight:500}' +
     '.vcp-ft{display:flex;gap:8px;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(255,255,255,.07)}' +
     '.vcp-ft button{flex:1;padding:0 8px;min-height:46px;border-radius:13px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:#ececef;font:600 13.5px/1.2 Prompt,sans-serif;cursor:pointer}' +
     '@media (max-width:420px){.vcp-ft button{font-size:12.5px}}' +
@@ -211,14 +243,19 @@
     var o = saved.o, n = saved.n; if (!o.trim() || !n.trim()) return;
     state.res = compare(o, n); state.f = 'chg'; result();
   }
-  function counts() { var c = { add: 0, del: 0, mod: 0, same: 0, risk: 0 }; state.res.forEach(function (r) { c[r.k]++; if (r.risk) c.risk++; }); return c; }
+  function counts() { var c = { add: 0, del: 0, mod: 0, same: 0, risk: 0, lost: 0, num: 0, good: 0 }; state.res.forEach(function (r) { c[r.k]++; if (r.lv) c[r.lv]++; }); return c; }
+  var LV = { risk: ['เสี่ยง', 'มีคำที่มักทำให้เสียเปรียบ'], lost: ['เสียสิทธิ์ที่เคยมี?', 'ข้อนี้หายไปจากฉบับใหม่'], num: ['ตัวเลขเปลี่ยน', ''], good: ['อาจเป็นผลดี', 'ตัดเงื่อนไขที่เคยเข้มออก'] };
+  var ORD = { risk: 0, lost: 1, num: 2, '': 3, good: 4 };
+  function badge(lv) { return lv ? '<span class="vcp-rk ' + lv + '"><i></i>' + LV[lv][0] + '</span>' : ''; }
   function result() {
     var c = counts(), bd = el.querySelector('.vcp-bd'), chg = c.add + c.del + c.mod;
     bd.innerHTML = '<div class="vcp-sum">' + [['chg', 'เปลี่ยนทั้งหมด', chg, '#7fb5ff'], ['mod', 'แก้ไข', c.mod, C.mod], ['add', 'เพิ่มใหม่', c.add, C.add], ['del', 'ถูกลบ', c.del, C.del]].map(function (x) {
         return '<button type="button" class="vcp-s" data-f="' + x[0] + '" style="--c:' + x[3] + '"><b>' + x[2] + '</b><small>' + x[1] + '</small></button>';
       }).join('') + '</div>' +
       (!chg ? '<div class="vcp-alert ok">✓ ไม่พบความแตกต่าง ข้อความทั้งสองฉบับเหมือนกันทุกข้อ</div>'
-        : c.risk ? '<div class="vcp-alert">⚠️ <span><b>' + c.risk + ' จุดควรอ่านให้ดี</b> — มีตัวเลขที่เปลี่ยน หรือคำที่มักทำให้เสียเปรียบ เช่น ค่าปรับ ไม่คืน ฝ่ายเดียว (ติดป้าย "ควรดู")</span></div>'
+        : (c.risk || c.lost || c.num) ? '<div class="vcp-alert">⚠️ <span><b>อ่านข้อเหล่านี้ก่อนเซ็น</b><span class="vcp-lvs">' +
+            (c.risk ? '<em class="risk"><i></i>' + c.risk + ' ข้อเสี่ยง</em>' : '') + (c.lost ? '<em class="lost"><i></i>' + c.lost + ' ข้อถูกลบ อาจเสียสิทธิ์</em>' : '') + (c.num ? '<em class="num"><i></i>' + c.num + ' ข้อตัวเลขเปลี่ยน</em>' : '') +
+            '</span>ข้อที่ "เสี่ยง" มีคำอย่าง ไม่ต้องแจ้ง, อัตโนมัติ, ไม่คืน หรือค่าปรับที่เปลี่ยน เรียงไว้ด้านบนแล้ว</span></div>'
         : '<div class="vcp-alert ok">ไม่พบตัวเลขที่เปลี่ยนหรือคำที่มักทำให้เสียเปรียบในส่วนที่แก้ แต่ควรอ่านทุกข้อที่เปลี่ยนอีกครั้ง</div>') +
       '<div class="vcp-list"></div>';
     el.querySelector('.vcp-ft').hidden = false; list(); bd.scrollTop = 0;
@@ -227,20 +264,24 @@
     var box = el.querySelector('.vcp-list'); if (!box) return;
     [].forEach.call(el.querySelectorAll('.vcp-s'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-f') === state.f)); });
     var L = state.res.filter(function (r) { return state.f === 'chg' ? r.k !== 'same' : r.k === state.f; });
-    if (state.f === 'chg') L.sort(function (a, b) { return (b.risk ? 1 : 0) - (a.risk ? 1 : 0); });
+    L = L.map(function (r, i) { return [r, i]; }).sort(function (a, b) { return (ORD[a[0].lv] - ORD[b[0].lv]) || (a[1] - b[1]); }).map(function (x) { return x[0]; });
     box.innerHTML = L.length ? L.map(function (r) {
-      var no = (r.b && r.b.no) || (r.a && r.a.no) || '';
-      var tx = r.k === 'mod' ? wordDiff(r.a.t, r.b.t) : esc(r.k === 'del' ? r.a.t : r.b.t);
-      return '<div class="vcp-it ' + r.k + (r.risk ? ' risk' : '') + '" style="--c:' + C[r.k] + '"><div class="vcp-ih"><span class="vcp-tag">' + LB[r.k] + '</span>' + (no ? '<span class="vcp-no">' + esc(no) + '</span>' : '') + (r.risk ? '<span class="vcp-rk">⚠ ควรดู</span>' : '') + '</div>' +
-        '<p class="vcp-tx">' + tx + '</p>' +
-        (r.num && r.num.length ? '<div class="vcp-num">' + r.num.map(function (p) { return '<span>ตัวเลขเปลี่ยน: <s>' + esc(p[0]) + '</s> → ' + esc(p[1]) + '</span>'; }).join('') + '</div>' : '') + '</div>';
+      var no = (r.b && r.b.no) || (r.a && r.a.no) || '', tx;
+      if (r.k === 'mod' && r.d.ratio > 0.45) tx = '<div class="vcp-two"><div class="o"><i>เดิม</i><p class="vcp-tx">' + esc(r.a.t) + '</p></div><div class="n"><i>ใหม่</i><p class="vcp-tx">' + esc(r.b.t) + '</p></div></div>';
+      else tx = '<p class="vcp-tx">' + (r.k === 'mod' ? r.d.h : esc(r.k === 'del' ? r.a.t : r.b.t)) + '</p>';
+      var why = r.lv && LV[r.lv][1] ? '<p class="vcp-why">' + esc(r.hit || LV[r.lv][1]) + (r.lv === 'lost' ? ' — ถามอีกฝ่ายว่าทำไมตัดออก และสิทธิ์นี้ยังคุ้มครองคุณอยู่ไหม' : '') + '</p>' : '';
+      return '<div class="vcp-it ' + r.k + (r.lv ? ' lv-' + r.lv : '') + '" style="--c:' + C[r.k] + '"><div class="vcp-ih"><span class="vcp-tag">' + LB[r.k] + '</span>' + (no ? '<span class="vcp-no">' + esc(no) + '</span>' : '') + badge(r.lv) + '</div>' +
+        tx + (r.lv === 'lost' || r.lv === 'risk' ? why : '') +
+        (r.num && r.num.length ? '<div class="vcp-num">' + r.num.map(function (p) {
+          return '<span class="' + p.t + '">' + (p.t === 'chg' ? '<s>' + esc(p.a) + '</s><b>→</b>' + esc(p.b) : p.t === 'cut' ? 'ถูกตัดออก: <s>' + esc(p.a) + '</s>' : 'ตัวเลขใหม่: ' + esc(p.b)) + '</span>';
+        }).join('') + '</div>' : '') + '</div>';
     }).join('') : '<div class="vcp-empty">ไม่มีรายการในหมวดนี้</div>';
   }
   function copySum() {
     var L = state.res.filter(function (r) { return r.k !== 'same'; });
     var t = 'สรุปการเปลี่ยนแปลงในสัญญาฉบับใหม่ (' + L.length + ' จุด)\n\n' + L.map(function (r, i) {
       var no = (r.b && r.b.no) || (r.a && r.a.no) || '';
-      return (i + 1) + ') [' + LB[r.k] + '] ' + (no ? no + ' ' : '') + (r.k === 'mod' ? '\n   เดิม: ' + r.a.t + '\n   ใหม่: ' + r.b.t : (r.k === 'del' ? r.a.t : r.b.t)) + (r.num && r.num.length ? '\n   ตัวเลขเปลี่ยน: ' + r.num.map(function (p) { return p[0] + ' → ' + p[1]; }).join(', ') : '');
+      return (i + 1) + ') [' + LB[r.k] + (r.lv ? ' · ' + LV[r.lv][0] : '') + '] ' + (no ? no + ' ' : '') + (r.k === 'mod' ? '\n   เดิม: ' + r.a.t + '\n   ใหม่: ' + r.b.t : (r.k === 'del' ? r.a.t : r.b.t)) + (r.num && r.num.length ? '\n   ตัวเลข: ' + r.num.map(numTxt).join(', ') : '');
     }).join('\n') + '\n\n(เทียบด้วย Vellum Check)';
     var done = function (ok) { say(ok ? 'คัดลอกสรุปแล้ว' : 'คัดลอกไม่ได้'); };
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function () { done(true); }, function () { done(false); }); else done(false);
