@@ -766,6 +766,7 @@
   var cache = {};
   function tr(s) {
     if (!s || !TH.test(s)) return null;
+    if (TOUT[s.trim().replace(/\s+/g, ' ')]) return s;
     if (cache.hasOwnProperty(s)) return cache[s];
     var lead = s.match(/^\s*/)[0], trail = s.match(/\s*$/)[0], t = s.trim().replace(/\s+/g, ' '), out = null;
     if (ZOK && ZO.hasOwnProperty(t)) out = ZO[t];
@@ -780,18 +781,67 @@
         break;
       }
     }
-    if (out == null) { if (Object.keys(missing).length < 3000) missing[t] = (missing[t] || 0) + 1; cache[s] = null; return null; }
+    if (out == null && TRC.hasOwnProperty(t)) out = TRC[t];
+    if (out == null) { if (Object.keys(missing).length < 3000) missing[t] = (missing[t] || 0) + 1; return null; }
     out = lead + out + trail; cache[s] = out; return out;
   }
+  /* ---------- ข้อความที่ไม่มีในพจนานุกรม → ให้ AI แปล (ผ่าน /api/translate) แล้วจำไว้ในเครื่อง ----------
+     ใช้กับผลตรวจตัวอย่าง ศัพท์น่ารู้ หน้าช่วยเหลือ วันสำคัญ และผลตรวจเก่าที่เป็นภาษาไทย
+     ไม่ส่งข้อความในช่องพิมพ์/ข้อความต้นฉบับสัญญา (ถูกข้ามด้วย skip ด้านล่าง) */
+  var TRK = 'vc_trc_' + LANG, TRC = {};
+  try { TRC = JSON.parse(localStorage.getItem(TRK) || '{}') || {}; } catch (e) { TRC = {}; }
+  var pend = {}, inflight = {}, failed = {}, aiT = 0, aiWait = 350, TOUT = {};
+  for (var tk in TRC) if (TRC.hasOwnProperty(tk)) TOUT[TRC[tk]] = 1;   /* คำแปลที่ได้แล้ว: ไม่ส่งไปแปลซ้ำ แม้มีอักษรไทยปนอยู่ */
+  function saveTRC() {
+    try {
+      var k = Object.keys(TRC); if (k.length > 2500) { var keep = {}; k.slice(-2000).forEach(function (x) { keep[x] = TRC[x]; }); TRC = keep; }
+      localStorage.setItem(TRK, JSON.stringify(TRC));
+    } catch (e) { try { localStorage.removeItem(TRK); } catch (e2) {} }
+  }
+  function ask(raw, target) {
+    var t = String(raw || '').trim().replace(/\s+/g, ' ');
+    if (t.length < 2 || t.length > 1500 || !TH.test(t) || failed[t] > 1 || TOUT[t]) return;
+    (pend[t] = pend[t] || []).push(target);
+    if (!aiT) aiT = setTimeout(flushAI, aiWait);
+  }
+  function apply(t, v) {
+    (pend[t] || []).forEach(function (g) {
+      if (g.n) { var cur = g.n.nodeValue || ''; if (cur.trim().replace(/\s+/g, ' ') === t) g.n.nodeValue = cur.match(/^\s*/)[0] + v + cur.match(/\s*$/)[0]; }
+      else if (g.el && (g.el.getAttribute(g.a) || '').trim().replace(/\s+/g, ' ') === t) g.el.setAttribute(g.a, v);
+    });
+    delete pend[t];
+  }
+  function flushAI() {
+    aiT = 0;
+    var keys = Object.keys(pend).filter(function (k) { return !inflight[k]; }), batch = [], total = 0;
+    for (var i = 0; i < keys.length && batch.length < 40; i++) {
+      if (TRC.hasOwnProperty(keys[i])) { apply(keys[i], TRC[keys[i]]); continue; }
+      if (total + keys[i].length > 12000) break;
+      batch.push(keys[i]); total += keys[i].length;
+    }
+    if (!batch.length) return;
+    batch.forEach(function (k) { inflight[k] = 1; });
+    of.call(window, '/api/translate', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lang: LANG, texts: batch }) })
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function (d) {
+        (d.out || []).forEach(function (v, i) { var k = batch[i]; delete inflight[k]; if (v) { TRC[k] = v; TOUT[v.trim().replace(/\s+/g, ' ')] = 1; apply(k, v); } else failed[k] = (failed[k] || 0) + 1; });
+        saveTRC(); aiWait = 350;
+        if (Object.keys(pend).some(function (k) { return !inflight[k]; })) aiT = setTimeout(flushAI, 150);
+      }, function () {
+        batch.forEach(function (k) { delete inflight[k]; failed[k] = (failed[k] || 0) + 1; });
+        aiWait = Math.min(aiWait * 3, 20000); aiT = setTimeout(flushAI, aiWait);
+      });
+  }
+
   var ATTRS = ['placeholder', 'aria-label', 'title', 'alt'];
   function skip(el) { return !el || el.closest && el.closest('[data-i18n-skip],script,style,[contenteditable="true"]'); }
   var HEAD = LANG === 'zh' ? { 'ตรวจสัญญา': '检查' } : { 'ตรวจสัญญา': 'Check' };   /* แถบด้านบนพื้นที่น้อย ใช้คำสั้น */
   function doText(n) { var p = n.parentElement;
-    if (p && p.closest('.site-header') && HEAD[n.nodeValue.trim()]) { n.nodeValue = n.nodeValue.replace(n.nodeValue.trim(), HEAD[n.nodeValue.trim()]); return; } if (skip(p) || (p && p.closest('textarea,#vwBody,.hl-quote,.tx-old,.sg-old > p:not(.sg-plbl),blockquote,.ad-face .gv,.vc-raw'))) return; var v = tr(n.nodeValue); if (v != null && v !== n.nodeValue) n.nodeValue = v; }
+    if (p && p.closest('.site-header') && HEAD[n.nodeValue.trim()]) { n.nodeValue = n.nodeValue.replace(n.nodeValue.trim(), HEAD[n.nodeValue.trim()]); return; } if (skip(p) || (p && p.closest('textarea:not(.vrm-title),#vwBody,.hl-quote,.tx-old,.sg-old > p:not(.sg-plbl),blockquote,.ad-face .gv,.vc-raw,.vrm-src'))) return; var v = tr(n.nodeValue); if (v != null) { if (v !== n.nodeValue) n.nodeValue = v; } else ask(n.nodeValue, { n: n }); }
   function doAttrs(el) {
     if (skip(el)) return;
-    for (var i = 0; i < ATTRS.length; i++) { var a = el.getAttribute(ATTRS[i]); if (a && TH.test(a)) { var v = tr(a); if (v != null) el.setAttribute(ATTRS[i], v); } }
-    if (el.tagName === 'INPUT' && (el.type === 'button' || el.type === 'submit') && TH.test(el.value)) { var w = tr(el.value); if (w != null) el.value = w; }
+    for (var i = 0; i < ATTRS.length; i++) { var a = el.getAttribute(ATTRS[i]); if (a && TH.test(a)) { var v = tr(a); if (v != null) { if (v !== a) el.setAttribute(ATTRS[i], v); } else ask(a, { el: el, a: ATTRS[i] }); } }
+    if (el.tagName === 'INPUT' && (el.type === 'button' || el.type === 'submit') && TH.test(el.value)) { var w = tr(el.value); if (w != null && w !== el.value) el.value = w; }
   }
   function walk(node) {
     if (node.nodeType === 3) { doText(node); return; }
@@ -806,7 +856,7 @@
     var f = window[k]; if (!f) return;
     window[k] = function (m) { var a = [].slice.call(arguments); if (typeof m === 'string') { var v = tr(m); if (v != null) a[0] = v; } return f.apply(window, a); };
   });
-  function title() { var v = tr(document.title); if (v) document.title = v; }
+  function title() { var v = tr(document.title); if (v && v !== document.title) document.title = v; }
 
   root.setAttribute('lang', LANG === 'zh' ? 'zh-Hans' : 'en');
   /* หมายเหตุภาษาแบบถาวรในโหมดอังกฤษ: ใต้คำเตือนหน้าตรวจ ท้ายผลตรวจ และท้ายหน้า */
