@@ -605,12 +605,91 @@
   }
   function close() { if (!el) return; el.classList.remove('in'); document.documentElement.style.overflow = ''; setTimeout(function () { el.hidden = true; }, 260); }
 
-  /* ปุ่มเข้า: ข้างปุ่ม "ลองใช้สัญญาตัวอย่าง" */
+  /* ---------- เปิดแบบมีโจทย์ ---------- */
+  function demo(k) {   /* (5) เปิดพร้อมสัญญาตัวอย่าง แล้วเทียบให้เลย */
+    var X = SAMPLES[k || 0]; saved.o = X.o; saved.n = X.n; state.res = null;
+    open(); setTimeout(run, 380);
+  }
+  function fromResult() {   /* (6) ใช้สัญญาที่เพิ่งตรวจเป็นฉบับเดิม */
+    var src = document.getElementById('input'); saved.o = src ? src.value : ''; saved.n = ''; state.res = null;
+    open(); setTimeout(function () { if (el && saved.o.trim()) { setTab('n'); say('ใส่สัญญาที่เพิ่งตรวจเป็นฉบับเดิมแล้ว วางฉบับใหม่ได้เลย'); } }, 120);
+  }
+
+  /* ---------- (1)+(2) การ์ดเข้า ---------- */
+  var MINI = '<span class="ec-ic" aria-hidden="true"><i class="pa"><b></b><b></b><b></b><b></b></i><i class="pb"><b></b><b class="y"></b><b></b><b class="r"></b></i><i class="sc"></i></span>';
+  var ecss = '' +
+    '#checkCard .ta-actions .vcp-ec{grid-column:1/-1;flex:1 1 100%;position:relative;display:flex !important;align-items:center;gap:12px;width:100%;min-height:0 !important;padding:12px 14px !important;border-radius:16px !important;' +
+      'border:1px solid rgba(127,181,255,.28) !important;background:linear-gradient(135deg,rgba(127,181,255,.12),rgba(127,181,255,.03) 60%),#15171c !important;color:#ececef !important;text-align:left;cursor:pointer;font:inherit;overflow:hidden;transition:transform .15s,border-color .2s,box-shadow .2s}' +
+    '#checkCard .ta-actions .vcp-ec::before,#checkCard .ta-actions .vcp-ec::after{content:none !important;display:none !important}' +
+    '#checkCard .ta-actions .vcp-ec:hover{border-color:rgba(127,181,255,.55) !important;box-shadow:0 10px 28px -14px rgba(91,155,255,.7)}#checkCard .ta-actions .vcp-ec:active{transform:scale(.985)}' +
+    '.vcp-ec .ec-ic{position:relative;flex:none;width:52px;height:46px}' +
+    '.vcp-ec .ec-ic i{position:absolute;top:3px;width:28px;height:38px;border-radius:5px;padding:6px 5px;display:flex;flex-direction:column;gap:4px;box-shadow:0 4px 10px -3px rgba(0,0,0,.6)}' +
+    '.vcp-ec .ec-ic b{display:block;height:3px;border-radius:2px;background:#c9c0ac}.vcp-ec .ec-ic b:nth-child(2n){width:70%}' +
+    '.vcp-ec .ec-ic .pa{left:0;background:#e9e2d2;transform:rotate(-7deg);animation:ecA 4s ease-in-out infinite}' +
+    '.vcp-ec .ec-ic .pb{right:0;background:#dbe8ff;transform:rotate(7deg);animation:ecB 4s ease-in-out infinite}.vcp-ec .ec-ic .pb b{background:#b3c8ee}' +
+    '.vcp-ec .ec-ic .pb b.y{animation:ecY 4s infinite}.vcp-ec .ec-ic .pb b.r{animation:ecR 4s infinite}' +
+    '.vcp-ec .ec-ic .sc{left:10px;width:32px;height:2px;padding:0;top:4px;border-radius:2px;background:#7fb5ff;box-shadow:0 0 8px 2px rgba(127,181,255,.8);opacity:0;animation:ecS 4s ease-in-out infinite;transform:none}' +
+    '@keyframes ecA{0%,15%{left:0;transform:rotate(-7deg)}35%,80%{left:8px;transform:rotate(-3deg)}100%{left:0;transform:rotate(-7deg)}}' +
+    '@keyframes ecB{0%,15%{right:0;transform:rotate(7deg)}35%,80%{right:8px;transform:rotate(3deg)}100%{right:0;transform:rotate(7deg)}}' +
+    '@keyframes ecS{0%,35%{opacity:0;top:4px}40%{opacity:1}62%{opacity:1;top:40px}66%,100%{opacity:0;top:40px}}' +
+    '@keyframes ecY{0%,48%{background:#b3c8ee}52%,85%{background:#f5c451}100%{background:#b3c8ee}}' +
+    '@keyframes ecR{0%,56%{background:#b3c8ee}60%,85%{background:#ff6b70}100%{background:#b3c8ee}}' +
+    '.vcp-ec .ec-tx{flex:1;min-width:0}.vcp-ec .ec-tx b{display:block;font:700 15px/1.3 Prompt,sans-serif;color:#fff}' +
+    '.vcp-ec .ec-tx small{display:block;margin-top:2px;font:400 12.5px/1.4 Prompt,sans-serif;color:#a9b8d0}' +
+    '.vcp-ec .ec-free{position:absolute;top:8px;right:10px;padding:2px 8px;border-radius:99px;background:rgba(52,211,153,.16);color:#6ee7b7;font:700 10.5px/1.5 Prompt,sans-serif}' +
+    '.vcp-ec .ec-go{flex:none;align-self:flex-end;margin-bottom:2px;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:rgba(127,181,255,.16);color:#9cc5ff;font:400 18px/1 Prompt,sans-serif}' +
+    '.vcp-ec .ec-tx{padding-right:4px}@media (max-width:380px){.vcp-ec .ec-free{display:none}}' +
+    /* (6) การ์ดท้ายผลตรวจ */
+    '.vcp-promo{display:flex;align-items:center;gap:12px;margin:18px 0 6px;padding:14px;border-radius:16px;border:1px dashed rgba(127,181,255,.35);background:rgba(127,181,255,.06);font-family:Prompt,sans-serif}' +
+    '.vcp-promo .ec-ic{position:relative;flex:none;width:52px;height:46px}' +
+    '.vcp-promo .ec-tx{flex:1;min-width:0}.vcp-promo .ec-tx b{display:block;font:700 14.5px/1.35 Prompt,sans-serif;color:#ececef}.vcp-promo .ec-tx small{display:block;margin-top:3px;font:400 12.5px/1.45 Prompt,sans-serif;color:#9a9aa3}' +
+    '.vcp-promo button{flex:none;min-height:42px !important;padding:0 14px !important;border:0;border-radius:12px;background:linear-gradient(135deg,#9cc5ff,#5b9bff);color:#06142b;font:700 13.5px/1 Prompt,sans-serif;cursor:pointer;white-space:nowrap}' +
+    '@media (max-width:480px){.vcp-promo{flex-wrap:wrap}.vcp-promo button{width:100%}}' +
+    '.vcp-promo .ec-ic i{position:absolute;top:3px;width:28px;height:38px;border-radius:5px;padding:6px 5px;display:flex;flex-direction:column;gap:4px;box-shadow:0 4px 10px -3px rgba(0,0,0,.6)}' +
+    '.vcp-promo .ec-ic b{display:block;height:3px;border-radius:2px;background:#c9c0ac}.vcp-promo .ec-ic b:nth-child(2n){width:70%}' +
+    '.vcp-promo .ec-ic .pa{left:0;background:#e9e2d2;transform:rotate(-7deg)}.vcp-promo .ec-ic .pb{right:0;background:#dbe8ff;transform:rotate(7deg)}.vcp-promo .ec-ic .pb b{background:#b3c8ee}.vcp-promo .ec-ic .pb b.y{background:#f5c451}.vcp-promo .ec-ic .pb b.r{background:#ff6b70}.vcp-promo .ec-ic .sc{display:none}' +
+    /* (5) ชิปในการ์ดลองตัวอย่าง */
+    '.vc-try-c.vcmp-chip svg{fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}' +
+    '@media (prefers-reduced-motion:reduce){.vcp-ec .ec-ic *{animation:none !important}}';
+  var est = document.createElement('style'); est.textContent = ecss; document.head.appendChild(est);
   function entry() {
     var row = document.querySelector('#checkCard .ta-actions'); if (!row || row.querySelector('.vcp-entry')) return;
-    var b = document.createElement('button'); b.type = 'button'; b.className = 'sample-btn vcp-entry'; b.textContent = 'เทียบ 2 ฉบับ';
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'vcp-entry vcp-ec';
+    b.setAttribute('aria-label', 'เทียบสัญญา 2 ฉบับ ดูว่าอีกฝ่ายแก้ตรงไหน ฟรี ไม่ใช้เครดิต');
+    b.innerHTML = MINI + '<span class="ec-tx"><b>เทียบ 2 ฉบับ</b><small>อีกฝ่ายแก้สัญญามา? ดูว่าแก้ตรงไหน</small></span><span class="ec-free">ฟรี · ไม่ใช้เครดิต</span><span class="ec-go">›</span>';
     b.addEventListener('click', open); row.appendChild(b);
   }
-  window.VCCompare = { open: open, compare: compare };
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', entry); else entry();
+  /* (5) ชิป "เทียบฉบับแก้" ในการ์ด "ยังไม่มีสัญญา?" */
+  function chip(tries) {
+    var box = document.querySelector('.vc-try-chips');
+    if (!box) { if ((tries || 0) < 20) setTimeout(function () { chip((tries || 0) + 1); }, 300); return; }
+    if (box.querySelector('.vcmp-chip')) return;
+    var c = document.createElement('button'); c.type = 'button'; c.className = 'vc-try-c vcmp-chip'; c.style.setProperty('--qa', '#7fb5ff');
+    c.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="7.5" height="16" rx="2"/><rect x="13.5" y="4" width="7.5" height="16" rx="2"/><path d="M5.5 9h2.5M16 9h2.5M16 12.5h2.5"/></svg>เทียบฉบับแก้';
+    c.addEventListener('click', function (e) { e.stopPropagation(); demo(0); });
+    var all = box.querySelector('.vc-try-all'); box.insertBefore(c, all || null);
+  }
+  /* (6) การ์ดท้ายผลตรวจ */
+  var pending = false;
+  function promo() {
+    pending = false;
+    var r = document.getElementById('result'); if (!r) return;
+    var has = r.querySelector('article.rpt'), ex = r.querySelector('.vcp-promo');
+    if (!has) { if (ex) ex.remove(); return; }
+    if (ex && ex === r.lastElementChild) return;
+    if (!ex) {
+      ex = document.createElement('div'); ex.className = 'vcp-promo';
+      ex.innerHTML = MINI + '<span class="ec-tx"><b>อีกฝ่ายส่งฉบับแก้กลับมา?</b><small>เทียบกับสัญญาที่เพิ่งตรวจได้เลย ระบบใส่ฉบับนี้เป็น "ฉบับเดิม" ให้แล้ว · ฟรี ไม่ใช้เครดิต</small></span><button type="button">เทียบฉบับแก้</button>';
+      ex.querySelector('button').addEventListener('click', fromResult);
+    }
+    r.appendChild(ex);
+  }
+  function watch() {
+    var r = document.getElementById('result'); if (!r) return;
+    new MutationObserver(function () { if (!pending) { pending = true; setTimeout(promo, 400); } }).observe(r, { childList: true });
+    promo();
+  }
+  function boot() { entry(); chip(); watch(); }
+  window.VCCompare = { open: open, compare: compare, demo: demo, fromResult: fromResult };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
