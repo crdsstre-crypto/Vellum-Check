@@ -519,7 +519,7 @@ app.post('/api/logout', async (req, res) => {
 
 // ---------- ตรวจสัญญา (ต้องล็อกอิน) ----------
 // ภาษาที่ผู้ใช้เลือกบนหน้าเว็บ (i18n.js ส่งมาเป็น header) → ให้ AI เขียนผลตรวจ/คำตอบเป็นภาษานั้น
-function langOf(req) { return String(req.get('x-vc-lang') || '').toLowerCase() === 'en' ? 'en' : 'th'; }
+function langOf(req) { const l = String(req.get('x-vc-lang') || '').toLowerCase(); return l === 'en' || l === 'zh' ? l : 'th'; }
 
 app.post('/api/check', async (req, res) => {
   let user;
