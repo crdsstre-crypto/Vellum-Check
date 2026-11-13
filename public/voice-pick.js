@@ -68,7 +68,8 @@
     if (playing === id && talk) { if (talk.audio.paused) talk.play(); else talk.stop(); return; }
     stop(); stopTalk();
     var stage = box.querySelector('.vpk-stage');
-    talk = window.VCTalk.mount(stage, { src: blobs[id] || purl(id), text: v.sample || 'ตัวอย่างเสียง', title: 'ตัวอย่างเสียง ' + (v.name || ''), autoplay: true, compact: true });
+    talk = window.VCTalk.mount(stage, { src: blobs[id] || purl(id), text: v.sample || 'ตัวอย่างเสียง', title: 'ตัวอย่างเสียง ' + (v.name || ''), autoplay: true, compact: true,
+      items: [{ title: 'ค่าปรับวันละ 500 บาท สูงเกินสมควร', level: 'check_detail', ref: 'ตัวอย่าง' }, { title: 'ผู้ให้เช่าขึ้นค่าเช่าได้ตลอด', level: 'check_detail', ref: 'ตัวอย่าง' }, { title: 'เงินประกันไม่คืนทุกกรณี', level: 'caution', ref: 'ตัวอย่าง' }] });
     if (!talk) return;
     playing = id; var a = talk.audio;
     var started = false, slow = setTimeout(function () { if (!started && playing === id) note('กำลังเตรียมเสียงครั้งแรก รอสักครู่…'); }, 1500);
