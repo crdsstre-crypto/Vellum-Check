@@ -20,7 +20,7 @@
     '.vpk-t{flex:1;min-width:0}' +
     '.vpk-t b{display:block;font:600 14px/1.25 Prompt,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;--ff:Prompt,sans-serif}' +
     '.vpk-t small{display:block;margin-top:2px;font:400 11.5px/1.2 Prompt,sans-serif;color:#9a9aa3;--ff:Prompt,sans-serif}' +
-    '.vpk-c.is-on .vpk-t small{color:#7fe3bd}' +
+    
     '.vpk-p{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;padding:0}' +
     '.vpk-p svg{width:13px;height:13px;fill:currentColor}' +
     '.vpk-p.is-play{background:#34d399;border-color:#34d399;color:#06281c}' +
@@ -33,7 +33,13 @@
     '.vpk-bars i{width:2.5px;border-radius:2px;background:currentColor;animation:vpkB .7s ease-in-out infinite alternate}' +
     '.vpk-bars i:nth-child(2){animation-delay:.15s}.vpk-bars i:nth-child(3){animation-delay:.3s}' +
     '@keyframes vpkB{from{height:3px}to{height:12px}}' +
-    '@media (max-width:520px){.vpk{padding:12px}.vpk-g{grid-template-columns:1fr 1fr;gap:7px}.vpk-c{gap:8px;padding:9px 8px 9px 11px}.vpk-av{display:none}.vpk-h small{font-size:11px}}' +
+    '@media (max-width:520px){.vpk{padding:12px}.vpk-g{grid-template-columns:1fr 1fr;gap:7px}.vpk-g.has-desc{grid-template-columns:1fr}.vpk-c{gap:8px;padding:9px 8px 9px 11px}.vpk-av{display:none}.vpk-h small{font-size:11px}}' +
+    '.vpk-n{display:flex;align-items:center;flex-wrap:wrap;gap:5px 6px}.vpk-n b{display:inline}' +
+    '.vpk-sx,.vpk-ok{font:600 10.5px/1 Prompt,sans-serif;font-style:normal;padding:4px 7px;border-radius:999px;white-space:nowrap;--ff:Prompt,sans-serif}' +
+    '.vpk-sx.m{color:#93c5fd;background:rgba(96,165,250,.14)}.vpk-sx.f{color:#f9a8d4;background:rgba(244,114,182,.14)}' +
+    '.vpk-ok{color:#06281c;background:#34d399}' +
+    '.vpk-t small{white-space:normal;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:4px}' +
+    '.vpk-g.has-desc{grid-template-columns:1fr}' +
     '.vpk-err{margin:8px 2px 0;font:400 12px/1.4 Prompt,sans-serif;color:#fca5a5}' +
     'html:not(.vc-art) .vpk,html[data-theme="light"] .vpk{border-color:rgba(0,0,0,.1);background:rgba(0,0,0,.02)}' +
     '@media (prefers-reduced-motion:reduce){.vpk-bars i,.vpk-p.is-load svg{animation:none}}';
@@ -74,11 +80,14 @@
     if (!box) return;
     var cur = current();
     box.innerHTML = '<div class="vpk-h"><span>เลือกเสียงที่ใช้สรุป</span><small>กด ▶ เพื่อฟังตัวอย่าง</small></div>' +
-      '<div class="vpk-g" role="radiogroup" aria-label="เลือกเสียงที่ใช้สรุป">' + voices.map(function (v, i) {
-        var on = v.id === cur;
+      '<div class="vpk-g' + (voices.some(function (v) { return v.desc; }) ? ' has-desc' : '') + '" role="radiogroup" aria-label="เลือกเสียงที่ใช้สรุป">' + voices.map(function (v, i) {
+        var on = v.id === cur, g = v.gender === 'ผู้หญิง' ? 'f' : v.gender === 'ผู้ชาย' ? 'm' : '';
         return '<div class="vpk-c' + (on ? ' is-on' : '') + '" role="radio" tabindex="0" aria-checked="' + on + '" data-id="' + esc(v.id) + '">' +
           '<span class="vpk-av" style="background:' + COL[i % COL.length] + '">' + esc(((v.name || '?').replace(/^[\u0E40-\u0E44]/, '').charAt(0) || '?').toUpperCase()) + '</span>' +
-          '<span class="vpk-t"><b>' + esc(v.name) + '</b><small>' + (on ? '✓ เลือกอยู่' : esc(v.gender || 'เลือก')) + '</small></span>' +
+          '<span class="vpk-t"><span class="vpk-n"><b>' + esc(v.name) + '</b>' +
+            (g ? '<i class="vpk-sx ' + g + '">' + (g === 'f' ? '♀ หญิง' : '♂ ชาย') + '</i>' : '') +
+            (on ? '<i class="vpk-ok">✓ เลือกอยู่</i>' : '') + '</span>' +
+            (v.desc ? '<small>' + esc(v.desc) + '</small>' : (!g && !on ? '<small>แตะเพื่อเลือก</small>' : '')) + '</span>' +
           '<button type="button" class="vpk-p" data-id="' + esc(v.id) + '" aria-label="ฟังตัวอย่างเสียง">' + PLAY + '<span class="vpk-bars"><i></i><i></i><i></i></span></button></div>';
       }).join('') + '</div><p class="vpk-note" hidden></p><p class="vpk-err" hidden></p>';
     paintBtns();
