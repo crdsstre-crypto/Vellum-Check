@@ -828,6 +828,7 @@
   }
   function flushAI() {
     aiT = 0;
+    Object.keys(pend).forEach(function (k) { if (failed[k] > 1 && !inflight[k]) delete pend[k]; });   /* แปลไม่ได้ 2 ครั้ง = เลิกส่งซ้ำ (เดิมส่งวนทุก 0.15 วิ จนชนเพดานคำขอ ข้อความอื่นเลยไม่ถูกแปล) */
     var keys = Object.keys(pend).filter(function (k) { return !inflight[k]; }), batch = [], total = 0;
     for (var i = 0; i < keys.length && batch.length < 40; i++) {
       if (TRC.hasOwnProperty(keys[i])) { apply(keys[i], TRC[keys[i]]); continue; }
@@ -842,9 +843,9 @@
         (d.out || []).forEach(function (v, i) { var k = batch[i]; delete inflight[k]; if (v) { TRC[k] = v; TOUT[v.trim().replace(/\s+/g, ' ')] = 1; apply(k, v); } else failed[k] = (failed[k] || 0) + 1; });
         saveTRC(); aiWait = 350;
         if (Object.keys(pend).some(function (k) { return !inflight[k]; })) aiT = setTimeout(flushAI, 150);
-      }, function () {
-        batch.forEach(function (k) { delete inflight[k]; failed[k] = (failed[k] || 0) + 1; });
-        aiWait = Math.min(aiWait * 3, 20000); aiT = setTimeout(flushAI, aiWait);
+      }, function (st) {
+        batch.forEach(function (k) { delete inflight[k]; if (st !== 429) failed[k] = (failed[k] || 0) + 1; });   /* 429 = ส่งถี่ไป รอแล้วลองใหม่ ไม่นับว่าแปลไม่ได้ */
+        aiWait = st === 429 ? 15000 : Math.min(aiWait * 3, 20000); aiT = setTimeout(flushAI, aiWait);
       });
   }
 
