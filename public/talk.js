@@ -83,8 +83,57 @@
     '.vtk .vtk-pp svg,.vtk .vtk-rp svg{display:block !important;max-width:none !important;flex:none;width:20px !important;height:20px !important}.vtk .vtk-rp svg{width:19px !important;height:19px !important}' +
     '.vtk .vtk-pp.is-p svg{transform:translateX(1.5px)}' +
     '.vtk-compact{margin:12px 0 0;padding:12px;border-radius:18px}.vtk-compact .vtk-stage{height:140px}.vtk-compact .vtk-top{grid-template-columns:100px minmax(0,1fr)}.vtk-compact .vtk-ctl{margin-top:10px}' +
+    /* (2) ฝุ่นในแสงไฟ + ม่านเวที */
+    '.vtk-dust{position:absolute;left:50%;top:-10px;width:110px;height:160px;margin-left:-55px;z-index:1;pointer-events:none;opacity:.35;transition:opacity .5s}' +
+    '.vtk.is-play .vtk-dust{opacity:1}' +
+    '.vtk-dust i{position:absolute;bottom:0;left:var(--x);width:var(--s);height:var(--s);border-radius:50%;background:#ffe9a8;box-shadow:0 0 6px 1px rgba(255,226,138,.7);opacity:0;animation:vtkDust var(--d) linear var(--dl) infinite}' +
+    '@keyframes vtkDust{0%{opacity:0;transform:translate(0,0)}15%{opacity:.9}80%{opacity:.6}100%{opacity:0;transform:translate(var(--dx),-150px)}}' +
+    '.vtk-cur{position:absolute;top:-16px;bottom:-14px;width:16px;z-index:0;opacity:.6;pointer-events:none;' +
+      'background:repeating-linear-gradient(90deg,#4a111a 0 3px,#7b2331 3px 7px,#5a1621 7px 10px);box-shadow:inset 0 -10px 14px rgba(0,0,0,.5)}' +
+    '.vtk-cur.l{left:-16px;border-radius:0 0 14px 0;transform-origin:0 0}.vtk-cur.r{right:-16px;border-radius:0 0 0 14px;transform-origin:100% 0}' +
+    '.vtk-val{position:absolute;left:-16px;right:-16px;top:-16px;height:14px;z-index:1;opacity:.65;pointer-events:none;' +
+      'background:radial-gradient(circle at 9px 0,#7b2331 8px,transparent 8.5px) 0 0/18px 14px repeat-x,linear-gradient(#5a1621,#5a1621) 0 0/100% 5px no-repeat}' +
+    /* (3) เปิดตัว */
+    '.vtk.is-enter .vtk-drop{animation:vtkDrop .8s cubic-bezier(.3,1.45,.5,1) .3s both}' +
+    '@keyframes vtkDrop{0%{transform:translateY(-150px) rotate(-8deg);opacity:0}45%{opacity:1}100%{transform:none;opacity:1}}' +
+    '.vtk.is-enter .vtk-spot,.vtk.is-enter .vtk-lamp{animation:vtkLight .6s steps(1,end) both}' +
+    '@keyframes vtkLight{0%{opacity:0}30%{opacity:.6}45%{opacity:.1}60%{opacity:1}100%{opacity:1}}' +
+    '.vtk.is-enter .vtk-bub{animation:vtkBub .5s cubic-bezier(.3,1.5,.5,1) .85s both;transform-origin:0 50%}' +
+    '@keyframes vtkBub{0%{transform:scale(.3);opacity:0}100%{transform:none;opacity:1}}' +
+    '.vtk.is-enter .vtk-cur.l{animation:vtkCurL .9s ease-out both}.vtk.is-enter .vtk-cur.r{animation:vtkCurR .9s ease-out both}' +
+    '@keyframes vtkCurL{0%{transform:scaleX(4)}100%{transform:none}}@keyframes vtkCurR{0%{transform:scaleX(4)}100%{transform:none}}' +
+    '.vtk.is-enter .vm-arm-r{animation:vtkWave .45s ease-in-out 1.15s 3}' +
+    '.vtk-puff{position:absolute;left:50%;bottom:4px;width:0;height:0;z-index:3;pointer-events:none}' +
+    '.vtk-puff i{position:absolute;width:8px;height:8px;margin:-4px;border-radius:50%;background:rgba(247,239,220,.7);animation:vtkPuff .6s ease-out forwards}' +
+    '@keyframes vtkPuff{0%{opacity:.9;transform:translate(0,0) scale(.6)}100%{opacity:0;transform:translate(var(--x),-8px) scale(1.6)}}' +
+    /* (5) การ์ดประเด็นที่เด้งตามที่พูด */
+    '.vtk-chips{display:flex;flex-wrap:nowrap;gap:6px;margin:10px -2px 0;padding:2px 2px 4px;overflow-x:auto;scrollbar-width:none;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}.vtk-chips::-webkit-scrollbar{display:none}' +
+    '.vtk-chips.has{min-height:38px}.vtk-chips:not(.has){display:none}' +
+    '.vtk-chips .vtk-chip{flex:none;max-width:82%}' +
+    '.vtk-chip{display:inline-flex;align-items:center;gap:6px;max-width:100%;padding:6px 10px 6px 8px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);' +
+      'color:#ececef;font:500 12.5px/1.3 Prompt,sans-serif;--ff:Prompt,sans-serif;cursor:pointer;text-align:left;animation:vtkChip .45s cubic-bezier(.3,1.5,.5,1) both}' +
+    '.vtk-chip b{flex:none;display:grid;place-items:center;width:18px;height:18px;border-radius:6px;font-size:11px;color:#fff;background:#e5484d}' +
+    '.vtk-chip.cau b{background:#f2b81c;color:#1a1305}.vtk-chip.low b{background:#34d399;color:#06281c}' +
+    '.vtk-chip span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}' +
+    '.vtk-chip em{flex:none;font-style:normal;color:#9a9aa3;font-size:11.5px}' +
+    '.vtk-chip.now{border-color:#ffd84d;background:rgba(255,216,77,.12);box-shadow:0 0 0 3px rgba(255,216,77,.12)}' +
+    '@keyframes vtkChip{0%{opacity:0;transform:translateY(8px) scale(.85)}100%{opacity:1;transform:none}}' +
+    '.vtk-flash{animation:vtkFlash 1.6s ease-out}@keyframes vtkFlash{0%,30%{box-shadow:0 0 0 3px #ffd84d,0 0 30px rgba(255,216,77,.5)}100%{box-shadow:0 0 0 0 rgba(255,216,77,0)}}' +
+    /* (6) เครื่องเล่นลอย */
+    '.vtk-mini{position:fixed;left:14px;bottom:calc(92px + env(safe-area-inset-bottom,0px));z-index:900;display:flex;align-items:center;gap:8px;padding:6px 12px 6px 6px;border-radius:999px;' +
+      'background:rgba(20,21,25,.92);border:1px solid rgba(255,255,255,.14);box-shadow:0 14px 30px -10px rgba(0,0,0,.8);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);' +
+      'color:#ececef;font:600 12px/1.2 Prompt,sans-serif;--ff:Prompt,sans-serif;opacity:0;transform:translateY(20px) scale(.9);pointer-events:none;transition:opacity .3s,transform .35s cubic-bezier(.3,1.4,.5,1)}' +
+    '.vtk-mini.on{opacity:1;transform:none;pointer-events:auto}' +
+    '.vtk-mini-av{position:relative;width:52px;height:52px;flex:none;border-radius:50%;display:grid;place-items:center;cursor:pointer;' +
+      'background:conic-gradient(#ffd84d calc(var(--p,0)*1%),rgba(255,255,255,.12) 0);padding:3px}' +
+    '.vtk-mini-av>span{width:100%;height:100%;border-radius:50%;background:#1d1e24;display:grid;place-items:end center;overflow:hidden}' +
+    '.vtk-mini-av svg{width:40px !important;height:47px !important;max-width:none !important;display:block;margin-bottom:-4px}' +
+    '.vtk-mini-st{position:absolute;right:-2px;bottom:-2px;width:20px;height:20px;border-radius:50%;background:#ffd84d;color:#1a1305;display:grid;place-items:center;box-shadow:0 2px 6px rgba(0,0,0,.5)}' +
+    '.vtk-mini-st svg{width:10px !important;height:10px !important;max-width:none !important;margin:0 !important;display:block}' +
+    '.vtk-mini-tx{display:flex;flex-direction:column;gap:2px;cursor:pointer}.vtk-mini-tx small{font:400 11px/1.2 Prompt,sans-serif;color:#9a9aa3}' +
+    '.vtk-mini-x{width:26px;height:26px;border-radius:50%;border:0;background:rgba(255,255,255,.08);color:#bbb;font-size:13px;line-height:1;cursor:pointer;padding:0}' +
     '@media (max-width:520px){.vtk{padding:14px 12px 12px}.vtk-top{grid-template-columns:96px minmax(0,1fr);gap:10px}.vtk-stage{height:136px}.vtk-view{font-size:15px}.vtk-t{min-width:0;font-size:11px}.vtk-ctl{gap:8px}}' +
-    '@media (prefers-reduced-motion:reduce){.vtk-hint,.vtk.is-play .vm-arm-r,.vtk-coin svg{animation:none}.vtk-lines{transition:none}}' +
+    '@media (prefers-reduced-motion:reduce){.vtk-dust,.vtk.is-enter *{animation:none !important}.vtk-hint,.vtk.is-play .vm-arm-r,.vtk-coin svg{animation:none}.vtk-lines{transition:none}}' +
     'html[data-theme="light"] .vtk{background:#fbf8f1;color:#2a2116;border-color:rgba(0,0,0,.08)}html[data-theme="light"] .vtk-wave i{background:rgba(0,0,0,.14)}';
   var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
 
@@ -97,8 +146,8 @@
   function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function fmt(t) { t = Math.max(0, Math.floor(t || 0)); return Math.floor(t / 60) + ':' + ('0' + t % 60).slice(-2); }
 
-  function figure() {
-    var s = window.VCMascot ? window.VCMascot.svg('wave', 110) : '';
+  function figure(size) {
+    var s = window.VCMascot ? window.VCMascot.svg('wave', size || 110) : '';
     if (!s) return '<div style="font-size:64px;line-height:1">📜</div>';
     var face = '<g class="vtk-face-talk">' +
       '<g class="vtk-brows"><path class="vtk-brow" d="' + BROW + '" stroke="' + INK + '" stroke-width="2.2" stroke-linecap="round" fill="none"/></g>' +
@@ -119,6 +168,23 @@
   }
 
   /* ตัดคำไทย */
+  function dust() {
+    var h = '';
+    for (var i = 0; i < 9; i++) h += '<i style="--x:' + (18 + Math.random() * 64).toFixed(0) + '%;--s:' + (1.5 + Math.random() * 2).toFixed(1) + 'px;--d:' + (3.5 + Math.random() * 3).toFixed(1) + 's;--dl:-' + (Math.random() * 6).toFixed(1) + 's;--dx:' + (Math.random() * 30 - 15).toFixed(0) + 'px"></i>';
+    return h;
+  }
+  /* (1) ทรงปากตามสระ: A=อ้ากว้าง E=ยิ้มแบน O=ห่อกลม M=หุบ (ม บ ป พ ผ ฟ ฝ) */
+  var VIS = { A: [6.8, 5.2], E: [8.2, 2.2], O: [3.9, 4.4], M: [6.2, .5], N: [6, 3] };
+  function viseme(str, i) {
+    var c = str.charAt(i) || '', n1 = str.charAt(i + 1) || '', n2 = str.charAt(i + 2) || '';
+    if (!c || /[\s,.!?]/.test(c)) return 'M';
+    var look = c + n1 + n2;
+    if (/[ุูโ]/.test(look) || /ัว|อ$/.test(c + n1)) return 'O';
+    if (/[ิีึืเแ]/.test(look)) return 'E';
+    if (/[าะัำไใ]/.test(look)) return 'A';
+    if (/[มบปพผฟฝ]/.test(c)) return 'M';
+    return 'N';
+  }
   function words(text) {
     var out = [];
     try {
@@ -159,11 +225,12 @@
 
     var root = document.createElement('section'); root.className = 'vtk' + (o.compact ? ' vtk-compact' : '');
     root.setAttribute('aria-label', 'เวลลัมอ่านสรุปผลตรวจ');
-    root.innerHTML = '<div class="vtk-top"><div class="vtk-stage"><span class="vtk-spot"></span><span class="vtk-lamp"></span><span class="vtk-floor"></span><span class="vtk-shadow"></span><div class="vtk-rings"></div>' +
-      '<div class="vtk-fig">' + figure() + '</div><span class="vtk-coin">' + COIN + '</span><span class="vtk-thumb">👍</span><div class="vtk-conf"></div><span class="vtk-hint">แตะฟังได้เลย</span></div>' +
+    root.innerHTML = '<div class="vtk-top"><div class="vtk-stage"><span class="vtk-cur l"></span><span class="vtk-cur r"></span><span class="vtk-val"></span><span class="vtk-spot"></span><div class="vtk-dust">' + dust() + '</div><span class="vtk-lamp"></span><span class="vtk-floor"></span><span class="vtk-shadow"></span><div class="vtk-rings"></div>' +
+      '<div class="vtk-drop"><div class="vtk-fig">' + figure() + '</div></div><div class="vtk-puff"></div><span class="vtk-coin">' + COIN + '</span><span class="vtk-thumb">👍</span><div class="vtk-conf"></div><span class="vtk-hint">แตะฟังได้เลย</span></div>' +
       '<div class="vtk-bub"><p class="vtk-who"><i></i>' + esc(o.title || 'เวลลัมสรุปให้ฟัง') + '</p><div class="vtk-view" data-i18n-skip><div class="vtk-lines">' +
       P.map(function (p) { return '<p class="vtk-ln">' + p.map(function (k) { return '<span class="vtk-w" data-k="' + k + '">' + esc(W[k].t) + '</span>'; }).join('') + '</p>'; }).join('') +
       '</div></div></div></div>' +
+      '<div class="vtk-chips"></div>' +
       '<div class="vtk-ctl"><button type="button" class="vtk-pp is-p" aria-label="เล่นเสียงสรุป">' + PLAY + '</button>' +
       '<div class="vtk-wave" role="slider" aria-label="ตำแหน่งเสียง" tabindex="0"></div>' +
       '<span class="vtk-t">0:00 / 0:00</span><button type="button" class="vtk-rp" aria-label="ฟังใหม่ตั้งแต่ต้น">' + REPLAY + '</button></div>';
@@ -276,12 +343,20 @@
       root.classList.toggle('is-money', mon && !au.paused);
       brow.setAttribute('d', root.classList.contains('is-serious') && !au.paused ? BROW_S : BROW);
     }
-    var sm = 0, ringAt = 0, blinkAt = performance.now() + 1800, raf = 0;
+    var sm = 0, mx = 6, my = 1.6, ringAt = 0, blinkAt = performance.now() + 1800, raf = 0;
     function frame(now) {
       var t = au.currentTime || 0, d = au.duration || 0, k = wordAt(t);
       var a = Math.max(0, level(t, k) || 0); sm += (a - sm) * .45; if (sm < 0) sm = 0;
-      mouth.setAttribute('ry', (1.6 + sm * 6.2).toFixed(2)); mouth.setAttribute('rx', (6 + sm * 1.6).toFixed(2));
-      tongue.setAttribute('ry', (sm > .25 ? sm * 2.2 : 0).toFixed(2));
+      var vs = 'N';
+      if (!au.paused && k >= 0 && k < W.length) {
+        if (al && joined === text) { for (var q = 0; q < al.s.length; q++) if (al.s[q] <= t && t < (al.e[q] || al.s[q] + .1)) { vs = viseme(text, q); break; } }
+        else { var ww = W[k].t, ff = Math.max(0, Math.min(.999, (t - starts[k]) / Math.max(.05, starts[k + 1] - starts[k]))); vs = viseme(ww, Math.floor(ff * ww.length)); }
+      }
+      var tv = VIS[vs], open = Math.min(1, .35 + sm * 1.3);
+      mx += ((au.paused ? 6 : tv[0]) - mx) * .35; my += ((au.paused ? 1.6 : Math.max(.5, tv[1] * open)) - my) * .35;
+      mouth.setAttribute('rx', mx.toFixed(2)); mouth.setAttribute('ry', my.toFixed(2));
+      tongue.setAttribute('ry', (vs === 'A' && my > 3.5 ? my * .35 : 0).toFixed(2));
+      if (miniMouth) { miniMouth.setAttribute('rx', mx.toFixed(2)); miniMouth.setAttribute('ry', my.toFixed(2)); }
       brows.style.transform = 'translateY(' + (-sm * 2.2).toFixed(2) + 'px)';
       var sec = now / 1000, play = !au.paused;
       var ry = RM ? 0 : Math.sin(sec * (play ? 1.3 : .7)) * (play ? 10 : 5), rx = RM ? 0 : Math.sin(sec * .9) * 3, y = RM ? 0 : -sm * 7 + Math.sin(sec * 2) * (play ? 1.5 : 2.5);
@@ -294,6 +369,8 @@
       wave.setAttribute('aria-valuenow', Math.round(p * 100));
       tm.textContent = fmt(t) + ' / ' + fmt(d);
       paintWords(t, k);
+      chipTick(k);
+      if (mini) mini.av.style.setProperty('--p', (p * 100).toFixed(1));
       raf = requestAnimationFrame(frame);
     }
     raf = requestAnimationFrame(frame);
@@ -344,6 +421,75 @@
       var k = +s.getAttribute('data-k'); if (starts[k] != null) { au.currentTime = starts[k]; cur = -2; if (au.paused) play(); }
     });
     window.addEventListener('resize', function () { if (root.isConnected && bars.length) { var hs = [].map.call(bars, function (b) { return parseFloat(b.style.height) / 36; }); buildBars(hs); } });
+
+    /* (5) การ์ดประเด็น: เด้งขึ้นเมื่อพูดถึงหัวข้อนั้น */
+    var chipsBox = $('.vtk-chips'), CH = [];
+    (o.items || []).forEach(function (it) {
+      var tt = String(it.title || '').trim(); if (!tt) return;
+      var at = text.indexOf(tt); if (at < 0) at = text.indexOf(tt.slice(0, 12)); if (at < 0) return;
+      var k0 = 0; for (var i = 0; i < W.length; i++) if (W[i].a <= at) k0 = i;
+      CH.push({ k: k0, it: it, el: null });
+    });
+    CH.sort(function (a, b) { return a.k - b.k; });
+    if (CH.length) chipsBox.classList.add('has');   /* จองพื้นที่ไว้ก่อน การ์ดจะได้ไม่กระตุกตอนเด้ง */
+    function addChip(c) {
+      if (c.el) return;
+      var it = c.it, lv = it.level === 'check_detail' ? '' : it.level === 'caution' ? ' cau' : ' low';
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'vtk-chip' + lv;
+      b.innerHTML = '<b>' + (it.level === 'check_detail' ? '!' : it.level === 'caution' ? '⚠' : 'i') + '</b><span>' + esc(it.title) + '</span>' + (it.ref ? '<em>· ' + esc(it.ref) + '</em>' : '');
+      b.addEventListener('click', function () {
+        var el = it.target && (typeof it.target === 'string' ? document.querySelector(it.target) : it.target);
+        if (!el) { b.classList.add('now'); setTimeout(function () { b.classList.remove('now'); }, 700); return; }
+        if (el.tagName === 'DETAILS') el.open = true;
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.remove('vtk-flash'); void el.offsetWidth; el.classList.add('vtk-flash');
+      });
+      c.el = b; chipsBox.appendChild(b);
+      chipsBox.scrollLeft = chipsBox.scrollWidth;   /* เลื่อนให้เห็นการ์ดล่าสุด */
+    }
+    var lastChipK = -9;
+    function chipTick(k) {
+      if (!CH.length || k === lastChipK) return; lastChipK = k;
+      var now = -1;
+      CH.forEach(function (c, i) { if (k >= c.k) { addChip(c); now = i; } });
+      CH.forEach(function (c, i) { if (c.el) c.el.classList.toggle('now', i === now && !au.paused && !au.ended); });
+    }
+
+    /* (6) เครื่องเล่นลอย: เลื่อนลงจนการ์ดหลุดจอ แต่ยังเล่นอยู่ */
+    var mini = null, miniMouth = null, inView = true;
+    if (!o.compact && 'IntersectionObserver' in window) {
+      var el = document.createElement('div'); el.className = 'vtk-mini'; el.setAttribute('role', 'group'); el.setAttribute('aria-label', 'เวลลัมกำลังพูดสรุป');
+      el.innerHTML = '<div class="vtk-mini-av" role="button" tabindex="0" aria-label="เล่น/หยุด"><span>' + figure(40) + '</span><i class="vtk-mini-st">' + PAUSE + '</i></div>' +
+        '<div class="vtk-mini-tx" role="button" tabindex="0" aria-label="กลับไปที่การ์ดเสียงสรุป">เวลลัมกำลังสรุป<small>แตะเพื่อกลับไปดู</small></div><button type="button" class="vtk-mini-x" aria-label="ปิดเสียงสรุป">✕</button>';
+      document.body.appendChild(el);
+      mini = { el: el, av: el.querySelector('.vtk-mini-av') };
+      miniMouth = el.querySelector('.vtk-mouth');
+      var toggle = function () { if (au.paused) play(); else au.pause(); };
+      mini.av.addEventListener('click', toggle);
+      el.querySelector('.vtk-mini-tx').addEventListener('click', function () { root.scrollIntoView({ behavior: 'smooth', block: 'center' }); });
+      el.querySelector('.vtk-mini-x').addEventListener('click', function () { au.pause(); el.classList.remove('on'); });
+      new IntersectionObserver(function (es) { inView = es[0].isIntersecting; miniSync(); }, { threshold: .15 }).observe(root);
+    }
+    function miniSync() {
+      if (!mini) return;
+      var show = !inView && root.isConnected && root.classList.contains('is-started') && !au.ended && !(au.paused && !mini.el.classList.contains('on'));
+      mini.el.classList.toggle('on', show);
+      mini.el.querySelector('.vtk-mini-st').innerHTML = au.paused ? PLAY : PAUSE;
+      mini.el.querySelector('.vtk-mini-tx').firstChild.nodeValue = au.paused ? 'หยุดไว้ · ' : 'เวลลัมกำลังสรุป';
+    }
+    au.addEventListener('play', miniSync); au.addEventListener('pause', miniSync); au.addEventListener('ended', miniSync);
+    var goneMini = setInterval(function () { if (!root.isConnected) { clearInterval(goneMini); if (mini && mini.el.parentNode) mini.el.parentNode.removeChild(mini.el); } }, 2000);
+
+    /* (3) เปิดตัว: ไฟติด → ม่านเปิด → น้องกระโดดลงเวที (ฝุ่นฟุ้ง) → บับเบิลกาง → โบกมือ */
+    if (!RM) {
+      root.classList.add('is-enter');
+      setTimeout(function () {
+        var pf = $('.vtk-puff'); if (!pf) return;
+        for (var i = 0; i < 6; i++) { var d = document.createElement('i'); d.style.setProperty('--x', ((i - 2.5) * 12) + 'px'); pf.appendChild(d); }
+        setTimeout(function () { pf.innerHTML = ''; }, 700);
+      }, 900);
+      setTimeout(function () { root.classList.remove('is-enter'); }, 2600);
+    }
 
     if (o.autoplay) play();
     return { root: root, audio: au, play: play, stop: function () { try { au.pause(); } catch (e) {} } };
