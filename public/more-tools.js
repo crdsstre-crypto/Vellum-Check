@@ -112,7 +112,33 @@
     '.vck-it small{display:block;margin-top:2px;font:400 12px/1.5 Prompt,sans-serif;color:#8a8a93}' +
     '.vmx .vck-rs{display:block;margin:14px auto 0;min-height:0 !important;padding:6px 12px !important;border:0;background:transparent;color:#8a8a93;font:500 12px/1 Prompt,sans-serif;text-decoration:underline;cursor:pointer}' +
     /* แชร์ */
-    '.vsh-who{display:flex;gap:8px;flex-wrap:wrap;margin:2px 0 14px}.vsh-who span{padding:5px 10px;border-radius:99px;background:rgba(255,255,255,.05);font:500 12px/1.3 Prompt,sans-serif;color:#c4c4cb}' +
+    '.vsh-h{margin:4px 2px 8px;font:600 12px/1.2 Prompt,sans-serif;color:#9a9aa3}' +
+    '.vsh-who,.vsh-days{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}' +
+    '.vmx .vsh-who button,.vmx .vsh-days button{min-height:38px !important;padding:0 12px !important;border-radius:99px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03);color:#c4c4cb;font:600 12.5px/1 Prompt,sans-serif;cursor:pointer;transition:all .15s}' +
+    '.vmx .vsh-who button.on,.vmx .vsh-days button.on{border-color:#7fb5ff;background:rgba(127,181,255,.14);color:#e1edff}' +
+    '.vsh-days{display:grid;grid-template-columns:repeat(3,1fr)}' +
+    '.vsh-msg{display:flex;align-items:center;gap:8px;margin:0 0 14px;padding:9px 12px;border-radius:14px 14px 14px 4px;background:rgba(141,224,85,.12);border:1px solid rgba(141,224,85,.25);font:400 13px/1.45 Prompt,sans-serif;color:#dcf5c9}' +
+    '.vsh-msg span{flex:1;min-width:0}.vsh-msg em{flex:none;font-style:normal;font:600 11px/1 Prompt,sans-serif;color:#9cc98a}' +
+    '.vsh-grid{display:grid;grid-template-columns:150px minmax(0,1fr);gap:14px;align-items:start;margin-bottom:14px}' +
+    '@media (max-width:380px){.vsh-grid{grid-template-columns:130px minmax(0,1fr)}}' +
+    '.vsh-ph{padding:6px;border-radius:24px;background:#2a2c33;box-shadow:0 14px 30px -12px rgba(0,0,0,.9),inset 0 0 0 1px rgba(255,255,255,.08)}' +
+    '.vsh-scr{height:250px;overflow:hidden;border-radius:19px;background:#0b0c0f;padding:8px 7px;display:flex;flex-direction:column;gap:6px}' +
+    '.vsh-scr .sb{display:flex;align-items:center;gap:4px}.vsh-scr .sb i{width:9px;height:9px;border-radius:3px;background:#c9ced6}.vsh-scr .sb b{font:600 8px/1 Prompt,sans-serif;letter-spacing:.04em}.vsh-scr .sb em{margin-left:auto;font:500 6.5px/1 Prompt,sans-serif;font-style:normal;color:#7fb5ff}' +
+    '.vsh-scr .bn{padding:5px 6px;border-radius:7px;background:rgba(127,181,255,.12);font:500 7.5px/1.3 Prompt,sans-serif;color:#cfe2ff}' +
+    '.vsh-scr .ct{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}.vsh-scr .ct span{padding:4px 0;border-radius:6px;background:#15171c;text-align:center;font:700 11px/1 Prompt,sans-serif;color:var(--c)}' +
+    '.vsh-scr .it{position:relative;padding:6px 6px 6px 9px;border-radius:8px;background:#15171c;overflow:hidden}.vsh-scr .it::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2.5px;background:var(--c)}' +
+    '.vsh-scr .it b{display:block;font:600 8.5px/1.35 Prompt,sans-serif}' +
+    '.vsh-scr .it p{margin:4px 0 0;font:400 7px/1.45 Prompt,sans-serif}.vsh-scr .q{padding:4px 5px;border-radius:5px;background:#f3ecdc;color:#2a251b;max-height:40px;transition:max-height .35s,opacity .3s,padding .3s,margin .3s;overflow:hidden}' +
+    '.vsh-scr .q.off{max-height:0;opacity:0;padding:0 5px;margin:0}.vsh-scr .fx{padding:4px 5px;border-radius:5px;background:rgba(52,211,153,.12);color:#9ee7c6}' +
+    '.vsh-scr .ghost{height:46px;--c:#f5c451;opacity:.6}' +
+    '.vsh-side{min-width:0}.vsh-side .vsh-h{margin-top:0}' +
+    '.vsh-mask{padding:10px 11px;border-radius:12px;background:#f3ecdc;color:#2a251b;font:400 13px/1.75 Sarabun,Prompt,sans-serif}' +
+    '.vsh-mk2{position:relative;display:inline-block;line-height:1.3}.vsh-mk2 i{position:absolute;inset:-1px -2px;border-radius:4px;background:#1c1a16;transform:scaleX(0);transform-origin:left;animation:vshMk .45s var(--d) cubic-bezier(.5,0,.2,1) forwards}' +
+    '.vsh-mk2 i::after{content:"ปิดบัง";position:absolute;inset:0;display:grid;place-items:center;font:600 9px/1 Prompt,sans-serif;color:#8a8170;letter-spacing:.06em;opacity:0;animation:vshFd .3s calc(var(--d) + .4s) forwards}' +
+    '@keyframes vshMk{to{transform:scaleX(1)}}@keyframes vshFd{to{opacity:1}}' +
+    '.vsh-dm{display:block;margin:5px 2px 0;font:400 11px/1.4 Prompt,sans-serif;color:#71717a}' +
+    '.vsh-strip{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 2px}.vsh-strip span{padding:5px 9px;border-radius:99px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);font:500 11.5px/1.3 Prompt,sans-serif;color:#b6eed6}' +
+    '@media (prefers-reduced-motion:reduce){.vsh-mk2 i,.vsh-mk2 i::after{animation:none;transform:none;opacity:1}}' +
     '.vsh-pv{padding:12px 14px;border-radius:14px;background:#18191d;border:1px solid rgba(255,255,255,.08)}' +
     '.vsh-pv p{margin:0 0 6px;font:600 12px/1.3 Prompt,sans-serif;color:#9a9aa3}.vsh-pv ul{margin:0;padding:0;list-style:none;display:grid;gap:6px}' +
     '.vsh-pv li{display:flex;gap:8px;font:400 13px/1.5 Prompt,sans-serif;color:#d4d4d8}.vsh-pv li::before{content:"✓";color:#34d399;font-weight:700}.vsh-pv li.x::before{content:"✕";color:#f2555a}' +
@@ -195,27 +221,61 @@
 
   /* ---------- 2) แชร์ลิงก์ ---------- */
   var sh = null, last = null;
-  function sample() {
-    var r = res(); if (!r || !r.items) return '';
-    var q = ''; r.items.some(function (it) { if (it.quote && /นาย|นาง|\d{3}/.test(it.quote)) { q = it.quote; return true; } return false; });
-    if (!q) r.items.some(function (it) { if (it.quote) { q = it.quote; return true; } return false; });
-    return q.slice(0, 120);
+  /* ข้อความที่ส่งไปพร้อมลิงก์ ตามผู้รับ */
+  var WHO = {
+    fam: ['👨‍👩‍👧', 'พ่อแม่ / ครอบครัว', function (P) { return 'ช่วยดูสัญญานี้ให้หน่อยนะ' + P + ' 🙏 มีจุดที่ควรระวังก่อนเซ็นอยู่ ' }],
+    fri: ['🧑‍🤝‍🧑', 'เพื่อนที่เคยเซ็น', function (P) { return 'ช่วยดูผลตรวจสัญญาให้หน่อย เคยเจอแบบนี้ไหม? 🙏 ' }],
+    law: ['⚖️', 'ทนาย / ที่ปรึกษา', function (P) { return 'รบกวนขอความเห็นเบื้องต้นเกี่ยวกับสัญญาฉบับนี้' + P + ' ผลตรวจเบื้องต้นอยู่ในลิงก์นี้ ' }]
+  };
+  function who() { var w = ls('vc_sh_who'); return WHO[w] ? w : 'fam'; }
+  function days() { var d = +ls('vc_sh_days'); return [1, 7, 30].indexOf(d) > -1 ? d : 7; }
+  function pp() { return ls('vc_neg_pp') === 'ค่ะ' ? 'ค่ะ' : 'ครับ'; }
+  function msg(url) { return WHO[who()][2](pp()) + '\n' + url; }
+
+  /* (2) อนิเมชันปิดบังข้อมูล */
+  var PII = /([\w.+-]+@[\w-]+(?:\.[\w-]+)+|\b\d[\d -]{11,16}\d\b|\b0\d{1,2}[- ]?\d{3}[- ]?\d{3,4}\b|(?:นางสาว|นาย|นาง|น\.ส\.)\s*[ก-๙]{2,}(?:\s+[ก-๙]{2,})?|(?:บ้านเลขที่|เลขที่)\s*[\d/]+)/g;
+  function piiLine() {
+    var r = res(), q = '';
+    if (r && r.items) r.items.some(function (it) { var t = String(it.quote || ''); PII.lastIndex = 0; if (PII.test(t)) { q = t; return true; } return false; });
+    if (q) { PII.lastIndex = 0; var m = PII.exec(q), a = Math.max(0, m.index - 30); return { t: (a ? '…' : '') + q.slice(a, a + 110), demo: false }; }
+    return { t: 'ผู้เช่า นายตัวอย่าง นามสมมติ โทร 000-000-0000 อีเมล sample@example.com', demo: true };
   }
-  function maskPreview(s) {
-    var M = '<em>•••</em>';
-    return esc(s).replace(/[\w.+-]+@[\w-]+(\.[\w-]+)+/g, M).replace(/\b\d[\d -]{11,16}\d\b/g, function (m) { return m.replace(/\D/g, '').length >= 10 ? M : m; })
-      .replace(/\b0\d{1,2}[- ]?\d{3}[- ]?\d{3,4}\b/g, M).replace(/(นางสาว|นาย|นาง|น\.ส\.)\s*[ก-๙]{2,}(\s+[ก-๙]{2,})?/g, '$1 ' + M).replace(/(บ้านเลขที่|เลขที่)\s*[\d/]+/g, '$1 ' + M);
+  function maskHtml(t) {
+    var out = '', last = 0, k = 0; PII.lastIndex = 0; var m;
+    while ((m = PII.exec(t))) {
+      var pre = '', body = m[0], pm = /^(นางสาว|นาย|นาง|น\.ส\.|บ้านเลขที่|เลขที่)\s*/.exec(body);
+      if (pm) { pre = pm[0]; body = body.slice(pre.length); }
+      out += esc(t.slice(last, m.index)) + esc(pre) + '<span class="vsh-mk2" style="--d:' + (0.5 + k * 0.45).toFixed(2) + 's"><span>' + esc(body) + '</span><i></i></span>';
+      last = m.index + m[0].length; k++;
+    }
+    return out + esc(t.slice(last));
+  }
+  /* (1) ตัวอย่างหน้าที่ผู้รับเห็น */
+  function phone(quotes) {
+    var r = res() || {}, it = (r.items || [])[0] || {}, c = { check_detail: 0, caution: 0, low: 0 };
+    (r.items || []).forEach(function (x) { if (c[x.level] != null) c[x.level]++; });
+    var q = it.quote && !it.missing ? it.quote.replace(PII, function (m) { var pm = /^(นางสาว|นาย|นาง|น\.ส\.|บ้านเลขที่|เลขที่)\s*/.exec(m); return (pm ? pm[0] : '') + '•••'; }) : '';
+    var LC = { check_detail: '#f2555a', caution: '#f5c451', low: '#8d8d96' };
+    return '<div class="vsh-ph"><div class="vsh-scr"><div class="sb"><i></i><b>Vellum Check</b><em>อ่านอย่างเดียว</em></div>' +
+      '<div class="bn">👀 มีคนแชร์ผลตรวจให้คุณดู</div>' +
+      '<div class="ct"><span style="--c:#f2555a">' + c.check_detail + '</span><span style="--c:#f5c451">' + c.caution + '</span><span style="--c:#8d8d96">' + c.low + '</span></div>' +
+      '<div class="it" style="--c:' + (LC[it.level] || '#8d8d96') + '"><b>' + esc(String(it.title || 'ประเด็นที่ 1').slice(0, 40)) + '</b>' +
+      (q ? '<p class="q' + (quotes ? '' : ' off') + '">“' + esc(q.slice(0, 70)) + '…”</p>' : '') + '<p class="fx">สิ่งที่ควรขอแก้ไข…</p></div>' +
+      '<div class="it ghost"></div></div></div>';
   }
   function shOpen() {
     if (!sh) {
-      sh = sheet('vsh', '#7fb5ff', '🔗', 'แชร์ผลตรวจให้คนอื่นดู', 'ลิงก์อ่านอย่างเดียว · ปิดบังข้อมูลส่วนตัว · หมดอายุใน 7 วัน');
+      sh = sheet('vsh', '#7fb5ff', '🔗', 'แชร์ผลตรวจให้คนอื่นดู', 'ลิงก์อ่านอย่างเดียว · ปิดบังข้อมูลส่วนตัวให้อัตโนมัติ');
+      sh.addEventListener('change', function (e) { if (e.target.classList.contains('vsh-q')) { var q = sh.querySelector('.vsh-ph .q'); if (q) q.classList.toggle('off', !e.target.checked); } });
       sh.addEventListener('click', function (e) {
         if (e.target.closest('.vsh-go')) return create();
+        var wb = e.target.closest('[data-who]'); if (wb) { ls('vc_sh_who', wb.getAttribute('data-who')); [].forEach.call(sh.querySelectorAll('[data-who]'), function (x) { x.classList.toggle('on', x === wb); }); var mm = sh.querySelector('.vsh-msg span'); if (mm) mm.textContent = WHO[who()][2](pp()); return; }
+        var db = e.target.closest('[data-days]'); if (db) { ls('vc_sh_days', db.getAttribute('data-days')); [].forEach.call(sh.querySelectorAll('[data-days]'), function (x) { x.classList.toggle('on', x === db); }); return; }
         if (e.target.closest('[data-login]')) { hide(sh); var a = document.querySelector('#bottomNav [data-nav="acct"]') || document.getElementById('authToggle'); if (a) setTimeout(function () { a.click(); }, 300); return; }
         var url = last ? location.origin + last.url : '';
         if (e.target.closest('[data-cp]')) { var b = e.target.closest('[data-cp]'); (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(function () { b.textContent = 'คัดลอกแล้ว ✓'; setTimeout(function () { b.textContent = 'คัดลอก'; }, 1500); }, function () { var i = sh.querySelector('.vsh-link input'); i.select(); try { document.execCommand('copy'); } catch (er) {} }); return; }
-        if (e.target.closest('[data-ln]')) { window.open('https://line.me/R/share?text=' + encodeURIComponent('ผลตรวจสัญญาของฉัน ช่วยดูให้หน่อย 🙏\n' + url), '_blank', 'noopener'); return; }
-        if (e.target.closest('[data-sh]')) { navigator.share({ title: 'ผลตรวจสัญญา', text: 'ผลตรวจสัญญาของฉัน ช่วยดูให้หน่อย 🙏', url: url }).catch(function () {}); return; }
+        if (e.target.closest('[data-ln]')) { window.open('https://line.me/R/share?text=' + encodeURIComponent(msg(url)), '_blank', 'noopener'); return; }
+        if (e.target.closest('[data-sh]')) { navigator.share({ title: 'ผลตรวจสัญญา', text: WHO[who()][2](pp()), url: url }).catch(function () {}); return; }
         if (e.target.closest('.vsh-rv')) return revoke();
       });
     }
@@ -223,11 +283,14 @@
     last = null; shForm(); show(sh);
   }
   function shForm(err) {
-    var q = sample(), n = (res().items || []).length;
-    var h = '<div class="vsh-who"><span>👨‍👩‍👧 พ่อแม่ / ครอบครัว</span><span>🧑‍🤝‍🧑 เพื่อนที่เคยเช่า/เคยเซ็น</span><span>⚖️ ทนาย / ที่ปรึกษา</span></div>' +
-      '<div class="vsh-pv"><p>คนที่เปิดลิงก์จะเห็น</p><ul><li>ผลตรวจทั้ง ' + n + ' ประเด็น พร้อมสิ่งที่ควรขอแก้</li><li>เรื่องที่สัญญายังไม่ได้ระบุ</li><li class="x">ไม่เห็นข้อความสัญญาฉบับเต็ม บัญชี หรือเครดิตของคุณ</li><li class="x">ชื่อ เลขบัตร เบอร์โทร อีเมล เลขบัญชี ถูกปิดบัง</li></ul></div>' +
-      '<label class="vsh-tg"><input type="checkbox" class="vsh-q" checked><span class="vsh-sw"></span><span><b>แสดงข้อความจากสัญญาที่ยกมา</b><small>ช่วยให้คนอ่านเข้าใจบริบท · ข้อมูลส่วนตัวยังถูกปิดบัง</small></span></label>' +
-      (q ? '<div class="vsh-mk">ตัวอย่างหลังปิดบัง: “' + maskPreview(q) + '”</div>' : '') +
+    var L = piiLine(), w = who(), d = days();
+    var h = '<p class="vsh-h">ส่งให้ใคร</p><div class="vsh-who">' + Object.keys(WHO).map(function (k) { return '<button type="button" data-who="' + k + '" class="' + (k === w ? 'on' : '') + '">' + WHO[k][0] + ' ' + WHO[k][1] + '</button>'; }).join('') + '</div>' +
+      '<div class="vsh-msg">💬 <span>' + esc(WHO[w][2](pp())) + '</span><em>+ ลิงก์</em></div>' +
+      '<div class="vsh-grid">' + phone(true) +
+        '<div class="vsh-side"><p class="vsh-h">ข้อมูลส่วนตัวถูกปิดบังให้อัตโนมัติ</p><div class="vsh-mask">' + maskHtml(L.t) + '</div>' + (L.demo ? '<small class="vsh-dm">ตัวอย่างสมมติ · ผลตรวจนี้ไม่มีข้อมูลส่วนตัวในข้อความที่ยกมา</small>' : '<small class="vsh-dm">จากผลตรวจของคุณ</small>') +
+        '<label class="vsh-tg"><input type="checkbox" class="vsh-q" checked><span class="vsh-sw"></span><span><b>แสดงข้อความจากสัญญา</b><small>ช่วยให้คนอ่านเข้าใจบริบท</small></span></label></div></div>' +
+      '<p class="vsh-h">ลิงก์ใช้ได้นาน</p><div class="vsh-days">' + [[1, '1 วัน'], [7, '7 วัน'], [30, '30 วัน']].map(function (x) { return '<button type="button" data-days="' + x[0] + '" class="' + (x[0] === d ? 'on' : '') + '">' + x[1] + '</button>'; }).join('') + '</div>' +
+      '<div class="vsh-strip"><span>🔒 ปิดบังข้อมูล</span><span>👁️ อ่านอย่างเดียว</span><span>📄 ไม่ส่งสัญญาเต็ม</span><span>🗑️ ยกเลิกได้</span></div>' +
       (err ? '<div class="vsh-er">' + esc(err.msg) + (err.login ? ' <button type="button" data-login style="margin-left:6px;border:0;background:#7fb5ff;color:#06142b;border-radius:8px;padding:4px 10px;font:600 12px Prompt;cursor:pointer">เข้าสู่ระบบ</button>' : '') + '</div>' : '') +
       '<button type="button" class="vsh-go">🔗 สร้างลิงก์แชร์</button>';
     sh.querySelector('.vmx-bd').innerHTML = h;
@@ -236,7 +299,7 @@
     var b = sh.querySelector('.vsh-go'); b.disabled = true; b.textContent = 'กำลังสร้างลิงก์…';
     var quotes = sh.querySelector('.vsh-q').checked;
     var title = (document.querySelector('#result .rpt-title') || {}).textContent || '';
-    fetch('/api/share', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ result: res(), quotes: quotes, typeText: typeText(), title: title.trim() }) })
+    fetch('/api/share', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ result: res(), quotes: quotes, typeText: typeText(), title: title.trim(), days: days() }) })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (x) { if (!x.ok) throw { msg: x.j.error || 'สร้างลิงก์ไม่สำเร็จ', login: !!x.j.login }; last = x.j; done(); })
       .catch(function (er) { shForm(er && er.msg ? er : { msg: 'สร้างลิงก์ไม่สำเร็จ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่' }); });
@@ -244,7 +307,8 @@
   function done() {
     var url = location.origin + last.url, exp = ''; try { exp = new Date(last.expiresAt).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' }); } catch (e) {}
     var share = !!navigator.share;
-    sh.querySelector('.vmx-bd').innerHTML = '<div class="vsh-ok"><i>✅</i><b>ลิงก์พร้อมแชร์แล้ว</b><small>ใช้ได้ถึง ' + esc(exp) + ' · ใครมีลิงก์ก็เปิดดูได้ แชร์เฉพาะคนที่ไว้ใจ</small></div>' +
+    sh.querySelector('.vmx-bd').innerHTML = '<div class="vsh-ok"><i>✅</i><b>ลิงก์พร้อมแชร์แล้ว</b><small>ใช้ได้ ' + (last.days || days()) + ' วัน ถึง ' + esc(exp) + ' · ใครมีลิงก์ก็เปิดดูได้ แชร์เฉพาะคนที่ไว้ใจ</small></div>' +
+      '<div class="vsh-msg">💬 <span>' + esc(WHO[who()][2](pp())) + '</span><em>+ ลิงก์</em></div>' +
       '<div class="vsh-link"><input type="text" readonly value="' + esc(url) + '" aria-label="ลิงก์แชร์"><button type="button" data-cp>คัดลอก</button></div>' +
       '<div class="vsh-acts" style="--n:' + (share ? 2 : 1) + '"><button type="button" class="line" data-ln>ส่งทาง LINE</button>' + (share ? '<button type="button" data-sh>ส่งต่อ…</button>' : '') + '</div>' +
       '<button type="button" class="vsh-rv">ยกเลิกลิงก์นี้ (คนที่มีลิงก์จะเปิดไม่ได้อีก)</button>';
@@ -271,7 +335,7 @@
     }
     var t = ckType(), c = ckCount(t);
     var html = '<button type="button" class="vmx-rb" data-m="ck" style="--c:#34d399"><span class="i">📋</span><span><b>เช็กลิสต์ก่อนเซ็น</b><small>' + (c.d ? 'ทำแล้ว ' + c.d + '/' + c.n + ' ข้อ' : c.n + ' ข้อที่ควรทำ') + '</small></span></button>' +
-      '<button type="button" class="vmx-rb" data-m="sh" style="--c:#7fb5ff"><span class="i">🔗</span><span><b>แชร์ให้คนอื่นดู</b><small>ลิงก์อ่านอย่างเดียว 7 วัน</small></span></button>';
+      '<button type="button" class="vmx-rb" data-m="sh" style="--c:#7fb5ff"><span class="i">🔗</span><span><b>แชร์ให้คนอื่นดู</b><small>ลิงก์อ่านอย่างเดียว</small></span></button>';
     if (ex.getAttribute('data-sig') !== html) { ex.innerHTML = html; ex.setAttribute('data-sig', html); }
     var anchor = rpt.querySelector('.vng-cta') || rpt.querySelector('.vhs') || rpt.querySelector('.vc-sum') || rpt.querySelector('.rpt-head');
     if (anchor && ex.previousElementSibling !== anchor) anchor.parentNode.insertBefore(ex, anchor.nextSibling);
