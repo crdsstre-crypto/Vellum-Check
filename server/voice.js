@@ -38,7 +38,7 @@ const FALLBACK = [   // เสียงฝรั่งพูดไทยจะ�
 const GENDER = { female: 'ผู้หญิง', male: 'ผู้ชาย' };
 // เสียงที่ให้ลูกค้าเลือก (แก้ที่นี่ที่เดียว ไม่ต้องตั้งค่าใน Render) · ถ้าตั้ง ELEVENLABS_VOICES ใน Render จะใช้ค่านั้นแทน
 const BUILTIN = [
-  { id: 'tKtPl8obOBs5uPMei6yN', name: 'Ohm', gender: 'ผู้ชาย', desc: 'เสียงเล่าเรื่อง อธิบายชัด เป็นธรรมชาติ สไตล์ผู้ประกาศข่าว', rec: true },   // ⭐ เสียงแนะนำ = ค่าเริ่มต้น
+  { id: 'tKtPl8obOBs5uPMei6yN', name: 'Ohm', gender: 'ผู้ชาย', desc: 'เสียงเล่าเรื่อง อธิบายชัด เป็นธรรมชาติ สไตล์ผู้ประกาศข่าว', rec: true, why: 'เหมาะกับการฟังสรุปสัญญา' },   // ⭐ เสียงแนะนำ = ค่าเริ่มต้น
   { id: 'uI1epevl1X6hqrxEciKt', name: 'Kirin', gender: 'ผู้ชาย', desc: 'เสียงพูดสบาย ๆ เป็นกันเอง เหมือนคุยกับเพื่อน' },
   { id: 'u14IW5Q2cGXcEj6L2joU', name: 'Emily', gender: 'ผู้หญิง', desc: 'เสียงนุ่ม สุภาพ เป็นกันเอง สไตล์พอดแคสต์' },
   { id: '7XW5JhaNn90bnFojQ5DA', name: 'Mali', gender: 'ผู้หญิง', desc: 'เสียงชัด อบอุ่น เป็นมิตร ฟังง่าย สไตล์ครูสอน' },
