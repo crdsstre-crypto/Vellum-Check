@@ -5,7 +5,7 @@
 import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { analyzeContract, answerFollowup, transcribeImage, MAX_ITEMS_LIMIT, CONTRACT_TYPES } from './ai.js';
+import { analyzeContract, answerFollowup, transcribeImage, explainClause, MAX_ITEMS_LIMIT, CONTRACT_TYPES } from './ai.js';
 import { translateTexts, allowTranslate, MAX_TEXTS as TR_MAX_TEXTS, MAX_LEN as TR_MAX_LEN, MAX_TOTAL as TR_MAX_TOTAL } from './translate.js';
 import { extractPdfText, extractDocxText } from './extract.js';
 import { initDb, pool } from './db.js';
@@ -252,6 +252,27 @@ app.get('/api/history/inspections/:id', async (req, res) => {
   }
 });
 
+// Command Center: สรุปทุกผลตรวจของบัญชี (เฉพาะระดับ/หัวข้อของประเด็น ไม่ส่งข้อความสัญญา) + วันสำคัญ ในคำขอเดียว
+app.get('/api/history/overview', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน' });
+    const { rows } = await pool.query(
+      `SELECT id, contract_type, created_at, title, pinned, result->>'detected_type' AS dt,
+              CASE WHEN jsonb_typeof(result->'items') = 'array' THEN
+                (SELECT coalesce(json_agg(json_build_object('level', e->>'level', 'title', left(e->>'title', 140), 'topic', left(e->>'topic', 60))), '[]'::json)
+                   FROM jsonb_array_elements(result->'items') e)
+              ELSE '[]'::json END AS items,
+              CASE WHEN jsonb_typeof(result->'missing_info') = 'array' THEN jsonb_array_length(result->'missing_info') ELSE 0 END AS n_missing
+         FROM inspections WHERE user_id = $1 ORDER BY created_at DESC, id DESC LIMIT 50`, [user.id]);
+    const reminders = await listReminders(user.id).catch(() => []);
+    res.json({ inspections: rows, reminders });
+  } catch (err) {
+    console.error('[history] overview failed:', err.message);
+    res.status(500).json({ error: 'โหลดภาพรวมไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+
 app.get('/api/history/payments', async (req, res) => {
   try {
     const user = await getUserFromRequest(req);
@@ -390,6 +411,34 @@ app.post('/api/translate', async (req, res) => {
   } catch (err) {
     console.error('[translate] failed:', err.message);
     res.status(502).json({ error: 'translate failed' });
+  }
+});
+
+// ----- อธิบายข้อความในสัญญา (เลือกข้อความ/กด "อธิบายข้อนี้") -----
+// สมาชิก 40 ครั้ง/วัน · ยังไม่เข้าสู่ระบบ 5 ครั้ง/วันต่อ IP (ลองกับสัญญาตัวอย่าง) · ข้อความเดิมจำคำตอบไว้ ไม่เสียค่า AI ซ้ำ
+const explainHits = new Map(), explainCache = new Map();
+app.post('/api/explain', async (req, res) => {
+  try {
+    const text = typeof req.body?.text === 'string' ? req.body.text.replace(/\s+/g, ' ').trim() : '';
+    if (text.length < 8) return res.status(400).json({ error: 'เลือกข้อความให้ยาวขึ้นอีกนิด' });
+    if (text.length > 1200) return res.status(413).json({ error: 'ข้อความยาวเกินไป เลือกทีละข้อ (ไม่เกิน 1,200 ตัวอักษร)' });
+    const lang = langOf(req), ck = lang + '\u0000' + text;
+    if (explainCache.has(ck)) return res.json({ ...explainCache.get(ck), cached: true });
+    const user = await getUserFromRequest(req).catch(() => null);
+    const who = user ? 'u' + user.id : 'ip' + (req.ip || 'x'), cap = user ? 40 : 5, now = Date.now();
+    let h = explainHits.get(who); if (!h || h.resetAt <= now) h = { n: 0, resetAt: now + 24 * 60 * 60 * 1000 };
+    if (h.n >= cap) return res.status(429).json({ error: user ? 'วันนี้ใช้ครบ 40 ครั้งแล้ว ลองใหม่พรุ่งนี้' : 'ลองได้ 5 ครั้งต่อวัน เข้าสู่ระบบเพื่อใช้ได้มากขึ้น', login: !user });
+    h.n += 1; explainHits.set(who, h);
+    if (explainHits.size > 20000) for (const [k, v] of explainHits) if (v.resetAt <= now) explainHits.delete(k);
+    let out;
+    try { out = await explainClause(text, lang); }
+    catch (e) { h.n -= 1; throw e; }   // AI ล้มเหลว = ไม่นับครั้ง
+    if (explainCache.size > 3000) explainCache.delete(explainCache.keys().next().value);
+    explainCache.set(ck, out);
+    res.json({ ...out, left: cap - h.n });
+  } catch (err) {
+    console.error('[explain] failed:', err.message);
+    res.status(502).json({ error: 'อธิบายไม่สำเร็จตอนนี้ ลองใหม่อีกครั้ง' });
   }
 });
 
