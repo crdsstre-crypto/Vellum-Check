@@ -1215,6 +1215,7 @@ async function runCheck() {
     const r = await api(CONFIG.api.check, 'POST', {
       text,
       voice: els.voiceOpt?.checked === true,
+      voiceId: (window.VCVoice && window.VCVoice.get()) || '',
       contractType,
     });
 
