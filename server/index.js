@@ -204,13 +204,7 @@ app.get('/api/auth/google/callback', async (req, res) => {
     if (!saved.length) return fail('no state cookie');
     if (!saved.includes(state)) return fail('state mismatch');
 
-    let profile;
-    try { profile = await exchangeCodeForProfile(code, redirectUriFor(req)); }
-    catch (e) {   // เครือข่ายสะดุดชั่วคราว (เซิร์ฟเวอร์เพิ่งตื่น) → ลองอีกครั้งเดียว
-      if (/invalid_grant|token exchange 4/i.test(e.message)) throw e;
-      await new Promise(r => setTimeout(r, 600));
-      profile = await exchangeCodeForProfile(code, redirectUriFor(req));
-    }
+    const profile = await exchangeCodeForProfile(code, redirectUriFor(req));   // ลองซ้ำเองใน googleAuth.js
     const user = await findOrCreateGoogleUser(profile);
     if (!user) return fail('no user');
 
