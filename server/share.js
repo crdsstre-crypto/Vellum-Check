@@ -1,4 +1,4 @@
-// ลิงก์แชร์ผลตรวจแบบอ่านอย่างเดียว (หมดอายุใน 7 วัน)
+// ลิงก์แชร์ผลตรวจแบบอ่านอย่างเดียว (เลือกอายุได้ 1 / 7 / 30 วัน ค่าเริ่มต้น 7 วัน)
 // - เก็บเฉพาะ "ผลตรวจ" ที่คัดฟิลด์แล้ว ไม่เก็บข้อความสัญญาเต็ม
 // - ปิดบังข้อมูลส่วนตัว (เลขบัตร เบอร์โทร อีเมล เลขบัญชี ชื่อหลังคำนำหน้า เลขที่บ้าน) ก่อนบันทึก
 // - เจ้าของลิงก์ยกเลิกลิงก์ได้ทุกเมื่อ
@@ -81,17 +81,19 @@ export function cleanPayload(result, opts = {}) {
 
 function newId() { return crypto.randomBytes(9).toString('base64url'); }
 
-export async function createShare(userId, payload) {
+export const SHARE_DAY_OPTIONS = [1, 7, 30];
+export async function createShare(userId, payload, days = SHARE_DAYS) {
+  days = SHARE_DAY_OPTIONS.includes(Number(days)) ? Number(days) : SHARE_DAYS;
   await ensureTable();
   const id = newId();
   const { rows } = await pool.query(
     `INSERT INTO shares (id, user_id, payload, expires_at)
      VALUES ($1, $2, $3, now() + ($4 || ' days')::interval) RETURNING expires_at`,
-    [id, userId, JSON.stringify(payload), String(SHARE_DAYS)]
+    [id, userId, JSON.stringify(payload), String(days)]
   );
   // เก็บกวาดลิงก์ที่หมดอายุ (เบา ๆ ทุกครั้งที่สร้างใหม่)
   pool.query('DELETE FROM shares WHERE expires_at < now() - interval \'1 day\'').catch(() => {});
-  return { id, expiresAt: rows[0].expires_at };
+  return { id, expiresAt: rows[0].expires_at, days };
 }
 
 export async function getShare(id) {
