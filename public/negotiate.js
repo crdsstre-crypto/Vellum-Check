@@ -135,6 +135,46 @@
     '.vng-ft{padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}' +
     '.vng .vng-ft button:disabled{opacity:.4;cursor:default}' +
     '.vng .vng-rb.ok{background:#34d399;border-color:#34d399;color:#06281b}' +
+    /* หน้าต่างแนะนำ */
+    '.vng .vng-help{margin-left:auto;flex:none;display:grid;place-items:center;width:40px;height:40px;min-height:0 !important;padding:0 !important;border-radius:50%;border:1px solid rgba(127,181,255,.35);background:rgba(127,181,255,.08);color:#9cc5ff;font:700 16px/1 Prompt,sans-serif;cursor:pointer}' +
+    '.vng-help + .vng-x{margin-left:8px !important}' +
+    '.vng-in{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;padding:16px;border-radius:inherit;background:rgba(10,11,13,.82);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);opacity:0;transition:opacity .25s}' +
+    '.vng-in[hidden]{display:none}.vng-in.in{opacity:1}' +
+    '.vng-ic{position:relative;width:100%;max-width:440px;overflow:hidden;border-radius:22px;border:1px solid rgba(255,255,255,.1);background:linear-gradient(160deg,#1c2130,#141519 60%);box-shadow:0 30px 60px -20px rgba(0,0,0,.9);transform:translateY(14px) scale(.97);transition:transform .35s cubic-bezier(.2,1.2,.4,1)}' +
+    '.vng-in.in .vng-ic{transform:none}' +
+    '.vng .vng-skip{position:absolute;top:12px;right:12px;z-index:2;min-height:0 !important;padding:5px 12px !important;border-radius:99px;border:0;background:rgba(255,255,255,.07);color:#a1a1aa;font:600 12px/1.3 Prompt,sans-serif;cursor:pointer}' +
+    '.vng-track{display:flex;transition:transform .4s cubic-bezier(.2,.9,.3,1)}' +
+    '.vng-sl{flex:0 0 100%;padding:26px 22px 8px;box-sizing:border-box}' +
+    '.vng-sl .k{margin:0 0 4px;font:600 12px/1.3 Prompt,sans-serif;color:#7fb5ff;letter-spacing:.03em}' +
+    '.vng .vng-sl h3{margin:0 0 10px !important;font:700 20px/1.35 Prompt,sans-serif !important;letter-spacing:0 !important;color:#fff !important}' +
+    '.vng-sl .d{margin:0;font:400 13.5px/1.7 Prompt,sans-serif;color:#b9b9c0}' +
+    '.vng-art{position:relative;height:150px;margin:0 0 16px;display:grid;place-items:center}' +
+    '.vng-art .vng-ph{width:150px;height:140px;border-radius:18px;background:linear-gradient(180deg,#7f9cc0,#97b0cf);overflow:hidden;box-shadow:0 14px 30px -12px rgba(0,0,0,.8)}' +
+    '.vng-art .vng-chh{display:flex;align-items:center;gap:6px;height:24px;padding:0 8px;background:#24324a}.vng-art .vng-chh i{width:12px;height:12px;border-radius:50%;background:#e8eef7}.vng-art .vng-chh b{width:46px;height:5px;border-radius:3px;background:#b7c4d8}' +
+    '.vng-art .vng-bb{display:flex;flex-direction:column;gap:4px;width:92px;margin:10px 8px 0 auto;padding:8px;border-radius:10px 10px 3px 10px;background:#8de055;opacity:0;transform:translateY(10px)}' +
+    '.vng-art .vng-bb.r{width:70px;margin-top:6px}.vng-art .vng-bb i{height:4px;border-radius:2px;background:rgba(19,42,11,.45)}.vng-art .vng-bb i.s{width:60%}' +
+    '.vng-sl.on .vng-art .vng-bb{animation:vngBb .5s .25s forwards}.vng-sl.on .vng-art .vng-bb.r{animation-delay:.75s}' +
+    '@keyframes vngBb{to{opacity:1;transform:none}}' +
+    '.vng-art .vng-pn{position:absolute;left:calc(50% - 100px);bottom:8px;font-size:34px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.6))}.vng-sl.on .vng-art .vng-pn{animation:vngPn 2.4s ease-in-out infinite}' +
+    '@keyframes vngPn{50%{transform:translate(6px,-6px) rotate(-8deg)}}' +
+    '.vng-steps{margin:6px 0 0;padding:0;list-style:none;display:grid;gap:10px}' +
+    '.vng-steps li{display:flex;gap:12px;align-items:flex-start;padding:11px 12px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);opacity:0;transform:translateX(14px)}' +
+    '.vng-sl.on .vng-steps li{animation:vngSt .4s forwards}.vng-sl.on .vng-steps li:nth-child(2){animation-delay:.12s}.vng-sl.on .vng-steps li:nth-child(3){animation-delay:.24s}' +
+    '@keyframes vngSt{to{opacity:1;transform:none}}' +
+    '.vng-steps li>i{flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#9cc5ff,#5b9bff);color:#06142b;font:800 13px/1 Prompt,sans-serif;font-style:normal}' +
+    '.vng-steps b{display:block;font:600 14px/1.35 Prompt,sans-serif;color:#fff}.vng-steps small{display:block;margin-top:2px;font:400 12px/1.5 Prompt,sans-serif;color:#9a9aa3}' +
+    '.vng-pros{display:grid;gap:8px}.vng-pros>div{display:flex;gap:11px;align-items:flex-start;padding:10px 11px;border-radius:14px;background:rgba(255,255,255,.035);opacity:0;transform:translateY(8px)}' +
+    '.vng-sl.on .vng-pros>div{animation:vngSt .4s forwards}.vng-sl.on .vng-pros>div:nth-child(2){animation-delay:.08s}.vng-sl.on .vng-pros>div:nth-child(3){animation-delay:.16s}.vng-sl.on .vng-pros>div:nth-child(4){animation-delay:.24s}' +
+    '.vng-pros span{flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:rgba(255,255,255,.06);font-size:17px}' +
+    '.vng-pros p{margin:0}.vng-pros b{display:block;font:600 13.5px/1.35 Prompt,sans-serif;color:#fff}.vng-pros small{display:block;font:400 12px/1.45 Prompt,sans-serif;color:#9a9aa3}' +
+    '.vng-disc{margin:12px 2px 0;font:400 11px/1.5 Prompt,sans-serif;color:#71717a}' +
+    '.vng-nav{display:flex;align-items:center;gap:10px;padding:14px 16px 16px}' +
+    '.vng .vng-pv2{flex:none;width:40px;height:40px;min-height:0 !important;padding:0 !important;border-radius:50%;border:1px solid rgba(255,255,255,.12);background:transparent;color:#ececef;font:400 22px/1 Prompt,sans-serif;cursor:pointer}' +
+    '.vng-dts{flex:1;display:flex;justify-content:center;gap:6px}' +
+    '.vng .vng-dts button{width:8px;height:8px;min-height:0 !important;padding:0 !important;border:0;border-radius:99px;background:rgba(255,255,255,.2);cursor:pointer;transition:width .25s,background .25s}.vng .vng-dts button.on{width:22px;background:#7fb5ff}' +
+    '.vng .vng-nx{flex:none;min-width:110px;min-height:44px !important;padding:0 16px !important;border:0;border-radius:13px;background:rgba(127,181,255,.16);color:#cfe2ff;font:700 14px/1 Prompt,sans-serif;cursor:pointer}' +
+    '.vng .vng-nx.go{background:#06c755;color:#fff;box-shadow:0 10px 22px -10px rgba(6,199,85,.9)}' +
+    '@media (prefers-reduced-motion:reduce){.vng-track{transition:none}.vng-sl *{animation:none !important;opacity:1 !important;transform:none !important}}' +
     /* (1) แถบสรุปการตั้งค่า */
     '.vng .vng-sum{display:flex;align-items:center;gap:10px;width:100%;min-height:46px !important;padding:0 14px !important;margin:2px 0 4px;border-radius:13px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.035);color:#e4e4e7;font:500 13.5px/1.3 Prompt,sans-serif;text-align:left;cursor:pointer}' +
     '.vng-sum .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.vng-sum em{flex:none;font-style:normal;font-size:12px;font-weight:600;color:#7fb5ff}' +
@@ -173,7 +213,7 @@
     el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', 'ร่างข้อความต่อรอง');
     var share = !!navigator.share;
     el.innerHTML = '<div class="vng-bg" data-x></div><div class="vng-card">' +
-      '<div class="vng-hd"><span class="ic">✍️</span><div><b>ร่างข้อความต่อรอง</b><small>เลือกข้อ เลือกน้ำเสียง แก้คำได้ แล้วส่งให้อีกฝ่าย</small></div><button type="button" class="vng-x" data-x aria-label="ปิด">×</button></div>' +
+      '<div class="vng-hd"><span class="ic">✍️</span><div><b>ร่างข้อความต่อรอง</b><small>เลือกข้อ เลือกน้ำเสียง แก้คำได้ แล้วส่งให้อีกฝ่าย</small></div><button type="button" class="vng-help" data-help aria-label="วิธีใช้">?</button><button type="button" class="vng-x" data-x aria-label="ปิด">×</button></div>' +
       '<div class="vng-tabs" role="tablist"><i aria-hidden="true"></i><button type="button" role="tab" data-tab="l" class="on">เลือกข้อ <b class="vng-n">0</b></button><button type="button" role="tab" data-tab="r">ดูข้อความ</button></div>' +
       '<div class="vng-bd"><div class="vng-l">' +
         '<button type="button" class="vng-sum" aria-expanded="false"><span class="t"></span><em>✎ ปรับ</em></button><div class="vng-set" hidden>' +
@@ -188,9 +228,13 @@
         '<button type="button" class="vng-rb" data-copy data-l="คัดลอก" aria-label="คัดลอก">' + I.copy + '</button><button type="button" class="vng-rb" data-mail data-l="อีเมล" aria-label="อีเมล">' + I.mail + '</button>' +
         (share ? '<button type="button" class="vng-rb" data-share data-l="ส่งต่อ" aria-label="ส่งต่อ">' + I.share + '</button>' : '') + '</div></div>';
     document.body.appendChild(el);
+    el.querySelector('.vng-card').appendChild(introEl());
     var ta = el.querySelector('textarea');
     el.addEventListener('click', function (e) {
       if (e.target.closest('[data-x]')) return close();
+      if (e.target.closest('[data-help]')) return intro(true);
+      var iv = e.target.closest('[data-iv]');
+      if (iv) { var a = iv.getAttribute('data-iv'); if (a === 'next') return slide(ix + 1); if (a === 'prev') return slide(ix - 1); if (a === 'skip' || a === 'go') return introClose(); return slide(+a); }
       var tb = e.target.closest('[data-tab]'); if (tb) return tab(tb.getAttribute('data-tab'));
       var sb = e.target.closest('.vng-seg button');
       if (sb) { var g = sb.parentNode.getAttribute('data-g'); st[g] = sb.getAttribute('data-v'); ls(g === 'tone' ? 'vc_neg_tone' : 'vc_neg_pp', st[g]); segs(); regen(); fade(); return; }
@@ -211,7 +255,52 @@
     });
     el.querySelector('.vng-to').addEventListener('input', function () { st.to = this.value; ls('vc_neg_to', st.to); who(); sumTx(); if (!edited) regen(); });
     ta.addEventListener('input', function () { edited = true; el.querySelector('.vng-re').hidden = false; grow(); count(); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && el && !el.hidden) close(); });
+    document.addEventListener('keydown', function (e) { if (e.key !== 'Escape' || !el || el.hidden) return; var d = el.querySelector('.vng-in'); if (d && !d.hidden) introClose(); else close(); });
+  }
+  /* ---------- หน้าต่างแนะนำการใช้งาน ---------- */
+  var ix = 0, NS = 3;
+  function introEl() {
+    var d = document.createElement('div'); d.className = 'vng-in'; d.hidden = true; d.setAttribute('role', 'dialog'); d.setAttribute('aria-label', 'วิธีใช้ร่างข้อความต่อรอง');
+    var S = [
+      '<div class="vng-sl"><div class="vng-art a1"><div class="vng-ph"><div class="vng-chh"><i></i><b></b></div><div class="vng-bb"><i></i><i></i><i class="s"></i></div><div class="vng-bb r"><i></i><i class="s"></i></div></div><span class="vng-pn">✍️</span></div>' +
+        '<p class="k">ร่างข้อความต่อรองคืออะไร?</p><h3>เปลี่ยนผลตรวจ เป็นข้อความที่ส่งได้ทันที</h3>' +
+        '<p class="d">ระบบหยิบข้อที่ควรขอแก้จากผลตรวจ มาเรียบเรียงเป็นข้อความสุภาพถึงอีกฝ่าย พร้อมข้อความเดิมในสัญญา และสิ่งที่ขอให้แก้ — ไม่ต้องคิดคำเอง</p></div>',
+      '<div class="vng-sl"><p class="k">ใช้ยังไง</p><h3>3 ขั้น ไม่ถึง 1 นาที</h3><ol class="vng-steps">' +
+        '<li><i>1</i><div><b>เลือกข้อที่อยากต่อรอง</b><small>ระบบติ๊กข้อสำคัญไว้ให้แล้ว แตะ ⌄ เพื่อดูว่าจะขอแก้เป็นอะไร</small></div></li>' +
+        '<li><i>2</i><div><b>เลือกน้ำเสียงและผู้รับ</b><small>สุภาพ · กลาง ๆ · ตรงไปตรงมา และลงท้าย ครับ/ค่ะ ที่แถบ ✎ ปรับ</small></div></li>' +
+        '<li><i>3</i><div><b>ดูข้อความ แล้วส่ง</b><small>แก้คำได้ในบับเบิล จากนั้นกด "ส่งทาง LINE" หรือคัดลอก / อีเมล</small></div></li></ol></div>',
+      '<div class="vng-sl"><p class="k">ช่วยอะไรคุณ</p><h3>ต่อรองได้มั่นใจขึ้น</h3><div class="vng-pros">' +
+        '<div><span>🕊️</span><p><b>ไม่ต้องกลัวเสียมารยาท</b><small>ถ้อยคำสุภาพ เป็นมืออาชีพ ไม่ดูเหมือนหาเรื่อง</small></p></div>' +
+        '<div><span>🎯</span><p><b>ชัดเจน อีกฝ่ายแก้ได้ทันที</b><small>อ้างข้อในสัญญา + บอกว่าอยากให้แก้เป็นอะไร</small></p></div>' +
+        '<div><span>📝</span><p><b>ไม่ลืมเรื่องที่ยังไม่ได้เขียน</b><small>ขอให้เพิ่มเรื่องที่สัญญายังไม่ระบุได้ในข้อความเดียว</small></p></div>' +
+        '<div><span>⚡</span><p><b>ส่งได้ในแตะเดียว</b><small>LINE · อีเมล · คัดลอก ไปวางที่ไหนก็ได้</small></p></div></div>' +
+        '<p class="vng-disc">ข้อความร่างจากผลตรวจของ AI ใช้ประกอบการพูดคุย ไม่ใช่คำปรึกษาทางกฎหมาย</p></div>'
+    ];
+    d.innerHTML = '<div class="vng-ic"><button type="button" class="vng-skip" data-iv="skip">ข้าม</button><div class="vng-track">' + S.join('') + '</div>' +
+      '<div class="vng-nav"><button type="button" class="vng-pv2" data-iv="prev" aria-label="ก่อนหน้า">‹</button><div class="vng-dts">' + S.map(function (_, k) { return '<button type="button" data-iv="' + k + '" aria-label="หน้า ' + (k + 1) + '"></button>'; }).join('') + '</div>' +
+      '<button type="button" class="vng-nx" data-iv="next">ถัดไป ›</button></div></div>';
+    /* ปัดซ้าย/ขวา */
+    var x0 = null;
+    d.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+    d.addEventListener('touchend', function (e) { if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 45) slide(ix + (dx < 0 ? 1 : -1)); }, { passive: true });
+    return d;
+  }
+  function slide(k) {
+    var d = el.querySelector('.vng-in'); ix = Math.max(0, Math.min(NS - 1, k));
+    d.querySelector('.vng-track').style.transform = 'translateX(' + (-ix * 100) + '%)';
+    [].forEach.call(d.querySelectorAll('.vng-dts button'), function (b, j) { b.classList.toggle('on', j === ix); });
+    d.querySelector('.vng-pv2').style.visibility = ix ? 'visible' : 'hidden';
+    var nx = d.querySelector('.vng-nx'); nx.textContent = ix === NS - 1 ? 'เริ่มร่างข้อความ' : 'ถัดไป ›'; nx.setAttribute('data-iv', ix === NS - 1 ? 'go' : 'next'); nx.classList.toggle('go', ix === NS - 1);
+    [].forEach.call(d.querySelectorAll('.vng-sl'), function (sl, j) { sl.classList.toggle('on', j === ix); sl.setAttribute('aria-hidden', String(j !== ix)); });
+  }
+  function intro(force) {
+    if (!force && ls('vc_neg_intro') === '1') return;
+    var d = el.querySelector('.vng-in'); d.hidden = false; slide(0);
+    requestAnimationFrame(function () { d.classList.add('in'); });
+  }
+  function introClose() {
+    ls('vc_neg_intro', '1');
+    var d = el.querySelector('.vng-in'); d.classList.remove('in'); setTimeout(function () { d.hidden = true; }, 250);
   }
   function tab(t) {
     el.setAttribute('data-t', t);
@@ -274,6 +363,8 @@
     el.hidden = false; prevOv = document.documentElement.style.overflow; document.documentElement.style.overflow = 'hidden';
     requestAnimationFrame(function () { requestAnimationFrame(function () { el.classList.add('in'); grow(); }); });
     el.querySelector('.vng-l').scrollTop = 0;
+    var din = el.querySelector('.vng-in'); din.hidden = true; din.classList.remove('in');
+    setTimeout(function () { intro(false); }, 320);
   }
   function close() { if (!el || el.hidden) return; el.classList.remove('in'); document.documentElement.style.overflow = prevOv || ''; setTimeout(function () { el.hidden = true; }, 300); }
   /* ---------- ปุ่มในผลตรวจ ---------- */
