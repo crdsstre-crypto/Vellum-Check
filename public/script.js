@@ -1245,7 +1245,9 @@ async function runCheck() {
     if (r.data.inspectionId && window.VCFeedback) window.VCFeedback.attach(r.data.inspectionId);
     if (window.VCRemind) window.VCRemind.link(r.data.inspectionId);
     if (r.data.audio) {
-      els.result.insertAdjacentHTML('afterbegin',
+      // เวลลัมพูดสรุป (talk.js) · ถ้าไฟล์ไม่โหลดใช้เครื่องเล่นเสียงธรรมดาแทน
+      if (window.VCTalk) window.VCTalk.mount(els.result, { audio: r.data.audio, text: r.data.audioText, align: r.data.audioAlign });
+      else els.result.insertAdjacentHTML('afterbegin',
         `<audio controls src="data:audio/mpeg;base64,${r.data.audio}" style="width:100%;margin-bottom:12px"></audio>`);
     }
     if (r.data.voiceError) {
