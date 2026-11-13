@@ -7364,3 +7364,7 @@ html.vc-lite .auth-ghost .gh-pen *{filter:none !important}
   box-shadow:0 4px 6px rgba(60,10,6,.4)}
 /* v288: กลับจาก Google → ไม่มีกระดาษตัวแทนแล้ว (เดิมเห็นกระดาษ 2 ใบสลับกัน) · เหลือแค่โต๊ะมืดกับแสงโคมรอ แล้วกระดาษจริงใบเดียวเลื่อนเข้ามา */
 html.vc-gin::before{content:none !important;display:none !important}
+/* v289 เลื่อนรายการสัญญาตัวอย่างลื่นขึ้น: หัวไม่ยุบแล้ว แถบเขียวเลื่อนไปกับรายการ · ไม่ลากหน้าหลังตามเมื่อสุดขอบ */
+.vsl-list{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.vsl-list > .vsl-hero{grid-column:1 / -1;margin:0 0 4px !important}
+.vsl-list > .vsl-hero + .vsl-item{margin-top:6px}
