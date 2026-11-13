@@ -55,13 +55,20 @@
     var P = lcs(na, nb, function (x, y) { return x === y; }).concat([[na.length, nb.length]]), out = [], i = 0, j = 0;
     P.forEach(function (p) {
       var a = na.slice(i, p[0]), b = nb.slice(j, p[1]), k;
-      for (k = 0; k < Math.max(a.length, b.length); k++) out.push(a[k] && b[k] ? { t: 'chg', a: a[k], b: b[k] } : a[k] ? { t: 'cut', a: a[k] } : { t: 'new', b: b[k] });
+      /* จับคู่เฉพาะตัวเลขหน่วยเดียวกัน (บาทกับบาท, วันกับวัน) */
+      var bu = b.map(function (x) { return { v: x, used: false }; });
+      a.forEach(function (x) {
+        var m = null; bu.some(function (y) { if (!y.used && unit(y.v) === unit(x)) { m = y; return true; } });
+        if (m) { m.used = true; out.push({ t: 'chg', a: x, b: m.v }); } else out.push({ t: 'cut', a: x });
+      });
+      bu.forEach(function (y) { if (!y.used) out.push({ t: 'new', b: y.v }); });
       i = p[0] + 1; j = p[1] + 1;
     });
     return out.slice(0, 5);
   }
+  function unit(x) { return (/^(วันที่|ร้อยละ|อัตรา)/.exec(x) || [''])[0] + '|' + (/(%|บาท|วัน|เดือน|ปี|ชั่วโมง|ครั้ง|หน่วย)$/.exec(x) || [''])[0]; }
   function numTxt(p) { return p.t === 'cut' ? 'ถูกตัดออก: ' + p.a : p.t === 'new' ? 'ตัวเลขใหม่: ' + p.b : p.a + ' → ' + p.b; }
-  var RISK = /ปรับ|ยึด|ไม่คืน|ฝ่ายเดียว|ทุกกรณี|ดอกเบี้ย|อัตโนมัติ|ไม่ต้องแจ้ง|ตามที่เห็นสมควร|สละสิทธิ์|ไม่รับผิดชอบ|ห้าม|ทันที/;
+  var RISK = /ปรับ|ยึด|ไม่คืน|ฝ่ายเดียว|ทุกกรณี|ดอกเบี้ย|อัตโนมัติ|ไม่ต้องแจ้ง|ตามที่เห็นสมควร|สละสิทธิ์|ไม่รับผิดชอบ|ห้าม|ทันที|ไม่จำกัด|ทุกเมื่อ|ไม่ต้องจ่าย|พอใจ|ที่เหลือทั้งหมด|ยอมรับสภาพ/;
 
   function compare(oldT, newT) {
     var A = blocks(oldT), B = blocks(newT);
@@ -135,7 +142,15 @@
     '.vcp-tools button,.vcp-tools label.f{display:inline-flex;align-items:center;gap:5px;min-height:32px !important;padding:0 10px !important;border-radius:9px;border:1px solid rgba(255,255,255,.12);background:transparent;color:#c9c9cf;font:500 12px/1 Prompt,sans-serif;cursor:pointer}' +
     '.vcp-tools input[type=file]{display:none}' +
     '.vcp-tools small{align-self:center;margin-left:auto;font:400 11.5px/1 Prompt,sans-serif;color:#71717a}' +
-    '.vcp-top{display:flex;align-items:center;gap:8px;margin-bottom:12px}' +
+    '.vcp-top{position:relative;display:flex;align-items:center;gap:8px;margin-bottom:12px}' +
+    '.vcp-demo em{font-style:normal;font-size:10px;opacity:.8;display:inline-block;transition:transform .2s}.vcp-demo[aria-expanded="true"] em{transform:rotate(180deg)}' +
+    '.vcp-dm{position:absolute;right:0;top:calc(100% + 6px);z-index:6;width:min(340px,100%);padding:12px;border-radius:16px;background:#1b1c21;border:1px solid rgba(245,196,81,.28);box-shadow:0 20px 40px -12px rgba(0,0,0,.85);animation:vcpDm .2s ease-out}' +
+    '.vcp-dm[hidden]{display:none}@keyframes vcpDm{from{opacity:0;transform:translateY(-6px)}}' +
+    '.vcp-dmh{font:700 13px/1.3 Prompt,sans-serif;color:#f5d27a;margin:0 2px 9px}.vcp-dmh small{font:400 11px/1 Prompt,sans-serif;color:#71717a;margin-left:6px}' +
+    '.vcp-dmg{display:grid;grid-template-columns:1fr 1fr;gap:7px}' +
+    '.vcp .vcp-dmg button{display:flex;align-items:center;gap:8px;min-height:46px !important;padding:0 10px !important;border-radius:12px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.035);color:#e4e4e7;font:600 13px/1.25 Prompt,sans-serif;text-align:left;cursor:pointer;transition:background .15s,border-color .15s}' +
+    '.vcp .vcp-dmg button:hover{background:rgba(245,196,81,.1);border-color:rgba(245,196,81,.4)}' +
+    '.vcp-dmg button span{flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:9px;background:rgba(255,255,255,.06);font-size:16px}' +
     '.vcp-tabs{display:flex;flex:1;gap:4px;padding:4px;border-radius:13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07)}' +
     '.vcp .vcp-tabs button{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;min-height:38px !important;padding:0 8px !important;border:0;border-radius:10px;background:transparent;color:#9a9aa3;font:600 13.5px/1 Prompt,sans-serif;cursor:pointer;transition:background .2s,color .2s}' +
     '.vcp .vcp-tabs button[aria-selected="true"]{background:#24262c;color:#fff;box-shadow:0 2px 8px -2px rgba(0,0,0,.6)}' +
@@ -308,7 +323,9 @@
       if (e.target.closest('[data-nshare]')) { navigator.share({ text: el.querySelector('.vcp-negp textarea').value }).catch(function () {}); return; }
       var s = e.target.closest('.vcp-s'); if (s) { state.f = s.getAttribute('data-f'); list(); return; }
       var tb = e.target.closest('[data-tab]'); if (tb) { setTab(tb.getAttribute('data-tab')); return; }
-      if (e.target.closest('[data-vdemo]')) { el.querySelector('#vcp-o').value = SAMPLE_O; el.querySelector('#vcp-n').value = SAMPLE_N; tab = 'n'; upd(); say('ใส่สัญญาเช่าตัวอย่าง (ข้อมูลสมมติ) แล้ว กด "เทียบเลย" ได้เลย'); var g = el.querySelector('.vcp-go'); g && g.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+      if (e.target.closest('[data-vdemo]')) { var dm = el.querySelector('.vcp-dm'); dm.hidden = !dm.hidden; e.target.closest('[data-vdemo]').setAttribute('aria-expanded', String(!dm.hidden)); return; }
+      var sm = e.target.closest('[data-smp]'); if (sm) { var X = SAMPLES[+sm.getAttribute('data-smp')]; el.querySelector('#vcp-o').value = X.o; el.querySelector('#vcp-n').value = X.n; el.querySelector('.vcp-dm').hidden = true; el.querySelector('[data-vdemo]').setAttribute('aria-expanded', 'false'); tab = 'n'; upd(); say('ใส่ตัวอย่าง "' + X.name + '" แล้ว กด "เทียบเลย" ได้เลย'); var g = el.querySelector('.vcp-go'); g && g.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+      var dmo = el.querySelector('.vcp-dm'); if (dmo && !dmo.hidden && !e.target.closest('.vcp-dm')) { dmo.hidden = true; var db = el.querySelector('[data-vdemo]'); db && db.setAttribute('aria-expanded', 'false'); }
       var ps = e.target.closest('[data-paste]'); if (ps) { paste(ps.closest('.vcp-side').classList.contains('o') ? 'o' : 'n'); return; }
       var fl = e.target.closest('[data-fill]'); if (fl) { var src = document.getElementById('input'); var ta = el.querySelector('#vcp-o'); if (src && src.value.trim()) { ta.value = src.value; filled('o'); } else say('ช่องตรวจยังไม่มีข้อความ'); return; }
       var cl = e.target.closest('[data-clr]'); if (cl) { cl.closest('.vcp-side').querySelector('textarea').value = ''; upd(); return; }
@@ -324,12 +341,20 @@
   }
   var saved = { o: '', n: '' };
   var tab = 'o';
-  var SAMPLE_O = 'สัญญาเช่าห้องพัก (ตัวอย่าง)\nข้อ 1 ผู้ให้เช่าตกลงให้ นายตัวอย่าง นามสมมติ เช่าห้องเลขที่ 000 มีกำหนด 1 ปี\nข้อ 2 ค่าเช่าเดือนละ 8,000 บาท ชำระภายในวันที่ 5 ของทุกเดือน\nข้อ 3 หากชำระล่าช้า ผู้เช่าเสียค่าปรับวันละ 100 บาท\nข้อ 4 เงินประกัน 16,000 บาท ผู้ให้เช่าจะคืนภายใน 30 วันหลังย้ายออก โดยหักเฉพาะค่าเสียหายที่เกิดจากผู้เช่า\nข้อ 5 ค่าไฟฟ้าหน่วยละ 7 บาท ค่าน้ำตามจริง\nข้อ 6 ผู้ให้เช่าจะเข้าตรวจห้องได้โดยแจ้งล่วงหน้าอย่างน้อย 24 ชั่วโมง\nข้อ 7 ห้ามนำสัตว์เลี้ยงเข้ามาในห้อง\nข้อ 8 ผู้ให้เช่ารับผิดชอบซ่อมแซมความเสียหายที่เกิดจากการเสื่อมสภาพตามปกติ';
-  var SAMPLE_N = 'สัญญาเช่าห้องพัก (ตัวอย่าง)\nข้อ 1 ผู้ให้เช่าตกลงให้ นายตัวอย่าง นามสมมติ เช่าห้องเลขที่ 000 มีกำหนด 1 ปี\nข้อ 2 ค่าเช่าเดือนละ 8,500 บาท ชำระภายในวันที่ 1 ของทุกเดือน\nข้อ 3 หากชำระล่าช้า ผู้เช่าเสียค่าปรับวันละ 300 บาท\nข้อ 4 เงินประกัน 16,000 บาท ผู้ให้เช่ามีสิทธิ์หักได้ตามที่เห็นสมควร และจะคืนส่วนที่เหลือภายใน 60 วัน\nข้อ 5 ค่าไฟฟ้าหน่วยละ 9 บาท ค่าน้ำตามจริง\nข้อ 6 ผู้ให้เช่าเข้าตรวจห้องได้ทุกเวลาโดยไม่ต้องแจ้งล่วงหน้า\nข้อ 7 ห้ามนำสัตว์เลี้ยงเข้ามาในห้อง\nข้อ 9 สัญญานี้ต่ออายุอัตโนมัติคราวละ 1 ปี หากผู้เช่าไม่แจ้งยกเลิกล่วงหน้า 90 วัน\nข้อ 10 ผู้เช่าต้องทำความสะอาดห้องโดยบริษัทที่ผู้ให้เช่ากำหนดก่อนย้ายออก';
+  /* สัญญาตัวอย่าง (ข้อมูลสมมติทั้งหมด) */
+  var SAMPLES = [
+    { ic: '🏠', name: 'เช่าห้อง', o: 'สัญญาเช่าห้องพัก (ตัวอย่าง)\nข้อ 1 ผู้ให้เช่าตกลงให้ นายตัวอย่าง นามสมมติ เช่าห้องเลขที่ 000 มีกำหนด 1 ปี\nข้อ 2 ค่าเช่าเดือนละ 8,000 บาท ชำระภายในวันที่ 5 ของทุกเดือน\nข้อ 3 หากชำระล่าช้า ผู้เช่าเสียค่าปรับวันละ 100 บาท\nข้อ 4 เงินประกัน 16,000 บาท ผู้ให้เช่าจะคืนภายใน 30 วันหลังย้ายออก โดยหักเฉพาะค่าเสียหายที่เกิดจากผู้เช่า\nข้อ 5 ค่าไฟฟ้าหน่วยละ 7 บาท ค่าน้ำตามจริง\nข้อ 6 ผู้ให้เช่าจะเข้าตรวจห้องได้โดยแจ้งล่วงหน้าอย่างน้อย 24 ชั่วโมง\nข้อ 7 ห้ามนำสัตว์เลี้ยงเข้ามาในห้อง\nข้อ 8 ผู้ให้เช่ารับผิดชอบซ่อมแซมความเสียหายที่เกิดจากการเสื่อมสภาพตามปกติ', n: 'สัญญาเช่าห้องพัก (ตัวอย่าง)\nข้อ 1 ผู้ให้เช่าตกลงให้ นายตัวอย่าง นามสมมติ เช่าห้องเลขที่ 000 มีกำหนด 1 ปี\nข้อ 2 ค่าเช่าเดือนละ 8,500 บาท ชำระภายในวันที่ 1 ของทุกเดือน\nข้อ 3 หากชำระล่าช้า ผู้เช่าเสียค่าปรับวันละ 300 บาท\nข้อ 4 เงินประกัน 16,000 บาท ผู้ให้เช่ามีสิทธิ์หักได้ตามที่เห็นสมควร และจะคืนส่วนที่เหลือภายใน 60 วัน\nข้อ 5 ค่าไฟฟ้าหน่วยละ 9 บาท ค่าน้ำตามจริง\nข้อ 6 ผู้ให้เช่าเข้าตรวจห้องได้ทุกเวลาโดยไม่ต้องแจ้งล่วงหน้า\nข้อ 7 ห้ามนำสัตว์เลี้ยงเข้ามาในห้อง\nข้อ 9 สัญญานี้ต่ออายุอัตโนมัติคราวละ 1 ปี หากผู้เช่าไม่แจ้งยกเลิกล่วงหน้า 90 วัน\nข้อ 10 ผู้เช่าต้องทำความสะอาดห้องโดยบริษัทที่ผู้ให้เช่ากำหนดก่อนย้ายออก' },
+    { ic: '💼', name: 'จ้างงาน', o: 'สัญญาจ้างงาน (ตัวอย่าง)\nข้อ 1 บริษัท ตัวอย่าง จำกัด ตกลงจ้าง นายตัวอย่าง นามสมมติ ในตำแหน่งเจ้าหน้าที่ธุรการ\nข้อ 2 ค่าจ้างเดือนละ 25,000 บาท จ่ายทุกวันที่ 25 ของเดือน\nข้อ 3 ทดลองงาน 90 วัน\nข้อ 4 ทำงานวันจันทร์ถึงวันศุกร์ วันละ 8 ชั่วโมง ทำงานเกินเวลาได้รับค่าล่วงเวลาตามกฎหมาย\nข้อ 5 ลาพักร้อนได้ปีละ 10 วัน\nข้อ 6 หากต้องการลาออก ให้แจ้งล่วงหน้า 30 วัน\nข้อ 7 บริษัทจัดประกันสุขภาพกลุ่มให้พนักงาน', n: 'สัญญาจ้างงาน (ตัวอย่าง)\nข้อ 1 บริษัท ตัวอย่าง จำกัด ตกลงจ้าง นายตัวอย่าง นามสมมติ ในตำแหน่งเจ้าหน้าที่ธุรการ\nข้อ 2 ค่าจ้างเดือนละ 22,000 บาท จ่ายทุกวันที่ 5 ของเดือนถัดไป\nข้อ 3 ทดลองงาน 119 วัน\nข้อ 4 ทำงานวันจันทร์ถึงวันเสาร์ วันละ 9 ชั่วโมง ค่าจ้างรวมค่าล่วงเวลาไว้แล้ว\nข้อ 5 ลาพักร้อนได้ปีละ 6 วัน\nข้อ 6 หากต้องการลาออก ให้แจ้งล่วงหน้า 90 วัน มิฉะนั้นจะไม่คืนค่าจ้างเดือนสุดท้าย\nข้อ 8 ห้ามพนักงานทำงานกับบริษัทในธุรกิจเดียวกันเป็นเวลา 2 ปีหลังลาออก\nข้อ 9 บริษัทย้ายตำแหน่งหรือสถานที่ทำงานได้ตามที่เห็นสมควร' },
+    { ic: '💻', name: 'ฟรีแลนซ์', o: 'สัญญาจ้างทำเว็บไซต์ (ตัวอย่าง)\nข้อ 1 บริษัท ตัวอย่าง จำกัด (ผู้ว่าจ้าง) จ้าง นายตัวอย่าง นามสมมติ (ผู้รับจ้าง) ทำเว็บไซต์ 5 หน้า\nข้อ 2 ค่าจ้างรวม 60,000 บาท จ่ายมัดจำ 30,000 บาท เมื่อเซ็นสัญญา ส่วนที่เหลือจ่ายเมื่อส่งงาน\nข้อ 3 ส่งงานภายใน 45 วัน\nข้อ 4 แก้ไขงานได้ไม่เกิน 3 ครั้ง หากเกินคิดเพิ่มครั้งละ 2,000 บาท\nข้อ 5 ผู้ว่าจ้างต้องตรวจรับงานภายใน 7 วัน หากไม่แจ้งถือว่ารับงานแล้ว\nข้อ 6 ลิขสิทธิ์ผลงานโอนให้ผู้ว่าจ้างเมื่อชำระเงินครบ', n: 'สัญญาจ้างทำเว็บไซต์ (ตัวอย่าง)\nข้อ 1 บริษัท ตัวอย่าง จำกัด (ผู้ว่าจ้าง) จ้าง นายตัวอย่าง นามสมมติ (ผู้รับจ้าง) ทำเว็บไซต์ 5 หน้า\nข้อ 2 ค่าจ้างรวม 60,000 บาท จ่ายทั้งหมดภายใน 60 วันหลังผู้ว่าจ้างพอใจในงาน\nข้อ 3 ส่งงานภายใน 30 วัน หากล่าช้าปรับวันละ 1,000 บาท\nข้อ 4 แก้ไขงานได้ไม่จำกัดจำนวนครั้งจนกว่าผู้ว่าจ้างจะพอใจ\nข้อ 6 ลิขสิทธิ์ผลงานเป็นของผู้ว่าจ้างทันทีที่เริ่มงาน\nข้อ 7 ผู้ว่าจ้างยกเลิกงานได้ทุกเมื่อ โดยไม่ต้องจ่ายค่าจ้างส่วนที่ทำไปแล้ว' },
+    { ic: '💰', name: 'กู้ยืมเงิน', o: 'สัญญากู้ยืมเงิน (ตัวอย่าง)\nข้อ 1 นายตัวอย่าง นามสมมติ (ผู้กู้) กู้ยืมเงินจาก บริษัท ตัวอย่าง ลิสซิ่ง จำกัด (ผู้ให้กู้) จำนวน 100,000 บาท\nข้อ 2 ดอกเบี้ยร้อยละ 12 ต่อปี\nข้อ 3 ผ่อนชำระเดือนละ 4,700 บาท เป็นเวลา 24 เดือน\nข้อ 4 หากผิดนัดชำระ คิดค่าติดตามทวงถามครั้งละ 100 บาท\nข้อ 5 ผู้กู้ชำระหนี้ก่อนกำหนดได้โดยไม่มีค่าธรรมเนียม', n: 'สัญญากู้ยืมเงิน (ตัวอย่าง)\nข้อ 1 นายตัวอย่าง นามสมมติ (ผู้กู้) กู้ยืมเงินจาก บริษัท ตัวอย่าง ลิสซิ่ง จำกัด (ผู้ให้กู้) จำนวน 100,000 บาท\nข้อ 2 ดอกเบี้ยร้อยละ 15 ต่อปี และผู้ให้กู้ปรับอัตราได้ฝ่ายเดียว\nข้อ 3 ผ่อนชำระเดือนละ 5,100 บาท เป็นเวลา 24 เดือน\nข้อ 4 หากผิดนัดชำระแม้งวดเดียว ผู้ให้กู้เรียกหนี้ทั้งหมดคืนได้ทันที และคิดค่าติดตามทวงถามครั้งละ 500 บาท\nข้อ 5 หากชำระหนี้ก่อนกำหนด ผู้กู้เสียค่าธรรมเนียมร้อยละ 5 ของยอดคงเหลือ\nข้อ 6 ผู้กู้ยินยอมให้ผู้ให้กู้หักเงินจากบัญชีเงินเดือนได้อัตโนมัติ' },
+    { ic: '🚗', name: 'ซื้อรถมือสอง', o: 'สัญญาซื้อขายรถยนต์มือสอง (ตัวอย่าง)\nข้อ 1 นายตัวอย่าง นามสมมติ (ผู้ซื้อ) ตกลงซื้อรถยนต์ทะเบียน กข 0000 จาก บริษัท ตัวอย่าง คาร์ จำกัด (ผู้ขาย)\nข้อ 2 ราคารถ 350,000 บาท วางมัดจำ 10,000 บาท\nข้อ 3 ผู้ขายรับประกันเครื่องยนต์และเกียร์ 6 เดือน\nข้อ 4 หากผู้ขายส่งมอบรถไม่ได้ ผู้ขายคืนเงินมัดจำเต็มจำนวน\nข้อ 5 ผู้ขายรับรองว่ารถไม่เคยประสบอุบัติเหตุหนักหรือน้ำท่วม\nข้อ 6 ผู้ขายเป็นผู้ดำเนินการโอนทะเบียน โดยไม่มีค่าใช้จ่าย', n: 'สัญญาซื้อขายรถยนต์มือสอง (ตัวอย่าง)\nข้อ 1 นายตัวอย่าง นามสมมติ (ผู้ซื้อ) ตกลงซื้อรถยนต์ทะเบียน กข 0000 จาก บริษัท ตัวอย่าง คาร์ จำกัด (ผู้ขาย)\nข้อ 2 ราคารถ 365,000 บาท วางมัดจำ 30,000 บาท\nข้อ 3 ผู้ขายรับประกันเครื่องยนต์และเกียร์ 1 เดือน\nข้อ 4 หากผู้ซื้อเปลี่ยนใจ ผู้ขายยึดเงินมัดจำทั้งหมด\nข้อ 6 ผู้ซื้อเป็นผู้ดำเนินการโอนทะเบียน และเสียค่าธรรมเนียมการโอน 3,500 บาท\nข้อ 7 ผู้ซื้อตรวจสภาพรถแล้ว และยอมรับสภาพรถตามที่เห็นทุกกรณี' },
+    { ic: '🏋️', name: 'สมาชิกฟิตเนส', o: 'สัญญาสมาชิกฟิตเนส (ตัวอย่าง)\nข้อ 1 นายตัวอย่าง นามสมมติ สมัครสมาชิกกับ บริษัท ตัวอย่าง ฟิตเนส จำกัด ระยะเวลา 12 เดือน\nข้อ 2 ค่าสมาชิกเดือนละ 1,500 บาท\nข้อ 3 สมาชิกพักการเป็นสมาชิกได้ปีละ 2 เดือน\nข้อ 4 ยกเลิกสมาชิกได้โดยแจ้งล่วงหน้า 30 วัน\nข้อ 5 เมื่อครบกำหนด สัญญาสิ้นสุดลง', n: 'สัญญาสมาชิกฟิตเนส (ตัวอย่าง)\nข้อ 1 นายตัวอย่าง นามสมมติ สมัครสมาชิกกับ บริษัท ตัวอย่าง ฟิตเนส จำกัด ระยะเวลา 24 เดือน\nข้อ 2 ค่าสมาชิกเดือนละ 1,890 บาท และค่าแรกเข้า 3,000 บาท\nข้อ 4 ยกเลิกก่อนครบกำหนด ต้องจ่ายค่าสมาชิกที่เหลือทั้งหมด\nข้อ 5 เมื่อครบกำหนด ต่ออายุอัตโนมัติคราวละ 12 เดือน และตัดบัตรเครดิตอัตโนมัติ\nข้อ 6 บริษัทเปลี่ยนแปลงเวลาเปิดปิดและบริการได้โดยไม่ต้องแจ้ง' }
+  ];
   function input() {
     var bd = el.querySelector('.vcp-bd');
     bd.innerHTML = '<div class="vcp-top"><div class="vcp-tabs" role="tablist"><button type="button" role="tab" data-tab="o"><i></i>ฉบับเดิม</button><button type="button" role="tab" data-tab="n"><i></i>ฉบับใหม่</button></div>' +
-      '<button type="button" class="vcp-demo" data-vdemo>✨ ลองด้วยสัญญาตัวอย่าง</button></div>' +
+      '<button type="button" class="vcp-demo" data-vdemo aria-expanded="false">✨ สัญญาตัวอย่าง <em>▾</em></button>' +
+      '<div class="vcp-dm" hidden><div class="vcp-dmh">เลือกสัญญาตัวอย่าง <small>ข้อมูลสมมติทั้งหมด</small></div><div class="vcp-dmg">' + SAMPLES.map(function (x, k) { return '<button type="button" data-smp="' + k + '"><span>' + x.ic + '</span>' + x.name + '</button>'; }).join('') + '</div></div></div>' +
       '<div class="vcp-in">' + side('o', 'ฉบับเดิม', 'ฉบับที่คุณมีอยู่', 'ฉบับเดิม') + side('n', 'ฉบับใหม่', 'ฉบับที่อีกฝ่ายแก้มา', 'ฉบับใหม่') + '</div>' +
       '<button type="button" class="vcp-go" disabled><span class="ic">' + ICO + '</span><span class="t">เทียบเลย</span></button><p class="vcp-note">เทียบในเครื่องของคุณ ไม่ใช้เครดิต และไม่ส่งข้อความไปที่ไหน · ไฟล์ PDF/Word/รูปต้องเข้าสู่ระบบเพื่ออ่านข้อความเหมือนช่องตรวจ</p>';
     bd.querySelector('#vcp-o').value = saved.o; bd.querySelector('#vcp-n').value = saved.n;
@@ -417,10 +442,10 @@
       var a = parseFloat(p.a.replace(/[^\d.]/g, '')), b = parseFloat(p.b.replace(/[^\d.]/g, ''));
       if (!(a >= 0) || !(b >= 0) || a === b) return;
       var at = r.b.t.indexOf(p.b.replace(/\s*บาท$/, '')), pre = at > 0 ? r.b.t.slice(Math.max(0, at - 40), at) : '';
-      var lb = (/(ค่า[ก-๙]+|เงิน[ก-๙]+)[^ค]*$/.exec(pre) || [])[1] || 'จำนวนเงิน';
+      var lm = pre.match(/ค่า[ก-๙]+|เงิน[ก-๙]+|ราคา[ก-๙]*|มัดจำ|ผ่อน[ก-๙]*/g), lb = lm ? lm[lm.length - 1] : 'จำนวนเงิน';
       lb = lb.replace(/(เดือนละ|วันละ|ปีละ|ครั้งละ|หน่วยละ|ละ)$/, '');
-      var per = /เดือนละ\s*$/.test(pre) ? 'm' : /วันละ\s*$/.test(pre) ? 'd' : /หน่วยละ\s*$/.test(pre) ? 'u' : /ปีละ\s*$/.test(pre) ? 'y' : '';
-      out.push({ no: (r.b && r.b.no) || '', lb: lb, a: a, b: b, per: per });
+      var per = /เดือนละ\s*$/.test(pre) ? 'm' : /วันละ\s*$/.test(pre) ? 'd' : /หน่วยละ\s*$/.test(pre) ? 'u' : /ครั้งละ\s*$/.test(pre) ? 't' : /ปีละ\s*$/.test(pre) ? 'y' : '';
+      out.push({ no: (r.b && r.b.no) || '', lb: lb, a: a, b: b, per: per, inc: /^(ค่าจ้าง|เงินเดือน|ค่าตอบแทน|ค่าคอม|รายได้|เงินโบนัส)/.test(lb) });
     });
     return out;
   }
@@ -428,15 +453,18 @@
   function moneyCard() {
     var M = []; state.res.forEach(function (r) { if (r.k === 'mod') M = M.concat(money(r)); });
     if (!M.length) return '';
-    var yr = 0;
+    var yr = 0, yi = 0;
     var rows = M.map(function (m) {
-      var d = m.b - m.a, up = d > 0, x = m.a > 0 ? m.b / m.a : 0, unit = { m: '/เดือน', d: '/วัน', u: '/หน่วย', y: '/ปี' }[m.per] || '';
-      if (m.per === 'm') yr += d * 12; else if (m.per === 'y') yr += d;
+      var d = m.b - m.a, up = d > 0, x = m.a > 0 ? m.b / m.a : 0, unit = { m: '/เดือน', d: '/วัน', u: '/หน่วย', y: '/ปี', t: '/ครั้ง' }[m.per] || '';
+      var py = m.per === 'm' ? d * 12 : m.per === 'y' ? d : 0; if (m.inc) yi += py; else yr += py;
+      var bad = m.inc ? !up : up;
       var big = x >= 1.9 ? '×' + (Math.round(x * 10) / 10) : (up ? '+' : '−') + (m.a > 0 ? Math.round(Math.abs(d) / m.a * 100) + '%' : '');
-      return '<div class="vcp-mr ' + (up ? 'up' : 'dn') + '"><div class="l"><b>' + esc(m.lb) + '</b><small>' + esc(m.no) + '</small></div>' +
+      return '<div class="vcp-mr ' + (bad ? 'up' : 'dn') + '"><div class="l"><b>' + esc(m.lb) + '</b><small>' + esc(m.no) + '</small></div>' +
         '<div class="v"><s>' + baht(m.a) + '</s><span>→</span><b>' + baht(m.b) + '</b><small>บาท' + unit + '</small></div><em>' + big + '</em></div>';
     }).join('');
-    var tot = yr ? '<div class="vcp-mt ' + (yr > 0 ? 'up' : 'dn') + '"><span>รวมแล้วคุณจ่าย' + (yr > 0 ? 'เพิ่ม' : 'น้อยลง') + 'ประมาณ</span><b>' + baht(Math.abs(yr)) + ' บาท/ปี</b><small>คิดเฉพาะรายการที่จ่ายรายเดือน/รายปี ยังไม่รวมค่าปรับหรือค่าใช้ตามจริง</small></div>' : '';
+    var NOTE = '<small>คิดเฉพาะรายการรายเดือน/รายปี ยังไม่รวมค่าปรับหรือค่าใช้ตามจริง</small>';
+    var tot = (yr ? '<div class="vcp-mt ' + (yr > 0 ? 'up' : 'dn') + '"><span>รวมแล้วคุณจ่าย' + (yr > 0 ? 'เพิ่ม' : 'น้อยลง') + 'ประมาณ</span><b>' + baht(Math.abs(yr)) + ' บาท/ปี</b>' + (yi ? '' : NOTE) + '</div>' : '') +
+      (yi ? '<div class="vcp-mt ' + (yi < 0 ? 'up' : 'dn') + '"><span>รวมแล้วคุณได้รับ' + (yi > 0 ? 'เพิ่มขึ้น' : 'น้อยลง') + 'ประมาณ</span><b>' + baht(Math.abs(yi)) + ' บาท/ปี</b>' + NOTE + '</div>' : '');
     return '<div class="vcp-money"><div class="vcp-mh">💸 เงินที่เปลี่ยน</div>' + rows + tot + '</div>';
   }
   /* ---------- (1) แถบภาพรวมทั้งฉบับ ---------- */
