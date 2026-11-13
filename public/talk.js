@@ -64,6 +64,10 @@
     '.vtk-lines{position:absolute;left:0;right:0;top:0;transition:transform .5s cubic-bezier(.25,.8,.3,1)}' +
     '.vtk-ln{margin:0;padding:1px 0 4px;opacity:.5;transform-origin:0 50%;transition:opacity .4s,transform .4s}' +
     '.vtk-ln.past{opacity:.28;transform:scale(.94)}.vtk-ln.now{opacity:1;transform:none}' +
+    '.vtk-wait{display:none;margin:0;height:5.6em;align-items:center;gap:3px;font:500 15px/1.6 Prompt,sans-serif;color:#8a6a2b}' +
+    '.vtk-wait i{width:6px;height:6px;border-radius:50%;background:#c9a24a;animation:vtkDot 1s ease-in-out infinite}.vtk-wait i:nth-child(2){animation-delay:.15s}.vtk-wait i:nth-child(3){animation-delay:.3s}' +
+    '@keyframes vtkDot{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-5px);opacity:1}}' +
+    '.vtk.is-started:not(.is-live) .vtk-wait{display:flex}.vtk.is-started:not(.is-live) .vtk-view{display:none}' +
     '.vtk-w{color:#a8987a;border-radius:3px;background-image:linear-gradient(#ffd84d,#ffd84d);background-repeat:no-repeat;background-position:0 88%;background-size:0 52%;transition:color .12s}' +
     '.vtk-w.p{color:#2a2116;background-image:linear-gradient(rgba(255,216,77,.42),rgba(255,216,77,.42));background-size:100% 52%}' +
     '.vtk-w.c{color:#1d1407;background-size:calc(var(--f,0) * 100%) 52%}' +
@@ -227,7 +231,7 @@
     root.setAttribute('aria-label', 'เวลลัมอ่านสรุปผลตรวจ');
     root.innerHTML = '<div class="vtk-top"><div class="vtk-stage"><span class="vtk-cur l"></span><span class="vtk-cur r"></span><span class="vtk-val"></span><span class="vtk-spot"></span><div class="vtk-dust">' + dust() + '</div><span class="vtk-lamp"></span><span class="vtk-floor"></span><span class="vtk-shadow"></span><div class="vtk-rings"></div>' +
       '<div class="vtk-drop"><div class="vtk-fig">' + figure() + '</div></div><div class="vtk-puff"></div><span class="vtk-coin">' + COIN + '</span><span class="vtk-thumb">👍</span><div class="vtk-conf"></div><span class="vtk-hint">แตะฟังได้เลย</span></div>' +
-      '<div class="vtk-bub"><p class="vtk-who"><i></i>' + esc(o.title || 'เวลลัมสรุปให้ฟัง') + '</p><div class="vtk-view" data-i18n-skip><div class="vtk-lines">' +
+      '<div class="vtk-bub"><p class="vtk-who"><i></i>' + esc(o.title || 'เวลลัมสรุปให้ฟัง') + '</p><p class="vtk-wait">กำลังเตรียมเสียง<i></i><i></i><i></i></p><div class="vtk-view" data-i18n-skip><div class="vtk-lines">' +
       P.map(function (p) { return '<p class="vtk-ln">' + p.map(function (k) { return '<span class="vtk-w" data-k="' + k + '">' + esc(W[k].t) + '</span>'; }).join('') + '</p>'; }).join('') +
       '</div></div></div></div>' +
       '<div class="vtk-chips"></div>' +
@@ -288,7 +292,11 @@
       return dur ? idx / text.length * dur : 0;
     }
     var starts = [];
-    function calc() { var d = au.duration || 0; starts = W.map(function (w) { return charTime(w.a, d); }); starts.push(d || 1e9); }
+    function calc() {
+      var d = isFinite(au.duration) ? au.duration : 0;
+      if (!al && !d) { starts = W.map(function () { return 1e9; }); starts.push(1e9); return; }   /* ยังไม่รู้ความยาว = ยังไม่เดา */
+      starts = W.map(function (w) { return charTime(w.a, d); }); starts.push(d || 1e9);
+    }
     calc(); au.addEventListener('loadedmetadata', calc); au.addEventListener('durationchange', calc);
 
     /* ความดัง: Web Audio (ยกเว้น iPhone ซึ่งทำให้เสียงเงียบได้) · ไม่งั้นขยับตามคำ */
@@ -315,9 +323,10 @@
     }
 
     /* (3)+(4) วาดคำบรรยายและท่าทาง */
-    var cur = -2, curLine = -1, lastBar = -2;
+    var cur = -2, curLine = -1, lastBar = -2, live = false;
+    au.addEventListener('playing', function () { live = true; calc(); root.classList.add('is-live'); });
     function wordAt(t) {
-      if (!root.classList.contains('is-started')) return -1;
+      if (!live) return -1;   /* ยังไม่มีเสียงออกจริง = ยังไม่ขยับคำบรรยาย */
       if (au.ended) return W.length;
       var k = -1; for (var i = 0; i < W.length; i++) { if (starts[i] <= t + .04) k = i; else break; } return k;
     }
