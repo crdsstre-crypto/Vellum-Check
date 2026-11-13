@@ -108,7 +108,7 @@
   function load() {
     if (loaded) return; loaded = true;
     fetch('/api/voices', { credentials: 'same-origin' }).then(function (r) { return r.ok ? r.json() : { voices: [] }; })
-      .then(function (d) { voices = (d && d.voices) || []; render(); sync(); })
+      .then(function (d) { voices = (d && d.voices) || []; if (voices.length < 2) loaded = false; render(); sync(); })
       .catch(function () { loaded = false; });
   }
 
