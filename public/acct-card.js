@@ -11,7 +11,7 @@
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function get(u) { return fetch(u, { credentials: 'same-origin', headers: { Accept: 'application/json' } }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }); }
 
-  var box = document.createElement('section'); box.className = 'vac'; box.id = 'vacCard'; box.setAttribute('aria-label', 'บัตรสมาชิกของคุณ'); box.hidden = true;
+  var box = document.createElement('section'); box.className = 'vac'; box.id = 'vacCard'; box.setAttribute('aria-label', 'สมุดบัญชีของคุณ'); box.hidden = true;
   pane.insertBefore(box, pane.firstChild);
   document.documentElement.classList.add('vac-on');
 
@@ -36,46 +36,89 @@
   }
   function topup() { var b = document.querySelector('.wallet-topup'); if (b) b.click(); else if (window.VCShowCredits) window.VCShowCredits(); }
 
+  function nm(m) {
+    var n = '';
+    try { n = localStorage.getItem('vc_gname_' + String(m || '').toLowerCase()) || ''; } catch (e) {}
+    n = n.split(/\s+/)[0] || '';
+    if (!n) { n = String(m || '').split('@')[0].replace(/[._-]+/g, ' ').trim().split(/\s+/)[0] || ''; n = n.replace(/\d+$/, '') || n; n = n.charAt(0).toUpperCase() + n.slice(1); }
+    return n.length > 14 ? n.slice(0, 13) + '…' : n;
+  }
+  function setOpen(on, anim) {
+    var bk = box.querySelector('.vl-book'); if (!bk) return;
+    if (!anim || calm()) bk.classList.add('no-anim'); else bk.classList.remove('no-anim');
+    bk.classList.toggle('is-open', on);
+    var cv = bk.querySelector('.vl-cover'); if (cv) { cv.setAttribute('aria-expanded', on ? 'true' : 'false'); cv.tabIndex = on ? -1 : 0; }
+    if (!anim || calm()) { void bk.offsetWidth; bk.classList.remove('no-anim'); }
+  }
+
   var busy = false, lastKey = '';
   function render(me, hist, daily) {
     var email = me.email || '', cr = me.credits | 0, vc = me.voice_credits | 0;
     var items = (hist && hist.items) || [], nIns = items.length, risk = 0;
     items.forEach(function (it) { var sm = it.summary || {}; risk += (+sm.check_detail || +it.n_detail || 0) + (+sm.caution || +it.n_caution || 0); });
     var last = items[0] && (items[0].createdAt || items[0].created_at);
-    var ph = document.getElementById('acctPhoto'), src = ph && !ph.hidden && ph.getAttribute('src') ? ph.currentSrc || ph.src : (typeof me.avatar === 'string' && /^(https:|data:image)/.test(me.avatar) ? me.avatar : '');
     var pts = daily && typeof daily.points === 'number' ? daily.points : null, need = 300;
-    var lowCr = cr <= 2, pct = Math.max(4, Math.min(100, cr / Math.max(10, cr) * 100));
+    var lowCr = cr <= 2, pct = Math.max(3, Math.min(100, cr / Math.max(10, cr) * 100));
+    var name = nm(email), wasOpen = false;
+    try { wasOpen = sessionStorage.getItem('vl_open') === '1'; } catch (e) {}
+    var line = function (pre, val, post, cls) { return '<button type="button" class="vl-ln' + (cls ? ' ' + cls : '') + '" data-a="hist">' + pre + ' <u>' + val + '</u> ' + post + '</button>'; };
+    box.className = 'vac vl';
     box.innerHTML =
-      '<div class="vac-card">' +
-        '<i class="vac-sheen" aria-hidden="true"></i>' +
-        '<div class="vac-top">' +
-          '<span class="vac-av">' + (src ? '<img alt="" src="' + esc(src) + '">' : '<b>' + esc((email.charAt(0) || '?').toUpperCase()) + '</b>') + '</span>' +
-          '<div class="vac-id"><small>สมาชิก Vellum Check' + (me.is_admin ? ' · แอดมิน' : '') + '</small><b>' + esc(email) + '</b></div>' +
-          '<span class="vac-seal" aria-hidden="true"><b>VC</b></span>' +
+      '<div class="vl-book' + (wasOpen ? ' is-open' : '') + '">' +
+        '<div class="vl-page">' +
+          '<div class="vl-head">' +
+            '<div><small class="vl-kick">สมุดบัญชีสมาชิก' + (me.is_admin ? ' · แอดมิน' : '') + '</small>' +
+            '<p class="vl-name">' + esc(name) + '</p><p class="vl-mail">' + esc(email) + '</p></div>' +
+            '<span class="vl-wax" aria-hidden="true"><b>VC</b></span>' +
+          '</div>' +
+          '<div class="vl-bal">' +
+            '<div class="vl-n"><span>เครดิตตรวจคงเหลือ</span><p><b data-c="' + cr + '">0</b><small>ครั้ง</small></p></div>' +
+            '<div class="vl-n is-v"><span>เครดิตเสียง</span><p><b data-c="' + vc + '">0</b><small>ครั้ง</small></p></div>' +
+          '</div>' +
+          '<div class="vl-gauge' + (lowCr ? ' is-low' : '') + '" role="img" aria-label="เหลือเครดิตตรวจ ' + cr + ' ครั้ง"><i style="--w:' + pct.toFixed(0) + '%"></i></div>' +
+          '<p class="vl-hint">' + (cr === 0 ? 'เครดิตหมดแล้ว — เติมหรือแลกแต้มเพื่อตรวจต่อ' : lowCr ? 'ใกล้หมดแล้ว เหลืออีก ' + cr + ' ครั้ง' : 'พร้อมตรวจได้อีก ' + cr + ' ฉบับ') + '</p>' +
+          '<div class="vl-acts">' +
+            '<button type="button" class="vl-stamp" data-a="topup">เติมเครดิต</button>' +
+            '<button type="button" class="vl-link" data-a="redeem">' + (pts == null ? 'แลกแต้มเช็กอิน' : pts >= need ? 'แลกตรวจฟรีได้แล้ว' : 'แต้มเช็กอิน ' + pts + '/' + need) + ' <span aria-hidden="true">→</span></button>' +
+          '</div>' +
+          '<div class="vl-notes">' +
+            '<p class="vl-nh">บันทึกของฉัน</p>' +
+            (nIns ? line('ตรวจไปแล้ว', nIns + (nIns >= 50 ? '+' : ''), 'ฉบับ') + line('เจอจุดน่าสงสัย', risk, 'จุด', 'is-r') + (last ? line('ล่าสุดเมื่อ', esc(ago(last)), '') : '')
+                  : '<button type="button" class="vl-ln is-empty" data-a="hist">ยังไม่มีบันทึก — ตรวจสัญญาฉบับแรกได้เลย</button>') +
+          '</div>' +
+          '<button type="button" class="vl-close" data-a="close" aria-label="ปิดสมุด">ปิดเล่ม</button>' +
         '</div>' +
-        '<div class="vac-nums">' +
-          '<div class="vac-n"><span>เครดิตตรวจ</span><p><b data-c="' + cr + '">0</b> <small>ครั้ง</small></p></div>' +
-          '<div class="vac-n is-v"><span>เครดิตเสียง</span><p><b data-c="' + vc + '">0</b> <small>ครั้ง</small></p></div>' +
-        '</div>' +
-        '<div class="vac-bar' + (lowCr ? ' is-low' : '') + '" role="img" aria-label="เหลือเครดิตตรวจ ' + cr + ' ครั้ง"><i style="--w:' + pct.toFixed(0) + '%"></i></div>' +
-        '<p class="vac-hint">' + (cr === 0 ? 'เครดิตหมดแล้ว เติมหรือแลกแต้มเพื่อตรวจต่อ' : lowCr ? 'ใกล้หมดแล้ว · เหลือ ' + cr + ' ครั้ง' : 'พร้อมตรวจได้อีก ' + cr + ' ฉบับ') + '</p>' +
-        '<div class="vac-acts">' +
-          '<button type="button" class="vac-btn" data-a="topup"><span aria-hidden="true">+</span> เติมเครดิต</button>' +
-          '<button type="button" class="vac-btn is-ghost" data-a="redeem">🪙 ' + (pts == null ? 'แลกแต้มเช็กอิน' : pts >= need ? 'แลกตรวจฟรีได้แล้ว!' : 'แต้ม ' + pts + '/' + need) + '</button>' +
-        '</div>' +
-      '</div>' +
-      '<p class="vac-h">สถิติของฉัน</p>' +
-      '<div class="vac-stats">' +
-        '<button type="button" class="vac-st" data-a="hist"><i class="vac-v"><b data-c="' + nIns + '">0</b>' + (nIns >= 50 ? '<em>+</em>' : '') + '</i><span>ฉบับที่ตรวจ</span></button>' +
-        '<button type="button" class="vac-st is-r" data-a="hist"><b data-c="' + risk + '">0</b><span>จุดเสี่ยงที่พบ</span></button>' +
-        '<button type="button" class="vac-st" data-a="hist"><b class="is-t">' + (last ? esc(ago(last)) : 'ยังไม่เคย') + '</b><span>ใช้ล่าสุด</span></button>' +
+        '<button type="button" class="vl-cover" data-a="cover" aria-label="เปิดสมุดบัญชี" aria-expanded="' + (wasOpen ? 'true' : 'false') + '"' + (wasOpen ? ' tabindex="-1"' : '') + '>' +
+          '<span class="vl-cv-in">' +
+            '<small>VELLUM CHECK</small>' +
+            '<i class="vl-orn" aria-hidden="true"></i>' +
+            '<b>' + esc(name) + '</b>' +
+            '<em>สมุดบัญชีสมาชิก</em>' +
+            '<span class="vl-tap">แตะเพื่อเปิด</span>' +
+          '</span>' +
+        '</button>' +
       '</div>';
-    /* วางแทนการ์ดเครดิตเดิมบนสุดของหน้าบัญชี (การ์ดเดิมถูกซ่อนด้วย CSS · ปุ่มเติมเครดิตเดิมยังใช้งานผ่านบัตรนี้) */
     var wc = document.querySelector('#authLoggedIn .vc-wcard');
     if (wc && wc.parentNode && box.nextSibling !== wc) wc.parentNode.insertBefore(box, wc);
     box.hidden = false;
-    [].forEach.call(box.querySelectorAll('[data-c]'), function (el) { count(el, +el.getAttribute('data-c')); });
-    if (!calm()) { var c = box.querySelector('.vac-card'); if (c.animate) c.animate([{ opacity: 0, transform: 'translateY(10px) scale(.98)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.2,.8,.2,1)' }); }
+    var nums = function () { [].forEach.call(box.querySelectorAll('[data-c]'), function (el) { count(el, +el.getAttribute('data-c')); }); };
+    if (wasOpen) nums();
+    else {
+      [].forEach.call(box.querySelectorAll('[data-c]'), function (el) { el.textContent = el.getAttribute('data-c'); });
+      var go = function () {
+        setTimeout(function () {
+          if (box.hidden) return;
+          setOpen(true, true);
+          try { sessionStorage.setItem('vl_open', '1'); } catch (e) {}
+          setTimeout(function () { [].forEach.call(box.querySelectorAll('[data-c]'), function (el) { el.textContent = '0'; }); nums(); }, calm() ? 0 : 380);
+        }, calm() ? 0 : 650);
+      };
+      /* พลิกเปิดเมื่อสมุดอยู่บนจอจริง ๆ (ไม่เปิดทิ้งไว้ตอนหน้าบัญชียังซ่อนอยู่) */
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (es) { if (es.some(function (e) { return e.isIntersecting; })) { io.disconnect(); go(); } }, { threshold: .5 });
+        io.observe(box.querySelector('.vl-book'));
+      } else go();
+    }
   }
   function refresh() {
     if (busy) return; busy = true;
@@ -94,6 +137,8 @@
     if (a === 'topup') topup();
     else if (a === 'redeem') { if (window.VCDaily && VCDaily.open) VCDaily.open(); }
     else if (a === 'hist') goHist();
+    else if (a === 'cover') setOpen(true, true);
+    else if (a === 'close') setOpen(false, true);
   });
   /* อัปเดตเมื่อเปิดหน้าบัญชี / ล็อกอิน-ออก */
   var lo = document.getElementById('authLoggedIn');
