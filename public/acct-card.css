@@ -1,0 +1,59 @@
+/* ===== บัตรสมาชิก (acct-card.js) ===== */
+.vac{margin:4px 0 18px}
+.vac[hidden]{display:none}
+/* ซ่อนเมนู "ข้อมูลบัญชี" แบบตารางเดิม (ข้อมูลย้ายมาอยู่บนบัตรแล้ว) */
+html.vac-on .vac:not([hidden]) ~ .acct-menu #acctInfoBtn,html.vac-on .vac:not([hidden]) ~ .acct-menu #acctDetail{display:none !important}
+.vac-card{position:relative;overflow:hidden;padding:18px 18px 16px;border-radius:20px;color:#f3e6c8;
+  background:radial-gradient(120% 90% at 100% 0,rgba(241,213,138,.16),transparent 55%),linear-gradient(155deg,#2b1f13,#17110b 70%);
+  border:1px solid rgba(241,213,138,.42);box-shadow:0 22px 40px -22px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,236,190,.14)}
+.vac-card::after{content:"";position:absolute;inset:6px;border-radius:15px;border:1px dashed rgba(241,213,138,.16);pointer-events:none}
+.vac-sheen{position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,240,200,.1) 48%,transparent 60%);transform:translateX(-100%)}
+@media (prefers-reduced-motion:no-preference){.vac-sheen{animation:vacSheen 5s ease-in-out 1s infinite}}
+@keyframes vacSheen{0%,70%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.vac-top{display:flex;align-items:center;gap:12px}
+.vac-av{flex:none;width:52px;height:52px;border-radius:50%;overflow:hidden;display:grid;place-items:center;
+  background:linear-gradient(180deg,#a8806a,#7a5543);box-shadow:0 0 0 2px #17110b,0 0 0 3.5px rgba(241,213,138,.7)}
+.vac-av img{width:100%;height:100%;object-fit:cover}
+.vac-av b{font:600 22px/1 Prompt,sans-serif;color:#fff6e4}
+.vac-id{flex:1;min-width:0}
+.vac-id small{display:block;font:600 11px/1.2 Prompt,sans-serif;letter-spacing:.1em;color:rgba(241,213,138,.75)}
+.vac-id b{display:block;margin-top:3px;font:700 15.5px/1.3 Prompt,sans-serif;color:#fbefd2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vac-seal{flex:none;width:44px;height:44px;display:grid;place-items:center;transform:rotate(-10deg);
+  background:radial-gradient(circle at 38% 32%,#e0504a 0,#b3231e 45%,#7c1210 100%);box-shadow:inset 0 -3px 5px rgba(0,0,0,.3),0 3px 6px rgba(0,0,0,.4);
+  clip-path:polygon(50% 0,61% 6%,74% 4%,80% 15%,93% 20%,92% 33%,100% 45%,95% 57%,99% 70%,88% 78%,84% 91%,71% 93%,60% 100%,49% 95%,37% 100%,27% 92%,14% 90%,11% 77%,1% 68%,5% 56%,0 43%,8% 33%,7% 19%,20% 15%,27% 4%,39% 6%)}
+.vac-seal b{font:700 italic 15px/1 Georgia,serif;color:rgba(255,205,195,.9)}
+.vac-nums{display:grid;grid-template-columns:1.4fr 1fr;gap:12px;margin:18px 0 12px}
+.vac-n span{display:block;font:500 12.5px/1.2 Prompt,sans-serif;color:rgba(243,230,200,.6)}
+.vac-n p{margin:4px 0 0;display:flex;align-items:baseline;gap:6px}
+.vac-n p b{font:700 44px/1 Prompt,sans-serif;font-variant-numeric:tabular-nums;background:linear-gradient(180deg,#fbe7b0,#d9a441);-webkit-background-clip:text;background-clip:text;color:transparent}
+.vac-n.is-v p b{font-size:32px;background:linear-gradient(180deg,#e8e2d4,#b8ad96);-webkit-background-clip:text;background-clip:text}
+.vac-n small{font:500 13px/1 Prompt,sans-serif;color:rgba(243,230,200,.55)}
+.vac-bar{height:8px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+.vac-bar i{display:block;height:100%;width:var(--w);border-radius:inherit;background:linear-gradient(90deg,#c9922e,#f7dc92)}
+.vac-bar.is-low i{background:linear-gradient(90deg,#d9562f,#f0a24a)}
+@media (prefers-reduced-motion:no-preference){.vac-bar i{animation:vacBar .9s cubic-bezier(.2,.8,.2,1) both}}
+@keyframes vacBar{from{width:0}}
+.vac-hint{margin:8px 0 14px;font:400 12.5px/1.4 Prompt,sans-serif;color:rgba(243,230,200,.65)}
+.vac-bar.is-low + .vac-hint{color:#f0a24a}
+.vac-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+html body .vac-btn{min-height:46px !important;padding:0 10px !important;border-radius:12px !important;border:0 !important;cursor:pointer;
+  font:700 14px/1.2 Prompt,sans-serif !important;color:#24180a !important;background:linear-gradient(180deg,#f7dc92,#d9a441) !important;box-shadow:0 8px 16px -8px rgba(217,164,65,.7) !important}
+html body .vac-btn.is-ghost{background:rgba(241,213,138,.08) !important;color:#f3e6c8 !important;box-shadow:inset 0 0 0 1.5px rgba(241,213,138,.4) !important}
+html body .vac-btn::before,html body .vac-btn::after,html body .vac-st::before,html body .vac-st::after{display:none !important}
+.vac-btn:active,.vac-st:active{transform:scale(.97)}
+.vac-h{margin:18px 4px 8px;font:600 13px/1 Prompt,sans-serif;color:rgba(243,230,200,.6)}
+.vac-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+html body .vac-st{display:flex !important;flex-direction:column;align-items:flex-start;gap:6px;min-height:84px !important;padding:12px !important;border-radius:14px !important;text-align:left;cursor:pointer;
+  border:1px solid rgba(255,255,255,.09) !important;background:rgba(255,255,255,.035) !important;color:#f3e6c8 !important;box-shadow:none !important;transition:border-color .15s,background .15s}
+html body .vac-st:hover{border-color:rgba(241,213,138,.4) !important;background:rgba(241,213,138,.06) !important}
+.vac-st b{font:700 24px/1 Prompt,sans-serif;color:#fbefd2;font-variant-numeric:tabular-nums}
+.vac-st b.is-t{font-size:15px;line-height:1.25}
+.vac-st em{font-style:normal;font-weight:700;color:#f1d58a;margin-left:-4px}
+.vac-st.is-r b{color:#f08a80}
+.vac-st span{font:400 12px/1.3 Prompt,sans-serif;color:rgba(243,230,200,.6)}
+.vac :focus-visible{outline:2px solid #f1d58a;outline-offset:2px}
+@media (max-width:360px){.vac-n p b{font-size:36px}.vac-st b{font-size:20px}}
+/* บัตรนี้แทนการ์ดเครดิตเดิม */
+#authLoggedIn:has(#vacCard:not([hidden])) .vc-wcard{display:none !important}
+#authLoggedIn .vc-wcard + .vac,#authLoggedIn .vac{margin-top:6px}
+html:has(#vacCard:not([hidden])) :is(#acctInfoBtn,#acctDetail){display:none !important}
