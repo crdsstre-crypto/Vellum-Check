@@ -40,8 +40,8 @@
   function render(me, hist, daily) {
     var email = me.email || '', cr = me.credits | 0, vc = me.voice_credits | 0;
     var items = (hist && hist.items) || [], nIns = items.length, risk = 0;
-    items.forEach(function (it) { risk += (+it.n_detail || 0) + (+it.n_caution || 0); });
-    var last = items[0] && items[0].created_at;
+    items.forEach(function (it) { var sm = it.summary || {}; risk += (+sm.check_detail || +it.n_detail || 0) + (+sm.caution || +it.n_caution || 0); });
+    var last = items[0] && (items[0].createdAt || items[0].created_at);
     var ph = document.getElementById('acctPhoto'), src = ph && !ph.hidden && ph.getAttribute('src') ? ph.currentSrc || ph.src : (typeof me.avatar === 'string' && /^(https:|data:image)/.test(me.avatar) ? me.avatar : '');
     var pts = daily && typeof daily.points === 'number' ? daily.points : null, need = 300;
     var lowCr = cr <= 2, pct = Math.max(4, Math.min(100, cr / Math.max(10, cr) * 100));
@@ -66,7 +66,7 @@
       '</div>' +
       '<p class="vac-h">สถิติของฉัน</p>' +
       '<div class="vac-stats">' +
-        '<button type="button" class="vac-st" data-a="hist"><b data-c="' + nIns + '">0</b>' + (nIns >= 50 ? '<em>+</em>' : '') + '<span>ฉบับที่ตรวจ</span></button>' +
+        '<button type="button" class="vac-st" data-a="hist"><i class="vac-v"><b data-c="' + nIns + '">0</b>' + (nIns >= 50 ? '<em>+</em>' : '') + '</i><span>ฉบับที่ตรวจ</span></button>' +
         '<button type="button" class="vac-st is-r" data-a="hist"><b data-c="' + risk + '">0</b><span>จุดเสี่ยงที่พบ</span></button>' +
         '<button type="button" class="vac-st" data-a="hist"><b class="is-t">' + (last ? esc(ago(last)) : 'ยังไม่เคย') + '</b><span>ใช้ล่าสุด</span></button>' +
       '</div>';
