@@ -135,12 +135,6 @@
     '.vng-ft{padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}' +
     '.vng .vng-ft button:disabled{opacity:.4;cursor:default}' +
     '.vng .vng-rb.ok{background:#34d399;border-color:#34d399;color:#06281b}' +
-    /* ปุ่มในผลตรวจ */
-    '.vng-cta{display:flex;align-items:center;gap:12px;width:100%;margin:14px 0;min-height:0 !important;padding:13px 14px !important;border-radius:16px;border:1px solid rgba(127,181,255,.3);background:linear-gradient(135deg,rgba(127,181,255,.13),rgba(127,181,255,.03) 60%),#15171c;color:#ececef;text-align:left;font-family:Prompt,sans-serif;cursor:pointer;transition:border-color .2s,transform .12s}' +
-    '.vng-cta:hover{border-color:rgba(127,181,255,.6)}.vng-cta:active{transform:scale(.985)}' +
-    '.vng-cta .ic{flex:none;display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:rgba(127,181,255,.18);font-size:20px}' +
-    '.vng-cta b{display:block;font:700 15px/1.3 Prompt,sans-serif}.vng-cta small{display:block;margin-top:2px;font:400 12.5px/1.4 Prompt,sans-serif;color:#a9b8d0}' +
-    '.vng-cta em{margin-left:auto;flex:none;display:grid;place-items:center;min-width:30px;height:30px;padding:0 9px;border-radius:99px;background:rgba(127,181,255,.18);color:#cfe2ff;font:700 13px/1 Prompt,sans-serif;font-style:normal}' +
     '@media (prefers-reduced-motion:reduce){.vng-l,.vng-r,.vng-tabs i,.vng-bub{transition:none;animation:none}}';
   var sty = document.createElement('style'); sty.textContent = css; document.head.appendChild(sty);
 
@@ -247,19 +241,71 @@
   }
   function close() { if (!el || el.hidden) return; el.classList.remove('in'); document.documentElement.style.overflow = prevOv || ''; setTimeout(function () { el.hidden = true; }, 300); }
   /* ---------- ปุ่มในผลตรวจ ---------- */
-  var pend = false;
+  var PEN = '<svg class="vng-pen" viewBox="0 0 48 48" aria-hidden="true">' +
+    '<rect x="7" y="6" width="28" height="36" rx="4" fill="#eef3fb"/>' +
+    '<path class="l1" d="M13 16h16"/><path class="l2" d="M13 23h16"/><path class="l3" d="M13 30h10"/>' +
+    '<g class="p"><path d="M30 33 41 22a2.4 2.4 0 0 1 3.4 3.4L33.4 36.4 29 38z" fill="#f5c451"/><path d="M29 38l1-4.2 3.4 2.6z" fill="#3a2f1a"/></g></svg>';
+  var LINE_S = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12 3C6.5 3 2 6.6 2 11c0 3.9 3.5 7.2 8.3 7.9.3.1.8.2.9.5.1.3.1.7 0 1l-.1.9c0 .3-.2 1 .9.5s6-3.5 8.2-6.1C21.7 14 22 12.5 22 11c0-4.4-4.5-8-10-8z"/></svg>';
+  var ccss = '' +
+    '.vng-cta{position:relative;display:block !important;width:100%;height:auto !important;margin:16px 0;min-height:0 !important;padding:14px !important;border-radius:18px;border:1px solid rgba(127,181,255,.3);background:linear-gradient(140deg,rgba(127,181,255,.14),rgba(127,181,255,.03) 55%),#15171c;color:#ececef;text-align:left;font-family:Prompt,sans-serif;cursor:pointer;overflow:hidden;transition:border-color .2s,transform .12s,box-shadow .3s}' +
+    'html body #result button.vng-cta.vng-cta{padding:14px !important;margin:16px 0 !important;border-radius:18px !important}' +
+    '.vng-cta:hover{border-color:rgba(127,181,255,.6)}.vng-cta:active{transform:scale(.985)}' +
+    '.vng-ct{display:flex;align-items:center;gap:12px}' +
+    '.vng-cta .ic{flex:none;display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:rgba(127,181,255,.16)}' +
+    '.vng-pen{width:36px;height:36px}.vng-pen path[class^=l]{fill:none;stroke:#9fb3d1;stroke-width:3;stroke-linecap:round;stroke-dasharray:16;stroke-dashoffset:16;animation:vngW 4.8s ease-in-out infinite}' +
+    '.vng-pen .l2{animation-delay:.6s !important}.vng-pen .l3{stroke-dasharray:10;stroke-dashoffset:10;animation-delay:1.2s !important}' +
+    '.vng-pen .p{animation:vngP 4.8s ease-in-out infinite}' +
+    '@keyframes vngW{0%,8%{stroke-dashoffset:16}30%,80%{stroke-dashoffset:0}92%,100%{stroke-dashoffset:16}}' +
+    '@keyframes vngP{0%{transform:translate(-16px,-22px)}12%{transform:translate(0,-22px)}20%{transform:translate(-16px,-15px)}32%{transform:translate(0,-15px)}40%{transform:translate(-16px,-8px)}50%,80%{transform:translate(-6px,-8px)}100%{transform:translate(-16px,-22px)}}' +
+    '.vng-cta b{display:block;font:700 15.5px/1.3 Prompt,sans-serif}' +
+    '.vng-st{display:block;margin-top:3px;font:500 12.5px/1.4 Prompt,sans-serif;color:#a9b8d0}.vng-st.star{color:#f5d27a}.vng-st.done{color:#6ee7b7}' +
+    '.vng-dots{margin-left:auto;flex:none;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:5px;max-width:92px}' +
+    '.vng-dots i{width:11px;height:11px;border-radius:50%;border:2px solid var(--c);box-sizing:border-box}' +
+    '.vng-dots i.on{background:var(--c)}.vng-dots i.st{box-shadow:0 0 0 2px rgba(245,196,81,.5)}' +
+    '.vng-pv{display:flex;align-items:flex-end;gap:8px;margin-top:12px;padding:10px;border-radius:14px;background:linear-gradient(180deg,#7f9cc0,#97b0cf)}' +
+    '.vng-pv span.b{flex:1;min-width:0;padding:8px 11px;border-radius:14px 14px 4px 14px;background:#8de055;color:#132a0b;font:400 13px/1.5 Sarabun,Prompt,sans-serif;box-shadow:0 1px 1px rgba(0,0,0,.12)}' +
+    '.vng-pv span.b i{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-height:3em;font-style:normal}' +
+    '.vng-pv span.ln{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#06c755}.vng-pv span.ln svg{width:18px;height:18px}' +
+    '.vng-cta.ready{border-color:rgba(110,231,183,.55);box-shadow:0 12px 30px -16px rgba(52,211,153,.8)}' +
+    '.vng-cta.ready::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.14) 50%,transparent 65%);transform:translateX(-100%);animation:vngSh 3.2s ease-in-out 1s infinite;pointer-events:none}' +
+    '@keyframes vngSh{0%,55%{transform:translateX(-100%)}100%{transform:translateX(100%)}}' +
+    '@media (prefers-reduced-motion:reduce){.vng-pen *,.vng-cta::after{animation:none !important}.vng-pen path[class^=l]{stroke-dashoffset:0}}';
+  var cst = document.createElement('style'); cst.textContent = ccss; document.head.appendChild(cst);
+
+  function progress() {
+    var its = document.querySelectorAll('#result details.item'), rows = document.querySelectorAll('#result .ix-row');
+    var a = [].filter.call(its, function (d) { var b = d.querySelector('.rv-btn'); return b && b.getAttribute('aria-pressed') === 'true'; }).length;
+    var b = [].filter.call(rows, function (x) { return x.classList.contains('is-done'); }).length;
+    var stars = [].filter.call(its, function (d) { return d.classList.contains('vc-star'); }).length;
+    return { read: Math.max(a, b), total: its.length || rows.length, stars: stars };
+  }
+  var pend = false, starMode = false;
   function cta() {
     pend = false;
     var r = document.getElementById('result'); if (!r) return;
     var rpt = r.querySelector('article.rpt'), ex = r.querySelector('.vng-cta');
     if (!rpt || !res()) { if (ex) ex.remove(); return; }
-    var n = collect(false).filter(function (x) { return x.on; }).length;
+    var all = collect(false), sel = all.filter(function (x) { return x.on; }), pg = progress();
     if (!ex) {
       ex = document.createElement('button'); ex.type = 'button'; ex.className = 'vng-cta';
-      ex.addEventListener('click', function () { open(false); });
+      ex.addEventListener('click', function () { open(starMode); });
     }
-    var html = '<span class="ic">✍️</span><span><b>ร่างข้อความต่อรอง</b><small>' + (n ? 'รวมข้อที่ควรขอแก้เป็นข้อความเดียว ส่งทาง LINE หรืออีเมลได้เลย' : 'ร่างข้อความถึงอีกฝ่ายจากผลตรวจนี้') + '</small></span>' + (n ? '<em>' + n + ' ข้อ</em>' : '');
-    if (ex.innerHTML !== html) ex.innerHTML = html;
+    starMode = pg.stars > 0;
+    var ready = pg.total > 0 && pg.read >= pg.total;
+    var stTx = starMode ? '<span class="vng-st star">⭐ ติดดาวไว้ ' + pg.stars + ' ข้อ · ร่างจากข้อที่เลือก</span>'
+      : ready ? '<span class="vng-st done">อ่านครบแล้ว พร้อมส่งให้อีกฝ่าย ✓</span>'
+      : sel.length ? '<span class="vng-st">ร่างจาก ' + sel.length + ' ข้อที่ควรขอแก้' + (pg.read ? ' · อ่านแล้ว ' + pg.read + '/' + pg.total : '') + '</span>'
+      : '<span class="vng-st">ร่างข้อความถึงอีกฝ่ายจากผลตรวจนี้</span>';
+    var dots = all.slice(0, 12).map(function (x) { return '<i class="' + (x.on ? 'on' : '') + (x.star ? ' st' : '') + '" style="--c:' + LV[x.lv][1] + '"></i>'; }).join('');
+    var use = starMode ? all.filter(function (x) { return x.star; }) : sel;
+    var heads = use.slice(0, 3).map(function (x) { return x.head.replace(' — ', ' '); }).join(', ');
+    var P = st.pp, pv = use.length ? 'สวัสดี' + P + ' ขอแก้ ' + use.length + ' ข้อก่อนลงนามนะ' + (P === 'ครับ' ? 'ครับ' : 'คะ') + ': ' + heads + (use.length > 3 ? ' …' : '') : 'สวัสดี' + P + ' อ่านร่างสัญญาแล้ว ขอคุยรายละเอียดก่อนลงนามนะ' + (P === 'ครับ' ? 'ครับ' : 'คะ');
+    var html = '<span class="vng-ct"><span class="ic">' + PEN + '</span><span><b>ร่างข้อความต่อรอง</b>' + stTx + '</span>' + (dots ? '<span class="vng-dots" aria-hidden="true">' + dots + '</span>' : '') + '</span>' +
+      '<span class="vng-pv"><span class="b"><i>' + esc(pv) + '</i></span><span class="ln">' + LINE_S + '</span></span>';
+    var sig = html.length + '|' + pv + stTx + dots;
+    if (ex.getAttribute('data-sig') !== sig) { ex.innerHTML = html; ex.setAttribute('data-sig', sig); }
+    ex.setAttribute('aria-label', 'ร่างข้อความต่อรอง ' + (use.length ? use.length + ' ข้อ' : ''));
+    ex.classList.toggle('ready', ready && !starMode);
     var anchor = rpt.querySelector('.vhs') || rpt.querySelector('.vc-sum') || rpt.querySelector('.rpt-head');
     if (anchor && ex.previousElementSibling !== anchor) anchor.parentNode.insertBefore(ex, anchor.nextSibling);
   }
@@ -267,8 +313,8 @@
     var r = document.getElementById('result'); if (!r) return;
     new MutationObserver(function (m) {
       if (m.every(function (x) { return x.target.closest && x.target.closest('.vng-cta'); })) return;
-      if (!pend) { pend = true; setTimeout(cta, 500); }
-    }).observe(r, { childList: true, subtree: true });
+      if (!pend) { pend = true; setTimeout(cta, 400); }
+    }).observe(r, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'aria-pressed'] });
     cta();
   }
 
