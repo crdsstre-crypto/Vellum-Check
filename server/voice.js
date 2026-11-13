@@ -39,6 +39,7 @@ const GENDER = { female: 'ผู้หญิง', male: 'ผู้ชาย' };
 // เสียงที่ให้ลูกค้าเลือก (แก้ที่นี่ที่เดียว ไม่ต้องตั้งค่าใน Render) · ถ้าตั้ง ELEVENLABS_VOICES ใน Render จะใช้ค่านั้นแทน
 const BUILTIN = [
   { id: 'tKtPl8obOBs5uPMei6yN', name: 'Ohm', gender: 'ผู้ชาย', desc: 'เสียงเล่าเรื่อง อธิบายชัด เป็นธรรมชาติ สไตล์ผู้ประกาศข่าว' },
+  { id: 'uI1epevl1X6hqrxEciKt', name: 'Kirin', gender: 'ผู้ชาย', desc: 'เสียงพูดสบาย ๆ เป็นกันเอง เหมือนคุยกับเพื่อน' },
 ];
 function shortName(n) { return String(n || '').split(/\s+[-–|]\s+/)[0].trim().slice(0, 24) || 'เสียง'; }
 
