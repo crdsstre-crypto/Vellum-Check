@@ -112,22 +112,38 @@ export async function warmPreviews() {
 
 const badModel = new Set();
 // คืนค่าเป็น base64 ของไฟล์ mp3
+// คืนค่าเป็น base64 ของไฟล์ mp3 (ใช้กับตัวอย่างเสียง)
 export async function synthesizeSpeech(text, chosenVoice) {
+  return (await speak(text, chosenVoice, false)).audio;
+}
+// เสียงสรุปพร้อม "เวลาของแต่ละตัวอักษร" ให้หน้าเว็บไฮไลต์คำที่กำลังพูด + ขยับปากตัวละคร
+// คืน { audio, align: { c: [ตัวอักษร], s: [เวลาเริ่ม วินาที], e: [เวลาจบ] } | null }
+export async function synthesizeWithTimes(text, chosenVoice) {
+  try { return await speak(text, chosenVoice, true); }
+  catch (e) {
+    console.error('[voice] with-timestamps ไม่สำเร็จ → สร้างเสียงแบบไม่มีเวลา:', e.message);
+    return { audio: (await speak(text, chosenVoice, false)).audio, align: null };
+  }
+}
+
+async function speak(text, chosenVoice, withTimes) {
   const apiKey = process.env.ELEVENLABS_API_KEY;
   const voiceId = chosenVoice || process.env.ELEVENLABS_VOICE_ID;
   if (!apiKey || !voiceId) {
     throw new Error('ยังไม่ได้ตั้งค่า ELEVENLABS_API_KEY หรือ ELEVENLABS_VOICE_ID');
   }
+  const url = `https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voiceId)}${withTimes ? '/with-timestamps' : ''}`;
 
   // ใช้ Eleven v4 Turbo (เร็วกว่า v3 มาก และเสียงไทยอย่าง Ohm ถูกปรับมาสำหรับ v4) ถ้าบัญชี/เสียงใช้ไม่ได้ ถอยไปใช้ v3 อัตโนมัติ
   const models = [...new Set([process.env.ELEVENLABS_MODEL || 'eleven_v4_turbo', 'eleven_v3'])];
   let res;
   for (const m of models) {
     if (badModel.has(m) && m !== models[models.length - 1]) continue;
-    res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voiceId)}`, {
+    res = await fetch(url, {
       method: 'POST',
-      headers: { 'xi-api-key': apiKey, 'Content-Type': 'application/json', Accept: 'audio/mpeg' },
+      headers: { 'xi-api-key': apiKey, 'Content-Type': 'application/json', Accept: withTimes ? 'application/json' : 'audio/mpeg' },
       body: JSON.stringify({ text, model_id: m }),
+      signal: AbortSignal.timeout(60000),
     });
     if (res.ok || res.status === 401 || res.status === 429 || res.status >= 500) break;
     if (m !== models[models.length - 1]) { console.error(`[voice] model ${m} ใช้ไม่ได้ (${res.status}) → ลอง v3`); badModel.add(m); }
@@ -140,5 +156,14 @@ export async function synthesizeSpeech(text, chosenVoice) {
   }
   // ElevenLabs ส่งจำนวนตัวอักษรที่คิดเงินมาในหัวข้อ character-cost ใช้ตรวจว่าเครดิตลดจริงเท่าไร
   console.log(`[voice] ตัวอักษรที่คิดเงิน: ${res.headers.get('character-cost') ?? 'ไม่ทราบ'} จากข้อความ ${text.length} ตัวอักษร`);
-  return Buffer.from(await res.arrayBuffer()).toString('base64');
+  if (!withTimes) return { audio: Buffer.from(await res.arrayBuffer()).toString('base64'), align: null };
+  const d = await res.json();
+  if (!d?.audio_base64) throw new Error('ไม่มีเสียงในคำตอบ');
+  const a = d.alignment || d.normalized_alignment;
+  const ok = a && Array.isArray(a.characters) && a.characters.length === a.character_start_times_seconds?.length;
+  const r3 = x => Math.round(x * 1000) / 1000;
+  return {
+    audio: d.audio_base64,
+    align: ok ? { c: a.characters, s: a.character_start_times_seconds.map(r3), e: (a.character_end_times_seconds || []).map(r3) } : null,
+  };
 }
