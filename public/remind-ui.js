@@ -153,21 +153,35 @@
 
   /* ---------- 1) การ์ดในผลตรวจ ---------- */
   var ctx = { inspectionId: null, demo: false };
+  var MON_S = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+  function padHtml(s) {
+    var d = parseIso(s);
+    return '<span class="vrm-pg" aria-hidden="true"><b>' + (d ? MON_S[d.getMonth()] + ' ' + String(d.getFullYear() + 543).slice(2) : '—') + '</b><em>' + (d ? d.getDate() : '?') + '</em></span>';
+  }
+  /* (3) ป้ายนับถอยหลังตามความเร่งด่วน + แถบใกล้ถึง (เต็มเมื่อเหลือ 0 วัน · เริ่มขึ้นเมื่อเหลือไม่ถึง 60 วัน) */
+  function urg(n) { return n < 0 ? 'past' : n <= 7 ? 'hot' : n <= 30 ? 'near' : 'far'; }
+  function leftHtml(s) {
+    if (!s) return '<span class="vrm-left">ยังไม่ได้ใส่วันที่</span>';
+    var n = daysLeft(s), u = urg(n), w = n < 0 ? 0 : Math.max(6, Math.round((1 - Math.min(n, 60) / 60) * 100));
+    return '<span class="vrm-left u-' + u + '">' + (n < 0 ? 'ผ่านไปแล้ว' : leftText(n)) + (n < 0 ? '' : '<i class="vrm-bar"><u style="width:' + w + '%"></u></i>') + '</span>';
+  }
   function rowHtml(c, k) {
     var n = daysLeft(c.dueDate);
-    return '<div class="vrm-row' + (c.on ? ' is-on' : '') + '" data-k="' + k + '">' +
+    return '<div class="vrm-row' + (c.on ? ' is-on' : '') + (n < 0 ? ' is-past' : '') + '" data-k="' + k + '" data-due="' + c.dueDate + '">' +
       '<label class="vrm-tick"><input type="checkbox"' + (c.on ? ' checked' : '') + ' aria-label="เลือกรายการนี้"><i aria-hidden="true"></i></label>' +
+      /* (1) แผ่นปฏิทินฉีก: แตะเพื่อแก้วันที่ (ช่องวันที่จริงซ้อนอยู่ใต้แผ่น) */
+      '<label class="vrm-pad" title="แตะเพื่อแก้วันที่">' + padHtml(c.dueDate) + '<input class="vrm-date" type="date" value="' + c.dueDate + '" aria-label="วันที่"></label>' +
       '<div class="vrm-main"><textarea class="vrm-title" rows="1" maxlength="120" aria-label="ชื่อรายการ">' + h(c.title) + '</textarea>' +
-      '<div class="vrm-meta"><input class="vrm-date" type="date" value="' + c.dueDate + '" aria-label="วันที่">' +
-      '<span class="vrm-left' + (n < 0 ? ' is-past' : n <= 30 ? ' is-near' : '') + '">' + leftLabel(c.dueDate) + '</span>' +
+      '<div class="vrm-meta">' + leftHtml(c.dueDate) +
       (c.repeat === 'monthly' ? '<span class="vrm-tag">ทุกเดือน</span>' : '') + (c.calc ? '<span class="vrm-tag is-calc" title="' + h(c.calc) + '">คำนวณ</span>' : '') + '</div>' +
-      (c.src ? '<small class="vrm-src">“' + h(c.src) + '”</small>' : '') + '</div>' +
+      (c.src ? '<button type="button" class="vrm-qt" aria-expanded="false">ดูข้อความในสัญญา <i>›</i></button><small class="vrm-src" hidden>“' + h(c.src) + '”</small>' : '') + '</div>' +
       '<button type="button" class="vrm-x" aria-label="ลบรายการนี้">✕</button></div>';
   }
   function cardHtml(list) {
     return '<section class="vrm-card" aria-label="วันสำคัญในสัญญานี้">' +
       '<div class="vrm-head"><span class="vrm-ic">' + ICO_CAL + '</span><div><h4>วันสำคัญในสัญญานี้</h4>' +
       '<p>' + (list.length ? 'ระบบอ่านวันที่จากข้อความในเครื่องของคุณ ตรวจและแก้ให้ตรงกับสัญญาจริงก่อนบันทึก' : 'ไม่พบวันที่ในสัญญานี้ เพิ่มวันที่อยากให้เตือนเองได้') + '</p></div></div>' +
+      '<button type="button" class="vrm-next" hidden></button>' +
       '<div class="vrm-list">' + list.map(rowHtml).join('') + '</div>' +
       '<div class="vrm-acts"><button type="button" class="vrm-add">+ เพิ่มวันเอง</button><span class="vrm-sp"></span>' +
       '<button type="button" class="vrm-ics">' + ICO_CAL + '<span>เพิ่มลงปฏิทิน</span></button>' +
@@ -181,25 +195,59 @@
     }).filter(function (x) { return x.on; });
   }
   function fit(t) { t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; }
+  /* (2) ไทม์ไลน์: เรียงตามวันที่ · หมุด "วันนี้" แทรกตรงตำแหน่งจริง · วันที่ผ่านแล้วจาง
+     (5) การ์ด "ถัดไป": รายการที่ติ๊กไว้และใกล้ถึงที่สุด */
+  function timeline(card) {
+    var list = card.querySelector('.vrm-list'); if (!list) return;
+    var rows = [].slice.call(list.querySelectorAll('.vrm-row'));
+    rows.sort(function (a, b) { var x = a.getAttribute('data-due') || '9999', y = b.getAttribute('data-due') || '9999'; return x < y ? -1 : x > y ? 1 : 0; });
+    var old = list.querySelector('.vrm-today'); if (old) old.remove();
+    var t = iso(today()), placed = false;
+    rows.forEach(function (r) {
+      var d = r.getAttribute('data-due') || '';
+      r.classList.toggle('is-past', !!d && d < t);
+      if (!placed && d && d >= t) {
+        var m = document.createElement('div'); m.className = 'vrm-today'; m.innerHTML = '<span>วันนี้ · ' + thDate(t) + '</span>';
+        list.appendChild(m); placed = true;
+      }
+      list.appendChild(r);
+    });
+    if (!placed && rows.length) { var m2 = document.createElement('div'); m2.className = 'vrm-today'; m2.innerHTML = '<span>วันนี้ · ' + thDate(t) + '</span>'; list.appendChild(m2); }
+    var nx = card.querySelector('.vrm-next'); if (!nx) return;
+    var next = rows.filter(function (r) { var d = r.getAttribute('data-due'); return d && d >= t && r.querySelector('input[type=checkbox]').checked; })[0];
+    if (!next) { nx.hidden = true; nx.removeAttribute('data-k'); return; }
+    var dd = next.getAttribute('data-due'), n = daysLeft(dd), u = urg(n), ttl = (next.querySelector('.vrm-title') || {}).value || '';
+    ttl = ttl.replace(/^[^:]{0,40}:\s*/, '');
+    nx.hidden = false; nx.setAttribute('data-k', next.getAttribute('data-k')); nx.className = 'vrm-next u-' + u;
+    nx.innerHTML = '<span class="vrm-nx-k">ถัดไป</span><span class="vrm-nx-t"><b>' + h(ttl || 'รายการถัดไป') + '</b><small>' + thDate(dd, true) + '</small></span>' +
+      '<span class="vrm-nx-n"><b>' + (n === 0 ? 'วันนี้' : n === 1 ? 'พรุ่งนี้' : n) + '</b>' + (n > 1 ? '<small>วัน</small>' : '') + '</span>';
+  }
   function fitAll(card) { [].forEach.call(card.querySelectorAll('textarea.vrm-title'), fit); }
   function bindCard(card) {
     card.addEventListener('input', function (e) { if (e.target.classList.contains('vrm-title')) { if (/\n/.test(e.target.value)) e.target.value = e.target.value.replace(/\n+/g, ' '); fit(e.target); } });
     card.addEventListener('keydown', function (e) { if (e.key === 'Enter' && e.target.classList.contains('vrm-title')) e.preventDefault(); });
     card.addEventListener('change', function (e) {
       var r = e.target.closest('.vrm-row'); if (!r) return;
-      if (e.target.type === 'checkbox') r.classList.toggle('is-on', e.target.checked);
+      if (e.target.type === 'checkbox') { r.classList.toggle('is-on', e.target.checked); timeline(card); }
       if (e.target.classList.contains('vrm-date')) {
-        var n = daysLeft(e.target.value), l = r.querySelector('.vrm-left');
-        if (l) { l.textContent = e.target.value ? leftLabel(e.target.value) : '—'; l.className = 'vrm-left' + (n < 0 ? ' is-past' : n <= 30 ? ' is-near' : ''); }
+        var l = r.querySelector('.vrm-left'), pg = r.querySelector('.vrm-pg');
+        if (l) l.outerHTML = leftHtml(e.target.value);
+        if (pg) pg.outerHTML = padHtml(e.target.value);
+        r.setAttribute('data-due', e.target.value); timeline(card);
         var c = r.querySelector('.is-calc'); if (c) c.remove();
       }
     });
     card.addEventListener('click', function (e) {
-      if (e.target.closest('.vrm-x')) { e.target.closest('.vrm-row').remove(); return; }
+      var qt = e.target.closest('.vrm-qt');
+      if (qt) { var sr = qt.parentNode.querySelector('.vrm-src'), o = sr.hidden; sr.hidden = !o; qt.setAttribute('aria-expanded', String(o)); qt.firstChild.nodeValue = o ? 'ซ่อนข้อความในสัญญา ' : 'ดูข้อความในสัญญา '; return; }
+      var nx = e.target.closest('.vrm-next[data-k]');
+      if (nx) { var tr = card.querySelector('.vrm-row[data-k="' + nx.getAttribute('data-k') + '"]'); if (tr) { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.remove('vrm-flash'); void tr.offsetWidth; tr.classList.add('vrm-flash'); } return; }
+      if (e.target.closest('.vrm-x')) { e.target.closest('.vrm-row').remove(); timeline(card); return; }
       if (e.target.closest('.vrm-add')) {
         var k = card.__list.length, c = { title: docName((typeof viewerSrc !== 'undefined' && viewerSrc && viewerSrc.text) || '', null) + ': ', dueDate: iso(addDays(today(), 30)), kind: 'other', repeat: 'none', on: true };
         card.__list.push(c);
         card.querySelector('.vrm-list').insertAdjacentHTML('beforeend', rowHtml(c, k));
+        timeline(card);
         var t = card.querySelector('.vrm-row[data-k="' + k + '"] .vrm-title'); if (t) { fit(t); t.focus(); t.setSelectionRange(t.value.length, t.value.length); }
         return;
       }
@@ -238,6 +286,7 @@
     var card = wrap.firstChild; card.__list = list;
     if (anchor) rpt.insertBefore(card, anchor); else rpt.appendChild(card);
     bindCard(card);
+    timeline(card);
     fitAll(card);
     // ฟอนต์โหลดช้า/หน้าจอเปลี่ยนขนาด → ความสูงช่องชื่อเปลี่ยน
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fitAll(card); });
