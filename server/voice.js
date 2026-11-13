@@ -45,10 +45,10 @@ export async function listVoices() {
   const env = String(process.env.ELEVENLABS_VOICES || '').trim();
   if (env) {
     out = env.split(',').map(x => x.trim()).filter(Boolean).map(x => {
-      // รูปแบบ "id:ชื่อ:เพศ" เช่น "abc123:Ohm:ชาย" (ใส่เพศหรือไม่ก็ได้)
-      const [id, name = '', g = ''] = x.split(':').map(y => y.trim());
+      // รูปแบบ "id:ชื่อ:เพศ:คำอธิบาย" เช่น "abc123:Ohm:ชาย:เสียงเล่าเรื่อง อธิบายชัด" (เพศ/คำอธิบายใส่หรือไม่ก็ได้)
+      const [id, name = '', g = '', ...d] = x.split(':').map(y => y.trim());
       const gender = /หญิง|female|^f$|^w$/i.test(g) ? 'ผู้หญิง' : /ชาย|male|^m$/i.test(g) ? 'ผู้ชาย' : '';
-      return { id, name: name || 'เสียง', gender };
+      return { id, name: name || 'เสียง', gender, desc: d.join(':').slice(0, 80) };
     });
   } else if (process.env.ELEVENLABS_API_KEY) {
     try {
@@ -100,18 +100,19 @@ function pvReady() {
   if (!pvTable) pvTable = pool.query('CREATE TABLE IF NOT EXISTS voice_previews (id TEXT NOT NULL, v INTEGER NOT NULL, audio BYTEA NOT NULL, PRIMARY KEY (id, v))').catch(e => { pvTable = null; throw e; });
   return pvTable;
 }
+const pkey = id => id + '|' + (process.env.ELEVENLABS_MODEL || 'eleven_v3');   // เปลี่ยนโมเดลเสียง = สร้างตัวอย่างใหม่
 const previews = new Map();
 export async function voicePreview(id) {
   if (previews.has(id)) return previews.get(id);
   const p = (async () => {
     try {
       await pvReady();
-      const r = await pool.query('SELECT audio FROM voice_previews WHERE id = $1 AND v = $2', [id, PREVIEW_V]);
+      const r = await pool.query('SELECT audio FROM voice_previews WHERE id = $1 AND v = $2', [pkey(id), PREVIEW_V]);
       if (r.rows[0]) return r.rows[0].audio;
     } catch (e) { console.error('[voice] preview db read:', e.message); }
     const v = (await listVoices()).find(x => x.id === id);
     const buf = Buffer.from(await synthesizeSpeech(previewText(v), id), 'base64');
-    pool.query('INSERT INTO voice_previews (id, v, audio) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING', [id, PREVIEW_V, buf])
+    pool.query('INSERT INTO voice_previews (id, v, audio) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING', [pkey(id), PREVIEW_V, buf])
       .catch(e => console.error('[voice] preview db write:', e.message));
     return buf;
   })();
@@ -137,7 +138,7 @@ export async function synthesizeSpeech(text, chosenVoice) {
     method: 'POST',
     headers: { 'xi-api-key': apiKey, 'Content-Type': 'application/json', Accept: 'audio/mpeg' },
     // ต้องใช้โมเดลที่รองรับภาษาไทยจริง (eleven_multilingual_v2 ไม่มีภาษาไทยในรายการ)
-    body: JSON.stringify({ text, model_id: 'eleven_v3' }),
+    body: JSON.stringify({ text, model_id: process.env.ELEVENLABS_MODEL || 'eleven_v3' }),
   });
   if (!res.ok) {
     // บันทึกเฉพาะข้อความสั้น ๆ จากผู้ให้บริการ ไม่บันทึกข้อความสัญญาหรือคีย์
