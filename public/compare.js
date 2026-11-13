@@ -161,6 +161,32 @@
     '@media (max-width:767px){.vcp-in[data-t="o"] .vcp-side.n,.vcp-in[data-t="n"] .vcp-side.o{display:none}.vcp-side label i{display:none}.vcp-side textarea{min-height:46vh}}' +
     '.vcp-side label .vcp-st{margin-left:auto;color:#34d399;font-weight:700}' +
     '.vcp-box{position:relative}' +
+    /* กล่องแบบกระดาษ เมื่อใส่ข้อความแล้ว */
+    '.vcp-ftab{position:absolute;top:-9px;right:14px;z-index:3;padding:2px 10px;border-radius:7px 7px 7px 7px;font:700 11px/1.5 Prompt,sans-serif;opacity:0;transform:translateY(4px);transition:opacity .25s,transform .25s;pointer-events:none}' +
+    '.vcp-side.o .vcp-ftab{background:#3a3b42;color:#e4e4e7}.vcp-side.n .vcp-ftab{background:#2c4f86;color:#dbe9ff}' +
+    '.vcp-box.has .vcp-ftab{opacity:1;transform:none}' +
+    '.vcp-box.has .vcp-mir{background:linear-gradient(180deg,rgba(255,255,255,.025),transparent 40%),#101114;box-shadow:inset 4px 0 0 var(--pc),0 10px 26px -14px rgba(0,0,0,.9)}' +
+    '.vcp-side.o{--pc:#6b6d76}.vcp-side.n{--pc:#5b9bff}' +
+    '.vcp-box.has .vcp-mir .in{background-image:repeating-linear-gradient(180deg,transparent 0,transparent calc(1.6em - 1px),rgba(255,255,255,.045) calc(1.6em - 1px),rgba(255,255,255,.045) 1.6em);background-position:0 0}' +
+    '.vcp-box.has textarea{border-color:color-mix(in srgb,var(--pc) 45%,transparent) !important}' +
+    /* วิธีใช้ */
+    '.vcp-how{margin-top:16px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02);overflow:hidden}' +
+    '.vcp .vcp-howb{display:flex;align-items:center;gap:10px;width:100%;min-height:0 !important;padding:13px 14px !important;border:0;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer}' +
+    '.vcp-howb span{font-size:17px}.vcp-howb b{font:700 14px/1.3 Prompt,sans-serif}' +
+    '.vcp-howb em{margin-left:auto;font:400 22px/1 Prompt,sans-serif;font-style:normal;color:#9a9aa3;transition:transform .2s}.vcp-how.on .vcp-howb em{transform:rotate(90deg)}' +
+    '.vcp-howp{display:none;padding:0 14px 14px}.vcp-how.on .vcp-howp{display:block;animation:vcpDm .25s ease-out}' +
+    '.vcp-stp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;position:relative}' +
+    '.vcp-stp div{position:relative;padding:10px 8px;border-radius:12px;background:rgba(127,181,255,.06);border:1px solid rgba(127,181,255,.14);text-align:center}' +
+    '.vcp-stp i{display:grid;place-items:center;width:26px;height:26px;margin:0 auto 6px;border-radius:50%;background:linear-gradient(135deg,#9cc5ff,#5b9bff);color:#06142b;font:800 13px/1 Prompt,sans-serif;font-style:normal}' +
+    '.vcp-stp b{display:block;font:700 12.5px/1.3 Prompt,sans-serif}.vcp-stp small{display:block;margin-top:3px;font:400 11px/1.4 Prompt,sans-serif;color:#9a9aa3}' +
+    '.vcp-stp div+div::before{content:"›";position:absolute;left:-8px;top:16px;width:8px;text-align:center;color:#5b9bff;font:700 14px/1 Prompt,sans-serif}' +
+    '.vcp-proh{margin:14px 2px 8px;font:700 12.5px/1 Prompt,sans-serif;color:#f5d27a}' +
+    '.vcp-pro{display:grid;gap:6px}@media (min-width:768px){.vcp-pro{grid-template-columns:1fr 1fr}}' +
+    '.vcp-pro>div{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border-radius:12px;background:rgba(255,255,255,.03)}' +
+    '.vcp-pro span{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,.06);font-size:16px}' +
+    '.vcp-pro p{margin:0}.vcp-pro b{display:block;font:600 13px/1.35 Prompt,sans-serif}.vcp-pro small{display:block;font:400 11.5px/1.45 Prompt,sans-serif;color:#9a9aa3}' +
+    '.vcp-use{margin-top:10px;padding:9px 11px;border-radius:11px;border:1px dashed rgba(255,255,255,.12);font:400 12px/1.6 Prompt,sans-serif;color:#b4b4bb}.vcp-use b{color:#ececef;margin-right:4px}' +
+    '.vcp .vcp-howtry{width:100%;margin-top:10px;min-height:44px !important;border-radius:12px;border:1px dashed rgba(245,196,81,.45);background:rgba(245,196,81,.07);color:#f5d27a;font:600 13.5px/1 Prompt,sans-serif;cursor:pointer}' +
     '.vcp-mir{position:absolute;left:0;top:0;right:0;z-index:0;box-sizing:border-box;overflow:hidden;border-style:solid;border-color:transparent;background:#0d0e10;color:#e4e4e7;white-space:pre-wrap;overflow-wrap:break-word;word-wrap:break-word;pointer-events:none}' +
     '.vcp-mir .in{white-space:pre-wrap;overflow-wrap:break-word;will-change:transform}' +
     '.vcp-mir .hk{color:#9cc8f5;background:linear-gradient(transparent 14%,rgba(96,165,250,.18) 14%,rgba(96,165,250,.18) 88%,transparent 88%)}' +
@@ -300,7 +326,7 @@
   var DOC = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>';
   function side(cls, tag, title, hint) {
     return '<div class="vcp-side ' + cls + '"><label for="vcp-' + cls + '"><i>' + tag + '</i>' + title + '<span class="vcp-st"></span></label>' +
-      '<div class="vcp-box"><div class="vcp-mir" aria-hidden="true"><div class="in"></div></div><textarea id="vcp-' + cls + '" placeholder="วางข้อความสัญญา' + hint + '" spellcheck="false"></textarea>' +
+      '<div class="vcp-box"><span class="vcp-ftab" aria-hidden="true">' + tag + '</span><div class="vcp-mir" aria-hidden="true"><div class="in"></div></div><textarea id="vcp-' + cls + '" placeholder="วางข้อความสัญญา' + hint + '" spellcheck="false"></textarea>' +
       '<div class="vcp-e0" data-focus><span class="d">' + DOC + '</span><b>วางสัญญา' + hint + '</b><small>วางข้อความ หรือเลือกไฟล์ PDF / Word / รูป</small>' +
       '<div class="a"><button type="button" class="pp" data-paste>📋 วางจากคลิปบอร์ด</button><label class="f">📄 เลือกไฟล์<input type="file" accept=".txt,.pdf,.docx,image/*"></label></div>' +
       (cls === 'o' ? '<button type="button" class="lk" data-fill>ใช้ข้อความที่อยู่ในช่องตรวจ</button>' : '<span class="lk0">หรือแตะเพื่อพิมพ์เอง</span>') + '</div></div>' +
@@ -323,6 +349,8 @@
       if (e.target.closest('[data-nshare]')) { navigator.share({ text: el.querySelector('.vcp-negp textarea').value }).catch(function () {}); return; }
       var s = e.target.closest('.vcp-s'); if (s) { state.f = s.getAttribute('data-f'); list(); return; }
       var tb = e.target.closest('[data-tab]'); if (tb) { setTab(tb.getAttribute('data-tab')); return; }
+      var hw = e.target.closest('[data-how]'); if (hw) { var hc = hw.closest('.vcp-how'), on = !hc.classList.contains('on'); hc.classList.toggle('on', on); hw.setAttribute('aria-expanded', String(on)); try { localStorage.setItem('vc_cmp_how', '1'); } catch (er) {} return; }
+      if (e.target.closest('.vcp-howtry')) { var tp = el.querySelector('.vcp-top'); tp && tp.scrollIntoView({ behavior: 'smooth', block: 'start' }); var dm0 = el.querySelector('.vcp-dm'); if (dm0) { dm0.hidden = false; el.querySelector('.vcp-demo').setAttribute('aria-expanded', 'true'); } return; }
       if (e.target.closest('[data-vdemo]')) { var dm = el.querySelector('.vcp-dm'); dm.hidden = !dm.hidden; e.target.closest('[data-vdemo]').setAttribute('aria-expanded', String(!dm.hidden)); return; }
       var sm = e.target.closest('[data-smp]'); if (sm) { var X = SAMPLES[+sm.getAttribute('data-smp')]; el.querySelector('#vcp-o').value = X.o; el.querySelector('#vcp-n').value = X.n; el.querySelector('.vcp-dm').hidden = true; el.querySelector('[data-vdemo]').setAttribute('aria-expanded', 'false'); tab = 'n'; upd(); say('ใส่ตัวอย่าง "' + X.name + '" แล้ว กด "เทียบเลย" ได้เลย'); var g = el.querySelector('.vcp-go'); g && g.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
       var dmo = el.querySelector('.vcp-dm'); if (dmo && !dmo.hidden && !e.target.closest('.vcp-dm')) { dmo.hidden = true; var db = el.querySelector('[data-vdemo]'); db && db.setAttribute('aria-expanded', 'false'); }
@@ -350,13 +378,23 @@
     { ic: '🚗', name: 'ซื้อรถมือสอง', o: 'สัญญาซื้อขายรถยนต์มือสอง (ตัวอย่าง)\nข้อ 1 นายตัวอย่าง นามสมมติ (ผู้ซื้อ) ตกลงซื้อรถยนต์ทะเบียน กข 0000 จาก บริษัท ตัวอย่าง คาร์ จำกัด (ผู้ขาย)\nข้อ 2 ราคารถ 350,000 บาท วางมัดจำ 10,000 บาท\nข้อ 3 ผู้ขายรับประกันเครื่องยนต์และเกียร์ 6 เดือน\nข้อ 4 หากผู้ขายส่งมอบรถไม่ได้ ผู้ขายคืนเงินมัดจำเต็มจำนวน\nข้อ 5 ผู้ขายรับรองว่ารถไม่เคยประสบอุบัติเหตุหนักหรือน้ำท่วม\nข้อ 6 ผู้ขายเป็นผู้ดำเนินการโอนทะเบียน โดยไม่มีค่าใช้จ่าย', n: 'สัญญาซื้อขายรถยนต์มือสอง (ตัวอย่าง)\nข้อ 1 นายตัวอย่าง นามสมมติ (ผู้ซื้อ) ตกลงซื้อรถยนต์ทะเบียน กข 0000 จาก บริษัท ตัวอย่าง คาร์ จำกัด (ผู้ขาย)\nข้อ 2 ราคารถ 365,000 บาท วางมัดจำ 30,000 บาท\nข้อ 3 ผู้ขายรับประกันเครื่องยนต์และเกียร์ 1 เดือน\nข้อ 4 หากผู้ซื้อเปลี่ยนใจ ผู้ขายยึดเงินมัดจำทั้งหมด\nข้อ 6 ผู้ซื้อเป็นผู้ดำเนินการโอนทะเบียน และเสียค่าธรรมเนียมการโอน 3,500 บาท\nข้อ 7 ผู้ซื้อตรวจสภาพรถแล้ว และยอมรับสภาพรถตามที่เห็นทุกกรณี' },
     { ic: '🏋️', name: 'สมาชิกฟิตเนส', o: 'สัญญาสมาชิกฟิตเนส (ตัวอย่าง)\nข้อ 1 นายตัวอย่าง นามสมมติ สมัครสมาชิกกับ บริษัท ตัวอย่าง ฟิตเนส จำกัด ระยะเวลา 12 เดือน\nข้อ 2 ค่าสมาชิกเดือนละ 1,500 บาท\nข้อ 3 สมาชิกพักการเป็นสมาชิกได้ปีละ 2 เดือน\nข้อ 4 ยกเลิกสมาชิกได้โดยแจ้งล่วงหน้า 30 วัน\nข้อ 5 เมื่อครบกำหนด สัญญาสิ้นสุดลง', n: 'สัญญาสมาชิกฟิตเนส (ตัวอย่าง)\nข้อ 1 นายตัวอย่าง นามสมมติ สมัครสมาชิกกับ บริษัท ตัวอย่าง ฟิตเนส จำกัด ระยะเวลา 24 เดือน\nข้อ 2 ค่าสมาชิกเดือนละ 1,890 บาท และค่าแรกเข้า 3,000 บาท\nข้อ 4 ยกเลิกก่อนครบกำหนด ต้องจ่ายค่าสมาชิกที่เหลือทั้งหมด\nข้อ 5 เมื่อครบกำหนด ต่ออายุอัตโนมัติคราวละ 12 เดือน และตัดบัตรเครดิตอัตโนมัติ\nข้อ 6 บริษัทเปลี่ยนแปลงเวลาเปิดปิดและบริการได้โดยไม่ต้องแจ้ง' }
   ];
+  function howCard() {
+    var open = true; try { open = !localStorage.getItem('vc_cmp_how'); } catch (e) {}
+    var steps = [['1', 'วางฉบับเดิม', 'สัญญาที่คุณมีอยู่ หรือฉบับที่เคยตกลงกันไว้'], ['2', 'วางฉบับใหม่', 'ฉบับที่อีกฝ่ายแก้แล้วส่งกลับมาให้เซ็น'], ['3', 'กดเทียบ', 'ระบบจับคู่ทีละข้อ แล้วชี้ว่าแก้ เพิ่ม หรือลบตรงไหน']];
+    var pros = [['🔍', 'ไม่พลาดจุดที่ถูกแก้', 'เห็นทุกคำและตัวเลขที่เปลี่ยน แม้สัญญายาวหลายหน้า'], ['🚩', 'รู้ทันทีว่าข้อไหนเสี่ยง', 'ติดป้ายคำที่มักทำให้เสียเปรียบ เช่น ไม่ต้องแจ้ง, อัตโนมัติ, ไม่คืน'], ['📉', 'เห็นสิทธิ์ที่หายไป', 'ข้อที่ถูกลบออกจะถูกเตือนว่าคุณอาจเสียสิทธิ์ที่เคยมี'], ['💸', 'เห็นผลกระทบเป็นเงิน', 'สรุปว่าคุณจ่ายเพิ่มหรือได้รับลดลงกี่บาทต่อปี'], ['✍️', 'ต่อรองได้ในปุ่มเดียว', 'ร่างข้อความขอแก้ให้ คัดลอกหรือส่งต่อทาง LINE ได้เลย'], ['🔒', 'ฟรีและเป็นส่วนตัว', 'เทียบในเครื่องคุณ ไม่ใช้เครดิต ไม่ส่งข้อความออกไปไหน']];
+    return '<div class="vcp-how' + (open ? ' on' : '') + '"><button type="button" class="vcp-howb" data-how aria-expanded="' + open + '"><span>💡</span><b>ใช้ยังไง และช่วยอะไรคุณ</b><em>›</em></button><div class="vcp-howp">' +
+      '<div class="vcp-stp">' + steps.map(function (x) { return '<div><i>' + x[0] + '</i><b>' + x[1] + '</b><small>' + x[2] + '</small></div>'; }).join('') + '</div>' +
+      '<div class="vcp-proh">ประโยชน์</div><div class="vcp-pro">' + pros.map(function (x) { return '<div><span>' + x[0] + '</span><p><b>' + x[1] + '</b><small>' + x[2] + '</small></p></div>'; }).join('') + '</div>' +
+      '<div class="vcp-use"><b>เหมาะกับ</b> ต่อสัญญาเช่า · สัญญาจ้างฉบับแก้ · อีกฝ่ายส่ง "ฉบับแก้ล่าสุด" มาให้เซ็น · เทียบร่างของ 2 เจ้า</div>' +
+      '<button type="button" class="vcp-howtry" data-vdemo>✨ ลองกับสัญญาตัวอย่างเลย</button></div></div>';
+  }
   function input() {
     var bd = el.querySelector('.vcp-bd');
     bd.innerHTML = '<div class="vcp-top"><div class="vcp-tabs" role="tablist"><button type="button" role="tab" data-tab="o"><i></i>ฉบับเดิม</button><button type="button" role="tab" data-tab="n"><i></i>ฉบับใหม่</button></div>' +
       '<button type="button" class="vcp-demo" data-vdemo aria-expanded="false">✨ สัญญาตัวอย่าง <em>▾</em></button>' +
       '<div class="vcp-dm" hidden><div class="vcp-dmh">เลือกสัญญาตัวอย่าง <small>ข้อมูลสมมติทั้งหมด</small></div><div class="vcp-dmg">' + SAMPLES.map(function (x, k) { return '<button type="button" data-smp="' + k + '"><span>' + x.ic + '</span>' + x.name + '</button>'; }).join('') + '</div></div></div>' +
       '<div class="vcp-in">' + side('o', 'ฉบับเดิม', 'ฉบับที่คุณมีอยู่', 'ฉบับเดิม') + side('n', 'ฉบับใหม่', 'ฉบับที่อีกฝ่ายแก้มา', 'ฉบับใหม่') + '</div>' +
-      '<button type="button" class="vcp-go" disabled><span class="ic">' + ICO + '</span><span class="t">เทียบเลย</span></button><p class="vcp-note">เทียบในเครื่องของคุณ ไม่ใช้เครดิต และไม่ส่งข้อความไปที่ไหน · ไฟล์ PDF/Word/รูปต้องเข้าสู่ระบบเพื่ออ่านข้อความเหมือนช่องตรวจ</p>';
+      '<button type="button" class="vcp-go" disabled><span class="ic">' + ICO + '</span><span class="t">เทียบเลย</span></button><p class="vcp-note">เทียบในเครื่องของคุณ ไม่ใช้เครดิต และไม่ส่งข้อความไปที่ไหน · ไฟล์ PDF/Word/รูปต้องเข้าสู่ระบบเพื่ออ่านข้อความเหมือนช่องตรวจ</p>' + howCard();
     bd.querySelector('#vcp-o').value = saved.o; bd.querySelector('#vcp-n').value = saved.n;
     if (el.__ro) [].forEach.call(bd.querySelectorAll('.vcp-box textarea'), function (t) { el.__ro.observe(t); });
     tab = saved.o.trim() && !saved.n.trim() ? 'n' : 'o';
