@@ -133,16 +133,50 @@
       '<span class="menu-ico" aria-hidden="true">' + ICO_DISP + '</span>' +
       '<span class="menu-txt"><b>การแสดงผล</b><small>กะทัดรัด ขนาดตัวอักษร ลดภาพเคลื่อนไหว</small></span>' +
     '</button>' +
-    '<div class="menu-panel" id="dispPanel" hidden>' +
-      '<div class="disp-row"><span>ขนาดตัวอักษร</span>' +
-        '<div class="seg" role="group" aria-label="ขนาดตัวอักษร">' +
-          '<button type="button" data-font="s" aria-label="เล็ก">ก</button>' +
-          '<button type="button" data-font="m" aria-label="กลาง">ก</button>' +
-          '<button type="button" data-font="l" aria-label="ใหญ่">ก</button>' +
-        '</div></div>' +
-      '<label class="disp-row"><span>โหมดกะทัดรัด<small>ลดระยะห่างและความสูงการ์ด</small></span><input type="checkbox" id="dispCompact"></label>' +
-      '<label class="disp-row"><span>ลดภาพเคลื่อนไหว<small>เหมาะกับเครื่องช้า</small></span><input type="checkbox" id="dispCalm"></label>' +
+    '<div class="menu-panel vds" id="dispPanel" hidden>' +
+      /* (2) ขนาดตัวอักษร: มีคำกำกับ + ประโยคตัวอย่างที่เปลี่ยนตามทันที */
+      '<div class="vds-blk"><p class="vds-h">ขนาดตัวอักษร</p>' +
+        '<div class="seg vds-seg" role="group" aria-label="ขนาดตัวอักษร">' +
+          '<button type="button" data-font="s"><b>ก</b><span>เล็ก</span></button>' +
+          '<button type="button" data-font="m"><b>ก</b><span>ปกติ</span></button>' +
+          '<button type="button" data-font="l"><b>ก</b><span>ใหญ่</span></button>' +
+        '</div>' +
+        '<p class="vds-pv"><small>ตัวอย่าง</small>สัญญาเช่าควรระบุวันคืนเงินมัดจำให้ชัดเจน</p></div>' +
+      /* (1) สวิตช์เปิด/ปิด + ไอคอน */
+      sw('dispCompact', 'โหมดกะทัดรัด', 'ลดระยะห่างและความสูงการ์ด', 'is-c', '<rect x="4" y="4" width="16" height="5" rx="1.5"/><rect x="4" y="11" width="16" height="4" rx="1.5"/><rect x="4" y="17" width="16" height="3" rx="1.5"/>') +
+      sw('dispCalm', 'ลดภาพเคลื่อนไหว', 'เหมาะกับเครื่องช้า', 'is-m', '<path d="M3 12h4l2-6 4 12 2-6h6"/>') +
+      /* (4) เสียงประกอบ */
+      sw('dispSfx', 'เสียงประกอบ', 'เสียงกระดาษและตราประทับเบา ๆ', 'is-s', '<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>') +
+      /* (5) บันทึกแล้ว + คืนค่าเริ่มต้น */
+      '<div class="vds-foot"><span class="vds-saved" id="dispSaved" role="status" aria-live="polite"></span>' +
+        '<button type="button" class="vds-reset" id="dispReset">คืนค่าเริ่มต้น</button></div>' +
     '</div>';
+  }
+  function sw(id, title, sub, cls, ico) {
+    return '<label class="disp-row vds-row ' + cls + '"><span class="vds-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + ico + '</svg></span>' +
+      '<span class="vds-tx">' + title + '<small>' + sub + '</small></span>' +
+      '<span class="vds-sw"><input type="checkbox" role="switch" id="' + id + '"><i aria-hidden="true"></i></span></label>';
+  }
+  function sfxOn() { try { return localStorage.getItem('vc_sfx') === '1'; } catch (e) { return false; } }
+  /* เสียงกระดาษสั้น ๆ ให้ฟังตอนเปิดสวิตช์ (สังเคราะห์ด้วย WebAudio แบบเดียวกับฉากประทับตรา) */
+  var AC = null;
+  function paperSound() {
+    try {
+      var C = window.AudioContext || window.webkitAudioContext; if (!C) return;
+      AC = AC || new C(); if (AC.state === 'suspended') AC.resume();
+      var a = AC, t = a.currentTime, len = Math.floor(a.sampleRate * .45), b = a.createBuffer(1, len, a.sampleRate), d = b.getChannelData(0);
+      for (var i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+      var n = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain(); n.buffer = b;
+      f.type = 'bandpass'; f.frequency.setValueAtTime(900, t); f.frequency.linearRampToValueAtTime(2600, t + .4);
+      n.connect(f); f.connect(g); g.connect(a.destination);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.07, t + .1); g.gain.linearRampToValueAtTime(0, t + .45); n.start(t);
+    } catch (e) {}
+  }
+  var savedT = 0;
+  function saved(msg) {
+    var el = document.getElementById('dispSaved'); if (!el) return;
+    el.textContent = msg || 'บันทึกแล้ว ✓'; el.classList.remove('is-on'); void el.offsetWidth; el.classList.add('is-on');
+    clearTimeout(savedT); savedT = setTimeout(function () { el.classList.remove('is-on'); }, 1800);
   }
 
   function toggleAcc(btn, panel) {
@@ -161,6 +195,8 @@
     });
     document.getElementById('dispCompact').checked = !!prefs.compact;
     document.getElementById('dispCalm').checked = !!prefs.calm;
+    var sx = document.getElementById('dispSfx'); if (sx) sx.checked = sfxOn();
+    var rs = document.getElementById('dispReset'); if (rs) rs.disabled = prefs.font === 'm' && !prefs.compact && !prefs.calm && !sfxOn();
   }
 
   function buildMenu() {
@@ -175,10 +211,20 @@
     });
     document.getElementById('dispPanel').addEventListener('click', function (e) {
       var b = e.target.closest('.seg button');
-      if (b) { prefs.font = b.dataset.font; applyPrefs(); syncDisplayUi(); }
+      if (b) { if (prefs.font !== b.dataset.font) { prefs.font = b.dataset.font; applyPrefs(); saved(); } syncDisplayUi(); }
     });
-    document.getElementById('dispCompact').addEventListener('change', function () { prefs.compact = this.checked; applyPrefs(); });
-    document.getElementById('dispCalm').addEventListener('change', function () { prefs.calm = this.checked; applyPrefs(); });
+    document.getElementById('dispCompact').addEventListener('change', function () { prefs.compact = this.checked; applyPrefs(); syncDisplayUi(); saved(); });
+    document.getElementById('dispCalm').addEventListener('change', function () { prefs.calm = this.checked; applyPrefs(); syncDisplayUi(); saved(); });
+    document.getElementById('dispSfx').addEventListener('change', function () {
+      try { localStorage.setItem('vc_sfx', this.checked ? '1' : '0'); } catch (e) {}
+      if (this.checked) paperSound();
+      syncDisplayUi(); saved(this.checked ? 'เปิดเสียงแล้ว ✓' : 'ปิดเสียงแล้ว ✓');
+    });
+    document.getElementById('dispReset').addEventListener('click', function () {
+      prefs.font = 'm'; prefs.compact = false; prefs.calm = false; applyPrefs();
+      try { localStorage.setItem('vc_sfx', '0'); } catch (e) {}
+      syncDisplayUi(); saved('คืนค่าเริ่มต้นแล้ว ✓');
+    });
     syncDisplayUi();
 
     var del = document.getElementById('privDel');
