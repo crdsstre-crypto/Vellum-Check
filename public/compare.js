@@ -146,6 +146,17 @@
     '@media (max-width:767px){.vcp-in[data-t="o"] .vcp-side.n,.vcp-in[data-t="n"] .vcp-side.o{display:none}.vcp-side label i{display:none}.vcp-side textarea{min-height:46vh}}' +
     '.vcp-side label .vcp-st{margin-left:auto;color:#34d399;font-weight:700}' +
     '.vcp-box{position:relative}' +
+    '.vcp-mir{position:absolute;left:0;top:0;right:0;z-index:0;box-sizing:border-box;overflow:hidden;border-style:solid;border-color:transparent;background:#0d0e10;color:#e4e4e7;white-space:pre-wrap;overflow-wrap:break-word;word-wrap:break-word;pointer-events:none}' +
+    '.vcp-mir .in{white-space:pre-wrap;overflow-wrap:break-word;will-change:transform}' +
+    '.vcp-mir .hk{color:#9cc8f5;background:linear-gradient(transparent 14%,rgba(96,165,250,.18) 14%,rgba(96,165,250,.18) 88%,transparent 88%)}' +
+    '.vcp-mir .hn{color:#f0d9a8}' +
+    '.vcp-mir .hr{color:#ffb4b6;background:linear-gradient(transparent 82%,rgba(255,107,112,.55) 82%,rgba(255,107,112,.55) 92%,transparent 92%)}' +
+    '.vcp-mir .hr .hn,.vcp-mir .hn .hr{color:inherit}' +
+    '.vcp .vcp-box textarea{position:relative;z-index:1;background-color:transparent !important;color:transparent !important;-webkit-text-fill-color:transparent;caret-color:#ececef}' +
+    '.vcp .vcp-box textarea::placeholder{-webkit-text-fill-color:#5f5f68;color:#5f5f68}' +
+    '.vcp .vcp-box textarea::selection{background:rgba(147,197,253,.35);-webkit-text-fill-color:transparent}' +
+    '.vcp-box:not(.has) .vcp-mir{display:none}.vcp-box:not(.has) textarea{background-color:#0d0e10 !important}' +
+    '#checkCard .vcp-entry{--ico:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23000\' stroke-width=\'1.9\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3E%3Crect x=\'3\' y=\'4\' width=\'7.5\' height=\'16\' rx=\'2\'/%3E%3Crect x=\'13.5\' y=\'4\' width=\'7.5\' height=\'16\' rx=\'2\'/%3E%3Cpath d=\'M5.5 9h2.5M5.5 12.5h2.5M16 9h2.5M16 12.5h2.5M16 16h2.5\'/%3E%3C/svg%3E")}' +
     '.vcp-e0{position:absolute;inset:1px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px;border-radius:13px;text-align:center;cursor:text;' +
       'background:radial-gradient(120% 80% at 50% 0%,rgba(127,181,255,.08),transparent 60%),#0d0e10;border:1.5px dashed rgba(127,181,255,.25)}' +
     '.vcp-side.n .vcp-e0{border-color:rgba(127,181,255,.4)}' +
@@ -274,7 +285,7 @@
   var DOC = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>';
   function side(cls, tag, title, hint) {
     return '<div class="vcp-side ' + cls + '"><label for="vcp-' + cls + '"><i>' + tag + '</i>' + title + '<span class="vcp-st"></span></label>' +
-      '<div class="vcp-box"><textarea id="vcp-' + cls + '" placeholder="วางข้อความสัญญา' + hint + '" spellcheck="false"></textarea>' +
+      '<div class="vcp-box"><div class="vcp-mir" aria-hidden="true"><div class="in"></div></div><textarea id="vcp-' + cls + '" placeholder="วางข้อความสัญญา' + hint + '" spellcheck="false"></textarea>' +
       '<div class="vcp-e0" data-focus><span class="d">' + DOC + '</span><b>วางสัญญา' + hint + '</b><small>วางข้อความ หรือเลือกไฟล์ PDF / Word / รูป</small>' +
       '<div class="a"><button type="button" class="pp" data-paste>📋 วางจากคลิปบอร์ด</button><label class="f">📄 เลือกไฟล์<input type="file" accept=".txt,.pdf,.docx,image/*"></label></div>' +
       (cls === 'o' ? '<button type="button" class="lk" data-fill>ใช้ข้อความที่อยู่ในช่องตรวจ</button>' : '<span class="lk0">หรือแตะเพื่อพิมพ์เอง</span>') + '</div></div>' +
@@ -307,6 +318,8 @@
     el.addEventListener('focusout', function (e) { var bx = e.target.closest && e.target.closest('.vcp-box'); if (bx && e.target.tagName === 'TEXTAREA') setTimeout(function () { bx.classList.remove('typing'); }, 150); });
     el.addEventListener('paste', function (e) { var t = e.target; if (t.id === 'vcp-o') setTimeout(function () { filled('o'); }, 0); });
     el.addEventListener('input', upd);
+    el.addEventListener('scroll', function (e) { if (e.target.tagName === 'TEXTAREA' && e.target.closest('.vcp-box')) sync(e.target); }, true);
+    if (window.ResizeObserver) { var ro = new ResizeObserver(function (en) { en.forEach(function (x) { if (x.target.tagName === 'TEXTAREA') sync(x.target); }); }); el.__ro = ro; }
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && el && !el.hidden) close(); });
   }
   var saved = { o: '', n: '' };
@@ -320,15 +333,39 @@
       '<div class="vcp-in">' + side('o', 'ฉบับเดิม', 'ฉบับที่คุณมีอยู่', 'ฉบับเดิม') + side('n', 'ฉบับใหม่', 'ฉบับที่อีกฝ่ายแก้มา', 'ฉบับใหม่') + '</div>' +
       '<button type="button" class="vcp-go" disabled><span class="ic">' + ICO + '</span><span class="t">เทียบเลย</span></button><p class="vcp-note">เทียบในเครื่องของคุณ ไม่ใช้เครดิต และไม่ส่งข้อความไปที่ไหน · ไฟล์ PDF/Word/รูปต้องเข้าสู่ระบบเพื่ออ่านข้อความเหมือนช่องตรวจ</p>';
     bd.querySelector('#vcp-o').value = saved.o; bd.querySelector('#vcp-n').value = saved.n;
+    if (el.__ro) [].forEach.call(bd.querySelectorAll('.vcp-box textarea'), function (t) { el.__ro.observe(t); });
     tab = saved.o.trim() && !saved.n.trim() ? 'n' : 'o';
     el.querySelector('.vcp-ft').hidden = true; upd(); bd.scrollTop = 0;
   }
   function setTab(t) {
     tab = t; var inn = el.querySelector('.vcp-in'); if (!inn) return;
     inn.setAttribute('data-t', t);
+    requestAnimationFrame(function () { [].forEach.call(el.querySelectorAll('.vcp-box textarea'), function (x) { if (x.offsetWidth) paint(x); }); });
     [].forEach.call(el.querySelectorAll('[data-tab]'), function (b) { b.setAttribute('aria-selected', String(b.getAttribute('data-tab') === t)); });
   }
   var lastFill = { o: false, n: false };
+  /* ไฮไลต์ในกล่อง: ชั้นเงาใต้ textarea (ตัวอักษรขนาดเดียวกัน ตำแหน่งจึงตรงกัน) — เลขข้อสีฟ้า, ตัวเลข/เงินสีทอง, คำเสี่ยงสีแดง */
+  var HNUM = /([0-9][0-9,.]*\s*(?:ล้านบาท|บาท|เปอร์เซ็นต์|%|วันทำการ|วัน|สัปดาห์|เดือน|ปี|ชั่วโมง|หน่วย|ครั้ง))/g;
+  var HRISK = new RegExp('(' + RISK.source + ')', 'g');
+  function paint(ta) {
+    var mir = ta.parentNode.querySelector('.vcp-mir'); if (!mir) return;
+    var v = ta.value;
+    var h = esc(v)
+      .replace(/(^|\n)([ \t]*)(ข้อ(?:ที่)?\s*[0-9๐-๙]+(?:\.[0-9๐-๙]+)*|[0-9๐-๙]+(?:\.[0-9๐-๙]+)*[.)](?=\s))/g, '$1$2\u0001k$3\u0002')
+      .replace(HNUM, '\u0001n$1\u0002')
+      .replace(HRISK, '\u0001r$1\u0002');
+    h = h.replace(/\u0001([knr])/g, '<span class="h$1">').replace(/\u0002/g, '</span>');
+    mir.firstChild.innerHTML = h + '\n​';
+    sync(ta);
+  }
+  function sync(ta) {
+    var mir = ta.parentNode.querySelector('.vcp-mir'); if (!mir) return;
+    var cs = getComputedStyle(ta), sb = ta.offsetWidth - ta.clientWidth - parseFloat(cs.borderLeftWidth) - parseFloat(cs.borderRightWidth);
+    ['paddingTop', 'paddingLeft', 'paddingBottom', 'fontFamily', 'fontSize', 'fontWeight', 'lineHeight', 'letterSpacing', 'borderTopWidth', 'borderLeftWidth', 'borderRightWidth', 'borderBottomWidth', 'borderRadius'].forEach(function (k) { mir.style[k] = cs[k]; });
+    mir.style.paddingRight = (parseFloat(cs.paddingRight) + Math.max(0, sb)) + 'px';
+    mir.style.height = ta.offsetHeight + 'px';
+    mir.firstChild.style.transform = 'translateY(' + (-ta.scrollTop) + 'px)';
+  }
   function upd() {
     if (!el) return; var o = el.querySelector('#vcp-o'), n = el.querySelector('#vcp-n'), go = el.querySelector('.vcp-go'); if (!o || !n) return;
     saved.o = o.value; saved.n = n.value;
@@ -339,7 +376,7 @@
       sd.querySelector('.vcp-tools small').innerHTML = has ? '<b>✓</b> ' + (cnt ? cnt + ' ข้อ · ' : '') + v.length.toLocaleString() + ' ตัวอักษร' : '';
       sd.querySelector('.vcp-st').textContent = has ? '✓' : '';
       var tb = el.querySelector('[data-tab="' + k + '"]'); if (tb) tb.classList.toggle('ok', has);
-      lastFill[k] = has;
+      lastFill[k] = has; paint(t);
     });
     setTab(tab);
     var ok = !!(o.value.trim() && n.value.trim()), miss = (o.value.trim() ? 0 : 1) + (n.value.trim() ? 0 : 1);
