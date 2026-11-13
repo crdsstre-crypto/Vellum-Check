@@ -7362,3 +7362,5 @@ html.vc-lite .auth-ghost .gh-pen *{filter:none !important}
   border-radius:50% 50% 50% 50% / 62% 62% 40% 40%;
   background:radial-gradient(circle at 38% 34%,#ff8a7e 0,#c9302a 42%,#7c1210 100%);
   box-shadow:0 4px 6px rgba(60,10,6,.4)}
+/* v288: กลับจาก Google → ไม่มีกระดาษตัวแทนแล้ว (เดิมเห็นกระดาษ 2 ใบสลับกัน) · เหลือแค่โต๊ะมืดกับแสงโคมรอ แล้วกระดาษจริงใบเดียวเลื่อนเข้ามา */
+html.vc-gin::before{content:none !important;display:none !important}
