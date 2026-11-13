@@ -21,10 +21,61 @@ export function buildSpokenSummary(result) {
   return `${head} ${tail}`.trim().slice(0, MAX_SPEECH_CHARS);
 }
 
+// ===== ให้ลูกค้าเลือกเสียงได้ =====
+// รายการเสียง: ถ้าตั้ง ELEVENLABS_VOICES (เช่น "id1:น้ำฝน,id2:ธนา") ใช้ตามนั้น
+// ถ้าไม่ตั้ง ดึงจาก "My Voices" ในบัญชี ElevenLabs เอง (เสียงที่กด Add จาก Voice Library หรือโคลนไว้)
+// ไม่เอาเสียง Default เพราะ ElevenLabs จะปิดเสียงกลุ่มนี้สิ้นปี 2026 · เสียงใน ELEVENLABS_VOICE_ID อยู่ในรายการเสมอเป็นค่าเริ่มต้น
+const EL = 'https://api.elevenlabs.io/v1';
+let voiceCache = null, voiceAt = 0;
+const GENDER = { female: 'ผู้หญิง', male: 'ผู้ชาย' };
+function shortName(n) { return String(n || '').split(/\s+[-–|]\s+/)[0].trim().slice(0, 24) || 'เสียง'; }
+
+export async function listVoices() {
+  if (voiceCache && Date.now() - voiceAt < 10 * 60 * 1000) return voiceCache;
+  const def = process.env.ELEVENLABS_VOICE_ID || '';
+  let out = [];
+  const env = String(process.env.ELEVENLABS_VOICES || '').trim();
+  if (env) {
+    out = env.split(',').map(x => x.trim()).filter(Boolean).map(x => {
+      const [id, ...rest] = x.split(':');
+      return { id: id.trim(), name: rest.join(':').trim() || 'เสียง', gender: '' };
+    });
+  } else if (process.env.ELEVENLABS_API_KEY) {
+    try {
+      const r = await fetch(`${EL}/voices`, { headers: { 'xi-api-key': process.env.ELEVENLABS_API_KEY }, signal: AbortSignal.timeout(10000) });
+      if (r.ok) {
+        const d = await r.json();
+        out = (d.voices || []).filter(v => v.category !== 'premade' || v.voice_id === def)
+          .map(v => ({ id: v.voice_id, name: shortName(v.name), gender: GENDER[String(v.labels?.gender || '').toLowerCase()] || '' }));
+      } else console.error('[voice] list voices status', r.status);
+    } catch (e) { console.error('[voice] list voices:', e.message); }
+  }
+  if (def && !out.some(v => v.id === def)) out.unshift({ id: def, name: 'เสียงหลัก', gender: '' });
+  out.sort((a, b) => (b.id === def) - (a.id === def));
+  out = out.filter(v => /^[A-Za-z0-9]{8,40}$/.test(v.id)).slice(0, 8);
+  voiceCache = out; voiceAt = Date.now();
+  return out;
+}
+export async function pickVoice(id) {
+  const list = await listVoices();
+  return list.some(v => v.id === id) ? id : (process.env.ELEVENLABS_VOICE_ID || list[0]?.id || '');
+}
+
+// ตัวอย่างเสียง: สร้างครั้งเดียวต่อเสียงแล้วจำไว้ (ประโยคสั้น เสียค่า ElevenLabs ไม่กี่สิบตัวอักษร)
+const PREVIEW_TEXT = 'สวัสดีครับ นี่คือตัวอย่างเสียงสรุปผลตรวจสัญญา';
+const previews = new Map();
+export async function voicePreview(id) {
+  if (previews.has(id)) return previews.get(id);
+  const p = synthesizeSpeech(PREVIEW_TEXT, id).then(b64 => Buffer.from(b64, 'base64'));
+  previews.set(id, p);
+  p.catch(() => previews.delete(id));
+  return p;
+}
+
 // คืนค่าเป็น base64 ของไฟล์ mp3
-export async function synthesizeSpeech(text) {
+export async function synthesizeSpeech(text, chosenVoice) {
   const apiKey = process.env.ELEVENLABS_API_KEY;
-  const voiceId = process.env.ELEVENLABS_VOICE_ID;
+  const voiceId = chosenVoice || process.env.ELEVENLABS_VOICE_ID;
   if (!apiKey || !voiceId) {
     throw new Error('ยังไม่ได้ตั้งค่า ELEVENLABS_API_KEY หรือ ELEVENLABS_VOICE_ID');
   }
