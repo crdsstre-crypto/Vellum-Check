@@ -4,6 +4,7 @@
    (2) เครดิตเป็นขีดนับลายมือ (มัดละ 5) ค่อย ๆ เขียนตอนเปิดสมุด
    (3) ตารางบัญชี "รายการล่าสุด" 3 ฉบับ + ตรายาง เสี่ยง/ระวัง/ผ่าน · แตะแถว = เปิดรายงาน
    (5) แตะตราครั่ง = เช็กอินรายวัน (กดตรา ครั่งกระเพื่อม +แต้ม)
+   v6: แท็บดัชนีข้างเล่ม (มือถือ) แทนการ์ด/เมนูเดิม · ตารางย้ายไปหน้า 2 พลิกหน้าได้ (ปัด/แตะ) · ตราครั่ง 7 วันแทนการ์ดเช็กอิน
    ข้อมูลจาก /api/me · /api/history/inspections · /api/daily (+ POST /api/daily/checkin) */
 (function () {
   'use strict';
@@ -49,7 +50,8 @@
   function ledgerNo(m) { var h = 7; String(m || '').split('').forEach(function (c) { h = (h * 31 + c.charCodeAt(0)) % 99991; }); return 'VC-' + ('0000' + (h % 10000)).slice(-4); }
   function typeName(v) {
     var o = v && document.querySelector('#contractType option[value="' + String(v).replace(/["\\]/g, '') + '"]');
-    return o ? o.textContent.trim() : '';
+    if (!o || v === 'unsure') return '';
+    return o.textContent.replace(/\s*\(.*$/, '').trim();
   }
   function setOpen(on, anim) {
     var bk = box.querySelector('.vl-book'); if (!bk) return;
@@ -103,20 +105,21 @@
 
   /* (3) ตารางบัญชีรายการล่าสุด */
   function ledger(items) {
-    if (!items.length) return '';
-    var rows = items.slice(0, 3).map(function (it) {
+    if (!items.length) return '<div class="vl-ledger"><p class="vl-lh"><span>รายการล่าสุด</span></p><p class="vl-lempty">ยังไม่มีรายการ — ตรวจสัญญาฉบับแรก แล้วจะถูกบันทึกไว้ที่หน้านี้</p></div>';
+    var rows = items.slice(0, 6).map(function (it) {
       var sm = it.summary || {}, hi = +sm.check_detail || +it.n_detail || 0, mid = +sm.caution || +it.n_caution || 0;
       var st = hi ? ['is-hi', 'เสี่ยง'] : mid ? ['is-mid', 'ระวัง'] : ['is-ok', 'ผ่าน'];
-      var title = it.title || typeName(it.contractType) || 'รายงานตรวจสัญญา';
+      var title = (it.title || typeName(it.contractType) || 'สัญญาทั่วไป').replace(/\s*\(.*$/, '');
+      var top = it.topIssue && it.topIssue.title ? '<small class="vl-ti">' + esc(it.topIssue.title) + '</small>' : '';
       return '<button type="button" class="vl-tr" data-a="open" data-id="' + esc(it.id) + '">' +
         '<span class="vl-td is-d">' + esc(dshort(it.createdAt || it.created_at)) + '</span>' +
-        '<span class="vl-td is-t">' + esc(title) + '</span>' +
+        '<span class="vl-td is-t"><b>' + esc(title) + '</b>' + top + '</span>' +
         '<span class="vl-td is-n">' + (hi + mid) + '</span>' +
         '<span class="vl-td is-s"><i class="vl-rstamp ' + st[0] + '">' + st[1] + '</i></span>' +
       '</button>';
     }).join('');
     return '<div class="vl-ledger">' +
-      '<p class="vl-lh"><span>รายการล่าสุด</span>' + (items.length > 3 ? '<button type="button" class="vl-more" data-a="hist">ดูทั้งหมด ' + items.length + (items.length >= 50 ? '+' : '') + ' ฉบับ →</button>' : '') + '</p>' +
+      '<p class="vl-lh"><span>รายการล่าสุด</span>' + (items.length > 6 ? '<button type="button" class="vl-more" data-a="hist">ดูทั้งหมด ' + items.length + (items.length >= 50 ? '+' : '') + ' ฉบับ →</button>' : '') + '</p>' +
       '<div class="vl-thead" aria-hidden="true"><span class="is-d">วันที่</span><span class="is-t">รายการ</span><span class="is-n">จุด</span><span class="is-s"></span></div>' +
       rows + '</div>';
   }
@@ -128,7 +131,17 @@
     if (D.checkedToday) return 'ประทับแล้ว\n' + (D.tomorrowReward ? 'พรุ่งนี้ +' + D.tomorrowReward : 'วันนี้');
     return 'แตะตรา\nเช็กอิน' + (D.todayReward ? ' +' + D.todayReward : '');
   }
+  function week() {
+    if (!D || !D.week || !D.week.length) return '';
+    return D.week.map(function (w, i) {
+      var cls = w.done ? 'is-done' : w.today ? 'is-today' : '';
+      var inner = w.done ? '<b>VC</b>' : '<em>+' + w.reward + '</em>';
+      return '<' + (w.today ? 'button type="button" data-a="seal"' : 'span') + ' class="vl-wd ' + cls + (i === 6 ? ' is-last' : '') + '" aria-label="วันที่ ' + w.day + (w.done ? ' ประทับแล้ว' : ' ได้ ' + w.reward + ' แต้ม') + '">' + inner + '<small>' + (i === 6 ? '★' : w.day) + '</small></' + (w.today ? 'button' : 'span') + '>';
+    }).join('');
+  }
   function paintSeal() {
+    var wk = box.querySelector('.vl-wrow'); if (wk) wk.innerHTML = week();
+    var sk = box.querySelector('.vl-streak'); if (sk) sk.innerHTML = D && D.streak ? 'ต่อเนื่อง <u>' + D.streak + '</u> วัน' : (D ? 'เริ่มนับวันนี้' : '');
     var w = box.querySelector('.vl-wax'), n = box.querySelector('.vl-snote'), l = box.querySelector('.vl-link');
     if (w) { w.classList.toggle('is-ready', !!(D && !D.checkedToday)); w.setAttribute('aria-label', D ? (D.checkedToday ? 'เช็กอินวันนี้แล้ว' : 'แตะตราเพื่อเช็กอินวันนี้') : 'ตรา Vellum Check'); }
     if (n) { n.textContent = sealNote(); n.classList.toggle('is-done', !!(D && D.checkedToday)); }
@@ -167,6 +180,35 @@
       }, function () { sealBusy = false; var n = box.querySelector('.vl-snote'); if (n) n.textContent = 'เชื่อมต่อไม่ได้ ลองใหม่'; });
   }
 
+  /* (3) พลิกหน้า: หน้า 1 (ยอด/บันทึก) ↔ หน้า 2 (ตารางรายการล่าสุด) */
+  var onP2 = false;
+  function turn(to2) {
+    var pg = box.querySelector('.vl-page'); if (!pg || onP2 === to2) return;
+    onP2 = to2;
+    var l1 = pg.querySelector('.vl-leaf.is-p1');
+    pg.classList.toggle('on-p2', to2);
+    if (!calm() && l1 && l1.animate) {
+      var fr = [{ transform: 'perspective(1800px) rotateY(0deg)', filter: 'brightness(1)' }, { transform: 'perspective(1800px) rotateY(-62deg)', filter: 'brightness(.88)', offset: .55 }, { transform: 'perspective(1800px) rotateY(-100deg)', filter: 'brightness(.7)' }];
+      l1.style.visibility = 'visible';
+      var an = l1.animate(to2 ? fr : fr.slice().reverse(), { duration: 620, easing: to2 ? 'cubic-bezier(.45,.05,.55,.95)' : 'cubic-bezier(.3,.6,.35,1)', fill: 'both' });
+      an.onfinish = function () { l1.style.visibility = ''; an.cancel(); };
+    }
+    try { pg.scrollIntoView({ block: 'start', behavior: calm() ? 'auto' : 'smooth' }); } catch (e) {}
+  }
+  function tab(t) {
+    if (t === 'hist') return goHist();
+    var sel = { remind: '#vrmAcct', disp: '#dispBtn', help: '#helpContact', out: '#logoutBtn', admin: '#adminPanel .adm-head' }[t];
+    var el = sel && document.querySelector(sel); if (!el) return;
+    el.click();
+    if (t === 'admin') try { el.scrollIntoView({ block: 'start', behavior: 'smooth' }); } catch (e) {}
+  }
+  function tabs(me) {
+    var T = [['hist', 'ประวัติ'], ['remind', 'แจ้งเตือน'], ['disp', 'ตั้งค่า'], ['help', 'ติดต่อ']];
+    if (me.is_admin && document.getElementById('adminPanel')) T.push(['admin', 'แอดมิน']);
+    T.push(['out', 'ออก']);
+    return '<nav class="vl-tabs" aria-label="ดัชนีบัญชี">' + T.map(function (x, i) { return '<button type="button" class="vl-tab is-' + x[0] + '" style="--i:' + i + '" data-a="tab" data-t="' + x[0] + '"><span>' + x[1] + '</span></button>'; }).join('') + '</nav>';
+  }
+
   var busy = false, lastKey = '';
   function render(me, hist, daily) {
     var email = me.email || '', cr = me.credits | 0, vc = me.voice_credits | 0;
@@ -180,7 +222,14 @@
     box.innerHTML =
       '<div class="vl-book' + (wasOpen ? ' is-open' : '') + '">' +
         '<i class="vl-ribbon" aria-hidden="true"></i>' +
+        tabs(me) +
         '<div class="vl-page">' +
+         '<div class="vl-leaf is-p2">' +
+          ledger(items) +
+          '<p class="vl-legal"><button type="button" data-a="go" data-sel="#privBtn">ความเป็นส่วนตัวของข้อมูล</button> · <button type="button" data-a="go" data-sel="#helpPrivacy">นโยบาย</button> · <button type="button" data-a="go" data-sel="#helpTerms">เงื่อนไขการใช้บริการ</button></p>' +
+          '<div class="vl-foot"><button type="button" class="vl-turn is-back" data-a="turn" data-p="1">← กลับหน้าแรก</button><span class="vl-pno">— ๒ —</span></div>' +
+         '</div>' +
+         '<div class="vl-leaf is-p1">' +
           '<div class="vl-head">' +
             '<div class="vl-phwrap"><button type="button" class="vl-photo" data-a="photo" aria-label="เปลี่ยนรูปโปรไฟล์"><span class="vl-ph-in">' + photoHtml(me, email) + '</span><i class="vl-corner is-a" aria-hidden="true"></i><i class="vl-corner is-b" aria-hidden="true"></i></button><i class="vl-clip" aria-hidden="true"></i></div>' +
             '<div class="vl-id"><small class="vl-kick">สมุดบัญชีสมาชิก</small>' +
@@ -197,12 +246,14 @@
             '<button type="button" class="vl-stamp" data-a="topup">เติมเครดิต</button>' +
             '<button type="button" class="vl-link" data-a="redeem">แลกแต้มเช็กอิน <span aria-hidden="true">→</span></button>' +
           '</div>' +
+          (D && D.week ? '<div class="vl-week"><p class="vl-nh"><span>ตราเช็กอิน 7 วัน</span><span class="vl-streak"></span></p><div class="vl-wrow"></div></div>' : '') +
           '<div class="vl-notes">' +
             '<p class="vl-nh"><span>บันทึกของฉัน</span><button type="button" class="vl-close" data-a="close" aria-label="ปิดสมุด">ปิดเล่ม</button></p>' +
             (nIns ? line('ตรวจไปแล้ว', nIns + (nIns >= 50 ? '+' : ''), 'ฉบับ') + line('เจอจุดน่าสงสัย', risk, 'จุด', 'is-r') + (last ? line('ล่าสุดเมื่อ', esc(ago(last)), '') : '')
                   : '<button type="button" class="vl-ln is-empty" data-a="hist">ยังไม่มีบันทึก — ตรวจสัญญาฉบับแรกได้เลย</button>') +
           '</div>' +
-          ledger(items) +
+          '<div class="vl-foot"><button type="button" class="vl-turn" data-a="turn" data-p="2">รายการล่าสุด ↷</button><span class="vl-pno">— ๑ —</span></div>' +
+         '</div>' +
         '</div>' +
         '<button type="button" class="vl-cover" data-a="cover" aria-label="เปิดสมุดบัญชี" aria-expanded="' + (wasOpen ? 'true' : 'false') + '"' + (wasOpen ? ' tabindex="-1"' : '') + '>' +
           '<span class="vl-cv-in">' +
@@ -214,7 +265,7 @@
           '</span>' +
         '</button>' +
       '</div>';
-    paintSeal();
+    paintSeal(); onP2 = false;
     var wc = document.querySelector('#authLoggedIn .vc-wcard');
     if (wc && wc.parentNode && box.nextSibling !== wc) wc.parentNode.insertBefore(box, wc);
     box.hidden = false;
@@ -261,9 +312,19 @@
     else if (a === 'close') setOpen(false, true);
     else if (a === 'photo') photoMenu(b);
     else if (a === 'ph-ch' || a === 'ph-rm') { if (menu) menu.remove(); var t = document.getElementById(a === 'ph-ch' ? 'acctFile' : 'acctPhotoDel'); if (t) t.click(); }
-    else if (a === 'seal') seal(b);
+    else if (a === 'seal') seal(box.querySelector('.vl-wax') || b);
+    else if (a === 'turn') turn(b.getAttribute('data-p') === '2');
+    else if (a === 'tab') tab(b.getAttribute('data-t'));
+    else if (a === 'go') { var g = document.querySelector(b.getAttribute('data-sel')); if (g) g.click(); }
     else if (a === 'open') { var id = b.getAttribute('data-id'); if (window.vcOpenInspection) window.vcOpenInspection(id); else goHist(); }
   });
+  /* ปัดซ้าย/ขวาเพื่อพลิกหน้า */
+  var sx = 0, sy = 0, st = 0;
+  box.addEventListener('touchstart', function (e) { if (!e.target.closest('.vl-page')) { st = 0; return; } var t = e.touches[0]; sx = t.clientX; sy = t.clientY; st = Date.now(); }, { passive: true });
+  box.addEventListener('touchend', function (e) {
+    if (!st || Date.now() - st > 700) return; var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy; st = 0;
+    if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.6) turn(dx < 0);
+  }, { passive: true });
   /* อัปเดตเมื่อเปิดหน้าบัญชี / ล็อกอิน-ออก */
   var lo = document.getElementById('authLoggedIn');
   if (lo && 'MutationObserver' in window) new MutationObserver(function () { if (lo.hidden) { box.hidden = true; lastKey = ''; } else refresh(); }).observe(lo, { attributes: true, attributeFilter: ['hidden'] });
