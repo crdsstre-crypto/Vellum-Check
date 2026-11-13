@@ -30,7 +30,7 @@
     '.vtk-ctl{display:flex;align-items:center;gap:10px;margin-top:14px}' +
     '.vtk-pp{flex:none;display:grid;place-items:center;width:48px;height:48px;border-radius:50%;border:0;cursor:pointer;color:#1a1305;' +
       'background:linear-gradient(145deg,#ffe28a,#f2b81c);box-shadow:0 8px 18px -8px rgba(242,184,28,.8),inset 0 -3px 0 rgba(0,0,0,.15);transition:transform .12s}' +
-    '.vtk-pp:active{transform:scale(.94)}.vtk-pp svg{width:20px;height:20px;fill:currentColor}' +
+    '.vtk-pp:active{transform:scale(.94)}.vtk .vtk-pp svg,.vtk .vtk-rp svg{display:block !important;max-width:none !important;width:20px !important;height:20px !important;flex:none;opacity:1 !important;visibility:visible !important}.vtk .vtk-rp svg{width:16px !important;height:16px !important}' +
     '.vtk-bar{position:relative;flex:1;height:30px;display:flex;align-items:center;cursor:pointer;touch-action:none}' +
     '.vtk-bar b{position:absolute;left:0;right:0;height:6px;border-radius:6px;background:rgba(255,255,255,.12);overflow:hidden}' +
     '.vtk-bar b i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:6px;background:linear-gradient(90deg,#34d399,#ffd84d)}' +
@@ -48,13 +48,14 @@
     '.vtk.is-play .vm-arm-r{animation:vtkWave 1.6s ease-in-out infinite;transform-origin:89px 72px;transform-box:view-box}' +
     '@keyframes vtkWave{0%,100%{transform:rotate(0)}50%{transform:rotate(-14deg)}}' +
     '.vtk-face-happy{display:none}.vtk.is-done .vtk-face-happy{display:inline}.vtk.is-done .vtk-face-talk{display:none}' +
+    '.vtk-compact{margin:12px 0 0;padding:12px;border-radius:18px}.vtk-compact .vtk-3d{height:126px}.vtk-compact .vtk-top{grid-template-columns:96px minmax(0,1fr)}.vtk-compact .vtk-ctl{margin-top:10px}.vtk-compact .vtk-pp{width:42px;height:42px}' +
     '@media (max-width:520px){.vtk{padding:14px 12px 12px}.vtk-top{grid-template-columns:92px minmax(0,1fr);gap:10px}.vtk-3d{height:124px}.vtk-cap{font-size:14.5px}}' +
     '@media (prefers-reduced-motion:reduce){.vtk-fig{transition:none}.vtk-hint,.vtk.is-play .vm-arm-r{animation:none}}' +
     'html[data-theme="light"] .vtk{background:#fbf8f1;color:#2a2116;border-color:rgba(0,0,0,.08)}html[data-theme="light"] .vtk-bar b{background:rgba(0,0,0,.1)}';
   var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
 
-  var PLAY = '<svg viewBox="0 0 16 16"><path d="M4.5 2.5v11l9-5.5z"/></svg>';
-  var PAUSE = '<svg viewBox="0 0 16 16"><path d="M4 2.5h3v11H4zM9 2.5h3v11H9z"/></svg>';
+  var PLAY = '<svg viewBox="0 0 16 16" width="20" height="20" fill="currentColor"><path d="M4.5 2.5v11l9-5.5z" fill="currentColor"/></svg>';
+  var PAUSE = '<svg viewBox="0 0 16 16" width="20" height="20" fill="currentColor"><path d="M4 2.5h3v11H4zM9 2.5h3v11H9z" fill="currentColor"/></svg>';
   var REPLAY = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7" fill="none" stroke="currentColor"/><path d="M3 4v5h5" fill="none" stroke="currentColor"/></svg>';
   function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function fmt(t) { t = Math.max(0, Math.floor(t || 0)); return Math.floor(t / 60) + ':' + ('0' + t % 60).slice(-2); }
@@ -97,24 +98,25 @@
   }
 
   function mount(host, o) {
-    if (!host || !o || !o.audio) return null;
+    if (!host || !o || !(o.audio || o.src)) return null;
     var text = String(o.text || '').trim() || 'สรุปผลตรวจสัญญา';
     var root = document.createElement('section'); root.className = 'vtk'; root.setAttribute('aria-label', 'เวลลัมอ่านสรุปผลตรวจ');
     var W = words(text);
     root.innerHTML = '<div class="vtk-top"><div class="vtk-3d"><span class="vtk-glow"></span><span class="vtk-floor"></span><div class="vtk-fig">' + figure() + '</div><span class="vtk-hint">แตะฟังได้เลย</span></div>' +
-      '<div class="vtk-bub"><p class="vtk-who"><i></i>เวลลัมสรุปให้ฟัง</p><div class="vtk-cap" data-i18n-skip>' +
+      '<div class="vtk-bub"><p class="vtk-who"><i></i>' + esc(o.title || 'เวลลัมสรุปให้ฟัง') + '</p><div class="vtk-cap" data-i18n-skip>' +
       W.map(function (w, i) { return '<span data-k="' + i + '">' + esc(w.t) + '</span>'; }).join('') + '</div></div></div>' +
       '<div class="vtk-ctl"><button type="button" class="vtk-pp" aria-label="เล่นเสียงสรุป">' + PLAY + '</button>' +
       '<div class="vtk-bar" role="slider" aria-label="ตำแหน่งเสียง" tabindex="0"><b><i></i></b><em></em></div>' +
       '<span class="vtk-t">0:00 / 0:00</span><button type="button" class="vtk-rp" aria-label="ฟังใหม่ตั้งแต่ต้น">' + REPLAY + '</button></div>';
     host.insertBefore(root, host.firstChild);   /* วางไว้บนสุดของกล่องผลตรวจ */
 
-    var src;
-    try {
+    var src = o.src;
+    if (!src) try {
       var bin = atob(o.audio), u8 = new Uint8Array(bin.length);
       for (var i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
       src = URL.createObjectURL(new Blob([u8], { type: 'audio/mpeg' }));
     } catch (e) { src = 'data:audio/mpeg;base64,' + o.audio; }
+    if (o.compact) root.classList.add('vtk-compact');
     var au = new Audio(); au.preload = 'auto'; au.src = src;
 
     var $ = function (q) { return root.querySelector(q); };
@@ -232,7 +234,8 @@
       var s = e.target.closest('span[data-k]'); if (!s) return;
       var k = +s.getAttribute('data-k'); if (starts[k] != null) { au.currentTime = starts[k]; cur = -2; if (au.paused) play(); }
     });
-    return { root: root, audio: au };
+    if (o.autoplay) play();
+    return { root: root, audio: au, play: play, stop: function () { try { au.pause(); } catch (e) {} } };
   }
 
   window.VCTalk = { mount: mount };
