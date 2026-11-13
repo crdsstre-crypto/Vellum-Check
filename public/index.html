@@ -50,7 +50,7 @@
 <link rel="stylesheet" href="help-ui.css?v=1">
 <link rel="stylesheet" href="solve-ui.css?v=1">
 <link rel="stylesheet" href="read-story.css?v=1">
-<link rel="stylesheet" href="acct-card.css?v=4">
+<link rel="stylesheet" href="acct-card.css?v=5">
 <link rel="stylesheet" href="daily-ui.css?v=13">
 <link rel="stylesheet" href="account-desk.css?v=5" media="(min-width: 768px)">
 </head>
@@ -1159,6 +1159,7 @@
       renderPayments();
     } catch (e) { if (my === reqId) showError(e.message); }
   }
+  window.vcOpenInspection = function (id) { return openOneResult(id); };   /* ให้สมุดบัญชี (acct-card.js) เปิดรายงานจากตารางรายการล่าสุด */
   async function openOneResult(id) {
     try {
       var data = await getJson('/api/history/inspections/' + encodeURIComponent(id));
@@ -1992,6 +1993,6 @@ document.addEventListener('click', function (e) {
 <script src="help-ui.js?v=2"></script>
 <script src="solve-ui.js?v=1"></script>
 <script src="read-story.js?v=1"></script>
-<script src="acct-card.js?v=4"></script>
+<script src="acct-card.js?v=5"></script>
 </body>
 </html>
