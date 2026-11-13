@@ -38,7 +38,17 @@
     '.vpk-sx,.vpk-ok,.vpk-rec{font:600 10.5px/1 Prompt,sans-serif;font-style:normal;padding:4px 7px;border-radius:999px;white-space:nowrap;--ff:Prompt,sans-serif}' +
     '.vpk-sx.m{color:#93c5fd;background:rgba(96,165,250,.14)}.vpk-sx.f{color:#f9a8d4;background:rgba(244,114,182,.14)}' +
     '.vpk-ok{color:#06281c;background:#34d399}' +
-    '.vpk-rec{color:#1a1305;background:linear-gradient(135deg,#ffe28a,#f2b81c)}' +
+    /* เสียงแนะนำ: ริบบิ้นทองมุมขวาบน + กรอบทองเรืองแสง + บรรทัดเหตุผล */
+    '.vpk-c.is-rec{overflow:hidden;border-color:rgba(242,184,28,.6);background:linear-gradient(135deg,rgba(255,216,77,.08),rgba(255,216,77,.01) 60%),#17181c;' +
+      'box-shadow:0 0 0 1px rgba(255,216,77,.12),0 0 22px -6px rgba(255,216,77,.45)}' +
+    '.vpk-c.is-rec.is-on{border-color:#34d399;background:linear-gradient(135deg,rgba(52,211,153,.14),rgba(52,211,153,.04));box-shadow:0 0 0 1px rgba(52,211,153,.12),0 0 22px -8px rgba(255,216,77,.35)}' +
+    '.vpk-c.is-rec .vpk-p{align-self:flex-end}' +
+    '.vpk-rib{position:absolute;top:0;right:0;width:62px;height:62px;overflow:hidden;pointer-events:none;z-index:1}' +
+    '.vpk-rib span{position:absolute;top:10px;right:-27px;width:94px;padding:2px 0;transform:rotate(45deg);text-align:center;' +
+      'font:700 10.5px/1.2 Prompt,sans-serif;--ff:Prompt,sans-serif;letter-spacing:.04em;color:#1a1305;' +
+      'background:linear-gradient(180deg,#ffe9a3,#f2b81c 55%,#d99a0b);box-shadow:0 3px 8px -2px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.55),inset 0 -1px 0 rgba(0,0,0,.18)}' +
+    '.vpk-c.is-rec .vpk-n{padding-right:26px}' +
+    '.vpk-why{display:block;margin-top:5px;font:600 11.5px/1.3 Prompt,sans-serif;font-style:normal;color:#f5c451;--ff:Prompt,sans-serif}' +
     '.vpk-t small{white-space:normal;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:4px}' +
     '.vpk-g.has-desc{grid-template-columns:1fr}' +
     '.vpk-err{margin:8px 2px 0;font:400 12px/1.4 Prompt,sans-serif;color:#fca5a5}' +
@@ -105,12 +115,14 @@
     box.innerHTML = '<div class="vpk-h"><span>เลือกเสียงที่ใช้สรุป</span><small>กด ▶ เพื่อฟังตัวอย่าง</small></div>' +
       '<div class="vpk-g' + (voices.some(function (v) { return v.desc; }) ? ' has-desc' : '') + '" role="radiogroup" aria-label="เลือกเสียงที่ใช้สรุป">' + voices.map(function (v, i) {
         var on = v.id === cur, g = v.gender === 'ผู้หญิง' ? 'f' : v.gender === 'ผู้ชาย' ? 'm' : '';
-        return '<div class="vpk-c' + (on ? ' is-on' : '') + '" role="radio" tabindex="0" aria-checked="' + on + '" data-id="' + esc(v.id) + '">' +
+        return '<div class="vpk-c' + (on ? ' is-on' : '') + (v.rec ? ' is-rec' : '') + '" role="radio" tabindex="0" aria-checked="' + on + '" data-id="' + esc(v.id) + '">' +
+          (v.rec ? '<span class="vpk-rib" aria-label="เสียงแนะนำ"><span>แนะนำ</span></span>' : '') +
           '<span class="vpk-av" style="background:' + COL[i % COL.length] + '">' + esc(((v.name || '?').replace(/^[\u0E40-\u0E44]/, '').charAt(0) || '?').toUpperCase()) + '</span>' +
           '<span class="vpk-t"><span class="vpk-n"><b>' + esc(v.name) + '</b>' +
             (g ? '<i class="vpk-sx ' + g + '">' + (g === 'f' ? '♀ หญิง' : '♂ ชาย') + '</i>' : '') +
-            (v.rec ? '<i class="vpk-rec">⭐ แนะนำ</i>' : '') + (on ? '<i class="vpk-ok">✓ เลือกอยู่</i>' : '') + '</span>' +
-            (v.desc ? '<small>' + esc(v.desc) + '</small>' : (!g && !on ? '<small>แตะเพื่อเลือก</small>' : '')) + '</span>' +
+            (on ? '<i class="vpk-ok">✓ เลือกอยู่</i>' : '') + '</span>' +
+            (v.desc ? '<small>' + esc(v.desc) + '</small>' : (!g && !on ? '<small>แตะเพื่อเลือก</small>' : '')) +
+            (v.rec ? '<em class="vpk-why">✦ ' + esc(v.why || 'เสียงที่เราแนะนำ') + '</em>' : '') + '</span>' +
           '<button type="button" class="vpk-p" data-id="' + esc(v.id) + '" aria-label="ฟังตัวอย่างเสียง">' + LOAD + PLAY + '<span class="vpk-bars"><i></i><i></i><i></i></span></button></div>';
       }).join('') + '</div><p class="vpk-note" hidden></p><p class="vpk-err" hidden></p><div class="vpk-stage"></div>';
     paintBtns();
