@@ -172,7 +172,7 @@
     '.vcp .vcp-box textarea::selection{background:rgba(147,197,253,.35);-webkit-text-fill-color:transparent}' +
     '.vcp-box:not(.has) .vcp-mir{display:none}.vcp-box:not(.has) textarea{background-color:#0d0e10 !important}' +
     '#checkCard .vcp-entry{--ico:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23000\' stroke-width=\'1.9\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3E%3Crect x=\'3\' y=\'4\' width=\'7.5\' height=\'16\' rx=\'2\'/%3E%3Crect x=\'13.5\' y=\'4\' width=\'7.5\' height=\'16\' rx=\'2\'/%3E%3Cpath d=\'M5.5 9h2.5M5.5 12.5h2.5M16 9h2.5M16 12.5h2.5M16 16h2.5\'/%3E%3C/svg%3E")}' +
-    '.vcp-e0{position:absolute;inset:1px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px;border-radius:13px;text-align:center;cursor:text;' +
+    '.vcp-e0{position:absolute;inset:1px;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px;border-radius:13px;text-align:center;cursor:text;' +
       'background:radial-gradient(120% 80% at 50% 0%,rgba(127,181,255,.08),transparent 60%),#0d0e10;border:1.5px dashed rgba(127,181,255,.25)}' +
     '.vcp-side.n .vcp-e0{border-color:rgba(127,181,255,.4)}' +
     '.vcp-box.has .vcp-e0,.vcp-box.typing .vcp-e0{display:none}' +
