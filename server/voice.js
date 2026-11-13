@@ -25,6 +25,7 @@ export function buildSpokenSummary(result) {
 // รายการเสียง: ถ้าตั้ง ELEVENLABS_VOICES (เช่น "id1:น้ำฝน,id2:ธนา") ใช้ตามนั้น
 // ถ้าไม่ตั้ง ดึงจาก "My Voices" ในบัญชี ElevenLabs เอง (เสียงที่กด Add จาก Voice Library หรือโคลนไว้)
 // ไม่เอาเสียง Default เพราะ ElevenLabs จะปิดเสียงกลุ่มนี้สิ้นปี 2026 · เสียงใน ELEVENLABS_VOICE_ID อยู่ในรายการเสมอเป็นค่าเริ่มต้น
+import { pool } from './db.js';
 const EL = 'https://api.elevenlabs.io/v1';
 let voiceCache = null, voiceAt = 0, lastSource = '', lastErr = '';
 export function voiceSource() { return lastSource; }
@@ -44,8 +45,10 @@ export async function listVoices() {
   const env = String(process.env.ELEVENLABS_VOICES || '').trim();
   if (env) {
     out = env.split(',').map(x => x.trim()).filter(Boolean).map(x => {
-      const [id, ...rest] = x.split(':');
-      return { id: id.trim(), name: rest.join(':').trim() || 'เสียง', gender: '' };
+      // รูปแบบ "id:ชื่อ:เพศ" เช่น "abc123:Ohm:ชาย" (ใส่เพศหรือไม่ก็ได้)
+      const [id, name = '', g = ''] = x.split(':').map(y => y.trim());
+      const gender = /หญิง|female|^f$|^w$/i.test(g) ? 'ผู้หญิง' : /ชาย|male|^m$/i.test(g) ? 'ผู้ชาย' : '';
+      return { id, name: name || 'เสียง', gender };
     });
   } else if (process.env.ELEVENLABS_API_KEY) {
     try {
@@ -85,20 +88,41 @@ export async function pickVoice(id) {
   return list.some(v => v.id === id) ? id : (process.env.ELEVENLABS_VOICE_ID || list[0]?.id || '');
 }
 
-// ตัวอย่างเสียง: สร้างครั้งเดียวต่อเสียงแล้วจำไว้ (ประโยคสั้น เสียค่า ElevenLabs ไม่กี่สิบตัวอักษร)
-// เสียงผู้หญิงลงท้าย "ค่ะ" ผู้ชาย "ครับ" ไม่รู้เพศไม่ใส่คำลงท้าย
+// ตัวอย่างเสียง: ประโยคแบบเดียวกับสรุปจริง ยาวพอให้ฟังออก (~8 วินาที)
+// สร้างครั้งเดียวต่อเสียง เก็บในฐานข้อมูล (รีสตาร์ตไม่ต้องสร้างใหม่) และสร้างล่วงหน้าทุกเสียงตอนเซิร์ฟเวอร์เปิด ลูกค้ากดแล้วได้ยินทันที
+const PREVIEW_V = 3;   // เปลี่ยนประโยคตัวอย่างเมื่อไรให้เพิ่มเลขนี้ จะสร้างใหม่ทั้งหมด
 function previewText(v) {
   const end = v?.gender === 'ผู้หญิง' ? 'ค่ะ' : v?.gender === 'ผู้ชาย' ? 'ครับ' : '';
-  return `สวัสดี${end} นี่คือตัวอย่างเสียงสรุปผลตรวจสัญญา`;
+  return `สวัสดี${end} นี่คือเสียงสรุปผลตรวจสัญญาจาก Vellum Check. พบ 3 ประเด็นที่ควรตรวจ ได้แก่ ค่าปรับวันละ 500 บาท สูงเกินสมควร, ผู้ให้เช่าขึ้นค่าเช่าได้ตลอด และเงินประกันไม่คืนทุกกรณี`;
+}
+let pvTable = null;
+function pvReady() {
+  if (!pvTable) pvTable = pool.query('CREATE TABLE IF NOT EXISTS voice_previews (id TEXT NOT NULL, v INTEGER NOT NULL, audio BYTEA NOT NULL, PRIMARY KEY (id, v))').catch(e => { pvTable = null; throw e; });
+  return pvTable;
 }
 const previews = new Map();
 export async function voicePreview(id) {
   if (previews.has(id)) return previews.get(id);
-  const v = (await listVoices()).find(x => x.id === id);
-  const p = synthesizeSpeech(previewText(v), id).then(b64 => Buffer.from(b64, 'base64'));
+  const p = (async () => {
+    try {
+      await pvReady();
+      const r = await pool.query('SELECT audio FROM voice_previews WHERE id = $1 AND v = $2', [id, PREVIEW_V]);
+      if (r.rows[0]) return r.rows[0].audio;
+    } catch (e) { console.error('[voice] preview db read:', e.message); }
+    const v = (await listVoices()).find(x => x.id === id);
+    const buf = Buffer.from(await synthesizeSpeech(previewText(v), id), 'base64');
+    pool.query('INSERT INTO voice_previews (id, v, audio) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING', [id, PREVIEW_V, buf])
+      .catch(e => console.error('[voice] preview db write:', e.message));
+    return buf;
+  })();
   previews.set(id, p);
   p.catch(() => previews.delete(id));
   return p;
+}
+// สร้างตัวอย่างทุกเสียงไว้ล่วงหน้า (ทีละเสียง ไม่รบกวนงานอื่น)
+export async function warmPreviews() {
+  try { for (const v of await listVoices()) await voicePreview(v.id).catch(e => console.error('[voice] warm', v.name, e.message)); }
+  catch (e) { console.error('[voice] warm:', e.message); }
 }
 
 // คืนค่าเป็น base64 ของไฟล์ mp3
