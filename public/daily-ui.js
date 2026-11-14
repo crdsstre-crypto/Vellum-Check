@@ -329,6 +329,7 @@
         if (e.target.closest('[data-shx]')) { shopClose(); return; }
         var t = e.target.closest('[data-tab]'); if (t) { shTab = t.getAttribute('data-tab'); shopRender(); return; }
         var tr = e.target.closest('.vst-tiers [data-tier]'); if (tr) { pvTier = +tr.getAttribute('data-tier'); if (pvTier === realTier()) pvTier = 0; shopRender(); hop(sh.querySelector('.vst-ms')); return; }
+        if (e.target.closest('[data-lore]')) { loreOpen(); return; }
         var it = e.target.closest('[data-outfit]'); if (it) { pick(it.getAttribute('data-outfit')); return; }
         var a = e.target.closest('[data-act]'); if (a) { act(a.getAttribute('data-act')); return; }
         if (e.target.closest('.vst-ms')) hop(sh.querySelector('.vst-ms'));
@@ -434,8 +435,8 @@
     return '<button type="button" class="vof-b vof-lim r-limited mt-' + medalTier() + (has ? ' is-own' : ' is-lock') + (on ? ' is-on' : '') + (sel === it.id ? ' is-try' : '') + '" data-outfit="' + it.id + '" aria-pressed="' + (sel === it.id) + '" aria-label="' + h(it.name + ' · ลิมิเต็ด · ' + (has ? 'มีแล้ว' : 'อีก ' + left + ' วัน')) + '" style="--lit:' + lit.toFixed(2) + ';--bp:' + Math.round(p * 100) + '%">' +
       '<em class="vof-r"><i class="vst-dia"></i>LIMITED</em>' +
       '<span class="lim-art"><svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg>' + (has ? '' : '<i class="lim-lock" aria-hidden="true"></i>') + '</span>' +
-      '<span class="lim-tx"><b>' + h(it.name) + '</b><small>ของรางวัลพิเศษ · ซื้อไม่ได้</small>' +
-      (has ? '' : '<span class="lim-bar"><i></i></span><small class="lim-n">เช็กอินติดกัน ' + bd.have + '/' + bd.n + ' วัน</small>') + tag + '</span></button>';
+      '<span class="lim-tx"><b>' + h(it.name) + '</b><small class="lim-tag">“ไฟที่ไม่ยอมมอด แม้ในคืนที่ยาวที่สุด”</small>' +
+      (has ? '' : '<span class="lim-bar"><i></i></span><small class="lim-n">เช็กอินติดกัน ' + bd.have + '/' + bd.n + ' วัน</small>') + '<span class="lim-row">' + tag + '<span class="lim-lore" role="button" tabindex="0" data-lore aria-label="อ่านตำนานเหรียญไฟไม่มอด">📜 ตำนาน</span></span></span></button>';
   }
   /* กล่องคำพูด: พิมพ์ทีละตัว (ข้อความเดิมไม่พิมพ์ซ้ำ) */
   var typeT = 0;
@@ -447,6 +448,55 @@
     el.innerHTML = '<span></span><i class="vst-cur"></i>';
     var sp = el.firstChild;
     typeT = setInterval(function () { n += 2; sp.textContent = chars.slice(0, n).join(''); if (n >= chars.length) { clearInterval(typeT); setTimeout(function () { var c = el.querySelector('.vst-cur'); if (c) c.remove(); }, 1400); } }, 28);
+  }
+  /* ===== ตำนานเหรียญไฟไม่มอด: บทนำเปิดให้อ่านเสมอ · ตอนที่ 1–3 ปลดล็อกตามสถิติติดต่อกัน (7/14/30) ===== */
+  var LORE = [
+    { need: 0, tier: 1, ic: '🕯️', t: 'บทนำ · ห้องสมุดที่ไม่เคยหลับ', p: [
+      'ตำนานเล่าว่า ในห้องสมุดเก่าแห่งหนึ่ง มีม้วนกระดาษน้อยชื่อ "เวลลัม"',
+      'ทุกคืนเขาจะจุดตะเกียงดวงเล็ก แล้วอ่านสัญญาทุกฉบับจนถึงบรรทัดสุดท้าย',
+      'ใคร ๆ ต่างรีบเซ็นแล้วจากไป แต่เวลลัมเชื่อว่า ความจริงมักซ่อนอยู่ในบรรทัดที่ไม่มีใครอ่าน'] },
+    { need: 7, tier: 1, ic: '🔥', t: 'ตอนที่ 1 · ไฟดวงแรก', p: [
+      'คืนที่เจ็ด ลมพัดแรงจนตะเกียงแทบดับ เวลลัมเอามือป้องเปลวไฟไว้แล้วอ่านต่อ',
+      'จนพบข้อความตัวจิ๋วที่อาจทำให้เพื่อนรักต้องเสียบ้านทั้งหลัง',
+      'รุ่งเช้า เปลวไฟนั้นไม่ดับอีกเลย มันหลอมเป็นเหรียญทองติดอกเขา — ไฟแห่งความอดทนดวงแรก'] },
+    { need: 14, tier: 2, ic: '❄️', t: 'ตอนที่ 2 · ไฟกลางหิมะ', p: [
+      'ฤดูหนาวมาเยือน หิมะปิดทางทุกสาย หลายคนเลิกกลางคัน',
+      'เวลลัมห่มผ้าขนฟู ฝ่าความหนาวไปอ่านทุกวันไม่เคยขาด',
+      'ไฟในเหรียญเปลี่ยนเป็นสีฟ้าใสดั่งน้ำแข็ง แต่ร้อนแรงกว่าเดิม — ไฟที่ความหนาวดับไม่ได้'] },
+    { need: 30, tier: 3, ic: '💎', t: 'ตอนที่ 3 · หัวใจที่ไม่มีวันมอด', p: [
+      'ครบสามสิบคืน ดวงดาวทั้งฟ้าลงมาส่องห้องสมุด',
+      'ไฟในเหรียญถูกหลอมด้วยความตั้งใจจนกลายเป็นเพชร และงอกปีกคริสตัลออกมา',
+      'นับแต่นั้น ใครได้ครอบครองเหรียญนี้ คือผู้ที่ "อ่านให้ครบ ก่อนเซ็น" ทุกครั้ง และไม่มีวันยอมแพ้'] }
+  ];
+  var lr = null, lrIdx = 0;
+  function loreOk(c) { return c.need === 0 || (S && (S.bestStreak || 0) >= c.need); }
+  function loreOpen(i) {
+    if (!lr) {
+      lr = document.createElement('div'); lr.className = 'vlr'; lr.setAttribute('role', 'dialog'); lr.setAttribute('aria-modal', 'true'); lr.setAttribute('aria-labelledby', 'vlrT');
+      lr.innerHTML = '<div class="vlr-bg" data-lx></div><div class="vlr-p"><i class="vlr-rod"></i><div class="vlr-sh"><button type="button" class="vlr-x" data-lx aria-label="ปิด">✕</button>' +
+        '<p class="vlr-k">ตำนานแห่ง</p><h3 id="vlrT">เหรียญไฟไม่มอด</h3><div class="vlr-tabs" role="tablist"></div><div class="vlr-body"></div></div><i class="vlr-rod b"></i></div>';
+      document.body.appendChild(lr);
+      lr.addEventListener('click', function (e) {
+        if (e.target.closest('[data-lx]')) { loreClose(); return; }
+        var t = e.target.closest('[data-ch]'); if (t) { lrIdx = +t.getAttribute('data-ch'); loreRender(); }
+      });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && lr && lr.classList.contains('on')) loreClose(); });
+    }
+    if (typeof i !== 'number') { lrIdx = 0; for (var k = LORE.length - 1; k >= 0; k--) if (loreOk(LORE[k])) { lrIdx = k; break; } } else lrIdx = i;
+    lr.hidden = false; requestAnimationFrame(function () { lr.classList.add('on'); }); loreRender();
+  }
+  function loreClose() { if (!lr) return; lr.classList.remove('on'); setTimeout(function () { if (!lr.classList.contains('on')) lr.hidden = true; }, 400); }
+  function loreRender() {
+    var c = LORE[lrIdx], ok = loreOk(c), m = MED[c.tier];
+    lr.style.setProperty('--f1', m.f1); lr.style.setProperty('--f2', m.f2);
+    lr.querySelector('.vlr-tabs').innerHTML = LORE.map(function (x, n) {
+      return '<button type="button" role="tab" data-ch="' + n + '" aria-selected="' + (n === lrIdx) + '" class="' + (n === lrIdx ? 'on' : '') + (loreOk(x) ? '' : ' lk') + '">' + x.ic + (loreOk(x) ? '' : '<i>🔒</i>') + '</button>';
+    }).join('');
+    lr.querySelector('.vlr-body').innerHTML = '<div class="vlr-art" aria-hidden="true"><svg viewBox="36 66 48 54">' + medalArt(c.tier) + '</svg></div>' +
+      '<h4>' + h(c.t) + '</h4>' +
+      c.p.map(function (t, n) { return '<p class="' + (!ok && n > 0 ? 'blur' : '') + '" style="--d:' + (n * .35 + .3) + 's">' + h(t) + '</p>'; }).join('') +
+      (ok ? '<p class="vlr-end">— ✦ —</p>' : '<div class="vlr-lock">🔒 ปลดล็อกเมื่อเช็กอินติดกันครบ ' + c.need + ' วัน<small>สถิติสูงสุดของคุณ ' + (S && S.bestStreak || 0) + ' วัน</small></div>');
+    lr.querySelector('.vlr-body').scrollTop = 0;
   }
   function shopRender() {
     if (!sh || sh.hidden || !S) return;
@@ -469,6 +519,7 @@
     var bb = o && o.badge && bmap[o.badge], lft = bb ? bb.n - bb.have : 0;
     sayType(say2, !o ? 'อยากให้ฉันใส่อะไรดี? แตะของด้านล่างเลย ✨'
       : own.indexOf(o.id) >= 0 ? (worn.indexOf(o.id) >= 0 ? 'ใส่อยู่นะ เข้ากับฉันไหม? 😊' : 'ของเราเองนี่นา ใส่เลยไหม? 💛')
+      : o.id === 'medal' ? 'รู้ไหม เหรียญนี้มีตำนานนะ… กด 📜 อ่านดูสิ! อีก ' + lft + ' วันก็ได้แล้ว 🔥'
       : o.badge ? (bb && bb.n - bb.have <= 3 ? 'อีกแค่ ' + lft + ' วันเอง! เช็กอินต่อนะ 🔥' : 'สู้ ๆ อีก ' + lft + ' วันได้แน่! 🔥')
       : (S.points >= o.price ? 'ลองใส่อยู่! ชอบไหม? ✨' : 'อีกนิดเดียวก็ซื้อได้แล้ว 💪'));
     sh.querySelector('.vst-tabs').innerHTML = TABS.map(function (t) {
