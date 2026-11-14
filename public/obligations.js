@@ -49,14 +49,31 @@
   function parseIso(s) { var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ''); return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null; }
   /* วันเริ่มสัญญา (ใช้ตัวอ่านวันที่ของ remind-ui.js) — งวดรายเดือนเริ่มนับจากวันเริ่มสัญญา ถ้ายังไม่ถึง */
   var startCache = { r: null, d: null };
-  function startDate() {
-    var r = res(); if (startCache.r === r) return startCache.d;
-    var d = null;
-    try { if (window.VCRemind && VCRemind.extract) { var st0 = VCRemind.extract(srcText(), r).filter(function (x) { return x.kind === 'start'; })[0]; if (st0) d = parseIso(st0.dueDate); } } catch (e) {}
-    startCache = { r: r, d: d }; return d;
+  function keyDates() {
+    var r = res(); if (startCache.r === r) return startCache;
+    var st = null, en = null;
+    try {
+      if (window.VCRemind && VCRemind.extract) VCRemind.extract(srcText(), r).forEach(function (x) {
+        var d = parseIso(x.dueDate); if (!d) return;
+        if (x.kind === 'start' && !st) st = d;
+        if (x.kind === 'end' && (!en || d > en)) en = d;
+      });
+    } catch (e) {}
+    startCache = { r: r, d: st, e: en }; return startCache;
+  }
+  function startDate() { return keyDates().d; }
+  /* กำหนดที่ผูกกับวันสิ้นสุดสัญญา เช่น "ล่วงหน้า 30 วันก่อนสิ้นสุดสัญญา" "ภายใน 30 วันหลังสิ้นสุดสัญญา" "เมื่อสัญญาสิ้นสุด" */
+  function fromEnd(o) {
+    var w = normDigits((o.when || '') + ' ' + (o.what || '')), en = keyDates().e;
+    if (!en || !/(สิ้นสุด|หมดอายุ|ครบกำหนดสัญญา|ครบสัญญา|ไม่ต่อ)/.test(w)) return '';
+    var m = /(\d{1,3})\s*วัน/.exec(o.when || ''), n = m ? +m[1] : 0;
+    var sign = /หลัง/.test(o.when || '') ? 1 : /(ก่อน|ล่วงหน้า)/.test(o.when || '') ? -1 : 1;
+    var d = new Date(en.getFullYear(), en.getMonth(), en.getDate() + sign * n);
+    return iso(d);
   }
   function nextDue(o) {
     if (o.due_date) return o.due_date;
+    if (o.repeat !== 'monthly' && o.repeat !== 'yearly') { var fe = fromEnd(o); if (fe) return fe; }
     if (o.repeat === 'monthly' && o.day_of_month) {
       var t = today(), day = o.day_of_month, sd = startDate();
       if (sd && sd > t) t = sd;
