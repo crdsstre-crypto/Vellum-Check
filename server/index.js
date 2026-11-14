@@ -5,7 +5,11 @@
 import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { analyzeContract, answerFollowup, transcribeImage, explainClause, MAX_ITEMS_LIMIT, CONTRACT_TYPES, extractObligations } from './ai.js';
+import { analyzeContract, answerFollowup, transcribeImage, explainClause, MAX_ITEMS_LIMIT, CONTRACT_TYPES, extractObligations, PROMPT_VERSION } from './ai.js';
+import { guardResult, guardAny } from './guard.js';
+import { startRetention, runRetention, KEEP_DAYS } from './retention.js';
+import { logCheckReceipt, findReceipt, ownsRef, REF_RE } from './receipt.js';
+import { CATEGORIES as SUPPORT_CATEGORIES, RESPONSE_DAYS, createTicket, myTickets, listTickets, resolveTicket } from './support.js';
 import { translateTexts, allowTranslate, MAX_TEXTS as TR_MAX_TEXTS, MAX_LEN as TR_MAX_LEN, MAX_TOTAL as TR_MAX_TOTAL } from './translate.js';
 import { extractPdfText, extractDocxText } from './extract.js';
 import { initDb, pool } from './db.js';
@@ -463,7 +467,7 @@ app.post('/api/explain', async (req, res) => {
     h.n += 1; explainHits.set(who, h);
     if (explainHits.size > 20000) for (const [k, v] of explainHits) if (v.resetAt <= now) explainHits.delete(k);
     let out;
-    try { out = await explainClause(text, lang); }
+    try { out = guardAny(await explainClause(text, lang)); }
     catch (e) { h.n -= 1; throw e; }   // AI ล้มเหลว = ไม่นับครั้ง
     if (explainCache.size > 3000) explainCache.delete(explainCache.keys().next().value);
     explainCache.set(ck, out);
@@ -587,7 +591,7 @@ app.post('/api/followup', async (req, res) => {
     followupHits.set(user.id, hit);
 
     try {
-      const answer = await answerFollowup(question, context, langOf(req));
+      const answer = guardAny(await answerFollowup(question, context, langOf(req)));
       res.json({ ok: true, answer });
     } catch (err) {
       hit.count -= 1; // ล้มเหลวไม่นับโควตา
@@ -827,7 +831,7 @@ app.post('/api/check', async (req, res) => {
       analyzeContract(text, contractType, langOf(req)),
       extractObligations(text, langOf(req)).catch(e => { console.error('[obligations] failed:', e.message); return null; }),
     ]);
-    result = cleanResult({ ...raw, parties: ob?.parties, obligations: ob?.obligations }, text);
+    result = guardResult(cleanResult({ ...raw, parties: ob?.parties, obligations: ob?.obligations }, text));
   } catch (err) {
     console.error('[check] failed:', err.message);
     await refundCredits(user.id, 1).catch(e => console.error('[credits] refund failed:', e.message));
@@ -862,10 +866,72 @@ app.post('/api/check', async (req, res) => {
   const credits = await getCredits(user.id).catch(() => null);
   const voiceCredits = await getVoiceCredits(user.id).catch(() => null);
   // บันทึกผลตรวจไว้ดูย้อนหลัง ถ้าบันทึกไม่สำเร็จไม่กระทบผลที่ส่งให้ผู้ใช้ (รอเพื่อส่ง id กลับไปผูกความเห็น)
-  const inspectionId = await saveInspection(user.id, contractType, result)
+  // ผู้ใช้เลือก "ไม่บันทึกประวัติ" ได้ — ไม่เก็บผลตรวจไว้ในบัญชีเลย (ใบรับรองยังออกให้ แต่เก็บแค่ hash)
+  const noSave = req.body?.noSave === true;
+  const inspectionId = noSave ? null : await saveInspection(user.id, contractType, result)
     .catch(e => { console.error('[history] save failed:', e.message); return null; });
-  logCheck(user.id, contractType, result.items.length).catch(e => console.error('[stats] log failed:', e.message));
-  res.json({ ok: true, result, credits, voiceCredits, audio, audioText: audio ? audioText : '', audioAlign: audio ? audioAlign : null, voiceError, inspectionId });
+  const receipt = await logCheckReceipt(user.id, contractType, result, { terms: TERMS_VERSION, prompt: PROMPT_VERSION, saved: !!inspectionId });
+  result.receipt = receipt;
+  if (inspectionId) pool.query('UPDATE inspections SET result = jsonb_set(result, \'{receipt}\', $2::jsonb) WHERE id = $1', [inspectionId, JSON.stringify(receipt)]).catch(() => {});
+  res.json({ ok: true, result, receipt, noSave, credits, voiceCredits, audio, audioText: audio ? audioText : '', audioAlign: audio ? audioAlign : null, voiceError, inspectionId });
+});
+
+// ---------- แจ้งปัญหา / ขอคืนเครดิต ----------
+const supportHits = new Map();
+app.get('/api/support', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    const base = { categories: SUPPORT_CATEGORIES, responseDays: RESPONSE_DAYS, keepDays: KEEP_DAYS };
+    if (!user) return res.json({ ...base, tickets: [] });
+    res.json({ ...base, tickets: await myTickets(user.id) });
+  } catch (err) { console.error('[support] list failed:', err.message); res.status(500).json({ error: 'โหลดไม่สำเร็จ' }); }
+});
+app.post('/api/support', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน เพื่อให้ทีมงานตอบกลับทางอีเมลได้' });
+    const now = Date.now(), h = supportHits.get(user.id);
+    if (h && h.resetAt > now && h.count >= 5) return res.status(429).json({ error: 'ส่งบ่อยเกินไป ลองใหม่ในอีกหนึ่งชั่วโมง' });
+    supportHits.set(user.id, h && h.resetAt > now ? { count: h.count + 1, resetAt: h.resetAt } : { count: 1, resetAt: now + 3600e3 });
+    let ref = String(req.body?.ref || '').trim().toUpperCase();
+    if (ref && !(await ownsRef(user.id, ref).catch(() => false))) ref = '';   // แนบได้เฉพาะรหัสของตัวเอง
+    const out = await createTicket(user, { category: req.body?.category, message: req.body?.message, ref });
+    if (out.error) return res.status(out.status || 400).json({ error: out.error });
+    res.json(out);
+  } catch (err) { console.error('[support] create failed:', err.message); res.status(500).json({ error: 'ส่งไม่สำเร็จ ลองใหม่อีกครั้ง' }); }
+});
+app.get('/api/admin/support', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'ยังไม่ได้เข้าสู่ระบบ' });
+    if (!isAdmin(user)) return res.status(403).json({ error: 'บัญชีนี้ไม่มีสิทธิ์แอดมิน' });
+    res.json({ tickets: await listTickets(String(req.query.status || 'open')), categories: SUPPORT_CATEGORIES, responseDays: RESPONSE_DAYS });
+  } catch (err) { console.error('[support] admin list failed:', err.message); res.status(500).json({ error: 'โหลดไม่สำเร็จ' }); }
+});
+app.post('/api/admin/support/:id/resolve', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'ยังไม่ได้เข้าสู่ระบบ' });
+    if (!isAdmin(user)) return res.status(403).json({ error: 'บัญชีนี้ไม่มีสิทธิ์แอดมิน' });
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id) || id < 1) return res.status(400).json({ error: 'รหัสเรื่องไม่ถูกต้อง' });
+    const out = await resolveTicket(id, { note: req.body?.note, refund: req.body?.refund });
+    if (out.error) return res.status(out.status || 400).json({ error: out.error });
+    console.log(`[support] ${user.email} ปิดเรื่อง #${id}${out.refunded ? ' คืน ' + out.refunded + ' เครดิต' : ''}`);
+    res.json(out);
+  } catch (err) { console.error('[support] resolve failed:', err.message); res.status(500).json({ error: 'บันทึกไม่สำเร็จ' }); }
+});
+app.get('/api/admin/receipt/:ref', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'ยังไม่ได้เข้าสู่ระบบ' });
+    if (!isAdmin(user)) return res.status(403).json({ error: 'บัญชีนี้ไม่มีสิทธิ์แอดมิน' });
+    const ref = String(req.params.ref || '').toUpperCase();
+    if (!REF_RE.test(ref)) return res.status(400).json({ error: 'รูปแบบรหัสไม่ถูกต้อง' });
+    const r = await findReceipt(ref);
+    if (!r) return res.status(404).json({ error: 'ไม่พบรหัสนี้' });
+    res.json(r);
+  } catch (err) { console.error('[receipt] find failed:', err.message); res.status(500).json({ error: 'ค้นไม่สำเร็จ' }); }
 });
 
 // ---------- ความเห็นต่อผลตรวจ ----------
@@ -1145,6 +1211,7 @@ initDb()
     app.listen(PORT, () => {
       console.log(`[เช็กสัญญา] server running on port ${PORT}`);
       setTimeout(() => warmPreviews(true), 3000);   // เตรียมตัวอย่างเสียงทุกเสียงไว้ล่วงหน้า
+      startRetention();                             // ลบผลตรวจที่เก่าเกิน 90 วันอัตโนมัติ
     });
   })
   .catch(err => {
