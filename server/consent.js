@@ -8,7 +8,7 @@ import crypto from 'node:crypto';
 import { pool } from './db.js';
 
 export const TERMS_VERSION = '1.1';
-const KINDS = new Set(['check', 'signup']);
+const KINDS = new Set(['check', 'signup', 'high_value']);
 
 let ready = null;
 function ensureTable() {
