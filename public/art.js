@@ -5406,8 +5406,11 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     if (!mq.matches) return;
     if (window.__vcDemoRun && window.__vcDemoScene) return; /* ผลตัวอย่างมีฉากของตัวเอง */
     hideLoader(true);
-    var raw = ta.value.split(/\n+/).map(function (l) { return l.trim(); }).filter(Boolean).slice(0, 14);
+    var raw = ta.value.split(/\n+/).map(function (l) { return l.trim(); }).filter(Boolean);
     var title = raw.length && !/^ข้อ\s*[0-9๐-๙]/.test(raw[0]) ? raw.shift() : 'สัญญา';
+    /* v282: ถ้ามี "ข้อ N" ให้อ่านเฉพาะข้อสัญญา (ไม่อ่านคำนำ/ช่องลงชื่อ) ครบทุกข้อ · ไม่มีก็ใช้บรรทัดแรก ๆ */
+    var cls = raw.filter(function (l) { return /^ข้อ\s*[0-9๐-๙]/.test(l); });
+    raw = (cls.length >= 2 ? cls : raw).slice(0, 20);
     ld = document.createElement('div'); ld.className = 'vc-ld vc-ld3'; ld.setAttribute('role', 'status'); ld.setAttribute('aria-live', 'polite');
     ld.innerHTML = '<div class="vc-ld-card">' +
       '<div class="vc-ld-stage" aria-hidden="true">' +
@@ -5431,6 +5434,15 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     document.body.appendChild(ld);
     document.documentElement.classList.add('vc-ld-open');
     lines = [].slice.call(ld.querySelectorAll('.vc-ld-paper p')); cur = -1; round = 0;
+    /* v282: ย่อตัวอักษรให้ทุกบรรทัดอยู่ในแผ่นกระดาษ (เดิมบรรทัดท้าย ๆ ล้นออกไป กล้องเลยซูมไปที่ว่าง) */
+    (function fitPaper() {
+      var pp = ld.querySelector('.vc-ld-paper'); if (!pp || !lines.length) return;
+      for (var k = 0; k < 3 && pp.scrollHeight > pp.clientHeight + 1; k++) {
+        var f = Math.max(.55, (pp.clientHeight - 44) / Math.max(1, pp.scrollHeight - 44)) * (k ? .96 : 1);
+        lines.forEach(function (p) { var cs = parseFloat(getComputedStyle(p).fontSize), mb = parseFloat(getComputedStyle(p).marginBottom);
+          p.style.fontSize = (cs * f).toFixed(2) + 'px'; p.style.marginBottom = (mb * f).toFixed(2) + 'px'; });
+      }
+    })();
     setStep(0); scene('privacy'); say('ปกปิดชื่อ เลขบัตร และเบอร์โทรก่อนส่ง');
     if (window.__vcDemoRun) { /* ผลตัวอย่าง: บอกตรง ๆ ว่าไม่ได้ส่งไปตรวจ */
       ld.classList.add('vc-ld-demo'); ld.querySelector('.vc-ld-h').textContent = 'กำลังเปิดผลตัวอย่าง';
@@ -5455,6 +5467,8 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     lines.forEach(function (p, k) { p.classList.toggle('is-reading', k === i); });
     var p = lines[i]; if (!p) return;
     var cy = p.offsetTop + p.offsetHeight / 2, ph = paper.offsetHeight;
+    /* v282: ไม่ให้กล้องเลื่อนพ้นขอบกระดาษ (เห็นที่ว่างด้านล่าง/บน) */
+    var half = ph / (2 * zoom) + 14; cy = Math.min(ph - half, Math.max(half, cy));
     hl.style.transform = 'translateY(' + (p.offsetTop - 3) + 'px)'; hl.style.height = (p.offsetHeight + 6) + 'px'; hl.style.opacity = '1';
     cam.style.transform = 'scale(' + zoom + ') translateY(' + (ph / 2 - cy).toFixed(1) + 'px)';
     var n = p.getAttribute('data-n'), total = lines.filter(function (x) { return x.hasAttribute('data-n'); }).length;
