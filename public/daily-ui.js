@@ -51,8 +51,7 @@
   function medalTier() { return pvTier || realTier(); }
   function medalArt(t) {
     var c = MED[t] || MED[1];
-    return (t === 3 ? '<g class="md-wing"><path d="M49 96c-10-2-17-9-19-17 6 3 10 3 13 2-4-2-7-5-8-9 6 3 11 4 14 4-2-2-3-4-3-6 5 4 7 9 8 14z" fill="#f4eeff" stroke="' + INK + '" stroke-width="1.4" stroke-linejoin="round"/>' +
-        '<path d="M71 96c10-2 17-9 19-17-6 3-10 3-13 2 4-2 7-5 8-9-6 3-11 4-14 4 2-2 3-4 3-6-5 4-7 9-8 14z" fill="#f4eeff" stroke="' + INK + '" stroke-width="1.4" stroke-linejoin="round"/></g>' : '') +
+    return (t === 3 ? '<g transform="translate(60 72) scale(1.22) translate(-60 -72)">' : '') +
       '<path d="M40 72h8l15 15h-8z" fill="' + c.r1 + '" stroke="' + INK + '" stroke-width="1.8" stroke-linejoin="round"/>' +
       '<path d="M80 72h-8L57 87h8z" fill="' + c.r2 + '" stroke="' + INK + '" stroke-width="1.8" stroke-linejoin="round"/>' +
       '<path d="M44 72l15 15M76 72 61 87" stroke="' + c.rs + '" stroke-width="2.2"/>' +
@@ -62,13 +61,18 @@
       '<circle cx="60" cy="86.5" r="2.8" fill="none" stroke="' + c.line + '" stroke-width="2"/>' +
       '<g class="md-coin"><path d="M60.0 85.8 L61.9 87.3 L64.3 86.7 L65.5 88.8 L67.9 89.1 L68.2 91.5 L70.3 92.7 L69.7 95.1 L71.2 97.0 L69.7 98.9 L70.3 101.3 L68.2 102.5 L67.9 104.9 L65.5 105.2 L64.3 107.3 L61.9 106.7 L60.0 108.2 L58.1 106.7 L55.7 107.3 L54.5 105.2 L52.1 104.9 L51.8 102.5 L49.7 101.3 L50.3 98.9 L48.8 97.0 L50.3 95.1 L49.7 92.7 L51.8 91.5 L52.1 89.1 L54.5 88.8 L55.7 86.7 L58.1 87.3Z" fill="' + c.rim + '" stroke="' + INK + '" stroke-width="1.6" stroke-linejoin="round"/>' +
       '<circle cx="60" cy="97" r="8.4" fill="' + c.disc + '" stroke="' + c.line + '" stroke-width="1.4"/>' +
-      (t === 3 ? '<path d="M60 89.5 67 97l-7 7.5-7-7.5z" fill="' + c.inn + '" stroke="' + c.hi + '" stroke-width=".9"/><path d="M60 89.5v15M53 97h14" stroke="' + c.hi + '" stroke-width=".5" opacity=".7"/>'
+      (t === 3 ? '<g class="md-gem"><path d="M60 89 67.5 95.5 60 105.5 52.5 95.5z" fill="#7a4cff" stroke="#fff" stroke-width=".7"/>' +
+          '<path d="M60 89l-3.5 6.5h7z" fill="#e9dcff"/><path d="M52.5 95.5 56.5 95.5 60 89z" fill="#b89aff"/><path d="M67.5 95.5 63.5 95.5 60 89z" fill="#cdb5ff"/>' +
+          '<path d="M52.5 95.5h4L60 105.5z" fill="#5b2bd6"/><path d="M67.5 95.5h-4L60 105.5z" fill="#8a5cff"/><path d="M56.5 95.5h7L60 105.5z" fill="#a47dff"/>' +
+          '<path class="md-rb" d="M53.5 96 66.5 96 60 104.5z" fill="url(#mdRb)" opacity="0"/></g>' +
+          '<defs><linearGradient id="mdRb" x1="0" x2="1"><stop offset="0" stop-color="#ff7ad9"/><stop offset=".33" stop-color="#7ad7ff"/><stop offset=".66" stop-color="#b6ff8a"/><stop offset="1" stop-color="#ffd27a"/></linearGradient></defs>'
         : '<circle cx="60" cy="97" r="6.3" fill="' + c.inn + '" stroke="' + c.hi + '" stroke-width=".9" opacity=".95"/>') +
       '<path class="md-gl" d="M53.6 94a7 7 0 0 1 5-4.8" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/>' +
-      '<g class="md-fl"><path d="M60 102.6c-2.6 0-4.2-1.7-4.2-3.8 0-2.4 1.9-3.4 2.4-5.8 1.4 1 2.2 2.3 2.2 3.5.7-.5 1.1-1.3 1.2-2.1 1.6 1.3 2.4 2.8 2.4 4.4 0 2.2-1.6 3.8-4 3.8z" fill="' + c.f1 + '" stroke="' + c.fs + '" stroke-width=".8"/>' +
-      '<path d="M60 102c-1.2 0-2-.8-2-1.9 0-1.4 1.2-1.8 1.4-3.2.9.7 2.6 1.9 2.6 3.2 0 1.1-.8 1.9-2 1.9z" fill="' + c.f2 + '"/></g></g>' +
+      (t === 3 ? '</g>' : '<g class="md-fl"><path d="M60 102.6c-2.6 0-4.2-1.7-4.2-3.8 0-2.4 1.9-3.4 2.4-5.8 1.4 1 2.2 2.3 2.2 3.5.7-.5 1.1-1.3 1.2-2.1 1.6 1.3 2.4 2.8 2.4 4.4 0 2.2-1.6 3.8-4 3.8z" fill="' + c.f1 + '" stroke="' + c.fs + '" stroke-width=".8"/>' +
+      '<path d="M60 102c-1.2 0-2-.8-2-1.9 0-1.4 1.2-1.8 1.4-3.2.9.7 2.6 1.9 2.6 3.2 0 1.1-.8 1.9-2 1.9z" fill="' + c.f2 + '"/></g></g>') +
       '<circle class="md-em" cx="58" cy="92" r=".9" fill="' + c.f2 + '"/><circle class="md-em md-em2" cx="62" cy="92" r=".7" fill="' + c.f2 + '"/>' +
-      '<path class="md-tw" d="M67 88l.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8z" fill="#fffbe6"/>';
+      '<path class="md-tw" d="M67 88l.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8z" fill="#fffbe6"/>' +
+      (t === 3 ? '<g class="md-burst" transform="translate(60 96)"><path d="M0-15 1.2-1.2 15 0 1.2 1.2 0 15-1.2 1.2-15 0-1.2-1.2z" fill="#fff"/><path d="M0-7 .7-.7 7 0 .7.7 0 7-.7.7-7 0-.7-.7z" fill="#fff" transform="rotate(45)"/></g></g>' : '');
   }
   /* (1) ออร่าไฟรอบตัวน้องตอนใส่เหรียญ (สีตามระดับเหรียญ) — วาดไว้หลังตัวน้อง */
   function auraArt(t) {   // แสงอุ่นจาง ๆ หลังตัว + ถ่านไฟไม่กี่จุด (ไม่ใช่ลิ้นไฟการ์ตูน)
@@ -78,6 +82,17 @@
   }
 
 
+  function backArt(t) {   // ระดับเพชร: ปีกคริสตัลกางหลังตัว + มงกุฎแสงเหนือหัว
+    if (t !== 3) return '';
+    var fe = function (d, o) { return '<path d="' + d + '" fill="url(#cwG)" stroke="#fff" stroke-width=".8" stroke-linejoin="round" opacity="' + o + '"/>'; };
+    var wing = fe('M50 70C34 56 16 50-6 52c10 6 14 11 14 16-8-1-14 0-20 4 10 3 16 7 18 12-6 1-11 4-14 9 12-1 22 1 30 5z', .95) +
+      fe('M50 74C38 66 26 62 10 62c6 5 8 9 8 13-5 0-9 2-12 5 8 1 13 4 15 8 9-1 18 0 28 4z', .8) +
+      '<path d="M50 70C34 60 18 56 0 56M50 72C36 68 24 68 6 74M50 76C38 76 28 80 16 88" stroke="#fff" stroke-width=".7" fill="none" opacity=".8"/>';
+    return '<g class="cw" aria-hidden="true"><defs><linearGradient id="cwG" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".95"/><stop offset=".45" stop-color="#d9c6ff" stop-opacity=".8"/><stop offset="1" stop-color="#8a6cff" stop-opacity=".45"/></linearGradient></defs>' +
+      '<g class="cw-l">' + wing + '</g><g class="cw-r" transform="translate(120 0) scale(-1 1)"><g class="cw-l2">' + wing + '</g></g></g>' +
+      '<g class="halo" aria-hidden="true"><ellipse cx="60" cy="8" rx="20" ry="5" fill="none" stroke="#f3e9ff" stroke-width="2.2"/><ellipse cx="60" cy="8" rx="20" ry="5" fill="none" stroke="#b28bff" stroke-width="5" opacity=".35"/>' +
+      '<path class="halo-g" d="M44 6.5a20 5 0 0 1 10-3" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></g>';
+  }
   function artFor(id) { return id === 'medal' ? medalArt(medalTier()) : ART_OUT[id] ? ART_OUT[id].art : ''; }
   var RAR = { common: 'ธรรมดา', rare: 'หายาก', epic: 'พิเศษ', legendary: 'ตำนาน' };
   function shopItems() { return (S && S.shop || []).filter(function (o) { return ART_OUT[o.id]; }); }
@@ -111,7 +126,7 @@
     var re = /<g[\s>]|<\/g>/g; re.lastIndex = i;
     for (var mt; (mt = re.exec(svg));) { if (mt[0] === '</g>') { depth--; if (!depth) { j = mt.index + 4; break; } } else depth++; }
     var out = svg.slice(0, j) + '<g class="vm-outfit">' + art + '</g>' + svg.slice(j);
-    if (worn.indexOf('medal') >= 0) { var k = out.indexOf('>') + 1; out = out.slice(0, k) + auraArt(medalTier()) + out.slice(k); }
+    if (worn.indexOf('medal') >= 0) { var k = out.indexOf('>') + 1; out = out.slice(0, k) + auraArt(medalTier()) + backArt(medalTier()) + out.slice(k); }
     return out;
   }
   function outfitHtml() {
@@ -342,7 +357,12 @@
         var sz = 3 + Math.random() * 12;
         bk += '<i class="vst-bk" style="left:' + (4 + Math.random() * 92).toFixed(1) + '%;width:' + sz.toFixed(1) + 'px;height:' + sz.toFixed(1) + 'px;--b:' + (sz > 9 ? 4 : sz > 6 ? 2 : .6) + 'px;--t:' + (7 + Math.random() * 8).toFixed(1) + 's;--d:-' + (Math.random() * 12).toFixed(1) + 's;--o:' + (.35 + Math.random() * .5).toFixed(2) + '"></i>';
       }
-      f.innerHTML = '<i class="vst-smoke"></i><i class="vst-smoke s2"></i><i class="vst-haze"></i>' + bk + '<i class="vst-hor"></i>';
+      var sn = '', sd = '';
+      for (var q = 0; q < 18; q++) { var z = 4 + Math.random() * 8; sn += '<i class="vst-sf" style="left:' + (Math.random() * 100).toFixed(1) + '%;font-size:' + z.toFixed(1) + 'px;--t:' + (8 + Math.random() * 8).toFixed(1) + 's;--d:-' + (Math.random() * 14).toFixed(1) + 's;--x:' + (Math.random() * 40 - 20).toFixed(0) + 'px">❄</i>'; }
+      var SH = [[18, 30, 10], [80, 26, 8], [12, 62, 7], [86, 58, 11], [26, 82, 6], [74, 80, 8]];
+      SH.forEach(function (p, n) { sd += '<i class="vst-shard" style="left:' + p[0] + '%;top:' + p[1] + '%;width:' + p[2] + 'px;height:' + (p[2] * 1.7).toFixed(0) + 'px;--d:-' + (n * .9).toFixed(1) + 's"></i>'; });
+      f.innerHTML = '<i class="vst-smoke"></i><i class="vst-smoke s2"></i><i class="vst-haze"></i>' + bk +
+        '<i class="vst-neb"></i><i class="vst-stars"></i><i class="vst-stars s2"></i>' + sd + '<i class="vst-fog"></i>' + sn + '<i class="vst-hor"></i>';
     }
     var bd = (S.badges || []).filter(function (b) { return b.id === 's7'; })[0], best = S.bestStreak || 0, rt = realTier(), line2 = '', pips = '';
     if (bd && !bd.earned) {
@@ -350,7 +370,7 @@
       line2 = 'ปลดล็อกในอีก ' + (bd.n - bd.have) + ' วัน';
     } else if (best < 30) line2 = 'อีก ' + ((best < 14 ? 14 : 30) - best) + ' วัน สู่ระดับ' + (best < 14 ? 'ทองคำขาว' : 'เพชร');
     else line2 = 'ระดับสูงสุด';
-    var html = '<div class="vst-lux"><em>LIMITED · ' + (MED[medalTier()].name === 'ทอง' ? 'GOLD' : MED[medalTier()].name === 'ทองคำขาว' ? 'PLATINUM' : 'DIAMOND') + '</em>' +
+    var html = '<div class="vst-lux"><em>' + (medalTier() === 3 ? '<i class="vst-dia"></i>' : '') + 'LIMITED · ' + (MED[medalTier()].name === 'ทอง' ? 'GOLD' : MED[medalTier()].name === 'ทองคำขาว' ? 'PLATINUM' : 'DIAMOND') + '</em>' +
       '<b>ของรางวัลเฉพาะผู้ไม่ยอมแพ้</b><span>' + line2 + '</span>' + (pips ? '<span class="vst-dots">' + pips + '</span>' : '') + '</div>';
     if (picked) html += '<div class="vst-tiers" role="group" aria-label="ดูตัวอย่างระดับเหรียญ">' + [[1, 'ทอง', 7], [2, 'ทองคำขาว', 14], [3, 'เพชร', 30]].map(function (t) {
       return '<button type="button" data-tier="' + t[0] + '" class="t' + t[0] + (medalTier() === t[0] ? ' on' : '') + (bd && bd.earned && rt >= t[0] ? ' got' : '') + '">' + t[1] + '<small>' + t[2] + ' วัน' + (bd && bd.earned && rt >= t[0] ? ' ✓' : '') + '</small></button>';
