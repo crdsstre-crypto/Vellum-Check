@@ -595,3 +595,28 @@ html body .vdc .vbg-m svg{width:100% !important;height:100% !important;fill:init
 html body .vdc .vof-b svg{width:46px !important;height:34px !important;overflow:visible}
 @media (max-width:380px){html body .vdc .vof-b svg{width:38px !important;height:28px !important}}
 html body .vdc .vof-b.is-lock svg{filter:brightness(0) drop-shadow(0 0 1px rgba(255,214,120,.6));opacity:.55}
+
+/* ===== v18 (14 พ.ย.): ร้านแต่งตัวน้อง (ซื้อด้วยแต้ม · ความหายาก 4 ระดับ · ลองใส่ก่อนซื้อ) ===== */
+html body .vdc .vdg-mascot svg.vm{overflow:visible}
+.vof-tip{margin:-2px 4px 10px;font:400 .7rem/1.4 'Prompt',sans-serif;color:#9f9479}
+html body .vdc .vof-row{grid-template-columns:repeat(3,1fr);gap:8px}
+html body .vdc .vof-b{--rc:#8f8676;padding:16px 4px 8px;gap:4px;border-color:color-mix(in srgb,var(--rc) 45%,transparent);background:radial-gradient(100% 70% at 50% 30%,color-mix(in srgb,var(--rc) 16%,transparent),transparent 70%),rgba(255,255,255,.025)}
+.vof-b.r-rare{--rc:#4fa3ff}.vof-b.r-epic{--rc:#b36bff}.vof-b.r-legendary{--rc:#f4c542}
+html body .vdc .vof-b.r-legendary{animation:vofLeg 3s ease-in-out infinite}
+@keyframes vofLeg{50%{box-shadow:0 0 16px rgba(244,197,66,.45)}}
+html body .vdc .vof-b svg{width:56px !important;height:40px !important}
+html body .vdc .vof-b.is-lock svg{filter:none;opacity:1}
+html body .vdc .vof-b.is-lock.is-badge-item svg{filter:grayscale(1) brightness(.6)}
+.vof-r{position:absolute;top:5px;left:6px;font:700 .52rem/1 'Prompt',sans-serif;font-style:normal;letter-spacing:.04em;color:var(--rc)}
+html body .vdc .vof-b small{color:#e9dcb8;font-size:.64rem}
+.vof-act{display:inline-flex;align-items:center;gap:4px;margin-top:2px;padding:3px 8px;border-radius:99px;font:700 .64rem/1.2 'Prompt',sans-serif;background:rgba(255,255,255,.07);color:#d4c9a8;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.vof-act.is-buy{background:linear-gradient(180deg,#ffe28a,#f0b93a);color:#2a1a02}
+.vof-act.is-buy.is-short{background:rgba(255,255,255,.08);color:#a59b80}
+.vof-act.is-on{background:rgba(95,211,166,.18);color:#7ee8b8}
+.vof-act.is-badge{font-weight:600;font-size:.58rem;background:rgba(244,197,66,.12);color:#e9cf86}
+.vof-coin{width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff3c4,#f4c542 55%,#b67a12);box-shadow:inset 0 0 0 1px rgba(90,60,6,.6)}
+html body .vdc .vof-b.is-try{border-color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.25),0 0 18px color-mix(in srgb,var(--rc) 60%,transparent)}
+html body .vdc .vof-b.is-try .vof-act.is-buy:not(.is-short)::after{content:" · แตะซื้อ"}
+html body .vdc .vof-b.is-on{border-color:#5fd3a6}
+.vof-b.is-new{animation:vbgNew 1s cubic-bezier(.3,1.6,.5,1)}
+html body .vdc .vof-act .vof-coin{position:static;display:inline-block;flex:none}
