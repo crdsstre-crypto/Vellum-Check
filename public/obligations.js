@@ -47,10 +47,19 @@
   function iso(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
   function today() { var d = new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
   function parseIso(s) { var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ''); return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null; }
+  /* วันเริ่มสัญญา (ใช้ตัวอ่านวันที่ของ remind-ui.js) — งวดรายเดือนเริ่มนับจากวันเริ่มสัญญา ถ้ายังไม่ถึง */
+  var startCache = { r: null, d: null };
+  function startDate() {
+    var r = res(); if (startCache.r === r) return startCache.d;
+    var d = null;
+    try { if (window.VCRemind && VCRemind.extract) { var st0 = VCRemind.extract(srcText(), r).filter(function (x) { return x.kind === 'start'; })[0]; if (st0) d = parseIso(st0.dueDate); } } catch (e) {}
+    startCache = { r: r, d: d }; return d;
+  }
   function nextDue(o) {
     if (o.due_date) return o.due_date;
     if (o.repeat === 'monthly' && o.day_of_month) {
-      var t = today(), day = o.day_of_month;
+      var t = today(), day = o.day_of_month, sd = startDate();
+      if (sd && sd > t) t = sd;
       var on = function (y, m) { return new Date(y, m, Math.min(day, new Date(y, m + 1, 0).getDate())); };
       var c = on(t.getFullYear(), t.getMonth()); if (c < t) c = on(t.getFullYear(), t.getMonth() + 1);
       return iso(c);
@@ -67,6 +76,9 @@
   /* ---------- อ่านภาระผูกพันจากข้อความในเครื่อง (ผลตรวจเก่า/ตัวอย่าง) ---------- */
   var RE_MONEY = /(\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?\s*บาท/;
   var RE_WHEN = /(ทุก\s*วันที่\s*\d{1,2}\s*ของ\s*(?:ทุก\s*)?เดือน|(?:ภายใน\s*)?วันที่\s*\d{1,2}\s*ของ\s*(?:ทุก\s*)?เดือน|ภายใน\s*\d{1,3}\s*วัน[^\s,]{0,20}|ล่วงหน้า\s*(?:ไม่น้อยกว่า\s*)?\d{1,3}\s*วัน|ทุก\s*(?:สิ้น)?เดือน|ภายในวันที่\s*\d{1,2}[^\s,]{0,12})/;
+  var ROLES = [].concat.apply([], PAIRS).sort(function (a, b) { return b.length - a.length; }).join('|');
+  var RE_SUBJ = new RegExp('^(?:' + ROLES + ')\\s*(?:จะ)?(?:ต้อง|มีหน้าที่|ตกลง(?:จะ)?)\\s*');
+  var RE_BAN = new RegExp('^ห้าม\\s*(?:' + ROLES + ')\\s*');
   function localExtract(text, result) {
     text = normDigits(text);
     if (!text.trim() && result) text = normDigits((result.items || []).map(function (it) { return it && it.quote || ''; }).join('\n'));
@@ -89,7 +101,8 @@
         party = a > -1 && (b < 0 || a < b) ? pair[1] : b > -1 ? pair[0] : '';
         if (!party && kind === 'pay') party = pair[0];
       }
-      var what = s.replace(/^ข้อ\s*\d+(\.\d+)*\s*/, '').replace(/^\*\s*/, '');
+      var what = s.replace(/^ข้อ\s*\d+(\.\d+)*\s*/, '').replace(/^\*\s*/, '')
+        .replace(RE_SUBJ, '').replace(RE_BAN, 'ห้าม');
       if (what.length > 70) what = what.slice(0, 68) + '…';
       var key = kind + '|' + what.slice(0, 24); if (seen[key]) return; seen[key] = 1;
       var mm = RE_MONEY.exec(s), wh = RE_WHEN.exec(s), dom = /วันที่\s*(\d{1,2})\s*ของ\s*(?:ทุก\s*)?เดือน/.exec(s);
