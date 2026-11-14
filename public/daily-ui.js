@@ -35,6 +35,49 @@
     if (m === 'sad') return 'เมื่อวานพลาดไปนิด ไม่เป็นไร แต้มยังอยู่ครบ เริ่มใหม่กัน!';
     return S.week[6].today ? 'วันนี้เปิดกล่องสมบัติได้แล้ว!' : 'วันนี้มีของรออยู่นะ! กดรับ +' + S.todayReward + ' แต้มเลย';
   }
+  /* (1) ไฟวันติด: เปลวไฟ 3 ชั้นพลิ้ว + สะเก็ดไฟ · ระดับตามจำนวนวัน (ส้ม → ทอง → ไฟฟ้า) */
+  function flameTier(n) { return n >= 7 ? 3 : n >= 3 ? 2 : n >= 1 ? 1 : 0; }
+  var FLAME = '<svg class="vf-svg" viewBox="0 0 48 60" aria-hidden="true">' +
+    '<path class="vf-o" d="M24 58C11 58 4 49 4 39 4 27 13 21 15 9c7 4 11 11 11 18 3-2 5-6 5-10 8 6 13 14 13 22 0 11-8 19-20 19Z"/>' +
+    '<path class="vf-m" d="M24 56c-8 0-13-6-13-13 0-8 6-12 8-20 4 3 6 8 6 12 2-1 4-4 4-7 5 4 8 9 8 15 0 8-5 13-13 13Z"/>' +
+    '<path class="vf-i" d="M24 55c-4 0-7-3-7-7 0-5 4-7 5-12 3 3 9 7 9 12 0 4-3 7-7 7Z"/></svg>' +
+    '<i class="vf-em"></i><i class="vf-em"></i><i class="vf-em"></i>';
+  /* (2) นาฬิกาพลิก: ตัวเลขแต่ละหลักเป็นแผ่นพลิก */
+  function flipParts(ms) { var t = Math.max(0, Math.floor(ms / 1000)), p = function (n) { return (n < 10 ? '0' : '') + n; }; return [p(Math.floor(t / 3600)), p(Math.floor(t % 3600 / 60)), p(t % 60)]; }
+  function flipHtml(ms, small) {
+    return '<span class="vfl' + (small ? ' is-sm' : '') + '" data-flip role="timer" aria-label="เหลือเวลา ' + hms(ms) + '">' + flipParts(ms).map(function (g, gi) {
+      return (gi ? '<em>:</em>' : '') + g.split('').map(function (d) { return '<i class="vfd"><b>' + d + '</b></i>'; }).join('');
+    }).join('') + '</span>';
+  }
+  function flipSet(el, ms) {
+    var ds = flipParts(ms).join('').split(''), cells = el.querySelectorAll('.vfd');
+    el.setAttribute('aria-label', 'เหลือเวลา ' + hms(ms));
+    [].forEach.call(cells, function (c, i) {
+      var cur = c.firstChild ? c.firstChild.textContent : '';
+      if (cur === ds[i]) return;
+      c.innerHTML = '<b>' + ds[i] + '</b><s>' + cur + '</s>';
+      c.classList.remove('go'); void c.offsetWidth; c.classList.add('go');
+    });
+  }
+  /* (7) เหรียญตรา */
+  var BADGE_ART = {
+    d1: '<path d="M32 16 36 28h12l-10 8 4 12-10-7-10 7 4-12-10-8h12z"/>',
+    s7: '<path d="M32 48c-7 0-11-5-11-11 0-7 5-10 7-17 4 3 6 7 6 11 2-1 3-4 3-6 4 3 7 8 7 13 0 6-5 10-12 10z"/>',
+    d30: '<path d="M22 20h20v8a10 10 0 0 1-20 0zM18 22h4v4a4 4 0 0 1-4-4zM46 22h-4v4a4 4 0 0 0 4-4zM29 38h6v5h5v4H24v-4h5z"/>',
+    s30: '<path d="M33 14 22 34h9l-2 16 13-22h-9z"/>',
+    d100: '<path d="M18 40 22 22l8 9 2-13 2 13 8-9 4 18zM18 43h28v5H18z"/>'
+  };
+  function badgesHtml() {
+    if (!S || !S.badges) return '';
+    var got = S.badges.filter(function (b) { return b.earned; }).length;
+    return '<div class="vbg"><div class="vbg-hd"><b>เหรียญตรา</b><span>' + got + '/' + S.badges.length + '</span></div><div class="vbg-row">' +
+      S.badges.map(function (b) {
+        var pct = Math.round(b.have / b.n * 100);
+        return '<button type="button" class="vbg-b' + (b.earned ? ' is-on' : '') + '" data-badge="' + b.id + '" style="--bp:' + pct + '%" aria-label="' + h(b.name + ' · ' + b.desc + (b.earned ? ' · ได้แล้ว' : ' · ' + b.have + '/' + b.n)) + '">' +
+          '<span class="vbg-m"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="32" class="vbg-c"/><circle cx="32" cy="32" r="24" class="vbg-c2"/><g class="vbg-i">' + (BADGE_ART[b.id] || BADGE_ART.d1) + '</g></svg></span>' +
+          '<small>' + h(b.name) + '</small><em>' + (b.earned ? 'ได้แล้ว' : b.have + '/' + b.n) + '</em></button>';
+      }).join('') + '</div></div>';
+  }
   function fmt(n) { return Number(n || 0).toLocaleString('th-TH'); }
   function slot() { if (!S) return 0; for (var i = 0; i < S.week.length; i++) if (S.week[i].today) return i + 1; return 0; }
 
@@ -91,6 +134,7 @@
       if (!box || box.hidden) { stopTick(); return; }
       var ms = msToMidnight(), el = box.querySelectorAll('[data-cd]');
       [].forEach.call(el, function (x) { x.textContent = x.getAttribute('data-cd') === 's' ? hms2(ms) : hms(ms); });
+      [].forEach.call(box.querySelectorAll('[data-flip]'), function (f) { flipSet(f, ms); });
       var mn = box.querySelector('.vdg-moon'); if (mn) mn.style.setProperty('--dp', (100 - ms / 864e3).toFixed(1) + '%');
       if (ms < 1000) { stopTick(); setTimeout(load, 1500); }  // ขึ้นวันใหม่
     }, 1000);
@@ -100,7 +144,8 @@
   function cardHtml(w, i) {
     var done = S.week.filter(function (x) { return x.done; }).length;
     var st = w.done ? 'is-done' : w.today ? 'is-open' : 'is-lock', soon = S.checkedToday && i === done;
-    var foot = w.done ? '' : w.today ? 'วันนี้' : soon ? 'พรุ่งนี้ <b data-cd="s">' + hms2(msToMidnight()) + '</b>' : '';
+    var toChest = S.checkedToday ? 7 - done : 6 - done;
+    var foot = w.done ? '' : w.today ? 'วันนี้' : soon ? 'พรุ่งนี้ <b data-cd="s">' + hms2(msToMidnight()) + '</b>' : i === 6 ? 'อีก ' + toChest + ' วัน' : '';
     var tag = w.today ? 'button' : 'div';
     return '<' + tag + (w.today ? ' type="button"' : '') + ' class="vdg-c ' + st + (soon ? ' is-soon' : '') + (i === 6 ? ' is-big' : '') + '" data-i="' + i + '"' +
       (w.today ? ' aria-label="รับรางวัลวันที่ ' + w.day + ' +' + w.reward + ' แต้ม"' : ' aria-label="วันที่ ' + w.day + ' +' + w.reward + ' แต้ม ' + (w.done ? 'รับแล้ว' : 'ยังไม่ถึง') + '"') + '>' +
@@ -113,25 +158,42 @@
       (!w.done && !w.today ? '<span class="vdg-lk" aria-hidden="true">' + ICO_LOCK + '</span>' : '') +
       '</' + tag + '>';
   }
+  /* (6) แตะน้อง: หลับอยู่ → สะดุ้งตื่น บ่นแล้วหลับต่อ · ตื่นอยู่ → กระโดดดีใจ */
+  var pokeT = 0, CHEER = ['กดรับแต้มเลย! 🎁', 'วันนี้ก็อ่านสัญญาให้ครบนะ!', 'เก็บครบ 7 วัน เปิดกล่องสมบัติได้นะ ✨', 'สู้ ๆ! 💪'];
+  function poke() {
+    if (!box || !S) return;
+    var ms = box.querySelector('.vdg-mascot'), sayEl = box.querySelector('.vdg-say'), md = mood();
+    clearTimeout(pokeT); ms.classList.remove('is-poke', 'is-hop'); void ms.offsetWidth;
+    if (md === 'sleep') {
+      var hrs = Math.max(1, Math.round(msToMidnight() / 36e5));
+      ms.innerHTML = mascot('wave', 260, ICO_GIFT); ms.setAttribute('data-m', 'poke'); ms.classList.add('is-poke');
+      sayEl.textContent = 'หืม…? อีกตั้ง ' + hrs + ' ชั่วโมงแน่ะ… ขอนอนต่อนะ 😴';
+      pokeT = setTimeout(function () { ms.classList.remove('is-poke'); ms.innerHTML = mascot('sleep', 260, ICO_GIFT); ms.setAttribute('data-m', 'sleep'); sayEl.textContent = line('sleep'); }, 2600);
+    } else {
+      ms.classList.add('is-hop'); sayEl.textContent = CHEER[Math.floor(Math.random() * CHEER.length)];
+      pokeT = setTimeout(function () { ms.classList.remove('is-hop'); sayEl.textContent = line(mood()); }, 2600);
+    }
+  }
   function render() {
     if (!box || !S) return;
     var r = S.redeem, pct = Math.min(100, Math.round(S.points / r.cost * 100)), done = S.week.filter(function (x) { return x.done; }).length;
     // อีกกี่วันถึงกล่องสมบัติ (วันที่ 7)
     var toChest = S.checkedToday ? 7 - done : 6 - done;
-    var hint = S.week[6].done ? 'ครบรอบ 7 วันแล้ว! พรุ่งนี้เริ่มรอบใหม่' : S.week[6].today ? 'วันนี้เปิดกล่องสมบัติได้!' : 'อีก ' + toChest + ' วัน เปิดกล่องสมบัติ +' + S.week[6].reward + ' แต้ม';
+    var hint = S.week[6].done ? 'ครบรอบ 7 วันแล้ว! พรุ่งนี้เริ่มรอบใหม่' : S.week[6].today ? 'วันนี้เปิดกล่องสมบัติได้!' : '';
     var need = r.cost - S.points;
     var redeemRow = r.canRedeem
       ? '<button type="button" class="vdg-redeem">แลกตรวจฟรี 1 ครั้ง</button>'
       : '<span class="vdg-need">' + (r.usedThisMonth >= r.perMonth ? 'เดือนนี้แลกครบ ' + r.perMonth + ' ครั้งแล้ว' : 'อีก <b>' + fmt(need) + '</b> แต้ม แลกตรวจฟรี 1 ครั้ง') + '</span>';
     box.querySelector('.vdg-body').innerHTML =
       '<div class="vdg-sum">' +
-        '<div class="vdg-fire' + (S.streak ? '' : ' is-zero') + '">' + ICO_FIRE + '<b>' + S.streak + '</b><span>' + (S.streak ? 'วันติด' : 'เริ่มวันแรก') + '</span></div>' +
+        '<div class="vdg-fire vf-t' + flameTier(S.streak) + (S.streak ? '' : ' is-zero') + '"><span class="vf">' + FLAME + '</span><b>' + S.streak + '</b><span>' + (S.streak ? 'วันติด' : 'เริ่มวันแรก') + '</span></div>' +
         '<div class="vdg-wallet"><div class="vdg-wl"><svg class="vdg-coin" viewBox="0 0 64 64" aria-hidden="true">' + COIN(32, 30, 22) + '</svg><b data-pts>' + fmt(S.points) + '</b><span>/ ' + fmt(r.cost) + ' แต้ม</span></div>' +
           '<div class="vdg-bar" role="progressbar" aria-label="แต้มสะสมสู่การแลกตรวจฟรี" aria-valuemin="0" aria-valuemax="' + r.cost + '" aria-valuenow="' + Math.min(S.points, r.cost) + '"><i style="width:' + pct + '%"></i>' + [1, 2].map(function (k) { var v = Math.round(r.cost * k / 3); return '<s class="' + (S.points >= v ? 'on' : '') + '" style="left:' + (k * 100 / 3).toFixed(2) + '%"><em>' + fmt(v) + '</em></s>'; }).join('') + '<s class="end' + (S.points >= r.cost ? ' on' : '') + '" style="left:100%"><em>ตรวจฟรี</em></s></div>' +
           redeemRow + '</div>' +
       '</div>' +
       '<div class="vdg-grid">' + S.week.map(cardHtml).join('') + '</div>' +
-      '<p class="vdg-hint">' + hint + '</p>' +
+      (hint ? '<p class="vdg-hint">' + hint + '</p>' : '') +
+      badgesHtml() +
       '<details class="vdg-rules"><summary>กติกา</summary><ul><li>รับได้วันละ 1 ครั้ง ขึ้นวันใหม่ตอนเที่ยงคืน (เวลาไทย)</li><li>ขาดวันไหน เริ่มวันที่ 1 ใหม่ แต่แต้มที่สะสมไว้ไม่หาย</li><li>' + fmt(r.cost) + ' แต้ม แลกตรวจสัญญาฟรีได้ 1 ครั้ง · เดือนละไม่เกิน ' + r.perMonth + ' ครั้ง (ใช้แล้ว ' + r.usedThisMonth + ')</li></ul></details>';
     var sub = box.querySelector('.vdg-sub'), foot = box.querySelector('.vdg-foot'), md = mood();
     var ms = box.querySelector('.vdg-mascot');
@@ -140,12 +202,12 @@
     box.querySelector('.vdg-say').textContent = line(md);
     sub.className = 'vdg-sub' + (S.checkedToday ? ' is-wait' : '');
     sub.innerHTML = S.checkedToday
-      ? '<span><i aria-hidden="true">⏱</i>รอบถัดไปใน <b data-cd>' + hms(msToMidnight()) + '</b></span>'
+      ? '<span><i aria-hidden="true">⏱</i>รอบถัดไปใน ' + flipHtml(msToMidnight()) + '</span>'
       : '<span><i aria-hidden="true">+</i>วันที่ ' + (done + 1) + ' · รับได้ <b>' + S.todayReward + ' แต้ม</b></span>';
     foot.innerHTML = S.checkedToday
       ? '<div class="vdg-rest" role="status"><span class="vdg-moon" aria-hidden="true" style="--dp:' + (100 - msToMidnight() / 864e3).toFixed(1) + '%"><svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z" fill="currentColor"/></svg></span>' +
-        '<span class="vdg-rtx"><b>วันนี้รับครบแล้ว พักก่อนนะ</b><small>กลับมาตอนเที่ยงคืน รับ <em>+' + S.tomorrowReward + ' แต้ม</em></small></span>' +
-        '<span class="vdg-rcd" data-cd="s">' + hms2(msToMidnight()) + '</span></div>'
+        '<span class="vdg-rtx"><b>รับครบแล้ว พักก่อนนะ</b><small>กลับมาตอนเที่ยงคืน รับ <em>+' + S.tomorrowReward + ' แต้ม</em></small></span>' +
+        '<span class="vdg-rcd">' + flipHtml(msToMidnight(), true) + '</span></div>'
       : '<button type="button" class="vdg-claim"><span>รับ +' + S.todayReward + ' แต้ม</span></button>';
     startTick();
   }
@@ -162,7 +224,10 @@
       if (e.target.closest('.vdg-retry')) { box.querySelector('.vdg-body').innerHTML = '<p class="vdc-wait">กำลังโหลด…</p>'; load(); return; }
       if (e.target.closest('[data-x]')) { close(); return; }
       if (e.target.closest('.vdg-c.is-open, .vdg-claim:not([disabled])')) { checkin(); return; }
-      if (e.target.closest('.vdg-redeem')) redeem();
+      if (e.target.closest('.vdg-redeem')) { redeem(); return; }
+      var bg = e.target.closest('[data-badge]');
+      if (bg && S && S.badges) { var b = S.badges.filter(function (x) { return x.id === bg.getAttribute('data-badge'); })[0]; if (b) say((b.earned ? '🏅 ' : '🔒 ') + b.name + ' · ' + b.desc + (b.earned ? '' : ' (' + b.have + '/' + b.n + ')')); return; }
+      if (e.target.closest('.vdg-mascot')) poke();
     });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && box && !box.hidden) close(); });
   }
@@ -244,6 +309,7 @@
     var btns = document.querySelectorAll('.vdg-claim, .vdg-c.is-open, .vds-go');
     [].forEach.call(btns, function (b) { b.disabled = true; });
     var before = S ? S.points : 0, k = S ? S.week.filter(function (x) { return x.done; }).length : 0;
+    var had = S && S.badges ? S.badges.filter(function (b) { return b.earned; }).map(function (b) { return b.id; }) : null;
     call('/api/daily/checkin', 'POST').then(function (r) {
       busy = false;
       if (!r.ok) { say(r.data.error || 'เช็กอินไม่สำเร็จ'); [].forEach.call(btns, function (b) { b.disabled = false; }); return; }
@@ -255,6 +321,14 @@
         if (open) celebrate(card, before, r.data.points, r.data.gained, r.data.bonus);
         else pop(r.data.gained);
         say(r.data.bonus ? 'ครบ 7 วัน! เปิดกล่องสมบัติ +' + r.data.gained + ' แต้ม' : 'เช็กอินแล้ว +' + r.data.gained + ' แต้ม');
+      }
+      if (had && r.data.badges) {
+        var fresh = r.data.badges.filter(function (b) { return b.earned && had.indexOf(b.id) < 0; });
+        if (fresh.length) setTimeout(function () {
+          say('🏅 ได้เหรียญตราใหม่: ' + fresh[0].name);
+          var el = box && box.querySelector('.vbg-b[data-badge="' + fresh[0].id + '"]');
+          if (el) { el.classList.add('is-new'); el.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
+        }, 1600);
       }
     });
   }
