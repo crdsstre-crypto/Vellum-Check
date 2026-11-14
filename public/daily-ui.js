@@ -436,7 +436,7 @@
       '<em class="vof-r"><i class="vst-dia"></i>LIMITED</em>' +
       '<span class="lim-art"><svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg>' + (has ? '' : '<i class="lim-lock" aria-hidden="true"></i>') + '</span>' +
       '<span class="lim-tx"><b>' + h(it.name) + '</b><small class="lim-tag">“ไฟที่ไม่ยอมมอด แม้ในคืนที่ยาวที่สุด”</small>' +
-      (has ? '' : '<span class="lim-bar"><i></i></span><small class="lim-n">เช็กอินติดกัน ' + bd.have + '/' + bd.n + ' วัน</small>') + '<span class="lim-row">' + tag + '<span class="lim-lore" role="button" tabindex="0" data-lore aria-label="อ่านตำนานเหรียญไฟไม่มอด">📜 ตำนาน</span></span></span></button>';
+      (has ? '' : '<span class="lim-bar"><i></i></span><small class="lim-n">เช็กอินติดกัน ' + bd.have + '/' + bd.n + ' วัน</small>') + '</span><span class="lim-row">' + tag + loreBtn() + '</span></button>';
   }
   /* กล่องคำพูด: พิมพ์ทีละตัว (ข้อความเดิมไม่พิมพ์ซ้ำ) */
   var typeT = 0;
@@ -477,6 +477,16 @@
   ];
   var SEAL = '<svg class="vlr-seal" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4c6 0 9 4 14 5s9 3 10 9-1 9 1 14-1 10-6 13-5 8-11 10-9-1-14 0-11-1-14-6-6-7-7-13 3-8 1-13 1-11 7-13 7-5 12-6 4-0 7 0z" fill="#a8232c"/><circle cx="32" cy="32" r="17" fill="#c22d37" stroke="#7a1018" stroke-width="2"/><circle cx="32" cy="32" r="13" fill="none" stroke="#e06b72" stroke-width="1" stroke-dasharray="2 2.4"/><path d="M32 43c-4.6 0-7.6-3-7.6-7 0-4.6 3.8-6.6 4.6-12 3 1.9 4.6 4.6 4.6 7.2 1.3-.9 2-2.4 2.2-4 3 2.4 4.6 5.4 4.6 8.8 0 4.3-3.3 7-8.4 7z" fill="#7a1018"/><path d="M14 20c3-6 9-10 16-10" stroke="#ff9aa0" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".55"/></svg>';
   function dropCap(t) { var m = t.match(/^.[ัำ-ฺ็-๎]*/); return '<span class="dc">' + h(m[0]) + '</span>' + h(t.slice(m[0].length)); }
+  function loreSeen() { try { return +(localStorage.getItem('vc_lore_seen') || -1); } catch (e) { return -1; } }
+  function loreBtn() {
+    var n = LORE.filter(loreOk).length, last = -1; LORE.forEach(function (x, k) { if (loreOk(x)) last = k; });
+    var fresh = last > loreSeen();
+    return '<span class="lim-lore" role="button" tabindex="0" data-lore aria-label="อ่านตำนานเหรียญไฟไม่มอด อ่านได้ ' + n + ' จาก ' + LORE.length + ' ตอน' + (fresh ? ' มีตอนใหม่' : '') + '">' +
+      '<svg viewBox="0 0 28 24" aria-hidden="true"><rect x="6" y="5" width="16" height="14" rx="1" fill="#f3e2b8"/><path d="M9 9h10M9 12h10M9 15h7" stroke="#b08a4a" stroke-width="1.2" stroke-linecap="round"/>' +
+      '<rect x="3" y="3" width="22" height="3.6" rx="1.8" fill="#8a5a2b"/><rect x="3" y="17.4" width="22" height="3.6" rx="1.8" fill="#8a5a2b"/>' +
+      '<rect x="1" y="2.4" width="3" height="4.8" rx="1.2" fill="#f4c542"/><rect x="24" y="2.4" width="3" height="4.8" rx="1.2" fill="#f4c542"/><rect x="1" y="16.8" width="3" height="4.8" rx="1.2" fill="#f4c542"/><rect x="24" y="16.8" width="3" height="4.8" rx="1.2" fill="#f4c542"/></svg>' +
+      '<span>ตำนาน</span><em>' + n + '/' + LORE.length + '</em>' + (fresh ? '<i class="lore-new"></i>' : '') + '</span>';
+  }
   function loreOk(c) { return c.need === 0 || (S && (S.bestStreak || 0) >= c.need); }
   function loreOpen(i) {
     if (!lr) {
@@ -496,6 +506,7 @@
   function loreClose() { if (!lr) return; lr.classList.remove('on'); setTimeout(function () { if (!lr.classList.contains('on')) lr.hidden = true; }, 400); }
   function loreRender() {
     var c = LORE[lrIdx], ok = loreOk(c), m = MED[c.tier];
+    if (ok && lrIdx > loreSeen()) { try { localStorage.setItem('vc_lore_seen', lrIdx); } catch (e) {} if (sh && !sh.hidden) shopRender(); }
     lr.style.setProperty('--f1', m.f1); lr.style.setProperty('--f2', m.f2);
     var lastOk = 0; LORE.forEach(function (x, n) { if (loreOk(x)) lastOk = n; });
     var tb = lr.querySelector('.vlr-tabs'); tb.style.setProperty('--lf', (lastOk / (LORE.length - 1) * 100) + '%');
