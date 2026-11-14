@@ -1185,3 +1185,143 @@ html body .vst .vof-lim .lim-tx{grid-area:tx}
 html body .vst .vof-lim .lim-row{grid-area:row}
 html body .vst .vof-lim .vof-r{position:absolute}
 html body .vst .vof-b.vof-lim{min-height:160px}
+
+
+/* ===== v34 (14 พ.ย.): กลับเป็นแบบเดิม + เก็บรายละเอียดเล็กน้อย ===== */
+/* LIMITED: ไอคอนเพชรไม่ทับตัวหนังสือ */
+html body .vst .vof-lim .vof-r{display:flex;align-items:center;gap:5px;left:12px;top:8px}
+html body .vst .vof-lim .vof-r .vst-dia{position:static;flex:none;margin:0;width:7px;height:7px}
+/* เหรียญ: สีจริง ไม่หม่นเป็นโคลน */
+html body .vst .vof-lim .lim-art svg{filter:saturate(calc(.6 + var(--lit) * .4)) brightness(calc(.72 + var(--lit) * .28)) drop-shadow(0 0 calc(var(--lit) * 10px) rgba(255,190,90,.7)) !important}
+/* แม่กุญแจ: มุมล่างขวา ไม่ทับริบบิ้น */
+html body .vst .vof-lim .lim-lock{top:auto;right:0;bottom:2px}
+/* ประโยคเด็ดอ่านได้ครบ */
+html body .vst .vof-lim .lim-tx small.lim-tag{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.4}
+
+/* ===== v35 (14 พ.ย.): การ์ดลิมิเต็ด เก็บรายละเอียด — กรอบรุ้งนุ่ม · แสงหลังเหรียญ · ชื่อทอง · ปุ่มส้มนุ่ม ===== */
+/* (1) กรอบรุ้งบาง หมุนช้า สีนุ่มลง */
+html body .vst .vof-lim::before{background:conic-gradient(from 0deg,#e9b3d9,#f1d9a8,#c9e6b8,#a9d6ee,#c6b3ee,#e9b3d9);animation-duration:12s;opacity:.85}
+html body .vst .vof-lim::after{inset:1.5px}
+/* (3) แสงนวลหลังเหรียญ */
+html body .vst .vof-lim .lim-art::before{content:"";position:absolute;left:50%;top:50%;width:92px;height:92px;margin:-46px 0 0 -46px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(255,205,120,calc(.24 + var(--lit) * .3)),rgba(255,170,80,calc(.05 + var(--lit) * .12)) 45%,transparent 70%)}
+html body .vst .vof-lim .lim-art svg{position:relative}
+/* (4) ชื่อเหรียญทองไล่สี */
+html body .vst .vof-lim .lim-tx b{background:linear-gradient(180deg,#fff6dc 10%,#f6dfa6 55%,#d9a54a);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 0 rgba(0,0,0,.4))}
+/* (6) ปุ่ม "อีก 3 วัน" นุ่มขึ้น เข้าคู่กับปุ่มตำนาน */
+html body .vst .vof-lim .vof-act.is-soon{background:linear-gradient(180deg,#ff9a3c,#e8641e);color:#2a1002;border:1.5px solid #ffc27a;
+  box-shadow:inset 0 1px 0 rgba(255,235,200,.55),inset 0 0 0 2px rgba(180,70,10,.35),0 3px 8px rgba(120,40,0,.45)}
+
+/* ===== v36 (14 พ.ย.): ปุ่ม "อีก N วัน" แฝดกับปุ่มตำนาน — หนังน้ำตาลขอบทอง · ไฟวาดเอง · ตัวเลขเด่น ===== */
+html body .vst .vof-lim .vof-act.is-soon{display:flex;align-items:center;justify-content:center;gap:7px;padding:5px 10px;border-radius:99px;color:#ffb35c;
+  background:linear-gradient(180deg,#5a3818,#3a220c);border:1.5px solid #c9962f;
+  box-shadow:inset 0 1px 0 rgba(255,220,150,.35),inset 0 0 0 2px rgba(58,34,12,.9),inset 0 0 0 3px rgba(201,150,47,.35),0 2px 6px rgba(0,0,0,.4)}
+.soon-fl{flex:none;width:17px !important;height:21px !important;filter:drop-shadow(0 0 4px rgba(255,140,40,.85)) !important;transform-origin:50% 100%;animation:soonFl .8s ease-in-out infinite alternate}
+@keyframes soonFl{0%{transform:scale(1,1) skewX(-4deg)}100%{transform:scale(.93,1.09) skewX(4deg)}}
+.soon-t{display:flex;align-items:baseline;gap:4px;line-height:1}
+.soon-t small{font:700 .68rem/1 'Prompt',sans-serif;color:#f1c98a}
+.soon-t b{font:800 1.15rem/1 'Prompt',sans-serif;background:linear-gradient(180deg,#fff3c4,#ffc24a 60%,#ff8a2b);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 5px rgba(255,150,50,.55))}
+@media (prefers-reduced-motion:reduce){.soon-fl{animation:none}}
+html body .vst .vof-lim .vof-act.is-soon svg.soon-fl{width:17px !important;height:21px !important;flex:none}
+html body .vst .vof-lim .vof-act.is-soon{padding:7px 10px}
+
+/* ===== v37 (14 พ.ย.): ปุ่มอ่านตำนาน — โทนกระดาษคัมภีร์ · คัมภีร์มีเชือกแดงตราครั่ง · ลูกปัด 4 เม็ด · ประกายวิบ ===== */
+html body .vst .vof-lim .lim-lore{gap:6px;padding:5px 10px;color:#4a2c0e;
+  background:radial-gradient(120% 140% at 30% 0%,#fff6dc,#f0dcaa 55%,#e2c486);border:1.5px solid #8a5a2b;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7),inset 0 0 0 2px rgba(240,220,170,.9),inset 0 0 0 3px rgba(138,90,43,.35),inset 0 0 12px rgba(150,95,30,.35),0 2px 6px rgba(0,0,0,.4)}
+html body .vst .vof-lim .lim-lore svg.lore-ic{width:26px !important;height:23px !important;filter:drop-shadow(0 1px 1px rgba(90,50,10,.4)) !important;animation:none !important}
+html body .vst .vof-lim .lim-lore>span:not(.lore-dots){font:800 .7rem/1 'Prompt',sans-serif;color:#4a2c0e;white-space:nowrap}
+html body .vst .vof-lim .lim-lore em{display:none}
+.lore-dots{display:flex;gap:3px}
+html body .vst .vof-lim .lore-dots i{position:static;display:block;width:6px;height:6px;border-radius:50%;background:rgba(74,44,14,.2);box-shadow:inset 0 0 0 1px rgba(74,44,14,.35)}
+html body .vst .vof-lim .lore-dots i.on{background:radial-gradient(circle at 35% 30%,#fff3c4,#d9a640 60%,#9a6418);box-shadow:0 0 4px rgba(217,166,64,.9)}
+html body .vst .vof-lim .lore-tw{position:absolute;left:6px;top:2px;right:auto;bottom:auto;width:9px;height:9px;pointer-events:none;
+  background:#fff;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);filter:drop-shadow(0 0 3px #ffd27a);animation:loreTw 2.8s ease-in-out infinite}
+@keyframes loreTw{0%,65%,100%{opacity:0;transform:scale(.2) rotate(0)}78%{opacity:1;transform:scale(1.2) rotate(45deg)}90%{opacity:.5;transform:scale(.7) rotate(90deg)}}
+html body .vst .vof-lim .lore-new{box-shadow:0 0 0 2px #f0dcaa,0 0 8px #ff4d5e}
+@media (prefers-reduced-motion:reduce){.lore-tw{animation:none;opacity:0}}
+html body .vst .vof-lim .lim-row{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}
+html body .vst .vof-lim .lim-lore{gap:5px;padding:5px 8px;overflow:hidden}
+html body .vst .vof-lim .lim-lore svg.lore-ic{width:24px !important;height:21px !important;flex:none}
+html body .vst .vof-lim .lim-lore>span:not(.lore-dots){font-size:.66rem}
+html body .vst .vof-lim .lore-dots{flex:none;gap:2.5px}
+html body .vst .vof-lim .lore-dots i{width:5px;height:5px}
+html body .vst .vof-lim .lim-lore{overflow:visible}
+html body .vst .vof-lim .lim-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+html body .vst .vof-lim .lim-lore>span:not(.lore-dots){font-size:.7rem}
+
+/* ===== v38 (15 พ.ย.): ข้อความการ์ดลิมิเต็ด — ป้ายระดับ · คำจารึก · เส้นคั่นทอง · แถบไฟมีหัวเรือง · เงื่อนไขชัด ===== */
+html body .vst .vof-lim .lim-tx{gap:4px}
+/* (2) ชื่อ + ป้ายระดับ */
+.lim-nm{display:flex;align-items:center;gap:6px;max-width:100%}
+html body .vst .vof-lim .lim-nm b{font-size:.92rem;white-space:nowrap}
+.lim-tier{flex:none;padding:2px 7px;border-radius:99px;font:700 .56rem/1.3 'Prompt',sans-serif;font-style:normal;letter-spacing:.02em}
+.lim-tier.t1{color:#3a2206;background:linear-gradient(180deg,#ffe9a8,#e0a92c);box-shadow:0 0 6px rgba(244,197,66,.5)}
+.lim-tier.t2{color:#0b2a4b;background:linear-gradient(180deg,#f4faff,#a9cfee);box-shadow:0 0 6px rgba(150,200,255,.5)}
+.lim-tier.t3{color:#2a1050;background:linear-gradient(180deg,#f3e9ff,#b892ff);box-shadow:0 0 6px rgba(180,140,255,.55)}
+/* (4) เส้นคั่นลายทอง */
+.lim-div{position:relative;display:block;width:100%;height:1px;margin:1px 0;background:linear-gradient(90deg,rgba(241,213,138,.7),rgba(241,213,138,.15) 70%,transparent)}
+.lim-div::before{content:"";position:absolute;left:0;top:-2.5px;width:6px;height:6px;background:#f1d58a;transform:rotate(45deg);box-shadow:0 0 5px rgba(241,213,138,.8)}
+/* (3) คำจารึก */
+html body .vst .vof-lim .lim-tx small.lim-tag{position:relative;padding-left:15px;font-style:italic;font-size:.6rem;line-height:1.45;color:#e9dcc0}
+html body .vst .vof-lim .lim-tx small.lim-tag::before{content:"“";position:absolute;left:0;top:-5px;font:800 1.5rem/1 Georgia,serif;font-style:normal;color:rgba(241,213,138,.55)}
+/* (5) แถบไฟมีหัวเรือง + ตัวเลขขวา */
+.lim-pg{display:flex;align-items:center;gap:8px;width:100%;margin-top:2px}
+html body .vst .vof-lim .lim-pg .lim-bar{flex:1;margin:0;height:6px;overflow:visible;position:relative}
+html body .vst .vof-lim .lim-pg .lim-bar i{position:relative;overflow:visible}
+html body .vst .vof-lim .lim-pg .lim-bar i::after{content:"";position:absolute;right:-4px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;
+  background:radial-gradient(circle,#fff,#ffd27a 40%,#ff8a2b 70%,transparent 72%);box-shadow:0 0 8px #ff8a2b,0 0 14px rgba(255,140,40,.7);animation:limHd 1.2s ease-in-out infinite alternate}
+@keyframes limHd{to{transform:scale(1.25)}}
+.lim-pg b{flex:none;font:800 .72rem/1 'Prompt',sans-serif;color:#ffc24a}
+/* (6) เงื่อนไขเล็ก */
+html body .vst .vof-lim .lim-tx small.lim-n{font-size:.58rem;color:#a99dc4}
+@media (prefers-reduced-motion:reduce){.lim-pg .lim-bar i::after{animation:none}}
+html body .vst .vof-lim .lim-nm b{font-size:.84rem}
+html body .vst .vof-lim .lim-tier{padding:2px 6px;font-size:.52rem}
+html body .vst .vof-lim .lim-div{position:relative;top:auto;right:auto;display:block;width:100%;height:1px;font-size:0}
+html body .vst .vof-lim .lim-pg b{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:#ffc24a;filter:none;font:800 .7rem/1 'Prompt',sans-serif}
+html body .vst .vof-lim .lim-pg .lim-bar i{position:relative;top:auto;right:auto;left:auto}
+html body .vst .vof-lim .lim-tx small.lim-tag::before{content:"\201C";font-size:1.3rem;top:-3px}
+
+
+/* ===== v40 (15 พ.ย.): ระดับเป็นดาว 3 ดวงต่อท้ายชื่อ ===== */
+html body .vst .vof-lim .lim-nm b{font-size:.84rem}
+.lim-stars{flex:none;display:inline-flex;gap:1px;font-style:normal}
+html body .vst .vof-lim .lim-stars svg{width:13px !important;height:13px !important;fill:rgba(255,255,255,.14);filter:none !important;animation:none !important}
+html body .vst .vof-lim .lim-stars.t1 svg.on{fill:url(#stG1)}
+html body .vst .vof-lim .lim-stars.t2 svg.on{fill:url(#stG2)}
+html body .vst .vof-lim .lim-stars.t3 svg.on{fill:url(#stG3)}
+html body .vst .vof-lim .lim-stars svg.on{filter:drop-shadow(0 0 3px rgba(255,210,120,.75)) !important;animation:starTw 3s ease-in-out infinite !important}
+html body .vst .vof-lim .lim-stars svg.on:nth-child(2){animation-delay:.3s !important}
+html body .vst .vof-lim .lim-stars svg.on:nth-child(3){animation-delay:.6s !important}
+@keyframes starTw{0%,80%,100%{transform:scale(1)}88%{transform:scale(1.25)}}
+@media (prefers-reduced-motion:reduce){.lim-stars svg{animation:none !important}}
+html body .vst .vof-lim .lim-nm b{font-size:.8rem}
+html body .vst .vof-lim .lim-nm{gap:4px}
+html body .vst .vof-lim .lim-stars svg{width:11px !important;height:11px !important}
+
+/* ===== v41 (15 พ.ย.): เครื่องหมายคำพูดทองวาดเอง เปิด-ปิด ===== */
+html body .vst .vof-lim .lim-tx small.lim-tag{padding-left:0;margin-top:3px}
+html body .vst .vof-lim .lim-tx small.lim-tag::before{content:none}
+html body .vst .vof-lim .lim-tag svg.lq{display:inline-block;width:11px !important;height:9px !important;vertical-align:4px;fill:url(#lqG);filter:drop-shadow(0 0 2px rgba(241,213,138,.45)) !important;animation:none !important}
+html body .vst .vof-lim .lim-tag svg.lq-o{margin-right:4px}
+html body .vst .vof-lim .lim-tag svg.lq-c{margin-left:3px;transform:rotate(180deg);vertical-align:-1px}
+
+/* v42: ระยะห่างแต่ละบรรทัดเท่ากัน */
+html body .vst .vof-lim .lim-tx{gap:8px;align-self:center}
+html body .vst .vof-lim .lim-tx>*{margin-top:0 !important;margin-bottom:0 !important}
+html body .vst .vof-lim .lim-tx small.lim-tag{line-height:1.45}
+html body .vst .vof-b.vof-lim{min-height:204px}
+html body .vst .vof-b.vof-lim{align-content:start}
+html body .vst .vof-b.vof-lim{min-height:174px}
+
+/* ===== v43 (15 พ.ย.): แม่กุญแจทองเหลืองจิ๋ว แกว่ง + วิบแสง ===== */
+html body .vst .vof-lim .lim-art svg.lim-pl{position:absolute;right:2px;bottom:4px;z-index:2;width:22px !important;height:28px !important;
+  filter:drop-shadow(0 2px 2px rgba(0,0,0,.55)) drop-shadow(0 0 4px rgba(255,200,100,.35)) !important;transform-origin:50% 8%;animation:plSw 3.2s ease-in-out infinite !important}
+@keyframes plSw{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+.pl-gl{animation:plGl 3.2s ease-in-out infinite}
+@keyframes plGl{0%,70%,100%{opacity:0}80%{opacity:.85}}
+@media (prefers-reduced-motion:reduce){.lim-pl,.pl-gl{animation:none !important}}
+
+/* v44: แม่กุญแจแบบ A — เล็กลง ชิดเหรียญ แกว่งช้า */
+html body .vst .vof-lim .lim-art svg.lim-pl{width:15px !important;height:19px !important;right:6px;bottom:10px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.6)) !important;animation-duration:4s !important}
