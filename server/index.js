@@ -7,6 +7,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { analyzeContract, answerFollowup, transcribeImage, explainClause, MAX_ITEMS_LIMIT, CONTRACT_TYPES, extractObligations, PROMPT_VERSION } from './ai.js';
 import { guardResult, guardAny } from './guard.js';
+import { detectHighValue } from './highvalue.js';
 import { startRetention, runRetention, KEEP_DAYS } from './retention.js';
 import { logCheckReceipt, findReceipt, ownsRef, REF_RE } from './receipt.js';
 import { CATEGORIES as SUPPORT_CATEGORIES, RESPONSE_DAYS, createTicket, myTickets, listTickets, resolveTicket } from './support.js';
@@ -786,6 +787,16 @@ app.post('/api/check', async (req, res) => {
     return res.status(413).json({ error: `ข้อความยาวเกิน ${MAX_CHARS} ตัวอักษร` });
   }
 
+  // สัญญามูลค่าสูง/ผลผูกพันสำคัญ: ต้องยืนยันว่าเข้าใจว่าควรให้ทนายตรวจ (ก่อนหักเครดิต) · หน้าเว็บเปิดหน้าต่างให้ติ๊กแล้วส่งใหม่เอง
+  const highValue = detectHighValue(text);
+  if (highValue.high) {
+    if (req.body?.highAck !== true) {
+      return res.status(409).json({ error: 'สัญญานี้มีมูลค่าสูงหรือมีผลผูกพันสำคัญ กรุณายืนยันก่อนตรวจ', needHighAck: true, highValue, version: TERMS_VERSION });
+    }
+    recordConsent(user.id, { version: TERMS_VERSION, kind: 'high_value', ip: req.ip, userAgent: req.get('user-agent') })
+      .catch(e => console.error('[consent] high_value log failed:', e.message));
+  }
+
   // ยอดแยกกัน: ตรวจ 1 ครั้งหักจากยอดตรวจ และถ้าขอเสียงหักจากยอดเสียงเพิ่ม
   const wantVoice = req.body?.voice === true;
 
@@ -832,6 +843,7 @@ app.post('/api/check', async (req, res) => {
       extractObligations(text, langOf(req)).catch(e => { console.error('[obligations] failed:', e.message); return null; }),
     ]);
     result = guardResult(cleanResult({ ...raw, parties: ob?.parties, obligations: ob?.obligations }, text));
+    if (highValue.high) result.high_value = { amount: highValue.amount, reasons: highValue.reasons };
   } catch (err) {
     console.error('[check] failed:', err.message);
     await refundCredits(user.id, 1).catch(e => console.error('[credits] refund failed:', e.message));
