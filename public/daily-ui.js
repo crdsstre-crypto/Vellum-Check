@@ -68,6 +68,7 @@
       if (!box || box.hidden) { stopTick(); return; }
       var ms = msToMidnight(), el = box.querySelectorAll('[data-cd]');
       [].forEach.call(el, function (x) { x.textContent = x.getAttribute('data-cd') === 's' ? hms2(ms) : hms(ms); });
+      var mn = box.querySelector('.vdg-moon'); if (mn) mn.style.setProperty('--dp', (100 - ms / 864e3).toFixed(1) + '%');
       if (ms < 1000) { stopTick(); setTimeout(load, 1500); }  // ขึ้นวันใหม่
     }, 1000);
   }
@@ -76,7 +77,7 @@
   function cardHtml(w, i) {
     var done = S.week.filter(function (x) { return x.done; }).length;
     var st = w.done ? 'is-done' : w.today ? 'is-open' : 'is-lock', soon = S.checkedToday && i === done;
-    var foot = w.done ? 'รับแล้ว' : w.today ? 'วันนี้' : soon ? 'พรุ่งนี้' : '';
+    var foot = w.done ? '' : w.today ? 'วันนี้' : soon ? 'พรุ่งนี้ <b data-cd="s">' + hms2(msToMidnight()) + '</b>' : '';
     var tag = w.today ? 'button' : 'div';
     return '<' + tag + (w.today ? ' type="button"' : '') + ' class="vdg-c ' + st + (soon ? ' is-soon' : '') + (i === 6 ? ' is-big' : '') + '" data-i="' + i + '"' +
       (w.today ? ' aria-label="รับรางวัลวันที่ ' + w.day + ' +' + w.reward + ' แต้ม"' : ' aria-label="วันที่ ' + w.day + ' +' + w.reward + ' แต้ม ' + (w.done ? 'รับแล้ว' : 'ยังไม่ถึง') + '"') + '>' +
@@ -84,7 +85,7 @@
       '<svg class="vdg-art" viewBox="0 0 64 64" aria-hidden="true">' + ART[i] + '</svg>' +
       '<span class="vdg-amt">+' + w.reward + '</span>' +
       (foot ? '<span class="vdg-tag">' + foot + '</span>' : '') +
-      (w.done ? '<span class="vdg-ok" aria-hidden="true">' + ICO_OK + '</span>' : '') +
+      (w.done ? '<span class="vdg-ok" aria-hidden="true">' + ICO_OK + '</span><span class="vdg-seal" aria-hidden="true"><i>รับแล้ว</i></span>' : '') +
       (!w.done && !w.today ? '<span class="vdg-lk" aria-hidden="true">' + ICO_LOCK + '</span>' : '') +
       '</' + tag + '>';
   }
@@ -102,7 +103,7 @@
       '<div class="vdg-sum">' +
         '<div class="vdg-fire' + (S.streak ? '' : ' is-zero') + '">' + ICO_FIRE + '<b>' + S.streak + '</b><span>' + (S.streak ? 'วันติด' : 'เริ่มวันแรก') + '</span></div>' +
         '<div class="vdg-wallet"><div class="vdg-wl"><svg class="vdg-coin" viewBox="0 0 64 64" aria-hidden="true">' + COIN(32, 30, 22) + '</svg><b data-pts>' + fmt(S.points) + '</b><span>/ ' + fmt(r.cost) + ' แต้ม</span></div>' +
-          '<div class="vdg-bar" role="progressbar" aria-label="แต้มสะสมสู่การแลกตรวจฟรี" aria-valuemin="0" aria-valuemax="' + r.cost + '" aria-valuenow="' + Math.min(S.points, r.cost) + '"><i style="width:' + pct + '%"></i></div>' +
+          '<div class="vdg-bar" role="progressbar" aria-label="แต้มสะสมสู่การแลกตรวจฟรี" aria-valuemin="0" aria-valuemax="' + r.cost + '" aria-valuenow="' + Math.min(S.points, r.cost) + '"><i style="width:' + pct + '%"></i>' + [1, 2].map(function (k) { var v = Math.round(r.cost * k / 3); return '<s class="' + (S.points >= v ? 'on' : '') + '" style="left:' + (k * 100 / 3).toFixed(2) + '%"><em>' + fmt(v) + '</em></s>'; }).join('') + '<s class="end' + (S.points >= r.cost ? ' on' : '') + '" style="left:100%"><em>ตรวจฟรี</em></s></div>' +
           redeemRow + '</div>' +
       '</div>' +
       '<div class="vdg-grid">' + S.week.map(cardHtml).join('') + '</div>' +
@@ -117,7 +118,9 @@
       ? '<span><i aria-hidden="true">⏱</i>รอบถัดไปใน <b data-cd>' + hms(msToMidnight()) + '</b></span>'
       : '<span><i aria-hidden="true">+</i>วันที่ ' + (done + 1) + ' · รับได้ <b>' + S.todayReward + ' แต้ม</b></span>';
     foot.innerHTML = S.checkedToday
-      ? '<button type="button" class="vdg-claim" disabled><span>กลับมาพรุ่งนี้ รับ +' + S.tomorrowReward + '</span><small data-cd="s">' + hms2(msToMidnight()) + '</small></button>'
+      ? '<div class="vdg-rest" role="status"><span class="vdg-moon" aria-hidden="true" style="--dp:' + (100 - msToMidnight() / 864e3).toFixed(1) + '%"><svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z" fill="currentColor"/></svg></span>' +
+        '<span class="vdg-rtx"><b>วันนี้รับครบแล้ว พักก่อนนะ</b><small>กลับมาตอนเที่ยงคืน รับ <em>+' + S.tomorrowReward + ' แต้ม</em></small></span>' +
+        '<span class="vdg-rcd" data-cd="s">' + hms2(msToMidnight()) + '</span></div>'
       : '<button type="button" class="vdg-claim"><span>รับ +' + S.todayReward + ' แต้ม</span></button>';
     startTick();
   }
