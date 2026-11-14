@@ -111,6 +111,22 @@ function buildSystemPrompt(maxItems, contractType = 'unsure', lang = 'th') {
 }`;
 }
 
+
+// v4: ขอให้ AI ตอบนิ่ง (temperature 0) · ถ้าโมเดลไม่รับค่านี้ (400) ส่งใหม่แบบไม่ใส่ แล้วจำไว้ไม่ส่งอีก
+let TEMP_OK = process.env.AI_TEMPERATURE !== 'off';
+async function postAI(body, extra = {}) {
+  const headers = { 'content-type': 'application/json', 'x-api-key': process.env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01' };
+  if (TEMP_OK) {
+    const r = await fetch(API_URL, { method: 'POST', headers, body: JSON.stringify({ ...body, temperature: 0 }), ...extra });
+    if (r.status !== 400) return r;
+    const msg = await r.text().catch(() => '');
+    console.error('[ai] 400 with temperature, retrying without:', msg.slice(0, 300));
+    if (/temperature/i.test(msg)) TEMP_OK = false;
+    else return new Response(msg, { status: 400 });
+  }
+  return fetch(API_URL, { method: 'POST', headers, body: JSON.stringify(body), ...extra });
+}
+
 // ดึงเฉพาะส่วนที่เป็น JSON ออกจากข้อความ แม้ AI จะใส่คำนำหรือ backtick มาด้วย
 function extractJson(raw) {
   const cleaned = raw.replace(/```json|```/g, '').trim();
@@ -130,24 +146,16 @@ export async function analyzeContract(text, contractType = 'unsure', lang = 'th'
     throw new Error('ANTHROPIC_API_KEY is not set');
   }
 
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      max_tokens: MAX_TOKENS,
-      temperature: 0,   // v3: ตอบนิ่ง ตรวจฉบับเดิมซ้ำได้ผลใกล้เคียงเดิม
-      system: buildSystemPrompt(itemsFor(text.length), type, lang === 'en' || lang === 'zh' ? lang : 'th'),
-      messages: [{ role: 'user', content: text }],
-    }),
+  const res = await postAI({
+    model: MODEL,
+    max_tokens: MAX_TOKENS,
+    system: buildSystemPrompt(itemsFor(text.length), type, lang === 'en' || lang === 'zh' ? lang : 'th'),
+    messages: [{ role: 'user', content: text }],
   });
 
   if (!res.ok) {
-    throw new Error(`AI request failed with status ${res.status}`);
+    const body = await res.text().catch(() => '');
+    throw new Error(`AI request failed with status ${res.status} ${body.slice(0, 200)}`);
   }
 
   const data = await res.json();
@@ -339,16 +347,11 @@ export async function extractObligations(text, lang = 'th') {
       required: ['parties', 'obligations'],
     },
   };
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-    body: JSON.stringify({
-      model: MODEL, max_tokens: 16000, temperature: 0, system,
-      tools: [tool], tool_choice: { type: 'tool', name: 'save_obligations' },
-      messages: [{ role: 'user', content: `<สัญญา>\n${text}\n</สัญญา>` }],
-    }),
-    signal: AbortSignal.timeout(90000),
-  });
+  const res = await postAI({
+    model: MODEL, max_tokens: 16000, system,
+    tools: [tool], tool_choice: { type: 'tool', name: 'save_obligations' },
+    messages: [{ role: 'user', content: `<สัญญา>\n${text}\n</สัญญา>` }],
+  }, { signal: AbortSignal.timeout(90000) });
   if (!res.ok) {
     const body = await res.text().catch(() => '');
     throw new Error(`AI obligations failed with status ${res.status} ${body.slice(0, 200)}`);
