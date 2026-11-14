@@ -334,3 +334,63 @@ html.vdc-open,html.vdc-open body{overflow:hidden}
 @keyframes vdcRingO{0%{opacity:.9;transform:scale(.97)}100%{opacity:0;transform:scale(1.06)}}
 @media (prefers-reduced-motion:reduce){.vda-pill::after,.vdc .vdg-c.is-open::before,.vdc .vdg-redeem::after{animation:none}}
 .vdg-retry{min-height:40px;padding:0 18px;border-radius:999px;border:1px solid rgba(241,213,138,.5);background:rgba(241,213,138,.12);color:#f3e6c8;font:600 14px/1 Prompt,sans-serif;cursor:pointer}
+
+/* ===== v14 (14 พ.ย.): สวยขึ้น — (1) ตราครั่ง "รับแล้ว" บนการ์ดทอง (2) การ์ดพรุ่งนี้เรืองแสง + นับถอยหลัง
+   (6) แถบแต้มทองเหลวมีประกายและหมุด (7) การ์ดพักผ่อนแทนปุ่มที่กดไม่ได้ ===== */
+
+/* (1) การ์ดที่รับแล้ว: ทองอุ่น + ตราครั่งแดง */
+html body .vdc .vdg-c.is-done{background:radial-gradient(90% 70% at 50% 25%,rgba(255,214,120,.16),transparent 70%),linear-gradient(180deg,#33270f,#1e170a);border:1px solid rgba(244,197,66,.38);box-shadow:inset 0 1px 0 rgba(255,236,170,.14)}
+html body .vdc .vdg-c.is-done .vdg-art{opacity:.62;filter:saturate(.85) sepia(.15)}
+html body .vdc .vdg-c.is-done .vdg-amt{color:#ffd978}
+html body .vdc .vdg-c.is-done .vdg-day{color:#e9d5a4}
+html body .vdc .vdg-c.is-done .vdg-ok{display:none}
+.vdg-seal{position:absolute;right:-7px;top:-8px;width:40px;height:40px;display:grid;place-items:center;transform:rotate(-14deg);z-index:2;pointer-events:none;
+  border-radius:47% 53% 50% 50% / 52% 46% 54% 48%;
+  background:radial-gradient(circle at 34% 30%,#e8585a,#b31f2b 48%,#7c0f19 100%);
+  box-shadow:0 3px 6px rgba(0,0,0,.5),inset 0 -3px 6px rgba(0,0,0,.35),inset 0 2px 3px rgba(255,170,160,.35)}
+.vdg-seal::before{content:"";position:absolute;inset:4px;border-radius:50%;border:1.5px dashed rgba(255,215,200,.55)}
+.vdg-seal i{position:relative;font:700 .52rem/1 'Prompt',sans-serif;font-style:normal;color:#ffe9dc;letter-spacing:.02em;text-shadow:0 1px 1px rgba(80,0,0,.7)}
+.vdc .vdg-c.is-big .vdg-seal{width:50px;height:50px;right:-8px;top:-10px}.vdc .vdg-c.is-big .vdg-seal i{font-size:.62rem}
+.vdg-c.just-claimed .vdg-seal{animation:vdgSeal .55s .12s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes vdgSeal{0%{opacity:0;transform:scale(2.4) rotate(-40deg)}60%{opacity:1;transform:scale(.88) rotate(-10deg)}100%{transform:scale(1) rotate(-14deg)}}
+.vdc .vdg-c.is-big.just-claimed .vdg-seal{animation:none}
+
+/* (2) การ์ดพรุ่งนี้: ขอบทองเรืองเป็นจังหวะ + เหรียญกระดิก + นับถอยหลังในการ์ด */
+html body .vdc .vdg-c.is-soon{border:1.5px solid rgba(244,197,66,.55);background:radial-gradient(100% 80% at 50% 35%,rgba(255,214,90,.14),transparent 70%),rgba(30,24,12,.9);animation:vdgSoon 2.4s ease-in-out infinite}
+html body .vdc .vdg-c.is-soon .vdg-art{opacity:.9;filter:none;animation:vdgWig 2.4s ease-in-out infinite;transform-origin:50% 80%}
+html body .vdc .vdg-c.is-soon .vdg-amt{color:#ffe08a}
+html body .vdc .vdg-c.is-soon .vdg-lk{display:none}
+html body .vdc .vdg-c.is-soon .vdg-tag{display:flex;flex-direction:column;align-items:center;gap:1px;line-height:1.25;padding:3px 8px;background:rgba(244,197,66,.14);color:#f4c542}
+html body .vdc .vdg-c.is-soon .vdg-tag b{font:600 .62rem/1 'Prompt',sans-serif;font-variant-numeric:tabular-nums;color:#ffe9b0;opacity:.9}
+@keyframes vdgSoon{0%,100%{box-shadow:0 0 0 0 rgba(244,197,66,0),inset 0 0 0 0 rgba(244,197,66,0)}50%{box-shadow:0 0 18px 1px rgba(244,197,66,.32),inset 0 0 14px rgba(244,197,66,.12)}}
+@keyframes vdgWig{0%,70%,100%{transform:rotate(0)}76%{transform:rotate(-8deg) translateY(-2px)}84%{transform:rotate(7deg) translateY(-2px)}92%{transform:rotate(-3deg)}}
+
+/* (6) แถบแต้ม: ทองเหลว + ประกายวิ่ง + หมุดหลักชัย */
+html body .vdc .vdg-bar{position:relative;height:12px;margin:12px 0 24px;overflow:visible;background:linear-gradient(180deg,rgba(0,0,0,.65),rgba(0,0,0,.4));box-shadow:inset 0 1px 3px rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.05)}
+html body .vdc .vdg-bar > i{position:relative;overflow:hidden;min-width:12px;background:linear-gradient(180deg,#fff0b8 0%,#f6cd52 38%,#d99a1c 70%,#b07510 100%);box-shadow:0 0 12px rgba(244,197,66,.55)}
+html body .vdc .vdg-bar > i::before{content:"";position:absolute;inset:1px 4px auto;height:3px;border-radius:9px;background:rgba(255,255,255,.55)}
+html body .vdc .vdg-bar > i::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-45%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.65),transparent);animation:vdgShine 2.6s ease-in-out infinite}
+@keyframes vdgShine{0%{left:-45%}60%,100%{left:110%}}
+.vdg-bar s{position:absolute;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:#2a2213;border:2px solid #6b5a33;text-decoration:none;z-index:1}
+.vdg-bar s.on{background:#ffe08a;border-color:#fff4cc;box-shadow:0 0 8px rgba(255,214,90,.8)}
+.vdg-bar s em{position:absolute;top:13px;left:50%;transform:translateX(-50%);font:500 .62rem/1 'Prompt',sans-serif;font-style:normal;color:#8f8676;white-space:nowrap}
+.vdg-bar s.on em{color:#ffd978}
+.vdg-bar s.end{width:14px;height:14px;margin:-7px 0 0 -12px;border-radius:4px}
+.vdg-bar s.end em{left:auto;right:-2px;transform:none;top:15px;color:#c9b27a}
+
+/* (7) การ์ดพักผ่อน: พระจันทร์ในวงนาฬิกา + ข้อความ + นับถอยหลัง */
+.vdg-rest{display:flex;align-items:center;gap:12px;width:100%;min-height:58px;padding:9px 14px 9px 10px;border-radius:18px;
+  background:radial-gradient(120% 140% at 0% 50%,rgba(140,160,255,.14),transparent 55%),linear-gradient(180deg,#1d1a2a,#141220);border:1px solid rgba(170,180,255,.2);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 10px 24px -14px rgba(0,0,0,.8);font-family:'Prompt',sans-serif}
+.vdg-moon{position:relative;flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#ffe7a6;
+  background:conic-gradient(#ffd978 var(--dp,0%),rgba(255,255,255,.08) 0);transition:background .6s}
+.vdg-moon::before{content:"";position:absolute;inset:3px;border-radius:50%;background:#18152a}
+.vdg-moon svg{position:relative;width:20px;height:20px;filter:drop-shadow(0 0 6px rgba(255,220,140,.6));animation:vdgMoon 4s ease-in-out infinite}
+@keyframes vdgMoon{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(6deg) translateY(-1px)}}
+.vdg-rtx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.vdg-rtx b{font:600 .9rem/1.3 'Prompt',sans-serif;color:#f1ecff}
+.vdg-rtx small{font:400 .74rem/1.35 'Prompt',sans-serif;color:#a9a3c4}.vdg-rtx em{font-style:normal;font-weight:600;color:#ffd978}
+.vdg-rcd{flex:none;padding:6px 9px;border-radius:10px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.07);font:600 .82rem/1 'Prompt',sans-serif;font-variant-numeric:tabular-nums;color:#e7e1ff;letter-spacing:.02em}
+@media (max-width:380px){.vdg-rest{gap:9px;padding:8px 10px 8px 8px}.vdg-moon{width:38px;height:38px}.vdg-rtx b{font-size:.82rem}.vdg-rcd{font-size:.74rem;padding:5px 7px}}
+@media (prefers-reduced-motion:reduce){html body .vdc .vdg-c.is-soon,html body .vdc .vdg-c.is-soon .vdg-art,html body .vdc .vdg-bar > i::after,.vdg-moon svg,.vdg-c.just-claimed .vdg-seal{animation:none !important}}
+html body .vdc .vdg-c.is-done:not(.is-big) .vdg-day{align-self:flex-start;padding-left:9px}
