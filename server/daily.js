@@ -36,6 +36,15 @@ function ensureTables() {
         )
       `);
       await pool.query(`CREATE INDEX IF NOT EXISTS point_redeems_user_idx ON point_redeems (user_id, created_at)`);
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS user_items (
+          user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+          item_id    TEXT NOT NULL,
+          price      INTEGER NOT NULL DEFAULT 0,
+          created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+          PRIMARY KEY (user_id, item_id)
+        )
+      `);
     })().catch(err => { ready = null; throw err; });
   }
   return ready;
@@ -50,6 +59,19 @@ export const BADGES = [
   { id: 'd30',  kind: 'total',  n: 30,  name: 'ขาประจำ',        desc: 'เช็กอินรวม 30 วัน' },
   { id: 's30',  kind: 'streak', n: 30,  name: 'วินัยเหล็ก',      desc: 'เช็กอินติดกัน 30 วัน' },
   { id: 'd100', kind: 'total',  n: 100, name: 'ตำนานผู้อ่านสัญญา', desc: 'เช็กอินรวม 100 วัน' },
+];
+// ร้านแต่งตัวน้อง: ใช้แต้มซื้อ (แต้มเดียวกับที่แลกตรวจฟรีได้ — ของแต่งตัวช่วยดูดแต้มไปใช้ทางอื่น ลดต้นทุน AI)
+// badge = ของรางวัลเหรียญตรา ซื้อไม่ได้ ได้ฟรีเมื่อได้เหรียญตรานั้น · ราคา/ความหายากตั้งที่เซิร์ฟเวอร์เท่านั้น
+export const SHOP = [
+  { id: 'scarf',   slot: 'neck', rarity: 'common',    price: 80,   name: 'ผ้าพันคอแดง' },
+  { id: 'glasses', slot: 'face', rarity: 'rare',      price: 150,  name: 'แว่นทนาย' },
+  { id: 'bow',     slot: 'neck', rarity: 'rare',      price: 200,  name: 'โบว์ไททนาย' },
+  { id: 'cap',     slot: 'head', rarity: 'epic',      price: 300,  name: 'หมวกนอนดาว' },
+  { id: 'wizard',  slot: 'head', rarity: 'epic',      price: 400,  name: 'หมวกนักเวท' },
+  { id: 'crown',   slot: 'head', rarity: 'legendary', price: 1000, name: 'มงกุฎตำนาน' },
+  { id: 'pin',     slot: 'chest', rarity: 'common',    badge: 'd1',   name: 'เข็มกลัดดาว' },
+  { id: 'medal',   slot: 'neck',  rarity: 'rare',      badge: 's7',   name: 'เหรียญไฟไม่มอด' },
+  { id: 'laurel',  slot: 'head',  rarity: 'legendary', badge: 'd100', name: 'มาลัยตำนาน' },
 ];
 function badgesFor(bestStreak, totalDays) {
   return BADGES.map(b => {
@@ -74,6 +96,7 @@ async function state(db, userId) {
     [userId]
   );
   const { rows: [tot] } = await db.query('SELECT count(*)::int AS days, COALESCE(max(streak), 0)::int AS best FROM checkins WHERE user_id = $1', [userId]);
+  const { rows: items } = await db.query('SELECT item_id FROM user_items WHERE user_id = $1', [userId]);
   const l = last[0];
   const checkedToday = !!(l && l.is_today);
   // streak ที่ยังนับต่อได้: เช็กอินวันนี้แล้ว หรือเมื่อวาน (ยังไม่ขาด)
@@ -89,6 +112,8 @@ async function state(db, userId) {
     totalDays: tot.days,
     bestStreak: tot.best,
     badges: badgesFor(tot.best, tot.days),
+    shop: SHOP,
+    owned: items.map(r => r.item_id),
     points: u?.points ?? 0,
     credits: u?.credits ?? 0,
     todayReward: checkedToday ? null : rewardFor(streak + 1),
@@ -153,6 +178,30 @@ export async function redeem(userId) {
     await client.query('INSERT INTO point_redeems (user_id, points, credits) VALUES ($1, $2, 1)', [userId, REDEEM_COST]);
     await client.query('COMMIT');
     return { ok: true, ...(await state(pool, userId)) };
+  } catch (err) {
+    await client.query('ROLLBACK').catch(() => {});
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+// ซื้อของแต่งตัวด้วยแต้ม (ล็อกแถวผู้ใช้กันกดซ้ำ/แต้มติดลบ)
+export async function buyItem(userId, itemId) {
+  await ensureTables();
+  const item = SHOP.find(x => x.id === itemId);
+  if (!item || !item.price) return { ok: false, error: 'ไม่มีของชิ้นนี้ในร้าน' };
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    const { rows: [u] } = await client.query('SELECT points FROM users WHERE id = $1 FOR UPDATE', [userId]);
+    const { rows: own } = await client.query('SELECT 1 FROM user_items WHERE user_id = $1 AND item_id = $2', [userId, itemId]);
+    if (own.length) { await client.query('ROLLBACK'); return { ok: false, error: 'มีของชิ้นนี้แล้ว' }; }
+    if (!u || u.points < item.price) { await client.query('ROLLBACK'); return { ok: false, error: `แต้มไม่พอ ต้องใช้ ${item.price} แต้ม` }; }
+    await client.query('UPDATE users SET points = points - $2 WHERE id = $1', [userId, item.price]);
+    await client.query('INSERT INTO user_items (user_id, item_id, price) VALUES ($1, $2, $3)', [userId, itemId, item.price]);
+    await client.query('COMMIT');
+    return { ok: true, bought: itemId, ...(await state(pool, userId)) };
   } catch (err) {
     await client.query('ROLLBACK').catch(() => {});
     throw err;
