@@ -40,7 +40,21 @@
 
   /* ---------- หน้าต่างเช็กอิน (สไตล์หน้ารับรางวัลเกม) ---------- */
   // ภาพรางวัลแต่ละวัน: เหรียญเพิ่มขึ้นตามวัน · วันที่ 7 เป็นกล่องสมบัติ
-  var COIN = function (x, y, r) { return '<g transform="translate(' + x + ' ' + y + ')"><ellipse cx="0" cy="' + (r * .22) + '" rx="' + r + '" ry="' + (r * .9) + '" fill="#9a6a12"/><ellipse cx="0" cy="0" rx="' + r + '" ry="' + (r * .9) + '" fill="url(#vdcG)"/><ellipse cx="0" cy="0" rx="' + (r * .66) + '" ry="' + (r * .58) + '" fill="none" stroke="#fff3c4" stroke-width="' + (r * .1) + '" opacity=".7"/><path d="M' + (-r * .12) + ' ' + (-r * .34) + 'v' + (r * .68) + 'M' + (r * .14) + ' ' + (-r * .34) + 'v' + (r * .68) + '" stroke="#8a5a08" stroke-width="' + (r * .13) + '" stroke-linecap="round"/></g>'; };
+  var COIN = function (x, y, r) {
+    var ry = r * .9, e = r * .26;   // e = ความหนาขอบเหรียญ
+    return '<g class="vdg-cn" transform="translate(' + x + ' ' + y + ')">' +
+      '<ellipse cx="0" cy="' + e + '" rx="' + r + '" ry="' + ry + '" fill="url(#vdcE)"/>' +
+      '<path d="M' + (-r) + ' 0v' + e + 'a' + r + ' ' + ry + ' 0 0 0 ' + (2 * r) + ' 0v' + (-e) + '" fill="url(#vdcE)"/>' +
+      '<path d="M' + (-r * .96) + ' ' + (e * .55) + 'a' + r + ' ' + ry + ' 0 0 0 ' + (r * 1.92) + ' 0" fill="none" stroke="#5c3a06" stroke-width="' + (r * .05) + '" stroke-dasharray="' + (r * .08) + ' ' + (r * .1) + '" opacity=".55"/>' +
+      '<ellipse cx="0" cy="0" rx="' + r + '" ry="' + ry + '" fill="url(#vdcF)"/>' +
+      '<ellipse cx="0" cy="0" rx="' + r + '" ry="' + ry + '" fill="none" stroke="#fff6cf" stroke-width="' + (r * .06) + '" opacity=".55"/>' +
+      '<ellipse cx="0" cy="' + (r * .03) + '" rx="' + (r * .7) + '" ry="' + (r * .62) + '" fill="url(#vdcI)" stroke="#a46f10" stroke-width="' + (r * .07) + '"/>' +
+      '<path d="M' + (-r * .12) + ' ' + (-r * .3) + 'v' + (r * .62) + 'M' + (r * .14) + ' ' + (-r * .3) + 'v' + (r * .62) + '" stroke="#8a5a08" stroke-width="' + (r * .13) + '" stroke-linecap="round"/>' +
+      '<path d="M' + (-r * .12 + r * .06) + ' ' + (-r * .3) + 'v' + (r * .62) + 'M' + (r * .14 + r * .06) + ' ' + (-r * .3) + 'v' + (r * .62) + '" stroke="#ffe9a0" stroke-width="' + (r * .05) + '" stroke-linecap="round" opacity=".6"/>' +
+      '<path d="M' + (-r * .72) + ' ' + (-r * .3) + 'a' + (r * .8) + ' ' + (r * .7) + ' 0 0 1 ' + (r * .9) + ' ' + (-r * .5) + '" fill="none" stroke="#fff" stroke-width="' + (r * .12) + '" stroke-linecap="round" opacity=".7"/>' +
+      '<ellipse class="vdg-gl" cx="0" cy="0" rx="' + r + '" ry="' + ry + '" fill="url(#vdcS)"/>' +
+      '</g>';
+  };
   var ART = [
     COIN(32, 34, 15),
     COIN(25, 37, 12) + COIN(39, 31, 12),
@@ -49,11 +63,20 @@
     COIN(32, 46, 11) + COIN(32, 38, 11) + COIN(32, 30, 11) + COIN(19, 44, 9) + COIN(45, 44, 9),
     COIN(18, 46, 10) + COIN(46, 46, 10) + COIN(32, 46, 10) + COIN(25, 34, 10) + COIN(39, 34, 10) + COIN(32, 23, 10),
     // กล่องสมบัติ
-    '<path d="M8 30h48v22a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4z" fill="#7a3f12"/><path d="M8 30h48v6H8z" fill="#5c2c0b"/><path d="M10 30c0-11 9-18 22-18s22 7 22 18z" fill="#a8561b"/>' +
-    '<path d="M28 12h8v44h-8z" fill="url(#vdcG)"/><path d="M8 30h48" stroke="url(#vdcG)" stroke-width="4"/><rect x="26" y="27" width="12" height="13" rx="3" fill="url(#vdcG)" stroke="#8a5a08" stroke-width="1.5"/><circle cx="32" cy="33" r="2" fill="#5c3a06"/>' +
-    '<path d="M14 18l2-5 2 5 5 2-5 2-2 5-2-5-5-2zM50 9l1.4-3.5L53 9l3.5 1.4L53 12l-1.6 3.5L50 12l-3.5-1.6z" fill="#fff4c2"/>'
+    '<g class="vdg-ch-glow"><ellipse cx="32" cy="30" rx="20" ry="7" fill="#ffd95a" opacity=".85"/></g>' +
+    '<path d="M8 30h48v22a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4z" fill="#7a3f12"/><path d="M8 30h48v6H8z" fill="#5c2c0b"/><path d="M14 36v18M50 36v18" stroke="#5c2c0b" stroke-width="1.5" opacity=".6"/>' +
+    '<path d="M28 30h8v26h-8z" fill="url(#vdcG)"/>' +
+    '<g class="vdg-lid"><path d="M10 30c0-11 9-18 22-18s22 7 22 18z" fill="#a8561b"/><path d="M14 26c2-7 9-11 18-11" stroke="#d8823a" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".7"/><path d="M28 12.3h8V30h-8z" fill="url(#vdcG)"/><path d="M8 30h48" stroke="url(#vdcG)" stroke-width="4"/></g>' +
+    '<rect x="26" y="27" width="12" height="13" rx="3" fill="url(#vdcG)" stroke="#8a5a08" stroke-width="1.5"/><circle cx="32" cy="33" r="2" fill="#5c3a06"/>' +
+    '<path class="vdg-tw" d="M14 18l2-5 2 5 5 2-5 2-2 5-2-5-5-2z" fill="#fff4c2"/><path class="vdg-tw vdg-tw2" d="M50 9l1.4-3.5L53 9l3.5 1.4L53 12l-1.6 3.5L50 12l-3.5-1.6z" fill="#fff4c2"/>'
   ];
-  var DEFS = '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="vdcG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1a8"/><stop offset=".45" stop-color="#f4c542"/><stop offset="1" stop-color="#c88a12"/></linearGradient></defs></svg>';
+  var GLINT = function (x, y) { return '<path class="vdg-tw" transform="translate(' + x + ' ' + y + ')" d="M0 -6 1.3 -1.3 6 0 1.3 1.3 0 6 -1.3 1.3 -6 0 -1.3 -1.3Z" fill="#fffbe6"/>'; };
+  [[42, 22], [47, 26], [41, 18], [48, 21], [42, 20], [41, 15]].forEach(function (g, i) { ART[i] += GLINT(g[0], g[1]); });
+  var DEFS = '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="vdcG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1a8"/><stop offset=".45" stop-color="#f4c542"/><stop offset="1" stop-color="#c88a12"/></linearGradient>' +
+    '<radialGradient id="vdcF" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="#fff7d0"/><stop offset=".35" stop-color="#ffd85c"/><stop offset=".75" stop-color="#e2a524"/><stop offset="1" stop-color="#a86d0c"/></radialGradient>' +
+    '<radialGradient id="vdcI" cx=".6" cy=".7" r=".8"><stop offset="0" stop-color="#ffe17a"/><stop offset="1" stop-color="#d79a1e"/></radialGradient>' +
+    '<linearGradient id="vdcE" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7a4f08"/><stop offset=".3" stop-color="#c58d1a"/><stop offset=".55" stop-color="#8a5a08"/><stop offset="1" stop-color="#5c3a06"/></linearGradient>' +
+    '<linearGradient id="vdcS" x1="0" y1="0" x2="1" y2=".4"><stop offset=".3" stop-color="#fff" stop-opacity="0"/><stop offset=".48" stop-color="#fff" stop-opacity=".85"/><stop offset=".56" stop-color="#fff" stop-opacity="0"/></linearGradient></defs></svg>';
   var ICO_LOCK = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg>';
   var ICO_OK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5.5 12.5 4.2 4.2L18.5 8"/></svg>';
 
@@ -82,6 +105,7 @@
     return '<' + tag + (w.today ? ' type="button"' : '') + ' class="vdg-c ' + st + (soon ? ' is-soon' : '') + (i === 6 ? ' is-big' : '') + '" data-i="' + i + '"' +
       (w.today ? ' aria-label="รับรางวัลวันที่ ' + w.day + ' +' + w.reward + ' แต้ม"' : ' aria-label="วันที่ ' + w.day + ' +' + w.reward + ' แต้ม ' + (w.done ? 'รับแล้ว' : 'ยังไม่ถึง') + '"') + '>' +
       '<span class="vdg-day">' + (i === 6 ? 'วันที่ 7 · กล่องสมบัติ' : 'วัน ' + w.day) + '</span>' +
+      (i === 6 ? '<span class="vdg-rays" aria-hidden="true"></span>' : '') +
       '<svg class="vdg-art" viewBox="0 0 64 64" aria-hidden="true">' + ART[i] + '</svg>' +
       '<span class="vdg-amt">+' + w.reward + '</span>' +
       (foot ? '<span class="vdg-tag">' + foot + '</span>' : '') +
@@ -112,6 +136,7 @@
     var sub = box.querySelector('.vdg-sub'), foot = box.querySelector('.vdg-foot'), md = mood();
     var ms = box.querySelector('.vdg-mascot');
     if (ms.getAttribute('data-m') !== md) { ms.setAttribute('data-m', md); ms.innerHTML = mascot(md, 260, ICO_GIFT); }
+    box.setAttribute('data-sky', md === 'sleep' ? 'night' : 'day');
     box.querySelector('.vdg-say').textContent = line(md);
     sub.className = 'vdg-sub' + (S.checkedToday ? ' is-wait' : '');
     sub.innerHTML = S.checkedToday
@@ -129,6 +154,7 @@
     box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-labelledby', 'vdcT');
     box.innerHTML = DEFS + '<div class="vdc-bg" data-x></div><div class="vdg-frame"><div class="vdc-grip" aria-hidden="true"></div>' +
       '<button type="button" class="vdg-x" data-x aria-label="ปิด">✕</button>' +
+      '<div class="vdg-sky" aria-hidden="true"><i class="sk-stars"></i><i class="sk-stars sk-b"></i><i class="sk-moon"></i><i class="sk-sun"></i><b class="sk-z">z</b><b class="sk-z sk-z2">z</b><b class="sk-z sk-z3">Z</b></div>' +
       '<div class="vdg-hd"><div class="vdg-hdt"><h3 id="vdcT"><span>ล็อกอิน</span><span>รายวัน</span><em>ฟรี!</em></h3><p class="vdg-say"></p></div><span class="vdg-mascot" aria-hidden="true"></span></div>' +
       '<div class="vdg-stage"><p class="vdg-sub"></p><div class="vdg-body"><p class="vdc-wait">กำลังโหลด…</p></div><div class="vdg-foot"></div></div></div>';
     document.body.appendChild(box);
