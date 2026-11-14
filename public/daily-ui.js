@@ -46,7 +46,9 @@
     2: { rim: '#aebfd2', disc: '#eef4fb', inn: '#c9d6e3', line: '#5d7088', hi: '#ffffff', f1: '#2f7bff', f2: '#d6f0ff', fs: '#0b2a6b', r1: '#23408e', r2: '#1a3070', rs: '#dfe8f2', name: 'ทองคำขาว' },
     3: { rim: '#8a5cff', disc: '#e4d6ff', inn: '#b28bff', line: '#4a2a9a', hi: '#ffffff', f1: '#a64bff', f2: '#f3dcff', fs: '#3a0a6b', r1: '#5b2bb0', r2: '#46208c', rs: '#ffd9ff', name: 'เพชร' }
   };
-  function medalTier() { var b = S && S.bestStreak || 0; return b >= 30 ? 3 : b >= 14 ? 2 : 1; }
+  var pvTier = 0;   // ดูตัวอย่างระดับในร้าน
+  function realTier() { var b = S && S.bestStreak || 0; return b >= 30 ? 3 : b >= 14 ? 2 : 1; }
+  function medalTier() { return pvTier || realTier(); }
   function medalArt(t) {
     var c = MED[t] || MED[1];
     return (t === 3 ? '<g class="md-wing"><path d="M49 96c-10-2-17-9-19-17 6 3 10 3 13 2-4-2-7-5-8-9 6 3 11 4 14 4-2-2-3-4-3-6 5 4 7 9 8 14z" fill="#f4eeff" stroke="' + INK + '" stroke-width="1.4" stroke-linejoin="round"/>' +
@@ -71,9 +73,11 @@
   /* (1) ออร่าไฟรอบตัวน้องตอนใส่เหรียญ (สีตามระดับเหรียญ) — วาดไว้หลังตัวน้อง */
   function auraArt(t) {
     var c = MED[t] || MED[1];
-    return '<g class="md-aura" aria-hidden="true"><path class="md-au1" d="M60 138C30 138 14 118 16 92 18 70 28 62 26 40c10 8 14 18 14 26 2-12 4-26 0-42 12 10 16 22 16 32 2-12 4-26 4-42 2 16 4 30 4 42 0-10 4-22 16-32-4 16-2 30 0 42 0-8 4-18 14-26-2 22 8 30 10 52 2 26-14 46-44 46z" fill="' + c.f1 + '" opacity=".5"/><path class="md-au2" transform="translate(60 138) scale(.78) translate(-60 -138)" d="M60 138C30 138 14 118 16 92 18 70 28 62 26 40c10 8 14 18 14 26 2-12 4-26 0-42 12 10 16 22 16 32 2-12 4-26 4-42 2 16 4 30 4 42 0-10 4-22 16-32-4 16-2 30 0 42 0-8 4-18 14-26-2 22 8 30 10 52 2 26-14 46-44 46z" fill="' + c.f2 + '" opacity=".42"/>' +
+    return '<g class="md-aura" aria-hidden="true"><ellipse cx="60" cy="80" rx="44" ry="58" fill="' + c.f1 + '" opacity=".18"/>' +
+      '<g transform="translate(22 124) rotate(-35) scale(1.5)"><g class="md-tg"><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" fill="' + c.f1 + '"/><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" transform="translate(0 -1) scale(.55)" fill="' + c.f2 + '"/></g></g><g transform="translate(18 96) rotate(-45) scale(1.35)"><g class="md-tg"><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" fill="' + c.f1 + '"/><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" transform="translate(0 -1) scale(.55)" fill="' + c.f2 + '"/></g></g><g transform="translate(20 64) rotate(-40) scale(1.2)"><g class="md-tg"><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" fill="' + c.f1 + '"/><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" transform="translate(0 -1) scale(.55)" fill="' + c.f2 + '"/></g></g><g transform="translate(30 38) rotate(-25) scale(1.05)"><g class="md-tg"><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" fill="' + c.f1 + '"/><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" transform="translate(0 -1) scale(.55)" fill="' + c.f2 + '"/></g></g><g transform="translate(46 24) rotate(-10) scale(0.9)"><g class="md-tg"><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" fill="' + c.f1 + '"/><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" transform="translate(0 -1) scale(.55)" fill="' + c.f2 + '"/></g></g><g transform="translate(98 124) rotate(35) scale(1.5)"><g class="md-tg"><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" fill="' + c.f1 + '"/><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" transform="translate(0 -1) scale(.55)" fill="' + c.f2 + '"/></g></g><g transform="translate(102 96) rotate(45) scale(1.35)"><g class="md-tg"><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" fill="' + c.f1 + '"/><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" transform="translate(0 -1) scale(.55)" fill="' + c.f2 + '"/></g></g><g transform="translate(100 64) rotate(40) scale(1.2)"><g class="md-tg"><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" fill="' + c.f1 + '"/><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" transform="translate(0 -1) scale(.55)" fill="' + c.f2 + '"/></g></g><g transform="translate(90 38) rotate(25) scale(1.05)"><g class="md-tg"><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" fill="' + c.f1 + '"/><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" transform="translate(0 -1) scale(.55)" fill="' + c.f2 + '"/></g></g><g transform="translate(74 24) rotate(10) scale(0.9)"><g class="md-tg"><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" fill="' + c.f1 + '"/><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" transform="translate(0 -1) scale(.55)" fill="' + c.f2 + '"/></g></g>' +
       '<circle class="md-ae" cx="20" cy="70" r="1.6" fill="' + c.f2 + '"/><circle class="md-ae md-ae2" cx="100" cy="60" r="1.4" fill="' + c.f2 + '"/><circle class="md-ae md-ae3" cx="30" cy="40" r="1.2" fill="' + c.f2 + '"/><circle class="md-ae md-ae4" cx="92" cy="96" r="1.6" fill="' + c.f2 + '"/></g>';
   }
+
   function artFor(id) { return id === 'medal' ? medalArt(medalTier()) : ART_OUT[id] ? ART_OUT[id].art : ''; }
   var RAR = { common: 'ธรรมดา', rare: 'หายาก', epic: 'พิเศษ', legendary: 'ตำนาน' };
   function shopItems() { return (S && S.shop || []).filter(function (o) { return ART_OUT[o.id]; }); }
@@ -214,7 +218,7 @@
     '<rect x="26" y="27" width="12" height="13" rx="3" fill="url(#vdcG)" stroke="#8a5a08" stroke-width="1.5"/><circle cx="32" cy="33" r="2" fill="#5c3a06"/>' +
     '<path class="vdg-tw" d="M14 18l2-5 2 5 5 2-5 2-2 5-2-5-5-2z" fill="#fff4c2"/><path class="vdg-tw vdg-tw2" d="M50 9l1.4-3.5L53 9l3.5 1.4L53 12l-1.6 3.5L50 12l-3.5-1.6z" fill="#fff4c2"/>'
   ];
-  var GLINT = function (x, y) { return '<path class="vdg-tw" transform="translate(' + x + ' ' + y + ')" d="M0 -6 1.3 -1.3 6 0 1.3 1.3 0 6 -1.3 1.3 -6 0 -1.3 -1.3Z" fill="#fffbe6"/>'; };
+  var GLINT = function (x, y) { return '<g transform="translate(' + x + ' ' + y + ')"><path class="vdg-tw" d="M0 -6 1.3 -1.3 6 0 1.3 1.3 0 6 -1.3 1.3 -6 0 -1.3 -1.3Z" fill="#fffbe6"/></g>'; };
   [[42, 22], [47, 26], [41, 18], [48, 21], [42, 20], [41, 15]].forEach(function (g, i) { ART[i] += GLINT(g[0], g[1]); });
   var DEFS = '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="vdcG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1a8"/><stop offset=".45" stop-color="#f4c542"/><stop offset="1" stop-color="#c88a12"/></linearGradient>' +
     '<radialGradient id="vdcF" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="#fff7d0"/><stop offset=".35" stop-color="#ffd85c"/><stop offset=".75" stop-color="#e2a524"/><stop offset="1" stop-color="#a86d0c"/></radialGradient>' +
@@ -292,12 +296,13 @@
       sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.setAttribute('aria-labelledby', 'vstT');
       sh.innerHTML = '<div class="vst-bg" data-shx></div><div class="vst-p">' +
         '<div class="vst-hd"><h3 id="vstT">ร้านค้าน้องเวลลัม</h3><span class="vst-pts"><i class="vof-coin"></i><b data-spts>0</b> แต้ม</span><button type="button" class="vst-x" data-shx aria-label="ปิดร้าน">✕</button></div>' +
-        '<div class="vst-stage"><i class="vst-spot"></i><i class="vst-ped"></i><div class="vst-ms" aria-hidden="true"></div><p class="vst-say"></p></div>' +
+        '<div class="vst-stage"><div class="vst-fire" aria-hidden="true"></div><i class="vst-spot"></i><i class="vst-ped"></i><div class="vst-extra"></div><div class="vst-ms" aria-hidden="true"></div><p class="vst-say"></p></div>' +
         '<div class="vst-tabs" role="tablist"></div><div class="vst-grid"></div><div class="vst-bar"></div></div>';
       document.body.appendChild(sh);
       sh.addEventListener('click', function (e) {
         if (e.target.closest('[data-shx]')) { shopClose(); return; }
         var t = e.target.closest('[data-tab]'); if (t) { shTab = t.getAttribute('data-tab'); shopRender(); return; }
+        var tr = e.target.closest('.vst-tiers [data-tier]'); if (tr) { pvTier = +tr.getAttribute('data-tier'); if (pvTier === realTier()) pvTier = 0; shopRender(); hop(sh.querySelector('.vst-ms')); return; }
         var it = e.target.closest('[data-outfit]'); if (it) { pick(it.getAttribute('data-outfit')); return; }
         var a = e.target.closest('[data-act]'); if (a) { act(a.getAttribute('data-act')); return; }
         if (e.target.closest('.vst-ms')) hop(sh.querySelector('.vst-ms'));
@@ -311,13 +316,13 @@
     setTimeout(function () { var x = sh.querySelector('.vst-x'); if (x) x.focus({ preventScroll: true }); }, 60);
   }
   function shopClose() {
-    if (!sh) return; tryOn = null; sel = null; sh.classList.remove('on'); document.documentElement.classList.remove('vst-open');
+    if (!sh) return; tryOn = null; sel = null; pvTier = 0; sh.classList.remove('on'); document.documentElement.classList.remove('vst-open');
     setTimeout(function () { if (sh && !sh.classList.contains('on')) sh.hidden = true; }, 260);
     if (box && !box.hidden) render();
   }
   function pick(id) {
     var o = itemById(id); if (!o) return;
-    sel = id; tryOn = ownedOutfits().indexOf(id) < 0 ? id : null;
+    sel = id; tryOn = ownedOutfits().indexOf(id) < 0 ? id : null; if (id !== 'medal') pvTier = 0;
     shopRender(); hop(sh.querySelector('.vst-ms'));
   }
   function act(a) {
@@ -325,13 +330,50 @@
     if (a === 'buy') { buy(o.id); return; }
     if (a === 'wear') { var on = wear(o.id); shopRender(); hop(sh.querySelector('.vst-ms')); say(on ? 'ใส่ ' + o.name + ' แล้ว' : 'ถอด ' + o.name + ' แล้ว'); if (box && !box.hidden) render(); }
   }
+  /* (2) ปีกฟีนิกซ์ (3) วงเวทไฟ (5) ปุ่มดูตัวอย่างระดับ (6) ป้ายนับถอยหลังปลดล็อก */
+  var WING = 'M150 122C120 100 92 72 38 38c14 30 10 42-10 48 26 9 26 19 10 29 26 3 30 11 20 24 32-10 58-12 92-9z';
+  var WING2 = 'M150 124c-24-14-48-34-80-52 9 18 4 25-9 30 18 6 18 12 10 20 23 0 43 3 79 8z';
+  function fireScene(on, picked) {
+    var f = sh.querySelector('.vst-fire'), x = sh.querySelector('.vst-extra');
+    if (!on) { f.innerHTML = ''; x.innerHTML = ''; f.removeAttribute('data-on'); return; }
+    if (!f.getAttribute('data-on')) {
+      f.setAttribute('data-on', '1');
+      var runes = '✦ ไฟไม่มอด ✦ VELLUM CHECK ✦ อ่านให้ครบ ✦ ก่อนเซ็น ✦ ไฟไม่มอด ✦ VELLUM CHECK ✦ อ่านให้ครบ ✦ ก่อนเซ็น ';
+      f.innerHTML =
+        '<svg class="vst-wings" viewBox="0 0 300 200"><defs><linearGradient id="phxA" x1="1" y1="0" x2="0" y2="0"><stop offset="0" style="stop-color:var(--f2)"/><stop offset=".5" style="stop-color:var(--f1)"/><stop offset="1" style="stop-color:var(--f1);stop-opacity:.15"/></linearGradient></defs>' +
+          '<g class="phx-l"><path d="' + WING + '" fill="url(#phxA)"/><path d="' + WING2 + '" fill="var(--f2)" opacity=".55"/><path d="M150 122C118 104 90 80 52 52M150 124C120 112 92 100 46 96M150 126c-30-4-56 0-84 14" stroke="var(--f2)" stroke-width="1.6" fill="none" opacity=".7"/></g>' +
+          '<g class="phx-r"><path d="' + WING + '" fill="url(#phxA)"/><path d="' + WING2 + '" fill="var(--f2)" opacity=".55"/><path d="M150 122C118 104 90 80 52 52M150 124C120 112 92 100 46 96M150 126c-30-4-56 0-84 14" stroke="var(--f2)" stroke-width="1.6" fill="none" opacity=".7"/></g></svg>' +
+        '<div class="vst-rune"><svg viewBox="0 0 260 260"><defs><path id="vrc" d="M130 130m-104 0a104 104 0 1 1 208 0a104 104 0 1 1-208 0"/></defs>' +
+          '<circle cx="130" cy="130" r="122" fill="none" stroke="var(--f2)" stroke-width="2.5" opacity=".9"/><circle cx="130" cy="130" r="114" fill="none" stroke="var(--f1)" stroke-width="1.5" stroke-dasharray="4 6"/>' +
+          '<circle cx="130" cy="130" r="92" fill="none" stroke="var(--f2)" stroke-width="1.5" opacity=".7"/>' +
+          '<path d="M130 40 208 175H52zM130 220 52 85h156z" fill="none" stroke="var(--f1)" stroke-width="1.6" opacity=".8"/>' +
+          '<text font-size="13" font-weight="700" letter-spacing="2" fill="var(--f2)"><textPath href="#vrc">' + runes + '</textPath></text></svg></div>';
+    }
+    var bd = (S.badges || []).filter(function (b) { return b.id === 's7'; })[0], best = S.bestStreak || 0, rt = realTier(), html = '';
+    if (bd && !bd.earned) {
+      var left = bd.n - bd.have, pips = '';
+      for (var k = 0; k < bd.n; k++) pips += '<i class="' + (k < bd.have ? 'on' : '') + '"></i>';
+      html += '<div class="vst-cd"><b>ปลดล็อกในอีก ' + left + ' วัน 🔥</b><span class="vst-pips">' + pips + '</span><small>อย่าขาดเช็กอินนะ</small></div>';
+    } else if (best < 30) {
+      var nx = best < 14 ? 14 : 30, nm = best < 14 ? 'ทองคำขาว' : 'เพชร';
+      html += '<div class="vst-cd"><b>อีก ' + (nx - best) + ' วัน → ระดับ' + nm + '</b><small>สถิติติดกันสูงสุด ' + best + ' วัน</small></div>';
+    } else html += '<div class="vst-cd"><b>ระดับสูงสุดแล้ว 💎</b><small>ตำนานผู้ไม่ยอมแพ้</small></div>';
+    if (picked) html += '<div class="vst-tiers" role="group" aria-label="ดูตัวอย่างระดับเหรียญ">' + [[1, 'ทอง', 7], [2, 'ทองคำขาว', 14], [3, 'เพชร', 30]].map(function (t) {
+      return '<button type="button" data-tier="' + t[0] + '" class="t' + t[0] + (medalTier() === t[0] ? ' on' : '') + (bd && bd.earned && rt >= t[0] ? ' got' : '') + '"><b>' + t[1] + '</b><small>' + t[2] + ' วัน' + (bd && bd.earned && rt >= t[0] ? ' ✓' : '') + '</small></button>';
+    }).join('') + '</div>';
+    x.innerHTML = html;
+  }
   function shopRender() {
     if (!sh || sh.hidden || !S) return;
     var list = shopItems(), own = ownedOutfits(), worn = wornOutfits(), bmap = {};
     (S.badges || []).forEach(function (b) { bmap[b.id] = b; });
     sh.querySelector('[data-spts]').textContent = fmt(S.points);
     sh.querySelector('.vst-ms').innerHTML = dressed('wave', 220);
-    sh.classList.toggle('is-fire', sel === 'medal' || (!sel && wornOutfits().indexOf('medal') >= 0));
+    var fireOn = sel === 'medal' || (!sel && wornOutfits().indexOf('medal') >= 0);
+    sh.classList.toggle('is-fire', fireOn);
+    var mc = MED[medalTier()] || MED[1]; sh.style.setProperty('--f1', mc.f1); sh.style.setProperty('--f2', mc.f2);
+    sh.setAttribute('data-tier', medalTier());
+    fireScene(fireOn, sel === 'medal');
     var o = itemById(sel), say2 = sh.querySelector('.vst-say');
     say2.textContent = !o ? 'อยากให้ฉันใส่อะไรดี? แตะของด้านล่างเพื่อลองใส่ได้เลย ✨'
       : own.indexOf(o.id) >= 0 ? (worn.indexOf(o.id) >= 0 ? 'ใส่ ' + o.name + ' อยู่นะ เข้ากับฉันไหม? 😊' : o.name + ' ของเราเอง ใส่เลยไหม?')
@@ -352,7 +394,7 @@
     }).join('');
     var bar = sh.querySelector('.vst-bar');
     if (!o) { bar.innerHTML = '<p class="vst-hint">แตะของเพื่อลองใส่ · ' + own.length + '/' + list.length + ' ชิ้นที่มีแล้ว · ได้แต้มจากเช็กอินทุกวัน</p>'; return; }
-    var head = '<span class="vst-it r-' + o.rarity + '"><em>' + (RAR[o.rarity] || '') + (o.id === 'medal' ? ' · ระดับ' + MED[medalTier()].name : '') + '</em><b>' + h(o.name) + '</b></span>';
+    var head = '<span class="vst-it r-' + o.rarity + '"><em>' + (RAR[o.rarity] || '') + (o.id === 'medal' ? ' · ระดับ' + MED[medalTier()].name + (pvTier ? ' (ตัวอย่าง)' : '') : '') + '</em><b>' + h(o.name) + '</b></span>';
     if (own.indexOf(o.id) >= 0) bar.innerHTML = head + '<button type="button" class="vst-btn ' + (worn.indexOf(o.id) >= 0 ? 'is-off' : '') + '" data-act="wear">' + (worn.indexOf(o.id) >= 0 ? 'ถอดออก' : 'ใส่ชิ้นนี้') + '</button>';
     else if (o.badge) { var b = bmap[o.badge]; bar.innerHTML = head + '<span class="vst-need">🏅 ' + h(b ? b.desc : 'เหรียญตรา') + (b ? ' · ' + b.have + '/' + b.n : '') + '</span>'; }
     else if (S.points >= o.price) bar.innerHTML = head + '<button type="button" class="vst-btn is-buy" data-act="buy"><i class="vof-coin"></i>ซื้อ ' + fmt(o.price) + ' แต้ม</button>';
