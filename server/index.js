@@ -36,7 +36,7 @@ import { isBlocked, recordFailure, clearFailures } from './rateLimit.js';
 import { buildSpokenSummary, synthesizeSpeech, synthesizeWithTimes, VOICE_CREDIT_COST, listVoices, pickVoice, voicePreview, voiceSource, warmPreviews, previewText } from './voice.js';
 import { createPromptPayPayment, confirmAndCredit, getPaymentStatus, PACKAGES } from './payments.js';
 import { logCheck, saveFeedback, adminStats, FEEDBACK_REASONS } from './stats.js';
-import { getDaily, checkIn, redeem } from './daily.js';
+import { getDaily, checkIn, redeem, buyItem } from './daily.js';
 import { fastStatic, cacheHeader } from './fastStatic.js';
 import { cleanPayload, createShare, getShare, deleteShare, SHARE_DAYS } from './share.js';
 import { TERMS_VERSION, hasConsent, recordConsent } from './consent.js';
@@ -1114,6 +1114,23 @@ app.post('/api/daily/redeem', async (req, res) => {
   } catch (err) {
     console.error('[daily] redeem failed:', err.message);
     res.status(500).json({ error: 'แลกแต้มไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+
+const buyHits = new Map();
+app.post('/api/daily/buy', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน' });
+    const now = Date.now(), h = buyHits.get(user.id);
+    if (h && h.resetAt > now && h.count >= 20) return res.status(429).json({ error: 'กดถี่เกินไป รอสักครู่นะ' });
+    buyHits.set(user.id, h && h.resetAt > now ? { count: h.count + 1, resetAt: h.resetAt } : { count: 1, resetAt: now + 60e3 });
+    const r = await buyItem(user.id, String(req.body?.item || ''));
+    if (!r.ok) return res.status(400).json(r);
+    res.json(r);
+  } catch (err) {
+    console.error('[daily] buy failed:', err.message);
+    res.status(500).json({ error: 'ซื้อไม่สำเร็จ ลองใหม่อีกครั้ง' });
   }
 });
 
