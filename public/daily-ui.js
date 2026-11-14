@@ -106,7 +106,7 @@
   function dressed(m, size) {
     var svg = mascot(m, size, ICO_GIFT), worn = wornOutfits();
     if (!worn.length || svg.indexOf('<g class="vm-face">') < 0) return svg;
-    var art = worn.map(artFor).join('');
+    var art = worn.map(function (id) { return id === 'medal' ? '<g class="md-worn">' + artFor(id) + '</g>' : artFor(id); }).join('');
     var i = svg.indexOf('<g class="vm-face">'), depth = 0, j = i;
     var re = /<g[\s>]|<\/g>/g; re.lastIndex = i;
     for (var mt; (mt = re.exec(svg));) { if (mt[0] === '</g>') { depth--; if (!depth) { j = mt.index + 4; break; } } else depth++; }
@@ -316,7 +316,7 @@
     setTimeout(function () { var x = sh.querySelector('.vst-x'); if (x) x.focus({ preventScroll: true }); }, 60);
   }
   function shopClose() {
-    if (!sh) return; tryOn = null; sel = null; pvTier = 0; heroKey = ''; sh.classList.remove('on'); document.documentElement.classList.remove('vst-open');
+    if (!sh) return; tryOn = null; sel = null; pvTier = 0; heroKey = ''; heroPlayed = false; sh.classList.remove('on'); document.documentElement.classList.remove('vst-open');
     setTimeout(function () { if (sh && !sh.classList.contains('on')) sh.hidden = true; }, 260);
     if (box && !box.hidden) render();
   }
@@ -359,14 +359,28 @@
   }
   /* (5) เหรียญเป็นพระเอก: ลอยใหญ่กลางฉาก หมุนช้า ๆ แล้วลอยลงไปคล้องคอน้อง */
   var heroKey = '', heroT = [];
-  function playHero(t) {
+  var heroPlayed = false;
+  function playHero(t) {   // เล่นครั้งเดียวต่อการเข้าร้าน: เหรียญลอยเด่นด้านบน แล้วค่อย ๆ ลอยลงไปคล้องคอน้อง
     var hEl = sh.querySelector('.vst-hero'), ms = sh.querySelector('.vst-ms');
     heroT.forEach(clearTimeout); heroT = [];
-    if (calm()) { hEl.className = 'vst-hero'; ms.classList.remove('is-wait'); return; }
+    if (calm()) return;
+    heroPlayed = true;
     hEl.innerHTML = '<i class="vst-rays"></i><svg viewBox="36 66 48 54">' + medalArt(t) + '</svg>';
-    hEl.className = 'vst-hero'; void hEl.offsetWidth; hEl.classList.add('show'); ms.classList.add('is-wait');
-    heroT.push(setTimeout(function () { hEl.classList.add('fly'); ms.classList.remove('is-wait'); }, 1900));
-    heroT.push(setTimeout(function () { hEl.className = 'vst-hero'; hop(ms); }, 2500));
+    hEl.className = 'vst-hero'; hEl.style.transform = ''; void hEl.offsetWidth; hEl.classList.add('show'); ms.classList.add('hide-medal');
+    heroT.push(setTimeout(function () {
+      var tgt = ms.querySelector('.md-worn'); if (!tgt || !hEl.animate) { done(); return; }
+      var a = hEl.querySelector('svg').getBoundingClientRect(), b = tgt.getBoundingClientRect();
+      var k = b.height / a.height, dx = (b.left + b.width / 2) - (a.left + a.width / 2), dy = (b.top + b.height / 2) - (a.top + a.height / 2);
+      hEl.classList.add('fly');
+      var an = hEl.animate([{ transform: 'translate(0,0) scale(1)' }, { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + k + ')' }], { duration: 900, easing: 'cubic-bezier(.45,0,.25,1)', fill: 'forwards' });
+      an.onfinish = done;
+    }, 1700));
+    function done() {
+      ms.classList.remove('hide-medal'); hEl.className = 'vst-hero'; hEl.getAnimations && hEl.getAnimations().forEach(function (x) { x.cancel(); });
+      var f = document.createElement('i'); f.className = 'vst-clasp'; var b = ms.querySelector('.md-worn'), st = sh.querySelector('.vst-stage');
+      if (b && st) { var r = b.getBoundingClientRect(), q = st.getBoundingClientRect(); f.style.left = (r.left - q.left + r.width / 2) + 'px'; f.style.top = (r.top - q.top + r.height / 2) + 'px'; st.appendChild(f); setTimeout(function () { f.remove(); }, 900); }
+      hop(ms);
+    }
   }
   function shopRender() {
     if (!sh || sh.hidden || !S) return;
@@ -381,8 +395,9 @@
     sh.setAttribute('data-tier', medalTier());
     fireScene(fireOn, sel === 'medal');
     var hk = sel === 'medal' ? 'm' + medalTier() : '';
-    if (hk && hk !== heroKey) playHero(medalTier());
-    if (!hk) { heroT.forEach(clearTimeout); var he = sh.querySelector('.vst-hero'); he.className = 'vst-hero'; sh.querySelector('.vst-ms').classList.remove('is-wait'); }
+    if (hk && !heroPlayed) setTimeout(function () { playHero(medalTier()); }, 30);
+    else if (hk && heroKey && hk !== heroKey && !calm()) { var stg = sh.querySelector('.vst-stage'); stg.classList.remove('tier-flash'); void stg.offsetWidth; stg.classList.add('tier-flash'); }
+    if (!hk) { heroT.forEach(clearTimeout); var he = sh.querySelector('.vst-hero'); he.className = 'vst-hero'; sh.querySelector('.vst-ms').classList.remove('hide-medal'); }
     heroKey = hk;
     var o = itemById(sel), say2 = sh.querySelector('.vst-say');
     say2.textContent = !o ? 'อยากให้ฉันใส่อะไรดี? แตะของด้านล่างเพื่อลองใส่ได้เลย ✨'
