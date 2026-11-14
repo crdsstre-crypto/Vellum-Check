@@ -461,3 +461,79 @@ html body .vdc .vdg-c.is-big.is-done .vdg-rays{opacity:.4}
 .vdc .vdg-stage .vdg-body{padding-bottom:18px;-webkit-mask-image:linear-gradient(180deg,#000 calc(100% - 22px),transparent);mask-image:linear-gradient(180deg,#000 calc(100% - 22px),transparent)}
 
 @media (prefers-reduced-motion:reduce){.vdc .vdg-sky *,.vdc .vdg-gl,.vdc .vdg-tw,.vdg-rays,.vdc .vdg-lid,.vdc .vdg-ch-glow{animation:none !important}.vdc .vdg-tw{opacity:0}}
+
+/* ===== v16 (14 พ.ย.): (1) ไฟวันติดมีชีวิต (2) นาฬิกาพลิก (6) แตะน้อง (7) เหรียญตรา + แก้พระจันทร์ทับหัวข้อ ===== */
+.vdg-sky .sk-moon{top:-8px !important;left:auto !important;right:34% !important}
+@media (max-width:767px){.vdg-sky .sk-moon{right:37% !important;top:-4px !important;width:52px !important;height:52px !important}}
+
+/* (1) ไฟ */
+html body .vdc .vdg-fire{position:relative;overflow:hidden;justify-content:flex-end;gap:1px}
+.vdg-fire .vf{position:relative;display:block;width:var(--fs,34px);height:calc(var(--fs,34px) * 1.25);margin-bottom:2px}
+.vdc .vdg-fire .vf-svg{display:block;width:100% !important;height:100% !important;overflow:visible;fill:none;stroke:none}
+.vf-svg path{transform-box:fill-box;transform-origin:50% 100%}
+.vf-o{fill:var(--f1,#ff6a2b);animation:vfA 1.1s ease-in-out infinite alternate;filter:drop-shadow(0 0 6px var(--fg,rgba(255,110,40,.7)))}
+.vf-m{fill:var(--f2,#ffa53a);animation:vfB .9s ease-in-out infinite alternate}
+.vf-i{fill:var(--f3,#ffe7a0);animation:vfA .7s ease-in-out infinite alternate-reverse}
+@keyframes vfA{0%{transform:scale(1,1) skewX(-3deg)}100%{transform:scale(.94,1.08) skewX(4deg)}}
+@keyframes vfB{0%{transform:scale(.96,1.04) skewX(3deg)}100%{transform:scale(1.03,.95) skewX(-4deg)}}
+.vf-em{position:absolute;left:50%;bottom:30%;width:3px;height:3px;border-radius:50%;background:var(--f3,#ffd27a);box-shadow:0 0 6px var(--f2,#ffa53a);opacity:0;animation:vfE 1.8s ease-out infinite}
+.vf-em:nth-of-type(2){animation-delay:.6s;margin-left:-7px}.vf-em:nth-of-type(3){animation-delay:1.2s;margin-left:6px}
+@keyframes vfE{0%{opacity:0;transform:translateY(0)}20%{opacity:1}100%{opacity:0;transform:translate(4px,-34px) scale(.4)}}
+.vdg-fire.vf-t1{--fs:30px}
+.vdg-fire.vf-t2{--fs:38px;--f1:#ff8a1f;--f2:#ffc23a;--f3:#fff2b8;--fg:rgba(255,190,60,.8)}
+.vdg-fire.vf-t3{--fs:44px;--f1:#3b7bff;--f2:#62c4ff;--f3:#e6fbff;--fg:rgba(90,170,255,.9)}
+html body .vdc .vdg-fire.vf-t2{border-color:rgba(255,200,80,.45);background:radial-gradient(80% 60% at 50% 35%,rgba(255,190,60,.22),transparent 70%),rgba(40,28,10,.85)}
+html body .vdc .vdg-fire.vf-t3{border-color:rgba(110,180,255,.55);background:radial-gradient(80% 60% at 50% 35%,rgba(90,160,255,.28),transparent 70%),rgba(12,20,40,.85)}
+.vdg-fire.vf-t3 span{color:#a9d6ff !important}
+.vdg-fire.is-zero .vf-o,.vdg-fire.is-zero .vf-m,.vdg-fire.is-zero .vf-i{fill:#4a463e;animation:none;filter:none}.vdg-fire.is-zero .vf-em{display:none}
+
+/* (2) นาฬิกาพลิก */
+.vfl{display:inline-flex;align-items:center;gap:2px;vertical-align:middle;margin-left:4px;font-variant-numeric:tabular-nums}
+.vfl em{font:700 .9em/1 'Prompt',sans-serif;font-style:normal;color:#f4c542;margin:0 1px;animation:vflC 1s steps(1) infinite}
+@keyframes vflC{50%{opacity:.35}}
+.vfd{position:relative;display:inline-grid;place-items:center;width:1.25em;height:1.6em;border-radius:5px;perspective:120px;
+  background:linear-gradient(180deg,#2e2614 0 50%,#211b0d 50%);box-shadow:inset 0 1px 0 rgba(255,236,170,.15),0 2px 4px rgba(0,0,0,.5);font:700 1em/1 'Prompt',sans-serif;color:#ffd75a}
+.vfd::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(0,0,0,.6);box-shadow:0 1px 0 rgba(255,255,255,.05)}
+.vfd b{position:relative;font-weight:700}
+.vfd s{position:absolute;inset:0;display:grid;place-items:center;text-decoration:none;color:#ffd75a;border-radius:5px;background:linear-gradient(180deg,#2e2614 0 50%,transparent 50%);
+  -webkit-clip-path:inset(0 0 50% 0);clip-path:inset(0 0 50% 0);transform-origin:50% 50%;backface-visibility:hidden}
+.vfd.go s{animation:vflF .38s ease-in forwards}
+.vfd.go b{animation:vflN .38s ease-out}
+@keyframes vflF{to{transform:rotateX(-90deg);filter:brightness(.5)}}
+@keyframes vflN{0%{-webkit-clip-path:inset(50% 0 0 0);clip-path:inset(50% 0 0 0)}100%{-webkit-clip-path:inset(0);clip-path:inset(0)}}
+.vfl.is-sm .vfd{width:1.15em;height:1.5em}
+html body .vdc .vdg-rcd{padding:5px 6px;background:rgba(0,0,0,.25)}
+html body .vdc .vdg-rcd .vfl{margin:0}
+
+/* (6) แตะน้อง */
+.vdc .vdg-mascot{cursor:pointer;-webkit-tap-highlight-color:transparent;pointer-events:auto}
+.vdc .vdg-mascot.is-poke{animation:vmPoke .6s cubic-bezier(.3,1.6,.5,1)}
+.vdc .vdg-mascot.is-hop{animation:vmHop .7s cubic-bezier(.3,1.6,.5,1) 2}
+@keyframes vmPoke{0%{transform:none}25%{transform:translateY(-14px) rotate(-6deg) scale(1.04)}55%{transform:translateY(0) rotate(4deg)}80%{transform:rotate(-2deg)}100%{transform:none}}
+@keyframes vmHop{0%,100%{transform:none}40%{transform:translateY(-22px) rotate(3deg)}70%{transform:translateY(0) scale(1.05,.95)}}
+
+/* (7) เหรียญตรา */
+.vbg{margin:16px 0 4px;padding:12px 12px 10px;border-radius:18px;background:rgba(0,0,0,.28);border:1px solid rgba(255,226,138,.18)}
+.vbg-hd{display:flex;justify-content:space-between;align-items:baseline;margin:0 4px 8px}
+.vbg-hd b{font:700 .92rem/1 'Prompt',sans-serif;color:#ffe7a6}.vbg-hd span{font:500 .75rem/1 'Prompt',sans-serif;color:#b9a77a}
+.vbg-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.vbg-b{appearance:none;border:0;background:none;padding:0;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:inherit;font:inherit;min-width:0}
+.vbg-m{position:relative;display:grid;place-items:center;width:54px;height:54px;border-radius:50%;
+  background:conic-gradient(#f4c542 var(--bp,0%),rgba(255,255,255,.08) 0);padding:3px;box-sizing:border-box}
+.vbg-m svg{width:100%;height:100%;display:block}
+.vbg-c{fill:#1b170e}.vbg-c2{fill:#252012;stroke:#3a321c;stroke-width:1.5}.vbg-i{fill:#4b4330}
+.vbg-b.is-on .vbg-m{background:linear-gradient(145deg,#fff1a8,#f4c542 45%,#b67a12);box-shadow:0 0 16px rgba(244,197,66,.45)}
+.vbg-b.is-on .vbg-c{fill:url(#vdcF)}.vbg-b.is-on .vbg-c2{fill:#e6ad2c;stroke:#fff1b8;stroke-width:1.2}.vbg-b.is-on .vbg-i{fill:#7a4c06}
+.vbg-b small{font:600 .64rem/1.25 'Prompt',sans-serif;color:#c9b88c;text-align:center;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vbg-b em{font:500 .6rem/1 'Prompt',sans-serif;font-style:normal;color:#8f8676}
+.vbg-b.is-on small{color:#ffe7a6}.vbg-b.is-on em{color:#f4c542}
+.vbg-b.is-new .vbg-m{animation:vbgNew 1.2s cubic-bezier(.3,1.6,.5,1) 2}
+@keyframes vbgNew{0%{transform:scale(.4) rotate(-30deg)}60%{transform:scale(1.18) rotate(8deg)}100%{transform:none}}
+@media (max-width:380px){.vbg-m{width:46px;height:46px}.vbg-row{gap:3px}}
+
+@media (prefers-reduced-motion:reduce){.vf-svg path,.vf-em,.vfl em,.vfd.go s,.vfd.go b,.vdc .vdg-mascot,.vbg-b.is-new .vbg-m{animation:none !important}}
+.vbg-m{padding:3.5px}
+html body .vdc .vdg-rcd{font-size:.74rem}
+.vdc .vdg-rest .vdg-rtx b{font-size:.84rem}
+@media (max-width:380px){html body .vdc .vdg-rcd{font-size:.66rem}}
+html body .vdc .vbg-m svg{width:100% !important;height:100% !important;fill:initial;stroke:initial}
