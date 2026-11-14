@@ -27,6 +27,36 @@
     return S.streak === 0 && S.totalDays > 0 ? 'sad' : 'wave';
   }
   function mascot(m, size, fallback) { return window.VCMascot ? window.VCMascot.svg(m, size) : (fallback || ''); }
+  /* (6) ชุดแต่งตัวน้อง: ปลดล็อกด้วยเหรียญตรา · เลือกใส่ได้หลายชิ้น (จำไว้ในเครื่อง) · วาดในพิกัดเดียวกับมาสคอต (120×140) */
+  var INK = '#3a2a12';
+  var OUTFITS = [
+    { id: 'pin', vb: '72 82 24 24', badge: 'd1', name: 'เข็มกลัดดาว', art: '<g transform="translate(84 94)"><path d="M0-7 2-2h5.5L3 1.3 4.6 6.8 0 3.6-4.6 6.8-3 1.3-7.5-2H-2z" fill="#ffd84d" stroke="' + INK + '" stroke-width="1.6" stroke-linejoin="round"/></g>' },
+    { id: 'glasses', vb: '30 44 60 28', badge: 's7', name: 'แว่นทนาย', art: '<g fill="rgba(190,225,255,.28)" stroke="' + INK + '" stroke-width="2.4"><circle cx="50" cy="58" r="8.5"/><circle cx="70" cy="58" r="8.5"/></g><path d="M58.5 57q1.5-2 3 0M41.5 56 32 52M78.5 56 88 52" stroke="' + INK + '" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M45 53.5q3-3 6-1.5M65 53.5q3-3 6-1.5" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".8"/>' },
+    { id: 'cap', vb: '18 -2 92 34', badge: 'd30', name: 'หมวกนอนดาว', art: '<path d="M24 24c4-14 22-22 40-20 14 2 26 10 34 4-2 10-12 14-22 14z" fill="#4b5bd6" stroke="' + INK + '" stroke-width="2.4" stroke-linejoin="round"/><path d="M22 22c12-4 50-4 58 0" stroke="#f7efdc" stroke-width="6" stroke-linecap="round"/><path d="M22 22c12-4 50-4 58 0" stroke="' + INK + '" stroke-width="1.4" fill="none" stroke-linecap="round" opacity=".5"/><circle cx="100" cy="7" r="6" fill="#f7efdc" stroke="' + INK + '" stroke-width="2.2"/><path d="M48 12l1 2.4 2.4.3-1.8 1.6.5 2.4-2.1-1.2-2.1 1.2.5-2.4-1.8-1.6 2.4-.3zM70 9l.8 1.8 1.9.2-1.4 1.3.4 1.9-1.7-1-1.7 1 .4-1.9-1.4-1.3 1.9-.2z" fill="#ffd84d"/>' },
+    { id: 'bow', vb: '44 64 32 24', badge: 's30', name: 'โบว์ไททนาย', art: '<g transform="translate(60 76)"><path d="M-3-3-14-9v18L-3 3zM3-3 14-9v18L3 3z" fill="#d2343e" stroke="' + INK + '" stroke-width="2" stroke-linejoin="round"/><rect x="-4" y="-4.5" width="8" height="9" rx="2.5" fill="#a91f2a" stroke="' + INK + '" stroke-width="2"/><path d="M-11-5-6-2M11-5 6-2" stroke="#ff8a92" stroke-width="1.4" stroke-linecap="round"/></g>' },
+    { id: 'crown', vb: '34 -8 52 34', badge: 'd100', name: 'มงกุฎตำนาน', art: '<g transform="translate(60 14)"><path d="M-20 6-23-14-10-3 0-18 10-3 23-14 20 6z" fill="#f4c542" stroke="' + INK + '" stroke-width="2.4" stroke-linejoin="round"/><rect x="-21" y="4" width="42" height="7" rx="2.5" fill="#e0a92c" stroke="' + INK + '" stroke-width="2.2"/><circle cy="7.5" r="2.4" fill="#d2343e"/><circle cx="-12" cy="7.5" r="1.8" fill="#4b8bd6"/><circle cx="12" cy="7.5" r="1.8" fill="#4b8bd6"/><path d="M-14-6l3 4" stroke="#fff6cf" stroke-width="1.8" stroke-linecap="round"/></g>' }
+  ];
+  function ownedOutfits() { if (!S || !S.badges) return []; var e = {}; S.badges.forEach(function (b) { if (b.earned) e[b.id] = 1; }); return OUTFITS.filter(function (o) { return e[o.badge]; }).map(function (o) { return o.id; }); }
+  function wornOutfits() { var w = []; try { w = JSON.parse(localStorage.getItem('vc_outfit') || '[]'); } catch (e) {} var own = ownedOutfits(); return w.filter(function (id) { return own.indexOf(id) >= 0; }); }
+  function dressed(m, size) {
+    var svg = mascot(m, size, ICO_GIFT), worn = wornOutfits();
+    if (!worn.length || svg.indexOf('<g class="vm-face">') < 0) return svg;
+    var art = OUTFITS.filter(function (o) { return worn.indexOf(o.id) >= 0; }).map(function (o) { return o.art; }).join('');
+    var i = svg.indexOf('<g class="vm-face">'), depth = 0, j = i;
+    var re = /<g[\s>]|<\/g>/g; re.lastIndex = i;
+    for (var mt; (mt = re.exec(svg));) { if (mt[0] === '</g>') { depth--; if (!depth) { j = mt.index + 4; break; } } else depth++; }
+    return svg.slice(0, j) + '<g class="vm-outfit">' + art + '</g>' + svg.slice(j);
+  }
+  function outfitHtml() {
+    if (!S || !S.badges) return '';
+    var own = ownedOutfits(), worn = wornOutfits(), names = {}; S.badges.forEach(function (b) { names[b.id] = b.name; });
+    return '<div class="vof"><div class="vbg-hd"><b>แต่งตัวน้อง</b><span>ปลดล็อกด้วยเหรียญตรา</span></div><div class="vof-row">' +
+      OUTFITS.map(function (o) {
+        var has = own.indexOf(o.id) >= 0, on = worn.indexOf(o.id) >= 0;
+        return '<button type="button" class="vof-b' + (has ? '' : ' is-lock') + (on ? ' is-on' : '') + '" data-outfit="' + o.id + '" aria-pressed="' + on + '" aria-label="' + h(o.name + (has ? '' : ' · ปลดล็อกด้วยเหรียญ ' + (names[o.badge] || ''))) + '">' +
+          '<svg viewBox="' + o.vb + '" aria-hidden="true">' + o.art + '</svg><small>' + h(o.name) + '</small>' + (has ? '' : '<i>🔒</i>') + '</button>';
+      }).join('') + '</div></div>';
+  }
   function line(m) {
     if (!S) return '';
     if (m === 'party') return 'ครบ 7 วันแล้ว! เปิดกล่องสมบัติได้ +' + S.week[6].reward + ' แต้ม';
@@ -166,9 +196,9 @@
     clearTimeout(pokeT); ms.classList.remove('is-poke', 'is-hop'); void ms.offsetWidth;
     if (md === 'sleep') {
       var hrs = Math.max(1, Math.round(msToMidnight() / 36e5));
-      ms.innerHTML = mascot('wave', 260, ICO_GIFT); ms.setAttribute('data-m', 'poke'); ms.classList.add('is-poke');
+      ms.innerHTML = dressed('wave', 260); ms.setAttribute('data-m', 'poke'); ms.classList.add('is-poke');
       sayEl.textContent = 'หืม…? อีกตั้ง ' + hrs + ' ชั่วโมงแน่ะ… ขอนอนต่อนะ 😴';
-      pokeT = setTimeout(function () { ms.classList.remove('is-poke'); ms.innerHTML = mascot('sleep', 260, ICO_GIFT); ms.setAttribute('data-m', 'sleep'); sayEl.textContent = line('sleep'); }, 2600);
+      pokeT = setTimeout(function () { ms.classList.remove('is-poke'); ms.innerHTML = dressed('sleep', 260); ms.setAttribute('data-m', 'sleep|' + wornOutfits().join(',')); sayEl.textContent = line('sleep'); }, 2600);
     } else {
       ms.classList.add('is-hop'); sayEl.textContent = CHEER[Math.floor(Math.random() * CHEER.length)];
       pokeT = setTimeout(function () { ms.classList.remove('is-hop'); sayEl.textContent = line(mood()); }, 2600);
@@ -193,11 +223,12 @@
       '</div>' +
       '<div class="vdg-grid">' + S.week.map(cardHtml).join('') + '</div>' +
       (hint ? '<p class="vdg-hint">' + hint + '</p>' : '') +
-      badgesHtml() +
+      badgesHtml() + outfitHtml() +
       '<details class="vdg-rules"><summary>กติกา</summary><ul><li>รับได้วันละ 1 ครั้ง ขึ้นวันใหม่ตอนเที่ยงคืน (เวลาไทย)</li><li>ขาดวันไหน เริ่มวันที่ 1 ใหม่ แต่แต้มที่สะสมไว้ไม่หาย</li><li>' + fmt(r.cost) + ' แต้ม แลกตรวจสัญญาฟรีได้ 1 ครั้ง · เดือนละไม่เกิน ' + r.perMonth + ' ครั้ง (ใช้แล้ว ' + r.usedThisMonth + ')</li></ul></details>';
     var sub = box.querySelector('.vdg-sub'), foot = box.querySelector('.vdg-foot'), md = mood();
     var ms = box.querySelector('.vdg-mascot');
-    if (ms.getAttribute('data-m') !== md) { ms.setAttribute('data-m', md); ms.innerHTML = mascot(md, 260, ICO_GIFT); }
+    var mk = md + '|' + wornOutfits().join(',');
+    if (ms.getAttribute('data-m') !== mk) { ms.setAttribute('data-m', mk); ms.innerHTML = dressed(md, 260); }
     box.setAttribute('data-sky', md === 'sleep' ? 'night' : 'day');
     box.querySelector('.vdg-say').textContent = line(md);
     sub.className = 'vdg-sub' + (S.checkedToday ? ' is-wait' : '');
@@ -227,6 +258,15 @@
       if (e.target.closest('.vdg-redeem')) { redeem(); return; }
       var bg = e.target.closest('[data-badge]');
       if (bg && S && S.badges) { var b = S.badges.filter(function (x) { return x.id === bg.getAttribute('data-badge'); })[0]; if (b) say((b.earned ? '🏅 ' : '🔒 ') + b.name + ' · ' + b.desc + (b.earned ? '' : ' (' + b.have + '/' + b.n + ')')); return; }
+      var of = e.target.closest('[data-outfit]');
+      if (of) {
+        var id = of.getAttribute('data-outfit'), o = OUTFITS.filter(function (x) { return x.id === id; })[0];
+        if (ownedOutfits().indexOf(id) < 0) { var bn = S.badges.filter(function (b) { return b.id === o.badge; })[0]; say('🔒 ' + o.name + ' · ได้เมื่อมีเหรียญ "' + (bn ? bn.name + '" (' + bn.desc + ')' : '"')); return; }
+        var w = wornOutfits(), k = w.indexOf(id); if (k >= 0) w.splice(k, 1); else w.push(id);
+        try { localStorage.setItem('vc_outfit', JSON.stringify(w)); } catch (er) {}
+        render(); var m2 = box.querySelector('.vdg-mascot'); if (m2) { m2.classList.remove('is-hop'); void m2.offsetWidth; m2.classList.add('is-hop'); setTimeout(function () { m2.classList.remove('is-hop'); }, 1500); }
+        return;
+      }
       if (e.target.closest('.vdg-mascot')) poke();
     });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && box && !box.hidden) close(); });
@@ -242,13 +282,47 @@
     setTimeout(function () { var x = box.querySelector('.vdg-claim:not([disabled])') || box.querySelector('.vdg-x'); if (x) x.focus({ preventScroll: true }); }, 40);
   }
   function close() {
-    if (!box) return; box.hidden = true; document.documentElement.classList.remove('vdc-open'); stopTick();
+    if (!box) return; clearTimeout(retryT); box.hidden = true; document.documentElement.classList.remove('vdc-open'); stopTick();
     if (justClaimed) { justClaimed = null; menu(); }   // เปิดครั้งหน้าเป็นท่าหลับรอพรุ่งนี้
     if (lastFocus && lastFocus.focus) try { lastFocus.focus({ preventScroll: true }); } catch (e) {}
   }
 
   /* ---------- ฉลองตอนรับรางวัล: เหรียญบินจากการ์ดเข้ากระเป๋า แล้วตัวเลขนับขึ้น ---------- */
   var calm = function () { return !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); };
+  /* (4) ตัวเลขหมุนแบบสล็อต: ทุกหลักหมุนจากค่าเดิมไปค่าใหม่ หลักขวาหมุนนานกว่า */
+  function rollNum(el, from, to) {
+    var a = fmt(to), b = fmt(from); while (b.length < a.length) b = ' ' + b;
+    el.classList.add('vrl'); el.setAttribute('aria-label', a);
+    el.innerHTML = a.split('').map(function (ch, i) {
+      if (!/\d/.test(ch)) return '<span class="vrl-x">' + ch + '</span>';
+      var st = ''; for (var k = 0; k < 20; k++) st += '<i>' + (k % 10) + '</i>';
+      return '<span class="vrl-c"><span class="vrl-s" data-f="' + (/\d/.test(b[i]) ? b[i] : 0) + '" data-t="' + ch + '">' + st + '</span></span>';
+    }).join('');
+    var cols = el.querySelectorAll('.vrl-s'), n = cols.length;
+    [].forEach.call(cols, function (c) { c.style.transform = 'translateY(' + (-c.getAttribute('data-f') * 5) + '%)'; });
+    void el.offsetWidth;
+    [].forEach.call(cols, function (c, i) {
+      var f = +c.getAttribute('data-f'), t = +c.getAttribute('data-t'), steps = t + 10 - (t >= f && i < n - 1 ? 10 : 0);
+      if (i === n - 1) steps = t + 10;   // หลักหน่วยหมุนเต็มรอบเสมอ
+      c.style.transition = 'transform ' + (.55 + i * .12) + 's cubic-bezier(.2,.9,.25,1.08)';
+      c.style.transform = 'translateY(' + (-steps * 5) + '%)';
+    });
+    setTimeout(function () { el.classList.remove('vrl'); el.textContent = a; }, 900 + n * 140);
+  }
+  /* (1) ฉากเปิดกล่องสมบัติ (วันที่ 7): จอมืด → กล่องสั่น → ฝาระเบิดเปิด เหรียญพุ่ง → ตัวเลขแต้ม · แตะเพื่อข้าม */
+  function chestShow(gained, done) {
+    if (calm()) { done(); return; }
+    var w = document.createElement('div'); w.className = 'vcs'; w.setAttribute('role', 'status'); w.setAttribute('aria-label', 'เปิดกล่องสมบัติ +' + gained + ' แต้ม');
+    var coins = ''; for (var k = 0; k < 26; k++) { var ang = Math.random() * Math.PI * 2, dist = 140 + Math.random() * 220; coins += '<i class="vcs-c" style="--dx:' + Math.round(Math.cos(ang) * dist) + 'px;--dy:' + Math.round(Math.sin(ang) * dist - 80) + 'px;--r:' + Math.round(Math.random() * 720 - 360) + 'deg;--d:' + (Math.random() * .25).toFixed(2) + 's"><svg viewBox="0 0 64 64">' + COIN(32, 30, 22) + '</svg></i>'; }
+    w.innerHTML = '<div class="vcs-rays"></div><div class="vcs-flash"></div><div class="vcs-box"><svg viewBox="0 0 64 64" aria-hidden="true">' + ART[6] + '</svg></div>' + coins +
+      '<div class="vcs-num">+' + gained + '<small>กล่องสมบัติวันที่ 7</small></div><p class="vcs-skip">แตะเพื่อไปต่อ</p>';
+    document.body.appendChild(w);
+    var fin = false, end = function () { if (fin) return; fin = true; w.classList.add('out'); setTimeout(function () { w.remove(); done(); }, 380); };
+    requestAnimationFrame(function () { w.classList.add('on'); });
+    setTimeout(function () { w.classList.add('burst'); }, 1250);
+    setTimeout(end, 3600);
+    w.addEventListener('click', end);
+  }
   function celebrate(card, from, to, gained, bonus) {
     var num = box && box.querySelector('[data-pts]'), dst = box && box.querySelector('.vdg-coin');
     if (!num) return;
@@ -273,13 +347,8 @@
         if (dst.animate) dst.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.25)' }, { transform: 'scale(1)' }], { duration: 220 });
       };
     })(k);
-    // ตัวเลขนับขึ้นระหว่างเหรียญกำลังเข้า
-    var t0 = performance.now() + 520, dur = 700;
-    (function step(t) {
-      var p = Math.max(0, Math.min(1, (t - t0) / dur));
-      num.textContent = fmt(Math.round(from + (to - from) * (1 - Math.pow(1 - p, 3))));
-      if (p < 1) requestAnimationFrame(step);
-    })(performance.now());
+    // ตัวเลขหมุนแบบเครื่องนับ ระหว่างเหรียญกำลังเข้า
+    setTimeout(function () { rollNum(num, from, to); }, 520);
     if (bonus) setTimeout(burst, 300);
   }
   // ประกายเมื่อครบ 7 วัน
@@ -296,16 +365,34 @@
   }
 
   /* ---------- การทำงาน ---------- */
-  function apply(d) { S = d; render(); strip(); menu(); }
+  /* v16: จำสถานะล่าสุดไว้ในเครื่อง (เฉพาะวันเดียวกัน) → เปิดหน้าต่างแล้วขึ้นทันที ไม่ต้องรอเซิร์ฟเวอร์ตื่น
+     ระหว่างนั้นปุ่มรับยังกดไม่ได้ (stale) จนกว่าเซิร์ฟเวอร์ตอบ · โหลดไม่สำเร็จ → ลองใหม่อัตโนมัติทุก 5 วินาที */
+  var CK = 'vc_daily', retryT = 0, tries = 0;
+  function thaiToday() { return new Date(Date.now() + 7 * 36e5).toISOString().slice(0, 10); }
+  function saveCache(d) { try { var u = user(); if (u && d && d.today) localStorage.setItem(CK, JSON.stringify({ e: u.email, d: d })); } catch (e) {} }
+  function readCache() {
+    try { var c = JSON.parse(localStorage.getItem(CK) || 'null'), u = user(); if (!c || !u || c.e !== u.email || !c.d || c.d.today !== thaiToday()) return null; c.d.stale = true; return c.d; } catch (e) { return null; }
+  }
+  function apply(d) { S = d; if (!d.stale) { saveCache(d); tries = 0; clearTimeout(retryT); } render(); strip(); menu(); }
   function load() {
     if (!user()) { S = null; strip(); menu(); return Promise.resolve(); }
-    /* v11: ไม่ค้าง "กำลังโหลด…" — เกิน 9 วินาที (เซิร์ฟเวอร์ตื่นช้า) หรือผิดพลาด → ขึ้นปุ่มลองใหม่ */
-    var done = false, fail = function (m) { if (done) return; done = true; if (box && !box.hidden && !S) box.querySelector('.vdg-body').innerHTML = '<p class="vdc-wait">' + h(m || 'โหลดไม่สำเร็จ') + '</p><p class="vdc-wait"><button type="button" class="vdg-retry">ลองใหม่</button></p>'; };
+    clearTimeout(retryT);
+    if (!S) { var c = readCache(); if (c) apply(c); }
+    var done = false, fail = function (m) {
+      if (done) return; done = true;
+      if (box && !box.hidden) {
+        if (S) { var sb = box.querySelector('.vdg-sub'); if (sb && S.stale) sb.innerHTML = '<span><i aria-hidden="true">⟳</i>กำลังเชื่อมต่อเซิร์ฟเวอร์…</span>'; }
+        else box.querySelector('.vdg-body').innerHTML = '<p class="vdc-wait">' + h(m || 'โหลดไม่สำเร็จ') + '</p><p class="vdc-wait vdc-auto">กำลังลองใหม่อัตโนมัติ…</p><p class="vdc-wait"><button type="button" class="vdg-retry">ลองใหม่ตอนนี้</button></p>';
+        if (tries++ < 36) retryT = setTimeout(load, 5000);
+      }
+    };
     setTimeout(function () { fail('เซิร์ฟเวอร์กำลังตื่น ใช้เวลานานกว่าปกติ'); }, 9000);
     return call('/api/daily').then(function (r) { if (r.ok) { done = true; try { apply(r.data); } catch (e) { fail('แสดงผลไม่สำเร็จ'); } } else fail(r.data && r.data.error); }, function () { fail('เชื่อมต่อไม่ได้'); });
   }
   function checkin() {
-    if (busy || (S && S.checkedToday)) return; busy = true;
+    if (busy || (S && S.checkedToday)) return;
+    if (S && S.stale) { say('กำลังเชื่อมต่อเซิร์ฟเวอร์ รอสักครู่แล้วกดอีกครั้งนะ'); load(); return; }
+    busy = true;
     var btns = document.querySelectorAll('.vdg-claim, .vdg-c.is-open, .vds-go');
     [].forEach.call(btns, function (b) { b.disabled = true; });
     var before = S ? S.points : 0, k = S ? S.week.filter(function (x) { return x.done; }).length : 0;
@@ -318,7 +405,8 @@
       var open = box && !box.hidden, card = open && box.querySelector('.vdg-c[data-i="' + k + '"]');
       if (card) card.classList.add('just-claimed');
       if (r.data.gained) {
-        if (open) celebrate(card, before, r.data.points, r.data.gained, r.data.bonus);
+        if (open && r.data.bonus) { var nm = box.querySelector('[data-pts]'); if (nm) nm.textContent = fmt(before); chestShow(r.data.gained, function () { celebrate(card, before, r.data.points, r.data.gained, true); }); }
+        else if (open) celebrate(card, before, r.data.points, r.data.gained, r.data.bonus);
         else pop(r.data.gained);
         say(r.data.bonus ? 'ครบ 7 วัน! เปิดกล่องสมบัติ +' + r.data.gained + ' แต้ม' : 'เช็กอินแล้ว +' + r.data.gained + ' แต้ม');
       }
