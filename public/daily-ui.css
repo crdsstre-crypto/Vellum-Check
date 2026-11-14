@@ -930,3 +930,46 @@ html body .vst-hero.fly{opacity:1;transition:none}
 .vst-ms.hide-medal{opacity:.28;filter:blur(1.5px)}
 .vst-ms{transition:opacity .6s,filter .6s,transform .45s}
 .vst-hero.fly~.vst-ms,.vst-stage:has(.vst-hero.fly) .vst-ms{opacity:1;filter:none}
+
+/* ===== v26 (14 พ.ย.): 3 ระดับมีโลกของตัวเอง — ทอง=ถ่านไฟ · ทองคำขาว=น้ำแข็ง · เพชร=กาแล็กซี + ปีกคริสตัล + มงกุฎแสง ===== */
+.vst-neb,.vst-stars,.vst-shard,.vst-fog,.vst-sf{display:none}
+/* ทองคำขาว: หมอกฟ้า + เกล็ดน้ำแข็ง */
+.vst[data-tier="2"] .vst-bk,.vst[data-tier="3"] .vst-bk,.vst[data-tier="2"] .vst-smoke,.vst[data-tier="3"] .vst-smoke{display:none}
+html body .vst.is-fire[data-tier="2"] .vst-stage{background:radial-gradient(60% 45% at 50% 85%,rgba(120,190,255,.22),transparent 70%),linear-gradient(180deg,#071222,#0a1a30 55%,#0c1d33 86%,#0e1f35)}
+.vst[data-tier="2"] .vst-fog{display:block;position:absolute;left:-20%;right:-20%;bottom:20px;height:120px;background:radial-gradient(50% 60% at 30% 70%,rgba(200,230,255,.22),transparent 70%),radial-gradient(45% 55% at 72% 60%,rgba(200,230,255,.18),transparent 70%);filter:blur(8px);animation:vstSm 14s ease-in-out infinite alternate}
+.vst[data-tier="2"] .vst-sf{display:block;position:absolute;top:-16px;color:#e6f4ff;opacity:0;text-shadow:0 0 6px #9fd0ff;animation:vstSf var(--t) linear var(--d) infinite}
+@keyframes vstSf{0%{opacity:0;transform:translate(0,0) rotate(0)}10%{opacity:.85}90%{opacity:.6}100%{opacity:0;transform:translate(var(--x),330px) rotate(240deg)}}
+html body .vst.is-fire[data-tier="2"] .vst-ped{background:linear-gradient(180deg,rgba(220,240,255,.35),rgba(120,170,230,.18));box-shadow:inset 0 0 0 1.5px rgba(230,245,255,.8),inset 0 2px 8px rgba(255,255,255,.4),0 0 34px rgba(110,180,255,.45)}
+html body .vst.is-fire[data-tier="2"] .vst-ped::after{background:linear-gradient(90deg,rgba(120,170,230,.25),rgba(220,240,255,.45) 50%,rgba(120,170,230,.25));box-shadow:0 2px 0 rgba(230,245,255,.8),0 14px 28px rgba(0,0,0,.5)}
+/* เพชร: กาแล็กซี + ดาว + เศษคริสตัลลอย */
+html body .vst.is-fire[data-tier="3"] .vst-stage{background:linear-gradient(180deg,#07051a,#0d0828 55%,#120a2e 86%,#150c33)}
+.vst[data-tier="3"] .vst-neb{display:block;position:absolute;inset:-20%;opacity:.9;filter:blur(18px);
+  background:radial-gradient(30% 22% at 30% 35%,rgba(150,80,255,.55),transparent 70%),radial-gradient(28% 20% at 70% 28%,rgba(60,120,255,.45),transparent 70%),radial-gradient(35% 25% at 55% 65%,rgba(255,90,200,.28),transparent 70%);animation:vstNeb 26s ease-in-out infinite alternate}
+@keyframes vstNeb{to{transform:rotate(8deg) scale(1.08)}}
+.vst[data-tier="3"] .vst-stars{display:block;position:absolute;inset:0;
+  background-image:radial-gradient(1.4px 1.4px at 8% 20%,#fff,transparent),radial-gradient(1px 1px at 22% 48%,#fff,transparent),radial-gradient(1.6px 1.6px at 37% 12%,#e9dcff,transparent),radial-gradient(1px 1px at 63% 40%,#fff,transparent),radial-gradient(1.4px 1.4px at 78% 18%,#fff,transparent),radial-gradient(1px 1px at 91% 52%,#cfe0ff,transparent),radial-gradient(1.2px 1.2px at 15% 70%,#fff,transparent),radial-gradient(1px 1px at 88% 76%,#fff,transparent);animation:skTw 2.8s ease-in-out infinite alternate}
+.vst[data-tier="3"] .vst-stars.s2{background-image:radial-gradient(1px 1px at 12% 36%,#fff,transparent),radial-gradient(1.5px 1.5px at 30% 28%,#fff,transparent),radial-gradient(1px 1px at 50% 8%,#fff,transparent),radial-gradient(1.4px 1.4px at 70% 60%,#e9dcff,transparent),radial-gradient(1px 1px at 84% 34%,#fff,transparent),radial-gradient(1.2px 1.2px at 96% 10%,#fff,transparent);animation-delay:-1.4s;animation-duration:2.2s}
+.vst[data-tier="3"] .vst-shard{display:block;position:absolute;z-index:1;clip-path:polygon(50% 0,100% 38%,70% 100%,30% 100%,0 38%);
+  background:linear-gradient(135deg,#fff,#d6c2ff 40%,#7a4cff);opacity:.85;filter:drop-shadow(0 0 6px rgba(180,140,255,.9));animation:vstSh 6s ease-in-out var(--d) infinite}
+@keyframes vstSh{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-12px) rotate(25deg)}}
+html body .vst.is-fire[data-tier="3"] .vst-ped{background:linear-gradient(180deg,rgba(255,255,255,.45),rgba(170,130,255,.25));box-shadow:inset 0 0 0 1.5px #f1e8ff,inset 0 3px 10px rgba(255,255,255,.5),0 0 40px rgba(150,90,255,.6)}
+html body .vst.is-fire[data-tier="3"] .vst-ped::after{background:linear-gradient(90deg,rgba(110,70,220,.35),rgba(240,230,255,.55) 35%,rgba(180,150,255,.35) 60%,rgba(110,70,220,.35));box-shadow:0 2px 0 #e9dcff,0 14px 30px rgba(60,20,140,.6)}
+html body .vst.is-fire[data-tier="3"] .vst-glow{background:radial-gradient(circle,rgba(170,120,255,.35),rgba(120,80,255,.12) 35%,transparent 68%)}
+/* ปีกคริสตัล + มงกุฎแสง */
+.cw{filter:drop-shadow(0 0 4px rgba(200,170,255,.9))}
+.cw-l,.cw-l2{transform-box:view-box;transform-origin:50px 72px;animation:cwF 2.2s ease-in-out infinite}
+@keyframes cwF{0%,100%{transform:rotate(0)}50%{transform:rotate(-7deg)}}
+.halo{transform-box:view-box;transform-origin:60px 8px;animation:haloF 3s ease-in-out infinite}
+@keyframes haloF{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.5px)}}
+.halo-g{animation:mdGl 2s ease-in-out infinite}
+/* เพชร: แสงรุ้งวิบผ่านเหลี่ยม + ประกายแฉก */
+.md-rb{animation:mdRb 3.4s ease-in-out infinite}
+@keyframes mdRb{0%,60%,100%{opacity:0}75%{opacity:.75}}
+.md-burst{opacity:0;transform-box:fill-box;transform-origin:center;animation:mdBurst 3.4s ease-out infinite}
+@keyframes mdBurst{0%,62%{opacity:0;transform:scale(.2) rotate(0)}72%{opacity:1;transform:scale(1.15) rotate(20deg)}88%,100%{opacity:0;transform:scale(.6) rotate(45deg)}}
+/* ป้ายเพชร */
+.vst[data-tier="3"] .vst-lux em{background:linear-gradient(90deg,#fff,#e2d2ff,#9fd7ff,#ffd2f2,#fff);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% 100%;animation:luxRb 4s linear infinite}
+@keyframes luxRb{to{background-position:200% 0}}
+.vst-dia{display:inline-block;width:9px;height:9px;margin-right:6px;vertical-align:-1px;background:linear-gradient(135deg,#fff,#b89aff);clip-path:polygon(50% 0,100% 40%,50% 100%,0 40%);animation:skSpin 3s linear infinite}
+.vst[data-tier="2"] .vst-lux em{color:#e6f4ff}
+@media (prefers-reduced-motion:reduce){.vst-neb,.vst-stars,.vst-shard,.vst-fog,.vst-sf,.cw-l,.cw-l2,.halo,.md-rb,.md-burst,.vst-dia{animation:none !important}}
