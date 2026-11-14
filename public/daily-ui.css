@@ -537,3 +537,61 @@ html body .vdc .vdg-rcd{font-size:.74rem}
 .vdc .vdg-rest .vdg-rtx b{font-size:.84rem}
 @media (max-width:380px){html body .vdc .vdg-rcd{font-size:.66rem}}
 html body .vdc .vbg-m svg{width:100% !important;height:100% !important;fill:initial;stroke:initial}
+
+/* ===== v17 (14 พ.ย.): (1) ฉากเปิดกล่องสมบัติ (4) ตัวเลขหมุนแบบสล็อต (6) ชุดแต่งตัวน้อง + แก้ข้อความล้น ===== */
+.vdc .vdg-rest .vdg-rtx em{white-space:nowrap}
+.vdc-auto{font-size:.78rem !important;opacity:.7}
+
+/* (4) */
+.vrl{display:inline-flex;align-items:flex-end}
+.vrl-c{display:inline-block;height:1.1em;overflow:hidden;line-height:1.1em;vertical-align:bottom}
+.vrl-s{display:flex;flex-direction:column;will-change:transform}
+.vrl-s i{font-style:normal;height:1.1em;line-height:1.1em;text-align:center}
+.vrl-x{display:inline-block}
+
+/* (1) */
+.vcs{position:fixed;inset:0;z-index:2147483200;display:grid;place-items:center;overflow:hidden;background:radial-gradient(circle at 50% 46%,rgba(60,40,8,.75),rgba(0,0,0,.94) 70%);opacity:0;transition:opacity .3s;cursor:pointer;font-family:'Prompt',sans-serif}
+.vcs.on{opacity:1}.vcs.out{opacity:0}
+.vcs-rays{position:absolute;left:50%;top:46%;width:900px;height:900px;margin:-450px 0 0 -450px;opacity:0;
+  background:repeating-conic-gradient(from 0deg,rgba(255,214,90,.35) 0 9deg,transparent 9deg 22deg);-webkit-mask-image:radial-gradient(circle,#000 6%,transparent 58%);mask-image:radial-gradient(circle,#000 6%,transparent 58%);transition:opacity .4s}
+.vcs.burst .vcs-rays{opacity:1;animation:skSpin 9s linear infinite}
+.vcs-flash{position:absolute;inset:0;background:radial-gradient(circle at 50% 46%,#fff8d6,rgba(255,214,90,.6) 20%,transparent 55%);opacity:0;pointer-events:none}
+.vcs.burst .vcs-flash{animation:vcsFl .7s ease-out}
+@keyframes vcsFl{0%{opacity:0}15%{opacity:1}100%{opacity:0}}
+.vcs-box{position:absolute;left:50%;top:46%;width:200px;height:200px;margin:-100px 0 0 -100px;transform:scale(.3);transition:transform .5s cubic-bezier(.3,1.6,.5,1)}
+.vcs.on .vcs-box{transform:scale(1);animation:vcsSh .11s linear .5s 7 alternate}
+.vcs.burst .vcs-box{animation:vcsPop .5s cubic-bezier(.3,1.6,.5,1) forwards}
+.vcs-box svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 20px 40px rgba(0,0,0,.6))}
+.vcs .vdg-lid{transform-box:fill-box;transform-origin:50% 100%;transition:transform .55s cubic-bezier(.2,1.4,.4,1)}
+.vcs.burst .vdg-lid{transform:translate(-6px,-26px) rotate(-38deg)}
+.vcs .vdg-ch-glow{opacity:0;transition:opacity .2s}.vcs.burst .vdg-ch-glow{opacity:1}
+@keyframes vcsSh{0%{transform:scale(1) rotate(-4deg)}100%{transform:scale(1.04) rotate(4deg)}}
+@keyframes vcsPop{0%{transform:scale(1.15)}100%{transform:scale(1) translateY(30px)}}
+.vcs-c{position:absolute;left:50%;top:46%;width:34px;height:34px;margin:-17px 0 0 -17px;opacity:0}
+.vcs-c svg{width:100%;height:100%}
+.vcs.burst .vcs-c{animation:vcsC 1.5s cubic-bezier(.15,.8,.35,1) var(--d) forwards}
+@keyframes vcsC{0%{opacity:1;transform:translate(0,0) scale(.4) rotate(0)}70%{opacity:1}100%{opacity:0;transform:translate(var(--dx),calc(var(--dy) + 160px)) scale(1.1) rotate(var(--r))}}
+.vcs-num{position:absolute;left:0;right:0;top:calc(46% + 120px);text-align:center;font:800 64px/1 'Prompt',sans-serif;color:#ffd75a;opacity:0;transform:scale(.4);
+  text-shadow:0 2px 0 #8a5a08,0 4px 0 #5c3a06,0 0 30px rgba(255,214,90,.7);transition:opacity .3s .25s,transform .5s .25s cubic-bezier(.3,1.6,.5,1)}
+.vcs-num small{display:block;margin-top:8px;font:600 15px/1.2 'Prompt',sans-serif;color:#f7e2b4;text-shadow:none}
+.vcs.burst .vcs-num{opacity:1;transform:none}
+.vcs-skip{position:absolute;bottom:calc(28px + env(safe-area-inset-bottom));left:0;right:0;margin:0;text-align:center;font:500 12px/1 'Prompt',sans-serif;color:rgba(255,255,255,.45)}
+
+/* (6) */
+.vdc .vdg-mascot .vm-outfit{pointer-events:none}
+.vof{margin:10px 0 4px;padding:12px 12px 10px;border-radius:18px;background:rgba(0,0,0,.28);border:1px solid rgba(255,226,138,.18)}
+.vof-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.vof-b{position:relative;appearance:none;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;padding:8px 2px 7px;border-radius:14px;cursor:pointer;
+  border:1.5px solid rgba(255,226,138,.18);background:rgba(255,255,255,.03);color:inherit;font:inherit;transition:border-color .2s,background .2s,transform .15s}
+.vof-b svg{width:44px;height:44px;display:block}
+.vof-b small{font:600 .6rem/1.2 'Prompt',sans-serif;color:#c9b88c;text-align:center;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vof-b i{position:absolute;top:4px;right:5px;font-size:.6rem;font-style:normal}
+.vof-b.is-lock svg{filter:brightness(0) opacity(.45)}.vof-b.is-lock small{color:#7f776a}
+.vof-b.is-on{border-color:#f4c542;background:radial-gradient(100% 80% at 50% 30%,rgba(255,214,90,.22),transparent 70%),rgba(40,30,10,.6);box-shadow:0 0 14px rgba(244,197,66,.3)}
+.vof-b.is-on small{color:#ffe7a6}
+.vof-b:active{transform:scale(.95)}
+@media (max-width:380px){.vof-b svg{width:36px;height:36px}.vof-row{gap:3px}}
+@media (prefers-reduced-motion:reduce){.vcs *{animation:none !important;transition:none !important}}
+html body .vdc .vof-b svg{width:46px !important;height:34px !important;overflow:visible}
+@media (max-width:380px){html body .vdc .vof-b svg{width:38px !important;height:28px !important}}
+html body .vdc .vof-b.is-lock svg{filter:brightness(0) drop-shadow(0 0 1px rgba(255,214,120,.6));opacity:.55}
