@@ -129,9 +129,36 @@
     out.sort(function (x, y) { return ORDER.indexOf(x.kind) - ORDER.indexOf(y.kind); });
     return { parties: pair ? pair.slice() : [], obligations: out };
   }
+  /* ตาข่ายกันตกหล่น: ข้อในสัญญาที่มีคำว่า ต้อง/ห้าม/ชำระ/แจ้งล่วงหน้า แต่ไม่มีรายการ AI ไหนอ้างถึง → เติมเป็นรายการ ⚠ */
+  function sq(x) { return normDigits(x || '').replace(/[\s"“”'‘’]+/g, ''); }
+  function netItems(ai, text) {
+    text = normDigits(text || ''); if (!text.trim()) return [];
+    var segs = text.split(/(?=ข้อ\s*\d{1,3}(?!\d))/).map(function (x) { return x.trim(); }).filter(function (x) { return /^ข้อ\s*\d/.test(x); });
+    if (segs.length < 2) return [];
+    var keys = ai.filter(function (o) { return o.quote && !o.missing; }).map(function (o) { return sq(o.quote).slice(0, 14); }).filter(function (k) { return k.length >= 6; });
+    var out = [];
+    segs.forEach(function (sg) {
+      if (out.length >= 6) return;
+      var body = sg.split(/\n\s*(?:ลงชื่อ|ลงนาม)/)[0], ss = sq(body);
+      if (!/(ต้อง|ห้าม|ชำระ|ล่วงหน้า|มีหน้าที่|จะไม่|ไม่ยอม|ไม่อนุญาต)/.test(body)) return;
+      if (keys.some(function (k) { return ss.indexOf(k) > -1; })) return;
+      var n = (/^ข้อ\s*(\d{1,3})/.exec(body) || [])[1] || '';
+      localExtract(body.replace(/\n+/g, ' '), null).obligations.slice(0, 2).forEach(function (o, j) {
+        if (out.length >= 6) return;
+        o.id = 'n' + n + '_' + j; o.net = true; o.clause = n; o.quote = body.replace(/\s+/g, ' ').slice(0, 220); out.push(o);
+      });
+    });
+    return out;
+  }
   function getData(r) {
-    if (r && Array.isArray(r.obligations) && r.obligations.length) return { parties: (r.parties || []).slice(), obligations: r.obligations, ai: true };
-    var d = localExtract(srcText(), r); d.ai = false; return d;
+    if (r && Array.isArray(r.obligations) && r.obligations.length) {
+      var d0 = { parties: (r.parties || []).slice(), obligations: r.obligations, ai: true };
+      d0.net = netItems(r.obligations, srcText());
+      /* ใส่ฝ่ายให้รายการตาข่ายตามชื่อฝ่ายที่ AI ใช้ */
+      d0.net.forEach(function (o) { if (o.party && d0.parties.indexOf(o.party) < 0) o.party = ''; });
+      return d0;
+    }
+    var d = localExtract(srcText(), r); d.ai = false; d.net = []; return d;
   }
 
   /* ---------- สถานะในเครื่อง ---------- */
@@ -188,36 +215,97 @@
     'html body #result .vob button.vob-q{padding:0 !important;margin-top:6px !important;background:none !important;border:0 !important;width:auto !important}' +
     'html body #result .vob .vob-me button{padding:7px 12px !important;width:auto !important}' +
     'html body #result .vob .vob-tabs button{padding:10px 6px !important;width:auto !important}' +
+    '.vob-it.is-net{border-style:dashed;border-color:rgba(245,196,81,.5);background:rgba(245,196,81,.05)}' +
+    '.vob-net{display:inline-block;margin:0 0 5px;padding:2px 8px;border-radius:99px;background:rgba(245,196,81,.16);color:#f8d27a;font:700 10.5px/1.4 Prompt,sans-serif}' +
+    '.vob-own{display:inline-block;margin:0 0 5px;padding:2px 8px;border-radius:99px;background:rgba(127,181,255,.14);color:#a9cbff;font:700 10.5px/1.4 Prompt,sans-serif}' +
+    '.vob-acts{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center}' +
+    'html body #result .vob button.vob-edb{padding:0 !important;margin-top:6px !important;background:none !important;border:0 !important;width:auto !important;color:#8a8a92;font:500 11.5px/1.4 Prompt,sans-serif;cursor:pointer}' +
+    'html body #result .vob button.vob-add,html body #result .vob button.vob-unhide{display:block;width:100% !important;margin:6px 0 0 !important;padding:11px !important;border-radius:13px;border:1.5px dashed rgba(255,255,255,.18);background:none;color:#cfcfd6;font:600 13px/1 Prompt,sans-serif;cursor:pointer}' +
+    'html body #result .vob button.vob-unhide{border:0;padding:6px !important;color:#8a8a92;font-weight:500;font-size:12px}' +
+    '.vob-ed{margin:0 0 8px;padding:14px;border-radius:14px;background:rgba(127,181,255,.06);border:1px solid rgba(127,181,255,.3);display:grid;gap:10px}' +
+    '.vob-edh{font:700 13.5px/1.2 Prompt,sans-serif;color:#fff}' +
+    '.vob-ed label{display:grid;gap:5px;font:600 11.5px/1.2 Prompt,sans-serif;color:#a3a3aa}' +
+    '.vob-ed input:not([type=checkbox]),.vob-ed select{width:100%;padding:10px 11px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.35);color:#f4f4f6;font:500 14px/1.2 Prompt,sans-serif;color-scheme:dark}' +
+    '.vob-edr{display:grid;grid-template-columns:1fr 1fr;gap:8px}' +
+    '.vob-ed label.vob-edc{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#cfcfd6}' +
+    '.vob-edk{display:flex;flex-wrap:wrap;gap:6px}' +
+    'html body #result .vob .vob-edk button{padding:6px 10px !important;width:auto !important;border-radius:99px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:#cfcfd6;font:600 11.5px/1 Prompt,sans-serif}' +
+    'html body #result .vob .vob-edk button[aria-pressed=true]{background:#7fb5ff;border-color:#7fb5ff;color:#0b1a30}' +
+    '.vob-edb2{display:flex;flex-wrap:wrap;gap:8px}' +
+    'html body #result .vob .vob-edb2 button{padding:10px 16px !important;width:auto !important;border-radius:11px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:#e4e4e8;font:700 13px/1 Prompt,sans-serif}' +
+    'html body #result .vob .vob-edb2 .e-save{background:#34d399;border-color:#34d399;color:#062a1d}' +
+    'html body #result .vob .vob-edb2 .e-del{margin-left:auto;background:none;border-color:rgba(255,122,134,.4);color:#ff9aa4}' +
+    '.vob-ftn{color:#c9a85a}' +
     '@media (prefers-reduced-motion:reduce){.vob.vob-flash{animation:none}}';
 
   /* ---------- การ์ด ---------- */
   var card = null, st = null;
-  function rowHtml(o, i) {
-    var k = KIND[o.kind] || KIND.do, due = nextDue(o), done = !!st.done[i], dont = o.kind === 'dont';
+  var KSEL = ['pay', 'deliver', 'notice', 'do', 'dont'];
+  /* รายการที่แสดงจริง = ฐาน (AI/ตาข่าย/อ่านในเครื่อง) − ที่ผู้ใช้ลบ + ที่ผู้ใช้แก้ + ที่ผู้ใช้เพิ่มเอง */
+  function items() {
+    var out = [];
+    card.__base.forEach(function (o) {
+      if (st.hidden[o.id]) return;
+      var e = st.edit[o.id]; out.push(e ? Object.assign({}, o, e, { edited: true }) : o);
+    });
+    (st.custom || []).forEach(function (o) { out.push(o); });
+    return out;
+  }
+  function byId(id) { var l = items(); for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }
+  function rowHtml(o) {
+    if (card.__ed === o.id) return edHtml(o);
+    var k = KIND[o.kind] || KIND.do, due = nextDue(o), done = !!st.done[o.id], dont = o.kind === 'dont';
     var chips = (o.amount ? '<span class="m">' + h(o.amount) + '</span>' : '') + (o.when ? '<span class="t">⏱ ' + h(o.when) + '</span>' : '') +
       (o.repeat === 'monthly' ? '<span class="r">ทุกเดือน</span>' : o.repeat === 'yearly' ? '<span class="r">ทุกปี</span>' : '') +
       (due ? '<span class="d">' + h(leftTx(due)) + '</span>' : '');
-    return '<div class="vob-it k-' + o.kind + (done ? ' is-done' : '') + '" style="--c:' + k.c + '" data-i="' + i + '">' +
+    return '<div class="vob-it k-' + o.kind + (done ? ' is-done' : '') + (o.net ? ' is-net' : '') + '" style="--c:' + k.c + '" data-id="' + h(o.id) + '">' +
       '<button type="button" class="vob-tk" aria-pressed="' + done + '" aria-label="' + (dont ? 'รับทราบแล้ว' : 'ทำแล้ว') + '"></button>' +
-      '<div><span class="vob-w">' + h(o.what) + '</span>' + (chips ? '<div class="vob-ch">' + chips + '</div>' : '') +
-      (o.quote ? '<button type="button" class="vob-q" aria-expanded="false">ดูข้อความในสัญญา ›</button><span class="vob-qt" hidden>“' + h(o.quote) + '”</span>' : '') + '</div>' +
-      (dont ? '<span></span>' : '<button type="button" class="vob-bell' + (st.bell[i] ? ' is-set' : '') + '" ' + (due ? '' : 'disabled ') + 'aria-label="' + (due ? 'ตั้งเตือน' : 'ไม่มีวันที่แน่นอนในสัญญา') + '" title="' + (due ? 'ตั้งเตือน' : 'ไม่มีวันที่แน่นอนในสัญญา') + '">🔔</button>') +
+      '<div>' + (o.net ? '<span class="vob-net">⚠ AI อาจข้ามข้อนี้' + (o.clause ? ' · ข้อ ' + h(o.clause) : '') + '</span>' : '') +
+        (o.mine ? '<span class="vob-own">✍ เพิ่มเอง</span>' : o.edited ? '<span class="vob-own">✎ แก้แล้ว</span>' : '') +
+        '<span class="vob-w">' + h(o.what) + '</span>' + (chips ? '<div class="vob-ch">' + chips + '</div>' : '') +
+        '<div class="vob-acts">' + (o.quote ? '<button type="button" class="vob-q" aria-expanded="' + (o.net ? 'true' : 'false') + '">' + (o.net ? 'ซ่อนข้อความ ‹' : 'ดูข้อความในสัญญา ›') + '</button>' : '') +
+        '<button type="button" class="vob-edb">✎ แก้ไข</button></div>' +
+        (o.quote ? '<span class="vob-qt"' + (o.net ? '' : ' hidden') + '>“' + h(o.quote) + '”</span>' : '') + '</div>' +
+      (dont ? '<span></span>' : '<button type="button" class="vob-bell' + (st.bell[o.id] ? ' is-set' : '') + '" ' + (due ? '' : 'disabled ') + 'aria-label="' + (due ? 'ตั้งเตือน' : 'ไม่มีวันที่แน่นอน แก้ไขเพื่อใส่วันที่') + '" title="' + (due ? 'ตั้งเตือน' : 'ไม่มีวันที่แน่นอน แก้ไขเพื่อใส่วันที่') + '">🔔</button>') +
       '</div>';
   }
+  /* ฟอร์มแก้ไข / เพิ่มเอง */
+  function edHtml(o) {
+    var isNew = !o.id || o.id === 'new', parties = card.__d.parties;
+    var due = o.due_date || (o.repeat === 'monthly' ? nextDue(o) : '') || '';
+    return '<div class="vob-ed" data-id="' + h(o.id || 'new') + '">' +
+      '<b class="vob-edh">' + (isNew ? '+ เพิ่มรายการเอง' : '✎ แก้ไขรายการ') + '</b>' +
+      '<label>ต้องทำอะไร<input class="e-what" maxlength="80" value="' + h(o.what || '') + '" placeholder="เช่น ชำระค่าเช่า"></label>' +
+      '<div class="vob-edk" role="group" aria-label="ประเภท">' + KSEL.map(function (k) {
+        return '<button type="button" data-k="' + k + '" aria-pressed="' + ((o.kind || 'do') === k) + '">' + KIND[k].ic + ' ' + KIND[k].name + '</button>'; }).join('') + '</div>' +
+      (parties.length > 1 ? '<label>ฝ่ายที่ต้องทำ<select class="e-party">' + parties.map(function (p) { return '<option' + (p === (o.party || st.me) ? ' selected' : '') + '>' + h(p) + '</option>'; }).join('') + '</select></label>' : '') +
+      '<div class="vob-edr"><label>จำนวนเงิน<input class="e-amt" maxlength="40" value="' + h(o.amount || '') + '" placeholder="เช่น 8,500 บาท"></label>' +
+      '<label>วันที่<input class="e-date" type="date" value="' + h(due) + '"></label></div>' +
+      '<label class="vob-edc"><input type="checkbox" class="e-mon"' + (o.repeat === 'monthly' ? ' checked' : '') + '> ทำซ้ำทุกเดือน</label>' +
+      '<div class="vob-edb2"><button type="button" class="e-save">บันทึก</button><button type="button" class="e-cancel">ยกเลิก</button>' +
+      (isNew ? '' : '<button type="button" class="e-del">ลบรายการนี้</button>') + '</div></div>';
+  }
+  function readEd(ed) {
+    var what = ed.querySelector('.e-what').value.trim(); if (!what) { say('ใส่ว่าต้องทำอะไรก่อนนะครับ'); return null; }
+    var kb = ed.querySelector('.vob-edk [aria-pressed=true]'), pa = ed.querySelector('.e-party'), dt = ed.querySelector('.e-date').value, mon = ed.querySelector('.e-mon').checked;
+    var d0 = parseIso(dt);
+    return { what: what.slice(0, 80), kind: kb ? kb.getAttribute('data-k') : 'do', party: pa ? pa.value : (st.me || ''), amount: ed.querySelector('.e-amt').value.trim().slice(0, 40),
+      repeat: mon ? 'monthly' : 'none', due_date: mon ? '' : (d0 ? dt : ''), day_of_month: mon && d0 ? d0.getDate() : 0, when: mon && d0 ? 'ทุกวันที่ ' + d0.getDate() + ' ของเดือน' : '' };
+  }
   function render() {
-    var d = card.__d, me = st.me, list = d.obligations;
+    var d = card.__d, me = st.me, list = items();
     var mine = [], theirs = [];
-    list.forEach(function (o, i) { (!o.party || o.party === me ? mine : theirs).push(i); });
+    list.forEach(function (o) { (!o.party || o.party === me || d.parties.indexOf(o.party) < 0 ? mine : theirs).push(o); });
     var tab = st.tab === 'them' && theirs.length ? 'them' : 'me';
-    if (!mine.length && theirs.length) tab = 'them';
-    var idx = tab === 'me' ? mine : theirs;
-    var countable = list.map(function (o, i) { return i; }).filter(function (i) { return list[i].kind !== 'dont'; });
-    var doneN = countable.filter(function (i) { return st.done[i]; }).length;
-    /* รายการถัดไปที่มีวันที่และยังไม่ทำ */
+    if (!mine.length && theirs.length && card.__ed !== 'new') tab = 'them';
+    var cur = tab === 'me' ? mine : theirs;
+    var countable = list.filter(function (o) { return o.kind !== 'dont'; });
+    var doneN = countable.filter(function (o) { return st.done[o.id]; }).length;
     var next = null;
-    mine.forEach(function (i) { var o = list[i], du = nextDue(o); if (du && !st.done[i] && o.kind !== 'dont' && (!next || du < next.du)) next = { o: o, du: du }; });
+    mine.forEach(function (o) { var du = nextDue(o); if (du && !st.done[o.id] && o.kind !== 'dont' && (!next || du < next.du)) next = { o: o, du: du }; });
     var other = d.parties.filter(function (p) { return p !== me; })[0] || 'อีกฝ่าย';
-    var groups = ORDER.map(function (k) { return { k: k, ids: idx.filter(function (i) { return list[i].kind === k; }) }; }).filter(function (g) { return g.ids.length; });
+    var groups = ORDER.map(function (k) { return { k: k, list: cur.filter(function (o) { return o.kind === k; }) }; }).filter(function (g) { return g.list.length; });
+    var nHid = Object.keys(st.hidden).filter(function (k) { return st.hidden[k]; }).length, nNet = list.filter(function (o) { return o.net; }).length;
     card.innerHTML =
       '<div class="vob-hd"><span class="vob-ic" aria-hidden="true">📋</span><div><h4>สิ่งที่ต้องทำตามสัญญา</h4><p>ใครต้องทำอะไร เท่าไร เมื่อไร ติ๊กเมื่อทำแล้ว แล้วกด 🔔 ให้เตือนก่อนถึงกำหนด</p></div>' +
         (countable.length ? '<span class="vob-ring" style="--p:' + Math.round(doneN / countable.length * 100) + '" role="img" aria-label="ทำแล้ว ' + doneN + ' จาก ' + countable.length + '"><b>' + doneN + '/' + countable.length + '</b></span>' : '') + '</div>' +
@@ -226,13 +314,17 @@
       (next ? '<div class="vob-next">⏰ <span>ถัดไป: <b>' + h(next.o.what) + (next.o.amount ? ' ' + h(next.o.amount) : '') + '</b> · ' + h(leftTx(next.du)) + '</span></div>' : '') +
       (d.parties.length > 1 ? '<div class="vob-tabs" role="tablist"><button type="button" role="tab" data-tab="me" aria-selected="' + (tab === 'me') + '">ที่คุณต้องทำ<em>' + mine.length + '</em></button>' +
         '<button type="button" role="tab" data-tab="them" aria-selected="' + (tab === 'them') + '">' + h(other) + 'ต้องทำ<em>' + theirs.length + '</em></button></div>' : '') +
-      (groups.length ? groups.map(function (g) { return '<div class="vob-g">' + KIND[g.k].ic + ' ' + KIND[g.k].name + '</div>' + g.ids.map(function (i) { return rowHtml(list[i], i); }).join(''); }).join('')
+      (groups.length ? groups.map(function (g) { return '<div class="vob-g">' + KIND[g.k].ic + ' ' + KIND[g.k].name + '</div>' + g.list.map(rowHtml).join(''); }).join('')
         : '<div class="vob-empty">' + (tab === 'me' ? 'ไม่พบสิ่งที่คุณต้องทำในสัญญานี้' : 'ไม่พบสิ่งที่อีกฝ่ายต้องทำ') + '</div>') +
-      '<p class="vob-ft">' + (d.ai ? 'AI อ่านจากข้อความในสัญญา' : 'อ่านจากข้อความในเครื่องของคุณอัตโนมัติ') + ' · ตรวจกับสัญญาจริงก่อนใช้ ไม่ใช่คำปรึกษาทางกฎหมาย</p>';
+      (card.__ed === 'new' ? edHtml({ id: 'new', party: tab === 'me' ? me : other, kind: 'do' }) : '<button type="button" class="vob-add">+ เพิ่มรายการเอง</button>') +
+      (nHid ? '<button type="button" class="vob-unhide">แสดงรายการที่ลบไป (' + nHid + ')</button>' : '') +
+      (nNet ? '<p class="vob-ft vob-ftn">⚠ = ระบบเจอข้อในสัญญาที่มีคำว่า ต้อง / ห้าม / ชำระ / แจ้งล่วงหน้า แต่ AI ไม่ได้หยิบมา อ่านข้อความแล้วแก้หรือลบได้</p>' : '') +
+      '<p class="vob-ft">' + (d.ai ? 'AI อ่านจากข้อความในสัญญา' : 'อ่านจากข้อความในเครื่องของคุณอัตโนมัติ') + ' · แก้ไขหรือเพิ่มเองได้ · ตรวจกับสัญญาจริงก่อนใช้ ไม่ใช่คำปรึกษาทางกฎหมาย</p>';
+    if (card.__ed) { var f = card.querySelector('.vob-ed .e-what'); if (f && !f.value) setTimeout(function () { try { f.focus({ preventScroll: true }); } catch (e) {} }, 30); }
   }
-  function persist() { save('vc_ob_' + card.__sig, { me: st.me, tab: st.tab, done: st.done, bell: st.bell }); }
-  function bell(i, btn) {
-    var o = card.__d.obligations[i], due = nextDue(o); if (!due) return;
+  function persist() { save('vc_ob_' + card.__sig, { me: st.me, tab: st.tab, done: st.done, bell: st.bell, edit: st.edit, hidden: st.hidden, custom: st.custom }); }
+  function bell(id, btn) {
+    var o = byId(id), due = o && nextDue(o); if (!due) return;
     var title = (o.what + (o.amount ? ' ' + o.amount : '')).slice(0, 110);
     var kind = o.kind === 'pay' ? 'pay' : o.kind === 'deliver' ? 'deliver' : o.kind === 'notice' ? 'notice' : 'other';
     var item = { title: title, dueDate: due, kind: kind, repeat: o.repeat === 'monthly' || o.repeat === 'yearly' ? o.repeat : 'none', note: o.when || '' };
@@ -240,25 +332,46 @@
       btn.disabled = true;
       call('/api/reminders', 'POST', { items: [item] }).then(function (x) {
         btn.disabled = false;
-        if (x.ok) { st.bell[i] = 1; persist(); btn.classList.add('is-set'); say('ตั้งเตือนแล้ว · ดูได้ที่ "แจ้งเตือนวันสำคัญ"'); if (window.VCRemind && VCRemind.refresh) VCRemind.refresh(); }
+        if (x.ok) { st.bell[id] = 1; persist(); btn.classList.add('is-set'); say('ตั้งเตือนแล้ว · ดูได้ที่ "แจ้งเตือนวันสำคัญ"'); if (window.VCRemind && VCRemind.refresh) VCRemind.refresh(); }
         else say((x.data && x.data.error) || 'ตั้งเตือนไม่สำเร็จ ลองใหม่อีกครั้ง');
       });
     } else if (window.VCRemind && VCRemind._ics) {
-      st.bell[i] = 1; persist(); btn.classList.add('is-set'); VCRemind._ics([item]);
+      st.bell[id] = 1; persist(); btn.classList.add('is-set'); VCRemind._ics([item]);
     } else say('เข้าสู่ระบบเพื่อบันทึกแจ้งเตือน');
   }
   function bind() {
     card.addEventListener('click', function (e) {
-      var t = e.target, it = t.closest('.vob-it'), i = it ? +it.getAttribute('data-i') : -1;
+      var t = e.target, it = t.closest('.vob-it'), id = it ? it.getAttribute('data-id') : '';
+      var ed = t.closest('.vob-ed');
+      if (ed) {
+        var eid = ed.getAttribute('data-id');
+        if (t.closest('.vob-edk [data-k]')) { [].forEach.call(ed.querySelectorAll('.vob-edk [data-k]'), function (b) { b.setAttribute('aria-pressed', String(b === t.closest('[data-k]'))); }); return; }
+        if (t.closest('.e-cancel')) { card.__ed = null; render(); return; }
+        if (t.closest('.e-del')) {
+          if (/^c/.test(eid)) st.custom = st.custom.filter(function (o) { return o.id !== eid; }); else st.hidden[eid] = 1;
+          card.__ed = null; persist(); render(); say('ลบรายการแล้ว'); return;
+        }
+        if (t.closest('.e-save')) {
+          var v = readEd(ed); if (!v) return;
+          if (eid === 'new') { v.id = 'c' + Date.now().toString(36); v.mine = true; st.custom.push(v); st.tab = v.party === st.me || !v.party ? 'me' : 'them'; }
+          else if (/^c/.test(eid)) st.custom = st.custom.map(function (o) { return o.id === eid ? Object.assign({}, o, v) : o; });
+          else st.edit[eid] = v;
+          card.__ed = null; persist(); render(); say('บันทึกแล้ว'); return;
+        }
+        return;
+      }
       if (t.closest('[data-me]')) { st.me = t.closest('[data-me]').getAttribute('data-me'); st.tab = 'me'; persist(); render(); return; }
       if (t.closest('[data-tab]')) { st.tab = t.closest('[data-tab]').getAttribute('data-tab'); persist(); render(); return; }
+      if (t.closest('.vob-add')) { card.__ed = 'new'; render(); var f0 = card.querySelector('.vob-ed'); if (f0) f0.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+      if (t.closest('.vob-unhide')) { st.hidden = {}; persist(); render(); return; }
+      if (t.closest('.vob-edb')) { card.__ed = id; render(); return; }
       if (t.closest('.vob-tk')) {
-        st.done[i] = st.done[i] ? 0 : 1; persist(); render();
-        if (st.done[i] && navigator.vibrate) try { navigator.vibrate(8); } catch (er) {}
+        st.done[id] = st.done[id] ? 0 : 1; persist(); render();
+        if (st.done[id] && navigator.vibrate) try { navigator.vibrate(8); } catch (er) {}
         return;
       }
       if (t.closest('.vob-q')) { var q = it.querySelector('.vob-qt'), b = t.closest('.vob-q'); q.hidden = !q.hidden; b.setAttribute('aria-expanded', String(!q.hidden)); b.textContent = q.hidden ? 'ดูข้อความในสัญญา ›' : 'ซ่อนข้อความ ‹'; return; }
-      if (t.closest('.vob-bell')) bell(i, t.closest('.vob-bell'));
+      if (t.closest('.vob-bell')) bell(id, t.closest('.vob-bell'));
     });
   }
   function place() {
@@ -270,9 +383,11 @@
       var d = getData(r);
       if (!d.obligations.length) { if (card && card.parentNode) card.remove(); return; }
       if (!card) { card = document.createElement('section'); card.className = 'vob'; card.id = 'vobCard'; card.setAttribute('aria-label', 'สิ่งที่ต้องทำตามสัญญา'); bind(); }
-      card.__r = r; card.__d = d; card.__sig = sigOf(d);
+      card.__r = r; card.__d = d; card.__sig = sigOf(d); card.__ed = null;
+      card.__base = d.obligations.map(function (o, i) { return Object.assign({ id: (d.ai ? 'a' : 'l') + i }, o); }).concat(d.net || []);
       st = load('vc_ob_' + card.__sig, null) || {};
-      st.done = st.done || {}; st.bell = st.bell || {};
+      ['done', 'bell', 'edit', 'hidden'].forEach(function (k) { if (!st[k] || typeof st[k] !== 'object' || Array.isArray(st[k])) st[k] = {}; });
+      if (!Array.isArray(st.custom)) st.custom = [];
       if (!st.me || d.parties.indexOf(st.me) < 0) st.me = defaultMe(d.parties);
       render();
     }
