@@ -6,7 +6,7 @@ const API_URL = 'https://api.anthropic.com/v1/messages';
 const MODEL = process.env.AI_MODEL || 'claude-haiku-5-5';
 
 // เพดานโทเคนของคำตอบ ภาษาไทยใช้โทเคนมาก จึงตั้งสูง
-const MAX_TOKENS = 8000;
+const MAX_TOKENS = 12000;   // v2: เพิ่มจาก 8000 เพราะมีรายการภาระผูกพัน (obligations) เพิ่ม
 
 // จำนวนข้อ: อย่างน้อย MIN_ITEMS และไม่เกิน MAX_ITEMS_LIMIT
 // สัญญายาวขึ้น ประมาณทุก CHARS_PER_ITEM ตัวอักษรจะเพิ่มได้ 1 ข้อ
@@ -42,7 +42,7 @@ const TYPE_FOCUS = {
 const EN_RULES = `
 
 ENGLISH MODE (overrides the language rule above):
-- The reader does not read Thai. Write every human-readable field (summary, title, topic, explanation, suggested_fix, how_to_negotiate, impact, urgency_note, uncertainty, missing_info) in clear, plain English.
+- The reader does not read Thai. Write every human-readable field (summary, title, topic, explanation, suggested_fix, how_to_negotiate, impact, urgency_note, uncertainty, missing_info, parties, and obligations.party/what/amount/when) in clear, plain English.
 - The contract itself may be in Thai or English. "quote" must still be copied verbatim from the contract in its original language.
 - Keep all enum values (level, urgency, detected_type) and the JSON keys exactly as specified.
 - "title" is a short plain-English question of at most 45 characters, e.g. "Who pays for repairs?" "When is the deposit returned?"
@@ -52,7 +52,7 @@ ENGLISH MODE (overrides the language rule above):
 const ZH_RULES = `
 
 CHINESE MODE (overrides the language rule above):
-- The reader reads Simplified Chinese, not Thai. Write every human-readable field (summary, title, topic, explanation, suggested_fix, how_to_negotiate, impact, urgency_note, uncertainty, missing_info) in clear, plain Simplified Chinese (简体中文).
+- The reader reads Simplified Chinese, not Thai. Write every human-readable field (summary, title, topic, explanation, suggested_fix, how_to_negotiate, impact, urgency_note, uncertainty, missing_info, parties, and obligations.party/what/amount/when) in clear, plain Simplified Chinese (简体中文).
 - The contract itself may be in Thai, English or Chinese. "quote" must still be copied verbatim from the contract in its original language.
 - Keep all enum values (level, urgency, detected_type) and the JSON keys exactly as specified.
 - "title" is a short plain-language question of at most 20 Chinese characters, e.g. "维修费谁来付？" "押金什么时候退？"
@@ -85,6 +85,17 @@ function buildSystemPrompt(maxItems, contractType = 'unsure', lang = 'th') {
 - "uncertainty" ระบุสิ่งที่ยังไม่รู้หรือข้อมูลที่ขาดซึ่งทำให้ประเมินประเด็นนี้ไม่ได้เต็มที่ เช่น ไม่มีภาคผนวกหรือข้อยกเว้น ถ้าไม่มีให้ใส่ "" ห้ามเดา
 - ไม่เกิน ${maxItems} รายการใน items เรียงจากความเสี่ยงสูงสุดก่อน
 - แต่ละฟิลด์ยาวไม่เกิน 2 ประโยค quote สั้นที่สุดที่ยังระบุจุดนั้นได้ชัด
+- "parties" คือคู่สัญญาหลัก 2 ฝ่ายตามคำที่สัญญาใช้เรียก เช่น ["ผู้เช่า", "ผู้ให้เช่า"] หรือ ["ลูกจ้าง", "นายจ้าง"] ห้ามใส่ชื่อบุคคลหรือชื่อบริษัทจริง ถ้าดูไม่ออกให้ใส่ []
+- "obligations" คือสิ่งที่แต่ละฝ่ายต้องทำหรือห้ามทำตามที่เขียนไว้ในสัญญาจริงเท่านั้น ไม่เกิน 10 รายการ ห้ามเดาหรือเพิ่มเอง เรียงจากเรื่องเงินและกำหนดเวลาก่อน
+  - "party" ต้องเป็นค่าหนึ่งใน parties
+  - "kind" ใช้ได้เพียง: "pay" (ต้องจ่ายเงิน), "deliver" (ต้องส่งมอบงาน ของ หรือคืนทรัพย์สิน/เงิน), "notice" (ต้องแจ้งหรือบอกกล่าวล่วงหน้า), "do" (หน้าที่อื่นที่ต้องทำ), "dont" (ข้อห้าม)
+  - "what" สั้น ไม่เกิน 40 ตัวอักษร ขึ้นต้นด้วยกริยา เช่น "ชำระค่าเช่า" "คืนเงินประกัน" "แจ้งก่อนย้ายออก" "ห้ามเลี้ยงสัตว์"
+  - "amount" จำนวนเงินตามสัญญา เช่น "8,500 บาท" ถ้าไม่มีใส่ ""
+  - "when" กำหนดเวลาแบบสั้นตามสัญญา เช่น "ทุกวันที่ 1 ของเดือน" "ภายใน 30 วันหลังสิ้นสุดสัญญา" "ล่วงหน้า 30 วัน" ถ้าไม่มีใส่ ""
+  - "repeat" ใช้ "monthly" ถ้าทำทุกเดือน "yearly" ถ้าทุกปี นอกนั้น "none"
+  - "due_date" วันที่แน่นอนรูปแบบ YYYY-MM-DD (ค.ศ.) เฉพาะเมื่อสัญญาระบุวันที่ชัดเจน ถ้าไม่มีใส่ ""
+  - "day_of_month" ตัวเลขวันที่ของเดือนเมื่อ repeat เป็น "monthly" เช่น 1 ถ้าไม่มีใส่ 0
+  - "quote" คัดลอกข้อความสั้นที่สุดจากสัญญาตามตัวอักษร
 - ตอบให้จบ JSON เสมอ แม้ต้องตัดรายละเอียดลง${lang === 'en' ? EN_RULES : lang === 'zh' ? ZH_RULES : ''}
 
 รูปแบบ JSON:
@@ -107,7 +118,11 @@ function buildSystemPrompt(maxItems, contractType = 'unsure', lang = 'th') {
     }
   ],
   "missing_info": [],
-  "detected_type": "unsure"
+  "detected_type": "unsure",
+  "parties": [],
+  "obligations": [
+    { "party": "", "kind": "pay", "what": "", "amount": "", "when": "", "repeat": "none", "due_date": "", "day_of_month": 0, "quote": "" }
+  ]
 }`;
 }
 
