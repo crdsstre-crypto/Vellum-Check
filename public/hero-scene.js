@@ -120,11 +120,89 @@
   var canBlur = (navigator.hardwareConcurrency || 4) >= 6 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   /* ---------- เสียง (ปิดไว้ก่อน ต้องกดเปิดเอง) ---------- */
   var AC = null, sOn = false, lastL = 1, uvDone = false, sb = SR.getElementById('snd');
+  function sbUI() { sb.classList.toggle('on', sOn); sb.setAttribute('aria-pressed', String(sOn)); sb.textContent = sOn ? '🔊 เสียงเปิด' : '🔇 เสียง'; }
+  function ensureAC() { if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { AC = null; } } if (AC && AC.state === 'suspended') AC.resume(); }
   sb.addEventListener('click', function () {
-    sOn = !sOn; sb.classList.toggle('on', sOn); sb.setAttribute('aria-pressed', String(sOn)); sb.textContent = sOn ? '🔊 เสียงเปิด' : '🔇 เสียง';
-    if (sOn && !AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { AC = null; } }
-    if (AC && AC.state === 'suspended') AC.resume();
+    sOn = !sOn; sbUI(); try { localStorage.setItem('vc_hero_snd', sOn ? '1' : '0'); } catch (e) {}
+    if (sOn) { ensureAC(); musicOn(); } else musicOff();
   });
+  /* จำค่าเปิดเสียงไว้ แต่เบราว์เซอร์ให้เริ่มเสียงได้หลังผู้ใช้แตะจอครั้งแรกเท่านั้น */
+  try { if (localStorage.getItem('vc_hero_snd') === '1') { sOn = true; sbUI(); } } catch (e) {}
+  function gest() { if (sOn && !(MU && MU.on)) { ensureAC(); musicOn(); } }
+  ['pointerdown', 'keydown', 'touchend'].forEach(function (e) { addEventListener(e, gest, { passive: true }); });
+
+  /* ---------- ดนตรีประกอบ (สร้างด้วยโค้ดทั้งหมด ไม่มีไฟล์เพลง ไม่มีลิขสิทธิ์) ----------
+     4 ชั้นเสียงที่ค่อย ๆ ผสมตามเรื่อง: warm (โต๊ะทำงาน) · dark (ไฟดับ/UV) · tension (กำลังส่อง) · resolve (ผลตรวจ/รุ่งเช้า) */
+  var MU = null;
+  function hz(m) { return 440 * Math.pow(2, (m - 69) / 12); }
+  function musicBuild() {
+    var A = AC, out = A.createGain(); out.gain.value = 0;
+    var comp = A.createDynamicsCompressor(); comp.threshold.value = -18; comp.ratio.value = 3; out.connect(comp); comp.connect(A.destination);
+    var rv = A.createConvolver(), len = A.sampleRate * 3.2, ir = A.createBuffer(2, len, A.sampleRate);
+    for (var c = 0; c < 2; c++) { var d = ir.getChannelData(c); for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6); }
+    rv.buffer = ir; var rvG = A.createGain(); rvG.gain.value = .55; rv.connect(rvG); rvG.connect(out);
+    function bus() { var g = A.createGain(); g.gain.value = 0; g.connect(out); var s2 = A.createGain(); s2.gain.value = .6; g.connect(s2); s2.connect(rv); return g; }
+    var M = { out: out, rv: rv, warm: bus(), dark: bus(), ten: bus(), res: bus(), on: false, next: 0, step: 0, bellT: 0, beatT: 0, mix: { w: 1, d: 0, t: 0, r: 0 } };
+    /* เสียงห้องเงียบ ๆ (noise กรองต่ำ) */
+    var nb = A.createBuffer(1, A.sampleRate * 2, A.sampleRate), nd = nb.getChannelData(0); for (var j = 0; j < nd.length; j++) nd[j] = Math.random() * 2 - 1;
+    var ns = A.createBufferSource(); ns.buffer = nb; ns.loop = true; var nf = A.createBiquadFilter(); nf.type = 'lowpass'; nf.frequency.value = 420; var ng = A.createGain(); ng.gain.value = .05;
+    ns.connect(nf); nf.connect(ng); ng.connect(M.warm); ns.start();
+    /* โดรนลึกลับ: saw 2 ตัวเพี้ยนกันนิด ผ่าน lowpass ที่เปิดกว้างขึ้นตามการส่อง */
+    M.df = A.createBiquadFilter(); M.df.type = 'lowpass'; M.df.frequency.value = 260; M.df.Q.value = 6; var dg = A.createGain(); dg.gain.value = .11; M.df.connect(dg); dg.connect(M.dark);
+    [45, 45.08, 52].forEach(function (m, k) { var o = A.createOscillator(); o.type = k === 2 ? 'triangle' : 'sawtooth'; o.frequency.value = hz(m); o.connect(M.df); o.start(); });
+    var lfo = A.createOscillator(), lg = A.createGain(); lfo.frequency.value = .13; lg.gain.value = 120; lfo.connect(lg); lg.connect(M.df.frequency); lfo.start();
+    /* แพดสว่าง (F add9) สำหรับตอนจบ */
+    [53, 60, 64, 67, 69].forEach(function (m, k) { var o = A.createOscillator(), g = A.createGain(); o.type = 'sine'; o.frequency.value = hz(m); o.detune.value = (k - 2) * 4; g.gain.value = .045; o.connect(g); g.connect(M.res); o.start(); });
+    return M;
+  }
+  function pluck(bus, f, t, dur, g, type) {
+    var A = AC, o = A.createOscillator(), o2 = A.createOscillator(), e = A.createGain(), lp = A.createBiquadFilter();
+    o.type = type || 'triangle'; o2.type = 'sine'; o.frequency.value = f; o2.frequency.value = f * 2.001;
+    lp.type = 'lowpass'; lp.frequency.setValueAtTime(Math.min(6000, f * 6), t); lp.frequency.exponentialRampToValueAtTime(Math.max(200, f * 1.2), t + dur);
+    e.gain.setValueAtTime(0, t); e.gain.linearRampToValueAtTime(g, t + .012); e.gain.exponentialRampToValueAtTime(.0008, t + dur);
+    var e2 = A.createGain(); e2.gain.value = .25; o.connect(lp); o2.connect(e2); e2.connect(lp); lp.connect(e); e.connect(bus);
+    o.start(t); o2.start(t); o.stop(t + dur + .05); o2.stop(t + dur + .05);
+  }
+  function kick(bus, t, g) {
+    var A = AC, o = A.createOscillator(), e = A.createGain(); o.type = 'sine';
+    o.frequency.setValueAtTime(90, t); o.frequency.exponentialRampToValueAtTime(38, t + .22);
+    e.gain.setValueAtTime(g, t); e.gain.exponentialRampToValueAtTime(.001, t + .3); o.connect(e); e.connect(bus); o.start(t); o.stop(t + .32);
+  }
+  /* คอร์ดอุ่น ๆ ช่วงโต๊ะทำงาน (Cmaj7 · Am7 · Fmaj7 · G6) และคอร์ดสว่างช่วงจบ (F · C/E · Dm9 · Bb6) */
+  var WARM = [[60, 64, 67, 71, 74], [57, 60, 64, 67, 72], [53, 57, 60, 64, 69], [55, 59, 62, 64, 67]];
+  var BRIGHT = [[65, 69, 72, 76, 79], [64, 67, 72, 76, 79], [62, 65, 69, 72, 76], [58, 62, 65, 67, 70]];
+  var BELL = [81, 84, 86, 88, 91, 93];
+  function sched() {
+    if (!MU || !MU.on || AC.state !== 'running') return;
+    var now = AC.currentTime, x = MU.mix;
+    while (MU.next < now + .25) {
+      var t = MU.next, br = x.r > x.w, set = br ? BRIGHT : WARM, ch = set[Math.floor(MU.step / 8) % 4], k = MU.step % 8;
+      var idx = [0, 2, 1, 3, 4, 3, 1, 2][k], vel = (k === 0 ? .16 : .1) * (.85 + Math.random() * .3);
+      if (x.w > .02 && !br) pluck(MU.warm, hz(ch[idx]), t, 1.6, vel);
+      if (br && x.r > .02 && k % 2 === 0) pluck(MU.res, hz(ch[idx] + (k === 0 ? -12 : 0)), t, 2.4, vel * .9, 'sine');
+      if (k === 0 && (x.w > .02 || x.r > .02)) pluck(br ? MU.res : MU.warm, hz(ch[0] - 24), t, 2.8, .09, 'sine');
+      MU.step++; MU.next += br ? .42 : .36;
+    }
+    if (x.d > .05 && now > MU.bellT) { MU.bellT = now + 1.6 + Math.random() * 1.8; pluck(MU.dark, hz(BELL[Math.floor(Math.random() * BELL.length)]), now + .05, 3.5, .07, 'sine'); }
+    if (x.t > .05 && now > MU.beatT) { var bpm = 60 + x.t * 40; kick(MU.ten, now + .02, .5); kick(MU.ten, now + .3, .3); MU.beatT = now + 60 / bpm; }
+  }
+  function musicOn() {
+    if (!AC) return; if (!MU) MU = musicBuild(); if (MU.on) return;
+    MU.on = true; MU.next = AC.currentTime + .1; MU.out.gain.cancelScheduledValues(AC.currentTime); MU.out.gain.setTargetAtTime(.55, AC.currentTime, .6);
+    if (!MU.iv) MU.iv = setInterval(sched, 90);
+    musicMix(lastP < 0 ? 0 : lastP);
+  }
+  function musicOff() { if (!MU || !MU.on) return; MU.on = false; MU.out.gain.setTargetAtTime(0, AC.currentTime, .25); }
+  function musicMix(p) {
+    if (!MU || !MU.on) return;
+    var w = 1 - seg(p, .25, .33), d = seg(p, .27, .34) * (1 - seg(p, .62, .72)), t = seg(p, .4, .5) * (1 - seg(p, .56, .62)), r = seg(p, .8, .9);
+    MU.mix = { w: w, d: d, t: t, r: r }; var n = AC.currentTime;
+    MU.warm.gain.setTargetAtTime(w * .9, n, .3); MU.dark.gain.setTargetAtTime(d, n, .4); MU.ten.gain.setTargetAtTime(t * .7, n, .2); MU.res.gain.setTargetAtTime(r * .9, n, .5);
+    MU.df.frequency.setTargetAtTime(220 + seg(p, .36, .58) * 900, n, .3);
+  }
+  /* หยุดเสียงเมื่อหน้าปกถูกซ่อน / สลับแท็บ */
+  function musicIdle(h) { if (!AC) return; if (h) { if (AC.state === 'running') AC.suspend(); } else if (sOn && MU && MU.on && AC.state === 'suspended') AC.resume(); }
+  document.addEventListener('visibilitychange', function () { musicIdle(document.hidden); });
   function click() {
     if (!AC) return; var n = AC.createBufferSource(), b = AC.createBuffer(1, AC.sampleRate * .03, AC.sampleRate), d = b.getChannelData(0);
     for (var i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 3);
@@ -153,6 +231,7 @@
   }
   var stDone = false, lastCnt = 0, lastLed = 0, tearDone = false;
   function sfx(Lv, p) {
+    musicMix(p);
     if (sOn && !stDone && p > .615 && p < .68) { thump(); stDone = true; } if (p < .6) stDone = false;
     if (sOn && Math.abs(Lv - lastL) > .4) click();
     if (sOn && !uvDone && p > .335 && p < .4) { hum(); uvDone = true; }
@@ -332,7 +411,8 @@
   var cv = SR.getElementById('dust'), cx = cv.getContext('2d'), P = [], dustMode = 0, DPR = Math.min(2, devicePixelRatio || 1);
   function initDust() { cv.width = W * DPR; cv.height = H * DPR; P = []; for (var i = 0; i < 46; i++) P.push({ x: Math.random() * W, y: Math.random() * H, r: .6 + Math.random() * 1.8, v: .1 + Math.random() * .35, a: Math.random() * 6.28 }); }
   function dust() {
-    if (!host.offsetParent && getComputedStyle(host).position !== 'fixed') { setTimeout(function () { requestAnimationFrame(dust); }, 400); return; }
+    if (!host.offsetParent && getComputedStyle(host).position !== 'fixed') { musicIdle(true); setTimeout(function () { requestAnimationFrame(dust); }, 400); return; }
+    musicIdle(document.hidden);
     cx.setTransform(DPR, 0, 0, DPR, 0, 0); cx.clearRect(0, 0, W, H);
     var col = dustMode === 1 ? '200,150,255' : '255,220,160';
     P.forEach(function (q) { q.y -= q.v; q.a += .01; q.x += Math.sin(q.a) * .25; if (q.y < -5) { q.y = H + 5; q.x = Math.random() * W; }
