@@ -5,7 +5,7 @@
 import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { analyzeContract, answerFollowup, transcribeImage, explainClause, MAX_ITEMS_LIMIT, CONTRACT_TYPES } from './ai.js';
+import { analyzeContract, answerFollowup, transcribeImage, explainClause, MAX_ITEMS_LIMIT, CONTRACT_TYPES, extractObligations } from './ai.js';
 import { translateTexts, allowTranslate, MAX_TEXTS as TR_MAX_TEXTS, MAX_LEN as TR_MAX_LEN, MAX_TOTAL as TR_MAX_TOTAL } from './translate.js';
 import { extractPdfText, extractDocxText } from './extract.js';
 import { initDb, pool } from './db.js';
@@ -785,8 +785,12 @@ app.post('/api/check', async (req, res) => {
   // 3) เรียก AI ถ้าล้มเหลวคืนยอดทั้งหมดที่หักไป
   let result;
   try {
-    const raw = await analyzeContract(text, contractType, langOf(req));
-    result = cleanResult(raw, text);
+    // ตรวจหลัก + ภาระผูกพัน เรียกพร้อมกัน · ภาระผูกพันล้มเหลวไม่ทำให้การตรวจล้มเหลว
+    const [raw, ob] = await Promise.all([
+      analyzeContract(text, contractType, langOf(req)),
+      extractObligations(text, langOf(req)).catch(e => { console.error('[obligations] failed:', e.message); return null; }),
+    ]);
+    result = cleanResult({ ...raw, parties: ob?.parties, obligations: ob?.obligations }, text);
   } catch (err) {
     console.error('[check] failed:', err.message);
     await refundCredits(user.id, 1).catch(e => console.error('[credits] refund failed:', e.message));
