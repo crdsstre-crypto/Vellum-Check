@@ -105,8 +105,8 @@
       '<g class="brth"><circle cx="72" cy="63" r="2.2" fill="#fff"/><circle cx="76" cy="60" r="3" fill="#fff"/><circle cx="81" cy="58" r="2.4" fill="#fff"/></g>';
   }
   function artFor(id) { return id === 'medal' ? medalArt(medalTier()) : ART_OUT[id] ? ART_OUT[id].art : ''; }
-  var RAR = { common: 'ธรรมดา', rare: 'หายาก', epic: 'พิเศษ', legendary: 'ตำนาน' };
-  function shopItems() { return (S && S.shop || []).filter(function (o) { return ART_OUT[o.id]; }); }
+  var RAR = { limited: 'LIMITED', common: 'ธรรมดา', rare: 'หายาก', epic: 'พิเศษ', legendary: 'ตำนาน' };
+  function shopItems() { return (S && S.shop || []).filter(function (o) { return ART_OUT[o.id]; }).map(function (o) { return o.id === 'medal' ? Object.assign({}, o, { rarity: 'limited' }) : o; }); }
   function itemById(id) { return shopItems().filter(function (o) { return o.id === id; })[0]; }
   function ownedOutfits() {
     if (!S) return []; var e = {}; (S.badges || []).forEach(function (b) { if (b.earned) e[b.id] = 1; });
@@ -413,6 +413,18 @@
       hop(ms);
     }
   }
+  /* การ์ดลิมิเต็ด: กว้าง 2 ช่อง กรอบโฮโลแกรม · ยังไม่ได้ = เห็นเหรียญจางพร้อมแม่กุญแจ ยิ่งใกล้ครบยิ่งสว่าง */
+  function limitedCard(it, has, on, bd) {
+    var a = ART_OUT[it.id], p = bd ? Math.min(1, bd.have / bd.n) : 1, left = bd ? bd.n - bd.have : 0;
+    var lit = has ? 1 : (.28 + .72 * p);
+    var tag = has ? '<span class="vof-act' + (on ? ' is-on' : '') + '">' + (on ? 'ใส่อยู่ ✓' : 'มีแล้ว · แตะเพื่อใส่') + '</span>'
+      : '<span class="vof-act is-soon">อีก ' + left + ' วัน 🔥</span>';
+    return '<button type="button" class="vof-b vof-lim r-limited mt-' + medalTier() + (has ? ' is-own' : ' is-lock') + (on ? ' is-on' : '') + (sel === it.id ? ' is-try' : '') + '" data-outfit="' + it.id + '" aria-pressed="' + (sel === it.id) + '" aria-label="' + h(it.name + ' · ลิมิเต็ด · ' + (has ? 'มีแล้ว' : 'อีก ' + left + ' วัน')) + '" style="--lit:' + lit.toFixed(2) + ';--bp:' + Math.round(p * 100) + '%">' +
+      '<em class="vof-r"><i class="vst-dia"></i>LIMITED</em>' +
+      '<span class="lim-art"><svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg>' + (has ? '' : '<i class="lim-lock" aria-hidden="true"></i>') + '</span>' +
+      '<span class="lim-tx"><b>' + h(it.name) + '</b><small>ของรางวัลพิเศษ · ซื้อไม่ได้</small>' +
+      (has ? '' : '<span class="lim-bar"><i></i></span><small class="lim-n">เช็กอินติดกัน ' + bd.have + '/' + bd.n + ' วัน</small>') + tag + '</span></button>';
+  }
   function shopRender() {
     if (!sh || sh.hidden || !S) return;
     var list = shopItems(), own = ownedOutfits(), worn = wornOutfits(), bmap = {};
@@ -439,8 +451,9 @@
       var n = t[0] === 'all' ? list.length : list.filter(function (x) { return x.slot === t[0]; }).length;
       return n ? '<button type="button" role="tab" aria-selected="' + (shTab === t[0]) + '" class="' + (shTab === t[0] ? 'on' : '') + '" data-tab="' + t[0] + '">' + t[1] + '</button>' : '';
     }).join('');
-    var show = list.filter(function (x) { return shTab === 'all' || x.slot === shTab; });
+    var show = list.filter(function (x) { return shTab === 'all' || x.slot === shTab; }).sort(function (a, b) { return (b.rarity === 'limited') - (a.rarity === 'limited'); });
     sh.querySelector('.vst-grid').innerHTML = show.map(function (it) {
+      if (it.rarity === 'limited') return limitedCard(it, own.indexOf(it.id) >= 0, worn.indexOf(it.id) >= 0 && tryOn !== it.id, bmap[it.badge]);
       var has = own.indexOf(it.id) >= 0, on = worn.indexOf(it.id) >= 0 && tryOn !== it.id, a = ART_OUT[it.id], bd = it.badge && bmap[it.badge];
       var tag = has ? '<span class="vof-act' + (on ? ' is-on' : '') + '">' + (on ? 'ใส่อยู่ ✓' : 'มีแล้ว') + '</span>'
         : it.badge ? '<span class="vof-act is-badge">🏅 รางวัล</span>'
