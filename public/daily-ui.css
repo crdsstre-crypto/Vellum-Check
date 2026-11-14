@@ -676,3 +676,19 @@ html.vst-open,html.vst-open body{overflow:hidden}
 .vst-stage{height:256px}
 .vst-ms{width:146px;margin-bottom:30px}
 .vst-say{max-width:40%}
+
+/* ===== v20: เหรียญไฟไม่มอด — ไฟพลิ้ว สะเก็ดไฟ แสงวาว · การ์ดของรางวัลที่ยังไม่ได้ = เงาขอบทอง + วงความคืบหน้า ===== */
+.md-fl{transform-box:fill-box;transform-origin:50% 100%;animation:mdFl .9s ease-in-out infinite alternate}
+@keyframes mdFl{0%{transform:scale(1,1) skewX(-4deg)}100%{transform:scale(.92,1.1) skewX(5deg)}}
+.md-em{opacity:0;transform-box:fill-box;animation:mdEm 1.8s ease-out infinite}.md-em2{animation-delay:.9s}
+@keyframes mdEm{0%{opacity:0;transform:translate(0,0)}20%{opacity:1}100%{opacity:0;transform:translate(1.5px,-9px) scale(.4)}}
+.md-gl{animation:mdGl 3.2s ease-in-out infinite}
+@keyframes mdGl{0%,100%{opacity:.35}50%{opacity:1}}
+.md-tw{transform-box:fill-box;transform-origin:center;animation:vdgTw 3.4s ease-in-out infinite}
+.vof-pr{position:relative;display:grid;place-items:center;width:58px;height:58px;border-radius:50%;margin:-6px 0 -4px;
+  background:conic-gradient(#f4c542 var(--bp,0%),rgba(255,255,255,.1) 0)}
+.vof-pr::before{content:"";position:absolute;inset:3px;border-radius:50%;background:radial-gradient(circle,#2a2238,#17121f)}
+.vof-pr svg{position:relative;width:40px !important;height:40px !important;filter:brightness(0) drop-shadow(0 0 1.5px #f4c542) drop-shadow(0 0 4px rgba(244,197,66,.5)) !important;opacity:1 !important}
+.vof-pr b{position:absolute;right:-8px;bottom:-2px;padding:2px 5px;border-radius:99px;background:#f4c542;color:#2a1a02;font:800 .56rem/1 'Prompt',sans-serif}
+html body :is(.vdc,.vst) .vof-b.is-badge-item svg{filter:none}
+@media (prefers-reduced-motion:reduce){.md-fl,.md-em,.md-gl,.md-tw{animation:none}}
