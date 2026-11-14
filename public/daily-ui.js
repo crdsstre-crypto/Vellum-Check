@@ -427,16 +427,27 @@
     }
   }
   /* การ์ดลิมิเต็ด: กว้าง 2 ช่อง กรอบโฮโลแกรม · ยังไม่ได้ = เห็นเหรียญจางพร้อมแม่กุญแจ ยิ่งใกล้ครบยิ่งสว่าง */
+  function tierTag(t) {   // ระดับเป็นดาว 3 ดวง: ทอง ★☆☆ · ทองคำขาว ★★☆ · เพชร ★★★
+    var st = ''; for (var k = 1; k <= 3; k++) st += '<svg class="' + (k <= t ? 'on' : '') + '" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L10 14.5l-5.1 2.8 1.1-5.7-4.3-4 5.8-.7z"/></svg>';
+    return '<em class="lim-stars t' + t + '" role="img" aria-label="ระดับ' + MED[t].name + ' ' + t + ' จาก 3 ดาว">' + st + '</em>';
+  }
   function limitedCard(it, has, on, bd) {
     var a = ART_OUT[it.id], p = bd ? Math.min(1, bd.have / bd.n) : 1, left = bd ? bd.n - bd.have : 0;
     var lit = has ? 1 : (.28 + .72 * p);
     var tag = has ? '<span class="vof-act' + (on ? ' is-on' : '') + '">' + (on ? 'ใส่อยู่ ✓' : 'มีแล้ว · แตะเพื่อใส่') + '</span>'
-      : '<span class="vof-act is-soon">อีก ' + left + ' วัน 🔥</span>';
+      : '<span class="vof-act is-soon" aria-label="อีก ' + left + ' วัน"><svg class="soon-fl" viewBox="0 0 24 30" aria-hidden="true"><defs><linearGradient id="soonG" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff4d1f"/><stop offset=".55" stop-color="#ff9a2b"/><stop offset="1" stop-color="#ffe08a"/></linearGradient></defs>' +
+        '<path d="M12 29C5.4 29 1.5 24.6 1.5 19 1.5 12 7.4 9.2 8.2 1.5c4.6 3.6 6.6 8 6.6 11.6 1.9-1.3 3-3.6 3.2-5.9 4 3.6 5.8 8.2 5.8 12.4 0 5.6-5.1 9.4-11.8 9.4z" fill="url(#soonG)"/><path d="M12 27c-3 0-5-2-5-4.8 0-3.4 3-4.6 3.6-8.4 2.2 1.6 5.4 4.2 5.4 7.6 0 3.2-1.8 5.6-4 5.6z" fill="#fff1c2" opacity=".85"/></svg>' +
+        '<span class="soon-t"><small>อีก</small><b>' + left + '</b><small>วัน</small></span></span>';
     return '<button type="button" class="vof-b vof-lim r-limited mt-' + medalTier() + (has ? ' is-own' : ' is-lock') + (on ? ' is-on' : '') + (sel === it.id ? ' is-try' : '') + '" data-outfit="' + it.id + '" aria-pressed="' + (sel === it.id) + '" aria-label="' + h(it.name + ' · ลิมิเต็ด · ' + (has ? 'มีแล้ว' : 'อีก ' + left + ' วัน')) + '" style="--lit:' + lit.toFixed(2) + ';--bp:' + Math.round(p * 100) + '%">' +
       '<em class="vof-r"><i class="vst-dia"></i>LIMITED</em>' +
-      '<span class="lim-art"><svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg>' + (has ? '' : '<i class="lim-lock" aria-hidden="true"></i>') + '</span>' +
-      '<span class="lim-tx"><b>' + h(it.name) + '</b><small class="lim-tag">“ไฟที่ไม่ยอมมอด แม้ในคืนที่ยาวที่สุด”</small>' +
-      (has ? '' : '<span class="lim-bar"><i></i></span><small class="lim-n">เช็กอินติดกัน ' + bd.have + '/' + bd.n + ' วัน</small>') + '</span><span class="lim-row">' + tag + loreBtn() + '</span></button>';
+      '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="lqG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset="1" stop-color="#c9962f"/></linearGradient><linearGradient id="stG1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset=".55" stop-color="#f4c542"/><stop offset="1" stop-color="#c8861a"/></linearGradient><linearGradient id="stG2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#9fc4e6"/></linearGradient><linearGradient id="stG3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbf6ff"/><stop offset="1" stop-color="#a47dff"/></linearGradient></defs></svg>' +
+      '<span class="lim-art"><svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg>' + (has ? '' : '<svg class="lim-pl" viewBox="0 0 24 30" aria-hidden="true"><defs><linearGradient id="plB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0b8"/><stop offset=".45" stop-color="#e0a92c"/><stop offset="1" stop-color="#8a5a12"/></linearGradient><linearGradient id="plS" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a5a12"/><stop offset=".5" stop-color="#f6d98a"/><stop offset="1" stop-color="#8a5a12"/></linearGradient></defs>' +
+        '<path d="M6.5 13V9a5.5 5.5 0 0 1 11 0v4" fill="none" stroke="url(#plS)" stroke-width="3" stroke-linecap="round"/><path d="M6.5 13V9a5.5 5.5 0 0 1 11 0v4" fill="none" stroke="#5a3a0a" stroke-width=".8" opacity=".6"/>' +
+        '<rect x="3" y="12" width="18" height="15" rx="3.2" fill="url(#plB)" stroke="#5a3a0a" stroke-width="1.1"/><path d="M5 14.5h14" stroke="#fff6d6" stroke-width="1.1" stroke-linecap="round" opacity=".7"/>' +
+        '<circle cx="12" cy="18.6" r="2" fill="#3a2406"/><path d="M11.1 19.6h1.8l.5 3.6h-2.8z" fill="#3a2406"/><path class="pl-gl" d="M6 25l3-11" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity="0"/></svg>') + '</span>' +
+      '<span class="lim-tx"><span class="lim-nm"><b>' + h(it.name) + '</b>' + tierTag(medalTier()) + '</span>' +
+      '<i class="lim-div" aria-hidden="true"></i><small class="lim-tag"><svg class="lq lq-o" viewBox="0 0 24 20" aria-hidden="true"><path d="M2 20v-7C2 6 5.4 1.6 10.4 0l1 2.4C8.4 4 6.8 6.6 6.6 9.6H11V20zm13 0v-7c0-7 3.4-11.4 8.4-13l1 2.4c-3 1.6-4.6 4.2-4.8 7.2H24V20z"/></svg>ไฟที่ไม่ยอมมอด แม้ในคืนที่ยาวที่สุด<svg class="lq lq-c" viewBox="0 0 24 20" aria-hidden="true"><path d="M2 20v-7C2 6 5.4 1.6 10.4 0l1 2.4C8.4 4 6.8 6.6 6.6 9.6H11V20zm13 0v-7c0-7 3.4-11.4 8.4-13l1 2.4c-3 1.6-4.6 4.2-4.8 7.2H24V20z"/></svg></small>' +
+      (has ? '' : '<span class="lim-pg"><span class="lim-bar"><i></i></span><b>' + bd.have + '/' + bd.n + '</b></span><small class="lim-n">ได้เมื่อเช็กอินติดกัน ' + bd.n + ' วัน</small>') + '</span><span class="lim-row">' + tag + loreBtn() + '</span></button>';
   }
   /* กล่องคำพูด: พิมพ์ทีละตัว (ข้อความเดิมไม่พิมพ์ซ้ำ) */
   var typeT = 0;
@@ -482,10 +493,12 @@
     var n = LORE.filter(loreOk).length, last = -1; LORE.forEach(function (x, k) { if (loreOk(x)) last = k; });
     var fresh = last > loreSeen();
     return '<span class="lim-lore" role="button" tabindex="0" data-lore aria-label="อ่านตำนานเหรียญไฟไม่มอด อ่านได้ ' + n + ' จาก ' + LORE.length + ' ตอน' + (fresh ? ' มีตอนใหม่' : '') + '">' +
-      '<svg viewBox="0 0 28 24" aria-hidden="true"><rect x="6" y="5" width="16" height="14" rx="1" fill="#f3e2b8"/><path d="M9 9h10M9 12h10M9 15h7" stroke="#b08a4a" stroke-width="1.2" stroke-linecap="round"/>' +
-      '<rect x="3" y="3" width="22" height="3.6" rx="1.8" fill="#8a5a2b"/><rect x="3" y="17.4" width="22" height="3.6" rx="1.8" fill="#8a5a2b"/>' +
-      '<rect x="1" y="2.4" width="3" height="4.8" rx="1.2" fill="#f4c542"/><rect x="24" y="2.4" width="3" height="4.8" rx="1.2" fill="#f4c542"/><rect x="1" y="16.8" width="3" height="4.8" rx="1.2" fill="#f4c542"/><rect x="24" y="16.8" width="3" height="4.8" rx="1.2" fill="#f4c542"/></svg>' +
-      '<span>ตำนาน</span><em>' + n + '/' + LORE.length + '</em>' + (fresh ? '<i class="lore-new"></i>' : '') + '</span>';
+      '<svg class="lore-ic" viewBox="0 0 32 28" aria-hidden="true">' +
+        '<rect x="5" y="6" width="22" height="16" rx="1.2" fill="#f6e8c4" stroke="#8a5a2b" stroke-width="1"/><path d="M9 10.5h6M9 13.5h5M19 10.5h4M19 17.5h4M9 17.5h5" stroke="#b08a4a" stroke-width="1.1" stroke-linecap="round"/>' +
+        '<rect x="2" y="3" width="28" height="4.4" rx="2.2" fill="#7a4a1f"/><rect x="2" y="20.6" width="28" height="4.4" rx="2.2" fill="#7a4a1f"/>' +
+        '<rect x="0" y="2.2" width="3.4" height="6" rx="1.3" fill="#f4c542"/><rect x="28.6" y="2.2" width="3.4" height="6" rx="1.3" fill="#f4c542"/><rect x="0" y="19.8" width="3.4" height="6" rx="1.3" fill="#f4c542"/><rect x="28.6" y="19.8" width="3.4" height="6" rx="1.3" fill="#f4c542"/>' +
+        '<path d="M17 6v16" stroke="#c22d37" stroke-width="2"/><circle cx="17" cy="14" r="3.6" fill="#b2232d" stroke="#7a1018" stroke-width=".8"/><path d="M17 15.8c-1 0-1.6-.7-1.6-1.5 0-1 .8-1.4 1-2.4.6.4 1 1 1 1.6.3-.2.5-.5.5-.9.6.5 1 1.1 1 1.8 0 .8-.7 1.4-1.9 1.4z" fill="#ff9aa0"/></svg>' +
+      '<i class="lore-tw" aria-hidden="true"></i><span>ตำนาน</span><span class="lore-dots" aria-hidden="true">' + LORE.map(function (x) { return '<i class="' + (loreOk(x) ? 'on' : '') + '"></i>'; }).join('') + '</span>' + (fresh ? '<i class="lore-new"></i>' : '') + '</span>';
   }
   function loreOk(c) { return c.need === 0 || (S && (S.bestStreak || 0) >= c.need); }
   function loreOpen(i) {
