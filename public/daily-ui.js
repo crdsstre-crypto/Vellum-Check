@@ -238,35 +238,105 @@
       pokeT = setTimeout(function () { ms.classList.remove('is-hop'); sayEl.textContent = line(mood()); }, 2600);
     }
   }
-  /* แตะของในร้าน: มีแล้ว → ใส่/ถอด · ของรางวัลเหรียญตรา → บอกวิธีได้ · ยังไม่มี → ลองใส่ แตะซ้ำ = ยืนยันซื้อ */
-  var armT = 0, armed = null, tryT = 0;
-  function hop() { var m2 = box && box.querySelector('.vdg-mascot'); if (!m2) return; m2.classList.remove('is-hop'); void m2.offsetWidth; m2.classList.add('is-hop'); setTimeout(function () { m2.classList.remove('is-hop'); }, 1500); }
-  function outfitTap(id) {
-    var o = itemById(id); if (!o || !S) return;
-    if (ownedOutfits().indexOf(id) >= 0) { tryOn = null; var on = wear(id); render(); hop(); say(on ? 'ใส่ ' + o.name + ' แล้ว' : 'ถอด ' + o.name + ' แล้ว'); return; }
-    if (o.badge) { var bd = (S.badges || []).filter(function (b) { return b.id === o.badge; })[0]; tryOn = id; render(); hop(); clearTimeout(tryT); tryT = setTimeout(function () { tryOn = null; render(); }, 3500);
-      say('🏅 ' + o.name + ' · ได้ฟรีเมื่อได้เหรียญ "' + (bd ? bd.name + '" (' + bd.desc + ' · ตอนนี้ ' + bd.have + '/' + bd.n + ')' : '"')); return; }
-    if (armed === id) { armed = null; clearTimeout(armT); buy(id); return; }
-    tryOn = id; armed = id; render(); hop();
-    clearTimeout(tryT); tryT = setTimeout(function () { tryOn = null; armed = null; render(); }, 4000);
-    clearTimeout(armT); armT = setTimeout(function () { armed = null; }, 4000);
-    say(S.points >= o.price ? 'ลองใส่ ' + o.name + ' อยู่ · แตะอีกครั้งเพื่อซื้อ ' + fmt(o.price) + ' แต้ม' : 'ลองใส่ ' + o.name + ' · ต้องใช้ ' + fmt(o.price) + ' แต้ม (ขาดอีก ' + fmt(o.price - S.points) + ')');
+  /* ===== ร้านค้าน้องเวลลัม (หน้าต่างแยก) =====
+     แท่นโชว์น้องตัวใหญ่ + แท็บตามส่วน + แตะของ = ลองใส่บนแท่น + แถบล่าง ซื้อ/ใส่/ถอด */
+  var sh = null, shTab = 'all', sel = null;
+  var TABS = [['all', 'ทั้งหมด'], ['head', 'หมวก'], ['face', 'แว่น'], ['neck', 'คอ'], ['chest', 'เข็มกลัด']];
+  function hop(el) { if (!el) return; el.classList.remove('is-hop'); void el.offsetWidth; el.classList.add('is-hop'); setTimeout(function () { el.classList.remove('is-hop'); }, 1500); }
+  function shopPromo() {
+    var list = shopItems(); if (!list.length) return '';
+    var own = ownedOutfits().length;
+    return '<button type="button" class="vsp" data-shop><span class="vsp-ic" aria-hidden="true">🛍️</span><span class="vsp-tx"><b>ร้านค้าน้องเวลลัม</b><small>มี ' + own + '/' + list.length + ' ชิ้น · ใช้แต้มซื้อชุดแต่งตัว</small></span><span class="vsp-go">เข้าร้าน ›</span></button>';
+  }
+  function shopOpen(focusId) {
+    if (!user()) { if (window.VCAuthGate) window.VCAuthGate.open(); else say('เข้าสู่ระบบก่อนนะครับ'); return; }
+    if (!sh) {
+      sh = document.createElement('div'); sh.className = 'vst'; sh.hidden = true;
+      sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.setAttribute('aria-labelledby', 'vstT');
+      sh.innerHTML = '<div class="vst-bg" data-shx></div><div class="vst-p">' +
+        '<div class="vst-hd"><h3 id="vstT">ร้านค้าน้องเวลลัม</h3><span class="vst-pts"><i class="vof-coin"></i><b data-spts>0</b> แต้ม</span><button type="button" class="vst-x" data-shx aria-label="ปิดร้าน">✕</button></div>' +
+        '<div class="vst-stage"><i class="vst-spot"></i><i class="vst-ped"></i><div class="vst-ms" aria-hidden="true"></div><p class="vst-say"></p></div>' +
+        '<div class="vst-tabs" role="tablist"></div><div class="vst-grid"></div><div class="vst-bar"></div></div>';
+      document.body.appendChild(sh);
+      sh.addEventListener('click', function (e) {
+        if (e.target.closest('[data-shx]')) { shopClose(); return; }
+        var t = e.target.closest('[data-tab]'); if (t) { shTab = t.getAttribute('data-tab'); shopRender(); return; }
+        var it = e.target.closest('[data-outfit]'); if (it) { pick(it.getAttribute('data-outfit')); return; }
+        var a = e.target.closest('[data-act]'); if (a) { act(a.getAttribute('data-act')); return; }
+        if (e.target.closest('.vst-ms')) hop(sh.querySelector('.vst-ms'));
+      });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && sh && !sh.hidden) shopClose(); });
+    }
+    sel = focusId || null; tryOn = focusId && ownedOutfits().indexOf(focusId) < 0 ? focusId : null;
+    sh.hidden = false; document.documentElement.classList.add('vst-open');
+    requestAnimationFrame(function () { sh.classList.add('on'); });
+    if (S) shopRender(); else { sh.querySelector('.vst-grid').innerHTML = '<p class="vst-wait">กำลังโหลดร้าน…</p>'; load(); }
+    setTimeout(function () { var x = sh.querySelector('.vst-x'); if (x) x.focus({ preventScroll: true }); }, 60);
+  }
+  function shopClose() {
+    if (!sh) return; tryOn = null; sel = null; sh.classList.remove('on'); document.documentElement.classList.remove('vst-open');
+    setTimeout(function () { if (sh && !sh.classList.contains('on')) sh.hidden = true; }, 260);
+    if (box && !box.hidden) render();
+  }
+  function pick(id) {
+    var o = itemById(id); if (!o) return;
+    sel = id; tryOn = ownedOutfits().indexOf(id) < 0 ? id : null;
+    shopRender(); hop(sh.querySelector('.vst-ms'));
+  }
+  function act(a) {
+    var o = itemById(sel); if (!o) return;
+    if (a === 'buy') { buy(o.id); return; }
+    if (a === 'wear') { var on = wear(o.id); shopRender(); hop(sh.querySelector('.vst-ms')); say(on ? 'ใส่ ' + o.name + ' แล้ว' : 'ถอด ' + o.name + ' แล้ว'); if (box && !box.hidden) render(); }
+  }
+  function shopRender() {
+    if (!sh || sh.hidden || !S) return;
+    var list = shopItems(), own = ownedOutfits(), worn = wornOutfits(), bmap = {};
+    (S.badges || []).forEach(function (b) { bmap[b.id] = b; });
+    sh.querySelector('[data-spts]').textContent = fmt(S.points);
+    sh.querySelector('.vst-ms').innerHTML = dressed('wave', 220);
+    var o = itemById(sel), say2 = sh.querySelector('.vst-say');
+    say2.textContent = !o ? 'อยากให้ฉันใส่อะไรดี? แตะของด้านล่างเพื่อลองใส่ได้เลย ✨'
+      : own.indexOf(o.id) >= 0 ? (worn.indexOf(o.id) >= 0 ? 'ใส่ ' + o.name + ' อยู่นะ เข้ากับฉันไหม? 😊' : o.name + ' ของเราเอง ใส่เลยไหม?')
+      : o.badge ? 'ชิ้นนี้ซื้อไม่ได้ ต้องได้เหรียญตรา "' + (bmap[o.badge] ? bmap[o.badge].name : '') + '" ก่อนนะ'
+      : 'ลอง ' + o.name + ' อยู่! ' + (S.points >= o.price ? 'ชอบไหม?' : 'อีกนิดเดียวก็ซื้อได้แล้ว');
+    sh.querySelector('.vst-tabs').innerHTML = TABS.map(function (t) {
+      var n = t[0] === 'all' ? list.length : list.filter(function (x) { return x.slot === t[0]; }).length;
+      return n ? '<button type="button" role="tab" aria-selected="' + (shTab === t[0]) + '" class="' + (shTab === t[0] ? 'on' : '') + '" data-tab="' + t[0] + '">' + t[1] + '</button>' : '';
+    }).join('');
+    var show = list.filter(function (x) { return shTab === 'all' || x.slot === shTab; });
+    sh.querySelector('.vst-grid').innerHTML = show.map(function (it) {
+      var has = own.indexOf(it.id) >= 0, on = worn.indexOf(it.id) >= 0 && tryOn !== it.id, a = ART_OUT[it.id], bd = it.badge && bmap[it.badge];
+      var tag = has ? '<span class="vof-act' + (on ? ' is-on' : '') + '">' + (on ? 'ใส่อยู่ ✓' : 'มีแล้ว') + '</span>'
+        : it.badge ? '<span class="vof-act is-badge">🏅 รางวัล</span>'
+        : '<span class="vof-act is-buy' + (S.points < it.price ? ' is-short' : '') + '"><i class="vof-coin"></i>' + fmt(it.price) + '</span>';
+      return '<button type="button" class="vof-b r-' + it.rarity + (has ? ' is-own' : ' is-lock' + (it.badge ? ' is-badge-item' : '')) + (on ? ' is-on' : '') + (sel === it.id ? ' is-try' : '') + '" data-outfit="' + it.id + '" aria-pressed="' + (sel === it.id) + '" aria-label="' + h(it.name + ' · ' + (RAR[it.rarity] || '')) + '">' +
+        '<em class="vof-r">' + (RAR[it.rarity] || '') + '</em><svg viewBox="' + a.vb + '" aria-hidden="true">' + a.art + '</svg><small>' + h(it.name) + '</small>' + tag + '</button>';
+    }).join('');
+    var bar = sh.querySelector('.vst-bar');
+    if (!o) { bar.innerHTML = '<p class="vst-hint">แตะของเพื่อลองใส่ · ' + own.length + '/' + list.length + ' ชิ้นที่มีแล้ว · ได้แต้มจากเช็กอินทุกวัน</p>'; return; }
+    var head = '<span class="vst-it r-' + o.rarity + '"><em>' + (RAR[o.rarity] || '') + '</em><b>' + h(o.name) + '</b></span>';
+    if (own.indexOf(o.id) >= 0) bar.innerHTML = head + '<button type="button" class="vst-btn ' + (worn.indexOf(o.id) >= 0 ? 'is-off' : '') + '" data-act="wear">' + (worn.indexOf(o.id) >= 0 ? 'ถอดออก' : 'ใส่ชิ้นนี้') + '</button>';
+    else if (o.badge) { var b = bmap[o.badge]; bar.innerHTML = head + '<span class="vst-need">🏅 ' + h(b ? b.desc : 'เหรียญตรา') + (b ? ' · ' + b.have + '/' + b.n : '') + '</span>'; }
+    else if (S.points >= o.price) bar.innerHTML = head + '<button type="button" class="vst-btn is-buy" data-act="buy"><i class="vof-coin"></i>ซื้อ ' + fmt(o.price) + ' แต้ม</button>';
+    else bar.innerHTML = head + '<span class="vst-need">ขาดอีก ' + fmt(o.price - S.points) + ' แต้ม</span>';
   }
   function buy(id) {
-    var o = itemById(id); if (!o || busy) return;
+    var o = itemById(id); if (!o || busy || !S) return;
     if (S.stale) { say('กำลังเชื่อมต่อเซิร์ฟเวอร์ รอสักครู่นะ'); return; }
     if (S.points < o.price) { say('แต้มยังไม่พอ ขาดอีก ' + fmt(o.price - S.points) + ' แต้ม'); return; }
-    busy = true;
+    busy = true; var btn = sh && sh.querySelector('[data-act="buy"]'); if (btn) { btn.disabled = true; btn.textContent = 'กำลังซื้อ…'; }
     fetch('/api/daily/buy', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ item: id }) })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, d: d }; }); })
       .then(function (x) {
-        busy = false; tryOn = null; clearTimeout(tryT);
-        if (!x.ok) { say(x.d.error || 'ซื้อไม่สำเร็จ'); if (x.d && x.d.week) apply(x.d); else render(); return; }
-        var before = S.points; wear(id); apply(x.d); hop();
-        var num = box.querySelector('[data-pts]'); if (num && !calm()) { num.textContent = fmt(before); rollNum(num, before, x.d.points); }
-        var card = box.querySelector('.vof-b[data-outfit="' + id + '"]'); if (card) card.classList.add('is-new');
+        busy = false;
+        if (!x.ok) { say(x.d.error || 'ซื้อไม่สำเร็จ'); if (x.d && x.d.week) apply(x.d); else shopRender(); return; }
+        var before = S.points; tryOn = null; wear(id); apply(x.d);
+        var pt = sh && sh.querySelector('[data-spts]'); if (pt && !calm()) { pt.textContent = fmt(before); rollNum(pt, before, x.d.points); }
+        var ms = sh && sh.querySelector('.vst-ms'); hop(ms);
+        if (sh && !calm()) { var fx = document.createElement('i'); fx.className = 'vst-fx'; sh.querySelector('.vst-stage').appendChild(fx); setTimeout(function () { fx.remove(); }, 1200); }
+        var card = sh && sh.querySelector('.vof-b[data-outfit="' + id + '"]'); if (card) card.classList.add('is-new');
         say('🎉 ได้ ' + o.name + ' แล้ว! ใส่ให้น้องเรียบร้อย');
-      }, function () { busy = false; say('เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง'); });
+      }, function () { busy = false; shopRender(); say('เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง'); });
   }
   function render() {
     if (!box || !S) return;
@@ -287,7 +357,7 @@
       '</div>' +
       '<div class="vdg-grid">' + S.week.map(cardHtml).join('') + '</div>' +
       (hint ? '<p class="vdg-hint">' + hint + '</p>' : '') +
-      badgesHtml() + outfitHtml() +
+      badgesHtml() + shopPromo() +
       '<details class="vdg-rules"><summary>กติกา</summary><ul><li>รับได้วันละ 1 ครั้ง ขึ้นวันใหม่ตอนเที่ยงคืน (เวลาไทย)</li><li>ขาดวันไหน เริ่มวันที่ 1 ใหม่ แต่แต้มที่สะสมไว้ไม่หาย</li><li>' + fmt(r.cost) + ' แต้ม แลกตรวจสัญญาฟรีได้ 1 ครั้ง · เดือนละไม่เกิน ' + r.perMonth + ' ครั้ง (ใช้แล้ว ' + r.usedThisMonth + ')</li></ul></details>';
     var sub = box.querySelector('.vdg-sub'), foot = box.querySelector('.vdg-foot'), md = mood();
     var ms = box.querySelector('.vdg-mascot');
@@ -322,8 +392,7 @@
       if (e.target.closest('.vdg-redeem')) { redeem(); return; }
       var bg = e.target.closest('[data-badge]');
       if (bg && S && S.badges) { var b = S.badges.filter(function (x) { return x.id === bg.getAttribute('data-badge'); })[0]; if (b) say((b.earned ? '🏅 ' : '🔒 ') + b.name + ' · ' + b.desc + (b.earned ? '' : ' (' + b.have + '/' + b.n + ')')); return; }
-      var of = e.target.closest('[data-outfit]');
-      if (of) { outfitTap(of.getAttribute('data-outfit')); return; }
+      if (e.target.closest('[data-shop]')) { shopOpen(); return; }
       if (e.target.closest('.vdg-mascot')) poke();
     });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && box && !box.hidden) close(); });
@@ -430,7 +499,7 @@
   function readCache() {
     try { var c = JSON.parse(localStorage.getItem(CK) || 'null'), u = user(); if (!c || !u || c.e !== u.email || !c.d || !c.d.shop || c.d.today !== thaiToday()) return null; c.d.stale = true; return c.d; } catch (e) { return null; }
   }
-  function apply(d) { S = d; if (!d.stale) { saveCache(d); tries = 0; clearTimeout(retryT); } render(); strip(); menu(); }
+  function apply(d) { S = d; if (!d.stale) { saveCache(d); tries = 0; clearTimeout(retryT); } render(); shopRender(); strip(); menu(); }
   function load() {
     if (!user()) { S = null; strip(); menu(); return Promise.resolve(); }
     clearTimeout(retryT);
@@ -572,5 +641,14 @@
   function init() { menu(); if (user()) load(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 
-  window.VCDaily = { open: open, refresh: load };
+  window.VCDaily = { open: open, refresh: load, shop: shopOpen };
+  /* เมนูบัญชี: "ร้านค้าน้องเวลลัม" (วางก่อน "ติดต่อผู้ดูแล") */
+  function shopMenu() {
+    var nav = document.querySelector('.acct-menu'); if (!nav || document.getElementById('vstMenu')) return;
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'menu-item'; b.id = 'vstMenu';
+    b.innerHTML = '<span class="vc-mi" aria-hidden="true">🛍️</span><span class="menu-txt"><b>ร้านค้าน้องเวลลัม</b><small>ใช้แต้มซื้อชุดแต่งตัว</small></span><i class="vc-mchev" aria-hidden="true"></i>';
+    b.addEventListener('click', function () { shopOpen(); });
+    nav.insertBefore(b, document.getElementById('vtMenu') || document.getElementById('helpContact') || null);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', shopMenu); else shopMenu();
 })();
