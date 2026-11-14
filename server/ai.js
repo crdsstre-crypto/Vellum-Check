@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 // เรียก AI ฝั่งเซิร์ฟเวอร์เท่านั้น
 // API key ต้องตั้งไว้ใน Environment Variables ของ Render (ชื่อ ANTHROPIC_API_KEY)
 // ห้ามใส่ key ในไฟล์นี้หรือไฟล์ใดใน public/
@@ -58,6 +59,9 @@ CHINESE MODE (overrides the language rule above):
 - "title" is a short plain-language question of at most 20 Chinese characters, e.g. "维修费谁来付？" "押金什么时候退？"
 - "suggested_fix" starts with a verb, e.g. "要求写明……"`;
 
+// รุ่นของคำสั่ง AI (เปลี่ยนเมื่อแก้ prompt) — เก็บไว้เป็นหลักฐานว่าผลตรวจแต่ละครั้งใช้คำสั่งรุ่นไหน
+export const PROMPT_VERSION = 'p' + createHash('sha256').update(String(buildSystemPrompt) + JSON.stringify(TYPE_FOCUS)).digest('hex').slice(0, 8);
+
 function buildSystemPrompt(maxItems, contractType = 'unsure', lang = 'th') {
   const focus = TYPE_FOCUS[contractType] || TYPE_FOCUS.unsure;
   return `คุณช่วยคัดกรองความเสี่ยงเบื้องต้นของสัญญาภาษาไทย คุณไม่ใช่ทนายและไม่ให้คำปรึกษาทางกฎหมาย
@@ -69,6 +73,7 @@ function buildSystemPrompt(maxItems, contractType = 'unsure', lang = 'th') {
 กติกา:
 - ตอบเป็น JSON อย่างเดียว ไม่มีข้อความอื่น ไม่ใช้ markdown ไม่ใส่ backtick
 - ห้ามฟันธงว่าสัญญาเป็นธรรมหรือไม่เป็นธรรม ห้ามบอกว่าฝ่ายใดชนะหรือแพ้
+- ห้ามใช้คำตัดสินแทนผู้ใช้ เช่น "ผิดกฎหมาย" "เป็นโมฆะ" "ปลอดภัย" "เซ็นได้เลย" "ไม่ต้องปรึกษาทนาย" ให้ใช้คำว่า "อาจ" และแนะนำให้ตรวจกับทนายเมื่อเป็นเรื่องข้อกฎหมาย
 - "quote" ต้องคัดลอกจากสัญญาตามตัวอักษรเท่านั้น ถ้าสัญญาไม่มีข้อความนั้นให้ใส่ ""
 - ถ้าสัญญาไม่ได้ระบุเรื่องใด ให้ใส่ไว้ใน missing_info ห้ามเดาเอง
 - detected_type ให้ระบุประเภทที่เห็นจากข้อความ ใช้ได้เพียงค่าเหล่านี้: "rent" (เช่า), "sale" (ซื้อขาย), "employment" (จ้างงาน), "service" (จ้างบริการ), "loan" (กู้ยืม), "shareholder" (หุ้นส่วน), "nda" (รักษาความลับ), "other" (อื่น ๆ) ถ้าดูไม่ออกให้ใส่ "unsure" ห้ามเดา
