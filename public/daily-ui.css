@@ -853,3 +853,46 @@ html body .vst .vst-tiers button.got small{color:#9fe3c8}
 .vof-b.is-fire::before{background:conic-gradient(from 0deg,transparent 0 70%,color-mix(in srgb,var(--fb) 80%,transparent) 82%,transparent 94%) !important;animation-duration:4.5s !important}
 .vof-b.is-fire::after{background:radial-gradient(120% 70% at 50% 110%,color-mix(in srgb,var(--fa) 22%,transparent),transparent 70%),#151015 !important;animation:none !important}
 @media (prefers-reduced-motion:reduce){.vst-smoke,.vst-bk,.vst-haze,.vst-hero svg,.vst-rays{animation:none !important}}
+
+/* ===== v24 (14 พ.ย.): ฉากเหรียญไฟไม่มอด ขั้นโฆษณา — แท่น 3 มิติ · พื้นสะท้อน · กล่องคำพูดกระจกดำ · แสงวาบ · เกรนฟิล์ม ===== */
+.vst-glow,.vst-refl,.vst-sweep,.vst-grain{display:none}
+.vst.is-fire .vst-stage{height:340px}
+.vst.is-fire .vst-ms{margin-bottom:92px}
+/* แสงฟุ้งหลังน้อง (ไม่มีขอบ) */
+.vst.is-fire .vst-glow{display:block;position:absolute;left:50%;bottom:90px;width:300px;height:300px;margin-left:-150px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,color-mix(in srgb,var(--f1) 30%,transparent) 0,color-mix(in srgb,var(--f1) 12%,transparent) 35%,transparent 68%);filter:blur(10px)}
+/* (1) แท่นทรงกระบอก: หน้าบนวงรี + ด้านข้าง + ขอบทองบนล่าง */
+html body .vst.is-fire .vst-ped{bottom:76px;width:200px;height:30px;margin-left:-100px;z-index:1;
+  background:radial-gradient(ellipse at 50% 35%,#3a312c,#141010 70%);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--f2) 70%,transparent),inset 0 2px 6px rgba(255,255,255,.12),0 0 30px color-mix(in srgb,var(--f1) 35%,transparent)}
+.vst.is-fire .vst-ped::after{content:"";position:absolute;left:0;right:0;top:15px;height:30px;z-index:-1;border-radius:0 0 50% 50% / 0 0 15px 15px;
+  background:linear-gradient(90deg,#060505,#2b2421 30%,#3d3430 50%,#1a1514 75%,#060505);box-shadow:0 2px 0 color-mix(in srgb,var(--f2) 60%,transparent),0 14px 28px rgba(0,0,0,.6)}
+.vst.is-fire .vst-ms{z-index:2}
+/* (2) พื้นมันวาว สะท้อนน้องจาง ๆ */
+.vst.is-fire .vst-refl{display:block;position:absolute;left:50%;bottom:-14px;width:146px;margin-left:-73px;transform:scaleY(-1);opacity:.16;pointer-events:none;
+  -webkit-mask-image:linear-gradient(0deg,#000 0,transparent 55%);mask-image:linear-gradient(0deg,#000 0,transparent 55%);filter:blur(1px)}
+.vst.is-fire .vst-refl svg{width:100%;height:auto;display:block}
+.vst.is-fire .vst-refl .md-aura{display:none}
+.vst.is-fire .vst-hor{bottom:46px;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--f2) 45%,transparent) 30%,color-mix(in srgb,var(--f2) 45%,transparent) 70%,transparent)}
+.vst.is-fire .vst-stage{background:radial-gradient(60% 40% at 50% 92%,color-mix(in srgb,var(--f1) 14%,transparent),transparent 70%),linear-gradient(180deg,#0c0a0b,#100b0a 60%,#0e0a09 86%,#151010)}
+.vst.is-fire .vst-haze{bottom:100px}
+.vst.is-fire .vst-spot{height:300px}
+/* ปุ่มระดับย้ายลงใต้แท่น */
+html body .vst.is-fire .vst-tiers{bottom:6px;z-index:4}
+/* (3) กล่องคำพูดกระจกดำ */
+html body .vst.is-fire .vst-say{background:rgba(22,16,13,.62);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid color-mix(in srgb,var(--f2) 38%,transparent);color:#f1e2c2;font-weight:500;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+/* (4) แสงวาบพาดเฉียง + เหรียญวิบพร้อมกัน */
+.vst.is-fire .vst-sweep{display:block;position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden}
+.vst.is-fire .vst-sweep::before{content:"";position:absolute;top:-20%;left:-60%;width:40%;height:140%;transform:rotate(18deg);
+  background:linear-gradient(90deg,transparent,rgba(255,240,210,.0) 20%,rgba(255,240,210,.16) 50%,rgba(255,240,210,0) 80%,transparent);animation:vstSw 6s ease-in-out infinite}
+@keyframes vstSw{0%,30%{left:-60%}62%,100%{left:130%}}
+.vst.is-fire .vst-ms .md-tw{animation:vstTw 6s ease-in-out infinite}
+@keyframes vstTw{0%,42%,60%,100%{opacity:0;transform:scale(.2) rotate(0)}48%{opacity:1;transform:scale(1.5) rotate(45deg)}54%{opacity:.6;transform:scale(.8) rotate(90deg)}}
+/* (5) เกรนฟิล์ม + ขอบมืด */
+.vst.is-fire .vst-grain{display:block;position:absolute;inset:0;z-index:5;pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 45%,transparent 55%,rgba(0,0,0,.55)),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:100% 100%,160px 160px;opacity:.5;mix-blend-mode:overlay;animation:vstGr .5s steps(3) infinite}
+@keyframes vstGr{33%{background-position:0 0,-40px 30px}66%{background-position:0 0,30px -50px}}
+.vst.is-fire .vst-lux,.vst.is-fire .vst-say{z-index:6}
+.vst.is-fire .vst-extra{z-index:6}
+@media (prefers-reduced-motion:reduce){.vst-sweep::before,.vst-grain,.vst.is-fire .vst-ms .md-tw{animation:none !important}}
+html body .vst.is-fire .vst-refl{bottom:auto;top:calc(100% - 46px);opacity:.24;-webkit-mask-image:linear-gradient(0deg,#000 0,transparent 30%);mask-image:linear-gradient(0deg,#000 0,transparent 30%)}
