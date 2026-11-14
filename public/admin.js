@@ -29,12 +29,25 @@
           '<div class="adm-st-hd"><h4>สถิติธุรกิจ</h4><div class="adm-st-rng" role="group" aria-label="ช่วงเวลา"><button type="button" data-d="7">7 วัน</button><button type="button" data-d="30" class="is-on">30 วัน</button><button type="button" data-d="90">90 วัน</button></div></div>' +
           '<div class="adm-st-body"><p class="adm-st-load">กำลังโหลด…</p></div>' +
         '</div>' +
+        '<div class="adm-st adm-ev" id="admEval">' +
+          '<div class="adm-st-hd"><h4>ทดสอบความแม่นยำ AI</h4></div>' +
+          '<p class="adm-fine">รันสัญญาสมมติพร้อมเฉลยทั้งชุด แล้วให้คะแนนว่า AI หาจุดเสี่ยงและสิ่งที่ต้องทำเจอกี่ % · ใช้ก่อนและหลังแก้คำสั่ง AI ทุกครั้ง · เรียก AI จริง 2 ครั้งต่อฉบับ (มีค่า API ไม่หักเครดิตใคร)</p>' +
+          '<button type="button" class="adm-go adm-ev-go">▶ รันชุดทดสอบ</button>' +
+          '<div class="adm-ev-body"></div>' +
+        '</div>' +
       '</section>'
     );
     var wallet = loggedIn.querySelector('.wallet');
     /* วางใต้การ์ดยอดเครดิต (ก่อนรายการเครดิตแยกประเภท) */
     if (wallet && wallet.parentNode) wallet.parentNode.insertBefore(card, wallet); else loggedIn.appendChild(card);
 
+    card.querySelector('.adm-ev-go').addEventListener('click', evStart);
+    if (!document.getElementById('admEvCss')) { var cs = document.createElement('style'); cs.id = 'admEvCss'; cs.textContent =
+      '.adm-ev-go{margin-top:8px}.adm-ev-bar{height:8px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin:10px 0 4px}.adm-ev-bar i{display:block;height:100%;background:linear-gradient(90deg,#3be0c0,#22c3e6);transition:width .4s}' +
+      '.adm-ev-t{grid-template-columns:repeat(2,minmax(0,1fr))}.adm-ev-t>div{padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.04)}.adm-ev-t small{display:block;font:500 11px/1.3 Prompt,sans-serif;color:#a1a1aa}.adm-ev-t b{font:800 22px/1.2 Prompt,sans-serif}' +
+      '.adm-ev-list{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}.adm-ev-list li{padding:9px 11px;border-radius:11px;background:rgba(255,255,255,.035)}.adm-ev-list b{display:block;font:600 13px/1.3 Prompt,sans-serif;color:#fff}.adm-ev-list small{font:400 11.5px/1.5 Prompt,sans-serif;color:#a1a1aa}.adm-ev-list em{font-style:normal;color:#ff9aa4}' +
+      '.adm-ev-miss{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}.adm-ev .m{display:inline-block;padding:2px 7px;border-radius:99px;font:600 10.5px/1.4 Prompt,sans-serif}.adm-ev .m.r{background:rgba(255,122,134,.15);color:#ffaab3}.adm-ev .m.o{background:rgba(127,181,255,.15);color:#a9cbff}';
+      document.head.appendChild(cs); }
     card.querySelector('.adm-quick').addEventListener('click', function (e) {
       var b = e.target.closest('[data-q]'); if (!b) return;
       card.querySelector('#admCheck').value = b.getAttribute('data-q');
@@ -96,6 +109,45 @@
       .catch(function () { body.innerHTML = '<p class="adm-empty">เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง</p>'; });
   }
 
+  /* ---- ชุดทดสอบความแม่นยำ ---- */
+  var evTimer = 0;
+  function evPct(v, good) { var c = v >= good ? '#34d399' : v >= good - 15 ? '#f5c451' : '#ff7a86'; return '<b style="color:' + c + '">' + v + '%</b>'; }
+  function evRender(d) {
+    var b = card.querySelector('.adm-ev-body'), go = card.querySelector('.adm-ev-go'), j = d && d.job;
+    if (!j) { b.innerHTML = '<p class="adm-fine">ยังไม่เคยรัน · มีสัญญาทดสอบ ' + ((d && d.cases) || []).length + ' ฉบับ</p>'; go.disabled = false; go.textContent = '▶ รันชุดทดสอบ'; return; }
+    if (j.status === 'running') {
+      go.disabled = true; go.textContent = 'กำลังทดสอบ ' + j.done + '/' + j.total + '…';
+      b.innerHTML = '<div class="adm-ev-bar"><i style="width:' + Math.round(j.done / j.total * 100) + '%"></i></div><p class="adm-fine">ใช้เวลาประมาณ 2–4 นาที ปิดหน้านี้ได้ กลับมาดูผลทีหลังได้</p>';
+      clearTimeout(evTimer); evTimer = setTimeout(evLoad, 4000); return;
+    }
+    go.disabled = false; go.textContent = '▶ รันอีกครั้ง';
+    var S = j.summary || {}, when = new Date(j.finishedAt || j.startedAt).toLocaleString('th-TH');
+    var rows = (j.cases || []).map(function (c) {
+      var miss = c.risk.missed.map(function (m) { return '<span class="m r">' + esc(m) + '</span>'; }).join('') + c.obl.missed.map(function (m) { return '<span class="m o">' + esc(m) + '</span>'; }).join('');
+      return '<li><div><b>' + esc(c.name) + '</b><small>จุดเสี่ยง ' + c.risk.found + '/' + c.risk.total + ' · สิ่งที่ต้องทำ ' + c.obl.found + '/' + c.obl.total + ' · อ้างข้อความถูก ' + c.quotes.ok + '/' + c.quotes.total +
+        (c.overAlert ? ' · <em>เตือนเกินจริง (' + c.high + ')</em>' : '') + (c.oblError ? ' · <em>ดึงสิ่งที่ต้องทำล้มเหลว</em>' : '') + '</small>' + (miss ? '<div class="adm-ev-miss">' + miss + '</div>' : '') + '</div></li>';
+    }).join('');
+    var errs = (j.errors || []).map(function (e) { return '<li><div><b>' + esc(e.id) + '</b><small><em>' + esc(e.error) + '</em></small></div></li>'; }).join('');
+    b.innerHTML = '<div class="adm-tiles adm-ev-t">' +
+      '<div><small>คะแนนรวม</small>' + evPct(S.overall || 0, 90) + '</div><div><small>หาจุดเสี่ยงเจอ</small>' + evPct(S.riskRecall || 0, 90) + '</div>' +
+      '<div><small>สิ่งที่ต้องทำครบ</small>' + evPct(S.oblRecall || 0, 90) + '</div><div><small>อ้างข้อความถูก</small>' + evPct(S.quoteValid || 0, 95) + '</div></div>' +
+      '<p class="adm-fine">รันเมื่อ ' + esc(when) + (S.overAlerts ? ' · สัญญาเป็นธรรมที่ถูกเตือนเกินจริง ' + S.overAlerts + ' ฉบับ' : '') + (S.failed ? ' · ล้มเหลว ' + S.failed + ' ฉบับ' : '') + '</p>' +
+      '<p class="adm-fine"><span class="m r">แดง</span> = จุดเสี่ยงที่ AI ไม่เจอ · <span class="m o">ฟ้า</span> = สิ่งที่ต้องทำที่ AI ไม่ดึงมา</p>' +
+      '<ul class="adm-ev-list">' + rows + errs + '</ul>';
+  }
+  function evLoad(id) {
+    fetch('/api/admin/eval' + (id ? '?id=' + encodeURIComponent(id) : ''), { credentials: 'same-origin' })
+      .then(function (r) { return r.json().catch(function () { return {}; }); }).then(evRender).catch(function () {});
+  }
+  function evStart() {
+    if (!confirm('รันชุดทดสอบทั้งหมด? จะเรียก AI จริงประมาณ 30 ครั้ง (มีค่า API)')) return;
+    var go = card.querySelector('.adm-ev-go'); go.disabled = true; go.textContent = 'กำลังเริ่ม…';
+    fetch('/api/admin/eval', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: '{}' })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (x) { if (!x.ok) { go.disabled = false; go.textContent = '▶ รันชุดทดสอบ'; card.querySelector('.adm-ev-body').innerHTML = '<p class="adm-empty">' + esc(x.d.error || 'เริ่มไม่สำเร็จ') + '</p>'; return; } evLoad(x.d.id); })
+      .catch(function () { go.disabled = false; go.textContent = '▶ รันชุดทดสอบ'; });
+  }
+
   function say(t, kind) { var m = card.querySelector('#admMsg'); m.textContent = t || ''; m.className = 'adm-msg' + (kind ? ' is-' + kind : ''); }
 
   function submit() {
@@ -127,7 +179,7 @@
       if (!d || !d.is_admin) { if (card) card.hidden = true; return; }
       if (!card) build();
       card.hidden = false;
-      loadStats();
+      loadStats(); evLoad();
       var em = card.querySelector('#admEmail'); if (!em.value) em.value = d.email || '';
     }).catch(function () {});
   }
