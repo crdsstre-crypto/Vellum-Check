@@ -469,11 +469,19 @@
       'นับแต่นั้น ใครได้ครอบครองเหรียญนี้ คือผู้ที่ "อ่านให้ครบ ก่อนเซ็น" ทุกครั้ง และไม่มีวันยอมแพ้'] }
   ];
   var lr = null, lrIdx = 0;
+  var LIC = [   // ไอคอนตอน วาดเอง สีทอง
+    '<path d="M12 3c1.6 2 1.8 3.4.4 4.6-1.6-1-1.8-2.6-.4-4.6z" fill="#f4a020"/><rect x="9" y="9" width="6" height="11" rx="1.4" fill="currentColor"/><path d="M7 21h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+    '<path d="M12 21c-3.6 0-6-2.4-6-5.6 0-3.6 3-5.2 3.6-9.4 2.4 1.5 3.6 3.6 3.6 5.6 1-.7 1.6-1.9 1.7-3.1 2.4 1.9 3.6 4.3 3.6 6.9 0 3.4-2.6 5.6-6.5 5.6z" fill="currentColor"/>',
+    '<g stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/><path d="M10 4.5 12 6l2-1.5M10 19.5 12 18l2 1.5M4.6 10.3l2.4-.3-.7-2.3M19.4 13.7l-2.4.3.7 2.3M4.6 13.7l2.4.3-.7 2.3M19.4 10.3l-2.4-.3.7-2.3"/></g>',
+    '<path d="M6 4h12l4 5-10 12L2 9z" fill="currentColor"/><path d="M2 9h20M8 4l4 17M16 4l-4 17M6 4l2 5M18 4l-2 5" stroke="#fff6dc" stroke-width="1" fill="none" opacity=".7"/>'
+  ];
+  var SEAL = '<svg class="vlr-seal" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4c6 0 9 4 14 5s9 3 10 9-1 9 1 14-1 10-6 13-5 8-11 10-9-1-14 0-11-1-14-6-6-7-7-13 3-8 1-13 1-11 7-13 7-5 12-6 4-0 7 0z" fill="#a8232c"/><circle cx="32" cy="32" r="17" fill="#c22d37" stroke="#7a1018" stroke-width="2"/><circle cx="32" cy="32" r="13" fill="none" stroke="#e06b72" stroke-width="1" stroke-dasharray="2 2.4"/><path d="M32 43c-4.6 0-7.6-3-7.6-7 0-4.6 3.8-6.6 4.6-12 3 1.9 4.6 4.6 4.6 7.2 1.3-.9 2-2.4 2.2-4 3 2.4 4.6 5.4 4.6 8.8 0 4.3-3.3 7-8.4 7z" fill="#7a1018"/><path d="M14 20c3-6 9-10 16-10" stroke="#ff9aa0" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".55"/></svg>';
+  function dropCap(t) { var m = t.match(/^.[ัำ-ฺ็-๎]*/); return '<span class="dc">' + h(m[0]) + '</span>' + h(t.slice(m[0].length)); }
   function loreOk(c) { return c.need === 0 || (S && (S.bestStreak || 0) >= c.need); }
   function loreOpen(i) {
     if (!lr) {
       lr = document.createElement('div'); lr.className = 'vlr'; lr.setAttribute('role', 'dialog'); lr.setAttribute('aria-modal', 'true'); lr.setAttribute('aria-labelledby', 'vlrT');
-      lr.innerHTML = '<div class="vlr-bg" data-lx></div><div class="vlr-p"><i class="vlr-rod"></i><div class="vlr-sh"><button type="button" class="vlr-x" data-lx aria-label="ปิด">✕</button>' +
+      lr.innerHTML = '<div class="vlr-bg" data-lx></div><div class="vlr-p"><i class="vlr-rod"></i><i class="vlr-glow" aria-hidden="true"></i><i class="vlr-frame" aria-hidden="true"><b></b><b></b><b></b><b></b></i><div class="vlr-sh"><button type="button" class="vlr-x" data-lx aria-label="ปิด">✕</button>' +
         '<p class="vlr-k">ตำนานแห่ง</p><h3 id="vlrT">เหรียญไฟไม่มอด</h3><div class="vlr-tabs" role="tablist"></div><div class="vlr-body"></div></div><i class="vlr-rod b"></i></div>';
       document.body.appendChild(lr);
       lr.addEventListener('click', function (e) {
@@ -489,13 +497,15 @@
   function loreRender() {
     var c = LORE[lrIdx], ok = loreOk(c), m = MED[c.tier];
     lr.style.setProperty('--f1', m.f1); lr.style.setProperty('--f2', m.f2);
-    lr.querySelector('.vlr-tabs').innerHTML = LORE.map(function (x, n) {
-      return '<button type="button" role="tab" data-ch="' + n + '" aria-selected="' + (n === lrIdx) + '" class="' + (n === lrIdx ? 'on' : '') + (loreOk(x) ? '' : ' lk') + '">' + x.ic + (loreOk(x) ? '' : '<i>🔒</i>') + '</button>';
+    var lastOk = 0; LORE.forEach(function (x, n) { if (loreOk(x)) lastOk = n; });
+    var tb = lr.querySelector('.vlr-tabs'); tb.style.setProperty('--lf', (lastOk / (LORE.length - 1) * 100) + '%');
+    tb.innerHTML = '<i class="vlr-path"><b></b></i>' + LORE.map(function (x, n) {
+      return '<button type="button" role="tab" data-ch="' + n + '" aria-selected="' + (n === lrIdx) + '" aria-label="' + h(x.t) + (loreOk(x) ? '' : ' (ล็อก)') + '" class="' + (n === lrIdx ? 'on' : '') + (loreOk(x) ? '' : ' lk') + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + LIC[n] + '</svg>' + (loreOk(x) ? '' : '<i class="lkb"></i>') + '</button>';
     }).join('');
     lr.querySelector('.vlr-body').innerHTML = '<div class="vlr-art" aria-hidden="true"><svg viewBox="36 66 48 54">' + medalArt(c.tier) + '</svg></div>' +
       '<h4>' + h(c.t) + '</h4>' +
-      c.p.map(function (t, n) { return '<p class="' + (!ok && n > 0 ? 'blur' : '') + '" style="--d:' + (n * .35 + .3) + 's">' + h(t) + '</p>'; }).join('') +
-      (ok ? '<p class="vlr-end">— ✦ —</p>' : '<div class="vlr-lock">🔒 ปลดล็อกเมื่อเช็กอินติดกันครบ ' + c.need + ' วัน<small>สถิติสูงสุดของคุณ ' + (S && S.bestStreak || 0) + ' วัน</small></div>');
+      c.p.map(function (t, n) { return '<p class="' + (n === 0 ? 'first ' : '') + (!ok && n > 0 ? 'blur' : '') + '" style="--d:' + (n * .35 + .3) + 's">' + (n === 0 ? dropCap(t) : h(t)) + '</p>'; }).join('') +
+      (ok ? '<div class="vlr-end">' + SEAL + '</div>' : '<div class="vlr-lock">🔒 ปลดล็อกเมื่อเช็กอินติดกันครบ ' + c.need + ' วัน<small>สถิติสูงสุดของคุณ ' + (S && S.bestStreak || 0) + ' วัน</small></div>');
     lr.querySelector('.vlr-body').scrollTop = 0;
   }
   function shopRender() {
