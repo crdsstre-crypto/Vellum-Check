@@ -3,6 +3,8 @@
    (2) ใบรับรองผลตรวจท้ายรายงาน — รหัสอ้างอิง เวลา ฉบับข้อกำหนด รุ่นคำสั่ง AI (ไม่เก็บข้อความสัญญา)
    (3) หน้าต่าง "แจ้งปัญหา / ขอคืนเครดิต" — เลือกหมวด เล่าปัญหา แนบรหัสอ้างอิงอัตโนมัติ สัญญาตอบภายใน 7 วัน
        เปิดได้จากท้ายรายงาน และจากเมนูบัญชี · ดูสถานะเรื่องที่เคยแจ้งได้ในหน้าต่างเดียวกัน
+   (4) สัญญามูลค่าสูง: เซิร์ฟเวอร์ตอบ 409 needHighAck → เปิดหน้าต่างให้ติ๊กยืนยันว่าควรให้ทนายตรวจ แล้วส่งใหม่ (ยังไม่หักเครดิต)
+       และรายงานมีกล่องเตือนเด่นด้านบน
    ไม่แก้ script.js: ดักคำขอ /api/check ผ่าน fetch และเฝ้าดู #result ด้วย MutationObserver */
 (function () {
   'use strict';
@@ -67,6 +69,14 @@
     '.vts-my li b{color:#fff;font-weight:600}.vts-st{float:right;padding:2px 8px;border-radius:99px;font:600 11px/1.5 Prompt,sans-serif;background:rgba(245,196,81,.15);color:#f5c451}.vts-st.done{background:rgba(52,211,153,.15);color:#7ee8b8}' +
     '.vts-my .ans{display:block;margin-top:5px;color:#b6f0d6}' +
     '.vts-fine{margin:12px 0 0;font:400 11px/1.55 Prompt,sans-serif;color:#7d7d86}' +
+    '.vth-ic{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:26px;margin:0 0 10px;background:rgba(246,196,81,.12);border:1px solid rgba(246,196,81,.3)}' +
+    '.vth-rs{margin:0 0 12px;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px}.vth-rs li{padding:5px 10px;border-radius:99px;background:rgba(246,196,81,.12);color:#f6d68c;font:600 12px/1.3 Prompt,sans-serif}' +
+    '.vth-box{padding:12px;border-radius:13px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);font:400 13px/1.6 Prompt,sans-serif;color:#d4d4da}.vth-box b{color:#fff}' +
+    '.vth-c{display:flex;gap:10px;align-items:flex-start;margin:14px 2px 4px;font:500 13px/1.55 Prompt,sans-serif;color:#e4e4e8;cursor:pointer}.vth-c input{flex:none;width:22px;height:22px;margin:1px 0 0;accent-color:#f5c451}' +
+    '.vth .vts-go{background:linear-gradient(135deg,#f6d68c,#f5a524);color:#2a1a00}.vth .vts-go[aria-disabled=true]{opacity:.45;filter:grayscale(.6)}' +
+    'html body #result .vt-hv{display:flex;gap:12px;align-items:flex-start;margin:0 0 14px;padding:14px;border-radius:16px;background:linear-gradient(150deg,rgba(245,165,36,.16),rgba(245,165,36,.05));border:1px solid rgba(245,165,36,.45);font-family:Prompt,Sarabun,sans-serif}' +
+    'html body #result .vt-hv-ic{flex:none;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-size:20px;background:rgba(0,0,0,.2)}' +
+    'html body #result .vt-hv b{display:block;font:700 14.5px/1.4 Prompt,sans-serif;color:#ffd58a}html body #result .vt-hv small{display:block;margin-top:3px;font:400 12.5px/1.55 Prompt,sans-serif;color:#e8d9bd}' +
     /* เมนูบัญชีบนมือถือ (art.css จัดลำดับด้วย order) */
     '@media (max-width:767px){body[data-sheet="acct"] #authLoggedIn #vtMenu{order:11}body[data-sheet="acct"] #authLoggedIn #helpContact{order:12}body[data-sheet="acct"] #authLoggedIn #vtMenu .vc-mi{--mc:#fb7185}}';
   var st = document.createElement('style'); st.id = 'vtCss'; st.textContent = CSS; document.head.appendChild(st);
@@ -80,7 +90,19 @@
     if (isCheck && noSave() && typeof init.body === 'string') {
       try { var b = JSON.parse(init.body); b.noSave = true; init = Object.assign({}, init, { body: JSON.stringify(b) }); } catch (e) {}
     }
-    var p = of.call(this, input, init);
+    var self = this, p = of.call(this, input, init);
+    if (isCheck) p = p.then(function (r) {
+      if (r.status !== 409) return r;
+      return r.clone().json().catch(function () { return {}; }).then(function (d) {
+        if (!d || !d.needHighAck) return r;
+        return askHigh(d.highValue || {}).then(function (ok) {
+          if (!ok) return new Response(JSON.stringify({ error: 'ยกเลิกการตรวจแล้ว ยังไม่ได้ใช้เครดิต' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
+          var b2 = {}; try { b2 = JSON.parse(init.body); } catch (e) {}
+          b2.highAck = true;
+          return window.fetch.call(self, input, Object.assign({}, init, { body: JSON.stringify(b2) }));
+        });
+      });
+    });
     if (isCheck) p.then(function (r) {
       if (!r.ok) return;
       r.clone().json().then(function (d) { if (d && d.receipt) { lastReceipt = Object.assign({ noSave: !!d.noSave }, d.receipt); stamp(); } }).catch(function () {});
@@ -145,8 +167,52 @@
   function watch() {
     var box = document.getElementById('result'); if (!box) return;
     var t = 0;
-    new MutationObserver(function () { clearTimeout(t); t = setTimeout(stamp, 60); }).observe(box, { childList: true });
-    stamp();
+    new MutationObserver(function () { clearTimeout(t); t = setTimeout(function () { stamp(); banner(); }, 60); }).observe(box, { childList: true });
+    stamp(); banner();
+  }
+
+  /* ---------- (4) สัญญามูลค่าสูง ---------- */
+  function askHigh(hv) {
+    return new Promise(function (resolve) {
+      var w = document.createElement('div'); w.className = 'vts vth';
+      w.setAttribute('role', 'dialog'); w.setAttribute('aria-modal', 'true'); w.setAttribute('aria-labelledby', 'vthT');
+      var rs = (hv.reasons || []).map(function (r) { return '<li>' + h(r) + '</li>'; }).join('');
+      w.innerHTML = '<div class="vts-p">' +
+        '<div class="vth-ic" aria-hidden="true">⚖️</div>' +
+        '<h3 id="vthT">สัญญานี้มีมูลค่าสูงหรือมีผลผูกพันสำคัญ</h3>' +
+        '<p class="vts-s">ระบบพบจุดที่ทำให้สัญญานี้ควรได้รับการตรวจจากทนายความก่อนลงนาม</p>' +
+        (rs ? '<ul class="vth-rs">' + rs + '</ul>' : '') +
+        '<div class="vth-box">ผลตรวจจาก AI ใช้เป็น<b>จุดเริ่มต้น</b>สำหรับคุยกับทนายหรืออีกฝ่ายได้ แต่<b>ไม่ควรใช้แทนการตรวจของทนาย</b> โดยเฉพาะเรื่องเงินก้อนใหญ่ ที่ดิน เงินกู้ และหุ้น</div>' +
+        '<label class="vth-c"><input type="checkbox" id="vthAck"><span>ฉันเข้าใจว่าสัญญานี้ควรให้ทนายความตรวจก่อนลงนาม และจะไม่ตัดสินใจจากผลตรวจนี้เพียงอย่างเดียว</span></label>' +
+        '<p class="vts-m" id="vthM" role="status" aria-live="polite"></p>' +
+        '<div class="vts-b"><button type="button" class="vts-no">ยกเลิก</button><button type="button" class="vts-go" aria-disabled="true">ยืนยันและตรวจต่อ</button></div>' +
+        '<p class="vts-fine">การยืนยันนี้ถูกบันทึกไว้กับบัญชีของคุณ · ยังไม่หักเครดิตจนกว่าจะกดตรวจต่อ</p>' +
+        '</div>';
+      document.body.appendChild(w);
+      requestAnimationFrame(function () { w.classList.add('on'); });
+      var cb = w.querySelector('#vthAck'), go = w.querySelector('.vts-go');
+      cb.addEventListener('change', function () { go.setAttribute('aria-disabled', cb.checked ? 'false' : 'true'); w.querySelector('#vthM').textContent = ''; });
+      function done(ok) { document.removeEventListener('keydown', key); w.classList.remove('on'); setTimeout(function () { w.remove(); }, 260); resolve(ok); }
+      function key(e) { if (e.key === 'Escape') done(false); }
+      document.addEventListener('keydown', key);
+      w.querySelector('.vts-no').addEventListener('click', function () { done(false); });
+      go.addEventListener('click', function () {
+        if (!cb.checked) { w.querySelector('#vthM').textContent = 'ติ๊กช่องยืนยันด้านบนก่อนนะครับ'; return; }
+        done(true);
+      });
+    });
+  }
+  function banner() {
+    var box = document.getElementById('result'); if (!box) return;
+    var r = res(), hv = r && r.high_value, old = box.querySelector('.vt-hv');
+    if (!box.querySelector('.disclaimer')) hv = null;   // แสดงเฉพาะตอนมีรายงานอยู่บนจอ (ไม่ใช่ตอนโหลด/ข้อความว่าง)
+    if (!hv) { if (old) old.remove(); return; }
+    if (old) return;
+    var art = box.querySelector('article') || box;
+    var d = document.createElement('div'); d.className = 'vt-hv'; d.setAttribute('role', 'note');
+    d.innerHTML = '<span class="vt-hv-ic" aria-hidden="true">⚖️</span><div><b>สัญญามูลค่าสูง ควรให้ทนายความตรวจก่อนเซ็น</b>' +
+      '<small>' + h((hv.reasons || []).join(' · ')) + (hv.reasons && hv.reasons.length ? ' — ' : '') + 'ใช้ผลด้านล่างเป็นรายการคำถามไปคุยกับทนาย ไม่ใช่คำตอบสุดท้าย</small></div>';
+    art.insertBefore(d, art.firstChild);
   }
 
   /* ---------- (3) หน้าต่างแจ้งปัญหา ---------- */
