@@ -65,6 +65,34 @@ app.use((req, res, next) => (
 const LEVELS = new Set(['check_detail', 'caution', 'low']);
 const URGENCIES = new Set(['before_sign', 'before_pay', 'before_deadline', 'monitor']);
 
+// ภาระผูกพัน (v2): ใครต้องทำอะไร เมื่อไร — ตรวจทุกช่องก่อนเก็บ
+const OB_KINDS = new Set(['pay', 'deliver', 'notice', 'do', 'dont']);
+const OB_REPEATS = new Set(['none', 'monthly', 'yearly']);
+function cleanObligations(raw, normSource) {
+  const one = v => (typeof v === 'string' ? v.replace(/\s+/g, ' ').trim() : '');
+  let parties = Array.isArray(raw?.parties) ? raw.parties.map(p => one(p).slice(0, 30)).filter(Boolean) : [];
+  const list = (Array.isArray(raw?.obligations) ? raw.obligations : []).slice(0, 12).map(o => {
+    const quote = one(o?.quote).slice(0, 300);
+    const due = one(o?.due_date);
+    const okDue = /^\d{4}-\d{2}-\d{2}$/.test(due) && !Number.isNaN(new Date(due + 'T00:00:00Z').getTime());
+    const dom = Number.isInteger(o?.day_of_month) && o.day_of_month >= 1 && o.day_of_month <= 31 ? o.day_of_month : 0;
+    return {
+      party: one(o?.party).slice(0, 30),
+      kind: OB_KINDS.has(o?.kind) ? o.kind : 'do',
+      what: one(o?.what).slice(0, 80),
+      amount: one(o?.amount).slice(0, 60),
+      when: one(o?.when).slice(0, 80),
+      repeat: OB_REPEATS.has(o?.repeat) ? o.repeat : 'none',
+      due_date: okDue ? due : '',
+      day_of_month: dom,
+      quote,
+      missing: !(quote.length > 0 && normSource.includes(squash(quote))),
+    };
+  }).filter(o => o.what);
+  list.forEach(o => { if (o.party && !parties.includes(o.party)) parties.push(o.party); });
+  return { parties: parties.slice(0, 4), obligations: list };
+}
+
 // ตัดช่องว่างทั้งหมดก่อนเทียบ เพื่อกันปัญหาการขึ้นบรรทัดใหม่ต่างกัน
 const squash = s => s.replace(/\s+/g, '');
 const str = v => (typeof v === 'string' ? v.slice(0, 1000) : '');
@@ -111,6 +139,7 @@ function cleanResult(raw, sourceText) {
     missing_info: Array.isArray(raw?.missing_info)
       ? raw.missing_info.filter(x => typeof x === 'string').slice(0, 20)
       : [],
+    ...cleanObligations(raw, normSource),
   };
 }
 
