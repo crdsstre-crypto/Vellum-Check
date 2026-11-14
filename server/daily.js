@@ -43,6 +43,21 @@ function ensureTables() {
 
 const rewardFor = streak => REWARDS[(streak - 1) % REWARDS.length];
 
+// เหรียญตราสะสม (ของที่ระลึก ไม่มีแต้มหรือเครดิตแถม) · kind: streak = ติดต่อกันสูงสุด, total = จำนวนวันรวม
+export const BADGES = [
+  { id: 'd1',   kind: 'total',  n: 1,   name: 'ก้าวแรก',        desc: 'เช็กอินครั้งแรก' },
+  { id: 's7',   kind: 'streak', n: 7,   name: 'ไฟไม่มอด',       desc: 'เช็กอินติดกัน 7 วัน' },
+  { id: 'd30',  kind: 'total',  n: 30,  name: 'ขาประจำ',        desc: 'เช็กอินรวม 30 วัน' },
+  { id: 's30',  kind: 'streak', n: 30,  name: 'วินัยเหล็ก',      desc: 'เช็กอินติดกัน 30 วัน' },
+  { id: 'd100', kind: 'total',  n: 100, name: 'ตำนานผู้อ่านสัญญา', desc: 'เช็กอินรวม 100 วัน' },
+];
+function badgesFor(bestStreak, totalDays) {
+  return BADGES.map(b => {
+    const have = b.kind === 'streak' ? bestStreak : totalDays;
+    return { ...b, have: Math.min(have, b.n), earned: have >= b.n };
+  });
+}
+
 // สถานะปัจจุบันของบัญชี (ใช้ทั้งตอนเปิดหน้าและหลังเช็กอิน/แลก)
 async function state(db, userId) {
   const { rows: [t] } = await db.query(`SELECT to_char((now() AT TIME ZONE '${TZ}')::date, 'YYYY-MM-DD') AS today`);
@@ -58,7 +73,7 @@ async function state(db, userId) {
       WHERE user_id = $1 AND date_trunc('month', created_at AT TIME ZONE '${TZ}') = date_trunc('month', now() AT TIME ZONE '${TZ}')`,
     [userId]
   );
-  const { rows: [tot] } = await db.query('SELECT count(*)::int AS days FROM checkins WHERE user_id = $1', [userId]);
+  const { rows: [tot] } = await db.query('SELECT count(*)::int AS days, COALESCE(max(streak), 0)::int AS best FROM checkins WHERE user_id = $1', [userId]);
   const l = last[0];
   const checkedToday = !!(l && l.is_today);
   // streak ที่ยังนับต่อได้: เช็กอินวันนี้แล้ว หรือเมื่อวาน (ยังไม่ขาด)
@@ -72,6 +87,8 @@ async function state(db, userId) {
     checkedToday,
     streak,
     totalDays: tot.days,
+    bestStreak: tot.best,
+    badges: badgesFor(tot.best, tot.days),
     points: u?.points ?? 0,
     credits: u?.credits ?? 0,
     todayReward: checkedToday ? null : rewardFor(streak + 1),
