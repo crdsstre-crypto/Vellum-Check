@@ -394,3 +394,70 @@ html body .vdc .vdg-bar > i::after{content:"";position:absolute;top:0;bottom:0;w
 @media (max-width:380px){.vdg-rest{gap:9px;padding:8px 10px 8px 8px}.vdg-moon{width:38px;height:38px}.vdg-rtx b{font-size:.82rem}.vdg-rcd{font-size:.74rem;padding:5px 7px}}
 @media (prefers-reduced-motion:reduce){html body .vdc .vdg-c.is-soon,html body .vdc .vdg-c.is-soon .vdg-art,html body .vdc .vdg-bar > i::after,.vdg-moon svg,.vdg-c.just-claimed .vdg-seal{animation:none !important}}
 html body .vdc .vdg-c.is-done:not(.is-big) .vdg-day{align-self:flex-start;padding-left:9px}
+
+/* ===== v15 (14 พ.ย.): (1) ฟ้าตามอารมณ์น้อง (3) เหรียญโลหะ + ประกาย + เงาดำตอนล็อก (6) กล่องสมบัติมีชีวิต ===== */
+
+/* (1) ฟ้า: กลางคืน = ดาวกะพริบ + จันทร์เสี้ยวหลังน้อง + zzz · กลางวัน = แสงทองหมุนช้า ๆ */
+.vdc .vdg-frame > .vdg-sky{position:absolute;left:0;right:0;top:0;height:300px;z-index:0;pointer-events:none;overflow:hidden;
+  -webkit-mask-image:linear-gradient(180deg,#000 55%,transparent);mask-image:linear-gradient(180deg,#000 55%,transparent)}
+.vdg-sky i,.vdg-sky b{position:absolute;display:block}
+.vdg-sky .sk-stars{inset:0;opacity:0;transition:opacity .8s;
+  background-image:radial-gradient(1.6px 1.6px at 12% 18%,#fff,transparent),radial-gradient(1.2px 1.2px at 28% 8%,#fff,transparent),radial-gradient(1.8px 1.8px at 44% 30%,#fff7d6,transparent),
+    radial-gradient(1.2px 1.2px at 9% 52%,#fff,transparent),radial-gradient(1.5px 1.5px at 36% 62%,#fff,transparent),radial-gradient(1.2px 1.2px at 58% 12%,#fff,transparent),
+    radial-gradient(1.6px 1.6px at 92% 46%,#fff,transparent),radial-gradient(1.2px 1.2px at 52% 48%,#fff,transparent),radial-gradient(1.4px 1.4px at 20% 40%,#dfe6ff,transparent)}
+.vdg-sky .sk-stars.sk-b{background-image:radial-gradient(1.3px 1.3px at 18% 28%,#fff,transparent),radial-gradient(1.8px 1.8px at 6% 10%,#fff,transparent),radial-gradient(1.3px 1.3px at 40% 16%,#fff,transparent),
+    radial-gradient(1.6px 1.6px at 30% 50%,#fff7d6,transparent),radial-gradient(1.2px 1.2px at 64% 30%,#fff,transparent),radial-gradient(1.4px 1.4px at 48% 70%,#fff,transparent),radial-gradient(1.6px 1.6px at 96% 24%,#fff,transparent)}
+.vdg-sky .sk-moon{left:43%;top:10px;width:78px;height:78px;border-radius:50%;opacity:0;transform:scale(.85);transition:opacity .8s,transform .8s;
+  background:radial-gradient(circle at 35% 35%,#fff8dc,#f3dfa0 60%,#d9bd6c);box-shadow:0 0 50px 10px rgba(255,230,160,.25),0 0 120px 40px rgba(170,180,255,.12);
+  -webkit-mask-image:radial-gradient(circle at 72% 32%,transparent 46%,#000 47%);mask-image:radial-gradient(circle at 72% 32%,transparent 46%,#000 47%)}
+.vdg-sky .sk-z{right:16%;top:120px;font:800 18px/1 'Prompt',sans-serif;color:#c9c4ff;opacity:0;text-shadow:0 0 10px rgba(170,160,255,.7)}
+.vdg-sky .sk-sun{left:50%;top:-180px;width:640px;height:640px;margin-left:-320px;opacity:0;transition:opacity .8s;
+  background:repeating-conic-gradient(from 0deg,rgba(255,214,90,.16) 0 8deg,transparent 8deg 20deg);
+  -webkit-mask-image:radial-gradient(circle,#000 10%,transparent 62%);mask-image:radial-gradient(circle,#000 10%,transparent 62%)}
+.vdc[data-sky="night"] .sk-stars{opacity:.9;animation:skTw 3.2s ease-in-out infinite alternate}
+.vdc[data-sky="night"] .sk-stars.sk-b{animation-delay:-1.6s;animation-duration:2.6s}
+.vdc[data-sky="night"] .sk-moon{opacity:1;transform:none}
+.vdc[data-sky="night"] .sk-z{animation:skZ 4.2s ease-in infinite}
+.vdc[data-sky="night"] .sk-z2{animation-delay:1.4s;font-size:14px}
+.vdc[data-sky="night"] .sk-z3{animation-delay:2.8s;font-size:22px}
+.vdc[data-sky="night"] .vdc-bg{background:radial-gradient(80% 50% at 75% 5%,rgba(120,130,255,.16),transparent 60%),rgba(6,6,12,.97)}
+.vdc[data-sky="day"] .sk-sun{opacity:1;animation:skSpin 40s linear infinite}
+@keyframes skTw{0%{opacity:.35}100%{opacity:1}}
+@keyframes skZ{0%{opacity:0;transform:translate(0,0) rotate(-10deg)}15%{opacity:.95}100%{opacity:0;transform:translate(34px,-90px) rotate(12deg) scale(1.3)}}
+@keyframes skSpin{to{transform:rotate(360deg)}}
+@media (max-width:767px){.vdg-sky .sk-moon{width:58px;height:58px;left:44%;top:6px}.vdg-sky .sk-z{right:10%;top:100px}}
+
+/* (3) เหรียญ: แสงวาวพาดผ่านเป็นระยะ + ประกายดาว · การ์ดที่ยังล็อก = เงาดำ */
+.vdc .vdg-gl{opacity:0;animation:vdgGl2 4.5s ease-in-out infinite}
+.vdc .vdg-c:nth-child(2n) .vdg-gl{animation-delay:-1.5s}.vdc .vdg-c:nth-child(3n) .vdg-gl{animation-delay:-3s}
+@keyframes vdgGl2{0%,78%,100%{opacity:0}86%{opacity:.9}}
+.vdc .vdg-tw{transform-box:fill-box;transform-origin:center;animation:vdgTw 3.6s ease-in-out infinite}
+.vdc .vdg-c:nth-child(2n) .vdg-tw{animation-delay:-1.2s}.vdc .vdg-c:nth-child(3n) .vdg-tw{animation-delay:-2.4s}.vdc .vdg-tw2{animation-delay:-1.8s}
+@keyframes vdgTw{0%,70%,100%{opacity:0;transform:scale(.2) rotate(0)}80%{opacity:1;transform:scale(1.15) rotate(45deg)}90%{opacity:.6;transform:scale(.7) rotate(90deg)}}
+html body .vdc .vdg-c.is-lock:not(.is-big):not(.is-soon) .vdg-art{opacity:.55;filter:brightness(0) drop-shadow(0 0 1px rgba(255,214,120,.55))}
+html body .vdc .vdg-c.is-lock:not(.is-soon):not(.is-big) .vdg-gl,html body .vdc .vdg-c.is-lock:not(.is-soon):not(.is-big) .vdg-tw{display:none}
+html body .vdc .vdg-c.is-done .vdg-art{opacity:.8;filter:saturate(.9)}
+
+/* (6) กล่องสมบัติ: ลำแสงหมุน + ประกาย + ฝากล่องสั่น · วันที่เปิดได้ = เด้งเปิด */
+html body .vdc .vdg-c.is-big{overflow:hidden;isolation:isolate}
+.vdg-rays{position:absolute;left:calc(50% - 40px);top:50%;width:260px;height:260px;margin:-130px 0 0 -130px;z-index:-1;pointer-events:none;
+  background:repeating-conic-gradient(from 0deg,rgba(255,214,90,.28) 0 10deg,transparent 10deg 24deg);
+  -webkit-mask-image:radial-gradient(circle,#000 8%,transparent 60%);mask-image:radial-gradient(circle,#000 8%,transparent 60%);animation:skSpin 14s linear infinite}
+.vdg-c.is-big.is-lock .vdg-rays{opacity:.55}
+.vdc .vdg-c.is-big .vdg-art{overflow:visible}
+.vdc .vdg-lid{transform-box:fill-box;transform-origin:50% 100%;animation:vdgLid 3.4s ease-in-out infinite}
+@keyframes vdgLid{0%,74%,100%{transform:none}78%{transform:translateY(-2.5px) rotate(-4deg)}82%{transform:translateY(0) rotate(3deg)}86%{transform:translateY(-1.5px) rotate(-2deg)}90%{transform:none}}
+.vdc .vdg-ch-glow{opacity:0;transform-box:fill-box;transform-origin:center;animation:vdgChG 3.4s ease-in-out infinite}
+@keyframes vdgChG{0%,74%,100%{opacity:0}80%{opacity:.9}90%{opacity:0}}
+html body .vdc .vdg-c.is-big.is-lock .vdg-art{opacity:1;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
+html body .vdc .vdg-c.is-big.is-open .vdg-lid{animation:vdgLidO 1.6s ease-in-out infinite}
+html body .vdc .vdg-c.is-big.is-open .vdg-ch-glow{animation:none;opacity:1}
+@keyframes vdgLidO{0%,100%{transform:translateY(-4px) rotate(-10deg)}50%{transform:translateY(-7px) rotate(-14deg)}}
+html body .vdc .vdg-c.is-big.is-done .vdg-lid{animation:none;transform:translateY(-6px) rotate(-16deg)}
+html body .vdc .vdg-c.is-big.is-done .vdg-ch-glow{animation:none;opacity:.6}
+html body .vdc .vdg-c.is-big.is-done .vdg-rays{opacity:.4}
+
+/* ข้อความใต้การ์ดไม่โดนแถบล่างทับ: เผื่อที่ว่างท้ายรายการ + ขอบล่างจางลงนุ่ม ๆ */
+.vdc .vdg-stage .vdg-body{padding-bottom:18px;-webkit-mask-image:linear-gradient(180deg,#000 calc(100% - 22px),transparent);mask-image:linear-gradient(180deg,#000 calc(100% - 22px),transparent)}
+
+@media (prefers-reduced-motion:reduce){.vdc .vdg-sky *,.vdc .vdg-gl,.vdc .vdg-tw,.vdg-rays,.vdc .vdg-lid,.vdc .vdg-ch-glow{animation:none !important}.vdc .vdg-tw{opacity:0}}
