@@ -383,9 +383,21 @@
     else line2 = 'ระดับสูงสุด';
     var html = '<div class="vst-lux"><em>' + (medalTier() === 3 ? '<i class="vst-dia"></i>' : '') + 'LIMITED · ' + (MED[medalTier()].name === 'ทอง' ? 'GOLD' : MED[medalTier()].name === 'ทองคำขาว' ? 'PLATINUM' : 'DIAMOND') + '</em>' +
       '<b>ของรางวัลเฉพาะผู้ไม่ยอมแพ้</b><span>' + line2 + '</span>' + (pips ? '<span class="vst-dots">' + pips + '</span>' : '') + '</div>';
-    if (picked) html += '<div class="vst-tiers" role="group" aria-label="ดูตัวอย่างระดับเหรียญ">' + [[1, 'ทอง', 7], [2, 'ทองคำขาว', 14], [3, 'เพชร', 30]].map(function (t) {
-      return '<button type="button" data-tier="' + t[0] + '" class="t' + t[0] + (medalTier() === t[0] ? ' on' : '') + (bd && bd.earned && rt >= t[0] ? ' got' : '') + '">' + t[1] + '<small>' + t[2] + ' วัน' + (bd && bd.earned && rt >= t[0] ? ' ✓' : '') + '</small></button>';
-    }).join('') + '</div>';
+    if (picked) {
+      var got = bd && bd.earned ? rt : 0, prog = Math.min(best, 30);
+      // ตำแหน่งบนเส้นทาง: 0→7 วัน = 0→1/3 ... 30 วัน = 1 (แบ่ง 3 ช่วง: 0-7, 7-14, 14-30)
+      var pos = prog <= 7 ? prog / 7 / 2 * 0 + (prog / 7) * 0 : 0;
+      var fill = prog >= 30 ? 100 : prog >= 14 ? 50 + (prog - 14) / 16 * 50 : prog >= 7 ? (prog - 7) / 7 * 50 : 0;
+      var pre = prog < 7 ? Math.round(prog / 7 * 100) : 100;
+      html += '<div class="vst-tiers vst-path" role="group" aria-label="ดูตัวอย่างระดับเหรียญ" style="--fill:' + fill.toFixed(1) + '%;--pre:' + pre + '%">' +
+        '<i class="vtp-pre"><b></b></i><i class="vtp-line"><b></b></i>' +
+        [[1, 'ทอง', 7], [2, 'ทองคำขาว', 14], [3, 'เพชร', 30]].map(function (t) {
+          var c = MED[t[0]], isOn = medalTier() === t[0], has = got >= t[0];
+          return '<button type="button" data-tier="' + t[0] + '" class="vtp t' + t[0] + (isOn ? ' on' : '') + (has ? ' got' : ' lock') + '" aria-pressed="' + isOn + '" aria-label="ระดับ' + t[1] + ' ' + t[2] + ' วัน' + (has ? ' ได้แล้ว' : '') + '" style="--c1:' + c.f1 + ';--c2:' + c.f2 + ';--rim:' + c.rim + '">' +
+            '<span class="vtp-c"><svg viewBox="47 84 26 26" aria-hidden="true">' + medalArt(t[0]).replace(/<g class="md-burst"[\s\S]*?<\/g>/, '') + '</svg>' + (has ? '' : '<i class="vtp-lk"></i>') + '</span>' +
+            '<b>' + t[1] + '</b><small>' + (has ? 'ได้แล้ว ✓' : t[2] + ' วัน') + '</small></button>';
+        }).join('') + '</div>';
+    }
     x.innerHTML = html;
   }
   /* (5) เหรียญเป็นพระเอก: ลอยใหญ่กลางฉาก หมุนช้า ๆ แล้วลอยลงไปคล้องคอน้อง */
@@ -425,6 +437,17 @@
       '<span class="lim-tx"><b>' + h(it.name) + '</b><small>ของรางวัลพิเศษ · ซื้อไม่ได้</small>' +
       (has ? '' : '<span class="lim-bar"><i></i></span><small class="lim-n">เช็กอินติดกัน ' + bd.have + '/' + bd.n + ' วัน</small>') + tag + '</span></button>';
   }
+  /* กล่องคำพูด: พิมพ์ทีละตัว (ข้อความเดิมไม่พิมพ์ซ้ำ) */
+  var typeT = 0;
+  function sayType(el, txt) {
+    if (el.getAttribute('data-t') === txt) return;
+    el.setAttribute('data-t', txt); clearInterval(typeT);
+    if (calm()) { el.textContent = txt; return; }
+    var chars = Array.from ? Array.from(txt) : txt.split(''), n = 0;
+    el.innerHTML = '<span></span><i class="vst-cur"></i>';
+    var sp = el.firstChild;
+    typeT = setInterval(function () { n += 2; sp.textContent = chars.slice(0, n).join(''); if (n >= chars.length) { clearInterval(typeT); setTimeout(function () { var c = el.querySelector('.vst-cur'); if (c) c.remove(); }, 1400); } }, 28);
+  }
   function shopRender() {
     if (!sh || sh.hidden || !S) return;
     var list = shopItems(), own = ownedOutfits(), worn = wornOutfits(), bmap = {};
@@ -443,10 +466,11 @@
     if (!hk) { heroT.forEach(clearTimeout); var he = sh.querySelector('.vst-hero'); he.className = 'vst-hero'; sh.querySelector('.vst-ms').classList.remove('hide-medal'); }
     heroKey = hk;
     var o = itemById(sel), say2 = sh.querySelector('.vst-say');
-    say2.textContent = !o ? 'อยากให้ฉันใส่อะไรดี? แตะของด้านล่างเพื่อลองใส่ได้เลย ✨'
-      : own.indexOf(o.id) >= 0 ? (worn.indexOf(o.id) >= 0 ? 'ใส่ ' + o.name + ' อยู่นะ เข้ากับฉันไหม? 😊' : o.name + ' ของเราเอง ใส่เลยไหม?')
-      : o.badge ? 'ชิ้นนี้ซื้อไม่ได้ ต้องได้เหรียญตรา "' + (bmap[o.badge] ? bmap[o.badge].name : '') + '" ก่อนนะ'
-      : 'ลอง ' + o.name + ' อยู่! ' + (S.points >= o.price ? 'ชอบไหม?' : 'อีกนิดเดียวก็ซื้อได้แล้ว');
+    var bb = o && o.badge && bmap[o.badge], lft = bb ? bb.n - bb.have : 0;
+    sayType(say2, !o ? 'อยากให้ฉันใส่อะไรดี? แตะของด้านล่างเลย ✨'
+      : own.indexOf(o.id) >= 0 ? (worn.indexOf(o.id) >= 0 ? 'ใส่อยู่นะ เข้ากับฉันไหม? 😊' : 'ของเราเองนี่นา ใส่เลยไหม? 💛')
+      : o.badge ? (bb && bb.n - bb.have <= 3 ? 'อีกแค่ ' + lft + ' วันเอง! เช็กอินต่อนะ 🔥' : 'สู้ ๆ อีก ' + lft + ' วันได้แน่! 🔥')
+      : (S.points >= o.price ? 'ลองใส่อยู่! ชอบไหม? ✨' : 'อีกนิดเดียวก็ซื้อได้แล้ว 💪'));
     sh.querySelector('.vst-tabs').innerHTML = TABS.map(function (t) {
       var n = t[0] === 'all' ? list.length : list.filter(function (x) { return x.slot === t[0]; }).length;
       return n ? '<button type="button" role="tab" aria-selected="' + (shTab === t[0]) + '" class="' + (shTab === t[0] ? 'on' : '') + '" data-tab="' + t[0] + '">' + t[1] + '</button>' : '';
