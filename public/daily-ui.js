@@ -29,41 +29,75 @@
   function mascot(m, size, fallback) { return window.VCMascot ? window.VCMascot.svg(m, size) : (fallback || ''); }
   /* (6) ชุดแต่งตัวน้อง: ปลดล็อกด้วยเหรียญตรา · เลือกใส่ได้หลายชิ้น (จำไว้ในเครื่อง) · วาดในพิกัดเดียวกับมาสคอต (120×140) */
   var INK = '#3a2a12';
-  var OUTFITS = [
-    { id: 'pin', vb: '72 82 24 24', badge: 'd1', name: 'เข็มกลัดดาว', art: '<g transform="translate(84 94)"><path d="M0-7 2-2h5.5L3 1.3 4.6 6.8 0 3.6-4.6 6.8-3 1.3-7.5-2H-2z" fill="#ffd84d" stroke="' + INK + '" stroke-width="1.6" stroke-linejoin="round"/></g>' },
-    { id: 'glasses', vb: '30 44 60 28', badge: 's7', name: 'แว่นทนาย', art: '<g fill="rgba(190,225,255,.28)" stroke="' + INK + '" stroke-width="2.4"><circle cx="50" cy="58" r="8.5"/><circle cx="70" cy="58" r="8.5"/></g><path d="M58.5 57q1.5-2 3 0M41.5 56 32 52M78.5 56 88 52" stroke="' + INK + '" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M45 53.5q3-3 6-1.5M65 53.5q3-3 6-1.5" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".8"/>' },
-    { id: 'cap', vb: '18 -2 92 34', badge: 'd30', name: 'หมวกนอนดาว', art: '<path d="M24 24c4-14 22-22 40-20 14 2 26 10 34 4-2 10-12 14-22 14z" fill="#4b5bd6" stroke="' + INK + '" stroke-width="2.4" stroke-linejoin="round"/><path d="M22 22c12-4 50-4 58 0" stroke="#f7efdc" stroke-width="6" stroke-linecap="round"/><path d="M22 22c12-4 50-4 58 0" stroke="' + INK + '" stroke-width="1.4" fill="none" stroke-linecap="round" opacity=".5"/><circle cx="100" cy="7" r="6" fill="#f7efdc" stroke="' + INK + '" stroke-width="2.2"/><path d="M48 12l1 2.4 2.4.3-1.8 1.6.5 2.4-2.1-1.2-2.1 1.2.5-2.4-1.8-1.6 2.4-.3zM70 9l.8 1.8 1.9.2-1.4 1.3.4 1.9-1.7-1-1.7 1 .4-1.9-1.4-1.3 1.9-.2z" fill="#ffd84d"/>' },
-    { id: 'bow', vb: '44 64 32 24', badge: 's30', name: 'โบว์ไททนาย', art: '<g transform="translate(60 76)"><path d="M-3-3-14-9v18L-3 3zM3-3 14-9v18L3 3z" fill="#d2343e" stroke="' + INK + '" stroke-width="2" stroke-linejoin="round"/><rect x="-4" y="-4.5" width="8" height="9" rx="2.5" fill="#a91f2a" stroke="' + INK + '" stroke-width="2"/><path d="M-11-5-6-2M11-5 6-2" stroke="#ff8a92" stroke-width="1.4" stroke-linecap="round"/></g>' },
-    { id: 'crown', vb: '34 -8 52 34', badge: 'd100', name: 'มงกุฎตำนาน', art: '<g transform="translate(60 14)"><path d="M-20 6-23-14-10-3 0-18 10-3 23-14 20 6z" fill="#f4c542" stroke="' + INK + '" stroke-width="2.4" stroke-linejoin="round"/><rect x="-21" y="4" width="42" height="7" rx="2.5" fill="#e0a92c" stroke="' + INK + '" stroke-width="2.2"/><circle cy="7.5" r="2.4" fill="#d2343e"/><circle cx="-12" cy="7.5" r="1.8" fill="#4b8bd6"/><circle cx="12" cy="7.5" r="1.8" fill="#4b8bd6"/><path d="M-14-6l3 4" stroke="#fff6cf" stroke-width="1.8" stroke-linecap="round"/></g>' }
-  ];
-  function ownedOutfits() { if (!S || !S.badges) return []; var e = {}; S.badges.forEach(function (b) { if (b.earned) e[b.id] = 1; }); return OUTFITS.filter(function (o) { return e[o.badge]; }).map(function (o) { return o.id; }); }
-  function wornOutfits() { var w = []; try { w = JSON.parse(localStorage.getItem('vc_outfit') || '[]'); } catch (e) {} var own = ownedOutfits(); return w.filter(function (id) { return own.indexOf(id) >= 0; }); }
+  var ART_OUT = {
+    pin: { vb: '72 82 24 24', art: '<g transform="translate(84 94)"><path d="M0-7 2-2h5.5L3 1.3 4.6 6.8 0 3.6-4.6 6.8-3 1.3-7.5-2H-2z" fill="#ffd84d" stroke="' + INK + '" stroke-width="1.6" stroke-linejoin="round"/></g>' },
+    glasses: { vb: '30 44 60 28', art: '<g fill="rgba(190,225,255,.28)" stroke="' + INK + '" stroke-width="2.4"><circle cx="50" cy="58" r="8.5"/><circle cx="70" cy="58" r="8.5"/></g><path d="M58.5 57q1.5-2 3 0M41.5 56 32 52M78.5 56 88 52" stroke="' + INK + '" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M45 53.5q3-3 6-1.5M65 53.5q3-3 6-1.5" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".8"/>' },
+    cap: { vb: '18 -2 92 34', art: '<path d="M24 24c4-14 22-22 40-20 14 2 26 10 34 4-2 10-12 14-22 14z" fill="#4b5bd6" stroke="' + INK + '" stroke-width="2.4" stroke-linejoin="round"/><path d="M22 22c12-4 50-4 58 0" stroke="#f7efdc" stroke-width="6" stroke-linecap="round"/><path d="M22 22c12-4 50-4 58 0" stroke="' + INK + '" stroke-width="1.4" fill="none" stroke-linecap="round" opacity=".5"/><circle cx="100" cy="7" r="6" fill="#f7efdc" stroke="' + INK + '" stroke-width="2.2"/><path d="M48 12l1 2.4 2.4.3-1.8 1.6.5 2.4-2.1-1.2-2.1 1.2.5-2.4-1.8-1.6 2.4-.3zM70 9l.8 1.8 1.9.2-1.4 1.3.4 1.9-1.7-1-1.7 1 .4-1.9-1.4-1.3 1.9-.2z" fill="#ffd84d"/>' },
+    bow: { vb: '44 64 32 24', art: '<g transform="translate(60 76)"><path d="M-3-3-14-9v18L-3 3zM3-3 14-9v18L3 3z" fill="#d2343e" stroke="' + INK + '" stroke-width="2" stroke-linejoin="round"/><rect x="-4" y="-4.5" width="8" height="9" rx="2.5" fill="#a91f2a" stroke="' + INK + '" stroke-width="2"/><path d="M-11-5-6-2M11-5 6-2" stroke="#ff8a92" stroke-width="1.4" stroke-linecap="round"/></g>' },
+    crown: { vb: '34 -8 52 34', art: '<g transform="translate(60 14)"><path d="M-20 6-23-14-10-3 0-18 10-3 23-14 20 6z" fill="#f4c542" stroke="' + INK + '" stroke-width="2.4" stroke-linejoin="round"/><rect x="-21" y="4" width="42" height="7" rx="2.5" fill="#e0a92c" stroke="' + INK + '" stroke-width="2.2"/><circle cy="7.5" r="2.4" fill="#d2343e"/><circle cx="-12" cy="7.5" r="1.8" fill="#4b8bd6"/><circle cx="12" cy="7.5" r="1.8" fill="#4b8bd6"/><path d="M-14-6l3 4" stroke="#fff6cf" stroke-width="1.8" stroke-linecap="round"/></g>' },
+    scarf: { vb: '28 62 70 46', art: '<path d="M30 70q30 10 60 0v9q-30 10-60 0z" fill="#d2343e" stroke="' + INK + '" stroke-width="2.2" stroke-linejoin="round"/><path d="M74 78l4 24 9-2-4-24z" fill="#d2343e" stroke="' + INK + '" stroke-width="2.2" stroke-linejoin="round"/><path d="M36 74q24 7 48 0M77 92h8M78 97h8" stroke="#ff8a92" stroke-width="1.6" fill="none" stroke-linecap="round"/>' },
+    wizard: { vb: '8 -36 104 64', art: '<path d="M22 24 58-30q6-5 10 2l-6 6 12 46z" fill="#5b3fb0" stroke="' + INK + '" stroke-width="2.4" stroke-linejoin="round"/><ellipse cx="60" cy="24" rx="46" ry="7" fill="#4a2f96" stroke="' + INK + '" stroke-width="2.4"/><path d="M26 18q34 8 70-2" stroke="#f4c542" stroke-width="4" fill="none"/><path d="M50 0l1.5 3.4 3.6.4-2.7 2.4.8 3.6-3.2-1.9-3.2 1.9.8-3.6-2.7-2.4 3.6-.4zM64-14l1 2.2 2.4.3-1.8 1.6.5 2.4-2.1-1.2-2.1 1.2.5-2.4-1.8-1.6 2.4-.3z" fill="#ffe28a"/>' },
+    medal: { vb: '44 62 32 40', art: '<path d="M50 68l10 18 10-18" stroke="#4b6bd6" stroke-width="5" fill="none" stroke-linejoin="round"/><circle cx="60" cy="92" r="8" fill="#f4c542" stroke="' + INK + '" stroke-width="2.2"/><path d="M60 97c-3 0-4.5-2-4.5-4 0-2.5 2-3.5 2.6-6 1.5 1 2.3 2.4 2.3 3.6.7-.5 1.1-1.3 1.2-2.1 1.6 1.3 2.4 2.9 2.4 4.6 0 2.3-1.7 3.9-4 3.9z" fill="#ff7a2b"/>' },
+    laurel: { vb: '16 -6 88 36', art: '<g fill="#7fbf4a" stroke="' + INK + '" stroke-width="1.6"><path d="M24 22q-4-10 2-18 4 8-2 18z"/><path d="M30 12q-2-9 6-14 2 8-6 14z"/><path d="M40 6q2-8 10-9-1 7-10 9z"/><path d="M96 22q4-10-2-18-4 8 2 18z"/><path d="M90 12q2-9-6-14-2 8 6 14z"/><path d="M80 6q-2-8-10-9 1 7 10 9z"/></g><path d="M24 24q36-30 72 0" stroke="#e0a92c" stroke-width="2.4" fill="none"/><circle cx="60" cy="0" r="3.4" fill="#f4c542" stroke="' + INK + '" stroke-width="1.6"/>' }
+  };
+  var RAR = { common: 'ธรรมดา', rare: 'หายาก', epic: 'พิเศษ', legendary: 'ตำนาน' };
+  function shopItems() { return (S && S.shop || []).filter(function (o) { return ART_OUT[o.id]; }); }
+  function itemById(id) { return shopItems().filter(function (o) { return o.id === id; })[0]; }
+  function ownedOutfits() {
+    if (!S) return []; var e = {}; (S.badges || []).forEach(function (b) { if (b.earned) e[b.id] = 1; });
+    var own = S.owned || [];
+    return shopItems().filter(function (o) { return own.indexOf(o.id) >= 0 || (o.badge && e[o.badge]); }).map(function (o) { return o.id; });
+  }
+  var tryOn = null;   // ลองใส่ชั่วคราว (ยังไม่ได้ซื้อ)
+  function wornOutfits() {
+    var w = []; try { w = JSON.parse(localStorage.getItem('vc_outfit') || '[]'); } catch (e) {}
+    var own = ownedOutfits(); w = w.filter(function (id) { return own.indexOf(id) >= 0; });
+    if (tryOn) { var t = itemById(tryOn); if (t) w = w.filter(function (id) { var o = itemById(id); return o && o.slot !== t.slot; }).concat(tryOn); }
+    var order = { chest: 0, neck: 1, face: 2, head: 3 };
+    return w.sort(function (a, b) { return (order[(itemById(a) || {}).slot] || 0) - (order[(itemById(b) || {}).slot] || 0); });
+  }
+  function wear(id) {   // ใส่/ถอด · ช่องเดียวกันใส่ได้ชิ้นเดียว
+    var w = []; try { w = JSON.parse(localStorage.getItem('vc_outfit') || '[]'); } catch (e) {}
+    var it = itemById(id), k = w.indexOf(id);
+    if (k >= 0) w.splice(k, 1);
+    else { w = w.filter(function (x) { var o = itemById(x); return !o || o.slot !== it.slot; }); w.push(id); }
+    try { localStorage.setItem('vc_outfit', JSON.stringify(w)); } catch (e) {}
+    return k < 0;
+  }
   function dressed(m, size) {
     var svg = mascot(m, size, ICO_GIFT), worn = wornOutfits();
     if (!worn.length || svg.indexOf('<g class="vm-face">') < 0) return svg;
-    var art = OUTFITS.filter(function (o) { return worn.indexOf(o.id) >= 0; }).map(function (o) { return o.art; }).join('');
+    var art = worn.map(function (id) { return ART_OUT[id] ? ART_OUT[id].art : ''; }).join('');
     var i = svg.indexOf('<g class="vm-face">'), depth = 0, j = i;
     var re = /<g[\s>]|<\/g>/g; re.lastIndex = i;
     for (var mt; (mt = re.exec(svg));) { if (mt[0] === '</g>') { depth--; if (!depth) { j = mt.index + 4; break; } } else depth++; }
     return svg.slice(0, j) + '<g class="vm-outfit">' + art + '</g>' + svg.slice(j);
   }
   function outfitHtml() {
-    if (!S || !S.badges) return '';
-    var own = ownedOutfits(), worn = wornOutfits(), names = {}; S.badges.forEach(function (b) { names[b.id] = b.name; });
-    return '<div class="vof"><div class="vbg-hd"><b>แต่งตัวน้อง</b><span>ปลดล็อกด้วยเหรียญตรา</span></div><div class="vof-row">' +
-      OUTFITS.map(function (o) {
-        var has = own.indexOf(o.id) >= 0, on = worn.indexOf(o.id) >= 0;
-        return '<button type="button" class="vof-b' + (has ? '' : ' is-lock') + (on ? ' is-on' : '') + '" data-outfit="' + o.id + '" aria-pressed="' + on + '" aria-label="' + h(o.name + (has ? '' : ' · ปลดล็อกด้วยเหรียญ ' + (names[o.badge] || ''))) + '">' +
-          '<svg viewBox="' + o.vb + '" aria-hidden="true">' + o.art + '</svg><small>' + h(o.name) + '</small>' + (has ? '' : '<i>🔒</i>') + '</button>';
+    var list = shopItems(); if (!list.length) return '';
+    var own = ownedOutfits(), worn = wornOutfits(), names = {}; (S.badges || []).forEach(function (b) { names[b.id] = b; });
+    return '<div class="vof"><div class="vbg-hd"><b>ร้านแต่งตัวน้อง</b><span>มี ' + fmt(S.points) + ' แต้ม</span></div>' +
+      '<p class="vof-tip">แตะรูปเพื่อลองใส่ · แต้มใช้ได้ทั้งซื้อของและแลกตรวจฟรี</p><div class="vof-row">' +
+      list.map(function (o) {
+        var has = own.indexOf(o.id) >= 0, on = worn.indexOf(o.id) >= 0 && tryOn !== o.id, a = ART_OUT[o.id], bd = o.badge && names[o.badge];
+        var btn = has ? '<span class="vof-act' + (on ? ' is-on' : '') + '">' + (on ? 'ใส่อยู่ ✓' : 'ใส่') + '</span>'
+          : o.badge ? '<span class="vof-act is-badge">🏅 ' + h(bd ? bd.name : 'เหรียญตรา') + '</span>'
+          : '<span class="vof-act is-buy' + (S.points < o.price ? ' is-short' : '') + '"><i class="vof-coin"></i>' + fmt(o.price) + '</span>';
+        return '<button type="button" class="vof-b r-' + o.rarity + (has ? ' is-own' : ' is-lock' + (o.badge ? ' is-badge-item' : '')) + (on ? ' is-on' : '') + (tryOn === o.id ? ' is-try' : '') + '" data-outfit="' + o.id + '" aria-label="' + h(o.name + ' · ' + (RAR[o.rarity] || '') + (has ? (on ? ' · ใส่อยู่' : ' · กดเพื่อใส่') : o.badge ? ' · ได้จากเหรียญตรา ' + (bd ? bd.name : '') : ' · ราคา ' + o.price + ' แต้ม')) + '">' +
+          '<em class="vof-r">' + (RAR[o.rarity] || '') + '</em>' +
+          '<svg viewBox="' + a.vb + '" aria-hidden="true">' + a.art + '</svg><small>' + h(o.name) + '</small>' + btn + '</button>';
       }).join('') + '</div></div>';
   }
+
   function line(m) {
     if (!S) return '';
     if (m === 'party') return 'ครบ 7 วันแล้ว! เปิดกล่องสมบัติได้ +' + S.week[6].reward + ' แต้ม';
     if (m === 'happy') return 'เย่! เก็บแต้มแล้ว พรุ่งนี้มารับ +' + S.tomorrowReward + ' นะ';
     if (m === 'sleep') return 'วันนี้รับไปแล้ว เจอกันพรุ่งนี้นะ… zzz';
     if (m === 'sad') return 'เมื่อวานพลาดไปนิด ไม่เป็นไร แต้มยังอยู่ครบ เริ่มใหม่กัน!';
-    return S.week[6].today ? 'วันนี้เปิดกล่องสมบัติได้แล้ว!' : 'วันนี้มีของรออยู่นะ! กดรับ +' + S.todayReward + ' แต้มเลย';
+    if (S.week[6].today) return 'วันนี้เปิดกล่องสมบัติได้แล้ว!';
+    if (S.streak >= 3) return 'ยินดีต้อนรับกลับมา! ดูแลเอกสารต่อเนื่อง ' + S.streak + ' วันแล้ว รับ +' + S.todayReward + ' แต้มเลย';
+    return 'วันนี้มีของรออยู่นะ! กดรับ +' + S.todayReward + ' แต้มเลย';
   }
   /* (1) ไฟวันติด: เปลวไฟ 3 ชั้นพลิ้ว + สะเก็ดไฟ · ระดับตามจำนวนวัน (ส้ม → ทอง → ไฟฟ้า) */
   function flameTier(n) { return n >= 7 ? 3 : n >= 3 ? 2 : n >= 1 ? 1 : 0; }
@@ -204,6 +238,36 @@
       pokeT = setTimeout(function () { ms.classList.remove('is-hop'); sayEl.textContent = line(mood()); }, 2600);
     }
   }
+  /* แตะของในร้าน: มีแล้ว → ใส่/ถอด · ของรางวัลเหรียญตรา → บอกวิธีได้ · ยังไม่มี → ลองใส่ แตะซ้ำ = ยืนยันซื้อ */
+  var armT = 0, armed = null, tryT = 0;
+  function hop() { var m2 = box && box.querySelector('.vdg-mascot'); if (!m2) return; m2.classList.remove('is-hop'); void m2.offsetWidth; m2.classList.add('is-hop'); setTimeout(function () { m2.classList.remove('is-hop'); }, 1500); }
+  function outfitTap(id) {
+    var o = itemById(id); if (!o || !S) return;
+    if (ownedOutfits().indexOf(id) >= 0) { tryOn = null; var on = wear(id); render(); hop(); say(on ? 'ใส่ ' + o.name + ' แล้ว' : 'ถอด ' + o.name + ' แล้ว'); return; }
+    if (o.badge) { var bd = (S.badges || []).filter(function (b) { return b.id === o.badge; })[0]; tryOn = id; render(); hop(); clearTimeout(tryT); tryT = setTimeout(function () { tryOn = null; render(); }, 3500);
+      say('🏅 ' + o.name + ' · ได้ฟรีเมื่อได้เหรียญ "' + (bd ? bd.name + '" (' + bd.desc + ' · ตอนนี้ ' + bd.have + '/' + bd.n + ')' : '"')); return; }
+    if (armed === id) { armed = null; clearTimeout(armT); buy(id); return; }
+    tryOn = id; armed = id; render(); hop();
+    clearTimeout(tryT); tryT = setTimeout(function () { tryOn = null; armed = null; render(); }, 4000);
+    clearTimeout(armT); armT = setTimeout(function () { armed = null; }, 4000);
+    say(S.points >= o.price ? 'ลองใส่ ' + o.name + ' อยู่ · แตะอีกครั้งเพื่อซื้อ ' + fmt(o.price) + ' แต้ม' : 'ลองใส่ ' + o.name + ' · ต้องใช้ ' + fmt(o.price) + ' แต้ม (ขาดอีก ' + fmt(o.price - S.points) + ')');
+  }
+  function buy(id) {
+    var o = itemById(id); if (!o || busy) return;
+    if (S.stale) { say('กำลังเชื่อมต่อเซิร์ฟเวอร์ รอสักครู่นะ'); return; }
+    if (S.points < o.price) { say('แต้มยังไม่พอ ขาดอีก ' + fmt(o.price - S.points) + ' แต้ม'); return; }
+    busy = true;
+    fetch('/api/daily/buy', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ item: id }) })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (x) {
+        busy = false; tryOn = null; clearTimeout(tryT);
+        if (!x.ok) { say(x.d.error || 'ซื้อไม่สำเร็จ'); if (x.d && x.d.week) apply(x.d); else render(); return; }
+        var before = S.points; wear(id); apply(x.d); hop();
+        var num = box.querySelector('[data-pts]'); if (num && !calm()) { num.textContent = fmt(before); rollNum(num, before, x.d.points); }
+        var card = box.querySelector('.vof-b[data-outfit="' + id + '"]'); if (card) card.classList.add('is-new');
+        say('🎉 ได้ ' + o.name + ' แล้ว! ใส่ให้น้องเรียบร้อย');
+      }, function () { busy = false; say('เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง'); });
+  }
   function render() {
     if (!box || !S) return;
     var r = S.redeem, pct = Math.min(100, Math.round(S.points / r.cost * 100)), done = S.week.filter(function (x) { return x.done; }).length;
@@ -259,14 +323,7 @@
       var bg = e.target.closest('[data-badge]');
       if (bg && S && S.badges) { var b = S.badges.filter(function (x) { return x.id === bg.getAttribute('data-badge'); })[0]; if (b) say((b.earned ? '🏅 ' : '🔒 ') + b.name + ' · ' + b.desc + (b.earned ? '' : ' (' + b.have + '/' + b.n + ')')); return; }
       var of = e.target.closest('[data-outfit]');
-      if (of) {
-        var id = of.getAttribute('data-outfit'), o = OUTFITS.filter(function (x) { return x.id === id; })[0];
-        if (ownedOutfits().indexOf(id) < 0) { var bn = S.badges.filter(function (b) { return b.id === o.badge; })[0]; say('🔒 ' + o.name + ' · ได้เมื่อมีเหรียญ "' + (bn ? bn.name + '" (' + bn.desc + ')' : '"')); return; }
-        var w = wornOutfits(), k = w.indexOf(id); if (k >= 0) w.splice(k, 1); else w.push(id);
-        try { localStorage.setItem('vc_outfit', JSON.stringify(w)); } catch (er) {}
-        render(); var m2 = box.querySelector('.vdg-mascot'); if (m2) { m2.classList.remove('is-hop'); void m2.offsetWidth; m2.classList.add('is-hop'); setTimeout(function () { m2.classList.remove('is-hop'); }, 1500); }
-        return;
-      }
+      if (of) { outfitTap(of.getAttribute('data-outfit')); return; }
       if (e.target.closest('.vdg-mascot')) poke();
     });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && box && !box.hidden) close(); });
@@ -371,7 +428,7 @@
   function thaiToday() { return new Date(Date.now() + 7 * 36e5).toISOString().slice(0, 10); }
   function saveCache(d) { try { var u = user(); if (u && d && d.today) localStorage.setItem(CK, JSON.stringify({ e: u.email, d: d })); } catch (e) {} }
   function readCache() {
-    try { var c = JSON.parse(localStorage.getItem(CK) || 'null'), u = user(); if (!c || !u || c.e !== u.email || !c.d || c.d.today !== thaiToday()) return null; c.d.stale = true; return c.d; } catch (e) { return null; }
+    try { var c = JSON.parse(localStorage.getItem(CK) || 'null'), u = user(); if (!c || !u || c.e !== u.email || !c.d || !c.d.shop || c.d.today !== thaiToday()) return null; c.d.stale = true; return c.d; } catch (e) { return null; }
   }
   function apply(d) { S = d; if (!d.stale) { saveCache(d); tries = 0; clearTimeout(retryT); } render(); strip(); menu(); }
   function load() {
