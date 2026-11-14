@@ -140,6 +140,7 @@ export async function analyzeContract(text, contractType = 'unsure', lang = 'th'
     body: JSON.stringify({
       model: MODEL,
       max_tokens: MAX_TOKENS,
+      temperature: 0,   // v3: ตอบนิ่ง ตรวจฉบับเดิมซ้ำได้ผลใกล้เคียงเดิม
       system: buildSystemPrompt(itemsFor(text.length), type, lang === 'en' || lang === 'zh' ? lang : 'th'),
       messages: [{ role: 'user', content: text }],
     }),
@@ -342,7 +343,7 @@ export async function extractObligations(text, lang = 'th') {
     method: 'POST',
     headers: { 'content-type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
     body: JSON.stringify({
-      model: MODEL, max_tokens: 16000, system,
+      model: MODEL, max_tokens: 16000, temperature: 0, system,
       tools: [tool], tool_choice: { type: 'tool', name: 'save_obligations' },
       messages: [{ role: 'user', content: `<สัญญา>\n${text}\n</สัญญา>` }],
     }),
