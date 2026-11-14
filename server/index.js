@@ -34,6 +34,8 @@ import { logCheck, saveFeedback, adminStats, FEEDBACK_REASONS } from './stats.js
 import { getDaily, checkIn, redeem } from './daily.js';
 import { fastStatic, cacheHeader } from './fastStatic.js';
 import { cleanPayload, createShare, getShare, deleteShare, SHARE_DAYS } from './share.js';
+import { TERMS_VERSION, hasConsent, recordConsent } from './consent.js';
+import { CASES as EVAL_CASES, startEval, getJob, lastJob } from './eval.js';
 import { listReminders, addReminders, updateReminder, deleteReminder, cleanReminder, buildIcs, MAX_BATCH, MAX_REMINDERS } from './reminders.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -491,6 +493,31 @@ app.post('/api/share', async (req, res) => {
     res.status(500).json({ error: 'สร้างลิงก์ไม่สำเร็จ ลองใหม่อีกครั้ง' });
   }
 });
+// ---------- การยอมรับข้อกำหนด (หลักฐานฝั่งเซิร์ฟเวอร์) ----------
+app.get('/api/consent', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.json({ version: TERMS_VERSION, accepted: false });
+    res.json({ version: TERMS_VERSION, accepted: await hasConsent(user.id) });
+  } catch (err) {
+    console.error('[consent] read failed:', err.message);
+    res.status(500).json({ error: 'ระบบมีปัญหา ลองใหม่อีกครั้ง' });
+  }
+});
+app.post('/api/consent', async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน' });
+    if (req.body?.agree !== true) return res.status(400).json({ error: 'กรุณาติ๊กยอมรับก่อน' });
+    const r = await recordConsent(user.id, { version: String(req.body?.version || ''), kind: req.body?.kind, ip: req.ip, userAgent: req.get('user-agent') });
+    if (!r.ok) return res.status(409).json({ error: r.error, version: TERMS_VERSION });
+    res.json({ ok: true, version: TERMS_VERSION });
+  } catch (err) {
+    console.error('[consent] save failed:', err.message);
+    res.status(500).json({ error: 'บันทึกไม่สำเร็จ ลองใหม่อีกครั้ง' });
+  }
+});
+
 app.get('/api/share/:id', async (req, res) => {
   try {
     res.setHeader('Cache-Control', 'no-store');
@@ -739,6 +766,16 @@ app.post('/api/check', async (req, res) => {
   }
   if (!user) return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อนตรวจสัญญา' });
 
+  // ต้องยอมรับข้อกำหนดฉบับปัจจุบันก่อน (ตรวจก่อนหักเครดิต) · หน้าเว็บจะเปิดหน้าต่างให้ติ๊กแล้วส่งใหม่เอง
+  try {
+    if (!(await hasConsent(user.id))) {
+      return res.status(428).json({ error: 'กรุณาอ่านและยอมรับข้อกำหนดก่อนตรวจสัญญา', needConsent: true, version: TERMS_VERSION });
+    }
+  } catch (err) {
+    console.error('[consent] check failed:', err.message);
+    return res.status(500).json({ error: 'ระบบมีปัญหา ลองใหม่อีกครั้ง' });
+  }
+
   const text = typeof req.body?.text === 'string' ? req.body.text.trim() : '';
   if (!text) return res.status(400).json({ error: 'กรุณาวางข้อความสัญญาก่อน' });
   if (text.length > MAX_CHARS) {
@@ -852,6 +889,35 @@ app.post('/api/feedback', async (req, res) => {
 });
 
 // ---------- สถิติสำหรับแอดมิน ----------
+// ---------- ชุดทดสอบความแม่นยำ AI (แอดมินเท่านั้น · เรียก AI จริง มีค่า API) ----------
+async function adminOnly(req, res) {
+  const user = await getUserFromRequest(req);
+  if (!user) { res.status(401).json({ error: 'ยังไม่ได้เข้าสู่ระบบ' }); return null; }
+  if (!isAdmin(user)) { res.status(403).json({ error: 'บัญชีนี้ไม่มีสิทธิ์แอดมิน' }); return null; }
+  return user;
+}
+app.post('/api/admin/eval', async (req, res) => {
+  try {
+    if (!(await adminOnly(req, res))) return;
+    const only = Array.isArray(req.body?.only) ? req.body.only.filter(x => typeof x === 'string').slice(0, 50) : null;
+    const job = startEval({ only });
+    res.json({ id: job.id, status: job.status, total: job.total });
+  } catch (err) {
+    console.error('[eval] start failed:', err.message);
+    res.status(500).json({ error: 'เริ่มทดสอบไม่สำเร็จ' });
+  }
+});
+app.get('/api/admin/eval', async (req, res) => {
+  try {
+    if (!(await adminOnly(req, res))) return;
+    const job = req.query.id ? getJob(String(req.query.id)) : lastJob();
+    res.json({ cases: EVAL_CASES.map(c => ({ id: c.id, name: c.name })), job });
+  } catch (err) {
+    console.error('[eval] read failed:', err.message);
+    res.status(500).json({ error: 'โหลดผลทดสอบไม่สำเร็จ' });
+  }
+});
+
 app.get('/api/admin/stats', async (req, res) => {
   try {
     const user = await getUserFromRequest(req);
