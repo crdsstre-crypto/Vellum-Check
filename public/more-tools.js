@@ -117,6 +117,21 @@
     '.vmx .vsh-who button,.vmx .vsh-days button{min-height:38px !important;padding:0 12px !important;border-radius:99px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03);color:#c4c4cb;font:600 12.5px/1 Prompt,sans-serif;cursor:pointer;transition:all .15s}' +
     '.vmx .vsh-who button.on,.vmx .vsh-days button.on{border-color:#7fb5ff;background:rgba(127,181,255,.14);color:#e1edff}' +
     '.vsh-days{display:grid;grid-template-columns:repeat(3,1fr)}' +
+    '.vsh-who{display:grid;grid-template-columns:repeat(3,1fr)}' +
+    '.vmx .vsh-who button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:64px !important;padding:8px 4px !important;border-radius:15px;font-size:12.5px}.vsh-who button span{font-size:22px;line-height:1}' +
+    '.vsh-pc{display:flex;flex-direction:column;gap:8px}' +
+    '.vsh-pc .vsh-tg{margin-top:0;padding:8px 10px;gap:8px;border-radius:12px}.vsh-pc .vsh-tg b{font-size:11.5px;line-height:1.3}.vsh-pc .vsh-sw{width:36px;height:22px}.vsh-pc .vsh-sw::after{width:16px;height:16px}.vsh-pc .vsh-tg input:checked + .vsh-sw::after{transform:translateX(14px)}' +
+    '.vsh-rows{display:grid;grid-template-columns:minmax(0,1fr);gap:6px;padding:10px;border-radius:13px;background:#f3ecdc}' +
+    '.vsh-rw{display:flex;min-width:0;overflow:hidden;align-items:center;gap:8px;padding:6px 8px;border-radius:9px;background:rgba(42,37,27,.06)}' +
+    '.vsh-rw .l{flex:none;width:58px;font:600 10.5px/1.2 Prompt,sans-serif;color:#8a7f6a}' +
+    '.vsh-rw .v{display:block;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font:500 13px/1.4 Sarabun,Prompt,sans-serif;color:#2a251b}' +
+    '.vsh-rw .vsh-mk2{max-width:100%;vertical-align:bottom}.vsh-rw .vsh-mk2>span{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:bottom}' +
+    '.vsh-pl{margin:2px 2px 4px;font:400 11.5px/1.6 Prompt,sans-serif;color:#9ad9bd}' +
+    '.vsh-ft{padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(255,255,255,.07);background:#131417;border-radius:0 0 24px 24px}.vsh-ft[hidden]{display:none}' +
+    '.vsh-ft .vsh-go{margin-top:0 !important}' +
+    '.vmx .vsh-again{display:flex;align-items:center;justify-content:center;width:100%;margin-top:14px;min-height:50px !important;border:0;border-radius:15px;background:linear-gradient(135deg,#9cc5ff,#5b9bff);color:#06142b;font:700 15px/1 Prompt,sans-serif;cursor:pointer}' +
+    '.vsh-scr{height:auto !important;min-height:220px}' +
+    '.vsh-scr .ct2{margin-top:auto;padding:6px;border-radius:7px;background:#f3ecdc;color:#1b1710;text-align:center;font:700 7.5px/1 Prompt,sans-serif}' +
     '.vsh-msg{display:flex;align-items:center;gap:8px;margin:0 0 14px;padding:9px 12px;border-radius:14px 14px 14px 4px;background:rgba(141,224,85,.12);border:1px solid rgba(141,224,85,.25);font:400 13px/1.45 Prompt,sans-serif;color:#dcf5c9}' +
     '.vsh-msg span{flex:1;min-width:0}.vsh-msg em{flex:none;font-style:normal;font:600 11px/1 Prompt,sans-serif;color:#9cc98a}' +
     '.vsh-grid{display:grid;grid-template-columns:150px minmax(0,1fr);gap:14px;align-items:start;margin-bottom:14px}' +
@@ -137,8 +152,7 @@
     '.vsh-mk2 i::after{content:"ปิดบัง";position:absolute;inset:0;display:grid;place-items:center;font:600 9px/1 Prompt,sans-serif;color:#8a8170;letter-spacing:.06em;opacity:0;animation:vshFd .3s calc(var(--d) + .4s) forwards}' +
     '@keyframes vshMk{to{transform:scaleX(1)}}@keyframes vshFd{to{opacity:1}}' +
     '.vsh-dm{display:block;margin:5px 2px 0;font:400 11px/1.4 Prompt,sans-serif;color:#71717a}' +
-    '.vsh-strip{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 2px}.vsh-strip span{padding:5px 9px;border-radius:99px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);font:500 11.5px/1.3 Prompt,sans-serif;color:#b6eed6}' +
-    '@media (prefers-reduced-motion:reduce){.vsh-mk2 i,.vsh-mk2 i::after{animation:none;transform:none;opacity:1}}' +
+        '@media (prefers-reduced-motion:reduce){.vsh-mk2 i,.vsh-mk2 i::after{animation:none;transform:none;opacity:1}}' +
     '.vsh-pv{padding:12px 14px;border-radius:14px;background:#18191d;border:1px solid rgba(255,255,255,.08)}' +
     '.vsh-pv p{margin:0 0 6px;font:600 12px/1.3 Prompt,sans-serif;color:#9a9aa3}.vsh-pv ul{margin:0;padding:0;list-style:none;display:grid;gap:6px}' +
     '.vsh-pv li{display:flex;gap:8px;font:400 13px/1.5 Prompt,sans-serif;color:#d4d4d8}.vsh-pv li::before{content:"✓";color:#34d399;font-weight:700}.vsh-pv li.x::before{content:"✕";color:#f2555a}' +
@@ -223,8 +237,8 @@
   var sh = null, last = null;
   /* ข้อความที่ส่งไปพร้อมลิงก์ ตามผู้รับ */
   var WHO = {
-    fam: ['👨‍👩‍👧', 'พ่อแม่ / ครอบครัว', function (P) { return 'ช่วยดูสัญญานี้ให้หน่อยนะ' + P + ' 🙏 มีจุดที่ควรระวังก่อนเซ็นอยู่ ' }],
-    fri: ['🧑‍🤝‍🧑', 'เพื่อนที่เคยเซ็น', function (P) { return 'ช่วยดูผลตรวจสัญญาให้หน่อย เคยเจอแบบนี้ไหม? 🙏 ' }],
+    fam: ['👨‍👩‍👧', 'ครอบครัว', function (P) { return 'ช่วยดูสัญญานี้ให้หน่อยนะ' + P + ' 🙏 มีจุดที่ควรระวังก่อนเซ็นอยู่ ' }],
+    fri: ['🧑‍🤝‍🧑', 'เพื่อน', function (P) { return 'ช่วยดูผลตรวจสัญญาให้หน่อย เคยเจอแบบนี้ไหม? 🙏 ' }],
     law: ['⚖️', 'ทนาย / ที่ปรึกษา', function (P) { return 'รบกวนขอความเห็นเบื้องต้นเกี่ยวกับสัญญาฉบับนี้' + P + ' ผลตรวจเบื้องต้นอยู่ในลิงก์นี้ ' }]
   };
   function who() { var w = ls('vc_sh_who'); return WHO[w] ? w : 'fam'; }
@@ -250,6 +264,15 @@
     }
     return out + esc(t.slice(last));
   }
+  function maskRows(L) {
+    var rows = [];
+    if (L.demo) rows = [['ชื่อ', 'นาย', 'ตัวอย่าง นามสมมติ'], ['เบอร์โทร', '', '000-000-0000'], ['อีเมล', '', 'sample@example.com']];
+    else { PII.lastIndex = 0; var m, seen = {}; while ((m = PII.exec(L.t)) && rows.length < 4) {
+      var v = m[0], pm = /^(นางสาว|นาย|นาง|น\.ส\.|บ้านเลขที่|เลขที่)\s*/.exec(v), pre = pm ? pm[1] + ' ' : '', body = pm ? v.slice(pm[0].length) : v;
+      var lb = /@/.test(v) ? 'อีเมล' : pm && /เลขที่/.test(pm[1]) ? 'ที่อยู่' : pm ? 'ชื่อ' : /^0\d/.test(v) && v.replace(/\D/g, '').length <= 10 ? 'เบอร์โทร' : 'เลขบัตร/บัญชี';
+      if (seen[lb + body]) continue; seen[lb + body] = 1; rows.push([lb, pre, body]); } }
+    return '<div class="vsh-rows">' + rows.map(function (r, k) { return '<div class="vsh-rw"><span class="l">' + r[0] + '</span><span class="v">' + esc(r[1]) + '<span class="vsh-mk2" style="--d:' + (0.45 + k * 0.4).toFixed(2) + 's"><span>' + esc(r[2]) + '</span><i></i></span></span></div>'; }).join('') + '</div>';
+  }
   /* (1) ตัวอย่างหน้าที่ผู้รับเห็น */
   function phone(quotes) {
     var r = res() || {}, it = (r.items || [])[0] || {}, c = { check_detail: 0, caution: 0, low: 0 };
@@ -261,7 +284,8 @@
       '<div class="ct"><span style="--c:#f2555a">' + c.check_detail + '</span><span style="--c:#f5c451">' + c.caution + '</span><span style="--c:#8d8d96">' + c.low + '</span></div>' +
       '<div class="it" style="--c:' + (LC[it.level] || '#8d8d96') + '"><b>' + esc(String(it.title || 'ประเด็นที่ 1').slice(0, 40)) + '</b>' +
       (q ? '<p class="q' + (quotes ? '' : ' off') + '">“' + esc(q.slice(0, 70)) + '…”</p>' : '') + '<p class="fx">สิ่งที่ควรขอแก้ไข…</p></div>' +
-      '<div class="it ghost"></div></div></div>';
+      (function () { var it2 = (r.items || [])[1]; return it2 ? '<div class="it" style="--c:' + (LC[it2.level] || '#8d8d96') + '"><b>' + esc(String(it2.title || '').slice(0, 40)) + '</b><p class="fx">สิ่งที่ควรขอแก้ไข…</p></div>' : ''; })() +
+      '<div class="ct2">ตรวจสัญญาของคุณ →</div></div></div>';
   }
   function shOpen() {
     if (!sh) {
@@ -269,8 +293,9 @@
       sh.addEventListener('change', function (e) { if (e.target.classList.contains('vsh-q')) { var q = sh.querySelector('.vsh-ph .q'); if (q) q.classList.toggle('off', !e.target.checked); } });
       sh.addEventListener('click', function (e) {
         if (e.target.closest('.vsh-go')) return create();
-        var wb = e.target.closest('[data-who]'); if (wb) { ls('vc_sh_who', wb.getAttribute('data-who')); [].forEach.call(sh.querySelectorAll('[data-who]'), function (x) { x.classList.toggle('on', x === wb); }); var mm = sh.querySelector('.vsh-msg span'); if (mm) mm.textContent = WHO[who()][2](pp()); return; }
-        var db = e.target.closest('[data-days]'); if (db) { ls('vc_sh_days', db.getAttribute('data-days')); [].forEach.call(sh.querySelectorAll('[data-days]'), function (x) { x.classList.toggle('on', x === db); }); return; }
+        if (e.target.closest('.vsh-again')) return shForm();
+        var wb = e.target.closest('[data-who]'); if (wb) { ls('vc_sh_who', wb.getAttribute('data-who')); [].forEach.call(sh.querySelectorAll('[data-who]'), function (x) { x.classList.toggle('on', x === wb); }); var mm = sh.querySelector('.vsh-msg span'); if (mm) mm.textContent = WHO[who()][2](pp()); footer(true); return; }
+        var db = e.target.closest('[data-days]'); if (db) { ls('vc_sh_days', db.getAttribute('data-days')); [].forEach.call(sh.querySelectorAll('[data-days]'), function (x) { x.classList.toggle('on', x === db); }); footer(true); return; }
         if (e.target.closest('[data-login]')) { hide(sh); var a = document.querySelector('#bottomNav [data-nav="acct"]') || document.getElementById('authToggle'); if (a) setTimeout(function () { a.click(); }, 300); return; }
         var url = last ? location.origin + last.url : '';
         if (e.target.closest('[data-cp]')) { var b = e.target.closest('[data-cp]'); (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(function () { b.textContent = 'คัดลอกแล้ว ✓'; setTimeout(function () { b.textContent = 'คัดลอก'; }, 1500); }, function () { var i = sh.querySelector('.vsh-link input'); i.select(); try { document.execCommand('copy'); } catch (er) {} }); return; }
@@ -282,22 +307,28 @@
     if (!res()) { if (window.VCTools) VCTools.open(); return; }
     last = null; shForm(); show(sh);
   }
+  function goLabel() { return '🔗 สร้างลิงก์ · ส่งให้' + WHO[who()][1].split(' /')[0] + ' · ' + days() + ' วัน'; }
+  function footer(on) {
+    var card = sh.querySelector('.vmx-card'), f = card.querySelector('.vsh-ft');
+    if (!f) { f = document.createElement('div'); f.className = 'vsh-ft'; f.innerHTML = '<button type="button" class="vsh-go"></button>'; card.appendChild(f); }
+    f.hidden = !on; if (on) { var b = f.querySelector('.vsh-go'); b.disabled = false; b.textContent = goLabel(); }
+  }
   function shForm(err) {
     var L = piiLine(), w = who(), d = days();
-    var h = '<p class="vsh-h">ส่งให้ใคร</p><div class="vsh-who">' + Object.keys(WHO).map(function (k) { return '<button type="button" data-who="' + k + '" class="' + (k === w ? 'on' : '') + '">' + WHO[k][0] + ' ' + WHO[k][1] + '</button>'; }).join('') + '</div>' +
+    var h = '<p class="vsh-h">ส่งให้ใคร</p><div class="vsh-who">' + Object.keys(WHO).map(function (k) { return '<button type="button" data-who="' + k + '" class="' + (k === w ? 'on' : '') + '"><span>' + WHO[k][0] + '</span>' + WHO[k][1].split(' /')[0] + '</button>'; }).join('') + '</div>' +
       '<div class="vsh-msg">💬 <span>' + esc(WHO[w][2](pp())) + '</span><em>+ ลิงก์</em></div>' +
-      '<div class="vsh-grid">' + phone(true) +
-        '<div class="vsh-side"><p class="vsh-h">ข้อมูลส่วนตัวถูกปิดบังให้อัตโนมัติ</p><div class="vsh-mask">' + maskHtml(L.t) + '</div>' + (L.demo ? '<small class="vsh-dm">ตัวอย่างสมมติ · ผลตรวจนี้ไม่มีข้อมูลส่วนตัวในข้อความที่ยกมา</small>' : '<small class="vsh-dm">จากผลตรวจของคุณ</small>') +
-        '<label class="vsh-tg"><input type="checkbox" class="vsh-q" checked><span class="vsh-sw"></span><span><b>แสดงข้อความจากสัญญา</b><small>ช่วยให้คนอ่านเข้าใจบริบท</small></span></label></div></div>' +
+      '<div class="vsh-grid"><div class="vsh-pc">' + phone(true) +
+        '<label class="vsh-tg"><input type="checkbox" class="vsh-q" checked><span class="vsh-sw"></span><span><b>ข้อความจากสัญญา</b></span></label></div>' +
+        '<div class="vsh-side"><p class="vsh-h">ข้อมูลส่วนตัวถูกปิดบังให้อัตโนมัติ</p>' + maskRows(L) + (L.demo ? '<small class="vsh-dm">ตัวอย่างสมมติ · ข้อความที่ยกมาในผลตรวจนี้ไม่มีข้อมูลส่วนตัว</small>' : '<small class="vsh-dm">จากข้อความในผลตรวจของคุณ</small>') + '</div></div>' +
       '<p class="vsh-h">ลิงก์ใช้ได้นาน</p><div class="vsh-days">' + [[1, '1 วัน'], [7, '7 วัน'], [30, '30 วัน']].map(function (x) { return '<button type="button" data-days="' + x[0] + '" class="' + (x[0] === d ? 'on' : '') + '">' + x[1] + '</button>'; }).join('') + '</div>' +
-      '<div class="vsh-strip"><span>🔒 ปิดบังข้อมูล</span><span>👁️ อ่านอย่างเดียว</span><span>📄 ไม่ส่งสัญญาเต็ม</span><span>🗑️ ยกเลิกได้</span></div>' +
-      (err ? '<div class="vsh-er">' + esc(err.msg) + (err.login ? ' <button type="button" data-login style="margin-left:6px;border:0;background:#7fb5ff;color:#06142b;border-radius:8px;padding:4px 10px;font:600 12px Prompt;cursor:pointer">เข้าสู่ระบบ</button>' : '') + '</div>' : '') +
-      '<button type="button" class="vsh-go">🔗 สร้างลิงก์แชร์</button>';
+      '<p class="vsh-pl">🔒 ปิดบังข้อมูลส่วนตัว · 👁️ อ่านอย่างเดียว · 📄 ไม่ส่งสัญญาฉบับเต็ม · 🗑️ ยกเลิกได้ทุกเมื่อ</p>' +
+      (err ? '<div class="vsh-er">' + esc(err.msg) + (err.login ? ' <button type="button" data-login style="margin-left:6px;border:0;background:#7fb5ff;color:#06142b;border-radius:8px;padding:4px 10px;font:600 12px Prompt;cursor:pointer">เข้าสู่ระบบ</button>' : '') + '</div>' : '');
     sh.querySelector('.vmx-bd').innerHTML = h;
+    footer(true);
   }
   function create() {
     var b = sh.querySelector('.vsh-go'); b.disabled = true; b.textContent = 'กำลังสร้างลิงก์…';
-    var quotes = sh.querySelector('.vsh-q').checked;
+    var qe = sh.querySelector('.vsh-q'), quotes = qe ? qe.checked : true;
     var title = (document.querySelector('#result .rpt-title') || {}).textContent || '';
     fetch('/api/share', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ result: res(), quotes: quotes, typeText: typeText(), title: title.trim(), days: days() }) })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
@@ -306,7 +337,7 @@
   }
   function done() {
     var url = location.origin + last.url, exp = ''; try { exp = new Date(last.expiresAt).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' }); } catch (e) {}
-    var share = !!navigator.share;
+    var share = !!navigator.share; footer(false);
     sh.querySelector('.vmx-bd').innerHTML = '<div class="vsh-ok"><i>✅</i><b>ลิงก์พร้อมแชร์แล้ว</b><small>ใช้ได้ ' + (last.days || days()) + ' วัน ถึง ' + esc(exp) + ' · ใครมีลิงก์ก็เปิดดูได้ แชร์เฉพาะคนที่ไว้ใจ</small></div>' +
       '<div class="vsh-msg">💬 <span>' + esc(WHO[who()][2](pp())) + '</span><em>+ ลิงก์</em></div>' +
       '<div class="vsh-link"><input type="text" readonly value="' + esc(url) + '" aria-label="ลิงก์แชร์"><button type="button" data-cp>คัดลอก</button></div>' +
@@ -317,7 +348,7 @@
     if (!last) return;
     fetch('/api/share/' + encodeURIComponent(last.id), { method: 'DELETE', credentials: 'same-origin' }).then(function (r) {
       if (!r.ok) throw 0;
-      sh.querySelector('.vmx-bd').innerHTML = '<div class="vsh-ok"><i>🗑️</i><b>ยกเลิกลิงก์แล้ว</b><small>คนที่มีลิงก์เดิมจะเปิดไม่ได้อีก · สร้างลิงก์ใหม่ได้ทุกเมื่อ</small></div><button type="button" class="vsh-go">🔗 สร้างลิงก์ใหม่</button>';
+      sh.querySelector('.vmx-bd').innerHTML = '<div class="vsh-ok"><i>🗑️</i><b>ยกเลิกลิงก์แล้ว</b><small>คนที่มีลิงก์เดิมจะเปิดไม่ได้อีก · สร้างลิงก์ใหม่ได้ทุกเมื่อ</small></div><button type="button" class="vsh-again">🔗 สร้างลิงก์ใหม่</button>';
       last = null;
     }).catch(function () { var b = sh.querySelector('.vsh-rv'); if (b) b.textContent = 'ยกเลิกไม่สำเร็จ ลองใหม่อีกครั้ง'; });
   }
