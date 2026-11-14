@@ -896,3 +896,37 @@ html body .vst.is-fire .vst-say{background:rgba(22,16,13,.62);-webkit-backdrop-f
 .vst.is-fire .vst-extra{z-index:6}
 @media (prefers-reduced-motion:reduce){.vst-sweep::before,.vst-grain,.vst.is-fire .vst-ms .md-tw{animation:none !important}}
 html body .vst.is-fire .vst-refl{bottom:auto;top:calc(100% - 46px);opacity:.24;-webkit-mask-image:linear-gradient(0deg,#000 0,transparent 30%);mask-image:linear-gradient(0deg,#000 0,transparent 30%)}
+
+/* ===== v25 (14 พ.ย.): แก้อนิเมชันเหรียญไฟไม่มอด — ห้อยแกว่งแทนหมุน · ลอยลงคล้องคอ · เปลี่ยนระดับไม่เล่นใหม่ ===== */
+/* (1) ริบบิ้นนิ่ง เหรียญแกว่งจากห่วง + แสงวาวพาดผ่าน (เลิกหมุน 3 มิติที่ทำให้เหลือเส้นบาง) */
+html body .vst-hero svg,html body :is(.vdc,.vst) .vof-b.is-fire svg,html body :is(.vdc,.vst) .vof-b.is-fire .vof-pr svg{animation:none !important;transform:none}
+.md-coin{transform-box:view-box;transform-origin:60px 86.5px;animation:mdSwing 3.2s ease-in-out infinite}
+@keyframes mdSwing{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+.vst-hero svg .md-coin{animation-duration:2.6s}
+.vof-b.is-fire .vof-pr svg .md-coin{animation:none}
+.vst-hero svg{-webkit-mask-image:linear-gradient(110deg,#000 40%,rgba(0,0,0,.55) 50%,#000 60%);mask-image:linear-gradient(110deg,#000 40%,rgba(0,0,0,.55) 50%,#000 60%);-webkit-mask-size:300% 100%;mask-size:300% 100%;animation:mdSheen 2.4s ease-in-out infinite !important}
+@keyframes mdSheen{0%{-webkit-mask-position:100% 0;mask-position:100% 0}100%{-webkit-mask-position:0 0;mask-position:0 0}}
+.vst-hero::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(110deg,transparent 42%,rgba(255,255,255,.35) 50%,transparent 58%);background-size:300% 100%;mix-blend-mode:overlay;animation:mdSheenB 2.4s ease-in-out infinite;-webkit-mask:radial-gradient(circle at 50% 62%,#000 22%,transparent 26%);mask:radial-gradient(circle at 50% 62%,#000 22%,transparent 26%)}
+@keyframes mdSheenB{0%{background-position:100% 0}100%{background-position:0 0}}
+/* (5) ปีกเพชรกางนิ่งแล้วกระพือ ไม่หมุนตาม */
+.md-wing path:first-child{animation:mdWl 1.4s ease-in-out infinite alternate}
+.md-wing path:last-child{animation:mdWr 1.4s ease-in-out infinite alternate}
+/* (2) น้องอยู่บนแท่นตลอด · เหรียญลอยลงคล้องคอ */
+html body .vst-ms.is-wait{opacity:1;transform:none}
+.vst-ms.hide-medal .md-worn,.vst-ms.hide-medal .md-aura{opacity:0}
+.vst-ms .md-worn,.vst-ms .md-aura{transition:opacity .25s}
+html body .vst-hero{top:22px;margin:0 0 0 -75px;transform:none;transition:opacity .5s}
+html body .vst-hero.show{opacity:1;transform:none}
+html body .vst-hero.fly{opacity:1;transition:none}
+.vst-hero.fly .vst-rays{opacity:0;transition:opacity .4s}
+.vst-clasp{position:absolute;z-index:5;width:8px;height:8px;margin:-4px;border-radius:50%;pointer-events:none;background:#fff;box-shadow:0 0 0 0 var(--f2);animation:vstCl .8s ease-out forwards}
+@keyframes vstCl{0%{box-shadow:0 0 0 0 var(--f2),0 0 12px 4px #fff;opacity:1}100%{box-shadow:0 0 0 46px transparent,0 0 30px 10px transparent;opacity:0}}
+/* (3) เปลี่ยนระดับ: แสงวาบสั้น ๆ สีเปลี่ยนนุ่ม ๆ */
+.vst.is-fire .vst-stage{transition:background .6s}
+.vst-stage.tier-flash::before{content:"";position:absolute;inset:0;z-index:7;pointer-events:none;background:radial-gradient(circle at 50% 55%,color-mix(in srgb,var(--f2) 55%,transparent),transparent 60%);animation:vstTf .7s ease-out forwards}
+@keyframes vstTf{0%{opacity:0}25%{opacity:1}100%{opacity:0}}
+.vst-stage.tier-flash .vst-ms{animation:vmHop .6s cubic-bezier(.3,1.6,.5,1)}
+@media (prefers-reduced-motion:reduce){.md-coin,.vst-hero svg,.vst-hero::after,.vst-clasp,.vst-stage.tier-flash::before{animation:none !important}}
+.vst-ms.hide-medal{opacity:.28;filter:blur(1.5px)}
+.vst-ms{transition:opacity .6s,filter .6s,transform .45s}
+.vst-hero.fly~.vst-ms,.vst-stage:has(.vst-hero.fly) .vst-ms{opacity:1;filter:none}
