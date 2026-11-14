@@ -120,6 +120,7 @@
     var mo = /(?:ภายใน\s*)?วันที่\s*(\d{1,2})\s*ของ\s*(?:ทุก\s*)?เดือน/.exec(text);
     if (mo && +mo[1] >= 1 && +mo[1] <= 31) {
       var t0 = today(), day = +mo[1];
+      if (start && start > t0) t0 = start;   // สัญญายังไม่เริ่ม → งวดแรกนับจากวันเริ่มสัญญา
       var onMonth = function (y, mIdx) { return new Date(y, mIdx, Math.min(day, new Date(y, mIdx + 1, 0).getDate())); };
       var cand = onMonth(t0.getFullYear(), t0.getMonth());
       if (cand < t0) cand = onMonth(t0.getFullYear(), t0.getMonth() + 1);
