@@ -1024,3 +1024,48 @@ html body .vst .vof-lim .lim-tx small{white-space:nowrap;overflow:hidden;text-ov
 html body .vst .vof-b.vof-lim{gap:8px;padding:18px 10px 12px}
 html body .vst .vof-lim .lim-art{width:76px}
 html body .vst .vof-lim .lim-art svg{width:72px !important}
+
+/* ===== v29 (14 พ.ย.): กล่องคำพูดมีหาง + พิมพ์ทีละตัว · ปุ่มระดับเป็นเหรียญจิ๋วบนเส้นทาง ===== */
+/* (1)(2) กล่องคำพูด */
+html body .vst .vst-say{left:auto;right:calc(50% + 62px);top:auto;bottom:228px;max-width:46%;min-height:34px;border-radius:16px 16px 4px 16px;padding:8px 12px}
+html body .vst .vst-say::after{content:"";position:absolute;right:-8px;bottom:6px;width:14px;height:14px;background:inherit;border:inherit;border-left:0;border-top:0;transform:rotate(-45deg) skew(10deg,10deg);border-radius:0 0 4px 0;-webkit-backdrop-filter:none;backdrop-filter:none}
+html body .vst:not(.is-fire) .vst-say{bottom:150px}
+html body .vst:not(.is-fire) .vst-say::after{background:#f7efdc}
+.vst-cur{display:inline-block;width:2px;height:1em;margin-left:2px;vertical-align:-2px;background:currentColor;animation:vstCur .8s steps(1) infinite}
+@keyframes vstCur{50%{opacity:0}}
+html body .vst.is-fire .vst-lux{top:10px}
+/* (5)(6) เหรียญจิ๋ว 3 อันบนเส้นทาง */
+html body .vst .vst-path{left:50%;bottom:2px;transform:translateX(-50%);display:flex;gap:0;justify-content:space-between;width:250px;padding:0;border:0}
+.vtp-line,.vtp-pre{position:absolute;top:19px;height:3px;border-radius:99px;background:rgba(255,255,255,.12);pointer-events:none}
+.vtp-line{left:42px;right:42px}
+.vtp-pre{display:none}
+.vtp-line b{display:block;height:100%;width:var(--fill);border-radius:inherit;background:linear-gradient(90deg,#ffb347,#9fd0ff,#c9a6ff);box-shadow:0 0 8px rgba(255,220,160,.7);transition:width .6s}
+html body .vst .vst-path button.vtp{position:relative;z-index:1;width:84px;display:flex;flex-direction:column;align-items:center;gap:1px;padding:0;border:0;background:none;color:rgba(244,237,228,.55);box-shadow:none;cursor:pointer}
+.vtp-c{position:relative;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:radial-gradient(circle,#1d1714,#0c0a09);box-shadow:0 0 0 1.5px rgba(255,255,255,.14);transition:transform .35s cubic-bezier(.3,1.6,.5,1),box-shadow .3s}
+.vtp-c svg{width:30px;height:30px;overflow:visible}
+.vtp.lock .vtp-c svg{filter:grayscale(.85) brightness(.6)}
+.vtp-lk{position:absolute;right:-3px;bottom:-3px;width:15px;height:15px;border-radius:50%;background:#0d0a12 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e9dcff' stroke-width='2.6' stroke-linecap='round'%3E%3Crect x='5' y='10.5' width='14' height='10' rx='2.5'/%3E%3Cpath d='M8 10.5V8a4 4 0 0 1 8 0v2.5'/%3E%3C/svg%3E") center/9px no-repeat;box-shadow:0 0 0 1px rgba(255,255,255,.25)}
+html body .vst .vst-path button.vtp b{margin-top:3px;font:700 .66rem/1.1 'Prompt',sans-serif}
+html body .vst .vst-path button.vtp small{font:500 .54rem/1.2 'Prompt',sans-serif;opacity:.75}
+html body .vst .vst-path button.vtp.got small{color:#9fe3c8;opacity:1}
+html body .vst .vst-path button.vtp.on{color:#fff;border:0}
+.vtp.on .vtp-c{transform:scale(1.25);box-shadow:0 0 0 2px var(--c2),0 0 18px var(--c1)}
+.vtp.on .vtp-c svg{filter:none}
+.vtp.got .vtp-c{box-shadow:0 0 0 1.5px var(--rim)}
+.vtp.got.on .vtp-c{box-shadow:0 0 0 2px var(--c2),0 0 18px var(--c1)}
+html body .vst.is-fire .vst-stage{height:360px}
+@media (prefers-reduced-motion:reduce){.vst-cur{animation:none}}
+.vtp-c{overflow:hidden}
+.vtp-c svg{width:44px;height:44px}
+html body .vst.is-fire .vst-ped{bottom:100px}
+html body .vst.is-fire .vst-ms{margin-bottom:116px}
+html body .vst.is-fire .vst-glow{bottom:114px}
+html body .vst.is-fire .vst-refl{top:calc(100% - 70px)}
+html body .vst.is-fire .vst-hor{bottom:70px}
+html body .vst.is-fire .vst-haze{bottom:124px}
+.vst[data-tier="2"] .vst-crk{bottom:54px}
+html body .vst.is-fire .vst-say{bottom:252px;max-width:50%}
+html body .vst .vst-path{bottom:6px}
+.vtp-c{overflow:visible}
+.vtp-c svg{clip-path:circle(46% at 50% 50%)}
+.vtp-line{background:rgba(255,255,255,.2)}
