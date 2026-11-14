@@ -200,6 +200,7 @@ function notifyAuthChange(user) {
 
 function showLoggedIn(user) {
   currentUser = user;
+  cacheMe(user);
   notifyAuthChange(user);
   els.loggedOut.hidden = true;
   els.loggedIn.hidden = false;
@@ -222,6 +223,7 @@ function resumePendingCheck() {
 }
 
 function showLoggedOut(message = '') {
+  if (message) cacheMe(null);
   currentUser = null;
   notifyAuthChange(null);
   els.loggedOut.hidden = false;
@@ -234,11 +236,32 @@ function showLoggedOut(message = '') {
 }
 
 // ตรวจตอนเปิดหน้า ถ้ามี session อยู่แล้วจะเข้าสู่ระบบให้อัตโนมัติ
-async function restoreSession() {
-  const r = await api(CONFIG.api.me);
-  if (r.ok) showLoggedIn(r.data);
-  else showLoggedOut();
+// v2: (1) จำสถานะล่าสุดไว้ในเครื่อง → เปิดเว็บแล้วขึ้น "เข้าสู่ระบบแล้ว" ทันที ไม่ต้องรอเซิร์ฟเวอร์ตื่น
+//     (2) ออกจากระบบเฉพาะเมื่อเซิร์ฟเวอร์ยืนยันว่า session หมดจริง (401) — เน็ตหลุด/เซิร์ฟเวอร์กำลังตื่น (502/503) จะลองใหม่เอง
+const ME_KEY = 'vc_me', ME_MAX_AGE = 30 * 864e5;   // เท่ากับอายุ session ฝั่งเซิร์ฟเวอร์ (30 วัน)
+function cacheMe(u) {
+  try {
+    if (u && u.email) localStorage.setItem(ME_KEY, JSON.stringify({ email: u.email, credits: u.credits, voice_credits: u.voice_credits, t: Date.now() }));
+    else localStorage.removeItem(ME_KEY);
+  } catch (e) {}
 }
+function cachedMe() {
+  try { const c = JSON.parse(localStorage.getItem(ME_KEY) || 'null'); return c && c.email && Date.now() - c.t < ME_MAX_AGE ? c : null; } catch (e) { return null; }
+}
+async function restoreSession(attempt = 0) {
+  if (attempt === 0) { const c = cachedMe(); if (c) showLoggedIn(c); }
+  const r = await api(CONFIG.api.me);
+  if (r.ok) { showLoggedIn(r.data); return; }
+  if (r.status === 401 || r.status === 403) { cacheMe(null); if (currentUser || attempt === 0) showLoggedOut(); return; }
+  // เครือข่าย/เซิร์ฟเวอร์ยังไม่พร้อม: ลองใหม่ 3, 6, 12, 24, 30, 30… วินาที (สูงสุดราว 3 นาที)
+  if (attempt < 8) setTimeout(() => restoreSession(attempt + 1), Math.min(30000, 3000 * 2 ** attempt));
+  else if (!currentUser) { showLoggedOut(); els.authMsg.textContent = CONFIG.messages.network; }
+}
+// กลับมาที่แท็บนี้หลังสลับแอป/หน้าต่าง: เช็กสถานะเงียบ ๆ (ไม่เด้งออก)
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible' || !currentUser) return;
+  api(CONFIG.api.me).then(r => { if (r.ok) showLoggedIn(r.data); else if (r.status === 401) { cacheMe(null); showLoggedOut(CONFIG.messages.sessionEnded); } });
+});
 
 function readCredentials() {
   const email = els.email.value.trim();
