@@ -35,6 +35,13 @@
           '<button type="button" class="adm-go adm-ev-go">▶ รันชุดทดสอบ</button>' +
           '<div class="adm-ev-body"></div>' +
         '</div>' +
+        '<div class="adm-st adm-sp" id="admSupport">' +
+          '<div class="adm-st-hd"><h4>เรื่องร้องเรียน</h4><div class="adm-st-rng adm-sp-rng" role="group" aria-label="สถานะ"><button type="button" data-s="open" class="is-on">รอตอบ</button><button type="button" data-s="resolved">ปิดแล้ว</button></div></div>' +
+          '<p class="adm-fine">สัญญากับลูกค้าว่าตอบภายใน 7 วัน · เรื่องที่ใกล้ครบกำหนดจะขึ้นสีแดง · ตอบลูกค้าทางอีเมลแล้วกดปิดเรื่องที่นี่ (คืนเครดิตได้ในขั้นตอนเดียว)</p>' +
+          '<form class="adm-sp-find"><input type="text" id="admRef" placeholder="ค้นรหัสอ้างอิง VC-XXXX-XXXX" autocomplete="off" spellcheck="false"><button type="submit">ค้น</button></form>' +
+          '<div class="adm-sp-ref"></div>' +
+          '<div class="adm-sp-body"><p class="adm-st-load">กำลังโหลด…</p></div>' +
+        '</div>' +
       '</section>'
     );
     var wallet = loggedIn.querySelector('.wallet');
@@ -42,6 +49,23 @@
     if (wallet && wallet.parentNode) wallet.parentNode.insertBefore(card, wallet); else loggedIn.appendChild(card);
 
     card.querySelector('.adm-ev-go').addEventListener('click', evStart);
+    card.querySelector('.adm-sp-rng').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-s]'); if (!b) return;
+      [].forEach.call(this.children, function (x) { x.classList.toggle('is-on', x === b); });
+      spLoad(b.getAttribute('data-s'));
+    });
+    card.querySelector('.adm-sp-body').addEventListener('click', spAct);
+    card.querySelector('.adm-sp-find').addEventListener('submit', function (e) { e.preventDefault(); spFind(); });
+    if (!document.getElementById('admSpCss')) { var c2 = document.createElement('style'); c2.id = 'admSpCss'; c2.textContent =
+      '.adm-sp-list{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:8px}.adm-sp-list li{padding:11px 12px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)}' +
+      '.adm-sp-list li.late{border-color:rgba(255,122,134,.5);background:rgba(255,122,134,.06)}.adm-sp-list .hd{display:flex;justify-content:space-between;gap:8px;font:600 12.5px/1.4 Prompt,sans-serif;color:#fff}' +
+      '.adm-sp-list .hd small{color:#a1a1aa;font-weight:400}.adm-sp-list p{margin:6px 0;font:400 13px/1.55 Prompt,sans-serif;color:#d4d4da;white-space:pre-wrap;word-break:break-word}' +
+      '.adm-sp-list .meta{font:400 11.5px/1.5 Prompt,sans-serif;color:#a1a1aa}.adm-sp-list .meta a{color:#7fb5ff}.adm-sp-list .act{display:grid;grid-template-columns:1fr 70px auto;gap:6px;margin-top:8px}' +
+      '.adm-sp-list input{min-width:0;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.25);color:#fff;border-radius:9px;padding:8px 9px;font:400 12.5px/1.3 Prompt,sans-serif}' +
+      '.adm-sp-list button,.adm-sp-find button{appearance:none;border:0;border-radius:9px;padding:8px 12px;background:linear-gradient(135deg,#3be0c0,#22c3e6);color:#04201c;font:700 12.5px/1 Prompt,sans-serif;cursor:pointer}' +
+      '.adm-sp-find{display:grid;grid-template-columns:1fr auto;gap:6px;margin:8px 0 0}.adm-sp-find input{min-width:0;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.25);color:#fff;border-radius:9px;padding:8px 9px;font:500 12.5px/1.3 ui-monospace,monospace;text-transform:uppercase}' +
+      '.adm-sp-ref{font:400 12px/1.6 Prompt,sans-serif;color:#d4d4da}.adm-sp-ref dl{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;margin:8px 0 0;padding:10px;border-radius:10px;background:rgba(246,214,140,.06)}.adm-sp-ref dt{color:#a1a1aa}.adm-sp-ref dd{margin:0;word-break:break-all}';
+      document.head.appendChild(c2); }
     if (!document.getElementById('admEvCss')) { var cs = document.createElement('style'); cs.id = 'admEvCss'; cs.textContent =
       '.adm-ev-go{margin-top:8px}.adm-ev-bar{height:8px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin:10px 0 4px}.adm-ev-bar i{display:block;height:100%;background:linear-gradient(90deg,#3be0c0,#22c3e6);transition:width .4s}' +
       '.adm-ev-t{grid-template-columns:repeat(2,minmax(0,1fr))}.adm-ev-t>div{padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.04)}.adm-ev-t small{display:block;font:500 11px/1.3 Prompt,sans-serif;color:#a1a1aa}.adm-ev-t b{font:800 22px/1.2 Prompt,sans-serif}' +
@@ -148,6 +172,62 @@
       .catch(function () { go.disabled = false; go.textContent = '▶ รันชุดทดสอบ'; });
   }
 
+  var SP_CAT = { wrong: 'ผลตรวจผิด/ไม่ครบ', bug: 'ระบบมีปัญหา', refund: 'ขอคืนเครดิต', privacy: 'ข้อมูลส่วนตัว (PDPA)', other: 'อื่น ๆ' }, spStatus = 'open';
+  function spDate(v) { try { return new Date(v).toLocaleString('th-TH', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Bangkok' }); } catch (e) { return v; } }
+  function spLoad(s) {
+    if (!card) return; spStatus = s || spStatus;
+    var b = card.querySelector('.adm-sp-body'); b.innerHTML = '<p class="adm-st-load">กำลังโหลด…</p>';
+    fetch('/api/admin/support?status=' + spStatus, { credentials: 'same-origin' })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (x) {
+        if (!x.ok) { b.innerHTML = '<p class="adm-empty">' + esc(x.d.error || 'โหลดไม่สำเร็จ') + '</p>'; return; }
+        var t = x.d.tickets || [];
+        if (!t.length) { b.innerHTML = '<p class="adm-empty">' + (spStatus === 'open' ? 'ไม่มีเรื่องรอตอบ 🎉' : 'ยังไม่มีเรื่องที่ปิด') + '</p>'; return; }
+        b.innerHTML = '<ul class="adm-sp-list">' + t.map(function (k) {
+          var open = k.status !== 'resolved';
+          return '<li class="' + (open && k.late ? 'late' : '') + '" data-id="' + k.id + '">' +
+            '<div class="hd"><span>#' + k.id + ' · ' + esc(SP_CAT[k.category] || k.category) + '</span><small>' + esc(spDate(k.created_at)) + (open && k.late ? ' · ใกล้ครบ 7 วัน' : '') + '</small></div>' +
+            '<p>' + esc(k.message) + '</p>' +
+            '<div class="meta">' + (k.email ? '<a href="mailto:' + esc(k.email) + '?subject=' + encodeURIComponent('เรื่อง #' + k.id + ' จาก Vellum Check') + '">' + esc(k.email) + '</a>' : 'ไม่มีอีเมล') +
+              (k.ref ? ' · <a href="#" data-ref="' + esc(k.ref) + '">' + esc(k.ref) + '</a>' : '') +
+              (!open ? ' · ปิดเมื่อ ' + esc(spDate(k.resolved_at)) + (k.refunded ? ' · คืน ' + k.refunded + ' เครดิต' : '') + (k.admin_note ? ' · ' + esc(k.admin_note) : '') : '') + '</div>' +
+            (open ? '<div class="act"><input type="text" class="sp-note" maxlength="500" placeholder="บันทึกคำตอบ (ลูกค้าเห็น)"><input type="number" class="sp-ref" min="0" max="20" value="' + (k.category === 'refund' || k.category === 'bug' ? 1 : 0) + '" aria-label="คืนเครดิต"><button type="button" data-a="resolve">ปิดเรื่อง</button></div>' : '') +
+          '</li>';
+        }).join('') + '</ul>';
+      }).catch(function () { b.innerHTML = '<p class="adm-empty">เชื่อมต่อไม่ได้</p>'; });
+  }
+  function spAct(e) {
+    var r = e.target.closest('[data-ref]');
+    if (r) { e.preventDefault(); card.querySelector('#admRef').value = r.getAttribute('data-ref'); spFind(); return; }
+    var b = e.target.closest('[data-a="resolve"]'); if (!b) return;
+    var li = b.closest('li'), id = li.getAttribute('data-id');
+    var note = li.querySelector('.sp-note').value.trim(), refund = parseInt(li.querySelector('.sp-ref').value || '0', 10) || 0;
+    b.disabled = true; b.textContent = '…';
+    fetch('/api/admin/support/' + id + '/resolve', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ note: note, refund: refund }) })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (x) {
+        if (!x.ok) { b.disabled = false; b.textContent = 'ปิดเรื่อง'; alertMsg(x.d.error || 'บันทึกไม่สำเร็จ'); return; }
+        alertMsg('ปิดเรื่อง #' + id + ' แล้ว' + (x.d.refunded ? ' · คืน ' + x.d.refunded + ' เครดิต' : ''), 'ok');
+        spLoad();
+      }).catch(function () { b.disabled = false; b.textContent = 'ปิดเรื่อง'; });
+  }
+  function alertMsg(t, kind) { say(t, kind || 'err'); var m = card.querySelector('#admMsg'); if (m && m.scrollIntoView) m.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
+  function spFind() {
+    var v = card.querySelector('#admRef').value.trim().toUpperCase(), out = card.querySelector('.adm-sp-ref');
+    if (!v) { out.innerHTML = ''; return; }
+    out.innerHTML = '<p class="adm-st-load">กำลังค้น…</p>';
+    fetch('/api/admin/receipt/' + encodeURIComponent(v), { credentials: 'same-origin' })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (x) {
+        if (!x.ok) { out.innerHTML = '<p class="adm-empty">' + esc(x.d.error || 'ไม่พบ') + '</p>'; return; }
+        var d = x.d;
+        out.innerHTML = '<dl><dt>รหัส</dt><dd>' + esc(d.ref) + '</dd><dt>ตรวจเมื่อ</dt><dd>' + esc(spDate(d.created_at)) + '</dd><dt>บัญชี</dt><dd>' + esc(d.email || '–') + '</dd>' +
+          '<dt>ประเภท</dt><dd>' + esc(d.contract_type) + ' · ' + d.n_items + ' ประเด็น</dd><dt>ข้อกำหนด</dt><dd>v' + esc(d.terms_version || '–') + '</dd>' +
+          '<dt>รุ่นระบบตรวจ</dt><dd>' + esc(d.prompt_version || '–') + '</dd><dt>บันทึกประวัติ</dt><dd>' + (d.saved ? 'ใช่' : 'ไม่ (ผู้ใช้เลือกไม่เก็บ)') + '</dd>' +
+          '<dt>ลายนิ้วมือผล</dt><dd>' + esc(d.result_hash || '–') + '</dd></dl>';
+      }).catch(function () { out.innerHTML = '<p class="adm-empty">เชื่อมต่อไม่ได้</p>'; });
+  }
+
   function say(t, kind) { var m = card.querySelector('#admMsg'); m.textContent = t || ''; m.className = 'adm-msg' + (kind ? ' is-' + kind : ''); }
 
   function submit() {
@@ -179,7 +259,7 @@
       if (!d || !d.is_admin) { if (card) card.hidden = true; return; }
       if (!card) build();
       card.hidden = false;
-      loadStats(); evLoad();
+      loadStats(); evLoad(); spLoad('open');
       var em = card.querySelector('#admEmail'); if (!em.value) em.value = d.email || '';
     }).catch(function () {});
   }
