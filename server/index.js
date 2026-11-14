@@ -71,7 +71,7 @@ const OB_REPEATS = new Set(['none', 'monthly', 'yearly']);
 function cleanObligations(raw, normSource) {
   const one = v => (typeof v === 'string' ? v.replace(/\s+/g, ' ').trim() : '');
   let parties = Array.isArray(raw?.parties) ? raw.parties.map(p => one(p).slice(0, 30)).filter(Boolean) : [];
-  const list = (Array.isArray(raw?.obligations) ? raw.obligations : []).slice(0, 12).map(o => {
+  const list = (Array.isArray(raw?.obligations) ? raw.obligations : []).slice(0, 14).map(o => {
     const quote = one(o?.quote).slice(0, 300);
     const due = one(o?.due_date);
     const okDue = /^\d{4}-\d{2}-\d{2}$/.test(due) && !Number.isNaN(new Date(due + 'T00:00:00Z').getTime());
