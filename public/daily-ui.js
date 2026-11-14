@@ -71,12 +71,12 @@
       '<path class="md-tw" d="M67 88l.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8z" fill="#fffbe6"/>';
   }
   /* (1) ออร่าไฟรอบตัวน้องตอนใส่เหรียญ (สีตามระดับเหรียญ) — วาดไว้หลังตัวน้อง */
-  function auraArt(t) {
+  function auraArt(t) {   // แสงอุ่นจาง ๆ หลังตัว + ถ่านไฟไม่กี่จุด (ไม่ใช่ลิ้นไฟการ์ตูน)
     var c = MED[t] || MED[1];
-    return '<g class="md-aura" aria-hidden="true"><ellipse cx="60" cy="80" rx="44" ry="58" fill="' + c.f1 + '" opacity=".18"/>' +
-      '<g transform="translate(22 124) rotate(-35) scale(1.5)"><g class="md-tg"><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" fill="' + c.f1 + '"/><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" transform="translate(0 -1) scale(.55)" fill="' + c.f2 + '"/></g></g><g transform="translate(18 96) rotate(-45) scale(1.35)"><g class="md-tg"><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" fill="' + c.f1 + '"/><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" transform="translate(0 -1) scale(.55)" fill="' + c.f2 + '"/></g></g><g transform="translate(20 64) rotate(-40) scale(1.2)"><g class="md-tg"><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" fill="' + c.f1 + '"/><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" transform="translate(0 -1) scale(.55)" fill="' + c.f2 + '"/></g></g><g transform="translate(30 38) rotate(-25) scale(1.05)"><g class="md-tg"><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" fill="' + c.f1 + '"/><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" transform="translate(0 -1) scale(.55)" fill="' + c.f2 + '"/></g></g><g transform="translate(46 24) rotate(-10) scale(0.9)"><g class="md-tg"><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" fill="' + c.f1 + '"/><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" transform="translate(0 -1) scale(.55)" fill="' + c.f2 + '"/></g></g><g transform="translate(98 124) rotate(35) scale(1.5)"><g class="md-tg"><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" fill="' + c.f1 + '"/><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" transform="translate(0 -1) scale(.55)" fill="' + c.f2 + '"/></g></g><g transform="translate(102 96) rotate(45) scale(1.35)"><g class="md-tg"><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" fill="' + c.f1 + '"/><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" transform="translate(0 -1) scale(.55)" fill="' + c.f2 + '"/></g></g><g transform="translate(100 64) rotate(40) scale(1.2)"><g class="md-tg"><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" fill="' + c.f1 + '"/><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" transform="translate(0 -1) scale(.55)" fill="' + c.f2 + '"/></g></g><g transform="translate(90 38) rotate(25) scale(1.05)"><g class="md-tg"><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" fill="' + c.f1 + '"/><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" transform="translate(0 -1) scale(.55)" fill="' + c.f2 + '"/></g></g><g transform="translate(74 24) rotate(10) scale(0.9)"><g class="md-tg"><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" fill="' + c.f1 + '"/><path d="M0 0c-6 0-10-4-10-10 0-8 6-11 7-20 4 3 6 7 6 11 2-2 3-5 3-8 5 5 6 11 6 16 0 7-5 11-12 11z" transform="translate(0 -1) scale(.55)" fill="' + c.f2 + '"/></g></g>' +
-      '<circle class="md-ae" cx="20" cy="70" r="1.6" fill="' + c.f2 + '"/><circle class="md-ae md-ae2" cx="100" cy="60" r="1.4" fill="' + c.f2 + '"/><circle class="md-ae md-ae3" cx="30" cy="40" r="1.2" fill="' + c.f2 + '"/><circle class="md-ae md-ae4" cx="92" cy="96" r="1.6" fill="' + c.f2 + '"/></g>';
+    return '<g class="md-aura" aria-hidden="true"><ellipse cx="60" cy="80" rx="50" ry="64" fill="' + c.f1 + '" opacity=".13"/><ellipse cx="60" cy="84" rx="34" ry="46" fill="' + c.f2 + '" opacity=".09"/>' +
+      '<circle class="md-ae" cx="22" cy="78" r="1.3" fill="' + c.f2 + '"/><circle class="md-ae md-ae2" cx="98" cy="64" r="1.1" fill="' + c.f2 + '"/><circle class="md-ae md-ae3" cx="30" cy="44" r=".9" fill="' + c.f2 + '"/><circle class="md-ae md-ae4" cx="94" cy="100" r="1.2" fill="' + c.f2 + '"/></g>';
   }
+
 
   function artFor(id) { return id === 'medal' ? medalArt(medalTier()) : ART_OUT[id] ? ART_OUT[id].art : ''; }
   var RAR = { common: 'ธรรมดา', rare: 'หายาก', epic: 'พิเศษ', legendary: 'ตำนาน' };
@@ -296,7 +296,7 @@
       sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.setAttribute('aria-labelledby', 'vstT');
       sh.innerHTML = '<div class="vst-bg" data-shx></div><div class="vst-p">' +
         '<div class="vst-hd"><h3 id="vstT">ร้านค้าน้องเวลลัม</h3><span class="vst-pts"><i class="vof-coin"></i><b data-spts>0</b> แต้ม</span><button type="button" class="vst-x" data-shx aria-label="ปิดร้าน">✕</button></div>' +
-        '<div class="vst-stage"><div class="vst-fire" aria-hidden="true"></div><i class="vst-spot"></i><i class="vst-ped"></i><div class="vst-extra"></div><div class="vst-ms" aria-hidden="true"></div><p class="vst-say"></p></div>' +
+        '<div class="vst-stage"><div class="vst-fire" aria-hidden="true"></div><i class="vst-spot"></i><i class="vst-ped"></i><div class="vst-extra"></div><div class="vst-hero" aria-hidden="true"></div><div class="vst-ms" aria-hidden="true"></div><p class="vst-say"></p></div>' +
         '<div class="vst-tabs" role="tablist"></div><div class="vst-grid"></div><div class="vst-bar"></div></div>';
       document.body.appendChild(sh);
       sh.addEventListener('click', function (e) {
@@ -316,7 +316,7 @@
     setTimeout(function () { var x = sh.querySelector('.vst-x'); if (x) x.focus({ preventScroll: true }); }, 60);
   }
   function shopClose() {
-    if (!sh) return; tryOn = null; sel = null; pvTier = 0; sh.classList.remove('on'); document.documentElement.classList.remove('vst-open');
+    if (!sh) return; tryOn = null; sel = null; pvTier = 0; heroKey = ''; sh.classList.remove('on'); document.documentElement.classList.remove('vst-open');
     setTimeout(function () { if (sh && !sh.classList.contains('on')) sh.hidden = true; }, 260);
     if (box && !box.hidden) render();
   }
@@ -331,37 +331,42 @@
     if (a === 'wear') { var on = wear(o.id); shopRender(); hop(sh.querySelector('.vst-ms')); say(on ? 'ใส่ ' + o.name + ' แล้ว' : 'ถอด ' + o.name + ' แล้ว'); if (box && !box.hidden) render(); }
   }
   /* (2) ปีกฟีนิกซ์ (3) วงเวทไฟ (5) ปุ่มดูตัวอย่างระดับ (6) ป้ายนับถอยหลังปลดล็อก */
-  var WING = 'M150 122C120 100 92 72 38 38c14 30 10 42-10 48 26 9 26 19 10 29 26 3 30 11 20 24 32-10 58-12 92-9z';
-  var WING2 = 'M150 124c-24-14-48-34-80-52 9 18 4 25-9 30 18 6 18 12 10 20 23 0 43 3 79 8z';
+  /* ฉากเหรียญไฟไม่มอด แนวภาพยนตร์: ควันมืด + ถ่านไฟเบลอลอยช้า + แสงอุ่นตัดขอบ · ป้ายแบบแบรนด์หรู */
   function fireScene(on, picked) {
     var f = sh.querySelector('.vst-fire'), x = sh.querySelector('.vst-extra');
     if (!on) { f.innerHTML = ''; x.innerHTML = ''; f.removeAttribute('data-on'); return; }
     if (!f.getAttribute('data-on')) {
       f.setAttribute('data-on', '1');
-      var runes = '✦ ไฟไม่มอด ✦ VELLUM CHECK ✦ อ่านให้ครบ ✦ ก่อนเซ็น ✦ ไฟไม่มอด ✦ VELLUM CHECK ✦ อ่านให้ครบ ✦ ก่อนเซ็น ';
-      f.innerHTML =
-        '<svg class="vst-wings" viewBox="0 0 300 200"><defs><linearGradient id="phxA" x1="1" y1="0" x2="0" y2="0"><stop offset="0" style="stop-color:var(--f2)"/><stop offset=".5" style="stop-color:var(--f1)"/><stop offset="1" style="stop-color:var(--f1);stop-opacity:.15"/></linearGradient></defs>' +
-          '<g class="phx-l"><path d="' + WING + '" fill="url(#phxA)"/><path d="' + WING2 + '" fill="var(--f2)" opacity=".55"/><path d="M150 122C118 104 90 80 52 52M150 124C120 112 92 100 46 96M150 126c-30-4-56 0-84 14" stroke="var(--f2)" stroke-width="1.6" fill="none" opacity=".7"/></g>' +
-          '<g class="phx-r"><path d="' + WING + '" fill="url(#phxA)"/><path d="' + WING2 + '" fill="var(--f2)" opacity=".55"/><path d="M150 122C118 104 90 80 52 52M150 124C120 112 92 100 46 96M150 126c-30-4-56 0-84 14" stroke="var(--f2)" stroke-width="1.6" fill="none" opacity=".7"/></g></svg>' +
-        '<div class="vst-rune"><svg viewBox="0 0 260 260"><defs><path id="vrc" d="M130 130m-104 0a104 104 0 1 1 208 0a104 104 0 1 1-208 0"/></defs>' +
-          '<circle cx="130" cy="130" r="122" fill="none" stroke="var(--f2)" stroke-width="2.5" opacity=".9"/><circle cx="130" cy="130" r="114" fill="none" stroke="var(--f1)" stroke-width="1.5" stroke-dasharray="4 6"/>' +
-          '<circle cx="130" cy="130" r="92" fill="none" stroke="var(--f2)" stroke-width="1.5" opacity=".7"/>' +
-          '<path d="M130 40 208 175H52zM130 220 52 85h156z" fill="none" stroke="var(--f1)" stroke-width="1.6" opacity=".8"/>' +
-          '<text font-size="13" font-weight="700" letter-spacing="2" fill="var(--f2)"><textPath href="#vrc">' + runes + '</textPath></text></svg></div>';
+      var bk = '';
+      for (var k = 0; k < 16; k++) {
+        var sz = 3 + Math.random() * 12;
+        bk += '<i class="vst-bk" style="left:' + (4 + Math.random() * 92).toFixed(1) + '%;width:' + sz.toFixed(1) + 'px;height:' + sz.toFixed(1) + 'px;--b:' + (sz > 9 ? 4 : sz > 6 ? 2 : .6) + 'px;--t:' + (7 + Math.random() * 8).toFixed(1) + 's;--d:-' + (Math.random() * 12).toFixed(1) + 's;--o:' + (.35 + Math.random() * .5).toFixed(2) + '"></i>';
+      }
+      f.innerHTML = '<i class="vst-smoke"></i><i class="vst-smoke s2"></i><i class="vst-haze"></i>' + bk + '<i class="vst-hor"></i>';
     }
-    var bd = (S.badges || []).filter(function (b) { return b.id === 's7'; })[0], best = S.bestStreak || 0, rt = realTier(), html = '';
+    var bd = (S.badges || []).filter(function (b) { return b.id === 's7'; })[0], best = S.bestStreak || 0, rt = realTier(), line2 = '', pips = '';
     if (bd && !bd.earned) {
-      var left = bd.n - bd.have, pips = '';
-      for (var k = 0; k < bd.n; k++) pips += '<i class="' + (k < bd.have ? 'on' : '') + '"></i>';
-      html += '<div class="vst-cd"><b>ปลดล็อกในอีก ' + left + ' วัน 🔥</b><span class="vst-pips">' + pips + '</span><small>อย่าขาดเช็กอินนะ</small></div>';
-    } else if (best < 30) {
-      var nx = best < 14 ? 14 : 30, nm = best < 14 ? 'ทองคำขาว' : 'เพชร';
-      html += '<div class="vst-cd"><b>อีก ' + (nx - best) + ' วัน → ระดับ' + nm + '</b><small>สถิติติดกันสูงสุด ' + best + ' วัน</small></div>';
-    } else html += '<div class="vst-cd"><b>ระดับสูงสุดแล้ว 💎</b><small>ตำนานผู้ไม่ยอมแพ้</small></div>';
+      for (var k2 = 0; k2 < bd.n; k2++) pips += '<i class="' + (k2 < bd.have ? 'on' : '') + '"></i>';
+      line2 = 'ปลดล็อกในอีก ' + (bd.n - bd.have) + ' วัน';
+    } else if (best < 30) line2 = 'อีก ' + ((best < 14 ? 14 : 30) - best) + ' วัน สู่ระดับ' + (best < 14 ? 'ทองคำขาว' : 'เพชร');
+    else line2 = 'ระดับสูงสุด';
+    var html = '<div class="vst-lux"><em>LIMITED · ' + (MED[medalTier()].name === 'ทอง' ? 'GOLD' : MED[medalTier()].name === 'ทองคำขาว' ? 'PLATINUM' : 'DIAMOND') + '</em>' +
+      '<b>ของรางวัลเฉพาะผู้ไม่ยอมแพ้</b><span>' + line2 + '</span>' + (pips ? '<span class="vst-dots">' + pips + '</span>' : '') + '</div>';
     if (picked) html += '<div class="vst-tiers" role="group" aria-label="ดูตัวอย่างระดับเหรียญ">' + [[1, 'ทอง', 7], [2, 'ทองคำขาว', 14], [3, 'เพชร', 30]].map(function (t) {
-      return '<button type="button" data-tier="' + t[0] + '" class="t' + t[0] + (medalTier() === t[0] ? ' on' : '') + (bd && bd.earned && rt >= t[0] ? ' got' : '') + '"><b>' + t[1] + '</b><small>' + t[2] + ' วัน' + (bd && bd.earned && rt >= t[0] ? ' ✓' : '') + '</small></button>';
+      return '<button type="button" data-tier="' + t[0] + '" class="t' + t[0] + (medalTier() === t[0] ? ' on' : '') + (bd && bd.earned && rt >= t[0] ? ' got' : '') + '">' + t[1] + '<small>' + t[2] + ' วัน' + (bd && bd.earned && rt >= t[0] ? ' ✓' : '') + '</small></button>';
     }).join('') + '</div>';
     x.innerHTML = html;
+  }
+  /* (5) เหรียญเป็นพระเอก: ลอยใหญ่กลางฉาก หมุนช้า ๆ แล้วลอยลงไปคล้องคอน้อง */
+  var heroKey = '', heroT = [];
+  function playHero(t) {
+    var hEl = sh.querySelector('.vst-hero'), ms = sh.querySelector('.vst-ms');
+    heroT.forEach(clearTimeout); heroT = [];
+    if (calm()) { hEl.className = 'vst-hero'; ms.classList.remove('is-wait'); return; }
+    hEl.innerHTML = '<i class="vst-rays"></i><svg viewBox="36 66 48 54">' + medalArt(t) + '</svg>';
+    hEl.className = 'vst-hero'; void hEl.offsetWidth; hEl.classList.add('show'); ms.classList.add('is-wait');
+    heroT.push(setTimeout(function () { hEl.classList.add('fly'); ms.classList.remove('is-wait'); }, 1900));
+    heroT.push(setTimeout(function () { hEl.className = 'vst-hero'; hop(ms); }, 2500));
   }
   function shopRender() {
     if (!sh || sh.hidden || !S) return;
@@ -374,6 +379,10 @@
     var mc = MED[medalTier()] || MED[1]; sh.style.setProperty('--f1', mc.f1); sh.style.setProperty('--f2', mc.f2);
     sh.setAttribute('data-tier', medalTier());
     fireScene(fireOn, sel === 'medal');
+    var hk = sel === 'medal' ? 'm' + medalTier() : '';
+    if (hk && hk !== heroKey) playHero(medalTier());
+    if (!hk) { heroT.forEach(clearTimeout); var he = sh.querySelector('.vst-hero'); he.className = 'vst-hero'; sh.querySelector('.vst-ms').classList.remove('is-wait'); }
+    heroKey = hk;
     var o = itemById(sel), say2 = sh.querySelector('.vst-say');
     say2.textContent = !o ? 'อยากให้ฉันใส่อะไรดี? แตะของด้านล่างเพื่อลองใส่ได้เลย ✨'
       : own.indexOf(o.id) >= 0 ? (worn.indexOf(o.id) >= 0 ? 'ใส่ ' + o.name + ' อยู่นะ เข้ากับฉันไหม? 😊' : o.name + ' ของเราเอง ใส่เลยไหม?')
