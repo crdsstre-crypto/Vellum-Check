@@ -73,7 +73,7 @@
   /* (1) ออร่าไฟรอบตัวน้องตอนใส่เหรียญ (สีตามระดับเหรียญ) — วาดไว้หลังตัวน้อง */
   function auraArt(t) {   // แสงอุ่นจาง ๆ หลังตัว + ถ่านไฟไม่กี่จุด (ไม่ใช่ลิ้นไฟการ์ตูน)
     var c = MED[t] || MED[1];
-    return '<g class="md-aura" aria-hidden="true"><ellipse cx="60" cy="80" rx="50" ry="64" fill="' + c.f1 + '" opacity=".13"/><ellipse cx="60" cy="84" rx="34" ry="46" fill="' + c.f2 + '" opacity=".09"/>' +
+    return '<g class="md-aura" aria-hidden="true">' +
       '<circle class="md-ae" cx="22" cy="78" r="1.3" fill="' + c.f2 + '"/><circle class="md-ae md-ae2" cx="98" cy="64" r="1.1" fill="' + c.f2 + '"/><circle class="md-ae md-ae3" cx="30" cy="44" r=".9" fill="' + c.f2 + '"/><circle class="md-ae md-ae4" cx="94" cy="100" r="1.2" fill="' + c.f2 + '"/></g>';
   }
 
@@ -296,7 +296,7 @@
       sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.setAttribute('aria-labelledby', 'vstT');
       sh.innerHTML = '<div class="vst-bg" data-shx></div><div class="vst-p">' +
         '<div class="vst-hd"><h3 id="vstT">ร้านค้าน้องเวลลัม</h3><span class="vst-pts"><i class="vof-coin"></i><b data-spts>0</b> แต้ม</span><button type="button" class="vst-x" data-shx aria-label="ปิดร้าน">✕</button></div>' +
-        '<div class="vst-stage"><div class="vst-fire" aria-hidden="true"></div><i class="vst-spot"></i><i class="vst-ped"></i><div class="vst-extra"></div><div class="vst-hero" aria-hidden="true"></div><div class="vst-ms" aria-hidden="true"></div><p class="vst-say"></p></div>' +
+        '<div class="vst-stage"><div class="vst-fire" aria-hidden="true"></div><i class="vst-spot"></i><i class="vst-glow"></i><div class="vst-refl" aria-hidden="true"></div><i class="vst-ped"></i><i class="vst-sweep"></i><i class="vst-grain"></i><div class="vst-extra"></div><div class="vst-hero" aria-hidden="true"></div><div class="vst-ms" aria-hidden="true"></div><p class="vst-say"></p></div>' +
         '<div class="vst-tabs" role="tablist"></div><div class="vst-grid"></div><div class="vst-bar"></div></div>';
       document.body.appendChild(sh);
       sh.addEventListener('click', function (e) {
@@ -373,9 +373,10 @@
     var list = shopItems(), own = ownedOutfits(), worn = wornOutfits(), bmap = {};
     (S.badges || []).forEach(function (b) { bmap[b.id] = b; });
     sh.querySelector('[data-spts]').textContent = fmt(S.points);
-    sh.querySelector('.vst-ms').innerHTML = dressed('wave', 220);
+    var mh = dressed('wave', 220); sh.querySelector('.vst-ms').innerHTML = mh;
     var fireOn = sel === 'medal' || (!sel && wornOutfits().indexOf('medal') >= 0);
     sh.classList.toggle('is-fire', fireOn);
+    sh.querySelector('.vst-refl').innerHTML = fireOn ? mh : '';
     var mc = MED[medalTier()] || MED[1]; sh.style.setProperty('--f1', mc.f1); sh.style.setProperty('--f2', mc.f2);
     sh.setAttribute('data-tier', medalTier());
     fireScene(fireOn, sel === 'medal');
