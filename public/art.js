@@ -5441,6 +5441,13 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     requestAnimationFrame(function () { ld && ld.classList.add('in'); });
     T(function () { setStep(1); scene('read'); readNext(); }, 1700);
     T(function () { var n = ld && !window.__vcDemoRun && ld.querySelector('.vc-ld-note'); if (n) n.textContent = 'สัญญายาว ระบบกำลังตรวจละเอียด อีกสักครู่นะครับ'; }, 20000);
+    T(function () { var n = ld && !window.__vcDemoRun && ld.querySelector('.vc-ld-note'); if (n) n.textContent = 'ใช้เวลานานกว่าปกตินิดหน่อย เกือบเสร็จแล้ว อย่าเพิ่งปิดหน้านี้'; }, 45000);
+    if (!document.getElementById('vcLdSumCss')) { var cs = document.createElement('style'); cs.id = 'vcLdSumCss';
+      cs.textContent = '.vc-ld3[data-scene="sum"] .vc-ld-cam{transform:scale(1) translateY(0) !important}' +
+        '.vc-ld3[data-scene="sum"] .vc-ld-paper{animation:vcSumGlow 2.6s ease-in-out infinite}' +
+        '@keyframes vcSumGlow{50%{box-shadow:0 0 0 2px rgba(110,231,183,.35),0 0 34px -4px rgba(110,231,183,.45)}}' +
+        '@media (prefers-reduced-motion:reduce){.vc-ld3[data-scene="sum"] .vc-ld-paper{animation:none}}';
+      document.head.appendChild(cs); };
   }
   function focusLine(i, zoom) {
     if (!ld) return;
@@ -5466,19 +5473,24 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     if (cur >= 0 && lines[cur]) lines[cur].classList.add('marked');
     cur++;
     if (cur >= lines.length) {
-      /* อ่านจบรอบ → เปลี่ยนฉากไปเทียบกฎหมาย */
-      round++; setStep(2); zoomOut(); scene('law'); say('กำลังเทียบแต่ละข้อกับกฎหมายที่เกี่ยวข้อง…');
-      T(function () {
-        if (!ld || ld.classList.contains('fin')) return;
-        /* กลับมาอ่านซ้ำ: ล้างสีไฮไลต์ พลิกหน้าใหม่ */
-        lines.forEach(function (p) { p.classList.remove('marked'); });
-        var f = ld.querySelector('.vc-ld-flip'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go');
-        scene('read'); cur = -1; T(readNext, 700);
-      }, 4200);
+      /* v281: อ่านจบ → เทียบกฎหมายทีละข้อ (ครั้งเดียว) → ขั้นสรุปผล แล้วรออยู่ตรงนั้น ไม่วนกลับไปอ่านใหม่ */
+      round++; setStep(2); zoomOut(); scene('law');
+      lawTick(lines.map(function (p) { return p.getAttribute('data-n'); }).filter(Boolean), 0);
       return;
     }
     focusLine(cur, fast ? 1.5 : 1.75);
     T(readNext, gap);
+  }
+  function lawTick(ns, k) {
+    if (!ld || ld.classList.contains('fin')) return;
+    if (!ns.length && k === 0) { say('กำลังเทียบแต่ละข้อกับกฎหมายที่เกี่ยวข้อง…'); T(function () { lawTick(ns, 1); }, 4200); return; }
+    if (k < ns.length) { say('กำลังเทียบข้อ ' + ns[k] + ' กับกฎหมายที่เกี่ยวข้อง…'); T(function () { lawTick(ns, k + 1); }, 1400); return; }
+    setStep(3); scene('sum'); sumTick(0);
+  }
+  var SUM_MSG = ['กำลังจัดลำดับจุดเสี่ยงจากมากไปน้อย…', 'กำลังเขียนคำแนะนำว่าควรขอแก้อย่างไร…', 'กำลังสรุปสิ่งที่ต้องทำตามสัญญา…', 'กำลังตรวจทานผลอีกรอบ…'];
+  function sumTick(k) {
+    if (!ld || ld.classList.contains('fin')) return;
+    say(SUM_MSG[k % SUM_MSG.length]); T(function () { sumTick(k + 1); }, 4500);
   }
   function setStep(k) {
     if (!ld) return;
