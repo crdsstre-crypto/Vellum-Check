@@ -59,7 +59,7 @@
       '<path d="M54 104l-3 9 4-2 2 3 2-9z" fill="' + c.r1 + '" stroke="' + INK + '" stroke-width="1.5" stroke-linejoin="round"/>' +
       '<path d="M66 104l3 9-4-2-2 3-2-9z" fill="' + c.r2 + '" stroke="' + INK + '" stroke-width="1.5" stroke-linejoin="round"/>' +
       '<circle cx="60" cy="86.5" r="2.8" fill="none" stroke="' + c.line + '" stroke-width="2"/>' +
-      '<g class="md-coin"><path d="M60.0 85.8 L61.9 87.3 L64.3 86.7 L65.5 88.8 L67.9 89.1 L68.2 91.5 L70.3 92.7 L69.7 95.1 L71.2 97.0 L69.7 98.9 L70.3 101.3 L68.2 102.5 L67.9 104.9 L65.5 105.2 L64.3 107.3 L61.9 106.7 L60.0 108.2 L58.1 106.7 L55.7 107.3 L54.5 105.2 L52.1 104.9 L51.8 102.5 L49.7 101.3 L50.3 98.9 L48.8 97.0 L50.3 95.1 L49.7 92.7 L51.8 91.5 L52.1 89.1 L54.5 88.8 L55.7 86.7 L58.1 87.3Z" fill="' + c.rim + '" stroke="' + INK + '" stroke-width="1.6" stroke-linejoin="round"/>' +
+      '<g class="md-coin"><path d="' + (t === 2 ? 'M60.0 84.4 L62.5 87.7 L65.2 88.0 L66.8 90.2 L70.9 90.7 L69.3 94.5 L70.4 97.0 L69.3 99.5 L70.9 103.3 L66.8 103.8 L65.2 106.0 L62.5 106.3 L60.0 109.6 L57.5 106.3 L54.8 106.0 L53.2 103.8 L49.1 103.3 L50.7 99.5 L49.6 97.0 L50.7 94.5 L49.1 90.7 L53.2 90.2 L54.8 88.0 L57.5 87.7Z' : 'M60.0 85.8 L61.9 87.3 L64.3 86.7 L65.5 88.8 L67.9 89.1 L68.2 91.5 L70.3 92.7 L69.7 95.1 L71.2 97.0 L69.7 98.9 L70.3 101.3 L68.2 102.5 L67.9 104.9 L65.5 105.2 L64.3 107.3 L61.9 106.7 L60.0 108.2 L58.1 106.7 L55.7 107.3 L54.5 105.2 L52.1 104.9 L51.8 102.5 L49.7 101.3 L50.3 98.9 L48.8 97.0 L50.3 95.1 L49.7 92.7 L51.8 91.5 L52.1 89.1 L54.5 88.8 L55.7 86.7 L58.1 87.3Z') + '" fill="' + c.rim + '" stroke="' + INK + '" stroke-width="1.6" stroke-linejoin="round"/>' +
       '<circle cx="60" cy="97" r="8.4" fill="' + c.disc + '" stroke="' + c.line + '" stroke-width="1.4"/>' +
       (t === 3 ? '<g class="md-gem"><path d="M60 89 67.5 95.5 60 105.5 52.5 95.5z" fill="#7a4cff" stroke="#fff" stroke-width=".7"/>' +
           '<path d="M60 89l-3.5 6.5h7z" fill="#e9dcff"/><path d="M52.5 95.5 56.5 95.5 60 89z" fill="#b89aff"/><path d="M67.5 95.5 63.5 95.5 60 89z" fill="#cdb5ff"/>' +
@@ -67,6 +67,7 @@
           '<path class="md-rb" d="M53.5 96 66.5 96 60 104.5z" fill="url(#mdRb)" opacity="0"/></g>' +
           '<defs><linearGradient id="mdRb" x1="0" x2="1"><stop offset="0" stop-color="#ff7ad9"/><stop offset=".33" stop-color="#7ad7ff"/><stop offset=".66" stop-color="#b6ff8a"/><stop offset="1" stop-color="#ffd27a"/></linearGradient></defs>'
         : '<circle cx="60" cy="97" r="6.3" fill="' + c.inn + '" stroke="' + c.hi + '" stroke-width=".9" opacity=".95"/>') +
+      (t === 2 ? '<g stroke="#ffffff" stroke-width=".7" stroke-linecap="round" opacity=".85"><path d="M60 89.6v14.8M53.6 93.3l12.8 7.4M53.6 100.7l12.8-7.4"/><path d="M58.4 90.6 60 92.2l1.6-1.6M58.4 103.4 60 101.8l1.6 1.6M54.8 95.4l2.2-.2-.6-2.2M65.2 98.6l-2.2.2.6 2.2M54.8 98.6l2.2.2-.6 2.2M65.2 95.4l-2.2-.2.6-2.2" fill="none"/></g>' : '') +
       '<path class="md-gl" d="M53.6 94a7 7 0 0 1 5-4.8" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/>' +
       (t === 3 ? '</g>' : '<g class="md-fl"><path d="M60 102.6c-2.6 0-4.2-1.7-4.2-3.8 0-2.4 1.9-3.4 2.4-5.8 1.4 1 2.2 2.3 2.2 3.5.7-.5 1.1-1.3 1.2-2.1 1.6 1.3 2.4 2.8 2.4 4.4 0 2.2-1.6 3.8-4 3.8z" fill="' + c.f1 + '" stroke="' + c.fs + '" stroke-width=".8"/>' +
       '<path d="M60 102c-1.2 0-2-.8-2-1.9 0-1.4 1.2-1.8 1.4-3.2.9.7 2.6 1.9 2.6 3.2 0 1.1-.8 1.9-2 1.9z" fill="' + c.f2 + '"/></g></g>') +
@@ -92,6 +93,16 @@
       '<g class="cw-l">' + wing + '</g><g class="cw-r" transform="translate(120 0) scale(-1 1)"><g class="cw-l2">' + wing + '</g></g></g>' +
       '<g class="halo" aria-hidden="true"><ellipse cx="60" cy="8" rx="20" ry="5" fill="none" stroke="#f3e9ff" stroke-width="2.2"/><ellipse cx="60" cy="8" rx="20" ry="5" fill="none" stroke="#b28bff" stroke-width="5" opacity=".35"/>' +
       '<path class="halo-g" d="M44 6.5a20 5 0 0 1 10-3" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></g>';
+  }
+  function frontArt(t) {   // ทองคำขาว: ผ้าคลุมไหล่ขนฟูสีขาว + ไอหายใจ
+    if (t !== 2) return '';
+    var puffs = '', xs = [30, 37, 44, 51, 58, 65, 72, 79, 86, 90];
+    xs.forEach(function (x, n) { puffs += '<circle cx="' + x + '" cy="' + (70 + (n % 2 ? 1.5 : -0.5)) + '" r="' + (n % 2 ? 5.2 : 5.8) + '"/>'; });
+    return '<g class="fur" transform="translate(0 6)"><g fill="#f4f8ff" stroke="' + INK + '" stroke-width="1.6">' + puffs + '</g>' +
+      '<g fill="#f4f8ff">' + puffs.replace(/r="[\d.]+"/g, function (m) { return 'r="' + (parseFloat(m.slice(3)) - 1.6) + '"'; }) + '</g>' +
+      '<path d="M36 69q4-3 8 0M50 69q4-3 8 0M64 69q4-3 8 0M78 69q4-3 8 0" stroke="#cfe0f5" stroke-width="1.2" fill="none" stroke-linecap="round"/>' +
+      '<g class="fur-tail"><path d="M84 74c-1 6-1 12 1 18 2 3 7 3 8 0 2-6 1-12-1-18z" fill="#f4f8ff" stroke="' + INK + '" stroke-width="1.5" stroke-linejoin="round"/><path d="M86 80v8M90 80v8" stroke="#cfe0f5" stroke-width="1" fill="none"/></g></g>' +
+      '<g class="brth"><circle cx="72" cy="63" r="2.2" fill="#fff"/><circle cx="76" cy="60" r="3" fill="#fff"/><circle cx="81" cy="58" r="2.4" fill="#fff"/></g>';
   }
   function artFor(id) { return id === 'medal' ? medalArt(medalTier()) : ART_OUT[id] ? ART_OUT[id].art : ''; }
   var RAR = { common: 'ธรรมดา', rare: 'หายาก', epic: 'พิเศษ', legendary: 'ตำนาน' };
@@ -121,7 +132,7 @@
   function dressed(m, size) {
     var svg = mascot(m, size, ICO_GIFT), worn = wornOutfits();
     if (!worn.length || svg.indexOf('<g class="vm-face">') < 0) return svg;
-    var art = worn.map(function (id) { return id === 'medal' ? '<g class="md-worn">' + artFor(id) + '</g>' : artFor(id); }).join('');
+    var art = worn.map(function (id) { return id === 'medal' ? frontArt(medalTier()) + '<g class="md-worn">' + artFor(id) + '</g>' : artFor(id); }).join('');
     var i = svg.indexOf('<g class="vm-face">'), depth = 0, j = i;
     var re = /<g[\s>]|<\/g>/g; re.lastIndex = i;
     for (var mt; (mt = re.exec(svg));) { if (mt[0] === '</g>') { depth--; if (!depth) { j = mt.index + 4; break; } } else depth++; }
@@ -362,7 +373,7 @@
       var SH = [[18, 30, 10], [80, 26, 8], [12, 62, 7], [86, 58, 11], [26, 82, 6], [74, 80, 8]];
       SH.forEach(function (p, n) { sd += '<i class="vst-shard" style="left:' + p[0] + '%;top:' + p[1] + '%;width:' + p[2] + 'px;height:' + (p[2] * 1.7).toFixed(0) + 'px;--d:-' + (n * .9).toFixed(1) + 's"></i>'; });
       f.innerHTML = '<i class="vst-smoke"></i><i class="vst-smoke s2"></i><i class="vst-haze"></i>' + bk +
-        '<i class="vst-neb"></i><i class="vst-stars"></i><i class="vst-stars s2"></i>' + sd + '<i class="vst-fog"></i>' + sn + '<i class="vst-hor"></i>';
+        '<i class="vst-neb"></i><i class="vst-stars"></i><i class="vst-stars s2"></i>' + sd + '<i class="vst-fog"></i><i class="vst-aur"></i><i class="vst-aur a2"></i><i class="vst-crk"></i>' + sn + '<i class="vst-hor"></i>';
     }
     var bd = (S.badges || []).filter(function (b) { return b.id === 's7'; })[0], best = S.bestStreak || 0, rt = realTier(), line2 = '', pips = '';
     if (bd && !bd.earned) {
