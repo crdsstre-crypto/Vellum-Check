@@ -36,7 +36,16 @@
     bow: { vb: '44 74 32 24', art: '<g transform="translate(60 86)"><path d="M-3-3-14-9v18L-3 3zM3-3 14-9v18L3 3z" fill="#d2343e" stroke="' + INK + '" stroke-width="2" stroke-linejoin="round"/><rect x="-4" y="-4.5" width="8" height="9" rx="2.5" fill="#a91f2a" stroke="' + INK + '" stroke-width="2"/><path d="M-11-5-6-2M11-5 6-2" stroke="#ff8a92" stroke-width="1.4" stroke-linecap="round"/></g>' },
     crown: { vb: '34 -10 52 38', art: '' },
     scarf: { vb: '28 62 70 46', art: '<path d="M30 70q30 10 60 0v9q-30 10-60 0z" fill="#d2343e" stroke="' + INK + '" stroke-width="2.2" stroke-linejoin="round"/><path d="M74 78l4 24 9-2-4-24z" fill="#d2343e" stroke="' + INK + '" stroke-width="2.2" stroke-linejoin="round"/><path d="M36 74q24 7 48 0M77 92h8M78 97h8" stroke="#ff8a92" stroke-width="1.6" fill="none" stroke-linecap="round"/>' },
-    wizard: { vb: '8 -36 104 64', art: '<path d="M22 24 58-30q6-5 10 2l-6 6 12 46z" fill="#5b3fb0" stroke="' + INK + '" stroke-width="2.4" stroke-linejoin="round"/><ellipse cx="60" cy="24" rx="46" ry="7" fill="#4a2f96" stroke="' + INK + '" stroke-width="2.4"/><path d="M26 18q34 8 70-2" stroke="#f4c542" stroke-width="4" fill="none"/><path d="M50 0l1.5 3.4 3.6.4-2.7 2.4.8 3.6-3.2-1.9-3.2 1.9.8-3.6-2.7-2.4 3.6-.4zM64-14l1 2.2 2.4.3-1.8 1.6.5 2.4-2.1-1.2-2.1 1.2.5-2.4-1.8-1.6 2.4-.3z" fill="#ffe28a"/>' },
+    wizard: { vb: '6 -36 108 72', art: '<defs><linearGradient id="wzC" x1="0" x2="1"><stop offset="0" stop-color="#8a6be0"/><stop offset=".45" stop-color="#6243c4"/><stop offset="1" stop-color="#3e2690"/></linearGradient>' +
+      '<linearGradient id="wzG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe9a3"/><stop offset=".55" stop-color="#f4c542"/><stop offset="1" stop-color="#c9921f"/></linearGradient>' +
+      '<linearGradient id="wzBr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a4bd0"/><stop offset="1" stop-color="#36217f"/></linearGradient></defs>' +
+      '<path d="M12 22Q14 17 60 16Q106 17 108 22Q100 26 60 26Q20 26 12 22Z" fill="#2e1b6e" stroke="' + INK + '" stroke-width="2.4" stroke-linejoin="round"/>' +
+      '<path d="M35 21C40 6 49-9 57-20C62-27 70-32 78-31C85-30 90-25 89-19C86-23 80-24 75-21C72-10 77 6 85 21Q60 25 35 21Z" fill="url(#wzC)" stroke="' + INK + '" stroke-width="2.4" stroke-linejoin="round"/>' +
+      '<path d="M42 16C46 4 52-8 58-17" stroke="#b9a2ff" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".7"/><path d="M75-21C79-23 84-22 87-20" stroke="#2a1766" stroke-width="1.6" fill="none" stroke-linecap="round"/>' +
+      '<path d="M67-4a5.5 5.5 0 1 0 4 9 4.4 4.4 0 1 1-4-9z" fill="#ffe28a"/><path d="M50 4l1.5 3.3 3.6.4-2.7 2.4.8 3.5-3.2-1.9-3.2 1.9.8-3.5-2.7-2.4 3.6-.4z" fill="#ffe28a"/><path d="M60-14l.9 2 2.2.3-1.6 1.5.4 2.2-1.9-1.1-1.9 1.1.4-2.2-1.6-1.5 2.2-.3z" fill="#fff3c4"/>' +
+      '<path d="M89-19v5" stroke="' + INK + '" stroke-width="1.4"/><path d="M89-15l1.6 3.4 3.7.5-2.7 2.6.7 3.7-3.3-1.8-3.3 1.8.7-3.7-2.7-2.6 3.7-.5z" fill="url(#wzG)" stroke="' + INK + '" stroke-width="1.2" stroke-linejoin="round"/>' +
+      '<path d="M35 13Q60 19 85 13L87 21Q60 27 33 21Z" fill="url(#wzG)" stroke="' + INK + '" stroke-width="2" stroke-linejoin="round"/><rect x="54.5" y="14.5" width="11" height="9.5" rx="1.6" fill="#ffe9a3" stroke="' + INK + '" stroke-width="1.8"/><rect x="57.8" y="17.4" width="4.4" height="3.8" rx=".6" fill="#4a2f96"/>' +
+      '<path d="M12 22Q20 26 60 26Q100 26 108 22Q110 27 102 30Q86 33 60 33Q34 33 18 30Q10 27 12 22Z" fill="url(#wzBr)" stroke="' + INK + '" stroke-width="2.4" stroke-linejoin="round"/><path d="M22 29Q60 34 98 29" stroke="#8f74ea" stroke-width="1.4" fill="none" opacity=".6"/>' },
     medal: { vb: '30 62 60 56', art: '' },
     laurel: { vb: '20 -17 80 40', art: '' },
   };
@@ -281,7 +290,7 @@
     if (!worn.length || svg.indexOf('<g class="vm-face">') < 0) return svg;
     if (worn.indexOf('laurel') >= 0 && /^(wave|happy|party)$/.test(m)) svg = lrPoseSvg(svg);
     else if (worn.indexOf('crown') >= 0 && /^(wave|happy|party)$/.test(m)) svg = crPoseSvg(svg);
-    var art = worn.map(function (id) { return id === 'medal' ? frontArt(medalTier()) + '<g class="md-worn">' + artFor(id) + '</g>' : id === 'laurel' ? '<g class="lr-worn">' + laurelArt(0, 'front') + '</g>' : id === 'crown' ? '<g class="cr-worn">' + artFor(id) + '</g>' : artFor(id); }).join('');
+    var art = worn.map(function (id) { return id === 'medal' ? frontArt(medalTier()) + '<g class="md-worn">' + artFor(id) + '</g>' : id === 'laurel' ? '<g class="lr-worn">' + laurelArt(0, 'front') + '</g>' : id === 'crown' ? '<g class="cr-worn">' + artFor(id) + '</g>' : id === 'wizard' ? '<g class="wz-worn">' + artFor(id) + '</g>' : artFor(id); }).join('');
     var i = svg.indexOf('<g class="vm-face">'), depth = 0, j = i;
     var re = /<g[\s>]|<\/g>/g; re.lastIndex = i;
     for (var mt; (mt = re.exec(svg));) { if (mt[0] === '</g>') { depth--; if (!depth) { j = mt.index + 4; break; } } else depth++; }
@@ -493,7 +502,7 @@
     setTimeout(function () { var x = sh.querySelector('.vst-x'); if (x) x.focus({ preventScroll: true }); }, 60);
   }
   function shopClose() {
-    if (!sh) return; tryOn = null; sel = null; pvTier = 0; heroKey = ''; heroPlayed = false; lrStop(); lrPlayed = false; crStop(); crPlayed = false; sh.classList.remove('on'); document.documentElement.classList.remove('vst-open');
+    if (!sh) return; tryOn = null; sel = null; pvTier = 0; heroKey = ''; heroPlayed = false; lrStop(); lrPlayed = false; crStop(); crPlayed = false; wzStop(); wzPlayed = false; sh.classList.remove('on'); document.documentElement.classList.remove('vst-open');
     setTimeout(function () { if (sh && !sh.classList.contains('on')) sh.hidden = true; }, 260);
     if (box && !box.hidden) render();
   }
@@ -891,6 +900,73 @@
       crT.push(setTimeout(function () { crEnd && crEnd(); }, 1250));
     };
   }
+  /* ===== ฉากเปิดตัวหมวกนักเวท (ระดับพิเศษ): วงเวทใต้เท้า → หมวกลอยขึ้นจากวง → ลอยลงสวมหัว → น้องร่ายคาถาเป็นดาว → การ์ดแนะนำ (แตะเพื่อข้าม) ===== */
+  var wzPlayed = false, wzT = [], wzEnd = null;
+  function wzStop() { wzT.forEach(clearTimeout); wzT = []; if (wzEnd) wzEnd(true); }
+  function playWizard(force) {
+    if (!sh || (wzPlayed && !force)) return;
+    var st = sh.querySelector('.vst-stage'), ms = sh.querySelector('.vst-ms'), worn = ms && ms.querySelector('.wz-worn'); if (!st || !worn) return;
+    wzStop(); wzPlayed = true;
+    var o = itemById('wizard') || { name: 'หมวกนักเวท', price: 400 }, has = ownedOutfits().indexOf('wizard') >= 0;
+    var isOn = function () { try { return JSON.parse(localStorage.getItem('vc_outfit') || '[]').indexOf('wizard') >= 0; } catch (e) { return false; } };
+    var RUNE = '';
+    for (var k = 0; k < 12; k++) { var a = k * 30; RUNE += '<g transform="rotate(' + a + ' 60 60) translate(60 13)">' + (k % 3 === 0 ? '<path d="M0-4 1.2-1.2 4 0 1.2 1.2 0 4-1.2 1.2-4 0-1.2-1.2z"/>' : k % 3 === 1 ? '<path d="M1.6-3.2a3.4 3.4 0 1 0 0 6.4 2.6 2.6 0 1 1 0-6.4z"/>' : '<circle r="1.4"/>') + '</g>'; }
+    var ring = '<svg class="vwz-ring" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="56" class="r1"/><circle cx="60" cy="60" r="44" class="r2"/><g class="rn">' + RUNE + '</g>' +
+      '<path class="r3" d="M60 22 93 79H27z"/><path class="r3" d="M60 98 27 41h66z"/></svg>';
+    var card = '<div class="vwz-card" role="dialog" aria-label="ไอเทมใหม่ หมวกนักเวท"><i class="vwz-rb">✦ พิเศษ</i><svg viewBox="' + ART_OUT.wizard.vb + '" aria-hidden="true">' + ART_OUT.wizard.art + '</svg>' +
+      '<b>' + h(o.name) + '</b><span class="vwz-q">“อ่านสัญญาแบบมีเวทมนตร์!”</span>' +
+      '<button type="button" class="vwz-go">' + (has ? (isOn() ? 'ใส่อยู่ ✓' : 'ใส่เลย') : 'ลองดูต่อ') + '</button>' + (has ? '' : '<small class="vwz-pr">ราคา ' + fmt(o.price) + ' แต้ม</small>') + '</div>';
+    var ov = document.createElement('div'); ov.className = 'vwz'; ov.setAttribute('aria-live', 'polite');
+    ov.innerHTML = '<i class="vwz-dim"></i>' + ring + '<i class="vwz-beam"></i><span class="vwz-hat"><svg viewBox="' + ART_OUT.wizard.vb + '">' + ART_OUT.wizard.art + '</svg></span>' +
+      '<svg class="vwz-star" viewBox="0 0 100 100" aria-hidden="true"><path pathLength="1" d="M50 6 61 38 95 38 67 58 78 92 50 71 22 92 33 58 5 38 39 38Z"/></svg><i class="vwz-burst b1"></i><i class="vwz-burst b2"></i>' + card + '<small class="vli-skip">แตะเพื่อข้าม</small>';
+    st.appendChild(ov); sh.classList.add('wz-intro');
+    var q = st.getBoundingClientRect(), msv = (ms.querySelector('svg') || ms).getBoundingClientRect(), tg = worn.getBoundingClientRect();
+    var cx = msv.left - q.left + msv.width / 2, feetY = msv.top - q.top + msv.height * 132 / 140;
+    var RW = Math.min(q.width * .62, msv.width * 1.25);
+    var rg = ov.querySelector('.vwz-ring'); rg.style.cssText = 'left:' + (cx - RW / 2) + 'px;top:' + (feetY - RW / 2) + 'px;width:' + RW + 'px;height:' + RW + 'px';
+    var bm = ov.querySelector('.vwz-beam'); bm.style.cssText = 'left:' + (cx - RW * .2) + 'px;width:' + (RW * .4) + 'px;top:' + (tg.top - q.top - 40) + 'px;height:' + (feetY - (tg.top - q.top) + 40) + 'px';
+    var tx = tg.left - q.left + tg.width / 2, ty = tg.top - q.top + tg.height / 2;
+    var hat = ov.querySelector('.vwz-hat'); hat.style.left = tx + 'px'; hat.style.top = ty + 'px';
+    var SW = Math.max(54, msv.width * .3), sx = msv.left - q.left + msv.width * .02, sy = msv.top - q.top + msv.height * .38;
+    var stv = ov.querySelector('.vwz-star'); stv.style.cssText = 'left:' + (sx - SW / 2) + 'px;top:' + (sy - SW / 2) + 'px;width:' + SW + 'px;height:' + SW + 'px';
+    [['b1', tx, ty], ['b2', sx, sy]].forEach(function (b) { var e = ov.querySelector('.vwz-burst.' + b[0]); e.style.left = b[1] + 'px'; e.style.top = b[2] + 'px'; });
+    var anims = [], ended = false;
+    wzEnd = function (quiet) {
+      if (ended) return; ended = true; wzEnd = null; wzT.forEach(clearTimeout); wzT = [];
+      anims.forEach(function (x) { try { x.cancel(); } catch (e) {} });
+      ms.classList.remove('hide-wizard'); sh.classList.remove('wz-intro');
+      if (quiet) { ov.remove(); return; }
+      ov.classList.add('out'); setTimeout(function () { ov.remove(); }, 450);
+    };
+    var showCard = function () { if (ended) return; ov.classList.add('card'); var b = ov.querySelector('.vwz-go'); try { b.focus({ preventScroll: true }); } catch (e) {} wzT.push(setTimeout(function () { wzEnd && wzEnd(); }, 7000)); };
+    ov.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (e.target.closest('.vwz-go')) { if (has && !isOn()) { wear('wizard'); wzEnd && wzEnd(); shopRender(); } else if (wzEnd) wzEnd(); return; }
+      if (e.target.closest('.vwz-card')) return;
+      if (ov.classList.contains('card')) { wzEnd && wzEnd(); return; }
+      wzT.forEach(clearTimeout); wzT = []; anims.forEach(function (x) { try { x.cancel(); } catch (er) {} }); ms.classList.remove('hide-wizard'); ov.classList.add('skip'); showCard();
+    });
+    ov.addEventListener('keydown', function (e) { if (e.key === 'Escape') { e.stopPropagation(); wzEnd && wzEnd(); } });
+    if (calm() || !hat.animate) { ov.classList.add('skip'); showCard(); return; }
+    ms.classList.add('hide-wizard'); void ov.offsetWidth; ov.classList.add('go');
+    var sv = hat.querySelector('svg'), k0 = tg.width / Math.max(1, sv.getBoundingClientRect().width), up = Math.max(54, tg.height * 1.6);
+    var P = function (x, y, s, r) { return 'translate(-50%,-50%) translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) scale(' + s + ') rotate(' + (r || 0) + 'deg)'; };
+    var dy0 = feetY - ty, T = 2300;
+    var ha = hat.animate([
+      { transform: P(0, dy0, .25, 0), opacity: 0 },
+      { transform: P(0, dy0 - 10, .5, -8), opacity: 1, offset: .12, easing: 'ease-out' },
+      { transform: P(0, -up, 1.25, 8), opacity: 1, offset: .5, easing: 'ease-in-out' },
+      { transform: P(0, -up - 6, 1.3, -6), opacity: 1, offset: .66, easing: 'ease-in' },
+      { transform: P(0, -6, k0 * 1.05, 0), opacity: 1, offset: .92 },
+      { transform: P(0, 0, k0, 0), opacity: 1 }], { duration: T, delay: 550, fill: 'both' });
+    anims.push(ha);
+    ha.onfinish = function () {
+      if (ended) return; ms.classList.remove('hide-wizard'); hat.style.opacity = '0'; ov.classList.add('worn'); hop(ms);
+      wzT.push(setTimeout(function () { ov.classList.add('cast'); }, 350));
+      wzT.push(setTimeout(function () { ov.classList.add('pop'); }, 1250));
+      wzT.push(setTimeout(showCard, 1750));
+    };
+  }
   /* การ์ดลิมิเต็ด: กว้าง 2 ช่อง กรอบโฮโลแกรม · ยังไม่ได้ = เห็นเหรียญจางพร้อมแม่กุญแจ ยิ่งใกล้ครบยิ่งสว่าง */
   function tierTag(t) {   // ระดับเป็นดาว 3 ดวง: ทอง ★☆☆ · ทองคำขาว ★★☆ · เพชร ★★★
     var st = ''; for (var k = 1; k <= 3; k++) st += '<svg class="' + (k <= t ? 'on' : '') + '" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L10 14.5l-5.1 2.8 1.1-5.7-4.3-4 5.8-.7z"/></svg>';
@@ -1083,16 +1159,48 @@
     (function () { var o = ''; for (var k = 0; k < 7; k++) { var a = Math.PI * (.62 + k * .13); o += '<ellipse cx="' + (32 + 14 * Math.cos(a)).toFixed(1) + '" cy="' + (32 + 14 * Math.sin(a)).toFixed(1) + '" rx="3.4" ry="1.4" transform="rotate(' + (a * 180 / Math.PI + 60).toFixed(0) + ' ' + (32 + 14 * Math.cos(a)).toFixed(1) + ' ' + (32 + 14 * Math.sin(a)).toFixed(1) + ')" fill="#7a4d08"/>'; a = Math.PI * (.38 - k * .13); o += '<ellipse cx="' + (32 + 14 * Math.cos(a)).toFixed(1) + '" cy="' + (32 + 14 * Math.sin(a)).toFixed(1) + '" rx="3.4" ry="1.4" transform="rotate(' + (a * 180 / Math.PI - 60).toFixed(0) + ' ' + (32 + 14 * Math.cos(a)).toFixed(1) + ' ' + (32 + 14 * Math.sin(a)).toFixed(1) + ')" fill="#7a4d08"/>'; } return o; })() +
     '<path d="M32 23l2.2 5.4 5.8.4-4.4 3.8 1.4 5.6L32 35.2l-5 3 1.4-5.6-4.4-3.8 5.8-.4z" fill="#7a4d08"/></svg>';
   function lFmt(t, d) { var k = 0; return h(t).replace(/==(.+?)==/g, function (m, x) { return '<mark class="lh" style="--md:' + (d + .25 * k++).toFixed(2) + 's">' + x + '</mark>'; }).replace(/\*\*(.+?)\*\*/g, '<b class="ln">$1</b>'); }
-  function curLore() { return lrSet === 'l' ? LORE_L : LORE; }
-  function okLore(c) { return lrSet === 'l' ? (c.need === 0 || (S && (S.totalDays || 0) >= c.need)) : loreOk(c); }
-  function seenLore() { try { return +(localStorage.getItem(lrSet === 'l' ? 'vc_lore_seen_l' : 'vc_lore_seen') || -1); } catch (e) { return -1; } }
+  /* ===== ตำนานหมวกนักเวท: บทนำอ่านได้ทุกคน · ตอน 1–3 อ่านได้เมื่อมีหมวก (เนื้อเรื่อง/ตัวละครแต่งขึ้นเอง) ===== */
+  var WZH = function (x, y, s) { return '<g transform="translate(' + x + ' ' + y + ') scale(' + s + ')">' + ART_OUT.wizard.art + '</g>'; };
+  var LORE_W = [
+    { need: 0, t: 'บทนำ · หมวกบนชั้นบนสุด', art: function () { return '<svg viewBox="0 -44 120 92"><g fill="#f3e6c8" stroke="#3a2a12" stroke-width="2"><rect x="18" y="20" width="84" height="12" rx="2"/><rect x="24" y="10" width="72" height="11" rx="2"/><rect x="14" y="31" width="92" height="12" rx="2"/></g><path d="M30 16h40M26 37h50" stroke="#c9b48a" stroke-width="1.6"/>' + WZH(12, -12, .8) + '</svg>'; }, q: 'บางอย่างรอให้ถูกอ่าน มานานกว่าที่เราคิด', p: [
+      'บนชั้นบนสุดของ**หอสมุดสัญญา** มีกองกระดาษที่ไม่เคยมีใครเปิดอ่าน',
+      'คืนหนึ่ง**เวลลัม**ปีนขึ้นไปเก็บฝุ่น แล้วพบ==หมวกปลายงอสีม่วงหม่น==วางอยู่บนกองนั้น',
+      'บนแถบผ้าคาดหมวกมีตัวอักษรจาง ๆ เขียนไว้ว่า'] },
+    { need: 1, t: 'ตอนที่ 1 · ตัวหนังสือที่ซ่อนตัว', art: function () { return '<svg viewBox="0 -10 120 70"><rect x="22" y="-4" width="76" height="60" rx="4" fill="#fbf6ea" stroke="#3a2a12" stroke-width="2"/><g stroke="#c9b48a" stroke-width="2.4" stroke-linecap="round"><path d="M32 8h56M32 17h50M32 26h54"/></g><path d="M32 42h44" stroke="#f4c542" stroke-width="3" stroke-linecap="round"/><path d="M32 48h30" stroke="#b98cff" stroke-width="2" stroke-linecap="round"/><g fill="#ffe28a"><path d="M86 38l1.5 3.3 3.6.4-2.7 2.4.8 3.5-3.2-1.9-3.2 1.9.8-3.5-2.7-2.4 3.6-.4z"/><circle cx="80" cy="50" r="1.4"/><circle cx="94" cy="47" r="1.1"/></g></svg>'; }, q: 'สิ่งที่ตัวเล็กที่สุด มักสำคัญที่สุด', p: [
+      'ทันทีที่สวมหมวก ==ตัวหนังสือเล็กจิ๋วท้ายสัญญาทุกฉบับก็เรืองแสงขึ้นมา==',
+      'มันคือ**เงื่อนไขที่ซ่อนอยู่** ค่าปรับ การต่ออายุอัตโนมัติ สิทธิ์ที่อีกฝ่ายเก็บไว้คนเดียว',
+      'ข้อความเหล่านั้นอยู่ตรงนั้นมาตลอด เพียงแต่ไม่เคยมีใครอ่านถึง หมวกกระซิบเบา ๆ ว่า'] },
+    { need: 1, t: 'ตอนที่ 2 · พ่อมดผู้ลืมอ่าน', art: function () { return '<svg viewBox="0 -10 120 70"><path d="M40 56V14l10-14 10 14v42z" fill="#4a3a7a" stroke="#3a2a12" stroke-width="2" stroke-linejoin="round"/><path d="M60 56V24l12-10 12 10v32z" fill="#3a2d63" stroke="#3a2a12" stroke-width="2" stroke-linejoin="round" opacity=".7"/><rect x="47" y="22" width="6" height="8" rx="3" fill="#ffe28a" opacity=".5"/><path d="M20 56h80" stroke="#3a2a12" stroke-width="2"/><path d="M86 6c6 0 9 4 9 8" stroke="#b9a2ff" stroke-width="1.6" fill="none" stroke-dasharray="2 3"/></svg>'; }, q: 'เวทมนตร์ช่วยได้ทุกอย่าง ยกเว้นสิ่งที่เราไม่ยอมอ่าน', p: [
+      'หมวกเคยเป็นของ**พ่อมดโอบิน** ผู้ร่ายคาถาได้ร้อยบท แต่มีนิสัยอย่างหนึ่ง คือ==เซ็นทุกอย่างโดยไม่อ่านให้จบ==',
+      'วันหนึ่งเขาเซ็นสัญญาเช่าหอคอย ในข้อสุดท้ายเขียนไว้ว่า ==ผู้ให้เช่าเรียกคืนได้ทุกเมื่อ==',
+      'เช้าวันต่อมา หอคอยก็ไม่ใช่ของเขาอีกต่อไป เหลือเพียงหมวกใบนี้กับคำสอนข้อเดียว'] },
+    { need: 1, t: 'ตอนที่ 3 · คาถาที่แท้จริง', art: function () { var m = mascot('happy', 100, ''); return m.indexOf('</svg>') > 0 ? m.replace(/<\/svg>\s*$/, '<g class="vm-outfit">' + ART_OUT.wizard.art + '</g></svg>') : m; }, q: 'คาถาที่ดีที่สุด คือการอ่านทุกบรรทัดก่อนเซ็น', p: [
+      '**เวลลัม**ถามหมวกว่า แล้วเวทมนตร์ของเจ้าอยู่ที่ไหนกันแน่',
+      'หมวกหัวเราะ ==เวทมนตร์ไม่เคยอยู่ที่ประกายดาวบนผ้า==',
+      'มันอยู่ที่**คนที่ยอมอ่านจนจบ** ทุกครั้งที่ใครสักคนอ่านทุกบรรทัดก่อนเซ็น หมวกก็จะเรืองแสงขึ้นอีกนิด เพราะ'] }
+  ];
+  var LIC_W = [
+    '<path d="M4 18h16M6 14h12M5 10h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>',
+    '<path d="M6 3h9l4 4v14H6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 16h6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>',
+    '<path d="M8 21V8l4-5 4 5v13zM5 21h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>',
+    '<path d="M12 3l2.4 5.2 5.6.6-4.2 3.8 1.2 5.6L12 15.4 7 18.2l1.2-5.6L4 8.8l5.6-.6z" fill="currentColor"/>'
+  ];
+  function hasWizard() { return ownedOutfits().indexOf('wizard') >= 0; }
+  function wizardLoreBtn() {
+    var seen = -1; try { seen = +(localStorage.getItem('vc_lore_seen_w') || -1); } catch (e) {}
+    var last = hasWizard() ? LORE_W.length - 1 : 0;
+    return '<span class="vof-lore-w" role="button" tabindex="0" data-lore="wizard" aria-label="อ่านตำนานหมวกนักเวท' + (last > seen ? ' มีตอนใหม่' : '') + '">📜' + (last > seen ? '<i class="lore-new"></i>' : '') + '</span>';
+  }
+  function curLore() { return lrSet === 'l' ? LORE_L : lrSet === 'w' ? LORE_W : LORE; }
+  function okLore(c) { return lrSet === 'w' ? (c.need === 0 || hasWizard()) : lrSet === 'l' ? (c.need === 0 || (S && (S.totalDays || 0) >= c.need)) : loreOk(c); }
+  function seenLore() { try { return +(localStorage.getItem(lrSet === 'l' ? 'vc_lore_seen_l' : lrSet === 'w' ? 'vc_lore_seen_w' : 'vc_lore_seen') || -1); } catch (e) { return -1; } }
   function laurelLoreBtn() {
     var tot = S && S.totalDays || 0, last = -1, seen = -1; LORE_L.forEach(function (x, k) { if (x.need === 0 || tot >= x.need) last = k; });
     try { seen = +(localStorage.getItem('vc_lore_seen_l') || -1); } catch (e) {}
     return '<span class="vof-act lrc-lore" role="button" tabindex="0" data-lore="laurel" aria-label="อ่านตำนานมาลัย' + (last > seen ? ' มีตอนใหม่' : '') + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + LIC_L[0] + '</svg>ตำนาน' + (last > seen ? '<i class="lore-new"></i>' : '') + '</span>';
   }
   function loreOpen(i, set) {
-    lrSet = set === 'laurel' ? 'l' : 'm';
+    lrSet = set === 'laurel' ? 'l' : set === 'wizard' ? 'w' : 'm';
     if (!lr) {
       lr = document.createElement('div'); lr.className = 'vlr'; lr.setAttribute('role', 'dialog'); lr.setAttribute('aria-modal', 'true'); lr.setAttribute('aria-labelledby', 'vlrT');
       lr.innerHTML = '<div class="vlr-bg" data-lx></div><div class="vlr-p"><i class="vlr-rod"></i><i class="vlr-glow" aria-hidden="true"></i><i class="vlr-frame" aria-hidden="true"><b></b><b></b><b></b><b></b></i><div class="vlr-sh"><button type="button" class="vlr-x" data-lx aria-label="ปิด">✕</button>' +
@@ -1104,19 +1212,19 @@
       });
       document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && lr && lr.classList.contains('on')) loreClose(); });
     }
-    lr.classList.toggle('is-laurel', lrSet === 'l'); lr.querySelector('#vlrT').textContent = lrSet === 'l' ? 'มาลัยตำนาน' : 'เหรียญไฟไม่มอด';
+    lr.classList.toggle('is-laurel', lrSet === 'l' || lrSet === 'w'); lr.classList.toggle('is-wizard', lrSet === 'w'); lr.querySelector('#vlrT').textContent = lrSet === 'l' ? 'มาลัยตำนาน' : lrSet === 'w' ? 'หมวกนักเวท' : 'เหรียญไฟไม่มอด';
     var LL = curLore();
     if (typeof i !== 'number') { lrIdx = 0; for (var k = LL.length - 1; k >= 0; k--) if (okLore(LL[k])) { lrIdx = k; break; } } else lrIdx = i;
     lr.hidden = false; requestAnimationFrame(function () { lr.classList.add('on'); }); loreRender();
   }
   function loreClose() { if (!lr) return; lr.classList.remove('on'); setTimeout(function () { if (!lr.classList.contains('on')) lr.hidden = true; }, 400); }
   function loreRender() {
-    var LL = curLore(), L = lrSet === 'l', c = LL[lrIdx], ok = okLore(c), m = MED[L ? 3 : c.tier];
-    if (ok && lrIdx > seenLore()) { try { localStorage.setItem(L ? 'vc_lore_seen_l' : 'vc_lore_seen', lrIdx); } catch (e) {} if (sh && !sh.hidden) shopRender(); }
+    var LL = curLore(), W = lrSet === 'w', L = lrSet === 'l' || W, c = LL[lrIdx], ok = okLore(c), m = MED[L ? 3 : c.tier];
+    if (ok && lrIdx > seenLore()) { try { localStorage.setItem(W ? 'vc_lore_seen_w' : L ? 'vc_lore_seen_l' : 'vc_lore_seen', lrIdx); } catch (e) {} if (sh && !sh.hidden) shopRender(); }
     if (!L) { lr.style.setProperty('--f1', m.f1); lr.style.setProperty('--f2', m.f2); }
     var lastOk = 0; LL.forEach(function (x, n) { if (okLore(x)) lastOk = n; });
     var tb = lr.querySelector('.vlr-tabs'); tb.style.setProperty('--lf', (lastOk / (LL.length - 1) * 100) + '%');
-    var IC = L ? LIC_L : LIC;
+    var IC = W ? LIC_W : L ? LIC_L : LIC;
     tb.innerHTML = '<i class="vlr-path"><b></b></i>' + LL.map(function (x, n) {
       return '<button type="button" role="tab" data-ch="' + n + '" aria-selected="' + (n === lrIdx) + '" aria-label="' + h(x.t) + (okLore(x) ? '' : ' (ล็อก)') + '" class="' + (n === lrIdx ? 'on' : '') + (okLore(x) ? '' : ' lk') + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + IC[n] + '</svg>' + (okLore(x) ? '' : '<i class="lkb"></i>') + '</button>';
     }).join('');
@@ -1125,7 +1233,7 @@
       '<h4>' + h(c.t) + '</h4>' +
       (L ? c.p.map(function (t, n) { return '<p class="lp' + (!ok && n > 0 ? ' blur' : '') + '" style="--d:' + (n * .3 + .25).toFixed(2) + 's">' + lFmt(t, n * .3 + .7) + '</p>'; }).join('') + (c.q ? '<blockquote class="lq' + (ok ? '' : ' blur') + '" style="--d:' + (c.p.length * .3 + .3).toFixed(2) + 's"><i class="lq-o">“</i>' + h(c.q) + '<i class="lq-c">”</i></blockquote>' : '')
         : c.p.map(function (t, n) { return '<p class="' + (n === 0 ? 'first ' : '') + (!ok && n > 0 ? 'blur' : '') + '" style="--d:' + (n * .35 + .3) + 's">' + (n === 0 ? dropCap(t) : h(t)) + '</p>'; }).join('')) +
-      (ok ? '<div class="vlr-end">' + (L ? SEAL_L : SEAL) + '</div>' : L ? '<div class="vlr-lock">🔒 ปลดล็อกเมื่อเช็กอินรวมครบ ' + c.need + ' วัน<small>ตอนนี้เช็กอินรวม ' + tot + ' วัน · อีก ' + Math.max(0, c.need - tot) + ' วัน</small></div>' : '<div class="vlr-lock">🔒 ปลดล็อกเมื่อเช็กอินติดกันครบ ' + c.need + ' วัน<small>สถิติสูงสุดของคุณ ' + best + ' วัน</small></div>');
+      (ok ? '<div class="vlr-end">' + (L ? SEAL_L : SEAL) + '</div>' : W ? '<div class="vlr-lock">🔒 อ่านต่อได้เมื่อมีหมวกนักเวท<small>ราคา ' + fmt((itemById('wizard') || {}).price || 400) + ' แต้ม · ตอนนี้มี ' + fmt(S && S.points || 0) + ' แต้ม</small></div>' : L ? '<div class="vlr-lock">🔒 ปลดล็อกเมื่อเช็กอินรวมครบ ' + c.need + ' วัน<small>ตอนนี้เช็กอินรวม ' + tot + ' วัน · อีก ' + Math.max(0, c.need - tot) + ' วัน</small></div>' : '<div class="vlr-lock">🔒 ปลดล็อกเมื่อเช็กอินติดกันครบ ' + c.need + ' วัน<small>สถิติสูงสุดของคุณ ' + best + ' วัน</small></div>');
     lr.querySelector('.vlr-body').scrollTop = 0;
   }
   function shopRender() {
@@ -1150,6 +1258,7 @@
     heroKey = hk;
     if (sel === 'laurel' && !lrPlayed) setTimeout(playLaurel, 30); else if (sel !== 'laurel') lrStop();
     if (sel === 'crown' && !crPlayed) setTimeout(playCrown, 30); else if (sel !== 'crown') crStop();
+    if (sel === 'wizard' && !wzPlayed) setTimeout(playWizard, 30); else if (sel !== 'wizard') wzStop();
     var o = itemById(sel), say2 = sh.querySelector('.vst-say');
     var bb = o && o.badge && bmap[o.badge], lft = bb ? bb.n - bb.have : 0;
     sayType(say2, !o ? 'อยากให้ฉันใส่อะไรดี? แตะของด้านล่างเลย ✨'
@@ -1171,7 +1280,7 @@
         : it.badge ? '<span class="vof-act is-badge">🏅 รางวัล</span>'
         : '<span class="vof-act is-buy' + (S.points < it.price ? ' is-short' : '') + '"><i class="vof-coin"></i>' + fmt(it.price) + '</span>';
       return '<button type="button" class="vof-b r-' + it.rarity + (it.id === 'laurel' ? ' is-laurel' : it.id === 'crown' ? ' is-crown' : '') + (it.id === 'medal' ? ' is-fire mt-' + medalTier() : '') + (has ? ' is-own' : ' is-lock' + (it.badge ? ' is-badge-item' : '')) + (on ? ' is-on' : '') + (sel === it.id ? ' is-try' : '') + '" data-outfit="' + it.id + '" aria-pressed="' + (sel === it.id) + '" aria-label="' + h(it.name + ' · ' + (RAR[it.rarity] || '')) + '">' +
-        (it.id === 'laurel' ? LRC_TAG + LRC_DUST : it.id === 'crown' ? CRC_TAG : '<em class="vof-r">' + (RAR[it.rarity] || '') + '</em>') + (!has && bd && it.id === 'laurel' ? lrCard(bd, a) : !has && bd ? '<span class="vof-pr" style="--bp:' + Math.round(bd.have / bd.n * 100) + '%"><svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg><i class="vof-spark"></i><b>' + bd.have + '/' + bd.n + '</b></span>' : '<svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg>') + '<small>' + h(it.name) + '</small>' + tag + (has && it.id === 'laurel' ? laurelLoreBtn() : '') + '</button>';
+        (it.id === 'laurel' ? LRC_TAG + LRC_DUST : it.id === 'crown' ? CRC_TAG : '<em class="vof-r">' + (RAR[it.rarity] || '') + '</em>') + (!has && bd && it.id === 'laurel' ? lrCard(bd, a) : !has && bd ? '<span class="vof-pr" style="--bp:' + Math.round(bd.have / bd.n * 100) + '%"><svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg><i class="vof-spark"></i><b>' + bd.have + '/' + bd.n + '</b></span>' : '<svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg>') + '<small>' + h(it.name) + '</small>' + tag + (has && it.id === 'laurel' ? laurelLoreBtn() : '') + (it.id === 'wizard' ? wizardLoreBtn() : '') + '</button>';
     }).join('');
     var bar = sh.querySelector('.vst-bar');
     if (!o) { bar.innerHTML = '<p class="vst-hint">แตะของเพื่อลองใส่ · ' + own.length + '/' + list.length + ' ชิ้นที่มีแล้ว · ได้แต้มจากเช็กอินทุกวัน</p>'; return; }
@@ -1197,6 +1306,7 @@
         if (sh && !calm()) { var fx = document.createElement('i'); fx.className = 'vst-fx'; sh.querySelector('.vst-stage').appendChild(fx); setTimeout(function () { fx.remove(); }, 1200); }
         var card = sh && sh.querySelector('.vof-b[data-outfit="' + id + '"]'); if (card) card.classList.add('is-new');
         say('🎉 ได้ ' + o.name + ' แล้ว! ใส่ให้น้องเรียบร้อย');
+        if (id === 'wizard') setTimeout(function () { playWizard(true); }, 250);
       }, function () { busy = false; shopRender(); say('เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง'); });
   }
   function render() {
