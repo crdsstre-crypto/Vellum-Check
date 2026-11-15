@@ -2096,3 +2096,104 @@ html body .vst .vst-path .vtp.on .vtp-c{transform-origin:50% 95%}
 html body .vst .vst-path button.vtp b{position:relative;z-index:2}
 @media (prefers-reduced-motion:reduce){html body .vst .vst-lib *{animation:none!important}}
 html body .vst.is-fire .vst-lux b,html body .vst.is-fire .vst-lux span,html body .vst.is-fire .vst-lux em{text-shadow:0 1px 2px rgba(0,0,0,.9),0 0 10px rgba(0,0,0,.85)}
+
+/* ===== เหรียญไฟไม่มอด: การ์ดลิมิเต็ด/กรอบคำพูด/แถบล่าง ตามระดับ (daily-ui.css v78) ===== */
+html body .vst .vof-lim.mt-1,html body .vst .vst-bar.mt-1,html body .vst.is-fire[data-tier="1"]{--tm:#e8b64a;--tm2:#fff1c2;--tg:#ffb54a;--tdk:#2a1a0e}
+html body .vst .vof-lim.mt-2,html body .vst .vst-bar.mt-2,html body .vst.is-fire[data-tier="2"]{--tm:#cfe3f5;--tm2:#ffffff;--tg:#8fd0ff;--tdk:#0e1d33}
+html body .vst .vof-lim.mt-3,html body .vst .vst-bar.mt-3,html body .vst.is-fire[data-tier="3"]{--tm:#d6c0ff;--tm2:#fff4ff;--tg:#c58bff;--tdk:#1a1036}
+/* (ก)(3) กรอบการ์ดตามระดับ */
+html body .vst .vof-lim.mt-1::before{background:conic-gradient(from 0deg,#7a4a10,#ffe9a3,#c8861a,#fff6d0,#9a6418,#f4c542,#7a4a10)!important;opacity:1!important}
+html body .vst .vof-lim.mt-2::before{background:conic-gradient(from 0deg,#6f8fb0,#ffffff,#9fb7cf,#e6f4ff,#5f7fa6,#d6ecff,#6f8fb0)!important;opacity:1!important}
+html body .vst .vof-lim.mt-3::before{background:conic-gradient(from 0deg,#7a5cff,#ffd9ff,#9fe0ff,#e6d6ff,#b28bff,#ffc8f0,#7a5cff)!important;opacity:1!important}
+html body .vst .vof-lim.mt-1::after{background:radial-gradient(80% 120% at 15% 45%,rgba(255,170,70,.22),transparent 60%),repeating-linear-gradient(100deg,rgba(255,220,170,.025) 0 3px,transparent 3px 9px),linear-gradient(150deg,#2e1c0f,#1a0f08 70%)!important}
+html body .vst .vof-lim.mt-2::after{background:radial-gradient(90% 60% at 50% 0,rgba(220,240,255,.18),transparent 60%),radial-gradient(80% 120% at 15% 45%,rgba(120,190,255,.2),transparent 60%),linear-gradient(150deg,#13284a,#0a1528 70%)!important}
+html body .vst .vof-lim.mt-3::after{background:radial-gradient(80% 120% at 15% 45%,rgba(190,130,255,.26),transparent 60%),linear-gradient(120deg,transparent 40%,rgba(255,220,255,.06) 50%,transparent 60%),linear-gradient(150deg,#22144a,#130a2c 70%)!important}
+html body .vst .vof-lim .vof-r{background:linear-gradient(90deg,var(--tm),var(--tm2),var(--tm))!important;background-size:200% 100%!important;-webkit-background-clip:text!important;background-clip:text!important}
+html body .vst .vof-lim.is-try{box-shadow:0 0 0 2px var(--tm2),0 0 24px color-mix(in srgb,var(--tg) 65%,transparent)!important}
+html body .vst .vof-lim .lim-art::before{background:radial-gradient(circle,color-mix(in srgb,var(--tg) 40%,transparent),transparent 68%)!important}
+html body .vst .vof-lim .lim-tag{color:color-mix(in srgb,var(--tm2) 75%,var(--tm))!important}
+/* (4) มุมโลหะประดับ */
+html body .vst .vof-lim>.lim-crn{position:absolute;inset:5px;z-index:2;pointer-events:none}
+html body .vst .vof-lim .lim-crn span{position:absolute;width:20px;height:20px}
+html body .vst .vof-lim .lim-crn .tl{left:0;top:0}html body .vst .vof-lim .lim-crn .tr{right:0;top:0;transform:scaleX(-1)}
+html body .vst .vof-lim .lim-crn .bl{left:0;bottom:0;transform:scaleY(-1)}html body .vst .vof-lim .lim-crn .br{right:0;bottom:0;transform:scale(-1)}
+html body .vst .vof-lim .lim-crn svg{display:block;width:100%!important;height:100%!important;overflow:visible;filter:drop-shadow(0 0 3px color-mix(in srgb,var(--tg) 70%,transparent))!important}
+html body .vst .vof-lim .lim-crn path{fill:none;stroke:var(--tm);stroke-width:1.8;stroke-linecap:round}
+html body .vst .vof-lim .lim-crn path.t{stroke-width:1;opacity:.55}
+html body .vst .vof-lim .lim-crn path.d{fill:var(--tm2);stroke:none}
+html body .vst .vof-lim .vof-r{left:26px!important}
+/* (ข) ไม่เหลือที่ว่างใต้ปุ่ม */
+
+/* (5) ดวงไฟ 7 ดวง */
+html body .vst .vof-lim .lim-lt{flex:1;display:flex;align-items:center;justify-content:space-between;gap:4px;min-width:0}
+html body .vst .vof-lim .lim-lt i{position:relative;flex:1;max-width:22px;height:10px;border-radius:99px;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+html body .vst .vof-lim .lim-lt i.on{background:radial-gradient(circle at 50% 35%,var(--tm2),var(--tg) 55%,color-mix(in srgb,var(--tg) 60%,#000));box-shadow:0 0 8px color-mix(in srgb,var(--tg) 80%,transparent),inset 0 1px 0 rgba(255,255,255,.6);animation:ltOn .5s ease calc(var(--q) * .08s) both}
+html body .vst .vof-lim .lim-lt i.nx{box-shadow:inset 0 0 0 1.5px var(--tg);animation:ltNx 1.6s ease-in-out infinite}
+@keyframes ltOn{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:none}}
+@keyframes ltNx{0%,100%{box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--tg) 50%,transparent)}50%{box-shadow:inset 0 0 0 1.5px var(--tg),0 0 10px var(--tg)}}
+html body .vst .vof-lim .lim-pg b{color:var(--tm)!important}
+/* (1) กรอบคำพูดฉากไฟ: ป้ายหนังโบราณ + มุมโลหะ */
+html body .vst.is-fire .vst-say{background:linear-gradient(170deg,#f8ecd0,#e8d2a2)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;color:#3a2410!important;font-weight:600!important;border:1px solid color-mix(in srgb,var(--tm) 70%,#6a4a20)!important;border-radius:6px!important;box-shadow:inset 0 0 14px rgba(150,100,40,.25),0 8px 22px rgba(0,0,0,.55),0 0 18px color-mix(in srgb,var(--tg) 30%,transparent)!important;text-shadow:none!important;padding:9px 13px!important}
+html body .vst.is-fire .vst-say::before{content:"";position:absolute;inset:3px;pointer-events:none;border-radius:3px;
+  background:linear-gradient(var(--tm),var(--tm)) 0 0/9px 2px,linear-gradient(var(--tm),var(--tm)) 0 0/2px 9px,linear-gradient(var(--tm),var(--tm)) 100% 0/9px 2px,linear-gradient(var(--tm),var(--tm)) 100% 0/2px 9px,
+  linear-gradient(var(--tm),var(--tm)) 0 100%/9px 2px,linear-gradient(var(--tm),var(--tm)) 0 100%/2px 9px,linear-gradient(var(--tm),var(--tm)) 100% 100%/9px 2px,linear-gradient(var(--tm),var(--tm)) 100% 100%/2px 9px;background-repeat:no-repeat;filter:drop-shadow(0 0 2px color-mix(in srgb,var(--tg) 80%,transparent))}
+html body .vst.is-fire .vst-say::after{background:#e8d2a2!important;border:1px solid color-mix(in srgb,var(--tm) 70%,#6a4a20)!important;border-left:0!important;border-top:0!important}
+/* (ค)(7) แถบล่างแบบป้ายโลหะ */
+html body .vst .vst-bar.is-med{position:relative;gap:10px;background:radial-gradient(60% 140% at 50% 0,color-mix(in srgb,var(--tg) 16%,transparent),transparent 70%),linear-gradient(180deg,color-mix(in srgb,var(--tdk) 92%,#000),#07050c)!important;border-top:0!important;box-shadow:inset 0 1px 0 color-mix(in srgb,var(--tm) 70%,transparent),0 -6px 20px color-mix(in srgb,var(--tg) 14%,transparent)}
+html body .vst .vst-bar.is-med::before{content:"";position:absolute;left:10%;right:10%;top:0;height:1px;background:linear-gradient(90deg,transparent,var(--tm2),transparent);opacity:.9}
+html body .vst .vst-bar.is-med .vst-it em{color:var(--tm)!important;letter-spacing:.06em}
+html body .vst .vst-mic{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,color-mix(in srgb,var(--tg) 30%,transparent),transparent 70%)}
+html body .vst .vst-mic svg{width:40px!important;height:40px!important;filter:drop-shadow(0 0 6px color-mix(in srgb,var(--tg) 70%,transparent))!important}
+html body .vst .vst-need.is-med{display:flex;align-items:center;gap:10px;max-width:none;padding:6px 6px 6px 12px;border-radius:99px;background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--tm) 35%,transparent);text-align:right}
+html body .vst .vst-need.is-med .mr-t{display:flex;flex-direction:column;line-height:1.2}
+html body .vst .vst-need.is-med .mr-t small{font:500 .62rem/1.2 'Prompt',sans-serif;color:rgba(255,255,255,.6)}
+html body .vst .vst-need.is-med .mr-t b{font:800 .86rem/1.2 'Prompt',sans-serif;color:var(--tm2)}
+html body .vst .mr-ring{flex:none;width:40px!important;height:40px!important;transform:rotate(-90deg);overflow:visible}
+html body .vst .mr-ring circle{fill:none;stroke-width:3.4}
+html body .vst .mr-ring .bg{stroke:rgba(255,255,255,.1)}
+html body .vst .mr-ring .fg{stroke:var(--tg);stroke-linecap:round;filter:drop-shadow(0 0 3px var(--tg))}
+html body .vst .mr-ring text{transform:rotate(90deg);transform-origin:18px 18px;font:800 9px 'Prompt',sans-serif;fill:#fff;text-anchor:middle}
+@media (prefers-reduced-motion:reduce){html body .vst .vof-lim .lim-lt i{animation:none!important}}
+html body .vst .vof-b.vof-lim{align-content:center}
+html body .vst .vof-lim .lim-lt{justify-content:flex-start;gap:6px}html body .vst .vof-lim .lim-lt i{flex:0 1 22px}
+
+/* ===== กรอบคำพูดฉากเหรียญไฟ v2: ป้ายหนังแกะลาย + ตราครั่ง + หางประกายไฟ + ข้อความ 3 บรรทัด (daily-ui.css v81) ===== */
+html body .vst.is-fire[data-tier="1"]{--tink:#6e3f0c;--wax1:#d0542a;--wax2:#7a1e0c}
+html body .vst.is-fire[data-tier="2"]{--tink:#1f4170;--wax1:#8fb4d8;--wax2:#3a5f8a}
+html body .vst.is-fire[data-tier="3"]{--tink:#4f2496;--wax1:#a873ff;--wax2:#4a1f99}
+html body .vst.is-fire .vst-say{top:12px!important;bottom:auto!important;left:auto!important;right:calc(50% + 4px)!important;max-width:min(240px,calc(50% - 16px))!important;min-height:0!important;padding:10px 16px 11px 13px!important;
+  background:radial-gradient(120% 90% at 30% 20%,#fbf2dc,#ecd8ab 70%,#dcc08a)!important;border:1.5px solid color-mix(in srgb,var(--tm) 75%,#5a3a14)!important;border-radius:8px!important;
+  box-shadow:inset 0 0 0 3px rgba(255,248,230,.55),inset 0 0 0 4px color-mix(in srgb,var(--tm) 45%,transparent),inset 0 0 18px rgba(140,90,30,.28),0 10px 24px rgba(0,0,0,.55),0 0 20px color-mix(in srgb,var(--tg) 30%,transparent)!important;
+  color:#3a2410!important;line-height:1.4!important;font-size:.72rem!important}
+/* มุมโลหะแกะลาย (หนาขึ้น + เม็ดหมุด) */
+html body .vst.is-fire .vst-say::before{inset:4px!important;background:
+  radial-gradient(circle,var(--tm2) 0 1.6px,var(--tm) 1.7px 2.6px,transparent 2.7px) 0 0/8px 8px,radial-gradient(circle,var(--tm2) 0 1.6px,var(--tm) 1.7px 2.6px,transparent 2.7px) 100% 0/8px 8px,
+  radial-gradient(circle,var(--tm2) 0 1.6px,var(--tm) 1.7px 2.6px,transparent 2.7px) 0 100%/8px 8px,
+  linear-gradient(var(--tm),var(--tm)) 8px 2px/12px 1.5px,linear-gradient(var(--tm),var(--tm)) 2px 8px/1.5px 12px,
+  linear-gradient(var(--tm),var(--tm)) calc(100% - 8px) 2px/12px 1.5px,linear-gradient(var(--tm),var(--tm)) calc(100% - 2px) 8px/1.5px 12px,
+  linear-gradient(var(--tm),var(--tm)) 8px calc(100% - 2px)/12px 1.5px,linear-gradient(var(--tm),var(--tm)) 2px calc(100% - 8px)/1.5px 12px!important;background-repeat:no-repeat!important}
+/* (3) หางประกายไฟ 3 จุด ลอยไปหาน้อง */
+html body .vst.is-fire .vst-say::after{content:""!important;right:-10px!important;bottom:-12px!important;left:auto!important;top:auto!important;width:8px!important;height:8px!important;border:0!important;border-radius:50%!important;transform:none!important;-webkit-clip-path:none!important;clip-path:none!important;
+  background:radial-gradient(circle,#fff6d0,var(--tg) 70%)!important;box-shadow:0 0 6px var(--tg),9px 9px 0 -1.5px var(--tg),9px 9px 6px -1px var(--tg),16px 17px 0 -2.5px color-mix(in srgb,var(--tg) 80%,#fff)!important;animation:mkSpark 1.8s ease-in-out infinite}
+@keyframes mkSpark{0%,100%{opacity:.75}50%{opacity:1}}
+/* (2) ตราประทับครั่ง */
+html body .vst.is-fire .vst-say .mk-seal{position:absolute;right:-9px;top:-10px;width:26px;height:26px;border-radius:46% 54% 50% 50%/52% 48% 52% 48%;display:grid;place-items:center;
+  background:radial-gradient(circle at 35% 30%,color-mix(in srgb,var(--wax1) 70%,#fff),var(--wax1) 45%,var(--wax2));box-shadow:0 2px 4px rgba(0,0,0,.45),inset 0 0 0 2px color-mix(in srgb,var(--wax2) 60%,transparent),inset 0 0 0 4px color-mix(in srgb,var(--wax1) 80%,#fff3);transform:rotate(-8deg)}
+html body .vst.is-fire .vst-say .mk-seal svg{width:14px!important;height:14px!important;fill:color-mix(in srgb,var(--wax2) 70%,#000);filter:drop-shadow(0 .5px 0 rgba(255,255,255,.45))!important}
+/* (4) ข้อความ 3 บรรทัด */
+html body .vst.is-fire .vst-say.mk-lore{display:flex;flex-direction:column;gap:2px;text-align:left}
+html body .vst.is-fire .vst-say .mk-h{font:800 .76rem/1.35 'Prompt',sans-serif;color:var(--tink)}
+html body .vst.is-fire .vst-say .mk-m{display:flex;align-items:center;gap:4px;font:600 .68rem/1.35 'Prompt',sans-serif;color:#5a3e1c}
+html body .vst.is-fire .vst-say .mk-ic{width:20px!important;height:16px!important;color:var(--tink);flex:none;filter:none!important}
+html body .vst.is-fire .vst-say .mk-n{margin-top:2px;padding-top:4px;border-top:1px dashed color-mix(in srgb,var(--tm) 60%,#8a6a3a);font:600 .7rem/1.3 'Prompt',sans-serif;color:#4a2e10}
+html body .vst.is-fire .vst-say .mk-n b{display:inline-block;margin:0 2px;font:800 1.3rem/1 'Prompt',sans-serif;color:var(--tink);vertical-align:-2px;text-shadow:0 0 8px color-mix(in srgb,var(--tg) 90%,transparent),0 0 2px #fff}
+html body .vst.is-fire .vst-say.mk-in{animation:mkIn .45s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes mkIn{from{opacity:0;transform:translateY(-6px) scale(.96)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){html body .vst.is-fire .vst-say,html body .vst.is-fire .vst-say::after{animation:none!important}}
+html body .vst.is-fire .vst-say{padding:8px 15px 9px 12px!important}
+html body .vst.is-fire .vst-say.mk-lore{gap:0}
+html body .vst.is-fire .vst-say .mk-h{font-size:.72rem;line-height:1.28}
+html body .vst.is-fire .vst-say .mk-m{line-height:1.3}
+html body .vst.is-fire .vst-say .mk-ic{width:18px!important;height:14px!important}
+html body .vst.is-fire .vst-say .mk-n{margin-top:3px;padding-top:3px;line-height:1.2}
+html body .vst.is-fire .vst-say .mk-n b{font-size:1.12rem}
