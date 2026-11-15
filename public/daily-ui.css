@@ -1923,3 +1923,38 @@ html body .vlr.is-wizard .vlr-body blockquote.lq .lq-o,html body .vlr.is-wizard 
 html body .vlr.is-wizard .vlr-lock{background:rgba(150,110,240,.1) !important;border-color:rgba(123,85,214,.45) !important;color:#4a2a9e !important}
 html body .vlr.is-wizard .vlr-art-l{filter:drop-shadow(0 4px 10px rgba(90,60,180,.35)) !important}
 html body .vlr.is-wizard .vlr-art-l{margin-top:18px !important}html body .vlr.is-wizard .vlr-art-l svg{overflow:visible !important}
+/* ===== ฉากหอคอยพ่อมดยามค่ำคืน ===== */
+html body .vst .vst-wzs{position:absolute;inset:0;z-index:1;opacity:0;visibility:hidden;pointer-events:none;overflow:hidden;transition:opacity .8s ease,visibility 0s .8s}
+html body .vst.is-wzs .vst-wzs{opacity:1;visibility:visible;transition:opacity .8s ease}
+html body .vst .ws-svg{position:absolute;inset:0;width:100%!important;height:100%!important;filter:none!important}
+html body .vst .ws-st{fill:#fff8e0}
+html body .vst .ws-st.tw{animation:wsTw 3.2s ease-in-out var(--d) infinite}
+@keyframes wsTw{0%,100%{opacity:1}50%{opacity:.25}}
+html body .vst .ws-moon{filter:drop-shadow(0 0 8px rgba(255,240,190,.8))}
+html body .vst .ws-tip{animation:wsTw 2.4s ease-in-out infinite}
+html body .vst .ws-tw path[fill^="url(#wsWin"]{filter:drop-shadow(0 0 3px rgba(255,200,90,.9))}
+html body .vst .ws-vig{position:absolute;inset:0;background:radial-gradient(80% 70% at 50% 50%,transparent 55%,rgba(5,3,18,.55) 100%)}
+/* ดาวตกนาน ๆ ครั้ง */
+html body .vst .ws-shoot{position:absolute;top:14%;left:62%;width:90px;height:2px;border-radius:2px;background:linear-gradient(90deg,rgba(255,255,255,0),#fff6d0);transform:rotate(-24deg);opacity:0;animation:wsShoot 9s ease-in 2.5s infinite}
+@keyframes wsShoot{0%,88%{opacity:0;transform:translate(0,0) rotate(-24deg)}90%{opacity:1}100%{opacity:0;transform:translate(-160px,72px) rotate(-24deg)}}
+/* (5) ผงดาวลอยขึ้น */
+html body .vst .ws-dust{position:absolute;inset:0}
+html body .vst .ws-d{position:absolute;bottom:-6px;width:3px;height:3px;border-radius:50%;background:#ffeeb0;box-shadow:0 0 6px 1px rgba(200,160,255,.9);opacity:0;transform:scale(var(--s));animation:wsRise var(--t) linear var(--d) infinite;will-change:transform}
+@keyframes wsRise{0%{opacity:0;transform:translate(0,0) scale(var(--s))}15%{opacity:.9}100%{opacity:0;transform:translate(var(--x),-230px) scale(var(--s))}}
+/* (4) วงเวทบนพื้นแทนฐานม่วง */
+html body .vst.is-wzs .vst-ped{opacity:0;transition:opacity .6s}
+html body .vst .ws-ring{position:absolute;left:50%;bottom:-82px;width:230px;height:230px;margin-left:-115px;overflow:visible;transform:scaleY(.3);filter:drop-shadow(0 0 5px rgba(190,150,255,.9)) drop-shadow(0 0 16px rgba(140,90,255,.55))}
+html body .vst .ws-ring circle{fill:none;stroke:#cdb2ff;stroke-width:1.5}
+html body .vst .ws-ring circle.i{stroke:#f4c542;stroke-width:1;stroke-dasharray:3 4}
+html body .vst .ws-ring .rn circle{fill:#ffe28a;stroke:none}
+html body .vst .ws-ring .t{fill:none;stroke:#b48cff;stroke-width:.9;opacity:.75}
+html body .vst .ws-ring .rn,html body .vst .ws-ring .t{transform-origin:60px 60px;animation:wsSpin 24s linear infinite}
+@keyframes wsSpin{to{transform:rotate(360deg)}}
+html body .vst.is-wzs .vst-ms{filter:drop-shadow(0 0 1px #e6d8ff) drop-shadow(0 0 8px rgba(170,130,255,.5))}
+/* กรอบคำพูดกระจกเวท (ฉากหอคอย) */
+html body .vst.is-wzs .vst-say{top:10px;bottom:auto;left:auto;right:calc(50% + 34px);max-width:min(176px,calc(50% - 46px));padding:8px 13px;border-radius:16px 16px 5px 16px;border:1px solid rgba(233,196,106,.6);background:linear-gradient(160deg,rgba(78,52,150,.62),rgba(36,20,82,.7));-webkit-backdrop-filter:blur(8px) saturate(1.3);backdrop-filter:blur(8px) saturate(1.3);color:#f4ecff;font-weight:500;text-wrap:balance;text-shadow:0 1px 2px rgba(20,8,50,.6);box-shadow:0 0 0 3px rgba(170,130,255,.12),0 0 20px rgba(160,110,255,.45),inset 0 1px 0 rgba(255,255,255,.18),0 10px 24px rgba(8,4,30,.5)}
+html body .vst.is-wzs .vst-say::after{content:"";right:-9px;bottom:-11px;width:8px;height:8px;border:0;border-radius:50%;transform:none;-webkit-clip-path:none;clip-path:none;filter:none;background:#f1d98a;box-shadow:0 0 6px rgba(241,217,138,.9),8px 9px 0 -1.5px #e9cf7c,8px 9px 6px -1px rgba(241,217,138,.6),14px 17px 0 -2.5px #dcc06e}
+html body .vst.is-wzs .vst-say::before{content:"✦";position:absolute;right:-7px;top:-9px;left:auto;bottom:auto;width:auto;height:auto;border:0;background:none;font:400 13px/1 sans-serif;color:#ffe9a8;text-shadow:0 0 6px #ffd76a,0 0 12px rgba(200,150,255,.8);pointer-events:none;animation:wsSay 2.6s ease-in-out infinite}
+@keyframes wsSay{0%,100%{opacity:.55;transform:scale(.8) rotate(0)}50%{opacity:1;transform:scale(1.1) rotate(20deg)}}
+@media (prefers-reduced-motion:reduce){html body .vst.is-wzs .vst-say::before{animation:none}}
+@media (prefers-reduced-motion:reduce){html body .vst .vst-wzs *{animation:none!important}html body .vst .ws-d,html body .vst .ws-shoot{display:none}}
