@@ -759,6 +759,46 @@
     }
     if (!was) { tv.classList.remove('in'); void tv.offsetWidth; tv.classList.add('in'); }
   }
+  /* ===== ฉากห้องสมุดที่ไม่เคยหลับ (เหรียญไฟไม่มอด): ชั้นหนังสือสองข้าง · หน้าต่างกระจกสีรูปเปลวไฟ + ลำแสง · แท่นหินแกะสลัก — สีตามระดับผ่าน CSS (data-tier) ===== */
+  function libScene() {
+    var R = function (a, b) { return a + Math.random() * (b - a); };
+    var bays = [[20, 130], [140, 250], [262, 322], [578, 638], [650, 760], [770, 880]], rows = [74, 128, 182, 236, 290], sh_ = '', bk = '';
+    bays.forEach(function (b) {
+      sh_ += '<rect class="lb-wd2" x="' + (b[0] - 6) + '" y="14" width="' + (b[1] - b[0] + 12) + '" height="280" rx="2"/><rect class="lb-bk" x="' + b[0] + '" y="20" width="' + (b[1] - b[0]) + '" height="272"/>';
+      rows.forEach(function (y) {
+        var x = b[0] + 2;
+        while (x < b[1] - 6) {
+          var w = R(5, 10), hh = R(30, 46), c = 'b' + (1 + Math.floor(Math.random() * 5)), gl = Math.random() < .09;
+          if (x + w > b[1] - 2) break;
+          if (Math.random() < .08 && x + hh * .5 < b[1] - 4) { bk += '<rect class="' + c + '" x="' + x.toFixed(1) + '" y="' + (y - w).toFixed(1) + '" width="' + (hh * .8).toFixed(1) + '" height="' + w.toFixed(1) + '" rx="1"/>'; x += hh * .8 + 1; continue; }
+          bk += '<rect class="' + c + (gl ? ' gl' : '') + '" x="' + x.toFixed(1) + '" y="' + (y - hh).toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + hh.toFixed(1) + '" rx="1"' + (gl ? ' style="--d:-' + R(0, 4).toFixed(1) + 's"' : '') + '/>' +
+            (w > 7 ? '<rect class="lb-band" x="' + x.toFixed(1) + '" y="' + (y - hh + 5).toFixed(1) + '" width="' + w.toFixed(1) + '" height="2"/>' : '');
+          x += w + R(.6, 1.8);
+        }
+        sh_ += '<rect class="lb-wd" x="' + (b[0] - 6) + '" y="' + y + '" width="' + (b[1] - b[0] + 12) + '" height="6" rx="1"/>';
+      });
+    });
+    var pet = ''; for (var i = 0; i < 12; i++) { var a0 = i / 12 * 6.2832, a1 = (i + 1) / 12 * 6.2832, P = function (r, a) { return (450 + r * Math.cos(a)).toFixed(1) + ' ' + (128 + r * Math.sin(a)).toFixed(1); };
+      pet += '<path class="' + (i % 2 ? 'g1' : 'g2') + '" d="M' + P(40, a0) + 'L' + P(84, a0) + 'A84 84 0 0 1 ' + P(84, a1) + 'L' + P(40, a1) + 'A40 40 0 0 0 ' + P(40, a0) + 'Z"/>'; }
+    var rays = '<g class="lb-rays"><path d="M408 190 340 300H420z"/><path d="M450 212 430 300H480z" class="r2"/><path d="M492 190 560 300H480z"/></g>';
+    return '<div class="vst-lib" aria-hidden="true"><svg class="lb-svg" viewBox="0 0 900 360" preserveAspectRatio="xMidYMax slice"><defs>' +
+      '<radialGradient id="lbWg"><stop offset="0" style="stop-color:var(--lg)" stop-opacity=".55"/><stop offset=".6" style="stop-color:var(--lg)" stop-opacity=".12"/><stop offset="1" style="stop-color:var(--lg)" stop-opacity="0"/></radialGradient>' +
+      '<linearGradient id="lbRay" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--lg)" stop-opacity=".35"/><stop offset="1" style="stop-color:var(--lg)" stop-opacity="0"/></linearGradient>' +
+      '<linearGradient id="lbFl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--lfl)"/><stop offset="1" stop-color="#000"/></linearGradient></defs>' +
+      '<rect class="lb-wall" width="900" height="360"/>' +
+      '<path class="lb-st" d="M312 300V96Q312 4 450 4Q588 4 588 96V300H570V98Q570 22 450 22Q330 22 330 98V300Z"/><path class="lb-st2" d="M330 300V98Q330 22 450 22Q570 22 570 98V300Z"/>' +
+      '<circle cx="450" cy="128" r="140" fill="url(#lbWg)"/>' + sh_ + bk +
+      '<g class="lb-win"><circle cx="450" cy="128" r="92" class="lb-rim"/>' + pet + '<circle cx="450" cy="128" r="40" class="g3"/>' +
+      '<path class="g4" d="M450 98C462 112 470 122 466 138C463 150 456 156 450 158C444 156 437 150 434 138C432 128 438 120 444 114C444 124 448 128 451 128C452 118 448 108 450 98Z"/>' +
+      '<g class="lb-lead"><circle cx="450" cy="128" r="84"/><circle cx="450" cy="128" r="40"/><circle cx="450" cy="128" r="62"/></g></g>' + rays +
+      '<rect class="lb-fl" y="292" width="900" height="68" fill="url(#lbFl)"/><path class="lb-fll" d="M0 300H900M120 300 40 360M300 300 260 360M450 300V360M600 300 640 360M780 300 860 360"/></svg><i class="lb-vig"></i>' +
+      '<svg class="vst-pd3" viewBox="0 0 230 64"><defs><linearGradient id="pdS" x1="0" x2="1"><stop offset="0" style="stop-color:var(--ps0)"/><stop offset=".45" style="stop-color:var(--ps1)"/><stop offset="1" style="stop-color:var(--ps0)"/></linearGradient>' +
+      '<radialGradient id="pdT" cx=".5" cy=".35" r=".7"><stop offset="0" style="stop-color:var(--ps1)"/><stop offset="1" style="stop-color:var(--ps0)"/></radialGradient></defs>' +
+      '<ellipse cx="115" cy="40" rx="108" ry="8" class="pd-b"/><path d="M15 16V36A100 13 0 0 0 215 36V16Z" fill="url(#pdS)"/>' +
+      '<g class="pd-c">' + [40, 64, 90, 115, 140, 166, 190].map(function (x) { return '<path d="M' + x + ' 21q3 4 0 9q-3-5 0-9z"/>'; }).join('') + '</g>' +
+      '<path d="M15 36A100 13 0 0 0 215 36" class="pd-m"/><path d="M15 33A100 13 0 0 0 215 33" class="pd-m2"/>' +
+      '<ellipse cx="115" cy="16" rx="100" ry="13" fill="url(#pdT)" class="pd-tm"/><ellipse cx="115" cy="16" rx="76" ry="9.5" class="pd-in"/><ellipse cx="115" cy="16" rx="90" ry="11.6" class="pd-fl"/></svg></div>';
+  }
   function fireScene(on, picked) {
     var f = sh.querySelector('.vst-fire'), x = sh.querySelector('.vst-extra');
     if (!on) { f.innerHTML = ''; x.innerHTML = ''; f.removeAttribute('data-on'); return; }
@@ -773,7 +813,7 @@
       for (var q = 0; q < 18; q++) { var z = 4 + Math.random() * 8; sn += '<i class="vst-sf" style="left:' + (Math.random() * 100).toFixed(1) + '%;font-size:' + z.toFixed(1) + 'px;--t:' + (8 + Math.random() * 8).toFixed(1) + 's;--d:-' + (Math.random() * 14).toFixed(1) + 's;--x:' + (Math.random() * 40 - 20).toFixed(0) + 'px">❄</i>'; }
       var SH = [[18, 30, 10], [80, 26, 8], [12, 62, 7], [86, 58, 11], [26, 82, 6], [74, 80, 8]];
       SH.forEach(function (p, n) { sd += '<i class="vst-shard" style="left:' + p[0] + '%;top:' + p[1] + '%;width:' + p[2] + 'px;height:' + (p[2] * 1.7).toFixed(0) + 'px;--d:-' + (n * .9).toFixed(1) + 's"></i>'; });
-      f.innerHTML = '<i class="vst-smoke"></i><i class="vst-smoke s2"></i><i class="vst-haze"></i>' + bk +
+      f.innerHTML = libScene() + '<i class="vst-smoke"></i><i class="vst-smoke s2"></i><i class="vst-haze"></i>' + bk +
         '<i class="vst-neb"></i><i class="vst-stars"></i><i class="vst-stars s2"></i>' + sd + '<i class="vst-fog"></i><i class="vst-aur"></i><i class="vst-aur a2"></i><i class="vst-crk"></i>' + sn + '<i class="vst-hor"></i>';
     }
     var bd = (S.badges || []).filter(function (b) { return b.id === 's7'; })[0], best = S.bestStreak || 0, rt = realTier(), line2 = '', pips = '';
