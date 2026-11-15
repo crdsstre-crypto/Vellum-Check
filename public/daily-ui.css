@@ -2257,7 +2257,7 @@ html body .vst:not(.is-fire) .vst-hero{display:none!important}
 
 /* ===== ลื่นขึ้น (daily-ui.css v87): หยุดอนิเมชันที่มองไม่เห็น — หน้าตาเหมือนเดิมทุกอย่าง ===== */
 /* หน้าเว็บด้านหลังร้าน (ถูกร้านบังทั้งหมด) */
-html.vst-open body > *:not(.vst),html.vst-open body > *:not(.vst) *,html.vst-open body > *:not(.vst) *::before,html.vst-open body > *:not(.vst) *::after{animation-play-state:paused!important}
+html.vst-open body > *:not(.vst):not(.vlr),html.vst-open body > *:not(.vst):not(.vlr) *,html.vst-open body > *:not(.vst):not(.vlr) *::before,html.vst-open body > *:not(.vst):not(.vlr) *::after{animation-play-state:paused!important}
 /* ฉากที่ไม่ได้ใช้อยู่ (ซ่อนอยู่) */
 html body .vst:not(.is-heav) .vst-heav *,html body .vst:not(.is-thr) .vst-thr *,html body .vst:not(.is-wzs) .vst-wzs *,html body .vst:not(.is-drm) .vst-drm *,html body .vst:not(.is-heav) .vst-heav *::before,html body .vst:not(.is-thr) .vst-thr *::before{animation-play-state:paused!important}
 /* การ์ด/เวทีที่เลื่อนพ้นจอ */
@@ -2265,7 +2265,7 @@ html body .vst .is-off,html body .vst .is-off *,html body .vst .is-off::before,h
 /* ปิดร้านแล้ว */
 html body .vst[hidden] *{animation:none!important}
 /* หน้าเว็บด้านหลังถูกร้านบังอยู่: ไม่ต้องวาด (ลดเลเยอร์ที่เครื่องต้องประมวลผลทุกเฟรม) */
-html.vst-full body > *:not(.vst){visibility:hidden!important}
+html.vst-full body > .vst-under{visibility:hidden!important}
 /* แสงวาบการ์ดพิเศษ: เดิมขยับด้วย left (เครื่องต้องจัดหน้าใหม่ทุกเฟรม) → ใช้ transform แทน ภาพเหมือนเดิม */
 html body .vst .vof-b.r-epic:not(.is-laurel):not(.is-crown)::before{animation-name:vEpicShine2;will-change:transform}
 @keyframes vEpicShine2{0%,72%{transform:skewX(-18deg) translateX(0)}100%{transform:skewX(-18deg) translateX(475%)}}
@@ -2293,3 +2293,113 @@ html body .vst .vst-pd3.vst-anim .pd-fl{filter:none!important;stroke-width:2.6}
 /* (6) โหมดเครื่องช้า: ละออง/กลีบดอกไม้/ดาวกะพริบ เหลือครึ่งหนึ่ง */
 html body .vst.is-lite :is(.vst-bk,.hv-d,.hv-bk,.ws-d,.tr-d):nth-child(2n){display:none!important}
 html body .vst.is-lite :is(.ws-st,.dm-st,.lb-svg rect.gl):nth-child(2n){animation:none!important}
+
+/* ===== ฉากห้องลองชุด (.vst.is-fit) — ธรรมดา = มิ้นต์ · หายาก = ฟ้าน้ำเงิน (daily-ui.css v89) ===== */
+html body .vst .vst-fit{position:absolute;inset:0;z-index:1;opacity:0;visibility:hidden;pointer-events:none;overflow:hidden;transition:opacity .7s ease,visibility 0s .7s;
+  --fw1:#123a3a;--fw2:#0a2224;--fm1:#a9e6da;--fm2:#e9fff9;--fg:#5fe0c4;--ff1:#0f2e2e;--ff2:#061516;--fc1:#e86a6a;--fc2:#f2c14e;--fc3:#7dd3c0;--fc4:#c99bff;
+  --fp0:#163c3a;--fp1:#3f7a72;--fv1:#2fa78f;--fv2:#11574b;--fpm:#bff3e6;--fbl:#fff7d6;--fac:#7fe8cf}
+html body .vst.is-fit[data-fr="rare"] .vst-fit{--fw1:#122347;--fw2:#0a142c;--fm1:#a9c8f2;--fm2:#eef6ff;--fg:#6aa8ff;--ff1:#0f1d3a;--ff2:#060c1c;
+  --fp0:#14234a;--fp1:#3f5f9c;--fv1:#3b6fd6;--fv2:#162f73;--fpm:#cfe2ff;--fac:#8fc0ff}
+html body .vst.is-fit .vst-fit{opacity:1;visibility:visible;transition:opacity .7s ease}
+html body .vst .ft-svg{position:absolute;inset:0;width:100%!important;height:100%!important;filter:none!important}
+html body .vst .ft-st{stroke:#fff;stroke-width:5;opacity:.025}
+html body .vst .ft-mold{stroke:var(--fac);stroke-width:1.2;opacity:.25}
+html body .vst .ft-fr{fill:#2a2216;stroke:#d9b45a;stroke-width:2}
+html body .vst .ft-gl{opacity:.32}
+html body .vst .ft-sh{stroke:#fff;stroke-width:5;stroke-linecap:round;opacity:.12}
+html body .vst .ft-bl{fill:var(--fbl);stroke:#d9b45a;stroke-width:.8}
+html body .vst .ft-bls{filter:drop-shadow(0 0 3px var(--fbl)) drop-shadow(0 0 6px rgba(255,220,140,.6))}
+html body .vst .ft-rod{stroke:#c9a75a;stroke-width:2.6;stroke-linecap:round;fill:none}
+html body .vst .ft-knob{fill:#e8c878}
+html body .vst .ft-hk{stroke:#d9d2c4;stroke-width:1.1;stroke-linecap:round}
+html body .vst .ft-cl{stroke:rgba(0,0,0,.35);stroke-width:1;opacity:.92}
+html body .vst .ft-fd{stroke:rgba(0,0,0,.18);stroke-width:1.2;fill:none}
+html body .vst .ft-rack{opacity:.85}
+html body .vst .ft-cu{fill:var(--fv2);stroke:rgba(0,0,0,.35);stroke-width:1}
+html body .vst .ft-cf{stroke:rgba(255,255,255,.1);stroke-width:3;fill:none}
+html body .vst .ft-cur .ft-cf{clip-path:none}
+html body .vst .ft-tie{stroke:#d9b45a;stroke-width:3;fill:none;stroke-linecap:round}
+html body .vst .ft-tieb{fill:#f0cf74}
+html body .vst .ft-fl{stroke:var(--fac);stroke-width:.7;opacity:.12;fill:none}
+html body .vst .ft-vig{position:absolute;inset:0;background:radial-gradient(75% 65% at 50% 45%,transparent 45%,rgba(0,0,0,.5) 100%)}
+/* (3) แท่นโชว์: กำมะหยี่ + ขอบโลหะเงา + เงาสะท้อนบนพื้น */
+html body .vst.is-fit .vst-ped{opacity:0}
+html body .vst .ft-pd{position:absolute;left:50%;bottom:6px;width:220px;height:60px;margin-left:-110px;overflow:visible;filter:drop-shadow(0 8px 14px rgba(0,0,0,.55))}
+html body .vst .ft-pshadow{fill:#000;opacity:.35}
+html body .vst .ft-prim{fill:none;stroke:var(--fpm);stroke-width:2.2}
+html body .vst .ft-prim2{fill:none;stroke:var(--fpm);stroke-width:.8;opacity:.4}
+html body .vst .ft-ptop{fill:var(--fp0);stroke:var(--fpm);stroke-width:2.2}
+html body .vst .ft-psh{fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;opacity:.3}
+html body .vst.is-fit .vst-refl{display:block;opacity:.18}
+html body .vst.is-fit .vst-ms{filter:drop-shadow(0 10px 14px rgba(0,0,0,.5)) drop-shadow(0 0 10px color-mix(in srgb,var(--fac,#7fe8cf) 30%,transparent))}
+/* (6) กรอบคำพูดแบบป้ายแท็กสินค้า: กระดาษคราฟต์ + รูร้อยเชือก */
+html body .vst.is-fit .vst-say{background:linear-gradient(170deg,#e6c99a,#d2ad74)!important;color:#3b2610!important;border-radius:4px 10px 10px 4px!important;padding:9px 12px 9px 24px!important;font-weight:600;
+  box-shadow:inset 0 0 0 1px rgba(90,60,20,.35),inset 0 0 12px rgba(120,80,30,.2),0 8px 18px rgba(0,0,0,.45)!important;-webkit-mask:radial-gradient(circle 4.5px at 11px 50%,#0000 98%,#000) ;mask:radial-gradient(circle 4.5px at 11px 50%,#0000 98%,#000)}
+html body .vst.is-fit .vst-say::before{content:"";position:absolute;left:6px;top:50%;width:11px;height:11px;margin-top:-5.5px;border-radius:50%;box-shadow:0 0 0 1.5px #a8823e;pointer-events:none}
+html body .vst.is-fit .vst-say::after{content:""!important;position:absolute!important;left:-14px!important;right:auto!important;top:calc(50% - 1px)!important;bottom:auto!important;width:20px!important;height:2px!important;background:#f3ead8!important;border:0!important;border-radius:2px!important;transform:rotate(-14deg)!important;transform-origin:100% 50%;box-shadow:0 1px 1px rgba(0,0,0,.3)}
+
+/* ===== ฉากเปิดตัวห้องลองชุด (.vft) (daily-ui.css v90) ===== */
+html body .vst.is-fit{--fcu:#11574b;--fcu2:#2fa78f;--fsp:#9ff5df}
+html body .vst.is-fit[data-fr="rare"]{--fcu:#162f73;--fcu2:#3b6fd6;--fsp:#a9ccff}
+html body .vst.ft-intro .vst-say{opacity:0!important;transition:none!important}
+html body .vst .vst-ms.ft-hide{opacity:0!important;transition:none!important}
+html body .vst .vft{position:absolute;inset:0;z-index:6;cursor:pointer;transition:opacity .3s}
+html body .vst .vft.out{opacity:0;pointer-events:none}
+html body .vst .vft-box{position:absolute;overflow:hidden}
+html body .vst .vft-rod{position:absolute;left:-4px;right:-4px;top:0;height:5px;border-radius:3px;z-index:3;background:linear-gradient(180deg,#f3d88a,#b0821e);box-shadow:0 2px 4px rgba(0,0,0,.4)}
+html body .vst .vft-c{position:absolute;top:3px;bottom:0;width:51%;z-index:1;will-change:transform;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.08) 0 3px,transparent 3px 11px,rgba(0,0,0,.18) 11px 14px,transparent 14px 20px),linear-gradient(180deg,var(--fcu2),var(--fcu));box-shadow:inset 0 -8px 12px rgba(0,0,0,.25)}
+html body .vst .vft-c.l{left:0;transform:translateX(-102%);border-radius:0 0 10px 0}
+html body .vst .vft-c.r{right:0;transform:translateX(102%);border-radius:0 0 0 10px}
+html body .vst .vft.go .vft-c{transform:none;transition:transform .32s cubic-bezier(.3,.9,.4,1)}
+html body .vst .vft.open .vft-c.l{transform:translateX(-102%) scaleX(.6);transform-origin:0 0;transition:transform .42s cubic-bezier(.5,0,.3,1)}
+html body .vst .vft.open .vft-c.r{transform:translateX(102%) scaleX(.6);transform-origin:100% 0;transition:transform .42s cubic-bezier(.5,0,.3,1)}
+/* เงาน้องเปลี่ยนชุดหลังม่าน */
+html body .vst .vft-sil{position:absolute;left:15.5%;top:2%;width:69%;z-index:2;opacity:0;will-change:transform}
+html body .vst .vft-sil svg{width:100%!important;height:auto!important;filter:brightness(0) blur(1.2px)!important}
+html body .vst .vft.go .vft-sil{opacity:.32;transition:opacity .2s .3s;animation:vftWig .7s ease-in-out .35s}
+html body .vst .vft.open .vft-sil{opacity:0;transition:opacity .15s}
+@keyframes vftWig{0%,100%{transform:none}20%{transform:translateX(-6px) rotate(-4deg)}45%{transform:translateY(-6px) scaleY(1.04)}70%{transform:translateX(6px) rotate(4deg)}}
+/* ประกาย + แสงวาบตามระดับ */
+html body .vst .vft-sp{position:absolute;width:0;height:0}
+html body .vst .vft-sp i{position:absolute;left:-6px;top:-8px;font:400 13px/1 sans-serif;font-style:normal;color:var(--fsp);text-shadow:0 0 6px var(--fsp);opacity:0;will-change:transform,opacity}
+html body .vst .vft.open .vft-sp i{animation:vftSp .75s cubic-bezier(.2,.8,.3,1) var(--d) forwards}
+@keyframes vftSp{0%{opacity:0;transform:translate(0,0) scale(.3)}25%{opacity:1}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(1.1) rotate(40deg)}}
+html body .vst .vft-fl{position:absolute;width:10px;height:10px;margin:-5px;border-radius:50%;opacity:0;background:radial-gradient(circle,#fff,var(--fsp) 40%,transparent 70%);will-change:transform,opacity}
+html body .vst .vft.is-rare.open .vft-fl{animation:vftFl .55s ease-out forwards}
+@keyframes vftFl{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(22)}}
+/* ไฟกระจก: หรี่ตอนม่านปิด → ติดวิ่งเป็นวงตอนเปิด แล้วค้างไว้ */
+html body .vst .vst-fit.ft-dim .ft-bl{opacity:.35}
+html body .vst .vst-fit.ft-chase .ft-bl{animation:ftChase .5s ease-out calc(var(--i) * 28ms) both}
+@keyframes ftChase{0%{opacity:.35}45%{opacity:1;fill:#fff}100%{opacity:1}}
+html body .vst .vft.open .vft-rod{opacity:0;transition:opacity .3s .25s}
+
+/* ===== ตำนานไอเทมธรรมดา/หายาก (.vlr.is-xl): ป้ายแท็กกระดาษคราฟต์ · ขอบสีตามระดับ (daily-ui.css v91) ===== */
+html body .vlr.is-xl{--xa:#2fa78f;--xa2:#9ff5df;--xd:#11574b}
+html body .vlr.is-xl[data-fr="rare"]{--xa:#3b6fd6;--xa2:#a9ccff;--xd:#162f73}
+html body .vlr.is-xl .vlr-bg{background:radial-gradient(70% 60% at 50% 40%,color-mix(in srgb,var(--xd) 60%,transparent),rgba(6,8,14,.9))!important}
+html body .vlr.is-xl .vlr-sh{color:#3b2610!important;border-radius:10px 22px 22px 10px!important;
+  background:radial-gradient(120% 80% at 30% 10%,rgba(255,255,255,.22),transparent 55%),repeating-linear-gradient(95deg,rgba(120,80,30,.04) 0 2px,transparent 2px 5px),linear-gradient(170deg,#ecd3a6,#d8b67f 60%,#c9a46a)!important;
+  box-shadow:inset 0 0 0 2px var(--xa),inset 0 0 0 5px #ecd3a6,inset 0 0 0 6px color-mix(in srgb,var(--xa) 55%,transparent),inset 0 0 30px rgba(120,80,30,.25),0 24px 60px rgba(0,0,0,.6)!important}
+html body .vlr.is-xl .vlr-sh::before{content:"";position:absolute;left:14px;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:50%;background:radial-gradient(circle,#1a1410 0 45%,transparent 47%);box-shadow:0 0 0 2.5px #a8823e;z-index:3;pointer-events:none}
+html body .vlr.is-xl .vlr-frame{display:none!important}
+html body .vlr.is-xl .vlr-k{color:color-mix(in srgb,var(--xd) 80%,#3b2610)!important}
+html body .vlr.is-xl .vlr-sh h3{background:none!important;color:#3b2610!important;-webkit-text-fill-color:#3b2610!important;filter:none!important;text-shadow:0 1px 0 rgba(255,255,255,.5)}
+html body .vlr.is-xl .vlr-x{color:#3b2610!important;background:rgba(255,248,230,.6)!important;border-color:rgba(90,60,20,.35)!important}
+html body .vlr.is-xl .vlr-tabs button{color:var(--xd)!important;border-color:color-mix(in srgb,var(--xa) 55%,transparent)!important;background:rgba(255,248,230,.65)!important}
+html body .vlr.is-xl .vlr-tabs button.on{color:#fff!important;background:radial-gradient(circle at 35% 30%,var(--xa2),var(--xa))!important;border-color:#fff!important;box-shadow:0 0 10px color-mix(in srgb,var(--xa) 60%,transparent)!important}
+html body .vlr.is-xl .vlr-tabs button.lk{color:#a89574!important;background:rgba(230,212,180,.7)!important}
+html body .vlr.is-xl .vlr-path b{background:var(--xa)!important}
+html body .vlr.is-xl .vlr-art-l{filter:drop-shadow(0 4px 8px rgba(90,60,20,.35))!important}
+html body .vlr.is-xl .vlr-art-l svg{border-radius:8px}
+html body .vlr.is-xl .vlr-body h4{color:color-mix(in srgb,var(--xd) 85%,#3b2610)!important}
+html body .vlr.is-xl .vlr-body p,html body .vlr.is-xl .vlr-body p.lp{color:#3b2610!important}
+html body .vlr.is-xl .vlr-body .ln{color:color-mix(in srgb,var(--xd) 85%,#3b2610)!important}
+html body .vlr.is-xl .vlr-body mark.lh{color:inherit!important;background-image:linear-gradient(transparent 52%,color-mix(in srgb,var(--xa2) 80%,transparent) 52%,color-mix(in srgb,var(--xa2) 90%,transparent) 92%,transparent 92%)!important}
+html body .vlr.is-xl .vlr-body blockquote.lq{color:color-mix(in srgb,var(--xd) 85%,#3b2610)!important;border-color:color-mix(in srgb,var(--xa) 60%,transparent)!important}
+html body .vlr.is-xl .vlr-body blockquote.lq .lq-o,html body .vlr.is-xl .vlr-body blockquote.lq .lq-c{color:var(--xa)!important}
+html body .vlr.is-xl .vlr-lock{background:rgba(255,248,230,.45)!important;border-color:color-mix(in srgb,var(--xa) 60%,transparent)!important;color:#5a3e1c!important}
+html body .vlr.is-xl .xl-end{display:inline-block;padding:4px 14px;border-radius:99px;font:700 .8rem/1.4 'Prompt',sans-serif;letter-spacing:.2em;color:#fff;background:linear-gradient(135deg,var(--xa2),var(--xa));box-shadow:0 2px 6px rgba(0,0,0,.25)}
+/* ปุ่ม 📜 บนการ์ดไอเทมธรรมดา/หายาก */
+html body .vst .vof-b .vof-lore-w.is-xl{top:24px;right:6px;width:24px;height:24px;font-size:12px}
+html body .vlr.is-xl .vlr-sh::before{top:22px;left:18px;margin-top:0}
