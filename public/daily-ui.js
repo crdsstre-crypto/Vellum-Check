@@ -729,16 +729,16 @@
   }
   /* คำพูดน้องตอนเลือกมาลัย (สุ่มสลับทุกครั้งที่แตะ) */
   var lrSayN = Math.floor(Math.random() * 6);
-  function lrSay(has, lft) {
+  function lrSay(has, lft) {   // "ประโยค|บรรทัดตัวเลข" — ฉากสวรรค์แยกตัวเลขลงบรรทัดล่าง
     var L;
     if (has) {
       var st = lrStage();
-      L = ['ขอบคุณที่ไม่ยอมแพ้นะ ตำนานนี้เป็นของเราสองคน 💛',
-        st === 3 ? 'มาลัยขั้นสูงสุดแล้ว! รัศมีเทพเปล่งประกายเต็มที่ ✨' : 'มาลัยขั้น ' + st + '/3 · เช็กอินรวมครบ ' + (st === 1 ? 130 : 160) + ' วัน มาลัยจะ' + (st === 1 ? 'เปล่งประกาย ✨' : 'มีวงรัศมีเทพ 🌟')];
+      L = ['ขอบคุณที่ไม่ยอมแพ้นะ ตำนานนี้เป็นของเราสองคน',
+        st === 3 ? 'รัศมีเทพเปล่งประกายเต็มที่แล้ว|ขั้นสูงสุด 3/3' : (st === 1 ? 'มาลัยจะเปล่งประกายเมื่อเช็กอินรวมครบ 130 วัน' : 'วงรัศมีเทพจะปรากฏเมื่อเช็กอินรวมครบ 160 วัน') + '|ขั้น ' + st + '/3'];
     } else if (lft <= 10) {
-      L = ['อีกแค่ ' + lft + ' วัน! ฉันได้ยินเสียงแตรเทวดาแล้ว 🎺', 'ประตูสวรรค์เริ่มเปิดแล้ว… อีก ' + lft + ' วันเท่านั้น!'];
+      L = ['ฉันได้ยินเสียงแตรเทวดาแล้ว!|อีกแค่ ' + lft + ' วัน', 'ประตูสวรรค์เริ่มเปิดแล้ว…|อีกแค่ ' + lft + ' วัน'];
     } else {
-      L = ['เทพกำลังเฝ้ามองอยู่นะ… อีก ' + lft + ' วัน มาลัยจะเป็นของเรา ✨', 'เช็กอินทุกวัน แล้ววันหนึ่งเทพจะสวมมาลัยให้ฉัน 🌿 อีก ' + lft + ' วัน', 'ผู้ที่อ่านสัญญาครบ 100 วัน… คือตำนาน 👑 อีก ' + lft + ' วัน'];
+      L = ['เทพกำลังเฝ้ามองอยู่นะ… มาลัยจะเป็นของเราในไม่ช้า|อีก ' + lft + ' วัน', 'เช็กอินทุกวัน แล้ววันหนึ่งเทพจะสวมมาลัยให้ฉัน|อีก ' + lft + ' วัน', 'ผู้ที่อ่านสัญญาครบ 100 วัน… คือตำนาน|อีก ' + lft + ' วัน'];
     }
     return L[lrSayN % L.length];
   }
@@ -747,7 +747,8 @@
   function sayType(el, txt) {
     if (el.getAttribute('data-t') === txt) return;
     el.setAttribute('data-t', txt); clearInterval(typeT);
-    if (sh && sh.classList.contains('is-heav')) { var hn = h(txt), mm = hn.match(/\d+(?=\s*วัน)/g) || hn.match(/\d+/g); if (mm) { var li = hn.lastIndexOf(mm[mm.length - 1]); hn = hn.slice(0, li) + '<b class="sv-n">' + mm[mm.length - 1] + '</b>' + hn.slice(li + mm[mm.length - 1].length); } el.innerHTML = '<span class="sv-t">' + hn + '</span>'; el.classList.remove('sv-in'); void el.offsetWidth; el.classList.add('sv-in'); return; }
+    if (sh && sh.classList.contains('is-heav')) { var pr = String(txt).split('|'), hn = '<span class="sv-t">' + h(pr[0]) + '</span>'; if (pr[1]) hn += '<span class="sv-hr"></span><span class="sv-c"><svg class="sv-lf" viewBox="0 0 26 14" aria-hidden="true"><path d="M1 11Q12 8 25 3" stroke="#b9821c" stroke-width=".9" fill="none"/><g fill="#d9a536" stroke="#9a6410" stroke-width=".35"><ellipse cx="7" cy="7.4" rx="3.4" ry="1.5" transform="rotate(-40 7 7.4)"/><ellipse cx="9" cy="12" rx="3.4" ry="1.5" transform="rotate(20 9 12)"/><ellipse cx="14" cy="5" rx="3.4" ry="1.5" transform="rotate(-50 14 5)"/><ellipse cx="16.4" cy="9.6" rx="3.4" ry="1.5" transform="rotate(10 16.4 9.6)"/><ellipse cx="22" cy="2.6" rx="3" ry="1.4" transform="rotate(-30 22 2.6)"/></g></svg>' + h(pr[1]).replace(/(\d+(?:\/\d+)?)/, '<b class="sv-n">$1</b>') + '<svg class="sv-lf sv-r" viewBox="0 0 26 14" aria-hidden="true"><path d="M1 11Q12 8 25 3" stroke="#b9821c" stroke-width=".9" fill="none"/><g fill="#d9a536" stroke="#9a6410" stroke-width=".35"><ellipse cx="7" cy="7.4" rx="3.4" ry="1.5" transform="rotate(-40 7 7.4)"/><ellipse cx="9" cy="12" rx="3.4" ry="1.5" transform="rotate(20 9 12)"/><ellipse cx="14" cy="5" rx="3.4" ry="1.5" transform="rotate(-50 14 5)"/><ellipse cx="16.4" cy="9.6" rx="3.4" ry="1.5" transform="rotate(10 16.4 9.6)"/><ellipse cx="22" cy="2.6" rx="3" ry="1.4" transform="rotate(-30 22 2.6)"/></g></svg></span>'; el.innerHTML = hn; el.classList.remove('sv-in'); void el.offsetWidth; el.classList.add('sv-in'); return; }
+    if (String(txt).indexOf('|') >= 0) txt = String(txt).replace('|', ' · ');
     el.classList.remove('sv-in');
     if (calm()) { el.textContent = txt; return; }
     var chars = Array.from ? Array.from(txt) : txt.split(''), n = 0;
