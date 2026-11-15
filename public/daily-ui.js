@@ -451,7 +451,8 @@
   }
   /* (2) ปีกฟีนิกซ์ (3) วงเวทไฟ (5) ปุ่มดูตัวอย่างระดับ (6) ป้ายนับถอยหลังปลดล็อก */
   /* ฉากเหรียญไฟไม่มอด แนวภาพยนตร์: ควันมืด + ถ่านไฟเบลอลอยช้า + แสงอุ่นตัดขอบ · ป้ายแบบแบรนด์หรู */
-  /* ฉากสวรรค์ของมาลัยตำนาน: ฟ้ารุ่งสาง · เสาวิหารหินอ่อน · ลำแสง · วงรัศมีเลขโรมัน · ทะเลเมฆ · แท่นหินอ่อนสลักลอเรล · ละอองทอง+กลีบดอก */
+  /* ฉากสวรรค์ของมาลัยตำนาน v2: ฟ้าโพล้เพล้ทองอำพัน-ชมพูกุหลาบ + ดวงอาทิตย์ · เกาะลอยฟ้าไกล ๆ · วงรัศมีลอเรล (เลขโรมันตั้งตรง)
+     · เสาหินอ่อนมีเงา+เถาไอวี่ทอง+ผ้าไหมพลิ้ว · พื้นหินอ่อนเงาวับ+หมอก · บันไดสู่แท่น (ผิวแท่นสะท้อนเงาน้อง) · โบเก้ · ละอองทอง+กลีบดอก */
   function heavScene(on) {
     var hv = sh.querySelector('.vst-heav'); if (!hv) return;
     var was = sh.classList.contains('is-heav');
@@ -459,34 +460,105 @@
     if (!on) return;
     if (!hv.getAttribute('data-on')) {
       hv.setAttribute('data-on', '1');
-      var R = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'], num = '', tick = '';
-      for (var k = 0; k < 12; k++) { var a = k * Math.PI / 6 - Math.PI / 2; num += '<text x="' + (195 + 104 * Math.cos(a)).toFixed(1) + '" y="' + (118 + 104 * Math.sin(a) + 3).toFixed(1) + '" transform="rotate(' + (k * 30) + ' ' + (195 + 104 * Math.cos(a)).toFixed(1) + ' ' + (118 + 104 * Math.sin(a)).toFixed(1) + ')">' + R[k] + '</text>'; }
-      for (var t = 0; t < 60; t++) { var b = t * Math.PI / 30, r1 = t % 5 ? 93 : 90; tick += 'M' + (195 + r1 * Math.cos(b)).toFixed(1) + ' ' + (118 + r1 * Math.sin(b)).toFixed(1) + 'L' + (195 + 96 * Math.cos(b)).toFixed(1) + ' ' + (118 + 96 * Math.sin(b)).toFixed(1); }
-      function col(x) {
-        var fl = ''; for (var q = 1; q < 5; q++) fl += 'M' + (x + q * 6) + ' 44V238';
-        return '<rect x="' + x + '" y="44" width="30" height="196" fill="url(#hvM)"/><path d="' + fl + '" stroke="#b9ad98" stroke-width=".8" opacity=".55"/>' +
-          '<rect x="' + (x - 6) + '" y="36" width="42" height="8" rx="1.5" fill="url(#hvM)" stroke="#d4a43a" stroke-width="1"/>' +
-          '<circle cx="' + (x - 4) + '" cy="40" r="4" fill="none" stroke="#d4a43a" stroke-width="1.4"/><circle cx="' + (x + 34) + '" cy="40" r="4" fill="none" stroke="#d4a43a" stroke-width="1.4"/>' +
-          '<rect x="' + (x - 3) + '" y="30" width="36" height="6" fill="#efe8da" stroke="#d4a43a" stroke-width=".8"/>';
+      var CX = 195, CY = 112, f1 = function (v) { return v.toFixed(1); };
+      var R = ['XII', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI'], num = '', wreath = '';
+      for (var k = 0; k < 12; k++) { var a = k * Math.PI / 6 - Math.PI / 2; num += '<text x="' + f1(CX + 79 * Math.cos(a)) + '" y="' + f1(CY + 79 * Math.sin(a) + 3) + '">' + R[k] + '</text>'; }
+      for (var w = 0; w < 36; w++) { var b2 = w * Math.PI / 18, px = CX + 70 * Math.cos(b2), py = CY + 70 * Math.sin(b2), rr = b2 * 180 / Math.PI + 90 + (w % 2 ? 32 : -32); wreath += '<path transform="translate(' + f1(px) + ' ' + f1(py) + ') rotate(' + f1(rr) + ')" d="M0 0c2.4-2.2 6-2.2 8.4 0-2.4 2.2-6 2.2-8.4 0z"/>'; }
+      function island(x, y, s, c) { return '<g transform="translate(' + x + ' ' + y + ') scale(' + s + ')" fill="' + c + '"><path d="M-30 0h60c-6 8-14 22-30 30C14 22-24 8-30 0z"/><rect x="-14" y="-12" width="28" height="12"/><path d="M-17-12h34L0-21z"/><path d="M-10-12v12M-4-12v12M2-12v12M8-12v12" stroke="' + c + '" stroke-width="1"/><path d="M-30 0c4-4 12-4 16-2 6-4 18-3 22 0 6-3 16-2 22 2z"/></g>'; }
+      function col(x, flip) {
+        var ivy = '', d = 'M' + (x + 15) + ' 236';
+        for (var y = 236; y > 50; y -= 16) { var sx = ((236 - y) / 16) % 2 ? -1 : 1; d += 'Q' + (x + 15 + sx * 20) + ' ' + (y - 8) + ' ' + (x + 15) + ' ' + (y - 16); ivy += '<path transform="translate(' + (x + 15 + sx * 12) + ' ' + (y - 8) + ') rotate(' + (sx > 0 ? -30 : 210) + ')" d="M0 0c2-2.4 5.4-2.4 7.4 0-2 2.4-5.4 2.4-7.4 0z" fill="#e2b23c"/>'; }
+        var fl = ''; for (var q = 1; q < 5; q++) fl += 'M' + (x + q * 6) + ' 46V238';
+        return '<rect x="' + x + '" y="46" width="30" height="194" fill="url(#hvC)"/><path d="' + fl + '" stroke="#a89a82" stroke-width=".7" opacity=".5"/>' +
+          '<path d="' + d + '" stroke="#c8961e" stroke-width="1.1" fill="none" opacity=".9"/>' + ivy +
+          '<rect x="' + (x - 3) + '" y="40" width="36" height="6" fill="url(#hvC)" stroke="#c8961e" stroke-width=".8"/>' +
+          '<path d="M' + (x - 7) + ' 34h44" stroke="#c8961e" stroke-width="7" stroke-linecap="round"/><path d="M' + (x - 7) + ' 34h44" stroke="#fff6dc" stroke-width="4.6" stroke-linecap="round"/>' +
+          '<circle cx="' + (x - 7) + '" cy="35" r="4.4" fill="#fff6dc" stroke="#c8961e" stroke-width="1.3"/><circle cx="' + (x - 7) + '" cy="35" r="1.6" fill="#c8961e"/><circle cx="' + (x + 37) + '" cy="35" r="4.4" fill="#fff6dc" stroke="#c8961e" stroke-width="1.3"/><circle cx="' + (x + 37) + '" cy="35" r="1.6" fill="#c8961e"/>' +
+          '<rect x="' + (x - 6) + '" y="236" width="42" height="8" fill="url(#hvC)" stroke="#c8961e" stroke-width=".8"/>';
       }
-      function cloud(cx, cy, s, c) { return '<g transform="translate(' + cx + ' ' + cy + ') scale(' + s + ')" fill="' + c + '"><ellipse cx="0" cy="0" rx="34" ry="14"/><circle cx="-16" cy="-8" r="13"/><circle cx="4" cy="-14" r="16"/><circle cx="22" cy="-6" r="11"/></g>'; }
-      var leaves = ''; for (var l = 0; l < 13; l++) { var lx = 113 + l * 13.7; leaves += '<path transform="translate(' + lx.toFixed(1) + ' 226) rotate(' + (l % 2 ? -30 : 30) + ')" d="M0 0c2-2 5-2 7 0-2 2-5 2-7 0z" fill="#d4a43a" opacity=".85"/>'; }
+      function drape(x, dir) {   // ผ้าไหมขาวขอบทอง ผูกเชือกทองที่ครึ่งเสา
+        var o = x + dir * 2, m = x + dir * 24;
+        return '<g class="hv-dr" style="transform-origin:' + x + 'px 30px"><path d="M' + o + ' 30C' + (o + dir * 30) + ' 34 ' + (m + dir * 6) + ' 40 ' + (m + dir * 10) + ' 32L' + (x + dir * 10) + ' 132C' + (x + dir * 22) + ' 160 ' + (x + dir * 30) + ' 196 ' + (x + dir * 30) + ' 236H' + o + 'z" fill="url(#hvF)" opacity=".92" stroke="#d4a43a" stroke-width="1.2"/>' +
+          '<path d="M' + (x + dir * 8) + ' 40C' + (x + dir * 12) + ' 80 ' + (x + dir * 8) + ' 110 ' + (x + dir * 6) + ' 132M' + (x + dir * 18) + ' 38C' + (x + dir * 18) + ' 90 ' + (x + dir * 12) + ' 116 ' + (x + dir * 9) + ' 132" stroke="#e6dccb" stroke-width="1.2" fill="none"/>' +
+          '<path d="M' + (x + dir * 14) + ' 150C' + (x + dir * 20) + ' 180 ' + (x + dir * 26) + ' 210 ' + (x + dir * 32) + ' 236" stroke="#e6dccb" stroke-width="1.2" fill="none"/>' +
+          '<path d="M' + (x - dir * 2) + ' 128q' + (dir * 8) + ' 8 ' + (dir * 16) + ' 2" stroke="#d4a43a" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="' + (x + dir * 15) + '" cy="131" r="2.4" fill="#f4c542"/><path d="M' + (x + dir * 15) + ' 133l' + (dir * -2) + ' 10M' + (x + dir * 15) + ' 133l' + (dir * 3) + ' 9" stroke="#d4a43a" stroke-width="1.3"/></g>';
+      }
+      function angel(x, dir) {   // รูปปั้นเทวดาหินอ่อนเป่าแตร บนแท่น
+        var g = '<g transform="translate(' + x + ' 0) scale(' + dir + ' 1)">';
+        g += '<rect x="-15" y="178" width="30" height="20" fill="url(#hvC)" stroke="#c8961e" stroke-width=".8"/><rect x="-18" y="174" width="36" height="5" fill="#f3ebdd" stroke="#c8961e" stroke-width=".8"/>';
+        g += '<path d="M-3 132C-14 116-24 106-30 92c6 2 9 6 10 9 1-6 0-11-2-16 6 4 9 10 10 16 2-5 2-10 1-15 6 6 8 14 8 24z" fill="#efe6d6" stroke="#bfae94" stroke-width=".7"/>';
+        g += '<path d="M-6 132c-3 14-7 28-12 42h28c-2-14-4-28-6-42z" fill="url(#hvC)" stroke="#bfae94" stroke-width=".7"/><path d="M-2 140c-1 10-3 22-6 32M3 140c1 10 1 22 2 32" stroke="#c9bca6" stroke-width=".7" fill="none"/>';
+        g += '<circle cx="0" cy="124" r="6.4" fill="#f6efe2" stroke="#bfae94" stroke-width=".7"/><path d="M-6 121c2-5 8-7 12-3" stroke="#d9a536" stroke-width="1.4" fill="none"/>';
+        g += '<path d="M3 134c5-2 8-6 9-11" stroke="#efe6d6" stroke-width="3" stroke-linecap="round" fill="none"/>';
+        g += '<g transform="translate(6 123) rotate(-38)"><rect x="0" y="-1" width="26" height="2" rx="1" fill="#e6b84a"/><path d="M24-1.6l9-5q2 6.6 0 13.2l-9-5z" fill="#f4c542" stroke="#b9821c" stroke-width=".5"/></g>';
+        return g + '</g>';
+      }
+      var tiles = '', VY = 120, rows = [198, 203, 209, 217, 228, 243, 262], cols = [];
+      for (var cx2 = -585; cx2 <= 975; cx2 += 78) cols.push(cx2);
+      for (var ri = 0; ri < rows.length - 1; ri++) {
+        var y0 = rows[ri], y1 = rows[ri + 1], k0 = (y0 - VY) / (262 - VY), k1 = (y1 - VY) / (262 - VY);
+        for (var ci = 0; ci < cols.length - 1; ci++) {
+          if ((ri + ci) % 2) continue;
+          var xa = 195 + (cols[ci] - 195) * k0, xb = 195 + (cols[ci + 1] - 195) * k0, xc = 195 + (cols[ci + 1] - 195) * k1, xd = 195 + (cols[ci] - 195) * k1;
+          tiles += 'M' + f1(xa) + ' ' + y0 + 'L' + f1(xb) + ' ' + y0 + 'L' + f1(xc) + ' ' + y1 + 'L' + f1(xd) + ' ' + y1 + 'z';
+        }
+      }
+      var vo = ''; for (var vi = 0; vi <= 14; vi++) { var va = Math.PI + vi * Math.PI / 14; vo += 'M' + f1(195 + 80 * Math.cos(va)) + ' ' + f1(112 + 80 * Math.sin(va)) + 'L' + f1(195 + 96 * Math.cos(va)) + ' ' + f1(112 + 96 * Math.sin(va)); }
+      var arch = '<path d="M99 198V112A96 96 0 0 1 291 112V198H275V112A80 80 0 0 0 115 112V198z" fill="#f0dfc2" stroke="#c8961e" stroke-width="1"/>' +
+        '<path d="' + vo + '" stroke="#d9c9ae" stroke-width=".8"/><path d="M115 198V112A80 80 0 0 1 275 112V198" stroke="#d4a43a" stroke-width="2" fill="none"/><path d="M99 112A96 96 0 0 1 291 112" stroke="#e8c870" stroke-width="1" fill="none"/>' +
+        '<path d="M186 14h18l-3 20h-12z" fill="#f4c542" stroke="#8a5a12" stroke-width=".7"/><rect x="190" y="19" width="10" height="9" rx="1.5" fill="#fff6d6" stroke="#8a5a12" stroke-width=".6"/><path d="M192 22h6M192 24.6h4" stroke="#b9821c" stroke-width=".6"/>' +
+        '<rect x="95" y="104" width="24" height="8" fill="#f3ebdd" stroke="#c8961e" stroke-width=".8"/><rect x="271" y="104" width="24" height="8" fill="#f3ebdd" stroke="#c8961e" stroke-width=".8"/>';
+      var stars = '<g class="hv-stars" fill="#fff8dc">'; [[60, 46, .7], [150, 40, .5], [250, 44, .6], [330, 52, .8], [120, 70, .4], [282, 74, .45], [70, 96, .5], [36, 64, .4]].forEach(function (q, i) { stars += '<path class="hv-st" style="animation-delay:-' + (i * .6).toFixed(1) + 's" transform="translate(' + q[0] + ' ' + q[1] + ') scale(' + q[2] + ')" d="M0-5l1.2 3.8L5 0 1.2 1.2 0 5-1.2 1.2-5 0-1.2-1.2z"/>'; });
+      stars += '</g><path d="M318 58a12 12 0 1 0 10 18 9.6 9.6 0 1 1-10-18z" fill="#fff4d6" opacity=".85"/>';
+      function swag(dir) {
+        var a = 195 - dir * 185, sx = function (v) { return 195 - dir * (195 - v); };
+        return '<path d="M' + a + ' 24H195V38C' + sx(140) + ' 76 ' + sx(64) + ' 74 ' + a + ' 34z" fill="url(#hvF)" stroke="#d4a43a" stroke-width="1.2"/>' +
+          '<path d="M' + sx(30) + ' 32C' + sx(80) + ' 60 ' + sx(140) + ' 60 ' + sx(186) + ' 34M' + sx(40) + ' 30C' + sx(86) + ' 48 ' + sx(140) + ' 48 ' + sx(180) + ' 30" stroke="#e3d6c0" stroke-width="1.4" fill="none"/>' +
+          '<path d="M' + a + ' 34C' + sx(64) + ' 74 ' + sx(140) + ' 76 195 38" stroke="#e8c870" stroke-width="3" stroke-dasharray="1.2 1.6" fill="none"/>';
+      }
+      var notes = '<g class="hv-nts" fill="#ffe08a" font-family="serif" font-size="11" font-weight="700">';
+      [[104, 103, 1], [286, 103, -1]].forEach(function (b, i) { notes += '<circle class="hv-bell" style="animation-delay:' + (i * 3) + 's" cx="' + b[0] + '" cy="' + b[1] + '" r="5" fill="#fff3c4"/>'; ['♪', '♫', '♪'].forEach(function (n, j) { notes += '<text class="hv-nt" style="--nx:' + (b[2] * (16 + j * 8)) + 'px;--ny:' + (-22 - j * 8) + 'px;animation-delay:' + (i * 3 + j * .35).toFixed(2) + 's" x="' + b[0] + '" y="' + b[1] + '">' + n + '</text>'; }); });
+      notes += '</g>';
+      var veins = '<path d="M0 214c40-6 70 6 110 2s60-10 96-4M180 236c40-8 90 4 140-4s50-6 70-2M20 248c50-4 80 6 130 2" stroke="#d9b45a" stroke-width=".7" fill="none" opacity=".55"/>';
       var dust = ''; for (var d = 0; d < 18; d++) { var pet = d % 3 === 0; dust += '<i class="hv-d' + (pet ? ' is-pet' : '') + '" style="left:' + (3 + Math.random() * 94).toFixed(1) + '%;--t:' + (6 + Math.random() * 7).toFixed(1) + 's;--d:-' + (Math.random() * 12).toFixed(1) + 's;--x:' + (Math.random() * 40 - 20).toFixed(0) + 'px;--s:' + (.6 + Math.random() * .8).toFixed(2) + '"></i>'; }
+      var bok = ''; [[8, 30, 34], [86, 22, 26], [16, 74, 20], [78, 70, 40], [50, 12, 16], [94, 52, 18]].forEach(function (q, i) { bok += '<i class="hv-bk" style="left:' + q[0] + '%;top:' + q[1] + '%;width:' + q[2] + 'px;height:' + q[2] + 'px;--d:-' + (i * 1.7) + 's"></i>'; });
       hv.innerHTML = '<i class="hv-sky"></i><svg class="hv-svg" viewBox="0 0 390 256" preserveAspectRatio="xMidYMax slice"><defs>' +
-        '<linearGradient id="hvM" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#cfc6b6"/><stop offset=".45" stop-color="#fffdf8"/><stop offset="1" stop-color="#c8bea9"/></linearGradient>' +
-        '<linearGradient id="hvB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffbe6" stop-opacity=".75"/><stop offset="1" stop-color="#fffbe6" stop-opacity="0"/></linearGradient>' +
-        '<radialGradient id="hvS"><stop offset="0" stop-color="#fffdf2"/><stop offset=".4" stop-color="#fff2c4" stop-opacity=".8"/><stop offset="1" stop-color="#ffe3a0" stop-opacity="0"/></radialGradient>' +
-        '<linearGradient id="hvP" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c8bea9"/><stop offset=".5" stop-color="#fffdf8"/><stop offset="1" stop-color="#bfb39c"/></linearGradient></defs>' +
-        '<circle cx="195" cy="110" r="150" fill="url(#hvS)"/>' +
-        '<path d="M-10 26L195-14 400 26z" fill="#fff8ec" opacity=".55" stroke="#d4a43a" stroke-width="1.2"/><rect x="-10" y="24" width="410" height="7" fill="#f3ecdf" opacity=".7"/><path d="M-10 31H400" stroke="#d4a43a" stroke-width=".8" opacity=".8"/>' +
-        '<g class="hv-rays" fill="url(#hvB)"><path d="M180-10h30l60 270H120z"/><path d="M150-10h14l-60 270H64z" opacity=".6"/><path d="M226-10h14l86 270h-40z" opacity=".6"/></g>' +
-        '<g class="hv-halo" fill="#c8961e" font-family="Georgia,serif" font-size="9" font-weight="700" text-anchor="middle"><circle cx="195" cy="118" r="96" fill="none" stroke="#d4a43a" stroke-width="1.2" opacity=".85"/><circle cx="195" cy="118" r="86" fill="none" stroke="#e8c870" stroke-width=".7" stroke-dasharray="1.5 4" opacity=".9"/><path d="' + tick + '" stroke="#d4a43a" stroke-width=".8" fill="none"/><circle cx="195" cy="118" r="112" fill="none" stroke="#e8c870" stroke-width=".6" opacity=".7"/>' + num + '</g>' +
-        col(14) + col(346) +
-        '<g class="hv-cl hv-cl1">' + cloud(30, 236, 1.5, '#fde9f0') + cloud(140, 246, 1.7, '#fff3f6') + cloud(270, 240, 1.6, '#fde9f0') + cloud(370, 238, 1.4, '#fff3f6') + '</g>' +
-        '<g class="hv-ped"><ellipse cx="195" cy="232" rx="92" ry="13" fill="#bfb39c"/><path d="M103 218v14c0 7 41 13 92 13s92-6 92-13v-14z" fill="url(#hvP)"/><path d="M103 232c0 7 41 13 92 13s92-6 92-13" stroke="#d4a43a" stroke-width="1.4" fill="none"/>' + leaves +
-        '<ellipse cx="195" cy="218" rx="92" ry="13" fill="#fbf7ef" stroke="#d4a43a" stroke-width="1.6"/><ellipse cx="195" cy="218" rx="80" ry="10" fill="none" stroke="#e8c870" stroke-width=".7"/><ellipse cx="180" cy="215" rx="40" ry="4" fill="#fff" opacity=".7"/></g>' +
-        '<g class="hv-cl hv-cl2">' + cloud(60, 258, 1.6, '#fff8fa') + cloud(210, 262, 1.9, '#ffffff') + cloud(340, 258, 1.6, '#fff8fa') + '</g></svg>' +
-        '<span class="hv-dust">' + dust + '</span><i class="hv-flash"></i>';
+        '<linearGradient id="hvC" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#cfb48a"/><stop offset=".22" stop-color="#f1e2c6"/><stop offset=".45" stop-color="#fff8ea"/><stop offset=".7" stop-color="#ead6b4"/><stop offset="1" stop-color="#b9976a"/></linearGradient>' +
+        '<linearGradient id="hvF" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#fbf4ea"/><stop offset="1" stop-color="#e9dcc8"/></linearGradient>' +
+        '<linearGradient id="hvB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3c8" stop-opacity=".6"/><stop offset="1" stop-color="#fff3c8" stop-opacity="0"/></linearGradient>' +
+        '<radialGradient id="hvS"><stop offset="0" stop-color="#fff2cc" stop-opacity=".85"/><stop offset=".22" stop-color="#ffe2a6" stop-opacity=".8"/><stop offset=".45" stop-color="#ffd27a" stop-opacity=".7"/><stop offset="1" stop-color="#ff9a6a" stop-opacity="0"/></radialGradient>' +
+        '<linearGradient id="hvFl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9d6bd"/><stop offset=".3" stop-color="#f7ecdc"/><stop offset="1" stop-color="#d9c2a2"/></linearGradient>' +
+        '<linearGradient id="hvP" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#cdb088"/><stop offset=".5" stop-color="#fff8ea"/><stop offset="1" stop-color="#c2a47a"/></linearGradient>' +
+        '<radialGradient id="hvDk"><stop offset="0" stop-color="#4a1a30" stop-opacity=".75"/><stop offset=".55" stop-color="#6a2c40" stop-opacity=".35"/><stop offset="1" stop-color="#7a3a4a" stop-opacity="0"/></radialGradient><filter id="hvBl" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="1.3"/></filter><filter id="hvBl2" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="2.2"/></filter><radialGradient id="hvG" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff6d6" stop-opacity=".9"/><stop offset="1" stop-color="#fff6d6" stop-opacity="0"/></radialGradient></defs>' +
+        '<g class="hv-sunw"><circle cx="' + CX + '" cy="' + CY + '" r="170" fill="url(#hvS)"/><circle cx="' + CX + '" cy="' + CY + '" r="58" fill="#ffe9bf" opacity=".3"/></g>' +
+        stars + '<g class="hv-far">' + island(78, 92, .8, '#c98aa8') + island(318, 70, .65, '#c98aa8') + island(345, 120, .45, '#d7a0b6') + island(40, 52, .4, '#d7a0b6') + '</g>' +
+        '<g class="hv-arch">' + arch + '</g><g class="hv-rays" fill="url(#hvB)"><path d="M180-10h30l60 270H120z" opacity=".5"/><path d="M150-10h14l-60 270H64z" opacity=".6"/><path d="M226-10h14l86 270h-40z" opacity=".6"/></g>' +
+        '<g class="hv-halo"><circle cx="' + CX + '" cy="' + CY + '" r="70" fill="none" stroke="#e0b048" stroke-width="1"/><g fill="#d9a536">' + wreath + '</g>' +
+          '<g class="hv-spin"><circle cx="' + CX + '" cy="' + CY + '" r="63" fill="none" stroke="#f2d48a" stroke-width=".8" stroke-dasharray="1 5"/></g>' +
+          '<g fill="#b9821c" font-family="Georgia,serif" font-size="7.5" font-weight="700" text-anchor="middle" opacity=".85">' + num + '</g></g>' +
+        '<rect x="-10" y="14" width="410" height="12" fill="#f3e8d8"/><path d="M-10 14H400M-10 26H400" stroke="#d4a43a" stroke-width=".9"/>' +
+        '<rect x="0" y="198" width="390" height="58" fill="url(#hvFl)"/><path d="' + tiles + '" fill="#d2a862" opacity=".7"/>' + veins + '<path d="M0 198H390" stroke="#d4a43a" stroke-width="1"/><ellipse cx="' + CX + '" cy="206" rx="120" ry="7" fill="#fffbea" opacity=".7"/>' +
+        '<g class="hv-ang">' + angel(72, 1) + angel(318, -1) + '</g>' + notes + col(14) + col(346) + '<g class="hv-swag">' + swag(1) + swag(-1) + '<circle cx="195" cy="38" r="3.4" fill="#f4c542" stroke="#8a5a12" stroke-width=".6"/><path class="hv-tas" d="M195 41l-3 12h6z" fill="#e0a92c" stroke="#8a5a12" stroke-width=".5"/></g><ellipse cx="195" cy="56" rx="78" ry="36" fill="url(#hvDk)"/>' +
+        '<g class="hv-mist"><ellipse cx="70" cy="214" rx="90" ry="10" fill="url(#hvG)"/><ellipse cx="320" cy="220" rx="100" ry="11" fill="url(#hvG)"/></g>' +
+        '<g class="hv-ped">' +
+          '<ellipse cx="' + CX + '" cy="250" rx="148" ry="16" fill="#bfae94"/><path d="M47 242v8c0 9 66 16 148 16s148-7 148-16v-8z" fill="url(#hvP)"/><ellipse cx="' + CX + '" cy="242" rx="148" ry="16" fill="#f6efe2" stroke="#d4a43a" stroke-width="1.2"/>' +
+          '<path d="M75 232v8c0 8 54 14 120 14s120-6 120-14v-8z" fill="url(#hvP)"/><ellipse cx="' + CX + '" cy="232" rx="120" ry="14" fill="#faf4ea" stroke="#d4a43a" stroke-width="1.2"/>' +
+          '<path d="M103 218v13c0 7 41 13 92 13s92-6 92-13v-13z" fill="url(#hvP)"/><path d="M103 231c0 7 41 13 92 13s92-6 92-13" stroke="#d4a43a" stroke-width="1.4" fill="none"/>' +
+          '<ellipse class="hv-top" cx="' + CX + '" cy="218" rx="92" ry="13" fill="#fbf7ef" stroke="#d4a43a" stroke-width="1.6"/><ellipse cx="' + CX + '" cy="218" rx="80" ry="10" fill="none" stroke="#e8c870" stroke-width=".7"/></g>' +
+        '</svg><div class="hv-refl"></div><span class="hv-dust">' + dust + '</span><span class="hv-bks">' + bok + '</span><i class="hv-vig"></i><i class="hv-flash"></i>';
+      var main = hv.querySelector('.hv-svg'), dfs = main.querySelector('defs'), back = '';
+      ['.hv-sunw', '.hv-far', '.hv-arch', '.hv-ang'].forEach(function (sel2) { var n = main.querySelector(sel2); if (n) { back += '<g filter="url(#' + (sel2 === '.hv-far' ? 'hvBl2' : 'hvBl') + ')">' + n.outerHTML + '</g>'; n.remove(); } });
+      main.insertAdjacentHTML('beforebegin', '<svg class="hv-svg hv-back" viewBox="0 0 390 256" preserveAspectRatio="xMidYMax slice">' + dfs.outerHTML + back + '</svg>');
+      hv.querySelector('.hv-sky').insertAdjacentHTML('afterend', '<i class="hv-shoot"></i>');
+    }
+    var stg = sh.querySelector('.vst-stage'), orb = stg.querySelector('.vst-orb'), msb = sh.querySelector('.vst-ms');
+    if (!orb) { orb = document.createElement('div'); orb.className = 'vst-orb'; orb.setAttribute('aria-hidden', 'true'); var oh = ''; [0, 1].forEach(function (r) { oh += '<span class="ob ob' + r + '"><span class="obr">'; for (var z = 0; z < 7; z++) oh += '<i style="transform:rotate(' + (z * 51.4 + r * 20).toFixed(1) + 'deg) translateY(-' + (r ? 70 : 84) + 'px)"></i>'; oh += '</span></span>'; }); orb.innerHTML = oh; msb.parentNode.insertBefore(orb, msb.nextSibling); }
+    var sr = stg.getBoundingClientRect(), mr = msb.getBoundingClientRect(); orb.style.left = (mr.left - sr.left + mr.width / 2) + 'px'; orb.style.top = (mr.top - sr.top + mr.height * .5) + 'px';
+    var rf = hv.querySelector('.hv-refl'), top = hv.querySelector('.hv-top'), msx = sh.querySelector('.vst-ms');
+    if (rf && top && msx) {
+      rf.innerHTML = msx.innerHTML;
+      var q = sh.querySelector('.vst-stage').getBoundingClientRect(), t = top.getBoundingClientRect(), sv = msx.querySelector('svg'), m = (sv || msx).getBoundingClientRect();
+      rf.style.cssText = 'left:' + (t.left - q.left) + 'px;top:' + (t.top - q.top) + 'px;width:' + t.width + 'px;height:' + t.height + 'px;--mx:' + (m.left - t.left).toFixed(1) + 'px;--mw:' + m.width.toFixed(1) + 'px;--mh:' + m.height.toFixed(1) + 'px;--fy:' + (m.top + m.height * 130 / 140 - t.top).toFixed(1) + 'px';
     }
     if (!was) { hv.classList.remove('in'); void hv.offsetWidth; hv.classList.add('in'); }
   }
