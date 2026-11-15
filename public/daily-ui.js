@@ -32,7 +32,23 @@
   var ART_OUT = {
     pin: { vb: '72 82 24 24', art: '<g transform="translate(84 94)"><path d="M0-7 2-2h5.5L3 1.3 4.6 6.8 0 3.6-4.6 6.8-3 1.3-7.5-2H-2z" fill="#ffd84d" stroke="' + INK + '" stroke-width="1.6" stroke-linejoin="round"/></g>' },
     glasses: { vb: '30 44 60 28', art: '<g fill="rgba(190,225,255,.28)" stroke="' + INK + '" stroke-width="2.4"><circle cx="50" cy="58" r="8.5"/><circle cx="70" cy="58" r="8.5"/></g><path d="M58.5 57q1.5-2 3 0M41.5 56 32 52M78.5 56 88 52" stroke="' + INK + '" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M45 53.5q3-3 6-1.5M65 53.5q3-3 6-1.5" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".8"/>' },
-    cap: { vb: '18 -2 92 34', art: '<path d="M24 24c4-14 22-22 40-20 14 2 26 10 34 4-2 10-12 14-22 14z" fill="#4b5bd6" stroke="' + INK + '" stroke-width="2.4" stroke-linejoin="round"/><path d="M22 22c12-4 50-4 58 0" stroke="#f7efdc" stroke-width="6" stroke-linecap="round"/><path d="M22 22c12-4 50-4 58 0" stroke="' + INK + '" stroke-width="1.4" fill="none" stroke-linecap="round" opacity=".5"/><circle cx="100" cy="7" r="6" fill="#f7efdc" stroke="' + INK + '" stroke-width="2.2"/><path d="M48 12l1 2.4 2.4.3-1.8 1.6.5 2.4-2.1-1.2-2.1 1.2.5-2.4-1.8-1.6 2.4-.3zM70 9l.8 1.8 1.9.2-1.4 1.3.4 1.9-1.7-1-1.7 1 .4-1.9-1.4-1.3 1.9-.2z" fill="#ffd84d"/>' },
+    cap: { vb: '12 -22 108 66', art: '<defs><linearGradient id="cpB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7d8cff"/><stop offset=".5" stop-color="#4f5fe0"/><stop offset="1" stop-color="#2c37a6"/></linearGradient>' +
+      '<linearGradient id="cpT" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a6aea"/><stop offset="1" stop-color="#2f3aa8"/></linearGradient>' +
+      '<radialGradient id="cpF" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#fffdf6"/><stop offset=".7" stop-color="#f6ecd6"/><stop offset="1" stop-color="#e2d2ae"/></radialGradient></defs>' +
+      /* ตัวหมวกทรงโดมนุ่ม */
+      '<path d="M23 19C24 3 38-11 57-14C76-16 92-6 97 19Z" fill="url(#cpB)" stroke="' + INK + '" stroke-width="2.4" stroke-linejoin="round"/>' +
+      '<path d="M31 13C34 3 42-5 52-8" stroke="#aab4ff" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".75"/>' +
+      '<path d="M74 6a5 5 0 1 0 3.6 8.2 4 4 0 1 1-3.6-8.2z" fill="#ffe28a"/>' +
+      '<path d="M86 1l1 2.2 2.4.3-1.8 1.6.5 2.4-2.1-1.2-2.1 1.2.5-2.4-1.8-1.6 2.4-.3z" fill="#ffe28a"/><path d="M63-6l.8 1.7 1.8.2-1.3 1.2.4 1.8-1.7-.9-1.7.9.4-1.8-1.3-1.2 1.8-.2z" fill="#fff3c4"/>' +
+      '<circle cx="50" cy="8" r="1.1" fill="#fff3c4"/><circle cx="82" cy="12" r="1" fill="#fff3c4"/><circle cx="69" cy="-1" r=".9" fill="#fff3c4"/>' +
+      /* ปลายผ้าห้อยพับลงซ้าย + ปอมปอม (แกว่ง) */
+      '<g class="cp-tl"><g transform="matrix(-1 0 0 1 120 0)"><path d="M52-13C38-12 24-5 15 7C10 14 8 22 9 30L16 29C16 22 19 14 25 8C31 2 40-2 48-3Z" fill="url(#cpT)" stroke="' + INK + '" stroke-width="2.4" stroke-linejoin="round"/>' +
+      '<path d="M45-8C34-6 24 0 18 9" stroke="#8e9bff" stroke-width="1.8" fill="none" stroke-linecap="round" opacity=".7"/><path d="M28 1l.7 1.5 1.6.2-1.2 1.1.3 1.6-1.4-.8-1.4.8.3-1.6-1.2-1.1 1.6-.2z" fill="#ffe28a"/>' +
+      '<g transform="translate(12.5 35)"><circle r="7.2" fill="url(#cpF)" stroke="' + INK + '" stroke-width="2.2"/><path d="M-4-2.5q1.2-1.6 3-1.8M-1.5 3.2q2 .6 3.6-.6M3 -3.6q1.4.8 1.8 2.4" stroke="#d9c79f" stroke-width="1.2" fill="none" stroke-linecap="round"/><circle cx="-2.4" cy="-2.6" r="1.6" fill="#fff" opacity=".9"/></g></g></g>' +
+      /* ขอบพับขนนุ่ม */
+      '<path d="M18 23Q17 15 26 15Q30 12 36 14Q42 11 48 14Q54 11 60 14Q66 11 72 14Q78 11 84 14Q90 12 94 15Q103 15 102 23Q103 31 94 31Q90 34 84 32Q78 35 72 32Q66 35 60 32Q54 35 48 32Q42 35 36 32Q30 34 26 31Q17 31 18 23Z" fill="url(#cpF)" stroke="' + INK + '" stroke-width="2.4" stroke-linejoin="round"/>' +
+      '<path d="M27 21q2-1.6 4 0M41 19q2-1.6 4 0M55 21q2-1.6 4 0M69 19q2-1.6 4 0M83 21q2-1.6 4 0M34 27q2 1.4 4 0M48 26q2 1.4 4 0M62 27q2 1.4 4 0M76 26q2 1.4 4 0" stroke="#d9c79f" stroke-width="1.3" fill="none" stroke-linecap="round"/>' +
+      '<path d="M26 18Q50 15 92 18" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".8"/>' },
     bow: { vb: '44 74 32 24', art: '<g transform="translate(60 86)"><path d="M-3-3-14-9v18L-3 3zM3-3 14-9v18L3 3z" fill="#d2343e" stroke="' + INK + '" stroke-width="2" stroke-linejoin="round"/><rect x="-4" y="-4.5" width="8" height="9" rx="2.5" fill="#a91f2a" stroke="' + INK + '" stroke-width="2"/><path d="M-11-5-6-2M11-5 6-2" stroke="#ff8a92" stroke-width="1.4" stroke-linecap="round"/></g>' },
     crown: { vb: '34 -10 52 38', art: '' },
     scarf: { vb: '28 62 70 46', art: '<path d="M30 70q30 10 60 0v9q-30 10-60 0z" fill="#d2343e" stroke="' + INK + '" stroke-width="2.2" stroke-linejoin="round"/><path d="M74 78l4 24 9-2-4-24z" fill="#d2343e" stroke="' + INK + '" stroke-width="2.2" stroke-linejoin="round"/><path d="M36 74q24 7 48 0M77 92h8M78 97h8" stroke="#ff8a92" stroke-width="1.6" fill="none" stroke-linecap="round"/>' },
@@ -49,6 +65,8 @@
     medal: { vb: '30 62 60 56', art: '' },
     laurel: { vb: '20 -17 80 40', art: '' },
   };
+  /* หนังตาปรือง่วง (หมวกนอนดาว · หน้า wave เท่านั้น) — ซ่อนไว้ เปิดเป็นจังหวะเฉพาะในฉากท้องฟ้าแห่งความฝัน */
+  var CP_LID = '<g class="cp-lid"><path d="M45 58.4V53.5Q50 49.6 55 53.5V58.4Q50 59.6 45 58.4ZM65 58.4V53.5Q70 49.6 75 53.5V58.4Q70 59.6 65 58.4Z" fill="#f7efdc"/><path d="M45.2 58.3Q50 60 54.8 58.3M65.2 58.3Q70 60 74.8 58.3" stroke="' + INK + '" stroke-width="2.2" fill="none" stroke-linecap="round"/></g>';
   /* (2) เหรียญไฟไม่มอดวิวัฒนาการตามสถิติติดต่อกันสูงสุด: 7 ทอง·ไฟส้ม → 14 ทองคำขาว·ไฟฟ้า → 30 เพชร·ไฟม่วง+ปีก */
   var MED = {
     1: { rim: '#e0a92c', disc: '#f4c542', inn: '#e2a524', line: '#9a6a12', hi: '#fff1b8', f1: '#ff6a2b', f2: '#ffe28a', fs: '#7a2a06', r1: '#c8323c', r2: '#a8222c', rs: '#f4c542', name: 'ทอง' },
@@ -290,7 +308,7 @@
     if (!worn.length || svg.indexOf('<g class="vm-face">') < 0) return svg;
     if (worn.indexOf('laurel') >= 0 && /^(wave|happy|party)$/.test(m)) svg = lrPoseSvg(svg);
     else if (worn.indexOf('crown') >= 0 && /^(wave|happy|party)$/.test(m)) svg = crPoseSvg(svg);
-    var art = worn.map(function (id) { return id === 'medal' ? frontArt(medalTier()) + '<g class="md-worn">' + artFor(id) + '</g>' : id === 'laurel' ? '<g class="lr-worn">' + laurelArt(0, 'front') + '</g>' : id === 'crown' ? '<g class="cr-worn">' + artFor(id) + '</g>' : id === 'wizard' ? '<g class="wz-worn">' + artFor(id) + '</g>' : artFor(id); }).join('');
+    var art = worn.map(function (id) { return id === 'medal' ? frontArt(medalTier()) + '<g class="md-worn">' + artFor(id) + '</g>' : id === 'laurel' ? '<g class="lr-worn">' + laurelArt(0, 'front') + '</g>' : id === 'crown' ? '<g class="cr-worn">' + artFor(id) + '</g>' : id === 'wizard' ? '<g class="wz-worn">' + artFor(id) + '</g>' : id === 'cap' ? '<g class="cp-worn">' + (m === 'wave' ? CP_LID : '') + artFor(id) + '</g>' : artFor(id); }).join('');
     var i = svg.indexOf('<g class="vm-face">'), depth = 0, j = i;
     var re = /<g[\s>]|<\/g>/g; re.lastIndex = i;
     for (var mt; (mt = re.exec(svg));) { if (mt[0] === '</g>') { depth--; if (!depth) { j = mt.index + 4; break; } } else depth++; }
@@ -481,7 +499,7 @@
       sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.setAttribute('aria-labelledby', 'vstT');
       sh.innerHTML = '<div class="vst-bg" data-shx></div><div class="vst-p">' +
         '<div class="vst-hd"><h3 id="vstT">ร้านค้าน้องเวลลัม</h3><span class="vst-pts"><i class="vof-coin"></i><b data-spts>0</b> แต้ม</span><button type="button" class="vst-x" data-shx aria-label="ปิดร้าน">✕</button></div>' +
-        '<div class="vst-stage"><div class="vst-fire" aria-hidden="true"></div><i class="vst-spot"></i><i class="vst-glow"></i><div class="vst-refl" aria-hidden="true"></div><i class="vst-ped"></i><i class="vst-sweep"></i><i class="vst-grain"></i><div class="vst-extra"></div><div class="vst-hero" aria-hidden="true"></div><div class="vst-heav" aria-hidden="true"></div><div class="vst-wzs" aria-hidden="true"></div><div class="vst-thr" aria-hidden="true"></div><div class="vst-ms" aria-hidden="true"></div><p class="vst-say"></p></div>' +
+        '<div class="vst-stage"><div class="vst-fire" aria-hidden="true"></div><i class="vst-spot"></i><i class="vst-glow"></i><div class="vst-refl" aria-hidden="true"></div><i class="vst-ped"></i><i class="vst-sweep"></i><i class="vst-grain"></i><div class="vst-extra"></div><div class="vst-hero" aria-hidden="true"></div><div class="vst-heav" aria-hidden="true"></div><div class="vst-wzs" aria-hidden="true"></div><div class="vst-drm" aria-hidden="true"></div><div class="vst-thr" aria-hidden="true"></div><div class="vst-ms" aria-hidden="true"></div><p class="vst-say"></p></div>' +
         '<div class="vst-tabs" role="tablist"></div><div class="vst-grid"></div><div class="vst-bar"></div></div>';
       document.body.appendChild(sh);
       sh.addEventListener('click', function (e) {
@@ -502,7 +520,7 @@
     setTimeout(function () { var x = sh.querySelector('.vst-x'); if (x) x.focus({ preventScroll: true }); }, 60);
   }
   function shopClose() {
-    if (!sh) return; tryOn = null; sel = null; pvTier = 0; heroKey = ''; heroPlayed = false; lrStop(); lrPlayed = false; crStop(); crPlayed = false; wzStop(); wzPlayed = false; sh.classList.remove('on'); document.documentElement.classList.remove('vst-open');
+    if (!sh) return; tryOn = null; sel = null; pvTier = 0; heroKey = ''; heroPlayed = false; lrStop(); lrPlayed = false; crStop(); crPlayed = false; wzStop(); wzPlayed = false; cpStop(); cpPlayed = false; sh.classList.remove('on'); document.documentElement.classList.remove('vst-open');
     setTimeout(function () { if (sh && !sh.classList.contains('on')) sh.hidden = true; }, 260);
     if (box && !box.hidden) render();
   }
@@ -665,6 +683,36 @@
       '<path d="M0 232q90-14 195-10t195 8v26H0z" fill="url(#wsH)"/></svg>' +
       '<i class="ws-shoot"></i><div class="ws-dust">' + dust + '</div>' +
       '<svg class="ws-ring" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="56"/><circle cx="60" cy="60" r="44" class="i"/><g class="rn">' + RUN + '</g><path d="M60 16 98 82H22z" class="t"/><path d="M60 104 22 38h76z" class="t"/></svg><i class="ws-vig"></i>';
+  }
+  /* ===== ฉากท้องฟ้าแห่งความฝัน (เลือก/ใส่หมวกนอนดาว): ฟ้าพาสเทล · เมฆนุ่มลอย · พระจันทร์หลับยิ้ม · ดาวห้อยเชือกแกว่ง · Zzz ลอย · ยืนบนก้อนเมฆ (วาดเองทั้งหมด) ===== */
+  function dreamScene(on) {
+    var dv = sh.querySelector('.vst-drm'); if (!dv) return;
+    sh.classList.toggle('is-drm', on);
+    if (!on || dv.getAttribute('data-on')) return;
+    dv.setAttribute('data-on', '1');
+    var R = function (a, b) { return a + Math.random() * (b - a); };
+    var stars = ''; for (var k = 0; k < 34; k++) stars += '<circle class="dm-st' + (k % 3 ? '' : ' tw') + '" cx="' + R(4, 386).toFixed(1) + '" cy="' + R(4, 140).toFixed(1) + '" r="' + R(.5, 1.2).toFixed(2) + '" style="--d:-' + R(0, 4).toFixed(1) + 's"/>';
+    var cloud = function (x, y, s, o, c) { return '<g class="dm-cl ' + c + '" transform="translate(' + x + ' ' + y + ') scale(' + s + ')" opacity="' + o + '"><path d="M-40 12Q-46 0-34-4Q-32-18-16-16Q-8-30 8-24Q20-32 30-20Q46-20 44-4Q54 2 44 12Z" fill="url(#dmCl)"/><path d="M-30 4Q-12 0 4 6" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".6"/></g>'; };
+    var hang = function (x, len, sc, d) { return '<g class="dm-hg" style="--d:' + d + 's;transform-origin:' + x + 'px 0"><path d="M' + x + ' 0v' + len + '" stroke="#e8dcff" stroke-width=".8" opacity=".75"/><path transform="translate(' + x + ' ' + (len + 6) + ') scale(' + sc + ')" d="M0-7 2.1-2.3 7.2-1.9 3.3 1.4 4.5 6.4 0 3.7-4.5 6.4-3.3 1.4-7.2-1.9-2.1-2.3z" fill="#ffe28a" stroke="#c9952a" stroke-width=".8" stroke-linejoin="round"/></g>'; };
+    var zz = ''; for (var z = 0; z < 3; z++) zz += '<i class="dm-z" style="--d:' + (z * 1.4) + 's;--s:' + (0.8 + z * .25) + '">z</i>';
+    dv.innerHTML = '<svg class="dm-svg" viewBox="0 0 390 256" preserveAspectRatio="xMidYMax slice"><defs>' +
+      '<linearGradient id="dmSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e2463"/><stop offset=".5" stop-color="#4b4a9e"/><stop offset=".85" stop-color="#9b7fc8"/><stop offset="1" stop-color="#d6a6cf"/></linearGradient>' +
+      '<radialGradient id="dmMg" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff6d6" stop-opacity=".6"/><stop offset=".5" stop-color="#ffd9f0" stop-opacity=".16"/><stop offset="1" stop-color="#ffd9f0" stop-opacity="0"/></radialGradient>' +
+      '<radialGradient id="dmMn" cx=".35" cy=".4" r=".8"><stop offset="0" stop-color="#fffbe6"/><stop offset=".6" stop-color="#ffe9a6"/><stop offset="1" stop-color="#f2c45e"/></radialGradient>' +
+      '<linearGradient id="dmCl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e3d6f6"/></linearGradient></defs>' +
+      '<rect width="390" height="256" fill="url(#dmSky)"/><g class="dm-stars">' + stars + '</g>' +
+      hang(46, 34, 1, -.4) + hang(82, 18, .75, -1.6) + hang(338, 26, .9, -2.4) +
+      '<g transform="translate(24.5 60.8) scale(.92)"><circle cx="300" cy="62" r="58" fill="url(#dmMg)"/><g class="dm-moon">' +
+      '<path d="M306.1 28A32 32 0 1 0 336.3 70.2A26 26 0 0 1 306.1 28Z" fill="url(#dmMn)" stroke="#c99236" stroke-width="1.6" stroke-linejoin="round"/>' +
+      '<path d="M285 40Q278 50 278 62" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".8"/><circle cx="296" cy="84" r="2.2" fill="#f0c766" opacity=".7"/><circle cx="283" cy="74" r="1.5" fill="#f0c766" opacity=".7"/>' +
+      '<path d="M286 60q3.4 3 6.8 0" stroke="#6b4a18" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M287 61.5l-1.4 1.6M289.4 62.6l-.4 2M292 61.6l1 1.6" stroke="#6b4a18" stroke-width="1.1" stroke-linecap="round"/>' +
+      '<path d="M291 69q3 2.6 6 .2" stroke="#6b4a18" stroke-width="1.6" fill="none" stroke-linecap="round"/><ellipse cx="285" cy="68" rx="3.4" ry="2" fill="#f7a3a0" opacity=".75"/></g></g>' +
+      cloud(70, 92, .9, .55, 'a') + cloud(320, 158, .75, .5, 'b') + cloud(30, 190, 1.2, .7, 'c') + cloud(360, 214, 1.3, .75, 'a') +
+      '<path d="M0 236q50-18 100-6t95-4q48-12 95 2t100-2v30H0z" fill="#f1e6fb" opacity=".55"/></svg>' +
+      '<div class="dm-zz">' + zz + '</div>' +
+      '<svg class="dm-pd" viewBox="0 0 220 64" aria-hidden="true"><defs><linearGradient id="dmPd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#efe6fb"/><stop offset="1" stop-color="#c8b6ea"/></linearGradient></defs>' +
+      '<path d="M18 50Q4 48 8 36Q6 24 22 24Q26 12 44 14Q54 2 72 8Q84 0 100 6Q114-2 128 6Q144 0 156 10Q174 6 180 18Q198 16 200 30Q216 34 208 46Q206 56 190 56H30Q16 58 18 50Z" fill="url(#dmPd)"/>' +
+      '<path d="M34 30Q60 22 92 26M120 20Q150 16 176 26" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" opacity=".9"/><path d="M30 56H190" stroke="#b8a2e0" stroke-width="2" stroke-linecap="round" opacity=".6"/></svg><i class="dm-vig"></i>';
   }
   function throneScene(on) {
     var tv = sh.querySelector('.vst-thr'); if (!tv) return;
@@ -974,12 +1022,12 @@
       if (quiet) { ov.remove(); return; }
       ov.classList.add('out'); setTimeout(function () { ov.remove(); }, 450);
     };
-    var showCard = function () { if (ended) return; ov.classList.add('card'); var b = ov.querySelector('.vwz-go'); try { b.focus({ preventScroll: true }); } catch (e) {} wzT.push(setTimeout(function () { wzEnd && wzEnd(); }, 7000)); };
+    var showCard = function () { if (ended) return; ov.classList.add('is-card'); var b = ov.querySelector('.vwz-go'); try { b.focus({ preventScroll: true }); } catch (e) {} wzT.push(setTimeout(function () { wzEnd && wzEnd(); }, 7000)); };
     ov.addEventListener('click', function (e) {
       e.stopPropagation();
       if (e.target.closest('.vwz-go')) { if (has && !isOn()) { wear('wizard'); wzEnd && wzEnd(); shopRender(); } else if (wzEnd) wzEnd(); return; }
       if (e.target.closest('.vwz-card')) return;
-      if (ov.classList.contains('card')) { wzEnd && wzEnd(); return; }
+      if (ov.classList.contains('is-card')) { wzEnd && wzEnd(); return; }
       wzT.forEach(clearTimeout); wzT = []; anims.forEach(function (x) { try { x.cancel(); } catch (er) {} }); ms.classList.remove('hide-wizard'); ov.classList.add('skip'); showCard();
     });
     ov.addEventListener('keydown', function (e) { if (e.key === 'Escape') { e.stopPropagation(); wzEnd && wzEnd(); } });
@@ -1002,6 +1050,108 @@
       wzT.push(setTimeout(function () { ov.classList.add('pop'); }, 1250));
       wzT.push(setTimeout(showCard, 1750));
     };
+  }
+  /* ===== ฉากเปิดตัวหมวกนอนดาว: น้องนอนหลับบนเตียง (Zzz) → สะดุ้งตื่น "!" → กระโดดลงจากเตียง → หมวกลอยพลิ้วลงมาสวมหัว → การ์ดแนะนำ ===== */
+  var cpPlayed = false, cpT = [], cpEnd = null;
+  function cpStop() { cpT.forEach(clearTimeout); cpT = []; if (cpEnd) cpEnd(true); }
+  function playCap(force) {
+    if (!sh || (cpPlayed && !force)) return;
+    var st = sh.querySelector('.vst-stage'), ms = sh.querySelector('.vst-ms'), worn = ms && ms.querySelector('.cp-worn'); if (!st || !worn) return;
+    cpStop(); cpPlayed = true;
+    var o = itemById('cap') || { name: 'หมวกนอนดาว', price: 300 }, has = ownedOutfits().indexOf('cap') >= 0;
+    var isOn = function () { try { return JSON.parse(localStorage.getItem('vc_outfit') || '[]').indexOf('cap') >= 0; } catch (e) { return false; } };
+    var sleeper = (window.VCMascot ? window.VCMascot.svg('sleep', 120) : '').replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '');
+    var STAR = function (x, y, r, f) { return '<path transform="translate(' + x + ' ' + y + ') scale(' + r + ')" d="M0-5 1.5-1.6 5.2-1.3 2.4 1 3.2 4.6 0 2.7-3.2 4.6-2.4 1-5.2-1.3-1.5-1.6z" fill="' + (f || '#ffe28a') + '"/>'; };
+    var bed = '<svg class="vnz-bed" viewBox="0 0 200 124" aria-hidden="true"><defs>' +
+      '<linearGradient id="vnzWd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9a066"/><stop offset="1" stop-color="#9a6334"/></linearGradient>' +
+      '<linearGradient id="vnzWd2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e2ad74"/><stop offset=".6" stop-color="#c08048"/><stop offset="1" stop-color="#94602f"/></linearGradient>' +
+      '<linearGradient id="vnzMt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffaf0"/><stop offset="1" stop-color="#e9dcc2"/></linearGradient>' +
+      '<linearGradient id="vnzBl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7f8eff"/><stop offset=".55" stop-color="#5262e2"/><stop offset="1" stop-color="#3540b0"/></linearGradient>' +
+      '<linearGradient id="vnzBs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4553cc"/><stop offset="1" stop-color="#29328f"/></linearGradient>' +
+      '<radialGradient id="vnzPl" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#ffffff"/><stop offset=".7" stop-color="#f3eee6"/><stop offset="1" stop-color="#d8cfc0"/></radialGradient>' +
+      '<pattern id="vnzQ" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0H12M0 0V12" stroke="#fff" stroke-width=".7" opacity=".18"/></pattern></defs>' +
+      '<ellipse cx="104" cy="120" rx="94" ry="3.6" fill="#140c38" opacity=".35"/>' +
+      /* ขาหลัง */
+      '<rect x="44" y="104" width="7" height="10" rx="1.5" fill="#7a4a22"/><rect x="172" y="104" width="7" height="10" rx="1.5" fill="#7a4a22"/>' +
+      /* หัวเตียงไม้ ทรงโค้ง + แผงกลาง + ดาวฉลุ */
+      '<path d="M12 116V50Q12 34 28 34Q44 34 44 50V116Z" fill="url(#vnzWd2)" stroke="#3a2412" stroke-width="2.4" stroke-linejoin="round"/>' +
+      '<path d="M18 104V52Q18 41 28 41Q38 41 38 52V104Z" fill="#b97a43" stroke="#7a4a22" stroke-width="1.4"/>' + STAR(28, 56, 1.3, '#ffe9a8') +
+      '<path d="M16 50Q18 40 26 38" stroke="#f3cf9a" stroke-width="2" fill="none" stroke-linecap="round" opacity=".8"/><circle cx="28" cy="34" r="3.6" fill="#e2ad74" stroke="#3a2412" stroke-width="1.8"/>' +
+      /* โครงเตียง */
+      '<rect x="36" y="96" width="158" height="12" rx="4" fill="url(#vnzWd)" stroke="#3a2412" stroke-width="2.4"/><path d="M42 99.5H188" stroke="#f0c48e" stroke-width="1.4" stroke-linecap="round" opacity=".8"/>' +
+      /* ขาหน้าทรงหนา */
+      '<path d="M40 106h12v10q0 3-3 3h-6q-3 0-3-3z" fill="url(#vnzWd)" stroke="#3a2412" stroke-width="2.2" stroke-linejoin="round"/><path d="M178 106h12v10q0 3-3 3h-6q-3 0-3-3z" fill="url(#vnzWd)" stroke="#3a2412" stroke-width="2.2" stroke-linejoin="round"/>' +
+      /* ฟูก: ด้านบน (มีมิติ) + ด้านหน้า + ตะเข็บ */
+      '<path d="M44 80H190Q195 80 194 85L193 88H40L41 85Q41 80 44 80Z" fill="#fffdf8" stroke="#3a2412" stroke-width="2" stroke-linejoin="round"/>' +
+      '<rect x="40" y="86" width="153" height="12" rx="3" fill="url(#vnzMt)" stroke="#3a2412" stroke-width="2.2"/><path d="M46 92H188" stroke="#c9b894" stroke-width="1" stroke-dasharray="3 3"/>' +
+      /* หมอนนุ่ม */
+      '<path d="M44 74Q42 62 56 62H72Q82 62 81 72Q83 84 70 84H54Q42 85 44 74Z" fill="url(#vnzPl)" stroke="#3a2412" stroke-width="2.2"/>' +
+      '<path d="M50 67Q60 64 72 66" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M56 78Q64 80 74 78" stroke="#cfc4b2" stroke-width="1.3" fill="none" stroke-linecap="round"/>' +
+      '<g class="vnz-who"><g transform="translate(36 102) rotate(-90) scale(.5)">' + sleeper + '</g></g>' +
+      /* ผ้าห่ม: ผืนบนนูนตามตัว + ชายห้อยลงด้านหน้าเป็นคลื่น + ขอบพับครีม */
+      '<g class="vnz-bl">' +
+      '<path d="M90 70Q92 62 104 62Q132 58 170 62Q192 64 194 78L194 100Q186 104 178 100Q170 104 162 100Q154 104 146 100Q138 104 130 100Q122 104 114 100Q106 104 98 100Q94 103 90 100Z" fill="url(#vnzBl)" stroke="#2a1e5c" stroke-width="2.4" stroke-linejoin="round"/>' +
+      '<path d="M90 70Q92 62 104 62Q132 58 170 62Q192 64 194 78L194 100Q186 104 178 100Q170 104 162 100Q154 104 146 100Q138 104 130 100Q122 104 114 100Q106 104 98 100Q94 103 90 100Z" fill="url(#vnzQ)"/>' +
+      '<path d="M92 86Q142 82 193 86" stroke="#2a3290" stroke-width="1.6" fill="none" opacity=".55"/><path d="M98 66Q140 62 178 66" stroke="#b4bdff" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>' +
+      '<path d="M87 66Q89 58 99 59Q107 60 107 70L105 100Q99 103 93 100Q87 88 87 66Z" fill="#fbf3e0" stroke="#2a1e5c" stroke-width="2.2" stroke-linejoin="round"/><path d="M93 66V96M99 64V98" stroke="#e2d2ae" stroke-width="1.1" stroke-dasharray="2.5 2.5"/>' +
+      STAR(118, 76, 1.1) + STAR(150, 72, .8, '#fff3c4') + STAR(176, 78, 1, '#ffe28a') + STAR(134, 94, .7, '#fff3c4') + STAR(166, 93, .9) +
+      '<path d="M108 88a4 4 0 1 0 3 6.4 3.2 3.2 0 1 1-3-6.4z" fill="#ffe28a"/></g>' +
+      '<g class="vnz-zz"><text x="68" y="44">z</text><text x="78" y="32">z</text><text x="90" y="18">Z</text></g><text class="vnz-ex" x="56" y="44">!</text></svg>';
+    var card = '<div class="vwz-card" role="dialog" aria-label="ไอเทมใหม่ หมวกนอนดาว"><i class="vwz-rb">✦ พิเศษ</i><svg viewBox="' + ART_OUT.cap.vb + '" aria-hidden="true">' + ART_OUT.cap.art + '</svg>' +
+      '<b>' + h(o.name) + '</b><span class="vwz-q">“หลับฝันดี ตื่นมาอ่านสัญญาสดชื่น!”</span>' +
+      '<button type="button" class="vwz-go">' + (has ? (isOn() ? 'ใส่อยู่ ✓' : 'ใส่เลย') : 'ลองดูต่อ') + '</button>' + (has ? '' : '<small class="vwz-pr">ราคา ' + fmt(o.price) + ' แต้ม</small>') + '</div>';
+    var ov = document.createElement('div'); ov.className = 'vwz vnz'; ov.setAttribute('aria-live', 'polite');
+    ov.innerHTML = '<i class="vwz-dim"></i>' + bed + '<span class="vwz-hat vnz-hat"><svg viewBox="' + ART_OUT.cap.vb + '">' + ART_OUT.cap.art + '</svg></span><i class="vwz-burst b1"></i>' + card + '<small class="vli-skip">แตะเพื่อข้าม</small>';
+    st.appendChild(ov); sh.classList.add('wz-intro');
+    var q = st.getBoundingClientRect(), msv = (ms.querySelector('svg') || ms).getBoundingClientRect(), tg = worn.getBoundingClientRect();
+    var cx = msv.left - q.left + msv.width / 2, feetY = msv.top - q.top + msv.height * 132 / 140;
+    var BW = Math.min(q.width * .86, msv.width * 1.75), BH = BW * .62;
+    ov.querySelector('.vnz-bed').style.cssText = 'left:' + (cx - BW / 2) + 'px;top:' + (feetY - BH * .93) + 'px;width:' + BW + 'px;height:' + BH + 'px';
+    var tx = tg.left - q.left + tg.width / 2, ty = tg.top - q.top + tg.height / 2;
+    var hat = ov.querySelector('.vwz-hat'); hat.style.cssText = 'left:' + tx + 'px;top:' + ty + 'px;width:' + tg.width + 'px;height:' + tg.height + 'px';
+    try { var bb = worn.getBBox(), hs = hat.querySelector('svg'); hs.setAttribute('viewBox', bb.x + ' ' + bb.y + ' ' + bb.width + ' ' + bb.height); hs.setAttribute('preserveAspectRatio', 'none'); } catch (e) {}
+    var bu = ov.querySelector('.vwz-burst'); bu.style.left = tx + 'px'; bu.style.top = ty + 'px';
+    var anims = [], ended = false;
+    cpEnd = function (quiet) {
+      if (ended) return; ended = true; cpEnd = null; cpT.forEach(clearTimeout); cpT = [];
+      anims.forEach(function (x) { try { x.cancel(); } catch (e) {} });
+      ms.classList.remove('cp-hide', 'cp-nohat'); sh.classList.remove('wz-intro');
+      if (quiet) { ov.remove(); return; }
+      ov.classList.add('out'); setTimeout(function () { ov.remove(); }, 450);
+    };
+    var showCard = function () { if (ended) return; ov.classList.add('is-card'); var b = ov.querySelector('.vwz-go'); try { b.focus({ preventScroll: true }); } catch (e) {} cpT.push(setTimeout(function () { cpEnd && cpEnd(); }, 7000)); };
+    var skipTo = function () { cpT.forEach(clearTimeout); cpT = []; anims.forEach(function (x) { try { x.cancel(); } catch (er) {} }); ms.classList.remove('cp-hide', 'cp-nohat'); ov.classList.add('skip'); showCard(); };
+    ov.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (e.target.closest('.vwz-go')) { if (has && !isOn()) { wear('cap'); cpEnd && cpEnd(); shopRender(); } else if (cpEnd) cpEnd(); return; }
+      if (e.target.closest('.vwz-card')) return;
+      if (ov.classList.contains('is-card')) { cpEnd && cpEnd(); return; }
+      skipTo();
+    });
+    ov.addEventListener('keydown', function (e) { if (e.key === 'Escape') { e.stopPropagation(); cpEnd && cpEnd(); } });
+    if (calm() || !hat.animate) { ov.classList.add('skip'); showCard(); return; }
+    ms.classList.add('cp-hide', 'cp-nohat'); void ov.offsetWidth; ov.classList.add('go');
+    cpT.push(setTimeout(function () { ov.classList.add('wake'); }, 2300));
+    cpT.push(setTimeout(function () {                 // กระโดดลงจากเตียง
+      if (ended) return; ov.classList.add('up'); ms.classList.remove('cp-hide'); hop(ms);
+    }, 3100));
+    cpT.push(setTimeout(function () {                 // หมวกลอยพลิ้วลงมา
+      if (ended) return;
+      var sv = hat.querySelector('svg'), k0 = 1, top = -(ty + tg.height);
+      var P = function (x, y, s, r) { return 'translate(-50%,-50%) translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) scale(' + s + ') rotate(' + r + 'deg)'; };
+      var ha = hat.animate([
+        { transform: P(-30, top, k0, -18), opacity: 0 },
+        { transform: P(26, top * .62, k0, 14), opacity: 1, offset: .25, easing: 'ease-in-out' },
+        { transform: P(-22, top * .32, k0, -12), opacity: 1, offset: .5, easing: 'ease-in-out' },
+        { transform: P(14, top * .1, k0, 8), opacity: 1, offset: .75, easing: 'ease-in-out' },
+        { transform: P(0, -4, k0 * 1.04, -2), opacity: 1, offset: .92 },
+        { transform: P(0, 0, k0, 0), opacity: 1 }], { duration: 1700, fill: 'both' });
+      anims.push(ha);
+      ha.onfinish = function () {
+        if (ended) return; ms.classList.remove('cp-nohat'); try { ha.cancel(); } catch (e) {} hat.style.opacity = '0'; ov.classList.add('worn'); hop(ms);
+        cpT.push(setTimeout(showCard, 900));
+      };
+    }, 3500));
   }
   /* การ์ดลิมิเต็ด: กว้าง 2 ช่อง กรอบโฮโลแกรม · ยังไม่ได้ = เห็นเหรียญจางพร้อมแม่กุญแจ ยิ่งใกล้ครบยิ่งสว่าง */
   function tierTag(t) {   // ระดับเป็นดาว 3 ดวง: ทอง ★☆☆ · ทองคำขาว ★★☆ · เพชร ★★★
@@ -1098,9 +1248,9 @@
     el.classList.remove('sv-in');
     if (calm()) { el.textContent = txt; return; }
     var chars = Array.from ? Array.from(txt) : txt.split(''), n = 0;
-    el.innerHTML = '<span></span><i class="vst-cur"></i>';
-    var sp = el.firstChild;
-    typeT = setInterval(function () { n += 2; sp.textContent = chars.slice(0, n).join(''); if (n >= chars.length) { clearInterval(typeT); setTimeout(function () { var c = el.querySelector('.vst-cur'); if (c) c.remove(); }, 1400); } }, 28);
+    el.innerHTML = '<span></span><i class="vst-cur"></i><span class="vst-rest"></span>';
+    var sp = el.firstChild, rest = el.lastChild; rest.textContent = txt;
+    typeT = setInterval(function () { n += 2; sp.textContent = chars.slice(0, n).join(''); rest.textContent = chars.slice(n).join(''); if (n >= chars.length) { clearInterval(typeT); setTimeout(function () { var c = el.querySelector('.vst-cur'); if (c) c.remove(); }, 1400); } }, 28);
   }
   /* ===== ตำนานเหรียญไฟไม่มอด: บทนำเปิดให้อ่านเสมอ · ตอนที่ 1–3 ปลดล็อกตามสถิติติดต่อกัน (7/14/30) ===== */
   var LORE = [
@@ -1221,22 +1371,55 @@
     '<path d="M8 21V8l4-5 4 5v13zM5 21h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>',
     '<path d="M12 3l2.4 5.2 5.6.6-4.2 3.8 1.2 5.6L12 15.4 7 18.2l1.2-5.6L4 8.8l5.6-.6z" fill="currentColor"/>'
   ];
+  /* ===== ตำนานหมวกนอนดาว (lrSet 'c') — บทนำอ่านได้ทุกคน · ตอน 1–3 เมื่อมีหมวก ===== */
+  var CPH = function (x, y, s) { return '<g transform="translate(' + x + ' ' + y + ') scale(' + s + ')">' + ART_OUT.cap.art + '</g>'; };
+  var MOON_C = '<path d="M306.1 28A32 32 0 1 0 336.3 70.2A26 26 0 0 1 306.1 28Z" fill="#ffe9a6" stroke="#c99236" stroke-width="1.6" stroke-linejoin="round"/><path d="M286 60q3.4 3 6.8 0M291 69q3 2.6 6 .2" stroke="#6b4a18" stroke-width="1.7" fill="none" stroke-linecap="round"/><ellipse cx="285" cy="68" rx="3.4" ry="2" fill="#f7a3a0" opacity=".75"/>';
+  var LORE_C = [
+    { need: 0, t: 'บทนำ · หมวกที่ลอยลงมาจากฟ้า', art: function () { return '<svg viewBox="0 -14 120 84"><rect x="20" y="-6" width="80" height="62" rx="6" fill="#2b3170" stroke="#3a2a12" stroke-width="2"/><path d="M60-6v62M20 25h80" stroke="#3a2a12" stroke-width="2"/><g fill="#fff3c4"><circle cx="32" cy="6" r="1.2"/><circle cx="82" cy="10" r="1"/><circle cx="46" cy="36" r="1"/><circle cx="90" cy="40" r="1.3"/></g><path d="M74 2l18-8" stroke="#fff6d0" stroke-width="1.6" stroke-linecap="round" opacity=".8"/><rect x="14" y="54" width="92" height="8" rx="2" fill="#e2ad74" stroke="#3a2a12" stroke-width="2"/>' + CPH(34, 34, .46) + '</svg>'; }, q: 'บางเรื่อง คำตอบที่ดีที่สุดคือ “ขอนอนคิดก่อน”', p: [
+      'คืนหนึ่ง**เวลลัม**นั่งอ่านสัญญากองโตจนดึกดื่น ตาปรือจนตัวหนังสือเริ่มเต้นไปมา',
+      'ทันใดนั้น ดาวตกดวงหนึ่งพาดผ่านหน้าต่าง แล้ว==หมวกผ้านุ่มสีน้ำเงินก็ลอยพลิ้วลงมาวางบนขอบหน้าต่าง==',
+      'ปอมปอมของมันอุ่นเหมือนแสงจันทร์ มีป้ายผ้าเล็ก ๆ ปักไว้ว่า'] },
+    { need: 1, t: 'ตอนที่ 1 · ข้อเสนอตอนเที่ยงคืน', art: function () { return '<svg viewBox="0 -10 120 70"><rect x="16" y="-2" width="58" height="58" rx="4" fill="#fbf6ea" stroke="#3a2a12" stroke-width="2"/><g stroke="#c9b48a" stroke-width="2.4" stroke-linecap="round"><path d="M24 10h42M24 19h36M24 28h40M24 37h30"/></g><path d="M24 47h22" stroke="#e5484d" stroke-width="2.4" stroke-linecap="round"/><circle cx="88" cy="22" r="18" fill="#fffaf0" stroke="#3a2a12" stroke-width="2"/><path d="M88 22V9M88 22l-1 0" stroke="#3a2a12" stroke-width="2.4" stroke-linecap="round"/><circle cx="88" cy="22" r="2" fill="#3a2a12"/><path d="M88 6v2M104 22h-2M88 38v-2M72 22h2" stroke="#3a2a12" stroke-width="1.6"/><text x="98" y="50" font-size="16" font-weight="800" fill="#ffd84d" stroke="#3a2a12" stroke-width="1" paint-order="stroke">!</text></svg>'; }, q: 'ข้อเสนอที่ดีจริง ไม่เคยกลัวให้คุณคิดนาน', p: [
+      'ทันทีที่สวมหมวก เวลลัมก็หลับไปและฝันถึง**พ่อค้าผ้าคลุมสีเทา** ผู้ยื่นสัญญามาพร้อมรอยยิ้มกว้าง',
+      'เขาเร่งว่า ==เซ็นเดี๋ยวนี้เลย ข้อเสนอนี้หมดเขตตอนเที่ยงคืน!== นาฬิกาเดินติ๊กต่อกดดันอยู่ข้างหู',
+      'แต่หมวกทำให้เวลลัมหาวยาว แล้วพูดสิ่งที่พ่อค้าไม่อยากได้ยินที่สุด'] },
+    { need: 1, t: 'ตอนที่ 2 · พระจันทร์ผู้เคยรีบเซ็น', art: function () { return '<svg viewBox="262 18 96 84"><circle cx="304" cy="62" r="40" fill="#fff3c4" opacity=".25"/>' + MOON_C + '<path d="M326 82l14 10M332 88l-6 8" stroke="#a89ad0" stroke-width="2" stroke-linecap="round" stroke-dasharray="2 3"/><rect x="334" y="88" width="18" height="12" rx="2" fill="#fbf6ea" stroke="#3a2a12" stroke-width="1.6" transform="rotate(12 343 94)"/></svg>'; }, q: 'สัญญาที่ไม่มีทางออก คือกับดักที่ดูสวยงาม', p: [
+      'บนฟ้า**พระจันทร์ง่วงงุน**กระซิบเล่าว่า นานมาแล้วเขาเคยรีบเซ็นสัญญาว่าจะส่องแสง==ทุกคืน ตลอดไป==',
+      'เขาไม่ได้อ่านว่าในสัญญา**ไม่มีข้อไหนให้เลิกได้เลย** ไม่มีวันหยุด ไม่มีวันพัก',
+      'พระจันทร์จึงง่วงมาตลอดจนทุกวันนี้ และถักหมวกใบนี้ขึ้นจากแสงที่นุ่มที่สุดของตัวเอง เพื่อเตือนทุกคนว่า'] },
+    { need: 1, t: 'ตอนที่ 3 · ตื่นมาพร้อมคำตอบ', art: function () { var m = mascot('happy', 100, ''); return m.indexOf('</svg>') > 0 ? m.replace(/<\/svg>\s*$/, '<g class="vm-outfit">' + ART_OUT.cap.art + '</g></svg>') : m; }, q: 'สัญญาที่ดี รอให้คุณนอนคิดได้เสมอ', p: [
+      'เช้าวันรุ่งขึ้น เวลลัมอ่านสัญญาฉบับเดิมอีกครั้งด้วยใจที่สดชื่น แล้วก็เจอ==ข้อต่ออายุอัตโนมัติกับค่าธรรมเนียมซ่อนอยู่ท้ายหน้า==',
+      'เมื่อคืนตาปรือจนมองข้ามไป แต่เช้านี้เห็นชัดทุกบรรทัด เวลลัมจด**คำถาม**ไว้ถามอีกฝ่ายก่อนตัดสินใจ',
+      'หมวกนอนดาวแกว่งปอมปอมอย่างพอใจ เพราะเวทมนตร์ของมันมีเพียงข้อเดียว'] }
+  ];
+  var LIC_C = [
+    '<rect x="4" y="4" width="16" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="1.6"/>',
+    '<circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>',
+    '<path d="M14 3.5a8.5 8.5 0 1 0 6.5 13 7 7 0 1 1-6.5-13z" fill="currentColor"/>',
+    '<circle cx="12" cy="12" r="4.5" fill="currentColor"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'
+  ];
+  function hasCap() { return ownedOutfits().indexOf('cap') >= 0; }
+  function capLoreBtn() {
+    var seen = -1; try { seen = +(localStorage.getItem('vc_lore_seen_c') || -1); } catch (e) {}
+    var last = hasCap() ? LORE_C.length - 1 : 0;
+    return '<span class="vof-lore-w is-cap" role="button" tabindex="0" data-lore="cap" aria-label="อ่านตำนานหมวกนอนดาว' + (last > seen ? ' มีตอนใหม่' : '') + '">📜' + (last > seen ? '<i class="lore-new"></i>' : '') + '</span>';
+  }
   function hasWizard() { return ownedOutfits().indexOf('wizard') >= 0; }
   function wizardLoreBtn() {
     var seen = -1; try { seen = +(localStorage.getItem('vc_lore_seen_w') || -1); } catch (e) {}
     var last = hasWizard() ? LORE_W.length - 1 : 0;
     return '<span class="vof-lore-w" role="button" tabindex="0" data-lore="wizard" aria-label="อ่านตำนานหมวกนักเวท' + (last > seen ? ' มีตอนใหม่' : '') + '">📜' + (last > seen ? '<i class="lore-new"></i>' : '') + '</span>';
   }
-  function curLore() { return lrSet === 'l' ? LORE_L : lrSet === 'w' ? LORE_W : LORE; }
-  function okLore(c) { return lrSet === 'w' ? (c.need === 0 || hasWizard()) : lrSet === 'l' ? (c.need === 0 || (S && (S.totalDays || 0) >= c.need)) : loreOk(c); }
-  function seenLore() { try { return +(localStorage.getItem(lrSet === 'l' ? 'vc_lore_seen_l' : lrSet === 'w' ? 'vc_lore_seen_w' : 'vc_lore_seen') || -1); } catch (e) { return -1; } }
+  function curLore() { return lrSet === 'l' ? LORE_L : lrSet === 'w' ? LORE_W : lrSet === 'c' ? LORE_C : LORE; }
+  function okLore(c) { return lrSet === 'c' ? (c.need === 0 || hasCap()) : lrSet === 'w' ? (c.need === 0 || hasWizard()) : lrSet === 'l' ? (c.need === 0 || (S && (S.totalDays || 0) >= c.need)) : loreOk(c); }
+  function seenLore() { try { return +(localStorage.getItem(lrSet === 'l' ? 'vc_lore_seen_l' : lrSet === 'w' ? 'vc_lore_seen_w' : lrSet === 'c' ? 'vc_lore_seen_c' : 'vc_lore_seen') || -1); } catch (e) { return -1; } }
   function laurelLoreBtn() {
     var tot = S && S.totalDays || 0, last = -1, seen = -1; LORE_L.forEach(function (x, k) { if (x.need === 0 || tot >= x.need) last = k; });
     try { seen = +(localStorage.getItem('vc_lore_seen_l') || -1); } catch (e) {}
     return '<span class="vof-act lrc-lore" role="button" tabindex="0" data-lore="laurel" aria-label="อ่านตำนานมาลัย' + (last > seen ? ' มีตอนใหม่' : '') + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + LIC_L[0] + '</svg>ตำนาน' + (last > seen ? '<i class="lore-new"></i>' : '') + '</span>';
   }
   function loreOpen(i, set) {
-    lrSet = set === 'laurel' ? 'l' : set === 'wizard' ? 'w' : 'm';
+    lrSet = set === 'laurel' ? 'l' : set === 'wizard' ? 'w' : set === 'cap' ? 'c' : 'm';
     if (!lr) {
       lr = document.createElement('div'); lr.className = 'vlr'; lr.setAttribute('role', 'dialog'); lr.setAttribute('aria-modal', 'true'); lr.setAttribute('aria-labelledby', 'vlrT');
       lr.innerHTML = '<div class="vlr-bg" data-lx></div><div class="vlr-p"><i class="vlr-rod"></i><i class="vlr-glow" aria-hidden="true"></i><i class="vlr-frame" aria-hidden="true"><b></b><b></b><b></b><b></b></i><div class="vlr-sh"><button type="button" class="vlr-x" data-lx aria-label="ปิด">✕</button>' +
@@ -1248,19 +1431,19 @@
       });
       document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && lr && lr.classList.contains('on')) loreClose(); });
     }
-    lr.classList.toggle('is-laurel', lrSet === 'l' || lrSet === 'w'); lr.classList.toggle('is-wizard', lrSet === 'w'); lr.querySelector('#vlrT').textContent = lrSet === 'l' ? 'มาลัยตำนาน' : lrSet === 'w' ? 'หมวกนักเวท' : 'เหรียญไฟไม่มอด';
+    lr.classList.toggle('is-laurel', lrSet === 'l' || lrSet === 'w' || lrSet === 'c'); lr.classList.toggle('is-wizard', lrSet === 'w'); lr.classList.toggle('is-cap', lrSet === 'c'); lr.querySelector('#vlrT').textContent = lrSet === 'l' ? 'มาลัยตำนาน' : lrSet === 'w' ? 'หมวกนักเวท' : lrSet === 'c' ? 'หมวกนอนดาว' : 'เหรียญไฟไม่มอด';
     var LL = curLore();
     if (typeof i !== 'number') { lrIdx = 0; for (var k = LL.length - 1; k >= 0; k--) if (okLore(LL[k])) { lrIdx = k; break; } } else lrIdx = i;
     lr.hidden = false; requestAnimationFrame(function () { lr.classList.add('on'); }); loreRender();
   }
   function loreClose() { if (!lr) return; lr.classList.remove('on'); setTimeout(function () { if (!lr.classList.contains('on')) lr.hidden = true; }, 400); }
   function loreRender() {
-    var LL = curLore(), W = lrSet === 'w', L = lrSet === 'l' || W, c = LL[lrIdx], ok = okLore(c), m = MED[L ? 3 : c.tier];
-    if (ok && lrIdx > seenLore()) { try { localStorage.setItem(W ? 'vc_lore_seen_w' : L ? 'vc_lore_seen_l' : 'vc_lore_seen', lrIdx); } catch (e) {} if (sh && !sh.hidden) shopRender(); }
+    var LL = curLore(), C = lrSet === 'c', W = lrSet === 'w', L = lrSet === 'l' || W || C, c = LL[lrIdx], ok = okLore(c), m = MED[L ? 3 : c.tier];
+    if (ok && lrIdx > seenLore()) { try { localStorage.setItem(C ? 'vc_lore_seen_c' : W ? 'vc_lore_seen_w' : L ? 'vc_lore_seen_l' : 'vc_lore_seen', lrIdx); } catch (e) {} if (sh && !sh.hidden) shopRender(); }
     if (!L) { lr.style.setProperty('--f1', m.f1); lr.style.setProperty('--f2', m.f2); }
     var lastOk = 0; LL.forEach(function (x, n) { if (okLore(x)) lastOk = n; });
     var tb = lr.querySelector('.vlr-tabs'); tb.style.setProperty('--lf', (lastOk / (LL.length - 1) * 100) + '%');
-    var IC = W ? LIC_W : L ? LIC_L : LIC;
+    var IC = C ? LIC_C : W ? LIC_W : L ? LIC_L : LIC;
     tb.innerHTML = '<i class="vlr-path"><b></b></i>' + LL.map(function (x, n) {
       return '<button type="button" role="tab" data-ch="' + n + '" aria-selected="' + (n === lrIdx) + '" aria-label="' + h(x.t) + (okLore(x) ? '' : ' (ล็อก)') + '" class="' + (n === lrIdx ? 'on' : '') + (okLore(x) ? '' : ' lk') + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + IC[n] + '</svg>' + (okLore(x) ? '' : '<i class="lkb"></i>') + '</button>';
     }).join('');
@@ -1269,7 +1452,7 @@
       '<h4>' + h(c.t) + '</h4>' +
       (L ? c.p.map(function (t, n) { return '<p class="lp' + (!ok && n > 0 ? ' blur' : '') + '" style="--d:' + (n * .3 + .25).toFixed(2) + 's">' + lFmt(t, n * .3 + .7) + '</p>'; }).join('') + (c.q ? '<blockquote class="lq' + (ok ? '' : ' blur') + '" style="--d:' + (c.p.length * .3 + .3).toFixed(2) + 's"><i class="lq-o">“</i>' + h(c.q) + '<i class="lq-c">”</i></blockquote>' : '')
         : c.p.map(function (t, n) { return '<p class="' + (n === 0 ? 'first ' : '') + (!ok && n > 0 ? 'blur' : '') + '" style="--d:' + (n * .35 + .3) + 's">' + (n === 0 ? dropCap(t) : h(t)) + '</p>'; }).join('')) +
-      (ok ? '<div class="vlr-end">' + (L ? SEAL_L : SEAL) + '</div>' : W ? '<div class="vlr-lock">🔒 อ่านต่อได้เมื่อมีหมวกนักเวท<small>ราคา ' + fmt((itemById('wizard') || {}).price || 400) + ' แต้ม · ตอนนี้มี ' + fmt(S && S.points || 0) + ' แต้ม</small></div>' : L ? '<div class="vlr-lock">🔒 ปลดล็อกเมื่อเช็กอินรวมครบ ' + c.need + ' วัน<small>ตอนนี้เช็กอินรวม ' + tot + ' วัน · อีก ' + Math.max(0, c.need - tot) + ' วัน</small></div>' : '<div class="vlr-lock">🔒 ปลดล็อกเมื่อเช็กอินติดกันครบ ' + c.need + ' วัน<small>สถิติสูงสุดของคุณ ' + best + ' วัน</small></div>');
+      (ok ? '<div class="vlr-end">' + (L ? SEAL_L : SEAL) + '</div>' : C ? '<div class="vlr-lock">🔒 อ่านต่อได้เมื่อมีหมวกนอนดาว<small>ราคา ' + fmt((itemById('cap') || {}).price || 300) + ' แต้ม · ตอนนี้มี ' + fmt(S && S.points || 0) + ' แต้ม</small></div>' : W ? '<div class="vlr-lock">🔒 อ่านต่อได้เมื่อมีหมวกนักเวท<small>ราคา ' + fmt((itemById('wizard') || {}).price || 400) + ' แต้ม · ตอนนี้มี ' + fmt(S && S.points || 0) + ' แต้ม</small></div>' : L ? '<div class="vlr-lock">🔒 ปลดล็อกเมื่อเช็กอินรวมครบ ' + c.need + ' วัน<small>ตอนนี้เช็กอินรวม ' + tot + ' วัน · อีก ' + Math.max(0, c.need - tot) + ' วัน</small></div>' : '<div class="vlr-lock">🔒 ปลดล็อกเมื่อเช็กอินติดกันครบ ' + c.need + ' วัน<small>สถิติสูงสุดของคุณ ' + best + ' วัน</small></div>');
     lr.querySelector('.vlr-body').scrollTop = 0;
   }
   function shopRender() {
@@ -1288,7 +1471,9 @@
     heavScene(hvOn);
     var thOn = !fireOn && !hvOn && (sel === 'crown' || (!sel && wornOutfits().indexOf('crown') >= 0));
     throneScene(thOn);
-    wizScene(!fireOn && !hvOn && !thOn && (sel === 'wizard' || (!sel && wornOutfits().indexOf('wizard') >= 0)));
+    var wzOn = !fireOn && !hvOn && !thOn && (sel === 'wizard' || (!sel && wornOutfits().indexOf('wizard') >= 0));
+    wizScene(wzOn);
+    dreamScene(!fireOn && !hvOn && !thOn && !wzOn && (sel === 'cap' || (!sel && wornOutfits().indexOf('cap') >= 0)));
     var hk = sel === 'medal' ? 'm' + medalTier() : '';
     if (hk && !heroPlayed) setTimeout(function () { playHero(medalTier()); }, 30);
     else if (hk && heroKey && hk !== heroKey && !calm()) { var stg = sh.querySelector('.vst-stage'); stg.classList.remove('tier-flash'); void stg.offsetWidth; stg.classList.add('tier-flash'); }
@@ -1297,6 +1482,7 @@
     if (sel === 'laurel' && !lrPlayed) setTimeout(playLaurel, 30); else if (sel !== 'laurel') lrStop();
     if (sel === 'crown' && !crPlayed) setTimeout(playCrown, 30); else if (sel !== 'crown') crStop();
     if (sel === 'wizard' && !wzPlayed) setTimeout(playWizard, 30); else if (sel !== 'wizard') wzStop();
+    if (sel === 'cap' && !cpPlayed) setTimeout(playCap, 30); else if (sel !== 'cap') cpStop();
     var o = itemById(sel), say2 = sh.querySelector('.vst-say');
     var bb = o && o.badge && bmap[o.badge], lft = bb ? bb.n - bb.have : 0;
     sayType(say2, !o ? 'อยากให้ฉันใส่อะไรดี? แตะของด้านล่างเลย ✨'
@@ -1318,7 +1504,7 @@
         : it.badge ? '<span class="vof-act is-badge">🏅 รางวัล</span>'
         : '<span class="vof-act is-buy' + (S.points < it.price ? ' is-short' : '') + '"><i class="vof-coin"></i>' + fmt(it.price) + '</span>';
       return '<button type="button" class="vof-b r-' + it.rarity + (it.id === 'laurel' ? ' is-laurel' : it.id === 'crown' ? ' is-crown' : '') + (it.id === 'medal' ? ' is-fire mt-' + medalTier() : '') + (has ? ' is-own' : ' is-lock' + (it.badge ? ' is-badge-item' : '')) + (on ? ' is-on' : '') + (sel === it.id ? ' is-try' : '') + '" data-outfit="' + it.id + '" aria-pressed="' + (sel === it.id) + '" aria-label="' + h(it.name + ' · ' + (RAR[it.rarity] || '')) + '">' +
-        (it.id === 'laurel' ? LRC_TAG + LRC_DUST : it.id === 'crown' ? CRC_TAG : '<em class="vof-r">' + (RAR[it.rarity] || '') + '</em>') + (!has && bd && it.id === 'laurel' ? lrCard(bd, a) : !has && bd ? '<span class="vof-pr" style="--bp:' + Math.round(bd.have / bd.n * 100) + '%"><svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg><i class="vof-spark"></i><b>' + bd.have + '/' + bd.n + '</b></span>' : '<svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg>') + '<small>' + h(it.name) + '</small>' + tag + (has && it.id === 'laurel' ? laurelLoreBtn() : '') + (it.id === 'wizard' ? wizardLoreBtn() : '') + '</button>';
+        (it.id === 'laurel' ? LRC_TAG + LRC_DUST : it.id === 'crown' ? CRC_TAG : '<em class="vof-r">' + (RAR[it.rarity] || '') + '</em>') + (!has && bd && it.id === 'laurel' ? lrCard(bd, a) : !has && bd ? '<span class="vof-pr" style="--bp:' + Math.round(bd.have / bd.n * 100) + '%"><svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg><i class="vof-spark"></i><b>' + bd.have + '/' + bd.n + '</b></span>' : '<svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg>') + '<small>' + h(it.name) + '</small>' + tag + (has && it.id === 'laurel' ? laurelLoreBtn() : '') + (it.id === 'wizard' ? wizardLoreBtn() : it.id === 'cap' ? capLoreBtn() : '') + '</button>';
     }).join('');
     var bar = sh.querySelector('.vst-bar');
     if (!o) { bar.innerHTML = '<p class="vst-hint">แตะของเพื่อลองใส่ · ' + own.length + '/' + list.length + ' ชิ้นที่มีแล้ว · ได้แต้มจากเช็กอินทุกวัน</p>'; return; }
@@ -1345,6 +1531,7 @@
         var card = sh && sh.querySelector('.vof-b[data-outfit="' + id + '"]'); if (card) card.classList.add('is-new');
         say('🎉 ได้ ' + o.name + ' แล้ว! ใส่ให้น้องเรียบร้อย');
         if (id === 'wizard') setTimeout(function () { playWizard(true); }, 250);
+        if (id === 'cap') setTimeout(function () { playCap(true); }, 250);
       }, function () { busy = false; shopRender(); say('เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง'); });
   }
   function render() {
