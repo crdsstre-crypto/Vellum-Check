@@ -481,7 +481,7 @@
       sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.setAttribute('aria-labelledby', 'vstT');
       sh.innerHTML = '<div class="vst-bg" data-shx></div><div class="vst-p">' +
         '<div class="vst-hd"><h3 id="vstT">ร้านค้าน้องเวลลัม</h3><span class="vst-pts"><i class="vof-coin"></i><b data-spts>0</b> แต้ม</span><button type="button" class="vst-x" data-shx aria-label="ปิดร้าน">✕</button></div>' +
-        '<div class="vst-stage"><div class="vst-fire" aria-hidden="true"></div><i class="vst-spot"></i><i class="vst-glow"></i><div class="vst-refl" aria-hidden="true"></div><i class="vst-ped"></i><i class="vst-sweep"></i><i class="vst-grain"></i><div class="vst-extra"></div><div class="vst-hero" aria-hidden="true"></div><div class="vst-heav" aria-hidden="true"></div><div class="vst-thr" aria-hidden="true"></div><div class="vst-ms" aria-hidden="true"></div><p class="vst-say"></p></div>' +
+        '<div class="vst-stage"><div class="vst-fire" aria-hidden="true"></div><i class="vst-spot"></i><i class="vst-glow"></i><div class="vst-refl" aria-hidden="true"></div><i class="vst-ped"></i><i class="vst-sweep"></i><i class="vst-grain"></i><div class="vst-extra"></div><div class="vst-hero" aria-hidden="true"></div><div class="vst-heav" aria-hidden="true"></div><div class="vst-wzs" aria-hidden="true"></div><div class="vst-thr" aria-hidden="true"></div><div class="vst-ms" aria-hidden="true"></div><p class="vst-say"></p></div>' +
         '<div class="vst-tabs" role="tablist"></div><div class="vst-grid"></div><div class="vst-bar"></div></div>';
       document.body.appendChild(sh);
       sh.addEventListener('click', function (e) {
@@ -630,6 +630,42 @@
     if (!was) { hv.classList.remove('in'); void hv.offsetWidth; hv.classList.add('in'); }
   }
   /* ฉากท้องพระโรงของมงกุฎตำนาน: ผนังลายดามัสก์ · ม่านกำมะหยี่แดง · บัลลังก์ทอง · เชิงเทียนเรืองแสง · พรมแดง · แท่นขั้นบันได · สปอตไลต์ · กลีบกุหลาบ */
+  /* ===== ฉากหอคอยพ่อมดยามค่ำคืน (เลือก/ใส่หมวกนักเวท): ฟ้าดาว · จันทร์เสี้ยว · หอคอยหน้าต่างเรืองแสง · วงเวทบนพื้น · ผงดาวลอยขึ้น (วาดเองทั้งหมด) ===== */
+  function wizScene(on) {
+    var wv = sh.querySelector('.vst-wzs'); if (!wv) return;
+    sh.classList.toggle('is-wzs', on);
+    if (!on || wv.getAttribute('data-on')) return;
+    wv.setAttribute('data-on', '1');
+    var R = function (a, b) { return a + Math.random() * (b - a); };
+    var stars = ''; for (var k = 0; k < 46; k++) { var big = k % 9 === 0; stars += '<circle class="ws-st' + (k % 3 ? '' : ' tw') + '" cx="' + R(4, 386).toFixed(1) + '" cy="' + R(4, 150).toFixed(1) + '" r="' + (big ? 1.5 : R(.5, 1.05)).toFixed(2) + '" style="--d:-' + R(0, 4).toFixed(1) + 's"/>'; }
+    var win = function (x, y) { return '<path d="M' + x + ' ' + (y + 9) + 'v-5a3 3 0 0 1 6 0v5z" fill="url(#wsWin)"/>'; };
+    var tower =
+      '<g class="ws-tw">' +
+      /* หอคอยหลัก */
+      '<path d="M58 256V112h40v144z" fill="url(#wsT)"/><path d="M52 114h52l-4-8H56z" fill="#1b1340"/>' +
+      '<path d="M50 108 78 34q4-6 8 2l-2 4 22 68z" fill="#24185a" stroke="#120c2c" stroke-width="1.2" stroke-linejoin="round"/><path d="M78 34q10-4 16 4" stroke="#24185a" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+      '<circle cx="95" cy="39" r="2.4" fill="#ffd36a" class="ws-tip"/>' +
+      win(70, 128) + win(82, 150) + win(66, 178) + win(84, 206) +
+      '<path d="M64 140h28M64 170h28M64 200h28M64 230h28" stroke="#120c2c" stroke-width=".8" opacity=".5"/>' +
+      /* หอคอยรอง */
+      '<path d="M104 256V170h22v86z" fill="url(#wsT2)"/><path d="M100 172 115 132l15 40z" fill="#1d1448" stroke="#120c2c" stroke-width="1" stroke-linejoin="round"/>' + win(112, 186) +
+      '</g>';
+    var dust = ''; for (var d = 0; d < 18; d++) dust += '<i class="ws-d" style="left:' + R(4, 96).toFixed(1) + '%;--t:' + R(5, 9).toFixed(1) + 's;--d:-' + R(0, 9).toFixed(1) + 's;--x:' + R(-24, 24).toFixed(0) + 'px;--s:' + R(.6, 1.3).toFixed(2) + '"></i>';
+    var RUN = ''; for (var q = 0; q < 16; q++) RUN += '<circle cx="' + (60 + 50 * Math.cos(q / 16 * 6.283)).toFixed(1) + '" cy="' + (60 + 50 * Math.sin(q / 16 * 6.283)).toFixed(1) + '" r="' + (q % 4 ? 1 : 2) + '"/>';
+    wv.innerHTML = '<svg class="ws-svg" viewBox="0 0 390 256" preserveAspectRatio="xMidYMax slice"><defs>' +
+      '<linearGradient id="wsSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b0a2a"/><stop offset=".55" stop-color="#241650"/><stop offset="1" stop-color="#3b2170"/></linearGradient>' +
+      '<radialGradient id="wsMg" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff3c4" stop-opacity=".55"/><stop offset=".45" stop-color="#cdb8ff" stop-opacity=".18"/><stop offset="1" stop-color="#cdb8ff" stop-opacity="0"/></radialGradient>' +
+      '<linearGradient id="wsT" x1="0" x2="1"><stop offset="0" stop-color="#2c2060"/><stop offset=".6" stop-color="#1c1444"/><stop offset="1" stop-color="#140e34"/></linearGradient>' +
+      '<linearGradient id="wsT2" x1="0" x2="1"><stop offset="0" stop-color="#251a54"/><stop offset="1" stop-color="#120c2e"/></linearGradient>' +
+      '<radialGradient id="wsWin"><stop offset="0" stop-color="#fff0b0"/><stop offset="1" stop-color="#f4b740"/></radialGradient>' +
+      '<linearGradient id="wsH" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e1546"/><stop offset="1" stop-color="#120c2e"/></linearGradient></defs>' +
+      '<rect width="390" height="256" fill="url(#wsSky)"/><g class="ws-stars">' + stars + '</g>' +
+      '<g transform="translate(0 46)"><circle cx="312" cy="58" r="60" fill="url(#wsMg)"/><path class="ws-moon" d="M318 26a32 32 0 1 0 24 52 26 26 0 1 1-24-52z" fill="#fff3c4"/></g>' +
+      '<path d="M0 214q60-26 120-12t130-8q70-12 140 6v56H0z" fill="#1a1240" opacity=".85"/>' + tower +
+      '<path d="M0 232q90-14 195-10t195 8v26H0z" fill="url(#wsH)"/></svg>' +
+      '<i class="ws-shoot"></i><div class="ws-dust">' + dust + '</div>' +
+      '<svg class="ws-ring" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="56"/><circle cx="60" cy="60" r="44" class="i"/><g class="rn">' + RUN + '</g><path d="M60 16 98 82H22z" class="t"/><path d="M60 104 22 38h76z" class="t"/></svg><i class="ws-vig"></i>';
+  }
   function throneScene(on) {
     var tv = sh.querySelector('.vst-thr'); if (!tv) return;
     var was = sh.classList.contains('is-thr');
@@ -1250,7 +1286,9 @@
     fireScene(fireOn, sel === 'medal');
     var hvOn = !fireOn && (sel === 'laurel' || (!sel && wornOutfits().indexOf('laurel') >= 0));
     heavScene(hvOn);
-    throneScene(!fireOn && !hvOn && (sel === 'crown' || (!sel && wornOutfits().indexOf('crown') >= 0)));
+    var thOn = !fireOn && !hvOn && (sel === 'crown' || (!sel && wornOutfits().indexOf('crown') >= 0));
+    throneScene(thOn);
+    wizScene(!fireOn && !hvOn && !thOn && (sel === 'wizard' || (!sel && wornOutfits().indexOf('wizard') >= 0)));
     var hk = sel === 'medal' ? 'm' + medalTier() : '';
     if (hk && !heroPlayed) setTimeout(function () { playHero(medalTier()); }, 30);
     else if (hk && heroKey && hk !== heroKey && !calm()) { var stg = sh.querySelector('.vst-stage'); stg.classList.remove('tier-flash'); void stg.offsetWidth; stg.classList.add('tier-flash'); }
