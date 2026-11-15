@@ -733,7 +733,7 @@
     var L;
     if (has) {
       var st = lrStage();
-      L = ['ขอบคุณที่ไม่ยอมแพ้นะ ตำนานนี้เป็นของเราสองคน',
+      L = ['ขอบคุณที่ไม่ยอมแพ้นะ ตำนานนี้เป็นของเรา',
         st === 3 ? 'รัศมีเทพเปล่งประกายเต็มที่แล้ว|ขั้นสูงสุด 3/3' : (st === 1 ? 'มาลัยจะเปล่งประกายเมื่อเช็กอินรวมครบ 130 วัน' : 'วงรัศมีเทพจะปรากฏเมื่อเช็กอินรวมครบ 160 วัน') + '|ขั้น ' + st + '/3'];
     } else if (lft <= 10) {
       L = ['ฉันได้ยินเสียงแตรเทวดาแล้ว!|อีกแค่ ' + lft + ' วัน', 'ประตูสวรรค์เริ่มเปิดแล้ว…|อีกแค่ ' + lft + ' วัน'];
@@ -742,12 +742,49 @@
     }
     return L[lrSayN % L.length];
   }
+  /* ม้วนกระดาษฉากสวรรค์: คลี่ออกจากกลาง (แกนหมุน) · ตัวหนังสือหมึกทองทีละคำ · ตัวเลขนับขึ้น · ใบลอเรลงอก · ลอยพลิ้ว · แสงวิ่งบนแกน · เปลี่ยนข้อความ = พับแล้วคลี่ใหม่ */
+  var svTok = 0, svCnt = 0;
+  function svSegs(t) {
+    var out = [];
+    try { if (window.Intl && Intl.Segmenter) { var sg = new Intl.Segmenter('th', { granularity: 'word' }); for (var it = sg.segment(t)[Symbol.iterator](), r = it.next(); !r.done; r = it.next()) out.push(r.value.segment); return out; } } catch (e) {}
+    for (var i = 0; i < t.length; i += 3) out.push(t.slice(i, i + 3)); return out;
+  }
+  function svShow(el, txt) {
+    var tok = ++svTok, prev = el.querySelector('.sv-body');
+    if (prev && !calm()) { el.classList.add('sv-out'); setTimeout(function () { if (tok === svTok) svBuild(el, txt, tok); }, 320); }
+    else svBuild(el, txt, tok);
+  }
+  function svBuild(el, txt, tok) {
+    clearInterval(svCnt); el.classList.remove('sv-out', 'sv-in', 'sv-done');
+    var pr = String(txt).split('|'), segs = svSegs(pr[0]), d = .38, t = '';
+    segs.forEach(function (w) { t += /^\s+$/.test(w) ? w : '<span class="sv-w" style="animation-delay:' + d.toFixed(2) + 's">' + h(w) + '</span>'; if (!/^\s+$/.test(w)) d += .055; });
+    var hn = '<span class="sv-t">' + t + '</span>', num = 0;
+    if (pr[1]) {
+      var m = pr[1].match(/(\d+)(\/\d+)?/); num = m ? +m[1] : 0;
+      var c = h(pr[1]).replace(/(\d+)(\/\d+)?/, '<b class="sv-n">' + (m ? '0' : '') + '</b>' + (m && m[2] ? '<span class="sv-of">' + m[2] + '</span>' : ''));
+      hn += '<span class="sv-hr" style="animation-delay:' + d.toFixed(2) + 's"></span><span class="sv-c" style="animation-delay:' + d.toFixed(2) + 's"><svg class="sv-lf" viewBox="0 0 26 14" aria-hidden="true"><path d="M1 11Q12 8 25 3" stroke="#b9821c" stroke-width=".9" fill="none"/><g fill="#d9a536" stroke="#9a6410" stroke-width=".35"><ellipse class="sv-lv" cx="7" cy="7.4" rx="3.4" ry="1.5" transform="rotate(-40 7 7.4)"/><ellipse class="sv-lv" cx="9" cy="12" rx="3.4" ry="1.5" transform="rotate(20 9 12)"/><ellipse class="sv-lv" cx="14" cy="5" rx="3.4" ry="1.5" transform="rotate(-50 14 5)"/><ellipse class="sv-lv" cx="16.4" cy="9.6" rx="3.4" ry="1.5" transform="rotate(10 16.4 9.6)"/><ellipse class="sv-lv" cx="22" cy="2.6" rx="3" ry="1.4" transform="rotate(-30 22 2.6)"/></g></svg>' + c + '<svg class="sv-lf sv-r" viewBox="0 0 26 14" aria-hidden="true"><path d="M1 11Q12 8 25 3" stroke="#b9821c" stroke-width=".9" fill="none"/><g fill="#d9a536" stroke="#9a6410" stroke-width=".35"><ellipse class="sv-lv" cx="7" cy="7.4" rx="3.4" ry="1.5" transform="rotate(-40 7 7.4)"/><ellipse class="sv-lv" cx="9" cy="12" rx="3.4" ry="1.5" transform="rotate(20 9 12)"/><ellipse class="sv-lv" cx="14" cy="5" rx="3.4" ry="1.5" transform="rotate(-50 14 5)"/><ellipse class="sv-lv" cx="16.4" cy="9.6" rx="3.4" ry="1.5" transform="rotate(10 16.4 9.6)"/><ellipse class="sv-lv" cx="22" cy="2.6" rx="3" ry="1.4" transform="rotate(-30 22 2.6)"/></g></svg></span>';
+    }
+    el.innerHTML = '<i class="sv-pp"></i><svg class="sv-co c0" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 15V7c0-3.4 2.6-6 6-6h8M1 10c2 0 3-1 3-3s1.4-3 3-3M4 15c0-2 1-3 3-3" stroke="#c8961e" stroke-width="1.1" fill="none" stroke-linecap="round"/><circle cx="7" cy="7" r="1.3" fill="#d9a536"/></svg><svg class="sv-co c1" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 15V7c0-3.4 2.6-6 6-6h8M1 10c2 0 3-1 3-3s1.4-3 3-3M4 15c0-2 1-3 3-3" stroke="#c8961e" stroke-width="1.1" fill="none" stroke-linecap="round"/><circle cx="7" cy="7" r="1.3" fill="#d9a536"/></svg><svg class="sv-co c2" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 15V7c0-3.4 2.6-6 6-6h8M1 10c2 0 3-1 3-3s1.4-3 3-3M4 15c0-2 1-3 3-3" stroke="#c8961e" stroke-width="1.1" fill="none" stroke-linecap="round"/><circle cx="7" cy="7" r="1.3" fill="#d9a536"/></svg><svg class="sv-co c3" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 15V7c0-3.4 2.6-6 6-6h8M1 10c2 0 3-1 3-3s1.4-3 3-3M4 15c0-2 1-3 3-3" stroke="#c8961e" stroke-width="1.1" fill="none" stroke-linecap="round"/><circle cx="7" cy="7" r="1.3" fill="#d9a536"/></svg><i class="sv-rod t"><b class="sv-sh"></b></i><i class="sv-rod b"><b class="sv-sh"></b></i><svg class="sv-tail" viewBox="0 0 20 16" aria-hidden="true"><path d="M0 2C7 1 14 4 18 11 13 8.6 7 8.4 0 11z" fill="#efdcae" stroke="#b9821c" stroke-width=".8"/><path d="M18 11c-2.6-.6-4.4.4-4.4 2.2 0 1.4 1.4 2.2 2.8 1.6" fill="#e3c88e" stroke="#b9821c" stroke-width=".8"/></svg><span class="sv-body">' + hn + '</span>';
+    el.style.setProperty('--sh', (el.offsetHeight / 2) + 'px');
+    void el.offsetWidth; el.classList.add('sv-in');
+    var nEl = el.querySelector('.sv-n');
+    if (!nEl) return;
+    if (calm()) { nEl.textContent = num; el.classList.add('sv-done'); return; }
+    setTimeout(function () {
+      if (tok !== svTok) return;
+      var t0 = Date.now(), dur = Math.min(900, 300 + num * 6);
+      svCnt = setInterval(function () {
+        var k = Math.min(1, (Date.now() - t0) / dur); nEl.textContent = Math.round(num * (1 - Math.pow(1 - k, 3)));
+        if (k >= 1) { clearInterval(svCnt); el.classList.add('sv-done'); }
+      }, 30);
+    }, (d + .2) * 1000);
+  }
   /* กล่องคำพูด: พิมพ์ทีละตัว (ข้อความเดิมไม่พิมพ์ซ้ำ) */
   var typeT = 0;
   function sayType(el, txt) {
     if (el.getAttribute('data-t') === txt) return;
     el.setAttribute('data-t', txt); clearInterval(typeT);
-    if (sh && sh.classList.contains('is-heav')) { var pr = String(txt).split('|'), hn = '<span class="sv-t">' + h(pr[0]) + '</span>'; if (pr[1]) hn += '<span class="sv-hr"></span><span class="sv-c"><svg class="sv-lf" viewBox="0 0 26 14" aria-hidden="true"><path d="M1 11Q12 8 25 3" stroke="#b9821c" stroke-width=".9" fill="none"/><g fill="#d9a536" stroke="#9a6410" stroke-width=".35"><ellipse cx="7" cy="7.4" rx="3.4" ry="1.5" transform="rotate(-40 7 7.4)"/><ellipse cx="9" cy="12" rx="3.4" ry="1.5" transform="rotate(20 9 12)"/><ellipse cx="14" cy="5" rx="3.4" ry="1.5" transform="rotate(-50 14 5)"/><ellipse cx="16.4" cy="9.6" rx="3.4" ry="1.5" transform="rotate(10 16.4 9.6)"/><ellipse cx="22" cy="2.6" rx="3" ry="1.4" transform="rotate(-30 22 2.6)"/></g></svg>' + h(pr[1]).replace(/(\d+(?:\/\d+)?)/, '<b class="sv-n">$1</b>') + '<svg class="sv-lf sv-r" viewBox="0 0 26 14" aria-hidden="true"><path d="M1 11Q12 8 25 3" stroke="#b9821c" stroke-width=".9" fill="none"/><g fill="#d9a536" stroke="#9a6410" stroke-width=".35"><ellipse cx="7" cy="7.4" rx="3.4" ry="1.5" transform="rotate(-40 7 7.4)"/><ellipse cx="9" cy="12" rx="3.4" ry="1.5" transform="rotate(20 9 12)"/><ellipse cx="14" cy="5" rx="3.4" ry="1.5" transform="rotate(-50 14 5)"/><ellipse cx="16.4" cy="9.6" rx="3.4" ry="1.5" transform="rotate(10 16.4 9.6)"/><ellipse cx="22" cy="2.6" rx="3" ry="1.4" transform="rotate(-30 22 2.6)"/></g></svg></span>'; el.innerHTML = hn; el.classList.remove('sv-in'); void el.offsetWidth; el.classList.add('sv-in'); return; }
+    if (sh && sh.classList.contains('is-heav')) { svShow(el, txt); return; }
     if (String(txt).indexOf('|') >= 0) txt = String(txt).replace('|', ' · ');
     el.classList.remove('sv-in');
     if (calm()) { el.textContent = txt; return; }
