@@ -2454,3 +2454,18 @@ html body .vst .vst-grid.in > *{animation:vtbIn .38s cubic-bezier(.2,.8,.3,1) ca
 @keyframes vtbIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){html body .vst .vst-tabs .vtb-ind::after,html body .vst .vst-tabs button.pop svg,html body .vst .vst-grid.in > *{animation:none!important}}
 html body .vst .vst-tabs .vtb-coin{left:auto;top:auto;width:8px;height:8px;margin:0;position:absolute;inset:auto auto 4px 18px}@media (min-width:420px){html body .vst .vst-tabs .vtb-coin{inset:auto auto 4px 21px}}
+
+/* ===== เรียงไอเทมตามระดับ (daily-ui.css v95): หัวข้อคั่นระดับ · การ์ดตำนานกว้างครึ่งแถว ===== */
+html body .vst .vst-grid.is-all{grid-template-columns:repeat(6,1fr)}
+html body .vst .vst-grid.is-all > .vof-b{grid-column:span 2}
+html body .vst .vst-grid.is-all > .vof-b.vof-lim{grid-column:1/-1}
+html body .vst .vst-grid.is-all > .vof-b.r-legendary{grid-column:span 3}
+html body .vst .vgh{grid-column:1/-1;display:flex;align-items:baseline;gap:8px;margin:8px 2px -2px;font:700 .78rem/1.2 'Prompt',sans-serif;letter-spacing:.04em}
+html body .vst .vgh b{font-weight:800}
+html body .vst .vgh small{font:500 .64rem/1.2 'Prompt',sans-serif;color:rgba(230,224,242,.5)}
+html body .vst .vgh i{flex:1;height:1px;align-self:center;background:linear-gradient(90deg,currentColor,transparent);opacity:.45}
+html body .vst .vgh-legendary{color:#f4c542}html body .vst .vgh-legendary b{background:linear-gradient(90deg,#fff3c4,#f4c542,#c98a1a);-webkit-background-clip:text;background-clip:text;color:transparent}
+html body .vst .vgh-epic{color:#b99bff}
+html body .vst .vgh-rare{color:#7fc4ff}
+html body .vst .vgh-common{color:#7fe0c4}
+html body .vst .vst-grid.is-all > .vof-b.is-half{grid-column:span 3}
