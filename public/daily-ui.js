@@ -421,7 +421,7 @@
         if (e.target.closest('[data-shx]')) { shopClose(); return; }
         var t = e.target.closest('[data-tab]'); if (t) { shTab = t.getAttribute('data-tab'); shopRender(); return; }
         var tr = e.target.closest('.vst-tiers [data-tier]'); if (tr) { pvTier = +tr.getAttribute('data-tier'); if (pvTier === realTier()) pvTier = 0; shopRender(); hop(sh.querySelector('.vst-ms')); return; }
-        if (e.target.closest('[data-lore]')) { loreOpen(); return; }
+        var lo = e.target.closest('[data-lore]'); if (lo) { loreOpen(undefined, lo.getAttribute('data-lore')); return; }
         var it = e.target.closest('[data-outfit]'); if (it) { pick(it.getAttribute('data-outfit')); return; }
         var a = e.target.closest('[data-act]'); if (a) { act(a.getAttribute('data-act')); return; }
         if (e.target.closest('.vst-ms')) hop(sh.querySelector('.vst-ms'));
@@ -843,11 +843,72 @@
       '<i class="lore-tw" aria-hidden="true"></i><span>ตำนาน</span><span class="lore-dots" aria-hidden="true">' + LORE.map(function (x) { return '<i class="' + (loreOk(x) ? 'on' : '') + '"></i>'; }).join('') + '</span>' + (fresh ? '<i class="lore-new"></i>' : '') + '</span>';
   }
   function loreOk(c) { return c.need === 0 || (S && (S.bestStreak || 0) >= c.need); }
-  function loreOpen(i) {
+  /* ===== ตำนานมาลัย: บทนำอ่านได้ทันที · ตอน 1–3 ที่ 25/50/75 วัน · ตอนจบ 100 วัน (ได้มาลัย) · ตอนพิเศษ 130/160 วัน (ขั้น 2/3) — นับวันเช็กอินรวม ===== */
+  var lrSet = 'm';
+  function lrTreeArt(bare) {
+    var lv = ''; [[-22, -10, -30], [-14, -22, -10], [0, -28, 0], [14, -22, 10], [22, -10, 30], [-26, 2, -50], [26, 2, 50], [-8, -14, -20], [8, -14, 20]].forEach(function (q, k) { if (bare && k) return; lv += '<ellipse cx="' + (60 + q[0]) + '" cy="' + (34 + q[1]) + '" rx="6" ry="2.6" transform="rotate(' + q[2] + ' ' + (60 + q[0]) + ' ' + (34 + q[1]) + ')" fill="url(#ltG)" stroke="#8a5a12" stroke-width=".5"/>'; });
+    return '<svg viewBox="0 0 120 80"><defs><linearGradient id="ltG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset=".5" stop-color="#f4c542"/><stop offset="1" stop-color="#a8741a"/></linearGradient><radialGradient id="ltH"><stop offset="0" stop-color="#ffe9a8" stop-opacity=".8"/><stop offset="1" stop-color="#ffe9a8" stop-opacity="0"/></radialGradient></defs>' +
+      '<circle cx="60" cy="34" r="36" fill="url(#ltH)"/><path d="M28 72c-6 0-8-5-5-8 2-3 7-3 9-1 2-5 9-7 13-3 3-5 12-5 15 0 4-4 12-2 13 3 4-2 10 0 10 5 0 3-3 5-6 5z" fill="#fff8ec" opacity=".9"/>' +
+      '<path d="M60 66V40M60 50l-12-12M60 46l12-12M60 40l-8-14M60 40l8-14" stroke="#9a6a1c" stroke-width="2.4" stroke-linecap="round" fill="none"/>' + lv +
+      (bare ? '<ellipse class="lt-fall" cx="80" cy="56" rx="5" ry="2.2" transform="rotate(30 80 56)" fill="url(#ltG)" stroke="#8a5a12" stroke-width=".5"/>' : '') + '</svg>';
+  }
+  var LORE_L = [
+    { need: 0, t: 'บทนำ · ต้นลอเรลทอง', art: function () { return lrTreeArt(false); }, q: 'คำสัญญาที่ไม่ได้อ่าน ไม่ใช่คำสัญญาที่แท้จริง', p: [
+      'เหนือก้อนเมฆชั้นที่เจ็ด มี**สวนสวรรค์**ที่ไม่เคยมืด',
+      'กลางสวนมี==ต้นลอเรลทอง==ต้นเดียว ที่ไม่ผลิใบตามฤดูกาล',
+      'มันจะแตกใบใหม่ก็ต่อเมื่อมีใครสักคน ==อ่านเอกสารจนถึงบรรทัดสุดท้าย==อย่างตั้งใจ',
+      'ผู้ดูแลต้นไม้คือ**เทพีออเรลา** เทพีแห่งพันธสัญญา ผู้เชื่อว่า'] },
+    { need: 25, t: 'ตอนที่ 1 · ยุคที่ใบร่วง', art: function () { return lrTreeArt(true); }, q: 'ผู้ใดกลับมาอ่านอย่างตั้งใจได้ครบร้อยวัน ใบไม้ทั้งร้อยจะกลายเป็นมาลัยบนศีรษะของเขา', p: [
+      'มีอยู่ยุคหนึ่งที่ผู้คนรีบร้อน ==เซ็นชื่อทั้งที่ยังไม่ได้อ่าน==',
+      '**ต้นลอเรลทอง**จึงร่วงใบทีละใบ จนกิ่งโล่ง',
+      '**เทพีออเรลา**เก็บใบสุดท้ายไว้ในมือ แล้วประกาศว่า'] },
+    { need: 50, t: 'ตอนที่ 2 · น้ำพุแห่งความจำ', art: function () { return fountainSvg(); }, q: 'ยิ่งอ่านละเอียดเท่าไร ใบไม้ก็ยิ่งเปล่งประกายเท่านั้น', p: [
+      'ใบลอเรลที่ผลิใหม่ทุกใบ เทพีจะนำไปจุ่มใน**น้ำพุแห่งความจำ**',
+      'น้ำในน้ำพุ==จดจำทุกบรรทัดที่ผู้อ่านเคยอ่าน==',
+      'แล้วเคลือบใบไม้ให้เป็นทองทีละชั้น ว่ากันว่า'] },
+    { need: 75, t: 'ตอนที่ 3 · ม้วนกระดาษน้อยผู้ไม่ยอมแพ้', art: function () { return mascot('happy', 100, ''); }, q: 'และตอนนี้ เขาได้พบคนคนนั้นแล้ว', p: [
+      'ในบรรดาผู้เฝ้ารอ มีม้วนกระดาษสัญญาน้อย ๆ ชื่อ**เวลลัม**',
+      'เขา==เคยถูกเซ็นทิ้งโดยไม่มีใครอ่าน==มาหลายครั้ง แต่ไม่เคยโกรธ',
+      'เขาเพียงหวังว่าวันหนึ่ง จะมีใครสักคนอ่านเขาจนจบ แล้วเดินไปด้วยกันทุกวัน…'] },
+    { need: 100, t: 'ตอนจบ · เสียงแตรแห่งสวรรค์', art: function () { return goddessSvg(); }, q: 'ใบไม้ทุกใบ เกิดจากวันที่เราอ่านด้วยกัน', p: [
+      'เช้าวันที่ร้อย ==เสียงแตรทองดังก้องทั่วฟ้า==',
+      '**เทพีออเรลา**เป่าแตรประกาศชื่อผู้ไม่ยอมแพ้',
+      '**น้ำพุแห่งความจำ**พุ่งสูง มาลัยที่ถักจากใบไม้ร้อยใบลอยขึ้นจากสายน้ำ แล้ว==บินมาสวมบนศีรษะของเวลลัม== เพราะ'] },
+    { need: 130, t: 'ตอนพิเศษ 1 · ใบที่เปล่งประกาย', art: function () { return '<svg viewBox="20 -17 80 40">' + laurelArt(2) + '</svg>'; }, q: 'มาลัยนี้ไม่เคยเสร็จ ตราบใดที่ยังมีคนอ่าน', p: [
+      'หลังพิธี ผู้คนคิดว่าเรื่องจบแล้ว แต่**ต้นลอเรลทอง**ยังคงผลิใบต่อ',
+      'ทุกใบใหม่ลอยมาประดับมาลัยบนหัว**เวลลัม** จน==ปลายใบทุกใบมีประกายดาว==',
+      '**เทพีออเรลา**กระซิบว่า'] },
+    { need: 160, t: 'ตอนพิเศษ 2 · รัศมีแห่งผู้รักษาคำสัญญา', art: function () { return '<svg viewBox="10 -32 100 70">' + laurelArt(3, 'back') + laurelArt(3, 'front') + '</svg>'; }, q: 'ไม่ใช่เพราะอ่านเร็วที่สุด แต่เพราะไม่เคยหยุดอ่าน', p: [
+      'เมื่อครบร้อยหกสิบวัน ==วงแหวนแสงก่อตัวขึ้นหลังศีรษะ==ของ**เวลลัม**',
+      'เป็นรัศมีที่เทพีมอบให้==ผู้รักษาคำสัญญา==เท่านั้น'] }
+  ];
+  var LIC_L = [
+    '<path d="M12 21v-8M12 15l-4-4M12 14l4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/><g fill="currentColor"><ellipse cx="7" cy="9" rx="3" ry="1.4" transform="rotate(-35 7 9)"/><ellipse cx="17" cy="9" rx="3" ry="1.4" transform="rotate(35 17 9)"/><ellipse cx="12" cy="6" rx="1.4" ry="3"/><ellipse cx="9" cy="5" rx="1.2" ry="2.6" transform="rotate(-25 9 5)"/><ellipse cx="15" cy="5" rx="1.2" ry="2.6" transform="rotate(25 15 5)"/></g>',
+    '<path d="M6 4c3 3 4 7 3 11M9 15c-2 1-4 0-5-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/><ellipse cx="16" cy="17" rx="4" ry="1.8" transform="rotate(30 16 17)" fill="currentColor"/>',
+    '<path d="M12 3c-2.6 3.4-4 5.8-4 7.6a4 4 0 0 0 8 0C16 8.8 14.6 6.4 12 3z" fill="currentColor"/><path d="M4 18h16M6 21h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+    '<rect x="6" y="5" width="12" height="14" rx="1" fill="currentColor"/><rect x="4" y="3" width="16" height="3.4" rx="1.7" fill="currentColor"/><rect x="4" y="17.6" width="16" height="3.4" rx="1.7" fill="currentColor"/><path d="M9 10h6M9 13h4" stroke="#fff6dc" stroke-width="1.2" stroke-linecap="round" opacity=".8"/>',
+    '<path d="M3 13h9l7-5v12l-7-5H3z" fill="currentColor"/><path d="M21 11q1.4 2 0 4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/>',
+    '<path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z" fill="currentColor"/><circle cx="19" cy="18" r="1.6" fill="currentColor"/><circle cx="5" cy="19" r="1.1" fill="currentColor"/>',
+    '<circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.6" fill="none" stroke="currentColor" stroke-width="1.2" stroke-dasharray="1.4 2"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/>'
+  ];
+  var SEAL_L = '<svg class="vlr-seal vlr-seal-l" viewBox="0 0 64 64" aria-hidden="true"><defs><radialGradient id="slG" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#fff3c4"/><stop offset=".55" stop-color="#e0a92c"/><stop offset="1" stop-color="#8a5a12"/></radialGradient></defs><circle cx="32" cy="32" r="27" fill="url(#slG)" stroke="#7a4d08" stroke-width="1.6"/><circle cx="32" cy="32" r="21" fill="none" stroke="#fff3c4" stroke-width=".9" stroke-dasharray="1.6 2.2"/>' +
+    (function () { var o = ''; for (var k = 0; k < 7; k++) { var a = Math.PI * (.62 + k * .13); o += '<ellipse cx="' + (32 + 14 * Math.cos(a)).toFixed(1) + '" cy="' + (32 + 14 * Math.sin(a)).toFixed(1) + '" rx="3.4" ry="1.4" transform="rotate(' + (a * 180 / Math.PI + 60).toFixed(0) + ' ' + (32 + 14 * Math.cos(a)).toFixed(1) + ' ' + (32 + 14 * Math.sin(a)).toFixed(1) + ')" fill="#7a4d08"/>'; a = Math.PI * (.38 - k * .13); o += '<ellipse cx="' + (32 + 14 * Math.cos(a)).toFixed(1) + '" cy="' + (32 + 14 * Math.sin(a)).toFixed(1) + '" rx="3.4" ry="1.4" transform="rotate(' + (a * 180 / Math.PI - 60).toFixed(0) + ' ' + (32 + 14 * Math.cos(a)).toFixed(1) + ' ' + (32 + 14 * Math.sin(a)).toFixed(1) + ')" fill="#7a4d08"/>'; } return o; })() +
+    '<path d="M32 23l2.2 5.4 5.8.4-4.4 3.8 1.4 5.6L32 35.2l-5 3 1.4-5.6-4.4-3.8 5.8-.4z" fill="#7a4d08"/></svg>';
+  function lFmt(t, d) { var k = 0; return h(t).replace(/==(.+?)==/g, function (m, x) { return '<mark class="lh" style="--md:' + (d + .25 * k++).toFixed(2) + 's">' + x + '</mark>'; }).replace(/\*\*(.+?)\*\*/g, '<b class="ln">$1</b>'); }
+  function curLore() { return lrSet === 'l' ? LORE_L : LORE; }
+  function okLore(c) { return lrSet === 'l' ? (c.need === 0 || (S && (S.totalDays || 0) >= c.need)) : loreOk(c); }
+  function seenLore() { try { return +(localStorage.getItem(lrSet === 'l' ? 'vc_lore_seen_l' : 'vc_lore_seen') || -1); } catch (e) { return -1; } }
+  function laurelLoreBtn() {
+    var tot = S && S.totalDays || 0, last = -1, seen = -1; LORE_L.forEach(function (x, k) { if (x.need === 0 || tot >= x.need) last = k; });
+    try { seen = +(localStorage.getItem('vc_lore_seen_l') || -1); } catch (e) {}
+    return '<span class="vof-act lrc-lore" role="button" tabindex="0" data-lore="laurel" aria-label="อ่านตำนานมาลัย' + (last > seen ? ' มีตอนใหม่' : '') + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + LIC_L[0] + '</svg>ตำนาน' + (last > seen ? '<i class="lore-new"></i>' : '') + '</span>';
+  }
+  function loreOpen(i, set) {
+    lrSet = set === 'laurel' ? 'l' : 'm';
     if (!lr) {
       lr = document.createElement('div'); lr.className = 'vlr'; lr.setAttribute('role', 'dialog'); lr.setAttribute('aria-modal', 'true'); lr.setAttribute('aria-labelledby', 'vlrT');
       lr.innerHTML = '<div class="vlr-bg" data-lx></div><div class="vlr-p"><i class="vlr-rod"></i><i class="vlr-glow" aria-hidden="true"></i><i class="vlr-frame" aria-hidden="true"><b></b><b></b><b></b><b></b></i><div class="vlr-sh"><button type="button" class="vlr-x" data-lx aria-label="ปิด">✕</button>' +
-        '<p class="vlr-k">ตำนานแห่ง</p><h3 id="vlrT">เหรียญไฟไม่มอด</h3><div class="vlr-tabs" role="tablist"></div><div class="vlr-body"></div></div><i class="vlr-rod b"></i></div>';
+        '<p class="vlr-k">ตำนานแห่ง</p><h3 id="vlrT"></h3><div class="vlr-tabs" role="tablist"></div><div class="vlr-body"></div></div><i class="vlr-rod b"></i></div>';
       document.body.appendChild(lr);
       lr.addEventListener('click', function (e) {
         if (e.target.closest('[data-lx]')) { loreClose(); return; }
@@ -855,23 +916,28 @@
       });
       document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && lr && lr.classList.contains('on')) loreClose(); });
     }
-    if (typeof i !== 'number') { lrIdx = 0; for (var k = LORE.length - 1; k >= 0; k--) if (loreOk(LORE[k])) { lrIdx = k; break; } } else lrIdx = i;
+    lr.classList.toggle('is-laurel', lrSet === 'l'); lr.querySelector('#vlrT').textContent = lrSet === 'l' ? 'มาลัยตำนาน' : 'เหรียญไฟไม่มอด';
+    var LL = curLore();
+    if (typeof i !== 'number') { lrIdx = 0; for (var k = LL.length - 1; k >= 0; k--) if (okLore(LL[k])) { lrIdx = k; break; } } else lrIdx = i;
     lr.hidden = false; requestAnimationFrame(function () { lr.classList.add('on'); }); loreRender();
   }
   function loreClose() { if (!lr) return; lr.classList.remove('on'); setTimeout(function () { if (!lr.classList.contains('on')) lr.hidden = true; }, 400); }
   function loreRender() {
-    var c = LORE[lrIdx], ok = loreOk(c), m = MED[c.tier];
-    if (ok && lrIdx > loreSeen()) { try { localStorage.setItem('vc_lore_seen', lrIdx); } catch (e) {} if (sh && !sh.hidden) shopRender(); }
-    lr.style.setProperty('--f1', m.f1); lr.style.setProperty('--f2', m.f2);
-    var lastOk = 0; LORE.forEach(function (x, n) { if (loreOk(x)) lastOk = n; });
-    var tb = lr.querySelector('.vlr-tabs'); tb.style.setProperty('--lf', (lastOk / (LORE.length - 1) * 100) + '%');
-    tb.innerHTML = '<i class="vlr-path"><b></b></i>' + LORE.map(function (x, n) {
-      return '<button type="button" role="tab" data-ch="' + n + '" aria-selected="' + (n === lrIdx) + '" aria-label="' + h(x.t) + (loreOk(x) ? '' : ' (ล็อก)') + '" class="' + (n === lrIdx ? 'on' : '') + (loreOk(x) ? '' : ' lk') + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + LIC[n] + '</svg>' + (loreOk(x) ? '' : '<i class="lkb"></i>') + '</button>';
+    var LL = curLore(), L = lrSet === 'l', c = LL[lrIdx], ok = okLore(c), m = MED[L ? 3 : c.tier];
+    if (ok && lrIdx > seenLore()) { try { localStorage.setItem(L ? 'vc_lore_seen_l' : 'vc_lore_seen', lrIdx); } catch (e) {} if (sh && !sh.hidden) shopRender(); }
+    if (!L) { lr.style.setProperty('--f1', m.f1); lr.style.setProperty('--f2', m.f2); }
+    var lastOk = 0; LL.forEach(function (x, n) { if (okLore(x)) lastOk = n; });
+    var tb = lr.querySelector('.vlr-tabs'); tb.style.setProperty('--lf', (lastOk / (LL.length - 1) * 100) + '%');
+    var IC = L ? LIC_L : LIC;
+    tb.innerHTML = '<i class="vlr-path"><b></b></i>' + LL.map(function (x, n) {
+      return '<button type="button" role="tab" data-ch="' + n + '" aria-selected="' + (n === lrIdx) + '" aria-label="' + h(x.t) + (okLore(x) ? '' : ' (ล็อก)') + '" class="' + (n === lrIdx ? 'on' : '') + (okLore(x) ? '' : ' lk') + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + IC[n] + '</svg>' + (okLore(x) ? '' : '<i class="lkb"></i>') + '</button>';
     }).join('');
-    lr.querySelector('.vlr-body').innerHTML = '<div class="vlr-art" aria-hidden="true"><svg viewBox="36 66 48 54">' + medalArt(c.tier) + '</svg></div>' +
+    var tot = S && S.totalDays || 0, best = S && S.bestStreak || 0;
+    lr.querySelector('.vlr-body').innerHTML = (L ? '<div class="vlr-art vlr-art-l" aria-hidden="true">' + c.art() + '</div>' : '<div class="vlr-art" aria-hidden="true"><svg viewBox="36 66 48 54">' + medalArt(c.tier) + '</svg></div>') +
       '<h4>' + h(c.t) + '</h4>' +
-      c.p.map(function (t, n) { return '<p class="' + (n === 0 ? 'first ' : '') + (!ok && n > 0 ? 'blur' : '') + '" style="--d:' + (n * .35 + .3) + 's">' + (n === 0 ? dropCap(t) : h(t)) + '</p>'; }).join('') +
-      (ok ? '<div class="vlr-end">' + SEAL + '</div>' : '<div class="vlr-lock">🔒 ปลดล็อกเมื่อเช็กอินติดกันครบ ' + c.need + ' วัน<small>สถิติสูงสุดของคุณ ' + (S && S.bestStreak || 0) + ' วัน</small></div>');
+      (L ? c.p.map(function (t, n) { return '<p class="lp' + (!ok && n > 0 ? ' blur' : '') + '" style="--d:' + (n * .3 + .25).toFixed(2) + 's">' + lFmt(t, n * .3 + .7) + '</p>'; }).join('') + (c.q ? '<blockquote class="lq' + (ok ? '' : ' blur') + '" style="--d:' + (c.p.length * .3 + .3).toFixed(2) + 's"><i class="lq-o">“</i>' + h(c.q) + '<i class="lq-c">”</i></blockquote>' : '')
+        : c.p.map(function (t, n) { return '<p class="' + (n === 0 ? 'first ' : '') + (!ok && n > 0 ? 'blur' : '') + '" style="--d:' + (n * .35 + .3) + 's">' + (n === 0 ? dropCap(t) : h(t)) + '</p>'; }).join('')) +
+      (ok ? '<div class="vlr-end">' + (L ? SEAL_L : SEAL) + '</div>' : L ? '<div class="vlr-lock">🔒 ปลดล็อกเมื่อเช็กอินรวมครบ ' + c.need + ' วัน<small>ตอนนี้เช็กอินรวม ' + tot + ' วัน · อีก ' + Math.max(0, c.need - tot) + ' วัน</small></div>' : '<div class="vlr-lock">🔒 ปลดล็อกเมื่อเช็กอินติดกันครบ ' + c.need + ' วัน<small>สถิติสูงสุดของคุณ ' + best + ' วัน</small></div>');
     lr.querySelector('.vlr-body').scrollTop = 0;
   }
   function shopRender() {
@@ -910,10 +976,11 @@
       if (it.rarity === 'limited') return limitedCard(it, own.indexOf(it.id) >= 0, worn.indexOf(it.id) >= 0 && tryOn !== it.id, bmap[it.badge]);
       var has = own.indexOf(it.id) >= 0, on = worn.indexOf(it.id) >= 0 && tryOn !== it.id, a = ART_OUT[it.id], bd = it.badge && bmap[it.badge];
       var tag = has ? '<span class="vof-act' + (on ? ' is-on' : '') + '">' + (on ? 'ใส่อยู่ ✓' : 'มีแล้ว') + '</span>'
+        : it.id === 'laurel' ? laurelLoreBtn()
         : it.badge ? '<span class="vof-act is-badge">🏅 รางวัล</span>'
         : '<span class="vof-act is-buy' + (S.points < it.price ? ' is-short' : '') + '"><i class="vof-coin"></i>' + fmt(it.price) + '</span>';
       return '<button type="button" class="vof-b r-' + it.rarity + (it.id === 'laurel' ? ' is-laurel' : '') + (it.id === 'medal' ? ' is-fire mt-' + medalTier() : '') + (has ? ' is-own' : ' is-lock' + (it.badge ? ' is-badge-item' : '')) + (on ? ' is-on' : '') + (sel === it.id ? ' is-try' : '') + '" data-outfit="' + it.id + '" aria-pressed="' + (sel === it.id) + '" aria-label="' + h(it.name + ' · ' + (RAR[it.rarity] || '')) + '">' +
-        (it.id === 'laurel' ? LRC_TAG + LRC_DUST : '<em class="vof-r">' + (RAR[it.rarity] || '') + '</em>') + (!has && bd && it.id === 'laurel' ? lrCard(bd, a) : !has && bd ? '<span class="vof-pr" style="--bp:' + Math.round(bd.have / bd.n * 100) + '%"><svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg><i class="vof-spark"></i><b>' + bd.have + '/' + bd.n + '</b></span>' : '<svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg>') + '<small>' + h(it.name) + '</small>' + tag + '</button>';
+        (it.id === 'laurel' ? LRC_TAG + LRC_DUST : '<em class="vof-r">' + (RAR[it.rarity] || '') + '</em>') + (!has && bd && it.id === 'laurel' ? lrCard(bd, a) : !has && bd ? '<span class="vof-pr" style="--bp:' + Math.round(bd.have / bd.n * 100) + '%"><svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg><i class="vof-spark"></i><b>' + bd.have + '/' + bd.n + '</b></span>' : '<svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg>') + '<small>' + h(it.name) + '</small>' + tag + (has && it.id === 'laurel' ? laurelLoreBtn() : '') + '</button>';
     }).join('');
     var bar = sh.querySelector('.vst-bar');
     if (!o) { bar.innerHTML = '<p class="vst-hint">แตะของเพื่อลองใส่ · ' + own.length + '/' + list.length + ' ชิ้นที่มีแล้ว · ได้แต้มจากเช็กอินทุกวัน</p>'; return; }
