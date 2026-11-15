@@ -1708,3 +1708,45 @@ html body .vst .vof-b.is-laurel .lrc-tw{position:absolute;width:9px;height:9px;m
 @keyframes lrcTw{0%,8%,100%{opacity:0;transform:scale(.2) rotate(0)}14%{opacity:1;transform:scale(1) rotate(45deg)}22%{opacity:0;transform:scale(.3) rotate(90deg)}}
 @media (prefers-reduced-motion:reduce){html body .vst .vof-b.is-laurel .lrc-gl,html body .vst .vof-b.is-laurel .lrc-tw{animation:none!important}html body .vst .vof-b.is-laurel .lrc-gl{opacity:.7}}
 html body .vst .vof-b.is-laurel .lrc-tw{width:12px;height:12px;margin:-6px 0 0 -6px}
+
+/* v64 ตำนานมาลัย: แผ่นหินอ่อนขอบทองธีมสวรรค์ */
+html body .vlr.is-laurel .vlr-rod{display:none}
+html body .vlr.is-laurel .vlr-bg{background:radial-gradient(70% 60% at 50% 40%,rgba(120,60,90,.55),rgba(10,6,16,.88))}
+html body .vlr.is-laurel .vlr-sh{margin:0;border-radius:18px;color:#3e2a12;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22240%22%20height%3D%22240%22%3E%3Cfilter%20id%3D%22m%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%22.006%20.02%22%20numOctaves%3D%224%22%20seed%3D%229%22/%3E%3CfeColorMatrix%20values%3D%220%200%200%200%20.62%200%200%200%200%20.52%200%200%200%200%20.38%200%200%200%20-2.2%201.25%22/%3E%3C/filter%3E%3Crect%20width%3D%22240%22%20height%3D%22240%22%20filter%3D%22url%28%23m%29%22/%3E%3C/svg%3E"),radial-gradient(120% 70% at 50% 0%,#fffaf0,#f6ecd8 55%,#e9d9bb);
+  box-shadow:inset 0 0 0 2px #d4a43a,inset 0 0 0 5px #fbf4e4,inset 0 0 0 6px rgba(212,164,58,.6),inset 0 0 30px rgba(160,110,40,.18),0 0 0 1px rgba(255,230,160,.4),0 20px 60px rgba(0,0,0,.6),0 0 40px rgba(255,200,110,.25)}
+html body .vlr.is-laurel .vlr-frame{inset:6px}
+html body .vlr.is-laurel .vlr-k{color:#b9821c;letter-spacing:.35em}
+html body .vlr.is-laurel .vlr-sh h3{font:700 1.4rem/1.2 'Prompt',sans-serif;background:linear-gradient(180deg,#d9a536,#8a5a12);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 0 #fff)}
+html body .vlr.is-laurel .vlr-tabs{gap:8px}
+html body .vlr.is-laurel .vlr-tabs button{width:36px;height:36px;color:#b9821c;border-color:rgba(185,130,28,.35);background:rgba(255,250,236,.7)}
+html body .vlr.is-laurel .vlr-tabs button svg{width:18px;height:18px}
+html body .vlr.is-laurel .vlr-tabs button.on{color:#fffaf0;background:radial-gradient(circle at 35% 30%,#f1c75a,#a8741a);border-color:#fff3c4}
+html body .vlr.is-laurel .vlr-tabs button.lk{color:#cbb894;background:#efe5d2}
+html body .vlr.is-laurel .vlr-path{left:18px;right:18px}
+html body .vlr.is-laurel .vlr-art-l{width:150px;height:96px;margin:0 auto 8px;display:grid;place-items:center;filter:drop-shadow(0 4px 8px rgba(140,90,30,.3))}
+html body .vlr.is-laurel .vlr-art-l svg{width:100%!important;height:100%!important;max-height:96px;opacity:1!important;position:static!important;transform:none!important;animation:none!important}
+html body .vlr.is-laurel .vlr-art-l svg *{animation-play-state:running}
+html body .vlr.is-laurel .vlr-body h4{color:#9a6410;font-weight:700}
+html body .vlr.is-laurel .vlr-body p{color:#3e2a12}
+html body .vlr.is-laurel .vlr-body .dc{color:#b9821c}
+html body .vlr.is-laurel .vlr-lock{background:rgba(212,164,58,.1);border-color:rgba(185,130,28,.45);color:#8a5a12}
+html body .vlr.is-laurel .vlr-seal-l{transform:none}
+html body .vlr.is-laurel .lt-fall{transform-box:fill-box;animation:ltFall 3s ease-in infinite}
+@keyframes ltFall{0%{transform:translate(-14px,-24px) rotate(0);opacity:0}20%{opacity:1}100%{transform:translate(0,0) rotate(40deg);opacity:1}}
+/* ปุ่มตำนานบนการ์ดมาลัย (มุมขวาบน) */
+html body .vst .vof-b.is-laurel .lrc-lore{position:absolute;right:8px;top:24px;z-index:2;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:#ffe08a;background:radial-gradient(circle at 35% 30%,rgba(255,236,170,.25),rgba(40,20,10,.75));box-shadow:inset 0 0 0 1px rgba(244,197,66,.7),0 0 8px rgba(255,200,90,.45)}
+html body .vst .vof-b.is-laurel .lrc-lore svg{width:14px!important;height:14px!important;filter:none!important}
+html body .vst .vof-b.is-laurel .lrc-lore .lore-new{position:absolute;right:-2px;top:-2px;width:8px;height:8px;border-radius:50%;background:#ff5a5a;box-shadow:0 0 0 2px #2a1408}
+html body .vlr.is-laurel .vlr-body .dc{float:none;display:inline;width:auto;height:auto;margin:0;padding:0;background:none;border:0;box-shadow:none;font:inherit;font-weight:700;color:#9a6410;line-height:inherit}
+html body .vst .vof-b.is-laurel .lrc-lore{position:relative;right:auto;top:auto;width:auto;height:auto;display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:99px;font:700 .62rem/1 'Prompt',sans-serif;color:#ffe7a6;background:linear-gradient(180deg,rgba(244,197,66,.28),rgba(244,197,66,.12));box-shadow:inset 0 0 0 1px rgba(244,197,66,.6),0 0 8px rgba(255,200,90,.3)}
+html body .vst .vof-b.is-laurel .lrc-lore svg{width:12px!important;height:12px!important;color:#ffd76a}
+html body .vst .vof-b.is-laurel .lrc-lore .lore-new{right:-3px;top:-3px;width:7px;height:7px}
+/* v65 ตำนานมาลัย: ไฮไลต์ทอง · ชื่อตัวหนา · ประโยคเด็ด · ย่อหน้าสั้น */
+html body .vlr.is-laurel .vlr-body p.lp{margin:0 0 9px;text-indent:0;font:400 .98rem/1.8 Sarabun,'Prompt',sans-serif;color:#3e2a12}
+html body .vlr.is-laurel .vlr-body .ln{font-weight:700;color:#8a5a12}
+html body .vlr.is-laurel .vlr-body mark.lh{color:inherit;padding:0 2px;border-radius:3px;background:linear-gradient(transparent 52%,rgba(244,197,66,.55) 52%,rgba(255,214,110,.6) 92%,transparent 92%) no-repeat 0 0/0% 100%;animation:lhDraw .7s cubic-bezier(.3,.7,.3,1) var(--md) forwards;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+@keyframes lhDraw{to{background-size:100% 100%}}
+html body .vlr.is-laurel .vlr-body blockquote.lq{position:relative;margin:14px 6px 8px;padding:12px 18px 10px;text-align:center;font:600 italic 1.02rem/1.6 Sarabun,'Prompt',sans-serif;color:#7a4d08;border-top:1px solid rgba(212,164,58,.6);border-bottom:1px solid rgba(212,164,58,.6);background:radial-gradient(80% 100% at 50% 50%,rgba(255,236,170,.35),transparent 75%)}
+html body .vlr.is-laurel .vlr-body blockquote.lq .lq-o,html body .vlr.is-laurel .vlr-body blockquote.lq .lq-c{font:700 1.6rem/0 Georgia,serif;color:#d4a43a;font-style:normal;vertical-align:-.4em;margin:0 3px}
+html body .vlr.is-laurel .vlr-body blockquote.lq.blur{filter:blur(5px);user-select:none}
+@media (prefers-reduced-motion:reduce){html body .vlr.is-laurel .vlr-body mark.lh{animation:none;background-size:100% 100%}}
