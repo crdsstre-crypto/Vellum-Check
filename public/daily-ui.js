@@ -38,7 +38,7 @@
     scarf: { vb: '28 62 70 46', art: '<path d="M30 70q30 10 60 0v9q-30 10-60 0z" fill="#d2343e" stroke="' + INK + '" stroke-width="2.2" stroke-linejoin="round"/><path d="M74 78l4 24 9-2-4-24z" fill="#d2343e" stroke="' + INK + '" stroke-width="2.2" stroke-linejoin="round"/><path d="M36 74q24 7 48 0M77 92h8M78 97h8" stroke="#ff8a92" stroke-width="1.6" fill="none" stroke-linecap="round"/>' },
     wizard: { vb: '8 -36 104 64', art: '<path d="M22 24 58-30q6-5 10 2l-6 6 12 46z" fill="#5b3fb0" stroke="' + INK + '" stroke-width="2.4" stroke-linejoin="round"/><ellipse cx="60" cy="24" rx="46" ry="7" fill="#4a2f96" stroke="' + INK + '" stroke-width="2.4"/><path d="M26 18q34 8 70-2" stroke="#f4c542" stroke-width="4" fill="none"/><path d="M50 0l1.5 3.4 3.6.4-2.7 2.4.8 3.6-3.2-1.9-3.2 1.9.8-3.6-2.7-2.4 3.6-.4zM64-14l1 2.2 2.4.3-1.8 1.6.5 2.4-2.1-1.2-2.1 1.2.5-2.4-1.8-1.6 2.4-.3z" fill="#ffe28a"/>' },
     medal: { vb: '30 62 60 56', art: '' },
-    laurel: { vb: '16 -6 88 36', art: '<g fill="#7fbf4a" stroke="' + INK + '" stroke-width="1.6"><path d="M24 22q-4-10 2-18 4 8-2 18z"/><path d="M30 12q-2-9 6-14 2 8-6 14z"/><path d="M40 6q2-8 10-9-1 7-10 9z"/><path d="M96 22q4-10-2-18-4 8 2 18z"/><path d="M90 12q2-9-6-14-2 8 6 14z"/><path d="M80 6q-2-8-10-9 1 7 10 9z"/></g><path d="M24 24q36-30 72 0" stroke="#e0a92c" stroke-width="2.4" fill="none"/><circle cx="60" cy="0" r="3.4" fill="#f4c542" stroke="' + INK + '" stroke-width="1.6"/>' }
+    laurel: { vb: '20 -17 80 40', art: '' },
   };
   /* (2) เหรียญไฟไม่มอดวิวัฒนาการตามสถิติติดต่อกันสูงสุด: 7 ทอง·ไฟส้ม → 14 ทองคำขาว·ไฟฟ้า → 30 เพชร·ไฟม่วง+ปีก */
   var MED = {
@@ -104,7 +104,72 @@
       '<g class="fur-tail"><path d="M84 74c-1 6-1 12 1 18 2 3 7 3 8 0 2-6 1-12-1-18z" fill="#f4f8ff" stroke="' + INK + '" stroke-width="1.5" stroke-linejoin="round"/><path d="M86 80v8M90 80v8" stroke="#cfe0f5" stroke-width="1" fill="none"/></g></g>' +
       '<g class="brth"><circle cx="72" cy="63" r="2.2" fill="#fff"/><circle cx="76" cy="60" r="3" fill="#fff"/><circle cx="81" cy="58" r="2.4" fill="#fff"/></g>';
   }
-  function artFor(id) { return id === 'medal' ? medalArt(medalTier()) : ART_OUT[id] ? ART_OUT[id].art : ''; }
+  function laurelAura() {   // วงรัศมีทองหมุนช้า + ใบลอเรลทองร่วง (หลังตัวน้อง)
+    var rays = ''; for (var k = 0; k < 16; k++) rays += '<path d="M60 70 L' + (60 + 54 * Math.cos(k * Math.PI / 8 - .06)).toFixed(1) + ' ' + (70 + 54 * Math.sin(k * Math.PI / 8 - .06)).toFixed(1) + ' L' + (60 + 54 * Math.cos(k * Math.PI / 8 + .06)).toFixed(1) + ' ' + (70 + 54 * Math.sin(k * Math.PI / 8 + .06)).toFixed(1) + 'z"/>';
+    var fall = ''; [[18, 0], [100, 1.3], [32, 2.6], [88, 3.9]].forEach(function (q) { fall += '<path class="lr-fall" style="animation-delay:-' + q[1] + 's" transform="translate(' + q[0] + ' 10)" d="M0 0c-2-1.3-2.4-4-.1-6 2.3 2 1.9 4.7.1 6z" fill="#f4c542"/>'; });
+    return '<g class="lr-aura" aria-hidden="true"><circle cx="60" cy="70" r="58" fill="url(#lrHalo)"/><g class="lr-rays" fill="url(#lrRay)">' + rays + '</g>' + fall +
+      '<defs><radialGradient id="lrRay" cx="60" cy="70" r="54" gradientUnits="userSpaceOnUse"><stop offset=".25" stop-color="#ffe08a" stop-opacity=".28"/><stop offset="1" stop-color="#ffe08a" stop-opacity="0"/></radialGradient><radialGradient id="lrHalo"><stop offset="0" stop-color="#ffe08a" stop-opacity=".35"/><stop offset=".6" stop-color="#f4c542" stop-opacity=".12"/><stop offset="1" stop-color="#f4c542" stop-opacity="0"/></radialGradient></defs></g>';
+  }
+  /* มาลัยตำนาน v3 (แบบ A): มงกุฎลอเรลลอยเหนือหัว · ใบเรียวทองขัดเงาสลับใบแก้วแสง · อัญมณีหยดน้ำ · ประกายปลายใบ
+     โตตามวันเช็กอินรวม: ขั้น 1 ได้รับ (100 วัน) · ขั้น 2 รวม 130 วัน ใบเพิ่ม+ประกาย · ขั้น 3 รวม 160 วัน วงรัศมีด้านหลัง */
+  function LR3(o) {
+    o = Object.assign({ cx: 60, cy: -1, rx: 34, ry: 9, tilt: -6, n: 9, glassEvery: 3, glassMode: 'mix', open: false, L: 15, W: 2.1, ang: 34, gem: 'drop', id: 'z' }, o);
+    var I = o.id, P = [];
+    function pt(t) { return [o.cx + o.rx * Math.cos(t), o.cy + o.ry * Math.sin(t)]; }
+    function f(v) { return v.toFixed(2); }
+    var defs = '<defs>' +
+      '<linearGradient id="m' + I + '" x1="0" y1="-1" x2="0" y2="1" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fffbe6"/><stop offset=".35" stop-color="#ffd75a"/><stop offset=".55" stop-color="#a8700f"/><stop offset=".75" stop-color="#ffe89a"/><stop offset="1" stop-color="#7a4d08"/></linearGradient>' +
+      '<linearGradient id="g' + I + '" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff6d6" stop-opacity=".2"/><stop offset=".6" stop-color="#fff2b8" stop-opacity=".55"/><stop offset="1" stop-color="#ffffff" stop-opacity=".95"/></linearGradient>' +
+      '<radialGradient id="h' + I + '"><stop offset="0" stop-color="#fff2b8" stop-opacity=".75"/><stop offset=".5" stop-color="#ffd75a" stop-opacity=".25"/><stop offset="1" stop-color="#ffd75a" stop-opacity="0"/></radialGradient>' +
+      '<radialGradient id="r' + I + '" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#fff"/><stop offset=".25" stop-color="#ffe1a8"/><stop offset=".6" stop-color="#f08a1c"/><stop offset="1" stop-color="#a3300a"/></radialGradient>' +
+      '<linearGradient id="w' + I + '" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a5a0c"/><stop offset=".5" stop-color="#fff0b0"/><stop offset="1" stop-color="#8a5a0c"/></linearGradient></defs>';
+    // กิ่ง: ซ้าย = ไล่ θ จากหลังไปหน้าทางซ้าย, ขวา = สมมาตร
+    var a0 = o.open ? Math.PI * 1.5 - .55 : Math.PI * 1.5 - .12, a1 = Math.PI / 2 + .16;
+    var leaves = [], stems = [[], []];
+    [-1, 1].forEach(function (side, si) {
+      var A = side < 0 ? a0 : Math.PI * 3 - a0, B = side < 0 ? a1 : Math.PI - a1 + 0; // right mirrors via cos sign
+      for (var k = 0; k <= 40; k++) { var t = a0 + (a1 - a0) * k / 40; var p = pt(t); if (side > 0) p[0] = 2 * o.cx - p[0]; stems[si].push(p); }
+      for (var j = 0; j < o.n; j++) {
+        var u = (j + .5) / o.n, t = a0 + (a1 - a0) * u, p = pt(t), q = pt(t + (a1 - a0) * .01);
+        if (side > 0) { p[0] = 2 * o.cx - p[0]; q[0] = 2 * o.cx - q[0]; }
+        var dir = Math.atan2(q[1] - p[1], q[0] - p[0]) * 180 / Math.PI;
+        var back = Math.sin(t) < -.05, sz = (.7 + .4 * Math.sin(Math.PI * Math.min(1, u * 1.15))) * (back ? .85 : 1);
+        [1, -1].forEach(function (s, si2) {
+          var glass = o.glassMode === 'all' ? true : o.glassMode === 'none' ? false : ((j + si2) % o.glassEvery === 0);
+          leaves.push({ x: p[0], y: p[1], r: dir, s: s, side: side, sz: sz, back: back, glass: glass, depth: Math.sin(t) });
+        });
+      }
+      // ใบปลาย
+      var pe = pt(a1), qe = pt(a1 - .05); if (side > 0) { pe[0] = 2 * o.cx - pe[0]; qe[0] = 2 * o.cx - qe[0]; }
+      leaves.push({ x: pe[0], y: pe[1], r: Math.atan2(pe[1] - qe[1], pe[0] - qe[0]) * 180 / Math.PI, s: 0, side: side, sz: .55, back: false, glass: false, depth: 1 });
+    });
+    leaves.sort(function (a, b) { return a.depth - b.depth; });
+    function leaf(l) {
+      var L = o.L * l.sz, W = o.W * l.sz * 2.2;
+      var d = 'M0 0C' + f(L * .25) + ' ' + f(-W) + ' ' + f(L * .7) + ' ' + f(-W * .9) + ' ' + f(L) + ' 0 ' + f(L * .7) + ' ' + f(W * .9) + ' ' + f(L * .25) + ' ' + f(W) + ' 0 0z';
+      var tf = 'translate(' + f(l.x) + ' ' + f(l.y) + ') rotate(' + f(l.r + l.s * o.ang) + ')';
+      var op = l.back ? ' opacity=".55"' : '';
+      if (l.glass) return '<g transform="' + tf + '"' + op + ' class="lv-gl"><path d="' + d + '" fill="url(#g' + I + ')" stroke="#fff6d6" stroke-width=".45"/><path d="M.5 0H' + f(L * .9) + '" stroke="#fff" stroke-width=".35" opacity=".9"/></g>';
+      return '<g transform="' + tf + '"' + op + '><path d="' + d + '" fill="url(#m' + I + ')" stroke="#5a3a06" stroke-width=".4" transform="scale(1 1)"/><path d="M.5 0H' + f(L * .9) + '" stroke="#fff6d6" stroke-width=".3" opacity=".8"/></g>';
+    }
+    function poly(a) { return a.map(function (p, i) { return (i ? 'L' : 'M') + f(p[0]) + ' ' + f(p[1]); }).join(''); }
+    var disc = (o.disc ? '<g class="lr-disc"><circle cx="' + o.cx + '" cy="' + (o.cy + 14) + '" r="46" fill="url(#h' + I + ')" opacity=".8"/><circle cx="' + o.cx + '" cy="' + (o.cy + 14) + '" r="40" fill="none" stroke="#ffe89a" stroke-width=".6" stroke-dasharray="1 3" opacity=".7"/></g>' : ''); if (o.part === 'back') return defs + disc; var out = defs + (o.part === 'front' ? '' : disc) + '<g class="lr-halo"><ellipse cx="' + o.cx + '" cy="17" rx="30" ry="5" fill="url(#h' + I + ')"/></g>';
+    out += '<g class="lr-float"><g transform="rotate(' + o.tilt + ' ' + o.cx + ' ' + o.cy + ')">';
+    out += '<path d="' + poly(stems[0]) + poly(stems[1]) + '" stroke="url(#w' + I + ')" stroke-width=".9" fill="none" stroke-linecap="round"/>';
+    out += leaves.filter(function (l) { return l.back; }).map(leaf).join('');
+    out += leaves.filter(function (l) { return !l.back; }).map(leaf).join('');
+    var g = pt(Math.PI / 2), gx = g[0], gy = g[1] + 1;
+    if (o.gem === 'drop') out += '<g class="lr-gem"><circle cx="' + gx + '" cy="' + (gy + 4) + '" r="7" fill="url(#h' + I + ')"/><circle cx="' + gx + '" cy="' + gy + '" r="1.6" fill="url(#m' + I + ')" stroke="#5a3a06" stroke-width=".3"/><path d="M' + gx + ' ' + (gy + 1.2) + 'c-2.8 3.4-3.4 5.4-3.4 6.6a3.4 3.4 0 0 0 6.8 0c0-1.2-.6-3.2-3.4-6.6z" fill="url(#r' + I + ')" stroke="#7a2a06" stroke-width=".4"/><ellipse cx="' + (gx - 1.1) + '" cy="' + (gy + 6.6) + '" rx=".8" ry="1.3" fill="#fff" opacity=".9"/></g>';
+    else out += '<g class="lr-gem"><circle cx="' + gx + '" cy="' + gy + '" r="6" fill="url(#h' + I + ')"/><path d="M' + gx + ' ' + (gy - 4) + 'l1.2 2.8 2.8 1.2-2.8 1.2L' + gx + ' ' + (gy + 4) + 'l-1.2-2.8-2.8-1.2 2.8-1.2z" fill="#fff" stroke="#ffd75a" stroke-width=".4"/></g>';
+    // ประกายปลายใบ
+    var tips = o.tips === false ? [] : leaves.filter(function (l) { return !l.back && !l.glass && l.s === 1; }).slice(-3);
+    tips.forEach(function (l, i) { var rr = (l.r + l.s * o.ang) * Math.PI / 180, L = o.L * l.sz; out += '<path class="lr-tw" style="animation-delay:' + (i * .7) + 's" transform="translate(' + f(l.x + L * Math.cos(rr)) + ' ' + f(l.y + L * Math.sin(rr)) + ')" d="M0-3 .4-.4 3 0 .4.4 0 3-.4.4-3 0-.4-.4z" fill="#fff"/>'; });
+    return out + '</g></g>';
+  }
+  function lrStage() { var b = S && S.totalDays || 0; return b >= 160 ? 3 : b >= 130 ? 2 : 1; }
+  function lrOpt(st, part) { return { id: 'L' + st + (part || ''), n: st === 1 ? 7 : st === 2 ? 9 : 11, tips: st >= 2, disc: st === 3, part: part }; }
+  function laurelArt(st, part) { return LR3(lrOpt(st || lrStage(), part)); }
+  function artFor(id) { return id === 'medal' ? medalArt(medalTier()) : id === 'laurel' ? laurelArt() : ART_OUT[id] ? ART_OUT[id].art : ''; }
   var RAR = { limited: 'LIMITED', common: 'ธรรมดา', rare: 'หายาก', epic: 'พิเศษ', legendary: 'ตำนาน' };
   function shopItems() { return (S && S.shop || []).filter(function (o) { return ART_OUT[o.id]; }).map(function (o) { return o.id === 'medal' ? Object.assign({}, o, { rarity: 'limited' }) : o; }); }
   function itemById(id) { return shopItems().filter(function (o) { return o.id === id; })[0]; }
@@ -129,14 +194,41 @@
     try { localStorage.setItem('vc_outfit', JSON.stringify(w)); } catch (e) {}
     return k < 0;
   }
+  /* ท่าทางเฉพาะมาลัยตำนาน: ตาประกายดาว · ลอยตัวแบบเทพ · สลับ 3 ท่า (แชมป์ชูแขน → แตะมาลัย+เท้าเอว → โบกมือราชวงศ์) */
+  function lrPoseSvg(svg) {
+    var INKc = '#3a2a12', PAP = '#f7efdc';
+    var arm = function (d) { return '<path d="' + d + '" stroke="' + INKc + '" stroke-width="3" stroke-linecap="round" fill="none"/>'; };
+    var hand = function (x, y) { return '<circle cx="' + x + '" cy="' + y + '" r="4.6" fill="' + PAP + '" stroke="' + INKc + '" stroke-width="2.4"/>'; };
+    var pen = function (x, y, r) { return '<g transform="translate(' + x + ' ' + y + ') rotate(' + r + ')"><rect x="-4" y="-17" width="8" height="22" rx="2.5" fill="#ffd84d" stroke="' + INKc + '" stroke-width="2"/><rect x="-4" y="-17" width="8" height="6" rx="2" fill="#f2b81c" stroke="' + INKc + '" stroke-width="2"/><path d="M-3 5h6l-1.5 5h-3z" fill="#f2b81c" stroke="' + INKc + '" stroke-width="2" stroke-linejoin="round"/></g>'; };
+    var star = function (x, y, s) { return '<path transform="translate(' + x + ' ' + y + ') scale(' + s + ')" d="M0-6l1.6 4.4L6 0l-4.4 1.6L0 6l-1.6-4.4L-6 0l4.4-1.6z" fill="#ffe28a"/>'; };
+    var face = '<ellipse cx="50" cy="58" rx="4.4" ry="5.4" fill="' + INKc + '"/><ellipse cx="70" cy="58" rx="4.4" ry="5.4" fill="' + INKc + '"/>' +
+      '<path class="lp-eye" d="M51.6 53.2l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7zM71.6 53.2l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z" fill="#fff"/><circle cx="48.4" cy="60.6" r=".9" fill="#fff" opacity=".8"/><circle cx="68.4" cy="60.6" r=".9" fill="#fff" opacity=".8"/>' +
+      '<path d="M44 48.6q5-4.4 11-2.2M65 46.4q6-2.2 11 2.2" stroke="' + INKc + '" stroke-width="2" stroke-linecap="round" fill="none"/>' +
+      '<path d="M52 65.4q8 7.6 16-.6q-8 3.2-16 .6z" fill="#c2453b" stroke="' + INKc + '" stroke-width="2.1" stroke-linejoin="round"/>' +
+      '<ellipse cx="42" cy="66" rx="5.6" ry="3.4" fill="#ff8f8f" opacity=".45"/><ellipse cx="78" cy="66" rx="5.6" ry="3.4" fill="#ff8f8f" opacity=".45"/>';
+    var p1 = '<g class="lp-p lp-1"><g class="lp-pump">' + arm('M31 72q-16-14-18-52') + hand(13, 20) + pen(12, 9, -8) + arm('M89 72q16-14 18-52') + hand(107, 20) + '</g>' + star(4, 34, .8) + star(116, 6, .7) + star(24, 2, .55) + '</g>';
+    var p2 = '<g class="lp-p lp-2">' + arm('M31 74q-11 2-9 12 2 4 8 1') + hand(28, 86) + '<g class="lp-tap">' + arm('M89 72q16-20 0-56') + hand(88, 14) + '</g></g>';
+    var p3 = '<g class="lp-p lp-3">' + arm('M31 80q-1 12 10 16') + pen(46, 98, 50) + hand(42, 97) + '<g class="lp-wv">' + arm('M89 72q12-4 15-20') + hand(104, 50) + '<path d="M112 40q4 5 1 11M116 36q6 8 1 17" stroke="#ffe28a" stroke-width="1.6" stroke-linecap="round" fill="none"/></g></g>';
+    // หน้า
+    var i = svg.indexOf('<g class="vm-face">'), depth = 0, j = i, re = /<g[\s>]|<\/g>/g; re.lastIndex = i;
+    for (var mt; (mt = re.exec(svg));) { if (mt[0] === '</g>') { depth--; if (!depth) { j = mt.index + 4; break; } } else depth++; }
+    var end = svg.lastIndexOf('</g></svg>');
+    svg = svg.slice(0, i) + '<g class="vm-face"><g class="lp-face">' + face + '</g></g>' + p1 + p2 + p3 + svg.slice(end);
+    // ลอยตัว + วงแสงใต้เท้า
+    svg = svg.replace('<ellipse cx="60" cy="134" rx="30" ry="4" fill="#000" opacity=".28"/>', '<ellipse class="lp-sh" cx="60" cy="134" rx="30" ry="4" fill="#000" opacity=".22"/><ellipse class="lp-ring" cx="60" cy="133" rx="27" ry="4.6" fill="none" stroke="#ffd75a" stroke-width="1.4"/><ellipse class="lp-ring lp-ring2" cx="60" cy="133" rx="27" ry="4.6" fill="none" stroke="#fff2b8" stroke-width=".8"/>');
+    svg = svg.replace('<g class="vm-body">', '<g class="lp-lev"><g class="vm-body">');
+    return svg.replace(/<\/g><\/svg>$/, '</g></g></svg>');
+  }
   function dressed(m, size) {
     var svg = mascot(m, size, ICO_GIFT), worn = wornOutfits();
     if (!worn.length || svg.indexOf('<g class="vm-face">') < 0) return svg;
-    var art = worn.map(function (id) { return id === 'medal' ? frontArt(medalTier()) + '<g class="md-worn">' + artFor(id) + '</g>' : artFor(id); }).join('');
+    if (worn.indexOf('laurel') >= 0 && /^(wave|happy|party)$/.test(m)) svg = lrPoseSvg(svg);
+    var art = worn.map(function (id) { return id === 'medal' ? frontArt(medalTier()) + '<g class="md-worn">' + artFor(id) + '</g>' : id === 'laurel' ? '<g class="lr-worn">' + laurelArt(0, 'front') + '</g>' : artFor(id); }).join('');
     var i = svg.indexOf('<g class="vm-face">'), depth = 0, j = i;
     var re = /<g[\s>]|<\/g>/g; re.lastIndex = i;
     for (var mt; (mt = re.exec(svg));) { if (mt[0] === '</g>') { depth--; if (!depth) { j = mt.index + 4; break; } } else depth++; }
     var out = svg.slice(0, j) + '<g class="vm-outfit">' + art + '</g>' + svg.slice(j);
+    if (worn.indexOf('laurel') >= 0) { var kL = out.indexOf('>') + 1; out = out.slice(0, kL) + laurelAura() + '<g class="lr-aura lr-bk">' + laurelArt(0, 'back') + '</g>' + out.slice(kL); }
     if (worn.indexOf('medal') >= 0) { var k = out.indexOf('>') + 1; out = out.slice(0, k) + auraArt(medalTier()) + backArt(medalTier()) + out.slice(k); }
     return out;
   }
@@ -322,7 +414,7 @@
       sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.setAttribute('aria-labelledby', 'vstT');
       sh.innerHTML = '<div class="vst-bg" data-shx></div><div class="vst-p">' +
         '<div class="vst-hd"><h3 id="vstT">ร้านค้าน้องเวลลัม</h3><span class="vst-pts"><i class="vof-coin"></i><b data-spts>0</b> แต้ม</span><button type="button" class="vst-x" data-shx aria-label="ปิดร้าน">✕</button></div>' +
-        '<div class="vst-stage"><div class="vst-fire" aria-hidden="true"></div><i class="vst-spot"></i><i class="vst-glow"></i><div class="vst-refl" aria-hidden="true"></div><i class="vst-ped"></i><i class="vst-sweep"></i><i class="vst-grain"></i><div class="vst-extra"></div><div class="vst-hero" aria-hidden="true"></div><div class="vst-ms" aria-hidden="true"></div><p class="vst-say"></p></div>' +
+        '<div class="vst-stage"><div class="vst-fire" aria-hidden="true"></div><i class="vst-spot"></i><i class="vst-glow"></i><div class="vst-refl" aria-hidden="true"></div><i class="vst-ped"></i><i class="vst-sweep"></i><i class="vst-grain"></i><div class="vst-extra"></div><div class="vst-hero" aria-hidden="true"></div><div class="vst-heav" aria-hidden="true"></div><div class="vst-ms" aria-hidden="true"></div><p class="vst-say"></p></div>' +
         '<div class="vst-tabs" role="tablist"></div><div class="vst-grid"></div><div class="vst-bar"></div></div>';
       document.body.appendChild(sh);
       sh.addEventListener('click', function (e) {
@@ -343,7 +435,7 @@
     setTimeout(function () { var x = sh.querySelector('.vst-x'); if (x) x.focus({ preventScroll: true }); }, 60);
   }
   function shopClose() {
-    if (!sh) return; tryOn = null; sel = null; pvTier = 0; heroKey = ''; heroPlayed = false; sh.classList.remove('on'); document.documentElement.classList.remove('vst-open');
+    if (!sh) return; tryOn = null; sel = null; pvTier = 0; heroKey = ''; heroPlayed = false; lrStop(); lrPlayed = false; sh.classList.remove('on'); document.documentElement.classList.remove('vst-open');
     setTimeout(function () { if (sh && !sh.classList.contains('on')) sh.hidden = true; }, 260);
     if (box && !box.hidden) render();
   }
@@ -359,6 +451,45 @@
   }
   /* (2) ปีกฟีนิกซ์ (3) วงเวทไฟ (5) ปุ่มดูตัวอย่างระดับ (6) ป้ายนับถอยหลังปลดล็อก */
   /* ฉากเหรียญไฟไม่มอด แนวภาพยนตร์: ควันมืด + ถ่านไฟเบลอลอยช้า + แสงอุ่นตัดขอบ · ป้ายแบบแบรนด์หรู */
+  /* ฉากสวรรค์ของมาลัยตำนาน: ฟ้ารุ่งสาง · เสาวิหารหินอ่อน · ลำแสง · วงรัศมีเลขโรมัน · ทะเลเมฆ · แท่นหินอ่อนสลักลอเรล · ละอองทอง+กลีบดอก */
+  function heavScene(on) {
+    var hv = sh.querySelector('.vst-heav'); if (!hv) return;
+    var was = sh.classList.contains('is-heav');
+    sh.classList.toggle('is-heav', on);
+    if (!on) return;
+    if (!hv.getAttribute('data-on')) {
+      hv.setAttribute('data-on', '1');
+      var R = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'], num = '', tick = '';
+      for (var k = 0; k < 12; k++) { var a = k * Math.PI / 6 - Math.PI / 2; num += '<text x="' + (195 + 104 * Math.cos(a)).toFixed(1) + '" y="' + (118 + 104 * Math.sin(a) + 3).toFixed(1) + '" transform="rotate(' + (k * 30) + ' ' + (195 + 104 * Math.cos(a)).toFixed(1) + ' ' + (118 + 104 * Math.sin(a)).toFixed(1) + ')">' + R[k] + '</text>'; }
+      for (var t = 0; t < 60; t++) { var b = t * Math.PI / 30, r1 = t % 5 ? 93 : 90; tick += 'M' + (195 + r1 * Math.cos(b)).toFixed(1) + ' ' + (118 + r1 * Math.sin(b)).toFixed(1) + 'L' + (195 + 96 * Math.cos(b)).toFixed(1) + ' ' + (118 + 96 * Math.sin(b)).toFixed(1); }
+      function col(x) {
+        var fl = ''; for (var q = 1; q < 5; q++) fl += 'M' + (x + q * 6) + ' 44V238';
+        return '<rect x="' + x + '" y="44" width="30" height="196" fill="url(#hvM)"/><path d="' + fl + '" stroke="#b9ad98" stroke-width=".8" opacity=".55"/>' +
+          '<rect x="' + (x - 6) + '" y="36" width="42" height="8" rx="1.5" fill="url(#hvM)" stroke="#d4a43a" stroke-width="1"/>' +
+          '<circle cx="' + (x - 4) + '" cy="40" r="4" fill="none" stroke="#d4a43a" stroke-width="1.4"/><circle cx="' + (x + 34) + '" cy="40" r="4" fill="none" stroke="#d4a43a" stroke-width="1.4"/>' +
+          '<rect x="' + (x - 3) + '" y="30" width="36" height="6" fill="#efe8da" stroke="#d4a43a" stroke-width=".8"/>';
+      }
+      function cloud(cx, cy, s, c) { return '<g transform="translate(' + cx + ' ' + cy + ') scale(' + s + ')" fill="' + c + '"><ellipse cx="0" cy="0" rx="34" ry="14"/><circle cx="-16" cy="-8" r="13"/><circle cx="4" cy="-14" r="16"/><circle cx="22" cy="-6" r="11"/></g>'; }
+      var leaves = ''; for (var l = 0; l < 13; l++) { var lx = 113 + l * 13.7; leaves += '<path transform="translate(' + lx.toFixed(1) + ' 226) rotate(' + (l % 2 ? -30 : 30) + ')" d="M0 0c2-2 5-2 7 0-2 2-5 2-7 0z" fill="#d4a43a" opacity=".85"/>'; }
+      var dust = ''; for (var d = 0; d < 18; d++) { var pet = d % 3 === 0; dust += '<i class="hv-d' + (pet ? ' is-pet' : '') + '" style="left:' + (3 + Math.random() * 94).toFixed(1) + '%;--t:' + (6 + Math.random() * 7).toFixed(1) + 's;--d:-' + (Math.random() * 12).toFixed(1) + 's;--x:' + (Math.random() * 40 - 20).toFixed(0) + 'px;--s:' + (.6 + Math.random() * .8).toFixed(2) + '"></i>'; }
+      hv.innerHTML = '<i class="hv-sky"></i><svg class="hv-svg" viewBox="0 0 390 256" preserveAspectRatio="xMidYMax slice"><defs>' +
+        '<linearGradient id="hvM" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#cfc6b6"/><stop offset=".45" stop-color="#fffdf8"/><stop offset="1" stop-color="#c8bea9"/></linearGradient>' +
+        '<linearGradient id="hvB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffbe6" stop-opacity=".75"/><stop offset="1" stop-color="#fffbe6" stop-opacity="0"/></linearGradient>' +
+        '<radialGradient id="hvS"><stop offset="0" stop-color="#fffdf2"/><stop offset=".4" stop-color="#fff2c4" stop-opacity=".8"/><stop offset="1" stop-color="#ffe3a0" stop-opacity="0"/></radialGradient>' +
+        '<linearGradient id="hvP" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c8bea9"/><stop offset=".5" stop-color="#fffdf8"/><stop offset="1" stop-color="#bfb39c"/></linearGradient></defs>' +
+        '<circle cx="195" cy="110" r="150" fill="url(#hvS)"/>' +
+        '<path d="M-10 26L195-14 400 26z" fill="#fff8ec" opacity=".55" stroke="#d4a43a" stroke-width="1.2"/><rect x="-10" y="24" width="410" height="7" fill="#f3ecdf" opacity=".7"/><path d="M-10 31H400" stroke="#d4a43a" stroke-width=".8" opacity=".8"/>' +
+        '<g class="hv-rays" fill="url(#hvB)"><path d="M180-10h30l60 270H120z"/><path d="M150-10h14l-60 270H64z" opacity=".6"/><path d="M226-10h14l86 270h-40z" opacity=".6"/></g>' +
+        '<g class="hv-halo" fill="#c8961e" font-family="Georgia,serif" font-size="9" font-weight="700" text-anchor="middle"><circle cx="195" cy="118" r="96" fill="none" stroke="#d4a43a" stroke-width="1.2" opacity=".85"/><circle cx="195" cy="118" r="86" fill="none" stroke="#e8c870" stroke-width=".7" stroke-dasharray="1.5 4" opacity=".9"/><path d="' + tick + '" stroke="#d4a43a" stroke-width=".8" fill="none"/><circle cx="195" cy="118" r="112" fill="none" stroke="#e8c870" stroke-width=".6" opacity=".7"/>' + num + '</g>' +
+        col(14) + col(346) +
+        '<g class="hv-cl hv-cl1">' + cloud(30, 236, 1.5, '#fde9f0') + cloud(140, 246, 1.7, '#fff3f6') + cloud(270, 240, 1.6, '#fde9f0') + cloud(370, 238, 1.4, '#fff3f6') + '</g>' +
+        '<g class="hv-ped"><ellipse cx="195" cy="232" rx="92" ry="13" fill="#bfb39c"/><path d="M103 218v14c0 7 41 13 92 13s92-6 92-13v-14z" fill="url(#hvP)"/><path d="M103 232c0 7 41 13 92 13s92-6 92-13" stroke="#d4a43a" stroke-width="1.4" fill="none"/>' + leaves +
+        '<ellipse cx="195" cy="218" rx="92" ry="13" fill="#fbf7ef" stroke="#d4a43a" stroke-width="1.6"/><ellipse cx="195" cy="218" rx="80" ry="10" fill="none" stroke="#e8c870" stroke-width=".7"/><ellipse cx="180" cy="215" rx="40" ry="4" fill="#fff" opacity=".7"/></g>' +
+        '<g class="hv-cl hv-cl2">' + cloud(60, 258, 1.6, '#fff8fa') + cloud(210, 262, 1.9, '#ffffff') + cloud(340, 258, 1.6, '#fff8fa') + '</g></svg>' +
+        '<span class="hv-dust">' + dust + '</span><i class="hv-flash"></i>';
+    }
+    if (!was) { hv.classList.remove('in'); void hv.offsetWidth; hv.classList.add('in'); }
+  }
   function fireScene(on, picked) {
     var f = sh.querySelector('.vst-fire'), x = sh.querySelector('.vst-extra');
     if (!on) { f.innerHTML = ''; x.innerHTML = ''; f.removeAttribute('data-on'); return; }
@@ -425,6 +556,81 @@
       if (b && st) { var r = b.getBoundingClientRect(), q = st.getBoundingClientRect(); f.style.left = (r.left - q.left + r.width / 2) + 'px'; f.style.top = (r.top - q.top + r.height / 2) + 'px'; st.appendChild(f); setTimeout(function () { f.remove(); }, 900); }
       hop(ms);
     }
+  }
+  /* มาลัยตำนาน: บทเปิดตัว — เทพธิดาเป่าแตรทองบนก้อนเมฆ · น้ำพุหินอ่อนพุ่ง · มาลัยลอยขึ้นจากสายน้ำแล้วบินไปสวมหัวน้อง (แตะเพื่อข้าม) */
+  var lrPlayed = false, lrT = [], lrEnd = null;
+  function lrStop() { lrT.forEach(clearTimeout); lrT = []; if (lrEnd) lrEnd(true); }
+  function goddessSvg() {
+    return '<svg class="vli-gd" viewBox="0 0 150 150" aria-hidden="true"><defs>' +
+      '<linearGradient id="gdG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fffbe8"/><stop offset=".45" stop-color="#ffe08a"/><stop offset="1" stop-color="#d49a2a"/></linearGradient>' +
+      '<linearGradient id="gdW" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#fffdf4"/><stop offset=".6" stop-color="#fff0c0"/><stop offset="1" stop-color="#f4c542"/></linearGradient>' +
+      '<linearGradient id="gdT" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b9821c"/><stop offset=".5" stop-color="#fff3c4"/><stop offset="1" stop-color="#e0a92c"/></linearGradient>' +
+      '<radialGradient id="gdH"><stop offset="0" stop-color="#fff6d6" stop-opacity=".9"/><stop offset="1" stop-color="#ffe08a" stop-opacity="0"/></radialGradient></defs>' +
+      '<circle cx="66" cy="62" r="56" fill="url(#gdH)" opacity=".55"/>' +
+      '<g class="vli-wing" stroke="#e0a92c" stroke-width=".5">' + [-38, -24, -10, 4, 18].map(function (r, k) { return '<path transform="rotate(' + r + ' 60 60)" d="M60 60C50 50 30 44 ' + (6 + k * 3) + ' 46C' + (24 + k * 2) + ' 54 44 60 60 63z" fill="url(#gdW)" opacity="' + (1 - k * .1).toFixed(2) + '"/>'; }).join('') + '<path d="M60 60C52 54 40 52 30 54" stroke="#fff" stroke-width="1" fill="none" opacity=".7"/></g>' +
+      '<path d="M18 132c-8 0-12-5-10-10 2-6 9-7 13-4 2-8 12-11 18-6 4-7 16-8 21 0 6-5 17-2 18 6 6-3 14 0 14 7 0 5-4 7-8 7z" fill="#fff8e6" opacity=".92"/>' +
+      '<path d="M60 60c-6 16-12 38-22 66 18 6 42 6 58-2-8-22-14-44-20-64z" fill="url(#gdG)"/>' +
+      '<path d="M64 64c2 18 8 40 16 58M58 70c-2 16-6 34-12 52" stroke="#c8861a" stroke-width="1" fill="none" opacity=".55"/>' +
+      '<path d="M55 64c6-6 14-6 20 0" stroke="#fff6d6" stroke-width="2" fill="none" stroke-linecap="round"/>' +
+      '<path d="M60 34c-8-3-14 4-12 12-5 6-3 14 4 16 1-7 4-12 9-15z" fill="#c8861a"/><circle cx="57" cy="31" r="5" fill="#c8861a"/>' +
+      '<rect x="64" y="44" width="5" height="10" rx="2" fill="url(#gdG)"/>' +
+      '<circle cx="67" cy="40" r="10.5" fill="url(#gdG)"/><path d="M76 38l2.6 2.4-2.4.8" fill="url(#gdG)"/>' +
+      '<path d="M69 37.5q2.4 1.6 4.4 0" stroke="#8a5a12" stroke-width="1.1" fill="none" stroke-linecap="round"/><circle cx="72" cy="43.5" r="2" fill="#ff9aa8" opacity=".55"/>' +
+      '<path d="M57 32c3-5 9-8 15-6M58 29l-2-3M62 27l-1-3.4M66 26l.4-3.6M70 26.4l1.6-3.2" stroke="#3fae6a" stroke-width="1.4" fill="none" stroke-linecap="round"/>' +
+      '<path d="M68 56c6-2 9-6 10-11" stroke="url(#gdG)" stroke-width="4" fill="none" stroke-linecap="round"/>' +
+      '<g class="vli-tp" transform="translate(77 43) rotate(22)">' +
+        '<rect x="0" y="-1.4" width="54" height="2.8" rx="1.4" fill="url(#gdT)"/><circle cx="20" cy="0" r="2.4" fill="#e0a92c"/>' +
+        '<path d="M50-2.4L66-10q3 10 0 20L50 2.4z" fill="url(#gdT)" stroke="#8a5a12" stroke-width=".6"/><ellipse class="vli-bell" cx="66" cy="0" rx="1.8" ry="10" fill="#fff6d6"/>' +
+        '<path d="M24 1.4h18l-2 13-7-3.4-7 3.4z" fill="#b3122e" stroke="#f4c542" stroke-width=".8"/><circle cx="33" cy="6.6" r="2.2" fill="#f4c542"/></g>' +
+      '<g class="vli-wv" fill="none" stroke="#fff3c4" stroke-linecap="round"><path d="M144 66q4 8 0 16"/><path d="M138 62q7 12 0 24" opacity=".6"/></g></svg>';
+  }
+  function fountainSvg() {
+    return '<svg class="vli-fn" viewBox="0 0 120 130" aria-hidden="true"><defs>' +
+      '<linearGradient id="fnM" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#cfc6b8"/><stop offset=".45" stop-color="#fffdf7"/><stop offset="1" stop-color="#b9ae9c"/></linearGradient>' +
+      '<linearGradient id="fnW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9fbff"/><stop offset="1" stop-color="#7fd3f0" stop-opacity=".5"/></linearGradient>' +
+      '<linearGradient id="fnJ" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#bff0ff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>' +
+      '<rect class="vli-jet" x="56" y="-40" width="8" height="80" rx="4" fill="url(#fnJ)"/>' +
+      '<g class="vli-wat" fill="none" stroke="url(#fnW)" stroke-width="2.4" stroke-linecap="round">' +
+        '<path d="M60 36C50 30 36 40 30 64"/><path d="M60 36C70 30 84 40 90 64"/><path d="M30 64C22 70 16 86 14 104"/><path d="M90 64C98 70 104 86 106 104"/></g>' +
+      '<ellipse cx="60" cy="112" rx="56" ry="11" fill="#8a7e6c"/><path d="M4 106h112v6c0 6-25 11-56 11S4 118 4 112z" fill="url(#fnM)"/>' +
+      '<ellipse cx="60" cy="106" rx="56" ry="10" fill="url(#fnM)" stroke="#d4a43a" stroke-width="1.4"/><ellipse cx="60" cy="106" rx="48" ry="7" fill="#7fd3f0" opacity=".7"/>' +
+      '<ellipse class="vli-rip" cx="60" cy="106" rx="20" ry="3" fill="none" stroke="#e9fbff" stroke-width="1"/>' +
+      '<path d="M54 104V70h12v34z" fill="url(#fnM)"/><path d="M52 72h16M52 100h16" stroke="#d4a43a" stroke-width="2"/>' +
+      '<path d="M28 62h64c0 9-14 14-32 14S28 71 28 62z" fill="url(#fnM)"/><ellipse cx="60" cy="62" rx="32" ry="5.5" fill="url(#fnM)" stroke="#d4a43a" stroke-width="1.2"/><ellipse cx="60" cy="62" rx="26" ry="3.6" fill="#7fd3f0" opacity=".75"/>' +
+      '<path d="M57 60V44h6v16z" fill="url(#fnM)"/><circle cx="60" cy="40" r="5" fill="#f4c542" stroke="#8a5a12" stroke-width=".6"/></svg>';
+  }
+  function playLaurel() {
+    if (!sh || lrPlayed || calm()) return;
+    var st = sh.querySelector('.vst-stage'), ms = sh.querySelector('.vst-ms'); if (!st || !ms || !ms.querySelector('.lr-worn')) return;
+    lrStop(); lrPlayed = true;
+    var notes = ''; ['♪', '♫', '♪', '♬', '♪', '♫'].forEach(function (n, k) { notes += '<i class="vli-nt" style="--d:' + (0.9 + k * 0.3).toFixed(2) + 's;--x:' + (40 + (k % 3) * 22) + 'px;--y:' + (-34 - (k % 2) * 26) + 'px">' + n + '</i>'; });
+    var ov = document.createElement('div'); ov.className = 'vli'; ov.setAttribute('aria-hidden', 'true');
+    ov.innerHTML = '<i class="vli-dim"></i><i class="vli-gr"></i>' + goddessSvg() + '<span class="vli-nts">' + notes + '</span>' + fountainSvg() +
+      '<span class="vli-lr"><i class="vli-lrg"></i><svg viewBox="' + ART_OUT.laurel.vb + '">' + artFor('laurel') + '</svg></span><small class="vli-skip">แตะเพื่อข้าม</small>';
+    st.appendChild(ov); sh.classList.add('lr-intro'); ms.classList.add('hide-laurel');
+    var lr = ov.querySelector('.vli-lr'), fn = ov.querySelector('.vli-fn');
+    var q = st.getBoundingClientRect(), f = fn.getBoundingClientRect();
+    lr.style.left = (f.left - q.left + f.width / 2) + 'px'; lr.style.top = (f.top - q.top + f.height * 40 / 130) + 'px';
+    void ov.offsetWidth; ov.classList.add('go');
+    var fly = null, ended = false;
+    lrEnd = function (quiet) {
+      if (ended) return; ended = true; lrEnd = null; lrT.forEach(clearTimeout); lrT = [];
+      if (fly) try { fly.cancel(); } catch (e) {}
+      ms.classList.remove('hide-laurel'); sh.classList.remove('lr-intro');
+      if (quiet) { ov.remove(); return; }
+      ov.classList.add('out'); setTimeout(function () { ov.remove(); }, 500);
+      var b = ms.querySelector('.lr-worn'); if (b) { var r = b.getBoundingClientRect(), qq = st.getBoundingClientRect(), c = document.createElement('i'); c.className = 'vst-clasp vli-crown'; c.style.left = (r.left - qq.left + r.width / 2) + 'px'; c.style.top = (r.top - qq.top + r.height / 2) + 'px'; st.appendChild(c); setTimeout(function () { c.remove(); }, 900); }
+      hop(ms);
+    };
+    ov.addEventListener('click', function (e) { e.stopPropagation(); if (lrEnd) lrEnd(); });
+    lrT.push(setTimeout(function () {
+      var tgt = ms.querySelector('.lr-worn'), sv = lr.querySelector('svg'); if (!tgt || !lr.animate) { lrEnd && lrEnd(); return; }
+      lr.classList.add('fly');
+      var a = sv.getBoundingClientRect(), b = tgt.getBoundingClientRect();
+      var k = b.width / a.width, dx = (b.left + b.width / 2) - (a.left + a.width / 2), dy = (b.top + b.height / 2) - (a.top + a.height / 2);
+      fly = lr.animate([{ transform: 'translate(-50%,-50%) translate(0,-70px) scale(1)' }, { transform: 'translate(-50%,-50%) translate(' + (dx * .5) + 'px,' + (dy * .5 - 120) + 'px) scale(' + ((1 + k) / 2) + ') rotate(-8deg)', offset: .5 }, { transform: 'translate(-50%,-50%) translate(' + dx + 'px,' + (dy - 70) + 'px) scale(' + k + ')' }], { duration: 1000, easing: 'cubic-bezier(.45,0,.3,1)', fill: 'forwards' });
+      fly.onfinish = function () { lrEnd && lrEnd(); };
+    }, 3300));
   }
   /* การ์ดลิมิเต็ด: กว้าง 2 ช่อง กรอบโฮโลแกรม · ยังไม่ได้ = เห็นเหรียญจางพร้อมแม่กุญแจ ยิ่งใกล้ครบยิ่งสว่าง */
   function tierTag(t) {   // ระดับเป็นดาว 3 ดวง: ทอง ★☆☆ · ทองคำขาว ★★☆ · เพชร ★★★
@@ -544,15 +750,18 @@
     var mc = MED[medalTier()] || MED[1]; sh.style.setProperty('--f1', mc.f1); sh.style.setProperty('--f2', mc.f2);
     sh.setAttribute('data-tier', medalTier());
     fireScene(fireOn, sel === 'medal');
+    heavScene(!fireOn && (sel === 'laurel' || (!sel && wornOutfits().indexOf('laurel') >= 0)));
     var hk = sel === 'medal' ? 'm' + medalTier() : '';
     if (hk && !heroPlayed) setTimeout(function () { playHero(medalTier()); }, 30);
     else if (hk && heroKey && hk !== heroKey && !calm()) { var stg = sh.querySelector('.vst-stage'); stg.classList.remove('tier-flash'); void stg.offsetWidth; stg.classList.add('tier-flash'); }
     if (!hk) { heroT.forEach(clearTimeout); var he = sh.querySelector('.vst-hero'); he.className = 'vst-hero'; sh.querySelector('.vst-ms').classList.remove('hide-medal'); }
     heroKey = hk;
+    if (sel === 'laurel' && !lrPlayed) setTimeout(playLaurel, 30); else if (sel !== 'laurel') lrStop();
     var o = itemById(sel), say2 = sh.querySelector('.vst-say');
     var bb = o && o.badge && bmap[o.badge], lft = bb ? bb.n - bb.have : 0;
     sayType(say2, !o ? 'อยากให้ฉันใส่อะไรดี? แตะของด้านล่างเลย ✨'
       : own.indexOf(o.id) >= 0 ? (worn.indexOf(o.id) >= 0 ? 'ใส่อยู่นะ เข้ากับฉันไหม? 😊' : 'ของเราเองนี่นา ใส่เลยไหม? 💛')
+      : o.id === 'laurel' && ownedOutfits().indexOf('laurel') >= 0 ? (lrStage() === 3 ? 'มาลัยขั้นสูงสุดแล้ว! รัศมีเทพเปล่งประกายเลย ✨' : 'มาลัยขั้น ' + lrStage() + '/3 · เช็กอินรวมครบ ' + (lrStage() === 1 ? 130 : 160) + ' วัน มาลัยจะ' + (lrStage() === 1 ? 'มีใบเพิ่มและเปล่งประกาย ✨' : 'มีวงรัศมีเทพ 🌟'))
       : o.id === 'medal' ? 'รู้ไหม เหรียญนี้มีตำนานนะ… กด 📜 อ่านดูสิ! อีก ' + lft + ' วันก็ได้แล้ว 🔥'
       : o.badge ? (bb && bb.n - bb.have <= 3 ? 'อีกแค่ ' + lft + ' วันเอง! เช็กอินต่อนะ 🔥' : 'สู้ ๆ อีก ' + lft + ' วันได้แน่! 🔥')
       : (S.points >= o.price ? 'ลองใส่อยู่! ชอบไหม? ✨' : 'อีกนิดเดียวก็ซื้อได้แล้ว 💪'));
@@ -567,8 +776,8 @@
       var tag = has ? '<span class="vof-act' + (on ? ' is-on' : '') + '">' + (on ? 'ใส่อยู่ ✓' : 'มีแล้ว') + '</span>'
         : it.badge ? '<span class="vof-act is-badge">🏅 รางวัล</span>'
         : '<span class="vof-act is-buy' + (S.points < it.price ? ' is-short' : '') + '"><i class="vof-coin"></i>' + fmt(it.price) + '</span>';
-      return '<button type="button" class="vof-b r-' + it.rarity + (it.id === 'medal' ? ' is-fire mt-' + medalTier() : '') + (has ? ' is-own' : ' is-lock' + (it.badge ? ' is-badge-item' : '')) + (on ? ' is-on' : '') + (sel === it.id ? ' is-try' : '') + '" data-outfit="' + it.id + '" aria-pressed="' + (sel === it.id) + '" aria-label="' + h(it.name + ' · ' + (RAR[it.rarity] || '')) + '">' +
-        '<em class="vof-r">' + (RAR[it.rarity] || '') + '</em>' + (!has && bd ? '<span class="vof-pr" style="--bp:' + Math.round(bd.have / bd.n * 100) + '%"><svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg><i class="vof-spark"></i><b>' + bd.have + '/' + bd.n + '</b></span>' : '<svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg>') + '<small>' + h(it.name) + '</small>' + tag + '</button>';
+      return '<button type="button" class="vof-b r-' + it.rarity + (it.id === 'laurel' ? ' is-laurel' : '') + (it.id === 'medal' ? ' is-fire mt-' + medalTier() : '') + (has ? ' is-own' : ' is-lock' + (it.badge ? ' is-badge-item' : '')) + (on ? ' is-on' : '') + (sel === it.id ? ' is-try' : '') + '" data-outfit="' + it.id + '" aria-pressed="' + (sel === it.id) + '" aria-label="' + h(it.name + ' · ' + (RAR[it.rarity] || '')) + '">' +
+        '<em class="vof-r">' + (RAR[it.rarity] || '') + '</em>' + (!has && bd && it.id === 'laurel' ? '<span class="lr-card" style="--bp:' + Math.round(bd.have / bd.n * 100) + '%"><svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg><span class="lr-bar"><i></i></span><em class="lr-left">อีก ' + (bd.n - bd.have) + ' วัน</em></span>' : !has && bd ? '<span class="vof-pr" style="--bp:' + Math.round(bd.have / bd.n * 100) + '%"><svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg><i class="vof-spark"></i><b>' + bd.have + '/' + bd.n + '</b></span>' : '<svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg>') + '<small>' + h(it.name) + '</small>' + tag + '</button>';
     }).join('');
     var bar = sh.querySelector('.vst-bar');
     if (!o) { bar.innerHTML = '<p class="vst-hint">แตะของเพื่อลองใส่ · ' + own.length + '/' + list.length + ' ชิ้นที่มีแล้ว · ได้แต้มจากเช็กอินทุกวัน</p>'; return; }
