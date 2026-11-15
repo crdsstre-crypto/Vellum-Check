@@ -1833,8 +1833,22 @@
     (function () { var on = tb.querySelector('button.on'), ind = tb.querySelector('.vtb-ind'); if (!on || !ind) return; var x = on.offsetLeft, w = on.offsetWidth, prev = tb.__ix;
       if (prev && !calm()) { ind.style.transition = 'none'; ind.style.transform = 'translateX(' + prev[0] + 'px)'; ind.style.width = prev[1] + 'px'; void ind.offsetWidth; ind.style.transition = ''; }
       ind.style.transform = 'translateX(' + x + 'px)'; ind.style.width = w + 'px'; tb.__ix = [x, w]; })();
-    var show = list.filter(function (x) { return shTab === 'all' || x.slot === shTab; }).sort(function (a, b) { return (b.rarity === 'limited') - (a.rarity === 'limited'); });
-    sh.querySelector('.vst-grid').innerHTML = show.map(function (it) {
+    /* เรียงตามระดับ หรูสุดลงมา · หมวด "ทั้งหมด" มีหัวข้อคั่นแต่ละระดับ + การ์ดตำนานกว้างครึ่งแถว */
+    var RK = { limited: 0, legendary: 1, epic: 2, rare: 3, common: 4 }, ord = {};
+    list.forEach(function (x, i) { ord[x.id] = i; });
+    var show = list.filter(function (x) { return shTab === 'all' || x.slot === shTab; }).sort(function (a, b) { return ((RK[a.rarity] == null ? 5 : RK[a.rarity]) - (RK[b.rarity] == null ? 5 : RK[b.rarity])) || (ord[a.id] - ord[b.id]); });
+    var gEl = sh.querySelector('.vst-grid'), ALL = shTab === 'all', GH = { legendary: ['✦ ตำนาน', 'ของชิ้นเอก'], epic: ['✦ พิเศษ', 'มีฉากและตำนานของตัวเอง'], rare: ['หายาก', ''], common: ['ธรรมดา', ''] }, lastR = '';
+    gEl.classList.toggle('is-all', ALL);
+    gEl.innerHTML = show.map(function (it) {
+      var hd = '';
+      if (ALL && it.rarity !== 'limited' && it.rarity !== lastR && GH[it.rarity]) { hd = '<p class="vgh vgh-' + it.rarity + '" role="presentation"><b>' + GH[it.rarity][0] + '</b>' + (GH[it.rarity][1] ? '<small>' + GH[it.rarity][1] + '</small>' : '') + '<i></i></p>'; }
+      lastR = it.rarity;
+      var c = shopCard(it);
+      if (ALL && it.rarity !== 'limited') { var grp = show.filter(function (x) { return x.rarity === it.rarity; }), gi = grp.indexOf(it), rem = grp.length % 3, full = grp.length - rem;
+        if (gi >= full && rem) c = c.replace('class="vof-b', 'class="vof-b is-half'); }
+      return hd + c;
+    }).join('');
+    function shopCard(it) {
       if (it.rarity === 'limited') return limitedCard(it, own.indexOf(it.id) >= 0, worn.indexOf(it.id) >= 0 && tryOn !== it.id, bmap[it.badge]);
       var has = own.indexOf(it.id) >= 0, on = worn.indexOf(it.id) >= 0 && tryOn !== it.id, a = ART_OUT[it.id], bd = it.badge && bmap[it.badge];
       var tag = has ? '<span class="vof-act' + (on ? ' is-on' : '') + '">' + (on ? 'ใส่อยู่ ✓' : 'มีแล้ว') + '</span>'
@@ -1843,7 +1857,8 @@
         : '<span class="vof-act is-buy' + (S.points < it.price ? ' is-short' : '') + '"><i class="vof-coin"></i>' + fmt(it.price) + '</span>';
       return '<button type="button" class="vof-b r-' + it.rarity + (it.id === 'laurel' ? ' is-laurel' : it.id === 'crown' ? ' is-crown' : '') + (it.id === 'medal' ? ' is-fire mt-' + medalTier() : '') + (has ? ' is-own' : ' is-lock' + (it.badge ? ' is-badge-item' : '')) + (on ? ' is-on' : '') + (sel === it.id ? ' is-try' : '') + '" data-outfit="' + it.id + '" aria-pressed="' + (sel === it.id) + '" aria-label="' + h(it.name + ' · ' + (RAR[it.rarity] || '')) + '">' +
         (it.id === 'laurel' ? LRC_TAG + LRC_DUST : it.id === 'crown' ? CRC_TAG : '<em class="vof-r">' + (RAR[it.rarity] || '') + '</em>') + (!has && bd && it.id === 'laurel' ? lrCard(bd, a) : !has && bd ? '<span class="vof-pr" style="--bp:' + Math.round(bd.have / bd.n * 100) + '%"><svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg><i class="vof-spark"></i><b>' + bd.have + '/' + bd.n + '</b></span>' : '<svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg>') + '<small>' + h(it.name) + '</small>' + tag + (has && it.id === 'laurel' ? laurelLoreBtn() : '') + (it.id === 'wizard' ? wizardLoreBtn() : it.id === 'cap' ? capLoreBtn() : it.id === 'crown' ? crownLoreBtn() : XL_BY[it.id] ? xlLoreBtn(it.id) : '') + '</button>';
-    }).join('');
+    }
+
     watchOff();
     var bar = sh.querySelector('.vst-bar');
     if (!o) { bar.innerHTML = '<p class="vst-hint">แตะของเพื่อลองใส่ · ' + own.length + '/' + list.length + ' ชิ้นที่มีแล้ว · ได้แต้มจากเช็กอินทุกวัน</p>'; return; }
