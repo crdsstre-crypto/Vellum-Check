@@ -2248,3 +2248,8 @@ html body .vst .vof-b .vof-lore-w.is-crown{top:auto;bottom:40px;right:8px;backgr
 @media (prefers-reduced-motion:reduce){html body .vlr .vlr-seal-r{animation:none}}
 html body .vst .vof-b .vof-lore-w.is-crown{top:30px;bottom:auto;right:6px;width:24px;height:24px;font-size:12px}
 html body .vst .vof-b .vof-lore-w.is-crown{top:auto;bottom:10px;right:10px}
+/* แก้: ป้าย/กรอบคำพูดไม่โผล่วาบก่อนฉากเปิดตัวมาลัย/มงกุฎ */
+html body .vst.lr-intro .vst-say,html body .vst.cr-intro .vst-say{opacity:0!important;transition:none!important}
+/* แก้: ไม่ให้มีของซ้ำสองชุดระหว่างฉากเปิดตัว — วงเวทของฉากหอคอยซ่อนตอนเปิดตัวหมวกนักเวท · Zzz ของฉากความฝันซ่อนตอนฉากเตียง */
+html body .vst.wz-intro .ws-ring,html body .vst.wz-intro .dm-zz{opacity:0!important;transition:opacity .3s}
+html body .vst .vnz.up .vnz-who{opacity:0;transition:opacity .15s}
