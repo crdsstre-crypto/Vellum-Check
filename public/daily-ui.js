@@ -1206,7 +1206,7 @@
         '<path d="M12 29C5.4 29 1.5 24.6 1.5 19 1.5 12 7.4 9.2 8.2 1.5c4.6 3.6 6.6 8 6.6 11.6 1.9-1.3 3-3.6 3.2-5.9 4 3.6 5.8 8.2 5.8 12.4 0 5.6-5.1 9.4-11.8 9.4z" fill="url(#soonG)"/><path d="M12 27c-3 0-5-2-5-4.8 0-3.4 3-4.6 3.6-8.4 2.2 1.6 5.4 4.2 5.4 7.6 0 3.2-1.8 5.6-4 5.6z" fill="#fff1c2" opacity=".85"/></svg>' +
         '<span class="soon-t"><small>อีก</small><b>' + left + '</b><small>วัน</small></span></span>';
     return '<button type="button" class="vof-b vof-lim r-limited mt-' + medalTier() + (has ? ' is-own' : ' is-lock') + (on ? ' is-on' : '') + (sel === it.id ? ' is-try' : '') + '" data-outfit="' + it.id + '" aria-pressed="' + (sel === it.id) + '" aria-label="' + h(it.name + ' · ลิมิเต็ด · ' + (has ? 'มีแล้ว' : 'อีก ' + left + ' วัน')) + '" style="--lit:' + lit.toFixed(2) + ';--bp:' + Math.round(p * 100) + '%">' +
-      '<i class="lim-sheen" aria-hidden="true"></i><em class="vof-r"><i class="vst-dia"></i>LIMITED</em>' +
+      '<i class="lim-sheen" aria-hidden="true"></i><i class="lim-crn" aria-hidden="true">' + ['tl', 'tr', 'bl', 'br'].map(function (c) { return '<span class="' + c + '"><svg viewBox=\"0 0 24 24\"><path d=\"M2 22V8Q2 2 8 2H22\"/><path d=\"M6 18V10Q6 6 10 6H18\" class=\"t\"/><path d=\"M2 -1.5 5.5 2 2 5.5 -1.5 2z\" class=\"d\"/></svg></span>'; }).join('') + '</i><em class="vof-r"><i class="vst-dia"></i>LIMITED</em>' +
       '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="lqG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset="1" stop-color="#c9962f"/></linearGradient><linearGradient id="stG1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset=".55" stop-color="#f4c542"/><stop offset="1" stop-color="#c8861a"/></linearGradient><linearGradient id="stG2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#9fc4e6"/></linearGradient><linearGradient id="stG3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbf6ff"/><stop offset="1" stop-color="#a47dff"/></linearGradient></defs></svg>' +
       '<span class="lim-art"><svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg>' + (has ? '' : '<svg class="lim-pl" viewBox="0 0 24 30" aria-hidden="true"><defs><linearGradient id="plB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0b8"/><stop offset=".45" stop-color="#e0a92c"/><stop offset="1" stop-color="#8a5a12"/></linearGradient><linearGradient id="plS" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a5a12"/><stop offset=".5" stop-color="#f6d98a"/><stop offset="1" stop-color="#8a5a12"/></linearGradient></defs>' +
         '<path d="M6.5 13V9a5.5 5.5 0 0 1 11 0v4" fill="none" stroke="url(#plS)" stroke-width="3" stroke-linecap="round"/><path d="M6.5 13V9a5.5 5.5 0 0 1 11 0v4" fill="none" stroke="#5a3a0a" stroke-width=".8" opacity=".6"/>' +
@@ -1214,7 +1214,7 @@
         '<circle cx="12" cy="18.6" r="2" fill="#3a2406"/><path d="M11.1 19.6h1.8l.5 3.6h-2.8z" fill="#3a2406"/><path class="pl-gl" d="M6 25l3-11" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity="0"/></svg>') + '</span>' +
       '<span class="lim-tx"><span class="lim-nm"><b>' + h(it.name) + '</b>' + tierTag(medalTier()) + '</span>' +
       '<i class="lim-div" aria-hidden="true"></i><small class="lim-tag"><svg class="lq lq-o" viewBox="0 0 24 20" aria-hidden="true"><path d="M2 20v-7C2 6 5.4 1.6 10.4 0l1 2.4C8.4 4 6.8 6.6 6.6 9.6H11V20zm13 0v-7c0-7 3.4-11.4 8.4-13l1 2.4c-3 1.6-4.6 4.2-4.8 7.2H24V20z"/></svg>ไฟที่ไม่ยอมมอด แม้ในคืนที่ยาวที่สุด<svg class="lq lq-c" viewBox="0 0 24 20" aria-hidden="true"><path d="M2 20v-7C2 6 5.4 1.6 10.4 0l1 2.4C8.4 4 6.8 6.6 6.6 9.6H11V20zm13 0v-7c0-7 3.4-11.4 8.4-13l1 2.4c-3 1.6-4.6 4.2-4.8 7.2H24V20z"/></svg></small>' +
-      (has ? '' : '<span class="lim-pg"><span class="lim-bar"><i></i></span><b>' + bd.have + '/' + bd.n + '</b></span><small class="lim-n">ได้เมื่อเช็กอินติดกัน ' + bd.n + ' วัน</small>') + '</span><span class="lim-row">' + tag + loreBtn() + '</span></button>';
+      (has ? '' : '<span class="lim-pg"><span class="lim-lt" aria-hidden="true">' + (function () { var o = ''; for (var q = 0; q < bd.n; q++) o += '<i class="' + (q < bd.have ? 'on' : q === bd.have ? 'nx' : '') + '" style="--q:' + q + '"></i>'; return o; })() + '</span><b>' + bd.have + '/' + bd.n + '</b></span><small class="lim-n">ได้เมื่อเช็กอินติดกัน ' + bd.n + ' วัน</small>') + '</span><span class="lim-row">' + tag + loreBtn() + '</span></button>';
   }
   /* การ์ดมาลัย (ยังไม่ได้): มาลัยเส้นทองเรืองแสง · วงรัศมีความคืบหน้ารอบมาลัย · ตัวเลขสลักกรีก */
   var LRC_TAG = '<em class="vof-r lrc-tag"><span class="lrt-in"><svg class="lrt-sp l" viewBox="0 0 26 14" aria-hidden="true"><path d="M1 11Q12 8 25 3" stroke="#d9a536" stroke-width="1" fill="none"/><g fill="#e8b94a"><ellipse cx="7" cy="7.4" rx="3.4" ry="1.5" transform="rotate(-40 7 7.4)"/><ellipse cx="9" cy="12" rx="3.4" ry="1.5" transform="rotate(20 9 12)"/><ellipse cx="14" cy="5" rx="3.4" ry="1.5" transform="rotate(-50 14 5)"/><ellipse cx="16.4" cy="9.6" rx="3.4" ry="1.5" transform="rotate(10 16.4 9.6)"/><ellipse cx="22" cy="2.6" rx="3" ry="1.4" transform="rotate(-30 22 2.6)"/></g></svg><span class="lrt-tx">LEGENDARY</span><svg class="lrt-sp r" viewBox="0 0 26 14" aria-hidden="true"><path d="M1 11Q12 8 25 3" stroke="#d9a536" stroke-width="1" fill="none"/><g fill="#e8b94a"><ellipse cx="7" cy="7.4" rx="3.4" ry="1.5" transform="rotate(-40 7 7.4)"/><ellipse cx="9" cy="12" rx="3.4" ry="1.5" transform="rotate(20 9 12)"/><ellipse cx="14" cy="5" rx="3.4" ry="1.5" transform="rotate(-50 14 5)"/><ellipse cx="16.4" cy="9.6" rx="3.4" ry="1.5" transform="rotate(10 16.4 9.6)"/><ellipse cx="22" cy="2.6" rx="3" ry="1.4" transform="rotate(-30 22 2.6)"/></g></svg></span></em>';
@@ -1280,10 +1280,23 @@
   }
   /* กล่องคำพูด: พิมพ์ทีละตัว (ข้อความเดิมไม่พิมพ์ซ้ำ) */
   var typeT = 0;
+  /* กรอบคำพูดฉากเหรียญไฟ: ป้ายหนังแกะลาย + ตราประทับครั่ง · ข้อความตำนานจัดเป็น 3 บรรทัด (หัวเรื่อง / ไอคอนม้วน / ตัวเลขวันเรืองแสง) */
+  var MK_SEAL = '<i class="mk-seal" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21c-3.6 0-6-2.4-6-5.6 0-3.8 3.4-5.4 3.8-9.4 2.6 1.8 3.8 4.4 3.8 6.4 1-.8 1.6-2 1.8-3.4 2 1.8 2.6 4.4 2.6 6.4 0 3.2-2.4 5.6-6 5.6z"/></svg></i>';
+  var MK_SCROLL = '<svg class="mk-ic" viewBox="0 0 24 20" aria-hidden="true"><rect x="5" y="3" width="14" height="14" rx="1" fill="#fbf1d8" stroke="currentColor" stroke-width="1.6"/><rect x="2" y="1.5" width="4" height="17" rx="2" fill="currentColor"/><rect x="18" y="1.5" width="4" height="17" rx="2" fill="currentColor"/><path d="M8 7h8M8 10.5h6M8 14h7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" opacity=".6"/></svg>';
+  function mkShow(el, txt) {
+    var m = /^รู้ไหม เหรียญนี้มีตำนานนะ… กด 📜 อ่านดูสิ! อีก (\d+) วันก็ได้แล้ว/.exec(String(txt));
+    el.classList.remove('sv-in');
+    el.innerHTML = (m ? '<span class="mk-h">รู้ไหม เหรียญนี้มีตำนานนะ…</span><span class="mk-m">กด ' + MK_SCROLL + ' อ่านดูสิ!</span><span class="mk-n">อีก <b>' + m[1] + '</b> วันก็ได้แล้ว 🔥</span>'
+      : '<span class="mk-t">' + h(String(txt).replace('|', ' · ')) + '</span>') + MK_SEAL;
+    el.classList.toggle('mk-lore', !!m);
+    if (!calm()) { el.classList.remove('mk-in'); void el.offsetWidth; el.classList.add('mk-in'); }
+  }
   function sayType(el, txt) {
-    if (el.getAttribute('data-t') === txt) return;
-    el.setAttribute('data-t', txt); clearInterval(typeT);
+    var tk = txt + (sh && sh.classList.contains('is-fire') ? '#f' : '');
+    if (el.getAttribute('data-t') === tk) return;
+    el.setAttribute('data-t', tk); clearInterval(typeT); el.classList.remove('mk-lore', 'mk-in');
     if (sh && sh.classList.contains('is-heav')) { svShow(el, txt); return; }
+    if (sh && sh.classList.contains('is-fire')) { mkShow(el, txt); return; }
     if (String(txt).indexOf('|') >= 0) txt = String(txt).replace('|', ' · ');
     el.classList.remove('sv-in');
     if (calm()) { el.textContent = txt; return; }
@@ -1548,8 +1561,13 @@
     }).join('');
     var bar = sh.querySelector('.vst-bar');
     if (!o) { bar.innerHTML = '<p class="vst-hint">แตะของเพื่อลองใส่ · ' + own.length + '/' + list.length + ' ชิ้นที่มีแล้ว · ได้แต้มจากเช็กอินทุกวัน</p>'; return; }
+    bar.className = 'vst-bar' + (o.id === 'medal' ? ' is-med mt-' + medalTier() : '');
     var head = '<span class="vst-it r-' + o.rarity + '"><em>' + (RAR[o.rarity] || '') + (o.id === 'medal' ? ' · ระดับ' + MED[medalTier()].name + (pvTier ? ' (ตัวอย่าง)' : '') : '') + '</em><b>' + h(o.name) + '</b></span>';
     if (own.indexOf(o.id) >= 0) bar.innerHTML = head + '<button type="button" class="vst-btn ' + (worn.indexOf(o.id) >= 0 ? 'is-off' : '') + '" data-act="wear">' + (worn.indexOf(o.id) >= 0 ? 'ถอดออก' : 'ใส่ชิ้นนี้') + '</button>';
+    else if (o.id === 'medal' && bmap[o.badge]) { var bm = bmap[o.badge], C = 2 * Math.PI * 15, pr = Math.min(1, bm.have / bm.n);
+      bar.innerHTML = '<span class="vst-mic" aria-hidden="true"><svg viewBox="47 84 26 26">' + medalArt(medalTier()).replace(/<g class="md-burst"[\s\S]*?<\/g>/, '') + '</svg></span>' + head +
+        '<span class="vst-need is-med" aria-label="' + h(bm.desc) + ' ' + bm.have + ' จาก ' + bm.n + '"><span class="mr-t"><small>เช็กอินติดกัน ' + bm.n + ' วัน</small><b>' + (bm.have >= bm.n ? 'ครบแล้ว!' : 'อีก ' + (bm.n - bm.have) + ' วัน') + '</b></span>' +
+        '<svg class="mr-ring" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15" class="bg"/><circle cx="18" cy="18" r="15" class="fg" style="stroke-dasharray:' + (C * pr).toFixed(1) + ' ' + C.toFixed(1) + '"/><text x="18" y="21.5">' + bm.have + '/' + bm.n + '</text></svg></span>'; }
     else if (o.badge) { var b = bmap[o.badge]; bar.innerHTML = head + '<span class="vst-need">🏅 ' + h(b ? b.desc : 'เหรียญตรา') + (b ? ' · ' + b.have + '/' + b.n : '') + '</span>'; }
     else if (S.points >= o.price) bar.innerHTML = head + '<button type="button" class="vst-btn is-buy" data-act="buy"><i class="vof-coin"></i>ซื้อ ' + fmt(o.price) + ' แต้ม</button>';
     else bar.innerHTML = head + '<span class="vst-need">ขาดอีก ' + fmt(o.price - S.points) + ' แต้ม</span>';
