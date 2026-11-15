@@ -105,20 +105,75 @@
     var TUFT = function (x, flip) { return '<g transform="translate(' + x + ' 44)' + (flip ? ' scale(-1 1)' : '') + '"><path d="M-2 -6Q6 -9 10 -3Q14 0 10 4Q12 9 5 9Q2 12 -2 8Z" fill="url(#wgM)" stroke="' + D + '" stroke-width="1.5" stroke-linejoin="round"/><path d="M1 -3Q6 -4 8 -1M1 3Q5 3 7 5" stroke="#c9c2e0" stroke-width="1" fill="none" stroke-linecap="round"/><circle cx="0" cy="1" r="2" fill="#f4c542" stroke="#6a4808" stroke-width=".7"/></g>'; };
     var FTH = ''; [[-18, 60, 0, 1], [138, 54, 1.7, -1], [-8, 90, 3.4, 1], [128, 86, 5.1, -1]].forEach(function (q) { FTH += '<g class="wg-fall" style="animation-delay:' + q[2] + 's"><path transform="translate(' + q[0] + ' ' + q[1] + ') rotate(' + (q[3] * 30) + ')" d="M0-6C3-4 3 3 0 6C-3 3-3-4 0-6Z" fill="#f4f2ff" stroke="#8d93c8" stroke-width=".8"/></g>'; });
     ART_OUT.wings = { vb: '-32 -14 184 156', back: true, art: WDEFS + WPAIR, worn: WDEFS + WPAIR + '<g class="wg-sps">' + SPK + '</g><g class="wg-fth">' + FTH + '</g><circle class="wg-flash" cx="60" cy="44" r="10" fill="#fffbe6"/>', front: TUFT(90, false) + TUFT(30, true) + HALO };
-    /* ผ้าคลุม: ด้านหลังทรงระฆังกว้างกว่าตัว + จีบผ้าลึก + ชายทิ้งตัวกองพื้น · ด้านหน้า (front) ปกเออร์มีนบนไหล่ + เข็มกลัดทองรูปมงกุฎ + สายคล้อง */
-    var CAPE_BACK = '<path d="M30 30Q15 34 13 54L5 126Q9 137 22 133Q33 139 45 134Q55 140 60 135Q65 140 75 134Q87 139 98 133Q111 137 115 126L107 54Q105 34 90 30Z" fill="url(#cpV)" stroke="' + D + '" stroke-width="2.4" stroke-linejoin="round"/>' +
-      '<path d="M27 44Q20 90 14 130M42 40Q38 92 34 134M78 40Q82 92 86 134M93 44Q100 90 106 130" stroke="#4a0414" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".7"/>' +
-      '<path d="M31 46Q25 90 20 128M46 44Q43 90 40 132M82 44Q86 90 91 132M97 48Q103 90 109 126" stroke="#ff6f86" stroke-width="1.4" fill="none" stroke-linecap="round" opacity=".45"/>' +
-      '<path d="M5 126Q9 137 22 133Q33 139 45 134Q55 140 60 135Q65 140 75 134Q87 139 98 133Q111 137 115 126" stroke="url(#cpG)" stroke-width="3.6" fill="none" stroke-linecap="round"/>' +
-      '<path d="M9 128Q14 134 22 131" stroke="#f3d7a8" stroke-width="2.6" fill="none" stroke-linecap="round" opacity=".9"/><path d="M111 128Q106 134 98 131" stroke="#f3d7a8" stroke-width="2.6" fill="none" stroke-linecap="round" opacity=".9"/>';
-    var ERM = function (x, flip) { return '<g transform="translate(' + x + ' 0)' + (flip ? ' scale(-1 1)' : '') + '"><path d="M0 26Q-14 26 -16 36Q-18 46 -8 48Q2 50 8 44Q12 38 10 32Q8 26 0 26Z" fill="url(#cpW)" stroke="' + D + '" stroke-width="1.8" stroke-linejoin="round"/>' +
-      '<g fill="#2a1d14"><path d="M-8 34l.9 2.6-.9-.7-.9.7z"/><path d="M0 40l.9 2.6-.9-.7-.9.7z"/><path d="M-11 42l.9 2.6-.9-.7-.9.7z"/></g><path d="M-12 32Q-6 28 2 29" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round"/></g>'; };
-    var CROWNPIN = function (x) { return '<g transform="translate(' + x + ' 36)"><path d="M-4.6 2.6-5.4-3l2.6 2 2.8-3.8 2.8 3.8 2.6-2-.8 5.6z" fill="url(#cpG)" stroke="' + D + '" stroke-width="1" stroke-linejoin="round"/><rect x="-4.8" y="2" width="9.6" height="2.4" rx=".8" fill="url(#cpG)" stroke="' + D + '" stroke-width=".8"/><circle cx="0" cy="-1.4" r="1" fill="#ff3456"/></g>'; };
-    var CAPE_FRONT = ERM(26, false) + ERM(94, true) + '<path d="M31 38Q60 46 89 38" stroke="url(#cpG)" stroke-width="1.6" fill="none" stroke-dasharray="2.2 1.4" stroke-linecap="round"/>' + CROWNPIN(31) + CROWNPIN(89);
-    var CAPE_DEFS = '<defs><linearGradient id="cpV" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6a0a1e"/><stop offset=".22" stop-color="#b3122e"/><stop offset=".5" stop-color="#d8233f"/><stop offset=".78" stop-color="#b3122e"/><stop offset="1" stop-color="#6a0a1e"/></linearGradient>' +
-      '<linearGradient id="cpG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset=".5" stop-color="#f4c542"/><stop offset="1" stop-color="#b07a14"/></linearGradient>' +
-      '<linearGradient id="cpW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e6ddd0"/></linearGradient></defs>';
-    ART_OUT.cape = { vb: '1 20 118 122', back: true, front: CAPE_FRONT, art: CAPE_DEFS + CAPE_BACK + '<path d="M22 30H98Q100 22 90 20H30Q20 22 22 30Z" fill="#f7efdc" stroke="' + D + '" stroke-width="1.6" opacity=".9"/>' + CAPE_FRONT };
+    /* ผ้าคลุมราชวงศ์ v4 · เครื่องแบบราชสำนักพอดีตัว: แจ็กเก็ตกรมท่าขลิบทอง · เสื้อกั๊กทอง+เชือกถัก · อินทรธนูพู่ทอง · สายสะพายเฉียง+เหรียญดาว · ผ้าคาดเอวแดงผูกโบ · ปกตั้งปักทอง+เข็มกลัด · ผ้าคลุมแดงพาดไหล่ข้างเดียว · ดาบประดับ */
+    var EMB = function (x1, y1, x2, y2, n) { var o = ''; for (var i = 0; i < n; i++) { var t = (i + .5) / n, x = x1 + (x2 - x1) * t, y = y1 + (y2 - y1) * t; o += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r=".8" fill="#ffe08a"/>'; } return o; };
+    var TAS = function (x, y) { var f = ''; for (var i = 0; i < 5; i++) f += '<path d="M' + (x - 2 + i).toFixed(1) + ' ' + (y + 3) + 'v' + (5 + (i % 2)) + '" stroke="#d9a536" stroke-width=".9" stroke-linecap="round"/>'; return '<g class="cp-tas">' + f + '<circle cx="' + x + '" cy="' + y + '" r="1.6" fill="url(#cqG)" stroke="' + D + '" stroke-width=".7"/><path d="M' + (x - 2.4) + ' ' + (y + 1.4) + 'h4.8l-.6 2h-3.6z" fill="url(#cqG)" stroke="' + D + '" stroke-width=".6"/></g>'; };
+    /* (1) ผ้าคลุมด้านหลัง: ห้อยจากไหล่ขวาของภาพ ทิ้งตัวยาวถึงพื้น ขอบลายทอง */
+    var CP_TAIL = 'M82 74Q100 70 106 80Q112 104 116 138Q110 145 98 143Q90 142 86 138Q92 112 90 92Z';
+    var CAPE_BACK = '<g class="cp-bd"><path d="' + CP_TAIL + '" fill="url(#cqV)" stroke="' + D + '" stroke-width="2.2" stroke-linejoin="round"/><path d="' + CP_TAIL + '" fill="url(#cqP)"/><path d="' + CP_TAIL + '" fill="url(#cqS)"/>' +
+      '<path d="M98 84Q104 110 106 138M104 82Q110 108 112 136" stroke="#6a0c0a" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".55"/><path d="M101 84Q107 110 109 138" stroke="#ff9a7a" stroke-width="1.1" fill="none" opacity=".4"/>' +
+      '<path d="M116 138Q110 145 98 143Q90 142 86 138" stroke="url(#cqG)" stroke-width="2.6" fill="none" stroke-linecap="round"/>' +
+      '<path d="M113.4 128Q112 112 108.6 96" stroke="url(#cqG)" stroke-width="1.2" fill="none" stroke-dasharray="1.6 1.8" stroke-linecap="round"/>' + EMB(88, 140, 114, 141, 6) + TAS(115.4, 139) + TAS(87, 139.4) + '</g>';
+    /* (2)(3) แจ็กเก็ต + เสื้อกั๊กทอง + เชือกถัก (เฉพาะช่วงตัวใต้หน้า ไม่ล้นออกนอกตัว) */
+    var FROG = ''; [86, 92, 98, 104].forEach(function (y) { FROG += '<path d="M48 ' + y + 'H72" stroke="#8a5a10" stroke-width="1.5" stroke-linecap="round"/><path d="M48 ' + y + 'H72" stroke="#ffe7a0" stroke-width=".6" stroke-linecap="round"/><circle cx="47" cy="' + y + '" r="1.5" fill="none" stroke="#8a5a10" stroke-width=".9"/><circle cx="73" cy="' + y + '" r="1.5" fill="none" stroke="#8a5a10" stroke-width=".9"/>'; });
+    var JACKET = '<path d="M31 76Q40 79 47 80L46 118Q38 118 31 116Z" fill="url(#cqN)" stroke="' + D + '" stroke-width="1.6" stroke-linejoin="round"/><path d="M89 76Q80 79 73 80L74 118Q82 118 89 116Z" fill="url(#cqN)" stroke="' + D + '" stroke-width="1.6" stroke-linejoin="round"/>' +
+      '<path d="M31 112L30 126Q36 128 40 118ZM89 112L90 126Q84 128 80 118Z" fill="url(#cqN)" stroke="' + D + '" stroke-width="1.3" stroke-linejoin="round"/>' +
+      '<path d="M47 80V118Q60 120 73 118V80Q60 82 47 80Z" fill="url(#cqD)" stroke="' + D + '" stroke-width="1.4" stroke-linejoin="round"/>' +
+      '<path d="M52 84Q54 88 52 92M68 96Q66 100 68 104M57 108q3-2 6 0" stroke="#c99a3a" stroke-width=".7" fill="none" opacity=".8"/>' + FROG +
+      '<path d="M47 80V118M73 80V118" stroke="url(#cqG)" stroke-width="1.8"/><path d="M33 116Q39 117.6 45 117.6M75 117.6Q81 117.6 87 116" stroke="url(#cqG)" stroke-width="1.4" stroke-linecap="round"/>' +
+      '<path d="M31 76Q40 79 47 80L46 118Q38 118 31 116ZM89 76Q80 79 73 80L74 118Q82 118 89 116Z" fill="url(#cqP)"/>' +
+      '<g stroke="url(#cqG)" stroke-width=".8" fill="none" stroke-linecap="round"><path d="M33 112Q35 107 39 108Q42 109 41 112M39 108Q40 104 44 104"/><path d="M87 112Q85 107 81 108Q78 109 79 112M81 108Q80 104 76 104"/><path d="M33 82Q36 85 40 83M87 82Q84 85 80 83"/></g>' +
+      '<g fill="#ffe08a"><circle cx="41.4" cy="112.4" r=".7"/><circle cx="44.4" cy="103.6" r=".7"/><circle cx="78.6" cy="112.4" r=".7"/><circle cx="75.6" cy="103.6" r=".7"/></g>' +
+      '<g clip-path="url(#cqC)"><rect class="cp-shine" x="34" y="78" width="10" height="44" fill="url(#cqH)" transform="skewX(-18)"/></g>';
+    /* (5) สายสะพายเฉียง + เหรียญดาว */
+    var SASH = '<path d="M33 77L40 77L88 108L88 114Z" fill="url(#cqB)" stroke="' + D + '" stroke-width="1.3" stroke-linejoin="round"/><path d="M34.6 78.6L87 110.6" stroke="url(#cqG)" stroke-width=".8" stroke-dasharray="1.4 1.2" opacity=".9"/>' +
+      '<g class="cp-star" transform="translate(41 85)"><path d="M0-4.6 1.3-1.4 4.6-1.4 2-.6 3 3.6 0 1.4-3 3.6-2-.6-4.6-1.4-1.3-1.4Z" fill="url(#cqG)" stroke="#6a4808" stroke-width=".6" stroke-linejoin="round"/><circle r="1.3" fill="#8a4ad8" stroke="#3a1a6a" stroke-width=".4"/></g>';
+    var RIBS = '<g transform="translate(75.4 84)"><rect width="3" height="2.2" fill="#e2324e"/><rect x="3" width="3" height="2.2" fill="#3a7bff"/><rect x="6" width="3" height="2.2" fill="#2fae6a"/><rect y="2.2" width="3" height="2.2" fill="#f4c542"/><rect x="3" y="2.2" width="3" height="2.2" fill="#8a4ad8"/><rect x="6" y="2.2" width="3" height="2.2" fill="#e2324e"/><rect width="9" height="4.4" fill="none" stroke="' + D + '" stroke-width=".5"/>' +
+      '<path d="M2 4.4v2.4M7 4.4v2.4" stroke="#3a7bff" stroke-width="1.4"/><circle cx="2" cy="8" r="1.5" fill="url(#cqG)" stroke="#6a4808" stroke-width=".4"/><circle cx="7" cy="8" r="1.5" fill="url(#cqG)" stroke="#6a4808" stroke-width=".4"/></g>';
+    /* (6) ผ้าคาดเอวแดง ผูกโบด้านข้าง ปลายพู่ทอง */
+    var FR = function (x, y) { var o = ''; for (var i = 0; i < 4; i++) o += '<path d="M' + (x + i * 1.2 - 1.8).toFixed(1) + ' ' + y + 'v3" stroke="#e8b23a" stroke-width=".8" stroke-linecap="round"/>'; return o; };
+    var WSASH = '<path d="M31 106Q60 110 89 106L89 112Q60 116 31 112Z" fill="url(#cqV)" stroke="' + D + '" stroke-width="1.4" stroke-linejoin="round"/><path d="M32 109Q60 113 88 109" stroke="#ffb08a" stroke-width=".7" fill="none" opacity=".6"/>' +
+      '<path d="M80 109Q72 102 74 112Q72 120 80 112Z" fill="url(#cqV)" stroke="' + D + '" stroke-width="1.2" stroke-linejoin="round"/>' +
+      '<path d="M81 110L76 125L80.4 124.6Z" fill="#b8241a" stroke="' + D + '" stroke-width="1.1" stroke-linejoin="round"/><path d="M82 110L86 127L89.4 125Z" fill="#c22a1a" stroke="' + D + '" stroke-width="1.1" stroke-linejoin="round"/>' +
+      '<rect x="76.6" y="122.6" width="4.8" height="2" rx=".5" fill="url(#cqG)" transform="rotate(-6 79 123.6)"/><rect x="85.8" y="124.6" width="4.8" height="2" rx=".5" fill="url(#cqG)" transform="rotate(-24 88 125.6)"/>' + FR(78.8, 124.6) + FR(88.6, 126.8) +
+      '<ellipse cx="81.4" cy="109.6" rx="2.8" ry="3" fill="#d8341f" stroke="' + D + '" stroke-width="1.1"/>';
+    /* (4) อินทรธนูทอง + พู่ */
+    var EP = function (x, flip) { var f = ''; for (var i = 0; i < 7; i++) f += '<path d="M' + (-6 + i * 2) + ' 2.6v' + (8.5 + (i % 2) * 1.2) + '" stroke="#d9a536" stroke-width="1.15" stroke-linecap="round"/><circle cx="' + (-6 + i * 2) + '" cy="' + (11.4 + (i % 2) * 1.2) + '" r=".7" fill="#f4c542"/>';
+      return '<g class="cp-ep" transform="translate(' + x + ' 77)' + (flip ? ' scale(-1 1)' : '') + '"><g class="cp-fr">' + f + '</g><path d="M-8 2.8Q-8.6 -3 0 -3.4Q8.6 -3 8 2.8Q0 5 -8 2.8Z" fill="url(#cqG)" stroke="' + D + '" stroke-width="1.3" stroke-linejoin="round"/><path d="M-5.6 1.4Q0 3 5.6 1.4" stroke="#9a6410" stroke-width=".7" fill="none" stroke-dasharray="1 .8"/><path class="cp-eph" d="M-5 -.6Q0-2.4 5-.6" stroke="#fff" stroke-width="1" fill="none" stroke-linecap="round"/><circle cy=".2" r="1.3" fill="url(#cqR)" stroke="#6a0a1e" stroke-width=".4"/></g>'; };
+    /* (1) ผ้าคลุมด้านหน้า: ทบพาดไหล่ขวาของภาพ ขอบปักทอง */
+    var CAPELET = '<g class="cp-cl"><path d="M91 102Q99 107 107 102" stroke="#3a0404" stroke-width="2.4" fill="none" opacity=".45" stroke-linecap="round"/><path d="M84 81Q90 88 91 99Q99 104 107 99L108 103Q99 108 90 103Z" fill="url(#cqD)" stroke="' + D + '" stroke-width="1.2" stroke-linejoin="round"/><path d="M76 75Q90 70 100 75Q108 82 107 99Q99 104 91 99Q90 88 84 81Z" fill="url(#cqV)" stroke="' + D + '" stroke-width="1.8" stroke-linejoin="round"/>' +
+      '<path d="M88 78Q96 84 98 100M94 77Q102 84 103 101" stroke="#6a0c0a" stroke-width="1.2" fill="none" opacity=".5"/><path d="M91 78Q99 85 100.6 101" stroke="#ff9a7a" stroke-width="1" fill="none" opacity=".45"/>' +
+      '<path d="M107 99Q99 104 91 99" stroke="url(#cqG)" stroke-width="2.2" fill="none" stroke-linecap="round"/>' + '<path d="M76 75Q90 70 100 75Q108 82 107 99Q99 104 91 99Q90 88 84 81Z" fill="url(#cqP)"/>' + EMB(92, 100.4, 106, 99.6, 4) + '</g>';
+    /* (7) ปกตั้งปักทอง + เข็มกลัดอัญมณี (ใต้ปากน้อง) */
+    var COLLAR = '<path d="M38 75Q60 81 82 75L83 79.6Q60 86 37 79.6Z" fill="url(#cqN)" stroke="' + D + '" stroke-width="1.3" stroke-linejoin="round"/><path d="M39 77.6Q60 83.4 81 77.6" stroke="url(#cqG)" stroke-width="1" fill="none" stroke-dasharray="1.6 1"/>' +
+      '<g class="cp-gem" transform="translate(60 81)"><path d="M0-3.6 3 0 0 3.6-3 0Z" fill="url(#cqG)" stroke="' + D + '" stroke-width=".9"/><circle r="1.6" fill="url(#cqR)"/><circle cx="-.5" cy="-.5" r=".45" fill="#fff"/></g>';
+    /* (8) ดาบประดับ ห้อยเอวซ้ายของภาพ */
+    var SWORD = '<g class="cp-sw" transform="matrix(-1 0 0 1 116 2)"><path d="M83 102L105.6 140.6Q107 143 104.6 143.4Q102.6 143.4 101.6 141.6L79.6 103.6Z" fill="#1e2350" stroke="' + D + '" stroke-width="1.6" stroke-linejoin="round"/>' +
+      '<path d="M82.2 103.4L103.4 140" stroke="#3a4690" stroke-width=".9" opacity=".8"/><path d="M85.4 110.6l3.6-2 2 3.4-3.6 2z" fill="url(#cqG)" stroke="' + D + '" stroke-width=".8"/><circle cx="88.3" cy="111.4" r="1" fill="#e2324e"/>' +
+      '<path d="M95.4 127.8l3.6-2 2 3.4-3.6 2z" fill="url(#cqG)" stroke="' + D + '" stroke-width=".8"/><path d="M101.4 138.4l3.2-1.8 1.6 2.8q.4 2.2-1.6 3.6-1.8.2-2.6-1.2z" fill="url(#cqG)" stroke="' + D + '" stroke-width=".8" stroke-linejoin="round"/>' +
+      '<path d="M76 101.6Q79 96 85.6 99.4Q84 104.4 79 104.6Z" fill="url(#cqG)" stroke="' + D + '" stroke-width="1.1" stroke-linejoin="round"/><path d="M77.4 103Q72 103.6 72.4 99" stroke="url(#cqG)" stroke-width="1.6" fill="none" stroke-linecap="round"/>' +
+      '<path d="M78.6 100.4L74.2 92.8" stroke="' + D + '" stroke-width="4" stroke-linecap="round"/><path d="M78.6 100.4L74.2 92.8" stroke="url(#cqG)" stroke-width="2.4" stroke-linecap="round"/>' +
+      '<ellipse cx="73.2" cy="90.8" rx="2.6" ry="3" transform="rotate(-30 73.2 90.8)" fill="url(#cqG)" stroke="' + D + '" stroke-width="1"/><circle cx="73.2" cy="90.8" r="1" fill="#8a4ad8"/></g>';
+    var CAPE_FRONT = '<g class="cp-j">' + JACKET + RIBS + '</g><g class="cp-sa">' + SASH + '</g><g class="cp-ws">' + WSASH + '</g>' + '<g class="cp-swg">' + SWORD + '</g><g class="cp-j">' + COLLAR + '</g>' + CAPELET + '<g class="cp-epg">' + EP(32, false) + EP(92, true) + '</g>';
+    /* (9) โบนัสครบชุดราชา (ใส่คู่มงกุฎตำนาน) */
+    var CP_SET = '<g class="cp-set"><ellipse class="cp-aura" cx="60" cy="80" rx="60" ry="70" fill="url(#cqA)"/></g>';
+    var CP_SET_FX = '<g class="cp-setfx">' +
+      [[16, 70, 0], [112, 70, .7], [14, 112, 1.4], [118, 116, 2.1], [104, 132, .35]].map(function (q) { return '<g transform="translate(' + q[0] + ' ' + q[1] + ')"><path class="cp-tw" style="animation-delay:' + q[2] + 's" d="M0-3.2 .9-.9 3.2 0 .9.9 0 3.2-.9.9-3.2 0-.9-.9z" fill="#fff6cf"/></g>'; }).join('') +
+      [[94, 139.6, '#e2324e'], [104, 141.4, '#3a7bff'], [112, 140.4, '#e2324e']].map(function (q) { return '<circle cx="' + q[0] + '" cy="' + q[1] + '" r="1.5" fill="' + q[2] + '" stroke="#fff3c4" stroke-width=".6"/>'; }).join('') + '</g>';
+    var CAPE_DEFS = '<defs><linearGradient id="cqV" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e2452c"/><stop offset=".5" stop-color="#c0261a"/><stop offset="1" stop-color="#7a100c"/></linearGradient>' +
+      '<linearGradient id="cqS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".3" stop-color="#fff" stop-opacity="0"/><stop offset=".8" stop-color="#3a0404" stop-opacity="0"/><stop offset="1" stop-color="#3a0404" stop-opacity=".3"/></linearGradient>' +
+      '<linearGradient id="cqN" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#151a3e"/><stop offset=".5" stop-color="#2c3474"/><stop offset="1" stop-color="#151a3e"/></linearGradient>' +
+      '<linearGradient id="cqD" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c99636"/><stop offset=".5" stop-color="#f6dc8e"/><stop offset="1" stop-color="#c99636"/></linearGradient>' +
+      '<linearGradient id="cqB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6a3ad0"/><stop offset="1" stop-color="#2e1a7a"/></linearGradient>' +
+      '<linearGradient id="cqG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset=".5" stop-color="#f4c542"/><stop offset="1" stop-color="#b07a14"/></linearGradient>' +
+      '<radialGradient id="cqR" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffd0d8"/><stop offset=".45" stop-color="#e2324e"/><stop offset="1" stop-color="#7a0a1e"/></radialGradient>' +
+      '<pattern id="cqP" width="9" height="9" patternUnits="userSpaceOnUse"><path d="M4.5 1Q6.4 3 4.5 5Q2.6 3 4.5 1ZM4.5 5.6Q5.2 7 4.5 8M0 4.5Q1.4 3.8 2.2 4.5Q1.4 5.2 0 4.5ZM9 4.5Q7.6 3.8 6.8 4.5Q7.6 5.2 9 4.5Z" fill="#fff" opacity=".11"/></pattern>' +
+      '<linearGradient id="cqH" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>' +
+      '<clipPath id="cqC"><path d="M47 80V118Q60 120 73 118V80Q60 82 47 80Z"/></clipPath>' +
+      '<radialGradient id="cqA" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffe9a0" stop-opacity=".55"/><stop offset=".6" stop-color="#ffd75a" stop-opacity=".18"/><stop offset="1" stop-color="#ffd75a" stop-opacity="0"/></radialGradient></defs>';
+    /* การ์ด: เครื่องแบบบนหุ่นกระดาษ */
+    var CP_CARD = '<defs><clipPath id="cqK"><rect x="20" y="60" width="100" height="70"/></clipPath></defs><g clip-path="url(#cqK)">' + CAPE_BACK.replace('<g class="cp-bd">', '<g>') + '</g><rect x="30" y="68" width="60" height="54" rx="5" fill="#f7efdc" stroke="' + D + '" stroke-width="1.6"/>' + JACKET + RIBS + SASH + WSASH + COLLAR + CAPELET + EP(32, false) + EP(92, true);
+    ART_OUT.cape = { vb: '21 66 92 62', back: true, front: CAPE_FRONT, art: CAPE_DEFS + CP_CARD, set: CP_SET, setfx: CP_SET_FX };
     ART_OUT.cape.worn = CAPE_DEFS + CAPE_BACK;
   })();
   /* (2) เหรียญไฟไม่มอดวิวัฒนาการตามสถิติติดต่อกันสูงสุด: 7 ทอง·ไฟส้ม → 14 ทองคำขาว·ไฟฟ้า → 30 เพชร·ไฟม่วง+ปีก */
@@ -352,7 +407,7 @@
     return svg.replace(/<\/g><\/svg>$/, '</g></g></svg>');
   }
   /* ท่าราชาเมื่อสวมมงกุฎ: ถือคทาทองลูกแก้วทับทิม · ผ้าคลุมกำมะหยี่แดงขอบขนเออร์มีน (หลังตัว) + ปกขนสีขาว */
-  function crPoseSvg(svg) {
+  function crPoseSvg(svg, noCape) {
     var I = '#3a2a12', P = '#f7efdc';
     var arm = function (d) { return '<path d="' + d + '" stroke="' + I + '" stroke-width="3" stroke-linecap="round" fill="none"/>'; };
     var hand = function (x, y) { return '<circle cx="' + x + '" cy="' + y + '" r="4.6" fill="' + P + '" stroke="' + I + '" stroke-width="2.4"/>'; };
@@ -365,11 +420,12 @@
     var i = svg.indexOf('<g class="vm-face">'), depth = 0, j = i, re = /<g[\s>]|<\/g>/g; re.lastIndex = i;
     for (var mt; (mt = re.exec(svg));) { if (mt[0] === '</g>') { depth--; if (!depth) { j = mt.index + 4; break; } } else depth++; }
     var end = svg.lastIndexOf('</g></svg>');
-    svg = svg.slice(0, j) + collar + arm('M31 76q-10 4-12 12') + pen + hand(19, 90) + scepter + arm('M89 76q8 2 12 8') + hand(101, 84) + svg.slice(end);
+    svg = svg.slice(0, j) + (noCape ? '' : collar) + arm('M31 76q-10 4-12 12') + pen + hand(19, 90) + scepter + arm('M89 76q8 2 12 8') + hand(101, 84) + svg.slice(end);
     var cape = '<g class="cp-cape"><defs><linearGradient id="cpV" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5a0614"/><stop offset=".3" stop-color="#b3122e"/><stop offset=".55" stop-color="#d42a46"/><stop offset=".8" stop-color="#9e0f2a"/><stop offset="1" stop-color="#4a0410"/></linearGradient></defs>' +
       '<path d="M24 32C20 60 12 92 8 120q9 6 18 0 9 6 18 0 9 6 16 0 7 6 16 0 9 6 18 0 9 6 18 0C108 92 100 60 96 32z" fill="url(#cpV)" stroke="' + I + '" stroke-width="1.8" stroke-linejoin="round"/>' +
       '<path d="M8 120q9 6 18 0 9 6 18 0 9 6 16 0 7 6 16 0 9 6 18 0 9 6 18 0" stroke="#fbf8f2" stroke-width="5" fill="none" stroke-linecap="round"/><g fill="#2a2018"><path d="M17 122l1 3 1-3z"/><path d="M35 122l1 3 1-3z"/><path d="M52 122l1 3 1-3z"/><path d="M68 122l1 3 1-3z"/><path d="M86 122l1 3 1-3z"/><path d="M103 122l1 3 1-3z"/></g>' +
       '<path d="M30 44c-3 24-8 50-12 72M90 44c3 24 8 50 12 72M44 40c-2 26-4 52-6 78M76 40c2 26 4 52 6 78" stroke="#6a0818" stroke-width="1.2" fill="none" opacity=".55"/></g>';
+    if (noCape) return svg;
     var k = svg.indexOf('>') + 1;
     return svg.slice(0, k) + cape + svg.slice(k);
   }
@@ -377,7 +433,7 @@
     var svg = mascot(m, size, ICO_GIFT), worn = wornOutfits();
     if (!worn.length || svg.indexOf('<g class="vm-face">') < 0) return svg;
     if (worn.indexOf('laurel') >= 0 && /^(wave|happy|party)$/.test(m)) svg = lrPoseSvg(svg);
-    else if (worn.indexOf('crown') >= 0 && /^(wave|happy|party)$/.test(m)) svg = crPoseSvg(svg);
+    else if (worn.indexOf('crown') >= 0 && /^(wave|happy|party)$/.test(m)) svg = crPoseSvg(svg, worn.indexOf('cape') >= 0);
     var backIds = worn.filter(function (id) { return ART_OUT[id] && ART_OUT[id].back; }); worn = worn.filter(function (id) { return !(ART_OUT[id] && ART_OUT[id].back); });
     var art = worn.map(function (id) { return id === 'medal' ? frontArt(medalTier()) + '<g class="md-worn">' + artFor(id) + '</g>' : id === 'laurel' ? '<g class="lr-worn">' + laurelArt(0, 'front') + '</g>' : id === 'crown' ? '<g class="cr-worn">' + artFor(id) + '</g>' : id === 'wizard' ? '<g class="wz-worn">' + artFor(id) + '</g>' : id === 'cap' ? '<g class="cp-worn">' + (m === 'wave' ? CP_LID : '') + artFor(id) + '</g>' : artFor(id); }).join('');
     var hasHead = worn.some(function (id) { var o = itemById(id); return o && o.slot === 'head'; });
@@ -388,7 +444,8 @@
     var out = svg.slice(0, j) + '<g class="vm-outfit">' + art + '</g>' + svg.slice(j);
     if (worn.indexOf('laurel') >= 0) { var kL = out.indexOf('>') + 1; out = out.slice(0, kL) + laurelAura() + '<g class="lr-aura lr-bk">' + laurelArt(0, 'back') + '</g>' + out.slice(kL); }
     if (worn.indexOf('medal') >= 0) { var k = out.indexOf('>') + 1; out = out.slice(0, k) + auraArt(medalTier()) + backArt(medalTier()) + out.slice(k); }
-    if (backIds.length) { var kB = out.indexOf('>') + 1; out = out.slice(0, kB) + backIds.map(function (id) { return '<g class="bk-worn bk-' + id + '">' + (ART_OUT[id].worn || artFor(id)) + '</g>'; }).join('') + out.slice(kB); }
+    var cpSet = backIds.indexOf('cape') >= 0 && worn.indexOf('crown') >= 0;
+    if (backIds.length) { var kB = out.indexOf('>') + 1; out = out.slice(0, kB) + (cpSet ? ART_OUT.cape.set : '') + backIds.map(function (id) { return '<g class="bk-worn bk-' + id + (id === 'cape' && cpSet ? ' is-set' : '') + '">' + (ART_OUT[id].worn || artFor(id)) + (id === 'cape' && cpSet ? ART_OUT.cape.setfx : '') + '</g>'; }).join('') + out.slice(kB); }
     return out;
   }
   function outfitHtml() {
@@ -573,7 +630,7 @@
       sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.setAttribute('aria-labelledby', 'vstT');
       sh.innerHTML = '<div class="vst-bg" data-shx></div><div class="vst-p">' +
         '<div class="vst-hd"><h3 id="vstT">ร้านค้าน้องเวลลัม</h3><span class="vst-pts"><i class="vof-coin"></i><b data-spts>0</b> แต้ม</span><button type="button" class="vst-x" data-shx aria-label="ปิดร้าน">✕</button></div>' +
-        '<div class="vst-stage"><div class="vst-fire" aria-hidden="true"></div><i class="vst-spot"></i><i class="vst-glow"></i><div class="vst-refl" aria-hidden="true"></div><i class="vst-ped"></i><i class="vst-sweep"></i><i class="vst-grain"></i><div class="vst-extra"></div><div class="vst-hero" aria-hidden="true"></div><div class="vst-heav" aria-hidden="true"></div><div class="vst-fit" aria-hidden="true"></div><div class="vst-sky" aria-hidden="true"></div><div class="vst-wzs" aria-hidden="true"></div><div class="vst-drm" aria-hidden="true"></div><div class="vst-thr" aria-hidden="true"></div><div class="vst-ms" aria-hidden="true"></div><p class="vst-say"></p></div>' +
+        '<div class="vst-stage"><div class="vst-fire" aria-hidden="true"></div><i class="vst-spot"></i><i class="vst-glow"></i><div class="vst-refl" aria-hidden="true"></div><i class="vst-ped"></i><i class="vst-sweep"></i><i class="vst-grain"></i><div class="vst-extra"></div><div class="vst-hero" aria-hidden="true"></div><div class="vst-heav" aria-hidden="true"></div><div class="vst-fit" aria-hidden="true"></div><div class="vst-sky" aria-hidden="true"></div><div class="vst-pal" aria-hidden="true"></div><div class="vst-wzs" aria-hidden="true"></div><div class="vst-drm" aria-hidden="true"></div><div class="vst-thr" aria-hidden="true"></div><div class="vst-ms" aria-hidden="true"></div><p class="vst-say"></p></div>' +
         '<div class="vst-tabs" role="tablist"></div><div class="vst-grid"></div><div class="vst-bar"></div></div>';
       document.body.appendChild(sh);
       sh.addEventListener('click', function (e) {
@@ -613,7 +670,7 @@
   var fullT = 0;
   function shopClose() {
     clearTimeout(fullT); document.documentElement.classList.remove('vst-full'); [].forEach.call(document.querySelectorAll('.vst-under'), function (n) { n.classList.remove('vst-under'); });
-    if (!sh) return; tryOn = null; sel = null; pvTier = 0; heroKey = ''; heroPlayed = false; heroT.forEach(clearTimeout); heroT = []; (function () { var he = sh.querySelector('.vst-hero'); if (he) { if (he.getAnimations) he.getAnimations().forEach(function (x) { x.cancel(); }); he.className = 'vst-hero'; he.innerHTML = ''; } })(); lrStop(); lrPlayed = false; crStop(); crPlayed = false; wzStop(); wzPlayed = false; cpStop(); cpPlayed = false; ftStop(); ftPlayed = {}; wgStop(); wgPlayed = false; sh.classList.remove('on'); document.documentElement.classList.remove('vst-open');
+    if (!sh) return; tryOn = null; sel = null; pvTier = 0; heroKey = ''; heroPlayed = false; heroT.forEach(clearTimeout); heroT = []; (function () { var he = sh.querySelector('.vst-hero'); if (he) { if (he.getAnimations) he.getAnimations().forEach(function (x) { x.cancel(); }); he.className = 'vst-hero'; he.innerHTML = ''; } })(); lrStop(); lrPlayed = false; crStop(); crPlayed = false; wzStop(); wzPlayed = false; cpStop(); cpPlayed = false; ftStop(); ftPlayed = {}; wgStop(); wgPlayed = false; cqStop(); cqPlayed = false; sh.classList.remove('on'); document.documentElement.classList.remove('vst-open');
     setTimeout(function () { if (sh && !sh.classList.contains('on')) sh.hidden = true; }, 260);
     if (box && !box.hidden) render();
   }
@@ -709,6 +766,58 @@
   }
   /* ===== ฉากเปิดตัวห้องลองชุด (ไอเทมธรรมดา/หายาก): ม่านรูดปิด → เงาน้องเปลี่ยนชุดหลังม่าน → ม่านรูดเปิด + ไฟกระจกวิ่ง + ประกายตามระดับ (~1.9 วิ · แตะข้าม) ===== */
   var ftPlayed = {}, ftT = [], ftEnd = null;
+  /* ===== พิธีแต่งองค์: พ่อบ้านที่คั่นหนังสือ + เมดกระดาษโน้ต แต่งเครื่องแบบให้น้องทีละชิ้น (~6 วิ · เล่นครั้งแรก · แตะข้ามได้) ===== */
+  var cqPlayed = false, cqT = [], cqEnd = null;
+  function cqStop() { cqT.forEach(clearTimeout); cqT = []; if (cqEnd) cqEnd(true); }
+  var SV_BUT = '<svg viewBox="0 0 60 96" class="sv-body"><path d="M30 2v8" stroke="#e8b23a" stroke-width="2"/><circle cx="30" cy="3" r="3" fill="#f4c542" stroke="#6a4808" stroke-width="1"/>' +
+    '<path d="M10 10H50V92L30 80L10 92Z" fill="#22285e" stroke="#2a1d14" stroke-width="2.4" stroke-linejoin="round"/><path d="M14 14H46V84L30 74L14 84Z" fill="none" stroke="#f4c542" stroke-width="1" stroke-dasharray="2 2"/>' +
+    '<path d="M18.6 34q3.4-4 6.8 0M34.6 34q3.4-4 6.8 0" stroke="#fff8e6" stroke-width="2.2" fill="none" stroke-linecap="round"/><ellipse cx="17" cy="40" rx="3" ry="1.8" fill="#ff8fa8" opacity=".55"/><ellipse cx="43" cy="40" rx="3" ry="1.8" fill="#ff8fa8" opacity=".55"/>' +
+    '<path d="M30 41Q25 38.6 21 41Q18.6 43 17 40.4M30 41Q35 38.6 39 41Q41.4 43 43 40.4" stroke="#f7efdc" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M26 45q4 3.4 8 0" stroke="#fff8e6" stroke-width="1.8" fill="none" stroke-linecap="round"/>' +
+    '<path d="M24 52L30 55L24 58ZM36 52L30 55L36 58Z" fill="#e2324e" stroke="#6a0a1e" stroke-width=".8" stroke-linejoin="round"/><circle cx="30" cy="55" r="1.6" fill="#b8141a"/></svg>' +
+    '<i class="sv-hd l"></i><i class="sv-hd r"></i><svg class="sv-mir" viewBox="0 0 24 34"><ellipse cx="12" cy="11" rx="10" ry="10.5" fill="#f4c542" stroke="#6a4808" stroke-width="1.4"/><ellipse cx="12" cy="11" rx="7.4" ry="8" fill="#cfe6ff"/><path d="M8 7q2-3 6-3" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/><rect x="10" y="21" width="4" height="12" rx="2" fill="#e8b23a" stroke="#6a4808" stroke-width="1.2"/></svg>';
+  var SV_MAID = '<svg viewBox="0 0 60 80" class="sv-body"><path d="M6 12H54V62L44 72H6Z" fill="#ffc6dc" stroke="#2a1d14" stroke-width="2.4" stroke-linejoin="round"/><path d="M44 72V62H54" fill="#f39ab9" stroke="#2a1d14" stroke-width="2" stroke-linejoin="round"/>' +
+    '<path d="M10 12Q14 4 18 12Q22 4 26 12Q30 4 34 12Q38 4 42 12Q46 4 50 12" fill="#fff" stroke="#2a1d14" stroke-width="1.6" stroke-linejoin="round"/><path d="M30 9L23 5.4V12.6ZM30 9L37 5.4V12.6Z" fill="#ff6a9a" stroke="#2a1d14" stroke-width="1.1" stroke-linejoin="round"/><circle cx="30" cy="9" r="1.8" fill="#ff6a9a" stroke="#2a1d14" stroke-width="1"/>' +
+    '<ellipse cx="22" cy="28" rx="2.4" ry="3" fill="#2a1d14"/><ellipse cx="38" cy="28" rx="2.4" ry="3" fill="#2a1d14"/><circle cx="21.2" cy="27" r=".9" fill="#fff"/><circle cx="37.2" cy="27" r=".9" fill="#fff"/><ellipse cx="17" cy="34" rx="3.4" ry="2" fill="#ff7aa0" opacity=".6"/><ellipse cx="43" cy="34" rx="3.4" ry="2" fill="#ff7aa0" opacity=".6"/>' +
+    '<path d="M26 34q4 4 8 0" stroke="#2a1d14" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M16 44H44V64Q44 70 38 70H22Q16 70 16 64Z" fill="#fff" stroke="#2a1d14" stroke-width="1.6" stroke-linejoin="round"/><path d="M16 48Q30 52 44 48" stroke="#ffb3cf" stroke-width="1.4" fill="none"/></svg>' +
+    '<i class="sv-hd l"></i><i class="sv-hd r"></i><svg class="sv-dus" viewBox="0 0 22 40"><rect x="10" y="16" width="3" height="24" rx="1.5" fill="#a86c2a" stroke="#4a2a10" stroke-width="1"/><path d="M11.5 18C2 16 0 6 4 2C6 6 8 4 11.5 0C15 4 17 6 19 2C23 6 21 16 11.5 18Z" fill="#ff9ab8" stroke="#8a2a4a" stroke-width="1"/></svg>';
+  function playCapeIn() {
+    if (!sh || calm()) return; var st = sh.querySelector('.vst-stage'), ms = sh.querySelector('.vst-ms'); if (!st || !ms) return;
+    cqStop(); ms.classList.remove('is-hop'); void ms.offsetWidth;
+    var q = st.getBoundingClientRect(), m = (ms.querySelector('svg') || ms).getBoundingClientRect();
+    var P = function (sx, sy) { return [m.left - q.left + m.width * (sx / 120), m.top - q.top + m.height * (sy / 140)]; };
+    var sw = Math.max(46, m.height * .42), mh = m.height;
+    var bx = m.left - q.left - sw * .78, mx = m.left - q.left + m.width - sw * .22, by = m.top - q.top + mh - sw * 1.6, my = m.top - q.top + mh - sw * 1.33;
+    var ov = document.createElement('div'); ov.className = 'vcq vsv'; ov.setAttribute('aria-hidden', 'true');
+    var cp = P(94, 76);
+    ov.innerHTML = '<i class="sv-cu l"></i><i class="sv-cu r"></i>' +
+      '<div class="sv-ch sv-but" style="left:' + bx + 'px;top:' + by + 'px;width:' + sw + 'px;height:' + (sw * 1.6) + 'px">' + SV_BUT + '</div>' +
+      '<div class="sv-ch sv-maid" style="left:' + mx + 'px;top:' + my + 'px;width:' + sw + 'px;height:' + (sw * 1.33) + 'px">' + SV_MAID + '</div>' +
+      '<p class="sv-say a" style="left:' + Math.max(6, bx - 6) + 'px;top:' + Math.max(4, by - 40) + 'px">ขออนุญาตแต่งองค์นะขอรับ</p>' +
+      '<p class="sv-say b" style="right:' + Math.max(6, q.width - (mx + sw + 6)) + 'px;top:' + Math.max(4, my - 40) + 'px">งามสง่าที่สุดเลยค่ะ!</p>' +
+      '<svg class="vcq-sw" style="left:' + (cp[0] - 70) + 'px;top:' + (cp[1] - 60) + 'px" viewBox="0 0 140 120"><defs><linearGradient id="vcqG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff7a5a" stop-opacity="0"/><stop offset=".6" stop-color="#ffd27a"/><stop offset="1" stop-color="#fff6d0"/></linearGradient></defs><path d="M14 96Q40 10 120 30" stroke="url(#vcqG)" stroke-width="5" fill="none" stroke-linecap="round"/></svg>' +
+      '<small class="vli-skip">แตะเพื่อข้าม</small>';
+    st.appendChild(ov); sh.classList.add('cq-in', 'cq-dress'); void ov.offsetWidth; ov.classList.add('go');
+    var but = ov.querySelector('.sv-but'), maid = ov.querySelector('.sv-maid'), ended = false;
+    var act = function (el, cls, ms2) { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); cqT.push(setTimeout(function () { el.classList.remove(cls); }, ms2 || 600)); };
+    var pop = function (sx, sy, txt) { var p = P(sx, sy), b = document.createElement('span'); b.className = 'sv-pop'; b.style.left = p[0] + 'px'; b.style.top = p[1] + 'px';
+      var h = ''; for (var k = 0; k < 6; k++) { var a = k / 6 * 6.283; h += '<i style="--x:' + (Math.cos(a) * 18).toFixed(0) + 'px;--y:' + (Math.sin(a) * 18).toFixed(0) + 'px"></i>'; } b.innerHTML = h + (txt ? '<b>' + txt + '</b>' : ''); ov.appendChild(b); cqT.push(setTimeout(function () { b.remove(); }, 900)); };
+    var step = function (n, who, sx, sy, txt) { return function () { if (ended) return; sh.classList.add('cq' + n); act(who, 'act'); pop(sx, sy, txt); }; };
+    var at = function (t, f) { cqT.push(setTimeout(f, t)); };
+    at(1000, step(1, but, 60, 96, 'วิ้ง!'));
+    at(1600, step(2, maid, 82, 110, ''));
+    at(2200, step(3, but, 32, 77, 'วิ้ง!')); at(2300, function () { if (!ended) pop(92, 77, ''); });
+    at(2850, function () { if (ended) return; sh.classList.add('cq4'); act(maid, 'act'); ov.classList.add('swish'); pop(94, 90, 'ฟึ่บ!'); });
+    at(3500, step(5, but, 40, 104, 'วิ้ง!'));
+    at(3850, function () { if (!ended) { act(maid, 'dust', 700); pop(60, 100, ''); } });
+    at(4400, function () { if (!ended) { but.classList.add('mirror'); ov.classList.add('say-b'); pop(60, 52, ''); } });
+    at(5150, function () { if (!ended) { ov.classList.add('bow'); } });
+    at(5500, function () { if (!ended) { ov.classList.add('exit'); sh.classList.add('cq-end'); hop(ms); } });
+    cqEnd = function (quiet) { if (ended) return; ended = true; cqEnd = null; cqT.forEach(clearTimeout); cqT = [];
+      sh.classList.remove('cq-in', 'cq-dress', 'cq1', 'cq2', 'cq3', 'cq4', 'cq5'); setTimeout(function () { sh && sh.classList.remove('cq-end'); }, 1500);
+      if (quiet) { ov.remove(); return; } ov.classList.add('out'); setTimeout(function () { ov.remove(); }, 350); };
+    ov.addEventListener('click', function (e) { e.stopPropagation(); if (cqEnd) cqEnd(); });
+    at(6100, function () { cqEnd && cqEnd(); });
+  }
   function ftStop() { ftT.forEach(clearTimeout); ftT = []; if (ftEnd) ftEnd(true); }
   function playFit(id) {
     if (!sh || ftPlayed[id] || calm() || !sh.classList.contains('is-fit')) { sh && sh.classList.remove('ft-intro'); return; }
@@ -735,6 +844,47 @@
     ms.classList.add('ft-hide'); void ov.offsetWidth; ov.classList.add('go');
     ftT.push(setTimeout(function () { if (ended) return; ov.classList.add('open'); ms.classList.remove('ft-hide'); hop(ms); fv && (fv.classList.remove('ft-dim'), fv.classList.add('ft-chase')); }, 1050));
     ftT.push(setTimeout(function () { ftEnd && ftEnd(); }, 1950));
+  }
+  /* ===== ฉากห้องโถงพระราชวังยามเย็น (เลือก/ใส่ผ้าคลุมราชวงศ์): หน้าต่างโค้ง+ลำแสง+ฝุ่นทอง · เสาทอง+ม่านแดง · ธงตราม้วนกระดาษ · โคมระย้า · พื้นหินอ่อน · แท่นหินอ่อนพรมแดง · คอนเฟตตีทอง ===== */
+  function palScene(on) {
+    var kv = sh.querySelector('.vst-pal'); if (!kv) return;
+    var was = sh.classList.contains('is-pal');
+    sh.classList.toggle('is-pal', on); if (!on && was) dropLater(kv, 'is-pal');
+    if (!on || kv.getAttribute('data-on')) return;
+    kv.setAttribute('data-on', '1');
+    var win = function (x) { return '<g transform="translate(' + x + ' 34)"><path d="M-30 150V40Q-30 0 0 0Q30 0 30 40V150Z" fill="#2a1420" stroke="#d9a536" stroke-width="3"/><path d="M-25 146V41Q-25 6 0 6Q25 6 25 41V146Z" fill="url(#plW)"/>' +
+      '<path d="M0 6V146M-25 60H25M-25 104H25" stroke="#4a2a1c" stroke-width="2.4"/><circle cy="30" r="9" fill="none" stroke="#4a2a1c" stroke-width="2"/><path d="M-25 146H25" stroke="#d9a536" stroke-width="3"/><path d="M-34 152H34" stroke="#b07a14" stroke-width="5" stroke-linecap="round"/></g>'; };
+    var col = function (x) { return '<g transform="translate(' + x + ' 0)"><rect x="-9" y="22" width="18" height="190" fill="url(#plC)"/><path d="M-5 26V208M0 26V208M5 26V208" stroke="#8a5a10" stroke-width=".8" opacity=".55"/>' +
+      '<path d="M-14 22H14L11 12H-11Z" fill="#e8b23a" stroke="#6a4808" stroke-width="1.2"/><path d="M-12 12Q-16 6-10 5H10Q16 6 12 12" fill="#f4c542" stroke="#6a4808" stroke-width="1.2"/><path d="M-14 212H14L16 222H-16Z" fill="#e8b23a" stroke="#6a4808" stroke-width="1.2"/></g>'; };
+    var EMB = '<g fill="none" stroke="#f4c542" stroke-width="1.6" stroke-linecap="round"><rect x="-7" y="-9" width="14" height="18" rx="2" fill="#f7efdc" stroke="#f4c542"/><path d="M-7-6H7M-7 6H7"/><path d="M8-12Q2-2-2 8" stroke="#fff3c4"/><path d="M-1 7l-1.5 3" stroke="#fff3c4"/></g>';
+    var ban = function (x, c) { return '<g class="pl-ban" style="transform-origin:' + x + 'px 6px"><path d="M' + (x - 18) + ' 6H' + (x + 18) + 'V96L' + x + ' 84L' + (x - 18) + ' 96Z" fill="' + c + '" stroke="#6a4808" stroke-width="1.6" stroke-linejoin="round"/>' +
+      '<path d="M' + (x - 14) + ' 10V88M' + (x + 14) + ' 10V88" stroke="#f4c542" stroke-width="1.4" stroke-dasharray="2 2"/><path d="M' + (x - 22) + ' 6H' + (x + 22) + '" stroke="#b07a14" stroke-width="4" stroke-linecap="round"/><g transform="translate(' + x + ' 44) scale(1.3)">' + EMB + '</g></g>'; };
+    var drop = ''; [-36, -24, -12, 0, 12, 24, 36].forEach(function (dx, i) { drop += '<path d="M' + dx + ' 22v' + (8 + (i % 2) * 6) + '" stroke="#f4c542" stroke-width=".8"/><path class="pl-cry" style="animation-delay:' + (i * .37).toFixed(2) + 's" d="M' + dx + ' ' + (32 + (i % 2) * 6) + 'l2 4-2 4-2-4z" fill="#eaf4ff" stroke="#9ab4e0" stroke-width=".5"/>'; });
+    var chand = '<g transform="translate(195 -4)"><path d="M0 0V10" stroke="#b07a14" stroke-width="2"/><path d="M-40 20Q0 34 40 20" stroke="#e8b23a" stroke-width="3" fill="none"/><path d="M-26 16Q0 26 26 16" stroke="#f4c542" stroke-width="2.4" fill="none"/><ellipse cy="14" rx="9" ry="6" fill="#f4c542" stroke="#6a4808" stroke-width="1.2"/>' + drop +
+      [-40, -20, 20, 40].map(function (dx) { return '<path d="M' + dx + ' 20v-6" stroke="#e8b23a" stroke-width="2"/><ellipse cx="' + dx + '" cy="10" rx="2.4" ry="4" fill="#fff6d0"/><circle cx="' + dx + '" cy="9" r="7" fill="url(#plG)"/>'; }).join('') + '</g>';
+    var curt = function (flip) { return '<g' + (flip ? ' transform="matrix(-1 0 0 1 390 0)"' : '') + '><path d="M0 0H58Q40 30 30 70Q24 120 32 200L22 256H0Z" fill="url(#plR)" stroke="#3a0606" stroke-width="1.6"/><path d="M14 10Q12 120 10 250M28 6Q22 100 20 210M42 4Q32 40 26 90" stroke="#4a0808" stroke-width="2" fill="none" opacity=".55"/><path d="M20 8Q18 110 16 240" stroke="#ff8a6a" stroke-width="1.4" fill="none" opacity=".3"/>' +
+      '<path d="M0 0H70Q60 18 36 22Q14 24 0 16Z" fill="url(#plR)" stroke="#3a0606" stroke-width="1.4"/><path d="M0 16Q14 24 36 22Q60 18 70 0" stroke="#f4c542" stroke-width="2.4" fill="none"/>' +
+      '<path d="M20 120Q32 126 40 118" stroke="#f4c542" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="41" cy="120" r="3.4" fill="#f4c542" stroke="#6a4808"/><path d="M38 124l-2 14h10l-2-14z" fill="#e8b23a" stroke="#6a4808" stroke-width=".8"/></g>'; };
+    var cf = ''; for (var i = 0; i < 16; i++) { var pet = i % 3 === 0; cf += '<i class="pl-cf' + (pet ? ' pet' : '') + '" style="left:' + (4 + Math.random() * 92).toFixed(0) + '%;--d:-' + (Math.random() * 10).toFixed(1) + 's;--t:' + (7 + Math.random() * 5).toFixed(1) + 's;--r:' + (Math.random() * 360).toFixed(0) + 'deg;--x:' + (Math.random() * 40 - 20).toFixed(0) + 'px"></i>'; }
+    var dust = ''; for (var j = 0; j < 10; j++) dust += '<i class="pl-du" style="left:' + (j < 5 ? 8 + Math.random() * 26 : 66 + Math.random() * 26).toFixed(0) + '%;top:' + (30 + Math.random() * 50).toFixed(0) + '%;--d:-' + (Math.random() * 6).toFixed(1) + 's"></i>';
+    var floor = ''; for (var fx = -8; fx <= 8; fx++) floor += '<path d="M' + (195 + fx * 14) + ' 200L' + (195 + fx * 44) + ' 256" stroke="#c9b48a" stroke-width=".8" opacity=".35"/>';
+    kv.innerHTML = '<svg class="pl-svg" viewBox="0 0 390 256" preserveAspectRatio="xMidYMax slice"><defs>' +
+      '<linearGradient id="plA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2e1428"/><stop offset=".7" stop-color="#5a2a34"/><stop offset="1" stop-color="#6e3a34"/></linearGradient>' +
+      '<linearGradient id="plW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a4a9a"/><stop offset=".35" stop-color="#ff8a6a"/><stop offset=".7" stop-color="#ffc06a"/><stop offset="1" stop-color="#ffe6a8"/></linearGradient>' +
+      '<linearGradient id="plC" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9a6410"/><stop offset=".35" stop-color="#ffe7a0"/><stop offset=".6" stop-color="#e8b23a"/><stop offset="1" stop-color="#8a5a10"/></linearGradient>' +
+      '<linearGradient id="plR" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5a0a0a"/><stop offset=".5" stop-color="#b8241a"/><stop offset="1" stop-color="#7a100c"/></linearGradient>' +
+      '<linearGradient id="plF" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9dcc2"/><stop offset="1" stop-color="#b8a27a"/></linearGradient>' +
+      '<linearGradient id="plB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff2c4" stop-opacity=".55"/><stop offset="1" stop-color="#fff2c4" stop-opacity="0"/></linearGradient>' +
+      '<radialGradient id="plG" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff2c0" stop-opacity=".9"/><stop offset="1" stop-color="#fff2c0" stop-opacity="0"/></radialGradient>' +
+      '<radialGradient id="plH" cx=".5" cy=".55" r=".55"><stop offset="0" stop-color="#ffd9a0" stop-opacity=".5"/><stop offset="1" stop-color="#ffd9a0" stop-opacity="0"/></radialGradient></defs>' +
+      '<rect width="390" height="256" fill="url(#plA)"/><path d="M0 120H390" stroke="#d9a536" stroke-width="1.4" opacity=".35"/><ellipse cx="195" cy="140" rx="170" ry="120" fill="url(#plH)"/>' +
+      win(52) + win(338) + col(108) + col(282) + ban(150, '#22285e') + ban(240, '#8e1414') + chand +
+      '<rect y="200" width="390" height="56" fill="url(#plF)"/>' + floor + '<path d="M0 200H390" stroke="#d9a536" stroke-width="2"/><path d="M150 256L175 200H215L240 256Z" fill="#a8201a" opacity=".85"/><path d="M175 200L150 256M215 200L240 256" stroke="#f4c542" stroke-width="1.6"/>' +
+      '<g class="pl-beams"><path class="pl-beam a" d="M30 60L80 50L250 256H120Z" fill="url(#plB)"/><path class="pl-beam b" d="M360 60L310 50L140 256H270Z" fill="url(#plB)"/></g>' + curt(false) + curt(true) + '</svg>' +
+      '<div class="pl-dus">' + dust + '</div><div class="pl-cfs">' + cf + '</div><i class="pl-flash"></i>' +
+      '<svg class="pl-pd" viewBox="0 0 230 64" aria-hidden="true"><defs><linearGradient id="plM" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d9d0c2"/></linearGradient></defs>' +
+      '<path d="M10 26V40Q115 66 220 40V26Z" fill="url(#plM)" stroke="#6a4808" stroke-width="1.6"/><path d="M10 40Q115 66 220 40" stroke="#e8b23a" stroke-width="3" fill="none"/><ellipse cx="115" cy="26" rx="105" ry="18" fill="#f6f0e6" stroke="#e8b23a" stroke-width="3"/>' +
+      '<ellipse cx="115" cy="26" rx="84" ry="13" fill="#b8241a" stroke="#6a0a0a" stroke-width="1.2"/><ellipse cx="115" cy="26" rx="76" ry="10.6" fill="none" stroke="#f4c542" stroke-width="1.2" stroke-dasharray="3 2.4"/><ellipse cx="115" cy="26" rx="40" ry="5.6" fill="none" stroke="#f4c542" stroke-width=".9" opacity=".7"/></svg>';
   }
   /* ===== ฉากสวนลอยฟ้าเหนือเมฆ (เลือก/ใส่ปีกนางฟ้า): ฟ้ายามเช้า · ดวงอาทิตย์ทองหลังน้อง · เกาะลอยฟ้า+น้ำตก · ทะเลเมฆ 2 ชั้นเลื่อนต่างความเร็ว · ขนนกลอย · แท่นเมฆขอบทอง ===== */
   function skyScene(on) {
@@ -1930,10 +2080,13 @@
     dreamScene(dmOn);
     var skOn = !fireOn && !hvOn && !thOn && !wzOn && !dmOn && (sel === 'wings' || (!sel && wornOutfits().indexOf('wings') >= 0));
     skyScene(skOn);
+    var plOn = !fireOn && !hvOn && !thOn && !wzOn && !dmOn && !skOn && (sel === 'cape' || (!sel && wornOutfits().indexOf('cape') >= 0));
+    palScene(plOn);
     var fitIt = sel ? itemById(sel) : null;
-    fitScene(!fireOn && !hvOn && !thOn && !wzOn && !dmOn && !skOn, fitIt && (fitIt.rarity === 'rare' || fitIt.rarity === 'epic') ? fitIt.rarity : 'common');
-    if (sel && fitIt && (fitIt.rarity === 'common' || fitIt.rarity === 'rare') && sh.classList.contains('is-fit') && !ftPlayed[sel] && !calm()) { sh.classList.add('ft-intro'); var fid = sel; setTimeout(function () { playFit(fid); }, 40); } else if (!sel || !fitIt || (fitIt.rarity !== 'common' && fitIt.rarity !== 'rare')) ftStop();
-    ['.vst-heav', '.vst-thr', '.vst-wzs', '.vst-drm', '.vst-lib', '.vst-fit', '.vst-sky'].forEach(function (q) { var r = sh.querySelector(q); if (r && r.firstChild) splitScene(r); }); var lbr = sh.querySelector('.vst-lib'); if (lbr) requestAnimationFrame(function () { libBreath(lbr); }); var pd = sh.querySelector('.vst-pd3'); if (pd) requestAnimationFrame(function () { splitSvg(pd); });
+    fitScene(!fireOn && !hvOn && !thOn && !wzOn && !dmOn && !skOn && !plOn, fitIt && (fitIt.rarity === 'rare' || fitIt.rarity === 'epic') ? fitIt.rarity : 'common');
+    if (sel === 'cape' && !cqPlayed && !calm()) { cqPlayed = true; ftPlayed.cape = true; setTimeout(playCapeIn, 40); } else if (sel !== 'cape') cqStop();
+    if (sel && sel !== 'cape' && fitIt && (fitIt.rarity === 'common' || fitIt.rarity === 'rare') && sh.classList.contains('is-fit') && !ftPlayed[sel] && !calm()) { sh.classList.add('ft-intro'); var fid = sel; setTimeout(function () { playFit(fid); }, 40); } else if (!sel || !fitIt || (fitIt.rarity !== 'common' && fitIt.rarity !== 'rare')) ftStop();
+    ['.vst-heav', '.vst-thr', '.vst-wzs', '.vst-drm', '.vst-lib', '.vst-fit', '.vst-sky', '.vst-pal'].forEach(function (q) { var r = sh.querySelector(q); if (r && r.firstChild) splitScene(r); }); var lbr = sh.querySelector('.vst-lib'); if (lbr) requestAnimationFrame(function () { libBreath(lbr); }); var pd = sh.querySelector('.vst-pd3'); if (pd) requestAnimationFrame(function () { splitSvg(pd); });
     var hk = sel === 'medal' ? 'm' + medalTier() : '';
     if (hk && !heroPlayed) setTimeout(function () { playHero(medalTier()); }, 30);
     else if (hk && heroKey && hk !== heroKey && !calm()) { var stg = sh.querySelector('.vst-stage'); stg.classList.remove('tier-flash'); void stg.offsetWidth; stg.classList.add('tier-flash'); }
@@ -1954,7 +2107,13 @@
     var bb = o && o.badge && bmap[o.badge], lft = bb ? bb.n - bb.have : 0;
     var skSay = !sh.classList.contains('is-sky') ? '' : (!o || (o.id === 'wings' && own.indexOf('wings') >= 0 && worn.indexOf('wings') >= 0)) ? 'ลอยสูงไป*ด้วยกัน*นะ'
       : own.indexOf('wings') >= 0 ? '*ปีกของเรา*เอง\nกางเลยไหม?' : S.points >= o.price ? '*ประตูสวรรค์*เปิดแล้ว\nพร้อมกางปีกไหม?' : 'ขนนกอีกไม่กี่เส้น…\nก็*โบยบิน*ได้แล้ว';
-    sayType(say2, skSay ? skSay : !o ? 'อยากให้ฉันใส่อะไรดี? แตะของด้านล่างเลย ✨'
+    var cpSetOn = worn.indexOf('cape') >= 0 && worn.indexOf('crown') >= 0;
+    var cpSay = skSay ? '' : cpSetOn && (!o || o.id === 'cape' || o.id === 'crown') ? 'สมเป็นราชาแห่งห้องสมุด 👑'
+      : o && o.id === 'cape' && own.indexOf('cape') < 0 ? (S.points >= o.price ? 'ผ้าคลุมของผู้ปกครอง… สวมเลยไหม? 👑' : 'ผ้าคลุมของผู้ปกครอง… อีก ' + fmt(o.price - S.points) + ' แต้ม') : '';
+    (function () { var stg = sh.querySelector('.vst-stage'), bd = stg.querySelector('.vst-set');
+      if (cpSetOn && !bd) { bd = document.createElement('span'); bd.className = 'vst-set'; bd.setAttribute('role', 'status'); bd.innerHTML = '<i aria-hidden="true">👑</i>ครบชุดราชา'; stg.appendChild(bd); }
+      else if (!cpSetOn && bd) bd.remove(); })();
+    sayType(say2, skSay ? skSay : cpSay ? cpSay : !o ? 'อยากให้ฉันใส่อะไรดี? แตะของด้านล่างเลย ✨'
       : o.id === 'laurel' ? lrSay(ownedOutfits().indexOf('laurel') >= 0, lft)
       : own.indexOf(o.id) >= 0 ? (worn.indexOf(o.id) >= 0 ? 'ใส่อยู่นะ เข้ากับฉันไหม? 😊' : 'ของเราเองนี่นา ใส่เลยไหม? 💛')
       : o.id === 'medal' ? 'รู้ไหม เหรียญนี้มีตำนานนะ… กด 📜 อ่านดูสิ! อีก ' + lft + ' วันก็ได้แล้ว 🔥'
