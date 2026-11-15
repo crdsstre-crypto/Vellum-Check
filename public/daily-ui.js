@@ -1056,7 +1056,7 @@
       '<button type="button" class="vwz-go">' + (has ? (isOn() ? 'ใส่อยู่ ✓' : 'ใส่เลย') : 'ลองดูต่อ') + '</button>' + (has ? '' : '<small class="vwz-pr">ราคา ' + fmt(o.price) + ' แต้ม</small>') + '</div>';
     var ov = document.createElement('div'); ov.className = 'vwz'; ov.setAttribute('aria-live', 'polite');
     ov.innerHTML = '<i class="vwz-dim"></i>' + ring + '<i class="vwz-beam"></i><span class="vwz-hat"><svg viewBox="' + ART_OUT.wizard.vb + '">' + ART_OUT.wizard.art + '</svg></span>' +
-      '<svg class="vwz-star" viewBox="0 0 100 100" aria-hidden="true"><path pathLength="1" d="M50 6 61 38 95 38 67 58 78 92 50 71 22 92 33 58 5 38 39 38Z"/></svg><i class="vwz-burst b1"></i><i class="vwz-burst b2"></i>' + card + '<small class="vli-skip">แตะเพื่อข้าม</small>';
+      '<svg class="vwz-star" viewBox="0 0 100 100" aria-hidden="true"><path pathLength="1" d="M50 6 61 38 95 38 67 58 78 92 50 71 22 92 33 58 5 38 39 38Z"/></svg><i class="vwz-burst b1"></i><i class="vwz-burst b2"></i>' + '<small class="vli-skip">แตะเพื่อข้าม</small>';
     st.appendChild(ov); sh.classList.add('wz-intro');
     var q = st.getBoundingClientRect(), msv = (ms.querySelector('svg') || ms).getBoundingClientRect(), tg = worn.getBoundingClientRect();
     var cx = msv.left - q.left + msv.width / 2, feetY = msv.top - q.top + msv.height * 132 / 140;
@@ -1076,7 +1076,7 @@
       if (quiet) { ov.remove(); return; }
       ov.classList.add('out'); setTimeout(function () { ov.remove(); }, 450);
     };
-    var showCard = function () { if (ended) return; ov.classList.add('is-card'); var b = ov.querySelector('.vwz-go'); try { b.focus({ preventScroll: true }); } catch (e) {} wzT.push(setTimeout(function () { wzEnd && wzEnd(); }, 7000)); };
+    var showCard = function () { wzEnd && wzEnd(); };
     ov.addEventListener('click', function (e) {
       e.stopPropagation();
       if (e.target.closest('.vwz-go')) { if (has && !isOn()) { wear('wizard'); wzEnd && wzEnd(); shopRender(); } else if (wzEnd) wzEnd(); return; }
@@ -1099,10 +1099,10 @@
       { transform: P(0, 0, k0, 0), opacity: 1 }], { duration: T, delay: 550, fill: 'both' });
     anims.push(ha);
     ha.onfinish = function () {
-      if (ended) return; ms.classList.remove('hide-wizard'); hat.style.opacity = '0'; ov.classList.add('worn'); hop(ms);
+      if (ended) return; ms.classList.remove('hide-wizard'); try { ha.cancel(); } catch (e) {} hat.style.display = 'none'; ov.classList.add('worn'); hop(ms);
       wzT.push(setTimeout(function () { ov.classList.add('cast'); }, 350));
       wzT.push(setTimeout(function () { ov.classList.add('pop'); }, 1250));
-      wzT.push(setTimeout(showCard, 1750));
+      wzT.push(setTimeout(function () { wzEnd && wzEnd(); }, 1750));
     };
   }
   /* ===== ฉากเปิดตัวหมวกนอนดาว: น้องนอนหลับบนเตียง (Zzz) → สะดุ้งตื่น "!" → กระโดดลงจากเตียง → หมวกลอยพลิ้วลงมาสวมหัว → การ์ดแนะนำ ===== */
@@ -1155,7 +1155,7 @@
       '<b>' + h(o.name) + '</b><span class="vwz-q">“หลับฝันดี ตื่นมาอ่านสัญญาสดชื่น!”</span>' +
       '<button type="button" class="vwz-go">' + (has ? (isOn() ? 'ใส่อยู่ ✓' : 'ใส่เลย') : 'ลองดูต่อ') + '</button>' + (has ? '' : '<small class="vwz-pr">ราคา ' + fmt(o.price) + ' แต้ม</small>') + '</div>';
     var ov = document.createElement('div'); ov.className = 'vwz vnz'; ov.setAttribute('aria-live', 'polite');
-    ov.innerHTML = '<i class="vwz-dim"></i>' + bed + '<span class="vwz-hat vnz-hat"><svg viewBox="' + ART_OUT.cap.vb + '">' + ART_OUT.cap.art + '</svg></span><i class="vwz-burst b1"></i>' + card + '<small class="vli-skip">แตะเพื่อข้าม</small>';
+    ov.innerHTML = '<i class="vwz-dim"></i>' + bed + '<span class="vwz-hat vnz-hat"><svg viewBox="' + ART_OUT.cap.vb + '">' + ART_OUT.cap.art + '</svg></span><i class="vwz-burst b1"></i>' + '<small class="vli-skip">แตะเพื่อข้าม</small>';
     st.appendChild(ov); sh.classList.add('wz-intro');
     var q = st.getBoundingClientRect(), msv = (ms.querySelector('svg') || ms).getBoundingClientRect(), tg = worn.getBoundingClientRect();
     var cx = msv.left - q.left + msv.width / 2, feetY = msv.top - q.top + msv.height * 132 / 140;
@@ -1173,7 +1173,7 @@
       if (quiet) { ov.remove(); return; }
       ov.classList.add('out'); setTimeout(function () { ov.remove(); }, 450);
     };
-    var showCard = function () { if (ended) return; ov.classList.add('is-card'); var b = ov.querySelector('.vwz-go'); try { b.focus({ preventScroll: true }); } catch (e) {} cpT.push(setTimeout(function () { cpEnd && cpEnd(); }, 7000)); };
+    var showCard = function () { cpEnd && cpEnd(); };
     var skipTo = function () { cpT.forEach(clearTimeout); cpT = []; anims.forEach(function (x) { try { x.cancel(); } catch (er) {} }); ms.classList.remove('cp-hide', 'cp-nohat'); ov.classList.add('skip'); showCard(); };
     ov.addEventListener('click', function (e) {
       e.stopPropagation();
@@ -1202,7 +1202,7 @@
         { transform: P(0, 0, k0, 0), opacity: 1 }], { duration: 1700, fill: 'both' });
       anims.push(ha);
       ha.onfinish = function () {
-        if (ended) return; ms.classList.remove('cp-nohat'); try { ha.cancel(); } catch (e) {} hat.style.opacity = '0'; ov.classList.add('worn'); hop(ms);
+        if (ended) return; ms.classList.remove('cp-nohat'); try { ha.cancel(); } catch (e) {} hat.style.display = 'none'; ov.classList.add('worn'); hop(ms);
         cpT.push(setTimeout(showCard, 900));
       };
     }, 3500));
