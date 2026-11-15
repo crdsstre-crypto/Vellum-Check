@@ -1364,3 +1364,9 @@ html body .vst .vof-b.r-legendary::after{content:"";position:absolute;inset:0;bo
 @media (prefers-reduced-motion:reduce){.vst-grain::before,.lim-sheen::before,.vdg-c.is-soon::after,.vof-b.r-legendary::after{animation:none !important}}
 /* เงาสะท้อนบนพื้น (จาง 24% เบลอ) และเหรียญจิ๋วในปุ่มระดับ: ไม่ต้องขยับข้างใน — มองไม่ออก แต่กินเครื่อง */
 .vst-refl *,.vtp-c svg *{animation:none !important}
+
+/* v47: การ์ดลิมิเต็ดกินเต็มแถว — ไม่ให้การ์ดข้าง ๆ (ผ้าพันคอ) ถูกยืดสูงตาม */
+html body .vst .vof-b.vof-lim{grid-column:1 / -1;grid-template-columns:92px minmax(0,1fr)}
+html body .vst .vof-lim .lim-art{width:92px}
+/* กรอบรุ้งหมุน: ใช้สี่เหลี่ยมจัตุรัสใหญ่พอสำหรับการ์ดกว้าง ไม่ให้มุมแหว่ง */
+html body .vst .vof-lim::before{inset:auto;left:50%;top:50%;width:260%;aspect-ratio:1;height:auto;margin:-130% 0 0 -130%}
