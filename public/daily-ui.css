@@ -2515,3 +2515,266 @@ html body .vst .vst-grid > .vof-b.r-legendary > small{font:700 .86rem/1.25 'Prom
 html body .vst .vst-grid > .vof-b.r-legendary :is(.crc-lore,.lrc-lore) .crc-dots i{width:5px;height:5px;background:rgba(255,231,166,.42)}
 html body .vst .vst-grid > .vof-b.r-legendary :is(.crc-lore,.lrc-lore) .crc-dots{flex:none;align-items:center}html body .vst .vst-grid > .vof-b.r-legendary :is(.crc-lore,.lrc-lore) .crc-dots i{position:static!important;display:block!important;flex:none;margin:0!important;inset:auto!important;transform:none!important}
 html body .vst .vst-grid > .vof-b.r-legendary :is(.crc-lore,.lrc-lore){width:150px;min-width:0}@media (min-width:420px){html body .vst .vst-grid > .vof-b.r-legendary :is(.crc-lore,.lrc-lore){width:170px}}
+
+/* ===== ช่อง "หลัง" + Wishlist (daily-ui.css v101) ===== */
+/* ปีกกระพือเบา ๆ · ผ้าคลุมพลิ้ว */
+.bk-wings .wg-l{transform-box:view-box;transform-origin:44px 64px;animation:wgFlapL 2.8s ease-in-out infinite}
+.bk-wings .wg-r{transform-box:view-box;transform-origin:76px 64px;animation:wgFlapR 2.8s ease-in-out infinite}
+@keyframes wgFlapL{0%,100%{transform:rotate(0)}50%{transform:rotate(-7deg)}}
+@keyframes wgFlapR{0%,100%{transform:rotate(0)}50%{transform:rotate(7deg)}}
+.bk-wings .wg-glow{animation:wgGl 2.8s ease-in-out infinite}
+@keyframes wgGl{0%,100%{opacity:.6}50%{opacity:1}}
+.bk-cape{transform-box:view-box;transform-origin:60px 30px;animation:cpeSw 4s ease-in-out infinite}
+@keyframes cpeSw{0%,100%{transform:skewX(0)}50%{transform:skewX(-2deg)}}
+.vst-refl :is(.bk-wings .wg-l,.bk-wings .wg-r,.bk-wings .wg-glow,.bk-cape){animation:none!important}
+@media (prefers-reduced-motion:reduce){:is(.bk-wings .wg-l,.bk-wings .wg-r,.bk-wings .wg-glow,.bk-cape){animation:none!important}}
+/* แถบหมวด: เลื่อนซ้ายขวาได้เมื่อมีหลายหมวด */
+html body .vst .vst-tabs{scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
+html body .vst .vst-tabs button.tc-back{--tc:#ffe7b0}
+html body .vst .vst-tabs button.tc-wish{--tc:#ff7a9a}
+/* ห้องลองชุดสำหรับไอเทมพิเศษ (ปีก): โทนม่วง */
+html body .vst.is-fit[data-fr="epic"] .vst-fit{--fw1:#2a1850;--fw2:#160c30;--fm1:#d2c0ff;--fm2:#f6f0ff;--fg:#b08cff;--ff1:#1e1240;--ff2:#0c0620;--fp0:#24164a;--fp1:#5a3fa0;--fv1:#7b55d6;--fv2:#3a2380;--fpm:#e6dcff;--fac:#c8b0ff}
+html body .vst.is-fit[data-fr="epic"]{--fcu:#3a2380;--fcu2:#7b55d6;--fsp:#e0ccff}
+/* หัวใจ Wishlist บนการ์ด */
+html body .vst .vof-b .vof-wish{position:absolute;left:7px;bottom:7px;z-index:3;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;cursor:pointer;
+  background:rgba(10,6,20,.55);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);transition:background .2s}
+html body .vst .vof-b .vof-wish svg{width:15px!important;height:15px!important;filter:none!important}
+html body .vst .vof-b .vof-wish path{fill:none;stroke:#e6dcef;stroke-width:2;stroke-linejoin:round;transition:fill .2s,stroke .2s}
+html body .vst .vof-b .vof-wish.on{background:rgba(255,80,120,.2);box-shadow:inset 0 0 0 1px rgba(255,120,150,.6),0 0 8px rgba(255,90,130,.45)}
+html body .vst .vof-b .vof-wish.on path{fill:#ff5a82;stroke:#ffb3c4}
+html body .vst .vof-b .vof-wish.pop svg{animation:wsPop .45s cubic-bezier(.3,1.8,.5,1)}
+@keyframes wsPop{0%{transform:scale(1)}40%{transform:scale(1.45)}100%{transform:scale(1)}}
+html body .vst .vof-b.vof-lim .vof-wish{left:auto;right:12px;bottom:auto;top:12px}
+html body .vst .vst-grid > .vof-b.r-legendary .vof-wish{left:12px;bottom:auto;top:30px}
+@media (prefers-reduced-motion:reduce){html body .vst .vof-b .vof-wish.pop svg{animation:none}}
+.bk-wings{transform-box:view-box;transform-origin:60px 60px;transform:scale(1.45)}
+.vdg-mascot svg{overflow:visible}
+/* หัวใจย้ายไปมุมซ้ายใต้ป้ายระดับ (ไม่ชนราคา) */
+html body .vst .vof-b .vof-wish{left:7px;top:26px;bottom:auto;width:24px;height:24px}
+html body .vst .vof-b .vof-wish svg{width:14px!important;height:14px!important}
+html body .vst .vof-b.r-epic .vof-wish{top:28px}
+html body .vst .vst-grid > .vof-b.r-legendary .vof-wish{left:12px;top:32px}
+html body .vst .vst-grid.is-all > .vof-b:not(.r-legendary):not(.vof-lim){justify-content:center}
+/* ปีกแบบใหม่: ไม่ต้องขยาย · กระพือเป็นจังหวะ (กาง → หุบ → นิ่ง) จากโคนปีกที่ไหล่ */
+.bk-wings{transform:none!important}
+.bk-wings .wg-l{transform-origin:42px 44px;animation:wgFlap2L 3.6s cubic-bezier(.45,0,.3,1) infinite}
+.bk-wings .wg-r{transform-origin:78px 44px;animation:wgFlap2R 3.6s cubic-bezier(.45,0,.3,1) infinite}
+@keyframes wgFlap2L{0%,45%,100%{transform:rotate(0)}12%{transform:rotate(-12deg)}26%{transform:rotate(5deg)}36%{transform:rotate(-3deg)}}
+@keyframes wgFlap2R{0%,45%,100%{transform:rotate(0)}12%{transform:rotate(12deg)}26%{transform:rotate(-5deg)}36%{transform:rotate(3deg)}}
+.bk-cape{transform-origin:60px 34px}
+.bk-wings{transform-box:view-box;transform-origin:60px 44px;transform:scale(1.18)!important}
+/* ===== ปีกนางฟ้า v3 (daily-ui.css v103) ===== */
+.bk-wings{transform:none!important}
+.bk-wings .wg-l{transform-origin:40px 46px;animation:wgFlap3L 3.8s cubic-bezier(.45,0,.3,1) infinite}
+.bk-wings .wg-r{transform-origin:80px 46px;animation:wgFlap3R 3.8s cubic-bezier(.45,0,.3,1) infinite}
+@keyframes wgFlap3L{0%,48%,100%{transform:rotate(0)}12%{transform:rotate(14deg)}26%{transform:rotate(-6deg)}38%{transform:rotate(3deg)}}
+@keyframes wgFlap3R{0%,48%,100%{transform:rotate(0)}12%{transform:rotate(-14deg)}26%{transform:rotate(6deg)}38%{transform:rotate(-3deg)}}
+/* (4) วงแสงรัศมี: ลอยขึ้นลงเบา ๆ · ใส่หมวกอยู่ = ยกสูงเหนือหมวก */
+.bk-f-wings .wg-halo{filter:drop-shadow(0 0 4px rgba(255,220,120,.9));animation:wgHalo 3s ease-in-out infinite}
+.bk-f-wings.has-head .wg-halo{transform:translateY(-44px);animation-name:wgHaloH}
+@keyframes wgHalo{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes wgHaloH{0%,100%{transform:translateY(-44px)}50%{transform:translateY(-47px)}}
+/* (5) ประกายลอยขึ้นจากปลายปีก */
+.bk-wings .wg-sp{opacity:0;transform-box:fill-box;animation:wgSp 2.6s ease-out infinite;filter:drop-shadow(0 0 2px #fff4c4)}
+@keyframes wgSp{0%{opacity:0;translate:0 0}20%{opacity:1}100%{opacity:0;translate:0 -26px}}
+.vst-refl :is(.wg-halo,.wg-sp,.wg-l,.wg-r){animation:none!important}
+.vst-refl .wg-sps,.vst-refl .bk-front{display:none}
+@media (prefers-reduced-motion:reduce){:is(.bk-wings .wg-l,.bk-wings .wg-r,.bk-f-wings .wg-halo,.bk-wings .wg-sp){animation:none!important}.bk-wings .wg-sp{display:none}}
+/* (6) ใส่ปีกอยู่: กรอบคำพูดขึ้นไปชิดด้านบน และแคบลง ไม่บังปีกซ้าย */
+html body .vst.is-fit:has(.vst-ms .bk-wings) .vst-say{top:4px!important;bottom:auto!important;height:auto!important;max-width:min(132px,calc(50% - 70px))!important;font-size:.68rem!important;padding:6px 10px 6px 22px!important}
+html body .vst .vof-b[data-outfit="wings"] > svg{width:118px!important;height:64px!important;max-width:92%}
+html body .vst .vof-b[data-outfit="wings"] > svg{width:96px!important;height:54px!important}
+
+/* ===== ปีกนางฟ้า v4 (daily-ui.css v104) ===== */
+/* (ก) สองข้างกระพือไม่พร้อมกันเป๊ะ */
+.bk-wings .wg-l{animation-delay:.12s}
+/* (2) ขนปลายปีกสะบัดตามช้ากว่าตัวปีก */
+.bk-wings .wg-tip{transform-box:fill-box;transform-origin:0 0;animation:wgTip 3.8s cubic-bezier(.45,0,.3,1) .18s infinite}
+@keyframes wgTip{0%,52%,100%{transform:rotate(0)}16%{transform:rotate(5deg)}30%{transform:rotate(-3deg)}42%{transform:rotate(1.5deg)}}
+/* (5) ขนนกร่วงลอยส่ายลงพื้น */
+.bk-wings .wg-fall{opacity:0;animation:wgFall 6.8s ease-in infinite}
+@keyframes wgFall{0%{opacity:0;transform:translate(0,0) rotate(0)}8%{opacity:.95}30%{transform:translate(5px,18px) rotate(18deg)}55%{transform:translate(-4px,38px) rotate(-14deg)}80%{opacity:.8;transform:translate(4px,58px) rotate(10deg)}100%{opacity:0;transform:translate(0,72px) rotate(0)}}
+.bk-wings .wg-flash{opacity:0}
+.vst-refl :is(.wg-tip,.wg-fall){animation:none!important}.vst-refl .wg-fth{display:none}
+/* (7) ฉากเปิดตัว: ปีกหุบอยู่ → กางออกพร้อมแสงวาบ + ขนนกปลิว → วงแสงลงมาลอยเหนือหัว */
+html body .vst.wgi .vst-say{opacity:0!important;transition:none!important}
+html body .vst.wgi .bk-wings .wg-l{animation:wgOpenL 1.3s cubic-bezier(.3,1.4,.5,1) .25s both}
+html body .vst.wgi .bk-wings .wg-r{animation:wgOpenR 1.3s cubic-bezier(.3,1.4,.5,1) .25s both}
+@keyframes wgOpenL{0%{transform:rotate(-62deg) scale(.55);opacity:.6}55%{transform:rotate(8deg) scale(1.04);opacity:1}100%{transform:none;opacity:1}}
+@keyframes wgOpenR{0%{transform:rotate(62deg) scale(.55);opacity:.6}55%{transform:rotate(-8deg) scale(1.04);opacity:1}100%{transform:none;opacity:1}}
+html body .vst.wgi .bk-wings .wg-tip{animation:none}
+html body .vst.wgi .bk-wings .wg-flash{transform-box:fill-box;transform-origin:center;animation:wgFlash .9s ease-out .7s both}
+@keyframes wgFlash{0%{opacity:0;transform:scale(.4)}25%{opacity:.95}100%{opacity:0;transform:scale(11)}}
+html body .vst.wgi .bk-wings .wg-fall{animation:wgBurst 1.4s cubic-bezier(.2,.8,.3,1) .8s both}
+html body .vst.wgi .bk-wings .wg-fall:nth-child(2n){animation-delay:.9s}
+@keyframes wgBurst{0%{opacity:0;transform:translate(0,-24px) rotate(-40deg) scale(.6)}20%{opacity:1}100%{opacity:0;transform:translate(0,46px) rotate(30deg) scale(1)}}
+html body .vst.wgi .bk-f-wings .wg-halo{animation:wgHaloIn 1s cubic-bezier(.3,1.3,.5,1) 1.1s both}
+html body .vst.wgi .bk-f-wings.has-head .wg-halo{animation-name:wgHaloInH}
+@keyframes wgHaloIn{0%{opacity:0;transform:translateY(-40px) scale(.6)}100%{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes wgHaloInH{0%{opacity:0;transform:translateY(-84px) scale(.6)}100%{opacity:1;transform:translateY(-44px) scale(1)}}
+@media (prefers-reduced-motion:reduce){.bk-wings .wg-tip,.bk-wings .wg-fall{animation:none!important}.bk-wings .wg-fth{display:none}}
+@keyframes wgOpenL{0%{transform:rotate(-78deg) scale(.38);opacity:.5}55%{transform:rotate(7deg) scale(1.05);opacity:1}100%{transform:none;opacity:1}}
+@keyframes wgOpenR{0%{transform:rotate(78deg) scale(.38);opacity:.5}55%{transform:rotate(-7deg) scale(1.05);opacity:1}100%{transform:none;opacity:1}}
+html body .vst.wgi .bk-wings .wg-l,html body .vst.wgi .bk-wings .wg-r{animation-duration:1.4s;animation-delay:.45s}
+html body .vst.wgi .bk-wings .wg-glow{animation:none;opacity:0;transition:none}
+
+/* ===== ปีกนางฟ้า v5: ทรงโค้งยาวลงด้านล่าง · หายใจเป็นคลื่น · กางหนึ่งครั้งเป็นระยะ (daily-ui.css v105) ===== */
+.bk-wings .wg-l{transform-box:view-box;transform-origin:34px 40px;animation:wgOpen5L 6s cubic-bezier(.45,0,.3,1) .1s infinite}
+.bk-wings .wg-r{transform-box:view-box;transform-origin:86px 40px;animation:wgOpen5R 6s cubic-bezier(.45,0,.3,1) infinite}
+@keyframes wgOpen5L{0%,62%,100%{transform:rotate(0)}74%{transform:rotate(26deg)}86%{transform:rotate(-3deg)}94%{transform:rotate(1deg)}}
+@keyframes wgOpen5R{0%,62%,100%{transform:rotate(0)}74%{transform:rotate(-26deg)}86%{transform:rotate(3deg)}94%{transform:rotate(-1deg)}}
+/* (3) หายใจเป็นคลื่น: ชั้นบนขยับก่อน ชั้นล่างตามทีหลัง · โค้งเข้าหาตัวแล้วคลายออก */
+.bk-wings :is(.wg-c,.wg-m,.wg-p){transform-box:view-box;transform-origin:86px 40px;animation:wgBreath 4s ease-in-out infinite}
+.bk-wings .wg-m{animation-delay:.28s}
+.bk-wings .wg-p{animation-delay:.56s;animation-name:wgBreathP}
+@keyframes wgBreath{0%,100%{transform:rotate(0)}50%{transform:rotate(2.5deg)}}
+@keyframes wgBreathP{0%,100%{transform:rotate(0) skewX(0)}50%{transform:rotate(4deg) skewX(-3deg)}}
+.vst-refl .bk-wings *{animation:none!important}
+/* (5) ฉากเปิดตัว: ปีกงอกจากไหล่ ไหลยาวลงทีละชั้น → กางหนึ่งครั้ง + แสงวาบ → โค้งกลับโอบตัว */
+html body .vst.wgi .bk-wings .wg-c{animation:wgGrow .5s cubic-bezier(.3,1.3,.5,1) .3s both}
+html body .vst.wgi .bk-wings .wg-m{animation:wgGrow .55s cubic-bezier(.3,1.3,.5,1) .6s both}
+html body .vst.wgi .bk-wings .wg-p{animation:wgGrow .6s cubic-bezier(.3,1.3,.5,1) .9s both}
+@keyframes wgGrow{0%{transform:scale(.1,.05);opacity:0}60%{opacity:1}100%{transform:none;opacity:1}}
+html body .vst.wgi .bk-wings .wg-l{animation:wgOpenOnceL 1s cubic-bezier(.45,0,.3,1) 1.4s both}
+html body .vst.wgi .bk-wings .wg-r{animation:wgOpenOnceR 1s cubic-bezier(.45,0,.3,1) 1.4s both}
+@keyframes wgOpenOnceL{0%,100%{transform:rotate(0)}40%{transform:rotate(28deg)}75%{transform:rotate(-3deg)}}
+@keyframes wgOpenOnceR{0%,100%{transform:rotate(0)}40%{transform:rotate(-28deg)}75%{transform:rotate(3deg)}}
+html body .vst.wgi .bk-wings .wg-flash{animation-delay:1.65s}
+html body .vst.wgi .bk-wings .wg-fall{animation-delay:1.7s}
+html body .vst.wgi .bk-wings .wg-fall:nth-child(2n){animation-delay:1.8s}
+html body .vst.wgi .bk-f-wings .wg-halo{animation-delay:1.9s}
+@media (prefers-reduced-motion:reduce){.bk-wings *{animation:none!important}}
+html body .vst.is-fit:has(.vst-ms .bk-wings) .vst-say{max-width:min(150px,calc(50% - 60px))!important}
+
+/* ===== ฉากเปิดตัวปีกนางฟ้า (.vwg) — ประตูสวรรค์เปิด (daily-ui.css v106) ===== */
+html body .vst.wg-pre .vst-ms :is(.bk-wings,.bk-f-wings){opacity:0!important}
+html body .vst.wg-intro .vst-say{opacity:0!important;transition:none!important}
+html body .vst .vwg{position:absolute;inset:0;z-index:6;overflow:hidden;cursor:pointer;transition:opacity .45s}
+html body .vst .vwg.out{opacity:0;pointer-events:none}
+html body .vst .vwg-dim{position:absolute;inset:0;background:radial-gradient(60% 60% at 50% 50%,rgba(40,30,90,.35),rgba(8,4,24,.75));opacity:0}
+html body .vst .vwg.go .vwg-dim{animation:vwgIn .5s ease forwards}
+@keyframes vwgIn{to{opacity:1}}
+/* เมฆแหวก */
+html body .vst .vwg-cl{position:absolute;top:-6px;width:62%;height:70px;will-change:transform}
+html body .vst .vwg-cl svg{width:100%!important;height:100%!important;filter:drop-shadow(0 6px 10px rgba(30,20,80,.35))!important}
+html body .vst .vwg-cl.l{left:-4%}
+html body .vst .vwg-cl.r{right:-4%;transform:scaleX(-1)}
+html body .vst .vwg.go .vwg-cl.l{animation:vwgClL 1.2s cubic-bezier(.5,0,.3,1) .35s forwards}
+html body .vst .vwg.go .vwg-cl.r{animation:vwgClR 1.2s cubic-bezier(.5,0,.3,1) .35s forwards}
+@keyframes vwgClL{to{transform:translateX(-46%)}}
+@keyframes vwgClR{to{transform:scaleX(-1) translateX(-46%)}}
+/* ลำแสงทอง */
+html body .vst .vwg-beam{position:absolute;top:0;bottom:0;width:180px;margin-left:-90px;opacity:0;transform-origin:50% 0;
+  background:linear-gradient(180deg,rgba(255,240,190,.75),rgba(255,226,150,.28) 60%,transparent);-webkit-clip-path:polygon(38% 0,62% 0,100% 100%,0 100%);clip-path:polygon(38% 0,62% 0,100% 100%,0 100%)}
+html body .vst .vwg.go .vwg-beam{animation:vwgBeam 1s ease-out .7s forwards}
+@keyframes vwgBeam{0%{opacity:0;transform:scaleY(.2)}100%{opacity:1;transform:none}}
+/* ขนนกโปรยลงมารวมที่หลังน้อง */
+html body .vst .vwg-fs i{position:absolute;top:0;width:12px;height:20px;margin-left:-6px;opacity:0;will-change:transform,opacity}
+html body .vst .vwg-fs i svg{width:100%!important;height:100%!important;filter:drop-shadow(0 0 3px #fff)!important}
+html body .vst .vwg.go .vwg-fs i{animation:vwgFea 1.25s cubic-bezier(.4,0,.6,1) var(--d) forwards}
+@keyframes vwgFea{0%{opacity:0;transform:translate(var(--x0),var(--y0)) rotate(var(--r))}15%{opacity:1}55%{transform:translate(calc(var(--x0) * .45 + var(--x1) * .55 + 10px),calc(var(--y1) * .55)) rotate(calc(var(--r) + 140deg))}88%{opacity:1}100%{opacity:0;transform:translate(var(--x1),var(--y1)) rotate(calc(var(--r) + 260deg)) scale(.4)}}
+/* วงเวทขนนกใต้เท้า */
+html body .vst .vwg-ring{position:absolute;overflow:visible;opacity:0;filter:drop-shadow(0 0 6px rgba(255,230,160,.9))!important}
+html body .vst .vwg.go .vwg-ring{animation:vwgIn .6s ease .5s forwards}
+html body .vst .vwg-ring .vwg-rn{transform-box:fill-box;transform-origin:center;animation:vwgSpin 6s linear infinite}
+@keyframes vwgSpin{to{transform:rotate(360deg)}}
+/* น้องลอยขึ้นตอนปีกกาง แล้วร่อนลง */
+html body .vst .vst-ms.wg-float > svg{animation:vwgFloat 1.4s cubic-bezier(.4,0,.3,1)}
+@keyframes vwgFloat{0%,100%{transform:translateY(0)}45%{transform:translateY(-14px)}}
+html body .vst .vwg.go .vli-skip{animation:vliIn .4s ease 1s forwards}
+@media (prefers-reduced-motion:reduce){html body .vst .vwg{display:none}}
+html body .vst .vwg-dim{background:radial-gradient(circle at var(--cx) var(--cy),rgba(8,4,24,0) 0,rgba(8,4,24,0) var(--r0),rgba(8,4,24,.72) var(--r1))}
+html body .vst .vwg-ring .vwg-rn{animation:vwgDash 2.4s linear infinite;transform:none}
+@keyframes vwgDash{to{stroke-dashoffset:-42}}
+
+/* ===== ฉากสวนลอยฟ้าเหนือเมฆ (.vst.is-sky) — ปีกนางฟ้า (daily-ui.css v107) ===== */
+html body .vst .vst-sky{position:absolute;inset:0;z-index:1;opacity:0;visibility:hidden;pointer-events:none;overflow:hidden;transition:opacity .8s ease,visibility 0s .8s}
+html body .vst.is-sky .vst-sky{opacity:1;visibility:visible;transition:opacity .8s ease}
+html body .vst .sk-svg{position:absolute;inset:0;width:100%!important;height:100%!important;filter:none!important}
+html body .vst .sk-rays{transform-box:view-box;transform-origin:195px 150px;animation:skRay 60s linear infinite}
+@keyframes skRay{to{transform:rotate(360deg)}}
+/* (5) ทะเลเมฆ 2 ชั้น เลื่อนต่างความเร็ว */
+html body .vst .sk-cb{animation:skDrift 26s ease-in-out infinite alternate}
+html body .vst .sk-cf{animation:skDrift 15s ease-in-out infinite alternate-reverse}
+@keyframes skDrift{from{transform:translateX(-14px)}to{transform:translateX(14px)}}
+html body .vst .sk-fall{animation:skFall .9s linear infinite}
+@keyframes skFall{to{stroke-dashoffset:-22}}
+/* (7) ขนนกลอยในอากาศ */
+html body .vst .sk-fes{position:absolute;inset:0;pointer-events:none}
+html body .vst .sk-fe{position:absolute;width:9px;height:15px;opacity:0;will-change:transform,opacity;animation:skFe var(--t) ease-in-out var(--d) infinite}
+html body .vst .sk-fe svg{width:100%!important;height:100%!important;filter:drop-shadow(0 0 2px #fff)!important}
+@keyframes skFe{0%{opacity:0;transform:translate(0,0) rotate(-20deg)}15%{opacity:.9}50%{transform:translate(18px,26px) rotate(25deg)}85%{opacity:.8}100%{opacity:0;transform:translate(-6px,54px) rotate(-10deg)}}
+html body .vst .sk-vig{position:absolute;inset:0;background:radial-gradient(90% 80% at 50% 50%,transparent 60%,rgba(90,70,160,.28) 100%)}
+/* (4) แท่นเมฆขอบทอง */
+html body .vst.is-sky .vst-ped{opacity:0}
+html body .vst .sk-pd{position:absolute;left:50%;bottom:-10px;width:230px;height:70px;margin-left:-115px;overflow:visible;filter:drop-shadow(0 0 12px rgba(255,226,140,.6)) drop-shadow(0 6px 12px rgba(120,90,180,.3))!important;animation:skPd 5s ease-in-out infinite}
+@keyframes skPd{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+html body .vst.is-sky .vst-ms{filter:drop-shadow(0 0 10px rgba(255,240,200,.6))}
+/* (8) กรอบคำพูดแบบเมฆ: ขาว ขอบทอง ปีกเล็กที่มุม · ไม่บังปีก */
+html body .vst.is-sky .vst-say{top:6px!important;bottom:auto!important;left:10px!important;right:auto!important;max-width:min(150px,calc(50% - 60px))!important;padding:8px 12px!important;border-radius:20px!important;
+  background:radial-gradient(120% 90% at 30% 20%,#ffffff,#f6f2ff)!important;color:#3a2f6a!important;font-weight:600!important;border:1.5px solid #f0cd6e!important;
+  box-shadow:0 0 0 3px rgba(255,255,255,.55),0 6px 16px rgba(110,90,190,.28),0 0 14px rgba(255,226,140,.45)!important;text-shadow:none!important;-webkit-mask:none!important;mask:none!important}
+html body .vst.is-sky .vst-say::before{content:""!important;position:absolute;right:-12px;top:-8px;left:auto;bottom:auto;width:22px;height:14px;border:0!important;border-radius:0;box-shadow:none!important;pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 14'%3E%3Cpath d='M2 12C6 4 14 0 21 1C19 4 16 5 13 5C16 6 17 8 15 9C12 10 10 9 9 8C9 10 7 12 2 12Z' fill='%23fff' stroke='%23d9b45a' stroke-width='1.2' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat!important}
+html body .vst.is-sky .vst-say::after{content:""!important;position:absolute!important;left:auto!important;right:-12px!important;top:auto!important;bottom:-10px!important;width:10px!important;height:10px!important;border-radius:50%!important;border:1.5px solid #f0cd6e!important;transform:none!important;
+  background:#fff!important;box-shadow:9px 9px 0 -2px #fff,9px 9px 0 -.5px #f0cd6e!important}
+@media (prefers-reduced-motion:reduce){html body .vst .vst-sky *{animation:none!important}html body .vst .sk-fes{display:none}}
+@media (max-width:520px){html body .vst.is-sky .vst-say{left:6px!important;max-width:118px!important;font-size:12px!important;padding:6px 10px!important}}
+
+/* ===== ป้ายทองติดปีก (ฉากสวนลอยฟ้า) — ไม่บังปีก · ตัวม่วงครามเน้นคำทอง · ปีกเล็กกระพือ · ดาวกะพริบ (daily-ui.css v108) ===== */
+html body .vst.is-sky .vst-say{top:9px!important;left:14px!important;right:auto!important;bottom:auto!important;max-width:none!important;min-height:0!important;width:auto!important;
+  padding:0!important;background:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;-webkit-mask:none!important;mask:none!important;
+  font:600 13px/1.4 'Prompt',sans-serif!important;color:#3b2f78!important;white-space:nowrap;text-align:center;
+  filter:drop-shadow(0 5px 9px rgba(90,70,170,.3))!important;animation:skSayF 4.5s ease-in-out infinite}
+html body .vst.is-sky .vst-say::before,html body .vst.is-sky .vst-say::after{content:none!important;display:none!important}
+/* (3) แผ่นป้ายทรงรี กรอบทองสองชั้น */
+html body .vst.is-sky .vst-say .sk-pl{position:relative;display:block;padding:7px 18px 8px;border-radius:999px;
+  background:radial-gradient(130% 120% at 50% 0%,#ffffff 0%,#fdf9ff 55%,#f1eafd 100%);
+  box-shadow:inset 0 0 0 1px #fff,inset 0 -6px 10px rgba(180,160,230,.18),0 0 0 1.6px #d9a93c,0 0 0 3.4px #fff8dc,0 0 0 4.6px #a8741a,0 0 14px 4px rgba(255,222,130,.45)}
+html body .vst.is-sky .vst-say .sk-pl::before{content:"";position:absolute;left:50%;top:-6px;width:10px;height:10px;margin-left:-5px;transform:rotate(45deg);border-radius:2px;
+  background:linear-gradient(135deg,#fff6cf,#e2ad3a 55%,#9a6410);box-shadow:0 0 0 1.2px #fff8dc,0 0 6px rgba(255,214,110,.9)}
+/* (4) ตัวม่วงคราม อ่านชัด · คำสำคัญทองเงา */
+html body .vst.is-sky .vst-say .sk-t{display:block;color:#3b2f78}
+html body .vst.is-sky .vst-say .sk-t b{font-weight:800;background:linear-gradient(100deg,#8a5a0e 0%,#c8901e 35%,#ffe9a6 50%,#c8901e 65%,#8a5a0e 100%);background-size:240% 100%;background-position:100% 0;
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;animation:skShine 3.6s ease-in-out infinite}
+@keyframes skShine{0%,50%{background-position:100% 0}100%{background-position:0 0}}
+/* (8) ปีกเล็กสองข้างกระพือ */
+html body .vst.is-sky .vst-say .sk-wg{position:absolute;top:50%;width:22px!important;height:18px!important;margin-top:-13px;overflow:visible;filter:drop-shadow(0 0 3px rgba(255,236,170,.9))!important}
+html body .vst.is-sky .vst-say .sk-wg.l{left:-17px;transform-origin:100% 60%;animation:skWgL 2.4s ease-in-out infinite}
+html body .vst.is-sky .vst-say .sk-wg.r{right:-17px;transform-origin:0 60%;animation:skWgR 2.4s ease-in-out infinite}
+@keyframes skWgL{0%,100%{transform:rotate(0)}45%{transform:rotate(16deg)}}
+@keyframes skWgR{0%,100%{transform:scaleX(-1) rotate(0)}45%{transform:scaleX(-1) rotate(16deg)}}
+/* (7) ประกายดาวกะพริบรอบป้าย */
+html body .vst.is-sky .vst-say .sk-st{position:absolute;font-style:normal;font-size:9px;line-height:1;color:#ffd970;text-shadow:0 0 4px #fff,0 0 6px rgba(255,210,100,.9);animation:skTw 2.2s ease-in-out infinite;pointer-events:none}
+html body .vst.is-sky .vst-say .sk-st.a{left:16%;top:-9px;animation-delay:-.4s}
+html body .vst.is-sky .vst-say .sk-st.b{right:10%;bottom:-8px;font-size:8px;animation-delay:-1.3s}
+html body .vst.is-sky .vst-say .sk-st.c{right:24%;top:-8px;font-size:7px;animation-delay:-1.9s}
+@keyframes skTw{0%,100%{opacity:.15;transform:scale(.6)}50%{opacity:1;transform:scale(1.15)}}
+@keyframes skSayF{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+html body .vst.is-sky .vst-say.sk-in .sk-pl{animation:skIn .7s cubic-bezier(.2,.8,.3,1) both}
+@keyframes skIn{from{opacity:0;transform:scale(.85);filter:blur(3px)}to{opacity:1;transform:none;filter:none}}
+html body .vst.is-sky.wg-intro .vst-say{opacity:0}
+/* (6) มือถือ: 2 บรรทัดสมดุล ไม่ทับปลายปีก */
+@media (max-width:520px){html body .vst.is-sky .vst-say{top:9px!important;left:18px!important;font-size:11px!important;line-height:1.3!important}
+  html body .vst.is-sky .vst-say .sk-pl{padding:5px 11px 6px}
+  html body .vst.is-sky .vst-say .sk-wg{width:17px!important;height:14px!important;margin-top:-10px}
+  html body .vst.is-sky .vst-say .sk-wg.l{left:-13px}html body .vst.is-sky .vst-say .sk-wg.r{right:-13px}}
+@media (prefers-reduced-motion:reduce){html body .vst.is-sky .vst-say,html body .vst.is-sky .vst-say *{animation:none!important}}
+@media (max-width:520px){html body .vst.is-sky .vst-say{left:13px!important;top:8px!important}html body .vst.is-sky .vst-say .sk-pl{padding:5px 9px 6px}}
+@media (min-width:521px){html body .vst.is-sky .vst-say{left:22px!important;top:10px!important}}
+@media (min-width:521px){html body .vst.is-sky .vst-say .sk-pl{padding:7px 20px 8px}}
+
+/* ===== คำเน้นทองคำแท้ (ฉากสวนลอยฟ้า): ทองเข้มนูน · ขอบน้ำตาลทองบาง · เงาวิ่งนุ่มไม่ซีด · ดาวจิ๋วกะพริบ ===== */
+html body .vst.is-sky .vst-say .sk-t b{position:relative;display:inline-block;font-weight:700;letter-spacing:.2px;padding:0 1px;
+  background:linear-gradient(100deg,transparent 38%,rgba(255,236,170,.6) 50%,transparent 62%),linear-gradient(180deg,#ffd877 0%,#f0b434 30%,#d18f16 60%,#a86c0e 100%);
+  background-size:300% 100%,100% 100%;background-position:120% 0,0 0;background-repeat:no-repeat;
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;-webkit-text-stroke:.3px #9a6410;
+  filter:drop-shadow(0 1px 0 rgba(255,255,255,.95)) drop-shadow(0 -.6px 0 rgba(110,66,6,.35));animation:skGold 4.2s ease-in-out infinite}
+@keyframes skGold{0%,45%{background-position:120% 0,0 0}100%{background-position:-20% 0,0 0}}
+html body .vst.is-sky .vst-say .sk-t b::after{content:"✦";position:absolute;right:-6px;top:-5px;font-size:7px;line-height:1;font-weight:400;-webkit-text-stroke:0;
+  -webkit-text-fill-color:#f4c64e;color:#f4c64e;background:none;text-shadow:0 0 3px #fff,0 0 5px rgba(255,200,80,.9);animation:skTw2 1.9s ease-in-out infinite}
+@keyframes skTw2{0%,100%{opacity:.45;transform:scale(.75)}50%{opacity:1;transform:scale(1.2)}}
+@media (prefers-reduced-motion:reduce){html body .vst.is-sky .vst-say .sk-t b,html body .vst.is-sky .vst-say .sk-t b::after{animation:none!important}}
+@media (max-width:520px){html body .vst.is-sky .vst-say .sk-pl{padding:5px 12px 6px}html body .vst.is-sky .vst-say{left:13px!important}}
+@keyframes skWgR2{0%,100%{transform:rotate(0)}45%{transform:rotate(-16deg)}}
+html body .vst.is-sky .vst-say .sk-wg.r{animation-name:skWgR2}
