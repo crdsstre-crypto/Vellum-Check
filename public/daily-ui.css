@@ -1579,3 +1579,13 @@ html body .vst.is-heav .vst-say.sv-in .sv-t{animation:svFade .7s ease .15s both}
 @keyframes svFade{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion:reduce){html body .vst.is-heav .vst-say,html body .vst.is-heav .vst-say *{animation:none!important}}
 html body .vst.is-heav .vst-say{right:calc(50% + 56px);max-width:calc(50% - 70px)}
+/* v58 ม้วนกระดาษ: ตัวเลขแยกบรรทัด · ตัวเลขสลักแบบกรีก · ลายใบลอเรลแทน emoji */
+html body .vst.is-heav .vst-say{text-align:center}
+html body .vst.is-heav .vst-say .sv-t{display:block}
+html body .vst.is-heav .vst-say .sv-hr{display:block;height:1px;margin:5px 8px 3px;background:linear-gradient(90deg,transparent,#c8961e 25%,#e9c46a 50%,#c8961e 75%,transparent)}
+html body .vst.is-heav .vst-say .sv-c{display:flex;align-items:center;justify-content:center;gap:5px;font-weight:700;color:#7a4d10;font-size:.7rem;white-space:nowrap}
+html body .vst.is-heav .vst-say .sv-n{display:inline;margin:0 1px;font:700 1.3rem/1 Georgia,'Times New Roman',serif;color:#a06a12;background:none;-webkit-background-clip:border-box;background-clip:border-box;animation:none;filter:none;vertical-align:-2px;text-shadow:0 1px 0 rgba(255,250,230,.9),0 -1px 0 rgba(90,50,0,.35)}
+html body .vst.is-heav .vst-say .sv-lf{width:20px!important;height:11px!important;flex:none;filter:none!important}
+html body .vst.is-heav .vst-say .sv-lf.sv-r{transform:scaleX(-1)}
+html body .vst.is-heav .vst-say{top:12px;bottom:auto}
+html body .vst.is-heav .vst-say .sv-lf{width:24px!important;height:13px!important}
