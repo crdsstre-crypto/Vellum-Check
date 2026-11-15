@@ -1589,3 +1589,68 @@ html body .vst.is-heav .vst-say .sv-lf{width:20px!important;height:11px!importan
 html body .vst.is-heav .vst-say .sv-lf.sv-r{transform:scaleX(-1)}
 html body .vst.is-heav .vst-say{top:12px;bottom:auto}
 html body .vst.is-heav .vst-say .sv-lf{width:24px!important;height:13px!important}
+
+/* v59 ม้วนกระดาษจริง: แกนบน-ล่าง · กระดาษเนียนขอบหยัก · ลายทองที่มุม · หางเป็นปลายกระดาษม้วน */
+html body .vst.is-heav .vst-say{background:none;box-shadow:none;border-radius:0;padding:12px 15px 11px;filter:drop-shadow(0 7px 12px rgba(80,30,40,.32))}
+html body .vst.is-heav .vst-say::before,html body .vst.is-heav .vst-say::after{content:none;display:none}
+html body .vst.is-heav .vst-say .sv-pp{position:absolute;inset:0;z-index:-1;background:radial-gradient(90% 80% at 50% 45%,#fdf5df 0%,#f6e6bf 55%,#e6c98e 100%);box-shadow:inset 0 0 12px rgba(160,105,30,.35);-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20preserveAspectRatio%3D%22none%22%3E%3Cpath%20d%3D%22M3%200H97Q100%208%2097.4%2016Q95%2025%2097.6%2034Q100%2042%2097.2%2050Q95%2058%2097.6%2067Q100%2076%2097.2%2084Q95%2092%2097%20100H3Q5%2092%202.8%2084Q0%2076%202.4%2067Q5%2058%202.8%2050Q0%2042%202.4%2034Q5%2025%202.6%2016Q0%208%203%200Z%22/%3E%3C/svg%3E") center/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20preserveAspectRatio%3D%22none%22%3E%3Cpath%20d%3D%22M3%200H97Q100%208%2097.4%2016Q95%2025%2097.6%2034Q100%2042%2097.2%2050Q95%2058%2097.6%2067Q100%2076%2097.2%2084Q95%2092%2097%20100H3Q5%2092%202.8%2084Q0%2076%202.4%2067Q5%2058%202.8%2050Q0%2042%202.4%2034Q5%2025%202.6%2016Q0%208%203%200Z%22/%3E%3C/svg%3E") center/100% 100% no-repeat}
+html body .vst.is-heav .vst-say .sv-body{position:relative;display:block}
+html body .vst.is-heav .vst-say .sv-rod{position:absolute;left:-7px;right:-7px;height:9px;border-radius:5px;background:linear-gradient(180deg,#7a4d08,#d9a536 28%,#fff3c4 45%,#e8b94a 62%,#8a5a12);box-shadow:0 2px 3px rgba(80,40,0,.3)}
+html body .vst.is-heav .vst-say .sv-rod.t{top:-6px}
+html body .vst.is-heav .vst-say .sv-rod.b{bottom:-6px}
+html body .vst.is-heav .vst-say .sv-rod::before,html body .vst.is-heav .vst-say .sv-rod::after{content:"";position:absolute;top:-2px;width:13px;height:13px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff6d6,#e0a92c 45%,#7a4d08);box-shadow:0 1px 2px rgba(60,30,0,.4)}
+html body .vst.is-heav .vst-say .sv-rod::before{left:-8px}
+html body .vst.is-heav .vst-say .sv-rod::after{right:-8px}
+html body .vst.is-heav .vst-say .sv-co{position:absolute;width:13px!important;height:13px!important;opacity:.85;filter:none!important}
+html body .vst.is-heav .vst-say .sv-co.c0{left:6px;top:5px}
+html body .vst.is-heav .vst-say .sv-co.c1{right:6px;top:5px;transform:scaleX(-1)}
+html body .vst.is-heav .vst-say .sv-co.c2{left:6px;bottom:5px;transform:scaleY(-1)}
+html body .vst.is-heav .vst-say .sv-co.c3{right:6px;bottom:5px;transform:scale(-1,-1)}
+html body .vst.is-heav .vst-say .sv-tail{position:absolute;right:-17px;bottom:16px;width:20px!important;height:16px!important;filter:none!important}
+@keyframes svUnroll{from{clip-path:inset(45% -20px 45% -20px)}to{clip-path:inset(-14px -30px -14px -20px)}}
+html body .vst.is-heav .vst-say{max-width:calc(50% - 80px);top:16px}
+/* v60 อนิเมชันม้วนกระดาษ */
+html body .vst.is-heav .vst-say.sv-in{animation:svFloat 4.2s ease-in-out .7s infinite}
+html body .vst.is-heav .vst-say .sv-pp{transform-origin:50% 50%}
+html body .vst.is-heav .vst-say.sv-in .sv-pp{animation:svPaper .55s cubic-bezier(.25,.8,.3,1) both}
+html body .vst.is-heav .vst-say.sv-in .sv-rod.t{animation:svRodT .55s cubic-bezier(.25,.8,.3,1) both}
+html body .vst.is-heav .vst-say.sv-in .sv-rod.b{animation:svRodB .55s cubic-bezier(.25,.8,.3,1) both}
+html body .vst.is-heav .vst-say .sv-rod{background-size:100% 300%;background-image:linear-gradient(180deg,#7a4d08,#d9a536 10%,#fff3c4 15%,#e8b94a 21%,#8a5a12 33%,#d9a536 43%,#fff3c4 48%,#e8b94a 54%,#8a5a12 66%,#d9a536 76%,#fff3c4 81%,#e8b94a 87%,#7a4d08)}
+html body .vst.is-heav .vst-say .sv-co,html body .vst.is-heav .vst-say .sv-tail{opacity:0;transition:opacity .3s}
+html body .vst.is-heav .vst-say.sv-in .sv-co{animation:svFade .4s ease .4s both}
+html body .vst.is-heav .vst-say.sv-in .sv-tail{animation:svFade .4s ease .45s both}
+html body .vst.is-heav .vst-say .sv-t{animation:none}
+html body .vst.is-heav .vst-say .sv-w{display:inline-block;opacity:0}
+html body .vst.is-heav .vst-say.sv-in .sv-w{animation:svInk .5s ease-out both}
+html body .vst.is-heav .vst-say .sv-hr,html body .vst.is-heav .vst-say .sv-c{opacity:0}
+html body .vst.is-heav .vst-say.sv-in .sv-hr{animation:svHr .45s ease-out both;transform-origin:50% 50%}
+html body .vst.is-heav .vst-say.sv-in .sv-c{animation:svFade .35s ease-out both}
+html body .vst.is-heav .vst-say .sv-of{font:700 .85rem/1 Georgia,serif;color:#a06a12;margin-left:1px}
+html body .vst.is-heav .vst-say .sv-n{display:inline-block;min-width:1.1em;text-align:center}
+html body .vst.is-heav .vst-say.sv-done .sv-n{animation:svPop .5s cubic-bezier(.3,1.6,.5,1)}
+html body .vst.is-heav .vst-say .sv-lv{transform-box:fill-box;transform-origin:0 50%;transform:scale(0)}
+html body .vst.is-heav .vst-say.sv-done .sv-lv{animation:svLeaf .35s cubic-bezier(.3,1.5,.5,1) both}
+html body .vst.is-heav .vst-say.sv-done .sv-lv:nth-child(2){animation-delay:.08s}
+html body .vst.is-heav .vst-say.sv-done .sv-lv:nth-child(3){animation-delay:.16s}
+html body .vst.is-heav .vst-say.sv-done .sv-lv:nth-child(4){animation-delay:.24s}
+html body .vst.is-heav .vst-say.sv-done .sv-lv:nth-child(5){animation-delay:.32s}
+html body .vst.is-heav .vst-say .sv-sh{position:absolute;inset:0;border-radius:inherit;overflow:hidden;pointer-events:none}
+html body .vst.is-heav .vst-say .sv-sh::before{content:"";position:absolute;top:0;bottom:0;left:0;width:30%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.85),transparent);transform:translateX(-120%);animation:svRodSh 4s ease-in-out 1.2s infinite}
+html body .vst.is-heav .vst-say .sv-rod.b .sv-sh::before{animation-delay:1.5s}
+html body .vst.is-heav .vst-say .sv-rod::before,html body .vst.is-heav .vst-say .sv-rod::after{animation:svKnob 2.6s ease-in-out infinite}
+html body .vst.is-heav .vst-say .sv-rod::after{animation-delay:-1.3s}
+html body .vst.is-heav .vst-say.sv-out .sv-pp{transform:scaleY(.04);transition:transform .3s ease-in}
+html body .vst.is-heav .vst-say.sv-out .sv-rod.t{transform:translateY(var(--sh));transition:transform .3s ease-in}
+html body .vst.is-heav .vst-say.sv-out .sv-rod.b{transform:translateY(calc(-1 * var(--sh)));transition:transform .3s ease-in}
+html body .vst.is-heav .vst-say.sv-out .sv-body,html body .vst.is-heav .vst-say.sv-out .sv-co,html body .vst.is-heav .vst-say.sv-out .sv-tail{opacity:0;transition:opacity .15s}
+@keyframes svFloat{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-2px) rotate(-.6deg)}70%{transform:translateY(1px) rotate(.5deg)}}
+@keyframes svPaper{from{transform:scaleY(.04)}to{transform:none}}
+@keyframes svRodT{from{transform:translateY(var(--sh));background-position:0 0}to{transform:none;background-position:0 100%}}
+@keyframes svRodB{from{transform:translateY(calc(-1 * var(--sh)));background-position:0 100%}to{transform:none;background-position:0 0}}
+@keyframes svInk{0%{opacity:0;transform:translateY(3px);color:#e0a92c;text-shadow:0 0 8px rgba(255,205,90,.95)}60%{opacity:1;color:#c8861a;text-shadow:0 0 6px rgba(255,205,90,.6)}100%{opacity:1;transform:none;color:inherit;text-shadow:none}}
+@keyframes svHr{from{opacity:0;transform:scaleX(0)}to{opacity:1;transform:none}}
+@keyframes svPop{0%{transform:scale(1)}40%{transform:scale(1.3);text-shadow:0 0 10px rgba(255,210,100,1),0 1px 0 #fff}100%{transform:scale(1)}}
+@keyframes svLeaf{from{transform:scale(0)}to{transform:scale(1)}}
+@keyframes svRodSh{0%,55%{transform:translateX(-120%)}100%{transform:translateX(420%)}}
+@keyframes svKnob{0%,100%{filter:brightness(1)}50%{filter:brightness(1.35)}}
+@media (prefers-reduced-motion:reduce){html body .vst.is-heav .vst-say *{animation:none!important;opacity:1!important}html body .vst.is-heav .vst-say .sv-lv{transform:none}}
