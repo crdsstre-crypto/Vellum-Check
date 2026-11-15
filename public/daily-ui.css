@@ -2253,3 +2253,4 @@ html body .vst.lr-intro .vst-say,html body .vst.cr-intro .vst-say{opacity:0!impo
 /* แก้: ไม่ให้มีของซ้ำสองชุดระหว่างฉากเปิดตัว — วงเวทของฉากหอคอยซ่อนตอนเปิดตัวหมวกนักเวท · Zzz ของฉากความฝันซ่อนตอนฉากเตียง */
 html body .vst.wz-intro .ws-ring,html body .vst.wz-intro .dm-zz{opacity:0!important;transition:opacity .3s}
 html body .vst .vnz.up .vnz-who{opacity:0;transition:opacity .15s}
+html body .vst:not(.is-fire) .vst-hero{display:none!important}
