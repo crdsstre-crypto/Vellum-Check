@@ -2197,3 +2197,54 @@ html body .vst.is-fire .vst-say .mk-m{line-height:1.3}
 html body .vst.is-fire .vst-say .mk-ic{width:18px!important;height:14px!important}
 html body .vst.is-fire .vst-say .mk-n{margin-top:3px;padding-top:3px;line-height:1.2}
 html body .vst.is-fire .vst-say .mk-n b{font-size:1.12rem}
+
+/* ===== กรอบคำพูดท้องพระโรง (มงกุฎตำนาน): กำมะหยี่แดง + เชือกทองถัก + มงกุฎจิ๋ว + หางอัญมณี 3 เม็ด + ประกายเพชร (daily-ui.css v82) ===== */
+html body .vst.is-thr .vst-say{bottom:118px;right:calc(50% + 70px);max-width:calc(50% - 82px);padding:11px 13px 9px;border-radius:12px;border:3px solid transparent;
+  background:radial-gradient(120% 90% at 30% 15%,#a3172f,#6a0a1c 60%,#4a0512) padding-box,repeating-linear-gradient(45deg,#fff0b0 0 2px,#e0a92c 2px 4.5px,#8a5a12 4.5px 6px) border-box!important;
+  color:#fbeccb;font-weight:600;text-shadow:0 1px 1px rgba(40,0,8,.6);
+  box-shadow:inset 0 0 0 1px rgba(255,220,150,.35),inset 0 8px 14px -8px rgba(255,190,190,.35),0 10px 24px rgba(40,0,10,.55),0 0 18px rgba(255,190,90,.25)!important}
+html body .vst.is-thr .vst-say::before{content:"";position:absolute;left:50%;top:-15px;width:30px;height:20px;margin-left:-15px;pointer-events:none;filter:drop-shadow(0 2px 2px rgba(60,10,0,.5));
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 20'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23fff3c4'/%3E%3Cstop offset='.55' stop-color='%23f4c542'/%3E%3Cstop offset='1' stop-color='%23b07a14'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M3 15 1.5 5l6 5 3.5-7.5L15 1l4 1.5L22.5 10l6-5L27 15z' fill='url(%23g)' stroke='%235a3a08' stroke-width='1' stroke-linejoin='round'/%3E%3Crect x='3' y='14' width='24' height='4.5' rx='1.2' fill='url(%23g)' stroke='%235a3a08' stroke-width='1'/%3E%3Ccircle cx='15' cy='8.6' r='1.9' fill='%23e0304a'/%3E%3Ccircle cx='9' cy='16.2' r='1.2' fill='%232f6bff'/%3E%3Ccircle cx='21' cy='16.2' r='1.2' fill='%231fae6a'/%3E%3Ccircle cx='1.5' cy='5' r='1.3' fill='%23fff3c4'/%3E%3Ccircle cx='28.5' cy='5' r='1.3' fill='%23fff3c4'/%3E%3Ccircle cx='15' cy='1.2' r='1.3' fill='%23fff3c4'/%3E%3C/svg%3E") center/contain no-repeat!important}
+html body .vst.is-thr .vst-say::after{content:"";right:-13px!important;bottom:auto!important;top:50%!important;left:auto!important;width:9px!important;height:9px!important;margin-top:-6px;border:0!important;border-radius:50%!important;transform:none!important;
+  background:radial-gradient(circle at 35% 30%,#ffb3be,#e0304a 55%,#8a0d22)!important;box-shadow:0 0 5px rgba(255,80,110,.8),10px 6px 0 -1.5px #2f6bff,10px 6px 5px -2px rgba(80,140,255,.8),18px 11px 0 -2.6px #1fae6a,18px 11px 4px -3px rgba(60,220,140,.8)!important}
+html body .vst.is-thr .vst-say .ry-sp{position:absolute;font:400 11px/1 sans-serif;font-style:normal;color:#fff6d0;text-shadow:0 0 6px #ffd76a,0 0 10px rgba(255,255,255,.8);pointer-events:none;animation:rySp 2.8s ease-in-out infinite}
+html body .vst.is-thr .vst-say .ry-sp.a{left:-6px;top:-6px}
+html body .vst.is-thr .vst-say .ry-sp.b{right:-5px;bottom:-6px;font-size:8px;animation-delay:-1.4s}
+@keyframes rySp{0%,100%{opacity:0;transform:scale(.4) rotate(0)}45%,55%{opacity:1;transform:scale(1.1) rotate(25deg)}}
+@media (prefers-reduced-motion:reduce){html body .vst.is-thr .vst-say .ry-sp{animation:none;opacity:.8}}
+html body .vst.is-thr .vst-say{box-sizing:border-box;right:calc(50% + 66px);max-width:min(240px,calc(50% - 78px))}
+
+/* ===== ตำนานมงกุฎตำนาน (.vlr.is-crown): ท้องพระโรงกำมะหยี่แดงขอบทอง · แท็บอัญมณี · ตราประทับตอนจบ (daily-ui.css v83) ===== */
+html body .vlr.is-crown .vlr-bg{background:radial-gradient(70% 60% at 50% 40%,rgba(140,20,40,.6),rgba(12,2,6,.92))!important}
+html body .vlr.is-crown .vlr-sh{color:#f6e6c8!important;background:radial-gradient(120% 70% at 50% 0,rgba(255,120,140,.18),transparent 55%),repeating-linear-gradient(115deg,rgba(255,255,255,.018) 0 2px,transparent 2px 6px),linear-gradient(170deg,#7e0f24,#5a0818 55%,#3e0410)!important;
+  box-shadow:inset 0 0 0 2px #e0a92c,inset 0 0 0 4px #5a0818,inset 0 0 0 5px rgba(244,197,66,.55),inset 0 0 40px rgba(0,0,0,.45),0 24px 60px rgba(0,0,0,.6)!important}
+html body .vlr.is-crown .vlr-frame b{border-color:#f4c542!important}
+html body .vlr.is-crown .vlr-k{color:#f1c75a!important}
+html body .vlr.is-crown .vlr-sh h3{background:linear-gradient(180deg,#fff3c4,#f4c542 50%,#b07a14)!important;-webkit-background-clip:text!important;background-clip:text!important;color:transparent!important;filter:drop-shadow(0 2px 0 rgba(60,0,10,.6))!important}
+html body .vlr.is-crown .vlr-x{color:#ffe9a8!important;background:rgba(60,4,14,.55)!important;border-color:rgba(244,197,66,.5)!important}
+html body .vlr.is-crown .vlr-tabs button{color:#f1c75a!important;border-color:rgba(244,197,66,.45)!important;background:rgba(40,2,10,.55)!important}
+html body .vlr.is-crown .vlr-tabs button.on{background:radial-gradient(circle at 35% 30%,#ffe9a3,#c9921f)!important;border-color:#fff3c4!important;box-shadow:0 0 12px rgba(255,210,110,.7)!important}
+html body .vlr.is-crown .vlr-tabs button svg{width:20px!important;height:20px!important}
+html body .vlr.is-crown .vlr-tabs button.lk svg{filter:grayscale(1) brightness(.7);opacity:.6}
+html body .vlr.is-crown .vlr-tabs button.lk{background:rgba(30,2,8,.6)!important;color:#8a6a5a!important}
+html body .vlr.is-crown .vlr-path b{background:linear-gradient(90deg,#f4c542,#ffe9a3)!important}
+html body .vlr.is-crown .vlr-body h4{color:#ffd76a!important}
+html body .vlr.is-crown .vlr-body p,html body .vlr.is-crown .vlr-body p.lp{color:#f6e6c8!important}
+html body .vlr.is-crown .vlr-body .ln{color:#ffd76a!important}
+html body .vlr.is-crown .vlr-body mark.lh{color:#fff6dc!important;background-image:linear-gradient(transparent 52%,rgba(244,197,66,.45) 52%,rgba(255,214,110,.5) 92%,transparent 92%)!important}
+html body .vlr.is-crown .vlr-body blockquote.lq{color:#ffe9a8!important;border-color:rgba(244,197,66,.5)!important}
+html body .vlr.is-crown .vlr-body blockquote.lq .lq-o,html body .vlr.is-crown .vlr-body blockquote.lq .lq-c{color:#f4c542!important}
+html body .vlr.is-crown .vlr-lock{background:rgba(255,210,110,.08)!important;border-color:rgba(244,197,66,.5)!important;color:#ffe9a8!important}
+html body .vlr.is-crown .vlr-lock small{color:#e8c9a0!important}
+html body .vlr.is-crown .vlr-art-l{margin-top:14px!important;filter:drop-shadow(0 6px 12px rgba(0,0,0,.45)) drop-shadow(0 0 14px rgba(255,200,100,.25))!important}
+html body .vlr.is-crown .vlr-art-l svg{overflow:visible!important}
+html body .vlr.is-crown .vlr-body{scrollbar-color:#c9921f transparent}
+/* (8) ตราประทับตอนจบ: กดลงมาเบา ๆ */
+html body .vlr.is-crown .vlr-end{display:grid;place-items:center}
+html body .vlr .vlr-seal-r{width:64px;height:64px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.5));animation:srStamp .7s cubic-bezier(.3,1.4,.5,1) .9s both}
+@keyframes srStamp{0%{opacity:0;transform:scale(1.8) rotate(-18deg)}60%{opacity:1;transform:scale(.92) rotate(-6deg)}100%{opacity:1;transform:scale(1) rotate(-8deg)}}
+/* ปุ่ม 📜 บนการ์ดมงกุฎ */
+html body .vst .vof-b .vof-lore-w.is-crown{top:auto;bottom:40px;right:8px;background:rgba(90,8,24,.85);box-shadow:0 0 0 1.5px #e0a92c}
+@media (prefers-reduced-motion:reduce){html body .vlr .vlr-seal-r{animation:none}}
+html body .vst .vof-b .vof-lore-w.is-crown{top:30px;bottom:auto;right:6px;width:24px;height:24px;font-size:12px}
+html body .vst .vof-b .vof-lore-w.is-crown{top:auto;bottom:10px;right:10px}
