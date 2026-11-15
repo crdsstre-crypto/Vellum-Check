@@ -1370,3 +1370,154 @@ html body .vst .vof-b.vof-lim{grid-column:1 / -1;grid-template-columns:92px minm
 html body .vst .vof-lim .lim-art{width:92px}
 /* กรอบรุ้งหมุน: ใช้สี่เหลี่ยมจัตุรัสใหญ่พอสำหรับการ์ดกว้าง ไม่ให้มุมแหว่ง */
 html body .vst .vof-lim::before{inset:auto;left:50%;top:50%;width:260%;aspect-ratio:1;height:auto;margin:-130% 0 0 -130%}
+
+/* ===== v49 (15 พ.ย.): มาลัยตำนาน — ใบทองคำ+มรกต · ทับทิมกลาง · ริบบิ้น · วงรัศมีทอง · การ์ดตำนานทอง ===== */
+.lr-burst{opacity:0;transform-box:fill-box;transform-origin:center;animation:mdBurst 3.6s ease-out infinite}
+.lr-rib path{transform-box:fill-box;transform-origin:50% 0}
+.lr-rib path:first-child{animation:lrRib 2.8s ease-in-out infinite}
+.lr-rib path:last-child{animation:lrRib 2.8s ease-in-out -1.4s infinite}
+@keyframes lrRib{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(5deg)}}
+.lr-rays{transform-box:view-box;transform-origin:60px 70px;animation:skSpin 30s linear infinite}
+.lr-fall{opacity:0;animation:lrFall 5.2s linear infinite}
+@keyframes lrFall{0%{opacity:0;translate:0 0;rotate:0deg}10%{opacity:.9}90%{opacity:.7}100%{opacity:0;translate:6px 120px;rotate:200deg}}
+.vst-refl .lr-aura{display:none}
+/* การ์ดในร้าน */
+html body .vst .vof-b.is-laurel{border:0;isolation:isolate;overflow:hidden;background:radial-gradient(100% 70% at 50% 30%,rgba(244,197,66,.18),transparent 70%),linear-gradient(180deg,#221a0c,#140f08)}
+html body .vst .vof-b.is-laurel::before{content:"";position:absolute;left:50%;top:50%;width:260%;aspect-ratio:1;margin:-130% 0 0 -130%;z-index:-2;
+  background:conic-gradient(from 0deg,#7a5410,#f4c542,#fff3c4,#f4c542,#7a5410,#c8962a,#7a5410);animation:skSpin 8s linear infinite}
+html body .vst .vof-b.is-laurel::after{content:"";position:absolute;inset:1.5px;z-index:-1;border-radius:14.5px;opacity:1;animation:none;box-shadow:none;
+  background:radial-gradient(100% 70% at 50% 30%,rgba(244,197,66,.18),transparent 70%),linear-gradient(180deg,#221a0c,#140f08)}
+html body .vst .vof-b.is-laurel .vof-r{color:#f4c542}
+.lr-card{display:flex;flex-direction:column;align-items:center;gap:4px;width:100%}
+html body .vst .vof-b.is-laurel .lr-card svg{width:66px !important;height:36px !important;filter:saturate(.75) brightness(.8) drop-shadow(0 0 6px rgba(244,197,66,.35)) !important}
+.lr-bar{display:block;width:70%;height:4px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}
+html body .vst .lr-bar i{position:static;display:block;width:var(--bp);min-width:3px;height:100%;border-radius:inherit;background:linear-gradient(90deg,#c8962a,#fff3c4);box-shadow:0 0 6px rgba(244,197,66,.8)}
+.lr-left{font:700 .6rem/1 'Prompt',sans-serif;font-style:normal;color:#f1d58a}
+html body .vst .vof-b.is-laurel small{color:#f6e3b0}
+html body .vst .vof-b.is-laurel .vof-act.is-badge{background:linear-gradient(180deg,rgba(244,197,66,.25),rgba(244,197,66,.12));color:#ffe7a6;box-shadow:inset 0 0 0 1px rgba(244,197,66,.45)}
+@media (prefers-reduced-motion:reduce){.lr-burst,.lr-rib path,.lr-rays,.lr-fall,.vof-b.is-laurel::before{animation:none !important}}
+html body .vst .vof-b.is-laurel .lr-card{gap:3px}
+html body .vst .vof-b.is-laurel .lr-card svg{width:60px !important;height:30px !important}
+html body .vst .vof-b.is-laurel .lr-left{font-size:.56rem}
+html body .vst .vof-b.is-laurel small{margin-top:2px}
+/* v50 มาลัยตำนาน: บทเปิดตัว เทพธิดาเป่าแตร + น้ำพุ */
+html body .vst .vli{position:absolute;inset:0;z-index:6;cursor:pointer;overflow:hidden;transition:opacity .45s ease}
+html body .vst .vli.out{opacity:0;pointer-events:none}
+html body .vst .vli-dim{position:absolute;inset:0;opacity:0;background:radial-gradient(60% 55% at 30% 18%,rgba(255,224,138,.28),transparent 70%),radial-gradient(50% 50% at 80% 80%,rgba(127,211,240,.16),transparent 70%),rgba(12,6,24,.62)}
+html body .vst .vli-gr{position:absolute;left:-40px;top:-60px;width:260px;height:360px;opacity:0;transform-origin:30% 0;transform:rotate(-24deg);background:linear-gradient(90deg,transparent,rgba(255,236,170,.22) 30%,transparent 42%,rgba(255,236,170,.14) 60%,transparent 74%)}
+html body .vst .vli svg{position:absolute;filter:none!important;overflow:visible}
+html body .vst .vli-gd{left:0;top:4px;width:150px!important;height:150px!important;opacity:0}
+html body .vst .vli-fn{right:8px;bottom:8px;width:104px!important;height:112px!important;opacity:0;transform-origin:50% 100%}
+html body .vst .vli-nts{position:absolute;left:138px;top:72px;width:0;height:0}
+html body .vst .vli-nt{position:absolute;left:0;top:0;font:700 17px/1 serif;font-style:normal;color:#ffe08a;text-shadow:0 0 8px rgba(255,214,110,.9);opacity:0}
+html body .vst .vli-lr{position:absolute;width:86px;height:46px;opacity:0;transform:translate(-50%,-50%) translate(0,24px) scale(.3);will-change:transform,opacity}
+html body .vst .vli-lr svg{position:absolute;inset:0;width:100%!important;height:100%!important}
+html body .vst .vli-lrg{position:absolute;left:50%;top:50%;width:150px;height:150px;margin:-75px;border-radius:50%;background:radial-gradient(circle,rgba(255,240,190,.85),rgba(255,214,110,.3) 38%,transparent 66%)}
+html body .vst .vli-skip{position:absolute;left:10px;bottom:8px;font:500 .66rem 'Prompt',sans-serif;color:rgba(255,246,214,.7);opacity:0}
+html body .vst.lr-intro .vst-say{opacity:0;transition:opacity .3s}
+html body .vst .vst-ms.hide-laurel .lr-worn,html body .vst .vst-ms.hide-laurel .lr-aura{opacity:0}
+html body .vst .vst-ms.hide-laurel{opacity:.62;transition:opacity .4s}
+.vli-crown{width:150px!important;height:150px!important;margin:-75px!important}
+/* ลำดับฉาก (~4.3 วิ) */
+html body .vst .vli.go .vli-dim{animation:vliIn .5s ease forwards!important}
+html body .vst .vli.go .vli-gr{animation:vliGr 4s ease .3s forwards!important}
+html body .vst .vli.go .vli-gd{animation:vliGd .8s cubic-bezier(.2,.8,.3,1) .15s forwards,vliFl 3s ease-in-out .95s infinite!important}
+html body .vst .vli.go .vli-wing{transform-box:fill-box;transform-origin:100% 90%;animation:vliWg 1.2s ease-in-out infinite!important}
+html body .vst .vli.go .vli-bell{animation:vliBl .5s ease-in-out .9s 5 alternate both!important}
+html body .vst .vli.go .vli-wv path{opacity:0;transform-box:fill-box;transform-origin:0 50%;animation:vliWv .7s ease-out .9s 4 both!important}
+html body .vst .vli.go .vli-wv path+path{animation-delay:1.05s!important}
+html body .vst .vli.go .vli-nt{animation:vliNt 1.6s ease-out var(--d) both!important}
+html body .vst .vli.go .vli-fn{animation:vliFn .7s cubic-bezier(.2,.9,.3,1.2) .4s forwards!important}
+html body .vst .vli.go .vli-wat path{stroke-dasharray:14 6;stroke-dashoffset:60;opacity:0;animation:vliWt .5s ease 1.1s forwards,vliFw .6s linear 1.1s infinite!important}
+html body .vst .vli.go .vli-jet{transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(0);animation:vliJt 1.4s ease-out 1.7s forwards!important}
+html body .vst .vli.go .vli-rip{transform-box:fill-box;transform-origin:50% 50%;animation:vliRp 1.2s ease-out 1.2s infinite both!important}
+html body .vst .vli.go .vli-lr{animation:vliLr .9s cubic-bezier(.2,.8,.3,1.1) 2.05s forwards!important}
+html body .vst .vli.go .vli-lr svg{animation:vliSp 1.4s ease-in-out 2.05s infinite alternate!important}
+html body .vst .vli.go .vli-lrg{animation:vliPl 1.2s ease-in-out 2.05s infinite alternate both!important}
+html body .vst .vli.go .vli-skip{animation:vliIn .4s ease 1s forwards!important}
+html body .vst .vli-lr.fly .vli-lrg{animation:vliPl .5s ease infinite alternate!important}
+@keyframes vliIn{to{opacity:1}}
+@keyframes vliGr{0%{opacity:0}30%{opacity:1}80%{opacity:.8}100%{opacity:.3}}
+@keyframes vliGd{from{opacity:0;transform:translate(-24px,-34px) scale(.9)}to{opacity:1;transform:none}}
+@keyframes vliFl{0%,100%{transform:none}50%{transform:translateY(-5px)}}
+@keyframes vliWg{0%,100%{transform:rotate(0)}50%{transform:rotate(8deg)}}
+@keyframes vliBl{from{opacity:.4}to{opacity:1}}
+@keyframes vliWv{from{opacity:.95;transform:scale(.5)}to{opacity:0;transform:translateX(10px) scale(1.5)}}
+@keyframes vliNt{0%{opacity:0;transform:translate(0,0) scale(.5) rotate(-15deg)}20%{opacity:1}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(1.15) rotate(12deg)}}
+@keyframes vliFn{from{opacity:0;transform:translateY(16px) scale(.7)}to{opacity:1;transform:none}}
+@keyframes vliWt{to{opacity:.95}}
+@keyframes vliFw{to{stroke-dashoffset:40}}
+@keyframes vliJt{0%{transform:scaleY(0)}35%{transform:scaleY(1.15)}100%{transform:scaleY(.85)}}
+@keyframes vliRp{from{opacity:.9;transform:scale(.4)}to{opacity:0;transform:scale(2.2)}}
+@keyframes vliLr{0%{opacity:0;transform:translate(-50%,-50%) translate(0,24px) scale(.3)}60%{opacity:1}100%{opacity:1;transform:translate(-50%,-50%) translate(0,-70px) scale(1)}}
+@keyframes vliSp{from{transform:rotate(-5deg)}to{transform:rotate(5deg) translateY(-3px)}}
+@keyframes vliPl{from{opacity:.55;transform:scale(.85)}to{opacity:1;transform:scale(1.1)}}
+@media (prefers-reduced-motion:reduce){html body .vst .vli{display:none}}
+/* v51 มาลัยตำนาน v3: ลอยเหนือหัว · ประกาย · แก้วแสง · ทีเซอร์เงาปริศนา */
+html body .lr-float{transform-box:view-box;animation:lrFloat 3.4s ease-in-out infinite}
+html body .lr-halo{transform-box:fill-box;transform-origin:center;animation:lrHalo 3.4s ease-in-out infinite}
+html body .lr-tw{transform-box:fill-box;transform-origin:center;opacity:0;animation:lrTw 2.4s ease-in-out infinite}
+html body .lv-gl{animation:lrGl 2.8s ease-in-out infinite}
+html body .lr-disc{transform-box:fill-box;transform-origin:center;animation:lrDisc 14s linear infinite}
+@keyframes lrFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.2px)}}
+@keyframes lrHalo{0%,100%{opacity:.75}50%{opacity:1}}
+@keyframes lrTw{0%,60%,100%{opacity:0;transform:scale(.3)}75%{opacity:1;transform:scale(1.15) rotate(45deg)}}
+@keyframes lrGl{0%,100%{opacity:.75}50%{opacity:1}}
+@keyframes lrDisc{to{transform:rotate(360deg)}}
+.vst-refl .lr-float,.vst-refl .lr-halo,.vst-refl .lr-tw,.vst-refl .lv-gl,.vst-refl .lr-disc{animation:none!important}
+html body .vst .vof-b.is-laurel .lr-card{position:relative}
+html body .vst .vof-b.is-laurel .lr-card svg{width:60px !important;height:30px !important;filter:brightness(0) drop-shadow(0 0 1px #ffd75a) drop-shadow(0 0 5px rgba(244,197,66,.45)) !important}
+html body .vst .vof-b.is-laurel .lr-card svg *{animation:none!important}
+html body .vst .vof-b.is-laurel .lr-card::after{content:"";position:absolute;left:0;top:0;width:40%;height:38px;background:linear-gradient(100deg,transparent,rgba(255,236,170,.55),transparent);transform:translateX(-120%) skewX(-12deg);animation:lrTease 3.2s ease-in-out infinite;pointer-events:none;mix-blend-mode:screen}
+@keyframes lrTease{0%,55%{transform:translateX(-120%) skewX(-12deg)}100%{transform:translateX(320%) skewX(-12deg)}}
+@media (prefers-reduced-motion:reduce){html body .lr-float,html body .lr-halo,html body .lr-tw,html body .lv-gl,html body .lr-disc,html body .vst .vof-b.is-laurel .lr-card::after{animation:none!important}html body .lr-tw{opacity:.8}}
+/* v52 ท่าทางเฉพาะมาลัยตำนาน */
+html body .lp-p{opacity:0}
+html body .lp-1{opacity:1}
+html body .lp-p{animation:lpCyc 12s infinite}
+html body .lp-2{animation-delay:-8s}
+html body .lp-3{animation-delay:-4s}
+@keyframes lpCyc{0%,30%{opacity:1}33.3%,96.7%{opacity:0}100%{opacity:1}}
+html body .lp-pump{transform-box:view-box;animation:lpPump 1s ease-in-out infinite}
+@keyframes lpPump{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.5px)}}
+html body .lp-tap{transform-box:view-box;transform-origin:89px 72px;animation:lpTap 2s ease-in-out infinite}
+@keyframes lpTap{0%,100%{transform:rotate(0)}50%{transform:rotate(-4deg)}}
+html body .lp-wv{transform-box:view-box;transform-origin:89px 72px;animation:lpWv 1.8s ease-in-out infinite}
+@keyframes lpWv{0%,100%{transform:rotate(-10deg)}50%{transform:rotate(12deg)}}
+html body .lp-eye{transform-box:fill-box;transform-origin:center;animation:lpEye 2.2s ease-in-out infinite}
+@keyframes lpEye{0%,100%{opacity:1}50%{opacity:.55}}
+html body .lp-lev{transform-box:view-box;animation:lpLev 3.4s ease-in-out infinite}
+@keyframes lpLev{0%,100%{transform:translateY(-3px)}50%{transform:translateY(-7px)}}
+html body .lp-sh{transform-box:fill-box;transform-origin:center;animation:lpSh 3.4s ease-in-out infinite}
+@keyframes lpSh{0%,100%{transform:scale(.85)}50%{transform:scale(.7)}}
+html body .lp-ring{transform-box:fill-box;transform-origin:center;opacity:0;animation:lpRing 2.4s ease-out infinite}
+html body .lp-ring2{animation-delay:-1.2s}
+@keyframes lpRing{0%{opacity:.9;transform:scale(.5)}100%{opacity:0;transform:scale(1.35)}}
+.vst-refl .lp-lev{transform:translateY(-3px)}
+@media (prefers-reduced-motion:reduce){html body .lp-p,html body .lp-pump,html body .lp-tap,html body .lp-wv,html body .lp-eye,html body .lp-lev,html body .lp-sh,html body .lp-ring{animation:none!important}html body .lp-ring{opacity:.6}}
+/* v53 ฉากสวรรค์ของมาลัยตำนาน */
+html body .vst .vst-heav{position:absolute;inset:0;z-index:1;opacity:0;visibility:hidden;pointer-events:none;overflow:hidden;transition:opacity .7s ease,visibility 0s .7s}
+html body .vst.is-heav .vst-heav{opacity:1;visibility:visible;transition:opacity .7s ease}
+html body .vst .hv-sky{position:absolute;inset:0;background:linear-gradient(180deg,#a9bff0 0%,#d9c8f0 26%,#ffd3dc 50%,#ffe2b0 74%,#fff1d2 100%)}
+html body .vst .hv-svg{position:absolute;inset:0;width:100%!important;height:100%!important;filter:none!important}
+html body .vst .hv-halo{transform-box:view-box;transform-origin:195px 118px;animation:hvSpin 80s linear infinite}
+html body .vst .hv-rays{animation:hvRay 5s ease-in-out infinite}
+html body .vst .hv-cl1{animation:hvCl 14s ease-in-out infinite alternate}
+html body .vst .hv-cl2{animation:hvCl 10s ease-in-out -4s infinite alternate-reverse}
+html body .vst .hv-dust{position:absolute;inset:0}
+html body .vst .hv-d{position:absolute;top:-8px;width:3px;height:3px;border-radius:50%;background:#fff6c8;box-shadow:0 0 6px 1px rgba(255,214,110,.9);opacity:0;animation:hvFall var(--t) linear var(--d) infinite;will-change:transform}
+html body .vst .hv-d.is-pet{width:6px;height:4px;border-radius:60% 0 60% 0;background:#fff;box-shadow:0 0 3px rgba(255,200,220,.8)}
+html body .vst .hv-flash{position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,#fff,rgba(255,246,214,.6) 40%,transparent 75%);opacity:0}
+html body .vst .vst-heav.in .hv-flash{animation:hvFlash .9s ease-out}
+html body .vst .vst-heav.in .hv-svg{animation:hvRise .9s cubic-bezier(.2,.8,.3,1)}
+html body .vst.is-heav .vst-say{box-shadow:0 8px 20px rgba(120,80,40,.25)}
+html body .vst.is-heav .vst-ms{filter:drop-shadow(0 10px 14px rgba(140,90,40,.35))}
+@keyframes hvSpin{to{transform:rotate(360deg)}}
+@keyframes hvRay{0%,100%{opacity:.75}50%{opacity:1}}
+@keyframes hvCl{from{transform:translateX(-14px)}to{transform:translateX(14px)}}
+@keyframes hvFall{0%{opacity:0;transform:translate(0,0) scale(var(--s)) rotate(0)}10%{opacity:1}85%{opacity:.9}100%{opacity:0;transform:translate(var(--x),270px) scale(var(--s)) rotate(260deg)}}
+@keyframes hvFlash{0%{opacity:.95}100%{opacity:0}}
+@keyframes hvRise{from{transform:translateY(12px) scale(1.04);opacity:.4}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){html body .vst .vst-heav *{animation:none!important}html body .vst .hv-d{opacity:.7}}
+html body .vst.is-heav .vst-ms .lv-gl path:first-child{stroke:#c8961e;stroke-width:.7}
+html body .vst.is-heav .vst-ms .lr-float{filter:drop-shadow(0 1px 1.5px rgba(120,70,10,.45))}
