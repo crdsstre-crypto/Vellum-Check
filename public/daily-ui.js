@@ -533,7 +533,7 @@
     setTimeout(function () { var x = sh.querySelector('.vst-x'); if (x) x.focus({ preventScroll: true }); }, 60);
   }
   function shopClose() {
-    if (!sh) return; tryOn = null; sel = null; pvTier = 0; heroKey = ''; heroPlayed = false; lrStop(); lrPlayed = false; crStop(); crPlayed = false; wzStop(); wzPlayed = false; cpStop(); cpPlayed = false; sh.classList.remove('on'); document.documentElement.classList.remove('vst-open');
+    if (!sh) return; tryOn = null; sel = null; pvTier = 0; heroKey = ''; heroPlayed = false; heroT.forEach(clearTimeout); heroT = []; (function () { var he = sh.querySelector('.vst-hero'); if (he) { if (he.getAnimations) he.getAnimations().forEach(function (x) { x.cancel(); }); he.className = 'vst-hero'; he.innerHTML = ''; } })(); lrStop(); lrPlayed = false; crStop(); crPlayed = false; wzStop(); wzPlayed = false; cpStop(); cpPlayed = false; sh.classList.remove('on'); document.documentElement.classList.remove('vst-open');
     setTimeout(function () { if (sh && !sh.classList.contains('on')) sh.hidden = true; }, 260);
     if (box && !box.hidden) render();
   }
@@ -1586,7 +1586,11 @@
     var hk = sel === 'medal' ? 'm' + medalTier() : '';
     if (hk && !heroPlayed) setTimeout(function () { playHero(medalTier()); }, 30);
     else if (hk && heroKey && hk !== heroKey && !calm()) { var stg = sh.querySelector('.vst-stage'); stg.classList.remove('tier-flash'); void stg.offsetWidth; stg.classList.add('tier-flash'); }
-    if (!hk) { heroT.forEach(clearTimeout); var he = sh.querySelector('.vst-hero'); he.className = 'vst-hero'; sh.querySelector('.vst-ms').classList.remove('hide-medal'); }
+    if (!hk) { heroT.forEach(clearTimeout); var he = sh.querySelector('.vst-hero'); he.className = 'vst-hero'; if (he.getAnimations) he.getAnimations().forEach(function (x) { x.cancel(); }); he.innerHTML = ''; sh.querySelector('.vst-ms').classList.remove('hide-medal'); }
+    /* กวาดของค้าง: แสง/ฉากเปิดตัวที่ไม่ได้เล่นอยู่ จะไม่ค้างทับตัวน้อง */
+    [['.vli', lrEnd], ['.vci', crEnd], ['.vwz', wzEnd || cpEnd]].forEach(function (q) { if (!q[1]) sh.querySelectorAll('.vst-stage > ' + q[0]).forEach(function (n) { n.remove(); }); });
+    sh.querySelectorAll('.vst-stage > .vst-clasp').forEach(function (n) { if (!n._t) { n._t = 1; setTimeout(function () { n.remove(); }, 900); } });
+    if (!sh.classList.contains('lr-intro') && !sh.classList.contains('cr-intro') && !sh.classList.contains('wz-intro')) { var msx = sh.querySelector('.vst-ms'); msx.classList.remove('hide-laurel', 'hide-crown', 'hide-wizard', 'cp-hide', 'cp-nohat'); }
     heroKey = hk;
     if (sel === 'laurel' && !lrPlayed && !calm()) sh.classList.add('lr-intro');
     if (sel === 'laurel' && !lrPlayed) setTimeout(playLaurel, 30); else if (sel !== 'laurel') lrStop();
