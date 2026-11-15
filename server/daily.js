@@ -69,7 +69,7 @@ export const SHOP = [
   { id: 'cap',     slot: 'head', rarity: 'epic',      price: 300,  name: 'หมวกนอนดาว' },
   { id: 'wizard',  slot: 'head', rarity: 'epic',      price: 400,  name: 'หมวกนักเวท' },
   { id: 'crown',   slot: 'head', rarity: 'legendary', price: 1000, name: 'มงกุฎตำนาน' },
-  { id: 'cape',    slot: 'back', rarity: 'rare',      price: 250,  name: 'ผ้าคลุมราชวงศ์' },
+  { id: 'cape',    slot: 'back', rarity: 'legendary', price: 1000, name: 'เครื่องแบบราชันย์' },
   { id: 'wings',   slot: 'back', rarity: 'epic',      price: 500,  name: 'ปีกนางฟ้า' },
   { id: 'pin',     slot: 'chest', rarity: 'common',    badge: 'd1',   name: 'เข็มกลัดดาว' },
   { id: 'medal',   slot: 'neck',  rarity: 'rare',      badge: 's7',   name: 'เหรียญไฟไม่มอด' },
