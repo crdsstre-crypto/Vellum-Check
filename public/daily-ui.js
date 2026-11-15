@@ -517,7 +517,7 @@
       document.body.appendChild(sh);
       sh.addEventListener('click', function (e) {
         if (e.target.closest('[data-shx]')) { shopClose(); return; }
-        var t = e.target.closest('[data-tab]'); if (t) { shTab = t.getAttribute('data-tab'); shopRender(); return; }
+        var t = e.target.closest('[data-tab]'); if (t) { var chg = shTab !== t.getAttribute('data-tab'); shTab = t.getAttribute('data-tab'); shopRender(); if (!calm()) { var nb = sh.querySelector('.vst-tabs [data-tab="' + shTab + '"]'); if (nb) nb.classList.add('pop'); if (chg) { var gd = sh.querySelector('.vst-grid'); gd.classList.remove('in'); [].forEach.call(gd.children, function (c2, i2) { c2.style.setProperty('--gi', Math.min(i2, 10)); }); void gd.offsetWidth; gd.classList.add('in'); setTimeout(function () { gd.classList.remove('in'); }, 900); } } return; }
         var tr = e.target.closest('.vst-tiers [data-tier]'); if (tr) { pvTier = +tr.getAttribute('data-tier'); if (pvTier === realTier()) pvTier = 0; shopRender(); hop(sh.querySelector('.vst-ms')); return; }
         var lo = e.target.closest('[data-lore]'); if (lo) { loreOpen(undefined, lo.getAttribute('data-lore')); return; }
         var it = e.target.closest('[data-outfit]'); if (it) { pick(it.getAttribute('data-outfit')); return; }
@@ -1818,10 +1818,21 @@
       : o.id === 'medal' ? 'รู้ไหม เหรียญนี้มีตำนานนะ… กด 📜 อ่านดูสิ! อีก ' + lft + ' วันก็ได้แล้ว 🔥'
       : o.badge ? (bb && bb.n - bb.have <= 3 ? 'อีกแค่ ' + lft + ' วันเอง! เช็กอินต่อนะ 🔥' : 'สู้ ๆ อีก ' + lft + ' วันได้แน่! 🔥')
       : (S.points >= o.price ? 'ลองใส่อยู่! ชอบไหม? ✨' : 'อีกนิดเดียวก็ซื้อได้แล้ว 💪'));
-    sh.querySelector('.vst-tabs').innerHTML = TABS.map(function (t) {
-      var n = t[0] === 'all' ? list.length : list.filter(function (x) { return x.slot === t[0]; }).length;
-      return n ? '<button type="button" role="tab" aria-selected="' + (shTab === t[0]) + '" class="' + (shTab === t[0] ? 'on' : '') + '" data-tab="' + t[0] + '">' + t[1] + '</button>' : '';
+    var TIC = { all: '<path d="M5 8h14l-1.2 11.2a1.5 1.5 0 0 1-1.5 1.3H7.7a1.5 1.5 0 0 1-1.5-1.3z" fill="currentColor" opacity=".25" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+      head: '<path d="M7 15V8.5Q7 5 12 5t5 3.5V15z" fill="currentColor" opacity=".25" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M3.5 16.5Q12 13 20.5 16.5Q12 19.5 3.5 16.5z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>',
+      face: '<circle cx="7" cy="13" r="3.6" fill="currentColor" opacity=".25" stroke="currentColor" stroke-width="1.8"/><circle cx="17" cy="13" r="3.6" fill="currentColor" opacity=".25" stroke="currentColor" stroke-width="1.8"/><path d="M10.6 12.6q1.4-1 2.8 0M3.4 12 2 10M20.6 12 22 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+      neck: '<path d="M3 7.5l7 4.5-7 4.5zM21 7.5 14 12l7 4.5z" fill="currentColor" opacity=".3" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><rect x="10" y="10" width="4" height="4" rx="1" fill="currentColor"/>',
+      chest: '<path d="M12 3.5l2.5 5.3 5.8.6-4.3 3.9 1.2 5.7L12 16.1 6.8 19l1.2-5.7-4.3-3.9 5.8-.6z" fill="currentColor" opacity=".3" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>' };
+    var own2 = ownedOutfits(), pts = S && S.points || 0;
+    var tb = sh.querySelector('.vst-tabs');
+    tb.innerHTML = '<i class="vtb-ind" aria-hidden="true"></i>' + TABS.map(function (t) {
+      var items = t[0] === 'all' ? list : list.filter(function (x) { return x.slot === t[0]; }), n = items.length;
+      var buy = items.some(function (x) { return own2.indexOf(x.id) < 0 && !x.badge && x.price && pts >= x.price; });
+      return n ? '<button type="button" role="tab" aria-selected="' + (shTab === t[0]) + '" class="' + (shTab === t[0] ? 'on' : '') + ' tc-' + t[0] + '" data-tab="' + t[0] + '" aria-label="' + t[1] + ' ' + n + ' ชิ้น' + (buy ? ' มีของที่ซื้อได้' : '') + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + (TIC[t[0]] || '') + '</svg><span>' + t[1] + '</span><small>' + n + '</small>' + (buy ? '<i class="vtb-coin" aria-hidden="true"></i>' : '') + '</button>' : '';
     }).join('');
+    (function () { var on = tb.querySelector('button.on'), ind = tb.querySelector('.vtb-ind'); if (!on || !ind) return; var x = on.offsetLeft, w = on.offsetWidth, prev = tb.__ix;
+      if (prev && !calm()) { ind.style.transition = 'none'; ind.style.transform = 'translateX(' + prev[0] + 'px)'; ind.style.width = prev[1] + 'px'; void ind.offsetWidth; ind.style.transition = ''; }
+      ind.style.transform = 'translateX(' + x + 'px)'; ind.style.width = w + 'px'; tb.__ix = [x, w]; })();
     var show = list.filter(function (x) { return shTab === 'all' || x.slot === shTab; }).sort(function (a, b) { return (b.rarity === 'limited') - (a.rarity === 'limited'); });
     sh.querySelector('.vst-grid').innerHTML = show.map(function (it) {
       if (it.rarity === 'limited') return limitedCard(it, own.indexOf(it.id) >= 0, worn.indexOf(it.id) >= 0 && tryOn !== it.id, bmap[it.badge]);
