@@ -1816,3 +1816,110 @@ html body .vst .vci-k .vk-body{transform-box:view-box;transform-origin:55px 150p
 html body .vst .vci-k.bow svg{transform-origin:50% 96%;animation:vkBow 1.1s ease-in-out forwards}
 @keyframes vkWalk{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-3px) rotate(-2deg)}75%{transform:translateY(-3px) rotate(2deg)}}
 @keyframes vkBow{0%{transform:rotate(0)}40%,70%{transform:rotate(-14deg)}100%{transform:rotate(0)}}
+/* ===== ระดับ "พิเศษ" (epic) ม่วงเงิน — ธรรมดา → พิเศษ → ROYAL → LEGENDARY ===== */
+html body .vst .vof-b.r-epic:not(.is-laurel):not(.is-crown){--rc:#b98cff;isolation:isolate;overflow:clip;
+  border-color:rgba(205,180,255,.55);
+  background:radial-gradient(70% 55% at 50% 40%,rgba(160,110,255,.32),transparent 72%),
+    radial-gradient(1px 1px at 18% 30%,rgba(255,255,255,.55) 50%,transparent 51%),radial-gradient(1px 1px at 82% 22%,rgba(255,255,255,.45) 50%,transparent 51%),
+    radial-gradient(1.2px 1.2px at 72% 70%,rgba(230,210,255,.5) 50%,transparent 51%),radial-gradient(1px 1px at 28% 78%,rgba(255,255,255,.35) 50%,transparent 51%),
+    linear-gradient(165deg,#2c1d4f 0%,#1d1438 55%,#150f2a 100%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.06),inset 0 1px 0 rgba(255,255,255,.14),0 6px 18px -8px rgba(120,70,220,.55)}
+/* (ข้อ 2) ริบบิ้น "✦ พิเศษ" */
+html body .vst .vof-b.r-epic:not(.is-laurel):not(.is-crown) .vof-r{top:0;left:0;padding:4px 9px 4px 8px;border-radius:14px 0 10px 0;
+  background:linear-gradient(135deg,#9b6bff,#6b3fd6);color:#fff;font-size:.56rem;letter-spacing:.06em;box-shadow:0 2px 6px rgba(80,40,170,.5)}
+html body .vst .vof-b.r-epic:not(.is-laurel):not(.is-crown) .vof-r::before{content:"✦ "}
+/* (ข้อ 3) แสงหลังไอเทม + ฐานรอง */
+html body .vst .vof-b.r-epic:not(.is-laurel):not(.is-crown) > svg{position:relative;z-index:1;filter:drop-shadow(0 0 10px rgba(185,140,255,.55)) drop-shadow(0 3px 2px rgba(0,0,0,.45))}
+html body .vst .vof-b.r-epic:not(.is-laurel):not(.is-crown)::after{content:"";position:absolute;z-index:0;left:50%;top:47px;width:60px;height:9px;margin-left:-30px;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(200,170,255,.5),rgba(120,80,220,.18) 60%,transparent);box-shadow:0 0 0 1px rgba(210,190,255,.18);pointer-events:none}
+/* (ข้อ 4) ประกายวาววิ่งผ่านทุก ~6 วินาที */
+html body .vst .vof-b.r-epic:not(.is-laurel):not(.is-crown)::before{content:"";position:absolute;z-index:2;top:-20%;bottom:-20%;left:-60%;width:40%;pointer-events:none;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.16) 40%,rgba(230,215,255,.32) 50%,rgba(255,255,255,.16) 60%,transparent);transform:skewX(-18deg);animation:vEpicShine 6s ease-in-out infinite}
+html body .vst .vof-b.r-epic:nth-of-type(odd)::before{animation-delay:2.2s}
+@keyframes vEpicShine{0%,72%{left:-60%}100%{left:130%}}
+/* (ข้อ 7 ที่แก้ ง) ป้ายราคาสีม่วงอ่อนเมื่อแต้มยังไม่พอ */
+html body .vst .vof-b.r-epic:not(.is-laurel):not(.is-crown) .vof-act{position:relative;z-index:1}
+html body .vst .vof-b.r-epic .vof-act.is-buy.is-short{background:rgba(185,140,255,.16);color:#e3d3ff;box-shadow:inset 0 0 0 1px rgba(200,170,255,.32)}
+html body .vst .vof-b.r-epic small{position:relative;z-index:1;color:#efe6ff}
+/* (ข้อ 6 + แก้ ข) การ์ดที่เลือก: เรืองแสงตามระดับ แทนขอบขาวหนา */
+html body :is(.vdc,.vst) .vof-b.is-try{border-color:color-mix(in srgb,var(--rc) 85%,#fff);box-shadow:0 0 0 1.5px color-mix(in srgb,var(--rc) 55%,transparent),0 0 20px color-mix(in srgb,var(--rc) 45%,transparent)}
+html body .vst .vof-b.r-epic.is-try:not(.is-laurel):not(.is-crown){border-color:#d9c2ff;box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 0 0 1.5px rgba(185,140,255,.7),0 0 24px rgba(160,110,255,.55),0 0 46px -6px rgba(140,90,255,.45)}
+html body .vst .vof-b.r-epic.is-on:not(.is-laurel):not(.is-crown){border-color:#5fd3a6}
+@media (prefers-reduced-motion:reduce){html body .vst .vof-b.r-epic::before{animation:none;display:none}}
+html[data-calm] .vst .vof-b.r-epic::before{animation:none;display:none}
+/* ===== ฉากเปิดตัวหมวกนักเวท ===== */
+html body .vst .vst-ms.hide-wizard .wz-worn{opacity:0}
+html body .vst .vwz{position:absolute;inset:0;z-index:6;cursor:pointer;overflow:hidden;transition:opacity .45s}
+html body .vst .vwz.out{opacity:0;pointer-events:none}
+html body .vst .vwz-dim{position:absolute;inset:0;background:radial-gradient(60% 55% at 50% 55%,rgba(60,30,120,.25),rgba(8,4,22,.72));opacity:0;transition:opacity .5s}
+html body .vst .vwz.go .vwz-dim,html body .vst .vwz.skip .vwz-dim{opacity:1}
+/* (1) วงเวท: วางราบบนพื้น หมุน อักขระเรืองแสง */
+html body .vst .vwz-ring{position:absolute;overflow:visible;transform:scaleY(.36) scale(.2) rotate(0);opacity:0;filter:drop-shadow(0 0 6px rgba(190,150,255,.9)) drop-shadow(0 0 18px rgba(150,100,255,.6))}
+html body .vst .vwz-ring circle,html body .vst .vwz-ring .r3{fill:none;stroke:#cdb2ff;stroke-width:1.6}
+html body .vst .vwz-ring .r2{stroke:#f4c542;stroke-width:1.1;stroke-dasharray:3 4}
+html body .vst .vwz-ring .r3{stroke:#b48cff;stroke-width:1;opacity:.8}
+html body .vst .vwz-ring .rn{fill:#ffe28a}
+html body .vst .vwz.go .vwz-ring{animation:vwzRing 3.4s cubic-bezier(.2,.8,.3,1) forwards}
+@keyframes vwzRing{0%{opacity:0;transform:scaleY(.36) scale(.2) rotate(0)}15%{opacity:1;transform:scaleY(.36) scale(1.05) rotate(40deg)}25%{transform:scaleY(.36) scale(1) rotate(70deg)}80%{opacity:1;transform:scaleY(.36) scale(1) rotate(260deg)}100%{opacity:0;transform:scaleY(.36) scale(1.15) rotate(320deg)}}
+/* ลำแสงขึ้นจากวง */
+html body .vst .vwz-beam{position:absolute;opacity:0;border-radius:50% 50% 40% 40%/12% 12% 8% 8%;background:linear-gradient(0deg,rgba(200,170,255,.55),rgba(170,130,255,.18) 60%,transparent);filter:blur(4px);transform-origin:50% 100%;transform:scaleY(0)}
+html body .vst .vwz.go .vwz-beam{animation:vwzBeam 2.2s ease .45s forwards}
+@keyframes vwzBeam{0%{opacity:0;transform:scaleY(0)}25%{opacity:1;transform:scaleY(1)}70%{opacity:.8}100%{opacity:0;transform:scaleY(1)}}
+/* (2) หมวก */
+html body .vst .vwz-hat{position:absolute;width:120px;height:74px;opacity:0;pointer-events:none;z-index:3}
+html body .vst .vwz-hat svg{display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0 12px rgba(200,160,255,.85))}
+html body .vst .vwz-burst{position:absolute;z-index:4;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;color:#ffe28a;opacity:0;pointer-events:none;
+  box-shadow:0 -34px 0 0 currentColor,24px -24px 0 -1px #e6d2ff,34px 0 0 0 currentColor,24px 24px 0 -1px #e6d2ff,0 34px 0 0 currentColor,-24px 24px 0 -1px #e6d2ff,-34px 0 0 0 currentColor,-24px -24px 0 -1px #e6d2ff}
+html body .vst .vwz.worn .vwz-burst.b1{animation:vwzBurst .7s ease-out forwards}
+html body .vst .vwz.pop .vwz-burst.b2{animation:vwzBurst .8s ease-out forwards}
+@keyframes vwzBurst{0%{opacity:1;transform:scale(.2)}60%{opacity:1}100%{opacity:0;transform:scale(1.25)}}
+/* (3) ร่ายคาถา: ลากเส้นประกายเป็นดาวจากปลายปากกา */
+html body .vst .vwz-star{position:absolute;z-index:4;overflow:visible;opacity:0;pointer-events:none}
+html body .vst .vwz-star path{fill:none;stroke:#ffe28a;stroke-width:3.4;stroke-linejoin:round;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;filter:drop-shadow(0 0 4px #ffd36a) drop-shadow(0 0 10px rgba(190,150,255,.9))}
+html body .vst .vwz.cast .vwz-star{opacity:1}
+html body .vst .vwz.cast .vwz-star path{animation:vwzDraw .85s cubic-bezier(.5,.1,.3,1) forwards}
+html body .vst .vwz.pop .vwz-star{animation:vwzStarPop .5s ease-in forwards}
+@keyframes vwzDraw{to{stroke-dashoffset:0}}
+@keyframes vwzStarPop{0%{opacity:1;transform:scale(1)}40%{opacity:1;transform:scale(1.15)}100%{opacity:0;transform:scale(.3) rotate(40deg)}}
+/* (4) การ์ดแนะนำ */
+html body .vst .vwz-card{position:absolute;left:50%;bottom:14px;z-index:5;width:min(280px,82%);display:flex;flex-direction:column;align-items:center;gap:4px;padding:18px 16px 14px;border-radius:18px;cursor:default;
+  background:radial-gradient(80% 60% at 50% 20%,rgba(170,120,255,.35),transparent 70%),linear-gradient(165deg,#2c1d4f,#160f2c);border:1.5px solid rgba(210,185,255,.6);
+  box-shadow:0 0 0 1px rgba(255,255,255,.06) inset,0 18px 40px -10px rgba(0,0,0,.8),0 0 30px rgba(150,100,255,.4);opacity:0;transform:translate(-50%,24px) scale(.94);pointer-events:none;transition:opacity .35s,transform .45s cubic-bezier(.2,.9,.3,1.25)}
+html body .vst .vwz.card .vwz-card{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+html body .vst .vwz-rb{position:absolute;top:0;left:0;padding:4px 10px;border-radius:17px 0 10px 0;background:linear-gradient(135deg,#9b6bff,#6b3fd6);color:#fff;font:700 .6rem/1 'Prompt',sans-serif;font-style:normal;letter-spacing:.06em}
+html body .vst .vwz-card svg{width:78px;height:48px;overflow:visible;filter:drop-shadow(0 0 10px rgba(190,150,255,.7))}
+html body .vst .vwz-card b{font:700 1.05rem/1.3 'Prompt',sans-serif;color:#fff}
+html body .vst .vwz-q{font:500 .78rem/1.4 'Prompt',sans-serif;color:#e3d3ff}
+html body .vst .vwz-go{margin-top:6px;min-height:40px;padding:0 22px;border:0;border-radius:12px;background:linear-gradient(135deg,#b98cff,#7b4be6);color:#fff;font:700 .85rem/1 'Prompt',sans-serif;cursor:pointer;box-shadow:0 8px 18px -8px rgba(140,90,255,.9)}
+html body .vst .vwz-pr{font:500 .66rem/1 'Prompt',sans-serif;color:#b9a8d8}
+html body .vst .vwz .vli-skip{position:absolute;left:10px;bottom:8px;font:500 .66rem 'Prompt',sans-serif;color:rgba(235,225,255,.7);transition:opacity .3s}
+html body .vst .vwz.card .vli-skip{opacity:0}
+@media (prefers-reduced-motion:reduce){html body .vst .vwz *{animation:none !important}html body .vst .vwz-card{transition:opacity .2s}}
+/* การ์ดแนะนำแบบกระชับ: ไม่บังน้อง */
+html body .vst .vwz-card{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"i n" "i q" "b b";column-gap:12px;row-gap:2px;align-items:center;width:min(300px,88%);padding:16px 14px 12px;bottom:10px;text-align:left}
+html body .vst .vwz-card svg{grid-area:i;width:64px;height:40px}
+html body .vst .vwz-card b{grid-area:n;align-self:end}
+html body .vst .vwz-q{grid-area:q;align-self:start}
+html body .vst .vwz-go{grid-area:b;justify-self:stretch;margin-top:8px}
+html body .vst .vwz-pr{position:absolute;right:12px;top:8px}
+html body .vst .vwz.card .vwz-dim{opacity:.5}
+/* ===== ตำนานหมวกนักเวท ===== */
+html body .vst .vof-b .vof-lore-w{position:absolute;top:6px;right:6px;z-index:3;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;font-size:13px;line-height:1;
+  background:rgba(30,18,60,.75);border:1px solid rgba(205,180,255,.55);box-shadow:0 2px 6px rgba(0,0,0,.4);cursor:pointer}
+html body .vst .vof-b .vof-lore-w .lore-new{position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:50%;background:#ff5a6e;box-shadow:0 0 0 2px #1d1438}
+html body .vst .vof-b .vof-lore-w:hover{background:rgba(70,40,140,.85)}
+html body .vlr.is-wizard .vlr-bg{background:radial-gradient(70% 60% at 50% 40%,rgba(80,50,160,.55),rgba(8,5,20,.9)) !important}
+html body .vlr.is-wizard .vlr-k{color:#7b55d6 !important}
+html body .vlr.is-wizard .vlr-sh h3{background:linear-gradient(180deg,#8f6af0,#4a2a9e) !important;-webkit-background-clip:text !important;background-clip:text !important;color:transparent !important}
+html body .vlr.is-wizard .vlr-tabs button{color:#7b55d6 !important;border-color:rgba(123,85,214,.35) !important;background:rgba(246,242,255,.8) !important}
+html body .vlr.is-wizard .vlr-tabs button.on{color:#fff !important;background:radial-gradient(circle at 35% 30%,#b598ff,#5b3cc4) !important;border-color:#e6dcff !important}
+html body .vlr.is-wizard .vlr-tabs button.lk{color:#c4b8de !important;background:#ece6f6 !important}
+html body .vlr.is-wizard .vlr-body h4{color:#5b3cc4 !important}
+html body .vlr.is-wizard .vlr-body p,html body .vlr.is-wizard .vlr-body p.lp{color:#2e2346 !important}
+html body .vlr.is-wizard .vlr-body .ln{color:#4a2a9e !important}
+html body .vlr.is-wizard .vlr-body mark.lh{background-image:linear-gradient(transparent 52%,rgba(185,140,255,.45) 52%,rgba(200,165,255,.5) 92%,transparent 92%) !important}
+html body .vlr.is-wizard .vlr-body blockquote.lq{color:#4a2a9e !important;border-color:rgba(123,85,214,.35) !important}
+html body .vlr.is-wizard .vlr-body blockquote.lq .lq-o,html body .vlr.is-wizard .vlr-body blockquote.lq .lq-c{color:#9b7bf0 !important}
+html body .vlr.is-wizard .vlr-lock{background:rgba(150,110,240,.1) !important;border-color:rgba(123,85,214,.45) !important;color:#4a2a9e !important}
+html body .vlr.is-wizard .vlr-art-l{filter:drop-shadow(0 4px 10px rgba(90,60,180,.35)) !important}
+html body .vlr.is-wizard .vlr-art-l{margin-top:18px !important}html body .vlr.is-wizard .vlr-art-l svg{overflow:visible !important}
