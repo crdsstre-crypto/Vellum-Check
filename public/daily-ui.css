@@ -2049,3 +2049,50 @@ html body .vlr.is-cap .vlr-lock{background:rgba(110,130,240,.1) !important;borde
 html body .vlr.is-cap .vlr-art-l{filter:drop-shadow(0 4px 10px rgba(60,80,180,.35)) !important}
 html body .vlr.is-cap .vlr-art-l{margin-top:18px !important}html body .vlr.is-cap .vlr-art-l svg{overflow:visible !important}
 html body .vst .vof-b .vof-lore-w.is-cap:hover{background:rgba(50,70,160,.85)}
+
+/* ===== เหรียญไฟไม่มอด: ห้องสมุดที่ไม่เคยหลับ · หน้าต่างกระจกสี · แท่นหินแกะสลัก · สีตามระดับ (daily-ui.css v77) ===== */
+html body .vst .vst-lib{position:absolute;inset:0;overflow:hidden;
+  --lw:#140c08;--lwd:#4a2c16;--lwd2:#2a180c;--lbk:#0c0705;--lb1:#6e2a1e;--lb2:#3f2a5a;--lb3:#1f4a3c;--lb4:#7a5a22;--lb5:#4a2a18;--lband:#d9a640;--lgl:#ffb54a;
+  --lst:#2a1c14;--lst2:#1a100a;--lr:#e0a92c;--g1:#ff7a2b;--g2:#ffd36a;--g3:#b0301a;--g4:#ffe9a8;--lg:#ffb050;--lfl:#2a1a10;
+  --ps0:#1d1612;--ps1:#4a3c32;--pm:#e8b64a;--pg:#ffcf6a}
+html body .vst.is-fire[data-tier="2"] .vst-lib{--lw:#08142a;--lwd:#22406a;--lwd2:#132a48;--lbk:#050c1a;--lb1:#2a4a7a;--lb2:#3a5c8a;--lb3:#1d3a5c;--lb4:#5a7aa0;--lb5:#2c3e66;--lband:#cfe6ff;--lgl:#9fe0ff;
+  --lst:#14284a;--lst2:#0b1830;--lr:#d6ecff;--g1:#3f9cff;--g2:#bfe6ff;--g3:#1d4fa8;--g4:#ffffff;--lg:#8cc8ff;--lfl:#0f2240;--ps0:#13233c;--ps1:#3e5c84;--pm:#e2f2ff;--pg:#a8e0ff}
+html body .vst.is-fire[data-tier="3"] .vst-lib{--lw:#0d0824;--lwd:#3a2470;--lwd2:#22144a;--lbk:#08051a;--lb1:#5a2a9a;--lb2:#7a3aa8;--lb3:#3a2a7a;--lb4:#a05ac8;--lb5:#2e1c66;--lband:#f0dcff;--lgl:#e6b8ff;
+  --lst:#22164a;--lst2:#140c30;--lr:#e6d6ff;--g1:#a64bff;--g2:#f3dcff;--g3:#5b2bb0;--g4:#ffffff;--lg:#c89bff;--lfl:#1a1040;--ps0:#1a1236;--ps1:#4c3a86;--pm:#e9dcff;--pg:#d6b0ff}
+html body .vst .lb-svg{position:absolute;inset:0;width:100%!important;height:100%!important;filter:none!important}
+html body .vst .lb-wall{fill:var(--lw);transition:fill .6s}
+html body .vst .lb-st{fill:var(--lst)}html body .vst .lb-st2{fill:var(--lst2)}
+html body .vst .lb-wd{fill:var(--lwd)}html body .vst .lb-wd2{fill:var(--lwd2)}html body .vst .lb-bk{fill:var(--lbk)}
+html body .vst .lb-svg .b1{fill:var(--lb1)}html body .vst .lb-svg .b2{fill:var(--lb2)}html body .vst .lb-svg .b3{fill:var(--lb3)}html body .vst .lb-svg .b4{fill:var(--lb4)}html body .vst .lb-svg .b5{fill:var(--lb5)}
+html body .vst .lb-band{fill:var(--lband);opacity:.45}
+html body .vst .lb-svg rect.gl{fill:var(--lgl);filter:drop-shadow(0 0 4px var(--lgl));animation:lbGl 4s ease-in-out var(--d) infinite}
+@keyframes lbGl{0%,100%{opacity:.55}50%{opacity:1}}
+html body .vst .lb-rim{fill:var(--lst2);stroke:var(--lr);stroke-width:5}
+html body .vst .lb-win .g1{fill:var(--g1);opacity:.85}html body .vst .lb-win .g2{fill:var(--g2);opacity:.8}html body .vst .lb-win .g3{fill:var(--g3)}html body .vst .lb-win .g4{fill:var(--g4)}
+html body .vst .lb-win{filter:drop-shadow(0 0 14px var(--lg));animation:lbWin 5s ease-in-out infinite}
+@keyframes lbWin{0%,100%{opacity:.82}50%{opacity:1}}
+html body .vst .lb-lead circle{fill:none;stroke:var(--lst2);stroke-width:2.6}
+html body .vst .lb-win path{stroke:var(--lst2);stroke-width:2.2}
+html body .vst .lb-rays path{fill:url(#lbRay);mix-blend-mode:screen;animation:lbRay 6s ease-in-out infinite}
+html body .vst .lb-rays .r2{animation-delay:-3s}
+@keyframes lbRay{0%,100%{opacity:.55}50%{opacity:1}}
+html body .vst .lb-fll{stroke:var(--lr);stroke-width:.8;opacity:.12;fill:none}
+html body .vst .lb-vig{position:absolute;inset:0;background:radial-gradient(70% 62% at 50% 46%,transparent 40%,rgba(0,0,0,.55) 100%),linear-gradient(90deg,rgba(0,0,0,.35),transparent 22%,transparent 78%,rgba(0,0,0,.45))}
+/* (3) แท่นหินแกะสลัก แทนกระบอกดำ */
+html body .vst.is-fire .vst-ped{opacity:0}html body .vst.is-fire .vst-ped::after{display:none}
+html body .vst .vst-pd3{position:absolute;left:50%;bottom:78px;width:230px;height:64px;margin-left:-115px;overflow:visible;filter:drop-shadow(0 10px 18px rgba(0,0,0,.6)) drop-shadow(0 0 22px color-mix(in srgb,var(--pg) 35%,transparent))}
+html body .vst .vst-pd3 .pd-b{fill:var(--ps0);stroke:var(--pm);stroke-width:1.2;opacity:.9}
+html body .vst .vst-pd3 .pd-c path{fill:var(--pg);opacity:.75;filter:drop-shadow(0 0 3px var(--pg))}
+html body .vst .vst-pd3 .pd-m{fill:none;stroke:var(--pm);stroke-width:2.4}
+html body .vst .vst-pd3 .pd-m2{fill:none;stroke:var(--pm);stroke-width:1;opacity:.45}
+html body .vst .vst-pd3 .pd-tm{stroke:var(--pm);stroke-width:2.4}
+html body .vst .vst-pd3 .pd-in{fill:none;stroke:var(--pm);stroke-width:1;opacity:.5}
+html body .vst .vst-pd3 .pd-fl{fill:none;stroke:var(--pg);stroke-width:2;stroke-dasharray:22 12;stroke-linecap:round;filter:drop-shadow(0 0 4px var(--pg));animation:pdFlow 6s linear infinite}
+@keyframes pdFlow{to{stroke-dashoffset:-204}}
+/* (ก) กรอบคำพูดฉากไฟ: ไม่ชิดขอบ */
+html body .vst.is-fire .vst-say{left:auto;right:calc(50% + 44px);max-width:min(220px,calc(50% - 56px));text-wrap:balance}
+/* (ข) เหรียญที่เลือกขยายขึ้นด้านบน ไม่บังชื่อระดับ */
+html body .vst .vst-path .vtp.on .vtp-c{transform-origin:50% 95%}
+html body .vst .vst-path button.vtp b{position:relative;z-index:2}
+@media (prefers-reduced-motion:reduce){html body .vst .vst-lib *{animation:none!important}}
+html body .vst.is-fire .vst-lux b,html body .vst.is-fire .vst-lux span,html body .vst.is-fire .vst-lux em{text-shadow:0 1px 2px rgba(0,0,0,.9),0 0 10px rgba(0,0,0,.85)}
