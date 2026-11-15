@@ -1750,3 +1750,69 @@ html body .vlr.is-laurel .vlr-body blockquote.lq{position:relative;margin:14px 6
 html body .vlr.is-laurel .vlr-body blockquote.lq .lq-o,html body .vlr.is-laurel .vlr-body blockquote.lq .lq-c{font:700 1.6rem/0 Georgia,serif;color:#d4a43a;font-style:normal;vertical-align:-.4em;margin:0 3px}
 html body .vlr.is-laurel .vlr-body blockquote.lq.blur{filter:blur(5px);user-select:none}
 @media (prefers-reduced-motion:reduce){html body .vlr.is-laurel .vlr-body mark.lh{animation:none;background-size:100% 100%}}
+
+/* v66 มงกุฎตำนาน: ประกาย · ท่าราชา · ฉากท้องพระโรง · พิธีสวมมงกุฎ · การ์ด ROYAL */
+html body .cr-tw{transform-box:fill-box;transform-origin:center;opacity:0;animation:crTw 3.2s ease-in-out infinite}
+@keyframes crTw{0%,62%,100%{opacity:0;transform:scale(.2) rotate(0)}74%{opacity:1;transform:scale(1.1) rotate(45deg)}86%{opacity:0;transform:scale(.3) rotate(90deg)}}
+html body .cp-cape{transform-box:view-box;transform-origin:60px 32px;animation:cpCape 4.5s ease-in-out infinite}
+@keyframes cpCape{0%,100%{transform:skewX(0)}50%{transform:skewX(-2.4deg)}}
+html body .cp-gl{transform-box:fill-box;transform-origin:center;opacity:0;animation:crTw 2.6s ease-in-out .8s infinite}
+.vst-refl .cr-tw,.vst-refl .cp-cape,.vst-refl .cp-gl{animation:none!important}
+html body .vst .vst-ms.hide-crown .cr-worn{opacity:0}
+/* ฉาก */
+html body .vst .vst-thr{position:absolute;inset:0;z-index:1;opacity:0;visibility:hidden;pointer-events:none;overflow:hidden;transition:opacity .7s ease,visibility 0s .7s}
+html body .vst.is-thr .vst-thr{opacity:1;visibility:visible;transition:opacity .7s ease}
+html body .vst .tr-svg{position:absolute;inset:0;width:100%!important;height:100%!important;filter:none!important}
+html body .vst .tr-vig{position:absolute;inset:0;background:radial-gradient(75% 70% at 50% 45%,transparent 50%,rgba(10,0,4,.55) 100%)}
+html body .vst .tr-fl{transform-box:fill-box;transform-origin:50% 100%;animation:trFl 1.4s ease-in-out infinite alternate}
+@keyframes trFl{from{transform:scale(1,1)}to{transform:scale(.88,1.12)}}
+html body .vst .tr-spot{animation:hvRay 5s ease-in-out infinite}
+html body .vst .tr-cur{transform-box:fill-box;transform-origin:50% 0;animation:hvDr 7s ease-in-out infinite}
+html body .vst .tr-dust{position:absolute;inset:0}
+html body .vst .tr-d{position:absolute;top:-8px;width:3px;height:3px;border-radius:50%;background:#fff1b8;box-shadow:0 0 6px 1px rgba(255,200,90,.85);opacity:0;animation:hvFall var(--t) linear var(--d) infinite;will-change:transform}
+html body .vst .tr-d.is-pet{width:7px;height:5px;border-radius:70% 0 70% 0;background:radial-gradient(circle at 30% 30%,#ff7a8e,#c41c38);box-shadow:none}
+html body .vst .tr-flash{position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,rgba(255,240,200,.95),rgba(255,200,120,.4) 40%,transparent 75%);opacity:0}
+html body .vst .vst-thr.in .tr-flash{animation:hvFlash .9s ease-out}
+html body .vst .vst-thr.in .tr-svg{animation:hvRise .9s cubic-bezier(.2,.8,.3,1)}
+html body .vst.is-thr .vst-ms{filter:drop-shadow(0 0 1px #ffe7a0) drop-shadow(0 0 7px rgba(255,190,90,.55))}
+html body .vst.is-thr .vst-say{background:rgba(255,246,232,.94);box-shadow:inset 0 0 0 1.5px #d4a43a,0 8px 20px rgba(40,0,10,.45)}
+html body .vst.is-thr .vst-say::after{background:rgba(255,246,232,.94)}
+/* พิธีสวมมงกุฎ */
+html body .vst .vci{position:absolute;inset:0;z-index:6;cursor:pointer;overflow:hidden;transition:opacity .45s}
+html body .vst .vci.out{opacity:0;pointer-events:none}
+html body .vst .vci-dim{position:absolute;inset:0;background:rgba(14,2,8,.55);opacity:0}
+html body .vst .vci-spot{position:absolute;left:50%;top:-20px;width:220px;height:330px;margin-left:-110px;background:linear-gradient(180deg,rgba(255,240,200,.55),rgba(255,230,170,.08) 85%);clip-path:polygon(40% 0,60% 0,100% 100%,0 100%);opacity:0}
+html body .vst .vci-pet{position:absolute;inset:0}
+html body .vst .vci-pet i{position:absolute;top:-10px;width:8px;height:6px;border-radius:70% 0 70% 0;background:radial-gradient(circle at 30% 30%,#ff8a9a,#c41c38);opacity:0}
+html body .vst .vci.go .vci-pet i{animation:vciPet var(--t) ease-in var(--d) forwards}
+@keyframes vciPet{0%{opacity:0;transform:translate(0,0) rotate(0)}10%{opacity:1}100%{opacity:0;transform:translate(var(--x),300px) rotate(300deg)}}
+html body .vst .vci-cr{position:absolute;width:70px;height:52px;transform:translate(-50%,-50%) translateY(-190px);opacity:0;will-change:transform,opacity}
+html body .vst .vci-cr svg{position:absolute;inset:0;width:100%!important;height:100%!important;filter:drop-shadow(0 0 6px rgba(255,210,110,.8))!important}
+html body .vst .vci-crg{position:absolute;left:50%;top:50%;width:130px;height:130px;margin:-65px;border-radius:50%;background:radial-gradient(circle,rgba(255,240,200,.75),rgba(255,200,110,.25) 40%,transparent 68%)}
+html body .vst .vci .vli-skip{position:absolute;left:10px;bottom:8px;font:500 .66rem 'Prompt',sans-serif;color:rgba(255,246,214,.7)}
+html body .vst .vci.go .vci-dim{animation:vliIn .5s ease forwards}
+html body .vst .vci.go .vci-spot{animation:vliIn .6s ease .2s forwards}
+html body .vst.cr-intro .vst-say{opacity:0;transition:opacity .3s}
+@media (prefers-reduced-motion:reduce){html body .vst .vci{display:none}html body .cr-tw,html body .cp-cape,html body .cp-gl,html body .vst .vst-thr *{animation:none!important}}
+/* การ์ด ROYAL */
+html body .vst .vof-b.is-crown{border:0;isolation:isolate;overflow:hidden;clip-path:inset(0 round 16px);background:#2a0610}
+html body .vst .vof-b.is-crown::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:16px;opacity:1;animation:none;pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cg%20transform%3D%22%22%3E%3Cpath%20d%3D%22M1%2015V7c0-3.4%202.6-6%206-6h8M1%2010c2%200%203-1%203-3s1.4-3%203-3M4%2015c0-2%201-3%203-3%22%20stroke%3D%22%23e0b048%22%20stroke-width%3D%221.1%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22/%3E%3Ccircle%20cx%3D%227%22%20cy%3D%227%22%20r%3D%221.3%22%20fill%3D%22%23e0b048%22/%3E%3C/g%3E%3C/svg%3E") 7px 7px/14px 14px no-repeat,url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cg%20transform%3D%22translate%2816%200%29%20scale%28-1%201%29%22%3E%3Cpath%20d%3D%22M1%2015V7c0-3.4%202.6-6%206-6h8M1%2010c2%200%203-1%203-3s1.4-3%203-3M4%2015c0-2%201-3%203-3%22%20stroke%3D%22%23e0b048%22%20stroke-width%3D%221.1%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22/%3E%3Ccircle%20cx%3D%227%22%20cy%3D%227%22%20r%3D%221.3%22%20fill%3D%22%23e0b048%22/%3E%3C/g%3E%3C/svg%3E") right 7px top 7px/14px 14px no-repeat,url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cg%20transform%3D%22translate%280%2016%29%20scale%281%20-1%29%22%3E%3Cpath%20d%3D%22M1%2015V7c0-3.4%202.6-6%206-6h8M1%2010c2%200%203-1%203-3s1.4-3%203-3M4%2015c0-2%201-3%203-3%22%20stroke%3D%22%23e0b048%22%20stroke-width%3D%221.1%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22/%3E%3Ccircle%20cx%3D%227%22%20cy%3D%227%22%20r%3D%221.3%22%20fill%3D%22%23e0b048%22/%3E%3C/g%3E%3C/svg%3E") left 7px bottom 7px/14px 14px no-repeat,url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cg%20transform%3D%22translate%2816%2016%29%20scale%28-1%20-1%29%22%3E%3Cpath%20d%3D%22M1%2015V7c0-3.4%202.6-6%206-6h8M1%2010c2%200%203-1%203-3s1.4-3%203-3M4%2015c0-2%201-3%203-3%22%20stroke%3D%22%23e0b048%22%20stroke-width%3D%221.1%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22/%3E%3Ccircle%20cx%3D%227%22%20cy%3D%227%22%20r%3D%221.3%22%20fill%3D%22%23e0b048%22/%3E%3C/g%3E%3C/svg%3E") right 7px bottom 7px/14px 14px no-repeat,radial-gradient(70% 55% at 50% 38%,rgba(255,200,110,.35),transparent 70%),url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2226%22%20height%3D%2230%22%3E%3Cpath%20d%3D%22M13%203c3%204%207%206%207%2012s-4%209-7%2012c-3-3-7-6-7-12s4-8%207-12z%22%20fill%3D%22none%22%20stroke%3D%22%23f4c542%22%20stroke-width%3D%22.8%22%20opacity%3D%22.18%22/%3E%3Ccircle%20cx%3D%2213%22%20cy%3D%2215%22%20r%3D%221.4%22%20fill%3D%22%23f4c542%22%20opacity%3D%22.2%22/%3E%3C/svg%3E") 0 0/18px 21px,linear-gradient(180deg,#6a0c1e,#3a0612 70%,#24030a);
+  box-shadow:inset 0 0 0 1.5px #f4c542,inset 0 0 0 3.5px rgba(30,4,10,.9),inset 0 0 0 4.5px rgba(244,197,66,.7),inset 0 0 18px rgba(0,0,0,.45)}
+html body .vst .vof-b.is-crown.is-try::after,html body .vst .vof-b.is-crown.is-on::after{box-shadow:inset 0 0 0 2px #fff3c4,inset 0 0 0 3.5px rgba(30,4,10,.9),inset 0 0 0 4.5px rgba(244,197,66,.9),inset 0 0 18px rgba(0,0,0,.45),inset 0 0 22px rgba(255,210,110,.35)}
+html body .vst .vof-b.is-crown > svg{filter:drop-shadow(0 0 6px rgba(255,200,90,.55))!important}
+html body .vst .vof-b.is-crown small{color:#ffe7b0}
+html body .vst .vof-b.is-crown .vof-r.crc-tag{left:0;right:0;top:9px;display:flex;justify-content:center;background:none;-webkit-background-clip:border-box;background-clip:border-box;color:inherit;animation:none!important;letter-spacing:0;font-size:inherit}
+html body .vst .vof-b.is-crown .lrt-in{display:inline-flex;align-items:center;gap:4px}
+html body .vst .vof-b.is-crown .crt-ic{width:11px!important;height:8px!important;filter:none!important}
+html body .vst .vof-b.is-crown .crt-tx{font:700 .54rem/1 Georgia,'Times New Roman',serif;letter-spacing:.24em;margin-right:-.24em;background:linear-gradient(100deg,#b9821c 0%,#f4c542 30%,#fff8dc 45%,#f4c542 60%,#b9821c 100%);background-size:250% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 0 rgba(0,0,0,.55));animation:lrtSh 4.2s ease-in-out infinite!important}
+/* v67 ราชายื่นมงกุฎ */
+html body .vst .vci-k{position:absolute;pointer-events:none;will-change:transform,opacity}
+html body .vst .vci-k svg{position:absolute;inset:0;width:100%!important;height:100%!important;overflow:visible;filter:drop-shadow(0 6px 10px rgba(0,0,0,.45))!important}
+html body .vst .vci-k .vk-up,html body .vst .vci-k .vk-bow{opacity:0}
+html body .vst .vci-k.bow .vk-hold,html body .vst .vci-k.bow .vk-up{opacity:0!important}
+html body .vst .vci-k.bow .vk-bow{opacity:1}
+html body .vst .vci-k .vk-body{transform-box:view-box;transform-origin:55px 150px;animation:vkWalk .42s ease-in-out 3}
+html body .vst .vci-k.bow svg{transform-origin:50% 96%;animation:vkBow 1.1s ease-in-out forwards}
+@keyframes vkWalk{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-3px) rotate(-2deg)}75%{transform:translateY(-3px) rotate(2deg)}}
+@keyframes vkBow{0%{transform:rotate(0)}40%,70%{transform:rotate(-14deg)}100%{transform:rotate(0)}}
