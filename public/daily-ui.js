@@ -1710,7 +1710,8 @@
   function crownLoreBtn() {
     var seen = -1; try { seen = +(localStorage.getItem('vc_lore_seen_r') || -1); } catch (e) {}
     var last = hasCrown() ? LORE_R.length - 1 : 0;
-    return '<span class="vof-lore-w is-crown" role="button" tabindex="0" data-lore="crown" aria-label="อ่านตำนานมงกุฎตำนาน' + (last > seen ? ' มีตอนใหม่' : '') + '">📜' + (last > seen ? '<i class="lore-new"></i>' : '') + '</span>';
+    var dots = ''; for (var d = 0; d < LORE_R.length; d++) dots += '<i class="' + (d <= last ? 'on' : '') + '"></i>';
+    return '<span class="vof-act crc-lore" role="button" tabindex="0" data-lore="crown" aria-label="อ่านตำนานมงกุฎตำนาน' + (last > seen ? ' มีตอนใหม่' : '') + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + LIC_R[4] + '</svg>ตำนาน<span class="crc-dots" aria-hidden="true">' + dots + '</span>' + (last > seen ? '<i class="lore-new"></i>' : '') + '</span>';
   }
   function hasWizard() { return ownedOutfits().indexOf('wizard') >= 0; }
   function wizardLoreBtn() {
@@ -1724,7 +1725,8 @@
   function laurelLoreBtn() {
     var tot = S && S.totalDays || 0, last = -1, seen = -1; LORE_L.forEach(function (x, k) { if (x.need === 0 || tot >= x.need) last = k; });
     try { seen = +(localStorage.getItem('vc_lore_seen_l') || -1); } catch (e) {}
-    return '<span class="vof-act lrc-lore" role="button" tabindex="0" data-lore="laurel" aria-label="อ่านตำนานมาลัย' + (last > seen ? ' มีตอนใหม่' : '') + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + LIC_L[0] + '</svg>ตำนาน' + (last > seen ? '<i class="lore-new"></i>' : '') + '</span>';
+    var dots = ''; for (var d = 0; d < LORE_L.length; d++) dots += '<i class="' + (d <= last ? 'on' : '') + '"></i>';
+    return '<span class="vof-act lrc-lore" role="button" tabindex="0" data-lore="laurel" aria-label="อ่านตำนานมาลัย' + (last > seen ? ' มีตอนใหม่' : '') + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + LIC_L[0] + '</svg>ตำนาน<span class="crc-dots" aria-hidden="true">' + dots + '</span>' + (last > seen ? '<i class="lore-new"></i>' : '') + '</span>';
   }
   function loreOpen(i, set) {
     lrSet = set === 'laurel' ? 'l' : set === 'wizard' ? 'w' : set === 'cap' ? 'c' : set === 'crown' ? 'r' : XL_BY[set] || 'm';
