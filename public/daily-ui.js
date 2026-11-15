@@ -528,11 +528,29 @@
     }
     sel = focusId || null; tryOn = focusId && ownedOutfits().indexOf(focusId) < 0 ? focusId : null;
     sh.hidden = false; document.documentElement.classList.add('vst-open');
+    clearTimeout(fullT); fullT = setTimeout(function () { if (sh && !sh.hidden && sh.classList.contains('on')) document.documentElement.classList.add('vst-full'); }, 320);
+    liteCheck();
     requestAnimationFrame(function () { sh.classList.add('on'); });
     if (S) shopRender(); else { sh.querySelector('.vst-grid').innerHTML = '<p class="vst-wait">กำลังโหลดร้าน…</p>'; load(); }
     setTimeout(function () { var x = sh.querySelector('.vst-x'); if (x) x.focus({ preventScroll: true }); }, 60);
   }
+  /* (6) เครื่องช้า: วัดความลื่น 1.5 วิ หลังเปิดร้าน ถ้าต่ำกว่า ~45 เฟรม/วิ ลดจำนวนละออง/กลีบดอกไม้ลงครึ่งหนึ่ง (เครื่องแรงเห็นครบเหมือนเดิม) */
+  function liteCheck() {
+    try { if (sessionStorage.getItem('vc_lite') === '1') { sh.classList.add('is-lite'); return; } } catch (e) {}
+    if (sh.classList.contains('is-lite') || calm()) return;
+    setTimeout(function () {
+      if (!sh || sh.hidden) return;
+      var t = [], last = 0, t0 = 0;
+      (function f(n) { if (!t0) t0 = n; if (last) t.push(n - last); last = n; if (n - t0 < 1500 && sh && !sh.hidden) requestAnimationFrame(f); else done(); })(performance.now());
+      function done() {
+        if (t.length < 10) return; t.sort(function (a, b) { return a - b; }); var med = t[Math.floor(t.length / 2)];
+        if (med > 22) { sh.classList.add('is-lite'); try { sessionStorage.setItem('vc_lite', '1'); } catch (e) {} }
+      }
+    }, 1400);
+  }
+  var fullT = 0;
   function shopClose() {
+    clearTimeout(fullT); document.documentElement.classList.remove('vst-full');
     if (!sh) return; tryOn = null; sel = null; pvTier = 0; heroKey = ''; heroPlayed = false; heroT.forEach(clearTimeout); heroT = []; (function () { var he = sh.querySelector('.vst-hero'); if (he) { if (he.getAnimations) he.getAnimations().forEach(function (x) { x.cancel(); }); he.className = 'vst-hero'; he.innerHTML = ''; } })(); lrStop(); lrPlayed = false; crStop(); crPlayed = false; wzStop(); wzPlayed = false; cpStop(); cpPlayed = false; sh.classList.remove('on'); document.documentElement.classList.remove('vst-open');
     setTimeout(function () { if (sh && !sh.classList.contains('on')) sh.hidden = true; }, 260);
     if (box && !box.hidden) render();
@@ -551,11 +569,46 @@
   /* ฉากเหรียญไฟไม่มอด แนวภาพยนตร์: ควันมืด + ถ่านไฟเบลอลอยช้า + แสงอุ่นตัดขอบ · ป้ายแบบแบรนด์หรู */
   /* ฉากสวรรค์ของมาลัยตำนาน v2: ฟ้าโพล้เพล้ทองอำพัน-ชมพูกุหลาบ + ดวงอาทิตย์ · เกาะลอยฟ้าไกล ๆ · วงรัศมีลอเรล (เลขโรมันตั้งตรง)
      · เสาหินอ่อนมีเงา+เถาไอวี่ทอง+ผ้าไหมพลิ้ว · พื้นหินอ่อนเงาวับ+หมอก · บันไดสู่แท่น (ผิวแท่นสะท้อนเงาน้อง) · โบเก้ · ละอองทอง+กลีบดอก */
+  /* ===== ลื่นขึ้น: แยกภาพฉากเป็น 2 ชั้น — ชั้นนิ่ง (วาดครั้งเดียว เก็บเป็นภาพ) กับชั้นที่ขยับ (วาดเฉพาะของที่ขยับ) — หน้าตาเหมือนเดิม ===== */
+  function splitSvg(svg) {
+    if (!svg || svg.__sp || svg.classList.contains('vst-anim')) return; svg.__sp = 1;
+    var all = [svg].concat([].slice.call(svg.querySelectorAll('*'))), n = all.length, isA = new Array(n), hasA = new Array(n), inA = new Array(n), inD = new Array(n), idx = new Map(), any = false;
+    all.forEach(function (el, i) { idx.set(el, i); });
+    for (var i = 1; i < n; i++) {
+      var el = all[i], pi = idx.get(el.parentNode);
+      inD[i] = el.tagName === 'defs' || (pi !== undefined && inD[pi]) || el.tagName === 'style';
+      if (inD[i]) continue;
+      var an = getComputedStyle(el).animationName;
+      isA[i] = !!an && an !== 'none';
+      inA[i] = isA[i] || (pi !== undefined && inA[pi]);
+      if (isA[i]) { any = true; for (var q = el.parentNode; q && q !== svg; q = q.parentNode) hasA[idx.get(q)] = true; }
+    }
+    svg.classList.add('vst-static');
+    if (!any) return;
+    var cl = svg.cloneNode(true), ca = [cl].concat([].slice.call(cl.querySelectorAll('*')));
+    cl.classList.remove('vst-static'); cl.classList.add('vst-anim'); cl.setAttribute('aria-hidden', 'true');
+    for (var j = n - 1; j >= 1; j--) {
+      var pj = idx.get(all[j].parentNode), pRemovedS = false;
+      if (inD[j]) { if (ca[j].parentNode && (pj === 0 || !inD[pj])) ca[j].remove(); continue; }
+      if (isA[j] && !(pj && inA[pj])) all[j].remove();               // ชั้นนิ่ง: เอาของที่ขยับออก
+      if (!inA[j] && !hasA[j]) ca[j].remove();                         // ชั้นขยับ: เก็บเฉพาะของที่ขยับ (และกลุ่มที่ครอบอยู่)
+    }
+    svg.parentNode.insertBefore(cl, svg.nextSibling);
+  }
+  function libBreath(root) {   /* หน้าต่างกระจกสี "หายใจ" ด้วยแผ่นเงาด้านบน (การ์ดจอทำให้) แทนการวาดหน้าต่าง+แสงเรืองใหม่ทุกเฟรม */
+    var w = root.querySelector('.lb-win circle.lb-rim'); if (!w) return;
+    var b = root.querySelector('.lb-wb') || root.appendChild(document.createElement('i')); b.className = 'lb-wb';
+    var r = w.getBoundingClientRect(), q = root.getBoundingClientRect();
+    b.style.cssText = 'left:' + (r.left - q.left) + 'px;top:' + (r.top - q.top) + 'px;width:' + r.width + 'px;height:' + r.height + 'px';
+  }
+  function splitScene(root) { if (!root) return; requestAnimationFrame(function () { root.querySelectorAll('svg').forEach(function (v) { if (v.parentNode === root && v.viewBox && v.viewBox.baseVal && v.viewBox.baseVal.width >= 300) splitSvg(v); }); }); }
+  /* ฉากที่ปิดไปแล้ว: ลบทิ้งหลังจางหาย (คืนหน่วยความจำ) แล้วสร้างใหม่ตอนกลับมา */
+  function dropLater(el, cls) { clearTimeout(el.__dt); el.__dt = setTimeout(function () { if (sh && !sh.classList.contains(cls) && el.getAttribute('data-on')) { el.innerHTML = ''; el.removeAttribute('data-on'); } }, 1200); }
   function heavScene(on) {
     var hv = sh.querySelector('.vst-heav'); if (!hv) return;
     var was = sh.classList.contains('is-heav');
     sh.classList.toggle('is-heav', on);
-    if (!on) return;
+    if (!on) { if (was) dropLater(hv, 'is-heav'); return; }
     if (!hv.getAttribute('data-on')) {
       hv.setAttribute('data-on', '1');
       var CX = 195, CY = 112, f1 = function (v) { return v.toFixed(1); };
@@ -664,7 +717,9 @@
   /* ===== ฉากหอคอยพ่อมดยามค่ำคืน (เลือก/ใส่หมวกนักเวท): ฟ้าดาว · จันทร์เสี้ยว · หอคอยหน้าต่างเรืองแสง · วงเวทบนพื้น · ผงดาวลอยขึ้น (วาดเองทั้งหมด) ===== */
   function wizScene(on) {
     var wv = sh.querySelector('.vst-wzs'); if (!wv) return;
+    var wasW = sh.classList.contains('is-wzs');
     sh.classList.toggle('is-wzs', on);
+    if (!on && wasW) dropLater(wv, 'is-wzs');
     if (!on || wv.getAttribute('data-on')) return;
     wv.setAttribute('data-on', '1');
     var R = function (a, b) { return a + Math.random() * (b - a); };
@@ -700,7 +755,9 @@
   /* ===== ฉากท้องฟ้าแห่งความฝัน (เลือก/ใส่หมวกนอนดาว): ฟ้าพาสเทล · เมฆนุ่มลอย · พระจันทร์หลับยิ้ม · ดาวห้อยเชือกแกว่ง · Zzz ลอย · ยืนบนก้อนเมฆ (วาดเองทั้งหมด) ===== */
   function dreamScene(on) {
     var dv = sh.querySelector('.vst-drm'); if (!dv) return;
+    var wasD = sh.classList.contains('is-drm');
     sh.classList.toggle('is-drm', on);
+    if (!on && wasD) dropLater(dv, 'is-drm');
     if (!on || dv.getAttribute('data-on')) return;
     dv.setAttribute('data-on', '1');
     var R = function (a, b) { return a + Math.random() * (b - a); };
@@ -731,7 +788,7 @@
     var tv = sh.querySelector('.vst-thr'); if (!tv) return;
     var was = sh.classList.contains('is-thr');
     sh.classList.toggle('is-thr', on);
-    if (!on) return;
+    if (!on) { if (was) dropLater(tv, 'is-thr'); return; }
     if (!tv.getAttribute('data-on')) {
       tv.setAttribute('data-on', '1');
       var tuft = ''; for (var ty = 64; ty < 190; ty += 16) for (var tx = 162; tx <= 228; tx += 16) tuft += '<circle cx="' + (tx + ((ty / 16) % 2 ? 8 : 0)) + '" cy="' + ty + '" r="1.4" fill="#4a0410"/>';
@@ -775,7 +832,7 @@
   /* ===== ฉากห้องสมุดที่ไม่เคยหลับ (เหรียญไฟไม่มอด): ชั้นหนังสือสองข้าง · หน้าต่างกระจกสีรูปเปลวไฟ + ลำแสง · แท่นหินแกะสลัก — สีตามระดับผ่าน CSS (data-tier) ===== */
   function libScene() {
     var R = function (a, b) { return a + Math.random() * (b - a); };
-    var bays = [[20, 130], [140, 250], [262, 322], [578, 638], [650, 760], [770, 880]], rows = [74, 128, 182, 236, 290], sh_ = '', bk = '';
+    var bays = [[20, 130], [140, 250], [262, 322], [578, 638], [650, 760], [770, 880]], rows = [74, 128, 182, 236, 290], sh_ = '', bk = '', gk = '';
     bays.forEach(function (b) {
       sh_ += '<rect class="lb-wd2" x="' + (b[0] - 6) + '" y="14" width="' + (b[1] - b[0] + 12) + '" height="280" rx="2"/><rect class="lb-bk" x="' + b[0] + '" y="20" width="' + (b[1] - b[0]) + '" height="272"/>';
       rows.forEach(function (y) {
@@ -784,8 +841,9 @@
           var w = R(5, 10), hh = R(30, 46), c = 'b' + (1 + Math.floor(Math.random() * 5)), gl = Math.random() < .09;
           if (x + w > b[1] - 2) break;
           if (Math.random() < .08 && x + hh * .5 < b[1] - 4) { bk += '<rect class="' + c + '" x="' + x.toFixed(1) + '" y="' + (y - w).toFixed(1) + '" width="' + (hh * .8).toFixed(1) + '" height="' + w.toFixed(1) + '" rx="1"/>'; x += hh * .8 + 1; continue; }
-          bk += '<rect class="' + c + (gl ? ' gl' : '') + '" x="' + x.toFixed(1) + '" y="' + (y - hh).toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + hh.toFixed(1) + '" rx="1"' + (gl ? ' style="--d:-' + R(0, 4).toFixed(1) + 's"' : '') + '/>' +
+          var bkS = '<rect class="' + c + (gl ? ' gl' : '') + '" x="' + x.toFixed(1) + '" y="' + (y - hh).toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + hh.toFixed(1) + '" rx="1"' + (gl ? ' style="--d:-' + R(0, 4).toFixed(1) + 's"' : '') + '/>' +
             (w > 7 ? '<rect class="lb-band" x="' + x.toFixed(1) + '" y="' + (y - hh + 5).toFixed(1) + '" width="' + w.toFixed(1) + '" height="2"/>' : '');
+          if (gl) gk += bkS; else bk += bkS;
           x += w + R(.6, 1.8);
         }
         sh_ += '<rect class="lb-wd" x="' + (b[0] - 6) + '" y="' + y + '" width="' + (b[1] - b[0] + 12) + '" height="6" rx="1"/>';
@@ -800,7 +858,8 @@
       '<linearGradient id="lbFl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--lfl)"/><stop offset="1" stop-color="#000"/></linearGradient></defs>' +
       '<rect class="lb-wall" width="900" height="360"/>' +
       '<path class="lb-st" d="M312 300V96Q312 4 450 4Q588 4 588 96V300H570V98Q570 22 450 22Q330 22 330 98V300Z"/><path class="lb-st2" d="M330 300V98Q330 22 450 22Q570 22 570 98V300Z"/>' +
-      '<circle cx="450" cy="128" r="140" fill="url(#lbWg)"/>' + sh_ + bk +
+      '<circle cx="450" cy="128" r="140" fill="url(#lbWg)"/>' + sh_ + bk + '</svg>' +
+      '<svg class="lb-svg lb-anim" viewBox="0 0 900 360" preserveAspectRatio="xMidYMax slice">' + gk +
       '<g class="lb-win"><circle cx="450" cy="128" r="92" class="lb-rim"/>' + pet + '<circle cx="450" cy="128" r="40" class="g3"/>' +
       '<path class="g4" d="M450 98C462 112 470 122 466 138C463 150 456 156 450 158C444 156 437 150 434 138C432 128 438 120 444 114C444 124 448 128 451 128C452 118 448 108 450 98Z"/>' +
       '<g class="lb-lead"><circle cx="450" cy="128" r="84"/><circle cx="450" cy="128" r="40"/><circle cx="450" cy="128" r="62"/></g></g>' + rays +
@@ -929,6 +988,7 @@
     var ov = document.createElement('div'); ov.className = 'vli'; ov.setAttribute('aria-hidden', 'true');
     ov.innerHTML = '<i class="vli-dim"></i><i class="vli-gr"></i>' + goddessSvg() + '<span class="vli-nts">' + notes + '</span>' + fountainSvg() +
       '<span class="vli-lr"><i class="vli-lrg"></i><svg viewBox="' + ART_OUT.laurel.vb + '">' + artFor('laurel') + '</svg></span><small class="vli-skip">แตะเพื่อข้าม</small>';
+    ms.classList.remove('is-hop'); void ms.offsetWidth;
     st.appendChild(ov); sh.classList.add('lr-intro'); ms.classList.add('hide-laurel');
     var lr = ov.querySelector('.vli-lr'), fn = ov.querySelector('.vli-fn');
     var q = st.getBoundingClientRect(), f = fn.getBoundingClientRect();
@@ -995,6 +1055,7 @@
     var pet = ''; for (var k = 0; k < 14; k++) pet += '<i style="left:' + (6 + Math.random() * 88).toFixed(1) + '%;--d:' + (1.6 + Math.random() * 1.4).toFixed(2) + 's;--t:' + (2.2 + Math.random() * 1.4).toFixed(2) + 's;--x:' + (Math.random() * 40 - 20).toFixed(0) + 'px"></i>';
     var ov = document.createElement('div'); ov.className = 'vci'; ov.setAttribute('aria-hidden', 'true');
     ov.innerHTML = '<i class="vci-dim"></i><i class="vci-spot"></i><span class="vci-pet">' + pet + '</span><span class="vci-k">' + kingSvg() + '</span><span class="vci-cr"><i class="vci-crg"></i><svg viewBox="' + ART_OUT.crown.vb + '">' + crownArt() + '</svg></span><small class="vli-skip">แตะเพื่อข้าม</small>';
+    ms.classList.remove('is-hop'); void ms.offsetWidth;   /* วัดตำแหน่งหัวตอนยืนนิ่ง (ไม่ใช่กลางท่ากระโดด) */
     st.appendChild(ov); sh.classList.add('cr-intro'); ms.classList.add('hide-crown');
     var q = st.getBoundingClientRect(), tg = ms.querySelector('.cr-worn').getBoundingClientRect(), msv = (ms.querySelector('svg') || ms).getBoundingClientRect();
     var kEl = ov.querySelector('.vci-k'), cr = ov.querySelector('.vci-cr');
@@ -1057,6 +1118,7 @@
     var ov = document.createElement('div'); ov.className = 'vwz'; ov.setAttribute('aria-live', 'polite');
     ov.innerHTML = '<i class="vwz-dim"></i>' + ring + '<i class="vwz-beam"></i><span class="vwz-hat"><svg viewBox="' + ART_OUT.wizard.vb + '">' + ART_OUT.wizard.art + '</svg></span>' +
       '<svg class="vwz-star" viewBox="0 0 100 100" aria-hidden="true"><path pathLength="1" d="M50 6 61 38 95 38 67 58 78 92 50 71 22 92 33 58 5 38 39 38Z"/></svg><i class="vwz-burst b1"></i><i class="vwz-burst b2"></i>' + '<small class="vli-skip">แตะเพื่อข้าม</small>';
+    ms.classList.remove('is-hop'); void ms.offsetWidth;
     st.appendChild(ov); sh.classList.add('wz-intro');
     var q = st.getBoundingClientRect(), msv = (ms.querySelector('svg') || ms).getBoundingClientRect(), tg = worn.getBoundingClientRect();
     var cx = msv.left - q.left + msv.width / 2, feetY = msv.top - q.top + msv.height * 132 / 140;
@@ -1156,6 +1218,7 @@
       '<button type="button" class="vwz-go">' + (has ? (isOn() ? 'ใส่อยู่ ✓' : 'ใส่เลย') : 'ลองดูต่อ') + '</button>' + (has ? '' : '<small class="vwz-pr">ราคา ' + fmt(o.price) + ' แต้ม</small>') + '</div>';
     var ov = document.createElement('div'); ov.className = 'vwz vnz'; ov.setAttribute('aria-live', 'polite');
     ov.innerHTML = '<i class="vwz-dim"></i>' + bed + '<span class="vwz-hat vnz-hat"><svg viewBox="' + ART_OUT.cap.vb + '">' + ART_OUT.cap.art + '</svg></span><i class="vwz-burst b1"></i>' + '<small class="vli-skip">แตะเพื่อข้าม</small>';
+    ms.classList.remove('is-hop'); void ms.offsetWidth;
     st.appendChild(ov); sh.classList.add('wz-intro');
     var q = st.getBoundingClientRect(), msv = (ms.querySelector('svg') || ms).getBoundingClientRect(), tg = worn.getBoundingClientRect();
     var cx = msv.left - q.left + msv.width / 2, feetY = msv.top - q.top + msv.height * 132 / 140;
@@ -1564,6 +1627,14 @@
       (ok ? '<div class="vlr-end">' + (RR ? SEAL_R : L ? SEAL_L : SEAL) + '</div>' : RR ? '<div class="vlr-lock">🔒 อ่านต่อได้เมื่อมีมงกุฎตำนาน<small>ราคา ' + fmt((itemById('crown') || {}).price || 1000) + ' แต้ม · ตอนนี้มี ' + fmt(S && S.points || 0) + ' แต้ม</small></div>' : C ? '<div class="vlr-lock">🔒 อ่านต่อได้เมื่อมีหมวกนอนดาว<small>ราคา ' + fmt((itemById('cap') || {}).price || 300) + ' แต้ม · ตอนนี้มี ' + fmt(S && S.points || 0) + ' แต้ม</small></div>' : W ? '<div class="vlr-lock">🔒 อ่านต่อได้เมื่อมีหมวกนักเวท<small>ราคา ' + fmt((itemById('wizard') || {}).price || 400) + ' แต้ม · ตอนนี้มี ' + fmt(S && S.points || 0) + ' แต้ม</small></div>' : L ? '<div class="vlr-lock">🔒 ปลดล็อกเมื่อเช็กอินรวมครบ ' + c.need + ' วัน<small>ตอนนี้เช็กอินรวม ' + tot + ' วัน · อีก ' + Math.max(0, c.need - tot) + ' วัน</small></div>' : '<div class="vlr-lock">🔒 ปลดล็อกเมื่อเช็กอินติดกันครบ ' + c.need + ' วัน<small>สถิติสูงสุดของคุณ ' + best + ' วัน</small></div>');
     lr.querySelector('.vlr-body').scrollTop = 0;
   }
+  /* ลื่นขึ้น: หยุดอนิเมชันของการ์ด/ฉากที่อยู่นอกจอ (มองไม่เห็นอยู่แล้ว หน้าตาไม่เปลี่ยน) */
+  var offIO = null;
+  function watchOff() {
+    if (!('IntersectionObserver' in window) || !sh) return;
+    if (!offIO) offIO = new IntersectionObserver(function (es) { es.forEach(function (e) { e.target.classList.toggle('is-off', !e.isIntersecting); }); }, { rootMargin: '120px 0px' });
+    else offIO.disconnect();
+    sh.querySelectorAll('.vof-b, .vst-stage').forEach(function (n) { offIO.observe(n); });
+  }
   function shopRender() {
     if (!sh || sh.hidden || !S) return;
     var list = shopItems(), own = ownedOutfits(), worn = wornOutfits(), bmap = {};
@@ -1583,6 +1654,7 @@
     var wzOn = !fireOn && !hvOn && !thOn && (sel === 'wizard' || (!sel && wornOutfits().indexOf('wizard') >= 0));
     wizScene(wzOn);
     dreamScene(!fireOn && !hvOn && !thOn && !wzOn && (sel === 'cap' || (!sel && wornOutfits().indexOf('cap') >= 0)));
+    ['.vst-heav', '.vst-thr', '.vst-wzs', '.vst-drm', '.vst-lib'].forEach(function (q) { var r = sh.querySelector(q); if (r && r.firstChild) splitScene(r); }); var lbr = sh.querySelector('.vst-lib'); if (lbr) requestAnimationFrame(function () { libBreath(lbr); }); var pd = sh.querySelector('.vst-pd3'); if (pd) requestAnimationFrame(function () { splitSvg(pd); });
     var hk = sel === 'medal' ? 'm' + medalTier() : '';
     if (hk && !heroPlayed) setTimeout(function () { playHero(medalTier()); }, 30);
     else if (hk && heroKey && hk !== heroKey && !calm()) { var stg = sh.querySelector('.vst-stage'); stg.classList.remove('tier-flash'); void stg.offsetWidth; stg.classList.add('tier-flash'); }
@@ -1621,6 +1693,7 @@
       return '<button type="button" class="vof-b r-' + it.rarity + (it.id === 'laurel' ? ' is-laurel' : it.id === 'crown' ? ' is-crown' : '') + (it.id === 'medal' ? ' is-fire mt-' + medalTier() : '') + (has ? ' is-own' : ' is-lock' + (it.badge ? ' is-badge-item' : '')) + (on ? ' is-on' : '') + (sel === it.id ? ' is-try' : '') + '" data-outfit="' + it.id + '" aria-pressed="' + (sel === it.id) + '" aria-label="' + h(it.name + ' · ' + (RAR[it.rarity] || '')) + '">' +
         (it.id === 'laurel' ? LRC_TAG + LRC_DUST : it.id === 'crown' ? CRC_TAG : '<em class="vof-r">' + (RAR[it.rarity] || '') + '</em>') + (!has && bd && it.id === 'laurel' ? lrCard(bd, a) : !has && bd ? '<span class="vof-pr" style="--bp:' + Math.round(bd.have / bd.n * 100) + '%"><svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg><i class="vof-spark"></i><b>' + bd.have + '/' + bd.n + '</b></span>' : '<svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg>') + '<small>' + h(it.name) + '</small>' + tag + (has && it.id === 'laurel' ? laurelLoreBtn() : '') + (it.id === 'wizard' ? wizardLoreBtn() : it.id === 'cap' ? capLoreBtn() : it.id === 'crown' ? crownLoreBtn() : '') + '</button>';
     }).join('');
+    watchOff();
     var bar = sh.querySelector('.vst-bar');
     if (!o) { bar.innerHTML = '<p class="vst-hint">แตะของเพื่อลองใส่ · ' + own.length + '/' + list.length + ' ชิ้นที่มีแล้ว · ได้แต้มจากเช็กอินทุกวัน</p>'; return; }
     bar.className = 'vst-bar' + (o.id === 'medal' ? ' is-med mt-' + medalTier() : '');
