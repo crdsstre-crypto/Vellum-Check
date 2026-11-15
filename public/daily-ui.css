@@ -2940,3 +2940,75 @@ html body .vst .vsv.exit .sv-maid{animation:svOutR .5s ease-in forwards!importan
 @keyframes svOutL{to{transform:translateX(-160px);opacity:0}}@keyframes svOutR{to{transform:translateX(160px);opacity:0}}
 html body .vst .vsv .vli-skip{z-index:5}
 html body .vst .vsv.go .vli-skip{animation:vliIn .4s ease .9s forwards}
+
+/* ===== ม้วนราชโองการ (ป้ายคำพูดฉากห้องโถงวัง) + การ์ดตำนานเครื่องแบบราชันย์ (daily-ui.css v116) ===== */
+html body .vst.is-pal .vst-say.pl-say{background:none!important;box-shadow:none!important;padding:7px 2px!important;border:0!important;max-width:min(46%,190px)!important;filter:drop-shadow(0 8px 14px rgba(40,10,10,.5))}
+html body .vst.is-pal .vst-say.pl-say::before,html body .vst.is-pal .vst-say.pl-say::after{content:none!important;display:none!important}
+html body .vst.is-pal .pl-say .pl-pp{display:block;position:relative;padding:8px 14px 10px;text-align:center;
+  background:linear-gradient(90deg,rgba(150,100,40,.18),transparent 12%,transparent 88%,rgba(150,100,40,.18)),linear-gradient(180deg,#fdf6e3,#efdcb0);
+  box-shadow:inset 0 0 0 1px rgba(200,144,30,.55),inset 0 0 0 4px #fdf6e3,inset 0 0 0 5px rgba(200,144,30,.35)}
+/* (1) แกนทองบนล่าง + หัวกลม */
+html body .vst.is-pal .pl-say .pl-rod{position:absolute;left:-7px;right:-7px;height:8px;border-radius:4px;z-index:1;background:linear-gradient(180deg,#7a4d08,#e2ad3a 30%,#fff3c4 48%,#e8b94a 64%,#8a5a12);box-shadow:0 2px 3px rgba(60,30,0,.4)}
+html body .vst.is-pal .pl-say .pl-rod.t{top:2px}html body .vst.is-pal .pl-say .pl-rod.b{bottom:2px}
+html body .vst.is-pal .pl-say .pl-rod::before,html body .vst.is-pal .pl-say .pl-rod::after{content:"";position:absolute;top:-2px;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff6d6,#e0a92c 45%,#7a4d08)}
+html body .vst.is-pal .pl-say .pl-rod::before{left:-7px}html body .vst.is-pal .pl-say .pl-rod::after{right:-7px}
+/* (2) หัวข้อ */
+html body .vst.is-pal .pl-say .pl-hd{display:block;margin:1px 0 4px;padding-bottom:4px;font:800 9.5px/1 'Prompt',sans-serif;letter-spacing:1.2px;color:#a8741a;
+  background:linear-gradient(90deg,transparent,#c8901e 25%,#e9c46a 50%,#c8901e 75%,transparent) bottom/100% 1px no-repeat}
+/* (3) หมึกน้ำตาล + คำเน้นทองนูน */
+html body .vst.is-pal .pl-say .pl-t{display:block;color:#4a2a0a;font:600 12px/1.45 'Prompt',sans-serif}
+html body .vst.is-pal .pl-say .pl-t b{font-weight:800;padding:0 1px;background:linear-gradient(180deg,#ffd877 0%,#f0b434 30%,#d18f16 60%,#a86c0e 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;-webkit-text-stroke:.3px #8a5a10;filter:drop-shadow(0 1px 0 rgba(255,255,255,.9))}
+/* (4) ตราครั่ง + ริบบิ้น */
+html body .vst.is-pal .pl-say .pl-seal{position:absolute;right:-10px;bottom:-12px;width:26px;height:26px;z-index:2;transform:rotate(-10deg)}
+html body .vst.is-pal .pl-say .pl-seal svg{width:100%!important;height:100%!important;position:relative;filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))!important}
+html body .vst.is-pal .pl-say .pl-seal i{position:absolute;top:16px;width:7px;height:16px;background:linear-gradient(180deg,#d8341f,#8e1414);clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%)}
+html body .vst.is-pal .pl-say .pl-seal i.r1{left:5px;transform:rotate(14deg)}html body .vst.is-pal .pl-say .pl-seal i.r2{left:13px;transform:rotate(-10deg)}
+/* (5) คลี่ออก */
+html body .vst.is-pal .pl-say.pl-in .pl-pp{animation:plUnroll .6s cubic-bezier(.2,.8,.3,1) both;transform-origin:50% 0}
+html body .vst.is-pal .pl-say.pl-in .pl-rod.b{animation:plRodB .6s cubic-bezier(.2,.8,.3,1) both}
+html body .vst.is-pal .pl-say.pl-in .pl-seal{animation:plSeal .4s cubic-bezier(.2,1.6,.4,1) .55s both}
+@keyframes plUnroll{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes plRodB{from{transform:translateY(calc(-1 * var(--h,60px)))}to{transform:none}}
+@keyframes plSeal{from{opacity:0;transform:rotate(-10deg) scale(2)}to{opacity:1;transform:rotate(-10deg)}}
+@media (prefers-reduced-motion:reduce){html body .vst.is-pal .pl-say *{animation:none!important}}
+/* (10) คำโปรยบนการ์ด */
+html body .vof-b.is-cape .cpk-q{display:block;margin:2px 8px 6px;font:italic 500 10.5px/1.35 'Prompt',sans-serif;color:#e9cf8a;opacity:.9;text-align:center}
+html body .vst.is-pal .vst-say.pl-say{max-width:min(41%,180px)!important}
+html body .vst .vof-b.is-cape .cpk-q{margin:-2px 6px 1px;font-size:9.5px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100% - 12px)}
+html body .vst .vof-b.is-cape > svg{max-height:58px}
+@media (min-width:700px){html body .vst .vof-b.is-cape .cpk-q{font-size:10.5px}}
+html body .vst .vof-b.is-cape .cpk-q{flex:none}
+html body .vst .vof-b.is-cape > svg{max-height:46px}
+html body .vst .vof-b.is-cape .cpk-q{margin:-3px 6px 0;line-height:1.15}
+/* มงกุฎตำนาน v2: ประกายวิ่งบนขอบทอง (daily-ui.css v117) */
+html body .cr-sh{animation:crSh 4.2s ease-in-out 1.2s infinite}
+@keyframes crSh{0%,62%{transform:skewX(-20deg) translateX(0)}100%{transform:skewX(-20deg) translateX(96px)}}
+.vst-refl .cr-sh{animation:none!important}
+@media (prefers-reduced-motion:reduce){html body .cr-sh{animation:none!important;opacity:0}}
+/* การ์ดมงกุฎ: ขนาดเท่าเครื่องแบบข้าง ๆ */
+html body .vst .vst-grid > .vof-b.is-crown:not(.is-cape) > svg{width:78px!important;height:56px!important;margin:6px 0 4px}
+@media (min-width:420px){html body .vst .vst-grid > .vof-b.is-crown:not(.is-cape) > svg{width:86px!important;height:62px!important}}
+/* มงกุฎ: ลอยตามช้ากว่าตัวนิดหนึ่งตอนกระโดด แล้วตกลงสวมพอดี · ซ่อนเงาบนการ์ด (daily-ui.css v119) */
+html body :is(.vst-ms,.vdg-mascot).is-hop .cr-worn .cr-body,html body :is(.vst-ms,.vdg-mascot).is-hop .cr-worn .cr-shd{transform-box:view-box}
+html body :is(.vst-ms,.vdg-mascot).is-hop .cr-worn{animation:crLag .7s cubic-bezier(.3,1.2,.5,1) .06s 2}
+@keyframes crLag{0%,100%{transform:translateY(0)}30%{transform:translateY(3px)}55%{transform:translateY(-4px)}80%{transform:translateY(.6px)}}
+html body .vof-b .cr-shd,html body .vci-cr .cr-shd{display:none}
+@media (prefers-reduced-motion:reduce){html body .cr-worn{animation:none!important}}
+/* ===== มงกุฎตำนานหรู: ออร่า · ประกายแฉก · ไข่มุกห้อยแกว่ง · ประกายทองลอย · หมอนกำมะหยี่บนการ์ด (daily-ui.css v120) ===== */
+html body .cr-aura,html body .cr-pts{display:none}
+html body .cr-worn .cr-aura,html body .cr-worn .cr-pts{display:inline}
+html body .vm-outfit .cr-pil,html body .vci-cr .cr-pil,html body .cr-worn .cr-pil{display:none}
+html body .cr-ray{transform-box:fill-box;transform-origin:center;animation:crRay 24s linear infinite}
+@keyframes crRay{to{transform:rotate(360deg)}}
+html body .cr-aura circle{transform-box:fill-box;transform-origin:center;animation:crAu 3.6s ease-in-out infinite}
+@keyframes crAu{0%,100%{opacity:.75;transform:scale(.94)}50%{opacity:1;transform:scale(1.04)}}
+html body .cr-fl{transform-box:fill-box;transform-origin:center;opacity:0;animation:crFl 2.8s ease-in-out infinite}
+@keyframes crFl{0%,70%,100%{opacity:0;transform:scale(.2) rotate(0)}80%{opacity:1;transform:scale(1) rotate(20deg)}90%{opacity:0;transform:scale(.4) rotate(40deg)}}
+html body .cr-pd{transform-box:fill-box;transform-origin:50% 0;animation:crPd 2.6s ease-in-out infinite}
+@keyframes crPd{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+html body .cr-pt{transform-box:fill-box;transform-origin:center;opacity:0;animation:crPt 3s ease-out infinite}
+@keyframes crPt{0%{opacity:0;transform:translateY(0) scale(.6)}25%{opacity:1}100%{opacity:0;transform:translateY(-14px) scale(1)}}
+.vst-refl :is(.cr-ray,.cr-aura circle,.cr-fl,.cr-pd,.cr-pt){animation:none!important}
+.vst-refl :is(.cr-aura,.cr-pts){display:none!important}
+@media (prefers-reduced-motion:reduce){html body :is(.cr-ray,.cr-aura circle,.cr-fl,.cr-pd,.cr-pt){animation:none!important}html body .cr-pts{display:none}}
+html body .vof-b .cr-beam{display:inline}html body .cr-beam{display:none}
