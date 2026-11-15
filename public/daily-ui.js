@@ -441,7 +441,7 @@
   }
   function pick(id) {
     var o = itemById(id); if (!o) return;
-    sel = id; tryOn = ownedOutfits().indexOf(id) < 0 ? id : null; if (id !== 'medal') pvTier = 0;
+    sel = id; tryOn = ownedOutfits().indexOf(id) < 0 ? id : null; if (id !== 'medal') pvTier = 0; if (id === 'laurel') lrSayN++;
     shopRender(); hop(sh.querySelector('.vst-ms'));
   }
   function act(a) {
@@ -727,11 +727,28 @@
       '<i class="lim-div" aria-hidden="true"></i><small class="lim-tag"><svg class="lq lq-o" viewBox="0 0 24 20" aria-hidden="true"><path d="M2 20v-7C2 6 5.4 1.6 10.4 0l1 2.4C8.4 4 6.8 6.6 6.6 9.6H11V20zm13 0v-7c0-7 3.4-11.4 8.4-13l1 2.4c-3 1.6-4.6 4.2-4.8 7.2H24V20z"/></svg>ไฟที่ไม่ยอมมอด แม้ในคืนที่ยาวที่สุด<svg class="lq lq-c" viewBox="0 0 24 20" aria-hidden="true"><path d="M2 20v-7C2 6 5.4 1.6 10.4 0l1 2.4C8.4 4 6.8 6.6 6.6 9.6H11V20zm13 0v-7c0-7 3.4-11.4 8.4-13l1 2.4c-3 1.6-4.6 4.2-4.8 7.2H24V20z"/></svg></small>' +
       (has ? '' : '<span class="lim-pg"><span class="lim-bar"><i></i></span><b>' + bd.have + '/' + bd.n + '</b></span><small class="lim-n">ได้เมื่อเช็กอินติดกัน ' + bd.n + ' วัน</small>') + '</span><span class="lim-row">' + tag + loreBtn() + '</span></button>';
   }
+  /* คำพูดน้องตอนเลือกมาลัย (สุ่มสลับทุกครั้งที่แตะ) */
+  var lrSayN = Math.floor(Math.random() * 6);
+  function lrSay(has, lft) {
+    var L;
+    if (has) {
+      var st = lrStage();
+      L = ['ขอบคุณที่ไม่ยอมแพ้นะ ตำนานนี้เป็นของเราสองคน 💛',
+        st === 3 ? 'มาลัยขั้นสูงสุดแล้ว! รัศมีเทพเปล่งประกายเต็มที่ ✨' : 'มาลัยขั้น ' + st + '/3 · เช็กอินรวมครบ ' + (st === 1 ? 130 : 160) + ' วัน มาลัยจะ' + (st === 1 ? 'เปล่งประกาย ✨' : 'มีวงรัศมีเทพ 🌟')];
+    } else if (lft <= 10) {
+      L = ['อีกแค่ ' + lft + ' วัน! ฉันได้ยินเสียงแตรเทวดาแล้ว 🎺', 'ประตูสวรรค์เริ่มเปิดแล้ว… อีก ' + lft + ' วันเท่านั้น!'];
+    } else {
+      L = ['เทพกำลังเฝ้ามองอยู่นะ… อีก ' + lft + ' วัน มาลัยจะเป็นของเรา ✨', 'เช็กอินทุกวัน แล้ววันหนึ่งเทพจะสวมมาลัยให้ฉัน 🌿 อีก ' + lft + ' วัน', 'ผู้ที่อ่านสัญญาครบ 100 วัน… คือตำนาน 👑 อีก ' + lft + ' วัน'];
+    }
+    return L[lrSayN % L.length];
+  }
   /* กล่องคำพูด: พิมพ์ทีละตัว (ข้อความเดิมไม่พิมพ์ซ้ำ) */
   var typeT = 0;
   function sayType(el, txt) {
     if (el.getAttribute('data-t') === txt) return;
     el.setAttribute('data-t', txt); clearInterval(typeT);
+    if (sh && sh.classList.contains('is-heav')) { var hn = h(txt), mm = hn.match(/\d+(?=\s*วัน)/g) || hn.match(/\d+/g); if (mm) { var li = hn.lastIndexOf(mm[mm.length - 1]); hn = hn.slice(0, li) + '<b class="sv-n">' + mm[mm.length - 1] + '</b>' + hn.slice(li + mm[mm.length - 1].length); } el.innerHTML = '<span class="sv-t">' + hn + '</span>'; el.classList.remove('sv-in'); void el.offsetWidth; el.classList.add('sv-in'); return; }
+    el.classList.remove('sv-in');
     if (calm()) { el.textContent = txt; return; }
     var chars = Array.from ? Array.from(txt) : txt.split(''), n = 0;
     el.innerHTML = '<span></span><i class="vst-cur"></i>';
@@ -832,8 +849,8 @@
     var o = itemById(sel), say2 = sh.querySelector('.vst-say');
     var bb = o && o.badge && bmap[o.badge], lft = bb ? bb.n - bb.have : 0;
     sayType(say2, !o ? 'อยากให้ฉันใส่อะไรดี? แตะของด้านล่างเลย ✨'
+      : o.id === 'laurel' ? lrSay(ownedOutfits().indexOf('laurel') >= 0, lft)
       : own.indexOf(o.id) >= 0 ? (worn.indexOf(o.id) >= 0 ? 'ใส่อยู่นะ เข้ากับฉันไหม? 😊' : 'ของเราเองนี่นา ใส่เลยไหม? 💛')
-      : o.id === 'laurel' && ownedOutfits().indexOf('laurel') >= 0 ? (lrStage() === 3 ? 'มาลัยขั้นสูงสุดแล้ว! รัศมีเทพเปล่งประกายเลย ✨' : 'มาลัยขั้น ' + lrStage() + '/3 · เช็กอินรวมครบ ' + (lrStage() === 1 ? 130 : 160) + ' วัน มาลัยจะ' + (lrStage() === 1 ? 'มีใบเพิ่มและเปล่งประกาย ✨' : 'มีวงรัศมีเทพ 🌟'))
       : o.id === 'medal' ? 'รู้ไหม เหรียญนี้มีตำนานนะ… กด 📜 อ่านดูสิ! อีก ' + lft + ' วันก็ได้แล้ว 🔥'
       : o.badge ? (bb && bb.n - bb.have <= 3 ? 'อีกแค่ ' + lft + ' วันเอง! เช็กอินต่อนะ 🔥' : 'สู้ ๆ อีก ' + lft + ' วันได้แน่! 🔥')
       : (S.points >= o.price ? 'ลองใส่อยู่! ชอบไหม? ✨' : 'อีกนิดเดียวก็ซื้อได้แล้ว 💪'));
