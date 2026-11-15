@@ -512,7 +512,7 @@
       sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.setAttribute('aria-labelledby', 'vstT');
       sh.innerHTML = '<div class="vst-bg" data-shx></div><div class="vst-p">' +
         '<div class="vst-hd"><h3 id="vstT">ร้านค้าน้องเวลลัม</h3><span class="vst-pts"><i class="vof-coin"></i><b data-spts>0</b> แต้ม</span><button type="button" class="vst-x" data-shx aria-label="ปิดร้าน">✕</button></div>' +
-        '<div class="vst-stage"><div class="vst-fire" aria-hidden="true"></div><i class="vst-spot"></i><i class="vst-glow"></i><div class="vst-refl" aria-hidden="true"></div><i class="vst-ped"></i><i class="vst-sweep"></i><i class="vst-grain"></i><div class="vst-extra"></div><div class="vst-hero" aria-hidden="true"></div><div class="vst-heav" aria-hidden="true"></div><div class="vst-wzs" aria-hidden="true"></div><div class="vst-drm" aria-hidden="true"></div><div class="vst-thr" aria-hidden="true"></div><div class="vst-ms" aria-hidden="true"></div><p class="vst-say"></p></div>' +
+        '<div class="vst-stage"><div class="vst-fire" aria-hidden="true"></div><i class="vst-spot"></i><i class="vst-glow"></i><div class="vst-refl" aria-hidden="true"></div><i class="vst-ped"></i><i class="vst-sweep"></i><i class="vst-grain"></i><div class="vst-extra"></div><div class="vst-hero" aria-hidden="true"></div><div class="vst-heav" aria-hidden="true"></div><div class="vst-fit" aria-hidden="true"></div><div class="vst-wzs" aria-hidden="true"></div><div class="vst-drm" aria-hidden="true"></div><div class="vst-thr" aria-hidden="true"></div><div class="vst-ms" aria-hidden="true"></div><p class="vst-say"></p></div>' +
         '<div class="vst-tabs" role="tablist"></div><div class="vst-grid"></div><div class="vst-bar"></div></div>';
       document.body.appendChild(sh);
       sh.addEventListener('click', function (e) {
@@ -528,7 +528,7 @@
     }
     sel = focusId || null; tryOn = focusId && ownedOutfits().indexOf(focusId) < 0 ? focusId : null;
     sh.hidden = false; document.documentElement.classList.add('vst-open');
-    clearTimeout(fullT); fullT = setTimeout(function () { if (sh && !sh.hidden && sh.classList.contains('on')) document.documentElement.classList.add('vst-full'); }, 320);
+    clearTimeout(fullT); fullT = setTimeout(function () { if (sh && !sh.hidden && sh.classList.contains('on')) { [].forEach.call(document.body.children, function (n) { if (n !== sh && n !== lr && !n.classList.contains('vlr')) n.classList.add('vst-under'); }); document.documentElement.classList.add('vst-full'); } }, 320);
     liteCheck();
     requestAnimationFrame(function () { sh.classList.add('on'); });
     if (S) shopRender(); else { sh.querySelector('.vst-grid').innerHTML = '<p class="vst-wait">กำลังโหลดร้าน…</p>'; load(); }
@@ -550,8 +550,8 @@
   }
   var fullT = 0;
   function shopClose() {
-    clearTimeout(fullT); document.documentElement.classList.remove('vst-full');
-    if (!sh) return; tryOn = null; sel = null; pvTier = 0; heroKey = ''; heroPlayed = false; heroT.forEach(clearTimeout); heroT = []; (function () { var he = sh.querySelector('.vst-hero'); if (he) { if (he.getAnimations) he.getAnimations().forEach(function (x) { x.cancel(); }); he.className = 'vst-hero'; he.innerHTML = ''; } })(); lrStop(); lrPlayed = false; crStop(); crPlayed = false; wzStop(); wzPlayed = false; cpStop(); cpPlayed = false; sh.classList.remove('on'); document.documentElement.classList.remove('vst-open');
+    clearTimeout(fullT); document.documentElement.classList.remove('vst-full'); [].forEach.call(document.querySelectorAll('.vst-under'), function (n) { n.classList.remove('vst-under'); });
+    if (!sh) return; tryOn = null; sel = null; pvTier = 0; heroKey = ''; heroPlayed = false; heroT.forEach(clearTimeout); heroT = []; (function () { var he = sh.querySelector('.vst-hero'); if (he) { if (he.getAnimations) he.getAnimations().forEach(function (x) { x.cancel(); }); he.className = 'vst-hero'; he.innerHTML = ''; } })(); lrStop(); lrPlayed = false; crStop(); crPlayed = false; wzStop(); wzPlayed = false; cpStop(); cpPlayed = false; ftStop(); ftPlayed = {}; sh.classList.remove('on'); document.documentElement.classList.remove('vst-open');
     setTimeout(function () { if (sh && !sh.classList.contains('on')) sh.hidden = true; }, 260);
     if (box && !box.hidden) render();
   }
@@ -604,6 +604,76 @@
   function splitScene(root) { if (!root) return; requestAnimationFrame(function () { root.querySelectorAll('svg').forEach(function (v) { if (v.parentNode === root && v.viewBox && v.viewBox.baseVal && v.viewBox.baseVal.width >= 300) splitSvg(v); }); }); }
   /* ฉากที่ปิดไปแล้ว: ลบทิ้งหลังจางหาย (คืนหน่วยความจำ) แล้วสร้างใหม่ตอนกลับมา */
   function dropLater(el, cls) { clearTimeout(el.__dt); el.__dt = setTimeout(function () { if (sh && !sh.classList.contains(cls) && el.getAttribute('data-on')) { el.innerHTML = ''; el.removeAttribute('data-on'); } }, 1200); }
+  /* ===== ฉากห้องลองชุด (ไอเทมระดับธรรมดา/หายาก และตอนยังไม่เลือก): กระจกไฟดวงกลม · ราวแขวนเสื้อ · ม่านห้องลอง · แท่นโชว์ · สีตามระดับ (CSS data-fr) ===== */
+  function fitScene(on, fr) {
+    var fv = sh.querySelector('.vst-fit'); if (!fv) return;
+    var was = sh.classList.contains('is-fit');
+    sh.classList.toggle('is-fit', on); if (on) sh.setAttribute('data-fr', fr || 'common'); else if (was) dropLater(fv, 'is-fit');
+    if (!on || fv.getAttribute('data-on')) return;
+    fv.setAttribute('data-on', '1');
+    var stripes = ''; for (var x = 6; x < 390; x += 14) stripes += 'M' + x + ' 0V236';
+    var bulbs = '', MX = 195, MY = 112, RX = 66, RY = 92;
+    for (var b = 0; b <= 12; b++) { var a = Math.PI + b * Math.PI / 12; bulbs += '<circle cx="' + (MX + (RX + 9) * Math.cos(a)).toFixed(1) + '" cy="' + (MY + (RY * .78 + 9) * Math.sin(a)).toFixed(1) + '" r="3.4" class="ft-bl" style="--i:' + (6 + b) + '"/>'; }
+    for (var y = 120, yi = 0; y <= 226; y += 18, yi++) { bulbs += '<circle cx="' + (MX - RX - 9) + '" cy="' + y + '" r="3.4" class="ft-bl" style="--i:' + (5 - yi) + '"/><circle cx="' + (MX + RX + 9) + '" cy="' + y + '" r="3.4" class="ft-bl" style="--i:' + (19 + yi) + '"/>'; }
+    var hang = function (x, c, len, w) { return '<g transform="translate(' + x + ' 52)"><path d="M0 0q-2-6 2-7q4 0 3 4" fill="none" class="ft-hk"/><path d="M0 2L-' + (w / 2) + ' 10H' + (w / 2) + 'Z" fill="none" class="ft-hk"/>' +
+      '<path d="M-' + (w / 2 - 1) + ' 10Q-' + (w / 2 + 3) + ' ' + (10 + len * .5) + ' -' + (w / 2 - 2) + ' ' + (10 + len) + 'H' + (w / 2 - 2) + 'Q' + (w / 2 + 3) + ' ' + (10 + len * .5) + ' ' + (w / 2 - 1) + ' 10Q0 16-' + (w / 2 - 1) + ' 10Z" fill="' + c + '" class="ft-cl"/>' +
+      '<path d="M-' + (w / 2 - 4) + ' 16V' + (8 + len) + 'M' + (w / 2 - 6) + ' 18V' + (6 + len) + '" class="ft-fd"/></g>'; };
+    var curtain = function (side) { var x0 = side < 0 ? 0 : 390, d = ''; for (var f = 0; f < 4; f++) d += '<path d="M' + (x0 + side * -f * 9) + ' 0V236" class="ft-cf"/>'; 
+      return '<g class="ft-cur"><path d="M' + x0 + ' 0H' + (x0 - side * 40) + 'Q' + (x0 - side * 30) + ' 120 ' + (x0 - side * 14) + ' 150Q' + (x0 - side * 34) + ' 190 ' + (x0 - side * 30) + ' 236H' + x0 + 'Z" class="ft-cu"/>' + d +
+        '<path d="M' + (x0 - side * 16) + ' 146q' + (-side * 10) + ' 4 ' + (-side * 18) + ' 0" class="ft-tie"/><circle cx="' + (x0 - side * 22) + '" cy="148" r="3" class="ft-tieb"/></g>'; };
+    fv.innerHTML = '<svg class="ft-svg" viewBox="0 0 390 256" preserveAspectRatio="xMidYMax slice"><defs>' +
+      '<linearGradient id="ftW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--fw1)"/><stop offset="1" style="stop-color:var(--fw2)"/></linearGradient>' +
+      '<linearGradient id="ftM" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--fm1)"/><stop offset=".55" style="stop-color:var(--fm2)"/><stop offset="1" style="stop-color:var(--fm1)"/></linearGradient>' +
+      '<radialGradient id="ftG" cx=".5" cy=".42" r=".6"><stop offset="0" style="stop-color:var(--fg)" stop-opacity=".5"/><stop offset="1" style="stop-color:var(--fg)" stop-opacity="0"/></radialGradient>' +
+      '<linearGradient id="ftF" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--ff1)"/><stop offset="1" style="stop-color:var(--ff2)"/></linearGradient></defs>' +
+      '<rect width="390" height="256" fill="url(#ftW)"/><path d="' + stripes + '" class="ft-st"/>' +
+      '<path d="M0 30H390" class="ft-mold"/><path d="M0 228H390" class="ft-mold"/>' +
+      '<ellipse cx="195" cy="120" rx="150" ry="120" fill="url(#ftG)"/>' +
+      /* กระจกบานโค้ง + ไฟดวงกลม */
+      '<path d="M' + (MX - RX - 16) + ' 236V' + MY + 'A' + (RX + 16) + ' ' + (RY * .78 + 16) + ' 0 0 1 ' + (MX + RX + 16) + ' ' + MY + 'V236Z" class="ft-fr"/>' +
+      '<path d="M' + (MX - RX) + ' 236V' + MY + 'A' + RX + ' ' + (RY * .78) + ' 0 0 1 ' + (MX + RX) + ' ' + MY + 'V236Z" fill="url(#ftM)" class="ft-gl"/>' +
+      '<path d="M' + (MX - RX + 14) + ' 200L' + (MX - 10) + ' ' + (MY - 40) + 'M' + (MX - RX + 30) + ' 214L' + (MX + 6) + ' ' + (MY - 30) + '" class="ft-sh"/>' + '<g class="ft-bls">' + bulbs + '</g>' +
+      /* ราวแขวนเสื้อ (ซ้าย) */
+      '<g class="ft-rack" transform="translate(0 66)"><path d="M30 236V48M104 236V48M24 48H110" class="ft-rod"/><circle cx="24" cy="48" r="3" class="ft-knob"/><circle cx="110" cy="48" r="3" class="ft-knob"/>' +
+      hang(40, 'var(--fc1)', 58, 18) + hang(58, 'var(--fc2)', 70, 20) + hang(76, 'var(--fc3)', 52, 18) + hang(94, 'var(--fc4)', 64, 16) + '<path d="M22 236h16M96 236h16" class="ft-rod"/></g>' +
+      /* ม่านห้องลอง (ขวา) */
+      '<path d="M286 6H390" class="ft-rod"/>' + curtain(1) +
+      /* พื้นเงา */
+      '<rect y="228" width="390" height="28" fill="url(#ftF)"/><path d="M0 238H390M60 228 20 256M150 228 140 256M240 228 250 256M330 228 370 256" class="ft-fl"/></svg><i class="ft-vig"></i>' +
+      '<svg class="ft-pd" viewBox="0 0 220 60" aria-hidden="true"><defs><linearGradient id="ftPs" x1="0" x2="1"><stop offset="0" style="stop-color:var(--fp0)"/><stop offset=".45" style="stop-color:var(--fp1)"/><stop offset="1" style="stop-color:var(--fp0)"/></linearGradient>' +
+      '<radialGradient id="ftPt" cx=".5" cy=".35" r=".7"><stop offset="0" style="stop-color:var(--fv1)"/><stop offset="1" style="stop-color:var(--fv2)"/></radialGradient></defs>' +
+      '<ellipse cx="110" cy="48" rx="104" ry="9" class="ft-pshadow"/><path d="M12 16V34A98 13 0 0 0 208 34V16Z" fill="url(#ftPs)"/><path d="M12 34A98 13 0 0 0 208 34" class="ft-prim"/><path d="M12 20A98 13 0 0 0 208 20" class="ft-prim2"/>' +
+      '<ellipse cx="110" cy="16" rx="98" ry="13" class="ft-ptop"/><ellipse cx="110" cy="16" rx="90" ry="11" fill="url(#ftPt)"/><path d="M40 12Q110 4 180 12" class="ft-psh"/></svg>';
+  }
+  /* ===== ฉากเปิดตัวห้องลองชุด (ไอเทมธรรมดา/หายาก): ม่านรูดปิด → เงาน้องเปลี่ยนชุดหลังม่าน → ม่านรูดเปิด + ไฟกระจกวิ่ง + ประกายตามระดับ (~1.9 วิ · แตะข้าม) ===== */
+  var ftPlayed = {}, ftT = [], ftEnd = null;
+  function ftStop() { ftT.forEach(clearTimeout); ftT = []; if (ftEnd) ftEnd(true); }
+  function playFit(id) {
+    if (!sh || ftPlayed[id] || calm() || !sh.classList.contains('is-fit')) { sh && sh.classList.remove('ft-intro'); return; }
+    var st = sh.querySelector('.vst-stage'), ms = sh.querySelector('.vst-ms'), fv = sh.querySelector('.vst-fit'); if (!st || !ms) return;
+    ftStop(); ftPlayed[id] = true;
+    ms.classList.remove('is-hop'); void ms.offsetWidth;
+    var it = itemById(id) || {}, rare = it.rarity === 'rare';
+    var q = st.getBoundingClientRect(), m = (ms.querySelector('svg') || ms).getBoundingClientRect();
+    var W = m.width * 1.45, H = m.height * 1.08, L = m.left - q.left + m.width / 2 - W / 2, T = m.top - q.top - m.height * .02;
+    var sil = (ms.querySelector('svg') || {}).outerHTML || '';
+    var sp = ''; for (var k = 0; k < (rare ? 12 : 7); k++) { var a = k / (rare ? 12 : 7) * 6.283 + Math.random() * .4, r = (rare ? 70 : 54) + Math.random() * 26; sp += '<i style="--x:' + (Math.cos(a) * r).toFixed(0) + 'px;--y:' + (Math.sin(a) * r * .8).toFixed(0) + 'px;--d:' + (Math.random() * .15).toFixed(2) + 's">✦</i>'; }
+    var ov = document.createElement('div'); ov.className = 'vft' + (rare ? ' is-rare' : ''); ov.setAttribute('aria-hidden', 'true');
+    ov.innerHTML = '<div class="vft-box" style="left:' + L + 'px;top:' + T + 'px;width:' + W + 'px;height:' + H + 'px"><i class="vft-rod"></i><span class="vft-sil">' + sil + '</span><i class="vft-c l"></i><i class="vft-c r"></i></div>' +
+      '<i class="vft-fl" style="left:' + (L + W / 2) + 'px;top:' + (T + H * .45) + 'px"></i><span class="vft-sp" style="left:' + (L + W / 2) + 'px;top:' + (T + H * .45) + 'px">' + sp + '</span><small class="vli-skip">แตะเพื่อข้าม</small>';
+    st.appendChild(ov); sh.classList.add('ft-intro'); fv && fv.classList.add('ft-dim');
+    var ended = false;
+    ftEnd = function (quiet) {
+      if (ended) return; ended = true; ftEnd = null; ftT.forEach(clearTimeout); ftT = [];
+      sh.classList.remove('ft-intro'); fv && fv.classList.remove('ft-dim', 'ft-chase'); ms.classList.remove('ft-hide');
+      if (quiet) { ov.remove(); return; }
+      ov.classList.add('out'); setTimeout(function () { ov.remove(); }, 350);
+    };
+    ov.addEventListener('click', function (e) { e.stopPropagation(); if (ftEnd) { ftEnd(); hop(ms); } });
+    ms.classList.add('ft-hide'); void ov.offsetWidth; ov.classList.add('go');
+    ftT.push(setTimeout(function () { if (ended) return; ov.classList.add('open'); ms.classList.remove('ft-hide'); hop(ms); fv && (fv.classList.remove('ft-dim'), fv.classList.add('ft-chase')); }, 1050));
+    ftT.push(setTimeout(function () { ftEnd && ftEnd(); }, 1950));
+  }
   function heavScene(on) {
     var hv = sh.querySelector('.vst-heav'); if (!hv) return;
     var was = sh.classList.contains('is-heav');
@@ -1571,6 +1641,72 @@
     '<path d="M32 4C40 3 44 8 50 9S60 16 60 24 63 36 58 42 52 56 44 58 36 62 28 60 14 58 9 50 2 40 5 30 6 14 14 9 24 5 32 4Z" fill="url(#srW)" stroke="#4a0410" stroke-width="1.5"/><circle cx="32" cy="32" r="19" fill="none" stroke="#ff8a9c" stroke-width="1.4" opacity=".6"/><circle cx="32" cy="32" r="16" fill="none" stroke="#5a0414" stroke-width="1"/>' +
     '<g transform="translate(32 33)"><path d="M-12 6-14-7-7-1-3-9 0-14 3-9 7-1 14-7 12 6z" fill="#ffd36a" stroke="#6a3a08" stroke-width="1" stroke-linejoin="round"/><rect x="-12" y="5" width="24" height="5" rx="1.4" fill="#e0a92c" stroke="#6a3a08" stroke-width="1"/></g><path d="M18 18q4-5 10-6" stroke="#ffb3c0" stroke-width="2" fill="none" stroke-linecap="round" opacity=".6"/></svg>';
   function hasCrown() { return ownedOutfits().indexOf('crown') >= 0; }
+  /* ===== ตำนานไอเทมธรรมดา/หายาก (ป้ายแท็กกระดาษคราฟต์): ผ้าพันคอแดง 2 · เข็มกลัดดาว 2 · แว่นนาย 3 · โบว์ไทนาย 3 ตอน ===== */
+  var ITM = function (id, x, y, s) { var a = ART_OUT[id]; return a ? '<svg x="' + x + '" y="' + y + '" width="' + s + '" height="' + (s * a.vb.split(' ')[3] / a.vb.split(' ')[2]) + '" viewBox="' + a.vb + '">' + a.art + '</svg>' : ''; };
+  var MSC = function (mood, x, y, w, id) { var m = mascot(mood, 100, ''); if (m.indexOf('<svg') !== 0) return ''; if (id) m = m.replace(/<\/svg>\s*$/, '<g class="vm-outfit">' + artFor(id) + '</g></svg>'); return m.replace(/^<svg[^>]*>/, '<svg x="' + x + '" y="' + y + '" width="' + w + '" height="' + (w * 140 / 120) + '" viewBox="0 0 120 140">'); };
+  var PAPER = function (x, y, w, h, r) { var l = ''; for (var i = 0; i < 4; i++) l += 'M' + (x + 6) + ' ' + (y + 9 + i * 7) + 'h' + (w - 12 - (i % 2) * 8); return '<g transform="rotate(' + (r || 0) + ' ' + (x + w / 2) + ' ' + (y + h / 2) + ')"><rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="2" fill="#fbf6ea" stroke="#3a2a12" stroke-width="1.6"/><path d="' + l + '" stroke="#c9b48a" stroke-width="1.8" stroke-linecap="round"/></g>'; };
+  var XL = {
+    s: { id: 'scarf', name: 'ผ้าพันคอแดง', fr: 'common', IC: [
+      '<path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="3" fill="currentColor"/>',
+      '<path d="M4 8q8 4 16 0v4q-8 4-16 0z" fill="currentColor"/><path d="M14 12v8h3v-7" fill="currentColor"/>'], L: [
+      { need: 0, t: 'บทนำ · คืนที่หนาวที่สุดของปี', art: function () { var sn = ''; for (var i = 0; i < 14; i++) sn += '<circle cx="' + (8 + (i * 37) % 104) + '" cy="' + (4 + (i * 23) % 50) + '" r="' + (1 + i % 2) + '" fill="#fff"/>'; return '<svg viewBox="0 0 120 70"><rect width="120" height="70" rx="6" fill="#23395a"/>' + sn + '<path d="M60 18 86 34V64H34V34Z" fill="#c9a06a" stroke="#3a2a12" stroke-width="1.6"/><rect x="54" y="44" width="12" height="20" fill="#7a4a22"/><rect x="40" y="38" width="10" height="9" fill="#ffd36a"/>' + PAPER(88, 30, 24, 30, 8) + '</svg>'; }, q: 'ความหนาวทำให้เรารีบ แต่สัญญาไม่เคยรอให้เราอุ่น', p: [
+        'คืนหนึ่งกลางฤดูหนาว **เวลลัม**ตัวสั่นอยู่หน้าห้องเช่าเล็ก ๆ ที่อยากย้ายเข้ามาอยู่',
+        'เจ้าของห้อง**ป้าลมหนาว**ยื่นสัญญาให้แล้วบอกว่า ==เซ็นตรงนี้เลย จะได้รีบเข้าห้องไปอุ่น ๆ==',
+        'มือเวลลัมเย็นเฉียบจนแทบจับปากกาไม่อยู่ แต่ก็ยังยกสัญญาขึ้นมาอ่าน เพราะจำได้เสมอว่า'] },
+      { need: 1, t: 'ตอนจบ · ผ้าพันคอผืนแรก', art: function () { return '<svg viewBox="0 0 120 70"><rect width="120" height="70" rx="6" fill="#3a2a40"/>' + MSC('happy', 30, 2, 58, 'scarf') + '<path d="M86 22q6-8 14-2" stroke="#ffd36a" stroke-width="2" fill="none"/><text x="92" y="44" font-size="16" fill="#ffd36a">?</text></svg>'; }, q: 'ถามก่อนเซ็น อุ่นใจกว่าเสียใจทีหลัง', p: [
+        'ท้ายหน้าเขียนไว้เล็ก ๆ ว่า ==ค่าไฟเครื่องทำความร้อนผู้เช่าจ่ายเอง และห้ามติดตั้งเพิ่ม==',
+        'เวลลัมเลยถามป้าลมหนาวอย่างสุภาพ ขอให้**เขียนเพิ่มลงในสัญญา**ว่าจะช่วยเรื่องผ้าห่มกับเครื่องทำความร้อน ป้าหัวเราะแล้วยอมแก้ให้',
+        'ก่อนกลับ ป้ายังถักผ้าพันคอสีแดงผืนหนึ่งมาให้ พร้อมกระซิบว่า'] } ] },
+    p: { id: 'pin', name: 'เข็มกลัดดาว', fr: 'common', IC: [
+      '<path d="M5 4h11l3 3v13H5z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 10h8M8 14h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+      '<path d="M12 2 14.9 8.6 22 9.3 16.6 14 18.2 21 12 17.3 5.8 21 7.4 14 2 9.3 9.1 8.6z" fill="currentColor"/>'], L: [
+      { need: 0, t: 'บทนำ · สัญญาฉบับแรกที่อ่านจนจบ', art: function () { return '<svg viewBox="0 0 120 70"><rect width="120" height="70" rx="6" fill="#2b2240"/><rect x="6" y="8" width="26" height="54" fill="#5a3a22"/><rect x="88" y="8" width="26" height="54" fill="#5a3a22"/>' + PAPER(44, 12, 34, 44, -4) + '<path d="M50 50h18" stroke="#e5484d" stroke-width="2" stroke-linecap="round"/></svg>'; }, q: 'ทุกการเดินทางเริ่มจากบรรทัดแรก', p: [
+        'นานมาแล้ว ตอนที่เวลลัมยังเป็น**ม้วนกระดาษน้อยตัวเล็ก ๆ** ได้ไปสมัครสมาชิกห้องสมุดเป็นครั้งแรก',
+        'บรรณารักษ์ยื่นใบสมัครมาให้ แล้วเวลลัม==อ่านทีละบรรทัดจนถึงบรรทัดสุดท้าย== ทั้งที่คนอื่นเซ็นกันในไม่กี่วินาที',
+        'บรรณารักษ์ชราเฝ้ามองอยู่เงียบ ๆ แล้วยิ้มออกมาอย่างอบอุ่น'] },
+      { need: 1, t: 'ตอนจบ · ดาวที่ไม่เคยดับ', art: function () { return '<svg viewBox="0 0 120 70"><rect width="120" height="70" rx="6" fill="#1f2450"/><circle cx="60" cy="34" r="26" fill="#ffe28a" opacity=".18"/>' + ITM('pin', 42, 16, 36) + '</svg>'; }, q: 'ดาวดวงเล็ก ก็ส่องทางได้ไกล', p: [
+        'บรรณารักษ์มอบ**เข็มกลัดรูปดาว**ให้ แล้วบอกว่ามันจะเรืองแสงทุกครั้งที่ผู้ติดมันอ่านอะไรจนจบ',
+        'ตั้งแต่วันนั้น เวลลัมติดเข็มกลัดดาวไว้ทุกวัน และ==มันก็ไม่เคยดับเลยสักครั้ง==',
+        'ทุกครั้งที่เจอสัญญายาว ๆ เวลลัมจะแตะเข็มกลัดเบา ๆ แล้วนึกถึงคำของบรรณารักษ์'] } ] },
+    g: { id: 'glasses', name: 'แว่นนาย', fr: 'rare', IC: [
+      '<path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7 15h4" stroke="currentColor" stroke-width="1.4"/>',
+      '<circle cx="10" cy="10" r="6" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M14.5 14.5 20 20" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>',
+      '<circle cx="7" cy="13" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17" cy="13" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M11 13h2" stroke="currentColor" stroke-width="2"/>'], L: [
+      { need: 0, t: 'บทนำ · ตัวหนังสือที่เล็กเกินไป', art: function () { return '<svg viewBox="0 0 120 70"><rect width="120" height="70" rx="6" fill="#1d2a4a"/><rect x="30" y="6" width="60" height="58" rx="3" fill="#fff4d6" stroke="#3a2a12" stroke-width="1.6"/><text x="60" y="30" text-anchor="middle" font-size="15" font-weight="800" fill="#e5484d">ฟรี 0฿</text><path d="M38 52h44M38 56h40" stroke="#bfae94" stroke-width=".8"/></svg>'; }, q: 'ยิ่งตัวหนังสือเล็ก ยิ่งต้องอ่านให้ชัด', p: [
+        'วันหนึ่งเวลลัมเห็นใบปลิวโปรโมชันมือถือเขียนตัวโตว่า ==ฟรี 0 บาท!== ใครเห็นก็อยากได้',
+        'แต่ท้ายใบปลิวมี**ตัวหนังสือเล็กจิ๋วเป็นแถว** เล็กจนเวลลัมหรี่ตาแค่ไหนก็อ่านไม่ออก',
+        'พนักงานบอกว่าไม่ต้องอ่านหรอก เป็นแค่รายละเอียดทั่วไป แต่เวลลัมยังสงสัยอยู่ในใจว่า'] },
+      { need: 1, t: 'ตอนที่ 1 · ช่างแว่นในซอยเล็ก', art: function () { return '<svg viewBox="0 0 120 70"><rect width="120" height="70" rx="6" fill="#3a2a22"/><rect x="10" y="40" width="100" height="24" fill="#7a4a22" stroke="#3a2a12" stroke-width="1.4"/>' + ITM('glasses', 34, 12, 52) + '<circle cx="96" cy="26" r="8" fill="none" stroke="#c9a75a" stroke-width="2.4"/><path d="M101 32l6 6" stroke="#c9a75a" stroke-width="2.6" stroke-linecap="round"/></svg>'; }, q: 'สิ่งที่ถูกทำให้เล็ก มักเป็นสิ่งที่ใหญ่ที่สุด', p: [
+        'เวลลัมเดินเข้าไปในซอยเล็ก ๆ จนเจอร้านของ**ลุงเลนส์** ช่างแว่นชราที่ทำแว่นมาทั้งชีวิต',
+        'ลุงเลนส์ฟังเรื่องแล้วพยักหน้า ก่อนหยิบแว่นกรอบกลมออกมาอันหนึ่ง ==แว่นที่ขยายเฉพาะตัวหนังสือที่ใครบางคนอยากซ่อน==',
+        'ลุงสวมแว่นให้เวลลัม แล้วบอกเคล็ดลับที่เรียนรู้มาจากงานทั้งชีวิตว่า'] },
+      { need: 1, t: 'ตอนที่ 2 · ฟรีที่ไม่ฟรี', art: function () { return '<svg viewBox="0 0 120 70"><rect width="120" height="70" rx="6" fill="#1d2a4a"/>' + MSC('happy', 6, 2, 56, 'glasses') + PAPER(70, 12, 40, 46, 4) + '<path d="M76 48h26" stroke="#e5484d" stroke-width="2" stroke-linecap="round"/></svg>'; }, q: 'ของฟรีที่ดี ไม่ต้องซ่อนเงื่อนไข', p: [
+        'พอสวมแว่นนาย ตัวหนังสือจิ๋วก็ชัดขึ้นมาทันที ==ต้องใช้แพ็กเกจ 24 เดือน ยกเลิกก่อนเสียค่าปรับ==',
+        'เวลลัมไม่ได้โกรธ แต่**ถามรายละเอียดทุกข้อ**จนเข้าใจ แล้วค่อยเลือกแพ็กเกจที่เหมาะกับตัวเองจริง ๆ',
+        'กลับถึงบ้าน เวลลัมวางแว่นไว้ข้างเตียง แล้วเขียนบันทึกสั้น ๆ ว่า'] } ] },
+    b: { id: 'bow', name: 'โบว์ไทนาย', fr: 'rare', IC: [
+      '<rect x="4" y="5" width="16" height="15" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 9h16M8 3v4M16 3v4" stroke="currentColor" stroke-width="2"/>',
+      '<circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>',
+      '<path d="M3 7l7 5-7 5zM21 7l-7 5 7 5z" fill="currentColor"/><rect x="10" y="10" width="4" height="4" rx="1" fill="currentColor"/>'], L: [
+      { need: 0, t: 'บทนำ · นัดสำคัญครั้งแรก', art: function () { return '<svg viewBox="0 0 120 70"><rect width="120" height="70" rx="6" fill="#22304e"/><rect x="66" y="8" width="40" height="54" rx="20" fill="#a9c8f2" opacity=".35" stroke="#d9b45a" stroke-width="2"/>' + MSC('happy', 14, 4, 54, 'bow') + '</svg>'; }, q: 'แต่งตัวให้พร้อม และเตรียมใจให้พร้อมกว่า', p: [
+        'เวลลัมได้รับเชิญไป**เจรจาสัญญาจ้างงานครั้งแรก**ในชีวิต ตื่นเต้นจนนอนไม่หลับทั้งคืน',
+        'เช้าวันนัด เวลลัมยืนหน้ากระจกแล้ว==ผูกโบว์ไทสีแดงอย่างตั้งใจ== ปรับซ้ายทีขวาทีจนตรงพอดี',
+        'ก่อนออกจากบ้าน เวลลัมยิ้มให้ตัวเองในกระจก แล้วบอกตัวเองว่า'] },
+      { need: 1, t: 'ตอนที่ 1 · ห้องประชุมที่เร่งรีบ', art: function () { return '<svg viewBox="0 0 120 70"><rect width="120" height="70" rx="6" fill="#2a2a36"/><rect x="8" y="44" width="104" height="10" fill="#7a4a22"/>' + PAPER(40, 20, 34, 26, -3) + '<circle cx="96" cy="22" r="13" fill="#fffaf0" stroke="#3a2a12" stroke-width="1.8"/><path d="M96 22V13M96 22l6 3" stroke="#3a2a12" stroke-width="2" stroke-linecap="round"/></svg>'; }, q: 'ความกดดันไม่ใช่เหตุผลให้ข้ามบรรทัด', p: [
+        'ในห้องประชุม ผู้จัดการ**คุณนาฬิกา**ยิ้มกว้างแล้ววางสัญญาหนาเตอะลงตรงหน้า',
+        'เขาเคาะนิ้วบนโต๊ะแล้วบอกว่า ==ยังมีคนรอคิวอีกเยอะนะ ถ้าสนใจก็เซ็นวันนี้เลย==',
+        'หัวใจเวลลัมเต้นแรง มือเริ่มเอื้อมไปหาปากกา แต่แล้วก็นึกขึ้นได้ว่า'] },
+      { need: 1, t: 'ตอนที่ 2 · ขอเวลาอย่างสุภาพ', art: function () { return '<svg viewBox="0 0 120 70"><rect width="120" height="70" rx="6" fill="#22304e"/>' + MSC('happy', 8, 2, 56, 'bow') + PAPER(68, 10, 42, 48, 3) + '<path d="M74 42h28" stroke="#ffd36a" stroke-width="5" opacity=".6"/></svg>'; }, q: 'คนที่มั่นใจ คือคนที่กล้าขอเวลาอ่าน', p: [
+        'เวลลัมจัดโบว์ไทให้ตรง ยิ้มอย่างสุภาพ แล้ว**ขอนำสัญญากลับไปอ่านหนึ่งวัน**',
+        'คืนนั้นเวลลัมอ่านจนเจอข้อที่ว่า ==ห้ามทำงานที่อื่นเป็นเวลา 2 ปีหลังลาออก== จึงจดคำถามไปขอแก้ในวันรุ่งขึ้น',
+        'คุณนาฬิกายอมแก้ให้ แถมยังชมว่าเวลลัมเป็นคนละเอียดที่บริษัทอยากได้ เพราะ'] } ] }
+  };
+  var XL_BY = { scarf: 's', pin: 'p', glasses: 'g', bow: 'b' };
+  function xlLoreBtn(id) {
+    var c = XL_BY[id], X = XL[c], has = ownedOutfits().indexOf(id) >= 0, seen = -1; try { seen = +(localStorage.getItem('vc_lore_seen_' + c) || -1); } catch (e) {}
+    var last = has ? X.L.length - 1 : 0;
+    return '<span class="vof-lore-w is-xl" role="button" tabindex="0" data-lore="' + id + '" aria-label="อ่านตำนาน' + X.name + (last > seen ? ' มีตอนใหม่' : '') + '">📜' + (last > seen ? '<i class="lore-new"></i>' : '') + '</span>';
+  }
   function crownLoreBtn() {
     var seen = -1; try { seen = +(localStorage.getItem('vc_lore_seen_r') || -1); } catch (e) {}
     var last = hasCrown() ? LORE_R.length - 1 : 0;
@@ -1582,16 +1718,16 @@
     var last = hasWizard() ? LORE_W.length - 1 : 0;
     return '<span class="vof-lore-w" role="button" tabindex="0" data-lore="wizard" aria-label="อ่านตำนานหมวกนักเวท' + (last > seen ? ' มีตอนใหม่' : '') + '">📜' + (last > seen ? '<i class="lore-new"></i>' : '') + '</span>';
   }
-  function curLore() { return lrSet === 'l' ? LORE_L : lrSet === 'w' ? LORE_W : lrSet === 'c' ? LORE_C : lrSet === 'r' ? LORE_R : LORE; }
-  function okLore(c) { return lrSet === 'r' ? (c.need === 0 || hasCrown()) : lrSet === 'c' ? (c.need === 0 || hasCap()) : lrSet === 'w' ? (c.need === 0 || hasWizard()) : lrSet === 'l' ? (c.need === 0 || (S && (S.totalDays || 0) >= c.need)) : loreOk(c); }
-  function seenLore() { try { return +(localStorage.getItem(lrSet === 'l' ? 'vc_lore_seen_l' : lrSet === 'w' ? 'vc_lore_seen_w' : lrSet === 'c' ? 'vc_lore_seen_c' : lrSet === 'r' ? 'vc_lore_seen_r' : 'vc_lore_seen') || -1); } catch (e) { return -1; } }
+  function curLore() { return lrSet === 'l' ? LORE_L : lrSet === 'w' ? LORE_W : lrSet === 'c' ? LORE_C : lrSet === 'r' ? LORE_R : XL[lrSet] ? XL[lrSet].L : LORE; }
+  function okLore(c) { return XL[lrSet] ? (c.need === 0 || ownedOutfits().indexOf(XL[lrSet].id) >= 0) : lrSet === 'r' ? (c.need === 0 || hasCrown()) : lrSet === 'c' ? (c.need === 0 || hasCap()) : lrSet === 'w' ? (c.need === 0 || hasWizard()) : lrSet === 'l' ? (c.need === 0 || (S && (S.totalDays || 0) >= c.need)) : loreOk(c); }
+  function seenLore() { try { return +(localStorage.getItem(lrSet === 'l' ? 'vc_lore_seen_l' : lrSet === 'w' ? 'vc_lore_seen_w' : lrSet === 'c' ? 'vc_lore_seen_c' : lrSet === 'r' ? 'vc_lore_seen_r' : XL[lrSet] ? 'vc_lore_seen_' + lrSet : 'vc_lore_seen') || -1); } catch (e) { return -1; } }
   function laurelLoreBtn() {
     var tot = S && S.totalDays || 0, last = -1, seen = -1; LORE_L.forEach(function (x, k) { if (x.need === 0 || tot >= x.need) last = k; });
     try { seen = +(localStorage.getItem('vc_lore_seen_l') || -1); } catch (e) {}
     return '<span class="vof-act lrc-lore" role="button" tabindex="0" data-lore="laurel" aria-label="อ่านตำนานมาลัย' + (last > seen ? ' มีตอนใหม่' : '') + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + LIC_L[0] + '</svg>ตำนาน' + (last > seen ? '<i class="lore-new"></i>' : '') + '</span>';
   }
   function loreOpen(i, set) {
-    lrSet = set === 'laurel' ? 'l' : set === 'wizard' ? 'w' : set === 'cap' ? 'c' : set === 'crown' ? 'r' : 'm';
+    lrSet = set === 'laurel' ? 'l' : set === 'wizard' ? 'w' : set === 'cap' ? 'c' : set === 'crown' ? 'r' : XL_BY[set] || 'm';
     if (!lr) {
       lr = document.createElement('div'); lr.className = 'vlr'; lr.setAttribute('role', 'dialog'); lr.setAttribute('aria-modal', 'true'); lr.setAttribute('aria-labelledby', 'vlrT');
       lr.innerHTML = '<div class="vlr-bg" data-lx></div><div class="vlr-p"><i class="vlr-rod"></i><i class="vlr-glow" aria-hidden="true"></i><i class="vlr-frame" aria-hidden="true"><b></b><b></b><b></b><b></b></i><div class="vlr-sh"><button type="button" class="vlr-x" data-lx aria-label="ปิด">✕</button>' +
@@ -1603,19 +1739,19 @@
       });
       document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && lr && lr.classList.contains('on')) loreClose(); });
     }
-    lr.classList.toggle('is-laurel', lrSet === 'l' || lrSet === 'w' || lrSet === 'c' || lrSet === 'r'); lr.classList.toggle('is-crown', lrSet === 'r'); lr.classList.toggle('is-wizard', lrSet === 'w'); lr.classList.toggle('is-cap', lrSet === 'c'); lr.querySelector('#vlrT').textContent = lrSet === 'l' ? 'มาลัยตำนาน' : lrSet === 'w' ? 'หมวกนักเวท' : lrSet === 'c' ? 'หมวกนอนดาว' : lrSet === 'r' ? 'มงกุฎตำนาน' : 'เหรียญไฟไม่มอด';
+    lr.classList.toggle('is-laurel', lrSet === 'l' || lrSet === 'w' || lrSet === 'c' || lrSet === 'r' || !!XL[lrSet]); lr.classList.toggle('is-xl', !!XL[lrSet]); lr.setAttribute('data-fr', XL[lrSet] ? XL[lrSet].fr : ''); lr.classList.toggle('is-crown', lrSet === 'r'); lr.classList.toggle('is-wizard', lrSet === 'w'); lr.classList.toggle('is-cap', lrSet === 'c'); lr.querySelector('#vlrT').textContent = lrSet === 'l' ? 'มาลัยตำนาน' : lrSet === 'w' ? 'หมวกนักเวท' : lrSet === 'c' ? 'หมวกนอนดาว' : lrSet === 'r' ? 'มงกุฎตำนาน' : XL[lrSet] ? XL[lrSet].name : 'เหรียญไฟไม่มอด';
     var LL = curLore();
     if (typeof i !== 'number') { lrIdx = 0; for (var k = LL.length - 1; k >= 0; k--) if (okLore(LL[k])) { lrIdx = k; break; } } else lrIdx = i;
     lr.hidden = false; requestAnimationFrame(function () { lr.classList.add('on'); }); loreRender();
   }
   function loreClose() { if (!lr) return; lr.classList.remove('on'); setTimeout(function () { if (!lr.classList.contains('on')) lr.hidden = true; }, 400); }
   function loreRender() {
-    var LL = curLore(), RR = lrSet === 'r', C = lrSet === 'c', W = lrSet === 'w', L = lrSet === 'l' || W || C || RR, c = LL[lrIdx], ok = okLore(c), m = MED[L ? 3 : c.tier];
-    if (ok && lrIdx > seenLore()) { try { localStorage.setItem(RR ? 'vc_lore_seen_r' : C ? 'vc_lore_seen_c' : W ? 'vc_lore_seen_w' : L ? 'vc_lore_seen_l' : 'vc_lore_seen', lrIdx); } catch (e) {} if (sh && !sh.hidden) shopRender(); }
+    var LL = curLore(), XX = XL[lrSet], RR = lrSet === 'r', C = lrSet === 'c', W = lrSet === 'w', L = lrSet === 'l' || W || C || RR || !!XX, c = LL[lrIdx], ok = okLore(c), m = MED[L ? 3 : c.tier];
+    if (ok && lrIdx > seenLore()) { try { localStorage.setItem(XX ? 'vc_lore_seen_' + lrSet : RR ? 'vc_lore_seen_r' : C ? 'vc_lore_seen_c' : W ? 'vc_lore_seen_w' : L ? 'vc_lore_seen_l' : 'vc_lore_seen', lrIdx); } catch (e) {} if (sh && !sh.hidden) shopRender(); }
     if (!L) { lr.style.setProperty('--f1', m.f1); lr.style.setProperty('--f2', m.f2); }
     var lastOk = 0; LL.forEach(function (x, n) { if (okLore(x)) lastOk = n; });
     var tb = lr.querySelector('.vlr-tabs'); tb.style.setProperty('--lf', (lastOk / (LL.length - 1) * 100) + '%');
-    var IC = RR ? LIC_R : C ? LIC_C : W ? LIC_W : L ? LIC_L : LIC;
+    var IC = XX ? XX.IC : RR ? LIC_R : C ? LIC_C : W ? LIC_W : L ? LIC_L : LIC;
     tb.innerHTML = '<i class="vlr-path"><b></b></i>' + LL.map(function (x, n) {
       return '<button type="button" role="tab" data-ch="' + n + '" aria-selected="' + (n === lrIdx) + '" aria-label="' + h(x.t) + (okLore(x) ? '' : ' (ล็อก)') + '" class="' + (n === lrIdx ? 'on' : '') + (okLore(x) ? '' : ' lk') + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + IC[n] + '</svg>' + (okLore(x) ? '' : '<i class="lkb"></i>') + '</button>';
     }).join('');
@@ -1624,7 +1760,7 @@
       '<h4>' + h(c.t) + '</h4>' +
       (L ? c.p.map(function (t, n) { return '<p class="lp' + (!ok && n > 0 ? ' blur' : '') + '" style="--d:' + (n * .3 + .25).toFixed(2) + 's">' + lFmt(t, n * .3 + .7) + '</p>'; }).join('') + (c.q ? '<blockquote class="lq' + (ok ? '' : ' blur') + '" style="--d:' + (c.p.length * .3 + .3).toFixed(2) + 's"><i class="lq-o">“</i>' + h(c.q) + '<i class="lq-c">”</i></blockquote>' : '')
         : c.p.map(function (t, n) { return '<p class="' + (n === 0 ? 'first ' : '') + (!ok && n > 0 ? 'blur' : '') + '" style="--d:' + (n * .35 + .3) + 's">' + (n === 0 ? dropCap(t) : h(t)) + '</p>'; }).join('')) +
-      (ok ? '<div class="vlr-end">' + (RR ? SEAL_R : L ? SEAL_L : SEAL) + '</div>' : RR ? '<div class="vlr-lock">🔒 อ่านต่อได้เมื่อมีมงกุฎตำนาน<small>ราคา ' + fmt((itemById('crown') || {}).price || 1000) + ' แต้ม · ตอนนี้มี ' + fmt(S && S.points || 0) + ' แต้ม</small></div>' : C ? '<div class="vlr-lock">🔒 อ่านต่อได้เมื่อมีหมวกนอนดาว<small>ราคา ' + fmt((itemById('cap') || {}).price || 300) + ' แต้ม · ตอนนี้มี ' + fmt(S && S.points || 0) + ' แต้ม</small></div>' : W ? '<div class="vlr-lock">🔒 อ่านต่อได้เมื่อมีหมวกนักเวท<small>ราคา ' + fmt((itemById('wizard') || {}).price || 400) + ' แต้ม · ตอนนี้มี ' + fmt(S && S.points || 0) + ' แต้ม</small></div>' : L ? '<div class="vlr-lock">🔒 ปลดล็อกเมื่อเช็กอินรวมครบ ' + c.need + ' วัน<small>ตอนนี้เช็กอินรวม ' + tot + ' วัน · อีก ' + Math.max(0, c.need - tot) + ' วัน</small></div>' : '<div class="vlr-lock">🔒 ปลดล็อกเมื่อเช็กอินติดกันครบ ' + c.need + ' วัน<small>สถิติสูงสุดของคุณ ' + best + ' วัน</small></div>');
+      (ok ? '<div class="vlr-end">' + (XX ? '<span class="xl-end">✦ จบ ✦</span>' : RR ? SEAL_R : L ? SEAL_L : SEAL) + '</div>' : XX ? '<div class="vlr-lock">🔒 อ่านต่อได้เมื่อมี' + XX.name + '<small>ราคา ' + fmt((itemById(XX.id) || {}).price || 0) + ' แต้ม · ตอนนี้มี ' + fmt(S && S.points || 0) + ' แต้ม</small></div>' : RR ? '<div class="vlr-lock">🔒 อ่านต่อได้เมื่อมีมงกุฎตำนาน<small>ราคา ' + fmt((itemById('crown') || {}).price || 1000) + ' แต้ม · ตอนนี้มี ' + fmt(S && S.points || 0) + ' แต้ม</small></div>' : C ? '<div class="vlr-lock">🔒 อ่านต่อได้เมื่อมีหมวกนอนดาว<small>ราคา ' + fmt((itemById('cap') || {}).price || 300) + ' แต้ม · ตอนนี้มี ' + fmt(S && S.points || 0) + ' แต้ม</small></div>' : W ? '<div class="vlr-lock">🔒 อ่านต่อได้เมื่อมีหมวกนักเวท<small>ราคา ' + fmt((itemById('wizard') || {}).price || 400) + ' แต้ม · ตอนนี้มี ' + fmt(S && S.points || 0) + ' แต้ม</small></div>' : L ? '<div class="vlr-lock">🔒 ปลดล็อกเมื่อเช็กอินรวมครบ ' + c.need + ' วัน<small>ตอนนี้เช็กอินรวม ' + tot + ' วัน · อีก ' + Math.max(0, c.need - tot) + ' วัน</small></div>' : '<div class="vlr-lock">🔒 ปลดล็อกเมื่อเช็กอินติดกันครบ ' + c.need + ' วัน<small>สถิติสูงสุดของคุณ ' + best + ' วัน</small></div>');
     lr.querySelector('.vlr-body').scrollTop = 0;
   }
   /* ลื่นขึ้น: หยุดอนิเมชันของการ์ด/ฉากที่อยู่นอกจอ (มองไม่เห็นอยู่แล้ว หน้าตาไม่เปลี่ยน) */
@@ -1653,8 +1789,12 @@
     throneScene(thOn);
     var wzOn = !fireOn && !hvOn && !thOn && (sel === 'wizard' || (!sel && wornOutfits().indexOf('wizard') >= 0));
     wizScene(wzOn);
-    dreamScene(!fireOn && !hvOn && !thOn && !wzOn && (sel === 'cap' || (!sel && wornOutfits().indexOf('cap') >= 0)));
-    ['.vst-heav', '.vst-thr', '.vst-wzs', '.vst-drm', '.vst-lib'].forEach(function (q) { var r = sh.querySelector(q); if (r && r.firstChild) splitScene(r); }); var lbr = sh.querySelector('.vst-lib'); if (lbr) requestAnimationFrame(function () { libBreath(lbr); }); var pd = sh.querySelector('.vst-pd3'); if (pd) requestAnimationFrame(function () { splitSvg(pd); });
+    var dmOn = !fireOn && !hvOn && !thOn && !wzOn && (sel === 'cap' || (!sel && wornOutfits().indexOf('cap') >= 0));
+    dreamScene(dmOn);
+    var fitIt = sel ? itemById(sel) : null;
+    fitScene(!fireOn && !hvOn && !thOn && !wzOn && !dmOn, fitIt && fitIt.rarity === 'rare' ? 'rare' : 'common');
+    if (sel && fitIt && (fitIt.rarity === 'common' || fitIt.rarity === 'rare') && sh.classList.contains('is-fit') && !ftPlayed[sel] && !calm()) { sh.classList.add('ft-intro'); var fid = sel; setTimeout(function () { playFit(fid); }, 40); } else if (!sel || !fitIt || (fitIt.rarity !== 'common' && fitIt.rarity !== 'rare')) ftStop();
+    ['.vst-heav', '.vst-thr', '.vst-wzs', '.vst-drm', '.vst-lib', '.vst-fit'].forEach(function (q) { var r = sh.querySelector(q); if (r && r.firstChild) splitScene(r); }); var lbr = sh.querySelector('.vst-lib'); if (lbr) requestAnimationFrame(function () { libBreath(lbr); }); var pd = sh.querySelector('.vst-pd3'); if (pd) requestAnimationFrame(function () { splitSvg(pd); });
     var hk = sel === 'medal' ? 'm' + medalTier() : '';
     if (hk && !heroPlayed) setTimeout(function () { playHero(medalTier()); }, 30);
     else if (hk && heroKey && hk !== heroKey && !calm()) { var stg = sh.querySelector('.vst-stage'); stg.classList.remove('tier-flash'); void stg.offsetWidth; stg.classList.add('tier-flash'); }
@@ -1691,7 +1831,7 @@
         : it.badge ? '<span class="vof-act is-badge">🏅 รางวัล</span>'
         : '<span class="vof-act is-buy' + (S.points < it.price ? ' is-short' : '') + '"><i class="vof-coin"></i>' + fmt(it.price) + '</span>';
       return '<button type="button" class="vof-b r-' + it.rarity + (it.id === 'laurel' ? ' is-laurel' : it.id === 'crown' ? ' is-crown' : '') + (it.id === 'medal' ? ' is-fire mt-' + medalTier() : '') + (has ? ' is-own' : ' is-lock' + (it.badge ? ' is-badge-item' : '')) + (on ? ' is-on' : '') + (sel === it.id ? ' is-try' : '') + '" data-outfit="' + it.id + '" aria-pressed="' + (sel === it.id) + '" aria-label="' + h(it.name + ' · ' + (RAR[it.rarity] || '')) + '">' +
-        (it.id === 'laurel' ? LRC_TAG + LRC_DUST : it.id === 'crown' ? CRC_TAG : '<em class="vof-r">' + (RAR[it.rarity] || '') + '</em>') + (!has && bd && it.id === 'laurel' ? lrCard(bd, a) : !has && bd ? '<span class="vof-pr" style="--bp:' + Math.round(bd.have / bd.n * 100) + '%"><svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg><i class="vof-spark"></i><b>' + bd.have + '/' + bd.n + '</b></span>' : '<svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg>') + '<small>' + h(it.name) + '</small>' + tag + (has && it.id === 'laurel' ? laurelLoreBtn() : '') + (it.id === 'wizard' ? wizardLoreBtn() : it.id === 'cap' ? capLoreBtn() : it.id === 'crown' ? crownLoreBtn() : '') + '</button>';
+        (it.id === 'laurel' ? LRC_TAG + LRC_DUST : it.id === 'crown' ? CRC_TAG : '<em class="vof-r">' + (RAR[it.rarity] || '') + '</em>') + (!has && bd && it.id === 'laurel' ? lrCard(bd, a) : !has && bd ? '<span class="vof-pr" style="--bp:' + Math.round(bd.have / bd.n * 100) + '%"><svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg><i class="vof-spark"></i><b>' + bd.have + '/' + bd.n + '</b></span>' : '<svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg>') + '<small>' + h(it.name) + '</small>' + tag + (has && it.id === 'laurel' ? laurelLoreBtn() : '') + (it.id === 'wizard' ? wizardLoreBtn() : it.id === 'cap' ? capLoreBtn() : it.id === 'crown' ? crownLoreBtn() : XL_BY[it.id] ? xlLoreBtn(it.id) : '') + '</button>';
     }).join('');
     watchOff();
     var bar = sh.querySelector('.vst-bar');
