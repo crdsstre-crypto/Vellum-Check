@@ -1666,7 +1666,7 @@ html body .vst .vof-b.is-laurel .lrc-pr .fg{fill:none;stroke:#f4c542;stroke-widt
 html body .vst .vof-b.is-laurel .lrc-pr .dot{fill:#fff6d6;filter:drop-shadow(0 0 3px #ffd75a);animation:lrcDot 1.6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
 html body .vst .vof-b.is-laurel .lr-card svg.lrc-art{position:absolute;left:50%;top:50%;width:66px!important;height:33px!important;margin:-16.5px 0 0 -33px;overflow:visible;filter:drop-shadow(0 0 2px rgba(255,205,100,.75)) drop-shadow(0 0 6px rgba(255,190,80,.35))!important}
 html body .vst .vof-b.is-laurel .lr-card svg.lrc-art *{fill:none!important;stroke:#f4c542!important;stroke-width:.55!important;animation:none!important}
-html body .vst .vof-b.is-laurel .lr-card svg.lrc-art :is(.lr-halo,.lr-tw,defs){display:none}
+html body .vst .vof-b.is-laurel .lr-card svg.lrc-art :is(.lr-halo,.lr-tw){display:none}
 html body .vst .vof-b.is-laurel .lr-card svg.lrc-art{animation:lrcGlow 2.8s ease-in-out infinite}
 html body .vst .vof-b.is-laurel .lr-left{font:600 .62rem/1 'Prompt',sans-serif;color:#f1d58a;margin-top:1px}
 html body .vst .vof-b.is-laurel .lr-left b{font:700 1.05rem/1 Georgia,'Times New Roman',serif;color:#ffd76a;margin:0 2px;text-shadow:0 0 8px rgba(255,200,90,.55),0 1px 0 rgba(0,0,0,.5)}
@@ -1698,3 +1698,13 @@ html body .vst .vof-b.is-laurel .lrt-tx{font-size:.5rem;letter-spacing:.14em;mar
 html body .vst .vof-b.is-laurel .lrt-sp{width:11px!important;height:6px!important}
 html body .vst .vof-b.is-laurel .vof-r.lrc-tag{top:8px}
 html body .vst .vof-b.is-laurel .lr-card{margin-top:3px}
+/* v63 การ์ดมาลัย: เลิกแสงสี่เหลี่ยม · แสงวิ่งบนเส้นมาลัย · เรืองแสงแบบหายใจ · ประกายปลายใบ */
+html body .vst .vof-b.is-laurel .lr-card::after{content:none!important;display:none!important;animation:none!important}
+html body .vst .vof-b.is-laurel .lr-card svg.lrc-art{animation:none!important;filter:drop-shadow(0 0 1.5px rgba(255,205,100,.7))!important}
+html body .vst .vof-b.is-laurel .lr-card svg.lrc-art *{stroke:url(#lrcSh)!important}
+html body .vst .vof-b.is-laurel .lrc-gl{position:absolute;left:50%;top:40%;width:84px;height:46px;margin:-23px 0 0 -42px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,206,110,.42),rgba(255,190,80,.14) 60%,transparent);animation:lrcBreath 4.2s ease-in-out infinite;will-change:opacity,transform}
+@keyframes lrcBreath{0%,100%{opacity:.45;transform:scale(.92)}50%{opacity:1;transform:scale(1.06)}}
+html body .vst .vof-b.is-laurel .lrc-tw{position:absolute;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;background:radial-gradient(circle,#fff 0 18%,transparent 22%),linear-gradient(0deg,transparent 42%,rgba(255,250,220,.95) 50%,transparent 58%),linear-gradient(90deg,transparent 42%,rgba(255,250,220,.95) 50%,transparent 58%);opacity:0;transform:scale(.2) rotate(0);animation:lrcTw 5.6s ease-in-out infinite}
+@keyframes lrcTw{0%,8%,100%{opacity:0;transform:scale(.2) rotate(0)}14%{opacity:1;transform:scale(1) rotate(45deg)}22%{opacity:0;transform:scale(.3) rotate(90deg)}}
+@media (prefers-reduced-motion:reduce){html body .vst .vof-b.is-laurel .lrc-gl,html body .vst .vof-b.is-laurel .lrc-tw{animation:none!important}html body .vst .vof-b.is-laurel .lrc-gl{opacity:.7}}
+html body .vst .vof-b.is-laurel .lrc-tw{width:12px;height:12px;margin:-6px 0 0 -6px}
