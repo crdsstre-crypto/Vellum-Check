@@ -50,7 +50,7 @@
       '<path d="M27 21q2-1.6 4 0M41 19q2-1.6 4 0M55 21q2-1.6 4 0M69 19q2-1.6 4 0M83 21q2-1.6 4 0M34 27q2 1.4 4 0M48 26q2 1.4 4 0M62 27q2 1.4 4 0M76 26q2 1.4 4 0" stroke="#d9c79f" stroke-width="1.3" fill="none" stroke-linecap="round"/>' +
       '<path d="M26 18Q50 15 92 18" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".8"/>' },
     bow: { vb: '44 74 32 24', art: '<g transform="translate(60 86)"><path d="M-3-3-14-9v18L-3 3zM3-3 14-9v18L3 3z" fill="#d2343e" stroke="' + INK + '" stroke-width="2" stroke-linejoin="round"/><rect x="-4" y="-4.5" width="8" height="9" rx="2.5" fill="#a91f2a" stroke="' + INK + '" stroke-width="2"/><path d="M-11-5-6-2M11-5 6-2" stroke="#ff8a92" stroke-width="1.4" stroke-linecap="round"/></g>' },
-    crown: { vb: '12 -34 96 68', art: '' },
+    crown: { vb: '26 -6 68 50', art: '' },
     scarf: { vb: '28 62 70 46', art: '<path d="M30 70q30 10 60 0v9q-30 10-60 0z" fill="#d2343e" stroke="' + INK + '" stroke-width="2.2" stroke-linejoin="round"/><path d="M74 78l4 24 9-2-4-24z" fill="#d2343e" stroke="' + INK + '" stroke-width="2.2" stroke-linejoin="round"/><path d="M36 74q24 7 48 0M77 92h8M78 97h8" stroke="#ff8a92" stroke-width="1.6" fill="none" stroke-linecap="round"/>' },
     wizard: { vb: '6 -36 108 72', art: '<defs><linearGradient id="wzC" x1="0" x2="1"><stop offset="0" stop-color="#8a6be0"/><stop offset=".45" stop-color="#6243c4"/><stop offset="1" stop-color="#3e2690"/></linearGradient>' +
       '<linearGradient id="wzG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe9a3"/><stop offset=".55" stop-color="#f4c542"/><stop offset="1" stop-color="#c9921f"/></linearGradient>' +
@@ -306,50 +306,62 @@
   function lrOpt(st, part) { return { id: 'L' + st + (part || ''), n: st === 1 ? 7 : st === 2 ? 9 : 11, tips: st >= 2, disc: st === 3, part: part }; }
   function laurelArt(st, part) { return LR3(lrOpt(st || lrStage(), part)); }
   /* มงกุฎตำนาน v2: ทองขัดเงา · กำมะหยี่แดง · มุกที่ยอด · ทับทิม/ไพลินเจียระไน · ประกาย */
-  function crownArt() {   // มงกุฎอิมพีเรียล: ขอบกว้างครอบหัวม้วน + ขนเออร์มีน · โค้งทองไขว้ + ลูกแก้วยอด · ยอดลายใบไม้สลับไข่มุก · อัญมณีเจียระไน (พิกัดเดียวกับมาสคอต)
+  function crownArt() {   // มงกุฎตำนาน v2: พอดีหัวม้วน · โดมกำมะหยี่เลือดหมูเตี้ย · โค้งทอง 4 เส้น + ลูกโลกทองกางเขน · ขอบทองฉลุ+ไข่มุก · ยอดดอกลิลลี่สลับไข่มุก · ทับทิมใหญ่กลาง เพชรเจียระไน ไพลิน มรกต · ประกายวิ่ง · เอียง 6°
     var D = '#4a2e05';
     var o = '<defs>' +
-      '<linearGradient id="crG" x1="0" y1="-30" x2="0" y2="14" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff6cf"/><stop offset=".3" stop-color="#ffd75a"/><stop offset=".6" stop-color="#c88a16"/><stop offset=".8" stop-color="#ffe9a0"/><stop offset="1" stop-color="#9a6410"/></linearGradient>' +
-      '<linearGradient id="crB" x1="0" y1="12" x2="0" y2="25" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff3c0"/><stop offset=".3" stop-color="#f0bf45"/><stop offset=".65" stop-color="#a8700f"/><stop offset="1" stop-color="#e8b23a"/></linearGradient>' +
-      '<radialGradient id="crV" cx=".45" cy=".3" r=".75"><stop offset="0" stop-color="#e2324e"/><stop offset=".55" stop-color="#a01030"/><stop offset="1" stop-color="#4a0414"/></radialGradient>' +
+      '<linearGradient id="crG" x1="0" y1="-16" x2="0" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff6cf"/><stop offset=".28" stop-color="#ffd75a"/><stop offset=".55" stop-color="#c88a16"/><stop offset=".78" stop-color="#ffe9a0"/><stop offset="1" stop-color="#9a6410"/></linearGradient>' +
+      '<linearGradient id="crB" x1="0" y1="13" x2="0" y2="23" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff3c0"/><stop offset=".25" stop-color="#f6c94e"/><stop offset=".6" stop-color="#b07a14"/><stop offset=".85" stop-color="#e8b23a"/><stop offset="1" stop-color="#7a4d08"/></linearGradient>' +
+      '<radialGradient id="crV" cx=".42" cy=".3" r=".8"><stop offset="0" stop-color="#a8304e"/><stop offset=".5" stop-color="#6e1430"/><stop offset="1" stop-color="#2e0614"/></radialGradient>' +
       '<radialGradient id="crO" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff8dc"/><stop offset=".45" stop-color="#f4c542"/><stop offset="1" stop-color="#8a5a0c"/></radialGradient>' +
       '<radialGradient id="crR" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffd0d8"/><stop offset=".35" stop-color="#ff3456"/><stop offset="1" stop-color="#6a0418"/></radialGradient>' +
       '<radialGradient id="crS" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#d6ecff"/><stop offset=".35" stop-color="#3a7bff"/><stop offset="1" stop-color="#0a1f6a"/></radialGradient>' +
       '<radialGradient id="crE" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#d4ffe8"/><stop offset=".4" stop-color="#22b874"/><stop offset="1" stop-color="#05502e"/></radialGradient>' +
+      '<radialGradient id="crD" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#e6f3ff"/><stop offset="1" stop-color="#8fb0d8"/></radialGradient>' +
       '<radialGradient id="crP" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff"/><stop offset=".6" stop-color="#f1e8d8"/><stop offset="1" stop-color="#b4a68a"/></radialGradient>' +
-      '<linearGradient id="crW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e6ddd0"/></linearGradient></defs>';
-    var B = function (t) { var u = 1 - t; return [u * u * u * 24 + 3 * u * u * t * 24 + 3 * u * t * t * 96 + t * t * t * 96, u * u * u * 13 + 3 * u * u * t * -24 + 3 * u * t * t * -24 + t * t * t * 13]; };
-    var pearl = function (x, y, r) { return '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="' + r + '" fill="url(#crP)" stroke="' + D + '" stroke-width=".5"/>'; };
-    // กำมะหยี่ทรงโดม + รอยพับ
-    o += '<path d="M25 14C25-10 40-18 60-18S95-10 95 14z" fill="url(#crV)" stroke="' + D + '" stroke-width="1"/>' +
-      '<path d="M38 12C38-2 44-10 50-13M70 12C72-2 76-8 82-10" stroke="#5a0618" stroke-width="1.2" fill="none" opacity=".55" stroke-linecap="round"/><path d="M33 4C35-6 41-11 48-13" stroke="#ff8a9c" stroke-width="1.3" fill="none" opacity=".55" stroke-linecap="round"/>';
-    // โค้งทองไขว้ (ด้านข้าง + กลาง)
-    var arc = 'M24 13C24-24 96-24 96 13M60 13V-15';
-    o += '<path d="' + arc + '" stroke="' + D + '" stroke-width="6.2" fill="none" stroke-linecap="round"/><path d="' + arc + '" stroke="url(#crG)" stroke-width="4.4" fill="none" stroke-linecap="round"/>' +
-      '<path d="M27 6C30-12 46-17 58-17.5M61 12V-12" stroke="#fff8dc" stroke-width="1" fill="none" opacity=".8" stroke-linecap="round"/>';
-    [.12, .24, .36, .64, .76, .88].forEach(function (t) { var q = B(t); o += pearl(q[0], q[1], 1.5); });
-    [3, -5].forEach(function (y) { o += pearl(60, y, 1.5); });
-    // ลูกแก้วทองบนยอด + เพชร
-    o += '<circle cx="60" cy="-20.5" r="5.6" fill="url(#crO)" stroke="' + D + '" stroke-width="1"/><path d="M54.6-20.5h10.8M60-26v11" stroke="' + D + '" stroke-width=".7" opacity=".55"/><path d="M54.8-19.6Q60-17.4 65.2-19.6" stroke="#fff3c4" stroke-width="1.1" fill="none"/><ellipse cx="58" cy="-22.6" rx="1.6" ry="1" fill="#fff" opacity=".85"/>' +
-      '<path d="M60-31.5 62.6-28.4 60-25.6 57.4-28.4z" fill="#eaf6ff" stroke="' + D + '" stroke-width=".7"/><path d="M57.4-28.4h5.2M60-31.5v5.9" stroke="#9ec9ff" stroke-width=".4"/>';
-    // ยอดลายใบไม้ + ยอดไข่มุก บนขอบ
-    var FL = 'M0-10C2.6-7 3-4 1.2-1.6C3.4-3.4 6-3 6.4-.6C6.8 1.6 4.6 2.4 3 2H-3C-4.6 2.4-6.8 1.6-6.4-.6C-6-3-3.4-3.4-1.2-1.6C-3-4-2.6-7 0-10Z';
-    [[24, .85], [42, .95], [78, .95], [96, .85]].forEach(function (f) { o += '<path transform="translate(' + f[0] + ' 12) scale(' + f[1] + ')" d="' + FL + '" fill="url(#crG)" stroke="' + D + '" stroke-width="1" stroke-linejoin="round"/>'; });
-    o += '<path transform="translate(60 12) scale(1.05)" d="' + FL + '" fill="url(#crG)" stroke="' + D + '" stroke-width="1" stroke-linejoin="round"/>';
-    [33, 51, 69, 87].forEach(function (x) { o += '<path d="M' + (x - 1.8) + ' 13.5L' + x + ' 5 ' + (x + 1.8) + ' 13.5z" fill="url(#crG)" stroke="' + D + '" stroke-width=".8" stroke-linejoin="round"/>' + pearl(x, 3.6, 2); });
-    // ขอบทองกว้าง + ลายเม็ดทอง
-    o += '<rect x="17" y="12.5" width="86" height="12" rx="3" fill="url(#crB)" stroke="' + D + '" stroke-width="1.2"/><path d="M20 14.4h80" stroke="#fff6d6" stroke-width=".9" opacity=".85"/>';
-    for (var k = 21; k <= 99; k += 3.5) if (Math.abs(k - 60) > 7 && Math.abs(k - 40) > 4.5 && Math.abs(k - 80) > 4.5 && Math.abs(k - 27.5) > 2.6 && Math.abs(k - 92.5) > 2.6) o += '<circle cx="' + k.toFixed(1) + '" cy="16" r=".55" fill="#fff3c4"/><circle cx="' + k.toFixed(1) + '" cy="21.2" r=".55" fill="#7a4d08" opacity=".7"/>';
-    // อัญมณีเจียระไน
-    o += '<g transform="translate(60 18.6)"><path d="M-6 0-3.6-4.4H3.6L6 0 3.6 4.4H-3.6z" fill="url(#crR)" stroke="' + D + '" stroke-width=".8"/><path d="M-6 0H6M-3.6-4.4-1.6 0-3.6 4.4M3.6-4.4 1.6 0 3.6 4.4M-1.6 0 0-4.4 1.6 0 0 4.4z" stroke="#ffb3c0" stroke-width=".35" fill="none" opacity=".85"/><path d="M-3.2-3.4-1.2-3.4-2.4-1.2z" fill="#fff" opacity=".9"/></g>';
-    [40, 80].forEach(function (x) { o += '<g transform="translate(' + x + ' 18.6)"><path d="M0-4.2 3.6 0 0 4.2-3.6 0z" fill="url(#crS)" stroke="' + D + '" stroke-width=".7"/><path d="M-3.6 0h7.2M0-4.2v8.4M-1.8-2.1 1.8 2.1M1.8-2.1-1.8 2.1" stroke="#bfe0ff" stroke-width=".3" opacity=".8"/><path d="M-1.6-1.6-.4-2.8-.4-1z" fill="#fff" opacity=".9"/></g>'; });
-    [27.5, 92.5].forEach(function (x) { o += '<g transform="translate(' + x + ' 18.6)"><rect x="-2.4" y="-2.4" width="4.8" height="4.8" rx=".8" transform="rotate(45)" fill="url(#crE)" stroke="' + D + '" stroke-width=".6"/><circle cx="-.8" cy="-.9" r=".6" fill="#fff" opacity=".9"/></g>'; });
-    // ขนเออร์มีนขอบล่าง (ครอบหัวม้วน)
-    o += '<path d="M15 26.5Q15 23.5 19 23.8Q24 22.6 29 23.8Q34 22.6 39 23.8Q44 22.6 49 23.8Q54 22.6 60 23.8Q66 22.6 71 23.8Q76 22.6 81 23.8Q86 22.6 91 23.8Q96 22.6 101 23.8Q105 23.5 105 26.5Q105 31.6 100 31.4Q95 32.8 90 31.4Q85 32.8 80 31.4Q75 32.8 70 31.4Q65 32.8 60 31.4Q55 32.8 50 31.4Q45 32.8 40 31.4Q35 32.8 30 31.4Q25 32.8 20 31.4Q15 31.6 15 26.5Z" fill="url(#crW)" stroke="' + D + '" stroke-width="1.1" stroke-linejoin="round"/>';
-    [22, 34, 46, 58, 70, 82, 94].forEach(function (x, i) { var y = i % 2 ? 26 : 27.6; o += '<path d="M' + x + ' ' + y + 'l.9 2.6-.9-.7-.9.7z" fill="#2a1d14"/>'; });
-    o += '<path d="M19 25.4Q60 24 101 25.4" stroke="#fff" stroke-width="1" fill="none" opacity=".9"/>';
-    // ประกายบนอัญมณี
-    [[60, 15.6, 0], [40, 15.8, 1.1], [80, 15.8, 2.2], [60, -31.5, .55], [58, -23, 1.7]].forEach(function (q) { o += '<path class="cr-tw" style="animation-delay:' + q[2] + 's" transform="translate(' + q[0] + ' ' + q[1] + ')" d="M0-3.4.5-.5 3.4 0 .5.5 0 3.4-.5.5-3.4 0-.5-.5z" fill="#fff"/>'; });
+      '<linearGradient id="crH" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>' +
+      '<pattern id="crQ" width="7" height="7" patternUnits="userSpaceOnUse"><path d="M3.5 .8Q5 2.4 3.5 4Q2 2.4 3.5 .8ZM.4 3.5Q1.6 2.9 2.2 3.5Q1.6 4.1.4 3.5ZM6.6 3.5Q5.4 2.9 4.8 3.5Q5.4 4.1 6.6 3.5ZM3.5 4.6V6.2" fill="#ffd0e0" opacity=".16"/></pattern>' +
+      '<linearGradient id="crM" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd8c4"/><stop offset=".5" stop-color="#e09a78"/><stop offset="1" stop-color="#9a5638"/></linearGradient>' +
+      '<radialGradient id="crA" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff2c0" stop-opacity=".7"/><stop offset=".5" stop-color="#ffd75a" stop-opacity=".25"/><stop offset="1" stop-color="#ffd75a" stop-opacity="0"/></radialGradient>' +
+      '<linearGradient id="crU" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8344e"/><stop offset=".6" stop-color="#8e1430"/><stop offset="1" stop-color="#4a0618"/></linearGradient>' +
+      '<clipPath id="crK"><path d="M25 13.6H95L96 22.4Q60 25 24 22.4Z"/></clipPath></defs>';
+    var pearl = function (x, y, r) { return '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="' + r + '" fill="url(#crP)" stroke="' + D + '" stroke-width=".45"/>'; };
+    var crRays = ''; for (var ri = 0; ri < 12; ri++) { var ra = ri / 12 * 6.283; crRays += 'M60 12L' + (60 + 34 * Math.cos(ra - .09)).toFixed(1) + ' ' + (12 + 34 * Math.sin(ra - .09)).toFixed(1) + 'L' + (60 + 34 * Math.cos(ra + .09)).toFixed(1) + ' ' + (12 + 34 * Math.sin(ra + .09)).toFixed(1) + 'Z'; }
+    o += '<g class="cr-aura"><circle cx="60" cy="12" r="30" fill="url(#crA)"/><path class="cr-ray" d="' + crRays + '" fill="#fff2c0" opacity=".22"/></g>';
+    var TS = function (x, y, f) { return '<g transform="translate(' + x + ' ' + y + ')' + (f ? ' scale(-1 1)' : '') + '"><circle r="1.4" fill="url(#crG)" stroke="' + D + '" stroke-width=".4"/><path d="M-1.2 1V4.6M-.4 1V5.2M.4 1V5.2M1.2 1V4.6" stroke="#e0a92c" stroke-width=".55" stroke-linecap="round"/></g>'; };
+    o += '<path class="cr-beam" d="M52-6H68L96 40H24Z" fill="url(#crA)" opacity=".55"/>';
+    o += '<g class="cr-pil"><path d="M32 29.4Q60 23.6 88 29.4Q92.6 33.4 88 37.4Q60 41.6 32 37.4Q27.4 33.4 32 29.4Z" fill="url(#crU)" stroke="' + D + '" stroke-width=".9"/><path d="M35 30.2Q60 25.8 85 30.2" stroke="#ff8aa0" stroke-width="1" fill="none" opacity=".5"/><path d="M33 36.8Q60 40.8 87 36.8" stroke="#f4c542" stroke-width=".8" fill="none" stroke-dasharray="1.4 1"/>' + TS(31.4, 30) + TS(88.6, 30, 1) + TS(31.8, 37.2) + TS(88.2, 37.2, 1) + '</g>';
+    o += '<ellipse class="cr-shd" cx="60" cy="28.4" rx="23" ry="2.6" fill="#3a2408" opacity=".28"/>';
+    o += '<g class="cr-body" transform="translate(60 27) scale(.68) translate(-60 -23)">';
+    // (2) โดมกำมะหยี่เตี้ย
+    o += '<path d="M28 14C28 1 42-3.6 60-3.6S92 1 92 14Z" fill="url(#crV)" stroke="' + D + '" stroke-width="1"/><path d="M28 14C28 1 42-3.6 60-3.6S92 1 92 14Z" fill="url(#crQ)"/><path d="M40 2Q50-2.4 62-2.6" stroke="#fff" stroke-width="2" fill="none" opacity=".18" stroke-linecap="round"/><path d="M36 12C37 5 42 1 48-1M74 12C74 6 78 2 83 0" stroke="#2a0410" stroke-width="1.2" fill="none" opacity=".5" stroke-linecap="round"/><path d="M33 8C35 3 40 0 46-2" stroke="#d86a88" stroke-width="1.2" fill="none" opacity=".55" stroke-linecap="round"/>';
+    // โค้งทอง 4 เส้น
+    var arc = 'M28 14C28-7 92-7 92 14M44 14C44-3 52-7 60-7.4M76 14C76-3 68-7 60-7.4';
+    o += '<path d="' + arc + '" stroke="' + D + '" stroke-width="5" fill="none" stroke-linecap="round"/><path d="' + arc + '" stroke="url(#crG)" stroke-width="3.4" fill="none" stroke-linecap="round"/><path d="M31 7C34-2 46-5.6 57-6.4" stroke="#fff8dc" stroke-width=".9" fill="none" opacity=".85" stroke-linecap="round"/>';
+    [[33.4, 3.2], [40, -1.4], [48, -4], [72, -4], [80, -1.4], [86.6, 3.2], [46.4, 5.4], [73.6, 5.4]].forEach(function (q) { o += pearl(q[0], q[1], 1.15); });
+    // ลูกโลกทอง + กางเขน
+    o += '<circle cx="60" cy="-10.6" r="3.5" fill="url(#crO)" stroke="' + D + '" stroke-width="1"/><path d="M57-9.9Q60-8.6 63-9.9" stroke="#fff3c4" stroke-width=".9" fill="none"/><ellipse cx="58.8" cy="-12" rx="1" ry=".65" fill="#fff" opacity=".9"/>' +
+      '<path d="M60-14v-5M58-17h4" stroke="' + D + '" stroke-width="2.8" stroke-linecap="round"/><path d="M60-14v-5M58-17h4" stroke="url(#crO)" stroke-width="1.5" stroke-linecap="round"/><circle cx="60" cy="-17" r=".7" fill="#ff3456"/>';
+    // (4) ยอดดอกลิลลี่สลับไข่มุก
+    var FL = 'M0-10C2.4-7.4 2.8-4.4 1.2-2C3.4-3.6 5.8-3.2 6.2-1C6.6 1.2 4.6 2 3 1.8H-3C-4.6 2-6.6 1.2-6.2-1C-5.8-3.2-3.4-3.6-1.2-2C-2.8-4.4-2.4-7.4 0-10Z';
+    [[28, .78], [44, .88], [76, .88], [92, .78]].forEach(function (f) { o += '<path transform="translate(' + f[0] + ' 13.4) scale(' + f[1] + ')" d="' + FL + '" fill="url(#crG)" stroke="' + D + '" stroke-width="1" stroke-linejoin="round"/>'; });
+    o += '<path transform="translate(60 13.4) scale(1.08)" d="' + FL + '" fill="url(#crG)" stroke="' + D + '" stroke-width="1" stroke-linejoin="round"/>';
+    [36, 52, 68, 84].forEach(function (x) { o += '<path d="M' + (x - 1.5) + ' 14.4L' + x + ' 7.4 ' + (x + 1.5) + ' 14.4z" fill="url(#crG)" stroke="' + D + '" stroke-width=".7" stroke-linejoin="round"/>' + pearl(x, 6.2, 1.7); });
+    // (3) ขอบทองฉลุ + ไข่มุกขอบล่าง
+    o += '<path d="M25 13.6H95L96 22.4Q60 25 24 22.4Z" fill="url(#crB)" stroke="' + D + '" stroke-width="1.2" stroke-linejoin="round"/><path d="M27 15.2H93" stroke="#fff6d6" stroke-width=".8" opacity=".9"/><path d="M25.2 14.2H94.8" stroke="url(#crM)" stroke-width="1.3"/><path d="M24.6 21.8Q60 24.4 95.4 21.8" stroke="url(#crM)" stroke-width="1.3" fill="none"/>';
+    for (var eg = 27; eg < 93; eg += 2.2) if (Math.abs(eg - 60) > 9) o += '<path d="M' + eg.toFixed(1) + ' 20.6l1.2-3.6" stroke="#8a5a10" stroke-width=".35" opacity=".45"/>';
+    [31.5, 38, 50, 70, 82, 88.5].forEach(function (x) { o += '<path transform="translate(' + x + ' 18.4)" d="M0-2.2Q1.4-.8 0 2.2Q-1.4-.8 0-2.2Z" fill="#6a4208" opacity=".55"/>'; });
+    for (var k = 26.5; k <= 93.5; k += 3.35) { var dy = Math.pow((k - 60) / 36, 2) * 1.6; o += pearl(k, 23.6 - dy * 0 + (1 - Math.pow((k - 60) / 36, 2)) * 1.0, .95); }
+    [[31, 0], [89, .6]].forEach(function (q) { o += '<g class="cr-pd" style="animation-delay:' + q[1] + 's"><path d="M' + q[0] + ' 23V31" stroke="#d9a536" stroke-width=".5"/>' + pearl(q[0], 25.2, 1) + pearl(q[0], 28, 1.1) + '<path d="M' + q[0] + ' 30L' + (q[0] + 1.6) + ' 32.4 ' + q[0] + ' 35 ' + (q[0] - 1.6) + ' 32.4Z" fill="url(#crR)" stroke="' + D + '" stroke-width=".4"/></g>'; });
+    // (7) ประกายวิ่งบนขอบทอง
+    o += '<g clip-path="url(#crK)"><rect class="cr-sh" x="10" y="10" width="8" height="18" fill="url(#crH)" transform="skewX(-20)"/></g>';
+    // (5) อัญมณีมีลำดับ: ทับทิมใหญ่ · เพชร · ไพลิน · มรกต
+    for (var bz = 0; bz < 14; bz++) { var bt = bz / 14 * 6.283; o += '<circle cx="' + (60 + 8 * Math.cos(bt)).toFixed(2) + '" cy="' + (18.6 + 5.6 * Math.sin(bt)).toFixed(2) + '" r=".75" fill="#fff3c4" stroke="#8a5a10" stroke-width=".3"/>'; }
+    o += '<g transform="translate(60 18.6) scale(1.18)"><path d="M-5.2-4.6H5.2L6.8-1.4 5.2 4.6H-5.2L-6.8-1.4Z" fill="#7a4d08"/><path d="M-4.6-3.8H4.6L5.8-1 4.6 3.8H-4.6L-5.8-1Z" fill="url(#crR)" stroke="' + D + '" stroke-width=".7"/><path d="M-5.8-1H5.8M-2.2-3.8-1 -1-2.2 3.8M2.2-3.8 1-1 2.2 3.8M-1-1 0-3.8 1-1" stroke="#ffb3c0" stroke-width=".35" fill="none"/><path d="M-3.6-3-1.8-3-2.8-1.4z" fill="#fff" opacity=".95"/><path d="M-5.8-1-4.6 3.8H-2.2L-1-1ZM1-1 2.2 3.8H4.6L5.8-1Z" fill="#000" opacity=".12"/><path d="M-2.2-3.8H2.2L1-1H-1Z" fill="#fff" opacity=".22"/></g>';
+    [44, 76].forEach(function (x) { o += '<g transform="translate(' + x + ' 18.6)"><circle r="3.2" fill="#7a4d08"/><path d="M0-2.8 2.4-1.2 2.4 1.2 0 2.8-2.4 1.2-2.4-1.2Z" fill="url(#crD)" stroke="' + D + '" stroke-width=".55"/><path d="M0-2.8V2.8M-2.4-1.2 2.4 1.2M2.4-1.2-2.4 1.2" stroke="#9ab8e0" stroke-width=".3"/><circle cx="-.9" cy="-1" r=".55" fill="#fff"/></g>'; });
+    [[34.6, 'crS'], [85.4, 'crS'], [27.6, 'crE'], [92.4, 'crE']].forEach(function (q, i) { o += '<g transform="translate(' + q[0] + ' 18.6)"><rect x="-1.8" y="-1.8" width="3.6" height="3.6" rx=".6" transform="rotate(45)" fill="url(#' + q[1] + ')" stroke="' + D + '" stroke-width=".5"/><circle cx="-.5" cy="-.7" r=".45" fill="#fff" opacity=".9"/></g>'; });
+    [[60, 15.4, 0], [44, 16, 1.1], [76, 16, 2.2], [60, -20, .55], [58.8, -12.4, 1.7]].forEach(function (q) { o += '<path class="cr-tw" style="animation-delay:' + q[2] + 's" transform="translate(' + q[0] + ' ' + q[1] + ')" d="M0-3.2.5-.5 3.2 0 .5.5 0 3.2-.5.5-3.2 0-.5-.5z" fill="#fff"/>'; });
+    [[60, 16.6, 0, 1.25], [44, 17.6, .7, .9], [76, 17.6, 1.4, .9], [60, -10.6, 2.1, .8]].forEach(function (q) { o += '<path class="cr-fl" style="animation-delay:' + q[2] + 's" transform="translate(' + q[0] + ' ' + q[1] + ') scale(' + q[3] + ')" d="M0-7 .55-.55 7 0 .55.55 0 7-.55.55-7 0-.55-.55Z" fill="#fff"/>'; });
+    o += '</g><g class="cr-pts">' + [[44, 12, 0], [52, 8, 1.1], [68, 9, .5], [76, 13, 1.7], [60, 4, 2.3]].map(function (q) { return '<circle class="cr-pt" style="animation-delay:' + q[2] + 's" cx="' + q[0] + '" cy="' + q[1] + '" r=".9" fill="#ffe9a0"/>'; }).join('') + '</g>';
     return o;
   }
   ART_OUT.crown.art = crownArt();
@@ -1721,14 +1733,26 @@
     el.setAttribute('aria-label', plain.replace('\n', ' '));
     if (!calm()) el.classList.add('sk-in');
   }
+  /* ป้ายคำพูดฉากห้องโถงวัง: ม้วนราชโองการ แกนทองบนล่าง · หัวข้อ "ราชโองการ" · หมึกน้ำตาล+คำเน้นทองนูน · ตราครั่งลายม้วนกระดาษ+ริบบิ้น · คลี่ออก */
+  function plShow(el, txt) {
+    var plain = String(txt).replace(/\*/g, '');
+    var esc = String(txt).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\*([^*]+)\*/g, '<b>$1</b>');
+    el.classList.remove('pl-in'); void el.offsetWidth; el.classList.add('pl-say');
+    el.innerHTML = '<i class="pl-rod t" aria-hidden="true"></i><span class="pl-pp"><span class="pl-hd" aria-hidden="true">✦ ราชโองการ ✦</span><span class="pl-t">' + esc + '</span></span><i class="pl-rod b" aria-hidden="true"></i>' +
+      '<span class="pl-seal" aria-hidden="true"><i class="r1"></i><i class="r2"></i><svg viewBox="-12 -12 24 24"><path d="M0-11C5-11 7-8 9-6S12 0 10 4 6 11 0 11-7 10-9 6-12 0-10-4-6-11 0-11Z" fill="#b8141a" stroke="#6a0a0a" stroke-width="1"/><circle r="6.6" fill="none" stroke="#ff8a7a" stroke-width=".9" opacity=".7"/><rect x="-4.4" y="-3.4" width="8.8" height="6.8" rx="1" fill="#ffd77a" stroke="#7a3a08" stroke-width=".7"/><path d="M-4.4-1.2H4.4M-4.4 1.2H4.4" stroke="#b8141a" stroke-width=".6"/><path d="M5-6Q2-2-1 4" stroke="#ffe7a0" stroke-width="1" fill="none"/></svg></span>';
+    el.setAttribute('aria-label', plain);
+    if (!calm()) el.classList.add('pl-in');
+  }
   function sayType(el, txt) {
     var thr = !!(sh && sh.classList.contains('is-thr')), RY = thr ? '<i class="ry-sp a" aria-hidden="true">✦</i><i class="ry-sp b" aria-hidden="true">✦</i>' : '';
-    var sky = !!(sh && sh.classList.contains('is-sky'));
-    var tk = txt + (sh && sh.classList.contains('is-fire') ? '#f' : thr ? '#t' : sky ? '#s' : '');
+    var sky = !!(sh && sh.classList.contains('is-sky')), pal = !sky && !!(sh && sh.classList.contains('is-pal'));
+    var tk = txt + (sh && sh.classList.contains('is-fire') ? '#f' : thr ? '#t' : sky ? '#s' : pal ? '#p' : '');
     if (el.getAttribute('data-t') === tk) return;
-    el.setAttribute('data-t', tk); clearInterval(typeT); el.classList.remove('mk-lore', 'mk-in', 'sk-in'); if (!sky) el.removeAttribute('aria-label');
+    el.setAttribute('data-t', tk); clearInterval(typeT); el.classList.remove('mk-lore', 'mk-in', 'sk-in', 'pl-in', 'pl-say'); if (!sky && !pal) el.removeAttribute('aria-label');
     if (sh && sh.classList.contains('is-heav')) { svShow(el, txt); return; }
     if (sky) { skShow(el, txt); return; }
+    if (pal) { plShow(el, txt); return; }
+    txt = String(txt).replace(/\*/g, '');
     if (sh && sh.classList.contains('is-fire')) { mkShow(el, txt); return; }
     if (String(txt).indexOf('|') >= 0) txt = String(txt).replace('|', ' · ');
     el.classList.remove('sv-in');
@@ -1998,15 +2022,41 @@
     var dots = ''; for (var d = 0; d < LORE_R.length; d++) dots += '<i class="' + (d <= last ? 'on' : '') + '"></i>';
     return '<span class="vof-act crc-lore" role="button" tabindex="0" data-lore="crown" aria-label="อ่านตำนานมงกุฎตำนาน' + (last > seen ? ' มีตอนใหม่' : '') + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + LIC_R[4] + '</svg>ตำนาน<span class="crc-dots" aria-hidden="true">' + dots + '</span>' + (last > seen ? '<i class="lore-new"></i>' : '') + '</span>';
   }
+  /* ===== ตำนานเครื่องแบบราชันย์ (ระดับตำนาน · ใช้กรอบเดียวกับมงกุฎ) ===== */
+  var LORE_K = [
+    { need: 0, t: 'บทนำ · หีบทองใต้ท้องพระโรง', art: function () { return '<svg viewBox="0 -6 120 72"><rect x="-4" y="-6" width="128" height="78" fill="#2e1428"/><path d="M24 30H96V62H24Z" fill="#8a5a10" stroke="#3a2006" stroke-width="2"/><path d="M20 30Q60 4 100 30Z" fill="#b07a14" stroke="#3a2006" stroke-width="2"/><path d="M24 40H96M60 30V62" stroke="#f4c542" stroke-width="2"/><rect x="54" y="34" width="12" height="10" rx="2" fill="#f4c542" stroke="#3a2006" stroke-width="1.4"/><path d="M36 26Q60 10 84 26" stroke="#fff3c4" stroke-width="1.6" fill="none" opacity=".6"/><g fill="#fff3c4"><path d="M14 12l1 3 3 1-3 1-1 3-1-3-3-1 3-1z"/><path d="M106 8l1 3 3 1-3 1-1 3-1-3-3-1 3-1z"/></g></svg>'; }, q: 'ชุดที่สวยที่สุด คือชุดที่ผู้สวมเข้าใจทุกตะเข็บ', p: [
+      'ใต้ท้องพระโรงแห่ง**อาณาจักรลูเมน** มี**หีบทองใบหนึ่ง**ที่ไม่เคยมีใครเปิดออกได้ ข้างในคือเครื่องแบบราชสำนักที่งดงามที่สุดในแผ่นดิน',
+      'ช่างตัดเสื้อหลวง**แม่นางเข็มทอง**ทิ้งคำจารึกไว้บนฝาหีบว่า ==ชุดนี้จะพอดีตัวกับผู้ที่อ่านทุกบรรทัดเท่านั้น==',
+      'ขุนนางหลายคนลองสวม แต่ชุดกลับหลวมโคร่งบ้าง คับแน่นบ้าง จนไม่มีใครใส่ได้มานานนับร้อยปี'] },
+    { need: 1, t: 'ตอนที่ 1 · ใบสั่งตัดที่ยาวสามวา', art: function () { return '<svg viewBox="0 -6 120 72"><rect x="-4" y="-6" width="128" height="78" fill="#3a2a22"/><path d="M40 -2H80V66H40Z" fill="#fbf3dd" stroke="#4a2e05" stroke-width="2"/><g stroke="#c9b48a" stroke-width="2"><path d="M46 6H74M46 13H72M46 20H74M46 27H70M46 34H74M46 41H72"/></g><path d="M46 56H62" stroke="#e2324e" stroke-width="1.6"/><circle cx="68" cy="56" r="7" fill="none" stroke="#e2324e" stroke-width="2"/><path d="M73 61l7 7" stroke="#e2324e" stroke-width="2.4" stroke-linecap="round"/></svg>'; }, q: 'บรรทัดที่เล็กที่สุด มักซ่อนราคาที่แพงที่สุด', p: [
+      'เมื่อเวลลัมขึ้นครองมงกุฎ แม่นางเข็มทองยื่น**ใบสั่งตัดชุดยาวสามวา**มาให้ลงนาม พร้อมยิ้มว่า ==เซ็นตรงนี้ แล้วหีบจะเปิดเองเพคะ==',
+      'เวลลัมค่อย ๆ อ่านทีละบรรทัด จนเจอข้อความจิ๋วท้ายกระดาษว่า ==ผู้สั่งตัดต้องจ่ายค่าด้ายทองทั้งอาณาจักรไปตลอดชีวิต==',
+      'เวลลัมถามอย่างสุภาพว่าข้อนี้หมายความว่าอย่างไร แม่นางเข็มทองหัวเราะเสียงใส แล้ว**ฉีกบรรทัดนั้นทิ้ง**ต่อหน้า'] },
+    { need: 1, t: 'ตอนที่ 2 · พ่อบ้านที่คั่นหนังสือกับเมดกระดาษโน้ต', art: function () { return '<svg viewBox="0 -6 120 72"><rect x="-4" y="-6" width="128" height="78" fill="#2a1e3a"/><path d="M26 6H50V62L38 54L26 62Z" fill="#22285e" stroke="#2a1d14" stroke-width="2"/><path d="M31 26q3-3 6 0M39 26q3-3 6 0" stroke="#fff" stroke-width="1.6" fill="none"/><path d="M38 32q-4-2-7 1M38 32q4-2 7 1" stroke="#f7efdc" stroke-width="1.6" fill="none"/><path d="M68 14H96V44L88 52H68Z" fill="#ffc6dc" stroke="#2a1d14" stroke-width="2"/><path d="M70 14q3-5 6 0q3-5 6 0q3-5 6 0q3-5 6 0" fill="#fff" stroke="#2a1d14" stroke-width="1.2"/><circle cx="76" cy="28" r="1.6" fill="#2a1d14"/><circle cx="88" cy="28" r="1.6" fill="#2a1d14"/><path d="M79 33q3 3 6 0" stroke="#2a1d14" stroke-width="1.4" fill="none"/></svg>'; }, q: 'ใครอ่านทุกบรรทัด เราจะดูแลทุกตะเข็บ', p: [
+      'คืนนั้นมีเสียงเคาะประตูเบา ๆ **ที่คั่นหนังสือสีกรมท่า**กับ**กระดาษโน้ตสีชมพู**จากหอสมุดเก่าเดินเข้ามาคำนับ',
+      'ทั้งคู่เล่าว่าพวกเขาเคยคั่นทุกหน้าสำคัญ และแปะทุกบรรทัดที่ควรระวัง ==รอคอยผู้ที่อ่านตามพวกเขาจนจบมาตลอดร้อยปี==',
+      'พ่อบ้านจัดปกตั้งให้ตรง เมดปัดฝุ่นทองออกจากอินทรธนู แล้วเครื่องแบบก็**พอดีตัวเวลลัมราวกับตัดมาเพื่อกันและกัน**'] },
+    { need: 1, t: 'ตอนจบ · ผ้าคลุมที่พาดไหล่ข้างเดียว', art: function () { var m = mascot('happy', 100, ''); if (m.indexOf('</svg>') < 0) return m; var k = m.indexOf('>') + 1; m = m.slice(0, k) + ART_OUT.cape.worn.replace('<g class="cp-bd">', '<g>') + m.slice(k); return m.replace(/<\/svg>\s*$/, '<g class="vm-outfit">' + ART_OUT.cape.front + '</g></svg>'); }, q: 'ไหล่หนึ่งแบกหน้าที่ อีกมือถือปากกาไว้ถามก่อนเซ็น', p: [
+      'ทุกคนในวังสงสัยว่าทำไมผ้าคลุมของราชันย์ถึง**พาดไหล่เพียงข้างเดียว**',
+      'แม่นางเข็มทองตอบว่า ไหล่ข้างหนึ่งมีไว้แบกหน้าที่ของแผ่นดิน ส่วน==อีกข้างต้องว่างไว้ ให้มือถือปากกาขีดเส้นใต้และถามทุกข้อที่ไม่เข้าใจ==',
+      'นับจากวันนั้น เวลลัมสวมเครื่องแบบนี้ทุกครั้งที่ต้องอ่านสัญญาสำคัญ และ**ไม่เคยลงนามในสิ่งที่ยังไม่เข้าใจเลยสักครั้ง**'] }
+  ];
+  function hasCapeK() { return ownedOutfits().indexOf('cape') >= 0; }
+  function capeLoreBtn() {
+    var seen = -1; try { seen = +(localStorage.getItem('vc_lore_seen_k') || -1); } catch (e) {}
+    var last = hasCapeK() ? LORE_K.length - 1 : 0;
+    var dots = ''; for (var d = 0; d < LORE_K.length; d++) dots += '<i class="' + (d <= last ? 'on' : '') + '"></i>';
+    return '<span class="vof-act crc-lore cpk-lore" role="button" tabindex="0" data-lore="cape" aria-label="อ่านตำนานเครื่องแบบราชันย์' + (last > seen ? ' มีตอนใหม่' : '') + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + LIC_R[4] + '</svg>ตำนาน<span class="crc-dots" aria-hidden="true">' + dots + '</span>' + (last > seen ? '<i class="lore-new"></i>' : '') + '</span>';
+  }
   function hasWizard() { return ownedOutfits().indexOf('wizard') >= 0; }
   function wizardLoreBtn() {
     var seen = -1; try { seen = +(localStorage.getItem('vc_lore_seen_w') || -1); } catch (e) {}
     var last = hasWizard() ? LORE_W.length - 1 : 0;
     return '<span class="vof-lore-w" role="button" tabindex="0" data-lore="wizard" aria-label="อ่านตำนานหมวกนักเวท' + (last > seen ? ' มีตอนใหม่' : '') + '">📜' + (last > seen ? '<i class="lore-new"></i>' : '') + '</span>';
   }
-  function curLore() { return lrSet === 'l' ? LORE_L : lrSet === 'w' ? LORE_W : lrSet === 'c' ? LORE_C : lrSet === 'r' ? LORE_R : XL[lrSet] ? XL[lrSet].L : LORE; }
-  function okLore(c) { return XL[lrSet] ? (c.need === 0 || ownedOutfits().indexOf(XL[lrSet].id) >= 0) : lrSet === 'r' ? (c.need === 0 || hasCrown()) : lrSet === 'c' ? (c.need === 0 || hasCap()) : lrSet === 'w' ? (c.need === 0 || hasWizard()) : lrSet === 'l' ? (c.need === 0 || (S && (S.totalDays || 0) >= c.need)) : loreOk(c); }
-  function seenLore() { try { return +(localStorage.getItem(lrSet === 'l' ? 'vc_lore_seen_l' : lrSet === 'w' ? 'vc_lore_seen_w' : lrSet === 'c' ? 'vc_lore_seen_c' : lrSet === 'r' ? 'vc_lore_seen_r' : XL[lrSet] ? 'vc_lore_seen_' + lrSet : 'vc_lore_seen') || -1); } catch (e) { return -1; } }
+  function curLore() { return lrSet === 'l' ? LORE_L : lrSet === 'w' ? LORE_W : lrSet === 'c' ? LORE_C : lrSet === 'r' ? LORE_R : lrSet === 'k' ? LORE_K : XL[lrSet] ? XL[lrSet].L : LORE; }
+  function okLore(c) { return XL[lrSet] ? (c.need === 0 || ownedOutfits().indexOf(XL[lrSet].id) >= 0) : lrSet === 'r' ? (c.need === 0 || hasCrown()) : lrSet === 'k' ? (c.need === 0 || hasCapeK()) : lrSet === 'c' ? (c.need === 0 || hasCap()) : lrSet === 'w' ? (c.need === 0 || hasWizard()) : lrSet === 'l' ? (c.need === 0 || (S && (S.totalDays || 0) >= c.need)) : loreOk(c); }
+  function seenLore() { try { return +(localStorage.getItem(lrSet === 'l' ? 'vc_lore_seen_l' : lrSet === 'w' ? 'vc_lore_seen_w' : lrSet === 'c' ? 'vc_lore_seen_c' : lrSet === 'r' ? 'vc_lore_seen_r' : lrSet === 'k' ? 'vc_lore_seen_k' : XL[lrSet] ? 'vc_lore_seen_' + lrSet : 'vc_lore_seen') || -1); } catch (e) { return -1; } }
   function laurelLoreBtn() {
     var tot = S && S.totalDays || 0, last = -1, seen = -1; LORE_L.forEach(function (x, k) { if (x.need === 0 || tot >= x.need) last = k; });
     try { seen = +(localStorage.getItem('vc_lore_seen_l') || -1); } catch (e) {}
@@ -2014,7 +2064,7 @@
     return '<span class="vof-act lrc-lore" role="button" tabindex="0" data-lore="laurel" aria-label="อ่านตำนานมาลัย' + (last > seen ? ' มีตอนใหม่' : '') + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + LIC_L[0] + '</svg>ตำนาน<span class="crc-dots" aria-hidden="true">' + dots + '</span>' + (last > seen ? '<i class="lore-new"></i>' : '') + '</span>';
   }
   function loreOpen(i, set) {
-    lrSet = set === 'laurel' ? 'l' : set === 'wizard' ? 'w' : set === 'cap' ? 'c' : set === 'crown' ? 'r' : XL_BY[set] || 'm';
+    lrSet = set === 'laurel' ? 'l' : set === 'wizard' ? 'w' : set === 'cap' ? 'c' : set === 'crown' ? 'r' : set === 'cape' ? 'k' : XL_BY[set] || 'm';
     if (!lr) {
       lr = document.createElement('div'); lr.className = 'vlr'; lr.setAttribute('role', 'dialog'); lr.setAttribute('aria-modal', 'true'); lr.setAttribute('aria-labelledby', 'vlrT');
       lr.innerHTML = '<div class="vlr-bg" data-lx></div><div class="vlr-p"><i class="vlr-rod"></i><i class="vlr-glow" aria-hidden="true"></i><i class="vlr-frame" aria-hidden="true"><b></b><b></b><b></b><b></b></i><div class="vlr-sh"><button type="button" class="vlr-x" data-lx aria-label="ปิด">✕</button>' +
@@ -2026,15 +2076,15 @@
       });
       document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && lr && lr.classList.contains('on')) loreClose(); });
     }
-    lr.classList.toggle('is-laurel', lrSet === 'l' || lrSet === 'w' || lrSet === 'c' || lrSet === 'r' || !!XL[lrSet]); lr.classList.toggle('is-xl', !!XL[lrSet]); lr.setAttribute('data-fr', XL[lrSet] ? XL[lrSet].fr : ''); lr.classList.toggle('is-crown', lrSet === 'r'); lr.classList.toggle('is-wizard', lrSet === 'w'); lr.classList.toggle('is-cap', lrSet === 'c'); lr.querySelector('#vlrT').textContent = lrSet === 'l' ? 'มาลัยตำนาน' : lrSet === 'w' ? 'หมวกนักเวท' : lrSet === 'c' ? 'หมวกนอนดาว' : lrSet === 'r' ? 'มงกุฎตำนาน' : XL[lrSet] ? XL[lrSet].name : 'เหรียญไฟไม่มอด';
+    lr.classList.toggle('is-laurel', lrSet === 'l' || lrSet === 'w' || lrSet === 'c' || lrSet === 'r' || lrSet === 'k' || !!XL[lrSet]); lr.classList.toggle('is-xl', !!XL[lrSet]); lr.setAttribute('data-fr', XL[lrSet] ? XL[lrSet].fr : ''); lr.classList.toggle('is-crown', lrSet === 'r' || lrSet === 'k'); lr.classList.toggle('is-wizard', lrSet === 'w'); lr.classList.toggle('is-cap', lrSet === 'c'); lr.querySelector('#vlrT').textContent = lrSet === 'l' ? 'มาลัยตำนาน' : lrSet === 'w' ? 'หมวกนักเวท' : lrSet === 'c' ? 'หมวกนอนดาว' : lrSet === 'r' ? 'มงกุฎตำนาน' : lrSet === 'k' ? 'เครื่องแบบราชันย์' : XL[lrSet] ? XL[lrSet].name : 'เหรียญไฟไม่มอด';
     var LL = curLore();
     if (typeof i !== 'number') { lrIdx = 0; for (var k = LL.length - 1; k >= 0; k--) if (okLore(LL[k])) { lrIdx = k; break; } } else lrIdx = i;
     lr.hidden = false; requestAnimationFrame(function () { lr.classList.add('on'); }); loreRender();
   }
   function loreClose() { if (!lr) return; lr.classList.remove('on'); setTimeout(function () { if (!lr.classList.contains('on')) lr.hidden = true; }, 400); }
   function loreRender() {
-    var LL = curLore(), XX = XL[lrSet], RR = lrSet === 'r', C = lrSet === 'c', W = lrSet === 'w', L = lrSet === 'l' || W || C || RR || !!XX, c = LL[lrIdx], ok = okLore(c), m = MED[L ? 3 : c.tier];
-    if (ok && lrIdx > seenLore()) { try { localStorage.setItem(XX ? 'vc_lore_seen_' + lrSet : RR ? 'vc_lore_seen_r' : C ? 'vc_lore_seen_c' : W ? 'vc_lore_seen_w' : L ? 'vc_lore_seen_l' : 'vc_lore_seen', lrIdx); } catch (e) {} if (sh && !sh.hidden) shopRender(); }
+    var LL = curLore(), XX = XL[lrSet], RR = lrSet === 'r' || lrSet === 'k', KK = lrSet === 'k', C = lrSet === 'c', W = lrSet === 'w', L = lrSet === 'l' || W || C || RR || !!XX, c = LL[lrIdx], ok = okLore(c), m = MED[L ? 3 : c.tier];
+    if (ok && lrIdx > seenLore()) { try { localStorage.setItem(XX ? 'vc_lore_seen_' + lrSet : RR ? (KK ? 'vc_lore_seen_k' : 'vc_lore_seen_r') : C ? 'vc_lore_seen_c' : W ? 'vc_lore_seen_w' : L ? 'vc_lore_seen_l' : 'vc_lore_seen', lrIdx); } catch (e) {} if (sh && !sh.hidden) shopRender(); }
     if (!L) { lr.style.setProperty('--f1', m.f1); lr.style.setProperty('--f2', m.f2); }
     var lastOk = 0; LL.forEach(function (x, n) { if (okLore(x)) lastOk = n; });
     var tb = lr.querySelector('.vlr-tabs'); tb.style.setProperty('--lf', (lastOk / (LL.length - 1) * 100) + '%');
@@ -2047,7 +2097,7 @@
       '<h4>' + h(c.t) + '</h4>' +
       (L ? c.p.map(function (t, n) { return '<p class="lp' + (!ok && n > 0 ? ' blur' : '') + '" style="--d:' + (n * .3 + .25).toFixed(2) + 's">' + lFmt(t, n * .3 + .7) + '</p>'; }).join('') + (c.q ? '<blockquote class="lq' + (ok ? '' : ' blur') + '" style="--d:' + (c.p.length * .3 + .3).toFixed(2) + 's"><i class="lq-o">“</i>' + h(c.q) + '<i class="lq-c">”</i></blockquote>' : '')
         : c.p.map(function (t, n) { return '<p class="' + (n === 0 ? 'first ' : '') + (!ok && n > 0 ? 'blur' : '') + '" style="--d:' + (n * .35 + .3) + 's">' + (n === 0 ? dropCap(t) : h(t)) + '</p>'; }).join('')) +
-      (ok ? '<div class="vlr-end">' + (XX ? '<span class="xl-end">✦ จบ ✦</span>' : RR ? SEAL_R : L ? SEAL_L : SEAL) + '</div>' : XX ? '<div class="vlr-lock">🔒 อ่านต่อได้เมื่อมี' + XX.name + '<small>ราคา ' + fmt((itemById(XX.id) || {}).price || 0) + ' แต้ม · ตอนนี้มี ' + fmt(S && S.points || 0) + ' แต้ม</small></div>' : RR ? '<div class="vlr-lock">🔒 อ่านต่อได้เมื่อมีมงกุฎตำนาน<small>ราคา ' + fmt((itemById('crown') || {}).price || 1000) + ' แต้ม · ตอนนี้มี ' + fmt(S && S.points || 0) + ' แต้ม</small></div>' : C ? '<div class="vlr-lock">🔒 อ่านต่อได้เมื่อมีหมวกนอนดาว<small>ราคา ' + fmt((itemById('cap') || {}).price || 300) + ' แต้ม · ตอนนี้มี ' + fmt(S && S.points || 0) + ' แต้ม</small></div>' : W ? '<div class="vlr-lock">🔒 อ่านต่อได้เมื่อมีหมวกนักเวท<small>ราคา ' + fmt((itemById('wizard') || {}).price || 400) + ' แต้ม · ตอนนี้มี ' + fmt(S && S.points || 0) + ' แต้ม</small></div>' : L ? '<div class="vlr-lock">🔒 ปลดล็อกเมื่อเช็กอินรวมครบ ' + c.need + ' วัน<small>ตอนนี้เช็กอินรวม ' + tot + ' วัน · อีก ' + Math.max(0, c.need - tot) + ' วัน</small></div>' : '<div class="vlr-lock">🔒 ปลดล็อกเมื่อเช็กอินติดกันครบ ' + c.need + ' วัน<small>สถิติสูงสุดของคุณ ' + best + ' วัน</small></div>');
+      (ok ? '<div class="vlr-end">' + (XX ? '<span class="xl-end">✦ จบ ✦</span>' : RR ? SEAL_R : L ? SEAL_L : SEAL) + '</div>' : XX ? '<div class="vlr-lock">🔒 อ่านต่อได้เมื่อมี' + XX.name + '<small>ราคา ' + fmt((itemById(XX.id) || {}).price || 0) + ' แต้ม · ตอนนี้มี ' + fmt(S && S.points || 0) + ' แต้ม</small></div>' : RR ? '<div class="vlr-lock">🔒 อ่านต่อได้เมื่อมี' + (KK ? 'เครื่องแบบราชันย์' : 'มงกุฎตำนาน') + '<small>ราคา ' + fmt((itemById(KK ? 'cape' : 'crown') || {}).price || 1000) + ' แต้ม · ตอนนี้มี ' + fmt(S && S.points || 0) + ' แต้ม</small></div>' : C ? '<div class="vlr-lock">🔒 อ่านต่อได้เมื่อมีหมวกนอนดาว<small>ราคา ' + fmt((itemById('cap') || {}).price || 300) + ' แต้ม · ตอนนี้มี ' + fmt(S && S.points || 0) + ' แต้ม</small></div>' : W ? '<div class="vlr-lock">🔒 อ่านต่อได้เมื่อมีหมวกนักเวท<small>ราคา ' + fmt((itemById('wizard') || {}).price || 400) + ' แต้ม · ตอนนี้มี ' + fmt(S && S.points || 0) + ' แต้ม</small></div>' : L ? '<div class="vlr-lock">🔒 ปลดล็อกเมื่อเช็กอินรวมครบ ' + c.need + ' วัน<small>ตอนนี้เช็กอินรวม ' + tot + ' วัน · อีก ' + Math.max(0, c.need - tot) + ' วัน</small></div>' : '<div class="vlr-lock">🔒 ปลดล็อกเมื่อเช็กอินติดกันครบ ' + c.need + ' วัน<small>สถิติสูงสุดของคุณ ' + best + ' วัน</small></div>');
     lr.querySelector('.vlr-body').scrollTop = 0;
   }
   /* ลื่นขึ้น: หยุดอนิเมชันของการ์ด/ฉากที่อยู่นอกจอ (มองไม่เห็นอยู่แล้ว หน้าตาไม่เปลี่ยน) */
@@ -2084,7 +2134,7 @@
     palScene(plOn);
     var fitIt = sel ? itemById(sel) : null;
     fitScene(!fireOn && !hvOn && !thOn && !wzOn && !dmOn && !skOn && !plOn, fitIt && (fitIt.rarity === 'rare' || fitIt.rarity === 'epic') ? fitIt.rarity : 'common');
-    if (sel === 'cape' && !cqPlayed && !calm()) { cqPlayed = true; ftPlayed.cape = true; setTimeout(playCapeIn, 40); } else if (sel !== 'cape') cqStop();
+    if (sel === 'cape' && !cqPlayed && !calm() && wornOutfits().indexOf('cape') >= 0) { cqPlayed = true; ftPlayed.cape = true; setTimeout(playCapeIn, 40); } else if (sel !== 'cape') cqStop();
     if (sel && sel !== 'cape' && fitIt && (fitIt.rarity === 'common' || fitIt.rarity === 'rare') && sh.classList.contains('is-fit') && !ftPlayed[sel] && !calm()) { sh.classList.add('ft-intro'); var fid = sel; setTimeout(function () { playFit(fid); }, 40); } else if (!sel || !fitIt || (fitIt.rarity !== 'common' && fitIt.rarity !== 'rare')) ftStop();
     ['.vst-heav', '.vst-thr', '.vst-wzs', '.vst-drm', '.vst-lib', '.vst-fit', '.vst-sky', '.vst-pal'].forEach(function (q) { var r = sh.querySelector(q); if (r && r.firstChild) splitScene(r); }); var lbr = sh.querySelector('.vst-lib'); if (lbr) requestAnimationFrame(function () { libBreath(lbr); }); var pd = sh.querySelector('.vst-pd3'); if (pd) requestAnimationFrame(function () { splitSvg(pd); });
     var hk = sel === 'medal' ? 'm' + medalTier() : '';
@@ -2108,8 +2158,9 @@
     var skSay = !sh.classList.contains('is-sky') ? '' : (!o || (o.id === 'wings' && own.indexOf('wings') >= 0 && worn.indexOf('wings') >= 0)) ? 'ลอยสูงไป*ด้วยกัน*นะ'
       : own.indexOf('wings') >= 0 ? '*ปีกของเรา*เอง\nกางเลยไหม?' : S.points >= o.price ? '*ประตูสวรรค์*เปิดแล้ว\nพร้อมกางปีกไหม?' : 'ขนนกอีกไม่กี่เส้น…\nก็*โบยบิน*ได้แล้ว';
     var cpSetOn = worn.indexOf('cape') >= 0 && worn.indexOf('crown') >= 0;
-    var cpSay = skSay ? '' : cpSetOn && (!o || o.id === 'cape' || o.id === 'crown') ? 'สมเป็นราชาแห่งห้องสมุด 👑'
-      : o && o.id === 'cape' && own.indexOf('cape') < 0 ? (S.points >= o.price ? 'ผ้าคลุมของผู้ปกครอง… สวมเลยไหม? 👑' : 'ผ้าคลุมของผู้ปกครอง… อีก ' + fmt(o.price - S.points) + ' แต้ม') : '';
+    var cpSay = skSay ? '' : cpSetOn && (!o || o.id === 'cape' || o.id === 'crown') ? '*ครบชุดราชา!* ทั้งห้องสมุดถวายความเคารพ'
+      : o && o.id === 'cape' ? (own.indexOf('cape') >= 0 ? (worn.indexOf('cape') >= 0 ? 'สง่างามสมเป็น*ราชันย์*แห่งห้องสมุด' : '*เครื่องแบบของพระองค์* พร้อมสวมแล้ว') : S.points >= o.price ? 'ถึงเวลา*ขึ้นครอง*แล้ว รับเครื่องแบบเลยไหม?' : 'ราชันย์ยังรอท่านอยู่… อีก *' + fmt(o.price - S.points) + '* แต้ม')
+      : !o && sh.classList.contains('is-pal') ? 'สง่างามสมเป็น*ราชันย์*แห่งห้องสมุด' : '';
     (function () { var stg = sh.querySelector('.vst-stage'), bd = stg.querySelector('.vst-set');
       if (cpSetOn && !bd) { bd = document.createElement('span'); bd.className = 'vst-set'; bd.setAttribute('role', 'status'); bd.innerHTML = '<i aria-hidden="true">👑</i>ครบชุดราชา'; stg.appendChild(bd); }
       else if (!cpSetOn && bd) bd.remove(); })();
@@ -2160,8 +2211,8 @@
         : it.id === 'laurel' ? laurelLoreBtn()
         : it.badge ? '<span class="vof-act is-badge">🏅 รางวัล</span>'
         : '<span class="vof-act is-buy' + (S.points < it.price ? ' is-short' : '') + '"><i class="vof-coin"></i>' + fmt(it.price) + '</span>';
-      return '<button type="button" class="vof-b r-' + it.rarity + (it.id === 'laurel' ? ' is-laurel' : it.id === 'crown' ? ' is-crown' : '') + (it.id === 'medal' ? ' is-fire mt-' + medalTier() : '') + (has ? ' is-own' : ' is-lock' + (it.badge ? ' is-badge-item' : '')) + (on ? ' is-on' : '') + (sel === it.id ? ' is-try' : '') + '" data-outfit="' + it.id + '" aria-pressed="' + (sel === it.id) + '" aria-label="' + h(it.name + ' · ' + (RAR[it.rarity] || '')) + '">' +
-        (it.id === 'laurel' ? LRC_TAG + LRC_DUST : it.id === 'crown' ? CRC_TAG : '<em class="vof-r">' + (RAR[it.rarity] || '') + '</em>') + (!has && bd && it.id === 'laurel' ? lrCard(bd, a) : !has && bd ? '<span class="vof-pr" style="--bp:' + Math.round(bd.have / bd.n * 100) + '%"><svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg><i class="vof-spark"></i><b>' + bd.have + '/' + bd.n + '</b></span>' : '<svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg>') + '<small>' + h(it.name) + '</small>' + tag + (has && it.id === 'laurel' ? laurelLoreBtn() : '') + (it.id === 'wizard' ? wizardLoreBtn() : it.id === 'cap' ? capLoreBtn() : it.id === 'crown' ? crownLoreBtn() : XL_BY[it.id] ? xlLoreBtn(it.id) : '') + '</button>';
+      return '<button type="button" class="vof-b r-' + it.rarity + (it.id === 'laurel' ? ' is-laurel' : it.id === 'crown' ? ' is-crown' : it.id === 'cape' ? ' is-crown is-cape' : '') + (it.id === 'medal' ? ' is-fire mt-' + medalTier() : '') + (has ? ' is-own' : ' is-lock' + (it.badge ? ' is-badge-item' : '')) + (on ? ' is-on' : '') + (sel === it.id ? ' is-try' : '') + '" data-outfit="' + it.id + '" aria-pressed="' + (sel === it.id) + '" aria-label="' + h(it.name + ' · ' + (RAR[it.rarity] || '')) + '">' +
+        (it.id === 'laurel' ? LRC_TAG + LRC_DUST : it.id === 'crown' || it.id === 'cape' ? CRC_TAG : '<em class="vof-r">' + (RAR[it.rarity] || '') + '</em>') + (!has && bd && it.id === 'laurel' ? lrCard(bd, a) : !has && bd ? '<span class="vof-pr" style="--bp:' + Math.round(bd.have / bd.n * 100) + '%"><svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg><i class="vof-spark"></i><b>' + bd.have + '/' + bd.n + '</b></span>' : '<svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg>') + '<small>' + h(it.name) + '</small>' + (it.id === 'cape' ? '<span class="cpk-q">“ผู้ปกป้องทุกบรรทัดแห่งห้องสมุด”</span>' : '') + tag + (has && it.id === 'laurel' ? laurelLoreBtn() : '') + (it.id === 'wizard' ? wizardLoreBtn() : it.id === 'cap' ? capLoreBtn() : it.id === 'crown' ? crownLoreBtn() : it.id === 'cape' ? capeLoreBtn() : XL_BY[it.id] ? xlLoreBtn(it.id) : '') + '</button>';
     }
 
     watchOff();
