@@ -1325,3 +1325,42 @@ html body .vst .vof-lim .lim-art svg.lim-pl{position:absolute;right:2px;bottom:4
 
 /* v44: แม่กุญแจแบบ A — เล็กลง ชิดเหรียญ แกว่งช้า */
 html body .vst .vof-lim .lim-art svg.lim-pl{width:15px !important;height:19px !important;right:6px;bottom:10px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.6)) !important;animation-duration:4s !important}
+
+/* ===== v45 (15 พ.ย.): ลื่นขึ้น — ภาพเหมือนเดิม แต่ย้ายแอนิเมชันไปให้การ์ดจอทำ ไม่บังคับวาดใหม่ทั้งหน้า =====
+   - แสงวาดพาดผ่าน: จาก left (คำนวณเลย์เอาต์ทุกเฟรม) → transform
+   - เกรนฟิล์ม: จาก background-position (วาดใหม่ทั้งฉาก) → เลื่อนเลเยอร์
+   - เงาเรืองเต้น (box-shadow): → ความโปร่งของเลเยอร์เงา
+   - ชิ้นที่มี SVG ขยับข้างใน: แยกเลเยอร์ ให้วาดใหม่เฉพาะชิ้นนั้น ไม่ลามทั้งหน้าต่าง */
+
+/* แสงวาดพาดผ่านฉากเหรียญ */
+html body .vst.is-fire .vst-sweep::before{left:0;animation:vstSw2 6s ease-in-out infinite}
+@keyframes vstSw2{0%,30%{transform:translateX(-150%) rotate(18deg)}62%,100%{transform:translateX(325%) rotate(18deg)}}
+/* แสงวิ่งบนแถบแต้ม */
+html body .vdc .vdg-bar > i::after{left:0;animation:vdgShine2 2.6s ease-in-out infinite}
+@keyframes vdgShine2{0%{transform:translateX(-112%)}60%,100%{transform:translateX(275%)}}
+/* เกรนฟิล์ม */
+html body .vst.is-fire .vst-grain{background:radial-gradient(120% 90% at 50% 45%,transparent 55%,rgba(0,0,0,.55));animation:none;overflow:hidden}
+.vst.is-fire .vst-grain::before{content:"";position:absolute;inset:-60px;will-change:transform;animation:vstGr2 .5s steps(1) infinite;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E") 0 0/160px 160px}
+@keyframes vstGr2{0%{transform:translate(0,0)}33%{transform:translate(-40px,30px)}66%{transform:translate(30px,-50px)}}
+/* แสงวาวบนการ์ดลิมิเต็ด: เลเยอร์แยก */
+html body .vst .vof-lim::after{background:radial-gradient(90% 120% at 15% 50%,rgba(170,120,255,.22),transparent 60%),linear-gradient(135deg,#1c1530,#120e1e);animation:none}
+.lim-sheen{position:absolute;inset:2px;z-index:0;border-radius:14px;overflow:hidden;pointer-events:none}
+.lim-sheen::before{content:"";position:absolute;top:0;bottom:0;left:0;width:100%;will-change:transform;
+  background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.07) 45%,rgba(160,220,255,.09) 50%,transparent 65%);animation:limSh2 4s ease-in-out infinite}
+@keyframes limSh2{0%{transform:translateX(-80%)}100%{transform:translateX(80%)}}
+html body .vst .vof-lim>*:not(.lim-sheen){position:relative;z-index:1}
+html body .vst .vof-lim>.vof-r{position:absolute}
+/* เงาเรืองเต้น → ความโปร่งของเลเยอร์ */
+html body .vdc .vdg-c.is-soon{animation:none}
+html body .vdc .vdg-c.is-soon::after{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;opacity:0;
+  box-shadow:0 0 18px 1px rgba(244,197,66,.32),inset 0 0 14px rgba(244,197,66,.12);animation:vdgSoon2 2.4s ease-in-out infinite}
+@keyframes vdgSoon2{50%{opacity:1}}
+html body .vst .vof-b.r-legendary{animation:none}
+html body .vst .vof-b.r-legendary::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;box-shadow:0 0 16px rgba(244,197,66,.45);animation:vdgSoon2 3s ease-in-out infinite}
+/* แยกเลเยอร์ชิ้นที่มี SVG ขยับข้างใน */
+.vst-ms,.vdc .vdg-mascot,.vst .vof-b svg,.vst-hero,.vdc .vdg-c .vdg-art,.vst-refl{will-change:transform}
+.vdc .vdg-fire .vf,.vst .lim-art,.vdc .vbg-m{will-change:transform}
+@media (prefers-reduced-motion:reduce){.vst-grain::before,.lim-sheen::before,.vdg-c.is-soon::after,.vof-b.r-legendary::after{animation:none !important}}
+/* เงาสะท้อนบนพื้น (จาง 24% เบลอ) และเหรียญจิ๋วในปุ่มระดับ: ไม่ต้องขยับข้างใน — มองไม่ออก แต่กินเครื่อง */
+.vst-refl *,.vtp-c svg *{animation:none !important}
