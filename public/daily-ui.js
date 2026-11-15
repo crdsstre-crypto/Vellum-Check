@@ -34,7 +34,7 @@
     glasses: { vb: '30 44 60 28', art: '<g fill="rgba(190,225,255,.28)" stroke="' + INK + '" stroke-width="2.4"><circle cx="50" cy="58" r="8.5"/><circle cx="70" cy="58" r="8.5"/></g><path d="M58.5 57q1.5-2 3 0M41.5 56 32 52M78.5 56 88 52" stroke="' + INK + '" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M45 53.5q3-3 6-1.5M65 53.5q3-3 6-1.5" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".8"/>' },
     cap: { vb: '18 -2 92 34', art: '<path d="M24 24c4-14 22-22 40-20 14 2 26 10 34 4-2 10-12 14-22 14z" fill="#4b5bd6" stroke="' + INK + '" stroke-width="2.4" stroke-linejoin="round"/><path d="M22 22c12-4 50-4 58 0" stroke="#f7efdc" stroke-width="6" stroke-linecap="round"/><path d="M22 22c12-4 50-4 58 0" stroke="' + INK + '" stroke-width="1.4" fill="none" stroke-linecap="round" opacity=".5"/><circle cx="100" cy="7" r="6" fill="#f7efdc" stroke="' + INK + '" stroke-width="2.2"/><path d="M48 12l1 2.4 2.4.3-1.8 1.6.5 2.4-2.1-1.2-2.1 1.2.5-2.4-1.8-1.6 2.4-.3zM70 9l.8 1.8 1.9.2-1.4 1.3.4 1.9-1.7-1-1.7 1 .4-1.9-1.4-1.3 1.9-.2z" fill="#ffd84d"/>' },
     bow: { vb: '44 74 32 24', art: '<g transform="translate(60 86)"><path d="M-3-3-14-9v18L-3 3zM3-3 14-9v18L3 3z" fill="#d2343e" stroke="' + INK + '" stroke-width="2" stroke-linejoin="round"/><rect x="-4" y="-4.5" width="8" height="9" rx="2.5" fill="#a91f2a" stroke="' + INK + '" stroke-width="2"/><path d="M-11-5-6-2M11-5 6-2" stroke="#ff8a92" stroke-width="1.4" stroke-linecap="round"/></g>' },
-    crown: { vb: '34 -8 52 34', art: '<g transform="translate(60 14)"><path d="M-20 6-23-14-10-3 0-18 10-3 23-14 20 6z" fill="#f4c542" stroke="' + INK + '" stroke-width="2.4" stroke-linejoin="round"/><rect x="-21" y="4" width="42" height="7" rx="2.5" fill="#e0a92c" stroke="' + INK + '" stroke-width="2.2"/><circle cy="7.5" r="2.4" fill="#d2343e"/><circle cx="-12" cy="7.5" r="1.8" fill="#4b8bd6"/><circle cx="12" cy="7.5" r="1.8" fill="#4b8bd6"/><path d="M-14-6l3 4" stroke="#fff6cf" stroke-width="1.8" stroke-linecap="round"/></g>' },
+    crown: { vb: '34 -10 52 38', art: '' },
     scarf: { vb: '28 62 70 46', art: '<path d="M30 70q30 10 60 0v9q-30 10-60 0z" fill="#d2343e" stroke="' + INK + '" stroke-width="2.2" stroke-linejoin="round"/><path d="M74 78l4 24 9-2-4-24z" fill="#d2343e" stroke="' + INK + '" stroke-width="2.2" stroke-linejoin="round"/><path d="M36 74q24 7 48 0M77 92h8M78 97h8" stroke="#ff8a92" stroke-width="1.6" fill="none" stroke-linecap="round"/>' },
     wizard: { vb: '8 -36 104 64', art: '<path d="M22 24 58-30q6-5 10 2l-6 6 12 46z" fill="#5b3fb0" stroke="' + INK + '" stroke-width="2.4" stroke-linejoin="round"/><ellipse cx="60" cy="24" rx="46" ry="7" fill="#4a2f96" stroke="' + INK + '" stroke-width="2.4"/><path d="M26 18q34 8 70-2" stroke="#f4c542" stroke-width="4" fill="none"/><path d="M50 0l1.5 3.4 3.6.4-2.7 2.4.8 3.6-3.2-1.9-3.2 1.9.8-3.6-2.7-2.4 3.6-.4zM64-14l1 2.2 2.4.3-1.8 1.6.5 2.4-2.1-1.2-2.1 1.2.5-2.4-1.8-1.6 2.4-.3z" fill="#ffe28a"/>' },
     medal: { vb: '30 62 60 56', art: '' },
@@ -169,6 +169,41 @@
   function lrStage() { var b = S && S.totalDays || 0; return b >= 160 ? 3 : b >= 130 ? 2 : 1; }
   function lrOpt(st, part) { return { id: 'L' + st + (part || ''), n: st === 1 ? 7 : st === 2 ? 9 : 11, tips: st >= 2, disc: st === 3, part: part }; }
   function laurelArt(st, part) { return LR3(lrOpt(st || lrStage(), part)); }
+  /* มงกุฎตำนาน v2: ทองขัดเงา · กำมะหยี่แดง · มุกที่ยอด · ทับทิม/ไพลินเจียระไน · ประกาย */
+  function crownArt() {
+    var D = '#4a2e05';
+    var tips = [[-23, -12], [-11.5, -7], [0, -19], [11.5, -7], [23, -12]];
+    var o = '<defs>' +
+      '<linearGradient id="crG" x1="0" y1="-20" x2="0" y2="12" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff6cf"/><stop offset=".3" stop-color="#ffd75a"/><stop offset=".55" stop-color="#c88a16"/><stop offset=".72" stop-color="#ffe9a0"/><stop offset="1" stop-color="#8a5a0c"/></linearGradient>' +
+      '<linearGradient id="crB" x1="0" y1="3" x2="0" y2="12" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff0b0"/><stop offset=".35" stop-color="#e8b23a"/><stop offset=".7" stop-color="#a8700f"/><stop offset="1" stop-color="#f4c542"/></linearGradient>' +
+      '<radialGradient id="crV" cx=".45" cy=".35" r=".7"><stop offset="0" stop-color="#e2324e"/><stop offset=".6" stop-color="#9e0f2a"/><stop offset="1" stop-color="#4a0414"/></radialGradient>' +
+      '<radialGradient id="crR" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffd0d8"/><stop offset=".35" stop-color="#ff3456"/><stop offset="1" stop-color="#6a0418"/></radialGradient>' +
+      '<radialGradient id="crS" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#d6ecff"/><stop offset=".35" stop-color="#3a7bff"/><stop offset="1" stop-color="#0a1f6a"/></radialGradient>' +
+      '<radialGradient id="crP" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff"/><stop offset=".6" stop-color="#f1e8d8"/><stop offset="1" stop-color="#b4a68a"/></radialGradient></defs>';
+    o += '<g transform="translate(60 14)">';
+    // กำมะหยี่ด้านใน
+    o += '<path d="M-19 5C-19-12-8-16 0-16S19-12 19 5z" fill="url(#crV)" stroke="' + D + '" stroke-width=".8"/><path d="M-12-6C-9-11-4-13 1-13" stroke="#ff7a8e" stroke-width="1.2" fill="none" opacity=".6" stroke-linecap="round"/>';
+    // ยอด
+    o += '<path d="M-20.5 6L-23-12-15 0-11.5-7-6 0 0-19 6 0 11.5-7 15 0 23-12 20.5 6z" fill="url(#crG)" stroke="' + D + '" stroke-width="1.1" stroke-linejoin="round"/>';
+    o += '<path d="M-21.6-9l1.6 11M-11-4.2l-2.6 6M-1.4-15.4l-2.8 16M10.4-4.2l-2 6M21.4-9l-1.4 11" stroke="#fff8dc" stroke-width=".9" stroke-linecap="round" opacity=".75"/>';
+    // แถบ
+    o += '<rect x="-21.5" y="3" width="43" height="9" rx="2" fill="url(#crB)" stroke="' + D + '" stroke-width="1.1"/><path d="M-20 4.6h40" stroke="#fff6d6" stroke-width=".8" opacity=".8"/><path d="M-20 10.6h40" stroke="#7a4d08" stroke-width=".7" opacity=".7"/>';
+    for (var k = -18; k <= 18; k += 4) if (Math.abs(k) > 5 && Math.abs(Math.abs(k) - 11) > 2) o += '<circle cx="' + k + '" cy="7.5" r=".7" fill="#fff3c4" opacity=".85"/>';
+    // มุกที่ปลาย
+    tips.forEach(function (t, i) { o += '<circle cx="' + t[0] + '" cy="' + (t[1] - (i === 2 ? 2.6 : 2)) + '" r="' + (i === 2 ? 2.8 : 2.2) + '" fill="url(#crP)" stroke="' + D + '" stroke-width=".6"/>'; });
+    // อัญมณีบนยอดกลาง
+    o += '<path d="M0-11l2.2 3-2.2 3.4-2.2-3.4z" fill="url(#crR)" stroke="' + D + '" stroke-width=".6"/>';
+    // ทับทิมกลาง (เจียระไน)
+    o += '<g transform="translate(0 7.5)"><ellipse rx="4.2" ry="3.6" fill="url(#crR)" stroke="' + D + '" stroke-width=".7"/><path d="M-4.2 0h8.4M0-3.6v7.2M-2.6-2.8L0 0l2.6-2.8M-2.6 2.8L0 0l2.6 2.8" stroke="#ffb3c0" stroke-width=".35" opacity=".8"/><ellipse cx="-1.4" cy="-1.3" rx="1.2" ry=".7" fill="#fff" opacity=".85"/></g>';
+    // ไพลินซ้ายขวา
+    [-11.5, 11.5].forEach(function (x) { o += '<g transform="translate(' + x + ' 7.5)"><path d="M0-3.4L3 0 0 3.4-3 0z" fill="url(#crS)" stroke="' + D + '" stroke-width=".6"/><path d="M-3 0h6M0-3.4v6.8" stroke="#bfe0ff" stroke-width=".3" opacity=".8"/><circle cx="-.9" cy="-1" r=".6" fill="#fff" opacity=".9"/></g>'; });
+    // มรกตเล็ก
+    [-18, 18].forEach(function (x) { o += '<circle cx="' + x + '" cy="7.5" r="1.5" fill="#2fb47a" stroke="' + D + '" stroke-width=".5"/>'; });
+    // ประกาย
+    [[0, 4.5, 0], [-11.5, 4.8, 1.1], [11.5, 4.8, 2.2], [0, -21.6, .55]].forEach(function (q) { o += '<path class="cr-tw" style="animation-delay:' + q[2] + 's" transform="translate(' + q[0] + ' ' + q[1] + ')" d="M0-3.4.5-.5 3.4 0 .5.5 0 3.4-.5.5-3.4 0-.5-.5z" fill="#fff"/>'; });
+    return o + '</g>';
+  }
+  ART_OUT.crown.art = crownArt();
   function artFor(id) { return id === 'medal' ? medalArt(medalTier()) : id === 'laurel' ? laurelArt() : ART_OUT[id] ? ART_OUT[id].art : ''; }
   var RAR = { limited: 'LIMITED', common: 'ธรรมดา', rare: 'หายาก', epic: 'พิเศษ', legendary: 'ตำนาน' };
   function shopItems() { return (S && S.shop || []).filter(function (o) { return ART_OUT[o.id]; }).map(function (o) { return o.id === 'medal' ? Object.assign({}, o, { rarity: 'limited' }) : o; }); }
@@ -219,11 +254,34 @@
     svg = svg.replace('<g class="vm-body">', '<g class="lp-lev"><g class="vm-body">');
     return svg.replace(/<\/g><\/svg>$/, '</g></g></svg>');
   }
+  /* ท่าราชาเมื่อสวมมงกุฎ: ถือคทาทองลูกแก้วทับทิม · ผ้าคลุมกำมะหยี่แดงขอบขนเออร์มีน (หลังตัว) + ปกขนสีขาว */
+  function crPoseSvg(svg) {
+    var I = '#3a2a12', P = '#f7efdc';
+    var arm = function (d) { return '<path d="' + d + '" stroke="' + I + '" stroke-width="3" stroke-linecap="round" fill="none"/>'; };
+    var hand = function (x, y) { return '<circle cx="' + x + '" cy="' + y + '" r="4.6" fill="' + P + '" stroke="' + I + '" stroke-width="2.4"/>'; };
+    var pen = '<g transform="translate(19 90) rotate(-20)"><rect x="-4" y="-17" width="8" height="22" rx="2.5" fill="#ffd84d" stroke="' + I + '" stroke-width="2"/><rect x="-4" y="-17" width="8" height="6" rx="2" fill="#f2b81c" stroke="' + I + '" stroke-width="2"/><path d="M-3 5h6l-1.5 5h-3z" fill="#f2b81c" stroke="' + I + '" stroke-width="2" stroke-linejoin="round"/></g>';
+    var scepter = '<g class="cp-sc"><defs><linearGradient id="cpG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a5a0c"/><stop offset=".45" stop-color="#fff0b0"/><stop offset="1" stop-color="#a8700f"/></linearGradient><radialGradient id="cpO" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffd0d8"/><stop offset=".4" stop-color="#ff3456"/><stop offset="1" stop-color="#6a0418"/></radialGradient></defs>' +
+      '<rect x="99.6" y="56" width="4.8" height="58" rx="2.2" fill="url(#cpG)" stroke="' + I + '" stroke-width="1.4"/><rect x="97.6" y="62" width="8.8" height="3.6" rx="1.6" fill="#f4c542" stroke="' + I + '" stroke-width="1.1"/><rect x="97.6" y="106" width="8.8" height="3.6" rx="1.6" fill="#f4c542" stroke="' + I + '" stroke-width="1.1"/>' +
+      '<path d="M96 56q6-6 12 0" fill="#f4c542" stroke="' + I + '" stroke-width="1.2"/><circle cx="102" cy="49" r="6" fill="url(#cpO)" stroke="' + I + '" stroke-width="1.4"/><ellipse cx="100" cy="47" rx="1.8" ry="1.2" fill="#fff" opacity=".85"/><path d="M102 43v-5M99.6 40.4h4.8" stroke="#f4c542" stroke-width="1.8" stroke-linecap="round"/>' +
+      '<path class="cp-gl" d="M108 44l.6 1.8 1.8.6-1.8.6-.6 1.8-.6-1.8-1.8-.6 1.8-.6z" fill="#fff"/></g>';
+    var collar = '<g class="cp-col"><path d="M26 30q34 12 68 0l2 8q-36 12-72 0z" fill="#fbf8f2" stroke="' + I + '" stroke-width="1.6" stroke-linejoin="round"/><g fill="#2a2018"><path d="M36 36l1 3 1-3z"/><path d="M50 39l1 3 1-3z"/><path d="M68 39l1 3 1-3z"/><path d="M83 36l1 3 1-3z"/></g><path d="M30 33q30 9 60 0" stroke="#e6ddd0" stroke-width="1.2" fill="none"/></g>';
+    var i = svg.indexOf('<g class="vm-face">'), depth = 0, j = i, re = /<g[\s>]|<\/g>/g; re.lastIndex = i;
+    for (var mt; (mt = re.exec(svg));) { if (mt[0] === '</g>') { depth--; if (!depth) { j = mt.index + 4; break; } } else depth++; }
+    var end = svg.lastIndexOf('</g></svg>');
+    svg = svg.slice(0, j) + collar + arm('M31 76q-10 4-12 12') + pen + hand(19, 90) + scepter + arm('M89 76q8 2 12 8') + hand(101, 84) + svg.slice(end);
+    var cape = '<g class="cp-cape"><defs><linearGradient id="cpV" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5a0614"/><stop offset=".3" stop-color="#b3122e"/><stop offset=".55" stop-color="#d42a46"/><stop offset=".8" stop-color="#9e0f2a"/><stop offset="1" stop-color="#4a0410"/></linearGradient></defs>' +
+      '<path d="M24 32C20 60 12 92 8 120q9 6 18 0 9 6 18 0 9 6 16 0 7 6 16 0 9 6 18 0 9 6 18 0C108 92 100 60 96 32z" fill="url(#cpV)" stroke="' + I + '" stroke-width="1.8" stroke-linejoin="round"/>' +
+      '<path d="M8 120q9 6 18 0 9 6 18 0 9 6 16 0 7 6 16 0 9 6 18 0 9 6 18 0" stroke="#fbf8f2" stroke-width="5" fill="none" stroke-linecap="round"/><g fill="#2a2018"><path d="M17 122l1 3 1-3z"/><path d="M35 122l1 3 1-3z"/><path d="M52 122l1 3 1-3z"/><path d="M68 122l1 3 1-3z"/><path d="M86 122l1 3 1-3z"/><path d="M103 122l1 3 1-3z"/></g>' +
+      '<path d="M30 44c-3 24-8 50-12 72M90 44c3 24 8 50 12 72M44 40c-2 26-4 52-6 78M76 40c2 26 4 52 6 78" stroke="#6a0818" stroke-width="1.2" fill="none" opacity=".55"/></g>';
+    var k = svg.indexOf('>') + 1;
+    return svg.slice(0, k) + cape + svg.slice(k);
+  }
   function dressed(m, size) {
     var svg = mascot(m, size, ICO_GIFT), worn = wornOutfits();
     if (!worn.length || svg.indexOf('<g class="vm-face">') < 0) return svg;
     if (worn.indexOf('laurel') >= 0 && /^(wave|happy|party)$/.test(m)) svg = lrPoseSvg(svg);
-    var art = worn.map(function (id) { return id === 'medal' ? frontArt(medalTier()) + '<g class="md-worn">' + artFor(id) + '</g>' : id === 'laurel' ? '<g class="lr-worn">' + laurelArt(0, 'front') + '</g>' : artFor(id); }).join('');
+    else if (worn.indexOf('crown') >= 0 && /^(wave|happy|party)$/.test(m)) svg = crPoseSvg(svg);
+    var art = worn.map(function (id) { return id === 'medal' ? frontArt(medalTier()) + '<g class="md-worn">' + artFor(id) + '</g>' : id === 'laurel' ? '<g class="lr-worn">' + laurelArt(0, 'front') + '</g>' : id === 'crown' ? '<g class="cr-worn">' + artFor(id) + '</g>' : artFor(id); }).join('');
     var i = svg.indexOf('<g class="vm-face">'), depth = 0, j = i;
     var re = /<g[\s>]|<\/g>/g; re.lastIndex = i;
     for (var mt; (mt = re.exec(svg));) { if (mt[0] === '</g>') { depth--; if (!depth) { j = mt.index + 4; break; } } else depth++; }
@@ -414,7 +472,7 @@
       sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.setAttribute('aria-labelledby', 'vstT');
       sh.innerHTML = '<div class="vst-bg" data-shx></div><div class="vst-p">' +
         '<div class="vst-hd"><h3 id="vstT">ร้านค้าน้องเวลลัม</h3><span class="vst-pts"><i class="vof-coin"></i><b data-spts>0</b> แต้ม</span><button type="button" class="vst-x" data-shx aria-label="ปิดร้าน">✕</button></div>' +
-        '<div class="vst-stage"><div class="vst-fire" aria-hidden="true"></div><i class="vst-spot"></i><i class="vst-glow"></i><div class="vst-refl" aria-hidden="true"></div><i class="vst-ped"></i><i class="vst-sweep"></i><i class="vst-grain"></i><div class="vst-extra"></div><div class="vst-hero" aria-hidden="true"></div><div class="vst-heav" aria-hidden="true"></div><div class="vst-ms" aria-hidden="true"></div><p class="vst-say"></p></div>' +
+        '<div class="vst-stage"><div class="vst-fire" aria-hidden="true"></div><i class="vst-spot"></i><i class="vst-glow"></i><div class="vst-refl" aria-hidden="true"></div><i class="vst-ped"></i><i class="vst-sweep"></i><i class="vst-grain"></i><div class="vst-extra"></div><div class="vst-hero" aria-hidden="true"></div><div class="vst-heav" aria-hidden="true"></div><div class="vst-thr" aria-hidden="true"></div><div class="vst-ms" aria-hidden="true"></div><p class="vst-say"></p></div>' +
         '<div class="vst-tabs" role="tablist"></div><div class="vst-grid"></div><div class="vst-bar"></div></div>';
       document.body.appendChild(sh);
       sh.addEventListener('click', function (e) {
@@ -435,7 +493,7 @@
     setTimeout(function () { var x = sh.querySelector('.vst-x'); if (x) x.focus({ preventScroll: true }); }, 60);
   }
   function shopClose() {
-    if (!sh) return; tryOn = null; sel = null; pvTier = 0; heroKey = ''; heroPlayed = false; lrStop(); lrPlayed = false; sh.classList.remove('on'); document.documentElement.classList.remove('vst-open');
+    if (!sh) return; tryOn = null; sel = null; pvTier = 0; heroKey = ''; heroPlayed = false; lrStop(); lrPlayed = false; crStop(); crPlayed = false; sh.classList.remove('on'); document.documentElement.classList.remove('vst-open');
     setTimeout(function () { if (sh && !sh.classList.contains('on')) sh.hidden = true; }, 260);
     if (box && !box.hidden) render();
   }
@@ -561,6 +619,52 @@
       rf.style.cssText = 'left:' + (t.left - q.left) + 'px;top:' + (t.top - q.top) + 'px;width:' + t.width + 'px;height:' + t.height + 'px;--mx:' + (m.left - t.left).toFixed(1) + 'px;--mw:' + m.width.toFixed(1) + 'px;--mh:' + m.height.toFixed(1) + 'px;--fy:' + (m.top + m.height * 130 / 140 - t.top).toFixed(1) + 'px';
     }
     if (!was) { hv.classList.remove('in'); void hv.offsetWidth; hv.classList.add('in'); }
+  }
+  /* ฉากท้องพระโรงของมงกุฎตำนาน: ผนังลายดามัสก์ · ม่านกำมะหยี่แดง · บัลลังก์ทอง · เชิงเทียนเรืองแสง · พรมแดง · แท่นขั้นบันได · สปอตไลต์ · กลีบกุหลาบ */
+  function throneScene(on) {
+    var tv = sh.querySelector('.vst-thr'); if (!tv) return;
+    var was = sh.classList.contains('is-thr');
+    sh.classList.toggle('is-thr', on);
+    if (!on) return;
+    if (!tv.getAttribute('data-on')) {
+      tv.setAttribute('data-on', '1');
+      var tuft = ''; for (var ty = 64; ty < 190; ty += 16) for (var tx = 162; tx <= 228; tx += 16) tuft += '<circle cx="' + (tx + ((ty / 16) % 2 ? 8 : 0)) + '" cy="' + ty + '" r="1.4" fill="#4a0410"/>';
+      function curtain(dir) {
+        var x0 = dir > 0 ? 0 : 390, sx = function (v) { return dir > 0 ? v : 390 - v; };
+        return '<g class="tr-cur"><path d="M' + x0 + ' 0H' + sx(78) + 'C' + sx(74) + ' 60 ' + sx(56) + ' 120 ' + sx(40) + ' 150C' + sx(52) + ' 180 ' + sx(60) + ' 220 ' + sx(64) + ' 256H' + x0 + 'z" fill="url(#trC)"/>' +
+          '<path d="M' + sx(16) + ' 0C' + sx(18) + ' 60 ' + sx(20) + ' 110 ' + sx(22) + ' 150M' + sx(36) + ' 0C' + sx(36) + ' 60 ' + sx(32) + ' 110 ' + sx(30) + ' 150M' + sx(56) + ' 0C' + sx(54) + ' 60 ' + sx(46) + ' 110 ' + sx(38) + ' 150M' + sx(30) + ' 160C' + sx(36) + ' 200 ' + sx(42) + ' 230 ' + sx(46) + ' 256M' + sx(14) + ' 160C' + sx(16) + ' 200 ' + sx(18) + ' 230 ' + sx(20) + ' 256" stroke="#3a0410" stroke-width="2" fill="none" opacity=".6"/>' +
+          '<path d="M' + sx(4) + ' 146q' + (dir * 20) + ' 10 ' + (dir * 40) + ' 4" stroke="#f4c542" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="' + sx(44) + '" cy="150" r="3.4" fill="#f4c542" stroke="#8a5a12" stroke-width=".8"/><path d="M' + sx(44) + ' 153l-2 14h4z" fill="#e0a92c" stroke="#8a5a12" stroke-width=".6"/></g>';
+      }
+      var fr = ''; for (var fx = 0; fx < 390; fx += 6) fr += 'M' + fx + ' 30v' + (5 + (fx / 6 % 2) * 2);
+      function sconce(x) { return '<g transform="translate(' + x + ' 96)"><circle r="22" fill="url(#trL)"/><path d="M-8 10h16l-3 6h-10z" fill="#d4a43a" stroke="#7a4d08" stroke-width=".8"/><rect x="-2" y="-2" width="4" height="12" fill="#fff6e0"/><path class="tr-fl" d="M0-12c-2.6 3-3.4 5.4-3.4 7a3.4 3.4 0 0 0 6.8 0c0-1.6-.8-4-3.4-7z" fill="#ffcf5a"/></g>'; }
+      var dust = ''; for (var d = 0; d < 16; d++) { var pet = d % 2 === 0; dust += '<i class="tr-d' + (pet ? ' is-pet' : '') + '" style="left:' + (4 + Math.random() * 92).toFixed(1) + '%;--t:' + (6 + Math.random() * 6).toFixed(1) + 's;--d:-' + (Math.random() * 12).toFixed(1) + 's;--x:' + (Math.random() * 40 - 20).toFixed(0) + 'px;--s:' + (.7 + Math.random() * .7).toFixed(2) + '"></i>'; }
+      var carpet = '<path d="M172 200h46l52 56H120z" fill="url(#trK)"/><path d="M172 200L120 256M218 200l52 56" stroke="#f4c542" stroke-width="2.4"/><path d="M178 200l-46 56M212 200l46 56" stroke="#f4c542" stroke-width=".8" opacity=".6"/>';
+      tv.innerHTML = '<svg class="tr-svg" viewBox="0 0 390 256" preserveAspectRatio="xMidYMax slice"><defs>' +
+        '<linearGradient id="trW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a0610"/><stop offset=".55" stop-color="#5a1020"/><stop offset="1" stop-color="#3a0a14"/></linearGradient>' +
+        '<pattern id="trD" width="26" height="30" patternUnits="userSpaceOnUse"><path d="M13 3c3 4 7 6 7 12s-4 9-7 12c-3-3-7-6-7-12s4-8 7-12z" fill="none" stroke="#f4c542" stroke-width=".8" opacity=".14"/><circle cx="13" cy="15" r="1.4" fill="#f4c542" opacity=".14"/></pattern>' +
+        '<linearGradient id="trC" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5a0614"/><stop offset=".35" stop-color="#b3122e"/><stop offset=".6" stop-color="#7a0a1e"/><stop offset=".85" stop-color="#c41c38"/><stop offset="1" stop-color="#5a0614"/></linearGradient>' +
+        '<linearGradient id="trG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a5a0c"/><stop offset=".3" stop-color="#ffe9a0"/><stop offset=".55" stop-color="#d4a43a"/><stop offset=".8" stop-color="#fff0b0"/><stop offset="1" stop-color="#8a5a0c"/></linearGradient>' +
+        '<radialGradient id="trV" cx=".5" cy=".4" r=".7"><stop offset="0" stop-color="#d42a46"/><stop offset="1" stop-color="#6a0818"/></radialGradient>' +
+        '<radialGradient id="trL"><stop offset="0" stop-color="#ffd27a" stop-opacity=".7"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient>' +
+        '<linearGradient id="trK" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a0a1e"/><stop offset="1" stop-color="#c41c38"/></linearGradient>' +
+        '<linearGradient id="trF" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e0a10"/><stop offset="1" stop-color="#3a1a1e"/></linearGradient>' +
+        '<linearGradient id="trS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3d0" stop-opacity=".5"/><stop offset="1" stop-color="#fff3d0" stop-opacity="0"/></linearGradient>' +
+        '<linearGradient id="trP" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6a0818"/><stop offset=".5" stop-color="#c41c38"/><stop offset="1" stop-color="#6a0818"/></linearGradient></defs>' +
+        '<rect width="390" height="256" fill="url(#trW)"/><rect width="390" height="200" fill="url(#trD)"/>' +
+        '<circle cx="195" cy="110" r="120" fill="url(#trL)" opacity=".5"/>' + sconce(98) + sconce(292) +
+        '<g class="tr-throne"><path d="M134 200V72q0-34 61-46 61 12 61 46v128z" fill="url(#trG)" stroke="#5a3a06" stroke-width="1.4"/><path d="M148 196V76q0-24 47-34 47 10 47 34v120z" fill="url(#trV)" stroke="#7a4d08" stroke-width="1.2"/>' + tuft +
+          '<circle cx="134" cy="66" r="6" fill="url(#trG)" stroke="#5a3a06" stroke-width="1"/><circle cx="256" cy="66" r="6" fill="url(#trG)" stroke="#5a3a06" stroke-width="1"/>' +
+          '<g transform="translate(195 22) scale(.55)"><path d="M-20 6L-23-12-15 0-11.5-7-6 0 0-19 6 0 11.5-7 15 0 23-12 20.5 6z" fill="url(#trG)" stroke="#5a3a06" stroke-width="1.6"/><rect x="-21" y="4" width="42" height="7" rx="2" fill="url(#trG)" stroke="#5a3a06" stroke-width="1.6"/><circle cy="7.5" r="2.6" fill="#ff3456"/></g>' +
+          '<path d="M116 150h30v50h-30z" fill="url(#trG)" stroke="#5a3a06" stroke-width="1.2"/><path d="M244 150h30v50h-30z" fill="url(#trG)" stroke="#5a3a06" stroke-width="1.2"/><rect x="112" y="144" width="38" height="10" rx="5" fill="url(#trV)" stroke="#7a4d08" stroke-width="1"/><rect x="240" y="144" width="38" height="10" rx="5" fill="url(#trV)" stroke="#7a4d08" stroke-width="1"/></g>' +
+        '<rect x="0" y="200" width="390" height="56" fill="url(#trF)"/><path d="M0 200H390" stroke="#d4a43a" stroke-width="1.2"/>' + carpet +
+        '<path class="tr-spot" d="M175-10h40l60 250H115z" fill="url(#trS)"/>' +
+        curtain(1) + curtain(-1) +
+        '<path d="M-5 0H395V22C340 44 260 44 195 30 130 44 50 44-5 22z" fill="url(#trC)"/><path d="M-5 22C50 44 130 44 195 30 260 44 340 44 395 22" stroke="#f4c542" stroke-width="2" fill="none"/><path d="M-5 26C50 48 130 48 195 34 260 48 340 48 395 26" stroke="#f4c542" stroke-width="3" stroke-dasharray="1.2 2" fill="none"/>' +
+        '<g class="tr-dais"><ellipse cx="195" cy="244" rx="128" ry="15" fill="#3a0a14"/><path d="M67 236v8c0 8 57 15 128 15s128-7 128-15v-8z" fill="url(#trP)"/><ellipse cx="195" cy="236" rx="128" ry="15" fill="#a3122c" stroke="#f4c542" stroke-width="1.4"/>' +
+          '<path d="M103 220v12c0 7 41 13 92 13s92-6 92-13v-12z" fill="url(#trG)"/><ellipse cx="195" cy="220" rx="92" ry="13" fill="url(#trV)" stroke="#f4c542" stroke-width="1.8"/><ellipse cx="195" cy="220" rx="80" ry="10" fill="none" stroke="#f4c542" stroke-width=".7" stroke-dasharray="2 2"/></g></svg>' +
+        '<span class="tr-dust">' + dust + '</span><i class="tr-vig"></i><i class="tr-flash"></i>';
+    }
+    if (!was) { tv.classList.remove('in'); void tv.offsetWidth; tv.classList.add('in'); }
   }
   function fireScene(on, picked) {
     var f = sh.querySelector('.vst-fire'), x = sh.querySelector('.vst-extra');
@@ -704,6 +808,89 @@
       fly.onfinish = function () { lrEnd && lrEnd(); };
     }, 3300));
   }
+  /* พิธีสวมมงกุฎ: สปอตไลต์ส่องลง · กลีบกุหลาบโปรย · มงกุฎค่อย ๆ ลอยลงจากฟ้าแล้วสวมบนหัวน้อง (แตะเพื่อข้าม) */
+  var crPlayed = false, crT = [], crEnd = null;
+  function crStop() { crT.forEach(clearTimeout); crT = []; if (crEnd) crEnd(true); }
+  /* ราชา (ตัวละครแต่งเอง) เดินเข้ามายื่นมงกุฎ แล้วยกขึ้นสวมบนหัวน้อง จากนั้นโค้งคำนับแล้วเดินออก */
+  function kingSvg() {
+    var I = '#3a2a12', SK = '#f6d7b5';
+    var sleeve = function (d) { return '<path d="' + d + '" stroke="' + I + '" stroke-width="9" stroke-linecap="round" fill="none"/><path d="' + d + '" stroke="#c41c38" stroke-width="6" stroke-linecap="round" fill="none"/>'; };
+    var hand = function (x, y) { return '<circle cx="' + x + '" cy="' + y + '" r="4.6" fill="' + SK + '" stroke="' + I + '" stroke-width="2"/>'; };
+    var cuff = function (x, y) { return '<circle cx="' + x + '" cy="' + y + '" r="4" fill="#fbf8f2" stroke="' + I + '" stroke-width="1.2"/>'; };
+    var o = '<svg class="vci-ks" viewBox="0 0 110 160">';
+    o += '<ellipse cx="55" cy="156" rx="30" ry="3.6" fill="#000" opacity=".3"/>';
+    o += '<g class="vk-body">';
+    // เสื้อคลุม
+    o += '<path d="M33 66C26 92 20 120 16 150h78c-4-30-10-58-17-84z" fill="#b3122e" stroke="' + I + '" stroke-width="2" stroke-linejoin="round"/>';
+    o += '<path d="M16 150h78" stroke="#fbf8f2" stroke-width="7" stroke-linecap="round"/><path d="M51 66h8v84h-8z" fill="#fbf8f2" stroke="' + I + '" stroke-width="1.2"/>';
+    o += '<g fill="#2a2018"><path d="M54 80l1 3 1-3z"/><path d="M54 98l1 3 1-3z"/><path d="M54 116l1 3 1-3z"/><path d="M54 134l1 3 1-3z"/><path d="M26 149l1 3 1-3z"/><path d="M40 149l1 3 1-3z"/><path d="M70 149l1 3 1-3z"/><path d="M84 149l1 3 1-3z"/></g>';
+    o += '<path d="M30 68q25 10 50 0l2 6q-27 10-54 0z" fill="#fbf8f2" stroke="' + I + '" stroke-width="1.4"/>';
+    o += '<ellipse cx="44" cy="155" rx="7" ry="3.6" fill="' + I + '"/><ellipse cx="66" cy="155" rx="7" ry="3.6" fill="' + I + '"/>';
+    // หัว
+    o += '<circle cx="55" cy="46" r="15" fill="' + SK + '" stroke="' + I + '" stroke-width="2"/>';
+    o += '<path d="M40 48c0 14 7 24 15 26 8-2 15-12 15-26-4 4-9 5-15 5s-11-1-15-5z" fill="#fbf8f2" stroke="' + I + '" stroke-width="1.6" stroke-linejoin="round"/>';
+    o += '<path d="M47 52q4-3 8 0 4-3 8 0" stroke="' + I + '" stroke-width="1.4" fill="#fbf8f2"/>';
+    o += '<path d="M47 43q3 2 6 0M57 43q3 2 6 0" stroke="' + I + '" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M45 39q4-2 8 0M57 39q4-2 8 0" stroke="#fbf8f2" stroke-width="2" fill="none" stroke-linecap="round"/>';
+    o += '<ellipse cx="45" cy="48" rx="3" ry="1.8" fill="#f4a7a0" opacity=".8"/><ellipse cx="65" cy="48" rx="3" ry="1.8" fill="#f4a7a0" opacity=".8"/>';
+    // มงกุฎของราชา
+    o += '<path d="M44 33l-2-10 6 5 7-8 7 8 6-5-2 10z" fill="#f4c542" stroke="' + I + '" stroke-width="1.4" stroke-linejoin="round"/><rect x="43" y="31" width="24" height="4" rx="1.4" fill="#e0a92c" stroke="' + I + '" stroke-width="1.2"/><circle cx="55" cy="33" r="1.3" fill="#ff3456"/>';
+    o += '</g>';
+    // แขน 3 ท่า
+    o += '<g class="vk-a vk-hold">' + sleeve('M34 76q-12 6-18 16') + sleeve('M76 76q-22 8-46 20') + cuff(16, 92) + cuff(30, 96) + hand(12, 93) + hand(26, 98) + '</g>';
+    o += '<g class="vk-a vk-up">' + sleeve('M34 74q-14-6-22-20') + sleeve('M76 74q-24-10-46-28') + cuff(13, 55) + cuff(31, 47) + hand(10, 51) + hand(28, 44) + '</g>';
+    o += '<g class="vk-a vk-bow">' + sleeve('M34 76q-8 12-8 26') + sleeve('M76 76q8 12 8 26') + cuff(26, 102) + cuff(84, 102) + hand(26, 107) + hand(84, 107) + '</g>';
+    return o + '</svg>';
+  }
+  function playCrown() {
+    if (!sh || crPlayed || calm()) return;
+    var st = sh.querySelector('.vst-stage'), ms = sh.querySelector('.vst-ms'); if (!st || !ms || !ms.querySelector('.cr-worn')) return;
+    crStop(); crPlayed = true;
+    var pet = ''; for (var k = 0; k < 14; k++) pet += '<i style="left:' + (6 + Math.random() * 88).toFixed(1) + '%;--d:' + (1.6 + Math.random() * 1.4).toFixed(2) + 's;--t:' + (2.2 + Math.random() * 1.4).toFixed(2) + 's;--x:' + (Math.random() * 40 - 20).toFixed(0) + 'px"></i>';
+    var ov = document.createElement('div'); ov.className = 'vci'; ov.setAttribute('aria-hidden', 'true');
+    ov.innerHTML = '<i class="vci-dim"></i><i class="vci-spot"></i><span class="vci-pet">' + pet + '</span><span class="vci-k">' + kingSvg() + '</span><span class="vci-cr"><i class="vci-crg"></i><svg viewBox="' + ART_OUT.crown.vb + '">' + crownArt() + '</svg></span><small class="vli-skip">แตะเพื่อข้าม</small>';
+    st.appendChild(ov); sh.classList.add('cr-intro'); ms.classList.add('hide-crown');
+    var q = st.getBoundingClientRect(), tg = ms.querySelector('.cr-worn').getBoundingClientRect(), msv = (ms.querySelector('svg') || ms).getBoundingClientRect();
+    var kEl = ov.querySelector('.vci-k'), cr = ov.querySelector('.vci-cr');
+    var KW = 104, KH = KW * 160 / 110, feetY = msv.top - q.top + msv.height * 132 / 140, kx = Math.min(q.width - KW / 2 - 4, msv.right - q.left + KW * .28), ky = feetY - KH * 156 / 160;
+    kEl.style.cssText = 'left:' + (kx - KW / 2) + 'px;top:' + ky + 'px;width:' + KW + 'px;height:' + KH + 'px';
+    var tx = tg.left - q.left + tg.width / 2, ty = tg.top - q.top + tg.height / 2;
+    cr.style.left = tx + 'px'; cr.style.top = ty + 'px';
+    var sc = KW / 110, hx = kx - KW / 2 + 19 * sc - tx, hy = ky + 90 * sc - ty, ux = kx - KW / 2 + 6 * sc - tx, uy = ky + 36 * sc - ty, IN = 220;
+    void ov.offsetWidth; ov.classList.add('go');
+    var anims = [], ended = false;
+    crEnd = function (quiet) {
+      if (ended) return; ended = true; crEnd = null; crT.forEach(clearTimeout); crT = [];
+      anims.forEach(function (a) { try { a.cancel(); } catch (e) {} });
+      ms.classList.remove('hide-crown'); sh.classList.remove('cr-intro');
+      if (quiet) { ov.remove(); return; }
+      ov.classList.add('out'); setTimeout(function () { ov.remove(); }, 500);
+    };
+    ov.addEventListener('click', function (e) { e.stopPropagation(); if (crEnd) crEnd(); });
+    if (!cr.animate) { crEnd(); return; }
+    var sv = cr.querySelector('svg'), k0 = tg.width / Math.max(1, sv.getBoundingClientRect().width);
+    var T = 3400;
+    anims.push(kEl.animate([{ transform: 'translateX(' + IN + 'px)', opacity: 1, easing: 'ease-out' }, { transform: 'translateX(0)', opacity: 1, offset: 1470 / 4600 }, { transform: 'translateX(0)', opacity: 1, offset: .86, easing: 'ease-in' }, { transform: 'translateX(' + IN + 'px)', opacity: 0 }], { duration: 4600, fill: 'forwards' }));
+    var p = function (x, y, s, r) { return 'translate(-50%,-50%) translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) scale(' + s + ') rotate(' + (r || 0) + 'deg)'; };
+    var ca = cr.animate([
+      { transform: p(hx + IN, hy, .8), opacity: 1, easing: 'ease-out' },
+      { transform: p(hx, hy, .8), opacity: 1, offset: 1470 / T },
+      { transform: p(hx, hy, .8), opacity: 1, offset: 1700 / T, easing: 'ease-in-out' },
+      { transform: p(ux, uy, .9, -6), opacity: 1, offset: 2150 / T, easing: 'ease-in-out' },
+      { transform: p(ux * .4, -46, .95, -3), opacity: 1, offset: 2700 / T, easing: 'ease-in-out' },
+      { transform: p(0, -16, 1, 0), opacity: 1, offset: 3050 / T, easing: 'ease-in' },
+      { transform: p(0, 0, k0.toFixed(3), 0), opacity: 1 }], { duration: T, fill: 'forwards' });
+    anims.push(ca);
+    var hold = kEl.querySelector('.vk-hold'), upA = kEl.querySelector('.vk-up');
+    anims.push(hold.animate([{ opacity: 1 }, { opacity: 1, offset: 1640 / T }, { opacity: 0, offset: 1650 / T }, { opacity: 0 }], { duration: T, fill: 'forwards' }));
+    anims.push(upA.animate([{ opacity: 0 }, { opacity: 0, offset: 1640 / T }, { opacity: 1, offset: 1650 / T }, { opacity: 1 }], { duration: T, fill: 'forwards' }));
+    ca.onfinish = function () {
+      if (ended) return;
+      ms.classList.remove('hide-crown'); cr.style.opacity = '0';
+      var b = ms.querySelector('.cr-worn'); if (b) { var r = b.getBoundingClientRect(), qq = st.getBoundingClientRect(), c = document.createElement('i'); c.className = 'vst-clasp vli-crown'; c.style.left = (r.left - qq.left + r.width / 2) + 'px'; c.style.top = (r.top - qq.top + r.height / 2) + 'px'; st.appendChild(c); setTimeout(function () { c.remove(); }, 900); }
+      hop(ms); anims.slice(-2).forEach(function (a) { try { a.cancel(); } catch (e) {} }); kEl.classList.add('bow');
+      crT.push(setTimeout(function () { crEnd && crEnd(); }, 1250));
+    };
+  }
   /* การ์ดลิมิเต็ด: กว้าง 2 ช่อง กรอบโฮโลแกรม · ยังไม่ได้ = เห็นเหรียญจางพร้อมแม่กุญแจ ยิ่งใกล้ครบยิ่งสว่าง */
   function tierTag(t) {   // ระดับเป็นดาว 3 ดวง: ทอง ★☆☆ · ทองคำขาว ★★☆ · เพชร ★★★
     var st = ''; for (var k = 1; k <= 3; k++) st += '<svg class="' + (k <= t ? 'on' : '') + '" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L10 14.5l-5.1 2.8 1.1-5.7-4.3-4 5.8-.7z"/></svg>';
@@ -730,6 +917,7 @@
   /* การ์ดมาลัย (ยังไม่ได้): มาลัยเส้นทองเรืองแสง · วงรัศมีความคืบหน้ารอบมาลัย · ตัวเลขสลักกรีก */
   var LRC_TAG = '<em class="vof-r lrc-tag"><span class="lrt-in"><svg class="lrt-sp l" viewBox="0 0 26 14" aria-hidden="true"><path d="M1 11Q12 8 25 3" stroke="#d9a536" stroke-width="1" fill="none"/><g fill="#e8b94a"><ellipse cx="7" cy="7.4" rx="3.4" ry="1.5" transform="rotate(-40 7 7.4)"/><ellipse cx="9" cy="12" rx="3.4" ry="1.5" transform="rotate(20 9 12)"/><ellipse cx="14" cy="5" rx="3.4" ry="1.5" transform="rotate(-50 14 5)"/><ellipse cx="16.4" cy="9.6" rx="3.4" ry="1.5" transform="rotate(10 16.4 9.6)"/><ellipse cx="22" cy="2.6" rx="3" ry="1.4" transform="rotate(-30 22 2.6)"/></g></svg><span class="lrt-tx">LEGENDARY</span><svg class="lrt-sp r" viewBox="0 0 26 14" aria-hidden="true"><path d="M1 11Q12 8 25 3" stroke="#d9a536" stroke-width="1" fill="none"/><g fill="#e8b94a"><ellipse cx="7" cy="7.4" rx="3.4" ry="1.5" transform="rotate(-40 7 7.4)"/><ellipse cx="9" cy="12" rx="3.4" ry="1.5" transform="rotate(20 9 12)"/><ellipse cx="14" cy="5" rx="3.4" ry="1.5" transform="rotate(-50 14 5)"/><ellipse cx="16.4" cy="9.6" rx="3.4" ry="1.5" transform="rotate(10 16.4 9.6)"/><ellipse cx="22" cy="2.6" rx="3" ry="1.4" transform="rotate(-30 22 2.6)"/></g></svg></span></em>';
   var LRC_TW = [[16, 30, 0], [80, 22, 1.7], [34, 62, 3.1], [66, 66, 4.4]].map(function (q) { return '<i class="lrc-tw" style="left:' + q[0] + '%;top:' + q[1] + '%;animation-delay:' + q[2] + 's"></i>'; }).join('');
+  var CRC_TAG = '<em class="vof-r crc-tag"><span class="lrt-in"><svg class="crt-ic" viewBox="-24 -22 48 36" aria-hidden="true"><path d="M-20 6L-23-12-15 0-11.5-7-6 0 0-19 6 0 11.5-7 15 0 23-12 20.5 6z" fill="#f4c542"/><rect x="-21" y="4" width="42" height="8" rx="2" fill="#e0a92c"/></svg><span class="crt-tx">ROYAL</span><svg class="crt-ic" viewBox="-24 -22 48 36" aria-hidden="true"><path d="M-20 6L-23-12-15 0-11.5-7-6 0 0-19 6 0 11.5-7 15 0 23-12 20.5 6z" fill="#f4c542"/><rect x="-21" y="4" width="42" height="8" rx="2" fill="#e0a92c"/></svg></span></em>';
   var LRC_DUST = (function () { var o = '<span class="lrc-dust" aria-hidden="true">'; for (var i = 0; i < 9; i++) o += '<i style="left:' + (8 + i * 10.5).toFixed(1) + '%;--d:-' + (i * 0.73 % 4).toFixed(2) + 's;--t:' + (3.2 + (i % 3) * .8).toFixed(1) + 's"></i>'; return o + '</span>'; })();
   function lrCard(bd, a) {
     var p = Math.max(0, Math.min(1, bd.have / bd.n)), ang = -Math.PI / 2 + p * 2 * Math.PI, dx = 50 + 46 * Math.cos(ang), dy = 26 + 23 * Math.sin(ang);
@@ -952,13 +1140,16 @@
     var mc = MED[medalTier()] || MED[1]; sh.style.setProperty('--f1', mc.f1); sh.style.setProperty('--f2', mc.f2);
     sh.setAttribute('data-tier', medalTier());
     fireScene(fireOn, sel === 'medal');
-    heavScene(!fireOn && (sel === 'laurel' || (!sel && wornOutfits().indexOf('laurel') >= 0)));
+    var hvOn = !fireOn && (sel === 'laurel' || (!sel && wornOutfits().indexOf('laurel') >= 0));
+    heavScene(hvOn);
+    throneScene(!fireOn && !hvOn && (sel === 'crown' || (!sel && wornOutfits().indexOf('crown') >= 0)));
     var hk = sel === 'medal' ? 'm' + medalTier() : '';
     if (hk && !heroPlayed) setTimeout(function () { playHero(medalTier()); }, 30);
     else if (hk && heroKey && hk !== heroKey && !calm()) { var stg = sh.querySelector('.vst-stage'); stg.classList.remove('tier-flash'); void stg.offsetWidth; stg.classList.add('tier-flash'); }
     if (!hk) { heroT.forEach(clearTimeout); var he = sh.querySelector('.vst-hero'); he.className = 'vst-hero'; sh.querySelector('.vst-ms').classList.remove('hide-medal'); }
     heroKey = hk;
     if (sel === 'laurel' && !lrPlayed) setTimeout(playLaurel, 30); else if (sel !== 'laurel') lrStop();
+    if (sel === 'crown' && !crPlayed) setTimeout(playCrown, 30); else if (sel !== 'crown') crStop();
     var o = itemById(sel), say2 = sh.querySelector('.vst-say');
     var bb = o && o.badge && bmap[o.badge], lft = bb ? bb.n - bb.have : 0;
     sayType(say2, !o ? 'อยากให้ฉันใส่อะไรดี? แตะของด้านล่างเลย ✨'
@@ -979,8 +1170,8 @@
         : it.id === 'laurel' ? laurelLoreBtn()
         : it.badge ? '<span class="vof-act is-badge">🏅 รางวัล</span>'
         : '<span class="vof-act is-buy' + (S.points < it.price ? ' is-short' : '') + '"><i class="vof-coin"></i>' + fmt(it.price) + '</span>';
-      return '<button type="button" class="vof-b r-' + it.rarity + (it.id === 'laurel' ? ' is-laurel' : '') + (it.id === 'medal' ? ' is-fire mt-' + medalTier() : '') + (has ? ' is-own' : ' is-lock' + (it.badge ? ' is-badge-item' : '')) + (on ? ' is-on' : '') + (sel === it.id ? ' is-try' : '') + '" data-outfit="' + it.id + '" aria-pressed="' + (sel === it.id) + '" aria-label="' + h(it.name + ' · ' + (RAR[it.rarity] || '')) + '">' +
-        (it.id === 'laurel' ? LRC_TAG + LRC_DUST : '<em class="vof-r">' + (RAR[it.rarity] || '') + '</em>') + (!has && bd && it.id === 'laurel' ? lrCard(bd, a) : !has && bd ? '<span class="vof-pr" style="--bp:' + Math.round(bd.have / bd.n * 100) + '%"><svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg><i class="vof-spark"></i><b>' + bd.have + '/' + bd.n + '</b></span>' : '<svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg>') + '<small>' + h(it.name) + '</small>' + tag + (has && it.id === 'laurel' ? laurelLoreBtn() : '') + '</button>';
+      return '<button type="button" class="vof-b r-' + it.rarity + (it.id === 'laurel' ? ' is-laurel' : it.id === 'crown' ? ' is-crown' : '') + (it.id === 'medal' ? ' is-fire mt-' + medalTier() : '') + (has ? ' is-own' : ' is-lock' + (it.badge ? ' is-badge-item' : '')) + (on ? ' is-on' : '') + (sel === it.id ? ' is-try' : '') + '" data-outfit="' + it.id + '" aria-pressed="' + (sel === it.id) + '" aria-label="' + h(it.name + ' · ' + (RAR[it.rarity] || '')) + '">' +
+        (it.id === 'laurel' ? LRC_TAG + LRC_DUST : it.id === 'crown' ? CRC_TAG : '<em class="vof-r">' + (RAR[it.rarity] || '') + '</em>') + (!has && bd && it.id === 'laurel' ? lrCard(bd, a) : !has && bd ? '<span class="vof-pr" style="--bp:' + Math.round(bd.have / bd.n * 100) + '%"><svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg><i class="vof-spark"></i><b>' + bd.have + '/' + bd.n + '</b></span>' : '<svg viewBox="' + a.vb + '" aria-hidden="true">' + artFor(it.id) + '</svg>') + '<small>' + h(it.name) + '</small>' + tag + (has && it.id === 'laurel' ? laurelLoreBtn() : '') + '</button>';
     }).join('');
     var bar = sh.querySelector('.vst-bar');
     if (!o) { bar.innerHTML = '<p class="vst-hint">แตะของเพื่อลองใส่ · ' + own.length + '/' + list.length + ' ชิ้นที่มีแล้ว · ได้แต้มจากเช็กอินทุกวัน</p>'; return; }
