@@ -2254,3 +2254,42 @@ html body .vst.lr-intro .vst-say,html body .vst.cr-intro .vst-say{opacity:0!impo
 html body .vst.wz-intro .ws-ring,html body .vst.wz-intro .dm-zz{opacity:0!important;transition:opacity .3s}
 html body .vst .vnz.up .vnz-who{opacity:0;transition:opacity .15s}
 html body .vst:not(.is-fire) .vst-hero{display:none!important}
+
+/* ===== ลื่นขึ้น (daily-ui.css v87): หยุดอนิเมชันที่มองไม่เห็น — หน้าตาเหมือนเดิมทุกอย่าง ===== */
+/* หน้าเว็บด้านหลังร้าน (ถูกร้านบังทั้งหมด) */
+html.vst-open body > *:not(.vst),html.vst-open body > *:not(.vst) *,html.vst-open body > *:not(.vst) *::before,html.vst-open body > *:not(.vst) *::after{animation-play-state:paused!important}
+/* ฉากที่ไม่ได้ใช้อยู่ (ซ่อนอยู่) */
+html body .vst:not(.is-heav) .vst-heav *,html body .vst:not(.is-thr) .vst-thr *,html body .vst:not(.is-wzs) .vst-wzs *,html body .vst:not(.is-drm) .vst-drm *,html body .vst:not(.is-heav) .vst-heav *::before,html body .vst:not(.is-thr) .vst-thr *::before{animation-play-state:paused!important}
+/* การ์ด/เวทีที่เลื่อนพ้นจอ */
+html body .vst .is-off,html body .vst .is-off *,html body .vst .is-off::before,html body .vst .is-off::after,html body .vst .is-off *::before,html body .vst .is-off *::after{animation-play-state:paused!important}
+/* ปิดร้านแล้ว */
+html body .vst[hidden] *{animation:none!important}
+/* หน้าเว็บด้านหลังถูกร้านบังอยู่: ไม่ต้องวาด (ลดเลเยอร์ที่เครื่องต้องประมวลผลทุกเฟรม) */
+html.vst-full body > *:not(.vst){visibility:hidden!important}
+/* แสงวาบการ์ดพิเศษ: เดิมขยับด้วย left (เครื่องต้องจัดหน้าใหม่ทุกเฟรม) → ใช้ transform แทน ภาพเหมือนเดิม */
+html body .vst .vof-b.r-epic:not(.is-laurel):not(.is-crown)::before{animation-name:vEpicShine2;will-change:transform}
+@keyframes vEpicShine2{0%,72%{transform:skewX(-18deg) translateX(0)}100%{transform:skewX(-18deg) translateX(475%)}}
+/* จุดแดง "มีตอนใหม่" + ดวงไฟถัดไป: เรืองแสงด้วย opacity ของเลเยอร์แยก แทนการเปลี่ยนเงาทุกเฟรม */
+.lore-new{animation-name:loreNew2}
+@keyframes loreNew2{50%{transform:scale(1.3)}}
+.lore-new::after{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:0 0 14px #ff4d5e;opacity:0;animation:loreNewG 1.2s ease-in-out infinite}
+@keyframes loreNewG{50%{opacity:1}}
+html body .vst .vof-lim .lim-lt i.nx{animation:none;box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--tg) 75%,transparent)}
+html body .vst .vof-lim .lim-lt i.nx::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1.5px var(--tg),0 0 10px var(--tg);opacity:0;animation:ltNx2 1.6s ease-in-out infinite}
+@keyframes ltNx2{50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.lore-new::after,html body .vst .vof-lim .lim-lt i.nx::after{animation:none}}
+html body .vst .lb-svg:not(.lb-anim){will-change:transform}
+/* ชั้นนิ่งของฉาก: เก็บเป็นภาพบนการ์ดจอ ไม่ต้องวาดใหม่ทุกเฟรม */
+html body .vst .vst-static{will-change:transform}
+html body .vst .vst-anim{pointer-events:none}
+/* (4) แสงเรืองแบบวาดไว้ในภาพ แทนเอฟเฟกต์เงาที่ต้องคำนวณใหม่ทุกเฟรม */
+html body .vst .lb-svg rect.gl{filter:none!important;stroke:var(--lgl);stroke-width:2.6;stroke-opacity:.38;paint-order:stroke}
+html body .vst .lb-win{animation:none!important}
+html body .vst .lb-wb{position:absolute;z-index:0;border-radius:50%;pointer-events:none;background:var(--lw);opacity:0;animation:lbWb 5s ease-in-out infinite;will-change:opacity}
+@keyframes lbWb{0%,100%{opacity:.16}50%{opacity:0}}
+html body .vst .vst-pd3.vst-anim{filter:none!important}
+html body .vst .vst-pd3.vst-anim .pd-fl{filter:none!important;stroke-width:2.6}
+@media (prefers-reduced-motion:reduce){html body .vst .lb-wb{animation:none}}
+/* (6) โหมดเครื่องช้า: ละออง/กลีบดอกไม้/ดาวกะพริบ เหลือครึ่งหนึ่ง */
+html body .vst.is-lite :is(.vst-bk,.hv-d,.hv-bk,.ws-d,.tr-d):nth-child(2n){display:none!important}
+html body .vst.is-lite :is(.ws-st,.dm-st,.lb-svg rect.gl):nth-child(2n){animation:none!important}
