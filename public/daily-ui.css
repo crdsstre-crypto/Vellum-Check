@@ -1885,7 +1885,7 @@ html body .vst .vwz.pop .vwz-star{animation:vwzStarPop .5s ease-in forwards}
 html body .vst .vwz-card{position:absolute;left:50%;bottom:14px;z-index:5;width:min(280px,82%);display:flex;flex-direction:column;align-items:center;gap:4px;padding:18px 16px 14px;border-radius:18px;cursor:default;
   background:radial-gradient(80% 60% at 50% 20%,rgba(170,120,255,.35),transparent 70%),linear-gradient(165deg,#2c1d4f,#160f2c);border:1.5px solid rgba(210,185,255,.6);
   box-shadow:0 0 0 1px rgba(255,255,255,.06) inset,0 18px 40px -10px rgba(0,0,0,.8),0 0 30px rgba(150,100,255,.4);opacity:0;transform:translate(-50%,24px) scale(.94);pointer-events:none;transition:opacity .35s,transform .45s cubic-bezier(.2,.9,.3,1.25)}
-html body .vst .vwz.card .vwz-card{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+html body .vst .vwz.is-card .vwz-card{opacity:1;transform:translate(-50%,0);pointer-events:auto}
 html body .vst .vwz-rb{position:absolute;top:0;left:0;padding:4px 10px;border-radius:17px 0 10px 0;background:linear-gradient(135deg,#9b6bff,#6b3fd6);color:#fff;font:700 .6rem/1 'Prompt',sans-serif;font-style:normal;letter-spacing:.06em}
 html body .vst .vwz-card svg{width:78px;height:48px;overflow:visible;filter:drop-shadow(0 0 10px rgba(190,150,255,.7))}
 html body .vst .vwz-card b{font:700 1.05rem/1.3 'Prompt',sans-serif;color:#fff}
@@ -1893,7 +1893,7 @@ html body .vst .vwz-q{font:500 .78rem/1.4 'Prompt',sans-serif;color:#e3d3ff}
 html body .vst .vwz-go{margin-top:6px;min-height:40px;padding:0 22px;border:0;border-radius:12px;background:linear-gradient(135deg,#b98cff,#7b4be6);color:#fff;font:700 .85rem/1 'Prompt',sans-serif;cursor:pointer;box-shadow:0 8px 18px -8px rgba(140,90,255,.9)}
 html body .vst .vwz-pr{font:500 .66rem/1 'Prompt',sans-serif;color:#b9a8d8}
 html body .vst .vwz .vli-skip{position:absolute;left:10px;bottom:8px;font:500 .66rem 'Prompt',sans-serif;color:rgba(235,225,255,.7);transition:opacity .3s}
-html body .vst .vwz.card .vli-skip{opacity:0}
+html body .vst .vwz.is-card .vli-skip{opacity:0}
 @media (prefers-reduced-motion:reduce){html body .vst .vwz *{animation:none !important}html body .vst .vwz-card{transition:opacity .2s}}
 /* การ์ดแนะนำแบบกระชับ: ไม่บังน้อง */
 html body .vst .vwz-card{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"i n" "i q" "b b";column-gap:12px;row-gap:2px;align-items:center;width:min(300px,88%);padding:16px 14px 12px;bottom:10px;text-align:left}
@@ -1902,7 +1902,7 @@ html body .vst .vwz-card b{grid-area:n;align-self:end}
 html body .vst .vwz-q{grid-area:q;align-self:start}
 html body .vst .vwz-go{grid-area:b;justify-self:stretch;margin-top:8px}
 html body .vst .vwz-pr{position:absolute;right:12px;top:8px}
-html body .vst .vwz.card .vwz-dim{opacity:.5}
+html body .vst .vwz.is-card .vwz-dim{opacity:.5}
 /* ===== ตำนานหมวกนักเวท ===== */
 html body .vst .vof-b .vof-lore-w{position:absolute;top:6px;right:6px;z-index:3;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;font-size:13px;line-height:1;
   background:rgba(30,18,60,.75);border:1px solid rgba(205,180,255,.55);box-shadow:0 2px 6px rgba(0,0,0,.4);cursor:pointer}
@@ -1958,3 +1958,94 @@ html body .vst.is-wzs .vst-say::before{content:"✦";position:absolute;right:-7p
 @keyframes wsSay{0%,100%{opacity:.55;transform:scale(.8) rotate(0)}50%{opacity:1;transform:scale(1.1) rotate(20deg)}}
 @media (prefers-reduced-motion:reduce){html body .vst.is-wzs .vst-say::before{animation:none}}
 @media (prefers-reduced-motion:reduce){html body .vst .vst-wzs *{animation:none!important}html body .vst .ws-d,html body .vst .ws-shoot{display:none}}
+
+/* ===== หมวกนอนดาว: ปอมปอมแกว่ง · หนังตาปรือ · ฉากท้องฟ้าแห่งความฝัน · กรอบคำพูดไม่ชิดขอบ (daily-ui.css v73) ===== */
+/* (ข) กรอบคำพูดทั่วไป: ไม่ล้นขอบซ้าย + แบ่งบรรทัดสมดุล · ส่วนที่ยังพิมพ์ไม่ถึงจองที่ไว้ก่อน (กรอบไม่กระตุก) */
+html body .vst .vst-say{text-wrap:balance}
+html body .vst:not(.is-fire):not(.is-heav):not(.is-wzs) .vst-say{max-width:min(46%,calc(50% - 74px))}
+html body .vst .vst-say .vst-rest{visibility:hidden}
+html body .vst .vst-say .vst-cur{margin-right:-4px}
+/* (4) ปลายหมวก + ปอมปอมแกว่งเบาๆ */
+.cp-tl{transform-box:fill-box;transform-origin:0 0;animation:cpSway 3.6s ease-in-out infinite}
+@keyframes cpSway{0%,100%{transform:rotate(3deg)}50%{transform:rotate(-5deg)}}
+/* (3) หนังตาปรือ — เฉพาะในฉากความฝัน */
+.cp-lid{display:none}
+html body .vst.is-drm .vst-ms .cp-lid{display:block;opacity:0;animation:cpLid 7s ease-in-out 1.5s infinite}
+@keyframes cpLid{0%,55%,100%{opacity:0}62%,86%{opacity:1}}
+/* (2) ฉาก */
+html body .vst .vst-drm{position:absolute;inset:0;z-index:1;opacity:0;visibility:hidden;pointer-events:none;overflow:hidden;transition:opacity .8s ease,visibility 0s .8s}
+html body .vst.is-drm .vst-drm{opacity:1;visibility:visible;transition:opacity .8s ease}
+html body .vst .dm-svg{position:absolute;inset:0;width:100%!important;height:100%!important;filter:none!important}
+html body .vst .dm-st{fill:#fff8e8}
+html body .vst .dm-st.tw{animation:wsTw 3.4s ease-in-out var(--d) infinite}
+html body .vst .dm-moon{filter:drop-shadow(0 0 9px rgba(255,236,200,.85));animation:dmBob 6s ease-in-out infinite}
+@keyframes dmBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+html body .vst .dm-hg{animation:dmSwing 4.2s ease-in-out var(--d) infinite}
+html body .vst .dm-hg path:last-child{filter:drop-shadow(0 0 4px rgba(255,220,120,.9))}
+@keyframes dmSwing{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+html body .vst .dm-cl{animation:dmDrift 14s ease-in-out infinite alternate}
+html body .vst .dm-cl.b{animation-duration:18s;animation-direction:alternate-reverse}
+html body .vst .dm-cl.c{animation-duration:22s}
+@keyframes dmDrift{to{translate:14px 0}}
+html body .vst .dm-vig{position:absolute;inset:0;background:radial-gradient(85% 75% at 50% 45%,transparent 58%,rgba(20,14,60,.4) 100%)}
+/* Zzz ลอยขึ้นข้างหมวก */
+html body .vst .dm-zz{position:absolute;left:calc(50% + 66px);bottom:200px;width:40px;height:60px}
+html body .vst .dm-z{position:absolute;left:0;bottom:0;font:700 calc(15px * var(--s))/1 'Prompt',sans-serif;font-style:normal;color:#fff;text-shadow:0 0 6px rgba(190,170,255,.95),0 2px 0 rgba(80,60,160,.5);opacity:0;animation:dmZ 4.2s ease-out var(--d) infinite}
+@keyframes dmZ{0%{opacity:0;transform:translate(0,0) rotate(-10deg) scale(.6)}15%{opacity:1}70%{opacity:.9}100%{opacity:0;transform:translate(26px,-52px) rotate(12deg) scale(1.15)}}
+/* (5) ก้อนเมฆแทนแท่น */
+html body .vst.is-drm .vst-ped{opacity:0;transition:opacity .6s}
+html body .vst .dm-pd{position:absolute;left:50%;bottom:-12px;width:220px;height:64px;margin-left:-110px;overflow:visible;filter:drop-shadow(0 0 10px rgba(255,255,255,.45)) drop-shadow(0 6px 14px rgba(60,30,120,.35));animation:dmFloat 5s ease-in-out infinite}
+@keyframes dmFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+html body .vst.is-drm .vst-ms{filter:drop-shadow(0 0 8px rgba(255,230,250,.45))}
+html body .vst.is-drm .vst-say{box-shadow:inset 0 0 0 1.5px #b7a6ec,0 8px 20px rgba(30,20,80,.45)}
+@media (prefers-reduced-motion:reduce){.cp-tl,html body .vst .vst-drm *{animation:none!important}html body .vst .dm-zz{display:none}html body .vst.is-drm .vst-ms .cp-lid{display:none}}
+
+/* ===== ฉากเปิดตัวหมวกนอนดาว (playCap): นอนบนเตียง → ตื่น → กระโดดลง → หมวกพลิ้วลงมาสวม ===== */
+html body .vst .vst-ms.cp-hide{opacity:0!important;transition:none}
+html body .vst .vst-ms{transition:opacity .25s}
+html body .vst .vst-ms.cp-nohat .cp-worn{opacity:0}
+html body .vst .vnz .vwz-dim{background:radial-gradient(60% 55% at 50% 60%,rgba(120,100,200,.1),rgba(20,16,60,.5))}
+html body .vst .vnz-bed{position:absolute;z-index:2;overflow:visible;opacity:0;transform-origin:50% 100%;filter:drop-shadow(0 8px 14px rgba(20,10,60,.45))}
+html body .vst .vnz.go .vnz-bed{animation:vnzBedIn .6s cubic-bezier(.2,.8,.3,1) forwards}
+html body .vst .vnz.up .vnz-bed{animation:vnzBedOut .5s ease-in forwards}
+@keyframes vnzBedIn{from{opacity:0;transform:translateY(14px) scale(.9)}to{opacity:1;transform:none}}
+@keyframes vnzBedOut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(24px) scale(.94)}}
+html body .vst .vnz-bl{transform-box:fill-box;transform-origin:50% 100%;animation:vnzBreath 1.6s ease-in-out infinite}
+@keyframes vnzBreath{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.05)}}
+html body .vst .vnz-zz text{font:700 12px 'Prompt',sans-serif;fill:#fff;opacity:0;paint-order:stroke;stroke:rgba(90,70,180,.55);stroke-width:2.4px;animation:vnzZ 1.8s ease-out infinite}
+html body .vst .vnz-zz text:nth-child(2){font-size:14px;animation-delay:.5s}
+html body .vst .vnz-zz text:nth-child(3){font-size:17px;animation-delay:1s}
+@keyframes vnzZ{0%{opacity:0;transform:translateY(6px)}30%{opacity:1}100%{opacity:0;transform:translateY(-10px)}}
+html body .vst .vnz.wake .vnz-zz{display:none}
+html body .vst .vnz-ex{font:800 26px 'Prompt',sans-serif;fill:#ffd84d;stroke:#3a2a12;stroke-width:2px;paint-order:stroke;opacity:0;transform-box:fill-box;transform-origin:50% 100%}
+html body .vst .vnz.wake .vnz-ex{animation:vnzEx .6s cubic-bezier(.3,1.6,.5,1) forwards}
+@keyframes vnzEx{0%{opacity:0;transform:scale(.2)}60%{opacity:1;transform:scale(1.25)}100%{opacity:1;transform:scale(1)}}
+html body .vst .vnz.wake .vnz-who{animation:vnzJolt .35s ease 2}
+@keyframes vnzJolt{0%,100%{transform:none}30%{transform:translate(1px,-3px)}60%{transform:translate(-1px,1px)}}
+html body .vst .vnz-hat{width:110px;height:68px}
+html body .vst .vnz-hat svg{filter:drop-shadow(0 0 10px rgba(200,210,255,.8))}
+html body .vst .vnz .vwz-burst{color:#fff3c4}
+html body .vst .vnz .vwz-rb{background:linear-gradient(135deg,#7d8cff,#4f5fe0)}
+html body .vst .vnz .vwz-card svg{filter:drop-shadow(0 0 10px rgba(170,180,255,.7))}
+html body .vst .vnz .vwz-q{color:#d8deff}
+html body .vst .vnz .vwz-go{background:linear-gradient(135deg,#8c9bff,#4f5fe0)}
+@media (prefers-reduced-motion:reduce){html body .vst .vnz *{animation:none!important}}
+html body .vst .vnz .vwz-card{background:radial-gradient(80% 60% at 50% 20%,rgba(130,150,255,.35),transparent 70%),linear-gradient(165deg,#1f2554,#11132e);border-color:rgba(190,200,255,.6);box-shadow:0 0 0 1px rgba(255,255,255,.06) inset,0 18px 40px -10px rgba(0,0,0,.8),0 0 30px rgba(110,130,255,.4)}
+
+/* ===== ตำนานหมวกนอนดาว (.vlr.is-cap) ธีมน้ำเงินกลางคืน ===== */
+html body .vlr.is-cap .vlr-bg{background:radial-gradient(70% 60% at 50% 40%,rgba(50,70,170,.55),rgba(8,5,20,.9)) !important}
+html body .vlr.is-cap .vlr-k{color:#4f62d8 !important}
+html body .vlr.is-cap .vlr-sh h3{background:linear-gradient(180deg,#6f82f4,#2c3a9e) !important;-webkit-background-clip:text !important;background-clip:text !important;color:transparent !important}
+html body .vlr.is-cap .vlr-tabs button{color:#4f62d8 !important;border-color:rgba(79,98,216,.35) !important;background:rgba(242,245,255,.8) !important}
+html body .vlr.is-cap .vlr-tabs button.on{color:#fff !important;background:radial-gradient(circle at 35% 30%,#98a8ff,#3c4cc4) !important;border-color:#dce2ff !important}
+html body .vlr.is-cap .vlr-tabs button.lk{color:#b8c0de !important;background:#e6e9f6 !important}
+html body .vlr.is-cap .vlr-body h4{color:#3c4cc4 !important}
+html body .vlr.is-cap .vlr-body p,html body .vlr.is-cap .vlr-body p.lp{color:#232846 !important}
+html body .vlr.is-cap .vlr-body .ln{color:#2c3a9e !important}
+html body .vlr.is-cap .vlr-body mark.lh{background-image:linear-gradient(transparent 52%,rgba(140,160,255,.45) 52%,rgba(165,180,255,.5) 92%,transparent 92%) !important}
+html body .vlr.is-cap .vlr-body blockquote.lq{color:#2c3a9e !important;border-color:rgba(79,98,216,.35) !important}
+html body .vlr.is-cap .vlr-body blockquote.lq .lq-o,html body .vlr.is-cap .vlr-body blockquote.lq .lq-c{color:#7b8ff0 !important}
+html body .vlr.is-cap .vlr-lock{background:rgba(110,130,240,.1) !important;border-color:rgba(79,98,216,.45) !important;color:#2c3a9e !important}
+html body .vlr.is-cap .vlr-art-l{filter:drop-shadow(0 4px 10px rgba(60,80,180,.35)) !important}
+html body .vlr.is-cap .vlr-art-l{margin-top:18px !important}html body .vlr.is-cap .vlr-art-l svg{overflow:visible !important}
+html body .vst .vof-b .vof-lore-w.is-cap:hover{background:rgba(50,70,160,.85)}
