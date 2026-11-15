@@ -937,8 +937,9 @@
     var fly = null, ended = false;
     lrEnd = function (quiet) {
       if (ended) return; ended = true; lrEnd = null; lrT.forEach(clearTimeout); lrT = [];
-      if (fly) try { fly.cancel(); } catch (e) {}
+      lr.style.visibility = 'hidden'; if (fly) try { fly.cancel(); } catch (e) {}
       ms.classList.remove('hide-laurel'); sh.classList.remove('lr-intro');
+      var sy = sh.querySelector('.vst-say'); if (sy && !quiet) { sy.classList.remove('sv-in'); void sy.offsetWidth; sy.classList.add('sv-in'); }
       if (quiet) { ov.remove(); return; }
       ov.classList.add('out'); setTimeout(function () { ov.remove(); }, 500);
       var b = ms.querySelector('.lr-worn'); if (b) { var r = b.getBoundingClientRect(), qq = st.getBoundingClientRect(), c = document.createElement('i'); c.className = 'vst-clasp vli-crown'; c.style.left = (r.left - qq.left + r.width / 2) + 'px'; c.style.top = (r.top - qq.top + r.height / 2) + 'px'; st.appendChild(c); setTimeout(function () { c.remove(); }, 900); }
@@ -1018,12 +1019,12 @@
     anims.push(kEl.animate([{ transform: 'translateX(' + IN + 'px)', opacity: 1, easing: 'ease-out' }, { transform: 'translateX(0)', opacity: 1, offset: 1470 / 4600 }, { transform: 'translateX(0)', opacity: 1, offset: .86, easing: 'ease-in' }, { transform: 'translateX(' + IN + 'px)', opacity: 0 }], { duration: 4600, fill: 'forwards' }));
     var p = function (x, y, s, r) { return 'translate(-50%,-50%) translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) scale(' + s + ') rotate(' + (r || 0) + 'deg)'; };
     var ca = cr.animate([
-      { transform: p(hx + IN, hy, .8), opacity: 1, easing: 'ease-out' },
-      { transform: p(hx, hy, .8), opacity: 1, offset: 1470 / T },
-      { transform: p(hx, hy, .8), opacity: 1, offset: 1700 / T, easing: 'ease-in-out' },
-      { transform: p(ux, uy, .9, -6), opacity: 1, offset: 2150 / T, easing: 'ease-in-out' },
-      { transform: p(ux * .4, -46, .95, -3), opacity: 1, offset: 2700 / T, easing: 'ease-in-out' },
-      { transform: p(0, -16, 1, 0), opacity: 1, offset: 3050 / T, easing: 'ease-in' },
+      { transform: p(hx + IN, hy, (k0 * .6).toFixed(3)), opacity: 1, easing: 'ease-out' },
+      { transform: p(hx, hy, (k0 * .6).toFixed(3)), opacity: 1, offset: 1470 / T },
+      { transform: p(hx, hy, (k0 * .6).toFixed(3)), opacity: 1, offset: 1700 / T, easing: 'ease-in-out' },
+      { transform: p(ux, uy, (k0 * .75).toFixed(3), -6), opacity: 1, offset: 2150 / T, easing: 'ease-in-out' },
+      { transform: p(ux * .4, -46, (k0 * .9).toFixed(3), -3), opacity: 1, offset: 2700 / T, easing: 'ease-in-out' },
+      { transform: p(0, -16, (k0 * .98).toFixed(3), 0), opacity: 1, offset: 3050 / T, easing: 'ease-in' },
       { transform: p(0, 0, k0.toFixed(3), 0), opacity: 1 }], { duration: T, fill: 'forwards' });
     anims.push(ca);
     var hold = kEl.querySelector('.vk-hold'), upA = kEl.querySelector('.vk-up');
@@ -1587,7 +1588,9 @@
     else if (hk && heroKey && hk !== heroKey && !calm()) { var stg = sh.querySelector('.vst-stage'); stg.classList.remove('tier-flash'); void stg.offsetWidth; stg.classList.add('tier-flash'); }
     if (!hk) { heroT.forEach(clearTimeout); var he = sh.querySelector('.vst-hero'); he.className = 'vst-hero'; sh.querySelector('.vst-ms').classList.remove('hide-medal'); }
     heroKey = hk;
+    if (sel === 'laurel' && !lrPlayed && !calm()) sh.classList.add('lr-intro');
     if (sel === 'laurel' && !lrPlayed) setTimeout(playLaurel, 30); else if (sel !== 'laurel') lrStop();
+    if (sel === 'crown' && !crPlayed && !calm()) sh.classList.add('cr-intro');
     if (sel === 'crown' && !crPlayed) setTimeout(playCrown, 30); else if (sel !== 'crown') crStop();
     if (sel === 'wizard' && !wzPlayed) setTimeout(playWizard, 30); else if (sel !== 'wizard') wzStop();
     if (sel === 'cap' && !cpPlayed) setTimeout(playCap, 30); else if (sel !== 'cap') cpStop();
