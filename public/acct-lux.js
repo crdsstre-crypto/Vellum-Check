@@ -78,3 +78,61 @@
     var card = document.getElementById('authCard'); if (card && window.MutationObserver) new MutationObserver(function () { if (!document.querySelector('#authCard .alx-spine')) dressCard(); dressHead(); dressGroups(); }).observe(card, { childList: true, subtree: true }); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
+/* คลังเอกสาร: แสดงจำนวนฉบับจากตัวนับ #stAll (acct-lux.js v10) */
+(function () {
+  function sync() { var n = document.getElementById('stAll'), h = document.querySelector('#historyPanel .vault-head'); if (!n || !h) return; var v = parseInt(n.textContent, 10), b = h.querySelector('.vault-txt b'); [h, b].forEach(function (e) { if (!e) return; if (v > 0) e.setAttribute('data-n', v); else e.removeAttribute('data-n'); }); }
+  function boot() { var n = document.getElementById('stAll'); if (!n || !window.MutationObserver) return; sync(); new MutationObserver(sync).observe(n, { childList: true, characterData: true, subtree: true }); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+/* คลังเอกสาร = ตู้บัตรรายการ: สร้างลิ้นชักเล็ก ลิ้นชักหลัก แฟ้มที่โผล่ (แท็บ = ประเภทสัญญาที่มีจริง) มือจับ (acct-lux.js v12: แฟ้มเป็น SVG) */
+(function () {
+  var st = document.createElement('style'); st.textContent = '.alx-cab-top,.alx-cab-main>.alx-grv,.alx-files,.alx-pull{display:none}'; document.head.appendChild(st);
+  function types() {
+    var out = [], sel = document.getElementById('histType');
+    if (sel) [].forEach.call(sel.options, function (o) { if (o.value !== 'all' && out.length < 3) out.push(o.textContent.replace(/^สัญญา/, '').replace(/เงิน$/, '').trim()); });
+    if (!out.length) [].forEach.call(document.querySelectorAll('#histList .hr-chip:not(.is-pin)'), function (c) { var x = c.textContent.replace(/^สัญญา/, '').replace(/เงิน$/, '').trim(); if (x && out.indexOf(x) < 0 && out.length < 3) out.push(x); });
+    return out;
+  }
+  var FC = [['#6a3a3e', '#4a262c'], ['#3c5444', '#2a3c30'], ['#3e4c62', '#2c3648']];
+  function esc2(x) { return String(x).replace(/[<>"&]/g, ''); }
+  function folders(t) {
+    var n = Math.max(t.length, 3), W = 300, H = 60, TW = 80, TH = 15, s = '';
+    for (var i = 0; i < n; i++) {
+      var ins = (n - 1 - i) * 9, x0 = ins, x1 = W - ins, top = 3 + i * 10, body = top + TH, c = FC[i % 3];
+      var span = x1 - x0 - 28 - TW, tx = x0 + 14 + (n > 1 ? span * i / (n - 1) : 0);
+      var back = 'M' + x0 + ' ' + (body + 4) + 'Q' + x0 + ' ' + body + ' ' + (x0 + 4) + ' ' + body + 'H' + (tx - 3) + 'Q' + tx + ' ' + body + ' ' + (tx + 2) + ' ' + (body - 4) + 'L' + (tx + 5) + ' ' + (top + 3) + 'Q' + (tx + 6) + ' ' + top + ' ' + (tx + 10) + ' ' + top + 'H' + (tx + TW - 10) + 'Q' + (tx + TW - 6) + ' ' + top + ' ' + (tx + TW - 5) + ' ' + (top + 3) + 'L' + (tx + TW - 2) + ' ' + (body - 4) + 'Q' + (tx + TW) + ' ' + body + ' ' + (tx + TW + 3) + ' ' + body + 'H' + (x1 - 4) + 'Q' + x1 + ' ' + body + ' ' + x1 + ' ' + (body + 4) + 'V' + H + 'H' + x0 + 'Z';
+      var p1y = body + 1 + (i % 2), p2y = body + 3 - (i % 2);
+      var lines = ''; for (var k = 0; k < 3; k++) lines += '<path d="M' + (x0 + 22) + ' ' + (p1y + 3 + k * 3) + 'H' + (x1 - 40 - k * 18) + '" stroke="#a08458" stroke-width=".8" opacity=".55"/>';
+      var lb = t[i] ? '<rect x="' + (tx + 9) + '" y="' + (top + 3) + '" width="' + (TW - 18) + '" height="' + (TH - 5) + '" rx="1.5" fill="#ece0c2" stroke="#8a7246" stroke-width=".8"/><text x="' + (tx + TW / 2) + '" y="' + (top + 10.6) + '" text-anchor="middle" font-family="Prompt,sans-serif" font-size="8.4" font-weight="700" fill="#4a3214">' + esc2(t[i]) + '</text>' : '<rect x="' + (tx + 9) + '" y="' + (top + 3) + '" width="' + (TW - 18) + '" height="' + (TH - 5) + '" rx="1.5" fill="#ece0c2" stroke="#8a7246" stroke-width=".8" opacity=".85"/>';
+      s += '<g class="fd" style="animation-delay:' + (0.62 + i * 0.13).toFixed(2) + 's">' +
+        '<path d="' + back + '" fill="url(#fdg' + (i % 3) + ')" stroke="#140a04" stroke-width=".9"/>' +
+        '<path d="M' + (tx + 10) + ' ' + (top + 1) + 'H' + (tx + TW - 10) + '" stroke="rgba(255,225,180,.25)" stroke-width="1"/>' + lb +
+        '<rect x="' + (x0 + 16) + '" y="' + p1y + '" width="' + (x1 - x0 - 40) + '" height="' + (H - p1y) + '" rx="1" fill="#e6d8b6" stroke="#8a6a3a" stroke-width=".6" transform="rotate(' + (i % 2 ? .6 : -.5) + ' ' + (x0 + 12) + ' ' + p1y + ')"/>' + lines +
+        '<rect x="' + (x0 + 26) + '" y="' + p2y + '" width="' + (x1 - x0 - 60) + '" height="' + (H - p2y) + '" rx="1" fill="#efe4c8" stroke="#8a6a3a" stroke-width=".5"/>' +
+        '<path d="M' + x0 + ' ' + (body + 9) + 'H' + x1 + 'V' + H + 'H' + x0 + 'Z" fill="url(#fdf' + (i % 3) + ')" stroke="#140a04" stroke-width=".9"/>' +
+        '<path d="M' + (x0 + 1) + ' ' + (body + 9.8) + 'H' + (x1 - 1) + '" stroke="rgba(255,225,180,.22)" stroke-width="1"/></g>';
+    }
+    var defs = FC.map(function (c, k) { return '<linearGradient id="fdg' + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + c[0] + '"/><stop offset="1" stop-color="' + c[1] + '"/></linearGradient><linearGradient id="fdf' + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + c[0] + '" stop-opacity=".98"/><stop offset="1" stop-color="' + c[1] + '"/></linearGradient>'; }).join('');
+    return '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><defs>' + defs + '</defs>' + s + '</svg>';
+  }
+  function tabs() {
+    var f = document.querySelector('#historyPanel .alx-files'); if (!f) return;
+    var t = types(), key = 'v3|' + t.join('|'); if (f.getAttribute('data-k') === key) return; f.setAttribute('data-k', key);
+    f.innerHTML = folders(t);
+  }
+  function build() {
+    var h = document.querySelector('#historyPanel .vault-head'); if (!h || h.querySelector('.alx-cab-main')) return;
+    var top = document.createElement('div'); top.className = 'alx-cab-top'; top.setAttribute('aria-hidden', 'true'); top.innerHTML = '<i></i><i></i><i></i>';
+    var main = document.createElement('div'); main.className = 'alx-cab-main';
+    main.innerHTML = '<i class="alx-grv" aria-hidden="true"></i><div class="alx-files" aria-hidden="true"></div>';
+    var txt = h.querySelector('.vault-txt'); if (txt) main.appendChild(txt);
+    var pull = document.createElement('i'); pull.className = 'alx-pull'; pull.setAttribute('aria-hidden', 'true'); pull.innerHTML = '<i></i><i></i>'; main.appendChild(pull);
+    h.appendChild(top); h.appendChild(main); tabs();
+  }
+  function boot() {
+    build();
+    var sel = document.getElementById('histType'), list = document.getElementById('histList');
+    if (window.MutationObserver) { if (sel) new MutationObserver(tabs).observe(sel, { childList: true }); if (list) new MutationObserver(tabs).observe(list, { childList: true }); }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
