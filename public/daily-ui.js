@@ -534,20 +534,37 @@
 
   /* ---------- หน้าต่างเช็กอิน (สไตล์หน้ารับรางวัลเกม) ---------- */
   // ภาพรางวัลแต่ละวัน: เหรียญเพิ่มขึ้นตามวัน · วันที่ 7 เป็นกล่องสมบัติ
+  /* เหรียญแบรนด์ Vellum Check: ขอบหยัก · วงเม็ดทอง · ตัว V+เครื่องหมายถูกนูน · ม้วนกระดาษใต้ตัว V · ตัวหนังสือรอบขอบ (เฉพาะเหรียญใหญ่) */
+  var coinN = 0;
   var COIN = function (x, y, r) {
-    var ry = r * .9, e = r * .26;   // e = ความหนาขอบเหรียญ
-    return '<g class="vdg-cn" transform="translate(' + x + ' ' + y + ')">' +
+    var ry = r * .9, e = r * .26, f = function (n) { return (n * r).toFixed(2); }, big = r >= 18, id = 'vcT' + (++coinN);
+    var o = '<g class="vdg-cn" stroke="none" transform="translate(' + x + ' ' + y + ')">' +
       '<ellipse cx="0" cy="' + e + '" rx="' + r + '" ry="' + ry + '" fill="url(#vdcE)"/>' +
       '<path d="M' + (-r) + ' 0v' + e + 'a' + r + ' ' + ry + ' 0 0 0 ' + (2 * r) + ' 0v' + (-e) + '" fill="url(#vdcE)"/>' +
-      '<path d="M' + (-r * .96) + ' ' + (e * .55) + 'a' + r + ' ' + ry + ' 0 0 0 ' + (r * 1.92) + ' 0" fill="none" stroke="#5c3a06" stroke-width="' + (r * .05) + '" stroke-dasharray="' + (r * .08) + ' ' + (r * .1) + '" opacity=".55"/>' +
+      '<path d="M' + (-r * .96) + ' ' + (e * .55) + 'a' + r + ' ' + ry + ' 0 0 0 ' + (r * 1.92) + ' 0" fill="none" stroke="#5c3a06" stroke-width="' + f(.05) + '" stroke-dasharray="' + f(.06) + ' ' + f(.07) + '" opacity=".6"/>' +
       '<ellipse cx="0" cy="0" rx="' + r + '" ry="' + ry + '" fill="url(#vdcF)"/>' +
-      '<ellipse cx="0" cy="0" rx="' + r + '" ry="' + ry + '" fill="none" stroke="#fff6cf" stroke-width="' + (r * .06) + '" opacity=".55"/>' +
-      '<ellipse cx="0" cy="' + (r * .03) + '" rx="' + (r * .7) + '" ry="' + (r * .62) + '" fill="url(#vdcI)" stroke="#a46f10" stroke-width="' + (r * .07) + '"/>' +
-      '<path d="M' + (-r * .12) + ' ' + (-r * .3) + 'v' + (r * .62) + 'M' + (r * .14) + ' ' + (-r * .3) + 'v' + (r * .62) + '" stroke="#8a5a08" stroke-width="' + (r * .13) + '" stroke-linecap="round"/>' +
-      '<path d="M' + (-r * .12 + r * .06) + ' ' + (-r * .3) + 'v' + (r * .62) + 'M' + (r * .14 + r * .06) + ' ' + (-r * .3) + 'v' + (r * .62) + '" stroke="#ffe9a0" stroke-width="' + (r * .05) + '" stroke-linecap="round" opacity=".6"/>' +
-      '<path d="M' + (-r * .72) + ' ' + (-r * .3) + 'a' + (r * .8) + ' ' + (r * .7) + ' 0 0 1 ' + (r * .9) + ' ' + (-r * .5) + '" fill="none" stroke="#fff" stroke-width="' + (r * .12) + '" stroke-linecap="round" opacity=".7"/>' +
-      '<ellipse class="vdg-gl" cx="0" cy="0" rx="' + r + '" ry="' + ry + '" fill="url(#vdcS)"/>' +
-      '</g>';
+      /* ขอบหยัก */
+      '<ellipse cx="0" cy="0" rx="' + f(.95) + '" ry="' + f(.855) + '" fill="none" stroke="#9a6410" stroke-width="' + f(.07) + '" stroke-dasharray="' + f(.035) + ' ' + f(.05) + '" opacity=".7"/>' +
+      '<ellipse cx="0" cy="0" rx="' + r + '" ry="' + ry + '" fill="none" stroke="#fff6cf" stroke-width="' + f(.05) + '" opacity=".6"/>' +
+      '<ellipse cx="0" cy="' + f(.02) + '" rx="' + f(big ? .62 : .74) + '" ry="' + f(big ? .55 : .66) + '" fill="url(#vdcI)" stroke="#a46f10" stroke-width="' + f(.05) + '"/>';
+    /* วงเม็ดทอง */
+    if (r >= 9) o += '<ellipse cx="0" cy="' + f(.02) + '" rx="' + f(big ? .69 : .82) + '" ry="' + f(big ? .615 : .73) + '" fill="none" stroke="#fff3c4" stroke-width="' + f(.055) + '" stroke-dasharray="0 ' + f(.13) + '" stroke-linecap="round" opacity=".85"/>';
+    /* ตัวหนังสือรอบขอบ */
+    if (big) o += '<ellipse cx="0" cy="' + f(.02) + '" rx="' + f(.8) + '" ry="' + f(.72) + '" fill="none" stroke="#ffe7a0" stroke-width="' + f(.2) + '" opacity=".55"/><defs><path id="' + id + 'a" d="M' + f(-.79) + ' ' + f(.06) + 'A' + f(.79) + ' ' + f(.71) + ' 0 0 1 ' + f(.79) + ' ' + f(.06) + '"/><path id="' + id + 'b" d="M' + f(-.82) + ' ' + f(.02) + 'A' + f(.82) + ' ' + f(.74) + ' 0 0 0 ' + f(.82) + ' ' + f(.02) + '"/></defs>' +
+      '<g font-family="Prompt,Arial,sans-serif" font-weight="800" fill="#5a3404" stroke="none" style="stroke:none" text-anchor="middle" letter-spacing="' + f(.03) + '">' +
+      '<text font-size="' + f(.17) + '"><textPath href="#' + id + 'a" startOffset="50%">VELLUM CHECK</textPath></text>' +
+      '<text font-size="' + f(.12) + '"><textPath href="#' + id + 'b" startOffset="50%">· VELLUMCHECK.COM ·</textPath></text></g>';
+    /* ตัว V + เครื่องหมายถูก */
+    var s = big ? .82 : 1, V = 'M' + f(-.34 * s) + ' ' + f(-.1 * s) + 'L' + f(-.08 * s) + ' ' + f(.24 * s) + 'L' + f(.42 * s) + ' ' + f(-.4 * s);
+    o += '<path d="' + V + '" fill="none" stroke="#6a4006" stroke-width="' + f(.24 * s) + '" stroke-linecap="round" stroke-linejoin="round" transform="translate(0 ' + f(.03) + ')"/>' +
+      '<path d="' + V + '" fill="none" stroke="#ffe9a6" stroke-width="' + f(.12 * s) + '" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '<path d="M' + f(-.34 * s) + ' ' + f(-.1 * s) + 'L' + f(-.2 * s) + ' ' + f(.08 * s) + '" stroke="#fffbe6" stroke-width="' + f(.04 * s) + '" stroke-linecap="round"/>';
+    /* ม้วนกระดาษเล็กใต้ตัว V */
+    if (r >= 10) o += '<g transform="translate(0 ' + f(.4 * s) + ')"><rect x="' + f(-.24 * s) + '" y="' + f(-.06 * s) + '" width="' + f(.48 * s) + '" height="' + f(.12 * s) + '" rx="' + f(.03) + '" fill="#fff3d0" stroke="#7a4d08" stroke-width="' + f(.035) + '"/><circle cx="' + f(-.25 * s) + '" cy="0" r="' + f(.07 * s) + '" fill="#f1dca6" stroke="#7a4d08" stroke-width="' + f(.035) + '"/><circle cx="' + f(.25 * s) + '" cy="0" r="' + f(.07 * s) + '" fill="#f1dca6" stroke="#7a4d08" stroke-width="' + f(.035) + '"/></g>';
+    o += '<path d="M' + f(-.72) + ' ' + f(-.3) + 'a' + f(.8) + ' ' + f(.7) + ' 0 0 1 ' + f(.9) + ' ' + f(-.5) + '" fill="none" stroke="#fff" stroke-width="' + f(big ? .05 : .1) + '" stroke-linecap="round" opacity="' + (big ? '.4' : '.65') + '"/>' +
+      '<path class="vdg-tw" transform="translate(' + f(.5) + ' ' + f(-.5) + ')" d="M0' + f(-.3) + 'L' + f(.06) + ' ' + f(-.06) + 'L' + f(.3) + ' 0L' + f(.06) + ' ' + f(.06) + 'L0 ' + f(.3) + 'L' + f(-.06) + ' ' + f(.06) + 'L' + f(-.3) + ' 0L' + f(-.06) + ' ' + f(-.06) + 'Z" fill="#fff"/>' +
+      '<ellipse class="vdg-gl" cx="0" cy="0" rx="' + r + '" ry="' + ry + '" fill="url(#vdcS)"/></g>';
+    return o;
   };
   var ART = [
     COIN(32, 34, 15),
@@ -880,20 +897,34 @@
     var cf = ''; for (var i = 0; i < 16; i++) { var pet = i % 3 === 0; cf += '<i class="pl-cf' + (pet ? ' pet' : '') + '" style="left:' + (4 + Math.random() * 92).toFixed(0) + '%;--d:-' + (Math.random() * 10).toFixed(1) + 's;--t:' + (7 + Math.random() * 5).toFixed(1) + 's;--r:' + (Math.random() * 360).toFixed(0) + 'deg;--x:' + (Math.random() * 40 - 20).toFixed(0) + 'px"></i>'; }
     var dust = ''; for (var j = 0; j < 10; j++) dust += '<i class="pl-du" style="left:' + (j < 5 ? 8 + Math.random() * 26 : 66 + Math.random() * 26).toFixed(0) + '%;top:' + (30 + Math.random() * 50).toFixed(0) + '%;--d:-' + (Math.random() * 6).toFixed(1) + 's"></i>';
     var floor = ''; for (var fx = -8; fx <= 8; fx++) floor += '<path d="M' + (195 + fx * 14) + ' 200L' + (195 + fx * 44) + ' 256" stroke="#c9b48a" stroke-width=".8" opacity=".35"/>';
+    /* ลำแสงยามเย็น: ลอดช่องหน้าต่างเป็นเส้น ๆ · ขอบนุ่ม (ชั้นกว้างจาง+ชั้นแกน) · จางตามระยะ · วงแสงบนพื้น · ฝุ่นทองในแสง */
+    var shaft = function (x0, y0, x1, y1, w0, w1) { return 'M' + (x0 - w0) + ' ' + y0 + 'L' + (x0 + w0) + ' ' + y0 + 'L' + (x1 + w1) + ' ' + y1 + 'L' + (x1 - w1) + ' ' + y1 + 'Z'; };
+    var side = function (L) { var g = L ? 'plL' : 'plR', o = '', soft = '', core = '', du = '';
+      [[40, 64, 160], [48, 58, 172], [57, 58, 184], [65, 64, 196]].forEach(function (q, i) {
+        var x0 = L ? q[0] : 390 - q[0], x1 = L ? q[2] : 390 - q[2], y1 = 238;
+        soft += '<path d="' + shaft(x0, q[1], x1, y1, 4.2, 13) + '"/>'; core += '<path d="' + shaft(x0, q[1], x1, y1, 1.6, 5.4) + '"/>';
+        for (var d = 0; d < 2; d++) { var t = .25 + Math.random() * .6; du += '<circle class="pl-dd" style="animation-delay:-' + (Math.random() * 6).toFixed(1) + 's" cx="' + (x0 + (x1 - x0) * t).toFixed(1) + '" cy="' + (q[1] + (y1 - q[1]) * t).toFixed(1) + '" r="' + (.8 + Math.random() * .7).toFixed(1) + '" fill="#fff3c4"/>'; }
+      });
+      return '<g class="pl-beam ' + (L ? 'a' : 'b') + '"><g fill="url(#' + g + ')" opacity=".45">' + soft + '</g><g fill="url(#' + g + ')" opacity=".85">' + core + '</g>' +
+        '<ellipse cx="' + (L ? 178 : 212) + '" cy="240" rx="40" ry="8" fill="url(#plP)"/>' + du + '</g>'; };
+    var beams = '<g class="pl-beams">' + side(true) + side(false) + '</g>';
     kv.innerHTML = '<svg class="pl-svg" viewBox="0 0 390 256" preserveAspectRatio="xMidYMax slice"><defs>' +
       '<linearGradient id="plA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2e1428"/><stop offset=".7" stop-color="#5a2a34"/><stop offset="1" stop-color="#6e3a34"/></linearGradient>' +
       '<linearGradient id="plW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a4a9a"/><stop offset=".35" stop-color="#ff8a6a"/><stop offset=".7" stop-color="#ffc06a"/><stop offset="1" stop-color="#ffe6a8"/></linearGradient>' +
       '<linearGradient id="plC" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9a6410"/><stop offset=".35" stop-color="#ffe7a0"/><stop offset=".6" stop-color="#e8b23a"/><stop offset="1" stop-color="#8a5a10"/></linearGradient>' +
       '<linearGradient id="plR" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5a0a0a"/><stop offset=".5" stop-color="#b8241a"/><stop offset="1" stop-color="#7a100c"/></linearGradient>' +
       '<linearGradient id="plF" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9dcc2"/><stop offset="1" stop-color="#b8a27a"/></linearGradient>' +
+      '<linearGradient id="plL" gradientUnits="userSpaceOnUse" x1="52" y1="60" x2="180" y2="238"><stop offset="0" stop-color="#ffe9a8" stop-opacity=".95"/><stop offset=".5" stop-color="#ffd27a" stop-opacity=".42"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></linearGradient>' +
+      '<linearGradient id="plR" gradientUnits="userSpaceOnUse" x1="338" y1="60" x2="210" y2="238"><stop offset="0" stop-color="#ffe9a8" stop-opacity=".95"/><stop offset=".5" stop-color="#ffd27a" stop-opacity=".42"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></linearGradient>' +
+      '<radialGradient id="plP" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffe2b0" stop-opacity=".55"/><stop offset="1" stop-color="#ffe2b0" stop-opacity="0"/></radialGradient>' +
       '<linearGradient id="plB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff2c4" stop-opacity=".55"/><stop offset="1" stop-color="#fff2c4" stop-opacity="0"/></linearGradient>' +
       '<radialGradient id="plG" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff2c0" stop-opacity=".9"/><stop offset="1" stop-color="#fff2c0" stop-opacity="0"/></radialGradient>' +
       '<radialGradient id="plH" cx=".5" cy=".55" r=".55"><stop offset="0" stop-color="#ffd9a0" stop-opacity=".5"/><stop offset="1" stop-color="#ffd9a0" stop-opacity="0"/></radialGradient></defs>' +
       '<rect width="390" height="256" fill="url(#plA)"/><path d="M0 120H390" stroke="#d9a536" stroke-width="1.4" opacity=".35"/><ellipse cx="195" cy="140" rx="170" ry="120" fill="url(#plH)"/>' +
       win(52) + win(338) + col(108) + col(282) + ban(150, '#22285e') + ban(240, '#8e1414') + chand +
       '<rect y="200" width="390" height="56" fill="url(#plF)"/>' + floor + '<path d="M0 200H390" stroke="#d9a536" stroke-width="2"/><path d="M150 256L175 200H215L240 256Z" fill="#a8201a" opacity=".85"/><path d="M175 200L150 256M215 200L240 256" stroke="#f4c542" stroke-width="1.6"/>' +
-      '<g class="pl-beams"><path class="pl-beam a" d="M30 60L80 50L250 256H120Z" fill="url(#plB)"/><path class="pl-beam b" d="M360 60L310 50L140 256H270Z" fill="url(#plB)"/></g>' + curt(false) + curt(true) + '</svg>' +
-      '<div class="pl-dus">' + dust + '</div><div class="pl-cfs">' + cf + '</div><i class="pl-flash"></i>' +
+      beams + curt(false) + curt(true) + '</svg>' +
+      '<div class="pl-cfs">' + cf + '</div><i class="pl-flash"></i>' +
       '<svg class="pl-pd" viewBox="0 0 230 64" aria-hidden="true"><defs><linearGradient id="plM" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d9d0c2"/></linearGradient></defs>' +
       '<path d="M10 26V40Q115 66 220 40V26Z" fill="url(#plM)" stroke="#6a4808" stroke-width="1.6"/><path d="M10 40Q115 66 220 40" stroke="#e8b23a" stroke-width="3" fill="none"/><ellipse cx="115" cy="26" rx="105" ry="18" fill="#f6f0e6" stroke="#e8b23a" stroke-width="3"/>' +
       '<ellipse cx="115" cy="26" rx="84" ry="13" fill="#b8241a" stroke="#6a0a0a" stroke-width="1.2"/><ellipse cx="115" cy="26" rx="76" ry="10.6" fill="none" stroke="#f4c542" stroke-width="1.2" stroke-dasharray="3 2.4"/><ellipse cx="115" cy="26" rx="40" ry="5.6" fill="none" stroke="#f4c542" stroke-width=".9" opacity=".7"/></svg>';
@@ -1736,17 +1767,17 @@
   /* ป้ายคำพูดฉากห้องโถงวัง: ม้วนราชโองการ แกนทองบนล่าง · หัวข้อ "ราชโองการ" · หมึกน้ำตาล+คำเน้นทองนูน · ตราครั่งลายม้วนกระดาษ+ริบบิ้น · คลี่ออก */
   function plShow(el, txt) {
     var plain = String(txt).replace(/\*/g, '');
-    var esc = String(txt).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\*([^*]+)\*/g, '<b>$1</b>');
+    var esc = String(txt).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\*([^*]+)\*/g, '<b>$1</b>').split('\n').join('<br>');
     el.classList.remove('pl-in'); void el.offsetWidth; el.classList.add('pl-say');
-    el.innerHTML = '<i class="pl-rod t" aria-hidden="true"></i><span class="pl-pp"><span class="pl-hd" aria-hidden="true">✦ ราชโองการ ✦</span><span class="pl-t">' + esc + '</span></span><i class="pl-rod b" aria-hidden="true"></i>' +
+    el.innerHTML = '<i class="pl-rod t" aria-hidden="true"></i><span class="pl-pp"><i class="pl-cl t" aria-hidden="true"></i><i class="pl-cl b" aria-hidden="true"></i><i class="pl-gl" aria-hidden="true"></i><span class="pl-hd" aria-hidden="true"><b>ราชโองการ</b></span><span class="pl-t">' + esc + '</span></span><i class="pl-rod b" aria-hidden="true"></i>' +
       '<span class="pl-seal" aria-hidden="true"><i class="r1"></i><i class="r2"></i><svg viewBox="-12 -12 24 24"><path d="M0-11C5-11 7-8 9-6S12 0 10 4 6 11 0 11-7 10-9 6-12 0-10-4-6-11 0-11Z" fill="#b8141a" stroke="#6a0a0a" stroke-width="1"/><circle r="6.6" fill="none" stroke="#ff8a7a" stroke-width=".9" opacity=".7"/><rect x="-4.4" y="-3.4" width="8.8" height="6.8" rx="1" fill="#ffd77a" stroke="#7a3a08" stroke-width=".7"/><path d="M-4.4-1.2H4.4M-4.4 1.2H4.4" stroke="#b8141a" stroke-width=".6"/><path d="M5-6Q2-2-1 4" stroke="#ffe7a0" stroke-width="1" fill="none"/></svg></span>';
-    el.setAttribute('aria-label', plain);
+    el.setAttribute('aria-label', plain.replace(/\n/g, ' '));
     if (!calm()) el.classList.add('pl-in');
   }
   function sayType(el, txt) {
     var thr = !!(sh && sh.classList.contains('is-thr')), RY = thr ? '<i class="ry-sp a" aria-hidden="true">✦</i><i class="ry-sp b" aria-hidden="true">✦</i>' : '';
-    var sky = !!(sh && sh.classList.contains('is-sky')), pal = !sky && !!(sh && sh.classList.contains('is-pal'));
-    var tk = txt + (sh && sh.classList.contains('is-fire') ? '#f' : thr ? '#t' : sky ? '#s' : pal ? '#p' : '');
+    var sky = !!(sh && sh.classList.contains('is-sky')), pal = !sky && !!(sh && (sh.classList.contains('is-pal') || thr));
+    var tk = txt + (sh && sh.classList.contains('is-fire') ? '#f' : sky ? '#s' : pal ? '#p' : '');
     if (el.getAttribute('data-t') === tk) return;
     el.setAttribute('data-t', tk); clearInterval(typeT); el.classList.remove('mk-lore', 'mk-in', 'sk-in', 'pl-in', 'pl-say'); if (!sky && !pal) el.removeAttribute('aria-label');
     if (sh && sh.classList.contains('is-heav')) { svShow(el, txt); return; }
@@ -2160,7 +2191,8 @@
     var cpSetOn = worn.indexOf('cape') >= 0 && worn.indexOf('crown') >= 0;
     var cpSay = skSay ? '' : cpSetOn && (!o || o.id === 'cape' || o.id === 'crown') ? '*ครบชุดราชา!* ทั้งห้องสมุดถวายความเคารพ'
       : o && o.id === 'cape' ? (own.indexOf('cape') >= 0 ? (worn.indexOf('cape') >= 0 ? 'สง่างามสมเป็น*ราชันย์*แห่งห้องสมุด' : '*เครื่องแบบของพระองค์* พร้อมสวมแล้ว') : S.points >= o.price ? 'ถึงเวลา*ขึ้นครอง*แล้ว รับเครื่องแบบเลยไหม?' : 'ราชันย์ยังรอท่านอยู่… อีก *' + fmt(o.price - S.points) + '* แต้ม')
-      : !o && sh.classList.contains('is-pal') ? 'สง่างามสมเป็น*ราชันย์*แห่งห้องสมุด' : '';
+      : o && o.id === 'crown' ? (own.indexOf('crown') >= 0 ? (worn.indexOf('crown') >= 0 ? 'ทรงพระเจริญ!\n*ราชาแห่งห้องสมุด*' : '*มงกุฎของพระองค์*\nพร้อมสวมแล้ว') : S.points >= o.price ? 'บัลลังก์ว่างรอแล้ว\n*สวมมงกุฎ*เลยไหม?' : 'มงกุฎรอผู้คู่ควรอยู่…\nอีก *' + fmt(o.price - S.points) + '* แต้ม')
+      : !o && sh.classList.contains('is-pal') ? 'สง่างามสมเป็น*ราชันย์*แห่งห้องสมุด' : !o && sh.classList.contains('is-thr') ? 'ทรงพระเจริญ!\n*ราชาแห่งห้องสมุด*' : '';
     (function () { var stg = sh.querySelector('.vst-stage'), bd = stg.querySelector('.vst-set');
       if (cpSetOn && !bd) { bd = document.createElement('span'); bd.className = 'vst-set'; bd.setAttribute('role', 'status'); bd.innerHTML = '<i aria-hidden="true">👑</i>ครบชุดราชา'; stg.appendChild(bd); }
       else if (!cpSetOn && bd) bd.remove(); })();
