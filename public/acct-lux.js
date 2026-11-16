@@ -55,8 +55,17 @@
     if (on && !lastOpen) setTimeout(sparkle, 950);
     lastOpen = on;
   }
-  function boot() { build(); dressCard(); dressHead();
+  /* หัวข้อกลุ่มใหม่ (เรียงตามความสำคัญ) — ลำดับจริงจัดด้วย CSS order ใน acct-lux.css */
+  var GT = { th: { r: 'แต้มและรางวัล', w: 'งานของฉัน', h: 'ช่วยเหลือ', g1: 'ตั้งค่า', g2: 'นโยบาย' }, en: { r: 'Points & rewards', w: 'My work', h: 'Help', g1: 'Settings', g2: 'Policies' }, zh: { r: '积分与奖励', w: '我的工作', h: '帮助', g1: '设置', g2: '政策' } };
+  function dressGroups() {
+    var li = document.getElementById('authLoggedIn'); if (!li) return;
+    var lang = document.documentElement.getAttribute('data-lang') || 'th', T = GT[lang] || GT.th;
+    ['r', 'w', 'h'].forEach(function (k) { var e = li.querySelector('.alx-mg-' + k); if (!e) { e = document.createElement('p'); e.className = 'vc-mg alx-mg alx-mg-' + k; li.appendChild(e); } if (e.textContent !== T[k]) e.textContent = T[k]; });
+    ['g1', 'g2'].forEach(function (k) { var e = li.querySelector('.acct-menu .vc-mg.' + k); if (e && e.textContent !== T[k]) e.textContent = T[k]; });
+  }
+  function boot() { build(); dressCard(); dressHead(); dressGroups();
     if (window.MutationObserver) new MutationObserver(watchOpen).observe(document.body, { attributes: true, attributeFilter: ['data-sheet'] });
-    var card = document.getElementById('authCard'); if (card && window.MutationObserver) new MutationObserver(function () { if (!document.querySelector('#authCard .alx-spine')) dressCard(); dressHead(); }).observe(card, { childList: true, subtree: true }); }
+    new MutationObserver(dressGroups).observe(document.documentElement, { attributes: true, attributeFilter: ['data-lang'] });
+    var card = document.getElementById('authCard'); if (card && window.MutationObserver) new MutationObserver(function () { if (!document.querySelector('#authCard .alx-spine')) dressCard(); dressHead(); dressGroups(); }).observe(card, { childList: true, subtree: true }); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
