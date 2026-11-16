@@ -21,14 +21,19 @@
   }
   /* การ์ดเครดิตแบบสมุดบัญชีหนัง: มุมโลหะทอง 4 มุม · ตราโล่ปั๊มทอง · แสงโคมตกกระทบ */
   var CORNER = '<svg viewBox="0 0 30 30"><path d="M2 28V8Q2 2 8 2H28L22 8H10Q8 8 8 10V22Z" fill="url(#alxG)" stroke="#5c3a06" stroke-width="1.2" stroke-linejoin="round"/><path d="M5 22V9Q5 5 9 5H22" fill="none" stroke="#fff3c4" stroke-width=".9" opacity=".7"/><circle cx="7.6" cy="7.6" r="1.6" fill="#7a4d08"/><path d="M12 11q3 0 3 3" fill="none" stroke="#7a4d08" stroke-width=".8"/><defs><linearGradient id="alxG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0bd"/><stop offset=".45" stop-color="#e2ad3a"/><stop offset="1" stop-color="#8a5a10"/></linearGradient></defs></svg>';
-  var CREST = '<svg viewBox="0 0 40 46"><defs><linearGradient id="alxC" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset=".5" stop-color="#e2ad3a"/><stop offset="1" stop-color="#9a6410"/></linearGradient></defs><path d="M20 2L36 8V22C36 33 29 40 20 44C11 40 4 33 4 22V8Z" fill="rgba(40,8,10,.35)" stroke="url(#alxC)" stroke-width="2.6" stroke-linejoin="round"/><path d="M20 7L31 11.4V22C31 30 26 35.6 20 38.6C14 35.6 9 30 9 22V11.4Z" fill="none" stroke="url(#alxC)" stroke-width="1" opacity=".7"/><path d="M12.5 22.5L18 28L28 15.5" fill="none" stroke="url(#alxC)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  /* ตัว V ปั๊มทองแบบโลโก้แบรนด์ (แทนโล่) */
+  var CREST = '<svg viewBox="0 0 40 46"><defs><linearGradient id="alxC" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset=".45" stop-color="#ebb84a"/><stop offset="1" stop-color="#9a6410"/></linearGradient></defs>' +
+    '<g transform="translate(0 1.4)" fill="#2a0410" opacity=".6"><path d="M4 7H15V9.4L12.6 10L20.4 31L27.6 10L25 9.4V7H36V9.4L33.4 10L22 40H18.4L6.4 10L4 9.4Z"/></g>' +
+    '<path d="M4 7H15V9.4L12.6 10L20.4 31L27.6 10L25 9.4V7H36V9.4L33.4 10L22 40H18.4L6.4 10L4 9.4Z" fill="url(#alxC)" stroke="#6a4006" stroke-width=".8" stroke-linejoin="round"/>' +
+    '<path d="M8 9.6L19.4 37" stroke="#fffbe6" stroke-width=".9" opacity=".7" stroke-linecap="round"/><path d="M11 44.4Q20 41.6 29 44.4" stroke="url(#alxC)" stroke-width="1.1" fill="none" stroke-linecap="round"/></svg>';
   function dressCard() {
     var c = document.querySelector('#authCard .vc-wcard'); if (!c || c.querySelector('.alx-spine')) return;
     var f = document.createElement('div'); f.className = 'alx-cf'; f.setAttribute('aria-hidden', 'true');
     var tw = ''; [[30, 22, 0], [72, 60, 1.3], [52, 86, 2.4], [88, 30, 3.1]].forEach(function (q) { tw += '<i class="alx-tw" style="left:' + q[0] + '%;top:' + q[1] + '%;animation-delay:' + q[2] + 's"></i>'; });
     f.innerHTML = '<i class="alx-spine"><b></b><b></b><b></b></i>' + ['tl', 'tr', 'bl', 'br'].map(function (k) { return '<i class="alx-stud ' + k + '"></i>'; }).join('') + '<i class="alx-crest">' + CREST + '<b></b></i><i class="alx-glare"></i>' + tw;
     c.insertBefore(f, c.firstChild);
-    var bt = c.querySelector('.vc-wc-top-up'); if (bt && !bt.querySelector('.alx-coin')) { var ic = document.createElement('i'); ic.className = 'alx-coin'; ic.setAttribute('aria-hidden', 'true'); bt.insertBefore(ic, bt.firstChild); }
+    var bt = c.querySelector('.vc-wc-top-up'); if (bt && !bt.querySelector('.alx-coin')) { var ic = document.createElement('i'); ic.className = 'alx-coin'; ic.setAttribute('aria-hidden', 'true'); bt.insertBefore(ic, bt.firstChild); var ar = document.createElement('i'); ar.className = 'alx-arr'; ar.setAttribute('aria-hidden', 'true'); bt.appendChild(ar); var stc = document.createElement('i'); stc.className = 'alx-stc'; stc.setAttribute('aria-hidden', 'true'); bt.appendChild(stc);
+      bt.addEventListener('pointerdown', function () { ic.classList.remove('spin'); void ic.offsetWidth; ic.classList.add('spin'); }); }
   }
   /* เส้นทองใต้ส่วนหัว + เพชรกลาง */
   function dressHead() { var h = document.querySelector('#authCard .sheet-head'); if (!h || h.querySelector('.alx-hd')) return; var d = document.createElement('i'); d.className = 'alx-hd'; d.setAttribute('aria-hidden', 'true'); h.appendChild(d); }
