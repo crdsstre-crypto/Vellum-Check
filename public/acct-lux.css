@@ -1,0 +1,165 @@
+/* =========================================================
+   acct-lux.css (v1) — หน้าบัญชีบนมือถือ ธีมโต๊ะไม้ยามค่ำต่อเนื่องจากหน้าปก
+   ชั้นพื้นหลัง .alx-bg สร้างโดย acct-lux.js
+   ปิด: ลบ <link href="acct-lux.css"> และ <script src="acct-lux.js"> ออกจาก index.html
+   ========================================================= */
+@media (max-width:767px){
+.alx-bg{display:none}
+body[data-sheet="acct"] #authCard{background:#120c08!important;overflow:hidden;isolation:isolate}
+body[data-sheet="acct"] #authCard > .alx-bg{display:block;position:absolute;inset:0;z-index:0;pointer-events:none;border-radius:inherit;overflow:hidden}
+body[data-sheet="acct"] #authCard > :not(.alx-bg){position:relative;z-index:1}
+
+/* (1) โต๊ะไม้วอลนัทเข้ม */
+.alx-w{position:absolute;inset:0;background:
+  linear-gradient(rgba(10,6,3,.62),rgba(10,6,3,.74)),
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .32' numOctaves='3' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 .1 0 0 0 0 .06 0 0 0 0 .03 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E") 0 0/600px 600px,
+  repeating-linear-gradient(90deg,rgba(0,0,0,0) 0 96px,rgba(0,0,0,.34) 96px 99px),
+  repeating-linear-gradient(90deg,rgba(255,255,255,.03) 0 7px,rgba(0,0,0,.04) 7px 13px,rgba(255,255,255,.02) 13px 29px),
+  linear-gradient(180deg,#5b3a22,#4a2e1a 60%,#3b2414)}
+/* (2) แสงโคมอุ่นจากมุมบนลงบนส่วนหัว */
+.alx-l{position:absolute;inset:0;mix-blend-mode:screen;animation:alxBr 7s ease-in-out infinite;background:
+  radial-gradient(90% 34% at 20% -2%,rgba(255,206,140,.34),rgba(255,170,90,.1) 45%,transparent 72%),
+  radial-gradient(40% 16% at 18% 0%,rgba(255,236,190,.26),transparent 70%)}
+@keyframes alxBr{50%{opacity:.8}}
+.alx-v{position:absolute;inset:0;background:radial-gradient(ellipse 130% 100% at 50% 30%,transparent 50%,rgba(0,0,0,.6))}
+/* (3) ฝุ่นทอง */
+.alx-dust{position:absolute;inset:0}
+.alx-dust i{position:absolute;width:3px;height:3px;border-radius:50%;background:#ffe7b0;box-shadow:0 0 5px rgba(255,200,110,.8);opacity:0;animation:alxDu var(--t) ease-in-out var(--d) infinite}
+@keyframes alxDu{0%{opacity:0;transform:translate(0,0)}25%{opacity:.75}75%{opacity:.35}100%{opacity:0;transform:translate(14px,-40px)}}
+/* (4) ของประดับขอบจอ */
+.alx-leaf{position:absolute;right:-14px;top:-10px;width:170px;height:170px;opacity:.85;filter:blur(1.2px);transform-origin:100% 0;animation:alxLeaf 9s ease-in-out infinite}
+@keyframes alxLeaf{50%{transform:rotate(-2.5deg)}}
+.alx-pen{position:absolute;right:-30px;bottom:150px;width:180px;height:36px;opacity:.45;transform:rotate(-24deg);filter:blur(.4px) drop-shadow(0 6px 6px rgba(0,0,0,.6))}
+.alx-gls{position:absolute;left:-34px;bottom:96px;width:150px;height:60px;opacity:.38;transform:rotate(14deg);filter:blur(.4px)}
+
+/* (7) ส่วนหัวโปรไฟล์ */
+body[data-sheet="acct"] #authCard .sheet-head{border-bottom-color:rgba(232,190,110,.18)!important}
+html body[data-sheet="acct"] #authCard .sheet-head .acct-avatar{box-shadow:0 0 0 2px #1a110a,0 0 18px rgba(255,200,110,.35)!important}
+html body[data-sheet="acct"] #authCard .sheet-head .acct-avatar::before{opacity:1!important;background:conic-gradient(from 210deg,#fff3c4,#d9a94a,#8a5a10,#f4c542,#fff3c4)!important}
+html body[data-sheet="acct"] #authCard .sheet-head .acct-avatar::after{box-shadow:0 0 0 2px #1a110a!important}
+body[data-sheet="acct"] #authCard .acct-mail{color:#f6ead2!important;text-shadow:0 1px 0 rgba(0,0,0,.5)}
+body[data-sheet="acct"] #authCard .vc-adm-badge{background:linear-gradient(180deg,#fff0bd,#e2ad3a 55%,#a8741a)!important;color:#4a2a04!important;border:0!important;box-shadow:inset 0 1px 0 #fff6d6,0 0 0 1px #7a4d08,0 2px 6px rgba(255,190,80,.35)!important;font-weight:800!important}
+body[data-sheet="acct"] #authCard .sheet-close{background-color:rgba(26,16,8,.7)!important;border-color:rgba(232,190,110,.5)!important}
+
+/* (6) การ์ดเครดิตแบบสมุดปกหนัง */
+body[data-sheet="acct"] #authCard .vc-wcard{background:
+  radial-gradient(120% 90% at 15% 0%,rgba(255,210,150,.16),transparent 55%),
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0 0/200px 200px,
+  linear-gradient(160deg,#5a3720,#3e2414 55%,#2c180c)!important;
+  border:0!important;box-shadow:inset 0 0 0 1px rgba(255,220,160,.12),inset 0 1px 0 rgba(255,230,190,.18),0 14px 30px rgba(0,0,0,.55),0 2px 0 #1c0f06!important}
+body[data-sheet="acct"] #authCard .vc-wcard::before{content:"";position:absolute;inset:8px;border-radius:12px;border:1.5px dashed rgba(232,190,110,.55);pointer-events:none;z-index:1}
+body[data-sheet="acct"] #authCard .vc-wcard .vc-wc-num b{background:none!important;color:#ffd767!important;-webkit-text-fill-color:#ffd767!important;filter:none!important;text-shadow:0 1px 0 #fff3c4,0 -1px 0 #8a5a10,0 3px 0 #4a2a04,0 0 14px rgba(255,200,90,.45)!important}
+body[data-sheet="acct"] #authCard .vc-wcard :is(.vc-wc-lab,.vc-wc-sub,.vc-wc-num small){color:#e9d4ad!important}
+body[data-sheet="acct"] #authCard .vc-wcard .vc-wc-voice{background:rgba(255,230,180,.08)!important;border-color:rgba(232,190,110,.35)!important;color:#f1dcb0!important}
+body[data-sheet="acct"] #authCard .vc-wcard .vc-wc-top-up{background:linear-gradient(180deg,#fff4d6,#f0d79a)!important;color:#3a2208!important;box-shadow:inset 0 1px 0 #fffbe8,0 0 0 1px rgba(120,80,20,.5),0 4px 12px rgba(0,0,0,.35)!important}
+body[data-sheet="acct"] #authCard .vc-wcard > *{position:relative;z-index:2}
+
+/* (5) การ์ดกระจกควันอุ่น ขอบทองบาง */
+body[data-sheet="acct"] #authCard :is(.vc-stat,.vdc-acct,.vrm-acct,.acct-menu .menu-item){background:rgba(34,22,14,.58)!important;border-color:rgba(232,190,110,.2)!important;-webkit-backdrop-filter:blur(10px) saturate(1.2);backdrop-filter:blur(10px) saturate(1.2);box-shadow:inset 0 1px 0 rgba(255,230,190,.06)!important}
+body[data-sheet="acct"] #authCard .acct-menu .menu-item + .menu-item{border-top-color:rgba(232,190,110,.12)!important}
+body[data-sheet="acct"] #authCard .acct-menu :is(.menu-txt b,.menu-item > span:not(.vc-mi) b){color:#f6ead2!important}
+body[data-sheet="acct"] #authCard .acct-out{background:rgba(60,18,14,.45)!important;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+
+/* (8) หัวข้อหมวดแบบหัวบทในหนังสือ */
+body[data-sheet="acct"] #authCard .vc-mg{color:#e6bf6a!important;font-weight:700!important;letter-spacing:.06em;display:flex;align-items:center;gap:10px}
+body[data-sheet="acct"] #authCard .vc-mg::before{content:"✦";font-size:.7em;color:#f4c542}
+body[data-sheet="acct"] #authCard .vc-mg::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(230,191,106,.55),transparent)}
+
+/* (9) ท้ายหน้า + ลายน้ำโล่ */
+body[data-sheet="acct"] #authCard .vc-acct-foot{position:relative;color:#a8916c!important;padding-top:54px!important}
+body[data-sheet="acct"] #authCard .vc-acct-foot b{color:#e6c88a!important}
+body[data-sheet="acct"] #authCard .vc-acct-foot::before{content:"";position:absolute;left:50%;top:4px;width:40px;height:46px;margin-left:-20px;opacity:.28;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 46'%3E%3Cpath d='M20 2L36 8V22C36 33 29 40 20 44C11 40 4 33 4 22V8Z' fill='none' stroke='%23e6c88a' stroke-width='2.4' stroke-linejoin='round'/%3E%3Cpath d='M12 23L18 29L29 16' fill='none' stroke='%23e6c88a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat}
+}
+@media (max-width:767px) and (prefers-reduced-motion:reduce){.alx-l,.alx-leaf{animation:none!important}.alx-dust{display:none}}
+
+/* ===== การ์ดเครดิต v2: สมุดบัญชีหนังไวน์แดง · มุมทอง · ตราโล่ปั๊มทอง · ด้ายเย็บมือ · ตัวเลขทองปั๊มนูน · ปุ่มป้ายทอง · ป้ายเสียงหนัง · แสงโคมตก (acct-lux.css v2) ===== */
+@media (max-width:767px){
+/* ก + 1 หนังไวน์แดง ตัดกับโต๊ะไม้ */
+body[data-sheet="acct"] #authCard .vc-wcard{background:
+  radial-gradient(130% 80% at 0% 0%,rgba(255,190,150,.2),transparent 50%),
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='turbulence' baseFrequency='.55' numOctaves='3' seed='11'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1.4 .9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E") 0 0/180px 180px,
+  radial-gradient(120% 120% at 50% 40%,transparent 55%,rgba(20,0,4,.55) 100%),
+  linear-gradient(160deg,#8a2234,#6a1426 50%,#47091a)!important;
+  box-shadow:inset 0 1px 0 rgba(255,200,190,.25),inset 0 0 0 1px rgba(255,180,170,.12),0 16px 32px rgba(0,0,0,.6),0 3px 0 #2a0610!important}
+/* ข + 4 ด้ายเย็บมือ ชัดขึ้น */
+body[data-sheet="acct"] #authCard .vc-wcard::before{inset:9px!important;border:2px dashed #e8bc5c!important;border-radius:13px!important;filter:drop-shadow(0 1px 0 rgba(20,0,4,.7));opacity:.9}
+/* ข + 2 มุมโลหะทอง */
+body[data-sheet="acct"] #authCard .vc-wcard > .alx-cf{position:absolute!important;inset:0;pointer-events:none;z-index:3!important;border-radius:inherit;overflow:hidden}
+.alx-cn{position:absolute;width:30px;height:30px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.5))}
+.alx-cn svg{width:100%;height:100%;display:block}
+.alx-cn.tl{left:0;top:0}.alx-cn.tr{right:0;top:0;transform:scaleX(-1)}.alx-cn.bl{left:0;bottom:0;transform:scaleY(-1)}.alx-cn.br{right:0;bottom:0;transform:scale(-1,-1)}
+/* ค + 3 ตราโล่ปั๊มทอง + ประกายวิ่ง */
+.alx-crest{position:absolute;right:20px;top:58px;width:34px;height:40px;filter:drop-shadow(0 1px 0 rgba(255,220,180,.25)) drop-shadow(0 -1px 0 rgba(20,0,4,.7));overflow:hidden}
+.alx-crest svg{width:100%;height:100%;display:block}
+.alx-crest b{position:absolute;top:0;bottom:0;left:-60%;width:40%;background:linear-gradient(100deg,transparent,rgba(255,250,220,.85),transparent);transform:skewX(-18deg);animation:alxCr 4.5s ease-in-out 1.5s infinite;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 46'%3E%3Cpath d='M20 2L36 8V22C36 33 29 40 20 44C11 40 4 33 4 22V8Z' fill='%23000'/%3E%3C/svg%3E") 0 0/34px 40px no-repeat}
+@keyframes alxCr{0%,65%{left:-60%}100%{left:130%}}
+/* 9 แสงโคมตกกระทบมุมบนซ้าย */
+.alx-glare{position:absolute;left:-20%;top:-40%;width:90%;height:110%;background:radial-gradient(closest-side,rgba(255,220,170,.22),transparent);transform:rotate(-20deg);mix-blend-mode:screen}
+/* 5 ตัวเลขทองปั๊มลึกในหนัง */
+body[data-sheet="acct"] #authCard .vc-wcard .vc-wc-num b{color:#f6c24c!important;-webkit-text-fill-color:#f6c24c!important;text-shadow:0 -1px 0 rgba(30,0,6,.9),0 -2px 1px rgba(30,0,6,.5),0 1px 0 #ffeaa8,0 2px 1px rgba(255,220,150,.35),0 0 16px rgba(255,190,80,.3)!important}
+body[data-sheet="acct"] #authCard .vc-wcard :is(.vc-wc-lab,.vc-wc-sub,.vc-wc-num small){color:#f3dcc0!important}
+/* 8 ป้ายเสียงแบบตราหนัง */
+body[data-sheet="acct"] #authCard .vc-wcard .vc-wc-voice{background:linear-gradient(180deg,#7a4a28,#5a321a)!important;border:0!important;color:#ffe9c4!important;box-shadow:inset 0 0 0 1px rgba(255,220,170,.2),inset 0 0 0 3px #5a321a,inset 0 0 0 4px rgba(232,188,92,.0),0 2px 4px rgba(0,0,0,.4)!important;outline:1.4px dashed rgba(232,188,92,.75);outline-offset:-5px;margin-right:34px}
+body[data-sheet="acct"] #authCard .vc-wcard .vc-wc-voice b{color:#ffd767!important}
+/* ง + 7 ปุ่มเติมเครดิตแบบป้ายทอง + เหรียญแบรนด์ + แสงวิ่ง */
+body[data-sheet="acct"] #authCard .vc-wcard .vc-wc-top-up{position:relative;overflow:hidden;background:linear-gradient(180deg,#fff2c0 0%,#f4c542 45%,#c88a16 100%)!important;color:#3a2004!important;font-weight:800!important;border:0!important;
+  box-shadow:inset 0 1px 0 #fffbe6,inset 0 -2px 0 rgba(120,70,0,.4),0 0 0 1.5px #6a4006,0 6px 14px rgba(0,0,0,.45),0 0 16px rgba(255,200,90,.25)!important;text-shadow:0 1px 0 rgba(255,245,210,.7)}
+body[data-sheet="acct"] #authCard .vc-wcard .vc-wc-top-up svg{display:none}
+body[data-sheet="acct"] #authCard .vc-wcard .vc-wc-top-up .alx-coin{display:inline-block;flex:none;width:20px;height:20px;margin-right:8px;vertical-align:-4px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3CradialGradient id='g' cx='.35' cy='.3' r='.8'%3E%3Cstop offset='0' stop-color='%23fff3c4'/%3E%3Cstop offset='.55' stop-color='%23f4c542'/%3E%3Cstop offset='1' stop-color='%23b67a12'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='12' cy='12' r='11' fill='url(%23g)' stroke='%237a4d08' stroke-width='1.4'/%3E%3Ccircle cx='12' cy='12' r='8.4' fill='none' stroke='%239a6410' stroke-width='1' stroke-dasharray='1 1.2' opacity='.75'/%3E%3Cpath d='M7.4 9.2 11 15.4 16.8 7.4' fill='none' stroke='%237a4d08' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M7.4 9.2 11 15.4 16.8 7.4' fill='none' stroke='%23ffe9a0' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;
+  filter:drop-shadow(0 1px 1px rgba(90,50,0,.5))}
+body[data-sheet="acct"] #authCard .vc-wcard .vc-wc-top-up::after{content:"";position:absolute;top:0;bottom:0;left:-40%;width:30%;background:linear-gradient(100deg,transparent,rgba(255,255,240,.8),transparent);transform:skewX(-18deg);animation:alxBtn 4s ease-in-out 2s infinite;pointer-events:none}
+@keyframes alxBtn{0%,70%{left:-40%}100%{left:120%}}
+}
+@media (max-width:767px) and (prefers-reduced-motion:reduce){.alx-crest b,body[data-sheet="acct"] #authCard .vc-wcard .vc-wc-top-up::after{animation:none!important;display:none}}
+@media (max-width:767px){body[data-sheet="acct"] #authCard .vc-wcard > .alx-cf{overflow:visible}
+.alx-cn{width:26px;height:26px}.alx-cn.tl{left:5px;top:5px}.alx-cn.tr{right:5px;top:5px}.alx-cn.bl{left:5px;bottom:5px}.alx-cn.br{right:5px;bottom:5px}
+body[data-sheet="acct"] #authCard .vc-wcard .vc-wc-voice{margin-right:0}}
+
+/* ===== การ์ดเครดิต v3: สันสมุด+ขอบกระดาษ · หมุดทอง · ลายปั๊มนูน · กรอบทองรอบตัวเลข · นับเลขขึ้น · ประกาย · เส้นทองส่วนหัว (acct-lux.css v3) ===== */
+@media (max-width:767px){
+/* (3) ข: ครอบมุมเดิม → หมุดทองเล็ก */
+.alx-cn{display:none}
+.alx-stud{position:absolute;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff6d0,#e2ad3a 50%,#7a4d08);box-shadow:0 1px 1px rgba(0,0,0,.6),0 0 0 1px rgba(90,50,0,.6)}
+.alx-stud.tl{left:25px;top:14px}.alx-stud.tr{right:14px;top:14px}.alx-stud.bl{left:25px;bottom:14px}.alx-stud.br{right:14px;bottom:14px}
+/* (1) ก: สันสมุดด้านซ้าย + ขอบกระดาษโผล่ด้านล่าง */
+.alx-spine{position:absolute;left:0;top:0;bottom:0;width:15px;border-radius:20px 0 0 20px;background:linear-gradient(90deg,#2a0610,#5a0f20 45%,#3a0814);box-shadow:inset -1px 0 0 rgba(255,180,170,.15),2px 0 4px rgba(0,0,0,.45)}
+.alx-spine b{position:absolute;left:2px;right:2px;height:5px;border-radius:3px;background:linear-gradient(180deg,#7a2236,#3a0814);box-shadow:0 1px 0 rgba(255,190,180,.2),0 -1px 0 rgba(0,0,0,.5)}
+.alx-spine b:nth-child(1){top:22%}.alx-spine b:nth-child(2){top:48%}.alx-spine b:nth-child(3){top:74%}
+body[data-sheet="acct"] #authCard .vc-wcard{padding-left:calc(var(--alx-pl,18px) + 12px)!important;
+  box-shadow:inset 0 1px 0 rgba(255,200,190,.25),inset 0 0 0 1px rgba(255,180,170,.12),0 3px 0 -1px #f3e6c8,0 5px 0 -1px #d9c59c,0 7px 0 -2px #efe0bd,0 9px 0 -2px #4a0a1a,0 18px 30px rgba(0,0,0,.6)!important;margin-bottom:14px!important}
+body[data-sheet="acct"] #authCard .vc-wcard::before{left:21px!important}
+/* (4) ค: ลายเถาปั๊มนูนจางทั้งแผ่น */
+body[data-sheet="acct"] #authCard .vc-wcard::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:0;opacity:.5;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke-linecap='round'%3E%3Cpath d='M36 6C46 16 46 26 36 36S26 56 36 66M6 36C16 26 26 26 36 36S56 46 66 36' stroke='%23000' stroke-opacity='.28' stroke-width='1.6'/%3E%3Cpath d='M36 7C46 17 46 27 36 37S26 57 36 67M6 37C16 27 26 27 36 37S56 47 66 37' stroke='%23ffb4a8' stroke-opacity='.1' stroke-width='1'/%3E%3Ccircle cx='36' cy='36' r='3' stroke='%23000' stroke-opacity='.25'/%3E%3C/g%3E%3C/svg%3E") 0 0/72px 72px}
+/* (5) + ง: กรอบทองรอบตัวเลข · (7) เส้นแบ่ง + "ครั้ง" ตัวทองวิจิตร */
+body[data-sheet="acct"] #authCard .vc-wcard .vc-wc-num{display:inline-flex!important;align-items:baseline;gap:10px;margin:14px 0 10px!important;padding:6px 18px 8px 14px;border-radius:10px;
+  background:linear-gradient(180deg,rgba(30,2,8,.35),rgba(30,2,8,.15));box-shadow:inset 0 0 0 1px rgba(232,188,92,.7),inset 0 0 0 3px rgba(60,6,16,.5),inset 0 0 0 4px rgba(232,188,92,.3),0 1px 0 rgba(255,200,180,.12)}
+body[data-sheet="acct"] #authCard .vc-wcard .vc-wc-num b{font-size:58px!important}
+body[data-sheet="acct"] #authCard .vc-wcard .vc-wc-num small{color:#e9c26a!important;font-style:italic;font-weight:600!important;font-size:17px!important;letter-spacing:.04em}
+body[data-sheet="acct"] #authCard .vc-wcard .vc-wc-sub{position:relative;padding-top:10px!important;margin-top:2px!important}
+body[data-sheet="acct"] #authCard .vc-wcard .vc-wc-sub::before{content:"";position:absolute;left:0;top:0;width:min(100%,260px);height:1px;background:linear-gradient(90deg,rgba(232,188,92,.8),rgba(232,188,92,.25) 70%,transparent)}
+body[data-sheet="acct"] #authCard .vc-wcard .vc-wc-sub::after{content:"✦";position:absolute;left:0;top:-6px;font-size:9px;color:#f4c542;text-shadow:0 0 4px rgba(255,200,90,.8)}
+/* (8) ประกายตอนนับเสร็จ */
+body[data-sheet="acct"] #authCard .vc-wcard .vc-wc-num.alx-pop{animation:alxPop .7s cubic-bezier(.2,1.5,.4,1)}
+@keyframes alxPop{0%{transform:scale(1)}35%{transform:scale(1.07);filter:brightness(1.35)}100%{transform:none;filter:none}}
+body[data-sheet="acct"] #authCard .vc-wcard .vc-wc-num.alx-pop::after{content:"";position:absolute;left:20px;top:2px;width:56px;height:56px;pointer-events:none;
+  background:radial-gradient(circle,rgba(255,240,190,.95) 0,rgba(255,210,110,.5) 20%,transparent 60%);animation:alxBurst .7s ease-out forwards}
+@keyframes alxBurst{0%{opacity:1;transform:scale(.3)}100%{opacity:0;transform:scale(2)}}
+body[data-sheet="acct"] #authCard .vc-wcard .vc-wc-num{position:relative}
+/* (9) ประกายเกาะการ์ด */
+.alx-tw{position:absolute;width:10px;height:10px;opacity:0;animation:alxTw 4.4s ease-in-out infinite;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-5 -5 10 10'%3E%3Cpath d='M0-5 .8-.8 5 0 .8.8 0 5-.8.8-5 0-.8-.8Z' fill='%23fff3c4'/%3E%3C/svg%3E") center/contain no-repeat;filter:drop-shadow(0 0 3px rgba(255,210,110,.9))}
+@keyframes alxTw{0%,75%,100%{opacity:0;transform:scale(.3) rotate(0)}85%{opacity:1;transform:scale(1) rotate(30deg)}95%{opacity:0;transform:scale(.4) rotate(50deg)}}
+.alx-crest{top:62px;right:22px}
+/* (10) เส้นทองใต้ส่วนหัว + เพชรกลาง */
+body[data-sheet="acct"] #authCard .sheet-head{border-bottom-color:transparent!important;position:relative}
+.alx-hd{position:absolute;left:6%;right:6%;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,rgba(232,188,92,.85) 30%,#ffe7a0 50%,rgba(232,188,92,.85) 70%,transparent);pointer-events:none}
+.alx-hd::after{content:"";position:absolute;left:50%;top:-4px;width:8px;height:8px;margin-left:-4px;transform:rotate(45deg);background:linear-gradient(135deg,#fff6d0,#e2ad3a 55%,#8a5a10);box-shadow:0 0 6px rgba(255,210,110,.8)}
+.alx-bg ~ * .alx-hd,.alx-hd{display:none}
+body[data-sheet="acct"] #authCard .sheet-head .alx-hd{display:block}
+}
+@media (max-width:767px) and (prefers-reduced-motion:reduce){.alx-tw{display:none}}
+@media (max-width:767px){html body[data-sheet="acct"] #authCard .vc-wcard.vc-wcard{box-shadow:inset 0 1px 0 rgba(255,200,190,.25),inset 0 0 0 1px rgba(255,180,170,.12),0 3px 0 -1px #f3e6c8,0 5px 0 -1px #d9c59c,0 7px 0 -2px #efe0bd,0 9px 0 -2px #4a0a1a,0 18px 30px rgba(0,0,0,.6)!important;overflow:visible!important}
+html body[data-sheet="acct"] #authCard .vc-wcard.vc-wcard > .vc-wc-sheen{border-radius:inherit}}
