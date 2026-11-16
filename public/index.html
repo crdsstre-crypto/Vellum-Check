@@ -68,7 +68,7 @@ html.vch-pre:not(.vch-on) body{background:#0a0806}</style>
 <link rel="stylesheet" href="acct-info.css?v=2">
 <link rel="stylesheet" href="perf-boost.css?v=1">
 <link rel="stylesheet" href="account-desk.css?v=5" media="(min-width: 768px)">
-<link rel="stylesheet" href="acct-lux.css?v=26" media="(max-width: 767px)">
+<link rel="stylesheet" href="acct-lux.css?v=27" media="(max-width: 767px)">
 </head>
 <body>
 <svg id="vcStickerDefs" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="vcg-y" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#f4f4f2"/><stop offset="1" stop-color="#a6a9b0"/></linearGradient><linearGradient id="vcg-o" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#dcdcdb"/><stop offset="1" stop-color="#8a8d94"/></linearGradient><linearGradient id="vcg-b" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#e6e8ec"/><stop offset="1" stop-color="#8f949d"/></linearGradient><linearGradient id="vcg-n" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#9a9ea6"/><stop offset="1" stop-color="#43464d"/></linearGradient><linearGradient id="vcg-t" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#eef0f1"/><stop offset="1" stop-color="#9fa3ab"/></linearGradient><linearGradient id="vcg-p" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#e0e0e0"/><stop offset="1" stop-color="#7f8289"/></linearGradient><linearGradient id="vcg-g" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#d6d9db"/><stop offset="1" stop-color="#888c93"/></linearGradient><linearGradient id="vcg-v" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#cdd0d5"/><stop offset="1" stop-color="#60636b"/></linearGradient><linearGradient id="vcg-w" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d5d8dc"/></linearGradient><linearGradient id="vcg-au" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#f7f7f5"/><stop offset="1" stop-color="#b4b7bd"/></linearGradient><linearGradient id="vcg-s" x1=".15" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#b0b4bb"/></linearGradient></defs></svg>
@@ -671,13 +671,31 @@ html.vch-pre:not(.vch-on) body{background:#0a0806}</style>
   function showSkeleton() {
     panel.hidden = false;
     var dsk = document.getElementById('libStats'); if (dsk && currentKind !== 'pay') { dsk.hidden = false; dsk.classList.add('is-loading'); }
-    list.innerHTML = '<div class="hist-skel"></div><div class="hist-skel"></div><div class="hist-skel"></div>';
+    list.innerHTML = '<div class="hist-skel"></div><div class="hist-skel"></div><div class="hist-skel"></div><p class="hist-wait" hidden>กำลังโหลดประวัติ… เซิร์ฟเวอร์อาจกำลังตื่น ใช้เวลาสักครู่</p>';
+    var w = list.querySelector('.hist-wait');
+    setTimeout(function () { if (w && w.isConnected) w.hidden = false; }, 4000);
+  }
+  // มีเวลาจำกัด + ลองซ้ำอัตโนมัติ 1 ครั้ง กันหน้าค้างโครงว่างไม่มีกำหนดเมื่อเซิร์ฟเวอร์ตอบช้า
+  async function getJsonOnce(url, ms) {
+    var ctl = window.AbortController ? new AbortController() : null;
+    var t = ctl ? setTimeout(function () { ctl.abort(); }, ms) : 0;
+    try {
+      var res = await fetch(url, { credentials: 'same-origin', cache: 'no-store', signal: ctl ? ctl.signal : undefined });
+      var data = await res.json().catch(function () { return {}; });
+      if (!res.ok) { var er = new Error(data.error || 'โหลดไม่สำเร็จ'); er.status = res.status; throw er; }
+      return data;
+    } catch (e) {
+      if (e && e.name === 'AbortError') { var te = new Error('เซิร์ฟเวอร์ตอบช้ากว่าปกติ ลองใหม่อีกครั้ง'); te.timeout = true; throw te; }
+      throw e;
+    } finally { clearTimeout(t); }
   }
   async function getJson(url) {
-    var res = await fetch(url, { credentials: 'same-origin' });
-    var data = await res.json().catch(function () { return {}; });
-    if (!res.ok) throw new Error(data.error || 'โหลดไม่สำเร็จ');
-    return data;
+    try { return await getJsonOnce(url, 12000); }
+    catch (e) {
+      if (e.status && e.status < 500) throw e;   // 401/404 ฯลฯ ไม่ต้องลองซ้ำ
+      await new Promise(function (r) { setTimeout(r, 800); });
+      return await getJsonOnce(url + (url.indexOf('?') < 0 ? '?' : '&') + '_r=' + Date.now(), 18000);   // ต่อท้ายให้ไม่ไปรอคิวคำขอเดิมที่ค้าง
+    }
   }
   var currentKind = 'insp';
   var currentStatus = 'all';
@@ -1057,7 +1075,9 @@ html.vch-pre:not(.vch-on) body{background:#0a0806}</style>
   async function openInspections() {
     var my = ++reqId;
     shown = PAGE;
-    showSkeleton();
+    // เคยโหลดแล้วในรอบนี้: แสดงของเดิมทันที แล้วค่อยอัปเดตเงียบ ๆ
+    if (inspItems.length) { try { fillTypeOptions(); renderInspections(); } catch (e0) { showSkeleton(); } } else showSkeleton();
+    var had = inspItems.length > 0;
     try {
       var data = await getJson('/api/history/inspections');
       if (my !== reqId) return;
@@ -1065,7 +1085,7 @@ html.vch-pre:not(.vch-on) body{background:#0a0806}</style>
       fillTypeOptions();
       renderInspections();
       list.classList.add('is-reveal'); setTimeout(function () { list.classList.remove('is-reveal'); }, 900);
-    } catch (e) { if (my === reqId) showError(e.message); }
+    } catch (e) { if (my === reqId && !had) showError(e.message); }
   }
 
   function pst(it) { return it.status || (it.credited ? 'credited' : 'pending'); }
@@ -1998,7 +2018,7 @@ document.addEventListener('click', function (e) {
 <script src="talk.js?v=8"></script>
 <script src="health.js?v=8"></script>
 <script src="miss-ui.js?v=3"></script>
-<script src="command.js?v=1"></script>
+<script src="command.js?v=2"></script>
 <script src="compare.js?v=14"></script>
 <script src="tools.js?v=11"></script>
 <script src="negotiate.js?v=5"></script>
