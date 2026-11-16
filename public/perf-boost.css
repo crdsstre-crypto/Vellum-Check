@@ -1,0 +1,16 @@
+/* perf-boost.css (v1) — ลื่นขึ้นโดยหน้าตาเหมือนเดิม
+   7) ฉากหลังเบลอของหน้าต่าง (backdrop-filter) เดิมเปิดค้างทั้งที่มองไม่เห็น (opacity 0) → เครื่องต้องเบลอทั้งจอทุกเฟรมตอนเลื่อน
+      ตอนนี้ซ่อน (visibility) ตอนหน้าต่างปิด แล้วค่อยแสดงตอนเปิด (ยังจางเข้า-ออกเหมือนเดิม)
+   8) html.vc-lite (perf-boost.js ตั้งให้เมื่อเครื่องช้า): ลดของประดับที่ลอย/กะพริบ ไม่แตะเนื้อหา */
+.sheet-backdrop{visibility:hidden;transition:opacity .3s ease,visibility 0s linear .3s}
+body.auth-open .sheet-backdrop,body.ct-open .sheet-backdrop{visibility:visible;transition:opacity .3s ease,visibility 0s}
+.vc-sheet-back{visibility:hidden;transition:opacity .25s ease,visibility 0s linear .25s}
+html.vc-sheet-open .vc-sheet-back{visibility:visible;transition:opacity .25s ease,visibility 0s}
+
+/* ---- โหมดเครื่องช้า ---- */
+html.vc-lite .vc-dust i:nth-child(2n),html.vc-lite .vc-bokeh i:nth-child(2n){display:none}
+html.vc-lite .vc-dust i,html.vc-lite .vc-bokeh i{will-change:auto}
+html.vc-lite .alx-dust,html.vc-lite .alx-tw,html.vc-lite .sk-fes,html.vc-lite .pl-dus,html.vc-lite .pl-dd,html.vc-lite .cr-pts{display:none!important}
+html.vc-lite .pl-cf:nth-child(2n){display:none}
+html.vc-lite :is(.alx-l,.alx-leaf,.cr-ray,.pl-ban,.sk-rays,.alx-crest b){animation:none!important}
+html.vc-lite .alx-bg ~ * :is(.acct-menu .menu-item,.vc-stat,.vdc-acct,.vrm-acct),html.vc-lite body[data-sheet="acct"] #authCard :is(.vc-stat,.vdc-acct,.vrm-acct,.acct-menu .menu-item,.acct-out){-webkit-backdrop-filter:none!important;backdrop-filter:none!important;background-color:rgba(34,22,14,.82)!important}
