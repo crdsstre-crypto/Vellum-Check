@@ -138,8 +138,14 @@
     loading = true;
     var rf = box.querySelector('.vcc-rf'); if (rf) rf.classList.add('spin');
     if (box.hidden && !box.innerHTML) { box.innerHTML = '<div class="vcc-skel"></div>'; box.hidden = false; }
-    fetch('/api/history/overview', { credentials: 'same-origin' }).then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (d) { loading = false; lastAt = Date.now(); if (d) render(d); else box.hidden = true; }, function () { loading = false; if (!box.querySelector('.vcc-h')) box.hidden = true; });
+    // มีเวลาจำกัด 18 วิ + ลองซ้ำ 1 ครั้ง กันโครงว่างค้างเมื่อเซิร์ฟเวอร์ตอบช้า
+    function get(ms) {
+      var ctl = window.AbortController ? new AbortController() : null, t = ctl ? setTimeout(function () { ctl.abort(); }, ms) : 0;
+      return fetch('/api/history/overview' + (ms > 15000 ? '?_r=' + Date.now() : ''), { credentials: 'same-origin', cache: 'no-store', signal: ctl ? ctl.signal : undefined })
+        .then(function (r) { clearTimeout(t); if (r.status >= 500) throw new Error('5xx'); return r.ok ? r.json() : null; }, function (e) { clearTimeout(t); throw e; });
+    }
+    get(14000).catch(function () { return new Promise(function (r) { setTimeout(r, 800); }).then(function () { return get(18000); }); })
+      .then(function (d) { loading = false; lastAt = Date.now(); if (rf) rf.classList.remove('spin'); if (d) render(d); else box.hidden = true; }, function () { loading = false; if (rf) rf.classList.remove('spin'); if (!box.querySelector('.vcc-h')) box.hidden = true; });
   }
   function onTab() {
     if (!box) return;
