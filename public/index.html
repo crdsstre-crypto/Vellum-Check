@@ -17,6 +17,15 @@
 <meta name="apple-mobile-web-app-title" content="Vellum Check">
 <!-- Vellum Art Direction: "vc-art" = ชั้นสไตล์ใหม่ (ลบสคริปต์บรรทัดนี้เพื่อย้อนกลับ) · "vc-spa" = หน้าแรกหน้าเดียว ส่วนอื่นเปิดจากเมนู (ลบเฉพาะ vc-spa เพื่อกลับไปเป็นหน้ายาวหน้าเดียว) -->
 <script>document.documentElement.classList.add("vc-art","vc-spa");</script>
+<script>/* perf-boost ข้อ 5: แบ่งงานตอนเปิดหน้า (DOMContentLoaded) เป็นชิ้น ๆ ทีละตัว ให้เครื่องได้หายใจ/วาดจอ/รับการแตะระหว่างกัน · ตัวจัดการ 'load' จะรอจนชิ้นเหล่านี้ทำครบก่อน ลำดับเหมือนเดิม */
+(function(){try{if(!window.MessageChannel||!window.WeakMap)return;var q=[],busy=0,done=0,lq=[],map=new WeakMap(),mc=new MessageChannel(),D=document,ev=null;
+function run(){var t=performance.now();while(q.length){var it=q.shift();try{it.f.call(it.t,ev)}catch(e){setTimeout(function(){throw e})}if(performance.now()-t>40)break}if(q.length)mc.port2.postMessage(0);else{busy=0;done=1;var l=lq;lq=[];l.forEach(function(x){try{x.f.call(window,x.e)}catch(e){setTimeout(function(){throw e})}})}}
+mc.port1.onmessage=run;
+function wrapDCL(t,f){if(typeof f!=='function'&&!(f&&f.handleEvent))return f;if(map.has(f))return map.get(f);var fn=typeof f==='function'?f:function(e){f.handleEvent(e)};var w=function(e){ev=e;q.push({f:fn,t:t});if(!busy){busy=1;mc.port2.postMessage(0)}};map.set(f,w);return w}
+function wrapLoad(f){if(typeof f!=='function')return f;if(map.has(f))return map.get(f);var w=function(e){if(busy||q.length)lq.push({f:f,e:e});else f.call(window,e)};map.set(f,w);return w}
+function patch(o,isWin){var a=o.addEventListener,r=o.removeEventListener;o.addEventListener=function(type,f,opt){if(type==='DOMContentLoaded'&&D.readyState==='loading')return a.call(this,type,wrapDCL(this,f),opt);if(isWin&&type==='load'&&D.readyState!=='complete')return a.call(this,type,wrapLoad(f),opt);return a.call(this,type,f,opt)};o.removeEventListener=function(type,f,opt){return r.call(this,type,(f&&map.get(f))||f,opt)}}
+patch(D,0);patch(window,1);}catch(e){}})();</script>
+
 <script>/* v269: เพิ่งกลับจากล็อกอิน Google → ปิดหน้าแรกไว้ก่อน (ไม่ให้เห็นแวบ) จนฉากประทับตราเริ่ม · กันค้าง 6 วินาที */
 (function(){try{var t=+sessionStorage.getItem("vc_stamp_google"),h=document.documentElement;if(t&&Date.now()-t<180000&&!/[?&]google=error/.test(location.search)&&!matchMedia("(prefers-reduced-motion: reduce)").matches){h.classList.add("vc-gin");window.__vcGinOff=function(){if(!h.classList.contains("vc-gin"))return;h.classList.add("vc-gin-out");setTimeout(function(){h.classList.remove("vc-gin","vc-gin-out")},450)};setTimeout(window.__vcGinOff,6000)}}catch(e){}})();</script>
 <title>เช็กสัญญา | Vellum Check</title>
@@ -25,7 +34,7 @@
 <style>html.vch-pre:not(.vch-on) main > .hero,html.vch-pre:not(.vch-on) main > .hero *{visibility:hidden !important}
 html.vch-pre:not(.vch-on) body{background:#0a0806}</style>
 <script>(function(d){d.classList.add('vch-pre');setTimeout(function(){if(!d.classList.contains('vch-on'))d.classList.remove('vch-pre')},6000)})(document.documentElement)</script>
-<script src="i18n.js?v=13"></script>
+<script>(function(d){try{var m=/[?&]lang=(en|th|zh)\b/.exec(location.search),l=m?m[1]:localStorage.getItem("vc_lang");if(l==="en"||l==="zh"){d.setAttribute("data-lang",l);d.classList.add("i18n-wait");var st=document.createElement("style");st.textContent="html.i18n-wait:not([data-lang=th]) body{opacity:0}";document.head.appendChild(st);setTimeout(function(){d.classList.remove("i18n-wait")},2500)}}catch(e){}})(document.documentElement)</script>
 
 <!-- ฟอนต์ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -57,7 +66,7 @@ html.vch-pre:not(.vch-on) body{background:#0a0806}</style>
 <link rel="stylesheet" href="solve-ui.css?v=1">
 <link rel="stylesheet" href="read-story.css?v=1">
 <link rel="stylesheet" href="acct-info.css?v=2">
-<link rel="stylesheet" href="daily-ui.css?v=124">
+<link rel="stylesheet" href="perf-boost.css?v=1">
 <link rel="stylesheet" href="account-desk.css?v=5" media="(min-width: 768px)">
 <link rel="stylesheet" href="acct-lux.css?v=6" media="(max-width: 767px)">
 </head>
@@ -1981,6 +1990,7 @@ document.addEventListener('click', function (e) {
   } catch (e) {}
 })();
 </script>
+<script src="i18n.js?v=13"></script>
 <script src="glossary.js?v=5"></script>
 <script src="script.js?v=48"></script>
 <script src="consent-ui.js?v=1"></script>
@@ -2007,12 +2017,12 @@ document.addEventListener('click', function (e) {
 <script src="silent-clip.js?v=1"></script>
 <script src="demo-results.js?v=4"></script>
 <script src="perf-guard.js?v=4"></script>
+<script src="perf-boost.js?v=1"></script>
 <script src="art.js?v=284"></script>
-<script src="hero-scene.js?v=8" onerror="document.documentElement.classList.remove('vch-pre')"></script>
+<script src="hero-scene.js?v=9" onerror="document.documentElement.classList.remove('vch-pre')"></script>
 <script src="desk-bg.js?v=1"></script>
 <script src="remind-ui.js?v=4"></script>
 <script src="mascot.js?v=1"></script>
-<script src="daily-ui.js?v=113"></script>
 <script src="help-ui.js?v=2"></script>
 <script src="solve-ui.js?v=2"></script>
 <script src="read-story.js?v=1"></script>
