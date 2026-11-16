@@ -567,8 +567,8 @@ html body .vdc .vbg-m svg{width:100% !important;height:100% !important;fill:init
 .vcs .vdg-ch-glow{opacity:0;transition:opacity .2s}.vcs.burst .vdg-ch-glow{opacity:1}
 @keyframes vcsSh{0%{transform:scale(1) rotate(-4deg)}100%{transform:scale(1.04) rotate(4deg)}}
 @keyframes vcsPop{0%{transform:scale(1.15)}100%{transform:scale(1) translateY(30px)}}
-.vcs-c{position:absolute;left:50%;top:46%;width:34px;height:34px;margin:-17px 0 0 -17px;opacity:0}
-.vcs-c svg{width:100%;height:100%}
+.vcs .vcs-c{position:absolute;left:50%;top:46%;width:34px;height:34px;margin:-17px 0 0 -17px;opacity:0}
+.vcs .vcs-c svg{width:100%;height:100%}
 .vcs.burst .vcs-c{animation:vcsC 1.5s cubic-bezier(.15,.8,.35,1) var(--d) forwards}
 @keyframes vcsC{0%{opacity:1;transform:translate(0,0) scale(.4) rotate(0)}70%{opacity:1}100%{opacity:0;transform:translate(var(--dx),calc(var(--dy) + 160px)) scale(1.1) rotate(var(--r))}}
 .vcs-num{position:absolute;left:0;right:0;top:calc(46% + 120px);text-align:center;font:800 64px/1 'Prompt',sans-serif;color:#ffd75a;opacity:0;transform:scale(.4);
@@ -3020,7 +3020,7 @@ html body .vof-b .cr-beam{display:inline}html body .cr-beam{display:none}
 @keyframes vcTw{0%,72%,100%{opacity:0;transform:scale(.2) rotate(0)}82%{opacity:1;transform:scale(1) rotate(25deg)}92%{opacity:0;transform:scale(.4) rotate(45deg)}}
 .vdg-wl .vdg-tw{animation:vcTw 3.4s ease-in-out 1s infinite;transform-box:fill-box;transform-origin:center}
 .vdc .vdg-coin{width:44px!important;height:44px!important;margin:-6px 0}
-.vcs-c{width:46px!important;height:46px!important;margin:-23px 0 0 -23px!important}
+.vcs .vcs-c{width:46px!important;height:46px!important;margin:-23px 0 0 -23px!important}
 /* เหรียญจิ๋ว (ราคา/แต้มในร้าน/แท็บ): ตัว V + ขอบ */
 html body .vof-coin,html body .vst .vst-tabs .vtb-coin{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3CradialGradient id='g' cx='.35' cy='.3' r='.8'%3E%3Cstop offset='0' stop-color='%23fff3c4'/%3E%3Cstop offset='.55' stop-color='%23f4c542'/%3E%3Cstop offset='1' stop-color='%23b67a12'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='12' cy='12' r='11.2' fill='url(%23g)' stroke='%237a4d08' stroke-width='1.4'/%3E%3Ccircle cx='12' cy='12' r='8.6' fill='none' stroke='%239a6410' stroke-width='1' stroke-dasharray='1 1.2' opacity='.75'/%3E%3Cpath d='M7.4 9.2 11 15.4 16.8 7.4' fill='none' stroke='%237a4d08' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M7.4 9.2 11 15.4 16.8 7.4' fill='none' stroke='%23ffe9a0' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/100% 100% no-repeat!important;box-shadow:0 1px 2px rgba(0,0,0,.35)!important}
 html body .vst-pts .vof-coin{width:16px!important;height:16px!important}
