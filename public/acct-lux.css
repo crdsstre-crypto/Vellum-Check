@@ -892,3 +892,6 @@ html body[data-sheet="acct"] #authCard #dispPanel .vds-reset{background:linear-g
 html body[data-sheet="acct"] #authCard #dispPanel .vds-reset:disabled{color:#9a8a6c!important;opacity:.75!important}
 html body[data-sheet="acct"] #authCard #dispPanel .vds-saved{color:#a4b46f!important}
 }
+/* ===== ข้อความระหว่างรอโหลดประวัตินาน (acct-lux.css v27) ===== */
+.hist-wait{margin:10px 4px 0;text-align:center;font:500 12.5px/1.6 'Prompt',sans-serif;color:#a99678;animation:vcWait 1.6s ease-in-out infinite alternate}
+@keyframes vcWait{from{opacity:.55}to{opacity:1}}
