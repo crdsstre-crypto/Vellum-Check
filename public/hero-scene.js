@@ -433,7 +433,7 @@
     if (document.hidden || (window.VCPause && VCPause.on())) { setTimeout(function () { requestAnimationFrame(dust); }, 300); return; }
     musicIdle(document.hidden); eqTick();
     /* v7: ฝุ่นลอยช้ามาก วาดแคนวาสทุก 2 เฟรม (ก้าวละ 2 เท่า ความเร็วเท่าเดิม) — ลดการส่งภาพเต็มจอขึ้นการ์ดจอครึ่งหนึ่ง */
-    if (!(dustFc = (dustFc + 1) & 1)) {
+    if (!(dustFc = (dustFc + 1) & (window.VCLite ? 3 : 1))) {
     cx.setTransform(DPR, 0, 0, DPR, 0, 0); cx.clearRect(0, 0, W, H);
     var col = dustMode === 1 ? '200,150,255' : '255,220,160';
     P.forEach(function (q) { q.y -= q.v * 2; q.a += .02; q.x += Math.sin(q.a) * .5; if (q.y < -5) { q.y = H + 5; q.x = Math.random() * W; }
