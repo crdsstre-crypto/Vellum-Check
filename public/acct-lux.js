@@ -63,7 +63,16 @@
     ['r', 'w', 'h'].forEach(function (k) { var e = li.querySelector('.alx-mg-' + k); if (!e) { e = document.createElement('p'); e.className = 'vc-mg alx-mg alx-mg-' + k; li.appendChild(e); } if (e.textContent !== T[k]) e.textContent = T[k]; });
     ['g1', 'g2'].forEach(function (k) { var e = li.querySelector('.acct-menu .vc-mg.' + k); if (e && e.textContent !== T[k]) e.textContent = T[k]; });
   }
-  function boot() { build(); dressCard(); dressHead(); dressGroups();
+  /* ป้ายเครดิตหน้าตรวจสัญญา: ใกล้หมด (≤1) → data-low · ตัวเลขเปลี่ยน → เด้ง+ประกาย */
+  function watchChip() {
+    var n = document.getElementById('creditNum'), c = document.getElementById('creditChip'); if (!n || !c || c.__alx) return; c.__alx = 1;
+    var last = n.textContent;
+    var upd = function () { var t = n.textContent, v = parseInt(t, 10); c.toggleAttribute('data-low', !isNaN(v) && v <= 1);
+      if (t !== last && last !== '–' && t !== '–') { c.classList.remove('alx-pop'); void c.offsetWidth; c.classList.add('alx-pop'); }
+      last = t; };
+    upd(); if (window.MutationObserver) new MutationObserver(upd).observe(n, { childList: true, characterData: true, subtree: true });
+  }
+  function boot() { build(); dressCard(); dressHead(); dressGroups(); watchChip();
     if (window.MutationObserver) new MutationObserver(watchOpen).observe(document.body, { attributes: true, attributeFilter: ['data-sheet'] });
     new MutationObserver(dressGroups).observe(document.documentElement, { attributes: true, attributeFilter: ['data-lang'] });
     var card = document.getElementById('authCard'); if (card && window.MutationObserver) new MutationObserver(function () { if (!document.querySelector('#authCard .alx-spine')) dressCard(); dressHead(); dressGroups(); }).observe(card, { childList: true, subtree: true }); }
