@@ -31,6 +31,7 @@
   /* ---------- รายการเครื่องมือ ---------- */
   var TOOLS = [
     {
+      sd: "วางฉบับเดิมกับฉบับใหม่ ระบบ==ไฮไลต์ทุกจุดที่ถูกแก้== และบอกว่าข้อไหนเสี่ยงขึ้น", ben: "ไม่พลาดข้อที่อีกฝ่ายแอบแก้ ก่อนเซ็นฉบับใหม่", how: ["กด \"เริ่มเทียบ\"", "วางฉบับเดิม แล้ววางฉบับใหม่", "ดูจุดที่แก้ แล้วกดร่างข้อความต่อรองได้เลย"],
       id: 'compare', c: '#7fb5ff', ic: '<rect x="3" y="4" width="7.5" height="16" rx="2"/><rect x="13.5" y="4" width="7.5" height="16" rx="2"/><path d="M5.5 9h2.5M5.5 12.5h2.5M16 9h2.5M16 12.5h2.5M16 16h2.5"/>',
       name: 'เทียบ 2 ฉบับ', tag: 'ฟรี · ไม่ใช้เครดิต',
       desc: 'อีกฝ่ายแก้สัญญาแล้วส่งกลับมา? วางฉบับเดิมกับฉบับใหม่ ระบบไฮไลต์จุดที่แก้ เพิ่ม หรือลบ พร้อมบอกข้อที่เสี่ยงและเงินที่เปลี่ยน',
@@ -39,6 +40,7 @@
              ['ลองกับตัวอย่าง', '', function () { close(); setTimeout(function () { window.VCCompare && VCCompare.demo(0); }, 200); }]]
     },
     {
+      sd: "รวมข้อที่ควรขอแก้เป็น==ข้อความสุภาพข้อความเดียว== พร้อมส่ง LINE หรืออีเมล", ben: "ขอแก้สัญญาได้โดยไม่ต้องคิดคำเอง และไม่เสียความสัมพันธ์กับอีกฝ่าย", how: ["ตรวจสัญญาให้เสร็จก่อน", "เลือกข้อที่อยากต่อรองและน้ำเสียง", "แก้คำได้ แล้วกดส่งหรือคัดลอก"],
       id: 'negotiate', c: '#c4a1ff', ic: '<path d="M4 20l4.5-1 10-10a2.1 2.1 0 0 0-3-3l-10 10z"/><path d="M13.5 6.5l3 3M4 20h16"/>',
       name: 'ร่างข้อความต่อรอง', tag: function () { return hasResult() ? 'จากผลตรวจล่าสุด' : 'ใช้หลังตรวจสัญญา'; },
       desc: 'รวมข้อที่ควรขอแก้จากผลตรวจเป็นข้อความสุภาพข้อความเดียว เลือกน้ำเสียงได้ แก้คำได้ แล้วส่งทาง LINE หรืออีเมลได้ทันที',
@@ -46,6 +48,7 @@
       acts: function () { return hasResult() ? [['ร่างข้อความ', 'p', function () { close(); setTimeout(function () { window.VCNeg && VCNeg.open(false); }, 220); }]] : [['ไปตรวจสัญญาก่อน', 'p', toResult]]; }
     },
     {
+      sd: "สิ่งที่ต้องทำ==ก่อน วันเซ็น และหลังเซ็น== แยกตามประเภทสัญญา ติ๊กเก็บไว้ได้", ben: "ไม่ลืมขั้นตอนสำคัญ เช่น ถ่ายรูปห้องไว้ กันโดนหักเงินประกันตอนย้ายออก", how: ["กด \"เปิดเช็กลิสต์\"", "เลือกประเภทสัญญา", "ติ๊กข้อที่ทำแล้ว กลับมาดูต่อได้"],
       id: 'checklist', c: '#34d399', ic: '<path d="M9 6h11M9 12h11M9 18h11"/><path d="m3.5 6 1.5 1.5L7.5 5M3.5 12l1.5 1.5L7.5 11M3.5 18l1.5 1.5L7.5 17"/>',
       name: 'เช็กลิสต์ก่อนเซ็น', tag: 'ฟรี · ไม่ต้องตรวจก่อน',
       desc: 'สิ่งที่ควรทำก่อน ระหว่าง และหลังเซ็น แยกตามประเภทสัญญา เช่น ถ่ายรูปห้องก่อนเข้าอยู่ ขอใบเสร็จเงินประกัน จดเลขมิเตอร์ ติ๊กเก็บไว้แล้วกลับมาดูต่อได้',
@@ -53,6 +56,7 @@
       acts: [['เปิดเช็กลิสต์', 'p', function () { close(); setTimeout(function () { window.VCMore && VCMore.checklist(); }, 220); }]]
     },
     {
+      sd: "สร้างลิงก์อ่านอย่างเดียวให้คนที่ไว้ใจช่วยดู ==ปิดบังข้อมูลส่วนตัวให้อัตโนมัติ==", ben: "ให้พ่อแม่ เพื่อน หรือทนายช่วยดูได้ โดยข้อมูลส่วนตัวไม่หลุด", how: ["ตรวจสัญญาให้เสร็จก่อน", "กด \"สร้างลิงก์แชร์\"", "ส่งลิงก์ได้เลย หมดอายุใน 7 วัน ยกเลิกได้ทุกเมื่อ"],
       id: 'share', c: '#7fb5ff', ic: '<path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/>',
       name: 'แชร์ผลตรวจให้คนอื่นดู', tag: function () { return loggedIn() ? 'ลิงก์ 7 วัน' : 'ต้องเข้าสู่ระบบ'; },
       desc: 'สร้างลิงก์อ่านอย่างเดียวส่งให้พ่อแม่ เพื่อน หรือทนายช่วยดู ระบบปิดบังชื่อ เลขบัตร เบอร์โทร และเลขบัญชีให้อัตโนมัติ ลิงก์หมดอายุใน 7 วัน และยกเลิกได้ทุกเมื่อ',
@@ -60,6 +64,7 @@
       acts: function () { return hasResult() ? [['สร้างลิงก์แชร์', 'p', function () { close(); setTimeout(function () { window.VCMore && VCMore.share(); }, 220); }]] : [['ไปตรวจสัญญาก่อน', 'p', toResult]]; }
     },
     {
+      sd: "สรุปว่า==ใครต้องทำอะไร จ่ายเท่าไร เมื่อไร== ติ๊กเมื่อทำแล้ว และตั้งเตือนได้", ben: "ไม่พลาดกำหนดจ่ายหรือวันแจ้งล่วงหน้า ที่อาจทำให้โดนปรับ", how: ["ตรวจสัญญาให้เสร็จก่อน", "เปิดรายการ ดูส่วนของคุณและของอีกฝ่าย", "กด 🔔 ตั้งเตือน หรือเพิ่มลงปฏิทิน"],
       id: 'oblig', c: '#f5c451', ic: '<rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4V3h6v1M8.5 10l1.5 1.5L13 8.5M8.5 15.5l1.5 1.5L13 14M15 10.5h1.5M15 16h1.5"/>',
       name: 'สิ่งที่ต้องทำตามสัญญา', tag: function () { return hasResult() ? 'จากผลตรวจล่าสุด' : 'ใช้หลังตรวจสัญญา'; },
       desc: 'สรุปว่าคุณและอีกฝ่ายต้องทำอะไร จ่ายเท่าไร เมื่อไร ติ๊กเมื่อทำแล้ว และกด 🔔 ให้เตือนก่อนถึงกำหนด',
@@ -67,6 +72,7 @@
       acts: function () { return hasResult() ? [['เปิดรายการ', 'p', function () { close(); setTimeout(function () { if (!(window.VCObl && VCObl.open())) toResult(); }, 220); }]] : [['ไปตรวจสัญญา', 'p', toResult]]; }
     },
     {
+      sd: "ข้อไหนอ่านไม่เข้าใจ ให้ AI ==แปลเป็นภาษาง่าย ๆ== พร้อมสิ่งที่ควรระวัง", ben: "เข้าใจทุกข้อก่อนเซ็น และรู้ว่าควรถามอีกฝ่ายเรื่องอะไร",
       id: 'explain', c: '#f5c451', ic: '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1.1 2V16h5v-.2c.1-.8.5-1.5 1.1-2A6 6 0 0 0 12 3z"/>',
       name: 'อธิบายข้อสัญญา', tag: 'ในหน้าผลตรวจ',
       desc: 'อ่านข้อไหนไม่เข้าใจ ให้ AI แปลเป็นภาษาง่าย ๆ พร้อมตัวอย่างสถานการณ์ สิ่งที่ควรระวัง และคำถามที่ควรถามอีกฝ่าย',
@@ -74,6 +80,7 @@
       acts: function () { return hasResult() ? [['ไปที่ผลตรวจ', 'p', toResult]] : [['ไปตรวจสัญญา', 'p', toResult]]; }
     },
     {
+      sd: "ดูคะแนนสัญญาทุกฉบับ ==ฉบับไหนเสี่ยงที่สุด== และวันสำคัญที่ใกล้ถึง", ben: "รู้ว่าควรดูสัญญาไหนก่อน และไม่ลืมวันต่อสัญญาหรือวันคืนเงินประกัน", how: ["เข้าสู่ระบบและตรวจสัญญาไว้", "กด \"เปิดภาพรวม\"", "ดู 3 อันดับที่ควรดูก่อน และวันสำคัญถัดไป"],
       id: 'overview', c: '#34d399', ic: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
       name: 'ภาพรวมและวันสำคัญ', tag: function () { return loggedIn() ? 'จากประวัติของคุณ' : 'ต้องเข้าสู่ระบบ'; },
       desc: 'ดูคะแนนสัญญาทุกฉบับที่เคยตรวจ ฉบับไหนเสี่ยงที่สุด และวันครบกำหนดที่ใกล้ถึง เช่น วันต่อสัญญา หรือวันคืนเงินประกัน',
@@ -97,7 +104,7 @@
     '.vct-hd b{display:block;font:700 17px/1.25 Prompt,sans-serif}.vct-hd small{display:block;font:400 12.5px/1.4 Prompt,sans-serif;color:#9a9aa3}' +
     '.vct .vct-x{margin-left:auto;flex:none;display:grid;place-items:center;width:40px;height:40px;min-height:0 !important;padding:0 !important;border-radius:50%;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#ececef;font-size:20px;line-height:1;cursor:pointer}' +
     '.vct-bd{overflow:auto;overscroll-behavior:contain;padding:14px 16px calc(18px + env(safe-area-inset-bottom,0px));display:grid;gap:12px}' +
-    '@media (min-width:768px){.vct-bd{grid-template-columns:1fr 1fr}.vct-it:first-child{grid-column:1/-1}}' +
+    '@media (min-width:768px){.vct-bd{grid-template-columns:1fr 1fr}.vct-it[data-tool=compare]{grid-column:1/-1}}' +
     '.vct-it{--c:#7fb5ff;position:relative;padding:14px;border-radius:18px;border:1px solid color-mix(in srgb,var(--c) 26%,transparent);background:linear-gradient(150deg,color-mix(in srgb,var(--c) 11%,transparent),transparent 55%),#17191e;animation:vctIn .4s both}' +
     '.vct-it:nth-child(2){animation-delay:.05s}.vct-it:nth-child(3){animation-delay:.1s}.vct-it:nth-child(4){animation-delay:.15s}' +
     '@keyframes vctIn{from{opacity:0;transform:translateY(10px)}}' +
@@ -117,6 +124,7 @@
     '.vct .vct-ac button{flex:1;min-height:44px !important;padding:0 12px !important;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:#ececef;font:600 13.5px/1 Prompt,sans-serif;cursor:pointer;transition:transform .12s}' +
     '.vct .vct-ac button.p{border:0;background:var(--c);color:#0b0c0f;box-shadow:0 8px 20px -10px var(--c)}' +
     '.vct .vct-ac button:active{transform:scale(.97)}' +
+    '.vct-gh{display:none}.vct-sd,.vct-tb,.vct-pn,.vct-mo{display:none}' +
     '.vct-soon{display:flex;align-items:center;gap:11px;padding:13px 14px;border-radius:18px;border:1px dashed rgba(255,255,255,.12);color:#8a8a93;font:400 12.5px/1.5 Prompt,sans-serif}' +
     '.vct-soon i{flex:none;display:grid;place-items:center;width:36px;height:36px;border-radius:12px;background:rgba(255,255,255,.04);font-style:normal;font-size:17px}' +
     '.vct-soon b{display:block;color:#c4c4cb;font-weight:600}' +
@@ -153,17 +161,39 @@
 
   /* ---------- แผง ---------- */
   var el = null, acts = {};
+  var MORE = {"compare": {"b": [["eye", "เห็นทุกจุดที่เปลี่ยนในพริบตา", "คำที่ถูกเพิ่ม ลบ หรือแก้ มีสีบอกชัด ไม่ต้องนั่งอ่านเทียบทีละบรรทัด"], ["money", "รู้ทันเงินที่ถูกปรับ", "ค่าเช่า ค่าปรับ ดอกเบี้ย หรือเงินมัดจำที่เปลี่ยนไป ระบบชี้ให้เห็นทันที"], ["warn", "เตือนข้อที่ถูกตัดทิ้ง", "ถ้าข้อที่คุ้มครองคุณหายไป เช่น การรับประกัน ระบบบอกว่าคุณเสียสิทธิ์อะไร"], ["chat", "ขอแก้กลับได้ทันที", "กดร่างข้อความต่อรองจากจุดที่ถูกแก้ แล้วส่งให้อีกฝ่ายได้เลย"], ["gift", "ฟรี ไม่หักเครดิต", "ใช้เทียบได้โดยไม่เสียเครดิตตรวจสัญญาของคุณ"]], "h": [["กด \"เริ่มเทียบ\"", "หรือกด \"ลองกับตัวอย่าง\" เพื่อดูหน้าตาผลลัพธ์ก่อนใช้จริง"], ["ใส่ฉบับเดิม", "วางสัญญาฉบับแรกที่ได้รับลงในกล่องแรก (กดค้างในกล่อง แล้วเลือก \"วาง\") หรืออัปโหลดไฟล์"], ["ใส่ฉบับใหม่", "วางฉบับที่อีกฝ่ายแก้แล้วส่งกลับมา ลงในกล่องที่สอง"], ["กด \"เทียบ\"", "ระบบเทียบให้ทีละข้อ แล้วไฮไลต์จุดที่เพิ่ม ลบ และแก้"], ["ดูผลและต่อรอง", "แตะแต่ละจุดเพื่อดูว่าเสี่ยงอย่างไร แล้วกดร่างข้อความต่อรองได้ในปุ่มเดียว"]], "tip": "ใช้เทียบร่างสัญญาจาก 2 เจ้าก่อนตัดสินใจเลือกก็ได้ เช่น ห้องเช่า 2 ที่ หรือร้านรถ 2 ร้าน"}, "negotiate": {"b": [["chat", "ไม่ต้องคิดคำเอง", "รวมข้อที่ควรขอแก้เป็นข้อความเดียว พร้อมยกข้อความเดิมและสิ่งที่ขอแก้ให้"], ["heart", "สุภาพ ไม่ดูหาเรื่อง", "ถ้อยคำเป็นมืออาชีพ รักษาความสัมพันธ์กับเจ้าของห้อง นายจ้าง หรือร้านค้า"], ["tone", "เลือกน้ำเสียงได้", "สุภาพ กลาง ๆ หรือตรงไปตรงมา ตามความสนิทกับอีกฝ่าย"], ["check", "อีกฝ่ายแก้ได้ทันที", "บอกชัดว่าข้อไหน ขอแก้เป็นอะไร ไม่ต้องคุยวนไปวนมา"], ["send", "ส่งได้ในแตะเดียว", "ส่งทาง LINE อีเมล หรือคัดลอกไปวางที่ไหนก็ได้"]], "h": [["ตรวจสัญญาให้เสร็จก่อน", "ระบบจะดึงข้อที่ควรขอแก้มาจากผลตรวจของคุณให้เอง"], ["กด \"ร่างข้อความ\"", "ในแท็บเครื่องมือนี้ หรือปุ่มในหน้าผลตรวจ"], ["เลือกข้อที่อยากต่อรอง", "ติ๊กเฉพาะข้อที่สำคัญกับคุณ ไม่จำเป็นต้องขอทุกข้อ"], ["เลือกน้ำเสียงและแก้คำ", "ใส่ชื่อผู้รับ แล้วแตะที่ข้อความเพื่อแก้คำเองได้"], ["ส่งให้อีกฝ่าย", "กดส่งทาง LINE อีเมล หรือคัดลอก"]], "tip": "ขอแก้ 2–3 ข้อที่สำคัญที่สุดก่อน มักคุยง่ายกว่าขอแก้ทีเดียวหลายข้อ"}, "checklist": {"b": [["money", "กันโดนหักเงินประกัน", "เตือนให้ถ่ายรูปสภาพห้องและจดเลขมิเตอร์ไว้ เป็นหลักฐานตอนย้ายออก"], ["doc", "มีหลักฐานครบมือ", "เตือนให้ขอสำเนาสัญญาที่เซ็นแล้ว และจ่ายเงินแบบมีหลักฐานทุกครั้ง"], ["pen", "เซ็นอย่างรอบคอบ", "เช็กชื่อคู่สัญญา และขีดฆ่าช่องว่าง กันการเติมข้อความภายหลัง"], ["list", "ตรงกับสัญญาของคุณ", "มี 6 แบบ: เช่าที่พัก จ้างงาน ฟรีแลนซ์ กู้ยืมเงิน ซื้อขาย และทั่วไป"], ["gift", "ฟรี ไม่ต้องตรวจก่อน", "เปิดดูได้ทันที แม้ยังไม่มีสัญญาในมือ"]], "h": [["กด \"เปิดเช็กลิสต์\"", "เปิดได้เลย ไม่ต้องตรวจสัญญาก่อน"], ["เลือกประเภทสัญญา", "แตะแบบที่ตรงกับสัญญาของคุณ เช่น เช่าที่พัก หรือจ้างงาน"], ["อ่านทีละช่วง", "แบ่งเป็น ก่อนเซ็น · วันเซ็น · หลังเซ็น แต่ละข้อบอกเหตุผลสั้น ๆ"], ["ติ๊กข้อที่ทำแล้ว", "ระบบจำไว้ในเครื่องนี้ กลับมาเปิดดูต่อได้"], ["ทำให้ครบก่อนวันเซ็น", "เมื่อติ๊กครบทุกข้อ จะมีข้อความบอกว่าพร้อมแล้ว"]], "tip": "เปิดเช็กลิสต์ตั้งแต่ก่อนไปดูห้องหรือนัดเซ็น จะรู้ว่าต้องถามหรือเตรียมอะไร"}, "share": {"b": [["users", "ให้คนที่ไว้ใจช่วยดู", "พ่อแม่ เพื่อน หรือทนาย เปิดดูผลตรวจได้จากลิงก์เดียว"], ["lock", "ข้อมูลส่วนตัวไม่หลุด", "ชื่อ เลขบัตร เบอร์โทร และเลขบัญชี ถูกปิดบังให้อัตโนมัติ"], ["eye", "อ่านอย่างเดียว", "คนที่ได้ลิงก์แก้อะไรไม่ได้ และไม่ได้รับสัญญาฉบับเต็ม"], ["clock", "กำหนดอายุลิงก์ได้", "เลือก 1 วัน 7 วัน หรือ 30 วัน และยกเลิกลิงก์ได้ทุกเมื่อ"], ["chat", "มีข้อความเตรียมไว้ให้", "เลือกว่าส่งให้ครอบครัว เพื่อน หรือทนาย ระบบเขียนข้อความชวนดูให้"]], "h": [["ตรวจสัญญาให้เสร็จก่อน", "ต้องเข้าสู่ระบบด้วย"], ["กด \"สร้างลิงก์แชร์\"", "ดูตัวอย่างได้ว่าข้อมูลไหนถูกปิดบัง"], ["เลือกผู้รับและอายุลิงก์", "ครอบครัว เพื่อน หรือทนาย และให้ลิงก์ใช้ได้ 1, 7 หรือ 30 วัน"], ["ส่งลิงก์", "กดแชร์ หรือคัดลอกลิงก์ไปส่งทาง LINE"], ["ยกเลิกได้ทุกเมื่อ", "กดยกเลิกลิงก์ แล้วคนที่มีลิงก์เดิมจะเปิดไม่ได้อีก"]], "tip": "ถ้าส่งให้ทนาย เลือกอายุลิงก์ 30 วัน จะได้มีเวลาอ่านและตอบกลับ"}, "oblig": {"b": [["list", "รู้ว่าใครต้องทำอะไร", "แยกให้ชัดว่า ส่วนไหนคุณต้องทำ ส่วนไหนอีกฝ่ายต้องทำ"], ["money", "ไม่พลาดวันจ่ายเงิน", "สรุปยอดและกำหนดจ่าย เช่น ค่าเช่าทุกวันที่ 5 ของเดือน"], ["bell", "เตือนก่อนถึงกำหนด", "กด 🔔 ให้ระบบเตือน หรือเพิ่มลงปฏิทินในมือถือ"], ["warn", "กันโดนปรับ", "เห็นข้อห้ามและวันที่ต้องแจ้งล่วงหน้า เช่น แจ้งย้ายออกก่อน 30 วัน"], ["check", "ติ๊กเมื่อทำแล้ว", "เห็นว่าอะไรเสร็จแล้ว อะไรยังค้าง ในที่เดียว"]], "h": [["ตรวจสัญญาให้เสร็จก่อน", "ระบบดึงสิ่งที่ต้องทำมาจากข้อความในสัญญาให้เอง"], ["กด \"เปิดรายการ\"", "หรือเลื่อนหาการ์ด \"สิ่งที่ต้องทำตามสัญญา\" ในหน้าผลตรวจ"], ["เลือกว่าคุณคือฝ่ายไหน", "เช่น ผู้เช่า หรือผู้ให้เช่า รายการจะแยกตามฝ่ายให้"], ["ตั้งเตือนข้อที่มีกำหนด", "แตะ 🔔 ที่ข้อนั้น ระบบจะเตือนก่อนถึงวัน"], ["ติ๊กเมื่อทำแล้ว", "กลับมาดูได้ว่าอะไรเสร็จแล้ว อะไรยังค้าง"]], "tip": "ตั้งเตือนวันแจ้งล่วงหน้าไว้เลยตั้งแต่วันเซ็น เพราะมักเป็นวันที่ลืมกันบ่อยที่สุด"}, "explain": {"b": [["bulb", "แปลภาษากฎหมายเป็นภาษาคน", "อธิบายข้อสัญญาด้วยคำง่าย ๆ ว่าแปลว่าอะไร"], ["doc", "มีตัวอย่างสถานการณ์", "เห็นภาพว่าถ้าเกิดเรื่องจริง ข้อนี้จะส่งผลกับคุณอย่างไร"], ["warn", "บอกสิ่งที่ควรระวัง", "รู้ว่าข้อนี้มีจุดไหนที่อาจทำให้คุณเสียเปรียบ"], ["question", "มีคำถามเตรียมไว้ให้", "รู้ว่าควรถามอีกฝ่ายเรื่องอะไร และคัดลอกคำถามไปส่งได้"]], "h": [["ตรวจสัญญาให้เสร็จก่อน", "ปุ่มอธิบายจะอยู่ในหน้าผลตรวจ"], ["หาข้อที่ไม่เข้าใจ", "ใต้ข้อความที่ยกมาจากสัญญาในแต่ละประเด็น จะมีปุ่ม \"💡 อธิบายข้อนี้\""], ["หรือลากเลือกข้อความเอง", "ลากคลุมข้อความที่สงสัย แล้วแตะปุ่มที่ลอยขึ้นมา"], ["อ่านคำอธิบาย", "มี แปลว่าอะไร · ตัวอย่างสถานการณ์ · ควรระวัง · ควรถามอีกฝ่าย"], ["คัดลอกคำถาม", "กดคัดลอกคำถาม แล้วส่งให้อีกฝ่ายตอบก่อนเซ็น"]], "tip": "คำอธิบายช่วยให้เข้าใจเบื้องต้น สัญญาที่มูลค่าสูงควรให้ทนายดูอีกครั้ง"}, "overview": {"b": [["chart", "เห็นทุกฉบับในหน้าเดียว", "ดูคะแนนสัญญาทุกฉบับที่เคยตรวจ เทียบกันได้ง่าย"], ["warn", "รู้ว่าฉบับไหนควรดูก่อน", "จัด 3 อันดับสัญญาที่เสี่ยงที่สุดไว้ด้านบน"], ["calendar", "ไม่ลืมวันสำคัญ", "บอกวันที่ใกล้ถึง เช่น วันต่อสัญญา หรือวันคืนเงินประกัน"], ["bell", "แจ้งเตือนวันถัดไป", "เห็นทันทีว่าวันสำคัญถัดไปคือเมื่อไร"]], "h": [["เข้าสู่ระบบ", "ภาพรวมใช้ประวัติการตรวจในบัญชีของคุณ"], ["ตรวจสัญญาไว้อย่างน้อย 1 ฉบับ", "ยิ่งตรวจหลายฉบับ ภาพรวมยิ่งมีประโยชน์"], ["กด \"เปิดภาพรวม\"", "จะพาไปที่ประวัติการตรวจของคุณ"], ["ดู 3 อันดับที่ควรดูก่อน", "แตะสัญญาที่เสี่ยงที่สุดเพื่อเปิดผลตรวจอีกครั้ง"], ["ดูวันสำคัญถัดไป", "เตรียมตัวก่อนถึงวันต่อสัญญาหรือวันคืนเงิน"]], "tip": "ถ้าปิด \"ไม่บันทึกผลตรวจในประวัติ\" ไว้ ผลตรวจครั้งนั้นจะไม่แสดงในภาพรวม"}};
+  function hl(t) { return esc(t).replace(/==(.+?)==/g, '<mark class="vct-hl">$1</mark>'); }
+  function mo(n, w, u) { return n > 0 ? '<button type="button" class="vct-mo" data-more aria-expanded="false"><span class="o">ดู' + w + 'อีก ' + n + ' ' + (u || 'ข้อ') + '</span><span class="c">ย่อ' + w + '</span></button>' : ''; }
+  function x2(t) {
+    var m = MORE[t.id] || {};
+    var bens = (m.b || []).map(function (x, i) { return '<li class="vct-bi' + (i > 1 ? ' vct-xm' : '') + '" data-i="' + x[0] + '"><i aria-hidden="true"></i><span><b>' + esc(x[1]) + '</b>' + esc(x[2]) + '</span></li>'; }).join('');
+    var how = (m.h || []).map(function (x, i) { return '<li' + (i > 1 ? ' class="vct-xm"' : '') + '><span><b>' + esc(x[0]) + '</b>' + esc(x[1]) + '</span></li>'; }).join('');
+    return '<p class="vct-sd">' + hl(t.sd) + '</p>' +
+      '<div class="vct-tb" role="tablist"><button type="button" role="tab" class="is-on" data-tab="b" aria-selected="true">ประโยชน์</button><button type="button" role="tab" data-tab="h" aria-selected="false">วิธีใช้ ' + (m.h ? m.h.length : 0) + ' ขั้น</button></div>' +
+      '<div class="vct-pn" data-pn="b"><div class="vct-ben"><b>ช่วยคุณอย่างไร</b>' + esc(t.ben) + '</div><ul class="vct-bl">' + bens + '</ul>' + mo((m.b || []).length - 2, 'ประโยชน์') + '</div>' +
+      '<div class="vct-pn" data-pn="h" hidden><ol class="vct-hw">' + how + '</ol>' + mo((m.h || []).length - 2, 'ขั้นตอน', 'ขั้น') + (m.tip ? '<div class="vct-tip vct-xm"><b>เคล็ดลับ</b>' + esc(m.tip) + '</div>' : '') + '</div>';
+  }
+  function hlWatch() {
+    var its = el.querySelectorAll('.vct-it.has-x2');
+    if (!('IntersectionObserver' in window)) { [].forEach.call(its, function (n) { n.classList.add('hl-on'); }); return; }
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('hl-on'); io.unobserve(e.target); } }); }, { root: el.querySelector('.vct-bd'), threshold: .45 });
+    [].forEach.call(its, function (n) { io.observe(n); });
+  }
   function render() {
     acts = {};
-    var html = TOOLS.map(function (t) {
+    var L = document.documentElement.getAttribute('data-lang') || 'th';
+    var GH = { th: ['ใช้ได้เลย', 'ใช้กับผลตรวจของคุณ'], en: ['Use right away', 'Works with your results'], zh: ['立即可用', '配合你的检查结果'] }[L] || ['ใช้ได้เลย', 'ใช้กับผลตรวจของคุณ'];
+    var html = '<div class="vct-gh" data-g="1">' + esc(GH[0]) + '</div><div class="vct-gh" data-g="2">' + esc(GH[1]) + '</div>' + TOOLS.map(function (t) {
       var A = typeof t.acts === 'function' ? t.acts() : t.acts;
-      return '<section class="vct-it" style="--c:' + t.c + '" data-tool="' + t.id + '"><div class="vct-ih"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">' + t.ic + '</svg></span><div><b>' + esc(t.name) + '</b><em>' + esc(typeof t.tag === 'function' ? t.tag() : t.tag) + '</em></div></div>' +
+      return '<section class="vct-it' + (L === 'th' && t.ben ? ' has-x2' : '') + '" style="--c:' + t.c + '" data-tool="' + t.id + '" data-g="' + (t.id === 'compare' || t.id === 'checklist' ? 1 : 2) + '"><div class="vct-ih"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">' + t.ic + '</svg></span><div><b>' + esc(t.name) + '</b><em>' + esc(typeof t.tag === 'function' ? t.tag() : t.tag) + '</em></div></div>' +
         '<p>' + esc(t.desc) + '</p>' +
         (t.pts ? '<div class="vct-pts">' + t.pts.map(function (x) { return '<span>' + esc(x) + '</span>'; }).join('') + '</div>' : '') +
         (t.steps ? '<ol class="vct-stp">' + t.steps.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ol>' : '') +
+        (L === 'th' && t.ben ? x2(t) : '') +
         '<div class="vct-ac">' + A.map(function (a, k) { var key = t.id + k; acts[key] = a[2]; return '<button type="button" class="' + a[1] + '" data-act="' + key + '">' + esc(a[0]) + '</button>'; }).join('') + '</div></section>';
     }).join('') + '<div class="vct-soon"><i>✨</i><span><b>เครื่องมือใหม่กำลังมา</b>เราจะเพิ่มเครื่องมือช่วยอ่านสัญญาไว้ที่นี่เรื่อย ๆ</span></div>';
     el.querySelector('.vct-bd').innerHTML = html;
+    hlWatch();
   }
   function build() {
     el = document.createElement('div'); el.className = 'vct'; el.hidden = true;
@@ -172,6 +202,14 @@
     document.body.appendChild(el);
     el.addEventListener('click', function (e) {
       if (e.target.closest('[data-x]')) { close(); return; }
+      var mb = e.target.closest('[data-more]');
+      if (mb) { var pn = mb.closest('.vct-pn'), op = !pn.classList.contains('is-open'); pn.classList.toggle('is-open', op); mb.setAttribute('aria-expanded', op ? 'true' : 'false');
+        if (!op) { var it2 = pn.closest('.vct-it'); it2 && it2.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } return; }
+      var tb = e.target.closest('[data-tab]');
+      if (tb) { var it = tb.closest('.vct-it'), k = tb.getAttribute('data-tab');
+        [].forEach.call(it.querySelectorAll('[data-tab]'), function (n) { var on = n === tb; n.classList.toggle('is-on', on); n.setAttribute('aria-selected', on ? 'true' : 'false'); });
+        [].forEach.call(it.querySelectorAll('[data-pn]'), function (n) { n.hidden = n.getAttribute('data-pn') !== k; });
+        return; }
       var b = e.target.closest('[data-act]'); if (b && acts[b.getAttribute('data-act')]) acts[b.getAttribute('data-act')]();
     });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && el && !el.hidden) close(); });
