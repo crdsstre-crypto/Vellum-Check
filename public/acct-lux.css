@@ -1158,3 +1158,85 @@ html body .bottom-nav{-webkit-backdrop-filter:none!important;backdrop-filter:non
 body.auth-open .site-header .brand-logo,body.auth-open .site-header .brand-logo svg{animation:none!important}
 html body #authCard .alx-bg,html body #authCard .vc-wcard{contain:paint}
 }
+/* v36 ป้ายพรีวิวประเภทสัญญา: ป้ายหัวข้อกว้างเท่ากัน · "ระบบดูให้" เป็นเม็ด ✓ · ตัวอย่างจริง · เครดิตย้ายไปใต้กรอบ · จุดบนโมเดลอยู่หลังกรอบ */
+@media (max-width:767px){
+html body .vcp .vcp-stage .vcp-spots{z-index:1!important}
+html body .vcp .vcp-stage > .vcp-cap{z-index:3!important}
+html body .vcp .vcp-stage.is-house .vcp-cap,html body .vcp .vcp-stage.is-x .vcp-cap{bottom:28px!important}
+html body .vcp .vcp-stage .vcp-credit{left:auto!important;right:16px!important;bottom:8px!important;max-width:calc(100% - 32px);text-align:right;font-size:9px!important;color:rgba(214,196,160,.62)!important;text-decoration:none!important}
+html body .vcp .vcp-stage .vcp-credit a{color:rgba(214,196,160,.7)!important}
+html body .vcp .vcp-cap .vcp-cn{font-size:19px!important;line-height:1.2!important;margin-bottom:0}
+html body .vcp .vcp-stage .vcp-cap{gap:4px!important;padding:9px 12px 10px!important}
+html body .vcp .vcp-hint-spot.alx-off{visibility:hidden!important}
+html body .vcp .vcp-stage.is-house .vcp-cap::before,html body .vcp .vcp-stage.is-x .vcp-cap::before{bottom:-28px!important;height:calc(100% + 86px)!important}
+html body .vcp .vcp-use,html body .vcp .vcp-cs{display:grid!important;grid-template-columns:66px 1fr;align-items:start;gap:7px!important}
+html body .vcp .vcp-cap .alx-k{box-sizing:border-box;width:66px;font-size:10px!important;text-align:center;white-space:nowrap;margin-top:1px;padding:2px 0!important}
+html body .vcp .vcp-cs .alx-k{background:linear-gradient(180deg,#e0cc98,#b8955a)!important}
+html body .vcp .vcp-cap .alx-pills{display:flex;flex-wrap:wrap;gap:4px}
+html body .vcp .vcp-cap .alx-pills i{font:600 11px/1.3 'Prompt',sans-serif;font-style:normal;padding:1px 7px 1px 5px;border-radius:999px;color:#efe3c6;background:rgba(201,168,98,.14);box-shadow:inset 0 0 0 1px rgba(201,168,98,.38)}
+html body .vcp .vcp-cap .alx-pills i::before{content:"✓";margin-right:4px;color:#d9bd78;font-weight:800}
+html body .vcp .vcp-cap .alx-ex{display:block;margin-top:1px;padding:4px 9px;border-radius:7px;font:500 11px/1.4 'Prompt',sans-serif;color:#e8d6b0;background:rgba(150,52,36,.22);box-shadow:inset 3px 0 0 #b8553e}
+html body .vcp .vcp-cap .alx-ex[hidden]{display:none!important}
+}
+/* v37 การ์ดพรีวิวไม่บังโมเดล: ย่อเหลือหัวข้อ+เม็ด ✓ (แตะ "ดูเพิ่ม") · พื้นไล่จางแทนกล่องทึบ · จางตอนลากหมุน · ยกโมเดลขึ้น */
+@media (max-width:767px){
+html body .vcp .vcp-stage .vcp-cap{background:linear-gradient(180deg,rgba(20,12,6,0) 0,rgba(20,12,6,.55) 34px,rgba(18,11,5,.82))!important;box-shadow:none!important;outline:0!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;padding:26px 12px 8px!important;left:0!important;right:0!important;border-radius:0 0 14px 14px!important;transition:opacity .35s ease}
+html body .vcp .vcp-stage.is-house .vcp-cap,html body .vcp .vcp-stage.is-x .vcp-cap{bottom:22px!important}
+html body .vcp .vcp-stage .vcp-cap::before{display:none!important}
+html body .vcp .vcp-stage.is-house .vcp-cap::after,html body .vcp .vcp-stage.is-x .vcp-cap::after{content:""!important;display:block!important;position:absolute;left:0;right:0;top:100%;height:22px;background:rgba(18,11,5,.82);pointer-events:none}
+html body .vcp .vcp-cap .vcp-cn{padding-right:76px}
+html body .vcp .vcp-cap:not(.alx-open) .vcp-use,html body .vcp .vcp-cap:not(.alx-open) .alx-ex{display:none!important}
+html body .vcp .vcp-cap .alx-more{position:absolute;right:12px;top:27px;pointer-events:auto;font:600 11px/1 'Prompt',sans-serif;color:#e0cc98;padding:6px 10px;border-radius:999px;border:0;background:rgba(201,168,98,.14);box-shadow:inset 0 0 0 1px rgba(201,168,98,.4);-webkit-tap-highlight-color:transparent}
+html body .vcp .vcp-cap .alx-more::after{content:"";display:inline-block;width:5px;height:5px;margin-left:6px;border:solid #e0cc98;border-width:0 1.5px 1.5px 0;transform:translateY(-2px) rotate(45deg);transition:transform .25s}
+html body .vcp .vcp-cap.alx-open .alx-more::after{transform:translateY(1px) rotate(-135deg)}
+html body .vcp .vcp-cap .alx-more:focus{outline:0}
+html body .vcp .vcp-stage.alx-drag .vcp-cap > :not(.vcp-cn),html body .vcp .vcp-stage.alx-drag .vcp-cap{background:none!important}
+html body .vcp .vcp-stage.alx-drag .vcp-cap > :not(.vcp-cn){opacity:0;transition:opacity .25s}
+html body .vcp .vcp-stage .vcp-cap > *{transition:opacity .35s ease}
+html body .vcp .vcp-stage.alx-drag .vcp-cap::after{opacity:0}
+html body .vcp .vcp-stage canvas,html body .vcp .vcp-stage .vcp-spots,html body .vcp .vcp-stage .vcp-hint-spot,html body .vcp .vcp-stage .vcp-big,html body .vcp .vcp-stage .vcp-floor{translate:0 -34px}
+}
+@media (max-width:767px) and (prefers-reduced-motion:reduce){html body .vcp .vcp-stage .vcp-cap,html body .vcp .vcp-stage .vcp-cap > *{transition:none!important}}
+/* v38 การ์ดพรีวิว: ประโยชน์ 2 ข้อ + ปุ่ม "ดูทั้ง 8 เรื่องที่ระบบตรวจ" → แผ่นรายละเอียดเลื่อนขึ้นทับภาพ 3D */
+@media (max-width:767px){
+html body .vcp .vcp-cap.alx-th .vcp-use,html body .vcp .vcp-cap.alx-th .vcp-cs,html body .vcp .vcp-cap.alx-th .alx-ex{display:none!important}
+html body .vcp .vcp-cap:not(.alx-th) .alx-ben{display:none}
+html body .vcp .vcp-cap.alx-th .vcp-cn{padding-right:0}
+html body .vcp .vcp-cap .alx-ben{list-style:none;margin:0;padding:0;display:grid;gap:3px}
+html body .vcp .vcp-cap .alx-ben li{position:relative;padding-left:20px;font:500 12.5px/1.4 'Prompt',sans-serif;color:#efe3c6;text-shadow:0 1px 2px rgba(0,0,0,.7)}
+html body .vcp .vcp-cap .alx-ben li::before{content:"✓";position:absolute;left:0;top:1px;width:15px;height:15px;border-radius:50%;font:800 9.5px/15px sans-serif;text-align:center;color:#2e1c08;background:linear-gradient(180deg,#e0cc98,#b8955a)}
+html body .vcp .vcp-cap.alx-th .alx-more{position:static;justify-self:start;align-self:flex-start;margin-top:3px;padding:5px 11px}
+html body .vcp .alx-sh{position:absolute;inset:0;z-index:6;display:flex;flex-direction:column;border-radius:inherit;background:url("tex/n5.webp") 0 0/180px 180px,linear-gradient(180deg,#2c1b0e,#1a1008);box-shadow:inset 0 1px 0 rgba(255,220,170,.14);transform:translateY(102%);visibility:hidden;transition:transform .32s cubic-bezier(.2,.8,.2,1),visibility 0s .32s}
+html body .vcp .alx-sh.is-on{transform:none;visibility:visible;transition:transform .32s cubic-bezier(.2,.8,.2,1)}
+html body .vcp .alx-sh-in{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:0 16px 16px}
+html body .vcp .alx-sh-hd{position:sticky;top:0;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 -16px 6px;padding:12px 12px 10px 16px;background:linear-gradient(180deg,#2c1b0e 75%,rgba(44,27,14,0))}
+html body .vcp .alx-sh-hd b{font:700 18px/1.2 'Prompt',sans-serif;color:#f2e6c8}
+html body .vcp .alx-sh-x{flex:none;display:grid!important;place-items:center;padding:0!important;margin:0!important;line-height:1!important;position:static!important;width:34px;height:34px;border-radius:50%;border:0;font-size:15px;color:#e0cc98;background:rgba(201,168,98,.14);box-shadow:inset 0 0 0 1px rgba(201,168,98,.4);-webkit-tap-highlight-color:transparent}
+html body .vcp .alx-sh-x:focus{outline:0}
+html body .vcp .alx-sh h4{margin:12px 0 7px;font:700 11px/1.3 'Prompt',sans-serif;letter-spacing:.04em;color:#c9a862}
+html body .vcp .alx-sh h4:first-of-type{margin-top:2px}
+html body .vcp .alx-sh-c{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:5px}
+html body .vcp .alx-sh-c li{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;font:600 12px/1.3 'Prompt',sans-serif;color:#efe3c6;background:rgba(201,168,98,.1);box-shadow:inset 0 0 0 1px rgba(201,168,98,.26)}
+html body .vcp .alx-sh-c li::before{content:"✓";flex:none;color:#d9bd78;font-weight:800}
+html body .vcp .alx-sh-b{list-style:none;margin:0;padding:0;display:grid;gap:5px}
+html body .vcp .alx-sh-b li{position:relative;padding-left:20px;font:500 12.5px/1.45 'Prompt',sans-serif;color:#e6dbc4}
+html body .vcp .alx-sh-b li::before{content:"✓";position:absolute;left:0;top:2px;width:15px;height:15px;border-radius:50%;font:800 9.5px/15px sans-serif;text-align:center;color:#2e1c08;background:linear-gradient(180deg,#e0cc98,#b8955a)}
+html body .vcp .alx-sh-u{margin:0;font:500 12.5px/1.5 'Prompt',sans-serif;color:#d4c4a2}
+html body .vcp .alx-sh-ex{margin:12px 0 0;padding:7px 10px;border-radius:8px;font:500 12px/1.45 'Prompt',sans-serif;color:#e8d6b0;background:rgba(150,52,36,.22);box-shadow:inset 3px 0 0 #b8553e}
+html body .vcp .alx-sh-ft{margin:12px 0 0;padding-top:10px;border-top:1px dashed rgba(201,168,98,.3);font:600 11.5px/1.45 'Prompt',sans-serif;color:#c9a862;text-align:center}
+html body .vcp .vcp-stage.alx-sh-open .vcp-spots,html body .vcp .vcp-stage.alx-sh-open .vcp-hint{visibility:hidden!important}
+}
+@media (max-width:767px) and (prefers-reduced-motion:reduce){html body .vcp .alx-sh,html body .vcp .alx-sh.is-on{transition:none!important}}
+/* v39 ข้อความในแผ่นรายละเอียด: คำเตือนท้ายแผ่น */
+@media (max-width:767px){html body .vcp .alx-sh-dc{margin:8px 0 0;font:500 10.5px/1.5 'Prompt',sans-serif;color:rgba(214,196,160,.62);text-align:center}}
+/* v40 ข้อควรระวังในแผ่นรายละเอียด + บรรทัดเตือนสั้นข้างปุ่มบนการ์ด */
+@media (max-width:767px){
+html body .vcp .vcp-cap .alx-mrow{display:flex;align-items:center;gap:10px;margin-top:3px}
+html body .vcp .vcp-cap.alx-th .alx-mrow .alx-more{margin-top:0}
+html body .vcp .vcp-cap:not(.alx-th) .alx-dc{display:none}
+html body .vcp .vcp-cap .alx-dc{font:500 10px/1.3 'Prompt',sans-serif;color:rgba(214,196,160,.66);text-shadow:0 1px 2px rgba(0,0,0,.8)}
+html body .vcp .alx-sh h4.alx-sh-wh{margin-top:14px;color:#d9826c}
+html body .vcp .alx-sh-w{list-style:none;margin:0;padding:9px 10px;display:grid;gap:6px;border-radius:9px;background:rgba(150,52,36,.16);box-shadow:inset 0 0 0 1px rgba(184,85,62,.35)}
+html body .vcp .alx-sh-w li{position:relative;padding-left:19px;font:500 12px/1.45 'Prompt',sans-serif;color:#e8d6b0}
+html body .vcp .alx-sh-w li::before{content:"!";position:absolute;left:0;top:2px;width:14px;height:14px;border-radius:50%;font:800 9.5px/14px sans-serif;text-align:center;color:#fff3e6;background:#b8553e}
+}
