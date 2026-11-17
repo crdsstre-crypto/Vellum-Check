@@ -100,6 +100,18 @@
       ],
       acts: [['hist', 'เปิดประวัติ']] }
   ];
+  /* v3: ไอคอนเส้นสีทองชุดเดียวกัน (แทนอิโมจิหลายสไตล์) */
+  var SVG = {
+    start: '<path d="M5 19c1.5-4 4-7.5 7.5-10.5L17 4l3 3-4.5 4.5C12.5 15 9 17.5 5 19z"/><path d="M14 7l3 3"/><path d="M7.5 13.5L4 13l2.5-3.5h3.5M10.5 16.5l.5 3.5 3.5-2.5V14"/>',
+    login: '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l2.5 2.5M14.5 8.5l2 2"/>',
+    file: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>',
+    stuck: '<path d="M7 3h10M7 21h10M8 3c0 4.5 8 5.5 8 9s-8 4.5-8 9M16 3c0 4.5-8 5.5-8 9s8 4.5 8 9"/>',
+    pay: '<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/>',
+    read: '<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5M8.5 11h5"/>',
+    hist: '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M8 13h8"/>'
+  };
+  function ico(t) { return SVG[t.id] ? '<svg viewBox="0 0 24 24" aria-hidden="true">' + SVG[t.id] + '</svg>' : t.ico; }
+  var HOT = { stuck: 1, pay: 1 };   /* ป้าย "เจอบ่อย" — ปรับเรื่องได้ตรงนี้ */
   var byId = {}; TOPICS.forEach(function (t) { byId[t.id] = t; });
 
   function mascot(mood, size) { return window.VCMascot ? window.VCMascot.svg(mood, size) : '<span class="vhp-emo">' + (mood === 'happy' ? '😊' : '👋') + '</span>'; }
@@ -150,13 +162,15 @@
   function home() {
     return '<div class="vhp-hd"><div class="vhp-hm">' + mascot('wave', 64) + '</div><div><h2 id="vhpT">ติดตรงไหนครับ?</h2><p>แตะเรื่องที่เจอ เดี๋ยวบอกวิธีแก้ทีละขั้น</p></div></div>' +
       '<div class="vhp-grid">' + TOPICS.map(function (t, k) {
-        return '<button type="button" class="vhp-card' + (t.id === 'start' ? ' is-wide' : '') + '" data-tp="' + t.id + '" style="--k:' + k + '"><span class="vhp-ic" aria-hidden="true">' + t.ico + '</span><span class="vhp-ct"><b>' + esc(t.t) + '</b><small>' + esc(t.s) + '</small></span><span class="vhp-go" aria-hidden="true">›</span></button>';
+        var wide = t.id === 'start';
+        var sub = wide ? '<span class="vhp-3">' + t.steps.map(function (st, n) { return '<i><em>' + (n + 1) + '</em>' + ['วางสัญญา', 'กดตรวจ', 'อ่านข้อสำคัญ'][n] + '</i>'; }).join('') + '</span>' : '<small>' + esc(t.s) + '</small>';
+        return '<button type="button" class="vhp-card' + (wide ? ' is-wide' : '') + '" data-tp="' + t.id + '" style="--k:' + k + '"><span class="vhp-ic" aria-hidden="true">' + ico(t) + '</span>' + (HOT[t.id] ? '<span class="vhp-hot">เจอบ่อย</span>' : '') + '<span class="vhp-ct"><b>' + esc(t.t) + '</b>' + sub + '</span><span class="vhp-go" aria-hidden="true">›</span></button>';
       }).join('') + '</div>' +
-      '<a class="vhp-mail" href="' + mailHref(null) + '"><span aria-hidden="true">✉️</span> ไม่มีเรื่องที่ตรง? <b>ส่งข้อความหาเรา</b></a>';
+      '<div class="vhp-mailbar"><a class="vhp-mail" href="' + mailHref(null) + '"><span class="vhp-mi" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span class="vhp-mt">ไม่มีเรื่องที่ตรง? <b>ส่งข้อความหาเรา</b><small>เราตอบกลับภายใน 7 วัน</small></span><span class="vhp-go" aria-hidden="true">›</span></a></div>';
   }
   function detail(t) {
     return '<div class="vhp-dh"><button type="button" class="vhp-back" data-back aria-label="กลับไปเลือกปัญหา"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>' +
-      '<span class="vhp-dic" aria-hidden="true">' + t.ico + '</span><h2 id="vhpT">' + esc(t.t) + '</h2></div>' +
+      '<span class="vhp-dic" aria-hidden="true">' + ico(t) + '</span><h2 id="vhpT">' + esc(t.t) + '</h2></div>' +
       '<ol class="vhp-steps">' + t.steps.map(function (s, k) {
         return '<li style="--k:' + k + '"><span class="vhp-n" aria-hidden="true">' + (k + 1) + '</span><div><b class="vhp-st">' + s[0] + '</b><span>' + s[1] + '</span></div></li>';
       }).join('') + '</ol>' +
