@@ -1251,3 +1251,18 @@ html body .vcp .vcp-opt:has(.vcp-3d){min-height:84px!important}
 html.vc-art body #checkCard .ta-wrap:not(.vc-has) textarea::placeholder{color:transparent!important;opacity:0!important}
 html.vc-art[data-view="desk"][data-desk="check"] body #checkCard .ta-wrap.ta-wrap::after,html.vc-art body #checkCard .ta-wrap.vc-has::after{display:none!important}
 }
+/* v43 หน้าต่างเลือกประเภทสัญญา (มือถือ): ไม่ให้เห็นหน้าเว็บโผล่ใต้ปุ่ม "ใช้ …" — สูงตามจอที่มองเห็นจริง (dvh) + ต่อพื้นสีเดียวกับแถบล่างลงไปใต้ขอบจอ (กันช่องตอนแถบ Safari ยุบ/ขยาย) */
+@media (max-width:767px){
+html body .vcp .vcp-panel{height:94vh!important;height:94dvh!important;box-shadow:0 -1px 0 rgba(200,170,112,.28),0 -20px 50px -20px rgba(0,0,0,.9),0 160px 0 0 #24170c!important}
+html body .vcp .vcp-foot{background:linear-gradient(180deg,rgba(36,23,12,0),rgba(36,23,12,.97) 30%,#24170c)!important}
+}
+/* v44 ปุ่ม "ใช้ …" กดง่ายขึ้น: สูง 58px สีทองเด่น มีลูกศร ชิดล่างในระยะนิ้วโป้ง เว้นขอบล่างตามแถบโฮมของ iPhone */
+@media (max-width:767px){
+html body .vcp .vcp-foot{padding:10px 0 max(14px,calc(env(safe-area-inset-bottom) + 8px))!important}
+html body .vcp .vcp-ok{min-height:58px!important;border-radius:16px!important;display:flex!important;align-items:center;justify-content:center;gap:10px;
+  font-size:17px!important;letter-spacing:.01em;color:#2a1806!important;text-shadow:0 1px 0 rgba(255,245,215,.5)!important;
+  background:linear-gradient(180deg,#f2dca4,#d6ad5e 55%,#b88a3c)!important;outline:0!important;
+  box-shadow:inset 0 1px 0 rgba(255,250,230,.75),inset 0 -2px 0 rgba(120,80,20,.35),0 0 0 1px #6a4614,0 4px 0 #5a3a0e,0 10px 22px -6px rgba(0,0,0,.7)!important;-webkit-tap-highlight-color:transparent}
+html body .vcp .vcp-ok::after{content:"";width:9px;height:9px;border:solid #2a1806;border-width:2.4px 2.4px 0 0;transform:rotate(45deg);margin-left:2px;flex:none}
+html body .vcp .vcp-ok:active{transform:translateY(3px)!important;box-shadow:inset 0 1px 0 rgba(255,250,230,.6),0 0 0 1px #6a4614,0 1px 0 #5a3a0e,0 4px 10px -4px rgba(0,0,0,.7)!important}
+}
