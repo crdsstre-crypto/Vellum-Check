@@ -136,3 +136,109 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
+/* ความเป็นส่วนตัวของข้อมูล: ไฮไลต์คำสำคัญ (ภาษาไทยเท่านั้น คืนข้อความเดิมเมื่อเปลี่ยนภาษา) (acct-lux.js v13) */
+(function () {
+  var KEY = ['ไม่เก็บข้อความสัญญาต้นฉบับ', 'ไม่บันทึกเนื้อหาสัญญาลง log', 'ไม่แสดงเนื้อหาจนกว่าคุณจะกดเปิด'];
+  var orig = null;
+  function apply() {
+    var ul = document.querySelector('#privPanel .priv-list'); if (!ul) return;
+    var th = (document.documentElement.getAttribute('data-lang') || 'th') === 'th';
+    if (!th) { if (orig !== null && ul.getAttribute('data-hl')) { ul.innerHTML = orig; ul.removeAttribute('data-hl'); } return; }
+    if (ul.getAttribute('data-hl')) return;
+    orig = ul.innerHTML;
+    [].forEach.call(ul.querySelectorAll('li'), function (li) {
+      [].forEach.call(li.childNodes, function (n) {
+        if (n.nodeType !== 3) return;
+        for (var i = 0; i < KEY.length; i++) {
+          var k = n.nodeValue.indexOf(KEY[i]); if (k < 0) continue;
+          var after = n.splitText(k); after.splitText(KEY[i].length);
+          var m = document.createElement('mark'); m.className = 'alx-hl'; m.textContent = KEY[i]; after.parentNode.replaceChild(m, after); break;
+        }
+      });
+    });
+    ul.setAttribute('data-hl', '1');
+  }
+  function boot() {
+    apply();
+    var tries = 0, iv = setInterval(function () { apply(); if (document.querySelector('#privPanel .priv-list[data-hl]') || ++tries > 20) clearInterval(iv); }, 500);
+    if (window.MutationObserver) new MutationObserver(apply).observe(document.documentElement, { attributes: true, attributeFilter: ['data-lang'] });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+/* แจ้งเตือนวันสำคัญ: ตอนว่างแสดง 2 ขั้นตอน (ภาษาไทย มือถือ) (acct-lux.js v14) */
+(function () {
+  var st = document.createElement('style'); st.textContent = '.alx-st{display:none}'; document.head.appendChild(st);
+  function add() {
+    if ((document.documentElement.getAttribute('data-lang') || 'th') !== 'th') return;
+    var e = document.querySelector('.vrh .vrh-body div.vrh-empty'); if (!e || e.querySelector('.alx-st')) return;
+    var ol = document.createElement('ol'); ol.className = 'alx-st';
+    ol.innerHTML = '<li><span><b>ตรวจสัญญา</b>ระบบจะหาวันสิ้นสุด วันแจ้งล่วงหน้า และวันชำระเงินให้</span></li><li><span><b>บันทึกแจ้งเตือน</b>กดบันทึกท้ายผลตรวจ หรือกด "+ เพิ่มเอง" ด้านบน</span></li>';
+    e.appendChild(ol);
+  }
+  function watch() {
+    var b = document.querySelector('.vrh .vrh-body'); if (!b) return false;
+    add(); if (window.MutationObserver) new MutationObserver(add).observe(b, { childList: true }); return true;
+  }
+  function boot() { if (watch()) return; var n = 0, iv = setInterval(function () { if (watch() || ++n > 120) clearInterval(iv); }, 1000); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+/* แจ้งปัญหา: ตัวนับใกล้เต็มเปลี่ยนสี (acct-lux.js v15) */
+document.addEventListener('input', function (e) {
+  if (!e.target || e.target.id !== 'vtsMsg') return;
+  var c = document.getElementById('vtsCnt'); if (c) c.classList.toggle('alx-near', e.target.value.length >= 900);
+}, true);
+/* พรีวิวประเภทสัญญา: แยก "ใช้กับ:" / "เน้นตรวจ:" เป็นป้ายหัวข้อ + เลื่อนแผ่นป้ายขึ้นเมื่อเปลี่ยน (acct-lux.js v18: + ไฮไลต์คำสำคัญ) */
+(function () {
+  var last = '';
+  var HL = ['ไม่รู้ว่าเป็นแบบไหน', 'หลายเรื่องรวมกัน', 'เลือกประเภทให้เอง', 'เงินมัดจำ', 'การคืนเงินประกัน', 'การส่งมอบ', 'ความรับผิดเมื่อชำรุด', 'ค่าจ้าง', 'การเลิกจ้าง', 'ขอบเขตงาน', 'งวดเงิน', 'ดอกเบี้ย', 'หลักประกัน', 'การแบ่งกำไร', 'การออกจากหุ้นส่วน', 'ห้ามเปิดเผยข้อมูล', 'ค่าเสียหาย', 'มักเสียเปรียบ'];
+  function hlIn(el) {
+    var txt = el.textContent, out = [], i = 0;
+    while (i < txt.length) {
+      var best = -1, w = '';
+      HL.forEach(function (h) { var k = txt.indexOf(h, i); if (k >= 0 && (best < 0 || k < best)) { best = k; w = h; } });
+      if (best < 0) { out.push(document.createTextNode(txt.slice(i))); break; }
+      if (best > i) out.push(document.createTextNode(txt.slice(i, best)));
+      var m = document.createElement('mark'); m.className = 'alx-hl'; m.textContent = w; out.push(m); i = best + w.length;
+    }
+    if (el.querySelector('mark')) return; el.textContent = ''; out.forEach(function (n) { el.appendChild(n); });
+  }
+  function fix() {
+    var cap = document.querySelector('#vcp .vcp-cap'); if (!cap) return false;
+    ['.vcp-use', '.vcp-cs'].forEach(function (s) {
+      var e = cap.querySelector(s); if (!e || e.querySelector('.alx-k')) return;
+      var m = /^([^:：]{1,24})[:：]\s*/.exec(e.textContent || ''); if (!m) return;
+      var rest = e.textContent.slice(m[0].length);
+      e.innerHTML = ''; var k = document.createElement('span'); k.className = 'alx-k'; k.textContent = m[1];
+      var r = document.createElement('span'); r.textContent = rest; e.appendChild(k); e.appendChild(r);
+      if ((document.documentElement.getAttribute('data-lang') || 'th') === 'th') hlIn(r);
+    });
+    var cn = cap.querySelector('.vcp-cn'), now = cn ? cn.textContent : '';
+    if (now && now !== last) { last = now; cap.classList.remove('alx-up'); void cap.offsetWidth; cap.classList.add('alx-up'); }
+    return true;
+  }
+  function boot() {
+    var cap = document.querySelector('#vcp .vcp-cap');
+    if (!cap) { var n = 0, iv = setInterval(function () { if (document.querySelector('#vcp .vcp-cap') || ++n > 60) { clearInterval(iv); boot2(); } }, 1000); return; }
+    boot2();
+  }
+  function boot2() {
+    var cap = document.querySelector('#vcp .vcp-cap'); if (!cap || !window.MutationObserver) return;
+    fix(); new MutationObserver(fix).observe(cap, { childList: true, subtree: true, characterData: true });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+/* พรีวิว "ไม่แน่ใจ": ฉากประกอบวาดด้วย SVG (acct-lux.js v17) */
+(function () {
+  var st = document.createElement('style'); st.textContent = '.alx-un{display:none}'; document.head.appendChild(st);
+  var SVG = '<svg viewBox="0 0 360 170" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><defs><linearGradient id="unW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a4428"/><stop offset="1" stop-color="#3e2616"/></linearGradient><linearGradient id="unP" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ece0c2"/><stop offset="1" stop-color="#d6c49a"/></linearGradient><linearGradient id="unG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8d6a4"/><stop offset=".55" stop-color="#c9a862"/><stop offset="1" stop-color="#8a6c38"/></linearGradient><radialGradient id="unL" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff6dc" stop-opacity=".35"/><stop offset="1" stop-color="#fff6dc" stop-opacity="0"/></radialGradient></defs><ellipse cx="180" cy="160" rx="170" ry="12" fill="#000" opacity=".35"/><path d="M20 150L48 118H312L340 150Z" fill="url(#unW)" stroke="#140a04" stroke-width=".8"/><g transform="rotate(-8 120 112)"><rect x="76" y="62" width="84" height="66" rx="2" fill="#cdb98c" stroke="#6a5030" stroke-width=".7"/></g><g transform="rotate(5 140 108)"><rect x="96" y="58" width="84" height="66" rx="2" fill="url(#unP)" stroke="#6a5030" stroke-width=".7"/><path d="M104 72h50M104 80h66M104 88h60M104 96h66M104 104h44" stroke="#9a7e52" stroke-width="1.6" stroke-linecap="round" opacity=".55"/></g><g transform="rotate(-2 150 112)"><rect x="112" y="70" width="84" height="62" rx="2" fill="url(#unP)" stroke="#6a5030" stroke-width=".8"/><path d="M120 84h48M120 92h66M120 100h62M120 108h66M120 116h40" stroke="#9a7e52" stroke-width="1.6" stroke-linecap="round" opacity=".6"/><path d="M168 122c4-3 8-3 12 0" stroke="#7a4a20" stroke-width="1.3" fill="none" stroke-linecap="round"/></g><g class="mg"><circle cx="150" cy="96" r="19" fill="url(#unL)" stroke="url(#unG)" stroke-width="4.5"/><circle cx="150" cy="96" r="19" fill="none" stroke="#3a2208" stroke-width=".8" opacity=".6"/><path d="M164 110l16 16" stroke="#3a2414" stroke-width="7" stroke-linecap="round"/><path d="M164 110l5 5" stroke="url(#unG)" stroke-width="6" stroke-linecap="round"/><path d="M140 88a12 12 0 0 1 9-5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" opacity=".55"/></g><g><g class="fd" style="animation-delay:0s"><path d="M221 56Q221 53 224 53H212Q214 53 215.5 50L217.5 42.5Q218.5 40 221.5 40H240.5Q243.5 40 244.5 42.5L246.5 50Q248 53 250 53H334Q337 53 337 56V128H221Z" fill="#3c5444" stroke="#140a04" stroke-width=".8"/><rect x="219" y="42.6" width="24" height="8.4" rx="1.2" fill="#ece0c2" stroke="#8a7246" stroke-width=".6"/><text x="231.0" y="49" text-anchor="middle" font-family="Prompt,sans-serif" font-weight="700" font-size="6.2" fill="#4a3214">เช่า</text><path class="ft" style="animation-delay:0s" d="M215.5 52L217.5 42.5Q218.5 40 221.5 40H240.5Q243.5 40 244.5 42.5L246.5 52" fill="none" stroke="#f0dca8" stroke-width="1.4" stroke-linejoin="round"/><rect x="229" y="55" width="98" height="40" rx="1" fill="#e6d8b6" stroke="#8a6a3a" stroke-width=".5"/><path d="M235 59H307M235 62H293" stroke="#a08458" stroke-width=".7" opacity=".55"/><path d="M221 62H337V128H221Z" fill="#2a3c30" stroke="#140a04" stroke-width=".8"/><path d="M222 62.8H336" stroke="rgba(255,225,180,.22)" stroke-width=".9"/></g><g class="fd" style="animation-delay:2s"><path d="M218 65Q218 62 221 62H244Q246 62 247.5 59L249.5 51.5Q250.5 49 253.5 49H272.5Q275.5 49 276.5 51.5L278.5 59Q280 62 282 62H337Q340 62 340 65V128H218Z" fill="#6a4a2a" stroke="#140a04" stroke-width=".8"/><rect x="251" y="51.6" width="24" height="8.4" rx="1.2" fill="#ece0c2" stroke="#8a7246" stroke-width=".6"/><text x="263.0" y="58" text-anchor="middle" font-family="Prompt,sans-serif" font-weight="700" font-size="6.2" fill="#4a3214">จ้าง</text><path class="ft" style="animation-delay:2s" d="M247.5 61L249.5 51.5Q250.5 49 253.5 49H272.5Q275.5 49 276.5 51.5L278.5 61" fill="none" stroke="#f0dca8" stroke-width="1.4" stroke-linejoin="round"/><rect x="226" y="65" width="104" height="40" rx="1" fill="#e6d8b6" stroke="#8a6a3a" stroke-width=".5"/><path d="M232 69H310M232 72H296" stroke="#a08458" stroke-width=".7" opacity=".55"/><path d="M218 71H340V128H218Z" fill="#4a321c" stroke="#140a04" stroke-width=".8"/><path d="M219 71.8H339" stroke="rgba(255,225,180,.22)" stroke-width=".9"/></g><g class="fd" style="animation-delay:4s"><path d="M215 74Q215 71 218 71H276Q278 71 279.5 68L281.5 60.5Q282.5 58 285.5 58H304.5Q307.5 58 308.5 60.5L310.5 68Q312 71 314 71H340Q343 71 343 74V128H215Z" fill="#3e4c62" stroke="#140a04" stroke-width=".8"/><rect x="283" y="60.6" width="24" height="8.4" rx="1.2" fill="#ece0c2" stroke="#8a7246" stroke-width=".6"/><text x="295.0" y="67" text-anchor="middle" font-family="Prompt,sans-serif" font-weight="700" font-size="7.2" fill="#4a3214">กู้</text><path class="ft" style="animation-delay:4s" d="M279.5 70L281.5 60.5Q282.5 58 285.5 58H304.5Q307.5 58 308.5 60.5L310.5 70" fill="none" stroke="#f0dca8" stroke-width="1.4" stroke-linejoin="round"/><rect x="223" y="73" width="110" height="40" rx="1" fill="#e6d8b6" stroke="#8a6a3a" stroke-width=".5"/><path d="M229 77H313M229 80H299" stroke="#a08458" stroke-width=".7" opacity=".55"/><path d="M215 80H343V128H215Z" fill="#2c3648" stroke="#140a04" stroke-width=".8"/><path d="M216 80.8H342" stroke="rgba(255,225,180,.22)" stroke-width=".9"/></g><g class="fd" style="animation-delay:6s"><path d="M212 83Q212 80 215 80H308Q310 80 311.5 77L313.5 69.5Q314.5 67 317.5 67H336.5Q339.5 67 340.5 69.5L342.5 77Q344 80 346 80H343Q346 80 346 83V128H212Z" fill="#6a3a3e" stroke="#140a04" stroke-width=".8"/><rect x="315" y="69.6" width="24" height="8.4" rx="1.2" fill="#ece0c2" stroke="#8a7246" stroke-width=".6"/><text x="327.0" y="76" text-anchor="middle" font-family="Prompt,sans-serif" font-weight="700" font-size="6.2" fill="#4a3214">ซื้อขาย</text><path class="ft" style="animation-delay:6s" d="M311.5 79L313.5 69.5Q314.5 67 317.5 67H336.5Q339.5 67 340.5 69.5L342.5 79" fill="none" stroke="#f0dca8" stroke-width="1.4" stroke-linejoin="round"/><rect x="220" y="83" width="116" height="40" rx="1" fill="#e6d8b6" stroke="#8a6a3a" stroke-width=".5"/><path d="M226 87H316M226 90H302" stroke="#a08458" stroke-width=".7" opacity=".55"/><path d="M212 89H346V128H212Z" fill="#4a262c" stroke="#140a04" stroke-width=".8"/><path d="M213 89.8H345" stroke="rgba(255,225,180,.22)" stroke-width=".9"/></g></g><path d="M206 98H352V130H206Z" fill="url(#unW)" stroke="#140a04" stroke-width=".9"/><path d="M207 99H351" stroke="rgba(255,220,170,.22)" stroke-width="1"/><rect x="263" y="106" width="32" height="12" rx="1.5" fill="#d9c8a0" stroke="#8e7648" stroke-width="1.4"/><path d="M268 112h22" stroke="#9a7e52" stroke-width="1" opacity=".6"/><circle cx="259" cy="112" r="1.6" fill="#b8955a"/><circle cx="299" cy="112" r="1.6" fill="#b8955a"/></svg>';
+  function add() {
+    var stage = document.querySelector('#vcp .vcp-stage'); if (!stage) return false;
+    if (stage.querySelector('.alx-un')) return true;
+    var d = document.createElement('div'); d.className = 'alx-un'; d.setAttribute('aria-hidden', 'true');
+    d.innerHTML = SVG + '<div class="st"><i>1</i>อ่านข้อความ<br><i>2</i>หาประเภทสัญญา<br><i>3</i>ตรวจตามประเภทนั้น</div><div class="bd">ระบบเลือกให้อัตโนมัติ</div>';
+    stage.insertBefore(d, stage.querySelector('.vcp-cap'));
+    return true;
+  }
+  function boot() { if (add()) return; var n = 0, iv = setInterval(function () { if (add() || ++n > 60) clearInterval(iv); }, 1000); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
