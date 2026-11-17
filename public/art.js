@@ -7388,7 +7388,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     '<p class="hxl-note">สัญญาตัวอย่างที่เตรียมไว้ · ไม่ใช้เครดิต · ไม่ต้องสมัคร</p>' +
     '<div class="hxl-own"><textarea rows="1" aria-label="วางข้อความสัญญาของคุณ" placeholder="หรือวางสัญญาของคุณตรงนี้…"></textarea><button type="button" class="hxl-own-go" hidden>ตรวจฉบับนี้ <b aria-hidden="true">→</b></button></div>' +
     '<div class="hxl-pop" role="dialog" aria-modal="false" aria-label="รายละเอียดจุดเสี่ยง" hidden></div>';
-  var cur = 0, timers = [], playing = false, visible = true;
+  var cur = 0, timers = [], playing = false, visible = true, ioVis = true;
   function clear() { timers.forEach(clearTimeout); timers = []; }
   function T(f, ms) { timers.push(setTimeout(f, ms)); }
   function linesOf(t) {
@@ -7468,6 +7468,7 @@ if (window.VCGate3DReady) window.VCGate3DReady();
       if (!fig.classList.contains('done')) { cur = i; if (render(i, true)) { tally(true); fig.classList.remove('out'); fig.classList.add('done', 'slam'); signSet(SIGN_STOP); } }
       T(function () { play(cur); }, 1200); return;   /* ค้างผลเต็มไว้ ไม่เปลี่ยนฉบับจนกว่าจะพ้นช่วงพัก */
     }   /* v272 ฉากล็อกอิน/หน้าต่างเปิดทับอยู่: พักไว้ก่อน ไม่แย่งเครื่อง */
+    if (!visible) { playing = false; return; }   /* v287: ตัวอย่างสดถูกซ่อน (หน้าปกใหม่บังอยู่ / ไม่ได้อยู่หน้าแรก) → ไม่เล่นอยู่เบื้องหลัง */
     clear(); cur = i; fig.classList.remove('done', 'out', 'scan', 'scan2', 'pen', 'sign', 'slam'); signReset();
     /* (3) พลิกหน้ากระดาษ — ถอดคลาสเองเมื่อครบเวลา กันกระดาษค้างล่องหน (เจอบน iPhone) */
     var pp = fig.querySelector('.hxl-paper');
@@ -7625,10 +7626,10 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     hero.classList.add('hx-wow');
     T(function () { play(0); }, 900);
     if ('IntersectionObserver' in window) new IntersectionObserver(function (es) {
-      var v = es[0].isIntersecting && onHome() && !document.hidden;
+      ioVis = es[0].isIntersecting; var v = ioVis && onHome() && !document.hidden;
       if (v && !visible) { visible = true; resume(); } else if (!v) visible = false;
     }, { threshold: .2 }).observe(fig);
-    document.addEventListener('visibilitychange', function () { visible = !document.hidden && onHome(); if (visible) resume(); });
+    document.addEventListener('visibilitychange', function () { visible = !document.hidden && onHome() && ioVis; if (visible) resume(); });
   }
   start();
 })();
