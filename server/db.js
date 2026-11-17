@@ -14,11 +14,11 @@ export const pool = new pg.Pool({
   // Internal URL ของ Render ไม่ต้องใช้ SSL ถ้าใช้ External URL ให้ตั้ง DATABASE_SSL=true
   ssl: process.env.DATABASE_SSL === 'true' ? { rejectUnauthorized: false } : undefined,
   // กันคำขอค้างไม่มีกำหนด: การเชื่อมต่อที่ค้าง/หลุดหลังเซิร์ฟเวอร์หรือฐานข้อมูลหลับ จะหมดเวลาแล้วตอบ error แทน
-  connectionTimeoutMillis: 10000,   // รอเปิดการเชื่อมต่อใหม่ได้ไม่เกิน 10 วิ
+  connectionTimeoutMillis: 30000,   // รอเปิดการเชื่อมต่อใหม่ได้ไม่เกิน 30 วิ (10 วิไม่พอตอนฐานข้อมูลตื่นช้า ทำให้ deploy ล้ม)
   idleTimeoutMillis: 30000,         // ปิดการเชื่อมต่อที่ว่างนานกว่า 30 วิ ไม่ให้ค้างเป็นของเสีย
   keepAlive: true,
-  query_timeout: 20000,             // ฝั่งแอป: คำสั่งใดเกิน 20 วิ ยกเลิก
-  statement_timeout: 20000,         // ฝั่งฐานข้อมูล: เช่นเดียวกัน
+  query_timeout: 30000,             // ฝั่งแอป: คำสั่งใดเกิน 30 วิ ยกเลิก
+  statement_timeout: 30000,         // ฝั่งฐานข้อมูล: เช่นเดียวกัน
 });
 // การเชื่อมต่อที่ว่างอยู่แล้วหลุด (เช่นฐานข้อมูลรีสตาร์ต) ต้องไม่ทำให้เซิร์ฟเวอร์ล่ม
 pool.on('error', (err) => { console.error('[db] idle client error:', err.message); });
