@@ -1246,3 +1246,8 @@ html body .vcp .vcp-opt .vcp-3d{left:10px!important;right:auto!important;top:58p
 html body .vcp .vcp-opt .vcp-3d::before{width:10px!important;height:10px!important}
 html body .vcp .vcp-opt:has(.vcp-3d){min-height:84px!important}
 }
+/* v42 ช่องวางสัญญา (มือถือ): ซ่อน placeholder ตอนยังว่าง (มีป้าย "วางสัญญาของคุณลงบนโต๊ะ" อยู่แล้ว ไม่ให้ซ้อน/โดนเคอร์เซอร์บัง) · เอามุมพับกระดาษที่กลายเป็นสี่เหลี่ยมดำหลังปุ่ม ✕ ออก */
+@media (max-width:767px){
+html.vc-art body #checkCard .ta-wrap:not(.vc-has) textarea::placeholder{color:transparent!important;opacity:0!important}
+html.vc-art[data-view="desk"][data-desk="check"] body #checkCard .ta-wrap.ta-wrap::after,html.vc-art body #checkCard .ta-wrap.vc-has::after{display:none!important}
+}
