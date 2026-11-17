@@ -1207,6 +1207,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     if (HASH[h] === 'desk') root.setAttribute('data-desk', (h === '#authCard' || h === '#desk') ? 'acct' : 'check');
     if (HASH.hasOwnProperty(h) && HASH[h] !== 'home') { apply(HASH[h]); mark(HASH[h]); setTimeout(function () { scrollToHash(h); }, 60); }
     else apply('home');
+    root.classList.remove('vc-boot');   /* v288: ระบบสลับหน้าพร้อมแล้ว เลิกซ่อนส่วนอื่นตอนเปิดเว็บ */
     window.VCView = { get current() { return cur; }, go: function (v, instant) { go(v, null, { instant: !!instant }); }, route: route };
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
