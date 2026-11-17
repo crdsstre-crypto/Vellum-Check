@@ -4399,7 +4399,8 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     var vv = window.visualViewport, kb = !mq.matches ? true : (vv ? (window.innerHeight - vv.height > 140) : true); /* คอม: โฟกัส = กำลังพิมพ์ */
     var typing = document.activeElement === ta && kb;
     var key = (has ? 1 : 0) + '|' + (typing ? 1 : 0);
-    wrap.classList.toggle('vc-has', has);
+    /* มือถือ: แตะกล่องแล้วคีย์บอร์ดขึ้น → เปลี่ยนเป็นกระดาษพร้อมพิมพ์ทันที (ไม่ค้างหน้าโต๊ะว่างทั้งที่คีย์บอร์ดขึ้นแล้ว) */
+    wrap.classList.toggle('vc-has', has || (typing && mq.matches));
     wrap.classList.toggle('vc-focus', typing);
     if (has) say('');
     var res = document.getElementById('result');
@@ -7263,7 +7264,8 @@ if (window.VCGate3DReady) window.VCGate3DReady();
     if (c) { var i = find(c.getAttribute('data-t')); if (i > -1 && window.VCSamples && VCSamples.run) VCSamples.run(i); return; }
     if (e.target.closest('.vc-try-main, .vc-try-all') && window.VCSamples) VCSamples.open();
   });
-  function sync() { var on = !ta.value.trim(); if (tc.hidden === on) tc.hidden = !on; }
+  /* การ์ด "ลองตรวจตัวอย่างฟรี" แสดงตลอด แม้มีข้อความในกล่องแล้ว (เดิมซ่อนเมื่อมีข้อความ) */
+  function sync() { if (tc.hidden) tc.hidden = false; }
   ta.addEventListener('input', sync); setInterval(function () { if (!document.hidden) sync(); }, 700); sync();
 
   /* ---------- 7) ฉากเปิดผลตัวอย่าง: สแกน → ประทับตราทีละจุดเสี่ยง ---------- */
