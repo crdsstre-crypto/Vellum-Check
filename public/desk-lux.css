@@ -3,7 +3,7 @@ html body .site-header .brand-logo > *{display:none!important}
 html body .site-header .brand-logo{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 46' fill='none' stroke='none' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 7H15V9.4L12.6 10L20.4 31L27.6 10L25 9.4V7H36V9.4L33.4 10L22 40H18.4L6.4 10L4 9.4Z' fill='%23cca54f' stroke='%236a4006' stroke-width='.8'/%3E%3Cpath d='M8 9.6L19.4 37' stroke='%23fff6d0' stroke-width='.9' opacity='.75'/%3E%3Cpath d='M11 44.4Q20 41.6 29 44.4' stroke='%23cca54f' stroke-width='1.2'/%3E%3C/svg%3E") center/contain no-repeat!important;filter:drop-shadow(0 1px 0 rgba(0,0,0,.6))!important}
 html body .site-header .brand-name{color:#e2d1ab!important;text-shadow:0 1px 0 rgba(0,0,0,.6)!important}
 html body .site-header .brand-logo{width:26px!important;height:30px!important}
-html body .site-header{background:linear-gradient(180deg,rgba(30,18,9,.72),rgba(30,18,9,.38))!important;-webkit-backdrop-filter:blur(8px) saturate(1.1);backdrop-filter:blur(8px) saturate(1.1);box-shadow:inset 0 -1px 0 rgba(200,170,112,.22)!important;border:0!important;transition:background .3s}
+html body .site-header{background:linear-gradient(180deg,rgba(30,18,9,.86),rgba(30,18,9,.55))!important;box-shadow:inset 0 -1px 0 rgba(200,170,112,.22)!important;border:0!important;transition:background .3s}
 html:not(.vc-top) body .site-header{background:linear-gradient(180deg,rgba(38,24,13,.96),rgba(30,18,9,.92))!important;box-shadow:inset 0 -1px 0 rgba(200,170,112,.3),0 6px 18px rgba(0,0,0,.45)!important}
 html body .site-header .topbar{display:flex!important;align-items:center;gap:6px}
 html body .site-header .brand{margin-right:auto!important;display:flex;align-items:center;gap:10px}
@@ -20,3 +20,16 @@ html body .site-header .dx-nav a:last-child{order:3;margin-left:2px;padding:10px
 html body .site-header .dx-nav a:last-child::after,html body .site-header .dx-nav a:last-child::before{display:none!important}
 html body .site-header .dx-nav a:last-child:hover{transform:translateY(-1px);color:#2e1c08!important;box-shadow:inset 0 1px 0 rgba(255,250,230,.7),0 0 0 1px rgba(60,35,8,.5),0 8px 18px rgba(0,0,0,.5)!important}
 html body .site-header .dx-nav a:last-child .rl-a,html body .site-header .dx-nav a:last-child .rl-b{color:#2e1c08!important}
+
+/* ===== ลื่นขึ้น (desk-lux.css v2): แถบเมนูไม่เบลอฉากหลัง (เบลอต้องคำนวณใหม่ทุกเฟรมที่เลื่อน) · หน้าบัญชีซ่อนฉาก 3D หน้าแรกที่ค้างอยู่ด้านหลัง · ฝุ่น/ไอกาแฟเหลือพอสวย ===== */
+html[data-view="desk"][data-desk="acct"] #vcBackdrop{visibility:hidden!important}
+.ld-scene .vc-dust i:nth-child(n+15),.ld-scene .vc-bokeh i:nth-child(n+5){display:none!important}
+.ld-scene .vc-dust i,.ld-scene .vc-bokeh i{will-change:auto!important;filter:none!important}
+.ld-scene .ld-steam.vc-wisp:nth-of-type(n+4){display:none!important}
+.ld-scene .ld-steam{filter:none!important}
+/* ฉากโต๊ะหน้าบัญชี: เดิมไฟตะเกียงกะพริบด้วยตัวแปร --on ที่ทุกชั้นแสงใช้ร่วมกัน → ต้องวาดใหม่ทั้งจอทุกเฟรมตลอดเวลา
+   เปลี่ยนเป็นค้าง --on:1 แล้วให้แสงอุ่นจาง/สว่างด้วย opacity (การ์ดจอทำเอง ไม่ต้องวาดใหม่) จังหวะเดิม 12 วินาที */
+html.vc-art .ld-scene:not([data-lamp]){animation:none!important;--on:1}
+html.vc-art .ld-scene:not([data-lamp]) .ld-glow,html.vc-art .ld-scene:not([data-lamp]) .ld-spot{animation:ldGlowO 12s linear infinite}
+@keyframes ldGlowO{0%,46%{opacity:1}48%{opacity:.55}50%{opacity:1}52%{opacity:.2}54%{opacity:.85}56%,74%{opacity:.05}76%{opacity:.7}78%{opacity:.1}81%{opacity:.9}84%,100%{opacity:1}}
+@media (prefers-reduced-motion:reduce){html.vc-art .ld-scene .ld-glow,html.vc-art .ld-scene .ld-spot{animation:none!important}}
