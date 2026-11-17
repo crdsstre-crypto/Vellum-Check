@@ -299,7 +299,7 @@
 
     /* หน้าตรวจ */
     'เลือกประเภทและใส่สัญญา': 'Type & contract', 'ประเภทสัญญา': 'Contract type', 'ไม่แน่ใจ': 'Not sure',
-    'ระบบอ่านข้อความแล้วเลือกประเภทให้เอง': 'We read the text and pick the type for you', 'เปลี่ยน': 'Change', 'วางข้อความสัญญาที่นี่': 'Paste contract text here',
+    'ระบบอ่านข้อความแล้วเลือกประเภทให้เอง': 'We read the text and pick the type for you', 'ระบบลองระบุประเภทจากข้อความ ถ้าดูไม่ออกจะบอกตรงๆ': 'We try to identify the type from the text, and say so if we can\'t', 'เน้นตรวจ: ระบบลองระบุประเภทจากข้อความ ถ้าดูไม่ออกจะบอกตรงๆ': 'Focus: we try to identify the type, and say so if we can\'t', 'ระบบลองระบุประเภทให้': 'We try to identify the type', 'สรุปจุดที่ควรดู': 'Summarize points to review', 'เปลี่ยน': 'Change', 'วางข้อความสัญญาที่นี่': 'Paste contract text here',
     'วางข้อความสัญญาที่นี่...': 'Paste contract text here...', 'วางจากคลิปบอร์ด': 'Paste from clipboard', 'อัปโหลด PDF · Word · รูปถ่าย': 'Upload PDF · Word · photo', 'อัปโหลดไฟล์': 'Upload file',
     'ยังไม่มีสัญญา? ลองตรวจตัวอย่างฟรี': 'No contract yet? Try a free sample', '{0} ฉบับ · ไม่ใช้เครดิต · เห็นผลใน {1} วินาที': '{0} samples · no credits · results in {1} seconds',
     'ฟรี': 'Free', 'ฟรี!': 'Free!', 'แตะเดียว ดูผลเลย': 'One tap, instant result', 'กู้ดอกโหด': 'Predatory loan', 'งานประจำ': 'Full-time job', 'ทั้งหมด ›': 'All ›',
