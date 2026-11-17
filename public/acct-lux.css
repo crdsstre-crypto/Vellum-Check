@@ -1240,3 +1240,9 @@ html body .vcp .alx-sh-w{list-style:none;margin:0;padding:9px 10px;display:grid;
 html body .vcp .alx-sh-w li{position:relative;padding-left:19px;font:500 12px/1.45 'Prompt',sans-serif;color:#e8d6b0}
 html body .vcp .alx-sh-w li::before{content:"!";position:absolute;left:0;top:2px;width:14px;height:14px;border-radius:50%;font:800 9.5px/14px sans-serif;text-align:center;color:#fff3e6;background:#b8553e}
 }
+/* v41 ป้าย 3D ในปุ่มประเภทสัญญา: กว้างเท่าไอคอน วางกึ่งกลางใต้ไอคอนพอดี ไม่ล้ำไปทับคำอธิบาย */
+@media (max-width:767px){
+html body .vcp .vcp-opt .vcp-3d{left:10px!important;right:auto!important;top:58px!important;bottom:auto!important;width:42px!important;box-sizing:border-box;justify-content:center;padding:3px 0!important;gap:3px!important;border-radius:6px!important}
+html body .vcp .vcp-opt .vcp-3d::before{width:10px!important;height:10px!important}
+html body .vcp .vcp-opt:has(.vcp-3d){min-height:84px!important}
+}
