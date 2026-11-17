@@ -17,6 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Vellum Check">
 <!-- Vellum Art Direction: "vc-art" = ชั้นสไตล์ใหม่ (ลบสคริปต์บรรทัดนี้เพื่อย้อนกลับ) · "vc-spa" = หน้าแรกหน้าเดียว ส่วนอื่นเปิดจากเมนู (ลบเฉพาะ vc-spa เพื่อกลับไปเป็นหน้ายาวหน้าเดียว) -->
 <script>document.documentElement.classList.add("vc-art","vc-spa");</script>
+<script>/* v288: เปิดหน้าแรก (ไม่มี #) → ตั้งเป็นหน้าแรกตั้งแต่ต้น + ซ่อนส่วนอื่นใน <main> จนกว่าระบบสลับหน้าจะพร้อม — ไม่ให้ "ทุกข้อ ทุกบรรทัด" โผล่แวบก่อนหน้าปก */(function(d){var h=location.hash;if(!h||h==="#"||h==="#top"){d.setAttribute("data-view","home");d.classList.add("vc-boot");setTimeout(function(){d.classList.remove("vc-boot")},8000)}})(document.documentElement)</script>
 <script>/* perf-boost ข้อ 5: แบ่งงานตอนเปิดหน้า (DOMContentLoaded) เป็นชิ้น ๆ ทีละตัว ให้เครื่องได้หายใจ/วาดจอ/รับการแตะระหว่างกัน · ตัวจัดการ 'load' จะรอจนชิ้นเหล่านี้ทำครบก่อน ลำดับเหมือนเดิม */
 (function(){try{if(!window.MessageChannel||!window.WeakMap)return;var q=[],busy=0,done=0,lq=[],map=new WeakMap(),mc=new MessageChannel(),D=document,ev=null;
 function run(){var t=performance.now();while(q.length){var it=q.shift();try{it.f.call(it.t,ev)}catch(e){setTimeout(function(){throw e})}if(performance.now()-t>40)break}if(q.length)mc.port2.postMessage(0);else{busy=0;done=1;var l=lq;lq=[];l.forEach(function(x){try{x.f.call(window,x.e)}catch(e){setTimeout(function(){throw e})}})}}
@@ -31,6 +32,11 @@ patch(D,0);patch(window,1);}catch(e){}})();</script>
 <title>เช็กสัญญา | Vellum Check</title>
 <!-- หน้าปกใหม่ (hero-scene.js) โหลดท้ายหน้า: ซ่อนหน้าปกเก่าตั้งแต่ก่อนวาดจอ ไม่ให้แวบขึ้นมา
      ถ้าหน้าปกใหม่โหลดไม่ขึ้นภายใน 6 วินาที (หรือไฟล์เสีย) หน้าปกเก่าจะกลับมาเอง -->
+<style>html.vc-boot main > :not(.hero):not(.vch):not(script),html.vc-boot body > footer{display:none !important}
+/* v288: เปิดหน้าแรก → ยังไม่วาดอะไร (ไม่มีจอดำมีแต่แถบหัว) จนหน้าปกพร้อม แล้วขึ้นทั้งหน้าในครั้งเดียว · กันค้าง: vch-pre หลุดเองใน 6 วิ */
+html.vc-boot.vch-pre:not(.vch-on) body{visibility:hidden !important}
+html.vc-boot{background:#0a0806}
+html.vc-boot.vch-pre:not(.vch-on){background:radial-gradient(130% 95% at 50% 58%,#4a3220 0,#2c1b0e 52%,#140b05 100%) fixed}</style>
 <style>html.vch-pre:not(.vch-on) main > .hero,html.vch-pre:not(.vch-on) main > .hero *{visibility:hidden !important}
 html.vch-pre:not(.vch-on) body{background:#0a0806}</style>
 <script>(function(d){d.classList.add('vch-pre');setTimeout(function(){if(!d.classList.contains('vch-on'))d.classList.remove('vch-pre')},6000)})(document.documentElement)</script>
@@ -39,7 +45,7 @@ html.vch-pre:not(.vch-on) body{background:#0a0806}</style>
 <!-- ฟอนต์ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="script" href="hero-scene.js?v=11">
+<link rel="preload" as="script" href="hero-scene.js?v=12">
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Taviraj:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=IBM+Plex+Mono:wght@400;500&family=Charmonman:wght@400;700&family=Sriracha&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Taviraj:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=IBM+Plex+Mono:wght@400;500&family=Charmonman:wght@400;700&family=Sriracha&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet"></noscript>
 
@@ -161,7 +167,7 @@ html.vch-pre:not(.vch-on) body{background:#0a0806}</style>
     <a class="hero-cue mono" href="#manifesto" data-reveal style="--i:6"><span>ดูวิธีอ่าน</span><i aria-hidden="true"></i></a>
   </section>
 <!-- หน้าปก: โหลดทันทีหลังส่วนหัว (ไม่ต้องรอสคริปต์อื่นทั้งหมด) → ขึ้นปกเร็ว -->
-<script src="hero-scene.js?v=11" onerror="document.documentElement.classList.remove('vch-pre')"></script>
+<script src="hero-scene.js?v=12" onerror="document.documentElement.classList.remove('vch-pre')"></script>
 
   <!-- ============ II. ฉากอ่านสัญญา: ตรึงจอแล้วเล่นตามการเลื่อน (ค่า --p จาก motion.js) ============
        โหมดลดการเคลื่อนไหวหรือ JS ไม่ทำงาน: ไม่ตรึง และแสดงสภาพสุดท้ายที่อ่านครบทั้งหมด -->
@@ -2044,7 +2050,7 @@ document.addEventListener('click', function (e) {
 <script src="demo-results.js?v=4"></script>
 <script src="perf-guard.js?v=4"></script>
 <script src="perf-boost.js?v=1"></script>
-<script src="art.js?v=288"></script>
+<script src="art.js?v=289"></script>
 <script src="desk-bg.js?v=1"></script>
 <script src="remind-ui.js?v=4"></script>
 <script src="mascot.js?v=1"></script>
