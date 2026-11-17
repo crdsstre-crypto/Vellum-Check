@@ -1,0 +1,22 @@
+/* ===== แถบเมนูบนคอม (≥1024px): โลโก้ V แบบมือถือ ซ้าย · เมนู + ภาษา + ปุ่มตรวจสัญญา ขวา · แถบหนังโปร่ง · เมนูสีงาช้างเส้นทอง (desk-lux.css v1) ===== */
+html body .site-header .brand-logo > *{display:none!important}
+html body .site-header .brand-logo{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 46' fill='none' stroke='none' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 7H15V9.4L12.6 10L20.4 31L27.6 10L25 9.4V7H36V9.4L33.4 10L22 40H18.4L6.4 10L4 9.4Z' fill='%23cca54f' stroke='%236a4006' stroke-width='.8'/%3E%3Cpath d='M8 9.6L19.4 37' stroke='%23fff6d0' stroke-width='.9' opacity='.75'/%3E%3Cpath d='M11 44.4Q20 41.6 29 44.4' stroke='%23cca54f' stroke-width='1.2'/%3E%3C/svg%3E") center/contain no-repeat!important;filter:drop-shadow(0 1px 0 rgba(0,0,0,.6))!important}
+html body .site-header .brand-name{color:#e2d1ab!important;text-shadow:0 1px 0 rgba(0,0,0,.6)!important}
+html body .site-header .brand-logo{width:26px!important;height:30px!important}
+html body .site-header{background:linear-gradient(180deg,rgba(30,18,9,.72),rgba(30,18,9,.38))!important;-webkit-backdrop-filter:blur(8px) saturate(1.1);backdrop-filter:blur(8px) saturate(1.1);box-shadow:inset 0 -1px 0 rgba(200,170,112,.22)!important;border:0!important;transition:background .3s}
+html:not(.vc-top) body .site-header{background:linear-gradient(180deg,rgba(38,24,13,.96),rgba(30,18,9,.92))!important;box-shadow:inset 0 -1px 0 rgba(200,170,112,.3),0 6px 18px rgba(0,0,0,.45)!important}
+html body .site-header .topbar{display:flex!important;align-items:center;gap:6px}
+html body .site-header .brand{margin-right:auto!important;display:flex;align-items:center;gap:10px}
+html body .site-header .brand-name{font:700 18px/1 'Prompt',sans-serif!important;letter-spacing:.01em!important;text-transform:none!important;color:#e2d1ab!important}
+html body .site-header .dx-nav{display:contents!important}
+html body .site-header .dx-nav a{order:1;position:relative;padding:8px 13px!important;background:transparent!important;border:0!important;box-shadow:none!important;color:#e3d6bc!important;font:500 14.5px/1 'Prompt',sans-serif!important;text-decoration:none}
+html body .site-header .dx-nav a::after{content:"";position:absolute;left:13px;right:13px;bottom:2px;height:1.5px;border-radius:2px;background:linear-gradient(90deg,#a8884e,#e0c98f,#a8884e);transform:scaleX(0);transform-origin:left;transition:transform .25s ease}
+html body .site-header .dx-nav a:hover{color:#f0dca8!important}
+html body .site-header .dx-nav a:hover::after,html body .site-header .dx-nav a.is-here:not(:last-child)::after{transform:scaleX(1)}
+html body .site-header .dx-nav a.is-here:not(:last-child){color:#f0dca8!important}
+html body .site-header .vc-lang{order:2;margin:0 6px 0 8px!important;background:rgba(0,0,0,.25)!important;border:1px solid rgba(200,170,112,.32)!important;color:#e3d6bc!important}
+html body .site-header .vc-lang svg{color:#c9a862!important}
+html body .site-header .dx-nav a:last-child{order:3;margin-left:2px;padding:10px 20px!important;border-radius:999px!important;color:#2e1c08!important;font-weight:700!important;background:linear-gradient(180deg,#f3dfa6,#d9b066 55%,#b8893e)!important;box-shadow:inset 0 1px 0 rgba(255,250,230,.7),0 0 0 1px rgba(60,35,8,.5),0 4px 12px rgba(0,0,0,.4)!important;transition:transform .2s,box-shadow .2s}
+html body .site-header .dx-nav a:last-child::after,html body .site-header .dx-nav a:last-child::before{display:none!important}
+html body .site-header .dx-nav a:last-child:hover{transform:translateY(-1px);color:#2e1c08!important;box-shadow:inset 0 1px 0 rgba(255,250,230,.7),0 0 0 1px rgba(60,35,8,.5),0 8px 18px rgba(0,0,0,.5)!important}
+html body .site-header .dx-nav a:last-child .rl-a,html body .site-header .dx-nav a:last-child .rl-b{color:#2e1c08!important}
