@@ -204,16 +204,102 @@ document.addEventListener('input', function (e) {
     }
     if (el.querySelector('mark')) return; el.textContent = ''; out.forEach(function (n) { el.appendChild(n); });
   }
+  /* v20: "เน้นตรวจ" → "ระบบดูให้" เป็นเม็ด ✓ + ตัวอย่างจริง 1 บรรทัด (ภาษาไทยเท่านั้น) */
+  var EX = { rent: 'ข้อที่ไม่ได้บอกว่าจะคืนเงินประกันเมื่อไหร่', sale: 'ข้อที่ไม่ได้บอกว่าของชำรุดหลังส่งมอบ ใครรับผิดชอบ', employment: 'ข้อที่ให้เลิกจ้างได้ทันทีโดยไม่ต้องแจ้งล่วงหน้า', service: 'ข้อที่ไม่จำกัดจำนวนครั้งที่ต้องแก้งาน', loan: 'ข้อที่คิดค่าปรับเพิ่มทุกวันเมื่อจ่ายช้า', shareholder: 'ข้อที่ไม่ได้บอกว่าถอนตัวแล้วจะได้เงินลงทุนคืนอย่างไร', nda: 'ข้อที่ไม่ได้กำหนดว่าห้ามเปิดเผยนานแค่ไหน', other: 'ข้อที่ให้อีกฝ่ายเปลี่ยนเงื่อนไขได้ฝ่ายเดียว' };
+  function th() { return (document.documentElement.getAttribute('data-lang') || 'th') === 'th'; }
+  /* v22: ประโยชน์ 2 ข้อบนการ์ด + แผ่นรายละเอียด (รายการตรวจ 8 เรื่อง · ประโยชน์เพิ่ม · ใช้กับ · ตัวอย่าง) */
+  /* ข้อความอิงจาก TYPE_FOCUS ใน server/ai.js — ถ้าแก้ฝั่งเซิร์ฟเวอร์ ต้องแก้ตรงนี้ให้ตรงกัน (ห้ามเขียนเกินสิ่งที่ระบบทำจริง) */
+  var INFO = {
+    unsure: { h: 'ระบบทำอะไรให้', b: ['ไม่ต้องเลือกประเภทเอง ระบบลองระบุจากข้อความให้', 'ถ้าดูไม่ออก ระบบถูกตั้งให้บอกตรงๆ แทนการเดา', 'ยกข้อความจากสัญญามาให้ดู ถ้าหาไม่เจอในสัญญาจะติดป้ายบอก', 'เสนอแนวทางขอแก้ และบอกเรื่องที่ระบบไม่พบในสัญญา'], c: ['อ่านจากข้อความในสัญญา', 'ลองระบุประเภทสัญญา', 'ดูไม่ออก จะบอกตรงๆ'] },
+    rent: { b: ['ดูข้อเรื่องเงินประกันและมัดจำ ว่ามีจุดที่ควรถามไหม', 'ดูข้อเรื่องค่าซ่อมและความเสียหาย พร้อมอธิบายภาษาง่าย', 'ยกข้อความจริงจากสัญญามาให้ดู พร้อมคำอธิบายภาษาง่าย', 'แนะนำข้อความที่ใช้ขอแก้ และบอกเรื่องที่สัญญายังไม่ได้เขียนไว้'], c: ['ค่าเช่าและการขึ้นค่าเช่า', 'เงินประกันและการคืนเงิน', 'การบอกเลิกสัญญา', 'การคืนมัดจำ', 'การซ่อมแซม', 'ความรับผิดเมื่อเสียหาย'] },
+    sale: { b: ['ดูข้อเรื่องการชำระเงินและการส่งมอบ ว่ามีจุดที่ควรถามไหม', 'ดูข้อเรื่องของชำรุดและการยกเลิก พร้อมอธิบายภาษาง่าย', 'ยกข้อความจริงจากสัญญามาให้ดู พร้อมคำอธิบายภาษาง่าย', 'แนะนำข้อความที่ใช้ขอแก้ และบอกเรื่องที่สัญญายังไม่ได้เขียนไว้'], c: ['ราคาและวิธีชำระ', 'การส่งมอบ', 'ความเสี่ยงระหว่างส่งมอบ', 'การรับประกันความชำรุด', 'การคืนสินค้าหรือยกเลิก'] },
+    employment: { b: ['ดูข้อเรื่องค่าจ้าง เวลาทำงาน และสวัสดิการ ว่ามีจุดที่ควรถามไหม', 'ดูข้อเรื่องการเลิกจ้างและการแจ้งล่วงหน้า พร้อมอธิบายภาษาง่าย', 'ยกข้อความจริงจากสัญญามาให้ดู พร้อมคำอธิบายภาษาง่าย', 'แนะนำข้อความที่ใช้ขอแก้ และบอกเรื่องที่สัญญายังไม่ได้เขียนไว้'], c: ['ค่าจ้างและการจ่ายตรงเวลา', 'ชั่วโมงหรือระยะเวลาทำงาน', 'โบนัสและสวัสดิการ', 'การเลิกจ้างและแจ้งล่วงหน้า', 'สิทธิในงานที่สร้างขณะทำงาน'] },
+    service: { b: ['ดูข้อเรื่องขอบเขตงานและจำนวนครั้งที่แก้ได้ ว่ามีจุดที่ควรถามไหม', 'ดูข้อเรื่องค่าปรับ ลิขสิทธิ์ และการยกเลิก พร้อมอธิบายภาษาง่าย', 'ยกข้อความจริงจากสัญญามาให้ดู พร้อมคำอธิบายภาษาง่าย', 'แนะนำข้อความที่ใช้ขอแก้ และบอกเรื่องที่สัญญายังไม่ได้เขียนไว้'], c: ['ขอบเขตงานและการส่งมอบ', 'กำหนดเวลาและค่าปรับ', 'การแก้งานและจำนวนครั้ง', 'ลิขสิทธิ์ของงาน', 'การจ่ายเงินเมื่อยกเลิกกลางคัน'] },
+    loan: { b: ['ดูข้อเรื่องดอกเบี้ย ค่าธรรมเนียม และค่าปรับ ว่ามีจุดที่ควรถามไหม', 'ดูข้อเรื่องการผิดนัดและหลักประกัน พร้อมอธิบายภาษาง่าย', 'ยกข้อความจริงจากสัญญามาให้ดู พร้อมคำอธิบายภาษาง่าย', 'แนะนำข้อความที่ใช้ขอแก้ และบอกเรื่องที่สัญญายังไม่ได้เขียนไว้'], c: ['ดอกเบี้ยและค่าธรรมเนียม', 'กำหนดคืนเงินและงวดชำระ', 'การผิดนัดและค่าปรับ', 'หลักประกัน'] },
+    shareholder: { b: ['ดูข้อเรื่องเงินลงทุนและการแบ่งกำไร ว่ามีจุดที่ควรคุยให้ชัดไหม', 'ดูข้อเรื่องการถอนตัวและการโอนหุ้น พร้อมอธิบายภาษาง่าย', 'ยกข้อความจริงจากสัญญามาให้ดู พร้อมคำอธิบายภาษาง่าย', 'แนะนำข้อความที่ใช้ขอแก้ และบอกเรื่องที่สัญญายังไม่ได้เขียนไว้'], c: ['สัดส่วนการลงทุน', 'การแบ่งกำไร', 'หน้าที่และการตัดสินใจ', 'การถอนตัวและการโอนหุ้น', 'การระงับข้อพิพาท'] },
+    nda: { b: ['ดูว่าสัญญากำหนดข้อมูลลับและข้อยกเว้นไว้อย่างไร', 'ดูข้อเรื่องระยะเวลาและค่าเสียหาย ว่ามีจุดที่ควรถามไหม', 'ยกข้อความจริงจากสัญญามาให้ดู พร้อมคำอธิบายภาษาง่าย', 'แนะนำข้อความที่ใช้ขอแก้ และบอกเรื่องที่สัญญายังไม่ได้เขียนไว้'], c: ['ขอบเขตของข้อมูลลับ', 'ข้อยกเว้นการเปิดเผย', 'ระยะเวลาคุ้มครอง', 'ค่าเสียหายและการบังคับใช้'] },
+    other: { b: ['ดูข้อเรื่องการชำระเงินและการยกเลิก ว่ามีจุดที่ควรถามไหม', 'ดูข้อเรื่องความรับผิดและค่าเสียหาย พร้อมอธิบายภาษาง่าย', 'ยกข้อความจริงจากสัญญามาให้ดู พร้อมคำอธิบายภาษาง่าย', 'แนะนำข้อความที่ใช้ขอแก้ และบอกเรื่องที่สัญญายังไม่ได้เขียนไว้'], c: ['เงื่อนไขการชำระเงิน', 'ระยะเวลาและการยกเลิก', 'ความรับผิดและค่าเสียหาย', 'การระงับข้อพิพาท'] }
+  };
+  var WARN = [
+    'อย่าใช้ผลตรวจแทนการอ่านสัญญาเอง และอย่าใช้แทนคำปรึกษาจากทนาย',
+    'ระบบไม่พบจุดเสี่ยง ไม่ได้แปลว่าสัญญาปลอดภัยหรือเซ็นได้เลย',
+    'AI อาจอ่านผิดหรือตกหล่น ควรเทียบข้อความที่ยกมากับสัญญาฉบับจริงทุกครั้ง',
+    'ส่งสัญญาให้ครบทุกหน้า ส่วนที่ไม่ได้ส่ง ระบบจะไม่ได้ตรวจ',
+    'อย่าส่งแนวทางขอแก้ให้อีกฝ่ายโดยไม่อ่านทวนและปรับให้ตรงกับกรณีของคุณ',
+    'ลบหรือปิดข้อมูลส่วนตัวที่ไม่จำเป็น เช่น เลขบัตรประชาชน เลขบัญชี ก่อนส่ง',
+    'สัญญาเงินก้อนใหญ่ อสังหาริมทรัพย์ หรือมีผลทางกฎหมายสูง ควรให้ทนายตรวจก่อนเซ็น'
+  ];
+  var sheet = null;
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function fillSheet(cap, ct) {
+    var I = INFO[ct]; if (!I) return; sheet.setAttribute('data-ct', ct);
+    var nm = (cap.querySelector('.vcp-cn') || {}).textContent || '', ue = cap.querySelector('.vcp-use .alx-tx'), use = ue ? ue.textContent : '';
+    sheet.querySelector('.alx-sh-in').innerHTML =
+      '<div class="alx-sh-hd"><b>' + esc(nm) + '</b><button type="button" class="alx-sh-x" aria-label="ปิด">✕</button></div>' +
+      '<h4>' + (I.h || 'เรื่องที่ระบบเน้นดู') + '</h4><ul class="alx-sh-c">' + I.c.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' +
+      '<h4>สิ่งที่ระบบช่วยได้</h4><ul class="alx-sh-b">' + I.b.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' +
+      (use ? '<h4>ใช้กับ</h4><p class="alx-sh-u">' + esc(use) + '</p>' : '') +
+      (EX[ct] ? '<p class="alx-sh-ex">ตัวอย่างข้อที่ระบบอาจชี้: ' + esc(EX[ct]) + '</p>' : '') +
+      '<p class="alx-sh-ft">ระบบอ่านข้อความที่คุณส่งทั้งหมด (ไม่เกิน 20,000 ตัวอักษร) แล้วสรุปจุดที่ควรดูได้สูงสุด 10 ข้อ เรียงจากเรื่องที่ควรระวังก่อน เรื่องนอกรายการนี้ก็อาจถูกชี้ได้</p>' +
+      '<h4 class="alx-sh-wh">ข้อควรระวัง</h4><ul class="alx-sh-w">' + WARN.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' +
+      '<p class="alx-sh-dc">Vellum Check เป็นเครื่องมือคัดกรองเบื้องต้นด้วย AI ไม่ใช่ทนายความ และไม่ใช่คำปรึกษาทางกฎหมาย</p>';
+    sheet.querySelector('.alx-sh-in').scrollTop = 0;
+  }
+  function openSheet(cap) {
+    var st = cap.closest('.vcp-stage'); if (!st) return;
+    if (!sheet) {
+      sheet = document.createElement('div'); sheet.className = 'alx-sh'; sheet.setAttribute('role', 'dialog'); sheet.setAttribute('aria-label', 'รายละเอียดประเภทสัญญา');
+      sheet.innerHTML = '<div class="alx-sh-in"></div>'; st.appendChild(sheet);
+      sheet.addEventListener('click', function (e) { if (e.target.closest('.alx-sh-x')) closeSheet(); });
+      sheet.addEventListener('pointerdown', function (e) { e.stopPropagation(); });
+    }
+    fillSheet(cap, st.dataset.ct); void sheet.offsetWidth; sheet.classList.add('is-on'); st.classList.add('alx-sh-open');
+    var mb = cap.querySelector('.alx-more'); if (mb) mb.setAttribute('aria-expanded', 'true');
+    var x = sheet.querySelector('.alx-sh-x'); if (x) x.focus({ preventScroll: true });
+  }
+  function closeSheet() {
+    if (!sheet) return; sheet.classList.remove('is-on'); var st = sheet.closest('.vcp-stage'); if (st) st.classList.remove('alx-sh-open');
+    var mb = document.querySelector('#vcp .alx-more'); if (mb) { mb.setAttribute('aria-expanded', 'false'); mb.focus({ preventScroll: true }); }
+  }
+  document.addEventListener('click', function (e) { if (sheet && e.target.closest && e.target.closest('#vcp [data-x],#vcp .vcp-ok')) { sheet.classList.remove('is-on'); var st = sheet.closest('.vcp-stage'); if (st) st.classList.remove('alx-sh-open'); } }, true);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && sheet && sheet.classList.contains('is-on')) { e.stopPropagation(); closeSheet(); } }, true);
   function fix() {
     var cap = document.querySelector('#vcp .vcp-cap'); if (!cap) return false;
     ['.vcp-use', '.vcp-cs'].forEach(function (s) {
       var e = cap.querySelector(s); if (!e || e.querySelector('.alx-k')) return;
       var m = /^([^:：]{1,24})[:：]\s*/.exec(e.textContent || ''); if (!m) return;
-      var rest = e.textContent.slice(m[0].length);
-      e.innerHTML = ''; var k = document.createElement('span'); k.className = 'alx-k'; k.textContent = m[1];
-      var r = document.createElement('span'); r.textContent = rest; e.appendChild(k); e.appendChild(r);
-      if ((document.documentElement.getAttribute('data-lang') || 'th') === 'th') hlIn(r);
+      var rest = e.textContent.slice(m[0].length), isCs = s === '.vcp-cs';
+      e.innerHTML = ''; var k = document.createElement('span'); k.className = 'alx-k'; k.textContent = isCs && th() ? 'ระบบดูให้' : m[1];
+      var r = document.createElement('span'); r.className = 'alx-tx';
+      var parts = rest.trim().split(/\s+/);
+      if (isCs && th() && parts.length > 1) { r.className = 'alx-tx alx-pills'; parts.forEach(function (w) { var b = document.createElement('i'); b.textContent = w; r.appendChild(b); }); }
+      else r.textContent = rest;
+      e.appendChild(k); e.appendChild(r);
     });
+    var st = cap.closest('.vcp-stage'), ct = st && st.dataset.ct, ex = cap.querySelector('.alx-ex');
+    if (!ex) { ex = document.createElement('span'); ex.className = 'alx-ex'; cap.appendChild(ex); }
+    var want = th() && EX[ct] ? 'ตัวอย่างข้อที่ระบบอาจชี้: ' + EX[ct] : '';
+    if (ex.textContent !== want) ex.textContent = want; ex.hidden = !want;
+    var useTh = th() && !!INFO[ct]; cap.classList.toggle('alx-th', useTh);
+    if (useTh) {
+      var bn = cap.querySelector('.alx-ben'); if (!bn) { bn = document.createElement('ul'); bn.className = 'alx-ben'; cap.insertBefore(bn, cap.querySelector('.vcp-use') || null); }
+      if (bn.getAttribute('data-ct') !== ct) { bn.setAttribute('data-ct', ct); bn.innerHTML = INFO[ct].b.slice(0, 2).map(function (t) { return '<li>' + t + '</li>'; }).join(''); }
+    }
+    var mb = cap.querySelector('.alx-more');
+    if (!mb) {
+      mb = document.createElement('button'); mb.type = 'button'; mb.className = 'alx-more'; mb.setAttribute('aria-expanded', 'false');
+      mb.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (cap.classList.contains('alx-th')) { openSheet(cap); return; }
+        var o = cap.classList.toggle('alx-open'); mb.setAttribute('aria-expanded', o ? 'true' : 'false'); mb.textContent = o ? 'Less' : 'More';
+      });
+      var row = document.createElement('div'); row.className = 'alx-mrow'; row.appendChild(mb);
+      var dc = document.createElement('span'); dc.className = 'alx-dc'; dc.textContent = 'ผลจาก AI ไม่ใช่คำปรึกษาทางกฎหมาย'; row.appendChild(dc);
+      cap.appendChild(row);
+    }
+    var lbl = useTh ? (ct === 'unsure' ? 'ดูว่าระบบทำอะไรให้' : 'ดูเรื่องที่ระบบเน้นดู') : (cap.classList.contains('alx-open') ? 'Less' : 'More');
+    if (mb.textContent !== lbl) mb.textContent = lbl;
+    if (sheet && sheet.classList.contains('is-on') && sheet.getAttribute('data-ct') !== ct) fillSheet(cap, ct);
     var cn = cap.querySelector('.vcp-cn'), now = cn ? cn.textContent : '';
     if (now && now !== last) { last = now; cap.classList.remove('alx-up'); void cap.offsetWidth; cap.classList.add('alx-up'); }
     return true;
@@ -237,10 +323,34 @@ document.addEventListener('input', function (e) {
     var stage = document.querySelector('#vcp .vcp-stage'); if (!stage) return false;
     if (stage.querySelector('.alx-un')) return true;
     var d = document.createElement('div'); d.className = 'alx-un'; d.setAttribute('aria-hidden', 'true');
-    d.innerHTML = SVG + '<div class="st"><i>1</i>อ่านข้อความ<br><i>2</i>หาประเภทสัญญา<br><i>3</i>ตรวจตามประเภทนั้น</div><div class="bd">ระบบเลือกให้อัตโนมัติ</div>';
+    d.innerHTML = SVG + '<div class="st"><i>1</i>อ่านข้อความ<br><i>2</i>หาประเภทสัญญา<br><i>3</i>สรุปจุดที่ควรดู</div><div class="bd">ระบบลองระบุประเภทให้</div>';
     stage.insertBefore(d, stage.querySelector('.vcp-cap'));
     return true;
   }
   function boot() { if (add()) return; var n = 0, iv = setInterval(function () { if (add() || ++n > 60) clearInterval(iv); }, 1000); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
+
+/* คำแนะนำ "แตะ ⊕" ครั้งแรก: ถ้าจุดอยู่หลังกรอบคำอธิบาย ไม่ต้องโชว์ทับข้อความในกรอบ (acct-lux.js v20) */
+(function () {
+  if (!window.MutationObserver || !window.matchMedia || !matchMedia('(max-width:767px)').matches) return;
+  var n = 0, iv = setInterval(function () {
+    var h = document.querySelector('#vcp .vcp-hint-spot'), cap = document.querySelector('#vcp .vcp-cap');
+    if (!h || !cap) { if (++n > 90) clearInterval(iv); return; } clearInterval(iv);
+    new MutationObserver(function () {
+      var m = /translate\(\s*[-\d.]+px,\s*([-\d.]+)px/.exec(h.style.transform || ''); if (!m) return;
+      var under = +m[1] + 30 > cap.offsetTop; if (h.classList.contains('alx-off') !== under) h.classList.toggle('alx-off', under);
+    }).observe(h, { attributes: true, attributeFilter: ['style'] });
+  }, 1000);
+})();
+/* ตอนลากหมุนโมเดล 3D: การ์ดคำอธิบายจางเหลือแค่หัวข้อ ปล่อยมือ 2 วินาทีค่อยกลับ (acct-lux.js v21) */
+(function () {
+  if (!window.matchMedia || !matchMedia('(max-width:767px)').matches) return;
+  var tm = 0;
+  document.addEventListener('pointerdown', function (e) {
+    var t = e.target; if (!t || !t.closest || !t.closest('#vcp .vcp-stage canvas')) return;
+    var st = t.closest('.vcp-stage'); clearTimeout(tm); st.classList.add('alx-drag');
+    function up() { document.removeEventListener('pointerup', up, true); document.removeEventListener('pointercancel', up, true); clearTimeout(tm); tm = setTimeout(function () { st.classList.remove('alx-drag'); }, 2000); }
+    document.addEventListener('pointerup', up, true); document.addEventListener('pointercancel', up, true);
+  }, { passive: true, capture: true });
 })();
