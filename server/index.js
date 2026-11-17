@@ -1235,7 +1235,18 @@ app.use(express.static(path.join(__dirname, '..', 'public'), {
 }));
 
 // เริ่มรับคำขอหลังเชื่อมฐานข้อมูลและสร้างตารางสำเร็จเท่านั้น
-initDb()
+// ฐานข้อมูลอาจตื่นช้าตอน deploy → ลองใหม่สูงสุด 6 ครั้ง (รอ 5, 10, 15, 20, 25 วิ) ก่อนยอมแพ้
+async function initDbWithRetry(max = 6) {
+  for (let i = 1; ; i++) {
+    try { return await initDb(); }
+    catch (err) {
+      if (i >= max) throw err;
+      console.error(`[startup] เชื่อมฐานข้อมูลไม่สำเร็จ (ครั้งที่ ${i}/${max}): ${err.message} — ลองใหม่ใน ${i * 5} วิ`);
+      await new Promise(r => setTimeout(r, i * 5000));
+    }
+  }
+}
+initDbWithRetry()
   .then(() => {
     app.listen(PORT, () => {
       console.log(`[เช็กสัญญา] server running on port ${PORT}`);
