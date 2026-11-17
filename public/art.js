@@ -297,27 +297,34 @@ window.VCStepPlay = function (v, fps, onEnd) {
     });
     var TEXT = 'input:not([type=checkbox]):not([type=radio]):not([type=file]),textarea,[contenteditable="true"]';
 
+    var snapR = null, snapRad = 0;   /* v290: เก็บมุมโค้งของปุ่มไว้ ไม่อ่าน getComputedStyle ทุกเฟรม */
     function frame() {
       raf = 0;
       var gx = tx, gy = ty;
-      if (snapEl) {
-        var sr = snapEl.getBoundingClientRect();
+      /* v290: อ่านตำแหน่งทั้งหมดก่อน แล้วค่อยเขียน style ทีเดียว (เดิมอ่าน-เขียนสลับกันทุกปุ่มทุกเฟรม = บังคับคำนวณเลย์เอาต์ซ้ำ ทำให้หน่วงตอนเมาส์ค้างบนเมนู) */
+      var sr = snapEl ? snapEl.getBoundingClientRect() : null;
+      if (snapEl && snapR !== snapEl) { snapR = snapEl; snapRad = parseFloat(getComputedStyle(snapEl).borderTopLeftRadius) || 0; }
+      var rects = []; for (var ri = 0; ri < mags.length; ri++) rects.push(mags[ri].el.getBoundingClientRect());
+      if (sr) {
         gx = sr.left + sr.width / 2; gy = sr.top + sr.height / 2;
         ringSize.w = sr.width + 16; ringSize.h = sr.height + 16;
-        ringSize.r = Math.min(ringSize.h / 2, (parseFloat(getComputedStyle(snapEl).borderTopLeftRadius) || 0) + 8);
+        ringSize.r = Math.min(ringSize.h / 2, snapRad + 8);
       } else { ringSize.w = 28; ringSize.h = 28; ringSize.r = 14; }
       ring.style.setProperty('--rw', ringSize.w.toFixed(1) + 'px'); ring.style.setProperty('--rh', ringSize.h.toFixed(1) + 'px'); ring.style.setProperty('--rr', ringSize.r.toFixed(1) + 'px');
       var magMoving = false;
       for (var mi = 0; mi < mags.length; mi++) {
-        var m = mags[mi], mr = m.el.getBoundingClientRect(), cx = mr.left - (m.x), cy = mr.top - (m.y);
+        var m = mags[mi], mr = rects[mi], cx = mr.left - (m.x), cy = mr.top - (m.y);
         var ccx = cx + mr.width / 2, ccy = cy + mr.height / 2;
         var dxm = mouseX - ccx, dym = mouseY - ccy;
         var near = mouseX > cx - 70 && mouseX < cx + mr.width + 70 && mouseY > cy - 70 && mouseY < cy + mr.height + 70;
         m.tx = near ? Math.max(-14, Math.min(14, dxm * .30)) : 0; m.ty = near ? Math.max(-10, Math.min(10, dym * .30)) : 0;
+        var ox = m.x, oy = m.y;
         m.x += (m.tx - m.x) * .16; m.y += (m.ty - m.y) * .16;
         if (Math.abs(m.tx - m.x) > .05 || Math.abs(m.ty - m.y) > .05) magMoving = true;
-        m.el.style.translate = m.x.toFixed(2) + 'px ' + m.y.toFixed(2) + 'px';
-        if (m.inner) m.inner.style.translate = (m.x * .18).toFixed(2) + 'px ' + (m.y * .18).toFixed(2) + 'px';
+        if (Math.abs(m.x - ox) > .01 || Math.abs(m.y - oy) > .01) {
+          m.el.style.translate = m.x.toFixed(2) + 'px ' + m.y.toFixed(2) + 'px';
+          if (m.inner) m.inner.style.translate = (m.x * .18).toFixed(2) + 'px ' + (m.y * .18).toFixed(2) + 'px';
+        }
       }
       rx += (gx - rx) * (snapEl ? 0.28 : 0.2); ry += (gy - ry) * (snapEl ? 0.28 : 0.2);
       ring.style.transform = 'translate3d(' + rx.toFixed(1) + 'px,' + ry.toFixed(1) + 'px,0)';
@@ -326,11 +333,13 @@ window.VCStepPlay = function (v, fps, onEnd) {
       var hero = document.querySelector('.hero');
       if (hero) { hero.style.setProperty('--mx', px.toFixed(3)); hero.style.setProperty('--my', py.toFixed(3)); }
       tiltC.x += (tiltT.x - tiltC.x) * 0.12; tiltC.y += (tiltT.y - tiltC.y) * 0.12;
-      var moving = magMoving || snapEl || Math.abs(gx - rx) > .3 || Math.abs(gy - ry) > .3 || Math.abs(pointer.tx - px) > .001 || Math.abs(pointer.ty - py) > .001 ||
+      /* v290: เมาส์ค้างบนปุ่มและวงแหวนเข้าที่แล้ว → หยุดลูป (เดิมวนทุกเฟรมตลอดเวลาที่ชี้ปุ่ม) · เลื่อนหน้า/ขยับเมาส์จะปลุกลูปเอง */
+      var moving = magMoving || Math.abs(gx - rx) > .3 || Math.abs(gy - ry) > .3 || Math.abs(pointer.tx - px) > .001 || Math.abs(pointer.ty - py) > .001 ||
                    Math.abs(tiltT.x - tiltC.x) > .02 || Math.abs(tiltT.y - tiltC.y) > .02;
       if (tiltEl) tiltEl.style.transform = 'perspective(900px) rotateX(' + (-tiltC.y).toFixed(2) + 'deg) rotateY(' + tiltC.x.toFixed(2) + 'deg)';
-      if (moving || tiltEl) raf = requestAnimationFrame(frame);
+      if (moving) raf = requestAnimationFrame(frame);
     }
+    window.addEventListener('scroll', function () { if (snapEl && !raf) raf = requestAnimationFrame(frame); }, { passive: true });
     function kick() { if (!raf) raf = requestAnimationFrame(frame); }
     pointer.tx = 0; pointer.ty = 0;
 
