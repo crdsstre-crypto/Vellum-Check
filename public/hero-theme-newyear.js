@@ -26,6 +26,23 @@
       clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);opacity:0;animation:nys var(--d,3.2s) ease-in-out var(--w,0s) infinite}
   @keyframes nys{0%,100%{opacity:0;transform:scale(.3) rotate(0)}50%{opacity:1;transform:scale(1) rotate(45deg)}}
   @media (max-width:767px){.ny-lt{height:92px}.ny-b{width:11px;height:15px;margin-left:-5.5px}}
+  /* เปิดมา: ไฟประดับติดไล่จากซ้ายไปขวา */
+  .ny-b{animation:nyon .4s ease-out calc(var(--i,0) * 70ms + .35s) both,nyb 2.4s ease-in-out var(--w,0s) infinite}
+  @keyframes nyon{from{filter:brightness(.18) saturate(.2)}to{filter:none}}
+  /* พลุหลังหัวข้อ: จรวดพุ่งขึ้น → แตกเป็นประกาย (แต่ละลูกวนทุก 6 วิ) */
+  .ny-fw{position:absolute;width:0;height:0}
+  .ny-fw b{position:absolute;left:-1.5px;top:0;width:3px;height:26px;border-radius:2px;background:linear-gradient(transparent,var(--c));opacity:0;animation:nyrk 6s ease-out var(--d) infinite}
+  .ny-fw i{position:absolute;left:-3px;top:-3px;width:6px;height:6px;border-radius:50%;background:var(--c);box-shadow:0 0 8px 2px var(--c);opacity:0;animation:nyfp 6s cubic-bezier(.15,.7,.3,1) var(--d) infinite}
+  .ny-fw u{position:absolute;left:-30px;top:-30px;width:60px;height:60px;border-radius:50%;background:radial-gradient(circle,rgba(255,250,230,.9),transparent 65%);opacity:0;animation:nyfc 6s ease-out var(--d) infinite}
+  @keyframes nyrk{0%{opacity:0;transform:translateY(150px)}1%{opacity:1}9%{opacity:1;transform:translateY(0)}10%,100%{opacity:0;transform:translateY(0)}}
+  @keyframes nyfp{0%,9.5%{opacity:0;transform:rotate(var(--a)) translateX(0)}10%{opacity:1}28%{opacity:.85}40%{opacity:0;transform:rotate(var(--a)) translateX(var(--r)) translateY(14px)}100%{opacity:0;transform:rotate(var(--a)) translateX(var(--r))}}
+  @keyframes nyfc{0%,9.5%{opacity:0;transform:scale(.3)}11%{opacity:1;transform:scale(1)}20%,100%{opacity:0;transform:scale(1.6)}}
+  /* แตะ → ประกายทองแตกกระจาย */
+  .ny-tp{width:0;height:0}
+  .ny-tp i{position:absolute;width:14px;height:14px;margin:-7px;background:radial-gradient(circle,#fffbe8 0 22%,#ffd36a 45%,rgba(255,211,106,.3) 70%);
+      clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);animation:nytp 1s ease-out forwards}
+  @keyframes nytp{0%{opacity:1;transform:translate(0,0) scale(.4) rotate(0)}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(1.1) rotate(160deg)}}
+  @media (prefers-reduced-motion:reduce){.ny-fw{display:none}}
   /* แสงอุ่นทองจาง ๆ ด้านบน */
   .ny-glow{position:absolute;inset:0;background:radial-gradient(90% 40% at 50% 0%,rgba(255,200,110,.16),transparent 70%)}
   `;
@@ -33,7 +50,7 @@
   var C = ['#ffd36a', '#ff6b6b', '#fff3cf', '#7fe0b0', '#ffb347'];
   function strand(y0, sag, n, off) {
     var bulbs = '', i, x, y;
-    for (i = 1; i < n; i++) { x = i / n; y = y0 + sag * 4 * x * (1 - x); bulbs += '<i class="ny-b" style="left:' + (x * 100).toFixed(1) + '%;top:' + y.toFixed(1) + '%;--c:' + C[(i + off) % C.length] + ';--w:-' + ((i * .37 + off) % 2.4).toFixed(2) + 's"></i>'; }
+    for (i = 1; i < n; i++) { x = i / n; y = y0 + sag * 4 * x * (1 - x); bulbs += '<i class="ny-b" style="--i:' + Math.round(x * 16) + ';left:' + (x * 100).toFixed(1) + '%;top:' + y.toFixed(1) + '%;--c:' + C[(i + off) % C.length] + ';--w:-' + ((i * .37 + off) % 2.4).toFixed(2) + 's"></i>'; }
     return { path: 'M0 ' + y0 + ' Q50 ' + (y0 + sag * 2) + ' 100 ' + y0, bulbs: bulbs };
   }
   var a = strand(6, 30, 13, 0), b = strand(0, 52, 10, 2);
@@ -42,7 +59,15 @@
   [[6, 34, 22, 3.4, 0], [93, 30, 18, 2.8, 1.1], [12, 62, 16, 3, 2], [88, 56, 24, 3.8, .6], [5, 84, 18, 3.1, 1.7], [95, 76, 16, 2.6, 2.4], [24, 46, 14, 3.6, 1.3], [76, 42, 15, 3.2, .3], [62, 86, 14, 3, 2.1]].forEach(function (s) {
     stars += '<i class="ny-s" style="left:' + s[0] + '%;top:' + s[1] + '%;--s:' + s[2] + 'px;--d:' + s[3] + 's;--w:-' + s[4] + 's"></i>';
   });
-  var stage = '<div class="ny-glow"></div>' + lights + stars;
+  function burst(x, y, c, d, r, n) { var h = '<div class="ny-fw" style="left:' + x + '%;top:' + y + '%;--c:' + c + ';--d:' + d + 's"><b></b><u></u>', i;
+    for (i = 0; i < n; i++) h += '<i style="--a:' + (i * 360 / n).toFixed(0) + 'deg;--r:' + (r * (.75 + (i % 3) * .14)).toFixed(0) + 'px"></i>';
+    return h + '</div>'; }
+  var R0 = Math.min(1.6, Math.max(.8, (window.innerWidth || 400) / 700));
+  var fw = burst(16, 24, '#ffd36a', .5, 100 * R0, 18) + burst(84, 20, '#ff8a7a', 1.3, 90 * R0, 16) + burst(70, 36, '#fff3cf', 2.3, 76 * R0, 14) + burst(28, 38, '#7fe0b0', 3.4, 80 * R0, 16);
+  var stage = '<div class="ny-glow"></div>' + fw + lights + stars;
+  function tap(x, y, lay) { var d = document.createElement('div'), h = '', i; d.className = 'thm-fx ny-tp'; d.style.left = x + 'px'; d.style.top = y + 'px';
+    for (i = 0; i < 10; i++) { var a = i / 10 * 6.283, r = 40 + Math.random() * 40; h += '<i style="--x:' + (Math.cos(a) * r).toFixed(0) + 'px;--y:' + (Math.sin(a) * r).toFixed(0) + 'px"></i>'; }
+    d.innerHTML = h; lay.appendChild(d); setTimeout(function () { d.remove(); }, 1100); }
 
   /* กล่องของขวัญมองจากด้านบน */
   function gift(base, dark, rib, rib2) {
@@ -55,6 +80,6 @@
   var cam = '<div class="L obj" data-k="1.2" data-x="-.47" data-y=".22" data-w="19vmin" data-r="-14" style="z-index:12">' + gift('#b3242f', '#7a1219', '#f2c35a', '#a8761f') + '</div>' +
             '<div class="L obj" data-k="1.3" data-x=".47" data-y="-.2" data-w="17vmin" data-r="12" style="z-index:12">' + gift('#14513f', '#0b3328', '#f2c35a', '#a8761f') + '</div>';
 
-  (window.VCHT = window.VCHT || {}).newyear = { css: css, stage: stage, cam: cam };
+  (window.VCHT = window.VCHT || {}).newyear = { css: css, stage: stage, cam: cam, tap: tap };
   if (window.__vchApply) window.__vchApply();
 })();
