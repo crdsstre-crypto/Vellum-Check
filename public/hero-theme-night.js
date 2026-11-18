@@ -29,9 +29,23 @@
       background:radial-gradient(circle at 38% 32%,rgba(235,242,255,.95),rgba(170,195,255,.4) 42%,rgba(6,10,28,.6) 78%);animation:tnd var(--d,7s) cubic-bezier(.5,0,.85,1) var(--w,0s) infinite}
   .tn-drop::after{content:"";position:absolute;left:3.5px;bottom:100%;width:3px;height:var(--tr,90px);border-radius:2px;background:linear-gradient(transparent,rgba(6,10,28,.45))}
   @keyframes tnd{0%{transform:translateY(0)}22%{transform:translateY(6vmin)}30%{transform:translateY(7vmin)}100%{transform:translateY(46vmin)}}
-  /* ฟ้าแลบจาง ๆ ทุก ~14 วินาที */
-  .tn-flash{position:absolute;inset:0;background:radial-gradient(120% 90% at 80% 0%,rgba(205,220,255,.32),rgba(160,180,255,.08) 50%,transparent 75%);opacity:0;animation:tnf 14s 4s infinite}
-  @keyframes tnf{0%,90%,100%{opacity:0}91%{opacity:.5}92%{opacity:.08}93.5%{opacity:.38}96%{opacity:0}}
+  /* ฟ้าแลบ: ครั้งแรก ~1 วิหลังเปิด แล้วทุก 14 วิ · แวบเดียวเห็นเงากิ่งไม้นอกหน้าต่างพาดโต๊ะ */
+  .tn-flash{position:absolute;inset:0;background:radial-gradient(120% 90% at 80% 0%,rgba(215,228,255,.42),rgba(160,180,255,.1) 50%,transparent 75%);opacity:0;animation:tnf 14s .8s infinite}
+  .tn-tree{position:absolute;right:-8%;top:-6%;width:min(110vmin,900px);aspect-ratio:1;opacity:0;animation:tnf 14s .8s infinite;transform:rotate(-12deg)}
+  .tn-tree svg{width:100%;height:100%;filter:blur(1.5px)}
+  @keyframes tnf{0%{opacity:0}1%{opacity:1}2.2%{opacity:.15}3.6%{opacity:.9}6%{opacity:0}100%{opacity:0}}
+  /* แตะ → วงหยดน้ำบนกระจก */
+  .tn-rp{width:0;height:0}
+  .tn-rp i{position:absolute;left:-40px;top:-40px;width:80px;height:80px;border-radius:50%;border:2px solid rgba(200,220,255,.6);animation:tnrp 1.3s ease-out forwards;opacity:0}
+  .tn-rp i+i{animation-delay:.18s}.tn-rp i+i+i{animation-delay:.36s}
+  .tn-rp b{position:absolute;left:-5px;top:-6px;width:10px;height:13px;border-radius:50% 50% 45% 45%;background:radial-gradient(circle at 38% 32%,#f2f6ff,rgba(160,190,255,.45) 50%,rgba(6,10,28,.5) 80%);animation:tnrd 1.4s ease-in forwards}
+  @keyframes tnrp{0%{opacity:.9;transform:scale(.1)}100%{opacity:0;transform:scale(1.6)}}
+  @keyframes tnrd{0%{opacity:1;transform:translateY(0)}60%{opacity:.9}100%{opacity:0;transform:translateY(60px)}}
+  /* ฉากจบ: ฝนหยุด แสงเช้า + รุ้งจาง ๆ */
+  .tn-sun{position:absolute;inset:0;background:radial-gradient(110% 70% at 10% -10%,rgba(255,214,150,.38),rgba(255,180,110,.1) 45%,transparent 70%)}
+  .tn-bow{position:absolute;left:50%;top:0;width:150vmax;height:150vmax;margin-left:-75vmax;border-radius:50%;opacity:.55;
+      background:radial-gradient(circle,transparent 40%,rgba(255,80,80,.22) 41.2%,rgba(255,170,60,.22) 42.4%,rgba(255,240,90,.2) 43.6%,rgba(90,220,120,.18) 44.8%,rgba(80,150,255,.18) 46%,rgba(150,90,255,.16) 47.2%,transparent 48.4%);
+      transform:translateY(-62%)}
   @media (max-width:767px){.tn-win{left:22%;top:12%;width:120vmin;height:92vmin;gap:10px}}
   `;
   var drops = '';
@@ -40,7 +54,7 @@
   });
   var dl = drops.split('</i>'), panes = '';
   for (var k = 0; k < 4; k++) panes += '<div class="tn-pane"><div class="tn-rain"></div><div class="tn-rain b"></div>' + (dl[k] ? dl[k] + '</i>' : '') + (dl[k + 4] ? dl[k + 4] + '</i>' : '') + '</div>';
-  var stage = '<div class="tn-tint"></div><div class="tn-cool"></div><div class="tn-win">' + panes + '</div><div class="tn-flash"></div>';
+  var stage = '<div class="tn-tint"></div><div class="tn-cool"></div><div class="tn-win">' + panes + '</div><div class="tn-tree"><svg viewBox="0 0 400 400"><g fill="none" stroke="rgba(2,4,14,.7)" stroke-linecap="round"><path d="M400 60C320 90 260 120 200 180S100 300 40 330" stroke-width="16"/><path d="M300 110c-10 40-40 70-90 90" stroke-width="9"/><path d="M240 160c40 0 80 20 110 60" stroke-width="8"/><path d="M170 210c-30-20-70-24-110-10" stroke-width="7"/><path d="M120 270c10 30 30 60 60 80" stroke-width="6"/><path d="M350 220c10 30 6 60-10 90" stroke-width="5"/><path d="M210 200c-6 40 0 80 20 110" stroke-width="5"/><path d="M60 200c-20 10-34 26-40 46" stroke-width="4"/></g></svg></div><div class="tn-flash"></div>';
 
   /* เสียงฝน: เปิดตามปุ่มเพลงของหน้าปก */
   function init(SR, host) {
@@ -68,6 +82,8 @@
     if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { if (!AC) return; if (es[0].isIntersecting) { if (on) AC.resume(); } else AC.suspend(); }).observe(host);
   }
 
-  (window.VCHT = window.VCHT || {}).night = { css: css, stage: stage, init: init };
+  var end = '<div class="tn-sun"></div><div class="tn-bow"></div>';
+  function tap(x, y, lay) { var d = document.createElement('div'); d.className = 'thm-fx tn-rp'; d.style.left = x + 'px'; d.style.top = y + 'px'; d.innerHTML = '<i></i><i></i><i></i><b></b>'; lay.appendChild(d); setTimeout(function () { d.remove(); }, 1700); }
+  (window.VCHT = window.VCHT || {}).night = { css: css, stage: stage, init: init, end: end, tap: tap };
   if (window.__vchApply) window.__vchApply();
 })();
