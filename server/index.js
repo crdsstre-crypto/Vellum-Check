@@ -1261,8 +1261,10 @@ initDbWithRetry()
   .then(() => {
     app.listen(PORT, () => {
       console.log(`[เช็กสัญญา] server running on port ${PORT}`);
-      setTimeout(() => warmPreviews(true), 3000);   // เตรียมตัวอย่างเสียงทุกเสียงไว้ล่วงหน้า
-      startRetention();                             // ลบผลตรวจที่เก่าเกิน 90 วันอัตโนมัติ
+      // เครื่องเพิ่งเปิด (แพ็กเกจฟรี CPU น้อย): รอ 90 วินาทีก่อนเตรียมตัวอย่างเสียง — เดิมเริ่มใน 3 วินาทีและยิงทุกเสียงพร้อมกัน
+      // แย่งการเชื่อมต่อฐานข้อมูล/เน็ตจนคนที่ล็อกอิน Google ช่วงนั้นหมดเวลา (fetch failed · timeout exceeded when trying to connect)
+      setTimeout(() => warmPreviews(true), 90 * 1000);
+      setTimeout(startRetention, 120 * 1000);       // ลบผลตรวจที่เก่าเกิน 90 วันอัตโนมัติ (เลื่อนไม่ให้ชนช่วงเครื่องเพิ่งเปิด)
     });
   })
   .catch(err => {
