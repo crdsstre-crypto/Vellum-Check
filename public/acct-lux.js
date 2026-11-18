@@ -1,5 +1,5 @@
 /* ของตกแต่งที่สคริปต์นี้สร้าง ใช้กับหน้ามือถือ (acct-lux.css โหลดเฉพาะจอ ≤767px) → จอคอม/แท็บเล็ตซ่อนทั้งหมด ไม่งั้นรูปจะขยายเต็มจอ (acct-lux.js v19) */
-(function () { var s = document.createElement('style'); s.textContent = '@media (min-width:768px){.alx-bg,.alx-crest,.alx-glare,.alx-spine,.alx-stud,.alx-tw,.alx-coin,.alx-arr,.alx-stc,.alx-hd,.alx-cf,.alx-mg,.alx-cab-top,.alx-files,.alx-pull,.alx-grv,.alx-un,.alx-st{display:none!important}}'; (document.head || document.documentElement).appendChild(s); })();
+(function () { var s = document.createElement('style'); s.textContent = '@media (min-width:768px) and (max-width:1023px){.alx-bg,.alx-crest,.alx-glare,.alx-spine,.alx-stud,.alx-tw,.alx-coin,.alx-arr,.alx-stc,.alx-hd,.alx-cf,.alx-mg,.alx-cab-top,.alx-files,.alx-pull,.alx-grv,.alx-un,.alx-st{display:none!important}}'; (document.head || document.documentElement).appendChild(s); })();
 /* acct-lux.js — ฉากหลังหน้าบัญชี (มือถือ) ต่อเนื่องจากหน้าปก
    ใส่ชั้นพื้นหลังเข้าไปใน #authCard: โต๊ะไม้เข้ม · แสงโคมอุ่น · ฝุ่นทองลอย · ใบไม้เงา/ปากกา/แว่นที่ขอบจอ
    หน้าตาทั้งหมดอยู่ใน acct-lux.css (ทำงานเฉพาะ body[data-sheet="acct"] จอ ≤767px)
