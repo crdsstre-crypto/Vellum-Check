@@ -45,3 +45,10 @@ html.vc-art .ld-scene .auth-doc-wrap{zoom:1.25!important}
 html.vc-art .ld-scene{min-height:100svh!important;align-items:center!important;box-sizing:border-box;padding-top:64px!important}
 html.vc-art .ld-scene .auth-doc-wrap{margin-top:56px!important}
 html.vc-art #authCard .disclaimer:empty{display:none!important}
+/* v5 หน้าตรวจสัญญา (จอกว้าง ≥1500px): ใช้ความกว้างจอมากขึ้น — เดิมเนื้อหากว้างสุด 1360px เหลือที่ว่างข้างละ ~280px บนจอ 1920
+   ผลการตรวจ (ขวา) กว้างขึ้นจาก ~440 → ~600px และขยับไปทางขวา · จอเล็กกว่านี้ใช้ผังเดิม */
+@media (min-width:1500px){
+  html.vc-art[data-view="desk"][data-desk="check"]{--content-max:min(1640px,calc(100vw - 160px))}
+  html.vc-art[data-view="desk"][data-desk="check"] main{
+    grid-template-columns:minmax(var(--gutter),1fr) minmax(0,320px) minmax(0,calc((var(--content-max) - 320px) * .54)) minmax(0,calc((var(--content-max) - 320px) * .46)) minmax(var(--gutter),1fr)!important}
+}
