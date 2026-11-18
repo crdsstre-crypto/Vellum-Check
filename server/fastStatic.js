@@ -26,20 +26,29 @@ export function fastStatic(root) {
   root = path.resolve(root);
   const cache = new Map();   // file → { mtime, size, raw, gz, br, brPending }
 
+  /* v2 (18 พ.ย.): เดิมตอนเปิดเครื่องบีบไฟล์ทั้งหมด ~10MB ในครั้งเดียว — gzipSync ทุกไฟล์ (บล็อกเซิร์ฟเวอร์) + brotli ระดับ 11
+     ทุกไฟล์พร้อมกันใน thread pool → บนเครื่องฟรี (CPU 0.1) thread pool เต็มหลายนาที ทำให้ DNS/ต่อฐานข้อมูล/ต่อ Google
+     ช่วงหลัง deploy หมดเวลา (Connection terminated due to connection timeout · UND_ERR_CONNECT_TIMEOUT)
+     ตอนนี้: บีบแบบไม่บล็อก (async) · ทีละไฟล์ตามคิว (เหลือ thread ให้งานอื่น) · brotli ระดับกลาง (เร็วกว่ามาก เล็กกว่า gzip อยู่ดี)
+     · อุ่นเครื่องเลื่อนเป็น 3 นาทีหลังเปิด */
+  let qGz = Promise.resolve(), qBr = Promise.resolve();   // 2 คิวแยก: gzip (ต้องใช้ทันที) ไม่ต้องรอ brotli
+  const enqGz = job => (qGz = qGz.then(job, job)), enqBr = job => (qBr = qBr.then(job, job));
+  const gzipA = raw => new Promise((ok, no) => zlib.gzip(raw, { level: 6 }, (err, out) => err ? no(err) : ok(out)));
+  const brA = raw => new Promise((ok, no) => zlib.brotliCompress(raw, { params: {
+    [zlib.constants.BROTLI_PARAM_QUALITY]: raw.length > 200 * 1024 ? 5 : 8, [zlib.constants.BROTLI_PARAM_SIZE_HINT]: raw.length } }, (err, out) => err ? no(err) : ok(out)));
+
   function entry(file, st) {
     let e = cache.get(file);
     if (e && e.mtime === st.mtimeMs && e.size === st.size) return e;
     const raw = fs.readFileSync(file);
-    e = { mtime: st.mtimeMs, size: st.size, raw, gz: zlib.gzipSync(raw, { level: 6 }), br: null };
+    e = { mtime: st.mtimeMs, size: st.size, raw, gz: null, br: null };
     cache.set(file, e);
-    // brotli ระดับสูงสุดใช้เวลานาน → ทำเบื้องหลัง ระหว่างนั้นส่ง gzip ไปก่อน
-    zlib.brotliCompress(raw, { params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 11, [zlib.constants.BROTLI_PARAM_SIZE_HINT]: raw.length } }, (err, out) => {
-      if (!err && cache.get(file) === e) e.br = out;
-    });
+    e.gzP = enqGz(() => gzipA(raw)).then(out => { if (cache.get(file) === e) e.gz = out; return out; }, () => null);
+    enqBr(() => brA(raw).then(out => { if (cache.get(file) === e) e.br = out; }, () => {}));
     return e;
   }
 
-  // อุ่นเครื่อง: บีบไฟล์ข้อความทั้งหมดตอนเปิดเซิร์ฟเวอร์ (ไม่บล็อกการเริ่มทำงาน)
+  // อุ่นเครื่อง: 3 นาทีหลังเปิด ค่อยๆ บีบไฟล์ข้อความที่เหลือทีละไฟล์ (ไม่แย่งงานช่วงเครื่องเพิ่งเปิด)
   setTimeout(() => {
     const walk = dir => {
       for (const d of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -52,9 +61,9 @@ export function fastStatic(root) {
       }
     };
     try { walk(root); } catch (err) { console.error('[static] warm-up failed:', err.message); }
-  }, 50).unref?.();
+  }, 180 * 1000).unref?.();
 
-  return function (req, res, next) {
+  return async function (req, res, next) {
     if (req.method !== 'GET' && req.method !== 'HEAD') return next();
     let rel;
     try { rel = decodeURIComponent((req.path || req.url.split('?')[0])); } catch { return next(); }
@@ -70,7 +79,9 @@ export function fastStatic(root) {
     const ae = String(req.headers['accept-encoding'] || '');
     let e;
     try { e = entry(file, st); } catch { return next(); }
-    const enc = e.br && /\bbr\b/.test(ae) ? 'br' : /\bgzip\b/.test(ae) ? 'gzip' : null;
+    const wantGz = /\bgzip\b/.test(ae);
+    if (!(e.br && /\bbr\b/.test(ae)) && wantGz && !e.gz) { try { await e.gzP; } catch { /* ส่งไม่บีบ */ } }
+    const enc = e.br && /\bbr\b/.test(ae) ? 'br' : wantGz && e.gz ? 'gzip' : null;
     const body = enc === 'br' ? e.br : enc === 'gzip' ? e.gz : e.raw;
     const etag = `W/"${st.size.toString(36)}-${Math.floor(st.mtimeMs).toString(36)}${enc ? '-' + enc : ''}"`;
 
