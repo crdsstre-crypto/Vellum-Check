@@ -7368,3 +7368,9 @@ html.vc-gin::before{content:none !important;display:none !important}
 .vsl-list{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .vsl-list > .vsl-hero{grid-column:1 / -1;margin:0 0 4px !important}
 .vsl-list > .vsl-hero + .vsl-item{margin-top:6px}
+/* v291 การ์ดต้อนรับหลังเข้าสู่ระบบ: ตัว VC อยู่กลางตราครั่ง (เดิม display:block ทับ grid ตัวอักษรเลยหลุดไปมุมซ้ายบน) · ไอคอนปฏิทินเส้นแทนอิโมจิเหรียญ */
+.vc-hello .vh-seal.qs-wax{display:grid;place-items:center}
+.vc-hello .vh-seal.qs-wax b{display:block;line-height:1;transform:translateY(1px)}
+.vc-hello .vh-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.vc-hello .vh-ic{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.vc-hello{overflow:hidden}
