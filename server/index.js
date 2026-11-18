@@ -233,7 +233,12 @@ app.get('/api/auth/google/callback', async (req, res) => {
     console.warn('[google] login failed:', why, '· host', req.hostname);
     // ล็อกอินอยู่แล้ว (เช่น กดย้อนกลับ/รีเฟรชหน้านี้ซ้ำ) → ไม่ต้องขึ้นว่าไม่สำเร็จ
     try { if (await getUserFromRequest(req)) return res.redirect('/'); } catch {}
-    res.redirect(why === 'cancelled' ? '/' : '/?google=error');
+    if (why === 'cancelled') return res.redirect('/');
+    // แนบรหัสสาเหตุสั้นๆ ไปด้วย (ไม่มีข้อมูลส่วนตัว) → หน้าเว็บบอกวิธีแก้ได้ตรงจุด และผู้ใช้แจ้งรหัสนี้ตอนติดต่อเราได้
+    const w = String(why);
+    const code = /state/.test(w) ? 'state' : /missing code/.test(w) ? 'code' : /token exchange|invalid_grant/.test(w) ? 'token'
+      : /fetch failed|abort|timeout/i.test(w) ? 'net' : w.startsWith('no user') ? 'user' : w.startsWith('google:') ? 'google' : 'server';
+    res.redirect('/?google=error&why=' + code);
   };
   try {
     const { code, state, error } = req.query;
@@ -246,11 +251,17 @@ app.get('/api/auth/google/callback', async (req, res) => {
     const t0 = Date.now();
     const profile = await exchangeCodeForProfile(code, redirectUriFor(req));   // ยิงซ้อนเองใน googleAuth.js ถ้าช้า
     const t1 = Date.now();
-    const user = await findOrCreateGoogleUser(profile);
-    if (!user) return fail('no user');
+    // ฐานข้อมูลเพิ่งตื่น/สะดุดชั่วคราว หรือสร้างบัญชีชนกันพร้อมกัน (กดซ้ำ 2 แท็บ) → ลองอีกรอบก่อนบอกว่าไม่สำเร็จ
+    let user = null;
+    for (let i = 0; i < 2 && !user; i++) {
+      try { user = await findOrCreateGoogleUser(profile); }
+      catch (e) { if (i) throw e; console.warn('[google] db retry:', e.message); await new Promise(r => setTimeout(r, 800)); }
+    }
+    if (!user) return fail(profile.emailVerified ? 'no user' : 'no user (email not verified)');
 
     // startSession ตั้ง Set-Cookie ใหม่ จึงต้องล้างคุกกี้ state หลังจากนั้น
-    await startSession(req, res, user.id);
+    try { await startSession(req, res, user.id); }
+    catch (e) { console.warn('[google] session retry:', e.message); await new Promise(r => setTimeout(r, 800)); await startSession(req, res, user.id); }
     res.append('Set-Cookie', CLEAR_STATE_COOKIE);
     // ชื่อจาก Google ไว้ให้ฉากต้อนรับใช้ (อ่านได้จากหน้าเว็บ · หมดอายุใน 5 นาที · ไม่ใช้ยืนยันตัวตน)
     if (profile.name) res.append('Set-Cookie', `vc_gname=${encodeURIComponent(profile.name)}; Path=/; Max-Age=300; SameSite=Lax; Secure`);
