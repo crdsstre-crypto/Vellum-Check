@@ -260,6 +260,159 @@
     HH + ' .bottom-nav .vc-bn-ind::before{background:radial-gradient(closest-side,rgba(163,25,28,.26),rgba(163,25,28,.07) 60%,transparent) !important}' +
     HH + ' .bottom-nav .vc-bn-ind::after{background:#a3191c !important;box-shadow:0 0 8px rgba(163,25,28,.8) !important}';
   var FEDORA = '<path d="M3.5 9.6c4.2 1.7 12.8 1.7 17 0"/><path d="M6.8 9.3 7.9 5.3c.3-1 1.2-1.4 2.1-1l2 .9 2-.9c.9-.4 1.8 0 2.1 1l1.1 4"/><path class="bd" d="M7.4 8c3.1.8 6.1.8 9.2 0" stroke="#b81d20" stroke-width="2"/><path d="M8.6 11.4a3.4 3.4 0 0 0 6.8 0"/><path d="M5 21c.7-3.5 3.5-5.4 7-5.4s6.3 1.9 7 5.4"/>';
+
+  /* ---------- แผ่นบัญชี (มือถือ) ตอนเปิดจากหน้าแรกธีมนักสืบ — บอร์ด · แฟ้มคดี · บัตรดัชนี · หมุดแดง ---------- */
+  var ACCT = `
+§{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 .25 0 0 0 0 .23 0 0 0 0 .2 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23c)'/%3E%3C/svg%3E"),radial-gradient(90% 40% at 50% 0,rgba(255,250,235,.12),transparent 70%),linear-gradient(170deg,#4e4a45,#33302c 50%,#222120) !important;box-shadow:0 -1px 0 rgba(163,25,28,.8),0 -20px 50px -20px rgba(0,0,0,.9) !important}
+§ .alx-bg .alx-w,§ .alx-bg .alx-l,§ .alx-bg .alx-leaf,§ .alx-bg .alx-pen,§ .alx-bg .alx-gls,§ .alx-bg .alx-v{display:none !important}
+§ .alx-bg{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 900' preserveAspectRatio='none'%3E%3Cg fill='none' stroke='%23a3191c' stroke-width='1.6' opacity='.55'%3E%3Cpath d='M-10 120Q120 190 260 150T410 210'/%3E%3Cpath d='M-10 520Q90 470 200 560T410 520'/%3E%3C/g%3E%3C/svg%3E") 0 0/100% 100% no-repeat !important}
+§ .alx-dust i{background:#ddd !important;box-shadow:none !important}
+§ .sheet-head{background:linear-gradient(180deg,rgba(0,0,0,.35),rgba(0,0,0,.12)) !important;border:0 !important}
+§ .alx-hd{background:linear-gradient(90deg,transparent,rgba(163,25,28,.9) 18%,rgba(163,25,28,.9) 82%,transparent) !important;height:1px !important}
+§ .alx-hd::before,§ .alx-hd::after{background:radial-gradient(circle at 35% 30%,#e17070,#a3191c 58%,#560808) !important;border-radius:50% !important;transform:none !important;box-shadow:1px 2px 2px rgba(0,0,0,.55) !important}
+/* หัวบัญชี = บัตรนักสืบ */
+§ #acctAvatarBtn{border-radius:2px !important;background:#3c3c3c !important;border:5px solid #ecebe6 !important;border-bottom-width:13px !important;box-shadow:2px 6px 10px rgba(0,0,0,.6) !important;transform:rotate(-4deg);color:#efefef !important}
+§ #acctAvatarBtn::before,§ #acctAvatarBtn::after{display:none !important}
+§ #acctAvatarBtn img{filter:grayscale(1) contrast(1.1) !important;border-radius:0 !important}
+§ #acctInitial{color:#f0f0f0 !important;font-family:'IBM Plex Mono',Prompt,monospace !important;text-shadow:none !important}
+§ .acct-cam{border-radius:50% !important;filter:grayscale(1) !important}
+§ .acct-mail{font-family:'IBM Plex Mono',Prompt,monospace !important;color:#f2f2f2 !important;letter-spacing:-.01em;text-shadow:none !important}
+§ .acct-label,§ .acct-label > :not(.vc-adm-badge){color:#c9c9c9 !important;-webkit-text-fill-color:#c9c9c9}
+§ .acct-label::before{background:#c23a3c !important;box-shadow:0 0 0 3px rgba(194,58,60,.2) !important}
+§ .vc-adm-badge{background:transparent !important;border:1.5px solid #b81d20 !important;color:#d24a4c !important;border-radius:3px !important;box-shadow:none !important;text-shadow:none !important;transform:rotate(-4deg);font-family:'IBM Plex Mono',Prompt,monospace !important;letter-spacing:.03em}
+§ #authClose{border-radius:50% !important;background:rgba(255,255,255,.05) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f0f0f0' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6 6 18'/%3E%3C/svg%3E") center/18px no-repeat !important;border:1px solid rgba(255,255,255,.3) !important;color:#f0f0f0 !important;box-shadow:none !important}
+/* หัวข้อกลุ่ม = ด้ายแดง */
+§ #authLoggedIn .vc-mg,§ .vc-mg{color:#dcdcdc !important;text-shadow:none !important}
+§ #authLoggedIn .vc-mg::before,§ .vc-mg::before{display:inline-block !important;flex:none;color:#c23a3c !important;background:radial-gradient(circle at 35% 30%,#e17070,#a3191c 58%,#560808) !important;-webkit-mask:none !important;mask:none !important;border-radius:50% !important;width:8px !important;height:8px !important;content:"" !important}
+§ #authLoggedIn .vc-mg::after,§ .vc-mg::after{background:linear-gradient(90deg,rgba(163,25,28,.85),rgba(163,25,28,.15)) !important;height:1px !important}
+/* การ์ดเครดิต = แฟ้มคดี */
+§ .vc-wcard{background:repeating-linear-gradient(180deg,transparent 0 23px,rgba(90,70,40,.08) 23px 24px),linear-gradient(172deg,#d9cfb5,#c6b997 60%,#b6a885) !important;border:0 !important;border-radius:4px 4px 6px 6px !important;box-shadow:0 2px 0 #9b8f70,0 18px 30px -12px rgba(0,0,0,.85) !important;overflow:visible !important;transform:none !important}
+§ .vc-wcard::before,§ .vc-wcard::after{display:none !important}
+§ .vc-wcard .alx-stud,§ .vc-wcard .alx-glare,§ .vc-wcard .vc-wc-sheen,§ .vc-wcard .vc-wc-glare{display:none !important}
+§ .vc-wcard .alx-cf{display:block !important;border:0 !important;background:none !important;box-shadow:none !important;overflow:visible !important}
+§ .vc-wcard .alx-spine{display:none !important}
+§ .vc-wcard .alx-crest{display:block !important;background:none !important;-webkit-mask:none !important;mask:none !important;filter:none !important;opacity:1 !important;width:auto !important;height:auto !important;right:18px !important;top:62px !important;left:auto !important;transform:rotate(-12deg) !important}
+§ .vc-wcard .alx-crest::after{content:"CASE FILE" !important;display:block !important;position:static !important;padding:4px 8px;border:2px solid rgba(163,25,28,.5);border-radius:3px;color:rgba(163,25,28,.55);font:700 13px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;background:none !important;width:auto !important;height:auto !important;-webkit-mask:none !important;mask:none !important}
+§ .vc-wcard .alx-crest::before,§ .vc-wcard .alx-crest > *{display:none !important}
+§ .vc-wcard .alx-crest{overflow:visible !important}
+§ .vc-wc-lab{color:#3a342a !important;text-shadow:none !important}
+§ .vc-wc-lab svg,§ .vc-wc-lab::before{filter:grayscale(1) brightness(.35) !important}
+§ .vc-wc-voice{background:transparent !important;border:1.5px solid rgba(40,34,26,.55) !important;color:#2a251c !important;box-shadow:none !important;text-shadow:none !important}
+§ .vc-wc-voice *{color:#2a251c !important;filter:grayscale(1) brightness(.4)}
+§ .vc-wc-num{background:rgba(255,255,255,.18) !important;border:1.5px dashed rgba(60,52,40,.55) !important;box-shadow:none !important;border-radius:3px !important}
+§ .vc-wc-num::before,§ .vc-wc-num::after{display:none !important}
+§ .vc-wc-num b{color:#161616 !important;background:none !important;-webkit-text-fill-color:#161616 !important;text-shadow:none !important;font-family:'IBM Plex Mono',Prompt,monospace !important;filter:none !important}
+§ .vc-wc-num small{color:#3a342a !important;-webkit-text-fill-color:#3a342a !important;text-shadow:none !important}
+§ .vc-wc-warn{background:rgba(163,25,28,.07) !important;border:1.5px solid rgba(163,25,28,.6) !important;color:#5a1414 !important;box-shadow:none !important}
+§ .vc-wc-warn *{color:#5a1414 !important;filter:none}
+§ .vc-wc-warn i{filter:grayscale(1) brightness(.3) !important}
+§ .vc-wcard > p:not(.vc-wc-num):not(.vc-wc-warn){color:#3a342a !important}
+§ .vc-wc-top-up{background:linear-gradient(180deg,#b3211f,#8a1414) !important;border:0 !important;color:#fff !important;border-radius:4px !important;box-shadow:0 2px 0 #5a0c0c,0 10px 18px -8px rgba(0,0,0,.7) !important;text-shadow:0 1px 0 rgba(0,0,0,.3) !important}
+§ .vc-wc-top-up::before,§ .vc-wc-top-up::after,§ .vc-wc-top-up .alx-stc,§ .vc-wc-top-up .alx-coin{display:none !important}
+§ .vc-wc-top-up *{color:#fff !important}
+§ .vc-wc-top-up .alx-arr{filter:grayscale(1) brightness(2.2) !important}
+/* การ์ดเมนู = บัตรดัชนีเทาเข้ม */
+§ #authLoggedIn .acct-menu .menu-item{border-radius:0 !important;border-left:1px solid #454545 !important;border-right:1px solid #454545 !important;border-top:1px dashed #3d3d3d !important;border-bottom:0 !important}
+§ .vc-stat,§ #vdcAcct,§ #vrmAcct,§ #authLoggedIn #adminPanel,§ #authLoggedIn .acct-menu .menu-item,§ .vst-acct{background:linear-gradient(180deg,#2a2a2a,#1f1f1f) !important;border-color:#454545 !important;box-shadow:0 8px 16px -10px rgba(0,0,0,.8) !important}
+§ .acct-menu .menu-item::before,§ .acct-menu .menu-item::after{filter:grayscale(1) !important;border-color:#454545 !important}
+§ .vc-stat b,§ .vda-tx b,§ .vra-tx b,§ .menu-item .menu-txt b,§ #adminPanel h3,§ .vc-stat-tx b{color:#f0f0f0 !important;text-shadow:none !important}
+§ .vc-stat small,§ .vda-tx small,§ .vra-tx small,§ .menu-item .menu-txt small,§ #adminPanel .adm-head p{color:#9e9e9e !important}
+§ .vc-stat-ic,§ .vra-ic,§ .vda-ic,§ .menu-ico,§ .vc-mi,§ .adm-ico,§ .acct-ico{filter:grayscale(1) brightness(1.35) !important}
+§ .vc-stat > i,§ .vra-chev,§ .vda-chev,§ .vc-mchev,§ .vc-adm-chev,§ .acct-chev{filter:grayscale(1) brightness(.55) sepia(1) saturate(9) hue-rotate(-32deg) brightness(1.1) !important}
+/* แต้มรายวัน = หมุด */
+§ .vda-dots i{width:9px !important;height:9px !important;border-radius:50% !important;background:#4a4a4a !important;box-shadow:inset 0 0 0 1px #5e5e5e !important}
+§ .vda-dots i.is-done{background:radial-gradient(circle at 35% 30%,#e17070,#a3191c 58%,#560808) !important;box-shadow:1px 2px 2px rgba(0,0,0,.5) !important}
+§ .vda-dots em{color:#9e9e9e !important}
+§ .vda-tx small *,§ .vda-tx small{color:#b0b0b0 !important;-webkit-text-fill-color:#b0b0b0}
+§ .vda-pill{background:transparent !important;border:1.5px solid #b81d20 !important;color:#d24a4c !important;border-radius:4px !important;box-shadow:none !important;transform:rotate(-3deg);text-shadow:none !important}
+§ .vda-pill small{color:#b8b8b8 !important}
+/* ออกจากระบบ = กรอบเส้นแดงหมึก */
+§ #authLoggedIn #logoutBtn.acct-out{background:transparent !important;border:1.5px solid rgba(163,25,28,.85) !important;box-shadow:none !important;color:#e46a6c !important}
+§ .acct-out *{color:#e46a6c !important;text-shadow:none !important}
+§ #authLoggedIn #logoutBtn.acct-out::before,§ #authLoggedIn #logoutBtn.acct-out::after{display:none !important}
+§ .vc-acct-foot{color:#8a8a8a !important}
+/* ===== การ์ดเครดิต v2: แฟ้มคดีมีมิติ + กระดาษรายงาน + คลิป + ตัวเลขตราปั๊ม + ป้ายเทป + ตราครั่ง + แสงไฟ ===== */
+§ .cred-card{padding-top:26px !important}
+§ .vc-wcard{contain:none !important;margin-top:10px !important;border-radius:3px 3px 4px 4px !important;
+  background:linear-gradient(transparent 0 0),repeating-linear-gradient(180deg,transparent 0 25px,rgba(70,90,140,.13) 25px 26px) 0 58px/100% calc(100% - 58px) no-repeat,linear-gradient(90deg,transparent 22px,rgba(190,40,40,.35) 22px 23.5px,transparent 23.5px),linear-gradient(174deg,#f6f1e4,#ebe3d0 65%,#ddd3bc) !important;
+  box-shadow:7px 9px 0 -1px #c5ab78,7px 9px 0 0 rgba(0,0,0,.25),-5px 13px 0 -2px #b3965f,0 26px 34px -14px rgba(0,0,0,.9) !important}
+/* แถบแฟ้ม No. 0417 */
+§ .vc-wcard .alx-spine b{display:none !important}
+§ .vc-wcard.vc-3d .alx-cf i.alx-spine{background:linear-gradient(180deg,#d2b984,#c5ab78) !important;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 -2px 6px rgba(0,0,0,.25) !important;-webkit-mask:none !important;mask:none !important;filter:none !important}
+§ .vc-wcard .alx-spine{display:block !important;position:absolute !important;left:16px !important;top:-19px !important;bottom:auto !important;right:auto !important;width:118px !important;height:20px !important;
+  border-radius:8px 8px 0 0 !important;background:linear-gradient(180deg,#d2b984,#c5ab78) !important;border:0 !important;transform:none !important;box-shadow:inset 0 1px 0 rgba(255,255,255,.35) !important;z-index:-1}
+§ .vc-wcard.vc-3d .alx-cf i.alx-spine::after{content:"CASE No. 0417" !important;display:block !important;position:absolute !important;left:12px;top:5px;font:700 10px/1 'IBM Plex Mono',monospace;color:#4a3a1e;letter-spacing:.06em;background:none !important;width:auto !important;height:auto !important}
+§ .vc-wcard .alx-spine::before{display:none !important}
+/* คลิปหนีบกระดาษ (มุมขวาบน) */
+§ .vc-wcard .alx-stud.tr{display:block !important;position:absolute !important;right:34px !important;top:-16px !important;left:auto !important;bottom:auto !important;width:16px !important;height:44px !important;border:0 !important;box-shadow:none !important;border-radius:0 !important;z-index:4;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 44' fill='none' stroke='%23b9bcc2' stroke-width='2.2' stroke-linecap='round'%3E%3Cpath d='M5 38V9a3.5 3.5 0 0 1 7 0v27a5.5 5.5 0 0 1-11 0V12'/%3E%3C/svg%3E") center/contain no-repeat !important;filter:drop-shadow(1px 2px 1.5px rgba(0,0,0,.45))}
+§ .vc-wcard .alx-stud.tr::before,§ .vc-wcard .alx-stud.tr::after{display:none !important}
+/* มุมกระดาษพับ (ขวาล่าง) */
+§ .vc-wcard .alx-stud.br{display:block !important;position:absolute !important;right:0 !important;bottom:0 !important;left:auto !important;top:auto !important;width:26px !important;height:26px !important;border:0 !important;border-radius:0 0 4px 0 !important;z-index:3;
+  background:linear-gradient(315deg,#c5ab78 0 49%,#cfc4ab 50%,#e9e1cd 70%,#d8ceb6 100%) !important;box-shadow:-3px -3px 5px -2px rgba(0,0,0,.35) !important}
+§ .vc-wcard .alx-stud.br::before,§ .vc-wcard .alx-stud.br::after{display:none !important}
+§ .vc-wcard .alx-tw{display:none !important}
+/* แสงไฟส่องจากมุมบน */
+§ .vc-wcard .vc-wc-glare{display:block !important;position:absolute !important;inset:0 !important;pointer-events:none;z-index:2;border-radius:inherit;background:radial-gradient(75% 55% at 18% -5%,rgba(255,252,238,.55),rgba(255,248,225,.12) 45%,transparent 70%),linear-gradient(180deg,transparent 60%,rgba(60,40,15,.1)) !important;mix-blend-mode:normal !important;animation:none !important;opacity:1 !important;transform:none !important}
+/* ตรา CASE FILE ชัดขึ้น */
+§ .vc-wcard .alx-crest{top:58px !important;right:16px !important;transform:rotate(-10deg) !important}
+§ .vc-wcard .alx-crest::after{border:2.5px solid rgba(163,25,28,.82) !important;color:rgba(163,25,28,.85) !important;font-size:14px !important;padding:5px 9px !important;
+  -webkit-mask:radial-gradient(circle at 30% 40%,#000 55%,rgba(0,0,0,.6) 56%,#000 66%),radial-gradient(circle at 75% 70%,#000 50%,rgba(0,0,0,.55) 52%,#000 62%) !important;-webkit-mask-composite:source-in;mask:radial-gradient(circle at 30% 40%,#000 55%,rgba(0,0,0,.6) 56%,#000 66%) !important}
+/* หัวการ์ด */
+§ .vc-wc-lab{font-family:'IBM Plex Mono',Prompt,monospace !important;letter-spacing:.02em;color:#463c2c !important}
+/* เครดิตเสียง = แท็กกระดาษผูกเชือก */
+§ .vc-wc-voice{position:relative;background:#efe6cf !important;border:1px solid #b8aa88 !important;border-radius:3px 12px 12px 3px !important;padding-left:18px !important;transform:rotate(5deg);box-shadow:1px 3px 4px rgba(0,0,0,.25) !important}
+§ .vc-wc-voice::before{content:"" !important;display:block !important;position:absolute !important;left:6px !important;top:50% !important;width:6px !important;height:6px !important;margin-top:-3px;border-radius:50%;background:#7a6d52 !important;box-shadow:inset 0 1px 1px rgba(0,0,0,.4)}
+§ .vc-wc-voice::after{content:"" !important;display:block !important;position:absolute !important;left:8px !important;top:-14px !important;width:1.5px !important;height:14px !important;background:#8a7a5a !important;transform:rotate(-20deg);transform-origin:50% 100%;border:0 !important}
+/* ตัวเลข = ตราปั๊มหมึกดำ ใหญ่ ไม่มีกรอบ */
+§ .vc-wc-num{background:none !important;border:0 !important;padding:0 !important;margin-top:4px !important;transform:rotate(-2deg);transform-origin:0 100%}
+§ .vc-wc-num b{font:800 clamp(64px,19vw,84px)/.9 'IBM Plex Mono',Prompt,monospace !important;color:#151515 !important;-webkit-text-fill-color:#151515 !important;letter-spacing:-.04em;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.2 2.05'/%3E%3C/filter%3E%3Crect width='90' height='90' filter='url(%23n)'/%3E%3C/svg%3E");mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.2 2.05'/%3E%3C/filter%3E%3Crect width='90' height='90' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:nzpump .5s cubic-bezier(.2,1.6,.4,1) .25s both !important;display:inline-block}
+§ .vc-wc-num small{font:600 15px/1 'IBM Plex Mono',Prompt,monospace !important;color:#3a3226 !important;-webkit-text-fill-color:#3a3226 !important;margin-left:4px}
+@keyframes nzpump{0%{opacity:0;transform:scale(1.9) rotate(-8deg)}55%{opacity:1}75%{transform:scale(.95)}100%{opacity:1;transform:none}}
+/* คำเตือน = ป้ายกระดาษแดงติดเทป */
+§ .vc-wc-warn{position:relative;width:fit-content !important;max-width:calc(100% - 10px);background:linear-gradient(180deg,#b5231f,#951714) !important;border:0 !important;border-radius:1px !important;color:#fff !important;
+  padding:9px 12px 8px !important;margin:6px 0 14px 4px !important;transform:rotate(-1.4deg);box-shadow:0 6px 10px -4px rgba(0,0,0,.45) !important}
+§ .vc-wc-warn *{color:#fff !important}
+§ .vc-wc-warn i{filter:brightness(0) invert(1) !important}
+§ .vc-wc-warn::before{content:"" !important;display:block !important;position:absolute !important;left:50% !important;top:-8px !important;width:54px !important;height:16px !important;margin-left:-27px;background:rgba(255,255,255,.45) !important;transform:rotate(3deg);box-shadow:0 1px 2px rgba(0,0,0,.15) !important;border:0 !important}
+§ .vc-wc-warn::after{display:none !important}
+§ .vc-wc-sub{color:#4a4032 !important;font-family:Prompt,sans-serif}
+§ .vc-wc-sub *{color:#4a4032 !important}
+/* ปุ่มเติมเครดิต = แถบแดงหมึก + ตราครั่ง */
+§ .vc-wc-top-up{position:relative;padding-left:56px !important;border-radius:3px !important;background:linear-gradient(180deg,#b9241f,#8f1512) !important;
+  box-shadow:0 2px 0 #5e0c0b,0 14px 20px -8px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.18) !important;transform:translateY(-1px)}
+§ .vc-wc-top-up .alx-coin{display:block !important;position:absolute !important;left:12px !important;top:50% !important;width:36px !important;height:36px !important;margin-top:-18px !important;border-radius:46% 54% 50% 50% !important;border:0 !important;
+  background:radial-gradient(circle at 50% 50%,transparent 0 9px,rgba(0,0,0,.18) 9.5px 10.5px,transparent 11px),radial-gradient(circle at 35% 30%,#e0574f,#9e1814 55%,#5a0807) !important;
+  box-shadow:0 2px 3px rgba(0,0,0,.45),inset 0 -2px 3px rgba(0,0,0,.35),inset 0 2px 2px rgba(255,180,170,.35) !important;filter:none !important;animation:none !important;transform:rotate(-8deg) !important}
+§ .vc-wc-top-up .alx-coin::before,§ .vc-wc-top-up .alx-coin::after{display:none !important}
+§ .vc-wc-top-up .alx-coin > *{display:none !important}
+§ .vc-wc-top-up:active{transform:translateY(1px)}
+/* ===== การ์ดเครดิต v3: มุมขวาบนโล่ง · CASE FILE ประทับใต้ตัวเลข · คำเตือนพิมพ์ดีดแดงขีดเส้นใต้ · แถบแดงเหลือแค่ปุ่ม · ตราครั่งจริง ===== */
+§ .vc-wcard .alx-crest{top:98px !important;right:24px !important;left:auto !important;z-index:0 !important;opacity:.42 !important;transform:rotate(-9deg) !important;pointer-events:none}
+§ .vc-wcard .alx-crest::after{font-size:15px !important;padding:5px 10px !important}
+§ .vc-wc-num{position:relative;z-index:1}
+§ .vc-wcard .alx-stud.tr{right:93px !important;top:-18px !important}
+§ .vc-wc-voice{transform:rotate(3deg) !important;transform-origin:10px 0}
+§ .vc-wc-voice::after{left:8px !important;top:-13px !important;height:13px !important;transform:none !important;width:1.4px !important;background:#7d6e50 !important}
+§ .vc-wc-warn{background:none !important;box-shadow:none !important;transform:none !important;padding:0 !important;margin:6px 2px 16px !important;color:#a3191c !important;width:auto !important;max-width:none !important;gap:10px;align-items:flex-start}
+§ .vc-wc-warn::before{display:none !important}
+§ .vc-wc-warn span{color:#9b1714 !important;font:600 14.5px/1.65 Prompt,sans-serif !important;text-decoration:underline solid rgba(163,25,28,.55);text-decoration-thickness:2px;text-underline-offset:5px;text-decoration-skip-ink:none}
+§ .vc-wc-warn i{-webkit-mask:none !important;mask:none !important;min-width:28px;flex:none;width:28px !important;height:28px !important;display:grid !important;place-items:center;border-radius:50% 46% 52% 48% !important;border:2px solid rgba(163,25,28,.85) !important;transform:rotate(-8deg);filter:none !important;margin-top:-2px;box-shadow:inset 0 0 0 0 transparent !important;background:none !important}
+§ .vc-wc-warn i > *{display:none !important}
+§ .vc-wc-warn i::before{content:"!" !important;display:block !important;font:800 16px/1 Prompt,sans-serif;color:#a3191c;background:none !important;-webkit-mask:none !important;mask:none !important;width:auto !important;height:auto !important;position:static !important}
+§ .vc-wc-warn i::after{display:none !important}
+§ .vc-wc-top-up{outline:1.5px dashed rgba(255,215,205,.4) !important;outline-offset:-6px !important;box-shadow:0 3px 0 #5e0c0b,0 18px 26px -10px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.2) !important}
+§ .vc-wc-top-up .alx-coin{width:44px !important;height:48px !important;margin-top:-24px !important;left:8px !important;border-radius:0 !important;box-shadow:none !important;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 52'%3E%3Cdefs%3E%3CradialGradient id='g' cx='.38' cy='.32' r='.75'%3E%3Cstop offset='0' stop-color='%23e2645a'/%3E%3Cstop offset='.55' stop-color='%23a51a15'/%3E%3Cstop offset='1' stop-color='%235e0a08'/%3E%3C/radialGradient%3E%3CradialGradient id='h' cx='.5' cy='.5' r='.5'%3E%3Cstop offset='.7' stop-color='%238e1512'/%3E%3Cstop offset='1' stop-color='%23b82a22'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cpath d='M33 46c1 3 0 5-2 5s-2-2-1.6-4.4' fill='%238e1512'/%3E%3Cpath d='M24 2c3 0 4 2 7 2s5 0 7 3 1 5 3 7 4 4 3 7-2 4-2 7 2 5 0 8-5 2-7 4-3 5-6 5-4-2-6-2-5 3-8 1-2-4-4-6-5-2-6-5 1-4 0-7-3-5-1-8 4-2 5-5 0-5 3-7 5 0 7-1 2-3 5-3z' fill='url(%23g)'/%3E%3Ccircle cx='24' cy='24.5' r='12.5' fill='url(%23h)' stroke='%235e0a08' stroke-opacity='.45'/%3E%3Cpath d='M18 25l4.5 4.5L31 20' fill='none' stroke='%235e0a08' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round' opacity='.75'/%3E%3Cpath d='M18 24l4.5 4.5L31 19' fill='none' stroke='%23f08a80' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round' opacity='.55'/%3E%3Cpath d='M12 13c3-4 8-6 13-6' fill='none' stroke='%23fff' stroke-opacity='.35' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") center/contain no-repeat !important;filter:drop-shadow(0 3px 2px rgba(0,0,0,.45)) !important;transform:rotate(-10deg) !important}
+/* ===== การ์ดเครดิต v4: ใกล้หมด = วงตัวเลขปากกาแดง + ลูกศร + ลายมือ "ใกล้หมด!" · ข้อความเต็มเป็นบรรทัดเล็กตัวเข้ม ===== */
+§ .vc-wc-warn{display:block !important;margin:10px 2px 14px !important;padding:0 !important;gap:0}
+§ .vc-wc-warn i{display:none !important}
+§ .vc-wc-warn span{color:#3e352a !important;font:500 13.5px/1.55 Prompt,sans-serif !important;text-decoration:none !important}
+§ .vc-wc-warn *{color:#3e352a !important}
+`;
+  siteCss += ACCT.split('§').join('html[data-htheme="noir"][data-view="home"] body[data-sheet="acct"] #authCard');
   function siteInit() {
     if (!document.getElementById('nz-site')) { var st = document.createElement('style'); st.id = 'nz-site'; st.textContent = siteCss; document.head.appendChild(st); }
     function addHb(el) { if (el && !el.querySelector(':scope > .nz-hb')) { var i = document.createElement('i'); i.className = 'nz-hb'; i.setAttribute('aria-hidden', 'true'); el.insertBefore(i, el.firstChild); } }
