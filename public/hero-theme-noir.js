@@ -463,6 +463,46 @@
 § #authLoggedIn #adminPanel .adm-tile{background:#1b1b1b !important;border-color:#3d3d3d !important}
 `;
   siteCss += ACCT.split('§').join('html[data-htheme="noir"][data-view="home"] body[data-sheet="acct"] #authCard');
+
+  /* ---------- แผ่น "เครื่องมือ" (มือถือ) ตอนเปิดจากหน้าแรกธีมนักสืบ — ผังเดิม เปลี่ยนแค่สี ---------- */
+  var TOOLS = `
+¤ .vct-card{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 .25 0 0 0 0 .23 0 0 0 0 .2 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23c)'/%3E%3C/svg%3E"),radial-gradient(90% 30% at 50% 0,rgba(255,250,235,.08),transparent 70%),linear-gradient(170deg,#4e4a45,#33302c 50%,#222120) !important;box-shadow:0 -1px 0 rgba(163,25,28,.8),0 -20px 50px -20px rgba(0,0,0,.9) !important}
+¤ .vct-hd{background:linear-gradient(180deg,#1c1c1c,#141414) !important}
+¤ .vct-hd::after{background:linear-gradient(90deg,transparent,rgba(163,25,28,.9) 18%,rgba(163,25,28,.9) 82%,transparent) !important}
+¤ .vct-hd::before{background:radial-gradient(circle at 35% 30%,#e17070,#a3191c 58%,#560808) !important;border-radius:50% !important;transform:none !important;width:9px !important;height:9px !important;margin-left:-4.5px !important;bottom:-4.5px !important;box-shadow:1px 2px 2px rgba(0,0,0,.55)}
+¤ .vct-hd .ic{background:#141414 !important;box-shadow:inset 0 0 0 1px #3d3d3d !important}
+¤ .vct-hd .ic svg,¤ .vct-ih .ic svg{background:#e6e6e6 !important}
+¤ .vct-hd b{color:#f2f2f2 !important}¤ .vct-hd small{color:#a8a8a8 !important}
+¤ .vct-x{background:rgba(255,255,255,.05) !important;border:1px solid rgba(255,255,255,.3) !important;box-shadow:none !important;color:#f0f0f0 !important;border-radius:50% !important}
+¤ .vct-gh{color:#dcdcdc !important}
+¤ .vct-gh::before{content:"" !important;width:8px;height:8px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#e17070,#a3191c 58%,#560808);flex:none}
+¤ .vct-gh::after{background:linear-gradient(90deg,rgba(163,25,28,.85),rgba(163,25,28,.12)) !important}
+¤ .vct-it,¤ .vct-it[data-tool]{--l1:#252525;--l2:#1c1c1c;background:linear-gradient(180deg,#252525,#1c1c1c) !important;box-shadow:0 0 0 1px #3d3d3d,0 10px 18px -10px rgba(0,0,0,.85) !important}
+¤ .vct-it::before{background:linear-gradient(180deg,transparent 14px,rgba(255,255,255,.14) 14px 15.5px,transparent 15.5px 18px,rgba(255,255,255,.14) 18px 19.5px,transparent 19.5px calc(100% - 19.5px),rgba(255,255,255,.14) calc(100% - 19.5px) calc(100% - 18px),transparent calc(100% - 18px) calc(100% - 15.5px),rgba(255,255,255,.14) calc(100% - 15.5px) calc(100% - 14px),transparent calc(100% - 14px)),#1a1a1a !important}
+¤ .vct-ih .ic{background:#141414 !important;box-shadow:inset 0 0 0 1px #3d3d3d !important}
+¤ .vct-ih b{color:#f2f2f2 !important}
+¤ .vct-ih em{color:#e46a6c !important;text-shadow:none !important}
+¤ .vct-it p{color:#bdbdbd !important}
+¤ mark.vct-hl{color:#ffffff !important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M1 17C20 16 40 16.6 60 16.2S88 16.8 99 15.6' stroke='%23c23a3c' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") !important}
+¤ .vct-it.has-x2 .vct-tb{border-bottom-color:#3d3d3d !important}
+¤ .vct-it.has-x2 .vct-tb button{color:#9a9a9a !important}
+¤ .vct-it.has-x2 .vct-tb button.is-on{color:#f2f2f2 !important;background:rgba(255,255,255,.05) !important;box-shadow:inset 1px 0 0 #3d3d3d,inset -1px 0 0 #3d3d3d !important}
+¤ .vct-it.has-x2 .vct-tb button.is-on::after{background:#c23a3c !important}
+¤ .vct-it.has-x2 .vct-ben{background:#141414 !important;box-shadow:inset 0 0 0 1px #333 !important;color:#ececec !important}
+¤ .vct-it.has-x2 .vct-ben b{color:#e46a6c !important}
+¤ .vct-it.has-x2 .vct-ben::before{background:linear-gradient(90deg,#7a1010,#a3191c 50%,#7a1010) !important}
+¤ .vct-it.has-x2 .vct-bi i{background:#141414 !important;box-shadow:inset 0 0 0 1px #3d3d3d !important}
+¤ .vct-it.has-x2 .vct-bi i::after{background:#e6e6e6 !important}
+¤ .vct-it.has-x2 .vct-bi b{color:#f2f2f2 !important}¤ .vct-it.has-x2 .vct-bi span{color:#a8a8a8 !important}
+¤ .vct-it.has-x2 .vct-bi{border-color:#333 !important}
+¤ .vct-it.has-x2 .vct-hw li{color:#cfcfcf !important}
+¤ .vct-it.has-x2 .vct-hw li::before{background:#141414 !important;color:#f2f2f2 !important;box-shadow:inset 0 0 0 1.2px #555 !important;font-family:'IBM Plex Mono',monospace !important}
+¤ .vct-it.has-x2 .vct-hw li:not(:last-child)::after{background:#3d3d3d !important}
+¤ .vct-it.has-x2 .vct-mo{background:transparent !important;box-shadow:inset 0 0 0 1px #4a4a4a !important;color:#e6e6e6 !important}
+¤ .vct-ac button{border:1px solid #4a4a4a !important;background:transparent !important;color:#f0f0f0 !important}
+¤ .vct-ac button.p{border:0 !important;background:linear-gradient(180deg,#b9241f,#8f1512) !important;color:#fff !important;box-shadow:0 2px 0 #5e0c0b,0 10px 18px -8px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.18) !important;text-shadow:0 1px 0 rgba(0,0,0,.3) !important}
+`;
+  siteCss += TOOLS.split('¤').join('html[data-htheme="noir"][data-view="home"] body .vct');
   function siteInit() {
     if (!document.getElementById('nz-site')) { var st = document.createElement('style'); st.id = 'nz-site'; st.textContent = siteCss; document.head.appendChild(st); }
     function addHb(el) { if (el && !el.querySelector(':scope > .nz-hb')) { var i = document.createElement('i'); i.className = 'nz-hb'; i.setAttribute('aria-hidden', 'true'); el.insertBefore(i, el.firstChild); } }
