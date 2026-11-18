@@ -411,6 +411,56 @@
 § .vc-wc-warn i{display:none !important}
 § .vc-wc-warn span{color:#3e352a !important;font:500 13.5px/1.55 Prompt,sans-serif !important;text-decoration:none !important}
 § .vc-wc-warn *{color:#3e352a !important}
+/* ===== แผงย่อย: ข้อมูลบัญชี (บัตรประจำตัว + ตั๋ว) · ความเป็นส่วนตัว · การแสดงผล · แผงแอดมิน ===== */
+§ #authLoggedIn #acctDetail.acct-detail,§ #authLoggedIn #dispPanel.menu-panel,§ #authLoggedIn #privPanel.menu-panel{background:linear-gradient(180deg,rgba(0,0,0,.32),rgba(0,0,0,.18)) !important;outline:1.4px dashed rgba(163,25,28,.6) !important;outline-offset:-7px}
+/* ข้อมูลบัญชี v4 (แบบ A): ผังเดิม · การ์ดเทาเข้มแบบเมนู · ตัวเลขขาว · "+ เติม" ขอบแดงหมึก · หลอดแดง */
+§ #authLoggedIn #acctDetail .vai-c,§ #authLoggedIn #acctDetail .vai-c.is-mail,§ #authLoggedIn #acctDetail .vai-c.is-check,§ #authLoggedIn #acctDetail .vai-c.is-voice,§ #authLoggedIn #acctDetail .vai-c.is-hist{background:linear-gradient(180deg,#252525,#1c1c1c) !important;border:1px solid #3d3d3d !important;border-radius:12px !important;
+  box-shadow:0 8px 16px -10px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.04) !important;-webkit-mask:none !important;mask:none !important;outline:0 !important}
+§ #authLoggedIn #acctDetail .vai-c::before,§ #authLoggedIn #acctDetail .vai-c::after{display:none !important}
+§ #authLoggedIn #acctDetail .vai-ic{background:#141414 !important;border:1px solid #3d3d3d !important;box-shadow:none !important;color:#e6e6e6 !important;filter:none !important}
+§ #authLoggedIn #acctDetail .vai-ic *{stroke:#e6e6e6 !important;color:#e6e6e6 !important}
+§ #authLoggedIn #acctDetail .vai-c .vai-ic::after{background:#e6e6e6 !important}
+§ #authLoggedIn #acctDetail .vai-c.is-mail .vai-ic svg{opacity:0 !important}
+§ #authLoggedIn #acctDetail .vai-lab{color:#a8a8a8 !important;-webkit-text-fill-color:#a8a8a8 !important;text-shadow:none !important}
+§ #authLoggedIn #acctDetail .vai-mail{color:#f2f2f2 !important;-webkit-text-fill-color:#f2f2f2 !important;text-shadow:none !important}
+§ #authLoggedIn #acctDetail .vai-num b,§ #authLoggedIn #acctDetail .vai-cap b{color:#f4f4f4 !important;-webkit-text-fill-color:#f4f4f4 !important;background:none !important;text-shadow:none !important;-webkit-mask:none !important;mask:none !important}
+§ #authLoggedIn #acctDetail .vai-num small,§ #authLoggedIn #acctDetail .vai-cap small{color:#bdbdbd !important;-webkit-text-fill-color:#bdbdbd !important}
+§ #authLoggedIn #acctDetail .vai-note{color:#9a9a9a !important}
+§ #authLoggedIn #acctDetail .vai-add{background:transparent !important;border:1px solid #a3191c !important;color:#e46a6c !important;box-shadow:none !important;text-shadow:none !important}
+§ #authLoggedIn #acctDetail .vai-add *{color:#e46a6c !important}
+§ #authLoggedIn #acctDetail .vai-add:active{background:rgba(163,25,28,.15) !important}
+§ #authLoggedIn #acctDetail .vai-go{color:#c23a3c !important;filter:none !important}
+§ #authLoggedIn #acctDetail .vai-go *{stroke:#c23a3c !important;color:#c23a3c !important}
+§ #authLoggedIn #acctDetail .vai-bar{background:#3a3a3a !important;box-shadow:none !important}
+§ #authLoggedIn #acctDetail .vai-bar i{background:linear-gradient(90deg,#8f1512,#c23a3c) !important;box-shadow:none !important}
+§ #authLoggedIn #acctDetail .is-hist .vai-note,§ #authLoggedIn #acctDetail .is-hist .vai-note *{color:#9a9a9a !important;stroke:#9a9a9a !important}
+§ #authLoggedIn #acctDetail .is-hist.is-full .vai-note,§ #authLoggedIn #acctDetail .is-hist.is-full .vai-note *,§ #authLoggedIn #acctDetail .is-hist.is-near .vai-note,§ #authLoggedIn #acctDetail .is-hist.is-near .vai-note *{color:#e46a6c !important;stroke:#e46a6c !important}
+/* ความเป็นส่วนตัว */
+§ #authLoggedIn #privPanel .priv-list li:not(:last-child) b{color:#f0f0f0 !important}
+§ #authLoggedIn #privPanel .priv-list li:not(:last-child){color:#b5b5b5 !important}
+§ #authLoggedIn #privPanel .priv-list li:last-child,§ #authLoggedIn #privPanel .priv-list li:last-child *{color:#3a3226 !important}
+§ #authLoggedIn #privPanel .priv-list li:last-child mark.alx-hl{color:#1a1a1a !important}
+§ #authLoggedIn #privPanel .priv-list li:not(:last-child)::before,§ #authLoggedIn #privPanel .priv-list li > i,§ #authLoggedIn #privPanel .priv-list svg{filter:grayscale(1) brightness(1.3) !important}
+§ #authLoggedIn #privPanel .priv-list mark.alx-hl{color:#f2f2f2 !important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 6' preserveAspectRatio='none'%3E%3Cpath d='M1.5 3.6C18 2.4 36 2.9 52 3.3S84 3.9 98.5 2.6' stroke='%23c23a3c' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") !important}
+§ #authLoggedIn #privPanel .priv-del{background:transparent !important;border:1.5px solid rgba(163,25,28,.85) !important;color:#e46a6c !important;box-shadow:none !important}
+/* การแสดงผล */
+§ #authLoggedIn #dispPanel .vds-h{color:#dcdcdc !important}
+§ #authLoggedIn #dispPanel .vds-h::before{color:#c23a3c !important}
+§ #authLoggedIn #dispPanel .vds-seg button.is-on{background:linear-gradient(174deg,#f3ecdb,#e2d8c0) !important;color:#161616 !important;box-shadow:0 2px 0 #b9ad92,0 6px 10px -4px rgba(0,0,0,.6) !important;outline:0 !important;border:0 !important}
+§ #authLoggedIn #dispPanel .vds-seg button.is-on *{color:#161616 !important}
+§ #authLoggedIn #dispPanel .vds-seg button:not(.is-on),§ #authLoggedIn #dispPanel .vds-seg button:not(.is-on) *{color:#c8c8c8 !important}
+§ #authLoggedIn #dispPanel .vds-ic{filter:grayscale(1) brightness(1.35) !important}
+§ #authLoggedIn #dispPanel .vds-tx,§ #authLoggedIn #dispPanel .vds-tx *{color:#efefef !important}
+§ #authLoggedIn #dispPanel .vds-tx small{color:#9e9e9e !important}
+§ #authLoggedIn #dispPanel .vds-sw i::after{background:radial-gradient(circle at 35% 30%,#ffffff,#c9c9c9 55%,#7a7a7a) !important;box-shadow:0 0 0 1px #111,0 2px 4px rgba(0,0,0,.55) !important}
+§ #authLoggedIn #dispPanel .vds-sw input:checked + i{background:linear-gradient(180deg,#b9241f,#8f1512) !important}
+§ #authLoggedIn #dispPanel .vds-reset{color:#e46a6c !important;border-color:rgba(163,25,28,.6) !important}
+/* แผงแอดมิน */
+§ #authLoggedIn #adminPanel .adm-go{background:linear-gradient(180deg,#b9241f,#8f1512) !important;color:#fff !important;border:0 !important;box-shadow:0 2px 0 #5e0c0b,0 10px 18px -8px rgba(0,0,0,.65) !important;text-shadow:none !important}
+§ #authLoggedIn #adminPanel .adm-f input{background:#141414 !important;border-color:#4a4a4a !important;color:#f0f0f0 !important}
+§ #authLoggedIn #adminPanel .adm-f input:focus{border-color:#a3191c !important;box-shadow:0 0 0 3px rgba(163,25,28,.25) !important}
+§ #authLoggedIn #adminPanel .adm-quick button{border-color:#4a4a4a !important;color:#e0e0e0 !important;background:#1b1b1b !important}
+§ #authLoggedIn #adminPanel .adm-tile{background:#1b1b1b !important;border-color:#3d3d3d !important}
 `;
   siteCss += ACCT.split('§').join('html[data-htheme="noir"][data-view="home"] body[data-sheet="acct"] #authCard');
   function siteInit() {
@@ -427,6 +477,7 @@
     function pin() { var c = document.querySelector('.site-header .dx-nav a[href="#checkCard"]'); if (c && !c.querySelector('.nz-pin')) { var i = document.createElement('i'); i.className = 'nz-pin'; i.setAttribute('aria-hidden', 'true'); c.appendChild(i); } }
     function icons() { addIc(document.querySelector('.bottom-nav .bn-item[data-nav="acct"]')); }
     icons(); setTimeout(icons, 1500); setTimeout(icons, 4000);
+
     /* แถบล่างอาจถูกสร้างทีหลัง (ตอนล็อกอิน) */
     if (!document.querySelector('.bottom-nav')) { var tries = 0, iv = setInterval(function () { var bn = document.querySelector('.bottom-nav'); if (bn) { addHb(bn); icons(); } if (bn || ++tries > 20) clearInterval(iv); }, 500); }
   }
