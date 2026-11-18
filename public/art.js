@@ -1287,7 +1287,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     var c = document.createElement('div'); c.className = 'vc-hello'; c.setAttribute('role', 'status');
     c.innerHTML = '<button type="button" class="vh-x" aria-label="ปิด"></button>' +
       '<div class="vh-top"><span class="vh-seal qs-wax"><b>VC</b></span><div><b class="vh-hi"></b><small class="vh-cr"></small></div></div>' +
-      '<div class="vh-acts"><button type="button" class="vh-btn" data-a="daily">🪙 เช็กอินรับแต้มวันนี้</button><button type="button" class="vh-btn is-ghost" data-a="check">เริ่มตรวจสัญญา →</button></div><i class="vh-bar"></i>';
+      '<div class="vh-acts"><button type="button" class="vh-btn" data-a="daily"><svg class="vh-ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4M9 14.5l2 2 4-4"/></svg>เช็กอินรับแต้มวันนี้</button><button type="button" class="vh-btn is-ghost" data-a="check">เริ่มตรวจสัญญา →</button></div><i class="vh-bar"></i>';
     c.querySelector('.vh-hi').textContent = nm ? 'สวัสดี คุณ ' + nm : 'เข้าสู่ระบบแล้ว';
     c.querySelector('.vh-cr').textContent = cr > 0 ? 'มีสิทธิ์ตรวจ ' + cr + ' ครั้ง · พร้อมใช้งาน' : cr === 0 ? 'สิทธิ์ตรวจหมดแล้ว · เช็กอินสะสมแต้มแลกตรวจฟรีได้' : 'พร้อมใช้งานแล้ว';
     document.body.appendChild(c);
