@@ -33,3 +33,15 @@ html.vc-art .ld-scene:not([data-lamp]){animation:none!important;--on:1}
 html.vc-art .ld-scene:not([data-lamp]) .ld-glow,html.vc-art .ld-scene:not([data-lamp]) .ld-spot{animation:ldGlowO 12s linear infinite}
 @keyframes ldGlowO{0%,46%{opacity:1}48%{opacity:.55}50%{opacity:1}52%{opacity:.2}54%{opacity:.85}56%,74%{opacity:.05}76%{opacity:.7}78%{opacity:.1}81%{opacity:.9}84%,100%{opacity:1}}
 @media (prefers-reduced-motion:reduce){html.vc-art .ld-scene .ld-glow,html.vc-art .ld-scene .ld-spot{animation:none!important}}
+/* v3 หน้าเข้าสู่ระบบ (คอม): กระดาษพอดีจอ — เดิมสูงเกินจอทุกขนาด (1366×768 กระดาษสูง 846px / 1920×945 สูง 985px ต้องเลื่อน)
+   ขนาดตามความสูงจอ: เหลือขอบบน-ล่างราว 70px ไม่ต้องเลื่อนหน้า */
+html.vc-art .ld-scene .auth-doc-wrap{zoom:1.25!important}
+@media (max-height:1099px){html.vc-art .ld-scene .auth-doc-wrap{zoom:1.2!important}}
+@media (max-height:999px){html.vc-art .ld-scene .auth-doc-wrap{zoom:1.08!important}}
+@media (max-height:899px){html.vc-art .ld-scene .auth-doc-wrap{zoom:1!important}}
+@media (max-height:819px){html.vc-art .ld-scene .auth-doc-wrap{zoom:.88!important}}
+@media (max-height:739px){html.vc-art .ld-scene .auth-doc-wrap{zoom:.8!important}}
+@media (max-height:659px){html.vc-art .ld-scene .auth-doc-wrap{zoom:.7!important}}
+html.vc-art .ld-scene{min-height:100svh!important;align-items:center!important;box-sizing:border-box;padding-top:64px!important}
+html.vc-art .ld-scene .auth-doc-wrap{margin-top:56px!important}
+html.vc-art #authCard .disclaimer:empty{display:none!important}
