@@ -114,7 +114,8 @@ export async function voicePreview(id) {
 let warmAt = 0;
 export async function warmPreviews(force) {
   if (!force && Date.now() - warmAt < 60 * 1000) return; warmAt = Date.now();
-  try { await Promise.all((await listVoices()).map(v => voicePreview(v.id).catch(e => console.error('[voice] warm', v.name, e.message)))); }
+  /* ทีละเสียง (เดิมทุกเสียงพร้อมกัน → แย่งการเชื่อมต่อฐานข้อมูล/เน็ตบนเครื่อง CPU น้อย จนงานอื่น เช่น ล็อกอิน Google หมดเวลา) */
+  try { for (const v of await listVoices()) { await voicePreview(v.id).catch(e => console.error('[voice] warm', v.name, e.message)); } }
   catch (e) { console.error('[voice] warm:', e.message); }
 }
 
