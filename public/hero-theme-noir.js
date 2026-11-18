@@ -53,6 +53,10 @@
   :host([data-th=noir]) .end a.go{background:linear-gradient(135deg,#f3f0e8,#d6d1c3);color:#141414;animation:none;box-shadow:0 14px 34px -12px rgba(0,0,0,.9),0 0 0 2px #c41414 inset}
   :host([data-th=noir]) .end a.go::after{background:linear-gradient(90deg,transparent,rgba(255,255,255,.8),transparent)}
   :host([data-th=noir]) .flh{color:#ddd}
+  /* ปุ่มเปลี่ยนฉาก: กรอบเหลี่ยมชั้นเดียว + ไอคอนหมวกนักสืบลายเส้น */
+  :host([data-th=noir]) .scn{border:1px solid #8a8a8a;border-radius:4px;background:rgba(18,18,18,.82);box-shadow:0 8px 20px -8px rgba(0,0,0,.8)}
+  :host([data-th=noir]) .scn i{font-size:0;border-radius:0;background:transparent center/24px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none' stroke='%23f0f0f0' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 21c4 2.6 22 2.6 26 0'/%3E%3Cpath d='M7 20.4 9 11c.4-1.8 2-2.6 3.6-1.8L16 11l3.4-1.8c1.6-.8 3.2 0 3.6 1.8l2 9.4'/%3E%3Cpath d='M8 17.6c5 1.4 11 1.4 16 0' stroke='%23e02020' stroke-width='2.4'/%3E%3C/svg%3E");box-shadow:none}
+  :host([data-th=noir]) .scn span{color:#eee}
   /* ---------- ชั้นฉากนักสืบ ---------- */
   .nz{position:absolute;inset:0;z-index:14;overflow:hidden;pointer-events:none;background:#111}
   .nz-b{position:absolute;inset:-3%;transform-origin:50% 50%;will-change:transform;
@@ -210,8 +214,73 @@
   var S0 = .26, S1 = .52;                                  /* ช่วงด้ายแดงวิ่ง */
   var CARDS = [[.1, .17], [.2, .26], [.53, .585]];         /* การ์ดหนังเงียบ */
 
+
+  /* ---------- แถบบน + แถบล่างของเว็บ (อยู่นอกหน้าปก) — เปลี่ยนเฉพาะหน้าแรก + ธีมนักสืบ · โลโก้คงสีเดิม ---------- */
+  var NOISE = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E\")";
+  var FEDMASK = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 9.6c4.2 1.7 12.8 1.7 17 0'/%3E%3Cpath d='M6.8 9.3 7.9 5.3c.3-1 1.2-1.4 2.1-1l2 .9 2-.9c.9-.4 1.8 0 2.1 1l1.1 4'/%3E%3Cpath d='M7.4 8c3.1.8 6.1.8 9.2 0' stroke-width='2.2'/%3E%3Cpath d='M8.6 11.4a3.4 3.4 0 0 0 6.8 0'/%3E%3Cpath d='M5 21c.7-3.5 3.5-5.4 7-5.4s6.3 1.9 7 5.4'/%3E%3C/svg%3E\")";
+  var H0 = 'html[data-htheme="noir"]', HH = 'html[data-htheme="noir"][data-view="home"]', HB = 'html[data-htheme="noir"][data-view="home"] body';
+  var siteCss =
+    /* ชั้นสีดำด้าน (จางเข้า/ออกนุ่ม ๆ ตอนเข้า/ออกหน้าแรก) */
+    '.nz-hb{position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:0;transition:opacity .5s ease;background:' + NOISE + ',linear-gradient(180deg,#191919,#0e0e0e)}' +
+    HH + ' .nz-hb{opacity:1}' +
+    H0 + ' .site-header,' + H0 + ' .bottom-nav{isolation:isolate}' +
+    '.site-header .nz-hb{box-shadow:inset 0 -1px 0 rgba(163,25,28,.85),0 6px 18px rgba(0,0,0,.5)}' +
+    '.bottom-nav .nz-hb{box-shadow:inset 0 1px 0 rgba(163,25,28,.85)}' +
+    /* ปุ่ม ☰ / บัญชี / ภาษา = ไอคอนขาวเปล่า ๆ (ไม่มีกรอบ) · ชี้/แตะ = ขีดแดงหมึกใต้ไอคอน */
+    H0 + ' .site-header .vct-mb,' + H0 + ' .site-header #authToggle,' + H0 + ' .site-header .vc-lang{transition:border-radius .4s,background-color .4s,border-color .4s,color .4s,box-shadow .25s}' +
+    HH + ' .site-header .vct-mb,' + HH + ' .site-header #authToggle,' + HH + ' .site-header .vc-lang{border-radius:999px !important;background:rgba(255,255,255,.05) !important;border:1px solid rgba(255,255,255,.28) !important;color:#f0f0f0 !important;box-shadow:none !important}' +
+    HH + ' .site-header .vct-mb:hover,' + HH + ' .site-header #authToggle:hover,' + HH + ' .site-header .vc-lang:hover,' + HH + ' .site-header .vct-mb:focus-visible,' + HH + ' .site-header #authToggle:focus-visible,' +
+      HH + ' .site-header .vct-mb:active,' + HH + ' .site-header #authToggle:active{border-color:#a3191c !important;box-shadow:0 0 0 2px rgba(163,25,28,.35) !important}' +
+    HH + ' .site-header .vct-mb svg,' + HH + ' .site-header #authToggle svg{filter:grayscale(1) brightness(1.7)}' +
+    /* ไอคอนบัญชี = เงาคนใส่หมวกเฟดอร่า (แทนไอคอนเดิมเฉพาะหน้าแรกธีมนี้) */
+    '.nz-ic{display:none}' + HB + ' .nz-ic,' + HB + ' .bottom-nav .bn-item[data-nav="acct"] svg.nz-ic,' + HB + ' .bottom-nav .bn-item[data-nav="acct"].is-on svg.nz-ic{display:inline-block !important;filter:none !important;background:none !important;color:#a8a8a8}' + HB + ' .bottom-nav .bn-item svg.nz-ic > *{display:inline !important;fill:none !important;stroke:currentColor !important;stroke-width:1.7px !important;opacity:1 !important}' + HB + ' .bottom-nav .bn-item svg.nz-ic > .bd{stroke:#b81d20 !important;stroke-width:2px !important}' +
+    HH + ' .bottom-nav .bn-item[data-nav="acct"] svg:not(.nz-ic){display:none !important}' +
+    HH + ' #authToggle::before{-webkit-mask-image:' + FEDMASK + ' !important;mask-image:' + FEDMASK + ' !important;-webkit-mask-size:contain !important;mask-size:contain !important;-webkit-mask-repeat:no-repeat !important;mask-repeat:no-repeat !important;-webkit-mask-position:center !important;mask-position:center !important;width:22px !important;height:22px !important;background:#f0f0f0 !important}' +
+    /* เมนูคอม */
+    H0 + ' .site-header .dx-nav a{transition:color .4s,background .4s,transform .4s,border-radius .4s,box-shadow .4s}' +
+    HH + ' .site-header .dx-nav a:not([href="#checkCard"]){color:#d9d9d9 !important}' +
+    HH + ' .site-header .dx-nav a:not([href="#checkCard"])::after{background:#a3191c !important}' +
+    /* ปุ่ม "ตรวจสัญญา" = บัตรหลักฐานกระดาษครีม ปักหมุดแดง ตั้งตรง สูงเท่าปุ่มอื่น */
+    HH + ' .site-header .dx-nav a[href="#checkCard"]{position:relative !important;overflow:visible !important;height:40px !important;display:inline-flex !important;align-items:center;padding:0 18px !important;' +
+      'background:radial-gradient(circle 5px at 50% 7px,#e07a7a 0,#a3191c 55%,#560808 85%,transparent 100%),radial-gradient(circle 7px at 51.5% 9px,rgba(0,0,0,.28),transparent 100%),linear-gradient(175deg,#f1eee6,#dcd7ca) !important;padding-top:6px !important;color:#1a1a1a !important;border:0 !important;border-radius:999px !important;transform:none !important;text-shadow:none !important;' +
+      'box-shadow:0 1px 0 #bdb6a6,0 6px 14px -4px rgba(0,0,0,.7) !important}' +
+    HH + ' .site-header .dx-nav a[href="#checkCard"] *{color:#1a1a1a !important}' +
+    '.nz-pin{display:none}' + HH + ' .nz-pin{display:block;position:absolute;left:50%;top:-4px;width:10px;height:10px;margin-left:-5px;border-radius:50%;z-index:3;pointer-events:none;background:radial-gradient(circle at 35% 30%,#e17070,#a3191c 58%,#560808);box-shadow:1px 2px 2px rgba(0,0,0,.55)}' +
+    HH + ' .site-header .dx-nav a[href="#checkCard"]::after{display:none !important}' +
+    HH + ' .site-header .dx-nav a[href="#checkCard"]:hover{box-shadow:0 1px 0 #bdb6a6,0 10px 18px -4px rgba(0,0,0,.8) !important;transform:translateY(-1px) !important}' +
+    HH + ' .site-header .dx-nav a[href="#checkCard"]:active{animation:nzwg .32s ease}' +
+    '@keyframes nzwg{25%{transform:rotate(-2.5deg)}60%{transform:rotate(1.8deg)}100%{transform:none}}' +
+    /* แถบล่างมือถือ */
+    H0 + ' .bottom-nav .bn-item,' + H0 + ' .bottom-nav .bn-item span{transition:color .4s}' +
+    HH + ' .bottom-nav .bn-item{color:#9a9a9a !important}' + HH + ' .bottom-nav .bn-item span{color:#a8a8a8 !important}' +
+    HB + ' .bottom-nav .bn-item svg:not(.nz-ic){filter:grayscale(1) brightness(1.25) !important}' +
+    HH + ' .bottom-nav .bn-item.is-on span{color:#ffffff !important}' +
+    HB + ' .bottom-nav .bn-item.is-on svg:not(.nz-ic){filter:grayscale(1) brightness(.62) sepia(1) saturate(9) hue-rotate(-32deg) brightness(1.05) !important}' +
+    HB + ' .bottom-nav .bn-item[data-nav="acct"].is-on svg.nz-ic{color:#c23a3c}' +
+    HH + ' .bottom-nav .vc-bn-ind::before{background:radial-gradient(closest-side,rgba(163,25,28,.26),rgba(163,25,28,.07) 60%,transparent) !important}' +
+    HH + ' .bottom-nav .vc-bn-ind::after{background:#a3191c !important;box-shadow:0 0 8px rgba(163,25,28,.8) !important}';
+  var FEDORA = '<path d="M3.5 9.6c4.2 1.7 12.8 1.7 17 0"/><path d="M6.8 9.3 7.9 5.3c.3-1 1.2-1.4 2.1-1l2 .9 2-.9c.9-.4 1.8 0 2.1 1l1.1 4"/><path class="bd" d="M7.4 8c3.1.8 6.1.8 9.2 0" stroke="#b81d20" stroke-width="2"/><path d="M8.6 11.4a3.4 3.4 0 0 0 6.8 0"/><path d="M5 21c.7-3.5 3.5-5.4 7-5.4s6.3 1.9 7 5.4"/>';
+  function siteInit() {
+    if (!document.getElementById('nz-site')) { var st = document.createElement('style'); st.id = 'nz-site'; st.textContent = siteCss; document.head.appendChild(st); }
+    function addHb(el) { if (el && !el.querySelector(':scope > .nz-hb')) { var i = document.createElement('i'); i.className = 'nz-hb'; i.setAttribute('aria-hidden', 'true'); el.insertBefore(i, el.firstChild); } }
+    addHb(document.querySelector('.site-header')); addHb(document.querySelector('.bottom-nav'));
+    function addIc(btn) {
+      if (!btn || btn.querySelector('.nz-ic')) return; var o = btn.querySelector('svg'); if (!o) return;
+      var r = o.getBoundingClientRect(), cs = getComputedStyle(o), w = r.width || parseFloat(cs.width) || 22, h = r.height || parseFloat(cs.height) || 22;
+      var n = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); n.setAttribute('class', 'nz-ic'); n.setAttribute('viewBox', '0 0 24 24'); n.setAttribute('aria-hidden', 'true');
+      n.setAttribute('fill', 'none'); n.setAttribute('stroke', 'currentColor'); n.setAttribute('stroke-width', '1.7'); n.setAttribute('stroke-linecap', 'round'); n.setAttribute('stroke-linejoin', 'round');
+      n.style.width = w + 'px'; n.style.height = h + 'px'; n.innerHTML = FEDORA; o.parentNode.insertBefore(n, o.nextSibling);
+    }
+    function pin() { var c = document.querySelector('.site-header .dx-nav a[href="#checkCard"]'); if (c && !c.querySelector('.nz-pin')) { var i = document.createElement('i'); i.className = 'nz-pin'; i.setAttribute('aria-hidden', 'true'); c.appendChild(i); } }
+    function icons() { addIc(document.querySelector('.bottom-nav .bn-item[data-nav="acct"]')); }
+    icons(); setTimeout(icons, 1500); setTimeout(icons, 4000);
+    /* แถบล่างอาจถูกสร้างทีหลัง (ตอนล็อกอิน) */
+    if (!document.querySelector('.bottom-nav')) { var tries = 0, iv = setInterval(function () { var bn = document.querySelector('.bottom-nav'); if (bn) { addHb(bn); icons(); } if (bn || ++tries > 20) clearInterval(iv); }, 500); }
+  }
+
   var Z = null;
   function init(SR, host) {
+    try { siteInit(); } catch (e) {}
     host.__thQuiet = true;   /* ไม่ใช้เสียงแว่นขยายของฉากเดิม */
     var st = SR.getElementById('st'), cam = SR.getElementById('cam');
     var nz = document.createElement('div'); nz.className = 'nz'; nz.setAttribute('aria-hidden', 'true'); nz.innerHTML = buildBoard(); st.insertBefore(nz, cam.nextSibling);
