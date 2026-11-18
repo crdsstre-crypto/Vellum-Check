@@ -15,12 +15,15 @@ try { net.setDefaultAutoSelectFamily?.(true); } catch {}
 // เรียก Google แบบ "ยิงซ้อน": ถ้าครั้งแรกยังไม่ตอบใน 2.5 วินาที ยิงครั้งใหม่คู่ขนาน (สูงสุด 3 ทาง) แล้วใช้คำตอบที่มาก่อน
 // แก้อาการกดเลือกอีเมลแล้วรอนาน (การเชื่อมต่อบางครั้งค้างจนหมดเวลาทีละ 8 วินาที)
 // ใช้ได้เพราะแต่ละคำขอเป็นแบบอ่านอย่างเดียว ส่วน /token ส่งซ้อนได้: Google ตอบสำเร็จให้คำขอแรกที่ถึง ที่เหลือได้ invalid_grant ซึ่งถูกทิ้งไป
-function gfetch(url, opts, { tries = 3, hedgeMs = 2500, timeoutMs = 10000 } = {}) {
+// v2: ยิงซ้อนช้าลง (5 วิ) และรอแต่ละทางนานขึ้น (20 วิ) — บนเครื่อง CPU น้อย การเปิด TLS หลายทางพร้อมกันทำให้ทุกทางช้าจนหมดเวลาพร้อมกัน
+function gfetch(url, opts, { tries = 3, hedgeMs = 5000, timeoutMs = 20000 } = {}) {
   const host = url.split('/')[2];
   return new Promise((resolve, reject) => {
-    let done = false, started = 0, failed = 0, lastErr, okFallback = null;
+    let done = false, started = 0, failed = 0, lastErr, okFallback = null, okCtrl = null;
     const ctrls = [];
-    const finish = (fn, v) => { if (done) return; done = true; clearTimeout(timer); ctrls.forEach(c => { try { c.abort(); } catch {} }); fn(v); };
+    // v3: ยกเลิกเฉพาะคำขออื่นที่แพ้ — เดิมยกเลิกทุกคำขอรวมถึงคำขอที่ชนะ ทำให้อ่านเนื้อหาคำตอบ (tokenRes.json()) ไม่ได้
+    //     → "This operation was aborted" แม้ Google ตอบสำเร็จแล้ว
+    const finish = (fn, v, keep) => { if (done) return; done = true; clearInterval(timer); ctrls.forEach(c => { if (c !== keep) { try { c.abort(); } catch {} } }); fn(v); };
     const fire = () => {
       if (done || started >= tries) return;
       const n = ++started, ctrl = new AbortController(); ctrls.push(ctrl);
@@ -28,16 +31,16 @@ function gfetch(url, opts, { tries = 3, hedgeMs = 2500, timeoutMs = 10000 } = {}
       if (n > 1) console.warn('[google] slow, hedge request', n, host);
       fetch(url, { ...opts, signal: ctrl.signal }).then(async r => {
         clearTimeout(to);
-        if (r.ok) return finish(resolve, r);
+        if (r.ok) return finish(resolve, r, ctrl);
         // คำตอบผิดพลาดจาก Google (เช่น invalid_grant ของคำขอซ้อน) → รอคำขออื่นก่อน ถ้าไม่มีแล้วค่อยส่งต่อ
-        okFallback = okFallback || r;
-        if (++failed >= started && started >= tries) finish(resolve, okFallback); else if (failed >= started) fire();
+        if (!okFallback) { okFallback = r; okCtrl = ctrl; }
+        if (++failed >= started && started >= tries) finish(resolve, okFallback, okCtrl); else if (failed >= started) fire();
       }, e => {
         clearTimeout(to);
         lastErr = e; console.warn('[google] fetch fail', n, host, e.cause?.code || e.name || e.message);
         if (++failed >= started) {
           if (started < tries) fire();
-          else if (okFallback) finish(resolve, okFallback);
+          else if (okFallback) finish(resolve, okFallback, okCtrl);
           else { const err = new Error('fetch failed (' + (lastErr?.cause?.code || lastErr?.name || 'network') + ')'); err.cause = lastErr; finish(reject, err); }
         }
       });
