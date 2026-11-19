@@ -42,7 +42,7 @@ import { cleanPayload, createShare, getShare, deleteShare, SHARE_DAYS } from './
 import { TERMS_VERSION, hasConsent, recordConsent } from './consent.js';
 import { CASES as EVAL_CASES, startEval, getJob, lastJob } from './eval.js';
 import { listReminders, addReminders, updateReminder, deleteReminder, cleanReminder, buildIcs, MAX_BATCH, MAX_REMINDERS } from './reminders.js';
-import { mountLibrary, initLibrary } from './library/index.js';   // Vellum Legal Library (คลังกฎหมาย) — แยกโฟลเดอร์ ไม่แตะระบบเดิม
+import { mountLibrary, initLibrary } from './library/routes.js';   // Vellum Legal Library (คลังกฎหมาย) — แยกโฟลเดอร์ ไม่แตะระบบเดิม
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
