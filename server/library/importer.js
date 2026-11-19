@@ -9,7 +9,15 @@ import { parseLaw, titleInfo, normalizeText, thToArabic } from './parse.js';
 import { tokenize } from './tokens.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// ชุดแกน: อ่านไฟล์ .json (ข้อความธรรมดา) ก่อน ถ้าไม่มีจึงใช้ .json.gz (ไฟล์บีบอัด) — วางไว้ไฟล์ใดไฟล์หนึ่งก็พอ
+const SEED_JSON = path.join(__dirname, 'seed', 'krisdika-core-2021.json');
 export const SEED_FILE = path.join(__dirname, 'seed', 'krisdika-core-2021.json.gz');
+async function readSeed() {
+  try { return JSON.parse(await readFile(SEED_JSON, 'utf8')); }
+  catch (e) { if (e.code !== 'ENOENT') throw new Error('ไฟล์ชุดแกน (.json) เสียหาย: ' + e.message); }
+  try { return JSON.parse(gunzipSync(await readFile(SEED_FILE)).toString('utf8')); }
+  catch (e) { throw new Error(e.code === 'ENOENT' ? 'ไม่พบไฟล์ชุดแกนใน server/library/seed/' : 'ไฟล์ชุดแกน (.gz) เสียหาย: ' + e.message); }
+}
 
 export const TOPICS = {
   contract: 'สัญญาและหนี้', consumer: 'คุ้มครองผู้บริโภค', labor: 'แรงงาน', property: 'ที่ดินและอสังหาริมทรัพย์',
@@ -160,7 +168,8 @@ async function createJob(pool, code, userId) {
 // ชุดแกน (ไฟล์มากับโค้ด): ข้อมูลจากเว็บไซต์กฤษฎีกา รวบรวมโดยโครงการ PyThaiNLP เมื่อ 20 มิ.ย. 2564
 export async function startSeedImport(pool, userId) {
   if (running) throw Object.assign(new Error('มีงานนำเข้ากำลังทำอยู่'), { status: 409 });
-  const seed = JSON.parse(gunzipSync(await readFile(SEED_FILE)).toString('utf8'));
+  let seed;
+  try { seed = await readSeed(); } catch (e) { throw Object.assign(e, { status: 400 }); }
   const sourceId = await ensureSource(pool, {
     code: 'pythainlp-thai-law-2021', name: 'ชุดข้อมูล thai-law (PyThaiNLP) จากเว็บไซต์สำนักงานคณะกรรมการกฤษฎีกา',
     homepage: seed.repo, license: seed.license, collectedAt: seed.collectedAt,
