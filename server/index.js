@@ -42,6 +42,7 @@ import { cleanPayload, createShare, getShare, deleteShare, SHARE_DAYS } from './
 import { TERMS_VERSION, hasConsent, recordConsent } from './consent.js';
 import { CASES as EVAL_CASES, startEval, getJob, lastJob } from './eval.js';
 import { listReminders, addReminders, updateReminder, deleteReminder, cleanReminder, buildIcs, MAX_BATCH, MAX_REMINDERS } from './reminders.js';
+import { mountLibrary, initLibrary } from './library/index.js';   // Vellum Legal Library (คลังกฎหมาย) — แยกโฟลเดอร์ ไม่แตะระบบเดิม
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -65,7 +66,9 @@ app.use((req, res, next) => {
 
 // ไฟล์อัปโหลดส่งเป็น base64 ใน JSON จึงให้ /api/extract รับขนาดใหญ่กว่าเส้นทางอื่น
 app.use((req, res, next) => (
-  req.path === '/api/extract' ? express.json({ limit: '8mb' }) : express.json({ limit: '200kb' })
+  req.path === '/api/extract' ? express.json({ limit: '8mb' })
+    : req.path === '/api/lib/admin/upload' ? express.json({ limit: '12mb' })   // แอดมินวางข้อความกฎหมายทั้งฉบับ
+    : express.json({ limit: '200kb' })
 )(req, res, next));
 
 // ---------- ตรวจผลจาก AI ----------
@@ -1229,6 +1232,9 @@ app.post('/api/ics', express.urlencoded({ extended: false, limit: '40kb' }), (re
   res.send(buildIcs(items, req.hostname || 'vellum-check'));
 });
 
+// ---------- คลังกฎหมาย (/api/lib/*, /library) ----------
+mountLibrary(app, { pool, getUserFromRequest, isAdmin });
+
 // ---------- หน้าเว็บ ----------
 // ไฟล์หน้าเว็บให้เบราว์เซอร์ตรวจกับเซิร์ฟเวอร์ทุกครั้ง เพื่อไม่ให้ค้างเวอร์ชันเก่าในมือถือ
 // คลิปวิดีโอ (public/videos/<ชื่อคลิป>/) แคชนาน 30 วัน — ถ้าแก้คลิป ให้เปลี่ยนชื่อโฟลเดอร์เป็นเวอร์ชันใหม่ (เช่น clip-intro-v2)
@@ -1265,6 +1271,7 @@ initDbWithRetry()
       // แย่งการเชื่อมต่อฐานข้อมูล/เน็ตจนคนที่ล็อกอิน Google ช่วงนั้นหมดเวลา (fetch failed · timeout exceeded when trying to connect)
       setTimeout(() => warmPreviews(true), 90 * 1000);
       setTimeout(startRetention, 120 * 1000);       // ลบผลตรวจที่เก่าเกิน 90 วันอัตโนมัติ (เลื่อนไม่ให้ชนช่วงเครื่องเพิ่งเปิด)
+      setTimeout(() => initLibrary(pool), 15 * 1000); // คลังกฎหมาย: สร้างตาราง lib_* (ล้มเหลวก็ไม่กระทบส่วนอื่น)
     });
   })
   .catch(err => {
