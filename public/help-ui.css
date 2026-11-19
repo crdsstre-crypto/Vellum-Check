@@ -210,3 +210,21 @@ html.vhp-open .vhp-fab,
 .vhp .vhp-card.is-wide .vhp-go{top:50%}
 .vhp .vhp-mail .vhp-go{position:static;width:24px;height:24px;margin:0}
 .vhp .vhp-3{gap:4px 8px}
+
+/* หน้าต่างช่วยเหลือ: เลื่อนเฉพาะเนื้อหา (.vhp-view) · หัวติดด้านบนตลอด · ปุ่มปิดไม่เลื่อนหาย อยู่แนวเดียวกับหัวข้อ ชิดขอบขวาเท่าการ์ด (help-ui.css v5) */
+.vhp .vhp-panel{display:flex !important;flex-direction:column !important;overflow:hidden !important}
+.vhp .vhp-panel > .vhp-view{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;margin:0 -20px;padding:0 20px}
+.vhp .vhp-panel > .vhp-x{position:absolute !important;z-index:3 !important;top:28px !important;right:20px !important;left:auto !important;margin:0 !important}
+.vhp .vhp-panel:has(.vhp-dh) > .vhp-x{top:22px !important}
+.vhp .vhp-hd,.vhp .vhp-dh{position:sticky;top:0;z-index:2;background:url("tex/n5.webp") 0 0/180px 180px,linear-gradient(180deg,#2e1d10,#2a1a0e);box-shadow:0 1px 0 rgba(201,168,98,.18)}
+.vhp .vhp-panel.vhp-panel{padding-top:0 !important}
+.vhp .vhp-panel::before{z-index:4}
+.vhp .vhp-hd{margin:0 -20px 8px;padding:22px 60px 8px 20px}
+.vhp .vhp-dh{margin:0 -20px 10px;padding:22px 64px 8px 20px}
+@media (max-width:767px){
+.vhp .vhp-panel > .vhp-view{margin:0 -16px;padding:0 16px}
+.vhp .vhp-panel > .vhp-x{top:32px !important;right:16px !important}
+.vhp .vhp-panel:has(.vhp-dh) > .vhp-x{top:26px !important}
+.vhp .vhp-hd{margin:0 -16px 8px;padding:26px 56px 8px 16px}
+.vhp .vhp-dh{margin:0 -16px 10px;padding:26px 60px 8px 16px}
+}
