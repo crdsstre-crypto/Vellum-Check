@@ -86,6 +86,13 @@
       desc: 'ดูคะแนนสัญญาทุกฉบับที่เคยตรวจ ฉบับไหนเสี่ยงที่สุด และวันครบกำหนดที่ใกล้ถึง เช่น วันต่อสัญญา หรือวันคืนเงินประกัน',
       pts: ['สัญญาที่ควรดูก่อน 3 อันดับ', 'แจ้งเตือนวันสำคัญถัดไป'],
       acts: function () { return [[loggedIn() ? 'เปิดภาพรวม' : 'เข้าสู่ระบบเพื่อดู', 'p', openHistory]]; }
+    },
+    {
+      id: 'library', c: '#f0a35c', ic: '<path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/><path d="M6.5 8h2.5M6.5 11h2.5M15 8h2.5M15 11h2.5"/>',
+      name: 'คลังกฎหมาย', tag: 'ฟรี · ไม่ต้องเข้าสู่ระบบ',
+      desc: 'อ่านกฎหมายไทยฉบับเต็มทีละมาตรา เช่น ป.พ.พ. คุ้มครองผู้บริโภค คุ้มครองแรงงาน พร้อมสารบัญและแหล่งที่มาของทุกฉบับ',
+      pts: ['อ่านทีละมาตรา มีสารบัญ', 'บอกแหล่งที่มาและวันที่รวบรวม', 'ลิงก์ไปมาตราที่ต้องการได้'],
+      acts: [['เปิดคลังกฎหมาย', 'p', function () { location.href = '/library'; }]]
     }
   ];
 
@@ -185,7 +192,7 @@
     var GH = { th: ['ใช้ได้เลย', 'ใช้กับผลตรวจของคุณ'], en: ['Use right away', 'Works with your results'], zh: ['立即可用', '配合你的检查结果'] }[L] || ['ใช้ได้เลย', 'ใช้กับผลตรวจของคุณ'];
     var html = '<div class="vct-gh" data-g="1">' + esc(GH[0]) + '</div><div class="vct-gh" data-g="2">' + esc(GH[1]) + '</div>' + TOOLS.map(function (t) {
       var A = typeof t.acts === 'function' ? t.acts() : t.acts;
-      return '<section class="vct-it' + (L === 'th' && t.ben ? ' has-x2' : '') + '" style="--c:' + t.c + '" data-tool="' + t.id + '" data-g="' + (t.id === 'compare' || t.id === 'checklist' ? 1 : 2) + '"><div class="vct-ih"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">' + t.ic + '</svg></span><div><b>' + esc(t.name) + '</b><em>' + esc(typeof t.tag === 'function' ? t.tag() : t.tag) + '</em></div></div>' +
+      return '<section class="vct-it' + (L === 'th' && t.ben ? ' has-x2' : '') + '" style="--c:' + t.c + '" data-tool="' + t.id + '" data-g="' + (t.id === 'compare' || t.id === 'checklist' || t.id === 'library' ? 1 : 2) + '"><div class="vct-ih"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">' + t.ic + '</svg></span><div><b>' + esc(t.name) + '</b><em>' + esc(typeof t.tag === 'function' ? t.tag() : t.tag) + '</em></div></div>' +
         '<p>' + esc(t.desc) + '</p>' +
         (t.pts ? '<div class="vct-pts">' + t.pts.map(function (x) { return '<span>' + esc(x) + '</span>'; }).join('') + '</div>' : '') +
         (t.steps ? '<ol class="vct-stp">' + t.steps.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ol>' : '') +
@@ -250,6 +257,8 @@
     var a = document.createElement('a'); a.href = '#tools'; a.className = 'vct-dl'; a.textContent = 'เครื่องมือ';
     a.addEventListener('click', function (e) { e.preventDefault(); open(); });
     var last = nav.lastElementChild; nav.insertBefore(a, last);   /* ก่อนปุ่ม "ตรวจสัญญา" ซึ่งเป็นปุ่มเด่นตัวสุดท้าย */
+    var lb = document.createElement('a'); lb.href = '/library'; lb.className = 'vct-ll'; lb.textContent = 'คลังกฎหมาย';
+    nav.insertBefore(lb, last);   /* หน้าคลังกฎหมาย (/library) — ลิงก์ธรรมดา เปิดหน้าใหม่ในแท็บเดิม */
   }
   /* ---------- เมนู ☰ (มือถือ) ---------- */
   var mel = null;
@@ -261,6 +270,7 @@
       mel.addEventListener('click', function (e) {
         if (e.target.closest('[data-x]')) { menuClose(); return; }
         if (e.target.closest('[data-m="tools"]')) { menuClose(); setTimeout(open, 220); return; }
+        var hr = e.target.closest('[data-href]'); if (hr) { menuClose(); location.href = hr.getAttribute('data-href'); return; }
         var g = e.target.closest('[data-goto]'); if (g) { menuClose(); var t = document.querySelector(g.getAttribute('data-goto')); if (t) setTimeout(function () { t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 250); return; }
         var l = e.target.closest('[data-lang]'); if (l && window.VCLang && l.getAttribute('data-lang') !== VCLang.get()) { menuClose(); VCLang.set(l.getAttribute('data-lang')); }
       });
@@ -272,6 +282,7 @@
     mel.innerHTML = '<div class="vct-bg" data-x></div><div class="vct-card"><div class="vct-hd"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true" style="color:#cfe2ff;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></span><div><b>เมนู</b><small>Vellum Check</small></div><button type="button" class="vct-x" data-x aria-label="ปิด">×</button></div>' +
       '<div class="vct-bd" style="display:block">' +
       '<div class="vcm-sec"><button type="button" class="vcm-row" data-m="tools" style="--c:#9cc5ff"><span class="i"><svg viewBox="0 0 24 24" aria-hidden="true">' + GRID + '</svg></span><span><b>เครื่องมือ</b><small>' + TOOLS.map(function (t) { return t.name; }).join(' · ') + '</small></span><em>›</em></button></div>' +
+      '<div class="vcm-sec"><button type="button" class="vcm-row" data-href="/library" style="--c:#f0a35c"><span class="i"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg></span><span><b>คลังกฎหมาย</b><small>อ่านกฎหมายไทยฉบับเต็มทีละมาตรา</small></span><em>›</em></button></div>' +
       (links.length ? '<div class="vcm-sec">' + links.map(function (x) { return '<button type="button" class="vcm-row" data-goto="' + x[0] + '" style="--c:' + x[3] + '"><span class="i"><svg viewBox="0 0 24 24" aria-hidden="true">' + x[4] + '</svg></span><span><b>' + x[1] + '</b><small>' + x[2] + '</small></span><em>›</em></button>'; }).join('') + '</div>' : '') +
       '<div class="vcm-sec"><p class="vcm-h">ภาษา · Language · 语言</p><div class="vcm-lang">' +
         [['th', 'ไทย', 'Thai'], ['en', 'English', 'อังกฤษ'], ['zh', '中文', 'จีน']].map(function (x) { return '<button type="button" data-lang="' + x[0] + '" class="' + (L === x[0] ? 'is-on' : '') + '">' + x[1] + '<small>' + x[2] + '</small></button>'; }).join('') +
