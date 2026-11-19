@@ -1,0 +1,218 @@
+/* Vellum Legal Library — Navy / Charcoal / Orange
+   จุดเด่นจุดเดียว: เลขมาตราเป็นหมายเหตุริมหน้า (ตัวเลขไทยสีส้ม) แบบหนังสือกฎหมาย ส่วนอื่นเงียบ */
+:root {
+  --navy-900: #0E1A2B;   /* พื้นหลัง */
+  --navy-800: #142338;   /* แผง */
+  --navy-700: #1C2E47;   /* แผงยกขึ้น / hover */
+  --char-800: #23272E;   /* ชาร์โคล: กล่องข้อมูลรอง */
+  --line: #2A3B55;
+  --ink: #E9EDF3;
+  --ink-2: #A9B4C4;
+  --ink-3: #7D8AA0;
+  --orange: #F08A24;
+  --orange-2: #F7B066;
+  --ok: #3FB68B; --wait: #E0B341; --gone: #E5606A; --unk: #8E9BB0;
+  --ui: 'IBM Plex Sans Thai', 'Sarabun', 'Noto Sans Thai', system-ui, sans-serif;
+  --read: 'Taviraj', 'Sarabun', 'Noto Serif Thai', serif;
+  --r-s: 6px; --r-m: 10px;
+}
+* { box-sizing: border-box; }
+html { background: var(--navy-900); color-scheme: dark; }
+body { margin: 0; font: 400 16px/1.65 var(--ui); color: var(--ink); background: var(--navy-900); -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; border-radius: 4px; }
+[hidden] { display: none !important; }
+.lb-skip { position: absolute; left: -9999px; top: 8px; background: var(--orange); color: #1b1006; padding: 6px 12px; border-radius: var(--r-s); z-index: 50; }
+.lb-skip:focus { left: 8px; }
+
+/* ---------- แถบบน ---------- */
+.lb-top { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 12px clamp(16px, 4vw, 48px); background: rgba(14, 26, 43, .92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.lb-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.lb-mark { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 7px; background: var(--orange); color: #1b1006; font: 700 17px/1 var(--read); }
+.lb-name { font-size: 15px; color: var(--ink-2); }
+.lb-name b { color: var(--ink); font-weight: 600; margin-right: 4px; }
+.lb-topnav { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+.lb-topnav a { text-decoration: none; font-size: 14px; color: var(--ink-2); padding: 6px 10px; border-radius: var(--r-s); }
+.lb-topnav a:hover { color: var(--ink); background: var(--navy-800); }
+.lb-topnav a[aria-current="page"] { color: var(--ink); box-shadow: inset 0 -2px 0 var(--orange); border-radius: 0; }
+.lb-topnav .lb-back { border: 1px solid var(--line); margin-left: 6px; }
+
+.lb-main { max-width: 1180px; margin: 0 auto; padding: clamp(20px, 4vw, 44px) clamp(16px, 4vw, 40px) 64px; outline: none; }
+.lb-boot { color: var(--ink-3); padding: 60px 0; }
+.lb-foot { max-width: 1180px; margin: 0 auto; padding: 24px clamp(16px, 4vw, 40px) 48px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 13px; }
+.lb-foot p { margin: 0 0 6px; max-width: 76ch; }
+
+/* ---------- หน้าแรก ---------- */
+.lb-hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(20px, 4vw, 56px); align-items: stretch; margin-bottom: 44px; }
+.lb-hero h1 { font: 600 clamp(30px, 4.4vw, 46px)/1.2 var(--read); margin: 6px 0 12px; letter-spacing: -.005em; }
+.lb-hero .lb-lede { color: var(--ink-2); margin: 0 0 22px; max-width: 46ch; }
+.lb-search { display: flex; gap: 8px; background: var(--navy-800); border: 1px solid var(--line); border-radius: var(--r-m); padding: 6px; }
+.lb-search:focus-within { border-color: var(--orange); }
+.lb-search input { flex: 1; min-width: 0; background: transparent; border: 0; padding: 10px 12px; font-size: 17px; outline: none; }
+.lb-search input::placeholder { color: var(--ink-3); }
+.lb-search button { border: 0; border-radius: 7px; padding: 0 18px; background: var(--orange); color: #1b1006; font-weight: 600; cursor: pointer; }
+.lb-search button:hover { background: var(--orange-2); }
+.lb-quick { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.lb-chip { border: 1px solid var(--line); background: transparent; border-radius: 999px; padding: 3px 12px; font-size: 13px; color: var(--ink-2); cursor: pointer; text-decoration: none; }
+.lb-chip:hover { border-color: var(--orange); color: var(--ink); }
+.lb-chip[aria-pressed="true"] { background: var(--orange); border-color: var(--orange); color: #1b1006; }
+.lb-chip .n { color: var(--ink-3); margin-left: 4px; }
+.lb-chip[aria-pressed="true"] .n { color: #3a2207; }
+
+/* มาตราจากคลัง: แผ่นตัวบทจริง เลขมาตราสีส้มริมซ้าย */
+.lb-spot { position: relative; background: var(--char-800); border: 1px solid #333944; border-radius: var(--r-m); padding: 20px 24px 16px; min-height: 220px; display: flex; flex-direction: column; margin: 0; }
+.lb-spot .lb-spot-k { display: flex; align-items: baseline; gap: 10px; font: 600 34px/1.1 var(--read); color: var(--orange); margin-bottom: 10px; }
+.lb-spot .lb-spot-k small { font: 500 13px/1 var(--ui); color: var(--ink-3); order: -1; }
+.lb-spot blockquote { margin: 0; font: 400 17px/1.85 var(--read); color: var(--ink); display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
+.lb-spot footer { margin-top: auto; padding-top: 14px; display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 13px; color: var(--ink-3); }
+.lb-spot footer a { color: var(--ink-2); }
+.lb-spot .lb-again { border: 1px solid #3a414d; background: transparent; border-radius: var(--r-s); padding: 3px 10px; color: var(--ink-2); cursor: pointer; white-space: nowrap; }
+.lb-spot .lb-again:hover { color: var(--ink); border-color: var(--ink-3); }
+
+.lb-sec { margin: 0 0 40px; }
+.lb-sec > h2 { font: 600 20px/1.3 var(--ui); margin: 0 0 14px; }
+.lb-sec > h2 small { font-weight: 400; font-size: 14px; color: var(--ink-3); margin-left: 8px; }
+.lb-topics { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; }
+.lb-topic { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; text-decoration: none; padding: 12px 14px; border-radius: var(--r-s); background: var(--navy-800); border: 1px solid transparent; }
+.lb-topic:hover { border-color: var(--line); background: var(--navy-700); }
+.lb-topic b { font-weight: 500; }
+.lb-topic span { color: var(--orange-2); font-variant-numeric: tabular-nums; font-size: 14px; }
+.lb-cols { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 4vw, 48px); }
+
+/* รายการกฎหมาย: เป็นแถว ไม่ใช่การ์ด */
+.lb-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.lb-row { border-bottom: 1px solid var(--line); }
+.lb-row a { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 12px 4px; text-decoration: none; }
+.lb-row a:hover .lb-row-t { color: var(--orange-2); }
+.lb-row-t { font-weight: 500; line-height: 1.45; }
+.lb-row-m { grid-column: 1; font-size: 13px; color: var(--ink-3); display: flex; gap: 10px; flex-wrap: wrap; }
+.lb-row .lb-st { grid-row: 1 / span 2; grid-column: 2; align-self: center; }
+.lb-empty { color: var(--ink-3); padding: 18px 4px; }
+
+.lb-st { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--ink-2); white-space: nowrap; }
+.lb-st::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--unk); }
+.lb-st.in_force::before { background: var(--ok); }
+.lb-st.not_yet_in_force::before { background: var(--wait); }
+.lb-st.repealed::before { background: var(--gone); }
+
+.lb-band { display: flex; gap: 14px; align-items: flex-start; padding: 14px 16px; border-radius: var(--r-m); background: var(--char-800); border-left: 3px solid var(--orange); color: var(--ink-2); font-size: 14px; }
+.lb-band b { color: var(--ink); font-weight: 600; }
+
+/* skeleton */
+.sk { display: block; border-radius: 4px; background: linear-gradient(90deg, var(--navy-800), var(--navy-700), var(--navy-800)); background-size: 200% 100%; animation: sk 1.3s linear infinite; }
+@keyframes sk { to { background-position: -200% 0; } }
+
+/* ---------- รายการทั้งหมด ---------- */
+.lb-browse-h { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 12px; margin-bottom: 16px; }
+.lb-browse-h h1 { font: 600 28px/1.25 var(--read); margin: 0; }
+.lb-filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 14px; }
+.lb-filters select, .lb-filters input { background: var(--navy-800); border: 1px solid var(--line); border-radius: var(--r-s); padding: 7px 10px; font-size: 14px; }
+.lb-count { color: var(--ink-3); font-size: 14px; }
+.lb-pager { display: flex; gap: 8px; justify-content: center; margin-top: 18px; }
+.lb-btn { border: 1px solid var(--line); background: var(--navy-800); border-radius: var(--r-s); padding: 7px 14px; cursor: pointer; text-decoration: none; font-size: 14px; }
+.lb-btn:hover:not(:disabled) { border-color: var(--ink-3); }
+.lb-btn:disabled { opacity: .45; cursor: default; }
+.lb-btn.primary { background: var(--orange); border-color: var(--orange); color: #1b1006; font-weight: 600; }
+.lb-btn.primary:hover:not(:disabled) { background: var(--orange-2); }
+
+/* ---------- หน้าอ่านกฎหมาย ---------- */
+.lb-crumb { font-size: 13px; color: var(--ink-3); margin-bottom: 10px; }
+.lb-crumb a { color: var(--ink-2); text-decoration: none; }
+.lb-crumb a:hover { color: var(--orange-2); }
+.lb-law-h h1 { font: 600 clamp(26px, 3.6vw, 38px)/1.3 var(--read); margin: 0 0 10px; max-width: 30ch; }
+.lb-law-meta { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; color: var(--ink-3); font-size: 14px; margin-bottom: 18px; }
+.lb-reader { display: grid; grid-template-columns: 240px minmax(0, 1fr) 280px; gap: 32px; align-items: start; margin-top: 24px; }
+.lb-toc { position: sticky; top: 76px; max-height: calc(100vh - 96px); overflow: auto; font-size: 13.5px; padding-right: 6px; scrollbar-width: thin; }
+.lb-toc h2, .lb-aside h2 { font: 600 13px/1.4 var(--ui); color: var(--ink-3); margin: 0 0 8px; }
+.lb-toc ol { list-style: none; margin: 0; padding: 0; }
+.lb-toc a { display: block; padding: 4px 8px; border-left: 2px solid transparent; text-decoration: none; color: var(--ink-2); line-height: 1.45; }
+.lb-toc a:hover { color: var(--ink); border-left-color: var(--line); }
+.lb-toc a.on { color: var(--ink); border-left-color: var(--orange); }
+.lb-toc .l-ภาค, .lb-toc .l-บรรพ { font-weight: 600; color: var(--ink); margin-top: 8px; }
+.lb-toc .l-หมวด { padding-left: 16px; }
+.lb-toc .l-ส่วนที่, .lb-toc .l-ส่วน { padding-left: 26px; font-size: 13px; }
+
+.lb-text { min-width: 0; }
+.lb-preamble { font: 400 15px/1.85 var(--read); color: var(--ink-2); white-space: pre-line; margin: 0 0 26px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+.lb-preamble.clamp { max-height: 9.5em; overflow: hidden; -webkit-mask: linear-gradient(#000 60%, transparent); mask: linear-gradient(#000 60%, transparent); }
+.lb-more-pre { margin: -14px 0 24px; }
+.lb-head { font: 600 19px/1.45 var(--read); margin: 34px 0 14px; color: var(--ink); scroll-margin-top: 84px; }
+.lb-head.l-ภาค, .lb-head.l-บรรพ { font-size: 23px; color: var(--orange-2); margin-top: 44px; }
+.lb-head.l-ส่วนที่, .lb-head.l-ส่วน { font-size: 17px; color: var(--ink-2); }
+/* มาตรา: เลขอยู่ริมซ้ายแบบหมายเหตุข้างหน้า */
+.lb-s { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 0 16px; padding: 10px 0; scroll-margin-top: 84px; border-radius: var(--r-s); }
+.lb-s:target, .lb-s.hit { background: rgba(240, 138, 36, .08); }
+.lb-s-n { display: block; text-align: right; font: 600 19px/1.6 var(--read); color: var(--orange); text-decoration: none; padding-top: 1px; }
+.lb-s-n small { display: block; font: 400 11.5px/1.3 var(--ui); color: var(--ink-3); }
+.lb-s-n:hover { color: var(--orange-2); }
+.lb-s-b { font: 400 17.5px/1.95 var(--read); color: var(--ink); max-width: 68ch; white-space: pre-line; overflow-wrap: anywhere; }
+.lb-fn { font: 600 10.5px/1 var(--ui); color: var(--orange-2); background: rgba(240, 138, 36, .14); border: 0; border-radius: 4px; padding: 2px 4px; cursor: pointer; margin: 0 1px; vertical-align: 2px; }
+.lb-s-g { text-align: right; }
+.lb-s-g sup { display: block; line-height: 1.2; }
+.lb-fnpop { grid-column: 2; margin: 6px 0 4px; padding: 10px 12px; border-radius: var(--r-s); background: var(--char-800); border: 1px solid #333944; font: 400 13.5px/1.6 var(--ui); color: var(--ink-2); max-width: 68ch; }
+.lb-annex-h { margin: 46px 0 6px; font: 600 15px/1.4 var(--ui); color: var(--ink-3); padding-top: 18px; border-top: 1px dashed var(--line); }
+.lb-annex .lb-s-b { font-size: 16px; color: var(--ink-2); }
+.lb-loadmore { display: block; margin: 20px auto 0; }
+
+.lb-aside { position: sticky; top: 76px; display: flex; flex-direction: column; gap: 16px; font-size: 14px; }
+.lb-box { background: var(--navy-800); border: 1px solid var(--line); border-radius: var(--r-m); padding: 14px 16px; }
+.lb-box dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; }
+.lb-box dt { color: var(--ink-3); }
+.lb-box dd { margin: 0; overflow-wrap: anywhere; }
+.lb-box a { color: var(--orange-2); }
+.lb-box p { margin: 0 0 8px; color: var(--ink-2); }
+.lb-tl { list-style: none; margin: 0; padding: 0 0 0 14px; border-left: 1px solid var(--line); }
+.lb-tl li { position: relative; padding: 0 0 12px; }
+.lb-tl li::before { content: ''; position: absolute; left: -18.5px; top: 8px; width: 8px; height: 8px; border-radius: 50%; background: var(--navy-900); border: 2px solid var(--ink-3); }
+.lb-tl li.promulgated::before { border-color: var(--orange); }
+.lb-tl time { display: block; font-size: 12.5px; color: var(--ink-3); }
+.lb-tl span { line-height: 1.45; display: block; }
+.lb-findbar { display: flex; gap: 6px; margin-bottom: 18px; }
+.lb-findbar input { flex: 1; min-width: 0; background: var(--navy-800); border: 1px solid var(--line); border-radius: var(--r-s); padding: 8px 12px; font-size: 14px; }
+.lb-findbar input:focus { border-color: var(--orange); outline: none; }
+.lb-findbar output { align-self: center; font-size: 13px; color: var(--ink-3); min-width: 6ch; }
+
+/* ---------- แอดมิน ---------- */
+.lb-adm h1 { font: 600 26px/1.3 var(--read); margin: 0 0 6px; }
+.lb-adm .lb-box { margin-bottom: 18px; }
+.lb-prog { height: 6px; border-radius: 3px; background: var(--navy-700); overflow: hidden; margin: 10px 0 6px; }
+.lb-prog i { display: block; height: 100%; background: var(--orange); width: 0; transition: width .4s; }
+.lb-tbl { width: 100%; border-collapse: collapse; font-size: 14px; }
+.lb-tbl th { text-align: left; font-weight: 500; color: var(--ink-3); padding: 8px; border-bottom: 1px solid var(--line); }
+.lb-tbl td { padding: 9px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.lb-tbl .flag { color: var(--wait); }
+.lb-verify { display: grid; gap: 8px; margin-top: 8px; padding: 12px; background: var(--char-800); border-radius: var(--r-s); }
+.lb-verify select, .lb-verify input { background: var(--navy-900); border: 1px solid var(--line); border-radius: var(--r-s); padding: 7px 10px; font-size: 14px; }
+.lb-msg { font-size: 13.5px; margin-top: 6px; }
+.lb-msg.err { color: var(--gone); }
+.lb-msg.ok { color: var(--ok); }
+.lb-log { font-size: 13px; color: var(--ink-2); max-height: 160px; overflow: auto; margin: 8px 0 0; padding-left: 18px; }
+
+/* ---------- จอเล็ก ---------- */
+@media (max-width: 1080px) {
+  .lb-reader { grid-template-columns: 210px minmax(0, 1fr); }
+  .lb-aside { grid-column: 1 / -1; position: static; display: grid; grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 820px) {
+  .lb-hero, .lb-cols { grid-template-columns: minmax(0, 1fr); }
+  .lb-reader { grid-template-columns: minmax(0, 1fr); }
+  .lb-toc { position: static; max-height: 260px; background: var(--navy-800); border: 1px solid var(--line); border-radius: var(--r-m); padding: 12px; }
+  .lb-aside { grid-template-columns: minmax(0, 1fr); }
+  .lb-topnav a:not(.lb-back):not([aria-current="page"]) { display: none; }
+}
+@media (max-width: 560px) {
+  .lb-name { white-space: nowrap; }
+  .lb-topnav a:not(.lb-back) { display: none; }
+  .lb-s-n small { margin-right: 6px; }
+  .lb-hero h1 br { display: none; }
+  .lb-s { grid-template-columns: minmax(0, 1fr); }
+  .lb-s-g, .lb-s-n { text-align: left; line-height: 1.5; }
+  .lb-s-g { display: flex; align-items: baseline; gap: 6px; }
+  .lb-fnpop { grid-column: 1; }
+  .lb-s-n small { display: inline; margin-left: 6px; }
+  .lb-spot { padding: 18px; }
+  .lb-s-b { font-size: 17px; }
+}
+@media (prefers-reduced-motion: reduce) { .sk { animation: none; } .lb-prog i { transition: none; } }
