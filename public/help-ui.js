@@ -186,7 +186,7 @@
     view.innerHTML = html;
     if (!calm() && view.animate) view.animate([{ opacity: 0, transform: 'translateX(' + (dir * 22) + 'px)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'cubic-bezier(.2,.8,.25,1)' });
     var h = view.querySelector('h2'); if (h) { h.setAttribute('tabindex', '-1'); try { h.focus({ preventScroll: true }); } catch (e) {} }
-    panel.scrollTop = 0;
+    panel.scrollTop = 0; view.scrollTop = 0;   /* ตอนนี้ .vhp-view เป็นตัวเลื่อน (หัวติดบน ปุ่มปิดไม่เลื่อนหาย) */
   }
   function show(id, dir) { cur = id && byId[id] ? id : null; swap(cur ? detail(byId[cur]) : home(), dir || 0); }
 
