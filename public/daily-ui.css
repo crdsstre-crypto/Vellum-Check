@@ -13,8 +13,9 @@
 .vds-txt small{font-size:.75rem;color:var(--dc-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .vds-go{flex:0 0 auto;min-height:38px;padding:0 16px;border:0;border-radius:10px;background:var(--dc-acc);color:#1a1608;font:600 .86rem/1 'Prompt',sans-serif;cursor:pointer}
 .vds-go:disabled{opacity:.6}
-.vds-x{flex:0 0 auto;width:30px;height:30px;border:0;border-radius:8px;background:transparent;color:var(--dc-mute);cursor:pointer}
-.vds-x:hover{background:rgba(255,255,255,.06);color:var(--dc-tx)}
+/* v126: กากบาทวาดด้วย CSS ให้อยู่กลางปุ่มพอดีทุกธีม/ทุกฟอนต์ (เดิมใช้ตัวอักษร ✕ ซึ่งฟอนต์ไทยดันลงต่ำ ~8px) */
+.vds-x{flex:0 0 auto;align-self:center;width:30px;height:30px;padding:0;border:0;border-radius:8px;background:linear-gradient(45deg,transparent calc(50% - .8px),currentColor calc(50% - .8px),currentColor calc(50% + .8px),transparent calc(50% + .8px)) center/12px 12px no-repeat,linear-gradient(-45deg,transparent calc(50% - .8px),currentColor calc(50% - .8px),currentColor calc(50% + .8px),transparent calc(50% + .8px)) center/12px 12px no-repeat;color:var(--dc-mute);cursor:pointer;font-size:0;line-height:0;overflow:hidden}
+.vds-x:hover{background:linear-gradient(45deg,transparent calc(50% - .8px),currentColor calc(50% - .8px),currentColor calc(50% + .8px),transparent calc(50% + .8px)) center/12px 12px no-repeat,linear-gradient(-45deg,transparent calc(50% - .8px),currentColor calc(50% - .8px),currentColor calc(50% + .8px),transparent calc(50% + .8px)) center/12px 12px no-repeat,rgba(255,255,255,.06);color:var(--dc-tx)}
 .vdc-strip.is-done{border-color:rgba(255,154,77,.4);background:linear-gradient(100deg,rgba(255,154,77,.12),transparent 60%),var(--dc-bg)}
 .vdc-strip.is-done .vdc-ic{color:var(--dc-fire);background:rgba(255,154,77,.12);border-color:rgba(255,154,77,.35)}
 .vdc-strip.is-done .vds-txt b{color:var(--dc-tx)}
