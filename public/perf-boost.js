@@ -7,7 +7,7 @@
 (function () {
   'use strict';
   var root = document.documentElement;
-  var DJS = 'daily-ui.js?v=113', DCSS = 'daily-ui.css?v=125';
+  var DJS = 'daily-ui.js?v=113', DCSS = 'daily-ui.css?v=126';
 
   /* ---------- 1) โหลดร้านค้า/รางวัลรายวันทีหลัง ---------- */
   var dState = 0, dWait = [];   /* 0 ยังไม่โหลด · 1 กำลังโหลด · 2 พร้อม */
