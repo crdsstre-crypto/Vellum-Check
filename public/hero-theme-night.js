@@ -84,7 +84,317 @@
 
   var end = '<div class="tn-sun"></div><div class="tn-bow"></div>';
   function tap(x, y, lay) { var d = document.createElement('div'); d.className = 'thm-fx tn-rp'; d.style.left = x + 'px'; d.style.top = y + 'px'; d.innerHTML = '<i></i><i></i><i></i><b></b>'; lay.appendChild(d); setTimeout(function () { d.remove(); }, 1700); }
-  (window.VCHT = window.VCHT || {}).night = { css: css, stage: stage, init: init, end: end, tap: tap };
+  /*NRSCROLL1*/ /* รอบ 1: ตอนไถ (กล้องดิ่ง → ปั๊มตรา) ของในฉากเปลี่ยนเป็นเรื่องฝน · p=0 (หน้าปก) ไม่เปลี่ยนอะไร */
+  var H = ':host([data-th=night]) ';
+  var DR = ['8% 14%', '23% 62%', '37% 30%', '52% 78%', '66% 22%', '79% 55%', '91% 84%', '15% 88%', '72% 92%', '44% 8%'].map(function (q, i) { var w = 3 + (i * 7 % 5); return 'radial-gradient(' + w + 'px ' + (w * 1.3).toFixed(1) + 'px at ' + q + ',rgba(240,248,255,.75),rgba(190,215,250,.25) 55%,transparent 72%)'; }).join(',');
+  var BOK = [[12, 30, '255,180,100', 70], [30, 70, '120,170,255', 90], [55, 40, '255,200,130', 60], [72, 80, '130,180,255', 110], [88, 25, '255,170,90', 80], [42, 92, '160,200,255', 70]].map(function (b) { return 'radial-gradient(' + b[3] + 'px ' + b[3] + 'px at ' + b[0] + '% ' + b[1] + '%,rgba(' + b[2] + ',.32),transparent 70%)'; }).join(',');
+  css += H + '.nr-wet{position:absolute;inset:0;pointer-events:none;opacity:var(--nd,0);background:' + DR + ' 0 0/260px 200px,' + BOK + ',repeating-linear-gradient(100deg,transparent 0 60px,rgba(190,215,255,.05) 60px 62px),linear-gradient(180deg,rgba(18,30,58,.78),rgba(10,18,38,.86));mix-blend-mode:normal}'
+    + H + '.nr-wet::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(100deg,transparent 0 34px,rgba(200,222,255,.07) 34px 36px,transparent 36px 90px) 0 0/100% 300px;animation:nrSlide 3.2s linear infinite}'
+    + '@keyframes nrSlide{to{background-position:0 300px}}'
+    + H + '.nr-pw{position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:var(--nd,0);background:' + DR + ' 0 0/180px 150px,radial-gradient(70% 18% at 50% 101%,rgba(120,150,190,.22),transparent 70%),radial-gradient(28% 10% at 0 30%,rgba(120,150,190,.18),transparent 70%),radial-gradient(22% 9% at 100% 62%,rgba(120,150,190,.16),transparent 70%),linear-gradient(180deg,rgba(215,228,248,.42),rgba(200,215,240,.32));mix-blend-mode:multiply}'
+    + H + '.nr-pw::after{content:"";position:absolute;inset:0;border-radius:inherit;background:repeating-linear-gradient(100deg,transparent 0 44px,rgba(40,70,120,.06) 44px 47px,transparent 47px 110px) 0 0/100% 260px;animation:nrSlide 4.5s linear infinite}'
+    + H + '{--ink:#1f2d52}'
+    + H + '.nib{filter:grayscale(1) invert(.8) brightness(1.08) contrast(1.15) drop-shadow(0 2px 3px rgba(0,0,0,.5)) !important}'
+    + H + '.uvl::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(215,228,248,.42),rgba(200,215,240,.32));mix-blend-mode:multiply;opacity:var(--nd,0)}'
+    /* แว่นขยายกรอบเงิน ด้ามกราไฟต์ */
+    + H + '#gbr stop:nth-child(1){stop-color:#ffffff}' + H + '#gbr stop:nth-child(2){stop-color:#cfd6e2}' + H + '#gbr stop:nth-child(3){stop-color:#8e98aa}' + H + '#gbr stop:nth-child(4){stop-color:#4e5668}'
+    + H + '#gwd stop:nth-child(1){stop-color:#4a5266}' + H + '#gwd stop:nth-child(2){stop-color:#262c3a}' + H + '#gwd stop:nth-child(3){stop-color:#12151e}'
+    + H + '#ggl stop:nth-child(3){stop-color:#cfe2ff}'
+    + H + '.nr-ld{position:absolute;left:var(--bx,50%);top:var(--by,50%);width:calc(var(--lr,46px) * 2.3);height:calc(var(--lr,46px) * 2.3);transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;z-index:8;opacity:var(--to,0);background:radial-gradient(4px 5px at 18% 30%,rgba(245,250,255,.95),rgba(190,215,250,.3) 60%,transparent 75%),radial-gradient(3px 4px at 74% 14%,rgba(245,250,255,.9),transparent 72%),radial-gradient(5px 6px at 88% 58%,rgba(245,250,255,.9),rgba(190,215,250,.3) 60%,transparent 75%),radial-gradient(3px 4px at 30% 86%,rgba(245,250,255,.85),transparent 72%),radial-gradient(2.5px 3.5px at 56% 92%,rgba(245,250,255,.85),transparent 72%),radial-gradient(circle at 35% 30%,rgba(200,225,255,.16),transparent 45%)}'
+    /* ไฮไลต์ = หมึกทองแสงโคม */
+    + H + '.row.hid .uvt{color:#1f2d52}'
+    + H + '.uvt .ch{background:linear-gradient(transparent 56%,rgba(242,205,130,.7) 56% 94%,transparent 94%)}'
+    + H + '.uvring{border-color:#e0b25e;box-shadow:0 0 0 3px rgba(242,205,130,.18),0 0 14px rgba(255,200,120,.35)}'
+    + H + '.uvtag{background:linear-gradient(180deg,#f2cd82,#c9963f);color:#2a1a08;box-shadow:0 4px 12px rgba(0,0,0,.35)}'
+    /* ตราปั๊มสีน้ำเงินหมึกซึม */
+    + H + '.stamp{border-color:#2d5aa6;color:#2f5fb0;background:rgba(40,80,160,.07);text-shadow:0 0 1.5px rgba(47,95,176,.7),0 0 6px rgba(47,95,176,.35);box-shadow:0 0 0 1px rgba(47,95,176,.25),0 0 10px rgba(47,95,176,.3),inset 0 0 12px rgba(47,95,176,.25)}'
+    + H + '.splat i{background:#2d5aa6 !important;box-shadow:0 0 10px rgba(45,90,166,.6) !important}'
+    + H + '.shock{border-color:rgba(160,200,255,.85)}'
+    /* หัวข้อ + ตัวนับ = โน้ตกระจก */
+    + H + '.cap p{width:fit-content;max-width:340px;padding:8px 16px;border-radius:14px;background:linear-gradient(180deg,rgba(30,44,77,.82),rgba(17,26,49,.85));border:1px solid rgba(175,198,235,.24);box-shadow:inset 0 1px 0 rgba(225,238,255,.22),0 8px 20px -8px rgba(0,0,0,.7);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);text-shadow:none}'
+    + H + '.cap p .u{color:#f2cd82}'
+    + H + '.uvc{background:linear-gradient(180deg,rgba(30,44,77,.85),rgba(17,26,49,.88));border-color:rgba(175,198,235,.3);color:#e3ebf7}'
+    + H + '.uvc i b{width:7px;height:10px;border-radius:50% 50% 50% 50%/40% 40% 60% 60%;background:rgba(185,205,235,.22);box-shadow:inset 0 0 0 1px rgba(185,205,235,.4)}'
+    + H + '.uvc i b.on{background:radial-gradient(circle at 38% 32%,#f2f8ff,#a8cbf5 40%,#4f86cf);box-shadow:0 0 8px rgba(140,185,245,.7)}'
+    /* ทะลุสายฝน + หยดน้ำเกาะเลนส์ + ฟ้าแลบ */
+    + '.nr-rush,.nr-lens,.nr-flash{position:absolute;inset:0;pointer-events:none;opacity:0}'
+    + H + '.nr-rush{z-index:9;opacity:var(--nrr,0);overflow:hidden;-webkit-mask:radial-gradient(closest-side,transparent 28%,#000 75%);mask:radial-gradient(closest-side,transparent 28%,#000 75%)}'
+    + H + '.nr-rush i{position:absolute;left:50%;top:46%;width:200vmax;height:200vmax;margin:-100vmax 0 0 -100vmax;background:repeating-conic-gradient(from 3deg,rgba(210,228,255,.55) 0 .35deg,transparent .35deg 6.5deg);animation:nrRush .55s linear infinite}'
+    + H + '.nr-rush i:nth-child(2){background:repeating-conic-gradient(from 0deg,rgba(210,228,255,.35) 0 .25deg,transparent .25deg 4.1deg);animation-duration:.8s;animation-delay:-.3s}'
+    + '@keyframes nrRush{0%{transform:scale(.55);opacity:0}25%{opacity:1}100%{transform:scale(1.35);opacity:0}}'
+    + H + '.nr-lens{z-index:20;opacity:var(--nrl,0);background:' + DR + ' 0 0/120px 160px;-webkit-mask:radial-gradient(ellipse 72% 64% at 50% 50%,transparent 62%,#000 100%);mask:radial-gradient(ellipse 72% 64% at 50% 50%,transparent 62%,#000 100%);animation:nrLens 14s linear infinite}'
+    + '@keyframes nrLens{to{background-position:0 320px}}'
+    + H + '.nr-flash{z-index:19;opacity:var(--nrf,0);background:radial-gradient(90% 70% at 70% 0,rgba(235,242,255,.95),rgba(190,210,255,.45) 50%,rgba(150,180,240,.15) 80%);mix-blend-mode:screen}'
+    + '@media (prefers-reduced-motion:reduce){' + H + '.nr-rush,' + H + '.nr-flash{display:none}' + H + '.nr-wet::after,' + H + '.nr-pw::after,' + H + '.nr-lens{animation:none}}';
+  var NR = null;
+  function seg(x, a, b) { return Math.max(0, Math.min(1, (x - a) / (b - a))); }
+  function nrInit(SR) {
+    var st = SR.getElementById('st'), desk = SR.querySelector('.desk'), pp = SR.getElementById('pp'), cw = SR.getElementById('cw'), cam = SR.getElementById('cam');
+    if (!st || !cw) return;
+    if (desk && !desk.querySelector('.nr-wet')) desk.insertAdjacentHTML('beforeend', '<div class="nr-wet" aria-hidden="true"></div>');
+    if (pp && !pp.querySelector('.nr-pw')) pp.insertAdjacentHTML('beforeend', '<div class="nr-pw" aria-hidden="true"></div>');
+    if (!cw.querySelector('.nr-ld')) cw.insertAdjacentHTML('beforeend', '<i class="nr-ld" aria-hidden="true"></i>');
+    if (!st.querySelector('.nr-rush')) (cam || st).insertAdjacentHTML('afterend', '<div class="nr-rush" aria-hidden="true"><i></i><i></i></div><div class="nr-flash" aria-hidden="true"></div><div class="nr-lens" aria-hidden="true"></div>');
+    NR = { st: st };
+  }
+  var lastNR = -1;
+  function frame(p, c) {
+    if (!NR) { if (c && c.SR) nrInit(c.SR); if (!NR) return; }
+    if (p === lastNR) return; lastNR = p;
+    var d = seg(p, .04, .26), sm = d * d * (3 - 2 * d);
+    var rush = Math.sin(Math.PI * seg(p, .03, .27)) * .85;
+    var hit = seg(p, .612, .66), fl = hit > 0 && hit < 1 ? (hit < .12 ? hit / .12 : hit < .22 ? 1 - (hit - .12) / .1 * .8 : hit < .3 ? .2 + (hit - .22) / .08 * .5 : .7 * (1 - (hit - .3) / .7)) : 0;
+    var lens = seg(p, .05, .2) * (1 - seg(p, .86, .95) * .6);
+    var s = NR.st.style;
+    s.setProperty('--nd', sm.toFixed(3)); s.setProperty('--nrr', rush.toFixed(3));
+    s.setProperty('--nrf', fl.toFixed(3)); s.setProperty('--nrl', (lens * .9).toFixed(3));
+  }
+  var init0 = init; init = function (SR, host) { try { init0(SR, host); } catch (e) {} try { nrInit(SR); } catch (e) {} };
+  /*/NRSCROLL1*/
+  /*NRSTORY1*/ /* เรื่องใหม่ "หน้าต่างที่ฝนเขียน" รอบ 1: ฉาก 1 กล้องเข้าหาหน้าต่าง · ฉาก 2 นิ้วเขียนสัญญาบนไอน้ำ · ฉาก 3 หยดฝนเป็นตัวตรวจ */
+  var CITY = [[8, 78, '255,170,90', 46], [20, 62, '120,170,255', 34], [31, 86, '255,190,120', 60], [43, 70, '255,140,80', 30], [55, 82, '140,190,255', 44], [66, 90, '255,175,100', 56], [76, 66, '255,210,150', 30], [86, 80, '120,160,255', 48], [95, 72, '255,160,90', 38], [26, 48, '200,220,255', 22], [70, 50, '255,200,140', 22]].map(function (b) { return 'radial-gradient(' + b[3] + 'px ' + b[3] + 'px at ' + b[0] + '% ' + b[1] + '%,rgba(' + b[2] + ',.55),transparent 70%)'; }).join(',');
+  css += H + '.nw{position:absolute;inset:0;z-index:10;pointer-events:none;opacity:var(--nwo,0);visibility:var(--nwv,hidden)}'
+    + H + '.nw-room{position:absolute;inset:0;background:radial-gradient(60% 40% at 18% 6%,rgba(255,190,120,.16),transparent 70%),radial-gradient(120% 90% at 50% 45%,#141c33,#0a0f1d 60%,#05070e)}'
+    + H + '.nw-win{position:absolute;left:50%;top:calc(var(--art-head,56px) + 9vh);width:min(86vw,520px);height:min(64vh,620px);margin-left:calc(min(86vw,520px) / -2);transform:scale(var(--nws,1));transform-origin:50% 40%;border:12px solid #2c1e14;border-radius:6px 6px 2px 2px;box-shadow:inset 0 0 0 2px #46311f,inset 0 0 40px rgba(0,0,0,.6),0 0 0 2px #140d08,0 30px 70px rgba(0,0,0,.7);overflow:hidden;background:#0c1426}'
+    + H + '.nw-out{position:absolute;inset:0;background:' + CITY + ',linear-gradient(180deg,#0b1428,#17233f 55%,#222744)}'
+    + H + '.nw-out::before{content:"";position:absolute;inset:auto 0 0 0;height:42%;background:linear-gradient(90deg,#0d1424 0 7%,transparent 7% 10%,#111a2e 10% 19%,transparent 19% 22%,#0d1424 22% 34%,transparent 34% 37%,#121b30 37% 50%,transparent 50% 53%,#0e1526 53% 66%,transparent 66% 69%,#111a2e 69% 82%,transparent 82% 85%,#0d1424 85% 100%);opacity:.8;-webkit-mask:linear-gradient(180deg,transparent,#000 35%);mask:linear-gradient(180deg,transparent,#000 35%)}'
+    + H + '.nw-rain,' + H + '.nw-rain2{position:absolute;inset:-140px 0 0;background:repeating-linear-gradient(102deg,transparent 0 17px,rgba(205,222,255,.5) 17px 18px,transparent 18px 47px,rgba(205,222,255,.28) 47px 48px,transparent 48px 83px);opacity:.32;animation:nwFall .5s linear infinite}'
+    + H + '.nw-rain2{opacity:.16;background-size:55% 100%;animation-duration:.85s}'
+    + '@keyframes nwFall{to{transform:translateY(140px)}}'
+    + H + '.nw-fog{position:absolute;inset:0;opacity:var(--nwf,0);background:radial-gradient(120% 80% at 50% 40%,rgba(205,220,240,.55),rgba(185,202,228,.62)),' + DR + ' 0 0/140px 110px;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}'
+    + H + '.nw-txt{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);padding:0 20px;display:flex;flex-direction:column;gap:7px;-webkit-mask:linear-gradient(90deg,#000 calc(100% - 34px),transparent calc(100% - 6px));mask:linear-gradient(90deg,#000 calc(100% - 34px),transparent calc(100% - 6px));opacity:var(--nwf,0)}'
+    + H + '.nw-r{position:relative;min-height:22px;display:flex;align-items:center;font:600 min(14px,3.4vw)/1.35 Sarabun,Prompt,sans-serif;color:rgba(12,20,42,.9);white-space:nowrap;text-shadow:0 0 1px rgba(255,255,255,.35)}'
+    + H + '.nw-r.h{font:700 20px/1.3 Prompt,sans-serif;margin-bottom:6px}'
+    + H + '.nw-r > span{display:inline-block;clip-path:inset(0 calc(100% - var(--w,0) * 100%) 0 0);-webkit-clip-path:inset(0 calc(100% - var(--w,0) * 100%) 0 0);max-width:100%;overflow:hidden;text-overflow:clip}'
+    + H + '.nw-r.hid > span.s{font-size:7px;letter-spacing:.01em;color:rgba(14,24,48,.6)}'
+    + H + '.nw-r.hid > span.b{position:absolute;left:-6px;right:-6px;top:0;bottom:0;padding:0 6px;display:flex;align-items:center;font:700 14px/1 Sarabun,Prompt,sans-serif;color:#2a1a08;border-radius:6px;background:rgba(242,205,130,.72);box-shadow:0 0 0 1px rgba(224,178,94,.8),0 0 16px rgba(255,200,120,.55);opacity:var(--lit,0);clip-path:none;-webkit-clip-path:none;transform:scale(calc(.94 + var(--lit,0) * .06))}'
+    + H + '.nw-r.hid > span.b::after{content:"\\0E15\\0E31\\0E27\\0E40\\0E25\\0E47\\0E01 #" attr(data-k);position:absolute;right:-2px;top:-13px;padding:2px 7px;border-radius:99px;background:linear-gradient(180deg,#f2cd82,#c9963f);color:#2a1a08;font:700 9.5px/1.3 Prompt,sans-serif}'
+    + H + '.nw-fin{position:absolute;left:0;top:0;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;background:radial-gradient(circle at 40% 35%,rgba(255,255,255,.85),rgba(220,232,250,.3) 60%,transparent 72%);box-shadow:0 0 14px rgba(230,240,255,.45);opacity:var(--nfo,0);transform:translate(var(--nfx,0px),var(--nfy,0px))}'
+    + H + '.nw-dp{position:absolute;top:0;left:0;width:12px;height:17px;margin:-17px 0 0 -6px;border-radius:50% 50% 50% 50%/40% 40% 60% 60%;background:radial-gradient(circle at 38% 32%,#ffffff,rgba(190,215,250,.75) 55%,rgba(120,160,220,.4) 75%);box-shadow:0 2px 4px rgba(0,0,0,.35),0 0 10px rgba(200,225,255,.5);opacity:0;transform:translate(var(--dx,0px),var(--dy,0px))}'
+    + H + '.nw-dp::before{content:"";position:absolute;left:4.5px;bottom:15px;width:3px;height:var(--dt,0px);border-radius:2px;background:linear-gradient(0deg,rgba(220,235,255,.55),transparent)}'
+    + H + '.nw-mu{position:absolute;inset:0;pointer-events:none}'
+    + H + '.nw-mu::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:9px;margin-left:-4.5px;background:linear-gradient(90deg,#1f150e,#36271b 50%,#1f150e);box-shadow:0 0 10px rgba(0,0,0,.6);opacity:calc(1 - var(--nwf,0) * .85)}'
+    + H + '.nw-sill{position:absolute;left:50%;top:calc(var(--art-head,56px) + 9vh + min(64vh,620px) - 4px);width:calc(min(86vw,520px) + 40px);height:22px;margin-left:calc((min(86vw,520px) + 40px) / -2);border-radius:3px;background:linear-gradient(180deg,#4a3424,#2c1f15 60%,#1c130c);box-shadow:0 14px 26px rgba(0,0,0,.7);transform:scale(var(--nws,1));transform-origin:50% -300px}'
+    + H + '.nr-rush{display:none !important}'
+    + H + '.thm{opacity:calc(1 - var(--nwo,0))}'
+    + '@media (prefers-reduced-motion:reduce){' + H + '.nw-rain,' + H + '.nw-rain2{animation:none}}';
+  var NW = null;
+  function nwBuild(SR) {
+    var st = SR.getElementById('st'), rows = [].slice.call(SR.querySelectorAll('#rows > .row'));
+    if (!st || !rows.length || st.querySelector('.nw')) return;
+    var html = '', k = 0;
+    rows.forEach(function (r) {
+      var ink = r.querySelector('.ink'), t = (ink ? ink.textContent : '').replace(/\s+/g, ' ').trim();
+      if (r.classList.contains('sig')) { html += '<div class="nw-r" style="opacity:.7;font-size:11px"><span>ลงชื่อ ________ ผู้ให้เช่า&nbsp;&nbsp;&nbsp;ลงชื่อ ________ ผู้เช่า</span></div>'; return; }
+      if (r.classList.contains('hid')) { var u = r.querySelector('.uvt'), ut = (u ? u.textContent : t).replace(/\s+/g, ' ').trim(); k++; html += '<div class="nw-r hid"><span class="s"></span><span class="b" data-k="' + k + '"></span></div>'; html = html.replace('<span class="s"></span><span class="b" data-k="' + k + '"></span>', '<span class="s">' + esc(t) + '</span><span class="b" data-k="' + k + '">' + esc(ut) + '</span>'); return; }
+      html += '<div class="nw-r' + (r.classList.contains('h') ? ' h' : '') + '"><span>' + esc(t) + '</span></div>';
+    });
+    st.insertAdjacentHTML('beforeend', '<div class="nw" aria-hidden="true"><div class="nw-room"></div><div class="nw-win"><div class="nw-out"><i class="nw-rain2"></i><i class="nw-rain"></i></div><div class="nw-fog"></div><div class="nw-txt">' + html + '</div><i class="nw-fin"></i><i class="nw-dp"></i><i class="nw-dp"></i><i class="nw-dp"></i><i class="nw-mu"></i></div><div class="nw-sill"></div></div>');
+    var nw = st.querySelector('.nw');
+    NW = { st: st, nw: nw, win: nw.querySelector('.nw-win'), rows: [].slice.call(nw.querySelectorAll('.nw-r')), hid: [].slice.call(nw.querySelectorAll('.nw-r.hid')), fin: nw.querySelector('.nw-fin'), dps: [].slice.call(nw.querySelectorAll('.nw-dp')), geo: null };
+    var c2 = SR.querySelector('.cap p[data-c="2"]'); if (c2) c2.innerHTML = 'ดู<span class="u">หยดฝน</span>ไหลผ่านตัวหนังสือเล็ก 💧';
+  }
+  function esc(x) { return String(x).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function nwGeo() {
+    var wr = NW.win.getBoundingClientRect(), sc = wr.width / (NW.win.offsetWidth || 1) || 1, g = { W: NW.win.clientWidth, H: NW.win.clientHeight, r: [] };
+    NW.rows.forEach(function (r) { var sp = r.querySelector('span'), rr = r.getBoundingClientRect(), sr = sp.getBoundingClientRect(); g.r.push({ x: (sr.left - wr.left) / sc - 12, y: (rr.top - wr.top) / sc - 12 + rr.height / sc / 2, w: sr.width / sc }); });
+    NW.geo = g;
+  }
+  var frame1 = frame;
+  frame = function (p, c) {
+    frame1(p, c);
+    if (!NW) { if (c && c.SR) nwBuild(c.SR); if (!NW) return; }
+    var s = NW.st.style;
+    var o = seg(p, .045, .12) * (1 - seg(p, .755, .805));
+    s.setProperty('--nwo', o.toFixed(3)); s.setProperty('--nwv', o > 0 ? 'visible' : 'hidden');
+    if (o <= 0) return;
+    if (!NW.geo || NW.geo.W !== NW.win.clientWidth) nwGeo();
+    var g = NW.geo;
+    /* ฉาก 1: หน้าต่างเลื่อนเข้าหากล้อง */
+    var z = seg(p, .045, .16); z = z * z * (3 - 2 * z);
+    s.setProperty('--nws', (.62 + .38 * z).toFixed(3));
+    /* ฉาก 2: ไอน้ำเกาะ แล้วนิ้วเขียนทีละบรรทัด (.12 – .29) */
+    s.setProperty('--nwf', seg(p, .1, .16).toFixed(3));
+    var n = NW.rows.length, wf = seg(p, .14, .29) * n, wi = Math.min(n - 1, Math.floor(wf));
+    NW.rows.forEach(function (r, i) { var q = Math.max(0, Math.min(1, wf - i)); var sp = r.querySelectorAll('span')[0]; if (sp) sp.style.setProperty('--w', q.toFixed(3)); });
+    var wq = Math.max(0, Math.min(1, wf - wi)), gr = g.r[wi] || { x: 0, y: 0, w: 0 };
+    s.setProperty('--nfx', (gr.x + gr.w * wq + 12).toFixed(1) + 'px'); s.setProperty('--nfy', (gr.y + 12).toFixed(1) + 'px');
+    s.setProperty('--nfo', (seg(p, .14, .15) * (1 - seg(p, .285, .3))).toFixed(3));
+    /* ฉาก 3: หยดฝนไหลผ่านข้อที่เขียนตัวเล็ก → เรืองทอง (.33 – .56 จังหวะเดียวกับตัวนับ) */
+    var u = seg(p, .35, .56), m = NW.hid.length;
+    NW.hid.forEach(function (r, k) {
+      var idx = NW.rows.indexOf(r), gy = g.r[idx] ? g.r[idx].y + 12 : 0, dp = NW.dps[k]; if (!dp) return;
+      var hitU = (k + .95) / m, t0 = hitU - .21, t1 = t0 + .3, q = Math.max(0, Math.min(1, (u - t0) / (t1 - t0)));
+      var xs = [.62, .34, .5][k % 3] * g.W, yEnd = g.H + 20, y = -10 + (yEnd + 10) * (q < .7 ? (q / .7) * ((gy + 10) / (yEnd + 10)) : (gy + 10) / (yEnd + 10) + (q - .7) / .3 * (1 - (gy + 10) / (yEnd + 10)));
+      var wob = Math.sin(q * 9 + k) * 3;
+      dp.style.setProperty('--dx', (xs + wob).toFixed(1) + 'px'); dp.style.setProperty('--dy', y.toFixed(1) + 'px');
+      dp.style.setProperty('--dt', Math.min(90, y + 10).toFixed(0) + 'px');
+      dp.style.opacity = (q > 0 && q < 1 && u < 1 ? 1 : 0);
+      var lit = q >= .7 || u >= 1 ? 1 : seg(q, .62, .7); r.style.setProperty('--lit', lit.toFixed(3));
+    });
+  };
+  /*/NRSTORY1*/
+  /*NRSTORY2*/ /* รอบ 2: ฉาก 4 ฟ้าแลบเผยคำเตือนบนกระจก · ฉาก 5 ข้อเสี่ยงกลั่นเป็นหยดน้ำร่วงลง กระจกใส กล้องทะลุหน้าต่าง → การ์ดแก้วใต้ฝน */
+  css += H + '#st{--hi:#ff9a8c;--md:#f2c46e}'
+    + H + '.nw-r.rk > span:first-child{position:relative;overflow:visible}'
+    + H + '.nw-r.rk:not(.hid) > span:first-child::after{content:"";position:absolute;left:-3px;right:-3px;top:48%;height:48%;border-radius:4px;background:var(--c,#ff9a8c);opacity:calc(var(--rkm,0) * .62);z-index:-1}'
+    + H + '.nw-r.rk{transform-origin:var(--fo,50%) 50%}'
+    + H + '.nw-warn{position:absolute;left:50%;top:46%;padding:9px 20px 10px;border-radius:14px;white-space:nowrap;font:800 30px/1.15 Prompt,sans-serif;color:#fff8e8;letter-spacing:.01em;background:rgba(14,22,44,.62);border:2px solid rgba(242,205,130,.9);box-shadow:0 0 0 4px rgba(242,205,130,.14),0 0 34px rgba(255,214,140,.55),inset 0 0 18px rgba(242,205,130,.25);text-shadow:0 0 12px rgba(255,220,150,.85),0 0 2px #fff;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);opacity:var(--nww,0);transform:translate(-50%,-50%) rotate(-5deg) scale(var(--nwk,1))}'
+    + H + '.nw-warn small{display:block;margin-top:3px;font:600 12px/1.3 Prompt,sans-serif;color:#d8e2f4;text-shadow:none;text-align:center}'
+    + H + '.nw-warn::after{content:"";position:absolute;left:12%;right:12%;top:100%;height:var(--nwd,0px);background:linear-gradient(90deg,transparent 0 9%,rgba(220,235,255,.55) 9% 10.5%,transparent 10.5% 37%,rgba(220,235,255,.4) 37% 38.2%,transparent 38.2% 71%,rgba(220,235,255,.5) 71% 72.4%,transparent 72.4%);-webkit-mask:linear-gradient(180deg,#000 40%,transparent);mask:linear-gradient(180deg,#000 40%,transparent)}'
+    + H + '.nw-fd{position:absolute;left:0;top:0;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:0 50% 50% 50%;background:radial-gradient(circle at 62% 62%,#ffffff,var(--c,#cfe2ff) 45%,rgba(60,90,150,.6) 85%);box-shadow:0 0 12px var(--c,#cfe2ff),0 3px 6px rgba(0,0,0,.4);opacity:0;transform:translate(var(--fx,0px),var(--fy,0px)) rotate(45deg) scale(var(--fs,1))}'
+    + H + '.nw-fd::before{content:"";position:absolute;right:100%;bottom:100%;width:3px;height:var(--ft,0px);transform-origin:100% 100%;transform:rotate(-45deg) translate(1px,0);border-radius:2px;background:linear-gradient(0deg,rgba(225,238,255,.6),transparent)}'
+    /* ฉากผล: กระจกเปียกหลังการ์ด (อยู่ใต้การ์ด) */
+    + H + '.nw-bg{position:absolute;inset:-6%;z-index:9;pointer-events:none;opacity:var(--nwb,0);visibility:var(--nwbv,hidden);background:radial-gradient(70% 45% at 50% 8%,rgba(255,200,130,.10),transparent 70%),linear-gradient(180deg,#0d1730,#121d38 50%,#0a1022)}'
+    + H + '.nw-bg::before{content:"";position:absolute;inset:0;background:' + CITY + ';filter:blur(10px);opacity:.75}'
+    + H + '.nw-bg::after{content:"";position:absolute;inset:0;background:' + DR + ' 0 0/130px 150px;opacity:.55;animation:nrLens 30s linear infinite}'
+    + H + '.thm{opacity:calc((1 - var(--nwo,0)) * (1 - var(--nwb,0) * .75))}'
+    /* การ์ดแก้วหยดน้ำ */
+    + H + '.row .card{background:linear-gradient(160deg,rgba(36,52,90,.9),rgba(15,23,45,.93));border:1px solid rgba(175,198,235,.28);box-shadow:inset 0 1px 0 rgba(225,238,255,.24),0 14px 30px -14px rgba(0,0,0,.9),0 0 26px -12px var(--c)}'
+    + H + '.row .card::before{display:none}'
+    + H + '.row .card::after{opacity:.5;background:conic-gradient(from var(--ang),transparent 0 62%,rgba(242,205,130,.85) 78%,#fff6dc 80%,rgba(242,205,130,.85) 82%,transparent 100%)}'
+    + H + '.row .card i{width:11px;height:11px;margin:0 2px 0 1px;border-radius:0 50% 50% 50%;transform:rotate(45deg);background:radial-gradient(circle at 62% 62%,#fff,var(--c) 52%,rgba(40,60,110,.8) 95%);box-shadow:0 0 10px var(--c)}'
+    + H + '.row .card b{color:#f5ecd8}'
+    + H + '.row .card em{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)}'
+    + H + '.row .card em.u{background:rgba(242,205,130,.16);border-color:rgba(242,205,130,.4);color:#f6d999}'
+    + H + '.row .card .gl{background:linear-gradient(115deg,rgba(225,238,255,.13),transparent 40%)}'
+    + H + '.row .card .gl::after{content:"";position:absolute;inset:0;border-radius:inherit;background:' + DR + ' 0 0/80px 46px;opacity:.55;-webkit-mask:linear-gradient(180deg,#000,transparent 45%);mask:linear-gradient(180deg,#000,transparent 45%)}'
+    + H + '.row .card.bk-on{background:linear-gradient(135deg,rgba(30,46,84,.94),rgba(13,20,40,.94))}'
+    + H + '.row .card .bkf small{color:#f2cd82}'
+    + H + '.row .card .bkf span{color:#e8eef9}'
+    /* หัวผลตรวจ */
+    + H + '.rh small{color:#9fb0cf}'
+    + H + '.rh h2{color:#f5ecd8;text-shadow:0 2px 12px rgba(0,0,0,.6)}'
+    + H + '.rh h2 em{color:#f2cd82;text-shadow:0 0 16px rgba(255,205,130,.45)}'
+    + H + '.rh p{color:#b4c2dc}'
+    + H + '.rh .money{background:rgba(242,205,130,.1);border-color:rgba(242,205,130,.42);color:#f2dcae}'
+    + H + '.row .strip,' + H + '.scraps,' + H + '.curl{display:none !important}'
+    + H + '#rows > .row .ink,' + H + '#rows > .row .uvt{opacity:calc(var(--io,1) * (1 - var(--nwb,0))) !important}'
+    + '@media (prefers-reduced-motion:reduce){' + H + '.nw-bg::after{animation:none}}';
+  var NW2 = null;
+  function nw2Build(SR) {
+    if (!NW || NW2) return;
+    var src = [].slice.call(SR.querySelectorAll('#rows > .row')), win = NW.win, risky = [];
+    NW.rows.forEach(function (r, i) { var o = src[i]; if (!o || !o.classList.contains('rk')) return; r.classList.add('rk'); var c = o.style.getPropertyValue('--c'); if (c) r.style.setProperty('--c', c); risky.push(r); });
+    var fd = ''; risky.forEach(function () { fd += '<i class="nw-fd"></i>'; });
+    win.insertAdjacentHTML('beforeend', '<div class="nw-warn">พบความเสี่ยง<small>' + risky.length + ' ข้อในสัญญานี้</small></div>' + fd);
+    var fds = [].slice.call(win.querySelectorAll('.nw-fd'));
+    risky.forEach(function (r, j) { var c = r.style.getPropertyValue('--c'); if (c) fds[j].style.setProperty('--c', c); });
+    var dk = SR.getElementById('flash') || SR.getElementById('dk');
+    if (dk && !SR.querySelector('.nw-bg')) dk.insertAdjacentHTML('afterend', '<div class="nw-bg" aria-hidden="true"></div>');
+    NW2 = { risky: risky, fds: fds, plain: NW.rows.filter(function (r) { return risky.indexOf(r) < 0; }) };
+  }
+  var frame2 = frame;
+  frame = function (p, c) {
+    frame2(p, c);
+    if (!NW) return;
+    if (!NW2 && c && c.SR) nw2Build(c.SR); if (!NW2) return;
+    var s = NW.st.style;
+    var bg = seg(p, .74, .8); s.setProperty('--nwb', bg.toFixed(3)); s.setProperty('--nwbv', bg > 0 ? 'visible' : 'hidden');
+    if (p < .56) { s.setProperty('--nww', '0'); NW2.risky.forEach(function (r) { r.style.removeProperty('transform'); r.style.removeProperty('opacity'); r.style.setProperty('--rkm', '0'); }); NW2.plain.forEach(function (r) { r.style.removeProperty('opacity'); }); NW2.fds.forEach(function (d) { d.style.opacity = 0; }); return; }
+    var g = NW.geo; if (!g) return;
+    /* ฉาก 4: ข้อเสี่ยงเรืองขึ้น แล้วฟ้าแลบเผยคำเตือนบนกระจก */
+    var rkm = seg(p, .565, .6);
+    var wIn = seg(p, .608, .62), ww = wIn * (1 - seg(p, .655, .672)), wk = 1 + .45 * (1 - wIn) * (1 - wIn);
+    s.setProperty('--nww', ww.toFixed(3)); s.setProperty('--nwk', wk.toFixed(3)); s.setProperty('--nwd', (seg(p, .62, .665) * 44).toFixed(1) + 'px');
+    /* ฉาก 5: กระจกใสขึ้น · ข้อเสี่ยงกลั่นเป็นหยดน้ำแล้วร่วง · กล้องทะลุหน้าต่าง */
+    var clr = seg(p, .665, .74);
+    s.setProperty('--nwf', (1 - clr * .7).toFixed(3));
+    var zt = seg(p, .745, .805); zt = zt * zt;
+    s.setProperty('--nws', (1 + zt * .55).toFixed(3));
+    var po = 1 - seg(p, .665, .7) ; NW2.plain.forEach(function (r) { r.style.opacity = po.toFixed(3); });
+    var m = NW2.risky.length;
+    NW2.risky.forEach(function (r, j) {
+      var i = NW.rows.indexOf(r), gr = g.r[i] || { x: 0, y: 0, w: 100 }, dp = NW2.fds[j];
+      r.style.setProperty('--rkm', rkm.toFixed(3));
+      var a = .668 + j * .011, b = a + .06, q = seg(p, a, b);
+      var isH = r.classList.contains('hid'), cxRow = isH ? r.offsetWidth / 2 : (r.firstElementChild ? r.firstElementChild.offsetLeft + Math.min(r.firstElementChild.offsetWidth, r.offsetWidth) / 2 : 40);
+      var wpx = isH ? r.offsetWidth : Math.min(gr.w, r.offsetWidth) || 80;
+      var sh = seg(q, 0, .35), sx = 1 - sh * (1 - 14 / Math.max(14, wpx)), sy = 1 - sh * .3;
+      r.style.setProperty('--fo', cxRow.toFixed(1) + 'px');
+      r.style.transform = q > 0 ? 'scale(' + sx.toFixed(3) + ',' + sy.toFixed(3) + ')' : '';
+      r.style.opacity = (1 - seg(q, .22, .36)).toFixed(3);
+      var ox = r.offsetLeft + cxRow + (NW.win.querySelector('.nw-txt').offsetLeft || 0), oy = gr.y + 12;
+      var fq = seg(q, .3, 1), fy = oy + (g.H + 40 - oy) * fq * fq;
+      dp.style.setProperty('--fx', (ox + Math.sin(fq * 7 + j) * 2).toFixed(1) + 'px'); dp.style.setProperty('--fy', fy.toFixed(1) + 'px');
+      dp.style.setProperty('--fs', (.4 + .6 * seg(q, .22, .34)).toFixed(3)); dp.style.setProperty('--ft', Math.min(70, fy - oy).toFixed(0) + 'px');
+      dp.style.opacity = q > .22 && q < 1 ? '1' : '0';
+    });
+  };
+  /*/NRSTORY2*/
+  /*NRMUSIC*/ /* เพลงธีมคืนฝนตก "Rainy Nocturne" — เปียโนจังหวะ 3/4 คีย์ A minor + เสียงฝน/หยดน้ำ/ฟ้าร้อง (สร้างด้วยโค้ดทั้งหมด ไม่มีไฟล์เพลง) */
+  var music = (function () {
+    function hz(m) { return 440 * Math.pow(2, (m - 69) / 12); }
+    /* คอร์ด: [เบส, 5th, 10th, ...] ไล่แบบมือซ้ายเพลงน็อกเทิร์น */
+    var NO = [[45, 52, 57, 60, 64], [41, 48, 53, 57, 60], [38, 45, 50, 53, 57], [40, 47, 52, 56, 62]];      /* Am · F · Dm · E7 */
+    var BR = [[48, 55, 60, 64, 67], [45, 52, 57, 60, 64], [41, 48, 53, 57, 64], [43, 50, 55, 59, 62]];      /* C · Am · Fmaj7 · G */
+    var ML = [76, 72, 77, 76, 74, 77, 76, 71, 72, 76, 81, 77, 74, 72, 71, 68];                               /* ทำนอง 8 ห้อง (ห้องละ 2 โน้ต) */
+    var MB = [79, 76, 76, 72, 77, 76, 74, 79, 76, 79, 81, 77, 77, 74, 74, 71];
+    var DK = [69, 72, 76, 77, 81];
+    var PAT = [0, 1, 2, 3, 4, 3];
+    function pno(A, bus, f, t, dur, g) {
+      var e = A.createGain(), lp = A.createBiquadFilter(); t = Math.max(t, A.currentTime || 0, 0);
+      e.gain.setValueAtTime(0, t); e.gain.linearRampToValueAtTime(g, t + .006); e.gain.exponentialRampToValueAtTime(g * .35, t + .28); e.gain.exponentialRampToValueAtTime(.0005, t + dur);
+      lp.type = 'lowpass'; lp.frequency.setValueAtTime(Math.min(9000, f * 8), t); lp.frequency.exponentialRampToValueAtTime(Math.max(300, f * 2), t + dur);
+      lp.connect(e); e.connect(bus);
+      [[1, 1, 'triangle'], [2, .32, 'sine'], [3, .11, 'sine'], [4.02, .045, 'sine']].forEach(function (h) { var o = A.createOscillator(), gg = A.createGain(); o.type = h[2]; o.frequency.value = f * h[0]; gg.gain.value = h[1]; o.connect(gg); gg.connect(lp); o.start(t); o.stop(t + dur + .05); });
+    }
+    function noise(A, sec) { var b = A.createBuffer(1, Math.floor(A.sampleRate * sec), A.sampleRate), d = b.getChannelData(0), l = 0; for (var i = 0; i < d.length; i++) { var w = Math.random() * 2 - 1; l = l * .7 + w * .3; d[i] = (w * .45 + l * .9) * .8; } return b; }
+    function plink(A, M, t, rl) {
+      var o = A.createOscillator(), e = A.createGain(), f = 1500 + Math.random() * 2800, g = (.012 + Math.random() * .028) * rl;
+      o.type = 'sine'; o.frequency.setValueAtTime(f, t); o.frequency.exponentialRampToValueAtTime(f * .62, t + .06);
+      e.gain.setValueAtTime(0, t); e.gain.linearRampToValueAtTime(g, t + .002); e.gain.exponentialRampToValueAtTime(.0002, t + .09);
+      o.connect(e); var last = e;
+      if (A.createStereoPanner) { var pn = A.createStereoPanner(); pn.pan.value = Math.random() * 1.6 - .8; e.connect(pn); last = pn; }
+      last.connect(M.out); o.start(t); o.stop(t + .11);
+    }
+    function thunder(A, M, t) {
+      var s = A.createBufferSource(), lp = A.createBiquadFilter(), g = A.createGain(); s.buffer = M.nx.nb;
+      lp.type = 'lowpass'; lp.frequency.value = 150; lp.Q.value = .8;
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.9, t + .05); g.gain.exponentialRampToValueAtTime(.3, t + .45); g.gain.linearRampToValueAtTime(.5, t + .9); g.gain.exponentialRampToValueAtTime(.001, t + 3.8);
+      s.connect(lp); lp.connect(g); g.connect(M.out); g.connect(M.rv); s.start(t, Math.random() * .3); s.stop(t + 3.9);
+      var c = A.createBufferSource(), hp = A.createBiquadFilter(), cg = A.createGain(); c.buffer = M.nx.nb;
+      hp.type = 'highpass'; hp.frequency.value = 1800; cg.gain.setValueAtTime(.22, t); cg.gain.exponentialRampToValueAtTime(.001, t + .3);
+      c.connect(hp); hp.connect(cg); cg.connect(M.out); c.start(t, 1); c.stop(t + .32);
+    }
+    return {
+      title: 'Rainy Nocturne',
+      build: function (A, M) {
+        var nb = noise(A, 4), g = A.createGain(); g.gain.value = 0; g.connect(M.out);
+        var s1 = A.createBufferSource(), hp = A.createBiquadFilter(), lp = A.createBiquadFilter(); s1.buffer = nb; s1.loop = true;
+        hp.type = 'highpass'; hp.frequency.value = 650; lp.type = 'lowpass'; lp.frequency.value = 5200; s1.connect(hp); hp.connect(lp); lp.connect(g); s1.start();
+        var s2 = A.createBufferSource(), lb = A.createBiquadFilter(), bg = A.createGain(); s2.buffer = nb; s2.loop = true; s2.playbackRate.value = .73;
+        lb.type = 'lowpass'; lb.frequency.value = 380; bg.gain.value = .55; s2.connect(lb); lb.connect(bg); bg.connect(g); s2.start(0, 1.7);
+        M.nx = { nb: nb, rainG: g, step: 0, next: 0, dropT: 0, bellT: 0, beatT: 0, lp: -1, rl: 0 };
+      },
+      sched: function (A, M, u) {
+        var N = M.nx; if (!N) return;
+        var now = u.now != null ? u.now : A.currentTime, x = M.mix;
+        if (!N.next || N.next < now - .5) N.next = now + .05;
+        while (N.next < now + .25) {
+          var t = N.next, br = x.r > x.w, ch = (br ? BR : NO)[Math.floor(N.step / 6) % 4], k = N.step % 6, bar = Math.floor(N.step / 6) % 8;
+          var bus = br ? M.res : M.warm, lvl = br ? x.r : x.w;
+          if (lvl > .02) {
+            pno(A, bus, hz(ch[PAT[k]]), t + (Math.random() - .5) * .012, k === 0 ? 3.2 : 1.8, (k === 0 ? .16 : .095) * (.85 + Math.random() * .3));
+            if (k === 0 || k === 3) { var mel = (br ? MB : ML)[bar * 2 + (k === 3 ? 1 : 0)]; pno(A, bus, hz(mel), t + .012, 3, k === 0 ? .12 : .095); }
+          }
+          N.step++; N.next += br ? .4 : .34;
+        }
+        if (x.d > .05 && now > N.bellT) { N.bellT = now + 2 + Math.random() * 1.8; pno(A, M.dark, hz(DK[Math.floor(Math.random() * DK.length)]), now + .05, 4, .06); }
+        if (x.t > .05 && now > N.beatT) { var bpm = 58 + x.t * 30; u.kick(M.ten, now + .02, .32); u.kick(M.ten, now + .3, .18); N.beatT = now + 60 / bpm; }
+        if (N.rl > .05 && now > N.dropT) { N.dropT = now + .05 + Math.random() * (.5 - N.rl * .35); plink(A, M, now + .02, N.rl); }
+      },
+      mix: function (A, M, p, now) {
+        var N = M.nx; if (!N) return; var t = now != null ? now : A.currentTime;
+        N.rl = (.5 + .5 * seg(p, .08, .2)) * (1 - .75 * seg(p, .84, .95));
+        N.rainG.gain.setTargetAtTime(N.rl * .11, t, .6);
+        if (N.lp >= 0 && N.lp < .612 && p >= .612 && p < .68) thunder(A, M, t + .02);
+        N.lp = p;
+      }
+    };
+  })();
+  /*/NRMUSIC*/
+  (window.VCHT = window.VCHT || {}).night = { css: css, stage: stage, init: init, end: end, tap: tap, frame: frame, music: music };
   if (window.__vchApply) window.__vchApply();
 })();
 
