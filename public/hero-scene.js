@@ -158,6 +158,8 @@
   /* ---------- ดนตรีประกอบ (สร้างด้วยโค้ดทั้งหมด ไม่มีไฟล์เพลง ไม่มีลิขสิทธิ์) ----------
      4 ชั้นเสียงที่ค่อย ๆ ผสมตามเรื่อง: warm (โต๊ะทำงาน) · dark (ไฟดับ/UV) · tension (กำลังส่อง) · resolve (ผลตรวจ/รุ่งเช้า) */
   var MU = null;
+  /* v21: ธีมเปลี่ยนเพลงได้ — window.VCHT[ธีม].music = { title, build, sched, mix } */
+  function tMus() { var t = host.__th && window.VCHT && window.VCHT[host.__th]; return t && t.music; }
   function hz(m) { return 440 * Math.pow(2, (m - 69) / 12); }
   function musicBuild() {
     var A = AC, out = A.createGain(); out.gain.value = 0;
@@ -178,6 +180,7 @@
     var lfo = A.createOscillator(), lg = A.createGain(); lfo.frequency.value = .13; lg.gain.value = 120; lfo.connect(lg); lg.connect(M.df.frequency); lfo.start();
     /* แพดสว่าง (F add9) สำหรับตอนจบ */
     [53, 60, 64, 67, 69].forEach(function (m, k) { var o = A.createOscillator(), g = A.createGain(); o.type = 'sine'; o.frequency.value = hz(m); o.detune.value = (k - 2) * 4; g.gain.value = .045; o.connect(g); g.connect(M.res); o.start(); });
+    var TM = tMus(); if (TM && TM.build) { try { TM.build(A, M, { bus: bus, hz: hz }); } catch (e) {} }
     return M;
   }
   function pluck(bus, f, t, dur, g, type) {
@@ -199,6 +202,7 @@
   var BELL = [81, 84, 86, 88, 91, 93];
   function sched() {
     if (!MU || !MU.on || AC.state !== 'running') return;
+    var TM = tMus(); if (TM && TM.sched) { try { TM.sched(AC, MU, { pluck: pluck, kick: kick, hz: hz }); } catch (e) {} return; }
     var now = AC.currentTime, x = MU.mix;
     while (MU.next < now + .25) {
       var t = MU.next, br = x.r > x.w, set = br ? BRIGHT : WARM, ch = set[Math.floor(MU.step / 8) % 4], k = MU.step % 8;
@@ -224,6 +228,7 @@
     MU.mix = { w: w, d: d, t: t, r: r }; var n = AC.currentTime;
     MU.warm.gain.setTargetAtTime(w * .9, n, .3); MU.dark.gain.setTargetAtTime(d, n, .4); MU.ten.gain.setTargetAtTime(t * .7, n, .2); MU.res.gain.setTargetAtTime(r * .9, n, .5);
     MU.df.frequency.setTargetAtTime(220 + seg(p, .36, .58) * 900, n, .3);
+    var TM = tMus(); if (TM && TM.mix) { try { TM.mix(AC, MU, p); } catch (e) {} }
   }
   /* หยุดเสียงเมื่อหน้าปกถูกซ่อน / สลับแท็บ */
   function musicIdle(h) { if (!AC) return; if (h) { if (AC.state === 'running') AC.suspend(); } else if (sOn && MU && MU.on && AC.state === 'suspended') AC.resume(); }
@@ -614,6 +619,7 @@
     if (t.stage) { var dv = document.createElement('div'); dv.className = 'thm' + (document.documentElement.classList.contains('vch-on') ? ' in' : ''); dv.setAttribute('aria-hidden', 'true'); dv.innerHTML = t.stage; st.insertBefore(dv, cam.nextSibling); }
     if (t.end) { var de = document.createElement('div'); de.className = 'thm-end'; de.setAttribute('aria-hidden', 'true'); de.innerHTML = t.end; st.insertBefore(de, cam.nextSibling); }
     if (t.frame) thFrame = t.frame;
+    if (t.music && t.music.title) { var mt = SR.querySelector('.snd .t1x'); if (mt) mt.textContent = t.music.title; }
     if (t.tap) {
       /* แตะโต๊ะตอนอยู่หน้าปก → ลูกเล่นของธีม (ไม่นับปุ่ม/ลิงก์) */
       SR.addEventListener('click', function (e) {
