@@ -1249,6 +1249,11 @@ window.VCStepPlay = function (v, fps, onEnd) {
      ฉากเขียน-เซ็น-ซองแบบเดิม (playInner) ไม่ถูกเรียกแล้ว */
   /* v275: กลับมาใช้ฉากเต็ม (เขียน → เซ็น → ตรา → ชื่อทอง → ซอง → บินเข้าบัญชี) ตามที่ผู้ใช้ขอ · มือถือใช้โหมดเบา */
   function play(info) {
+    /* ธีมนักสืบ: ฉากใหม่ "บัตรนักสืบ" (hero-theme-noir.js) · ถ้าไฟล์ธีมยังไม่โหลดหรือพัง ใช้ฉากเดิม */
+    if (document.documentElement.getAttribute('data-htheme') === 'noir' && typeof window.VCNoirLogin === 'function') {
+      try { cleanupFx(); window.VCNoirLogin(info || {}, { welcome: welcomeCard, name: niceName2, target: accTarget, sndOn: sndOn, ac: ac, reduce: reduce }); return; }
+      catch (e) { if (window.console) console.warn('noir login fx', e); var nz = document.querySelector('.nzl'); if (nz) nz.remove(); }
+    }
     if (reduce() || !document.body.animate) { if (window.__vcGinOff) window.__vcGinOff(); welcomeCard((info && info.email) || ''); return; }
     if (document.fonts && document.fonts.load && !play.__f) {
       play.__f = 1; var done = false, go2 = function () { if (done) return; done = true; play(info); };
@@ -1371,7 +1376,9 @@ window.VCStepPlay = function (v, fps, onEnd) {
     var NSV = 'http://www.w3.org/2000/svg', mob = window.innerWidth < 768;
     /* ---------- Timeline กลาง: ทุกอนิเมชันอ้างเวลาศูนย์เดียวกัน ---------- */
     var TL = { t0: 0, anims: [], cues: [], dead: false, raf: 0, frame: null };
-    function A(el, kf, o) { var x = el.animate(kf, o); TL.anims.push(x); return x; }
+    /* ธีมอื่น (ไม่ใช่นักสืบ): เร่งทั้งฉากให้สั้นลงเหลือ ~5 วินาที (เดิม ~11 วินาที) — ทุกอนิเมชันและ cue ใช้ตัวคูณเดียวกัน */
+    var SP = 2;
+    function A(el, kf, o) { var x = el.animate(kf, o); try { x.playbackRate = SP; } catch (e) {} TL.anims.push(x); return x; }
     function cue(at, fn) { TL.cues.push({ at: at, fn: fn }); }
     function kill() { if (TL.dead) return; TL.dead = true; cancelAnimationFrame(TL.raf); TL.anims.forEach(function (x) { try { x.cancel(); } catch (e) {} });
       document.documentElement.classList.remove('vc-ritual', 'vc-lite');
@@ -1481,12 +1488,12 @@ window.VCStepPlay = function (v, fps, onEnd) {
     var fromGin = document.documentElement.classList.contains('vc-gin');
     /* v278: ให้เห็นทัน — เริ่มเขียนหลังกระดาษสว่างเต็มแล้ว · เขียน/เซ็นช้าลง · หยดครั่งกับปั๊มช้าลงเห็นทุกจังหวะ */
     var P0 = fromGin ? 450 : 500, PICK = 650;   /* v279: กระดาษสว่างทันที ปากกาเริ่มเร็วขึ้น */                 /* กระดาษสว่างเต็ม → ยกปากกาไปจุดเริ่มอีเมล */
-    var W0 = P0 + PICK, WRITE = gw ? Math.max(1700, Math.min(2700, 800 + email.length * 55)) : 0;
-    var G0 = W0 + WRITE, GAP = 450;                            /* ยกข้ามไปที่ลายเซ็น */
+    var W0 = P0 + PICK, WRITE = gw ? Math.max(1300, Math.min(1900, 700 + email.length * 45)) : 0;
+    var G0 = W0 + WRITE, GAP = 300;                            /* ยกข้ามไปที่ลายเซ็น */
     var S0 = G0 + GAP, SIG = SL ? 1150 : 0;
     var R0 = S0 + SIG, RET = 520;                              /* ปากกาถอยออก */
     var D = R0 + 160;                                          /* หยดครั่งเริ่ม */
-    var CONTACT = D + 1850, WEL = CONTACT + 1050, LK = WEL + 1800, EXIT = LK + 4000;
+    var CONTACT = D + 1850, WEL = CONTACT + 1050, LK = WEL + 1700, EXIT = LK + 4000;
     var e1 = { x: go.x + 2, y: go.y + gh * .8 }, s0 = SL ? sp.getPointAtLength(0) : { x: 0, y: 0 }, sEnd = SL ? sp.getPointAtLength(SL) : { x: 0, y: 0 };
     var sigStart = { x: sigX + s0.x * k, y: sigY + s0.y * k }, sigEnd = { x: sigX + sEnd.x * k, y: sigY + sEnd.y * k };
     var lastX = 0, rotC = REST.rot;
@@ -1531,7 +1538,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     }
     function tick(now) {
       if (TL.dead) return;
-      var t = now - TL.t0;
+      var t = (now - TL.t0) * SP;
       frame(t);
       for (var i = 0; i < TL.cues.length; i++) { var c = TL.cues[i]; if (!c.done && t >= c.at) { c.done = 1; c.fn(); } }
       if (t < EXIT + 900) TL.raf = requestAnimationFrame(tick);
@@ -1614,7 +1621,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
       });
       var av = wel.querySelector('.gw-av');
       if (av) A(av, [{ opacity: 0, transform: 'scale(1.9) rotate(-18deg)' }, { opacity: 1, transform: 'scale(.92) rotate(-6deg)', offset: .7 }, { opacity: 1, transform: 'scale(1) rotate(-8deg)' }], { duration: 360, delay: 140 + WD * 1.75, easing: 'cubic-bezier(.5,0,.7,.4)', fill: 'both' });
-      sfx('scratch', WD * 1.6);
+      sfx('scratch', WD * 1.6 / SP);
     });
 
     /* ---------- v269 (2) พับใส่ซอง ปิดผนึก แล้วซองบินไปหาปุ่มบัญชี (ปุ่มเด้ง + เรืองแสงทอง) ---------- */
@@ -1707,7 +1714,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
       A(env, [{ opacity: 1 }, { opacity: 0 }], { duration: 140, delay: FLY0 + FLY - 40, fill: 'forwards' });   /* เห็นซองตลอดทาง หายตอนเข้าปุ่มพอดี */
       /* v270 (3) หางประกายทองตามทางบิน */
       if (!mob) cue(J0 + FLY0, function () {
-        var tEnd = performance.now() + FLY - 60, last = 0;
+        var tEnd = performance.now() + (FLY - 60) / SP, last = 0;
         (function trail(n) {
           if (TL.dead || n > tEnd || !env.parentNode) return;
           if (n - last > 38) {
