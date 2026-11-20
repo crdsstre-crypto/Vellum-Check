@@ -21,7 +21,7 @@
 <script>/* v294: ธีมหน้าปก — เลือกก่อนวาดจอ: ?theme=… > ฉากที่ลูกค้าเลือกเอง (localStorage vc_ht_pick, จำข้ามวัน) > ธีมเดิมในรอบนี้ > ช่วงปีใหม่ (1 ธ.ค.–7 ม.ค.) > สุ่ม 1 ใน 4 เป็นธีมพิเศษ (นักสืบ/งานกระดาษ) > เวลาเครื่อง (06:00–17:59 แดดเช้า, นอกนั้นคืนฝนตก) · โหลดเฉพาะไฟล์ธีมที่ใช้ */
 (function(d){var t=null,ok={night:1,morning:1,newyear:1,classic:1,noir:1,paper:1},q=location.search.match(/[?&]theme=([a-z]+)/);var pk=null;try{pk=localStorage.getItem("vc_ht_pick")}catch(e){}d.setAttribute("data-htmode",ok[pk]?"pick":"auto");try{if(q&&ok[q[1]]){t=q[1];sessionStorage.setItem("vc_ht",t)}else if(ok[pk]){t=pk}else{var v=sessionStorage.getItem("vc_ht");if(ok[v])t=v}}catch(e){}
 if(!t){var n=new Date(),m=n.getMonth(),h=n.getHours();t=(m===11||(m===0&&n.getDate()<=7))?"newyear":Math.random()<.25?(Math.random()<.5?"noir":"paper"):(h>=6&&h<18)?"morning":"night";try{sessionStorage.setItem("vc_ht",t)}catch(e){}}
-d.setAttribute("data-htheme",t);if(t!=="classic"){var s=document.createElement("script");s.src="hero-theme-"+t+".js?v=25";s.async=true;document.head.appendChild(s)}})(document.documentElement)</script>
+d.setAttribute("data-htheme",t);if(t!=="classic"){var s=document.createElement("script");s.src="hero-theme-"+t+".js?v=31";s.async=true;document.head.appendChild(s)}})(document.documentElement)</script>
 <script>/* v293: ไข่อีสเตอร์ — แตะโลโก้ 3 ครั้งติดกัน → สลับธีมหน้าปก (จำไว้ในรอบนี้) */
 (function(){var n=0,t0=0,L=["night","morning","noir","paper","newyear","classic"],N={night:"คืนฝนตก",morning:"แดดเช้า",noir:"นักสืบขาวดำ",paper:"งานกระดาษตัด",newyear:"ปีใหม่",classic:"ออริจินอล"};
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest(".brand");if(!b)return;var now=Date.now();n=now-t0<650?n+1:1;t0=now;if(n<3)return;n=0;e.preventDefault();
@@ -47,7 +47,10 @@ patch(D,0);patch(window,1);}catch(e){}})();</script>
 html.vc-boot.vch-pre:not(.vch-on) body{visibility:hidden !important}
 html.vc-boot{background:#0a0806}
 html.vc-boot.vch-pre:not(.vch-on){background:radial-gradient(130% 95% at 50% 58%,#4a3220 0,#2c1b0e 52%,#140b05 100%) fixed}
-html[data-htheme="morning"].vc-boot.vch-pre:not(.vch-on){background:radial-gradient(130% 95% at 50% 50%,#8a5d38 0,#5e3c22 55%,#2e1c0e 100%) fixed}</style>
+html[data-htheme="morning"].vc-boot.vch-pre:not(.vch-on){background:radial-gradient(130% 95% at 50% 50%,#8a5d38 0,#5e3c22 55%,#2e1c0e 100%) fixed}
+/* ธีมนักสืบ: จอรอหลังกลับจาก Google = โต๊ะมืดเทา แสงโคม เงามู่ลี่ + ข้อความ "กำลังเปิดแฟ้ม…" (ไม่เป็นจอว่าง) */
+html[data-htheme="noir"].vc-gin::after{background:radial-gradient(ellipse 70% 46% at 50% 30%,rgba(255,184,96,.20),transparent 70%),repeating-linear-gradient(-22deg,transparent 0 34px,rgba(0,0,0,.22) 34px 54px),radial-gradient(ellipse 90% 80% at 50% 45%,#2a2a2a,#121212 60%,#070707) !important}
+html[data-htheme="noir"].vc-gin::before{content:"กำลังเปิดแฟ้ม…" !important;display:block !important;position:fixed !important;z-index:10031 !important;left:50% !important;top:44% !important;transform:translate(-50%,-50%) !important;width:auto !important;height:auto !important;padding:0 !important;background:none !important;box-shadow:none !important;border-radius:0 !important;color:#cfcfcf !important;font:500 15px/1 Prompt,sans-serif !important;letter-spacing:.04em !important;white-space:nowrap !important;animation:none !important}</style>
 <style>html.vch-pre:not(.vch-on) main > .hero,html.vch-pre:not(.vch-on) main > .hero *{visibility:hidden !important}
 html.vch-pre:not(.vch-on) body{background:#0a0806}</style>
 <script>(function(d){d.classList.add('vch-pre');setTimeout(function(){if(!d.classList.contains('vch-on'))d.classList.remove('vch-pre')},6000)})(document.documentElement)</script>
@@ -2074,7 +2077,7 @@ document.addEventListener('click', function (e) {
 <script src="demo-results.js?v=4"></script>
 <script src="perf-guard.js?v=4"></script>
 <script src="perf-boost.js?v=1"></script>
-<script src="art.js?v=290"></script>
+<script src="art.js?v=291"></script>
 <script src="desk-bg.js?v=1"></script>
 <script src="remind-ui.js?v=4"></script>
 <script src="mascot.js?v=1"></script>
