@@ -18,10 +18,10 @@
 <!-- Vellum Art Direction: "vc-art" = ชั้นสไตล์ใหม่ (ลบสคริปต์บรรทัดนี้เพื่อย้อนกลับ) · "vc-spa" = หน้าแรกหน้าเดียว ส่วนอื่นเปิดจากเมนู (ลบเฉพาะ vc-spa เพื่อกลับไปเป็นหน้ายาวหน้าเดียว) -->
 <script>document.documentElement.classList.add("vc-art","vc-spa");</script>
 <script>/* v288: เปิดหน้าแรก (ไม่มี #) → ตั้งเป็นหน้าแรกตั้งแต่ต้น + ซ่อนส่วนอื่นใน <main> จนกว่าระบบสลับหน้าจะพร้อม — ไม่ให้ "ทุกข้อ ทุกบรรทัด" โผล่แวบก่อนหน้าปก */(function(d){var h=location.hash;if(!h||h==="#"||h==="#top"){d.setAttribute("data-view","home");d.classList.add("vc-boot");setTimeout(function(){d.classList.remove("vc-boot")},8000)}})(document.documentElement)</script>
-<script>/* v294: ธีมหน้าปก — เลือกก่อนวาดจอ: ?theme=… > ฉากที่ลูกค้าเลือกเอง (localStorage vc_ht_pick, จำข้ามวัน) > ธีมเดิมในรอบนี้ > ช่วงปีใหม่ (1 ธ.ค.–7 ม.ค.) > สุ่ม 1 ใน 4 เป็นธีมพิเศษ (นักสืบ/งานกระดาษ) > เวลาเครื่อง (06:00–17:59 แดดเช้า, นอกนั้นคืนฝนตก) · โหลดเฉพาะไฟล์ธีมที่ใช้ */
+<script>/* v295: ไฟล์ธีมโหลดก่อนของอื่น (preload + fetchpriority high) · โหลดพลาด ลองใหม่ 1 ครั้ง แล้วใช้ฉากออริจินอล · v294: ธีมหน้าปก — เลือกก่อนวาดจอ: ?theme=… > ฉากที่ลูกค้าเลือกเอง (localStorage vc_ht_pick, จำข้ามวัน) > ธีมเดิมในรอบนี้ > ช่วงปีใหม่ (1 ธ.ค.–7 ม.ค.) > สุ่ม 1 ใน 4 เป็นธีมพิเศษ (นักสืบ/งานกระดาษ) > เวลาเครื่อง (06:00–17:59 แดดเช้า, นอกนั้นคืนฝนตก) · โหลดเฉพาะไฟล์ธีมที่ใช้ */
 (function(d){var t=null,ok={night:1,morning:1,newyear:1,classic:1,noir:1,paper:1},q=location.search.match(/[?&]theme=([a-z]+)/);var pk=null;try{pk=localStorage.getItem("vc_ht_pick")}catch(e){}d.setAttribute("data-htmode",ok[pk]?"pick":"auto");try{if(q&&ok[q[1]]){t=q[1];sessionStorage.setItem("vc_ht",t)}else if(ok[pk]){t=pk}else{var v=sessionStorage.getItem("vc_ht");if(ok[v])t=v}}catch(e){}
 if(!t){var n=new Date(),m=n.getMonth(),h=n.getHours();t=(m===11||(m===0&&n.getDate()<=7))?"newyear":Math.random()<.25?(Math.random()<.5?"noir":"paper"):(h>=6&&h<18)?"morning":"night";try{sessionStorage.setItem("vc_ht",t)}catch(e){}}
-d.setAttribute("data-htheme",t);if(t!=="classic"){var s=document.createElement("script");s.src="hero-theme-"+t+".js?v=45";s.async=true;document.head.appendChild(s)}})(document.documentElement)</script>
+d.setAttribute("data-htheme",t);var u="hero-theme-"+t+".js?v=46";window.__vchThV=u.split("v=")[1];if(t!=="classic"){var l=document.createElement("link");l.rel="preload";l.as="script";l.href=u;l.setAttribute("fetchpriority","high");document.head.appendChild(l);var em="";addEventListener("error",function(e){if(e&&e.filename&&e.filename.indexOf("hero-theme-")>-1)em=(e.message||"error")+" @"+(e.lineno||0)},true);var fail=function(why){if(window.__vchThFail)return;window.__vchThFail=1;d.setAttribute("data-htheme","classic");try{localStorage.setItem("vc_ht_err",t+": "+why)}catch(x){}if(window.__vchReveal)window.__vchReveal();var toast=function(){var n=document.createElement("div");n.setAttribute("role","status");n.textContent="เปิดฉากนี้บนเครื่องนี้ไม่ได้ เลยใช้ฉากออริจินอลแทน ("+why+")";n.style.cssText="position:fixed;left:12px;right:12px;bottom:90px;z-index:99999;padding:10px 14px;border-radius:12px;background:rgba(24,16,8,.94);border:1px solid rgba(242,195,90,.5);color:#ffe9c0;font:500 12.5px/1.4 Prompt,system-ui,sans-serif;text-align:center";document.body.appendChild(n);setTimeout(function(){n.remove()},9000)};if(document.body)toast();else addEventListener("DOMContentLoaded",toast)};var add=function(src,last){var s=document.createElement("script");s.src=src;s.async=true;try{s.fetchPriority="high"}catch(e){}s.onerror=function(){if(!last)return add(u+"&r="+Date.now(),1);fail("โหลดไฟล์ไม่สำเร็จ")};s.onload=function(){if(!(window.VCHT&&window.VCHT[t]))fail(em||"ไฟล์ทำงานไม่จบ")};document.head.appendChild(s)};add(u,0)}})(document.documentElement)</script>
 <script>/* v293: ไข่อีสเตอร์ — แตะโลโก้ 3 ครั้งติดกัน → สลับธีมหน้าปก (จำไว้ในรอบนี้) */
 (function(){var n=0,t0=0,L=["night","morning","noir","paper","newyear","classic"],N={night:"คืนฝนตก",morning:"แดดเช้า",noir:"นักสืบขาวดำ",paper:"งานกระดาษตัด",newyear:"ปีใหม่",classic:"ออริจินอล"};
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest(".brand");if(!b)return;var now=Date.now();n=now-t0<650?n+1:1;t0=now;if(n<3)return;n=0;e.preventDefault();
@@ -59,7 +59,7 @@ html.vch-pre:not(.vch-on) body{background:#0a0806}</style>
 <!-- ฟอนต์ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="script" href="hero-scene.js?v=21">
+<link rel="preload" as="script" href="hero-scene.js?v=23">
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Taviraj:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=IBM+Plex+Mono:wght@400;500&family=Charmonman:wght@400;700&family=Sriracha&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Taviraj:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=IBM+Plex+Mono:wght@400;500&family=Charmonman:wght@400;700&family=Sriracha&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet"></noscript>
 
@@ -82,7 +82,7 @@ html.vch-pre:not(.vch-on) body{background:#0a0806}</style>
 <link rel="stylesheet" href="ct-sticker.css?v=9" media="(max-width: 767px)">
 <link rel="stylesheet" href="desktop-layout.css?v=5" media="(min-width: 1024px)">
 <link rel="stylesheet" href="silent-clip.css?v=1" media="(min-width: 1024px)">
-<link rel="stylesheet" href="art.css?v=291">
+<link rel="stylesheet" href="art.css?v=292">
 <link rel="stylesheet" href="remind-ui.css?v=3" media="print" onload="this.media=this.dataset.m||'all'">
 <link rel="stylesheet" href="mascot.css?v=1">
 <link rel="stylesheet" href="help-ui.css?v=5">
@@ -182,7 +182,7 @@ html.vch-pre:not(.vch-on) body{background:#0a0806}</style>
     <a class="hero-cue mono" href="#manifesto" data-reveal style="--i:6"><span>ดูวิธีอ่าน</span><i aria-hidden="true"></i></a>
   </section>
 <!-- หน้าปก: โหลดทันทีหลังส่วนหัว (ไม่ต้องรอสคริปต์อื่นทั้งหมด) → ขึ้นปกเร็ว -->
-<script src="hero-scene.js?v=21" onerror="document.documentElement.classList.remove('vch-pre')"></script>
+<script src="hero-scene.js?v=23" onerror="document.documentElement.classList.remove('vch-pre')"></script>
 
   <!-- ============ II. ฉากอ่านสัญญา: ตรึงจอแล้วเล่นตามการเลื่อน (ค่า --p จาก motion.js) ============
        โหมดลดการเคลื่อนไหวหรือ JS ไม่ทำงาน: ไม่ตรึง และแสดงสภาพสุดท้ายที่อ่านครบทั้งหมด -->
@@ -2049,42 +2049,43 @@ document.addEventListener('click', function (e) {
   } catch (e) {}
 })();
 </script>
-<script src="i18n.js?v=14"></script>
-<script src="glossary.js?v=5"></script>
-<script src="script.js?v=48"></script>
-<script src="consent-ui.js?v=1"></script>
-<script src="trust-ui.js?v=2"></script>
-<script src="talk.js?v=8"></script>
-<script src="health.js?v=8"></script>
-<script src="miss-ui.js?v=3"></script>
-<script src="command.js?v=2"></script>
-<script src="compare.js?v=14"></script>
-<script src="tools.js?v=12"></script>
-<script src="negotiate.js?v=5"></script>
-<script src="more-tools.js?v=3"></script>
-<script src="obligations.js?v=5"></script>
-<script src="explain.js?v=4"></script>
-<script src="voice-pick.js?v=10"></script>
-<script src="admin.js?v=4"></script>
-<script src="extras.js?v=6"></script>
-<script src="pay-ui.js?v=3"></script>
-<script src="privacy.js?v=2"></script>
-<script src="privacy-ui.js?v=4"></script>
-<script src="feedback.js?v=1"></script>
-<script src="care.js?v=4"></script>
-<script src="video-embed.js?v=1"></script>
-<script src="silent-clip.js?v=1"></script>
-<script src="demo-results.js?v=4"></script>
-<script src="perf-guard.js?v=4"></script>
-<script src="perf-boost.js?v=1"></script>
-<script src="art.js?v=291"></script>
-<script src="desk-bg.js?v=1"></script>
-<script src="remind-ui.js?v=4"></script>
-<script src="mascot.js?v=1"></script>
-<script src="help-ui.js?v=5"></script>
-<script src="solve-ui.js?v=2"></script>
-<script src="read-story.js?v=1"></script>
-<script src="acct-info.js?v=1"></script>
-<script src="acct-lux.js?v=26"></script>
+<!-- v296: สคริปต์ท้ายหน้าโหลดทีหลัง CSS/หน้าปก/ไฟล์ธีม (fetchpriority low) · ลำดับการทำงานเหมือนเดิม -->
+<script src="i18n.js?v=14" fetchpriority="low"></script>
+<script src="glossary.js?v=5" fetchpriority="low"></script>
+<script src="script.js?v=48" fetchpriority="low"></script>
+<script src="consent-ui.js?v=1" fetchpriority="low"></script>
+<script src="trust-ui.js?v=2" fetchpriority="low"></script>
+<script src="talk.js?v=8" fetchpriority="low"></script>
+<script src="health.js?v=8" fetchpriority="low"></script>
+<script src="miss-ui.js?v=3" fetchpriority="low"></script>
+<script src="command.js?v=2" fetchpriority="low"></script>
+<script src="compare.js?v=14" fetchpriority="low"></script>
+<script src="tools.js?v=12" fetchpriority="low"></script>
+<script src="negotiate.js?v=5" fetchpriority="low"></script>
+<script src="more-tools.js?v=3" fetchpriority="low"></script>
+<script src="obligations.js?v=5" fetchpriority="low"></script>
+<script src="explain.js?v=4" fetchpriority="low"></script>
+<script src="voice-pick.js?v=10" fetchpriority="low"></script>
+<script src="admin.js?v=4" fetchpriority="low"></script>
+<script src="extras.js?v=6" fetchpriority="low"></script>
+<script src="pay-ui.js?v=3" fetchpriority="low"></script>
+<script src="privacy.js?v=2" fetchpriority="low"></script>
+<script src="privacy-ui.js?v=4" fetchpriority="low"></script>
+<script src="feedback.js?v=1" fetchpriority="low"></script>
+<script src="care.js?v=4" fetchpriority="low"></script>
+<script src="video-embed.js?v=1" fetchpriority="low"></script>
+<script src="silent-clip.js?v=1" fetchpriority="low"></script>
+<script src="demo-results.js?v=4" fetchpriority="low"></script>
+<script src="perf-guard.js?v=4" fetchpriority="low"></script>
+<script src="perf-boost.js?v=1" fetchpriority="low"></script>
+<script src="art.js?v=292" fetchpriority="low"></script>
+<script src="desk-bg.js?v=1" fetchpriority="low"></script>
+<script src="remind-ui.js?v=4" fetchpriority="low"></script>
+<script src="mascot.js?v=1" fetchpriority="low"></script>
+<script src="help-ui.js?v=5" fetchpriority="low"></script>
+<script src="solve-ui.js?v=2" fetchpriority="low"></script>
+<script src="read-story.js?v=1" fetchpriority="low"></script>
+<script src="acct-info.js?v=1" fetchpriority="low"></script>
+<script src="acct-lux.js?v=26" fetchpriority="low"></script>
 </body>
 </html>
