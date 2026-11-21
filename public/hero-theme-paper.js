@@ -453,6 +453,17 @@
     H + ' .site-header .dx-nav a[href="#checkCard"]:focus-visible{outline:2px solid #1d4f4c !important;outline-offset:2px}' +
     H + ' .site-header .pzt{display:block;position:absolute;right:-9px;top:-6px;width:28px;height:11px;transform:rotate(18deg);background:rgba(230,216,188,.72);border-left:2px dashed rgba(0,0,0,.08);border-right:2px dashed rgba(0,0,0,.08);pointer-events:none}' +
     '@media (prefers-reduced-motion:reduce){.pzn,.pzn.out,.pzs.go svg{animation:none}}';
+  /* v2: หัวเว็บเป็นกระดาษเขียวเข้มสีโต๊ะ ชุดเดียวกับแถบล่าง — ขอบฟอยล์ทองหม่น · ดาวฉลุจาง · ตัวหนังสือครีม */
+  var STARS = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='40'%3E%3Cg fill='%23b98d45' fill-opacity='.22'%3E%3Cpath d='M12 6l1.4 2.9 3.1.4-2.3 2.1.6 3.1L12 13l-2.8 1.5.6-3.1-2.3-2.1 3.1-.4z'/%3E%3Cpath d='M44 22l1 2 2.2.3-1.6 1.5.4 2.2-2-1.1-2 1.1.4-2.2-1.6-1.5 2.2-.3z'/%3E%3Ccircle cx='30' cy='8' r='1.3'/%3E%3Ccircle cx='56' cy='34' r='1.1'/%3E%3Ccircle cx='22' cy='31' r='1.2'/%3E%3C/g%3E%3C/svg%3E\")";
+  var NOISE2 = NOISE.replace("0 0 0 0 .32 0 0 0 0 .22 0 0 0 0 .1", "0 0 0 0 0 0 0 0 0 .05 0 0 0 0 .05");
+  css +=
+    '.pzh .k2{background:#b8964e !important;filter:drop-shadow(0 4px 4px rgba(0,0,0,.4)) !important}' +
+    '.pzh .k1{bottom:5px !important;background:' + STARS + ',' + NOISE2 + ',linear-gradient(180deg,#224a45,#2c5b55) !important}' +
+    H + ' .site-header .brand-name{color:#e6d6b8 !important;-webkit-text-fill-color:#e6d6b8 !important;text-shadow:0 1px 2px rgba(0,0,0,.35) !important}' +
+    H + ' .site-header .dx-nav a:not([href="#checkCard"]),' + H + ' .site-header .dx-nav a:not([href="#checkCard"]) *{color:#e6d6b8 !important;-webkit-text-fill-color:#e6d6b8 !important}' +
+    H + ' .site-header .vct-mb,' + H + ' .site-header #authToggle.auth-toggle,' + H + ' .site-header .vc-lang{box-shadow:2px 3px 0 #10302c,0 6px 8px -4px rgba(0,0,0,.5) !important}' +
+    H + ' .site-header .dx-nav a[href="#checkCard"]{box-shadow:2px 3px 0 #10302c,0 7px 10px -5px rgba(0,0,0,.5) !important}' +
+    H + ' .site-header .dx-nav a[href="#checkCard"]::before,' + H + ' .site-header .dx-nav a[href="#checkCard"]::after{background:radial-gradient(circle 2.4px at 50% 50%,#24504b 92%,transparent) 0 1px/6px 8px repeat-y !important}';
   var V = 'M4 7H15V9.4L12.6 10L20.4 31L27.6 10L25 9.4V7H36V9.4L33.4 10L22 40H18.4L6.4 10L4 9.4Z', SW = 'M11 44.4Q20 41.6 29 44.4';
   var LOGO = '<svg viewBox="0 0 40 46" aria-hidden="true">' +
     '<g transform="translate(2.6 2.6)"><path d="' + V + '" fill="#c4735a"/><path d="' + SW + '" stroke="#c4735a" stroke-width="2.4" fill="none" stroke-linecap="round"/></g>' +
