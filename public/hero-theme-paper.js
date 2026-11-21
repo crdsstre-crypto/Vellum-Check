@@ -2395,15 +2395,26 @@
     C + ' #creditNum::before{display:none !important}' +
     /* ประเภทสัญญา */
     C + ' .field-label{display:flex !important;align-items:center;gap:6px;' + DK + 'font-weight:800 !important;font-size:12.5px !important;margin-top:14px !important}' +
-    C + ' .field-label::before{content:"\\2702" !important;color:#7d3a2c !important;-webkit-text-fill-color:#7d3a2c !important}' +
+    C + ' .field-label::before{content:"\\2702\\FE0E" !important;color:#7d3a2c !important;-webkit-text-fill-color:#7d3a2c !important}' +
     C + ' #vcpTrigger{background:none !important;border:0 !important;box-shadow:none !important;padding:4px 0 !important;' + DK + '}' +
     C + ' #vcpTrigger::before,' + C + ' #vcpTrigger::after{display:none !important}' +
-    C + ' #vcpTrigger .vcp-ti{width:58px !important;height:58px !important;flex:0 0 58px !important;border:0 !important;border-radius:0 !important;background:none no-repeat center/contain !important;box-shadow:none !important;position:relative}' +
+    C + ' #vcpTrigger .vcp-ti{position:relative !important;width:62px !important;height:62px !important;flex:0 0 62px !important;border:0 !important;border-radius:50% !important;background:radial-gradient(circle at 50% 42%,#fbf4e4 0 60%,#efe3ca 61%) !important;box-shadow:inset 0 3px 5px rgba(60,40,20,.28),0 0 0 2px #efe3ca,0 0 0 3.5px rgba(94,71,42,.35) !important}' +
     C + ' #vcpTrigger .vcp-ti > *{display:none !important}' +
-    C + ' #vcpTrigger .vcp-ti::after{content:"";position:absolute;inset:-5px;border:2px dashed #2c5b55;border-radius:8px}' +
+    C + ' #vcpTrigger .vcp-ti::before{content:"" !important;position:absolute;inset:6px;background:none no-repeat center/contain;display:block}' +
+    C + ' #vcpTrigger .vcp-ti::after{display:none !important}' +
     C + ' #vcpTrigger .vcp-tt b{' + DK + 'font-size:14.5px !important;font-weight:800 !important}' +
     C + ' #vcpTrigger .vcp-tt small{' + MD + 'font-size:11px !important;opacity:1 !important}' +
     C + ' #vcpTrigger .vcp-tc{position:relative !important;padding:6px 11px !important;border:0 !important;border-radius:3px !important;background:#efe3ca !important;box-shadow:1px 2px 0 #7d6233,inset 0 0 0 2px #efe3ca,inset 0 0 0 3.2px rgba(94,71,42,.35) !important;' + DK + 'font-weight:700 !important;font-size:12px !important}' +
+    /* กรอบหัวขั้น 1 = แถบกระดาษมัสตาร์ดติดเทป ขอบล่างซิกแซก · กรอบประเภทสัญญา = การ์ดเซจมีหูป้าย */
+    C + ' .vc-box[data-pzb="1"] .step-head{position:relative !important;margin:2px -2px 30px !important;padding:12px 12px 18px !important;background:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27240%27 height=%27120%27%3E%3Cg fill=%27none%27 stroke=%27%237a5a30%27 stroke-opacity=%27.16%27 stroke-width=%27.8%27%3E%3Cpath d=%27M10 20q20 6 34-2M80 64q14 10 30 4M150 30q18-8 32 2M30 96q12-6 26 0M190 90q10 8 24 2M120 104q16 4 28-6%27/%3E%3C/g%3E%3C/svg%3E"),linear-gradient(180deg,#ecdcae,#e2cf9c) !important;border:0 !important;border-radius:3px 3px 0 0 !important;clip-path:polygon(0 0,100% 0,100% calc(100% - 6px),' + (function(){var a=[];for(var j=0;j<=30;j++)a.push((100-j*100/30).toFixed(2)+'% '+(j%2?'100%':'calc(100% - 6px)'));return a.join(',');})() + ');filter:drop-shadow(1px 2px 0 rgba(125,98,51,.55))}' +
+    C + ' .vc-box[data-pzb="1"] .step-head::before{content:"" !important;position:absolute !important;inset:5px 5px 11px !important;border:1.5px dashed rgba(94,71,42,.3) !important;border-radius:2px !important;pointer-events:none;display:block !important;background:none !important}' +
+    C + ' .vc-box[data-pzb="1"] .step-head::after{display:none !important}' +
+    C + ' .vc-box[data-pzb="1"] .vc-sn{background:#fbf4e4 !important;border-color:#8a6c42 !important;box-shadow:1px 2px 0 rgba(125,98,51,.45) !important}' +
+    C + ' .vc-box[data-pzb="1"] .pzd-k{color:#6e5530 !important;-webkit-text-fill-color:#6e5530 !important}' +
+    C + ' .vc-box[data-pzb="1"] .field-wrap{position:relative !important;margin:6px 0 4px !important;padding:12px 12px 10px !important;background:linear-gradient(180deg,#d3dcc6,#c5d0b8) !important;border-radius:0 5px 5px 5px !important;box-shadow:2px 3px 0 #7d6233 !important}' +
+    C + ' .vc-box[data-pzb="1"] .field-wrap::before{content:"" !important;position:absolute !important;inset:5px !important;border:1.5px dashed rgba(44,74,63,.3) !important;border-radius:3px !important;pointer-events:none;display:block !important}' +
+    C + ' .vc-box[data-pzb="1"] .field-wrap .field-label{position:absolute !important;left:0 !important;top:-21px !important;margin:0 !important;height:22px;padding:0 12px 0 10px !important;background:#d3dcc6 !important;border-radius:5px 9px 0 0 !important;font-size:11.5px !important;line-height:22px !important;z-index:1}' +
+    C + ' .vc-box[data-pzb="1"] .field-wrap .vcp-tc{background:#fbf4e4 !important}' +
     /* คูปองวางสัญญา */
     C + ' .ta-wrap{position:relative !important;margin-top:18px !important;border:0 !important;border-radius:4px !important;background:rgba(255,252,243,.6) !important;box-shadow:none !important;overflow:visible !important}' +
     C + ' .ta-wrap::before{content:"" !important;display:block !important;position:absolute !important;inset:0 !important;border:2.5px dashed #5e472a !important;border-radius:4px !important;background:none !important;box-shadow:none !important;pointer-events:none;z-index:3;opacity:1 !important;width:auto !important;height:auto !important}' +
@@ -2447,7 +2458,7 @@
     C + ' .vc-try-c svg{color:#5e472a !important;stroke:#5e472a !important}' +
     C + ' .vc-try-c::before,' + C + ' .vc-try-all::before{content:"" !important;position:absolute !important;left:5px !important;top:50% !important;width:4px !important;height:4px !important;margin-top:-2px !important;border-radius:50% !important;background:#9d8057 !important;display:block !important}' +
     'html[data-calm] #checkCard .ta-wrap{animation:none !important}@media (prefers-reduced-motion:reduce){#checkCard .ta-wrap{animation:none !important}}';
-  CSS += Object.keys(SHAPE).map(function (k) { return C + ' #vcpTrigger[data-pzt="' + k + '"] .vcp-ti{background-image:' + u(SHAPE[k]) + ' !important}'; }).join('');
+  CSS += Object.keys(SHAPE).map(function (k) { return C + ' #vcpTrigger[data-pzt="' + k + '"] .vcp-ti::before{background-image:' + u(SHAPE[k]) + ' !important}'; }).join('');
   var css = '@media (max-width:767px){' + CSS + '}';
   var COLS = ['#c4735a', '#d1a54a', '#7fa184', '#93aaac', '#e2c6b6', '#c4735a', '#d1a54a'];
   function calm() { return document.documentElement.hasAttribute('data-calm') || !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); }
