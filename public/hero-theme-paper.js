@@ -552,3 +552,74 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
 })();
 /*/PZNAV*/
+
+/*PZMENU*/ /* ธีมตัดกระดาษ: แผ่นเมนู ☰ เป็นกระดาษคราฟต์หม่น (เฉพาะหน้าแรก · โทนเดียวกับหัวเว็บ ไม่แสบตา)
+   ขอบบนซิกแซก + ชั้นมัสตาร์ดหม่น · หัวแผ่นไอคอนกรรไกร + เส้นคั่นรอยปรุ · การ์ดกระดาษครีมนวลเอียงสลับ · ไอคอนตัดกระดาษ 2 สี
+   ปุ่มภาษาเป็นแถบตั๋ว 3 ช่อง (ช่องที่เลือกติดเทป) · ปุ่มปิดวงกลมกระดาษ */
+(function () {
+  'use strict';
+  if (window.__pzMenu) return; window.__pzMenu = 1;
+  var M = 'html[data-htheme="paper"][data-view="home"] body .vct.vcm';
+  function zigTop(n, d) { var a = [], i; for (i = 0; i <= n; i++) a.push((i * 100 / n).toFixed(2) + '% ' + (i % 2 ? '0' : d + 'px')); return 'polygon(' + a.join(',') + ',100% 100%,0 100%)'; }
+  function U(svg) { return 'url("data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28">' + svg + '</svg>').replace(/'/g, '%27') + '")'; }
+  var D = '#3a2a16', R = '#c4735a', C = '#eadcc0';
+  var IC = {
+    cut: U('<path d="M11.2 15.6L24 3.4" stroke="' + D + '" stroke-width="2.8" stroke-linecap="round"/><path d="M12.4 12.4L25 21" stroke="' + D + '" stroke-width="2.8" stroke-linecap="round"/><circle cx="7.6" cy="19.6" r="4.4" fill="none" stroke="' + R + '" stroke-width="2.8"/><circle cx="7.6" cy="8.4" r="4.4" fill="none" stroke="' + D + '" stroke-width="2.8"/><circle cx="13.2" cy="14" r="1.6" fill="' + C + '"/>'),
+    tools: U('<rect x="3" y="3" width="9" height="9" rx="2" fill="' + D + '"/><rect x="16" y="3" width="9" height="9" rx="2" fill="' + R + '"/><rect x="3" y="16" width="9" height="9" rx="2" fill="' + R + '"/><path d="M20.5 15.5v10M15.5 20.5h10" stroke="' + D + '" stroke-width="3" stroke-linecap="round"/>'),
+    lib: U('<rect x="3" y="4" width="10" height="20" rx="1.5" fill="' + D + '"/><rect x="15" y="4" width="10" height="20" rx="1.5" fill="' + R + '"/><rect x="5.5" y="8" width="5" height="2" rx="1" fill="' + C + '"/><rect x="17.5" y="8" width="5" height="2" rx="1" fill="' + C + '"/>'),
+    vid: U('<rect x="3" y="6" width="22" height="16" rx="3" fill="' + D + '"/><path d="M12 10l6 4-6 4z" fill="' + R + '"/>'),
+    read: U('<path d="M3 6c4-1.5 7-1 11 1.5V24c-4-2.5-7-3-11-1.5z" fill="' + D + '"/><path d="M25 6c-4-1.5-7-1-11 1.5V24c4-2.5 7-3 11-1.5z" fill="' + R + '"/>')
+  };
+  var FIB = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='120'%3E%3Cg fill='none' stroke='%237a5a30' stroke-opacity='.16' stroke-width='.8'%3E%3Cpath d='M10 20q20 6 34-2M80 64q14 10 30 4M150 30q18-8 32 2M30 96q12-6 26 0M190 90q10 8 24 2M120 104q16 4 28-6'/%3E%3C/g%3E%3C/svg%3E\")";
+  var NOISE = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 .32 0 0 0 0 .22 0 0 0 0 .1 0 0 0 .18 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23f)'/%3E%3C/svg%3E\")";
+  var PAPER = 'background:' + FIB + ',linear-gradient(180deg,#e6d7b9,#ddcca9) !important;';
+  var css =
+    M + ' .vct-card{background:none !important;box-shadow:none !important;border:0 !important;border-radius:0 !important;isolation:isolate;color:#3a2a16 !important}' +
+    M + ' .vct-card::before,' + M + ' .vct-card::after{content:"" !important;display:block !important;position:absolute !important;left:0 !important;right:0 !important;bottom:0 !important;pointer-events:none;z-index:-1 !important;border-radius:0 !important;opacity:1 !important}' +
+    M + ' .vct-card::before{top:0 !important;background:#a9843a !important;clip-path:' + zigTop(40, 11) + ';filter:drop-shadow(0 -4px 4px rgba(0,0,0,.35))}' +
+    M + ' .vct-card::after{top:9px !important;background:' + FIB + ',' + NOISE + ',linear-gradient(180deg,#ad8f64,#9d8057) !important;clip-path:' + zigTop(50, 7) + '}' +
+    /* หัวแผ่น */
+    M + ' .vct-hd{background:none !important;box-shadow:none !important;border:0 !important;padding-top:24px !important}' +
+    M + ' .vct-hd::before{display:none !important}' +
+    M + ' .vct-hd::after{content:"" !important;display:block !important;left:18px !important;right:18px !important;bottom:0 !important;width:auto !important;height:6px !important;opacity:.7 !important;transform:none !important;background:radial-gradient(circle 2.2px at 50% 50%,#5e472a 92%,transparent) 0 0/9px 6px repeat-x !important}' +
+    M + ' .vct-hd .ic{position:relative;border-radius:6px !important;' + PAPER + 'border:0 !important;box-shadow:2px 3px 0 #7d6233 !important}' +
+    M + ' .vct-hd .ic svg{background:' + IC.cut + ' center/100% 100% no-repeat !important;filter:none !important;-webkit-mask:none !important;mask:none !important;width:26px !important;height:26px !important}' +
+    M + ' .vct-hd .ic svg > *{display:none !important}' +
+    M + ' .vct-hd b{color:#2e2112 !important;-webkit-text-fill-color:#2e2112 !important;text-shadow:none !important}' +
+    M + ' .vct-hd small{color:#4f3b22 !important;-webkit-text-fill-color:#4f3b22 !important}' +
+    M + ' .vct-x{position:relative;border-radius:50% !important;background:#e3d3b4 !important;border:0 !important;color:#3a2a16 !important;box-shadow:2px 3px 0 #7d6233,0 6px 8px -4px rgba(0,0,0,.4) !important;font-weight:700 !important}' +
+    M + ' .vct-x::after{content:"" !important;display:block !important;position:absolute;inset:3px;border-radius:50%;border:1.5px dashed rgba(58,42,22,.24);background:none !important;pointer-events:none}' +
+    M + ' .vct-x:active{transform:translate(1px,2px);box-shadow:1px 1px 0 #7d6233 !important}' +
+    /* การ์ดเมนู */
+    M + ' .vcm-row{' + PAPER + 'border:0 !important;border-radius:4px !important;box-shadow:2px 3px 0 #7d6233,0 8px 12px -8px rgba(0,0,0,.5) !important;color:#2e2112 !important;transition:transform .15s,box-shadow .15s !important}' +
+    M + ' .vcm-sec:nth-child(odd) .vcm-row,' + M + ' .vcm-row:nth-child(even){rotate:-.6deg}' + M + ' .vcm-sec:nth-child(even) .vcm-row:nth-child(odd){rotate:.5deg}' +
+    M + ' .vcm-row:hover{box-shadow:2px 4px 0 #7d6233,0 10px 14px -8px rgba(0,0,0,.5) !important}' +
+    M + ' .vcm-row:active{transform:translate(1px,2px) !important;box-shadow:1px 1px 0 #7d6233 !important}' +
+    M + ' .vcm-row:focus-visible{outline:2px solid #1d4f4c !important;outline-offset:2px}' +
+    M + ' .vcm-row b{color:#2e2112 !important;-webkit-text-fill-color:#2e2112 !important}' +
+    M + ' .vcm-row small{color:#5a4528 !important;-webkit-text-fill-color:#5a4528 !important}' +
+    M + ' .vcm-row em{color:#6f5634 !important;font-style:normal}' +
+    M + ' .vcm-row .i{background:#d4c19c !important;border-radius:4px !important;border:0 !important;box-shadow:none !important}' +
+    M + ' .vcm-row .i svg{background:var(--pzi) center/100% 100% no-repeat !important;-webkit-mask:none !important;mask:none !important;width:24px !important;height:24px !important;filter:drop-shadow(1px 1.5px 0 rgba(0,0,0,.18)) !important;fill:none !important;stroke:none !important}' +
+    M + ' .vcm-row .i svg > *{display:none !important}' +
+    M + ' .vcm-row[data-m="tools"]{--pzi:' + IC.tools + '}' + M + ' .vcm-row[data-href="/library"]{--pzi:' + IC.lib + '}' +
+    M + ' .vcm-row[data-goto="#introVideo"]{--pzi:' + IC.vid + '}' + M + ' .vcm-row[data-goto="#manifesto"]{--pzi:' + IC.read + '}' +
+    /* การ์ดหลากสี (หม่น ไม่แสบตา): เขียวเสจ · ชมพูอิฐ · มัสตาร์ด · ฟ้าหม่น */
+    M + ' .vcm-row[data-m="tools"]{background:' + FIB + ',linear-gradient(180deg,#cdd6c0,#bfcab1) !important}' + M + ' .vcm-row[data-m="tools"] .i{background:#a9b897 !important}' +
+    M + ' .vcm-row[data-href="/library"]{background:' + FIB + ',linear-gradient(180deg,#e2c6b6,#d6b6a4) !important}' + M + ' .vcm-row[data-href="/library"] .i{background:#c99d86 !important}' +
+    M + ' .vcm-row[data-goto="#introVideo"]{background:' + FIB + ',linear-gradient(180deg,#e4d3a6,#d8c493) !important}' + M + ' .vcm-row[data-goto="#introVideo"] .i{background:#c8ad6c !important}' +
+    M + ' .vcm-row[data-goto="#manifesto"]{background:' + FIB + ',linear-gradient(180deg,#c6d3d3,#b6c5c6) !important}' + M + ' .vcm-row[data-goto="#manifesto"] .i{background:#93aaac !important}' +
+    /* ปุ่มภาษา = แถบตั๋ว */
+    M + ' .vcm-h{color:#2e2112 !important;font-weight:700 !important}' +
+    M + ' .vcm-lang{background:#e3d3b4 !important;border:0 !important;border-radius:4px !important;box-shadow:2px 3px 0 #7d6233 !important;padding:0 !important;gap:0 !important;overflow:visible !important}' +
+    M + ' .vcm-lang button{position:relative;border-radius:4px !important;color:#3a2a16 !important;background:none !important;box-shadow:none !important}' +
+    M + ' .vcm-lang button small{color:#5a4528 !important}' +
+    M + ' .vcm-lang button + button{background:radial-gradient(circle 2.2px at 50% 50%,#9d8057 92%,transparent) left top/6px 8px repeat-y !important}' +
+    M + ' .vcm-lang button.is-on{background:#c99f48 !important;color:#2e2112 !important;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06) !important}' +
+    M + ' .vcm-lang button.is-on::after{content:"";position:absolute;top:-6px;left:50%;width:30px;height:11px;margin-left:-15px;transform:rotate(-6deg);background:rgba(230,216,188,.72);border-left:2px dashed rgba(0,0,0,.08);border-right:2px dashed rgba(0,0,0,.08);pointer-events:none}' +
+    M + ' .vcm-lang button:focus-visible{outline:2px solid #1d4f4c !important;outline-offset:-2px}';
+  function on() { return document.documentElement.getAttribute('data-htheme') === 'paper'; }
+  function go() { if (!on() || document.getElementById('pz-menu')) return; var s = document.createElement('style'); s.id = 'pz-menu'; s.textContent = css; document.head.appendChild(s); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+})();
+/*/PZMENU*/
