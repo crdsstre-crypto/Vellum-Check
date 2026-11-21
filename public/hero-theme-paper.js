@@ -540,6 +540,28 @@
     /* ไอคอนบัญชีบนหัวเว็บ (ล็อกอินแล้ว) */
     H + ' .site-header #authToggle.auth-toggle::before{-webkit-mask:none !important;mask:none !important;background:' + IC.acct + ' center/78% no-repeat !important;opacity:1 !important;filter:drop-shadow(1px 1.5px 0 rgba(0,0,0,.18)) !important}' +
     '@media (prefers-reduced-motion:reduce){' + B + ' .bn-item.vc-tap,' + B + ':has(.bn-item.vc-tap) .vc-bn-ind::before{animation:none !important}}';
+  /* v2: แถบล่างเป็นกระดาษเขียวเข้มสีโต๊ะ ตัดกับแผ่นต่างๆ ชัด (ผู้ใช้: กลืนกับแผ่นบัญชีเกินไป ไม่ดูลับ)
+     ขอบฟอยล์ทองหม่น · ลายฉลุดาวจางๆ · ไอคอน/ตัวหนังสือครีม · ป้ายแท็บที่เลือกเป็นครีมติดเทป + ตราขี้ผึ้งจิ๋ว */
+  var LD = '#e6d6b8', LR = '#d08a70', LC = '#2f5a54', LM = '#cfa75a';
+  var ICL = {
+    home: U('<path d="M7 3h10l5 5v15a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" fill="' + LD + '"/><path d="M17 3v5h5z" fill="' + LR + '"/><rect x="8" y="12" width="9" height="2.2" rx="1" fill="' + LC + '"/><rect x="8" y="16.5" width="6" height="2.2" rx="1" fill="' + LR + '"/>'),
+    tools: U('<circle cx="14" cy="14" r="10" fill="' + LD + '"/><circle cx="14" cy="14" r="6.5" fill="' + LC + '"/><path d="M17.5 10.5l-2 5-5 2 2-5z" fill="' + LR + '"/>'),
+    hist: U('<path d="M7 3h14v3l-5 8 5 8v3H7v-3l5-8-5-8z" fill="' + LD + '"/><path d="M10 6h8l-4 6z" fill="' + LR + '"/><path d="M10 23l4-5 4 5z" fill="' + LM + '"/>'),
+    acct: U('<circle cx="14" cy="9" r="5.5" fill="' + LD + '"/><path d="M4 25c0-6 4.5-9 10-9s10 3 10 9z" fill="' + LR + '"/>')
+  };
+  var STARS = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='40'%3E%3Cg fill='%23b98d45' fill-opacity='.22'%3E%3Cpath d='M12 6l1.4 2.9 3.1.4-2.3 2.1.6 3.1L12 13l-2.8 1.5.6-3.1-2.3-2.1 3.1-.4z'/%3E%3Cpath d='M44 22l1 2 2.2.3-1.6 1.5.4 2.2-2-1.1-2 1.1.4-2.2-1.6-1.5 2.2-.3z'/%3E%3Ccircle cx='30' cy='8' r='1.3'/%3E%3Ccircle cx='56' cy='34' r='1.1'/%3E%3Ccircle cx='22' cy='31' r='1.2'/%3E%3C/g%3E%3C/svg%3E\")";
+  var NOISE2 = NOISE.replace("0 0 0 0 .32 0 0 0 0 .22 0 0 0 0 .1", "0 0 0 0 0 0 0 0 0 .05 0 0 0 0 .05");
+  css +=
+    '.pzb .k2{background:#b8964e !important;filter:drop-shadow(0 -3px 4px rgba(0,0,0,.4)) !important}' +
+    '.pzb .k1{top:5px !important;background:' + STARS + ',' + NOISE2 + ',linear-gradient(180deg,#2c5b55,#224a45) !important}' +
+    B + ' .bn-item[data-nav="home"]{--pzi:' + ICL.home + ';--pzid:' + IC.home + '}' + B + ' .bn-item.vct-nb{--pzi:' + ICL.tools + ';--pzid:' + IC.tools + '}' +
+    B + ' .bn-item[data-nav="hist"]{--pzi:' + ICL.hist + ';--pzid:' + IC.hist + '}' + B + ' .bn-item[data-nav="acct"]{--pzi:' + ICL.acct + ';--pzid:' + IC.acct + '}' +
+    B + ' .bn-item svg{opacity:.78 !important;filter:drop-shadow(1px 2px 0 rgba(0,0,0,.35)) !important}' +
+    B + ' .bn-item.is-on svg{background-image:var(--pzid) !important;opacity:1 !important;filter:drop-shadow(1.5px 2px 0 rgba(0,0,0,.2)) !important}' +
+    B + ' .bn-item span{color:#d6c7a8 !important;-webkit-text-fill-color:#d6c7a8 !important}' +
+    B + ' .bn-item.is-on span{color:#2e2112 !important;-webkit-text-fill-color:#2e2112 !important}' +
+    B + ' .vc-bn-ind::before{background:radial-gradient(circle at calc(100% - 9px) 9px,#b55a45 0 4px,#8a4232 4.5px 6px,transparent 6.5px),' + FIB + ',linear-gradient(180deg,#e9dbbf,#ddcca9) !important;box-shadow:2px 3px 0 #10302c,0 6px 10px -5px rgba(0,0,0,.5) !important}' +
+    B + ' .bn-item:focus-visible{outline-color:#e6d6b8 !important}';
   function on() { return document.documentElement.getAttribute('data-htheme') === 'paper'; }
   function build() {
     if (!on()) return true;
