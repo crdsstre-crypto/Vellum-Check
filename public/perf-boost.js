@@ -78,7 +78,7 @@
     for (var i = 0; i < list.length; i++) {
       var a = list[i]; if (a.playState !== 'running' || mine.has(a)) continue;
       var t; try { t = a.effect.getTiming(); } catch (e) { continue; }
-      if (t.iterations !== Infinity) continue;
+      if (t.iterations !== Infinity) { var left = (typeof t.duration === 'number' ? t.duration : 0) * t.iterations + (t.delay || 0) - (a.currentTime || 0); if (!(left > 4000)) continue; }   /* v3: แอนิเมชันยาว (>4 วิ) ที่มองไม่เห็นก็หยุดด้วย */
       var el = a.effect.target; if (!el || el.nodeType !== 1) continue;
       if (!seen(el)) { try { a.pause(); mine.add(a); held.push(a); } catch (e) {} }
     }
@@ -86,7 +86,7 @@
   var scrolling = 0;
   function tick() { if (!scrolling) sweep(); }
   if (canAnim) {
-    setInterval(tick, 1500);
+    setInterval(tick, 1200);
     /* เลื่อนจอ/เปิดหน้าต่างใหม่ → เช็กอีกรอบหลังหยุดเลื่อน ให้ของที่กลับมาในจอเล่นต่อทันที */
     var st = 0;
     window.addEventListener('scroll', function () { scrolling = 1; clearTimeout(st); st = setTimeout(function () { scrolling = 0; sweep(); }, 160); }, { passive: true, capture: true });
