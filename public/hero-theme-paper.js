@@ -1538,3 +1538,145 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else setTimeout(go, 0);
 })();
 /*/PZNAVOUT*/
+
+/*PZPOP*/ /* ธีมตัดกระดาษ: ฉากหลังหน้าบัญชี = "ทิวทัศน์ป๊อปอัปซ้อนชั้น" (แทนเศษกระดาษร่วง .pzf)
+   ฟ้ากระดาษครีม · ดวงอาทิตย์ · เมฆติดไม้ห้อย (แกว่งช้า) · ฝูงนกกระเรียนบินผ่านเป็นระยะ · ภูเขา/เนิน 5 ชั้น + ต้นสน + บ้านไฟกะพริบ
+   (ก) อยู่หลังการ์ด + แผ่นโปร่งช่วยอ่าน · (ข) parallax: เลื่อนแผ่นลง ชั้นหน้าจมเร็ว ชั้นหลังจมช้า
+   (ค) ใช้ transform/opacity ล้วน · display:none เมื่อปิดแผ่น = อนิเมชันหยุดเอง · (ง) โหมดสงบ/ลดภาพเคลื่อนไหว = ภาพนิ่ง */
+(function () {
+  'use strict';
+  if (window.__pzPop) return; window.__pzPop = 1;
+  var H0 = 'html[data-htheme="paper"][data-view="home"]';
+  var A = H0 + ' body[data-sheet="acct"] #authCard#authCard';
+  var CALM = 'html[data-calm]';
+  function zigTop(n, d) { var a = [], i; for (i = 0; i <= n; i++) a.push((i * 100 / n).toFixed(2) + '% ' + (i % 2 ? '0' : d + 'px')); return 'polygon(' + a.join(',') + ',100% 100%,0 100%)'; }
+  function calm() { var h = document.documentElement; return h.hasAttribute('data-calm') || !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); }
+  /* ชั้นเนิน: [ความสูง %, ตัวคูณ parallax, svg ภายใน] — เงาขอบบน = path เดิมเลื่อนขึ้น 4px (ถูกกว่า filter) */
+  function hill(d, fill) { return '<path d="' + d + '" fill="rgba(60,40,20,.2)" transform="translate(0 -4)"/><path d="' + d + '" fill="' + fill + '"/>'; }
+  var CR = '<svg viewBox="0 0 96 72"><path d="M48 40 L20 6 L44 30 Z" fill="#f4ead6"/><path d="M48 40 L80 2 L54 32 Z" fill="#e2d2b2"/><path d="M6 44 L48 40 L34 52 Z" fill="#c4735a"/><path d="M48 40 L90 30 L62 50 Z" fill="#b06a55"/></svg>';
+  var LAYERS = [
+    [66, .035, hill('M0 200 L60 110 L110 170 L180 60 L250 160 L300 100 L360 170 L420 120 V560 H0Z', '#8eaeb4'), 560],
+    [56, .06, hill('M0 140 Q60 80 130 120 T260 110 T420 90 V470 H0Z', '#84b07a'), 470],
+    [48, .09, hill('M0 120 Q90 60 190 110 T420 80 V400 H0Z', '#4f9064') +
+      '<path d="M60 110 L76 60 L92 110Z" fill="#2f6b4a"/><rect x="74" y="110" width="4" height="10" fill="#6b5030"/><path d="M96 104 L108 70 L120 104Z" fill="#3b7d55"/><path d="M320 92 L336 46 L352 92Z" fill="#2f6b4a"/><path d="M350 96 L362 62 L374 96Z" fill="#3b7d55"/>' +
+      '<g transform="translate(220 62)"><rect x="0" y="22" width="46" height="34" fill="#e9dbbf"/><path d="M-6 24 L23 0 L52 24Z" fill="#b06a55"/><rect x="18" y="34" width="12" height="22" fill="#7d6036"/><rect class="w" x="5" y="30" width="9" height="9" fill="#e2b45a"/><rect class="w w2" x="33" y="30" width="9" height="9" fill="#e2b45a"/></g>', 400],
+    [36, .13, hill('M0 90 Q110 40 230 80 T420 60 V300 H0Z', '#dba63e') + '<g fill="#f2e2c0"><circle cx="40" cy="96" r="4"/><circle cx="150" cy="88" r="3.5"/><circle cx="300" cy="76" r="4"/></g><g fill="#c4624a"><circle cx="90" cy="110" r="3.5"/><circle cx="230" cy="98" r="4"/><circle cx="380" cy="84" r="3.5"/></g>', 300],
+    [26, .18, hill('M0 70 Q70 30 160 60 T320 50 T420 40 V220 H0Z', '#c4624a') + '<g fill="#f2e2c0"><circle cx="30" cy="80" r="4"/><circle cx="200" cy="74" r="4.5"/><circle cx="350" cy="62" r="4"/></g><g fill="#dba63e"><circle cx="110" cy="72" r="4"/><circle cx="280" cy="76" r="3.5"/><circle cx="405" cy="58" r="4"/></g><g fill="#8eaeb4"><circle cx="70" cy="92" r="3"/><circle cx="250" cy="90" r="3"/></g>', 220]
+  ];
+  var css =
+    '.pzp{display:none}' +
+    A + ' > .pzp{display:block;position:absolute;left:0;right:0;top:9px;bottom:0;z-index:0;pointer-events:none;overflow:hidden;clip-path:' + zigTop(50, 7) + ';background:linear-gradient(180deg,#f1dfb4 0%,#eed0a2 40%,#e9b99a 72%,#dfa98e 100%);contain:strict}' +
+    A + ' > .pzf{display:none !important}' +
+    '.pzp > *,.pzp .pzp-sun,.pzp .pzp-cw{position:absolute}' +
+    '.pzp .pzp-sky{inset:0}' +
+    '.pzp .pzp-rb{position:absolute;left:-8%;right:18%;bottom:34%;aspect-ratio:2/1}' +
+    '.pzp .pzp-rb i{position:absolute;left:var(--o);right:var(--o);top:calc(var(--o) * 2);bottom:calc(var(--o) * 2 - 100%);border-radius:50%;background:var(--c);box-shadow:0 -3px 0 rgba(60,40,20,.12)}' +
+    '.pzp .pzp-rb i:nth-child(1){--o:0%}.pzp .pzp-rb i:nth-child(2){--o:5%}.pzp .pzp-rb i:nth-child(3){--o:10%}.pzp .pzp-rb i:nth-child(4){--o:15%}.pzp .pzp-rb i:nth-child(5){--o:20%;background:linear-gradient(180deg,#f1dfb4,#eed0a2)}' +
+    '.pzp .pzp-rb{overflow:hidden;opacity:.9}' +
+    '.pzp .pzp-sun{right:14%;top:15%;width:58px;height:58px;border-radius:50%;background:#e2b45a;box-shadow:0 0 0 8px rgba(226,180,90,.25)}' +
+    '.pzp .pzp-cw{top:84px;width:2px;transform-origin:50% 0;animation:pzpSway 7s ease-in-out infinite alternate}' +
+    '.pzp .pzp-cw::before{content:"";position:absolute;left:0;top:0;bottom:12px;width:2px;background:#8a6c42}' +
+    '.pzp .pzp-cl{position:absolute;bottom:0;height:24px;border-radius:13px;background:#f4ead6;box-shadow:2px 3px 0 rgba(0,0,0,.12)}' +
+    '.pzp .pzp-cl::before{content:"";position:absolute;width:46%;height:150%;left:18%;top:-60%;border-radius:50%;background:inherit}' +
+    '.pzp .c1{left:30%;height:70px}.pzp .c1 .pzp-cl{left:-40px;width:86px}' +
+    '.pzp .c2{left:64%;height:132px;animation-duration:9s;animation-delay:-3s}.pzp .c2 .pzp-cl{left:-38px;width:76px;opacity:.92}' +
+    '@keyframes pzpSway{from{transform:rotate(-3.5deg)}to{transform:rotate(3.5deg)}}' +
+    '.pzp .pzp-fly{left:0;right:0;top:27%;height:60px}' +
+    '.pzp .pzp-flock{position:absolute;inset:0;transform:translate3d(-110px,0,0);animation:pzpFly 26s linear 2s infinite}' +
+    '.pzp .pzp-flock svg{position:absolute;display:block;height:auto}' +
+    '.pzp .pzp-flock .f1{left:30px;top:6px;width:32px}.pzp .pzp-flock .f2{left:70px;top:18px;width:24px}.pzp .pzp-flock .f3{left:0;top:26px;width:20px}' +
+    '.pzp .pzp-flock svg{animation:pzpBob 1.6s ease-in-out infinite alternate}.pzp .pzp-flock .f2{animation-delay:-.6s}.pzp .pzp-flock .f3{animation-delay:-1.1s}' +
+    '@keyframes pzpFly{0%{transform:translate3d(-110px,14px,0)}45%{transform:translate3d(calc(100% + 20px),-16px,0)}100%{transform:translate3d(calc(100% + 20px),-16px,0)}}' +
+    '@keyframes pzpBob{from{transform:translateY(0)}to{transform:translateY(-4px)}}' +
+    '.pzp .pzp-L{left:-10px;right:-10px;bottom:-100px;will-change:transform}' +
+    '.pzp .pzp-L svg{display:block;width:100%;height:calc(100% - 100px)}' +
+    '.pzp .pzp-L::after{content:"";display:block;height:100px;background:var(--pzf)}' +
+    '.pzp .w{animation:pzpLit 5s steps(1,end) infinite}.pzp .w2{animation-duration:7s;animation-delay:-2s}' +
+    '@keyframes pzpLit{0%,100%{opacity:1}46%{opacity:.55}50%{opacity:1}78%{opacity:.75}82%{opacity:1}}' +
+    /* (ก) แผ่นโปร่ง: บนโปร่งใส ล่างนวลลง — ตัวหนังสือที่วางบนเนินเขียว/อิฐยังอ่านได้ */
+    '.pzp .pzp-veil{inset:0;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,0))}' +
+    A + ' .vc-mg{background:rgba(239,227,202,.86) !important;border-radius:3px !important;box-shadow:1px 2px 0 rgba(125,98,51,.45) !important;padding-top:3px !important;padding-bottom:3px !important;padding-right:8px !important}' +
+    /* ป๊อปอัปตอนเปิดแผ่น: ชั้นเด้งขึ้นทีละชั้น (หลัง→หน้า) */
+    A + '.pz-pop > .pzp .pzp-L svg{animation:pzpUp .6s cubic-bezier(.2,1.25,.4,1) var(--pzd,0s) both}' +
+    '@keyframes pzpUp{from{transform:translate3d(0,60px,0)}to{transform:none}}' +
+    /* (ง) */
+    CALM + ' .pzp *,' + CALM + ' .pzp *::before{animation:none !important}' + CALM + ' .pzp .pzp-flock{transform:translate3d(46%,0,0) !important}' +
+    '@media (prefers-reduced-motion:reduce){.pzp *,.pzp *::before{animation:none !important}.pzp .pzp-flock{transform:translate3d(46%,0,0) !important}}';
+  var layers = [], sky = [], body = null, q = 0;
+  function build() {
+    var c = document.getElementById('authCard'); if (!c) return null;
+    var s = c.querySelector(':scope > .pzp'); if (s) return s;
+    s = document.createElement('div'); s.className = 'pzp'; s.setAttribute('aria-hidden', 'true');
+    var h = '<div class="pzp-sky"><div class="pzp-rb"><i style="--c:#c4624a"></i><i style="--c:#dba63e"></i><i style="--c:#84b07a"></i><i style="--c:#8eaeb4"></i><i style="--c:#f1dfb4"></i></div><div class="pzp-sun"></div><div class="pzp-cw c1"><div class="pzp-cl"></div></div><div class="pzp-cw c2"><div class="pzp-cl"></div></div></div>' +
+      '<div class="pzp-fly"><div class="pzp-flock">' + CR.replace('<svg', '<svg class="f1"') + CR.replace('<svg', '<svg class="f2"') + CR.replace('<svg', '<svg class="f3"') + '</div></div>';
+    LAYERS.forEach(function (L, i) {
+      var fill = (L[2].match(/fill="(#[0-9a-f]+)"/) || [])[1];
+      h += '<div class="pzp-L" style="height:calc(' + L[0] + '% + 100px);--pzf:' + fill + ';--pzd:' + (i * .06).toFixed(2) + 's"><svg viewBox="0 0 420 ' + L[3] + '" preserveAspectRatio="xMidYMin slice">' + L[2] + '</svg></div>';
+    });
+    s.innerHTML = h + '<div class="pzp-veil"></div>';
+    var pza = c.querySelector(':scope > .pza'); c.insertBefore(s, pza ? pza.nextSibling : c.firstChild);
+    return s;
+  }
+  function active() { var h = document.documentElement; return h.getAttribute('data-htheme') === 'paper' && h.getAttribute('data-view') === 'home' && document.body.getAttribute('data-sheet') === 'acct'; }
+  function paint() {
+    q = 0; var y = (!active() || calm() || !body) ? 0 : Math.max(0, body.scrollTop);
+    for (var i = 0; i < layers.length; i++) { var v = Math.min(y * LAYERS[i][1], 40 + i * 14); layers[i].style.transform = v ? 'translate3d(0,' + v.toFixed(1) + 'px,0)' : ''; }
+    if (sky[0]) sky[0].style.transform = y ? 'translate3d(0,' + Math.min(y * .02, 14).toFixed(1) + 'px,0)' : '';
+  }
+  function onScroll() { if (!q) q = requestAnimationFrame(paint); }
+  function hook() {
+    var s = build(); if (!s) return;
+    layers = [].slice.call(s.querySelectorAll('.pzp-L')); sky = [s.querySelector('.pzp-sky')];
+    var b = document.querySelector('#authCard > .sheet-body');
+    if (b !== body) { if (body) body.removeEventListener('scroll', onScroll); body = b; if (body) body.addEventListener('scroll', onScroll, { passive: true }); }
+    paint();
+  }
+  function go() {
+    if (document.documentElement.getAttribute('data-htheme') !== 'paper') return;
+    if (!document.getElementById('pz-pop')) { var st = document.createElement('style'); st.id = 'pz-pop'; st.textContent = css; document.head.appendChild(st); }
+    hook();
+    var last = document.body.getAttribute('data-sheet');
+    new MutationObserver(function () { var v = document.body.getAttribute('data-sheet'); if (v === last) return; last = v; hook(); })
+      .observe(document.body, { attributes: true, attributeFilter: ['data-sheet'] });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+})();
+/*/PZPOP*/
+
+/*PZPROF*/ /* ธีมตัดกระดาษ: หัวแผ่นบัญชี = "ป้ายชื่อกระดาษ" ติดเทป (รูปโปรไฟล์วงแหวนประ + ป้ายตราประทับ "เข้าสู่ระบบแล้ว")
+   ปุ่ม X กลางแนวป้ายชื่อ ชิดขวา · ซองเครดิต: เลื่อนปุ่ม "เติมเครดิต" ลง + ย้ายตรา V ขึ้นเหนือปุ่ม (ไม่ทับกันแล้ว) */
+(function () {
+  'use strict';
+  if (window.__pzProf) return; window.__pzProf = 1;
+  var A = 'html[data-htheme="paper"][data-view="home"] body[data-sheet="acct"] #authCard#authCard';
+  var FIB = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='120'%3E%3Cg fill='none' stroke='%237a5a30' stroke-opacity='.14' stroke-width='.8'%3E%3Cpath d='M10 20q20 6 34-2M80 64q14 10 30 4M150 30q18-8 32 2M30 96q12-6 26 0M190 90q10 8 24 2M120 104q16 4 28-6'/%3E%3C/g%3E%3C/svg%3E\")";
+  var css =
+    /* หัวแผ่น */
+    A + ' > .sheet-head{padding:24px 16px 12px 18px !important;align-items:center !important;gap:12px !important}' +
+    A + ' .acct-row{flex:1 1 auto;min-width:0;position:relative;align-items:center !important;gap:12px !important;padding:10px 12px 10px 10px !important;background:' + FIB + ',linear-gradient(180deg,#f1e6cf,#e8d9bb) !important;border-radius:4px !important;box-shadow:2px 3px 0 #7d6233,0 8px 12px -8px rgba(0,0,0,.45) !important;rotate:-.6deg}' +
+    A + ' .acct-row::before{content:"";position:absolute;inset:4px;border:1.5px dashed rgba(94,71,42,.28);border-radius:3px;pointer-events:none}' +
+    A + ' .acct-row::after{content:"";position:absolute;top:-8px;left:22px;width:46px;height:15px;transform:rotate(-7deg);background:rgba(216,196,147,.85);box-shadow:0 1px 1px rgba(0,0,0,.12);pointer-events:none}' +
+    A + ' .acct-avatar{width:48px !important;height:48px !important;flex:0 0 48px !important;background:#cdd6c0 !important;box-shadow:0 0 0 3px #efe3ca,0 0 0 4.5px #a9843a !important}' +
+    A + ' .acct-avatar::after{inset:4px !important;border-color:rgba(47,74,44,.3) !important}' +
+    A + ' #acctInitial{font-size:20px !important;color:#2c4a3f !important;-webkit-text-fill-color:#2c4a3f !important}' +
+    A + ' .acct-cam{right:-5px !important;bottom:-5px !important;width:20px !important;height:20px !important;background:#d1a54a !important;color:#2e2112 !important;border:2px solid #efe3ca !important;box-shadow:1px 1px 0 #6e4f22 !important}' +
+    A + ' .acct-cam svg{width:10px !important;height:10px !important;color:#2e2112 !important;stroke:#2e2112 !important}' +
+    A + ' .acct-info{min-width:0;gap:5px !important}' +
+    A + ' .acct-mail{font-size:14.5px !important;line-height:1.25 !important}' +
+    A + ' .acct-label{align-self:flex-start;gap:6px !important;padding:3px 9px 3px 7px !important;border:1.5px solid rgba(60,92,76,.6) !important;border-radius:20px !important;background:rgba(127,161,132,.16) !important;font-size:0 !important}' +
+    A + ' .acct-label::before{width:6px !important;height:6px !important}' +
+    A + ' .acct-label::after{color:#2f4a2c !important;-webkit-text-fill-color:#2f4a2c !important;font:600 11.5px/1 Prompt,Sarabun,sans-serif !important}' +
+    A + ' #authClose.sheet-close{position:relative !important;top:auto !important;right:auto !important;left:auto !important;align-self:center !important;flex:0 0 40px !important;width:40px !important;height:40px !important;margin:0 !important;rotate:4deg}' +
+    A + ' .alx-hd{margin-top:12px !important}' +
+    /* ซองเครดิต: ปุ่มลง 38px · ตรา V อยู่เหนือปุ่ม · กระเป๋าซองสูงขึ้นให้ปลาย V ตรงตรา */
+    A + ' .vc-wc-top-up{margin-top:96px !important}' +
+    A + ' .vc-wcard > .pze-se{bottom:94px !important}' +
+    A + ' .vc-wcard > .pze-pk{height:166px !important}';
+  function go() {
+    if (document.documentElement.getAttribute('data-htheme') !== 'paper') return;
+    if (document.getElementById('pz-prof')) return;
+    var s = document.createElement('style'); s.id = 'pz-prof'; s.textContent = css; document.head.appendChild(s);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+})();
+/*/PZPROF*/
