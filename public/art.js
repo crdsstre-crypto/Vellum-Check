@@ -52,10 +52,12 @@
   function watch() {
     var sc = document.querySelector('.ld-scene');
     if (sc && 'IntersectionObserver' in window) new IntersectionObserver(function (es) { if (es.some(function (e) { return e.isIntersecting; })) fire(); }, { rootMargin: '0px' }).observe(sc);
-    document.addEventListener('pointerdown', function (e) { if (e.target.closest && e.target.closest('#authToggle,[href="#authCard"],.dx-nav a')) fire(); }, true);
+    document.addEventListener('pointerdown', function (e) { if (e.target.closest && e.target.closest('#authToggle,[href="#authCard"],.dx-nav a,.bn-item[data-nav="acct"],#bottomNav [data-nav="acct"]')) fire(); }, true);
     document.addEventListener('pointerover', function (e) { if (e.target.closest && e.target.closest('#authToggle,[href="#authCard"]')) fire(); }, true);
-    var idle = function () { (window.requestIdleCallback || function (c) { setTimeout(c, 1); })(fire, { timeout: 2000 }); };
-    if (document.readyState === 'complete') setTimeout(idle, 3000); else addEventListener('load', function () { setTimeout(idle, 3000); });
+    /* v294: เดิมโหลดไฟล์ภาพ/วิดีโอหน้าเข้าสู่ระบบ (~900KB) อัตโนมัติ 3 วิหลังเปิดเว็บ → แย่งเน็ตกับรูปหน้าอื่น (กดตรวจสัญญาแล้วรูปขึ้นช้า)
+       ตอนนี้: โหลดเมื่อจะไปหน้าบัญชีจริง (แตะปุ่มบัญชี / เห็นฉากโต๊ะ) · ยังไม่ล็อกอินและว่างนาน 20 วิ ค่อยเตรียมไว้ */
+    var idle = function () { if (document.documentElement.getAttribute('data-auth') === 'in' || document.body.classList.contains('logged-in')) return; (window.requestIdleCallback || function (c) { setTimeout(c, 1); })(fire, { timeout: 4000 }); };
+    if (document.readyState === 'complete') setTimeout(idle, 20000); else addEventListener('load', function () { setTimeout(idle, 20000); });
     /* คลิปแนะนำ (iframe ใหญ่): โหลดเมื่อเลื่อนเข้าใกล้เท่านั้น */
     Array.prototype.forEach.call(document.querySelectorAll('iframe[data-src]'), function (f) {
       var go = function () { if (!f.getAttribute('src')) f.setAttribute('src', f.getAttribute('data-src')); };
@@ -71,7 +73,7 @@
 /* ภาพพื้นโต๊ะไม้และเนื้อกระดาษ (ย้ายออกจาก art.css ให้หน้าแรกแสดงผลเร็วขึ้น) ใส่เมื่อจะใช้หน้าโต๊ะ/หน้าตรวจ */
 (function () {
   var IMG0, PAPER;
-  window.VCWhenDesk(function () { window.VCMedia(function (M) { var root0 = document.documentElement, r = root0.style; r.setProperty('--vc-img0', M.IMG0); r.setProperty('--vc-paper', M.PAPER); if (M.ROCK) { r.setProperty('--vc-rock', M.ROCK); r.setProperty('--vc-rock-m', M.ROCKM); root0.classList.add('vc-rock-on'); } }); });
+  window.VCWhenDesk(function () { window.VCMedia(function (M) { var root0 = document.documentElement, r = root0.style; if (M.ROCK) { r.setProperty('--vc-rock', M.ROCK); r.setProperty('--vc-rock-m', M.ROCKM); root0.classList.add('vc-rock-on'); } }); });
 })();
 /* เล่นวิดีโอแบบเดินเฟรมเอง (สำรอง): iPhone โหมดประหยัดพลังงาน/บางเบราว์เซอร์บล็อก video.play()
    → เลื่อน currentTime ตามนาฬิกาเอง แล้ววาดเฟรมตอน seeked · คืนฟังก์ชันหยุด */
@@ -827,6 +829,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
     }
     function loop(now) {
       raf = 0; if (!running || lost) return;
+      if (++chkN % 45 === 0 && !cvShown()) { running = false; return; }
       if (window.VCPause && window.VCPause.on()) { running = false; return; }   /* มีหน้าต่างเปิดทับ: หยุดวาด (perf-guard.js) */
       if (tier === 3) { skipF = !skipF; if (skipF) { raf = requestAnimationFrame(loop); return; } }
       /* ไม่มีใครขยับเมาส์: วาดฉาก 3D ทีละเว้นเฟรม (30 ภาพ/วินาที) ลดภาระการ์ดจอครึ่งหนึ่ง พอขยับเมาส์กลับเป็นเต็มความลื่นทันที */
@@ -845,8 +848,12 @@ window.VCStepPlay = function (v, fps, onEnd) {
       }
       sk = 0; last = now; raf = requestAnimationFrame(loop);
     }
+    /* v294: ฉาก 3D เดิมถูกซ่อนอยู่ (หน้าปกใหม่ hero-scene ทับ / ซ่อนหลังหน้าโต๊ะ) → ไม่ต้องวาด · เดิมวาดเต็มจอทุกเฟรม + บังคับคำนวณ layout ทุกเฟรม ทำให้ทั้งเว็บหน่วง */
+    function cvShown() { if (!cv.isConnected) return false; var r = cv.getBoundingClientRect(); if (r.width < 2 || r.height < 2) return false; var cs = getComputedStyle(cv); if (cs.visibility === 'hidden' || cs.display === 'none' || +cs.opacity === 0) return false; for (var el = cv.parentElement; el && el !== document.body; el = el.parentElement) { var c2 = getComputedStyle(el); if (c2.display === 'none' || c2.visibility === 'hidden' || +c2.opacity === 0) return false; } return true; }
+    var chkN = 0;
     function go() {
       if (lost || tier === 4) return;
+      if (!cvShown()) { running = false; return; }
       if (mq && mq.matches) { running = false; draw(performance.now(), true); return; }
       if (!running && inView && !document.hidden) { running = true; last = 0; if (!raf) raf = requestAnimationFrame(loop); }
     }
@@ -1074,7 +1081,8 @@ window.VCStepPlay = function (v, fps, onEnd) {
   }
   function apply(view) {
     cur = view; root.setAttribute('data-view', view);
-    window.dispatchEvent(new Event('resize'));       /* ให้ฉาก 3 มิติ/ฉากเลื่อนคำนวณขนาดใหม่ */
+    /* v294: ให้หน้าใหม่วาดเฟรมแรกก่อน แล้วค่อยบอกฉากต่างๆ ให้คำนวณขนาดใหม่ */
+    requestAnimationFrame(function () { setTimeout(function () { window.dispatchEvent(new Event('resize')); }, 0); });
     document.dispatchEvent(new CustomEvent('vc-view', { detail: { view: view } }));
   }
   /* ระลอกหมึก (Ink tide): แถบหมึกชาร์โคลมีขอบเงินบางแบบเส้นบรรทัดบัญชี ไหลขึ้นจากล่างจอเป็นคลื่น ปิดทั้งจอ → สลับหน้าตอนปิดสนิท
@@ -1132,10 +1140,10 @@ window.VCStepPlay = function (v, fps, onEnd) {
     if (reduce() || opts.instant || !window.requestAnimationFrame) { hideWipe(); finish(); return; }
     hideWipe(); busy = true;
     if (view === 'desk' && window.VCDeskIntro) {   /* เข้าโต๊ะ: จอมืดลงสั้นๆ แล้วให้ฉากจุดตะเกียงเปิดเอง แทนคลื่นม่วง */
-      var fz = document.createElement('div'); fz.className = 'vc-fadeblack'; document.body.appendChild(fz);
-      requestAnimationFrame(function () { fz.classList.add('on'); });
-      setTimeout(function () { if (my !== seq) { fz.remove(); return; } finish(); hideWipe(); VCDeskIntro.play(true);
-        requestAnimationFrame(function () { fz.classList.remove('on'); setTimeout(function () { fz.remove(); }, 400); }); }, 260);
+      /* v294: กดแล้วมาเลย — ไม่มีจอมืด 0.26 วิก่อนเปลี่ยนหน้า · ฉากจุดตะเกียงเล่นแค่ครั้งแรกครั้งเดียว (ครั้งต่อไปขึ้นหน้าทันที) */
+      finish(); hideWipe();
+      var introSeen = false; try { introSeen = localStorage.getItem('vc_intro_seen') === '1'; } catch (e) {}
+      if (!introSeen) requestAnimationFrame(function () { if (my === seq) VCDeskIntro.play(true); });
       return;
     }
     /* v267: เลิกใช้ม่านหมึก (จอดำเกือบ 1 วินาที) → เปลี่ยนหน้าแบบเลื่อนซ้อน ~0.4 วินาที
@@ -2265,7 +2273,8 @@ window.VCStepPlay = function (v, fps, onEnd) {
     var raf = 0;
     /* วิดีโอแบบสี|ความทึบ วางคู่กัน (กว้าง 1600): ครึ่งซ้ายสี ครึ่งขวาความทึบ → ประกอบเป็นภาพโปร่งใสบน canvas มือจึงทึบจริง เงาโปร่งแสง */
     var off = document.createElement('canvas'); off.width = PW * 2; off.height = PH; var ox = off.getContext('2d', { willReadFrequently: true });
-    function draw() { raf = 0; if (v.readyState >= 2) { if (cv.width !== PW) { cv.width = PW; cv.height = PH; }
+    var sgN = 0; /* v294: วาดลายเซ็นทีละ 2 เฟรม (~30fps) — getImageData หนัก ลดงานครึ่งหนึ่งโดยตาแทบไม่เห็นต่าง */
+    function draw(e) { raf = 0; if (typeof e === 'number' && (++sgN & 1)) { if (!v.paused && !v.ended) raf = requestAnimationFrame(draw); return; } if (v.readyState >= 2) { if (cv.width !== PW) { cv.width = PW; cv.height = PH; }
         ox.drawImage(v, 0, 0, PW * 2, PH); var c = ox.getImageData(0, 0, PW, PH), a = ox.getImageData(PW, 0, PW, PH), cd = c.data, ad = a.data;
         for (var i = 3; i < cd.length; i += 4) cd[i] = ad[i - 3];
         cx.putImageData(c, 0, 0); } if (!v.paused && !v.ended) raf = requestAnimationFrame(draw); }
@@ -2343,7 +2352,7 @@ window.VCStepPlay = function (v, fps, onEnd) {
   function play(force) {
     var sc = document.querySelector('.ld-scene'); if (!sc || busy || (done && !force) || reduced() || !sc.offsetWidth) return;
     done = true; busy = true;
-    var full = !seen(), D = full ? 2800 : 1400;
+    var full = !seen(), D = full ? 1500 : 900;
     var lamp = sc.querySelector('.ld-lamp'), sr = sc.getBoundingClientRect(), lr = lamp ? lamp.getBoundingClientRect() : sr;
     var lx = lr.left + lr.width / 2 - sr.left, ly = lr.top + lr.height / 2 - sr.top;
     var doc = sc.querySelector('.auth-doc'), dr = doc ? doc.getBoundingClientRect() : sr;
