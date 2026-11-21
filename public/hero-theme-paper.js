@@ -119,6 +119,91 @@
   (window.VCHT = window.VCHT || {}).paper = { css: css, stage: stage, cam: cam, init: init, tap: tap };   /* v2: เรียก __vchApply ท้ายไฟล์ (หลังเพิ่มฉากเลื่อน) */
 })();
 
+/*PZMUSIC*/ /* เพลงธีมตัดกระดาษ "Paper Crane Waltz" — กล่องดนตรี/คาลิมบา จังหวะวอลซ์ 3/4 คีย์ D major + เสียงกระดาษ (สร้างด้วยโค้ดทั้งหมด ไม่มีไฟล์ ไม่มีลิขสิทธิ์)
+   ผสมตามฉากเลื่อนของธีมนี้: ดิ่งผ่านชั้นกระดาษ (คาลิมบา + เสียงกระดาษปัด) → ตัดข้อเสี่ยง (เสียงกรรไกร "ฉึบ" ตามจังหวะ)
+   → ลอกชั้นบน (กระดิ่งกล่องดนตรีระยิบ) → ฉีกกระดาษ (เสียงฉีก) → ตรานูน (ตุ้บ) → ผลตรวจ (คอร์ดสว่าง ทำนองช้าลง) */
+(function () {
+  var T = window.VCHT && window.VCHT.paper; if (!T || T.music) return;
+  function cl(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
+  function seg(p, a, b) { return cl((p - a) / (b - a)); }
+  function hz(m) { return 440 * Math.pow(2, (m - 69) / 12); }
+  /* D · Bm · G · A (ช่วงหลัก) / G · D/F# · Em · A (ช่วงผลตรวจ) — [เบส, 5th, 10th, ...] */
+  var CH = [[50, 57, 62, 66, 69], [47, 54, 59, 62, 66], [43, 50, 55, 59, 62], [45, 52, 57, 61, 64]];
+  var CB = [[43, 50, 55, 59, 62], [42, 50, 54, 57, 62], [40, 47, 52, 55, 59], [45, 52, 57, 61, 64]];
+  /* ทำนอง 8 ห้อง (ห้องละ 3 โน้ต: จังหวะ 1, 2, 3) — 0 = เว้น */
+  var ML = [78, 0, 76, 74, 0, 71, 74, 76, 79, 78, 0, 0, 78, 0, 81, 83, 81, 78, 76, 78, 74, 76, 0, 0];
+  var MB = [74, 0, 78, 81, 0, 79, 78, 0, 76, 76, 74, 0, 79, 0, 78, 76, 0, 74, 73, 74, 76, 74, 0, 0];
+  var SP = [86, 88, 90, 93, 95, 98];
+  function kal(A, bus, f, t, dur, g) {   /* คาลิมบา/กล่องดนตรี: ไซน์ดีดเร็ว + โอเวอร์โทนเพี้ยนนิดๆ */
+    t = Math.max(t, A.currentTime || 0);
+    var e = A.createGain(); e.gain.setValueAtTime(0, t); e.gain.linearRampToValueAtTime(g, t + .004); e.gain.exponentialRampToValueAtTime(g * .3, t + .18); e.gain.exponentialRampToValueAtTime(.0004, t + dur); e.connect(bus);
+    [[1, 1], [2.76, .18], [5.4, .06]].forEach(function (h) { var o = A.createOscillator(), gg = A.createGain(); o.type = 'sine'; o.frequency.value = f * h[0]; gg.gain.value = h[1]; o.connect(gg); gg.connect(e); o.start(t); o.stop(t + dur + .05); });
+  }
+  function nz(A, sec) { var b = A.createBuffer(1, Math.floor(A.sampleRate * sec), A.sampleRate), d = b.getChannelData(0); for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; return b; }
+  function burst(A, buf, bus, t, f0, f1, dur, g, type, q) {
+    var s = A.createBufferSource(), fl = A.createBiquadFilter(), e = A.createGain(); s.buffer = buf;
+    fl.type = type || 'bandpass'; fl.frequency.setValueAtTime(f0, t); fl.frequency.exponentialRampToValueAtTime(f1, t + dur); fl.Q.value = q || 1.2;
+    e.gain.setValueAtTime(0, t); e.gain.linearRampToValueAtTime(g, t + .004); e.gain.exponentialRampToValueAtTime(.0005, t + dur);
+    s.connect(fl); fl.connect(e); e.connect(bus); s.start(t, Math.random() * .5); s.stop(t + dur + .02);
+  }
+  function snip(A, N, t) { burst(A, N.nb, N.sn, t, 5200, 2600, .05, .5, 'bandpass', 2.5); burst(A, N.nb, N.sn, t + .055, 6400, 3400, .04, .32, 'bandpass', 3); }
+  function rustle(A, N, t, g) { burst(A, N.nb, N.ks, t, 2600, 1200, .22, g, 'bandpass', .8); }
+  function tear(A, N, t) {
+    var s = A.createBufferSource(), fl = A.createBiquadFilter(), e = A.createGain(); s.buffer = N.nb;
+    fl.type = 'highpass'; fl.frequency.setValueAtTime(900, t); fl.frequency.linearRampToValueAtTime(2600, t + .5);
+    e.gain.setValueAtTime(0, t); for (var i = 0; i < 10; i++) e.gain.linearRampToValueAtTime((i % 2 ? .12 : .34) * (1 - i / 12), t + .05 * i + .02); e.gain.linearRampToValueAtTime(0, t + .6);
+    s.connect(fl); fl.connect(e); e.connect(N.fx); s.start(t); s.stop(t + .65);
+  }
+  function thump(A, N, t) {
+    var o = A.createOscillator(), e = A.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(55, t + .2);
+    e.gain.setValueAtTime(.45, t); e.gain.exponentialRampToValueAtTime(.001, t + .32); o.connect(e); e.connect(N.fx); o.start(t); o.stop(t + .34);
+    burst(A, N.nb, N.fx, t, 900, 400, .08, .25, 'lowpass', .7);
+  }
+  T.music = {
+    title: 'Paper Crane Waltz',
+    build: function (A, M, u) {
+      var b = u && u.bus ? u.bus : function () { var g = A.createGain(); g.gain.value = 0; g.connect(M.out); return g; };
+      var fx = A.createGain(); fx.gain.value = .8; fx.connect(M.out);
+      M.pz = { nb: nz(A, 2), ks: b(), sn: b(), sp: b(), br: b(), fx: fx, step: 0, next: 0, spT: 0, lp: -1, x: { k: 1, s: 0, p: 0, b: 0 } };
+    },
+    sched: function (A, M) {
+      var N = M.pz; if (!N) return;
+      var now = A.currentTime, x = N.x;
+      if (!N.next || N.next < now - .5) N.next = now + .06;
+      while (N.next < now + .25) {
+        var t = N.next, br = x.b > x.k, beat = N.step % 3, bar = Math.floor(N.step / 3) % 8, ch = (br ? CB : CH)[Math.floor(N.step / 6) % 4];
+        var bus = br ? N.br : N.ks, sw = beat === 0 ? 0 : .025;   /* วอลซ์: จังหวะ 2-3 หน่วงนิดๆ */
+        if (x.k > .02 || x.b > .02) {
+          if (beat === 0) kal(A, bus, hz(ch[0]), t, 2.6, .17);
+          else kal(A, bus, hz(ch[beat === 1 ? 2 : 3]), t + sw, 1.3, .07 + Math.random() * .02);
+          var m = (br ? MB : ML)[bar * 3 + beat]; if (m) kal(A, bus, hz(m), t + sw + .008, beat === 0 ? 2.2 : 1.6, .11);
+          if (!br && beat === 0 && x.k > .3 && bar % 2 === 0) rustle(A, N, t + .02, .05);
+        }
+        if (x.s > .05 && beat === 1) snip(A, N, t + sw);
+        N.step++; N.next += br ? .46 : .38;
+      }
+      if (x.p > .05 && now > N.spT) { N.spT = now + .22 + Math.random() * .35; kal(A, N.sp, hz(SP[Math.floor(Math.random() * SP.length)]), now + .03, 1.8, .05); }
+    },
+    mix: function (A, M, p) {
+      var N = M.pz; if (!N) return; var n = A.currentTime;
+      var k = 1 - seg(p, .68, .74), s = seg(p, .2, .215) * (1 - seg(p, .4, .43)), sp = seg(p, .455, .475) * (1 - seg(p, .565, .59)), b = seg(p, .7, .78);
+      N.x = { k: k, s: s, p: sp, b: b };
+      [M.warm, M.dark, M.ten, M.res].forEach(function (g) { g.gain.cancelScheduledValues(n); g.gain.setTargetAtTime(0, n, .2); });   /* ปิดเพลงตั้งต้น */
+      N.ks.gain.setTargetAtTime(k * .9, n, .3); N.sn.gain.setTargetAtTime(s * .7, n, .15); N.sp.gain.setTargetAtTime(sp * .8, n, .3); N.br.gain.setTargetAtTime(b * .9, n, .5);
+      if (N.lp >= 0) {
+        if (N.lp < .58 && p >= .58 && p < .64) tear(A, N, n + .02);
+        if (N.lp < .612 && p >= .612 && p < .66) thump(A, N, n + .02);
+        if (N.lp < .468 && p >= .468 && p < .5) rustle(A, N, n + .02, .12);
+      }
+      N.lp = p;
+    }
+  };
+  /* ชื่อเพลงบนปุ่ม (ถ้าธีมถูกใช้ไปแล้วก่อนบล็อกนี้) */
+  function title() { var h = document.getElementById('vch'), sr = h && h.shadowRoot, t = sr && sr.querySelector('.snd .t1x'); if (t && h.getAttribute('data-th') === 'paper') t.textContent = T.music.title; }
+  title(); setTimeout(title, 600); setTimeout(title, 2500);
+})();
+/*/PZMUSIC*/
+
 /*PZSCROLL*/ /* ธีมตัดกระดาษ (v2): ฉากเลื่อนลงของตัวเอง — ดิ่งผ่านชั้นกระดาษ → กรรไกรตัดข้อเสี่ยง 3 ข้อ → ลอกชั้นบนดูตัวเล็ก 2 ข้อ
    → ขอบกระดาษฉีกคั่นฉาก → ตรากระดาษนูน "ตรวจแล้ว" → ผลตรวจเป็นการ์ดป๊อปอัป แถบกระดาษสี
    หน้าปกเหมือนเดิม · ข้อมูลในสัญญาเป็นข้อมูลสมมติ · ขยับด้วย transform/opacity เป็นหลัก (ลื่นบนมือถือ) */
