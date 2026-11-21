@@ -2442,22 +2442,6 @@
     '.pzd-sc{display:none}' + C + ' .ta-wrap > .pzd-sc{display:block;position:absolute;left:0;top:0;width:24px;height:24px;margin:-12px 0 0 -12px;z-index:5;pointer-events:none;background:' + SCIS + ' center/18px no-repeat,#fbf4e4;border-radius:50%}' +
     C + ' .ta-wrap.pz-lift{animation:pzdLift .5s ease both}' +
     '@keyframes pzdLift{0%{transform:none}40%{transform:translateY(-4px) rotate(-.6deg);box-shadow:0 8px 12px -6px rgba(0,0,0,.3)}100%{transform:none}}' +
-    /* ตัวอย่างฟรี = ถุงกระดาษ */
-    C + ' .vc-try{background:none !important;border:0 !important;box-shadow:none !important;margin-top:18px !important}' +
-    C + ' .vc-try::before,' + C + ' .vc-try::after{display:none !important}' +
-    C + ' .vc-try-main{position:relative !important;display:flex !important;align-items:flex-end !important;gap:12px !important;padding:0 !important;background:none !important;border:0 !important;box-shadow:none !important;text-align:left !important}' +
-    C + ' .vc-try-main::before,' + C + ' .vc-try-main::after{display:none !important}' +
-    C + ' .vc-try-fan{flex:0 0 88px !important;width:88px !important;height:96px !important;background:' + BAG + ' center bottom/contain no-repeat !important;transform:none !important}' +
-    C + ' .vc-try-fan > *{display:none !important}' +
-    C + ' .vc-try-tx{padding-bottom:6px}' + C + ' .vc-try-tx b{' + DK + 'font-size:14px !important;font-weight:800 !important}' +
-    C + ' .vc-try-tx small{' + MD + 'font-size:11px !important;opacity:1 !important}' +
-    C + ' .vc-try-free{position:absolute !important;left:60px !important;top:-14px !important;right:auto !important;width:44px !important;height:44px !important;padding:0 !important;border-radius:50% !important;border:3px solid rgba(196,115,90,.95) !important;background:rgba(251,244,228,.55) !important;box-shadow:inset 0 0 0 3px rgba(251,244,228,.55),inset 0 0 0 4.2px rgba(196,115,90,.7) !important;color:#c4735a !important;-webkit-text-fill-color:#c4735a !important;font:900 13px/38px Prompt,sans-serif !important;text-align:center !important;transform:rotate(-14deg) !important;text-shadow:none !important;animation:none !important}' +
-    C + ' .vc-try-q{border-top:1.5px dashed rgba(94,71,42,.3) !important;margin-top:10px !important;padding-top:10px !important;background:none !important}' +
-    C + ' .vc-try-q > span{' + MD + 'font-weight:700 !important;font-size:11px !important}' +
-    C + ' .vc-try-c,' + C + ' .vc-try-all{position:relative !important;padding:6px 10px 6px 17px !important;border:0 !important;border-radius:3px !important;box-shadow:1px 2px 0 #7d6233 !important;' + DK + 'font-weight:700 !important;font-size:11.5px !important;clip-path:polygon(8px 0,100% 0,100% calc(100% + 4px),8px calc(100% + 4px),0 50%);background:#e6d7b9 !important}' +
-    C + ' .vc-try-c:nth-child(1){background:#e2c6b6 !important}' + C + ' .vc-try-c:nth-child(2){background:#c6d3d3 !important}' + C + ' .vc-try-c:nth-child(3){background:#e4d3a6 !important}' +
-    C + ' .vc-try-c svg{color:#5e472a !important;stroke:#5e472a !important}' +
-    C + ' .vc-try-c::before,' + C + ' .vc-try-all::before{content:"" !important;position:absolute !important;left:5px !important;top:50% !important;width:4px !important;height:4px !important;margin-top:-2px !important;border-radius:50% !important;background:#9d8057 !important;display:block !important}' +
     /* v94: เลขขั้น = เหรียญตราขอบหยัก (แบบหน้าวิธีแก้) · คูปองมีกรอบคราฟต์ + รอยตัด ด้านใน */
     C + ' .vc-sn{border:0 !important;border-radius:0 !important;background:none !important;box-shadow:none !important;width:50px !important;height:50px !important;isolation:isolate}' +
     C + ' .vc-box .vc-sn::before{content:attr(data-n) !important;position:relative !important;z-index:2;font:900 24px/1 Prompt,sans-serif !important;text-shadow:none !important;color:var(--d,#8a3a2a) !important;-webkit-text-fill-color:var(--d,#8a3a2a) !important}' +
@@ -2474,6 +2458,9 @@
     C + ' .vc-empty > .vc-empty-ico,' + C + ' .vc-empty > b,' + C + ' .vc-empty > .vc-paste-msg{flex:0 0 100% !important}' + C + ' .vc-empty > b{margin:0 0 22px !important}' + C + ' .vc-empty > .vc-paste{padding:12px 16px !important;font-size:13px !important;margin-top:0 !important}' + C + ' .vc-empty small label{padding:11px 14px !important;font-size:0 !important}' + C + ' .vc-empty small label::after{font-size:13px !important}' +
     C + ' .vc-empty > .vc-paste,' + C + ' .vc-empty > small{flex:0 0 100% !important;max-width:260px !important;margin:0 !important}' + C + ' .vc-empty > small{display:block !important;margin-top:6px !important}' + C + ' .vc-empty > .vc-paste{justify-content:center !important}' + C + ' .vc-empty small label{display:flex !important;justify-content:center !important;width:100% !important;box-sizing:border-box}' +
     C + ' .vc-empty-ico{width:150px !important;height:96px !important;margin:0 auto 6px !important;background:' + ART2 + ' center/contain no-repeat !important}' +
+    /* v95: การ์ด "ลองตรวจตัวอย่างฟรี" ใช้แบบเดิม (ผู้ใช้ขอคืน) — วางพื้นเข้มรองไว้ เพราะการ์ดเดิมโปร่งและออกแบบให้อยู่บนพื้นเข้ม */
+    C + ' .vc-try{background-color:#1b2523 !important;margin-top:18px !important}' +
+    C + ' .vc-try,' + C + ' .vc-try *{-webkit-text-fill-color:currentColor !important}' +
     'html[data-calm] #checkCard .ta-wrap{animation:none !important}@media (prefers-reduced-motion:reduce){#checkCard .ta-wrap{animation:none !important}}';
   CSS += Object.keys(SHAPE).map(function (k) { return C + ' #vcpTrigger[data-pzt="' + k + '"] .vcp-ti::before{background-image:' + u(SHAPE[k]) + ' !important}'; }).join('');
   var css = '@media (max-width:767px){' + CSS + '}';
