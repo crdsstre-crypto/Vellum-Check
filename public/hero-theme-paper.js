@@ -30,7 +30,7 @@
   .pc-l{position:absolute;left:-6%;right:-6%;pointer-events:none;transform:translate(calc(var(--px,0) * var(--k) * 1px),calc(var(--py,0) * var(--k) * 1px));transition:transform .25s ease-out}
   .pc-l svg{position:absolute;inset:0;width:100%;height:100%}
   .pc-l path{filter:drop-shadow(0 6px 6px rgba(0,0,0,.35))}
-  .pc-t{top:calc(var(--art-head,56px) - 2px);height:16vh}.pc-b{bottom:-1%;height:11vh}
+  .pc-t{top:calc(var(--pc-top,58px) - 14px);height:calc(16vh + 12px)}   /* v2: ชิดใต้แถบหัวเว็บจริง (เดิมใช้ --art-head ซึ่งรวมระยะเผื่อ จึงมีช่องว่าง) · ยื่นเข้าใต้หัวเว็บ 14px กันช่องตอนแกว่ง */.pc-b{bottom:-1%;height:11vh}
   .pc-sway{position:absolute;inset:0;animation:pcs 9s ease-in-out infinite alternate}
   @keyframes pcs{from{transform:translate(-6px,-3px)}to{transform:translate(6px,4px)}}
   .pc-dot{position:absolute;width:var(--s);height:var(--s);background:var(--c);border-radius:var(--r,50%);box-shadow:2px 3px 0 rgba(0,0,0,.25);transform:rotate(var(--a,0deg))}
@@ -53,7 +53,7 @@
   .pc-tp i{position:absolute;width:var(--w);height:var(--h);margin:-5px;background:var(--c);border-radius:2px;box-shadow:2px 2px 0 rgba(0,0,0,.22);animation:pctp 1.2s cubic-bezier(.2,.7,.4,1) forwards}
   @keyframes pctp{0%{opacity:1;transform:translate(0,0) rotate(0)}55%{opacity:1;transform:translate(var(--x),var(--y)) rotate(var(--r))}100%{opacity:0;transform:translate(calc(var(--x) * 1.2),calc(var(--y) + 70px)) rotate(calc(var(--r) * 2))}}
   @media (prefers-reduced-motion:reduce){.pc-cr{display:none}}
-  @media (min-width:768px){.pc-t{height:15vh}.pc-b{height:11vh}}
+  @media (min-width:768px){.pc-t{height:calc(15vh + 12px)}.pc-b{height:11vh}}
   `;
   function wave(top, layers) {
     var out = '';
@@ -101,6 +101,9 @@
 
   /* มิติ: เมาส์ (คอม) / เอียงเครื่อง (Android) → --px/--py บนหน้าปก */
   function init(SR, host) {
+    /* ขอบบนของกรอบกระดาษ = ขอบล่างของแถบหัวเว็บที่เห็นจริง */
+    function top() { var h = document.querySelector('.site-header'); if (!h) return; var b = h.getBoundingClientRect().bottom; if (b > 0) host.style.setProperty('--pc-top', b.toFixed(0) + 'px'); }
+    top(); setTimeout(top, 600); addEventListener('resize', function () { requestAnimationFrame(top); });
     var raf = 0, X = 0, Y = 0;
     function put() { raf = 0; host.style.setProperty('--px', X.toFixed(2)); host.style.setProperty('--py', Y.toFixed(2)); }
     function q(x, y) { X = Math.max(-1, Math.min(1, x)); Y = Math.max(-1, Math.min(1, y)); if (!raf) raf = requestAnimationFrame(put); }
