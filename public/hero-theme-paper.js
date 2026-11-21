@@ -1299,7 +1299,7 @@
     L + ' #googleBtn::before{display:none !important}' + L + ' #googleBtn .pzg{width:20px;height:20px;flex:none}' +
     L + ' .ad-fine{color:#7a6448 !important}' +
     /* v2: การ์ดใหญ่ขึ้นเต็มจอ · อยู่กลางแนวตั้ง */
-    L + '{min-height:100% !important;display:flex !important;flex-direction:column}' + L + ' .ld-scene{display:flex !important;flex-direction:column;justify-content:safe center;flex:1 0 auto;min-height:0 !important}' +
+    L + ':not([hidden]){min-height:100% !important;display:flex !important;flex-direction:column}' + L + ' .ld-scene{display:flex !important;flex-direction:column;justify-content:safe center;flex:1 0 auto;min-height:0 !important}' +
     L + ' .ld-scene .auth-doc-wrap{width:100% !important;max-width:560px;margin:0 auto !important;padding:100px 14px 92px !important;zoom:1 !important}' +
     L + ' .ad-pose{transform:rotate(-.8deg) !important}' +
     '@media (max-height:760px){' + L + ' .ld-scene .auth-doc-wrap{padding:66px 12px 70px !important}' + L + ' .auth-doc{padding:22px 18px 20px !important}' + L + ' .ad-title{font-size:26px !important}' + L + ' .ld-scene > .pzld.cr{top:34px;width:48px;height:36px}}' +
@@ -1419,3 +1419,37 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
 })();
 /*/PZHELLO*/
+
+/*PZNAVOUT*/ /* ธีมตัดกระดาษ: แถบเมนูล่างบนมือถือแสดงตอนยังไม่ล็อกอินด้วย (เดิมซ่อน) — แตะ ประวัติ/บัญชี → เปิดหน้าเข้าสู่ระบบ */
+(function () {
+  'use strict';
+  if (window.__pzNavOut) return; window.__pzNavOut = 1;
+  var mq = window.matchMedia('(max-width: 767px)');
+  function on() { return document.documentElement.getAttribute('data-htheme') === 'paper'; }
+  function go() {
+    if (!on()) return;
+    var nav = document.getElementById('bottomNav'), li = document.getElementById('authLoggedIn'), tg = document.getElementById('authToggle');
+    if (!nav || !li) return;
+    if (!document.getElementById('pz-navout')) { var st = document.createElement('style'); st.id = 'pz-navout'; st.textContent = '@media (max-width:767px){html[data-htheme="paper"] body.pz-nav-out .vch{--vh-nav:64px}html[data-htheme="paper"] body.pz-nav-out footer{padding-bottom:calc(26px + var(--nav-h,64px) + env(safe-area-inset-bottom))}html[data-htheme="paper"] body.pz-nav-out .vc-fpill,html[data-htheme="paper"] body.pz-nav-out .to-top{margin-bottom:var(--nav-h,64px)}}'; document.head.appendChild(st); }
+    var busy = false;
+    function fix() {
+      if (busy) return; busy = true;
+      var out = li.hidden && mq.matches;
+      if (out) { if (nav.hidden) nav.hidden = false; document.body.classList.add('pz-nav-out'); }
+      else document.body.classList.remove('pz-nav-out');
+      busy = false;
+    }
+    new MutationObserver(function () { setTimeout(fix, 0); }).observe(nav, { attributes: true, attributeFilter: ['hidden'] });
+    new MutationObserver(function () { setTimeout(fix, 0); }).observe(li, { attributes: true, attributeFilter: ['hidden'] });
+    if (mq.addEventListener) mq.addEventListener('change', fix);
+    nav.addEventListener('click', function (e) {
+      if (!li.hidden) return;
+      var b = e.target.closest && e.target.closest('[data-nav="hist"],[data-nav="acct"]'); if (!b) return;
+      e.preventDefault(); e.stopImmediatePropagation();
+      if (!document.body.classList.contains('auth-open') && tg) tg.click();
+    }, true);
+    fix();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else setTimeout(go, 0);
+})();
+/*/PZNAVOUT*/
