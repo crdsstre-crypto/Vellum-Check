@@ -670,7 +670,12 @@
   window.__vchApply = applyTheme; window.__vchBoot = function () { boot(); };
   applyTheme();
   host.addEventListener('scroll', on, { passive: true });
-  addEventListener('resize', function () { boot(); });
+  /* v28: resize ปลอม (ตอนสลับหน้า) ไม่ต้องคำนวณฉากทันที — เลื่อนไปหลังเฟรมแรก กดแล้วหน้าใหม่ขึ้นก่อน */
+  var rzT = 0, rzW = innerWidth, rzH = innerHeight;
+  addEventListener('resize', function (e) {
+    var same = innerWidth === rzW && innerHeight === rzH; rzW = innerWidth; rzH = innerHeight;
+    clearTimeout(rzT); rzT = setTimeout(function () { requestAnimationFrame(boot); }, (e && e.isTrusted === false && same) ? 180 : 60);
+  });
   (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(boot);
   boot(); if (!reduce) requestAnimationFrame(dust);
 
