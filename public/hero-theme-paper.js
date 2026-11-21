@@ -1318,3 +1318,77 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
 })();
 /*/PZLOGIN*/
+
+/*PZHELLO*/ /* ธีมตัดกระดาษ: การ์ดต้อนรับ (.vc-hello จาก art.js welcomeCard) — โน้ตครีมติดเทป 2 มุม ขอบล่างซิกแซก
+   ตรานกกระเรียนแทนตราครั่ง · ตัวเลขบนป้ายกระดาษ · แสตมป์เช็กอิน · ตั๋ว "เริ่มตรวจสัญญา" · แถบอิฐ + กรรไกรจิ๋ว · ตรายาง · พับกางตอนเด้ง */
+(function () {
+  'use strict';
+  if (window.__pzHello) return; window.__pzHello = 1;
+  var C = 'html[data-htheme="paper"] body .vc-hello.vc-hello';
+  var FIB = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='120'%3E%3Cg fill='none' stroke='%237a5a30' stroke-opacity='.16' stroke-width='.8'%3E%3Cpath d='M10 20q20 6 34-2M80 64q14 10 30 4M150 30q18-8 32 2M30 96q12-6 26 0M190 90q10 8 24 2M120 104q16 4 28-6'/%3E%3C/g%3E%3C/svg%3E\")";
+  var INK = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.4 1.7'/%3E%3C/filter%3E%3Crect width='120' height='60' filter='url(%23n)'/%3E%3C/svg%3E\")";
+  var EDGE = 'polygon(50% 0,61% 9%,75% 5%,80% 19%,95% 25%,91% 39%,100% 50%,91% 61%,95% 75%,80% 81%,75% 95%,61% 91%,50% 100%,39% 91%,25% 95%,20% 81%,5% 75%,9% 61%,0 50%,9% 39%,5% 25%,20% 19%,25% 5%,39% 9%)';
+  function zigBot(n, d) { var a = [], i; for (i = 0; i <= n; i++) a.push((100 - i * 100 / n).toFixed(2) + '% ' + (i % 2 ? '100%' : 'calc(100% - ' + d + 'px)')); return 'polygon(0 0,100% 0,' + a.join(',') + ')'; }
+  var CRANE = '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 31 L23 9 L36 32 Z" fill="#efe3cb"/><path d="M32 31 L23 9 L28 30 Z" fill="#dccaa6"/><path d="M33 31 L46 7 L40 33 Z" fill="#d9c7a3"/>' +
+    '<path d="M17 39 L32 31 L47 39 L32 45 Z" fill="#c4735a"/><path d="M17 39 L32 39 L32 45 Z" fill="#a85a46"/><path d="M22 38 L9 21 L11.5 20 L25 36 Z" fill="#c4735a"/><path d="M9 21 L4.5 23.5 L10.5 22.5 Z" fill="#3a2a16"/><path d="M42 38 L59 27 L45 40.5 Z" fill="#b06a55"/></svg>';
+  var SCI = '<svg viewBox="0 0 64 40" aria-hidden="true"><path d="M30 20 L62 8" stroke="#3a2a16" stroke-width="5" stroke-linecap="round"/><path d="M30 20 L62 32" stroke="#5a4528" stroke-width="5" stroke-linecap="round"/><ellipse cx="13" cy="12" rx="10" ry="6.5" fill="none" stroke="#c4735a" stroke-width="4.5"/><ellipse cx="13" cy="28" rx="10" ry="6.5" fill="none" stroke="#3a2a16" stroke-width="4.5"/></svg>';
+  var DK = 'color:#2e2112 !important;-webkit-text-fill-color:#2e2112 !important;text-shadow:none !important;';
+  var css =
+    C + '{background:none !important;border:0 !important;box-shadow:none !important;overflow:visible !important;isolation:isolate;rotate:-1.2deg;filter:drop-shadow(0 10px 12px rgba(0,0,0,.4));-webkit-backdrop-filter:none !important;backdrop-filter:none !important;padding-bottom:26px !important;transform-origin:50% 100%}' +
+    C + '::before{content:"" !important;display:block !important;position:absolute !important;inset:0 !important;z-index:-1 !important;border-radius:0 !important;opacity:1 !important;background:' + FIB + ',linear-gradient(180deg,#f1e6cf,#e6d7b9) !important;clip-path:' + zigBot(40, 8) + ';box-shadow:none !important;animation:none !important}' +
+    C + '::after{content:"" !important;display:block !important;position:absolute !important;left:16px !important;right:16px !important;bottom:16px !important;top:auto !important;height:0 !important;border:0 !important;border-top:1.5px dashed rgba(58,42,22,.3) !important;background:none !important;opacity:1 !important;z-index:0 !important}' +
+    C + '.pz-in{animation:pzhIn .4s cubic-bezier(.3,1.3,.5,1) both}' + '@keyframes pzhIn{from{scale:1 .12;opacity:.3}to{scale:1 1;opacity:1}}' +
+    C + ' .vh-seal{width:58px !important;height:58px !important;background:none !important;box-shadow:none !important;border:0 !important;position:relative;filter:drop-shadow(1px 3px 2px rgba(0,0,0,.28))}' +
+    C + ' .vh-seal > b{display:none !important}' + C + ' .vh-seal::before,' + C + ' .vh-seal::after{display:none !important}' +
+    '.pzhb{display:none}' + C + ' .vh-seal > .pzhb{display:block;position:absolute;inset:0}' +
+    C + ' .vh-seal .r1{position:absolute;inset:0;background:#d1a54a;clip-path:' + EDGE + '}' +
+    C + ' .vh-seal .r2{position:absolute;inset:7px;border-radius:50%;background:#f4ead6;box-shadow:inset 0 2px 3px rgba(0,0,0,.12)}' +
+    C + ' .vh-seal svg{position:absolute;inset:7px;width:44px;height:44px}' +
+    C + ' .vh-hi{' + DK + 'font-weight:800 !important}' +
+    C + ' .vh-cr{color:#4f3b22 !important;-webkit-text-fill-color:#4f3b22 !important}' +
+    C + ' .vh-cr .pzn{display:inline-block !important;width:auto !important;position:static !important;font:800 15px/1.25 Prompt,sans-serif;color:#7d3a2c;-webkit-text-fill-color:#7d3a2c;background:#ecd8a4;padding:0 7px;margin:0 3px;border-radius:2px;box-shadow:1px 2px 0 rgba(125,98,51,.45);rotate:-2deg}' +
+    C + ' .vh-x{background:#e3d3b4 !important;border:0 !important;box-shadow:1px 2px 0 #7d6233 !important;border-radius:50% !important;position:absolute}' +
+    C + ' .vh-x::before{content:"" !important;display:block !important;position:absolute;inset:2.5px;border-radius:50%;border:1.2px dashed rgba(58,42,22,.25);background:none !important}' +
+    C + ' .vh-x::after{content:"" !important;display:block !important;position:absolute !important;left:50% !important;top:50% !important;width:12px !important;height:12px !important;margin:-6px 0 0 -6px !important;border:0 !important;opacity:1 !important;transform:none !important;-webkit-mask:none !important;mask:none !important;background:linear-gradient(45deg,transparent 42%,#3a2a16 42% 58%,transparent 58%),linear-gradient(-45deg,transparent 42%,#3a2a16 42% 58%,transparent 58%) !important}' +
+    C + ' .vh-x{background-image:none !important}' +
+    C + ' > .pzhs{position:absolute;right:50px;top:12px;rotate:-10deg;padding:1px 6px;border:2px solid rgba(60,92,76,.85);border-radius:3px;color:rgba(60,92,76,.92);font:800 10px/1.3 Prompt,sans-serif;-webkit-mask:' + INK + ';mask:' + INK + ';pointer-events:none}' +
+    C + ' > .pzht{position:absolute;top:4px;width:56px;height:16px;background:rgba(240,228,200,.85);border-left:2px dashed rgba(0,0,0,.08);border-right:2px dashed rgba(0,0,0,.08);pointer-events:none;z-index:3}' +
+    C + ' > .pzht.l{left:-12px;rotate:-30deg}' + C + ' > .pzht.r{right:-14px;rotate:28deg}' +
+    C + ' .vh-btn{border-radius:4px !important;' + DK + 'font-weight:800 !important;box-shadow:none !important}' +
+    C + ' .vh-btn[data-a="daily"]{background:#7fa184 !important;background-clip:border-box !important;border:4px dotted #e6d7b9 !important;border-radius:0 !important;color:#f4f1e6 !important;-webkit-text-fill-color:#f4f1e6 !important;rotate:-1.5deg}' +
+    C + ' .vh-btn[data-a="daily"] svg{stroke:#f4f1e6 !important;color:#f4f1e6 !important}' +
+    C + ' .vh-btn[data-a="check"]{position:relative;overflow:visible !important;background:#d1a54a !important;border:0 !important;box-shadow:2px 3px 0 #6e4f22 !important}' +
+    C + ' .vh-btn[data-a="check"]::before,' + C + ' .vh-btn[data-a="check"]::after{content:"" !important;display:block !important;position:absolute !important;top:0 !important;bottom:0 !important;left:auto;right:auto;width:6px !important;height:auto !important;border:0 !important;opacity:1 !important;transform:none !important;animation:none !important;background:radial-gradient(circle 2.4px at 50% 50%,#e6d7b9 92%,transparent) 0 1px/6px 8px repeat-y !important}' +
+    C + ' .vh-btn[data-a="check"]::before{left:-3px !important}' + C + ' .vh-btn[data-a="check"]::after{right:-3px !important}' +
+    C + ' .vh-btn:active{translate:1px 2px}' + C + ' .vh-btn:focus-visible,' + C + ' .vh-x:focus-visible{outline:2px solid #1d4f4c !important;outline-offset:2px}' +
+    C + ' .vh-bar{left:16px !important;right:16px !important;bottom:14px !important;height:6px !important;background:#c4735a !important;clip-path:polygon(0 0,100% 0,99% 100%,0 100%);border-radius:0 !important;z-index:1}' +
+    C + ' > .pzhc{position:absolute;bottom:9px;left:16px;width:22px;height:16px;margin-left:-11px;z-index:2;pointer-events:none;will-change:transform}' +
+    C + ' > .pzhc svg{width:100%;height:100%;display:block}' +
+    '@media (prefers-reduced-motion:reduce){' + C + '.pz-in{animation:none}}' + 'html[data-calm] body .vc-hello.vc-hello.pz-in{animation:none}';
+  function dress(c) {
+    if (c.__pz) return; c.__pz = 1;
+    var s = c.querySelector('.vh-seal'); if (s) s.insertAdjacentHTML('afterbegin', '<span class="pzhb" aria-hidden="true"><i class="r1"></i><i class="r2"></i>' + CRANE + '</span>');
+    var cr = c.querySelector('.vh-cr'); if (cr) { var t = cr.textContent, m = t.match(/(\d+)/); if (m) { var i = t.indexOf(m[1]); cr.textContent = ''; cr.appendChild(document.createTextNode(t.slice(0, i))); var b = document.createElement('span'); b.className = 'pzn'; b.textContent = m[1]; cr.appendChild(b); cr.appendChild(document.createTextNode(t.slice(i + m[1].length))); } }
+    c.insertAdjacentHTML('beforeend', '<i class="pzht l" aria-hidden="true"></i><i class="pzht r" aria-hidden="true"></i><i class="pzhs" aria-hidden="true">ลับเฉพาะ</i><i class="pzhc" aria-hidden="true">' + SCI + '</i>');
+    var calm = document.documentElement.hasAttribute('data-calm') || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+    if (!calm) c.classList.add('pz-in');
+    var bar = c.querySelector('.vh-bar'), sc = c.querySelector('.pzhc');
+    if (!bar || !sc) return;
+    (function tick() {
+      if (!c.isConnected) return;
+      var w = bar.offsetWidth, a = bar.getAnimations ? bar.getAnimations()[0] : null, p = 0;
+      if (a && a.effect && a.effect.getTiming) { var d = a.effect.getTiming().duration || 9000; p = Math.min(1, (a.currentTime || 0) / d); }
+      sc.style.transform = 'translateX(' + ((1 - p) * w).toFixed(1) + 'px)';
+      if (p < 1) requestAnimationFrame(tick);
+    })();
+  }
+  function go() {
+    if (document.documentElement.getAttribute('data-htheme') !== 'paper') return;
+    if (!document.getElementById('pz-hello')) { var s = document.createElement('style'); s.id = 'pz-hello'; s.textContent = css; document.head.appendChild(s); }
+    new MutationObserver(function (ms) { for (var i = 0; i < ms.length; i++) for (var j = 0; j < ms[i].addedNodes.length; j++) { var n = ms[i].addedNodes[j]; if (n.nodeType === 1 && n.classList.contains('vc-hello')) dress(n); } })
+      .observe(document.body, { childList: true });
+    var ex = document.querySelector('.vc-hello'); if (ex) dress(ex);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+})();
+/*/PZHELLO*/
