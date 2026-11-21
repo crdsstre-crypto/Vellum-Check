@@ -583,59 +583,83 @@
     var r = w.getBoundingClientRect();
     [0, 140, 280].forEach(function (dl) { setTimeout(function () { var d = document.createElement('i'); d.className = 'nt-rip'; d.style.left = (e.clientX - r.left) + 'px'; d.style.top = (e.clientY - r.top) + 'px'; w.appendChild(d); setTimeout(function () { d.remove(); }, 750); }, dl); });
   }, true);
-  /* v61 ตอนกดเข้าสู่ระบบ (เฉพาะธีมคืนฝนตก): จดหมายพับเป็นเรือกระดาษ ลอยตามสายฝนไปจอดที่ปุ่มบัญชี
-     — ขับด้วยนาฬิกาเดียว (requestAnimationFrame + performance.now) ถ้าเครื่องกระตุก ภาพจะข้ามไปตำแหน่งที่ควรเป็น ไม่ค้างกลางทาง
-     — รอหน้าโหลดเสร็จก่อนค่อยเริ่มขยับ (กลับจาก Google หน้ายังโหลดหนัก) · ไม่ใช้ filter/mask ที่ทำให้มือถือหน่วง
+  /* v62 ตอนกดเข้าสู่ระบบ (เฉพาะธีมคืนฝนตก): จดหมายพับเป็นเรือกระดาษ (ทีละขั้น) → แตะแอ่งน้ำฝนด้านล่างจอ → แล่นไปจอดที่ปุ่มบัญชี
+     — นาฬิกาเดียว rAF + performance.now (เครื่องช้าก็ไม่ค้าง) · รอหน้าโหลดเสร็จก่อนเริ่ม · ไม่มี filter/mask
+     — แถบเมนูล่าง (มือถือ) เห็นตลอด · "ยินดีต้อนรับ" ขึ้นบนฉากทึบ แล้วจางออกทั้งฉากพร้อมกัน
      — art.js เรียกผ่าน window.VCNightLogin(info, api) */
   window.VCNightLogin = function (info, api) {
     var email = (info && info.email) || '', nm = api.name(email) || '', red = api.reduce();
     var seen = false; try { seen = localStorage.getItem('vc_ntb_seen') === '1'; localStorage.setItem('vc_ntb_seen', '1'); } catch (e) {}
-    var K = seen ? .75 : 1, H = document.documentElement;
-    if (!document.getElementById('ntb-css')) {
-      var cs = document.createElement('style'); cs.id = 'ntb-css';
-      cs.textContent = '.ntb{position:fixed;inset:0;z-index:10040;overflow:hidden;font-family:Prompt,sans-serif;-webkit-tap-highlight-color:transparent;contain:strict}' +
-        '.ntb-bg{position:absolute;inset:0;background:radial-gradient(90% 60% at 50% 18%,rgba(255,206,140,.10),transparent 62%),linear-gradient(180deg,#0e1628,#152240)}' +
-        '.ntb-r{position:absolute;top:-12%;width:1px;height:90px;background:linear-gradient(180deg,transparent,rgba(170,195,235,.42));animation:ntbR .8s linear infinite;will-change:transform}' +
+    var K = seen ? .8 : 1, H = document.documentElement;
+    var old = document.querySelector('.ntb'); if (old) old.remove();
+    if (!document.getElementById('ntb-css2')) {
+      var o1 = document.getElementById('ntb-css'); if (o1) o1.remove();
+      var cs = document.createElement('style'); cs.id = 'ntb-css2';
+      cs.textContent = '.ntb{position:fixed;left:0;right:0;top:0;bottom:var(--nb,0px);z-index:10040;overflow:hidden;font-family:Prompt,sans-serif;-webkit-tap-highlight-color:transparent;contain:strict}' +
+        '.ntb-bg{position:absolute;inset:0;background:radial-gradient(90% 50% at 50% 12%,rgba(255,206,140,.10),transparent 62%),linear-gradient(180deg,#0e1628,#152240)}' +
+        '.ntb-r{position:absolute;top:-12%;width:1px;height:80px;background:linear-gradient(180deg,transparent,rgba(170,195,235,.42));animation:ntbR .8s linear infinite;will-change:transform}' +
         '@keyframes ntbR{from{transform:translate3d(0,0,0) rotate(10deg)}to{transform:translate3d(-24px,125vh,0) rotate(10deg)}}' +
-        '.ntb-sv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0}' +
-        '.ntb-p{position:absolute;left:50%;top:50%;width:220px;height:290px;margin:-170px 0 0 -110px;border-radius:2px;background:repeating-linear-gradient(180deg,transparent 0 19px,rgba(61,84,120,.09) 19px 20px),linear-gradient(180deg,#efe6cf,#e2d6b8);box-shadow:0 16px 26px -12px rgba(0,0,0,.8);will-change:transform,opacity}' +
-        '.ntb-p b{position:absolute;left:20px;top:26px;font:700 18px/1.2 Prompt,sans-serif;color:#2a2014}' +
-        '.ntb-p em{position:absolute;right:16px;top:16px;width:46px;height:46px;border-radius:50%;border:2px solid rgba(44,74,130,.7);transform:rotate(-12deg)}' +
-        '.ntb-fl{position:absolute;left:0;top:0;width:50%;height:100%;transform-origin:100% 50%;background:linear-gradient(90deg,#d6caac,#e8dec5);will-change:transform}' +
-        '.ntb-fr{position:absolute;right:0;top:0;width:50%;height:46%;transform-origin:50% 100%;background:linear-gradient(180deg,#e8dec5,#d6caac);will-change:transform}' +
-        '.ntb-b{position:absolute;left:0;top:0;width:150px;height:118px;margin:-59px 0 0 -75px;opacity:0;will-change:transform,opacity}' +
-        '.ntb-pool{position:absolute;left:50%;top:50%;width:260px;height:70px;margin:20px 0 0 -130px;border-radius:50%;background:radial-gradient(closest-side,rgba(120,160,215,.30),rgba(90,130,190,.10) 70%,transparent);opacity:0}' +
-        '.ntb-rip{position:absolute;left:0;top:0;width:40px;height:12px;margin:-6px 0 0 -20px;border-radius:50%;border:1.5px solid rgba(190,212,245,.55);pointer-events:none;animation:ntbRip .75s cubic-bezier(.2,.7,.3,1) forwards}' +
-        '.ntb-rip.big{animation-name:ntbRipB;animation-duration:.95s}' +
-        '@keyframes ntbRip{from{transform:translate3d(var(--x),var(--y),0) scale(.4);opacity:.9}to{transform:translate3d(var(--x),var(--y),0) scale(2.4);opacity:0}}' +
-        '@keyframes ntbRipB{from{transform:translate3d(var(--x),var(--y),0) scale(.4);opacity:.9}to{transform:translate3d(var(--x),var(--y),0) scale(4.2);opacity:0}}' +
-        '.ntb-wel{position:absolute;left:0;right:0;top:30%;text-align:center;opacity:0;pointer-events:none;text-shadow:0 2px 12px rgba(8,12,24,.9),0 0 2px rgba(8,12,24,.9)}' +
-        '.ntb-wel small{display:block;font:400 14px/1.4 Prompt,sans-serif;color:#a9b8d4}.ntb-wel b{display:block;font:600 26px/1.3 Prompt,sans-serif;color:#efe9da;margin-top:4px;padding:0 20px}' +
+        '.ntb-w{position:absolute;left:0;right:0;bottom:0;height:var(--wh,150px);background:linear-gradient(180deg,rgba(60,90,140,0),rgba(60,92,145,.45) 18%,rgba(40,66,110,.62));opacity:0}' +
+        '.ntb-w::before{content:"";position:absolute;left:0;right:0;top:26px;height:1.5px;background:linear-gradient(90deg,transparent,rgba(200,220,250,.5),transparent)}' +
+        '.ntb-w::after{content:"";position:absolute;left:0;right:0;top:30px;bottom:0;background:repeating-linear-gradient(180deg,transparent 0 9px,rgba(190,212,245,.08) 9px 10px)}' +
+        '.ntb-p{position:absolute;left:50%;top:38%;width:180px;height:236px;margin:-118px 0 0 -90px;will-change:transform,opacity;opacity:0}' +
+        '.ntb-pb,.ntb-pt{position:absolute;left:0;width:180px;height:118px;background:repeating-linear-gradient(180deg,transparent 0 17px,rgba(61,84,120,.09) 17px 18px),linear-gradient(180deg,#efe6cf,#e2d6b8)}' +
+        '.ntb-pb{top:118px;box-shadow:0 14px 22px -10px rgba(0,0,0,.8)}' +
+        '.ntb-pt{top:0;transform-origin:50% 100%;will-change:transform}' +
+        '.ntb-pt b{position:absolute;left:18px;top:22px;font:700 17px/1.2 Prompt,sans-serif;color:#2a2014;backface-visibility:hidden}' +
+        '.ntb-pt em{position:absolute;right:14px;top:14px;width:40px;height:40px;border-radius:50%;border:2px solid rgba(44,74,130,.7);transform:rotate(-12deg);backface-visibility:hidden}' +
+        '.ntb-pt i{position:absolute;inset:0;background:linear-gradient(180deg,#cfc2a2,#d9cdb0);opacity:0}' +
+        '.ntb-pt.fl b,.ntb-pt.fl em{opacity:0}.ntb-pt.fl i{opacity:1}' +
+        '.ntb-pt{transform-style:preserve-3d}' +
+        '.ntb-cf{position:absolute;top:118px;width:90px;height:90px;transform-style:preserve-3d;will-change:transform}' +
+        '.ntb-cf s,.ntb-cf u{position:absolute;inset:0;text-decoration:none;backface-visibility:hidden}' +
+        '.ntb-cl{left:0;transform-origin:45px 45px;clip-path:polygon(0 0,100% 0,0 100%)}' +
+        '.ntb-cr{right:0;transform-origin:45px 45px;clip-path:polygon(0 0,100% 0,100% 100%)}' +
+        '.ntb-cf s{background:linear-gradient(180deg,#d9cdb0,#cfc2a2)}' +
+        '.ntb-cf u{background:linear-gradient(135deg,#d3c6a6,#e2d6b8);transform:rotateY(180deg)}' +
+        '.ntb-b{position:absolute;left:0;top:0;width:120px;height:94px;margin:-80px 0 0 -60px;opacity:0;will-change:transform,opacity}' +
+        '.ntb-rf{position:absolute;left:0;top:0;width:120px;height:32px;margin:0 0 0 -60px;opacity:0;will-change:transform,opacity}' +
+        '.ntb-wk{position:absolute;left:0;top:0;width:140px;height:14px;margin:4px 0 0 -170px;opacity:0;will-change:transform,opacity}' +
+        '.ntb-rip{position:absolute;left:0;top:0;width:40px;height:10px;margin:-5px 0 0 -20px;border-radius:50%;border:1.2px solid rgba(190,212,245,.5);pointer-events:none;animation:ntbRip .8s cubic-bezier(.2,.7,.3,1) forwards}' +
+        '.ntb-rip.sm{width:18px;height:5px;margin:-2.5px 0 0 -9px;animation-duration:.7s}' +
+        '.ntb-rip.big{animation-name:ntbRipB;animation-duration:1s}' +
+        '@keyframes ntbRip{from{transform:translate3d(var(--x),var(--y),0) scale(.4);opacity:.85}to{transform:translate3d(var(--x),var(--y),0) scale(2.4);opacity:0}}' +
+        '@keyframes ntbRipB{from{transform:translate3d(var(--x),var(--y),0) scale(.4);opacity:.9}to{transform:translate3d(var(--x),var(--y),0) scale(3.6);opacity:0}}' +
+        '.ntb-wel{position:absolute;left:0;right:0;top:28%;text-align:center;opacity:0;pointer-events:none}' +
+        '.ntb-wel small{display:block;font:400 14px/1.4 Prompt,sans-serif;color:#a9b8d4}.ntb-wel b{display:block;font:600 27px/1.3 Prompt,sans-serif;color:#efe9da;margin-top:4px;padding:0 20px;overflow-wrap:anywhere}' +
         '.ntb-skip,.ntb-snd{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));z-index:3;border:0;font:500 12px/1 Prompt,sans-serif;padding:8px 12px;border-radius:14px;background:rgba(140,165,210,.16);color:#d9dfea;cursor:pointer}' +
         '.ntb-skip{right:14px}.ntb-snd{left:14px}' +
-        'html.ntb-on body>*:not(.ntb){visibility:hidden !important}';
+        'html.ntb-on body>*:not(.ntb):not(#bottomNav){visibility:hidden !important}';
       document.head.appendChild(cs);
     }
-    var R = document.createElement('div'); R.className = 'ntb'; R.setAttribute('aria-hidden', 'true');
+    /* แถบเมนูล่างที่มองเห็น (มือถือ) → ฉากจบเหนือแถบ ให้เห็นปุ่มบัญชีตลอด */
+    var nav = document.getElementById('bottomNav'), nb = 0;
+    if (nav && !nav.hidden && innerWidth < 768) { var nr = nav.getBoundingClientRect(); if (nr.height > 0 && nr.top < innerHeight) nb = Math.max(0, innerHeight - nr.top - 2); }
+    var R = document.createElement('div'); R.className = 'ntb'; R.setAttribute('aria-hidden', 'true'); R.style.setProperty('--nb', nb + 'px');
     var rn = ''; for (var q = 0; q < 14; q++) rn += '<i class="ntb-r" style="left:' + (3 + q * 7.1).toFixed(1) + '%;animation-delay:-' + ((q * .37) % .8).toFixed(2) + 's;animation-duration:' + (.7 + (q % 4) * .1).toFixed(2) + 's"></i>';
-    R.innerHTML = '<div class="ntb-bg">' + rn + '</div><svg class="ntb-sv"><path class="ntb-st" fill="none" stroke="rgba(120,160,215,.26)" stroke-width="40" stroke-linecap="round"/><path class="ntb-st2" fill="none" stroke="rgba(190,212,245,.22)" stroke-width="2" stroke-dasharray="6 10"/></svg>' +
-      '<div class="ntb-pool"></div><div class="ntb-p"><b>เข้าสู่ระบบ</b><em></em><i class="ntb-fr"></i><i class="ntb-fl"></i></div>' +
-      '<svg class="ntb-b" viewBox="0 0 150 118"><ellipse cx="75" cy="104" rx="62" ry="9" fill="rgba(0,0,0,.28)"/><defs><linearGradient id="ntbG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8dec5"/><stop offset="1" stop-color="#c9bc9c"/></linearGradient></defs><path d="M10 62h130l-20 34H30z" fill="url(#ntbG)"/><path d="M75 8 40 62h70z" fill="#efe6cf"/><path d="M75 8v54h35z" fill="#e2d6b8"/><path d="M75 8v54" stroke="rgba(80,64,40,.35)"/><path d="M30 96 75 62l45 34" fill="none" stroke="rgba(80,64,40,.22)"/><path d="M48 70h54M52 78h46" stroke="rgba(61,84,120,.18)"/><circle cx="96" cy="44" r="7" fill="none" stroke="rgba(44,74,130,.55)" stroke-width="1.2"/></svg>' +
+    var HULL = '<path d="M10 62h130l-20 34H30z" fill="url(#ntbG)"/>';
+    R.innerHTML = '<div class="ntb-bg">' + rn + '</div><div class="ntb-w"></div>' +
+      '<div class="ntb-p"><div class="ntb-pb"></div><div class="ntb-pt"><b>เข้าสู่ระบบ</b><em></em><i></i></div><i class="ntb-cf ntb-cl"><s></s><u></u></i><i class="ntb-cf ntb-cr"><s></s><u></u></i></div>' +
+      '<svg class="ntb-wk" viewBox="0 0 140 14"><path d="M0 7Q70 0 140 7" fill="none" stroke="rgba(200,220,250,.38)" stroke-width="1.5"/><path d="M14 11Q70 5 138 10" fill="none" stroke="rgba(200,220,250,.2)" stroke-width="1"/></svg>' +
+      '<svg class="ntb-rf" viewBox="0 62 150 40"><defs><linearGradient id="ntbF" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9cdb0" stop-opacity=".9"/><stop offset="1" stop-color="#d9cdb0" stop-opacity="0"/></linearGradient></defs><path d="M10 62h130l-20 34H30z" fill="url(#ntbF)" transform="matrix(1 0 0 -1 0 164)"/></svg>' +
+      '<svg class="ntb-b" viewBox="0 0 150 118"><defs><linearGradient id="ntbG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8dec5"/><stop offset="1" stop-color="#c9bc9c"/></linearGradient></defs>' + HULL + '<path d="M75 8 40 62h70z" fill="#efe6cf"/><path d="M75 8v54h35z" fill="#e2d6b8"/><path d="M75 8v54" stroke="rgba(80,64,40,.35)"/><path d="M30 96 75 62l45 34" fill="none" stroke="rgba(80,64,40,.22)"/><path d="M48 70h54M52 78h46" stroke="rgba(61,84,120,.18)"/><circle cx="96" cy="44" r="8" fill="none" stroke="rgba(44,74,130,.6)" stroke-width="1.4"/></svg>' +
       '<div class="ntb-wel"><small>ยินดีต้อนรับ</small><b></b></div><button type="button" class="ntb-skip">ข้าม ›</button>' + (red ? '' : '<button type="button" class="ntb-snd"></button>');
     R.querySelector('.ntb-wel b').textContent = nm ? 'คุณ ' + nm : 'กลับมาแล้ว';
     document.body.appendChild(R); H.classList.add('ntb-on');
     if (window.__vcGinOff) setTimeout(window.__vcGinOff, 60);
     var $ = function (s2) { return R.querySelector(s2); };
-    var P = $('.ntb-p'), FL = $('.ntb-fl'), FR = $('.ntb-fr'), B = $('.ntb-b'), pool = $('.ntb-pool'), wel = $('.ntb-wel'), sv = $('.ntb-sv'), st = $('.ntb-st'), st2 = $('.ntb-st2'), bg = $('.ntb-bg'), snd = $('.ntb-snd');
+    var P = $('.ntb-p'), PB = $('.ntb-pb'), PT = $('.ntb-pt'), CL = $('.ntb-cl'), CR = $('.ntb-cr'), B = $('.ntb-b'), RF = $('.ntb-rf'), WK = $('.ntb-wk'), W = $('.ntb-w'), wel = $('.ntb-wel'), snd = $('.ntb-snd');
     var alive = true, raf = 0, rain = null, guard = 0;
     function rainOn() {
       if (rain || !api.sndOn()) return; var a = api.ac(); if (!a) return;
-      try { var len = a.sampleRate * 2, b = a.createBuffer(1, len, a.sampleRate), d = b.getChannelData(0); for (var i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
-        var n = a.createBufferSource(); n.buffer = b; n.loop = true; var f = a.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 1700; var g = a.createGain(); g.gain.setValueAtTime(0, a.currentTime); g.gain.linearRampToValueAtTime(.06, a.currentTime + 1.2);
+      try { var len = a.sampleRate * 2, bf = a.createBuffer(1, len, a.sampleRate), d = bf.getChannelData(0); for (var i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+        var n = a.createBufferSource(); n.buffer = bf; n.loop = true; var f = a.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 1700; var g = a.createGain(); g.gain.setValueAtTime(0, a.currentTime); g.gain.linearRampToValueAtTime(.06, a.currentTime + 1.2);
         n.connect(f); f.connect(g); g.connect(a.destination); n.start(); rain = { a: a, n: n, g: g }; } catch (e) {}
     }
     function rainOff(ms) { if (!rain) return; var r0 = rain; rain = null; try { r0.g.gain.cancelScheduledValues(r0.a.currentTime); r0.g.gain.setValueAtTime(r0.g.gain.value, r0.a.currentTime); r0.g.gain.linearRampToValueAtTime(0, r0.a.currentTime + (ms || 600) / 1000); setTimeout(function () { try { r0.n.stop(); } catch (e) {} }, (ms || 600) + 80); } catch (e) {} }
-    function plink() { if (!api.sndOn()) return; var a = api.ac(); if (!a) return; try { var t = a.currentTime, o = a.createOscillator(), g = a.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(1400 + Math.random() * 500, t); o.frequency.exponentialRampToValueAtTime(700, t + .12); g.gain.setValueAtTime(.05, t); g.gain.exponentialRampToValueAtTime(.001, t + .18); o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + .2); } catch (e) {} }
+    function tone(f0, f1, dur, vol, type) { if (!api.sndOn()) return; var a = api.ac(); if (!a) return; try { var t = a.currentTime, o = a.createOscillator(), g = a.createGain(); o.type = type || 'sine'; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + dur * .7); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.001, t + dur); o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + dur + .02); } catch (e) {} }
+    function plop() { tone(520, 160, .22, .09); setTimeout(function () { tone(1300, 900, .12, .03); }, 70); }   /* จ๋อม */
+    function rustle() { tone(2400, 1600, .08, .015, 'triangle'); }
     function lab() { if (snd) { snd.textContent = api.sndOn() ? 'เสียง: เปิด' : 'เสียง: ปิด'; snd.setAttribute('aria-pressed', api.sndOn() ? 'true' : 'false'); } }
     lab();
     if (snd) snd.addEventListener('click', function (e) { e.stopPropagation(); try { localStorage.setItem('vc_sfx', api.sndOn() ? '0' : '1'); } catch (x) {} lab(); if (api.sndOn()) { api.ac(); rainOn(); } else rainOff(200); });
@@ -646,67 +670,66 @@
       window.__vcHold = Date.now() + 7000; api.welcome(email);
     }
     R.addEventListener('click', end);
-    guard = setTimeout(end, 12000);   /* กันค้าง */
+    guard = setTimeout(end, 11000);
     if (red) { P.style.display = 'none'; $('.ntb-bg').innerHTML = ''; wel.style.opacity = 1; guard = setTimeout(end, 1200); return; }
-    /* ---------- เส้นทาง ---------- */
-    var vw = innerWidth, vh = innerHeight, cx = vw / 2, cy = vh / 2, tg = null, x0, y0, x3, y3, c1x, c1y, c2x, c2y;
-    function path() {
-      tg = api.target(); var tx = tg ? tg.r.left + tg.r.width / 2 : vw - 40, ty = tg ? tg.r.top + tg.r.height / 2 : vh - 40;
-      if (!(tx > 0 && tx < vw)) tx = vw - 40; if (!(ty > 0 && ty < vh)) ty = vh - 40;
-      x0 = cx; y0 = cy + 30; x3 = Math.max(40, Math.min(vw - 40, tx)); y3 = Math.max(70, Math.min(vh - 60, ty - 34));
-      var up = y3 < y0; c1x = up ? vw * 1.05 : -vw * .1; c1y = y0 + (y3 - y0) * .3 + (up ? 120 : 60); c2x = up ? -vw * .05 : vw * .95; c2y = y0 + (y3 - y0) * .75 + (up ? 40 : -20);
-      var d = 'M' + x0.toFixed(0) + ' ' + (y0 + 30).toFixed(0) + ' C' + c1x.toFixed(0) + ' ' + (c1y + 30).toFixed(0) + ' ' + c2x.toFixed(0) + ' ' + (c2y + 30).toFixed(0) + ' ' + x3.toFixed(0) + ' ' + (y3 + 36).toFixed(0);
-      st.setAttribute('d', d); st2.setAttribute('d', d);
+    var vw, vh, WH, WY, xs, xe, tg = null, x0, y0;
+    function layout() {
+      vw = innerWidth; vh = innerHeight - nb; WH = Math.round(Math.min(170, Math.max(120, vh * .2))); R.style.setProperty('--wh', WH + 'px'); WY = vh - WH + 27;
+      tg = api.target(); var tx = tg ? tg.r.left + tg.r.width / 2 : vw - 70;
+      if (!tg || tg.r.top < vh * .5) tx = vw - 70;   /* เป้าอยู่ด้านบน (คอม) → แล่นไปสุดขวา */
+      xs = Math.max(70, vw * .26); xe = Math.max(xs + 80, Math.min(vw - 46, tx));
+      var pr = P.getBoundingClientRect(); x0 = pr.left + pr.width / 2; y0 = pr.top + 40 + 205;
     }
-    function bz(t, a, b, c, d) { var u = 1 - t; return u * u * u * a + 3 * u * u * t * b + 3 * u * t * t * c + t * t * t * d; }
     function cl(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
     function seg(t, a, b) { return cl((t - a) / (b - a)); }
     function eo(p) { return 1 - Math.pow(1 - p, 3); }
+    function ei(p) { return p * p * p; }
     function eio(p) { return p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2; }
-    function ripple(x, y, big) { var r = document.createElement('i'); r.className = 'ntb-rip' + (big ? ' big' : ''); r.style.setProperty('--x', x.toFixed(0) + 'px'); r.style.setProperty('--y', y.toFixed(0) + 'px'); R.appendChild(r); setTimeout(function () { r.remove(); }, 1000); }
-    /* เหตุการณ์ตามเวลา (ms ตามจริงก่อนคูณ K) */
-    var EV = [[500, function () { plink(); }], [1650, function () { ripple(cx, cy + 62, true); plink(); }], [1950, function () { ripple(cx, cy + 62, false); }]];
-    [.18, .36, .54, .72, .88].forEach(function (f, k) { EV.push([2350 + 2200 * f, function () { ripple(bz(f, x0, c1x, c2x, x3), bz(f, y0, c1y, c2y, y3) + 22 * (1 - .6 * f), false); if (k % 2 === 0) plink(); }]); });
-    EV.push([4500, function () { ripple(x3, y3 + 28, true); ripple(x3, y3 + 28, false); if (tg) { try { tg.el.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.16)', offset: .35 }, { transform: 'scale(1)' }], { duration: 650 }); } catch (e) {} } try { if (navigator.vibrate) navigator.vibrate(14); } catch (e) {} }]);
-    EV.push([4200, function () { H.classList.remove('ntb-on'); }]);
-    EV.push([4800, function () { rainOff(900); }]);
-    EV.sort(function (a, b) { return a[0] - b[0]; });
-    var ei = 0, t0 = 0, sEnd = .32;
+    function ripple(x, y, k) { var r = document.createElement('i'); r.className = 'ntb-rip' + (k ? ' ' + k : ''); r.style.setProperty('--x', x.toFixed(0) + 'px'); r.style.setProperty('--y', y.toFixed(0) + 'px'); R.appendChild(r); setTimeout(function () { r.remove(); }, 1100); }
+    var EV = [], ev = 0, t0 = 0, nextDrop = 2000, bx = 0, by = 0;
+    function plan() {
+      EV = [[520, rustle], [980, rustle], [1250, rustle],
+        [2050, function () { plop(); ripple(xs, WY + 4, 'big'); ripple(xs, WY + 4); }],
+        [4050, function () { ripple(xe, WY + 4, 'big'); ripple(xe, WY + 4); if (tg && tg.r.top > vh * .5) { try { tg.el.animate([{ transform: 'scale(1)', boxShadow: '0 0 0 0 rgba(159,184,224,0)' }, { transform: 'scale(1.12)', boxShadow: '0 0 0 3px rgba(159,184,224,.55),0 0 18px 6px rgba(159,184,224,.35)', offset: .35 }, { transform: 'scale(1)', boxShadow: '0 0 0 10px rgba(159,184,224,0)' }], { duration: 750, easing: 'cubic-bezier(.2,.8,.3,1)' }); } catch (e) {} } try { if (navigator.vibrate) navigator.vibrate(12); } catch (e) {} }],
+        [4500, function () { rainOff(700); }]];
+    }
     function frame(now) {
       if (!alive) return;
-      var t = (now - t0) / K;
-      while (ei < EV.length && EV[ei][0] <= t) { try { EV[ei][1](); } catch (e) {} ei++; }
-      /* 1 จดหมายปรากฏ + พับ */
-      var pa = eo(seg(t, 0, 380)), pf = eio(seg(t, 420, 940)), pr = eio(seg(t, 820, 1240)), po = eio(seg(t, 1180, 1560));
-      P.style.opacity = (pa * (1 - po)).toFixed(3);
-      P.style.transform = 'translate3d(0,' + (16 * (1 - pa) + 160 * po * .32).toFixed(1) + 'px,0) scale(' + (1 - .04 * (1 - pa) - .45 * po).toFixed(3) + ',' + (1 - .04 * (1 - pa) - .68 * po).toFixed(3) + ')';
-      FL.style.transform = 'perspective(700px) rotateY(' + (-178 * pf).toFixed(1) + 'deg)';
-      FR.style.transform = 'perspective(700px) rotateX(' + (-170 * pr).toFixed(1) + 'deg)';
-      /* 2 เรือ + แอ่งน้ำ */
-      var ba = eo(seg(t, 1260, 1680)), pl = seg(t, 1450, 1850) * (1 - seg(t, 2200, 2700));
-      pool.style.opacity = pl.toFixed(3); pool.style.transform = 'scale(' + (.6 + .4 * seg(t, 1450, 1850)).toFixed(3) + ')';
-      /* 3 สายน้ำ + ลอย */
-      sv.style.opacity = eo(seg(t, 1900, 2600)).toFixed(3);
-      var mv = eio(seg(t, 2350, 4550)), bx, by, ang = 0, sc;
-      if (mv <= 0) { bx = cx; by = cy - 10 + 40 * ba + Math.sin(t / 260) * 2 * ba; sc = 1.25 - .25 * ba; }
-      else {
-        bx = bz(mv, x0, c1x, c2x, x3); by = bz(mv, y0, c1y, c2y, y3) + Math.sin(t / 240) * 2;
-        var m2 = Math.min(1, mv + .02), dx = bz(m2, x0, c1x, c2x, x3) - bx, dy = bz(m2, y0, c1y, c2y, y3) - by;
-        ang = Math.max(-28, Math.min(28, Math.atan2(dy, dx || .001) * 57.3 * .25)) + Math.sin(t / 300) * 4; sc = 1 - (1 - sEnd) * mv;
-      }
+      var t = window.__ntbT != null ? window.__ntbT : (now - t0) / K;   /* __ntbT = ใช้ตอนทดสอบเท่านั้น */
+      while (ev < EV.length && EV[ev][0] <= t) { try { EV[ev][1](); } catch (e) {} ev++; }
+      /* เม็ดฝนตกลงผิวน้ำ */
+      if (t > nextDrop && t < 4600) { ripple(Math.random() * vw, WY + 10 + Math.random() * (WH - 40), 'sm'); nextDrop = t + 140 + Math.random() * 160; }
+      W.style.opacity = eo(seg(t, 0, 600)).toFixed(3);
+      /* 1 จดหมาย: ปรากฏ → พับครึ่งลง → พับสองมุม → กลายเป็นเรือ */
+      var pa = eo(seg(t, 0, 340)), ph = eio(seg(t, 360, 860)), pc = eio(seg(t, 880, 1320)), pm = seg(t, 1360, 1470);
+      P.style.opacity = (pa * (1 - pm)).toFixed(3);
+      P.style.transform = 'translate3d(0,' + (14 * (1 - pa) + 40 * ph).toFixed(1) + 'px,0) scale(' + (1 + .06 * pm).toFixed(3) + ',' + (1 - .35 * pm).toFixed(3) + ')';
+      PT.style.transform = 'perspective(800px) rotateX(' + (-180 * ph).toFixed(1) + 'deg)'; PT.classList.toggle('fl', ph > .5);
+      CL.style.opacity = CR.style.opacity = ph >= 1 ? '1' : '0';
+      var kk = (90 * pc).toFixed(1); PB.style.clipPath = PB.style.webkitClipPath = pc > 0 ? 'polygon(' + kk + 'px 0,' + (180 - 90 * pc).toFixed(1) + 'px 0,180px ' + kk + 'px,180px 118px,0 118px,0 ' + kk + 'px)' : 'none';
+      PT.style.clipPath = PT.style.webkitClipPath = pc > 0 ? 'polygon(0 0,180px 0,180px ' + (118 - 90 * pc).toFixed(1) + 'px,' + (180 - 90 * pc).toFixed(1) + 'px 118px,' + kk + 'px 118px,0 ' + (118 - 90 * pc).toFixed(1) + 'px)' : 'none';
+      CL.style.transform = 'perspective(800px) rotate3d(-1,1,0,' + (180 * pc).toFixed(1) + 'deg)';
+      CR.style.transform = 'perspective(800px) rotate3d(1,1,0,' + (180 * pc).toFixed(1) + 'deg)';
+      /* 2 เรือโผล่ แล้วหล่นลงน้ำ */
+      var ba = eo(seg(t, 1340, 1460)), fall = ei(seg(t, 1700, 2050)), sail = eio(seg(t, 2150, 4050)), pop = seg(t, 1340, 1700), sc = 1.4 - .4 * eo(pop);
+      var bob = t > 2050 ? Math.sin(t / 230) * 2.2 : 0, ang = t > 2050 ? Math.sin(t / 310) * 4 - 3 * Math.sin(sail * Math.PI) : 0;
+      if (t < 2050) { bx = x0 + (xs - x0) * fall; by = y0 + (WY - y0) * fall; }
+      else { bx = xs + (xe - xs) * sail; by = WY + bob; }
+      if (t > 2050 && t < 2350) { var sp = seg(t, 2050, 2350); by += Math.sin(sp * Math.PI) * 6 * (1 - sp); }
       B.style.opacity = ba.toFixed(3);
       B.style.transform = 'translate3d(' + bx.toFixed(1) + 'px,' + by.toFixed(1) + 'px,0) rotate(' + ang.toFixed(1) + 'deg) scale(' + sc.toFixed(3) + ')';
-      /* 4 จอด + ยินดีต้อนรับ + จางออก */
-      bg.style.opacity = (1 - .26 * eo(seg(t, 4100, 4700))).toFixed(3);
-      var w = eo(seg(t, 4500, 5000)); wel.style.opacity = w.toFixed(3); wel.style.transform = 'translate3d(0,' + (10 * (1 - w)).toFixed(1) + 'px,0)';
-      R.style.opacity = (1 - seg(t, 5600, 6120)).toFixed(3);
-      if (t >= 6150) { end(); return; }
+      var onw = seg(t, 2000, 2200);
+      RF.style.opacity = (onw * .55).toFixed(3); RF.style.transform = 'translate3d(' + bx.toFixed(1) + 'px,' + (WY + 2 - bob * .5).toFixed(1) + 'px,0) rotate(' + (-ang).toFixed(1) + 'deg)';
+      var wk = seg(t, 2250, 2600) * (1 - seg(t, 3900, 4300)); WK.style.opacity = wk.toFixed(3); WK.style.transform = 'translate3d(' + (bx + 20).toFixed(1) + 'px,' + (WY + 6).toFixed(1) + 'px,0)';
+      /* 3 จอด + ยินดีต้อนรับ (ฉากยังทึบ) → จางออกทั้งฉาก */
+      var w = eo(seg(t, 4000, 4450)); wel.style.opacity = w.toFixed(3); wel.style.transform = 'translate3d(0,' + (10 * (1 - w)).toFixed(1) + 'px,0)';
+      R.style.opacity = (1 - eo(seg(t, 4650, 5100))).toFixed(3);
+      if (t >= 5120) { end(); return; }
       raf = requestAnimationFrame(frame);
     }
-    /* เริ่มเมื่อหน้าพร้อม: โหลดเสร็จ + มองเห็นจอ (กลับจาก Google หน้ายังโหลดหนัก) · รอไม่เกิน 2.5 วิ */
     var w0 = Date.now(), started = false;
     function start() {
-      if (started || !alive) return; started = true; vw = innerWidth; vh = innerHeight; cx = vw / 2; cy = vh / 2; path(); rainOn();
+      if (started || !alive) return; started = true; layout(); plan(); rainOn();
       requestAnimationFrame(function (n) { t0 = n; raf = requestAnimationFrame(frame); });
     }
     (function wait() {
@@ -714,7 +737,6 @@
       if ((document.readyState === 'complete' && !document.hidden) || Date.now() - w0 > 2500) { requestAnimationFrame(function () { requestAnimationFrame(start); }); return; }
       setTimeout(wait, 120);
     })();
-    P.style.opacity = '0';
   };
 })();
 /*/NTSITE*/
