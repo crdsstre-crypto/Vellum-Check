@@ -39,6 +39,39 @@ patch(D,0);patch(window,1);}catch(e){}})();</script>
 
 <script>/* v269: เพิ่งกลับจากล็อกอิน Google → ปิดหน้าแรกไว้ก่อน (ไม่ให้เห็นแวบ) จนฉากประทับตราเริ่ม · กันค้าง 6 วินาที */
 (function(){try{var t=+sessionStorage.getItem("vc_stamp_google"),h=document.documentElement;if(t&&Date.now()-t<180000&&!/[?&]google=error/.test(location.search)&&!matchMedia("(prefers-reduced-motion: reduce)").matches){h.classList.add("vc-gin");window.__vcGinOff=function(){if(!h.classList.contains("vc-gin"))return;h.classList.add("vc-gin-out");setTimeout(function(){h.classList.remove("vc-gin","vc-gin-out")},450)};setTimeout(window.__vcGinOff,6000)}}catch(e){}})();</script>
+<style>/* v65: เปลี่ยนไปฉากนักสืบ → ม่านมู่ลี่ + พิมพ์ดีด อยู่ต่อข้ามการรีโหลดหน้า จนฉากนักสืบพร้อม แล้ว "แกร๊ก" เปิดโคม มู่ลี่ม้วนขึ้น */
+#vcNsw{position:fixed;inset:0;z-index:2147483000;background:#0b0a09;overflow:hidden;pointer-events:auto;font-family:"Courier New",ui-monospace,monospace}
+#vcNsw .ns-str{position:absolute;inset:-20%;background:repeating-linear-gradient(180deg,rgba(255,226,170,.09) 0 14px,transparent 14px 30px);transform:skewY(-8deg)}
+#vcNsw .ns-sl{position:absolute;left:0;right:0;height:calc(10% + 1px);background:linear-gradient(180deg,#2b2620,#1a1713 70%,#0d0b09);box-shadow:0 2px 3px rgba(0,0,0,.6);transform-origin:50% 0;will-change:transform}
+#vcNsw .ns-cord{position:absolute;right:26px;top:0;width:2px;height:62%;background:#5a5048}
+#vcNsw .ns-ty{position:absolute;left:28px;right:20px;top:40%;color:#d8d2c4;font-size:14px;line-height:1.8;white-space:pre-wrap;z-index:2}
+#vcNsw .ns-ty small{display:block;color:#8a8478;font-size:12px}
+#vcNsw .ns-c{display:inline-block;width:8px;height:15px;background:#d8d2c4;vertical-align:-2px;margin-left:2px;animation:nsBl 1s steps(1) infinite}
+#vcNsw .ns-lamp{position:absolute;left:50%;top:-12px;width:46px;height:24px;margin-left:-23px;border-radius:23px 23px 4px 4px;background:#2a2622;z-index:3}
+#vcNsw .ns-lamp::after{content:"";position:absolute;left:14px;bottom:-5px;width:18px;height:6px;border-radius:0 0 9px 9px;background:#5a5040}
+#vcNsw .ns-cone{position:absolute;left:50%;top:0;width:150vmax;height:150vmax;margin-left:-75vmax;background:radial-gradient(34% 40% at 50% 0%,rgba(255,220,160,.36),transparent 70%);opacity:0;z-index:1}
+#vcNsw.lit .ns-lamp::after{background:#ffe2a8;box-shadow:0 0 30px 12px rgba(255,214,150,.45)}
+#vcNsw.lit .ns-cone{animation:nsLit .5s steps(1) forwards}
+#vcNsw.open{background:transparent;transition:background .5s ease}
+#vcNsw.open .ns-sl{animation:nsUp .55s cubic-bezier(.5,0,.3,1) forwards}
+#vcNsw.open .ns-str,#vcNsw.open .ns-ty,#vcNsw.open .ns-cord{opacity:0;transition:opacity .35s ease}
+#vcNsw.gone{opacity:0;transition:opacity .45s ease}
+@keyframes nsBl{50%{opacity:0}}
+@keyframes nsLit{0%{opacity:.9}18%{opacity:.15}34%{opacity:.85}48%{opacity:.2}62%,100%{opacity:1}}
+@keyframes nsUp{to{transform:scaleY(0)}}
+@media (prefers-reduced-motion:reduce){#vcNsw *{animation:none !important}#vcNsw.open .ns-sl{transform:scaleY(0)}}</style>
+<script>(function(d){try{var ts=+sessionStorage.getItem("vc_nsw");sessionStorage.removeItem("vc_nsw");if(!ts||Date.now()-ts>30000||d.getAttribute("data-htheme")!=="noir")return;}catch(e){return}
+d.classList.add("vc-nsw");var o=document.createElement("div");o.id="vcNsw";o.setAttribute("aria-hidden","true");var h='<i class="ns-str"></i><i class="ns-cone"></i><i class="ns-lamp"></i>';for(var i=0;i<10;i++)h+='<i class="ns-sl" style="top:'+(i*10)+'%;animation-delay:'+((9-i)*.04).toFixed(2)+'s"></i>';
+o.innerHTML=h+'<i class="ns-cord"></i><div class="ns-ty">แฟ้มคดีหมายเลข 0421\n<span></span><i class="ns-c"></i><small>Vellum Check · ฝ่ายสืบสวนสัญญา</small></div>';d.appendChild(o);
+var red=matchMedia("(prefers-reduced-motion: reduce)").matches,sp=o.querySelector(".ns-ty span"),L2="สถานะ: กำลังเปิดแฟ้ม…",k=0,done=0,ac=null;
+function snd(f,du,v,ty){try{if(localStorage.getItem("vc_sfx")!=="1")return;ac=ac||new(window.AudioContext||window.webkitAudioContext)();if(ac.state!=="running")return;var t=ac.currentTime,os=ac.createOscillator(),g=ac.createGain();os.type=ty||"square";os.frequency.value=f;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+du);os.connect(g);g.connect(ac.destination);os.start(t);os.stop(t+du+.02)}catch(e){}}
+(function tw(){if(done||!o.isConnected)return;if(k<L2.length){sp.textContent=L2.slice(0,++k);snd(900+Math.random()*300,.03,.02);setTimeout(tw,red?0:45)}})();
+window.__vcNswOpen=function(){if(done)return;done=1;sp.textContent=L2;snd(1600,.04,.05);setTimeout(function(){snd(220,.06,.04)},30);
+if(red){o.className="open gone";setTimeout(function(){o.remove();d.classList.remove("vc-nsw")},500);return}
+o.classList.add("lit");setTimeout(function(){o.classList.add("open");for(var j=0;j<4;j++)setTimeout(function(){snd(170+Math.random()*80,.05,.02)},j*90)},520);
+setTimeout(function(){o.classList.add("gone")},1150);setTimeout(function(){o.remove();d.classList.remove("vc-nsw")},1650)};
+setTimeout(function(){if(window.__vcNswOpen)window.__vcNswOpen()},15000);
+var chk=setInterval(function(){if(window.__vchThFail){clearInterval(chk);window.__vcNswOpen()}if(done)clearInterval(chk)},300)})(document.documentElement)</script>
 <title>เช็กสัญญา | Vellum Check</title>
 <!-- หน้าปกใหม่ (hero-scene.js) โหลดท้ายหน้า: ซ่อนหน้าปกเก่าตั้งแต่ก่อนวาดจอ ไม่ให้แวบขึ้นมา
      ถ้าหน้าปกใหม่โหลดไม่ขึ้นภายใน 6 วินาที (หรือไฟล์เสีย) หน้าปกเก่าจะกลับมาเอง -->
@@ -64,7 +97,7 @@ html.vch-pre:not(.vch-on) body{background:#0a0806}</style>
 <!-- ฟอนต์ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="script" href="hero-scene.js?v=24">
+<link rel="preload" as="script" href="hero-scene.js?v=25">
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Taviraj:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=IBM+Plex+Mono:wght@400;500&family=Charmonman:wght@400;700&family=Sriracha&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Taviraj:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=IBM+Plex+Mono:wght@400;500&family=Charmonman:wght@400;700&family=Sriracha&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet"></noscript>
 
@@ -187,7 +220,7 @@ html.vch-pre:not(.vch-on) body{background:#0a0806}</style>
     <a class="hero-cue mono" href="#manifesto" data-reveal style="--i:6"><span>ดูวิธีอ่าน</span><i aria-hidden="true"></i></a>
   </section>
 <!-- หน้าปก: โหลดทันทีหลังส่วนหัว (ไม่ต้องรอสคริปต์อื่นทั้งหมด) → ขึ้นปกเร็ว -->
-<script src="hero-scene.js?v=24" onerror="document.documentElement.classList.remove('vch-pre')"></script>
+<script src="hero-scene.js?v=25" onerror="document.documentElement.classList.remove('vch-pre')"></script>
 
   <!-- ============ II. ฉากอ่านสัญญา: ตรึงจอแล้วเล่นตามการเลื่อน (ค่า --p จาก motion.js) ============
        โหมดลดการเคลื่อนไหวหรือ JS ไม่ทำงาน: ไม่ตรึง และแสดงสภาพสุดท้ายที่อ่านครบทั้งหมด -->
