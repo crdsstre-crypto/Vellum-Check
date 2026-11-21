@@ -1985,3 +1985,102 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
 })();
 /*/PZVTS*/
+
+/*PZDISP*/ /* ธีมตัดกระดาษ: แผง "การแสดงผล" (#dispPanel จาก extras.js + แถวภาษาจาก i18n.js) ในหน้าบัญชี
+   (ก) แฟ้มกระดาษครีมทึบ — แก้ฉากทิวทัศน์ทะลุทับตัวหนังสือ · หูแฟ้มเขียวกรอบทอง "ตั้งค่าการแสดงผล"
+   ภาษา = ตั๋ว 3 สี ใบที่ใช้อยู่ยก + หมุด + ตรา "ใช้อยู่" · ขนาดตัวอักษร = "ก" ตัดกระดาษบนไม้บรรทัด · ตัวอย่าง = โน้ตติดเทป
+   สวิตช์ = ป้ายเลื่อนมีคำ เปิด/ปิด · ไอคอนวงกลม 3 สี · คั่นแถวรอยปรุ · เปิดลดภาพเคลื่อนไหว → ตรา "นิ่ง" */
+(function () {
+  'use strict';
+  if (window.__pzDisp) return; window.__pzDisp = 1;
+  var H = 'html[data-htheme="paper"][data-view="home"]';
+  var D = H + ' body #authCard#authCard #dispPanel';
+  function u(svg) { return 'url("data:image/svg+xml,' + encodeURIComponent(svg).replace(/'/g, '%27') + '")'; }
+  var GEAR = u('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2l2 3 3.5-.8.8 3.5 3 2-2 3 .8 3.5-3.5.8-2 3-3-2-3 2-2-3-3.5-.8.8-3.5-2-3 3-2-.8-3.5L10 5z" fill="#d8b86a"/><circle cx="12" cy="12" r="4" fill="#2c5b55"/></svg>');
+  var PIN = 'radial-gradient(circle at 35% 30%,#e09a82,#c4735a 55%,#7d3a2c)';
+  var DK = 'color:#2e2112 !important;-webkit-text-fill-color:#2e2112 !important;text-shadow:none !important;';
+  var MD = 'color:#4f3b22 !important;-webkit-text-fill-color:#4f3b22 !important;text-shadow:none !important;';
+  var NOTCH = function (c, bg) { return 'radial-gradient(circle 5px at 0 50%,' + bg + ' 95%,transparent 100%),radial-gradient(circle 5px at 100% 50%,' + bg + ' 95%,transparent 100%),' + c; };
+  var css =
+    /* แฟ้ม */
+    D + '.menu-panel{position:relative !important;overflow:visible !important;margin:32px 0 6px !important;padding:20px 16px 14px !important;border:0 !important;border-radius:0 6px 6px 6px !important;background:repeating-linear-gradient(180deg,transparent 0 31px,rgba(94,71,42,.07) 31px 32px),linear-gradient(180deg,#f3e9d4,#eadcbe) !important;box-shadow:2px 3px 0 #7d6233,0 12px 18px -10px rgba(0,0,0,.5) !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;' + DK + '}' +
+    D + '.menu-panel::before{content:"\\0E15\\0E31\\0E49\\0E07\\0E04\\0E48\\0E32\\0E01\\0E32\\0E23\\0E41\\0E2A\\0E14\\0E07\\0E1C\\0E25" !important;display:flex !important;align-items:center;position:absolute !important;left:0 !important;top:-26px !important;right:auto !important;bottom:auto !important;width:auto !important;height:28px !important;padding:0 16px 0 30px !important;border:0 !important;border-radius:6px 10px 0 0 !important;background:' + GEAR + ' 9px 50%/15px no-repeat,linear-gradient(180deg,#2c5b55,#224a45) !important;box-shadow:inset 0 0 0 1px rgba(184,150,78,.55) !important;color:#efe3ca !important;-webkit-text-fill-color:#efe3ca !important;font:800 12.5px/1 Prompt,sans-serif !important;opacity:1 !important;pointer-events:none;-webkit-mask:none !important;mask:none !important;transform:none !important}' +
+    'html[data-lang="en"]' + D.slice(4) + '.menu-panel::before{content:"Display settings" !important}' + 'html[data-lang="zh"]' + D.slice(4) + '.menu-panel::before{content:"\\663E\\793A\\8BBE\\7F6E" !important}' +
+    D + '.menu-panel::after{display:none !important}' +
+    D + ' .vds-blk{border:0 !important;background:none !important;box-shadow:none !important;padding:0 !important;margin:0 0 14px !important}' +
+    D + ' .vds-blk::before,' + D + ' .vds-blk::after{display:none !important}' +
+    D + ' .vds-h{' + DK + 'font-weight:800 !important;font-size:13px !important;letter-spacing:0 !important;margin:2px 0 10px !important;opacity:1 !important}' +
+    D + ' .vds-h::before{content:"\\2702" !important;color:#7d3a2c !important;font-size:12px !important}' +
+    D + ' .vds-h::after{display:none !important}' +
+    /* แถบปุ่ม (รวม) */
+    D + ' .vds-seg{position:relative !important;gap:9px !important;padding:0 !important;border:0 !important;border-radius:0 !important;background:none !important;box-shadow:none !important;overflow:visible !important}' +
+    D + ' .vds-seg::before,' + D + ' .vds-seg::after{display:none !important}' +
+    D + ' .vds-seg button{position:relative !important;overflow:visible !important;transform:none;transition:transform .18s ease !important;opacity:1 !important}' +
+    D + ' .vds-seg button b{' + DK + 'opacity:1 !important}' + D + ' .vds-seg button span{' + MD + 'opacity:1 !important;position:static !important}' +
+    /* ภาษา = ตั๋ว */
+    D + ' .vds-lang .vds-seg button{height:62px !important;border-radius:4px !important;box-shadow:1px 2px 0 #7d6233 !important}' +
+    D + ' .vds-lang .vds-seg button[data-lang="th"]{background:' + NOTCH('#e2c6b6', '#eee2c7') + ' !important}' +
+    D + ' .vds-lang .vds-seg button[data-lang="en"]{background:' + NOTCH('#c6d3d3', '#eee2c7') + ' !important}' +
+    D + ' .vds-lang .vds-seg button[data-lang="zh"]{background:' + NOTCH('#e4d3a6', '#eee2c7') + ' !important}' +
+    D + ' .vds-lang .vds-seg button::before{content:"" !important;display:block !important;position:absolute !important;inset:5px 9px !important;width:auto !important;height:auto !important;border:1.5px dashed rgba(46,33,18,.25) !important;border-radius:2px !important;background:none !important;pointer-events:none;opacity:1 !important}' +
+    D + ' .vds-lang .vds-seg button::after{display:none !important}' +
+    D + ' .vds-lang .vds-seg button b{font-size:16px !important;font-weight:800 !important}' +
+    D + ' .vds-lang .vds-seg button.is-on{transform:translateY(-4px) rotate(-2deg) !important;box-shadow:inset 0 0 0 2px #2c5b55,2px 5px 0 #5e472a !important}' +
+    D + ' .vds-lang .vds-seg button.is-on::after{content:"\\0E43\\0E0A\\0E49\\0E2D\\0E22\\0E39\\0E48" !important;display:block !important;position:absolute !important;right:-6px !important;bottom:-9px !important;left:auto !important;top:auto !important;width:auto !important;height:auto !important;z-index:4;padding:1px 6px !important;border:2px solid rgba(60,92,76,.85) !important;border-radius:3px !important;background:rgba(243,233,212,.92) !important;color:rgba(60,92,76,.95) !important;-webkit-text-fill-color:rgba(60,92,76,.95) !important;font:900 9.5px/1.3 Prompt,sans-serif !important;transform:rotate(-10deg) !important;opacity:1 !important}' +
+    'html[data-lang="en"]' + D.slice(4) + ' .vds-lang .vds-seg button.is-on::after{content:"IN USE" !important}' + 'html[data-lang="zh"]' + D.slice(4) + ' .vds-lang .vds-seg button.is-on::after{content:"\\4F7F\\7528\\4E2D" !important}' +
+    /* หมุด (ใช้ span::after เพราะ ::before/::after ของปุ่มใช้แล้ว) */
+    D + ' .vds-seg button.is-on span::after{content:"";position:absolute;right:-5px;top:-9px;width:14px;height:14px;border-radius:50%;background:' + PIN + ';box-shadow:1px 2px 0 rgba(0,0,0,.3);z-index:5}' +
+    /* ขนาดตัวอักษร = ไม้บรรทัด */
+    D + ' .vds-blk:not(.vds-lang) .vds-seg{height:76px;align-items:end !important;gap:0 !important;padding:0 4px !important;border-radius:3px !important;background:repeating-linear-gradient(90deg,rgba(94,71,42,.55) 0 1.5px,transparent 1.5px 10px) 8px 0/calc(100% - 16px) 7px no-repeat,repeating-linear-gradient(90deg,rgba(94,71,42,.6) 0 1.5px,transparent 1.5px 50px) 8px 0/calc(100% - 16px) 12px no-repeat,linear-gradient(180deg,#e4d3a6,#d8c493) !important;box-shadow:1px 2px 0 #7d6233 !important}' +
+    D + ' .vds-blk:not(.vds-lang) .vds-seg button{height:58px !important;margin:0 8px 6px !important;padding:0 !important;display:flex !important;flex-direction:column !important;align-items:center !important;justify-content:flex-end !important;background:none !important;border:0 !important;border-radius:4px !important;box-shadow:none !important}' +
+    D + ' .vds-blk:not(.vds-lang) .vds-seg button::before,' + D + ' .vds-blk:not(.vds-lang) .vds-seg button::after{display:none !important}' +
+    D + ' .vds-blk:not(.vds-lang) .vds-seg button b{font-family:Prompt,sans-serif !important;font-weight:900 !important;line-height:1 !important;color:#efe3cb !important;-webkit-text-fill-color:#efe3cb !important;-webkit-text-stroke:1.1px #4a2e14;text-shadow:2px 2px 0 #c4735a !important}' +
+    D + ' .vds-seg button[data-font="s"] b{font-size:20px !important}' + D + ' .vds-seg button[data-font="m"] b{font-size:28px !important}' + D + ' .vds-seg button[data-font="l"] b{font-size:36px !important}' +
+    D + ' .vds-blk:not(.vds-lang) .vds-seg button span{font-size:10.5px !important;font-weight:700 !important;margin-top:3px !important;padding-bottom:3px}' +
+    D + ' .vds-blk:not(.vds-lang) .vds-seg button.is-on{background:rgba(239,227,202,.6) !important;box-shadow:inset 0 0 0 2px #2c5b55 !important}' +
+    /* โน้ตตัวอย่าง */
+    D + ' .vds-pv{position:relative !important;margin:14px 0 4px !important;padding:14px 14px 12px !important;border:0 !important;border-radius:0 !important;background:#fbf4e4 !important;box-shadow:1px 3px 0 #7d6233 !important;rotate:-.6deg;' + DK + '}' +
+    D + ' .vds-pv::before{content:"" !important;display:block !important;position:absolute !important;top:-8px !important;left:50% !important;width:56px !important;height:16px !important;margin-left:-28px !important;background:rgba(216,196,147,.85) !important;transform:rotate(-3deg) !important;border:0 !important;border-radius:0 !important;opacity:1 !important}' +
+    D + ' .vds-pv::after{display:none !important}' +
+    D + ' .vds-pv small{color:#7d6a4c !important;-webkit-text-fill-color:#7d6a4c !important;font-weight:700 !important}' +
+    /* แถวสวิตช์ */
+    D + ' .vds-row{position:relative !important;padding:14px 2px !important;border:0 !important;background:none !important;box-shadow:none !important}' +
+    D + ' .vds-row::after{display:none !important}' +
+    D + ' .vds-row::before{content:"" !important;display:block !important;position:absolute !important;left:-6px !important;right:-6px !important;top:0 !important;height:6px !important;width:auto !important;border:0 !important;background:radial-gradient(circle 2.2px at 50% 50%,rgba(94,71,42,.45) 95%,transparent) 0 0/10px 6px repeat-x !important;opacity:1 !important}' +
+    D + ' .vds-ic{flex:0 0 42px !important;width:42px !important;height:42px !important;border:0 !important;border-radius:50% !important;box-shadow:1px 2px 0 #7d6233 !important;display:flex !important;align-items:center;justify-content:center}' +
+    D + ' .vds-ic::before,' + D + ' .vds-ic::after{display:none !important}' +
+    D + ' .vds-ic svg{opacity:1 !important;width:20px !important;height:20px !important;color:#efe3ca !important;stroke:#efe3ca !important;stroke-width:2 !important}' +
+    D + ' .vds-row.is-c .vds-ic{background:#93aaac !important}' + D + ' .vds-row.is-m .vds-ic{background:#7fa184 !important}' + D + ' .vds-row.is-s .vds-ic{background:#d1a54a !important}' +
+    D + ' .vds-row.is-s .vds-ic svg{color:#2e2112 !important;stroke:#2e2112 !important}' +
+    D + ' .vds-tx{position:relative;' + DK + 'font-weight:800 !important;font-size:14.5px !important}' +
+    D + ' .vds-tx small{' + MD + 'font-weight:400 !important;font-size:11.5px !important;opacity:1 !important}' +
+    D + ' .vds-row.is-m:has(input:checked) .vds-tx::after{content:"\\0E19\\0E34\\0E48\\0E07";position:absolute;right:-4px;top:-8px;padding:1px 7px;border:2px solid rgba(60,92,76,.85);border-radius:3px;color:rgba(60,92,76,.95);-webkit-text-fill-color:rgba(60,92,76,.95);font:900 10px/1.3 Prompt,sans-serif;transform:rotate(-12deg)}' +
+    'html[data-lang="en"]' + D.slice(4) + ' .vds-row.is-m:has(input:checked) .vds-tx::after{content:"STILL"}' + 'html[data-lang="zh"]' + D.slice(4) + ' .vds-row.is-m:has(input:checked) .vds-tx::after{content:"\\9759\\6B62"}' +
+    /* สวิตช์ป้ายเลื่อน */
+    D + ' .vds-sw{flex:0 0 78px !important;width:78px !important;height:34px !important}' +
+    D + ' .vds-sw i{border-radius:4px !important;background:#e6d7b9 !important;box-shadow:inset 0 0 0 1.5px #b9a47c !important}' +
+    D + ' .vds-sw i::before{content:"" !important;position:absolute;inset:4px;border:1.5px dashed rgba(94,71,42,.25);border-radius:2px}' +
+    D + ' .vds-sw i::after{content:"\\0E1B\\0E34\\0E14" !important;top:3px !important;left:3px !important;width:38px !important;height:28px !important;border-radius:3px !important;background:#efe3ca !important;box-shadow:1px 2px 0 #7d6233 !important;display:flex !important;align-items:center;justify-content:center;color:#5e472a !important;font:800 11.5px/1 Prompt,sans-serif !important;transform:none}' +
+    D + ' .vds-sw input:checked + i{background:#2c5b55 !important;box-shadow:inset 0 0 0 1.5px #1f423d !important}' +
+    D + ' .vds-sw input:checked + i::before{border-color:rgba(216,184,106,.35)}' +
+    D + ' .vds-sw input:checked + i::after{content:"\\0E40\\0E1B\\0E34\\0E14" !important;transform:translateX(34px) !important;background:#d8b86a !important;color:#2e2112 !important;box-shadow:1px 2px 0 #13302c !important}' +
+    D + ' .vds-sw input:active + i::after{width:38px !important}' + D + ' .vds-sw input:checked:active + i::after{transform:translateX(31px) !important}' +
+    'html[data-lang="en"]' + D.slice(4) + ' .vds-sw i::after{content:"OFF" !important}' + 'html[data-lang="en"]' + D.slice(4) + ' .vds-sw input:checked + i::after{content:"ON" !important}' +
+    'html[data-lang="zh"]' + D.slice(4) + ' .vds-sw i::after{content:"\\5173" !important}' + 'html[data-lang="zh"]' + D.slice(4) + ' .vds-sw input:checked + i::after{content:"\\5F00" !important}' +
+    D + ' .vds-sw input:focus-visible + i{outline:2px solid #2c5b55 !important;outline-offset:2px !important}' +
+    /* ท้ายแผง */
+    D + ' .vds-foot{border:0 !important;padding-top:8px !important;margin-top:4px !important}' + D + ' .vds-foot::before{display:none !important}' +
+    D + ' .vds-saved{padding:3px 9px;background:#cdd6c0 !important;border-radius:3px;box-shadow:1px 2px 0 rgba(125,98,51,.5);color:#2c4a3f !important;-webkit-text-fill-color:#2c4a3f !important;font-weight:700 !important}' +
+    D + ' .vds-saved:empty{padding:0;box-shadow:none;background:none !important}' +
+    D + ' .vds-reset{position:relative !important;padding:9px 14px !important;border:0 !important;border-radius:4px !important;background:#efe3ca !important;box-shadow:2px 3px 0 #7d6233 !important;' + DK + 'font-weight:700 !important}' +
+    D + ' .vds-reset::after{content:"" !important;position:absolute !important;inset:3px !important;border:1.5px dashed rgba(94,71,42,.35) !important;border-radius:3px !important;background:none !important}' +
+    D + ' .vds-reset:disabled{opacity:.55 !important}' +
+    '@media (prefers-reduced-motion:reduce){' + D + ' .vds-seg button{transition:none !important}}';
+  function go() {
+    if (document.documentElement.getAttribute('data-htheme') !== 'paper') return;
+    if (document.getElementById('pz-disp')) return;
+    var s = document.createElement('style'); s.id = 'pz-disp'; s.textContent = css; document.head.appendChild(s);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+})();
+/*/PZDISP*/
