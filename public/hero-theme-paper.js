@@ -395,3 +395,101 @@
   if (window.__vchApply) window.__vchApply();
 })();
 /*/PZSCROLL*/
+
+/*PZHEAD*/ /* ธีมตัดกระดาษ: หัวเว็บเป็นกระดาษคราฟต์ 2 ชั้น (เฉพาะหน้าแรก · ธีมอื่นไม่เปลี่ยน)
+   ขอบล่างตัดซิกแซก + ชั้นมัสตาร์ดเหลื่อม · ลายเส้นใยกระดาษ · โลโก้ V ซ้อน 3 สี · ปุ่มกลมกระดาษ · ป้ายตรวจสัญญามัสตาร์ดรอยปรุ + เทป
+   ดาวลับข้างชื่อเว็บ แตะแล้วโน้ตพับเปิด · เทปลายจุดมุมซ้าย */
+(function () {
+  'use strict';
+  if (window.__pzHead) return; window.__pzHead = 1;
+  var H = 'html[data-htheme="paper"][data-view="home"] body';
+  function zig(n, d) { var a = [], i; for (i = 0; i <= n; i++) a.push((100 - i * 100 / n).toFixed(2) + '% ' + (i % 2 ? '100%' : 'calc(100% - ' + d + 'px)')); return 'polygon(0 0,100% 0,' + a.join(',') + ')'; }
+  var NOISE = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 .32 0 0 0 0 .22 0 0 0 0 .1 0 0 0 .2 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23f)'/%3E%3C/svg%3E\")";
+  var FIB = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='120'%3E%3Cg fill='none' stroke='%237a5a30' stroke-opacity='.16' stroke-width='.8'%3E%3Cpath d='M10 20q20 6 34-2M80 64q14 10 30 4M150 30q18-8 32 2M30 96q12-6 26 0M190 90q10 8 24 2M120 104q16 4 28-6'/%3E%3C/g%3E%3C/svg%3E\")";
+  var css =
+    '.pzh,.pzv,.pzs,.pzt{display:none}' +
+    H + ' .site-header{background:none !important;box-shadow:none !important;border:0 !important;isolation:isolate}' +
+    H + ' .site-header .pzh{display:block;position:absolute;left:0;right:0;top:0;bottom:-9px;z-index:-1;pointer-events:none}' +
+    '.pzh i{position:absolute;inset:0}' +
+    '.pzh .k2{background:#e0a93a;clip-path:' + zig(64, 9) + ';filter:drop-shadow(0 4px 3px rgba(0,0,0,.32))}' +
+    '.pzh .k1{bottom:6px;background:' + FIB + ',' + NOISE + ',linear-gradient(180deg,#dcbd8f,#c9a573);clip-path:' + zig(80, 7) + '}' +
+    '.pzh .wa{left:-16px;top:7px;right:auto;bottom:auto;width:76px;height:17px;transform:rotate(-24deg);opacity:.92;box-shadow:0 1px 2px rgba(0,0,0,.2);background:radial-gradient(circle,#ef7d5e 0 2.3px,transparent 2.6px) 0 0/12px 17px,#fff0d8}' +
+    '@media (min-width:768px){.pzh .wa{left:-12px;top:8px;transform:rotate(-18deg)}}' +
+    /* โลโก้ V ซ้อน 3 สี */
+    H + ' .site-header .brand > svg{display:none !important}' +
+    H + ' .site-header .pzv{display:block;position:relative;flex:none;width:30px;height:34px;margin-right:2px}' +
+    '.pzv svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}' +
+    H + ' .site-header .brand-name{color:#3a2a16 !important;-webkit-text-fill-color:#3a2a16 !important;background:none !important;text-shadow:0 1px 0 rgba(255,240,216,.45) !important}' +
+    /* ดาวลับ */
+    H + ' .site-header .brand{position:relative}' +
+    H + ' .site-header .pzs{display:block;position:absolute;left:16px;top:-6px;z-index:2;width:30px;height:30px;margin:0;padding:6px;border:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent}' +
+    '.pzs svg{display:block;width:18px;height:18px;filter:drop-shadow(1px 2px 0 rgba(0,0,0,.25));transition:transform .2s}' +
+    '.pzs:hover svg{transform:rotate(12deg) scale(1.1)}.pzs.go svg{animation:pzsp .6s cubic-bezier(.3,1.6,.5,1)}' +
+    '.pzs,.pzs:focus{outline:none !important;box-shadow:none !important;border-radius:50%}.pzs:focus-visible{outline:2px solid #1d4f4c !important;outline-offset:1px}' +
+    '@keyframes pzsp{0%{transform:scale(.8) rotate(-30deg)}60%{transform:scale(1.35) rotate(30deg)}100%{transform:scale(1.15) rotate(18deg)}}' +
+    '.pzn{position:fixed;z-index:60;width:min(250px,calc(100vw - 24px));padding:12px 14px 12px 50px;border-radius:4px;background:#fff0d8;color:#3a2a16;font:500 12.5px/1.5 Prompt,Sarabun,sans-serif;box-shadow:3px 4px 0 #ef7d5e,0 14px 22px -8px rgba(0,0,0,.55);transform-origin:var(--ox,30px) 0;animation:pzno .45s cubic-bezier(.3,1.4,.5,1)}' +
+    '.pzn b{display:block;font:700 14px/1.35 Prompt,sans-serif;color:#1d4f4c}' +
+    '.pzn svg{position:absolute;left:11px;top:12px;width:30px;height:30px}' +
+    '.pzn::before{content:"";position:absolute;left:var(--ox,30px);top:-7px;margin-left:-7px;border:7px solid transparent;border-top:0;border-bottom-color:#fff0d8}' +
+    '.pzn.out{animation:pznc .3s ease forwards}' +
+    '@keyframes pzno{from{transform:perspective(500px) rotateX(-90deg);opacity:0}to{transform:none;opacity:1}}@keyframes pznc{to{transform:perspective(500px) rotateX(-90deg);opacity:0}}' +
+    /* ปุ่มกลมกระดาษ (☰ / บัญชี / ภาษา) */
+    H + ' .site-header .vct-mb,' + H + ' .site-header #authToggle.auth-toggle,' + H + ' .site-header .vc-lang{position:relative !important;background:#fff0d8 !important;border:0 !important;color:#3a2a16 !important;box-shadow:2px 3px 0 #b48a2c,0 6px 8px -4px rgba(0,0,0,.4) !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important}' +
+    H + ' .site-header .vct-mb::after,' + H + ' .site-header #authToggle.auth-toggle::after,' + H + ' .site-header .vc-lang::after{content:"" !important;display:block !important;position:absolute;inset:3px;border-radius:inherit;border:1.5px dashed rgba(58,42,22,.24);pointer-events:none;background:none !important}' +
+    H + ' .site-header .vct-mb *,' + H + ' .site-header #authToggle *,' + H + ' .site-header .vc-lang *{color:#3a2a16 !important;-webkit-text-fill-color:#3a2a16 !important;text-shadow:none !important}' +
+    H + ' .site-header .vct-mb svg,' + H + ' .site-header #authToggle svg{stroke:currentColor;filter:none !important}' +
+    H + ' .site-header .vct-mb:active,' + H + ' .site-header #authToggle:active,' + H + ' .site-header .vc-lang:active{transform:translate(1px,2px);box-shadow:1px 1px 0 #b48a2c !important}' +
+    H + ' .site-header .vct-mb:focus-visible,' + H + ' .site-header #authToggle:focus-visible,' + H + ' .site-header .vc-lang:focus-visible{outline:2px solid #1d4f4c !important;outline-offset:2px}' +
+    /* ลิงก์เมนู (คอม) */
+    H + ' .site-header .dx-nav a:not([href="#checkCard"]),' + H + ' .site-header .dx-nav a:not([href="#checkCard"]) *{color:#3a2a16 !important;-webkit-text-fill-color:#3a2a16 !important;text-shadow:none !important}' +
+    H + ' .site-header .dx-nav a:not([href="#checkCard"])::after{background:#d0603f !important}' +
+    /* ป้ายตรวจสัญญา = กระดาษมัสตาร์ด ขอบรอยปรุ + เทปมุม (ปุ่มทองปุ่มเดียวบนหัวเว็บ) */
+    H + ' .site-header .dx-nav a[href="#checkCard"]{position:relative !important;overflow:visible !important;border-radius:3px !important;background:#f3c14d !important;border:0 !important;color:#3a2c12 !important;box-shadow:2px 3px 0 #b48a2c,0 7px 10px -5px rgba(0,0,0,.45) !important;padding-left:18px !important;padding-right:18px !important;animation:none !important;transition:transform .15s,box-shadow .15s !important}' +
+    H + ' .site-header .dx-nav a[href="#checkCard"] *{color:#3a2c12 !important;-webkit-text-fill-color:#3a2c12 !important;text-shadow:none !important}' +
+    H + ' .site-header .dx-nav a[href="#checkCard"]::before,' + H + ' .site-header .dx-nav a[href="#checkCard"]::after{content:"" !important;display:block !important;position:absolute !important;top:0 !important;bottom:0 !important;left:auto;right:auto;width:6px !important;height:auto !important;border-radius:0 !important;opacity:1 !important;transform:none !important;animation:none !important;box-shadow:none !important;background:radial-gradient(circle 2.4px at 50% 50%,#cfae7f 92%,transparent) 0 1px/6px 8px repeat-y !important}' +
+    H + ' .site-header .dx-nav a[href="#checkCard"]::before{left:-3px !important}' + H + ' .site-header .dx-nav a[href="#checkCard"]::after{right:-3px !important}' +
+    H + ' .site-header .dx-nav a[href="#checkCard"]:hover{transform:translateY(-1px) !important;box-shadow:2px 4px 0 #b48a2c,0 10px 14px -6px rgba(0,0,0,.5) !important}' +
+    H + ' .site-header .dx-nav a[href="#checkCard"]:active{transform:translate(1px,2px) !important;box-shadow:1px 1px 0 #b48a2c !important}' +
+    H + ' .site-header .dx-nav a[href="#checkCard"]:focus-visible{outline:2px solid #1d4f4c !important;outline-offset:2px}' +
+    H + ' .site-header .pzt{display:block;position:absolute;right:-9px;top:-6px;width:28px;height:11px;transform:rotate(18deg);background:rgba(246,236,210,.82);border-left:2px dashed rgba(0,0,0,.08);border-right:2px dashed rgba(0,0,0,.08);pointer-events:none}' +
+    '@media (prefers-reduced-motion:reduce){.pzn,.pzn.out,.pzs.go svg{animation:none}}';
+  var V = 'M4 7H15V9.4L12.6 10L20.4 31L27.6 10L25 9.4V7H36V9.4L33.4 10L22 40H18.4L6.4 10L4 9.4Z', SW = 'M11 44.4Q20 41.6 29 44.4';
+  var LOGO = '<svg viewBox="0 0 40 46" aria-hidden="true">' +
+    '<g transform="translate(2.6 2.6)"><path d="' + V + '" fill="#ef7d5e"/><path d="' + SW + '" stroke="#ef7d5e" stroke-width="2.4" fill="none" stroke-linecap="round"/></g>' +
+    '<g transform="translate(1.3 1.3)"><path d="' + V + '" fill="#f3c14d"/><path d="' + SW + '" stroke="#f3c14d" stroke-width="2.4" fill="none" stroke-linecap="round"/></g>' +
+    '<path d="' + V + '" fill="#fff0d8" stroke="#5a3a18" stroke-width=".7"/><path d="' + SW + '" stroke="#fff0d8" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>';
+  var STAR = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1.5l2.5 5.2 5.7.8-4.1 4 1 5.6L10 14.4 4.9 17.1l1-5.6-4.1-4 5.7-.8z" fill="#f3c14d" stroke="#a87a22" stroke-width="1" stroke-linejoin="round"/></svg>';
+  function on() { return document.documentElement.getAttribute('data-htheme') === 'paper'; }
+  var note = null;
+  function closeNote() { if (!note) return; var n = note; note = null; n.classList.add('out'); setTimeout(function () { n.remove(); }, 320); }
+  function openNote(btn) {
+    if (note) { closeNote(); return; }
+    var r = btn.getBoundingClientRect(), n = document.createElement('div'); n.className = 'pzn'; n.setAttribute('role', 'status');
+    n.innerHTML = STAR + '<b>คุณเจอธีมลับแล้ว ✂</b>ธีม “งานกระดาษตัด” ฉบับหายาก · แตะที่ไหนก็ได้เพื่อปิด';
+    document.body.appendChild(n);
+    var w = n.offsetWidth, x = Math.max(12, Math.min(innerWidth - w - 12, r.left + r.width / 2 - 40));
+    n.style.left = x + 'px'; n.style.top = (r.bottom + 12) + 'px'; n.style.setProperty('--ox', (r.left + r.width / 2 - x) + 'px');
+    note = n;
+  }
+  function build() {
+    if (!on()) return false;
+    var h = document.querySelector('.site-header'); if (!h) return false;
+    if (!document.getElementById('pz-head')) { var s = document.createElement('style'); s.id = 'pz-head'; s.textContent = css; document.head.appendChild(s); }
+    if (!h.querySelector(':scope > .pzh')) { var b = document.createElement('div'); b.className = 'pzh'; b.setAttribute('aria-hidden', 'true'); b.innerHTML = '<i class="k2"></i><i class="k1"></i><i class="wa"></i>'; h.insertBefore(b, h.firstChild); }
+    var br = h.querySelector('.brand');
+    if (br && !br.querySelector('.pzv')) { var v = document.createElement('span'); v.className = 'pzv'; v.innerHTML = LOGO; br.insertBefore(v, br.firstChild); }
+    if (br && !br.querySelector('.pzs')) {
+      var st = document.createElement('button'); st.type = 'button'; st.className = 'pzs'; st.setAttribute('aria-label', 'ธีมลับ'); st.innerHTML = STAR;
+      st.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); st.classList.remove('go'); void st.offsetWidth; st.classList.add('go'); openNote(st); });
+      br.appendChild(st);
+    }
+    var a = h.querySelector('.dx-nav a[href="#checkCard"]'); if (a && !a.querySelector('.pzt')) { var t = document.createElement('i'); t.className = 'pzt'; t.setAttribute('aria-hidden', 'true'); a.appendChild(t); }
+    return true;
+  }
+  document.addEventListener('click', function (e) { if (note && !(e.target.closest && e.target.closest('.pzs,.pzn'))) closeNote(); }, true);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeNote(); });
+  addEventListener('scroll', closeNote, { passive: true, capture: true });
+  function go() { if (build()) return; var n = 0, iv = setInterval(function () { if (build() || ++n > 20) clearInterval(iv); }, 400); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+})();
+/*/PZHEAD*/
