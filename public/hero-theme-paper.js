@@ -2167,3 +2167,134 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
 })();
 /*/PZPRIV*/
+
+/*PZHELP*/ /* ธีมตัดกระดาษ: แผ่นช่วยเหลือ "ติดตรงไหนครับ?" (.vhp จาก help-ui.js)
+   พื้นคราฟต์ขอบซิกแซก · หัว = ป้ายเขียวกรอบทอง + น้องเวลลัม + ปุ่ม X ในป้าย
+   "ใช้ยังไง?" การ์ดครีม เลข 3 ขั้นคนละสี · ปัญหา 6 เรื่อง = แฟ้มมีหู 6 สี (หูเขียนหมวด) · ไอคอนรูปตัดกระดาษหลายชั้นบนวงกลมสี
+   "เจอบ่อย" = ตรายางอิฐ · ลูกศร = มุมพับ · "ส่งข้อความหาเรา" = ซองจดหมาย ต่อท้ายรายการ (ไม่ลอยทับ) + ตั๋วทอง
+   หน้าวิธีแก้: ป้ายหัวเขียว · ขั้นตอน = โน้ตครีม เลขบนเหรียญตราขอบหยัก 3 สี + เส้นประเชื่อม · ปุ่มหลักตั๋วทอง */
+(function () {
+  'use strict';
+  if (window.__pzHelp) return; window.__pzHelp = 1;
+  var V = 'html[data-htheme="paper"][data-view="home"] body .vhp';
+  function zig(n, d, top) { var a = [], i; for (i = 0; i <= n; i++) a.push((i * 100 / n).toFixed(2) + '% ' + (top ? (i % 2 ? '0' : d + 'px') : (i % 2 ? '100%' : 'calc(100% - ' + d + 'px)'))); return top ? 'polygon(' + a.join(',') + ',100% 100%,0 100%)' : 'polygon(0 0,100% 0,' + a.reverse().join(',') + ')'; }
+  function u(svg) { return 'url("data:image/svg+xml,' + encodeURIComponent(svg).replace(/'/g, '%27') + '")'; }
+  var X = ':not(#pz0):not(#pz1)';
+  var FIB = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='120'%3E%3Cg fill='none' stroke='%237a5a30' stroke-opacity='.14' stroke-width='.8'%3E%3Cpath d='M10 20q20 6 34-2M80 64q14 10 30 4M150 30q18-8 32 2M30 96q12-6 26 0M190 90q10 8 24 2M120 104q16 4 28-6'/%3E%3C/g%3E%3C/svg%3E\")";
+  var S = 'xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"';
+  var IC = {
+    start: '<svg ' + S + '><rect x="9" y="8" width="24" height="31" rx="2" fill="#f6ecd6"/><path d="M13 15h14M13 20h14M13 25h9" stroke="#c9b48a" stroke-width="2" stroke-linecap="round"/><path d="M20 38l3-9 13-13 6 6-13 13z" fill="#7d3a2c"/><path d="M19 37l3-9 13-13 6 6-13 13z" fill="#c4735a"/><path d="M19 37l3-9 5 5z" fill="#f2d48a"/></svg>',
+    login: '<svg ' + S + '><circle cx="18.5" cy="28.5" r="11" fill="#7d3a2c"/><circle cx="17" cy="27" r="11" fill="#f2d48a"/><circle cx="17" cy="27" r="4.5" fill="#c4735a"/><path d="M25 21l13-13 4 4-3 3 3 3-3 3-3-3-6 6z" fill="#f2d48a" stroke="#7d3a2c" stroke-width="1.2"/></svg>',
+    file: '<svg ' + S + '><path d="M15 9h16l8 8v27H15z" fill="#2f4f57"/><path d="M13 7h16l8 8v27H13z" fill="#f6ecd6"/><path d="M29 7v8h8z" fill="#c9b48a"/><path d="M17 21h15M17 26h15M17 31h10" stroke="#5f7f88" stroke-width="2.2" stroke-linecap="round"/><circle cx="34" cy="36" r="7" fill="#c4735a"/><path d="M34 32.5v4M34 38.5v.6" stroke="#f6ecd6" stroke-width="2.2" stroke-linecap="round"/></svg>',
+    stuck: '<svg ' + S + '><rect x="12" y="6" width="24" height="5" rx="2" fill="#6e4f22"/><rect x="12" y="37" width="24" height="5" rx="2" fill="#6e4f22"/><path d="M15 11h18c0 8-7 9-7 13s7 5 7 13H15c0-8 7-9 7-13s-7-5-7-13z" fill="#f6ecd6"/><path d="M18 14h12c-1 4-6 6-6 8 0-2-5-4-6-8z" fill="#d1a54a"/><path d="M17 36c1-4 4-6 7-6s6 2 7 6z" fill="#d1a54a"/></svg>',
+    pay: '<svg ' + S + '><rect x="8" y="15" width="34" height="23" rx="3" fill="#2c4a3f"/><rect x="6" y="13" width="34" height="23" rx="3" fill="#f6ecd6"/><rect x="6" y="18" width="34" height="5" fill="#5f8a6f"/><rect x="10" y="27" width="7" height="5" rx="1" fill="#d1a54a"/><path d="M21 30h12" stroke="#a9997a" stroke-width="2" stroke-linecap="round"/><circle cx="38" cy="12" r="7" fill="#c4735a"/><path d="M35 12h6M38 9v6" stroke="#f6ecd6" stroke-width="2" stroke-linecap="round"/></svg>',
+    read: '<svg ' + S + '><path d="M8 8h20v28H8z" fill="#f6ecd6"/><path d="M12 14h12M12 19h12M12 24h8" stroke="#e2a08c" stroke-width="2.4" stroke-linecap="round"/><circle cx="29" cy="27" r="10" fill="#c6d3d3" fill-opacity=".85" stroke="#6e3f30" stroke-width="3.5"/><path d="M36.5 34.5l7 7" stroke="#6e3f30" stroke-width="5" stroke-linecap="round"/><path d="M24 23a6 6 0 0 1 5-3" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
+    hist: '<svg ' + S + '><path d="M8 15h13l3 4h20v22H8z" fill="#4a3720"/><path d="M6 13h13l3 4h20v22H6z" fill="#d1a54a"/><rect x="11" y="9" width="24" height="16" rx="1" fill="#f6ecd6" transform="rotate(-6 23 17)"/><rect x="14" y="11" width="24" height="16" rx="1" fill="#e6d7b9" transform="rotate(4 26 19)"/><path d="M6 21h36v18H6z" fill="#e4b95a"/><path d="M19 30h10" stroke="#6e4f22" stroke-width="2.4" stroke-linecap="round"/></svg>'
+  };
+  var C = { start: ['#2c5b55'], login: ['#e2c6b6', '#c4735a', 'บัญชี', 'Account', '账户'], file: ['#c6d3d3', '#5f7f88', 'ไฟล์', 'Files', '文件'], stuck: ['#e4d3a6', '#a9843a', 'การตรวจ', 'Checking', '检查'], pay: ['#cdd6c0', '#5f8a6f', 'ชำระเงิน', 'Payment', '付款'], read: ['#ecd2c8', '#b06a55', 'ผลตรวจ', 'Results', '结果'], hist: ['#e6d7b9', '#8a6c42', 'ประวัติ', 'History', '历史'] };
+  var TITLE = { 'ใช้ยังไง?': 'start', 'เข้าสู่ระบบไม่ได้': 'login', 'ใส่ไฟล์ไม่ได้': 'file', 'กดตรวจแล้วไม่ขึ้นผล': 'stuck', 'จ่ายเงินแล้วเครดิตไม่เข้า': 'pay', 'อ่านผลไม่เข้าใจ': 'read', 'หาผลตรวจเก่าไม่เจอ': 'hist' };
+  var DK = 'color:#2e2112 !important;-webkit-text-fill-color:#2e2112 !important;text-shadow:none !important;';
+  var MD = 'color:#3d2e1a !important;-webkit-text-fill-color:#3d2e1a !important;text-shadow:none !important;';
+  var BANNER = 'background:linear-gradient(180deg,#2c5b55,#224a45) !important;clip-path:' + zig(34, 6, false) + ';box-shadow:none !important;border:0 !important;border-radius:0 !important;';
+  var XBTN = 'width:34px !important;height:34px !important;min-width:0 !important;padding:0 !important;border:0 !important;border-radius:50% !important;background:rgba(18,48,44,.55) !important;box-shadow:inset 0 0 0 1.5px #b8964e,inset 0 0 0 5px rgba(18,48,44,.55),inset 0 0 0 6px rgba(216,184,106,.45) !important;';
+  var SCALLOP = 'polygon(100.0% 50.0%,92.2% 58.4%,96.2% 69.1%,85.8% 73.9%,85.4% 85.4%,73.9% 85.8%,69.1% 96.2%,58.4% 92.2%,50.0% 100.0%,41.6% 92.2%,30.9% 96.2%,26.1% 85.8%,14.6% 85.4%,14.2% 73.9%,3.8% 69.1%,7.8% 58.4%,0.0% 50.0%,7.8% 41.6%,3.8% 30.9%,14.2% 26.1%,14.6% 14.6%,26.1% 14.2%,30.9% 3.8%,41.6% 7.8%,50.0% 0.0%,58.4% 7.8%,69.1% 3.8%,73.9% 14.2%,85.4% 14.6%,85.8% 26.1%,96.2% 30.9%,92.2% 41.6%)';
+  var css =
+    V + ' .vhp-bg{background:rgba(20,14,8,.6) !important}' +
+    V + ' .vhp-panel{background:' + FIB + ',linear-gradient(180deg,#ad8f64,#9d8057) !important;border:0 !important;border-radius:0 !important;clip-path:' + zig(50, 10, true) + ';box-shadow:0 -10px 30px rgba(0,0,0,.35) !important;color:#2e2112 !important}' +
+    V + ' .vhp-panel::before{background:#5e472a !important;opacity:.55;top:16px !important}' +
+    /* หัวหน้าแรก + หัวหน้าวิธีแก้ */
+    V + ' .vhp-hd,' + V + ' .vhp-dh{position:sticky !important;top:0;z-index:2;margin:0 -16px 6px !important;padding:28px 16px 6px !important;background:linear-gradient(180deg,#a68860 70%,rgba(166,136,96,0)) !important;box-shadow:none !important;border:0 !important}' +
+    V + ' .vhp-hd,' + V + ' .vhp-dh{display:block !important}' + V + ' .vhp-dh > .pzh-bn{gap:10px !important}' +
+    '.pzh-bn{display:contents}' +
+    V + ' .vhp-hd > .pzh-bn,' + V + ' .vhp-dh > .pzh-bn{position:relative;display:flex;align-items:center;gap:12px;padding:12px 56px 18px 10px;' + BANNER + 'filter:drop-shadow(2px 3px 0 #7d6233)}' +
+    V + ' .pzh-bn::before{content:"";position:absolute;inset:5px 5px 11px;border:1px solid rgba(184,150,78,.75);pointer-events:none}' +
+    V + ' .pzh-bn h2{margin:0 !important;color:#efe3ca !important;-webkit-text-fill-color:#efe3ca !important;text-shadow:none !important;font-weight:800 !important;font-size:18px !important;line-height:1.3 !important}' +
+    V + ' .vhp-dh .pzh-bn h2{font-size:16px !important}' +
+    V + ' .pzh-bn p{margin:2px 0 0 !important;color:#cbd9cf !important;-webkit-text-fill-color:#cbd9cf !important;font-size:11.5px !important}' +
+    V + ' .pzh-bn .vhp-hm{flex:0 0 54px;width:54px !important;height:auto !important;margin:0 !important;background:none !important;box-shadow:none !important}' +
+    V + ' .pzh-bn .vhp-hm svg{width:54px !important;height:64px !important}' +
+    V + ' .vhp-panel > .vhp-x' + X + '{position:absolute !important;z-index:5 !important;top:41px !important;right:28px !important;left:auto !important;margin:0 !important;' + XBTN + '}' +
+    V + ' .vhp-panel > .vhp-x' + X + ' svg{stroke:#efe3ca !important;width:15px !important;height:15px !important}' +
+    V + ' .vhp-back' + X + '{flex:0 0 34px;' + XBTN + 'display:flex !important;align-items:center;justify-content:center}' +
+    V + ' .vhp-back' + X + ' svg{stroke:#efe3ca !important;width:16px !important;height:16px !important}' +
+    V + ' .vhp-dic{flex:0 0 44px !important;width:44px !important;height:44px !important;border:0 !important;border-radius:50% !important;background:#a9843a !important;box-shadow:0 0 0 2px rgba(216,184,106,.6) !important;display:flex !important;align-items:center;justify-content:center;background-position:center !important;background-size:34px !important;background-repeat:no-repeat !important}' +
+    V + ' .vhp-dic[data-pz] svg{display:none !important}' + V + ' .vhp-dic svg{stroke:#efe3ca !important}' +
+    /* การ์ด */
+    V + ' .vhp-grid{gap:24px 12px !important;padding-top:4px}' +
+    V + ' .vhp-card{position:relative !important;overflow:visible !important;border:0 !important;border-radius:0 5px 5px 5px !important;box-shadow:2px 3px 0 #7d6233 !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;padding:14px 12px 18px !important;' + DK + '}' +
+    V + ' .vhp-card::after{display:none !important}' +
+    V + ' .vhp-card:hover{transform:translateY(-1px) !important;box-shadow:2px 4px 0 #7d6233 !important}' +
+    V + ' .vhp-card:active{transform:translateY(2px) !important;box-shadow:0 1px 0 #7d6233 !important}' +
+    V + ' .vhp-card:focus-visible{outline:2px solid #2c5b55 !important;outline-offset:3px !important}' +
+    V + ' .vhp-card::before{position:absolute !important;left:0 !important;top:-18px !important;right:auto !important;bottom:auto !important;width:auto !important;height:19px !important;padding:0 10px !important;border-radius:5px 8px 0 0 !important;display:flex !important;align-items:center;font:800 10px/1 Prompt,sans-serif !important;color:#2e2112 !important;opacity:1 !important;border:0 !important;box-shadow:none !important;-webkit-mask:none !important;mask:none !important;transform:none !important}' +
+    V + ' .vhp-card.is-wide{border-radius:4px !important;background:' + FIB + ',linear-gradient(180deg,#f3e9d4,#eadcbe) !important;padding:12px !important;margin-bottom:6px}' +
+    V + ' .vhp-card.is-wide::before{display:none !important}' +
+    V + ' .vhp-ic{width:56px !important;height:56px !important;min-width:56px;border:0 !important;border-radius:50% !important;box-shadow:inset 0 0 0 3px rgba(255,255,255,.18),2px 3px 0 rgba(60,40,20,.35) !important;background-position:center !important;background-size:42px !important;background-repeat:no-repeat !important}' +
+    V + ' .vhp-ic svg{display:none !important}' + V + ' .vhp-ic::before,' + V + ' .vhp-ic::after{display:none !important}' +
+    V + ' .vhp-card.is-wide .vhp-ic{width:54px !important;height:54px !important;background-size:40px !important}' +
+    V + ' .vhp-ct b{' + DK + 'font-weight:800 !important;font-size:14px !important}' +
+    V + ' .vhp-ct small{' + MD + 'font-size:11px !important;opacity:1 !important}' +
+    V + ' .vhp-3 i{' + MD + 'font-size:11.5px !important;font-style:normal}' +
+    V + ' .vhp-3 em{background:#c4735a !important;color:#efe3ca !important;-webkit-text-fill-color:#efe3ca !important;box-shadow:none !important;border:0 !important;font-style:normal}' +
+    V + ' .vhp-3 i:nth-child(2) em{background:#5f7f88 !important}' + V + ' .vhp-3 i:nth-child(3) em{background:#5f8a6f !important}' +
+    V + ' .vhp-hot{position:absolute !important;right:8px !important;top:8px !important;left:auto !important;padding:1px 6px !important;border:2px solid rgba(160,70,50,.85) !important;border-radius:3px !important;background:rgba(246,236,214,.35) !important;box-shadow:none !important;color:rgba(160,70,50,.95) !important;-webkit-text-fill-color:rgba(160,70,50,.95) !important;font:900 10px/1.3 Prompt,sans-serif !important;transform:rotate(-10deg) !important;text-shadow:none !important}' +
+    V + ' .vhp-card .vhp-go{position:absolute !important;right:0 !important;bottom:0 !important;left:auto !important;top:auto !important;width:22px !important;height:22px !important;margin:0 !important;padding:0 !important;border:0 !important;border-radius:0 0 5px 0 !important;background:linear-gradient(135deg,transparent 50%,rgba(0,0,0,.18) 50%,rgba(0,0,0,.18) 56%,#efe3ca 56%) !important;box-shadow:none !important;color:#5e472a !important;-webkit-text-fill-color:#5e472a !important;font:900 13px/1 Prompt,sans-serif !important;display:flex !important;align-items:flex-end;justify-content:flex-end;padding:0 3px 2px 0 !important}' +
+    V + ' .vhp-card.is-wide .vhp-go{display:none !important}' +
+    /* ซองจดหมาย */
+    V + ' .vhp-mailbar{position:static !important;margin:18px 0 0 !important;padding:0 0 calc(18px + env(safe-area-inset-bottom,0px)) !important;background:none !important;border:0 !important;box-shadow:none !important}' +
+    V + ' .vhp-mail{position:relative !important;display:flex !important;align-items:center;gap:10px;margin:0 !important;padding:14px 120px 12px 14px !important;border:0 !important;border-radius:0 !important;background:linear-gradient(160deg,transparent 49%,rgba(94,71,42,.18) 50%,transparent 51%) 0 0/50% 40px no-repeat,linear-gradient(200deg,transparent 49%,rgba(94,71,42,.18) 50%,transparent 51%) 100% 0/50% 40px no-repeat,#efe3ca !important;box-shadow:2px 3px 0 #7d6233 !important;text-align:left !important;' + MD + '}' +
+    V + ' .vhp-mail .vhp-mi,' + V + ' .vhp-mail .vhp-go{display:none !important}' +
+    V + ' .vhp-mail b{' + DK + 'font-size:14px !important;text-decoration:none !important}' +
+    V + ' .vhp-mail span{' + MD + '}' +
+    V + ' .vhp-mail::after{content:"\\0E2A\\0E48\\0E07\\0E02\\0E49\\0E2D\\0E04\\0E27\\0E32\\0E21";position:absolute;right:12px;top:50%;transform:translateY(-50%);padding:10px 12px;border-radius:4px;background:radial-gradient(circle 2.5px at 0 50%,#efe3ca 95%,transparent) 0 0/6px 9px repeat-y,radial-gradient(circle 2.5px at 100% 50%,#efe3ca 95%,transparent) 100% 0/6px 9px repeat-y,#d1a54a;box-shadow:2px 3px 0 #6e4f22;color:#2e2112;font:800 12.5px/1 Prompt,sans-serif;white-space:nowrap}' +
+    'html[data-lang="en"]' + V.slice(4) + ' .vhp-mail::after{content:"Send"}' + 'html[data-lang="zh"]' + V.slice(4) + ' .vhp-mail::after{content:"\\53D1\\9001"}' +
+    /* หน้าวิธีแก้ */
+    V + ' .vhp-steps{padding:0 !important;margin:8px 0 0 !important}' +
+    V + ' .vhp-steps::before,' + V + ' .vhp-steps::after{display:none !important}' +
+    V + ' .vhp-steps li{position:relative !important;display:block !important;margin:0 0 16px !important;padding:12px 12px 12px 70px !important;min-height:74px;background:#fbf4e4 !important;box-shadow:1px 3px 0 #7d6233 !important;border:0 !important;border-radius:0 !important}' +
+    V + ' .vhp-steps li:nth-child(odd){rotate:-.5deg}' + V + ' .vhp-steps li:nth-child(even){rotate:.5deg}' +
+    V + ' .vhp-steps li::before,' + V + ' .vhp-steps li::after{display:none !important}' +
+    V + ' .vhp-steps li + li::after{content:"" !important;display:block !important;position:absolute !important;left:34px !important;top:-18px !important;height:20px !important;width:0 !important;border-left:2.5px dashed #5e472a !important;background:none !important}' +
+    V + ' .vhp-steps li > div{padding:0 !important;background:none !important;border:0 !important;box-shadow:none !important}' +
+    V + ' .vhp-st{' + DK + 'font-weight:800 !important;font-size:14px !important}' +
+    V + ' .vhp-steps li > div > span{' + MD + 'font-size:12px !important}' +
+    V + ' .vhp-steps li > div > span b{background:linear-gradient(180deg,transparent 40%,rgba(127,161,132,.55) 40%,rgba(127,161,132,.55) 90%,transparent 90%) !important;' + DK + '}' +
+    V + ' .vhp-n{position:absolute !important;left:10px !important;top:50% !important;width:50px !important;height:50px !important;margin:-25px 0 0 !important;padding:0 !important;isolation:isolate;display:flex !important;align-items:center;justify-content:center;border:0 !important;border-radius:0 !important;background:none !important;box-shadow:none !important;--c:#c4735a;--d:#8a3a2a;color:var(--d) !important;-webkit-text-fill-color:var(--d) !important;font:900 24px/1 Prompt,sans-serif !important;text-shadow:none !important}' +
+    V + ' .vhp-steps li:nth-child(3n+2) .vhp-n{--c:#5f7f88;--d:#2f4f57}' + V + ' .vhp-steps li:nth-child(3n) .vhp-n{--c:#5f8a6f;--d:#2c4a3f}' +
+    V + ' .vhp-n::before{content:"" !important;position:absolute !important;inset:0 !important;z-index:-2;background:var(--c) !important;clip-path:' + SCALLOP + ';filter:drop-shadow(1px 2px 0 rgba(60,40,20,.4));border:0 !important;border-radius:0 !important;width:auto !important;height:auto !important}' +
+    V + ' .vhp-n::after{content:"" !important;position:absolute !important;inset:8px !important;z-index:-1;border-radius:50% !important;background:#f6ecd6 !important;box-shadow:inset 0 0 0 1.5px var(--c),inset 0 0 0 3.5px #f6ecd6,inset 0 0 0 4.5px rgba(94,71,42,.3) !important;width:auto !important;height:auto !important}' +
+    V + ' .vhp-note{background:#e6d7b9 !important;border:0 !important;border-radius:3px !important;box-shadow:1px 2px 0 #7d6233 !important;' + MD + '}' +
+    V + ' .vhp-btn{position:relative !important;border:0 !important;border-radius:4px !important;background:radial-gradient(circle 2.5px at 0 50%,#a68860 95%,transparent) 0 0/6px 9px repeat-y,radial-gradient(circle 2.5px at 100% 50%,#a68860 95%,transparent) 100% 0/6px 9px repeat-y,#d1a54a !important;box-shadow:2px 3px 0 #6e4f22 !important;' + DK + 'font-weight:800 !important}' +
+    V + ' .vhp-btn.is-ghost{background:#efe3ca !important;box-shadow:2px 3px 0 #7d6233 !important}' +
+    V + ' .vhp-fb{border-top:0 !important;' + DK + '}' + V + ' .vhp-fb > span{' + DK + 'font-weight:700 !important}' + V + ' .vhp-fb > span::before{content:"\\2702  ";color:#7d3a2c}' +
+    V + ' .vhp-chip{position:relative !important;border:0 !important;border-radius:4px !important;background:#efe3ca !important;box-shadow:1px 2px 0 #7d6233,inset 0 0 0 3px #efe3ca,inset 0 0 0 4.5px rgba(94,71,42,.3) !important;' + DK + 'font-weight:700 !important}' +
+    V + ' .vhp-chip[data-ok]{background:#cdd6c0 !important;box-shadow:1px 2px 0 #7d6233,inset 0 0 0 3px #cdd6c0,inset 0 0 0 4.5px rgba(44,74,63,.3) !important}' +
+    V + ' .vhp-thx h2,' + V + ' .vhp-thx p{' + DK + '}' +
+    '@media (prefers-reduced-motion:reduce){' + V + ' .vhp-card{transition:none !important}}';
+  Object.keys(IC).forEach(function (k) {
+    var c = C[k];
+    css += V + ' .vhp-card[data-tp="' + k + '"] .vhp-ic{background-color:' + (c[1] || c[0]) + ' !important;background-image:' + u(IC[k]) + ' !important}' +
+      V + ' .vhp-dic[data-pz="' + k + '"]{background-image:' + u(IC[k]) + ' !important;background-color:' + (c[1] || c[0]) + ' !important}';
+    if (c[1]) css += V + ' .vhp-card[data-tp="' + k + '"]{background:' + FIB + ',' + c[0] + ' !important}' +
+      V + ' .vhp-card[data-tp="' + k + '"]::before{content:"' + c[2] + '" !important;background:' + c[0] + ' !important}' +
+      'html[data-lang="en"]' + V.slice(4) + ' .vhp-card[data-tp="' + k + '"]::before{content:"' + c[3] + '" !important}' +
+      'html[data-lang="zh"]' + V.slice(4) + ' .vhp-card[data-tp="' + k + '"]::before{content:"' + c[4] + '" !important}';
+  });
+  var lastTp = null;
+  function dress(w) {
+    if (!w) return;
+    var hd = w.querySelector('.vhp-hd'); if (hd && !hd.querySelector('.pzh-bn')) { var b = document.createElement('div'); b.className = 'pzh-bn'; while (hd.firstChild) b.appendChild(hd.firstChild); hd.appendChild(b); }
+    var dh = w.querySelector('.vhp-dh'); if (dh && !dh.querySelector('.pzh-bn')) { var b2 = document.createElement('div'); b2.className = 'pzh-bn'; while (dh.firstChild) b2.appendChild(dh.firstChild); dh.appendChild(b2); }
+    var di = w.querySelector('.vhp-dic'); if (di && !di.hasAttribute('data-pz')) { var h = w.querySelector('.vhp-dh h2'), id = (h && TITLE[(h.textContent || '').trim()]) || lastTp; if (id && IC[id]) di.setAttribute('data-pz', id); }
+  }
+  function go() {
+    if (document.documentElement.getAttribute('data-htheme') !== 'paper') return;
+    if (!document.getElementById('pz-help')) { var s = document.createElement('style'); s.id = 'pz-help'; s.textContent = css; document.head.appendChild(s); }
+    document.addEventListener('click', function (e) { var t = e.target.closest && e.target.closest('.vhp [data-tp]'); if (t) lastTp = t.getAttribute('data-tp'); }, true);
+    var hooked = null;
+    function hook() { var w = document.querySelector('.vhp'); if (!w || w === hooked) return; hooked = w; var v = w.querySelector('.vhp-view'); new MutationObserver(function () { dress(w); }).observe(v || w, { childList: true }); dress(w); }
+    hook(); new MutationObserver(hook).observe(document.body, { childList: true });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+})();
+/*/PZHELP*/
