@@ -1267,6 +1267,11 @@ window.VCStepPlay = function (v, fps, onEnd) {
       try { cleanupFx(); window.VCNightLogin(info || {}, { welcome: welcomeCard, name: niceName2, target: accTarget, sndOn: sndOn, ac: ac, reduce: reduce }); return; }
       catch (e) { if (window.console) console.warn('night login fx', e); var nb = document.querySelector('.ntb'); if (nb) nb.remove(); }
     }
+    /* ธีมตัดกระดาษ: ฉาก "นกกระเรียนกระดาษ" (hero-theme-paper.js) · ถ้าไฟล์ธีมยังไม่โหลดหรือพัง ใช้ฉากเดิม */
+    if (document.documentElement.getAttribute('data-htheme') === 'paper' && typeof window.VCPaperLogin === 'function') {
+      try { cleanupFx(); window.VCPaperLogin(info || {}, { welcome: welcomeCard, name: niceName2, target: accTarget, sndOn: sndOn, ac: ac, reduce: reduce }); return; }
+      catch (e) { if (window.console) console.warn('paper login fx', e); var pl = document.querySelector('.pzl'); if (pl) pl.remove(); }
+    }
     if (reduce() || !document.body.animate) { if (window.__vcGinOff) window.__vcGinOff(); welcomeCard((info && info.email) || ''); return; }
     if (document.fonts && document.fonts.load && !play.__f) {
       play.__f = 1; var done = false, go2 = function () { if (done) return; done = true; play(info); };
