@@ -570,7 +570,7 @@
   function build() {
     if (!on()) return false;
     var h = document.querySelector('.site-header'); if (!h) return false;
-    if (!document.getElementById('pz-head')) { var s = document.createElement('style'); s.id = 'pz-head'; s.textContent = css; document.head.appendChild(s); }
+    if (!document.getElementById('pz-head')) { var s = document.createElement('style'); s.id = 'pz-head'; s.textContent = css + '@media (max-width:767px){' + css.split('[data-view="home"]').join('[data-view="desk"]') + '}'; document.head.appendChild(s); }
     if (!h.querySelector(':scope > .pzh')) { var b = document.createElement('div'); b.className = 'pzh'; b.setAttribute('aria-hidden', 'true'); b.innerHTML = '<i class="k2"></i><i class="k1"></i><i class="wa"></i>'; h.insertBefore(b, h.firstChild); }
     var br = h.querySelector('.brand');
     if (br && !br.querySelector('.pzv')) { var v = document.createElement('span'); v.className = 'pzv'; v.innerHTML = LOGO; br.insertBefore(v, br.firstChild); }
@@ -661,7 +661,7 @@
   function on() { return document.documentElement.getAttribute('data-htheme') === 'paper'; }
   function build() {
     if (!on()) return true;
-    if (!document.getElementById('pz-nav')) { var s = document.createElement('style'); s.id = 'pz-nav'; s.textContent = css; document.head.appendChild(s); }
+    if (!document.getElementById('pz-nav')) { var s = document.createElement('style'); s.id = 'pz-nav'; s.textContent = css + '@media (max-width:767px){' + css.split('[data-view="home"]').join('[data-view="desk"]') + '}'; document.head.appendChild(s); }
     var n = document.querySelector('.bottom-nav'); if (!n) return false;
     if (!n.querySelector(':scope > .pzb')) { var b = document.createElement('div'); b.className = 'pzb'; b.setAttribute('aria-hidden', 'true'); b.innerHTML = '<i class="k2"></i><i class="k1"></i>'; n.insertBefore(b, n.firstChild); }
     return true;
@@ -2298,3 +2298,205 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
 })();
 /*/PZHELP*/
+
+/*PZDESK*/ /* ธีมตัดกระดาษ: หน้าตรวจสัญญา (data-view="desk" · มือถือ) — "แผ่นรองตัดกระดาษ"
+   พื้น = แผ่นรองตัดสีเขียวมีตาราง + ไม้บรรทัดขอบซ้าย · หัวเว็บ/แถบล่างใช้แบบหน้าแรก (PZHEAD/PZNAV ขยายมา desk ใน @media)
+   แถบเช็กอิน (#vdcStrip) = โซ่กระดาษ 7 ห่วง + เหรียญตรา · ขั้นที่ 1 = แผ่นกระดาษหนีบคลิปดำ เลขในกรอบรอยตัด
+   เครดิต = ม้วนตั๋ว · ประเภทสัญญา = รูปตัดกระดาษของประเภทที่เลือก + ปุ่ม "เปลี่ยน" (การทำงานเดิม)
+   ช่องวาง = คูปองตัดตามรอยประ + กรรไกร (วางแล้ว กรรไกรวิ่งรอบคูปองครั้งเดียว) · ปุ่มทองขอบฉีก · อัปโหลดมุมพับ
+   ตัวอย่างฟรี = ถุงกระดาษ + ตรายางวงกลม · ขั้นที่ 2–3 = แผ่นเขียวเข้มหนีบคลิป (เนื้อในคงเดิม — ทำรอบถัดไป) */
+(function () {
+  'use strict';
+  if (window.__pzDesk) return; window.__pzDesk = 1;
+  var D = 'html[data-htheme="paper"][data-view="desk"] body';
+  var C = D + ' #checkCard#checkCard';
+  function u(svg) { return 'url("data:image/svg+xml,' + encodeURIComponent(svg).replace(/'/g, '%27') + '")'; }
+  var DK = 'color:#2e2112 !important;-webkit-text-fill-color:#2e2112 !important;text-shadow:none !important;';
+  var MD = 'color:#4f3b22 !important;-webkit-text-fill-color:#4f3b22 !important;text-shadow:none !important;';
+  var CLIP = u('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 74 34"><path d="M10 34 L20 6 M64 34 L54 6" stroke="#9aa3a0" stroke-width="3" fill="none"/><rect x="6" y="14" width="62" height="20" rx="3" fill="#1f1f1f"/><rect x="6" y="14" width="62" height="5" rx="2" fill="#3a3a3a"/><path d="M20 6 Q37 -4 54 6" stroke="#c9cfcc" stroke-width="3" fill="none"/></svg>');
+  var ROLL = u('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 46"><path d="M2 6 a14 5 0 0 1 28 0 v34 a14 5 0 0 1 -28 0z" fill="#c9a24e"/><path d="M2 6 a14 5 0 0 1 28 0 v34 a14 5 0 0 1 -28 0z" fill="url(#g)"/><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#b88f3f"/><stop offset=".5" stop-color="#e8c97e"/><stop offset="1" stop-color="#a9843a"/></linearGradient></defs><ellipse cx="16" cy="6" rx="14" ry="5" fill="#f0d898"/><ellipse cx="16" cy="6" rx="5" ry="2" fill="#7d6233"/></svg>');
+  var SCIS = u('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#5e472a" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.5 7.5L20 18M8.5 16.5L20 6"/></svg>');
+  var ART = u('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 78"><rect x="30" y="14" width="50" height="60" fill="#e6d7b9" transform="rotate(-9 55 44)"/><rect x="38" y="10" width="50" height="62" fill="#fff8ea" stroke="#e0cfae" transform="rotate(4 63 41)"/><g transform="rotate(4 63 41)"><path d="M45 22h36M45 30h36M45 38h26M45 46h32M45 54h20" stroke="#c9b48a" stroke-width="2.4" stroke-linecap="round"/><path d="M45 30h20" stroke="#c4735a" stroke-width="4" stroke-linecap="round" opacity=".55"/></g><path d="M96 20l14-12" stroke="#7d3a2c" stroke-width="3" stroke-linecap="round"/><path d="M92 26l6-8 4 4-8 6z" fill="#c9cfcc"/></svg>');
+  var CLIPB = u('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#2e2112" stroke-width="2.2"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9z"/></svg>');
+  var FOLD = u('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#5e472a" stroke-width="2.2"><path d="M3 7h7l2 2h9v10H3z"/></svg>');
+  var BAG = u('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 104"><rect x="22" y="2" width="34" height="44" fill="#fbf4e4" transform="rotate(-12 39 24)"/><rect x="40" y="0" width="34" height="44" fill="#fff8ea" transform="rotate(9 57 22)"/><g transform="rotate(9 57 22)"><path d="M46 10h22M46 16h22M46 22h14" stroke="#d1a54a" stroke-width="2.2"/></g><path d="M8 34 H88 L84 102 H12 Z" fill="#a9843a"/><path d="M8 34 H88 L86 44 H10 Z" fill="#8a6c42"/><path d="M8 34 l6 -6 l6 6 l6 -6 l6 6 l6 -6 l6 6 l6 -6 l6 6 l6 -6 l6 6 l6 -6 l6 6 l6 -6 l4 6z" fill="#a9843a"/><text x="48" y="80" text-anchor="middle" font-family="Prompt,sans-serif" font-size="13" font-weight="900" fill="#4a3720">ตัวอย่าง</text></svg>');
+  var CRANE = u('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 72"><path d="M48 40 L20 6 L44 30 Z" fill="#f4ead6"/><path d="M48 40 L80 2 L54 32 Z" fill="#e2d2b2"/><path d="M6 44 L48 40 L34 52 Z" fill="#d8b86a"/><path d="M48 40 L90 30 L62 50 Z" fill="#c9a24e"/></svg>');
+  var S = 'xmlns="http://www.w3.org/2000/svg" viewBox="0 0 58 58"';
+  var SHAPE = {
+    unsure: '<svg ' + S + '><circle cx="31" cy="32" r="20" fill="#5e472a" opacity=".45"/><circle cx="29" cy="30" r="20" fill="#e6d7b9" stroke="#9d8057" stroke-width="2" stroke-dasharray="4 3"/><text x="29" y="38" text-anchor="middle" font-family="Georgia,serif" font-size="24" font-weight="900" fill="#7d6a4c">?</text></svg>',
+    rent: '<svg ' + S + '><path d="M29 8 L52 28 H46 V52 H12 V28 H6 Z" fill="#7d3a2c" transform="translate(2 3)"/><path d="M29 8 L52 28 H46 V52 H12 V28 H6 Z" fill="#c4735a"/><rect x="24" y="36" width="10" height="16" fill="#efe3ca"/><rect x="15" y="32" width="6" height="6" fill="#efe3ca"/></svg>',
+    sale: '<svg ' + S + '><path d="M9 12h6l5 24h24l5-16H18" fill="none" stroke="#2f4f57" stroke-width="5" stroke-linejoin="round" transform="translate(2 2)"/><path d="M9 12h6l5 24h24l5-16H18" fill="#c6d3d3" stroke="#5f7f88" stroke-width="5" stroke-linejoin="round"/><circle cx="24" cy="45" r="4.5" fill="#5f7f88"/><circle cx="40" cy="45" r="4.5" fill="#5f7f88"/></svg>',
+    employment: '<svg ' + S + '><rect x="9" y="19" width="42" height="30" rx="4" fill="#2f4f57"/><rect x="7" y="17" width="42" height="30" rx="4" fill="#5f7f88"/><path d="M21 17v-5h14v5" stroke="#5f7f88" stroke-width="4" fill="none"/><rect x="7" y="27" width="42" height="4" fill="#2f4f57"/></svg>',
+    service: '<svg ' + S + '><path d="M38 10a11 11 0 0 0-13 14L10 39a5 5 0 0 0 7 7l15-15a11 11 0 0 0 14-13l-7 7-6-2-2-6z" fill="#6e4f22" transform="translate(2 2)"/><path d="M38 10a11 11 0 0 0-13 14L10 39a5 5 0 0 0 7 7l15-15a11 11 0 0 0 14-13l-7 7-6-2-2-6z" fill="#d1a54a"/></svg>',
+    loan: '<svg ' + S + '><circle cx="31" cy="32" r="21" fill="#6e4f22"/><circle cx="29" cy="30" r="21" fill="#d1a54a"/><circle cx="29" cy="30" r="15" fill="none" stroke="#efe3ca" stroke-width="2" stroke-dasharray="3 3"/><text x="29" y="37" text-anchor="middle" font-family="Prompt,sans-serif" font-size="20" font-weight="900" fill="#6e4f22">฿</text></svg>',
+    shareholder: '<svg ' + S + '><path d="M27 10v20h20A20 20 0 1 1 27 10z" fill="#7d3a2c" transform="translate(2 2)"/><path d="M27 10v20h20A20 20 0 1 1 27 10z" fill="#e2a08c"/><path d="M32 7a19 19 0 0 1 17 17H32z" fill="#c4735a"/></svg>',
+    nda: '<svg ' + S + '><path d="M19 27v-7a10 10 0 0 1 20 0v7" fill="none" stroke="#2c4a3f" stroke-width="5"/><rect x="13" y="27" width="34" height="24" rx="3" fill="#2c4a3f" transform="translate(2 2)"/><rect x="13" y="27" width="34" height="24" rx="3" fill="#5f8a6f"/><circle cx="30" cy="38" r="3.5" fill="#efe3ca"/></svg>',
+    other: '<svg ' + S + '><path d="M15 8h20l10 10v34H15z" fill="#7d6233" transform="translate(2 2)"/><path d="M15 8h20l10 10v34H15z" fill="#f6ecd6"/><path d="M35 8v10h10z" fill="#d8c493"/><path d="M20 26h20M20 33h20M20 40h13" stroke="#c4735a" stroke-width="2.6" stroke-linecap="round"/></svg>'
+  };
+  var MAT = 'linear-gradient(90deg,rgba(255,255,255,.75) 0 7px,transparent 7px) 0 0/14px 50px repeat-y,linear-gradient(180deg,rgba(255,255,255,.8) 1.5px,transparent 1.5px) 0 0/12px 50px repeat-y,linear-gradient(180deg,rgba(255,255,255,.55) 1px,transparent 1px) 0 0/6px 10px repeat-y,' +
+    'linear-gradient(rgba(255,255,255,.1) 1px,transparent 1px) 0 0/20px 20px,linear-gradient(90deg,rgba(255,255,255,.1) 1px,transparent 1px) 0 0/20px 20px,linear-gradient(rgba(255,255,255,.2) 1.5px,transparent 1.5px) 0 0/100px 100px,linear-gradient(90deg,rgba(255,255,255,.2) 1.5px,transparent 1.5px) 0 0/100px 100px,#3f6e5c';
+  var CSS =
+    D + ' main:not(#pz0):not(#pz1){background:' + MAT + ' !important}' +
+    D + ' main:not(#pz0):not(#pz1)::before,' + D + ' main:not(#pz0):not(#pz1)::after{opacity:0 !important}' +
+    C + '{background:none !important;border:0 !important;box-shadow:none !important;padding-left:8px !important}' +
+    C + '::before,' + C + '::after{display:none !important}' +
+    /* ---------- แถบเช็กอิน = โซ่กระดาษ ---------- */
+    C + ' #vdcStrip{position:relative !important;display:block !important;min-height:96px;margin:4px 0 22px !important;padding:2px 70px 0 0 !important;background:none !important;border:0 !important;box-shadow:none !important;overflow:visible !important}' +
+    C + ' #vdcStrip::before,' + C + ' #vdcStrip::after{display:none !important}' +
+    C + ' #vdcStrip .vdc-ic{display:none !important}' +
+    C + ' #vdcStrip .vds-txt{display:block !important;padding:0 !important;background:none !important;border:0 !important;text-align:left !important}' +
+    C + ' #vdcStrip .vds-txt b{display:block;color:#efe3ca !important;-webkit-text-fill-color:#efe3ca !important;text-shadow:0 1px 0 rgba(0,0,0,.45) !important;font-size:13.5px !important;font-weight:800 !important}' +
+    C + ' #vdcStrip .vds-txt small{display:block;color:#d6e4dc !important;-webkit-text-fill-color:#d6e4dc !important;font-size:11px !important;opacity:1 !important}' +
+    C + ' #vdcStrip .vds-go{position:absolute !important;right:72px !important;top:0 !important;padding:7px 14px 7px 12px !important;border:0 !important;border-radius:0 !important;background:#d1a54a !important;box-shadow:2px 3px 0 #213a31 !important;' + DK + 'font-weight:800 !important;clip-path:polygon(0 0,100% 0,94% 14%,100% 28%,94% 42%,100% 56%,94% 70%,100% 84%,94% 100%,0 100%)}' +
+    C + ' #vdcStrip .vds-x{position:absolute !important;right:-2px !important;top:-6px !important;width:22px !important;height:22px !important;padding:0 !important;border-radius:50% !important;background:rgba(0,0,0,.25) !important;border:0 !important;color:#efe3ca !important;font-size:11px !important;z-index:3}' +
+    '.pzk{display:none}' + C + ' #vdcStrip > .pzk{display:block;position:absolute;left:0;right:70px;bottom:6px;height:32px;pointer-events:none}' +
+    '.pzk i{position:absolute;top:2px;width:44px;height:26px;border-radius:13px;border:7px solid var(--c);box-shadow:1px 2px 0 rgba(0,0,0,.3)}' +
+    '.pzk i.v{width:26px;height:30px;top:0;border-radius:12px;border-width:6px}' +
+    '.pzk i.e{border:2px dashed rgba(239,227,202,.55);box-shadow:none}' +
+    '.pzk i.t{border:2px dashed #e2a08c;background:rgba(226,160,140,.18);box-shadow:none}' +
+    C + ' #vdcStrip.is-done .pzk i.n{animation:pzkIn .6s cubic-bezier(.3,1.5,.5,1) both}' +
+    '@keyframes pzkIn{0%{transform:scale(.2) rotate(-30deg);opacity:0}100%{transform:none;opacity:1}}' +
+    '.pzkb{display:none}' + C + ' #vdcStrip > .pzkb{display:flex;position:absolute;right:0;top:-2px;width:60px;height:60px;align-items:center;justify-content:center;flex-direction:column;z-index:2;font:900 19px/1 Prompt,sans-serif;color:#6e4f22;isolation:isolate}' +
+    C + ' #vdcStrip > .pzkb small{font-size:8.5px;font-weight:800;margin-top:1px}' +
+    C + ' #vdcStrip > .pzkb::before{content:"";position:absolute;inset:0;z-index:-1;background:#d1a54a;clip-path:polygon(100% 50%,96% 59%,96% 69%,88% 75%,85% 85%,75% 88%,69% 96%,59% 96%,50% 100%,41% 96%,31% 96%,25% 88%,15% 85%,12% 75%,4% 69%,4% 59%,0 50%,4% 41%,4% 31%,12% 25%,15% 15%,25% 12%,31% 4%,41% 4%,50% 0,59% 4%,69% 4%,75% 12%,85% 15%,88% 25%,96% 31%,96% 41%);filter:drop-shadow(1px 2px 0 rgba(0,0,0,.35))}' +
+    C + ' #vdcStrip > .pzkb::after{content:"";position:absolute;inset:8px;z-index:-1;border-radius:50%;background:#efe3ca;box-shadow:inset 0 0 0 1.5px #a9843a}' +
+    'html[data-calm] .pzk i,html[data-calm] #vdcStrip .pzk i{animation:none !important}@media (prefers-reduced-motion:reduce){.pzk i{animation:none !important}}' +
+    /* ---------- กล่องขั้นตอน ---------- */
+    C + ' .vc-box{position:relative !important;overflow:visible !important;border:0 !important;border-radius:0 !important;margin-top:28px !important;padding-top:30px !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important}' +
+    C + ' .vc-box::before{content:"" !important;display:block !important;position:absolute !important;left:50% !important;top:-16px !important;right:auto !important;bottom:auto !important;width:74px !important;height:34px !important;margin-left:-37px !important;background:' + CLIP + ' center/contain no-repeat !important;border:0 !important;border-radius:0 !important;box-shadow:none !important;opacity:1 !important;z-index:4;transform:none !important;-webkit-mask:none !important;mask:none !important}' +
+    C + ' .vc-box::after{display:none !important}' +
+    C + ' .vc-box[data-pzb="1"]{background:repeating-linear-gradient(180deg,transparent 0 27px,rgba(94,71,42,.10) 27px 28px),#fbf4e4 !important;box-shadow:2px 4px 0 rgba(0,0,0,.25),0 14px 20px -12px rgba(0,0,0,.5) !important;rotate:-.6deg;' + DK + '}' +
+    C + ' .vc-box[data-pzb="2"],' + C + ' .vc-box[data-pzb="3"]{background:linear-gradient(180deg,#244d47,#1f433e) !important;box-shadow:2px 4px 0 rgba(0,0,0,.3),0 14px 20px -12px rgba(0,0,0,.5) !important}' +
+    C + ' .vc-box[data-pzb="2"]{rotate:.5deg}' + C + ' .vc-box[data-pzb="3"]{rotate:-.4deg}' +
+    /* หัวขั้น */
+    C + ' .vc-sh{display:grid !important;grid-template-columns:46px 1fr;column-gap:10px;align-items:center;' + DK + 'font-size:15px !important;font-weight:800 !important;line-height:1.3 !important}' +
+    C + ' .vc-box[data-pzb="2"] .vc-sh,' + C + ' .vc-box[data-pzb="3"] .vc-sh{color:#efe3ca !important;-webkit-text-fill-color:#efe3ca !important}' +
+    C + ' .vc-sh::before,' + C + ' .vc-sh::after{display:none !important}' +
+    C + ' .vc-sn{grid-row:1 / 3;position:relative !important;width:46px !important;height:46px !important;min-width:0 !important;margin:0 !important;padding:0 !important;border:1.5px dashed #7d6a4c !important;border-radius:3px !important;background:none !important;box-shadow:none !important;font-size:0 !important;display:flex !important;align-items:center;justify-content:center}' +
+    C + ' .vc-sn::before{content:attr(data-n) !important;display:block !important;position:static !important;width:auto !important;height:auto !important;background:none !important;border:0 !important;box-shadow:none !important;font:900 32px/1 Georgia,serif !important;color:#c4735a !important;-webkit-text-fill-color:#c4735a !important;text-shadow:2px 2px 0 #7d3a2c !important;opacity:1 !important;transform:none !important;-webkit-mask:none !important;mask:none !important}' +
+    C + ' .vc-sn::after{display:none !important}' +
+    C + ' .vc-sn.is-done::after{content:"\\2713" !important;display:flex !important;align-items:center;justify-content:center;position:absolute !important;right:-8px !important;top:-8px !important;left:auto !important;bottom:auto !important;width:20px !important;height:20px !important;border-radius:50% !important;background:#2c5b55 !important;border:0 !important;box-shadow:0 0 0 2px #fbf4e4 !important;color:#efe3ca !important;-webkit-text-fill-color:#efe3ca !important;font:900 11px/1 Prompt,sans-serif !important;-webkit-mask:none !important;mask:none !important;opacity:1 !important;transform:none !important}' +
+    C + ' .ta-clear{background:#efe3ca !important;border:0 !important;box-shadow:1px 2px 0 #7d6233 !important;color:#5e472a !important;-webkit-text-fill-color:#5e472a !important}' +
+    C + ' .ta-count{background:#e4d3a6 !important;border:0 !important;border-radius:2px !important;box-shadow:1px 2px 0 rgba(125,98,51,.5) !important;color:#4f3b22 !important;-webkit-text-fill-color:#4f3b22 !important;rotate:-1deg}' +
+    C + ' .vc-box[data-pzb="2"] .vc-sn{border-color:rgba(216,184,106,.6) !important}' + C + ' .vc-box[data-pzb="2"] .vc-sn::before{color:#93aaac !important;-webkit-text-fill-color:#93aaac !important;text-shadow:2px 2px 0 #13302c !important}' +
+    C + ' .vc-box[data-pzb="3"] .vc-sn{border-color:rgba(216,184,106,.6) !important}' + C + ' .vc-box[data-pzb="3"] .vc-sn::before{color:#d8b86a !important;-webkit-text-fill-color:#d8b86a !important;text-shadow:2px 2px 0 #13302c !important}' +
+    '.pzd-k{display:none}' + C + ' .vc-sh > .pzd-k{display:block;grid-column:2;grid-row:1;font-size:10.5px;font-weight:700;color:#7d6a4c;-webkit-text-fill-color:#7d6a4c;line-height:1.2}' +
+    C + ' .vc-box[data-pzb="2"] .pzd-k,' + C + ' .vc-box[data-pzb="3"] .pzd-k{color:#b9cbc2;-webkit-text-fill-color:#b9cbc2}' +
+    'html:not([data-lang="th"]):is([data-lang]) .pzd-k{display:none !important}' +
+    /* เครดิต = ม้วนตั๋ว */
+    C + ' #creditChip{position:relative !important;display:block !important;width:80px !important;height:52px !important;min-width:0 !important;padding:0 !important;border:0 !important;border-radius:0 !important;background:' + ROLL + ' right 0 top 0/30px 44px no-repeat !important;box-shadow:none !important;overflow:visible !important;font-size:0 !important}' +
+    C + ' #creditChip[hidden]{display:none !important}' +
+    C + ' #creditChip::before{display:none !important}' +
+    C + ' #creditChip::after{content:"\\0E40\\0E04\\0E23\\0E14\\0E34\\0E15" !important;display:block !important;position:absolute !important;left:0 !important;right:0 !important;bottom:0 !important;top:auto !important;width:auto !important;height:auto !important;background:none !important;border:0 !important;text-align:center;font:800 9.5px/1 Prompt,sans-serif !important;color:#5e472a !important;-webkit-text-fill-color:#5e472a !important;opacity:1 !important;transform:none !important}' +
+    'html[data-lang="en"] #checkCard #creditChip::after{content:"credits" !important}html[data-lang="zh"] #checkCard #creditChip::after{content:"\\79EF\\5206" !important}' +
+    C + ' #creditChip > *:not(#creditNum){display:none !important}' +
+    C + ' #creditNum{position:absolute !important;left:0 !important;top:8px !important;width:58px !important;height:28px !important;display:flex !important;align-items:center;justify-content:center;padding-right:10px;background:#e4c376 !important;border-radius:3px 0 0 3px !important;box-shadow:1px 2px 0 rgba(0,0,0,.18) !important;' + DK + 'font:900 15px/1 Prompt,sans-serif !important;-webkit-mask:radial-gradient(circle 3px at 0 50%,transparent 96%,#000);mask:radial-gradient(circle 3px at 0 50%,transparent 96%,#000)}' +
+    C + ' #creditNum::after{content:"" !important;position:absolute !important;right:12px !important;top:3px !important;bottom:3px !important;border-left:1.5px dashed rgba(46,33,18,.45) !important}' +
+    C + ' #creditNum::before{display:none !important}' +
+    /* ประเภทสัญญา */
+    C + ' .field-label{display:flex !important;align-items:center;gap:6px;' + DK + 'font-weight:800 !important;font-size:12.5px !important;margin-top:14px !important}' +
+    C + ' .field-label::before{content:"\\2702" !important;color:#7d3a2c !important;-webkit-text-fill-color:#7d3a2c !important}' +
+    C + ' #vcpTrigger{background:none !important;border:0 !important;box-shadow:none !important;padding:4px 0 !important;' + DK + '}' +
+    C + ' #vcpTrigger::before,' + C + ' #vcpTrigger::after{display:none !important}' +
+    C + ' #vcpTrigger .vcp-ti{width:58px !important;height:58px !important;flex:0 0 58px !important;border:0 !important;border-radius:0 !important;background:none no-repeat center/contain !important;box-shadow:none !important;position:relative}' +
+    C + ' #vcpTrigger .vcp-ti > *{display:none !important}' +
+    C + ' #vcpTrigger .vcp-ti::after{content:"";position:absolute;inset:-5px;border:2px dashed #2c5b55;border-radius:8px}' +
+    C + ' #vcpTrigger .vcp-tt b{' + DK + 'font-size:14.5px !important;font-weight:800 !important}' +
+    C + ' #vcpTrigger .vcp-tt small{' + MD + 'font-size:11px !important;opacity:1 !important}' +
+    C + ' #vcpTrigger .vcp-tc{position:relative !important;padding:6px 11px !important;border:0 !important;border-radius:3px !important;background:#efe3ca !important;box-shadow:1px 2px 0 #7d6233,inset 0 0 0 2px #efe3ca,inset 0 0 0 3.2px rgba(94,71,42,.35) !important;' + DK + 'font-weight:700 !important;font-size:12px !important}' +
+    /* คูปองวางสัญญา */
+    C + ' .ta-wrap{position:relative !important;margin-top:18px !important;border:0 !important;border-radius:4px !important;background:rgba(255,252,243,.6) !important;box-shadow:none !important;overflow:visible !important}' +
+    C + ' .ta-wrap::before{content:"" !important;display:block !important;position:absolute !important;inset:0 !important;border:2.5px dashed #5e472a !important;border-radius:4px !important;background:none !important;box-shadow:none !important;pointer-events:none;z-index:3;opacity:1 !important;width:auto !important;height:auto !important}' +
+    C + ' .ta-wrap::after{content:"" !important;display:block !important;position:absolute !important;left:16px !important;top:-12px !important;width:26px !important;height:22px !important;background:' + SCIS + ' center/18px no-repeat,#fbf4e4 !important;border:0 !important;z-index:4;pointer-events:none;opacity:1 !important;transform:none !important}' +
+    C + ' .ta-wrap.pz-cut::after{opacity:0 !important}' +
+    C + ' #input{background:transparent !important;border:0 !important;box-shadow:none !important;min-height:300px !important}' +
+    C + ' .vc-mirror{background:none !important;box-shadow:none !important;border:0 !important}' + C + ' .vc-mirror::before,' + C + ' .vc-mirror::after{display:none !important}' +
+    C + ' .vc-empty{background:none !important;border:0 !important;box-shadow:none !important}' +
+    C + ' .vc-empty::before,' + C + ' .vc-empty::after{display:none !important}' +
+    C + ' .vc-empty > svg{display:none !important}' +
+    C + ' .vc-empty-ico{display:block !important;width:120px !important;height:78px !important;margin:0 auto 4px !important;background:' + ART + ' center/contain no-repeat !important;border:0 !important;box-shadow:none !important;border-radius:0 !important}' +
+    C + ' .vc-empty-ico > *{display:none !important}' + C + ' .vc-empty-ico::before,' + C + ' .vc-empty-ico::after{display:none !important}' +
+    C + ' .vc-empty > b{' + DK + 'font-weight:800 !important}' +
+    C + ' .vc-empty > b::before{color:#2e2112 !important;-webkit-text-fill-color:#2e2112 !important;text-shadow:none !important}' + C + ' .vc-empty > b::after{color:#5e472a !important;-webkit-text-fill-color:#5e472a !important;text-shadow:none !important}' +
+    C + ' .vc-paste{position:relative !important;display:inline-flex !important;align-items:center;gap:7px;padding:11px 18px 11px 14px !important;border:0 !important;border-radius:0 !important;background:#d1a54a !important;box-shadow:2px 3px 0 #6e4f22 !important;' + DK + 'font-weight:800 !important;font-size:13px !important;clip-path:polygon(0 0,100% 0,96% 12%,100% 25%,96% 38%,100% 50%,96% 62%,100% 75%,96% 88%,100% 100%,0 100%)}' +
+    C + ' .vc-paste svg{display:none !important}' + C + ' .vc-paste::before{content:"" !important;display:block !important;width:16px !important;height:16px !important;background:' + CLIPB + ' center/contain no-repeat !important;-webkit-mask:none !important;mask:none !important;position:static !important;opacity:1 !important}' +
+    C + ' .vc-paste::after{display:none !important}' +
+    C + ' .vc-empty small{' + MD + '}' +
+    C + ' .vc-empty small label{position:relative !important;display:inline-flex !important;align-items:center;gap:7px;padding:10px 18px 10px 12px !important;border:0 !important;border-radius:0 !important;background:linear-gradient(225deg,#fbf4e4 0 9px,#d9c9a6 9px 13px,transparent 13px) right top/100% 100% no-repeat,#efe3ca !important;box-shadow:2px 3px 0 #7d6233 !important;' + DK + 'font-weight:800 !important;text-decoration:none !important}' +
+    C + ' .vc-empty small label::before{content:"" !important;display:block !important;width:16px !important;height:16px !important;background:' + FOLD + ' center/contain no-repeat !important;-webkit-mask:none !important;mask:none !important;position:static !important;opacity:1 !important}' +
+    C + ' .vc-empty small label::after{content:"\\0E2D\\0E31\\0E1B\\0E42\\0E2B\\0E25\\0E14\\0E44\\0E1F\\0E25\\0E4C" !important;position:static !important;display:block !important;width:auto !important;height:auto !important;background:none !important;border:0 !important;font:800 13px/1 Prompt,sans-serif !important;color:#2e2112 !important;-webkit-text-fill-color:#2e2112 !important;opacity:1 !important}' +
+    'html[data-lang="en"] #checkCard .vc-empty small label::after{content:"Upload file" !important}html[data-lang="zh"] #checkCard .vc-empty small label::after{content:"\\4E0A\\4F20\\6587\\4EF6" !important}' +
+    C + ' .vc-paste-msg{' + MD + '}' +
+    '.pzd-sc{display:none}' + C + ' .ta-wrap > .pzd-sc{display:block;position:absolute;left:0;top:0;width:24px;height:24px;margin:-12px 0 0 -12px;z-index:5;pointer-events:none;background:' + SCIS + ' center/18px no-repeat,#fbf4e4;border-radius:50%}' +
+    C + ' .ta-wrap.pz-lift{animation:pzdLift .5s ease both}' +
+    '@keyframes pzdLift{0%{transform:none}40%{transform:translateY(-4px) rotate(-.6deg);box-shadow:0 8px 12px -6px rgba(0,0,0,.3)}100%{transform:none}}' +
+    /* ตัวอย่างฟรี = ถุงกระดาษ */
+    C + ' .vc-try{background:none !important;border:0 !important;box-shadow:none !important;margin-top:18px !important}' +
+    C + ' .vc-try::before,' + C + ' .vc-try::after{display:none !important}' +
+    C + ' .vc-try-main{position:relative !important;display:flex !important;align-items:flex-end !important;gap:12px !important;padding:0 !important;background:none !important;border:0 !important;box-shadow:none !important;text-align:left !important}' +
+    C + ' .vc-try-main::before,' + C + ' .vc-try-main::after{display:none !important}' +
+    C + ' .vc-try-fan{flex:0 0 88px !important;width:88px !important;height:96px !important;background:' + BAG + ' center bottom/contain no-repeat !important;transform:none !important}' +
+    C + ' .vc-try-fan > *{display:none !important}' +
+    C + ' .vc-try-tx{padding-bottom:6px}' + C + ' .vc-try-tx b{' + DK + 'font-size:14px !important;font-weight:800 !important}' +
+    C + ' .vc-try-tx small{' + MD + 'font-size:11px !important;opacity:1 !important}' +
+    C + ' .vc-try-free{position:absolute !important;left:60px !important;top:-14px !important;right:auto !important;width:44px !important;height:44px !important;padding:0 !important;border-radius:50% !important;border:3px solid rgba(196,115,90,.95) !important;background:rgba(251,244,228,.55) !important;box-shadow:inset 0 0 0 3px rgba(251,244,228,.55),inset 0 0 0 4.2px rgba(196,115,90,.7) !important;color:#c4735a !important;-webkit-text-fill-color:#c4735a !important;font:900 13px/38px Prompt,sans-serif !important;text-align:center !important;transform:rotate(-14deg) !important;text-shadow:none !important;animation:none !important}' +
+    C + ' .vc-try-q{border-top:1.5px dashed rgba(94,71,42,.3) !important;margin-top:10px !important;padding-top:10px !important;background:none !important}' +
+    C + ' .vc-try-q > span{' + MD + 'font-weight:700 !important;font-size:11px !important}' +
+    C + ' .vc-try-c,' + C + ' .vc-try-all{position:relative !important;padding:6px 10px 6px 17px !important;border:0 !important;border-radius:3px !important;box-shadow:1px 2px 0 #7d6233 !important;' + DK + 'font-weight:700 !important;font-size:11.5px !important;clip-path:polygon(8px 0,100% 0,100% calc(100% + 4px),8px calc(100% + 4px),0 50%);background:#e6d7b9 !important}' +
+    C + ' .vc-try-c:nth-child(1){background:#e2c6b6 !important}' + C + ' .vc-try-c:nth-child(2){background:#c6d3d3 !important}' + C + ' .vc-try-c:nth-child(3){background:#e4d3a6 !important}' +
+    C + ' .vc-try-c svg{color:#5e472a !important;stroke:#5e472a !important}' +
+    C + ' .vc-try-c::before,' + C + ' .vc-try-all::before{content:"" !important;position:absolute !important;left:5px !important;top:50% !important;width:4px !important;height:4px !important;margin-top:-2px !important;border-radius:50% !important;background:#9d8057 !important;display:block !important}' +
+    'html[data-calm] #checkCard .ta-wrap{animation:none !important}@media (prefers-reduced-motion:reduce){#checkCard .ta-wrap{animation:none !important}}';
+  CSS += Object.keys(SHAPE).map(function (k) { return C + ' #vcpTrigger[data-pzt="' + k + '"] .vcp-ti{background-image:' + u(SHAPE[k]) + ' !important}'; }).join('');
+  var css = '@media (max-width:767px){' + CSS + '}';
+  var COLS = ['#c4735a', '#d1a54a', '#7fa184', '#93aaac', '#e2c6b6', '#c4735a', '#d1a54a'];
+  function calm() { return document.documentElement.hasAttribute('data-calm') || !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); }
+  function chain(s) {
+    var t = (s.textContent || ''), done = s.classList.contains('is-done'), n = 0, k = 1, m;
+    if (done && (m = t.match(/(\d+)\s*วันติด/))) { n = +m[1]; k = ((n - 1) % 7) + 1; }
+    else if ((m = t.match(/(\d+)\s*\/\s*7/))) k = +m[1];
+    var filled = done ? k : k - 1, h = '', x = 0;
+    for (var i = 0; i < 7; i++) {
+      var v = i % 2 === 1, cls = i < filled ? (v ? 'v' : '') + (done && i === filled - 1 ? ' n' : '') : (i === filled && !done ? 't' : 'e') + (v ? ' v' : '');
+      h += '<i class="' + cls + '" style="left:' + x + 'px;--c:' + COLS[i] + '"></i>'; x += v ? 18 : 34;
+    }
+    var key = done + ':' + k + ':' + n;
+    var ck = s.querySelector(':scope > .pzk'); if (ck && ck.getAttribute('data-k') === key) return;
+    if (ck) ck.remove(); var bd = s.querySelector(':scope > .pzkb'); if (bd) bd.remove();
+    s.insertAdjacentHTML('beforeend', '<span class="pzk" aria-hidden="true" data-k="' + key + '">' + h + '</span><span class="pzkb" aria-hidden="true">' + (done && n ? n + '<small>วันติด</small>' : k + '/7<small>วันนี้</small>') + '</span>');
+  }
+  function dress() {
+    var cc = document.getElementById('checkCard'); if (!cc) return;
+    var boxes = cc.querySelectorAll(':scope > .vc-box');
+    [].forEach.call(boxes, function (b, i) {
+      if (b.getAttribute('data-pzb') !== String(i + 1)) b.setAttribute('data-pzb', String(i + 1));
+      var sh = b.querySelector('.vc-sh'), sn = sh && sh.querySelector('.vc-sn');
+      if (sn) { var n = (sn.textContent || '').replace(/[^0-9]/g, '') || String(i + 1); if (sn.getAttribute('data-n') !== n) sn.setAttribute('data-n', n); }
+      if (sh && !sh.querySelector('.pzd-k')) { var k = document.createElement('small'); k.className = 'pzd-k'; k.setAttribute('aria-hidden', 'true'); k.textContent = 'ขั้นที่ ' + (i + 1) + ' จาก ' + boxes.length; if (sn) sn.after(k); else sh.prepend(k); }
+    });
+    var tr = document.getElementById('vcpTrigger'), sel = document.getElementById('contractType');
+    if (tr && sel) { var v = SHAPE[sel.value] ? sel.value : (sel.value ? 'other' : 'unsure'); if (tr.getAttribute('data-pzt') !== v) tr.setAttribute('data-pzt', v); }
+    var st = document.getElementById('vdcStrip'); if (st) chain(st);
+  }
+  function cut() {
+    var w = document.querySelector('#checkCard .ta-wrap'); if (!w || calm() || !w.animate) return;
+    if (w.querySelector('.pzd-sc')) return;
+    var W = w.offsetWidth, Hh = w.offsetHeight, sc = document.createElement('span'); sc.className = 'pzd-sc'; sc.setAttribute('aria-hidden', 'true'); w.appendChild(sc); w.classList.add('pz-cut');
+    var L = 2 * (W + Hh), K = [[29, 0], [W, 0], [W, Hh], [0, Hh], [0, 0], [29, 0]].map(function (p, i, a) { return { transform: 'translate(' + p[0] + 'px,' + p[1] + 'px) rotate(' + [0, 90, 180, 270, 360, 360][i] + 'deg)' }; });
+    var an = sc.animate(K, { duration: 1100, easing: 'linear' });
+    an.onfinish = function () { sc.remove(); w.classList.remove('pz-cut'); w.classList.remove('pz-lift'); void w.offsetWidth; w.classList.add('pz-lift'); setTimeout(function () { w.classList.remove('pz-lift'); }, 600); };
+  }
+  function on() { var h = document.documentElement; return h.getAttribute('data-htheme') === 'paper' && h.getAttribute('data-view') === 'desk' && innerWidth < 768; }
+  function go() {
+    if (document.documentElement.getAttribute('data-htheme') !== 'paper') return;
+    if (!document.getElementById('pz-desk')) { var s = document.createElement('style'); s.id = 'pz-desk'; s.textContent = css; document.head.appendChild(s); }
+    var cc = document.getElementById('checkCard'); if (!cc) return;
+    var q = 0; new MutationObserver(function () { if (q) return; q = requestAnimationFrame(function () { q = 0; dress(); }); }).observe(cc, { childList: true, subtree: true, characterData: true });
+    var sel = document.getElementById('contractType'); if (sel) sel.addEventListener('change', dress);
+    var ta = document.getElementById('input'), had = ta && !!ta.value;
+    if (ta) ta.addEventListener('input', function () { var has = !!ta.value.trim(); if (has && !had && on()) cut(); had = has; });
+    dress();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+})();
+/*/PZDESK*/
