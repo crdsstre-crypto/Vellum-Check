@@ -1034,3 +1034,201 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
 })();
 /*/PZHIST*/
+
+/*PZFX*/ /* ธีมตัดกระดาษ: (ก) "ข้อมูลบัญชี" ที่กางออก = ซองคราฟต์ + บัตรสมาชิก + การ์ดเครดิต 3 สี + แสตมป์ "+ เติม"
+   (ข) อนิเมชันหน้าบัญชี: นกกระเรียนกระดาษตอนล็อกอิน · ป๊อปอัปตอนเปิดแผ่น · เศษกระดาษร่วงแทนฝน · เลขเครดิตพลิก · แสตมป์ปั๊มตอนรับแต้ม
+   โหมดสงบ (html[data-calm]) / ลดภาพเคลื่อนไหว → ไม่มีเศษกระดาษร่วง และข้ามฉาก · ใช้ transform/opacity ล้วน */
+(function () {
+  'use strict';
+  if (window.__pzFx) return; window.__pzFx = 1;
+  var H0 = 'html[data-htheme="paper"][data-view="home"]';
+  var A = H0 + ' body #authCard#authCard';
+  var CALM = 'html[data-calm]';
+  function calm() { var h = document.documentElement; return h.hasAttribute('data-calm') || !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); }
+  var FIB = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='120'%3E%3Cg fill='none' stroke='%237a5a30' stroke-opacity='.16' stroke-width='.8'%3E%3Cpath d='M10 20q20 6 34-2M80 64q14 10 30 4M150 30q18-8 32 2M30 96q12-6 26 0M190 90q10 8 24 2M120 104q16 4 28-6'/%3E%3C/g%3E%3C/svg%3E\")";
+  var INK = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.4 1.7'/%3E%3C/filter%3E%3Crect width='120' height='60' filter='url(%23n)'/%3E%3C/svg%3E\")";
+  var DK = 'color:#2e2112 !important;-webkit-text-fill-color:#2e2112 !important;text-shadow:none !important;';
+  var MD = 'color:#4f3b22 !important;-webkit-text-fill-color:#4f3b22 !important;text-shadow:none !important;';
+  var NUM = 'background:none !important;color:#efe3cb !important;-webkit-text-fill-color:#efe3cb !important;-webkit-text-stroke:1.2px #5a3a18;text-shadow:2px 2px 0 #d1a54a,4px 4px 0 #c4735a !important;font-weight:900 !important;filter:none !important;';
+  var css =
+    /* ---------- (ก) ข้อมูลบัญชีที่กางออก ---------- */
+    A + ' #acctDetail{position:relative;margin:0 6px !important;padding:14px 12px 14px !important;background:linear-gradient(180deg,#8a6c42,#7d6036) !important;border:0 !important;border-radius:0 0 6px 6px !important;box-shadow:inset 0 8px 10px -6px rgba(0,0,0,.4),2px 3px 0 #4a3720 !important}' +
+    A + ' #acctDetail::before{content:"" !important;display:block !important;position:absolute;inset:6px;border:1.5px dashed rgba(240,225,195,.35);border-radius:4px;pointer-events:none;background:none !important}' +
+    A + ' #acctDetail::after{display:none !important}' +
+    A + ' .vai-c{border:0 !important;border-radius:4px !important;box-shadow:1px 3px 0 #4a3720 !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;color:#2e2112 !important}' +
+    A + ' .vai-c::before,' + A + ' .vai-c::after{display:none !important}' +
+    A + ' .vai-c.is-mail{position:relative;background:' + FIB + ',linear-gradient(180deg,#f1e6cf,#e8d9bb) !important}' +
+    A + ' .vai-c.is-check{background:' + FIB + ',linear-gradient(180deg,#cdd6c0,#bfcab1) !important;rotate:-.8deg;--pzk:#bfcab1}' +
+    A + ' .vai-c.is-voice{background:' + FIB + ',linear-gradient(180deg,#c6d3d3,#b6c5c6) !important;rotate:.8deg;--pzk:#b6c5c6}' +
+    A + ' .vai-c.is-hist{background:' + FIB + ',linear-gradient(180deg,#e2c6b6,#d6b6a4) !important}' +
+    A + ' .vai-ic{background:rgba(58,42,22,.14) !important;border:0 !important;box-shadow:none !important;border-radius:4px !important}' +
+    A + ' .vai-ic::after{display:none !important}' +
+    A + ' .vai-ic svg{color:#3a2a16 !important;stroke:#3a2a16 !important;opacity:1 !important;visibility:visible !important;filter:none !important}' +
+    A + ' .vai-lab{' + DK + 'font-weight:700 !important}' + A + ' .vai-mail{' + DK + '}' +
+    A + ' .vai-num b,' + A + ' .vai-cap b{' + NUM + '}' + A + ' .vai-num small,' + A + ' .vai-cap small{color:#5a3a18 !important;-webkit-text-fill-color:#5a3a18 !important;font-weight:700 !important}' +
+    A + ' .vai-note{' + MD + '}' + A + ' .vai-go{color:#5e472a !important}' +
+    A + ' .vai-add{background:#d1a54a !important;background-clip:border-box !important;border:3px dotted var(--pzk,#bfcab1) !important;border-radius:0 !important;' + DK + 'font-weight:800 !important;box-shadow:none !important;rotate:2deg;transition:transform .12s}' +
+    A + ' .vai-add:active{transform:translateY(2px) scale(.96)}' + A + ' .vai-add:focus-visible{outline:2px solid #1d4f4c !important;outline-offset:2px}' +
+    A + ' .vai-bar{background:none !important;border:1.5px dashed rgba(58,42,22,.4) !important;border-radius:2px !important;padding:1.5px !important;height:12px !important;box-shadow:none !important}' +
+    A + ' .vai-bar i{background:#c4735a !important;border-radius:0 !important;clip-path:polygon(0 0,100% 0,99% 100%,0 100%);box-shadow:none !important}' +
+    A + ' .vai-c.is-hist .vai-note.pz-warn,' + A + ' .vai-c.is-hist .vai-note:has(svg){position:relative;display:block;margin-top:10px;padding:7px 10px !important;background:#ede0c6 !important;border-radius:3px;color:#7d3a2c !important;-webkit-text-fill-color:#7d3a2c !important;font-weight:700 !important;rotate:-.6deg}' +
+    A + ' .vai-c.is-hist .vai-note:has(svg)::before{content:"";position:absolute;top:-6px;left:18px;width:36px;height:11px;background:rgba(230,216,188,.85);transform:rotate(-4deg)}' +
+    A + ' .vai-c.is-hist .vai-note svg{color:#7d3a2c !important;stroke:#7d3a2c !important}' +
+    '.pzm{display:none}' + A + ' .vai-c.is-mail > .pzm{display:block;position:absolute;pointer-events:none}' +
+    A + ' .vai-c.is-mail > .pzm.h{right:16px;top:14px;width:12px;height:12px;border-radius:50%;background:#7d6036;box-shadow:inset 0 1px 2px rgba(0,0,0,.4)}' +
+    A + ' .vai-c.is-mail > .pzm.s{right:20px;top:-20px;width:2px;height:40px;background:#c4735a;transform:rotate(8deg)}' +
+    A + ' .vai-c.is-mail > .pzm.r{right:40px;top:14px;transform:rotate(-10deg);padding:2px 7px;border:2px solid rgba(60,92,76,.85);border-radius:3px;color:rgba(60,92,76,.92);font:800 10.5px/1.2 Prompt,sans-serif;-webkit-mask:' + INK + ';mask:' + INK + '}' +
+    /* ---------- (ข2) ป๊อปอัปตอนเปิดแผ่นบัญชี ---------- */
+    A + '.pz-pop > .pza{animation:pzpA .45s cubic-bezier(.2,1.2,.4,1) both}' +
+    A + '.pz-pop .vc-wcard,' + A + '.pz-pop .vc-mg,' + A + '.pz-pop #vdcAcct,' + A + '.pz-pop #vstMenu,' + A + '.pz-pop .vc-stat,' + A + '.pz-pop #vrmAcct{transform-origin:50% 100%;animation:pzpC .5s cubic-bezier(.25,1.5,.5,1) both}' +
+    A + '.pz-pop .vc-wcard{animation-delay:.08s}' + A + '.pz-pop .vc-mg{animation-delay:.16s}' + A + '.pz-pop #vdcAcct{animation-delay:.2s}' + A + '.pz-pop #vstMenu{animation-delay:.26s}' + A + '.pz-pop .vc-stat{animation-delay:.32s}' + A + '.pz-pop #vrmAcct{animation-delay:.36s}' +
+    '@keyframes pzpA{from{translate:0 -24px;opacity:.3}to{translate:0 0;opacity:1}}' +
+    '@keyframes pzpC{0%{scale:1 .2;opacity:0}60%{scale:1 1.05;opacity:1}100%{scale:1 1;opacity:1}}' +
+    /* ---------- (ข3) เศษกระดาษร่วง (แทนฝน) ---------- */
+    '.pzf{display:none}' +
+    H0 + ' body[data-sheet="acct"] #authCard#authCard > .pzf{display:block;position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;border-radius:inherit}' +
+    CALM + ' body #authCard > .pzf{display:none !important}' +
+    '.pzf i{position:absolute;top:-24px;left:var(--x);width:var(--w);height:var(--w);background:var(--c);opacity:.5;will-change:transform;animation:pzfall var(--d) linear var(--dl) infinite}' +
+    '.pzf i.st{clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}.pzf i.dm{clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}.pzf i.dt{border-radius:50%}' +
+    '@keyframes pzfall{0%{transform:translate3d(0,0,0) rotate(0deg)}50%{transform:translate3d(18px,55vh,0) rotate(180deg)}100%{transform:translate3d(-6px,110vh,0) rotate(360deg)}}' +
+    '@media (prefers-reduced-motion:reduce){.pzf{display:none !important}}' +
+    /* ---------- (ข5) เลขเครดิตพลิก ---------- */
+    A + ' .vc-wc-num b.pz-flip,' + A + ' .vai-num b.pz-flip{display:inline-block;animation:pzflip .55s cubic-bezier(.3,1.3,.5,1) both}' +
+    '@keyframes pzflip{0%{transform:perspective(300px) rotateX(-95deg);opacity:.2}55%{transform:perspective(300px) rotateX(14deg);opacity:1}100%{transform:perspective(300px) rotateX(0)}}' +
+    /* ---------- (ข6) แสตมป์ปั๊ม ---------- */
+    A + ' .vda-pill.pz-stamp{animation:pzst .62s cubic-bezier(.3,1.4,.5,1) both}' +
+    A + ' #vdcAcct.pz-shake{animation:pzsh .3s .26s ease both}' +
+    '@keyframes pzst{0%{transform:translateY(0) scale(1)}35%{transform:translateY(-16px) scale(1.18) rotate(-6deg)}55%{transform:translateY(2px) scale(.9) rotate(-3deg)}100%{transform:none}}' +
+    '@keyframes pzsh{0%,100%{translate:0 0}30%{translate:-2px 1px}60%{translate:2px -1px}}' +
+    '.pzcf{position:absolute;width:10px;height:10px;pointer-events:none;z-index:6}' +
+    /* ---------- (ข1) นกกระเรียนตอนล็อกอิน ---------- */
+    '.pzl{position:fixed;inset:0;z-index:2147483000;cursor:pointer;-webkit-tap-highlight-color:transparent}' +
+    '.pzl-dim{position:absolute;left:0;right:0;top:0;bottom:var(--nb,0px);background:rgba(13,36,34,.62);animation:pzlD .35s ease both}' +
+    '.pzl.out .pzl-dim{animation:pzlD .3s ease reverse both}' +
+    '@keyframes pzlD{from{opacity:0}to{opacity:1}}' +
+    '.pzl-sq{position:absolute;left:50%;top:44%;width:120px;height:120px;margin:-60px 0 0 -60px;background:' + FIB + ',linear-gradient(135deg,#f1e6cf,#ddcca9);box-shadow:0 10px 20px rgba(0,0,0,.35);border-radius:2px}' +
+    '.pzl-cr{position:absolute;left:0;top:0;width:128px;height:96px;margin:-48px 0 0 -64px;opacity:0;filter:drop-shadow(0 8px 8px rgba(0,0,0,.35))}' +
+    '.pzl-cr svg{width:100%;height:100%;overflow:visible}' +
+    '.pzl-cr .wl,.pzl-cr .wr{transform-box:fill-box;animation:pzflap .32s ease-in-out infinite alternate}' + '.pzl-cr .wl{transform-origin:100% 100%}.pzl-cr .wr{transform-origin:0 100%;animation-delay:.05s}' +
+    '@keyframes pzflap{from{transform:scaleY(1)}to{transform:scaleY(.45)}}' +
+    '.pzl-wel{position:absolute;left:0;right:0;top:calc(44% - 150px);text-align:center;color:#f6ead2;font:700 20px/1.3 Prompt,sans-serif;text-shadow:0 2px 6px rgba(0,0,0,.4);opacity:0}' +
+    '.pzl-wel small{display:block;font-size:13px;font-weight:500;opacity:.85}' +
+    '.pzl-skip{position:absolute;right:14px;top:calc(env(safe-area-inset-top) + 12px);padding:6px 12px;border:0;border-radius:3px;background:#e6d7b9;color:#2e2112;font:700 13px Prompt,sans-serif;box-shadow:2px 3px 0 #7d6233}' +
+    '.pz-catch{animation:pzcatch .5s cubic-bezier(.3,1.6,.5,1)}@keyframes pzcatch{0%{transform:none}35%{transform:translateY(-8px) scale(1.15)}100%{transform:none}}';
+  var CRANE = '<svg viewBox="0 0 96 72" aria-hidden="true"><path class="wl" d="M48 40 L20 6 L44 30 Z" fill="#e6d6b8"/><path class="wr" d="M48 40 L80 2 L54 32 Z" fill="#d9c7a3"/>' +
+    '<path d="M6 44 L48 40 L34 52 Z" fill="#efe3cb"/><path d="M48 40 L90 30 L62 50 Z" fill="#d9c7a3"/><path d="M34 52 L48 40 L62 50 L48 58 Z" fill="#c9b48c"/><path d="M90 30 L94 22 L86 30 Z" fill="#c4735a"/></svg>';
+  /* ---------- (ข1) ฉากล็อกอิน ---------- */
+  window.VCPaperLogin = function (info, api) {
+    var email = (info && info.email) || '', nm = api.name(email) || '';
+    var old = document.querySelector('.pzl'); if (old) old.remove();
+    var nav = document.getElementById('bottomNav'), nb = 0;
+    if (nav && innerWidth < 768) { var nr = nav.getBoundingClientRect(); if (nr.height > 0 && nr.top < innerHeight) nb = innerHeight - nr.top; }
+    var R = document.createElement('div'); R.className = 'pzl'; R.style.setProperty('--nb', nb + 'px');
+    R.innerHTML = '<i class="pzl-dim"></i><i class="pzl-sq"></i><i class="pzl-cr">' + CRANE + '</i><div class="pzl-wel"><small>ยินดีต้อนรับ</small><b></b></div><button type="button" class="pzl-skip">ข้าม ›</button>';
+    R.querySelector('.pzl-wel b').textContent = nm ? 'คุณ ' + nm : 'กลับมาแล้ว';
+    document.body.appendChild(R);
+    if (window.__vcGinOff) setTimeout(window.__vcGinOff, 60);
+    var alive = true, anims = [], guard = 0;
+    function end() {
+      if (!alive) return; alive = false; clearTimeout(guard);
+      anims.forEach(function (a) { try { a.cancel(); } catch (e) {} });
+      R.classList.add('out'); setTimeout(function () { if (R.parentNode) R.parentNode.removeChild(R); }, 300);
+      if (window.__vcGinOff) window.__vcGinOff();
+      window.__vcHold = Date.now() + 7000; api.welcome(email);
+    }
+    R.addEventListener('click', end);
+    guard = setTimeout(end, 6500);
+    if (calm() || !R.animate) { R.querySelector('.pzl-sq').style.display = 'none'; R.querySelector('.pzl-wel').style.opacity = 1; guard = setTimeout(end, 1000); return; }
+    var sq = R.querySelector('.pzl-sq'), cr = R.querySelector('.pzl-cr'), wel = R.querySelector('.pzl-wel');
+    var vw = innerWidth, vh = innerHeight, cx = vw / 2, cy = vh * .44;
+    /* พับกระดาษ: สี่เหลี่ยมหมุนเป็นข้าวหลามตัด → พับครึ่ง → หดเป็นนก */
+    anims.push(sq.animate([{ transform: 'rotate(0) scale(.6)', opacity: 0 }, { transform: 'rotate(45deg) scale(1)', opacity: 1, offset: .3 }, { transform: 'rotate(45deg) scale(1,.5)', offset: .6 }, { transform: 'rotate(45deg) scale(.5,.2)', opacity: 0 }], { duration: 700, easing: 'ease-in-out', fill: 'forwards' }));
+    anims.push(wel.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none', offset: .2 }, { opacity: 1, offset: .75 }, { opacity: 0 }], { duration: 1600, fill: 'forwards' }));
+    var tg = api.target(), tx = tg ? tg.r.left + tg.r.width / 2 : vw - 60, ty = tg ? tg.r.top + tg.r.height / 2 : vh - 40;
+    if (!tg || tg.r.top < vh * .5) { tx = vw - 60; ty = 40; }
+    var c1x = cx + (tx - cx) * .2, c1y = cy - vh * .3, c2x = tx + (tx > cx ? 30 : -30), c2y = cy - vh * .05;
+    var K = [], n = 10, i;
+    for (i = 0; i <= n; i++) {
+      var t = i / n, u = 1 - t;
+      var x = u * u * u * cx + 3 * u * u * t * c1x + 3 * u * t * t * c2x + t * t * t * tx;
+      var y = u * u * u * cy + 3 * u * u * t * c1y + 3 * u * t * t * c2y + t * t * t * ty;
+      var dx = 3 * u * u * (c1x - cx) + 6 * u * t * (c2x - c1x) + 3 * t * t * (tx - c2x), dy = 3 * u * u * (c1y - cy) + 6 * u * t * (c2y - c1y) + 3 * t * t * (ty - c2y);
+      var flip = dx < 0 ? -1 : 1, ang = Math.max(-28, Math.min(28, Math.atan2(dy, Math.abs(dx) + 40) * 180 / Math.PI));
+      K.push({ transform: 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) scaleX(' + flip + ') rotate(' + ang.toFixed(1) + 'deg) scale(' + (1 - t * .6).toFixed(3) + ')', opacity: i === 0 ? 0 : 1 });
+    }
+    K[1].opacity = 1;
+    setTimeout(function () {
+      if (!alive) return;
+      var fly = cr.animate(K, { duration: 1300, easing: 'cubic-bezier(.45,.05,.35,1)', fill: 'forwards' }); anims.push(fly);
+      fly.onfinish = function () {
+        if (!alive) return;
+        var el = tg && tg.el; if (el) { el.classList.remove('pz-catch'); void el.offsetWidth; el.classList.add('pz-catch'); setTimeout(function () { el.classList.remove('pz-catch'); }, 600); }
+        cr.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, fill: 'forwards' });
+        setTimeout(end, 260);
+      };
+    }, 560);
+  };
+  /* ---------- อื่นๆ ---------- */
+  var BITS = [['st', '#d1a54a', 12], ['dm', '#c4735a', 9], ['dt', '#93aaac', 7], ['st', '#7fa184', 10], ['dm', '#d1a54a', 8], ['st', '#c4735a', 11], ['dt', '#e6d6b8', 6]];
+  function build() {
+    var c = document.getElementById('authCard'); if (!c) return;
+    if (!c.querySelector(':scope > .pzf')) {
+      var f = document.createElement('div'); f.className = 'pzf'; f.setAttribute('aria-hidden', 'true');
+      f.innerHTML = BITS.map(function (b, i) { return '<i class="' + b[0] + '" style="--c:' + b[1] + ';--w:' + b[2] + 'px;--x:' + (6 + i * 13.5) + '%;--d:' + (11 + (i % 3) * 3.5) + 's;--dl:-' + (i * 2.3).toFixed(1) + 's"></i>'; }).join('');
+      var pza = c.querySelector(':scope > .pza'); c.insertBefore(f, pza ? pza.nextSibling : c.firstChild);
+    }
+    var m = c.querySelector('.vai-c.is-mail'); if (m && !m.querySelector(':scope > .pzm')) {
+      m.insertAdjacentHTML('beforeend', '<i class="pzm s" aria-hidden="true"></i><i class="pzm h" aria-hidden="true"></i><i class="pzm r" aria-hidden="true">ลับเฉพาะ</i>');
+    }
+  }
+  function flip(b) { if (!b || calm()) return; b.classList.remove('pz-flip'); void b.offsetWidth; b.classList.add('pz-flip'); setTimeout(function () { b.classList.remove('pz-flip'); }, 700); }
+  function home() { return document.documentElement.getAttribute('data-view') === 'home' && document.documentElement.getAttribute('data-htheme') === 'paper'; }
+  function opened() {
+    if (!home()) return; build();
+    var c = document.getElementById('authCard');
+    if (!calm()) { c.classList.remove('pz-pop'); void c.offsetWidth; c.classList.add('pz-pop'); setTimeout(function () { c.classList.remove('pz-pop'); }, 900); }
+    setTimeout(function () { flip(c.querySelector('.vc-wc-num b')); }, 260);
+  }
+  function confetti(host) {
+    var cols = ['#d1a54a', '#c4735a', '#7fa184', '#93aaac', '#e6d6b8', '#d1a54a'], shp = ['50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%', '50% 0,100% 50%,50% 100%,0 50%'];
+    var pill = host.querySelector('.vda-pill'); var hr = host.getBoundingClientRect(), pr = pill ? pill.getBoundingClientRect() : hr;
+    var ox = pr.left - hr.left + pr.width / 2, oy = pr.top - hr.top + pr.height / 2;
+    for (var i = 0; i < 6; i++) {
+      var s = document.createElement('i'); s.className = 'pzcf'; s.style.left = ox + 'px'; s.style.top = oy + 'px'; s.style.background = cols[i]; s.style.clipPath = 'polygon(' + shp[i % 2] + ')';
+      host.appendChild(s);
+      var a = (-150 + i * 24) * Math.PI / 180, d = 38 + (i % 3) * 12;
+      var an = s.animate([{ transform: 'translate(-50%,-50%) scale(.4)', opacity: 1 }, { transform: 'translate(calc(-50% + ' + (Math.cos(a) * d).toFixed(0) + 'px),calc(-50% + ' + (Math.sin(a) * d).toFixed(0) + 'px)) rotate(' + (120 + i * 40) + 'deg) scale(1)', opacity: 1, offset: .6 }, { transform: 'translate(calc(-50% + ' + (Math.cos(a) * d * 1.1).toFixed(0) + 'px),calc(-50% + ' + (Math.sin(a) * d + 24).toFixed(0) + 'px)) rotate(' + (200 + i * 40) + 'deg) scale(.8)', opacity: 0 }], { duration: 700, delay: 260, easing: 'cubic-bezier(.2,.8,.4,1)', fill: 'both' });
+      (function (n) { an.onfinish = function () { n.remove(); }; })(s);
+    }
+  }
+  function stamp() {
+    if (!home() || calm()) return;
+    var host = document.getElementById('vdcAcct'), pill = host && host.querySelector('.vda-pill'); if (!pill) return;
+    pill.classList.remove('pz-stamp'); host.classList.remove('pz-shake'); void pill.offsetWidth;
+    pill.classList.add('pz-stamp'); host.classList.add('pz-shake'); if (host.animate) confetti(host);
+    setTimeout(function () { pill.classList.remove('pz-stamp'); host.classList.remove('pz-shake'); }, 800);
+  }
+  function go() {
+    if (document.documentElement.getAttribute('data-htheme') !== 'paper') return;
+    if (!document.getElementById('pz-fx')) { var s = document.createElement('style'); s.id = 'pz-fx'; s.textContent = css; document.head.appendChild(s); }
+    build();
+    var last = document.body.getAttribute('data-sheet');
+    new MutationObserver(function () { var v = document.body.getAttribute('data-sheet'); if (v === last) return; last = v; if (v === 'acct') setTimeout(opened, 40); })
+      .observe(document.body, { attributes: true, attributeFilter: ['data-sheet'] });
+    var c = document.getElementById('authCard'); if (!c) return;
+    var q = 0, okWas = !!c.querySelector('#vdcAcct .vda-pill.is-ok'), numWas = (c.querySelector('.vc-wc-num b') || {}).textContent;
+    new MutationObserver(function () {
+      if (q) return; q = requestAnimationFrame(function () {
+        q = 0; build();
+        var ok = !!c.querySelector('#vdcAcct .vda-pill.is-ok'); if (ok && !okWas) stamp(); okWas = ok;
+        var nb = c.querySelector('.vc-wc-num b'), nv = nb && nb.textContent; if (nb && numWas !== undefined && nv !== numWas && document.body.getAttribute('data-sheet') === 'acct' && home()) flip(nb); numWas = nv;
+      });
+    }).observe(c, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'], characterData: true });
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest && e.target.closest('#acctInfoBtn'); if (!b || !home()) return;
+      setTimeout(function () { if (b.getAttribute('aria-expanded') === 'true') [].forEach.call(c.querySelectorAll('.vai-num b,.vai-cap b'), function (x, i) { setTimeout(function () { flip(x); }, i * 90); }); }, 60);
+    }, true);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+})();
+/*/PZFX*/
