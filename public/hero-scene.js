@@ -40,7 +40,7 @@
     });
     run(host, SR);
     /* v22: รอไฟล์ธีมได้นานขึ้น (เดิม 0.4 วิ ทำให้เน็ตช้าเห็นฉากออริจินอลแวบก่อน) · ไฟล์ธีมมาเมื่อไหร่เปิดจอทันที · โหลดพลาดเปิดเลย */
-    if (!TH || TH === 'classic' || host.__th || window.__vchThFail) reveal(); else setTimeout(reveal, document.documentElement.classList.contains('vc-nsw') ? 15000 : 5000);
+    if (!TH || TH === 'classic' || host.__th || window.__vchThFail) reveal(); else setTimeout(reveal, (document.documentElement.classList.contains('vc-nsw') || document.documentElement.classList.contains('vc-rsw')) ? 15000 : 5000);
     try { performance.mark('vch-ready'); } catch (e) {}
   }
   function run(host, SR) {
@@ -596,11 +596,12 @@
     function prefetchTheme(t) {
       var cb = null, fin = false; function done() { if (fin) return; fin = true; if (cb) cb(); }
       if (!TH[t] || t === 'classic' || !window.fetch || !window.__vchThV) fin = true;
-      else { try { fetch('hero-theme-' + t + '.js?v=' + window.__vchThV, { credentials: 'same-origin' }).then(function (r) { return r.text(); }).then(done, done); } catch (x) { fin = true; } setTimeout(done, t === 'noir' ? 8000 : 4000); }
+      else { try { fetch('hero-theme-' + t + '.js?v=' + window.__vchThV, { credentials: 'same-origin' }).then(function (r) { return r.text(); }).then(done, done); } catch (x) { fin = true; } setTimeout(done, t === 'noir' || t === 'night' ? 8000 : 4000); }
       return function (f) { cb = f; if (fin) f(); };
     }
     function curtain(t, done) {
       /* v26: ฉากนักสืบใช้ม่านแฟ้มคดีของหน้าเว็บ (#vcNsw ใน index.html) ซึ่งอยู่ต่อข้ามการรีโหลดได้ */
+      if (t === 'night' && window.__vcRswShow) { try { window.__vcRswShow(); setTimeout(done, reduce ? 50 : 1300); return; } catch (x) {} }
       if (t === 'noir' && window.__vcNswShow) { try { window.__vcNswShow(); setTimeout(done, reduce ? 50 : 1250); return; } catch (x) {} }
       var html = t === 'noir' ? Array.apply(null, Array(10)).map(function (_, i) { return '<i style="top:' + (i * 10) + '%;animation-delay:' + (i * .035).toFixed(3) + 's"></i>'; }).join('') + '<b></b><u></u>' : t === 'paper' ? '<i></i><i></i>' : t === 'morning' ? Array.apply(null, Array(12)).map(function (_, i) { return '<i style="top:' + (i * 100 / 12).toFixed(3) + '%;animation-delay:' + (i * .03).toFixed(2) + 's"></i>'; }).join('') : '';
       cv.className = 'scv on scv-' + (TH[t] ? t : 'dark'); cv.innerHTML = html;
@@ -634,7 +635,7 @@
       pn.classList.remove('on');
       /* v22: ระหว่างม่านปิด โหลดไฟล์ธีมใหม่เก็บไว้ก่อน → หลังรีโหลดขึ้นฉากใหม่ทันที (รอไม่เกิน 4 วิ) */
       var pf = prefetchTheme(go), cd = false, ready = false;
-      function goNow() { if (!cd || !ready) return; try { if (go === 'noir') sessionStorage.setItem('vc_nsw', String(Date.now())); } catch (x) {} try { var u = new URL(location.href); u.searchParams.delete('theme'); history.replaceState(history.state, '', u.pathname + u.search + u.hash); } catch (x) {} location.reload(); }
+      function goNow() { if (!cd || !ready) return; try { if (go === 'noir') sessionStorage.setItem('vc_nsw', String(Date.now())); if (go === 'night') sessionStorage.setItem('vc_rsw', String(Date.now())); } catch (x) {} try { var u = new URL(location.href); u.searchParams.delete('theme'); history.replaceState(history.state, '', u.pathname + u.search + u.hash); } catch (x) {} location.reload(); }
       pf(function () { ready = true; goNow(); });
       curtain(go, function () { cd = true; goNow(); });
     });
@@ -664,6 +665,7 @@
     if (W) boot();
     if (window.__vchReveal) window.__vchReveal();
     if (window.__vcNswOpen) requestAnimationFrame(function () { requestAnimationFrame(window.__vcNswOpen); });
+    if (window.__vcRswOpen) requestAnimationFrame(function () { requestAnimationFrame(window.__vcRswOpen); });
   }
   window.__vchApply = applyTheme; window.__vchBoot = function () { boot(); };
   applyTheme();
