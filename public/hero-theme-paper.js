@@ -907,3 +907,130 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
 })();
 /*/PZTOOLS*/
+
+/*PZHIST*/ /* ธีมตัดกระดาษ: แผ่นประวัติ (อยู่ใน #authCard โหมด data-sheet=hist) — ตู้ลิ้นชักไม้เปลี่ยนเป็น "ราวเชือกไม้หนีบ"
+   ธงราวกระดาษ 4 สี · แผ่นสัญญา 3 แผ่นหนีบด้วยไม้หนีบ (แกว่งเบาๆ ครั้งเดียวตอนเปิด) · แท็ก "ลับเฉพาะ" · การ์ดภาพรวมครีมมีหูแฟ้ม
+   ช่องตัวเลข 4 สี ตัวเลขตัดกระดาษ · แถบกระดาษ 3 ชิ้น · ปุ่ม "ประเด็นควรทบทวน" เป็นตั๋วมัสตาร์ด · รายการเป็นการ์ดครีมมีแถบสีทางซ้าย */
+(function () {
+  'use strict';
+  if (window.__pzHist) return; window.__pzHist = 1;
+  var A = 'html[data-htheme="paper"][data-view="home"] body #authCard#authCard';
+  var FIB = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='120'%3E%3Cg fill='none' stroke='%237a5a30' stroke-opacity='.16' stroke-width='.8'%3E%3Cpath d='M10 20q20 6 34-2M80 64q14 10 30 4M150 30q18-8 32 2M30 96q12-6 26 0M190 90q10 8 24 2M120 104q16 4 28-6'/%3E%3C/g%3E%3C/svg%3E\")";
+  var CUT = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Cpath d='M11.2 15.6L24 3.4M12.4 12.4L25 21' stroke='%233a2a16' stroke-width='2.8' stroke-linecap='round'/%3E%3Ccircle cx='7.6' cy='19.6' r='4.4' fill='none' stroke='%23c4735a' stroke-width='2.8'/%3E%3Ccircle cx='7.6' cy='8.4' r='4.4' fill='none' stroke='%233a2a16' stroke-width='2.8'/%3E%3C/svg%3E\")";
+  function paper(a, b) { return 'background:' + FIB + ',linear-gradient(180deg,' + a + ',' + b + ') !important;border:0 !important;border-radius:4px !important;box-shadow:2px 3px 0 #7d6233,0 8px 12px -8px rgba(0,0,0,.45) !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;'; }
+  var DK = 'color:#2e2112 !important;-webkit-text-fill-color:#2e2112 !important;text-shadow:none !important;';
+  var MD = 'color:#4f3b22 !important;-webkit-text-fill-color:#4f3b22 !important;text-shadow:none !important;';
+  var BUNT = '<svg class="bt" viewBox="0 0 358 46" preserveAspectRatio="none" aria-hidden="true"><path d="M0 6 Q179 30 358 6" fill="none" stroke="#5e472a" stroke-width="1.6"/><g stroke="#5e472a" stroke-width=".6">' +
+    [[14, 8.5, 40, 11.6, 26, 34, '#c4735a'], [48, 12.4, 74, 15, 60, 37, '#d1a54a'], [82, 15.6, 108, 17.8, 94, 40, '#7fa184'], [116, 18.4, 142, 19.8, 128, 42, '#93aaac'], [150, 20, 176, 20.6, 162, 43, '#c4735a'],
+     [182, 20.6, 208, 20, 196, 43, '#d1a54a'], [216, 19.8, 242, 18.4, 230, 42, '#7fa184'], [250, 17.8, 276, 15.6, 264, 40, '#93aaac'], [284, 15, 310, 12.4, 298, 37, '#c4735a'], [318, 11.6, 344, 8.5, 332, 34, '#d1a54a']]
+      .map(function (t) { return '<path d="M' + t[0] + ' ' + t[1] + 'L' + t[2] + ' ' + t[3] + 'L' + t[4] + ' ' + t[5] + 'Z" fill="' + t[6] + '"/>'; }).join('') + '</g></svg>' +
+    '<svg class="rp" viewBox="0 0 358 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 8 Q179 48 358 8" fill="none" stroke="#5e472a" stroke-width="2" stroke-dasharray="5 1.5"/></svg>';
+  function pp(cls, col, name, w) { return '<span class="pp ' + cls + '"><i class="pg"></i><b style="background:' + col + '">' + name + '</b><s></s><s style="width:' + w[0] + '%"></s><s></s><s style="width:' + w[1] + '%"></s></span>'; }
+  var CL = BUNT + pp('p1', '#d6b6a4', 'เช่า', [100, 60]) + pp('p2', '#bfcab1', 'จ้างงาน', [70, 50]) + pp('p3', '#b6c5c6', 'ซื้อขาย', [100, 65]) + '<span class="tg"><i></i>ลับเฉพาะ ✂</span>';
+  var V = A + ' .vault-head';
+  var css =
+    /* หัวแผ่น */
+    A + ' .sheet-head h2{' + DK + '}' +
+    A + ' .sheet-head h2::before{-webkit-mask:none !important;mask:none !important;background:' + CUT + ' center/22px no-repeat,linear-gradient(180deg,#e6d7b9,#ddcca9) !important;width:36px !important;height:36px !important;border-radius:6px !important;box-shadow:2px 3px 0 #7d6233 !important;vertical-align:middle}' +
+    A + ' .sheet-head h2::after{display:none !important}' +
+    /* ราวเชือกไม้หนีบ (แทนตู้ลิ้นชัก) */
+    V + '{position:relative;height:290px !important;min-height:0 !important;padding:0 !important;overflow:hidden !important;' + paper('#e2d2b2', '#d6c49f') + 'border-radius:5px !important}' +
+    V + '::before,' + V + '::after{display:none !important}' +
+    V + ' .alx-cab-top,' + V + ' .alx-grv,' + V + ' .alx-files,' + V + ' .alx-pull{display:none !important}' +
+    V + ' .alx-cab-main{position:absolute !important;inset:0 !important;width:auto !important;transform:none !important;background:none !important;border:0 !important;box-shadow:none !important;padding:0 !important;height:auto !important}' +
+    V + ' .alx-cab-main::before,' + V + ' .alx-cab-main::after{display:none !important}' +
+    '.pzcl{display:none}' + V + ' > .pzcl{display:block;position:absolute;inset:0;pointer-events:none}' +
+    '.pzcl .bt{position:absolute;left:0;top:0;width:100%;height:46px}' +
+    '.pzcl .rp{position:absolute;left:0;top:60px;width:100%;height:60px}' +
+    '.pzcl .pp{position:absolute;top:0;width:27%;height:118px;background:#f1e6cf;border-radius:2px;box-shadow:2px 4px 6px -2px rgba(0,0,0,.35);padding:22px 9px 8px;transform-origin:50% 0}' +
+    '.pzcl .pp b{display:block;margin:0 -9px 8px;padding:3px 0;text-align:center;font:700 12px/1.3 Prompt,sans-serif;color:#2e2112}' +
+    '.pzcl .pp s{display:block;height:4px;border-radius:2px;background:#d7c8a8;margin:6px 0}' +
+    '.pzcl .pg{position:absolute;left:50%;top:-12px;margin-left:-5px;width:10px;height:26px;border-radius:2px;background:linear-gradient(90deg,#c9a46a,#b48c54);box-shadow:1px 1px 0 rgba(0,0,0,.25)}' +
+    '.pzcl .pg::after{content:"";position:absolute;left:3px;top:9px;width:4px;height:4px;border-radius:50%;background:#7d6233}' +
+    '.pzcl .p1{left:6%;top:76px;rotate:-6deg}.pzcl .p2{left:33%;top:90px;rotate:2deg}.pzcl .p3{left:59%;top:82px;rotate:6deg}' +
+    '.pzcl .tg{position:absolute;right:-24px;top:66px;padding:4px 8px 4px 14px;background:#e9dbbf;border:1.5px solid rgba(60,92,76,.8);color:#3c5c4c;font:800 11px/1.2 Prompt,sans-serif;border-radius:2px 8px 8px 2px;rotate:74deg;transform-origin:0 50%;white-space:nowrap}' +
+    '.pzcl .tg i{position:absolute;left:4px;top:50%;margin-top:-3px;width:6px;height:6px;border-radius:50%;background:#9d8057}' +
+    V + '.pz-sw .pzcl .pp{animation:pzsw 1.1s ease-out both}' + V + '.pz-sw .pzcl .p2{animation-delay:.08s}' + V + '.pz-sw .pzcl .p3{animation-delay:.16s}' +
+    '@keyframes pzsw{0%{transform:rotate(9deg)}30%{transform:rotate(-6deg)}55%{transform:rotate(3.5deg)}78%{transform:rotate(-1.5deg)}100%{transform:none}}' +
+    '@media (prefers-reduced-motion:reduce){.pzcl .pp{animation:none !important}}' +
+    V + ' .vault-txt{position:absolute !important;left:0 !important;right:0 !important;bottom:14px !important;top:auto !important;width:auto !important;margin:0 !important;background:none !important;border:0 !important;box-shadow:none !important;text-align:center;transform:none !important}' +
+    V + ' .vault-txt::before,' + V + ' .vault-txt::after{display:none !important}' +
+    V + ' .vault-txt b{' + DK + 'font-size:19px !important}' + V + ' .vault-txt b::after{color:#7d3a2c !important;-webkit-text-fill-color:#7d3a2c !important;font-size:16px}' +
+    V + ' .vault-txt small{' + MD + '}' + V + ' .vault-txt small::before{' + MD + '}' +
+    /* การ์ดภาพรวม */
+    A + ' section.vcc{position:relative;margin-top:30px !important;overflow:visible !important;' + paper('#e9dbbf', '#e0cfae') + 'border-radius:0 6px 6px 6px !important;color:#2e2112 !important}' +
+    A + ' section.vcc::before{display:none !important}' +
+    A + ' section.vcc::after{content:"";position:absolute;left:0;top:-19px;width:128px;height:20px;background:#e9dbbf;clip-path:polygon(0 100%,0 30%,8% 0,92% 0,100% 30%,100% 100%)}' +
+    A + ' .vcc-h b,' + A + ' .vcc-tx b,' + A + ' .vcc-sec p{' + DK + '}' + A + ' .vcc-h small,' + A + ' .vcc-tx small,' + A + ' .vcc-leg span,' + A + ' .vcc-sec p em{' + MD + '}' +
+    A + ' .vcc-sec p::before{content:"✂" !important;color:#7d3a2c !important}' +
+    A + ' .vcc-h .ic{background:#d4c19c !important;border:0 !important;box-shadow:none !important;border-radius:5px !important}' + A + ' .vcc-h .ic svg{background:#3a2a16 !important}' +
+    A + ' .vcc-rf{position:relative;border-radius:50% !important;background:#e3d3b4 !important;border:0 !important;box-shadow:2px 3px 0 #7d6233 !important;color:#3a2a16 !important}' + A + ' .vcc-rf svg{color:#3a2a16 !important;stroke:#3a2a16 !important}' +
+    A + ' .vcc-rf::after{content:"" !important;display:block !important;position:absolute;inset:3px;border-radius:50%;border:1.5px dashed rgba(58,42,22,.24);background:none !important;pointer-events:none}' +
+    A + ' .vcc-st{border:0 !important;border-radius:4px !important;box-shadow:1px 2px 0 #7d6233 !important}' +
+    A + ' .vcc-st:nth-child(1){background:#bfcab1 !important;rotate:-1.2deg}' + A + ' .vcc-st:nth-child(2){background:#d6b6a4 !important;rotate:1deg}' + A + ' .vcc-st:nth-child(3){background:#d8c493 !important;rotate:-.8deg}' + A + ' .vcc-st:nth-child(4){background:#b6c5c6 !important;rotate:1.2deg}' +
+    A + ' .vcc-st b{color:#efe3cb !important;-webkit-text-fill-color:#efe3cb !important;-webkit-text-stroke:1px #5a3a18;text-shadow:2px 2px 0 #7a4434 !important;background:none !important;font-weight:900 !important}' +
+    A + ' .vcc-st small{' + DK + 'font-weight:600 !important}' +
+    A + ' .vcc-dist{background:none !important;gap:3px;display:flex !important;height:12px !important;border-radius:0 !important;box-shadow:none !important;overflow:visible !important}' +
+    A + ' .vcc-dist i{clip-path:polygon(0 0,100% 0,97% 100%,0 100%);border-radius:0 !important}' +
+    A + ' .vcc-row{' + paper('#efe3ca', '#e6d7b9') + 'color:#2e2112 !important}' +
+    A + ' .vcc-row .vcc-ar{color:#5e472a !important}' + A + ' .vcc-mr b{' + DK + '}' +
+    A + ' .vcc-pg{background:#f1e6cf !important;border:0 !important;box-shadow:1px 2px 0 #7d6233 !important}' + A + ' .vcc-pg i{background:#c4735a !important;color:#fff4e6 !important}' + A + ' .vcc-pg b{' + DK + '}' +
+    A + ' .vcc-cd{background:#d6b6a4 !important;color:#2e2112 !important;border:0 !important;border-radius:3px !important}' +
+    /* แบนเนอร์เทียบ 2 ฉบับ + แดชบอร์ด */
+    A + ' .vct-cc{' + paper('#c6d3d3', '#b6c5c6') + 'color:#2e2112 !important}' + A + ' .vct-cc b,' + A + ' .vct-cc em{' + DK + 'font-style:normal}' + A + ' .vct-cc small{' + MD + '}' +
+    A + ' .vct-cc .i{background:#93aaac !important;border:0 !important;box-shadow:none !important}' + A + ' .vct-cc .i svg{background:#3a2a16 !important}' +
+    A + ' .ld-head small,' + A + ' .ld-head b{' + DK + '}' +
+    A + ' .ld-period{background:#e3d3b4 !important;border:0 !important;box-shadow:2px 3px 0 #7d6233 !important;' + DK + '}' + A + ' .ld-period *{' + DK + '}' + A + ' .ld-period svg{background:#3a2a16 !important}' +
+    A + ' .ld-strip{' + paper('#e6d7b9', '#ddcca9') + '}' + A + ' .ld-strip::before,' + A + ' .ld-strip::after{display:none !important}' +
+    A + ' .ls-cell b,' + A + ' .ls-cell small{' + DK + '}' + A + ' .ls-cell svg{background:#5e472a !important}' + A + ' .ls-cell::before{background:rgba(58,42,22,.25) !important}' +
+    /* แท็บ / เครื่องมือค้นหา */
+    A + ' .hist-tabs{border-bottom:2px solid rgba(58,42,22,.25) !important;gap:6px}' +
+    A + ' .hist-tab{border-radius:5px 5px 0 0 !important;background:rgba(58,42,22,.1) !important;border:0 !important;box-shadow:none !important;color:#4f3b22 !important;-webkit-text-fill-color:#4f3b22 !important}' +
+    A + ' .hist-tab.is-on{background:#e6d7b9 !important;' + DK + 'translate:0 2px}' + A + ' .hist-tab::before,' + A + ' .hist-tab::after{display:none !important}' +
+    A + ' .hist-tools{background:#a1845a !important;box-shadow:0 6px 10px -8px rgba(0,0,0,.5) !important}' + A + ' .hist-tools::after{display:none !important}' +
+    A + ' #histSearch{background:#efe3ca !important;border:1.5px dashed rgba(58,42,22,.4) !important;color:#2e2112 !important;box-shadow:none !important}' + A + ' #histSearch::placeholder{color:#7a6448 !important}' +
+    A + ' .lib-seg-b,' + A + ' .lib-chip{background:#e3d3b4 !important;border:0 !important;box-shadow:1px 2px 0 #7d6233 !important;' + DK + '}' + A + ' .lib-seg-b *,' + A + ' .lib-chip *{' + DK + '}' +
+    A + ' .lib-seg-b.is-on{background:#c99f48 !important}' + A + ' .lib-seg-b svg{background:#3a2a16 !important}' +
+    /* ตั๋ว "ประเด็นควรทบทวน" (ปุ่มเด่นปุ่มเดียว) */
+    A + ' #libReview{position:relative;overflow:visible !important;border-radius:4px !important;background:#d1a54a !important;border:0 !important;box-shadow:2px 3px 0 #6e4f22 !important;' + DK + 'font-weight:800 !important}' +
+    A + ' #libReview *{' + DK + '}' + A + ' #libReview svg{color:#2e2112 !important;stroke:#2e2112 !important;background:none !important}' +
+    A + ' #libReview::before,' + A + ' #libReview::after{content:"" !important;display:block !important;position:absolute !important;top:0 !important;bottom:0 !important;left:auto;right:auto;width:6px !important;height:auto !important;border:0 !important;border-radius:0 !important;opacity:1 !important;transform:none !important;animation:none !important;box-shadow:none !important;background:radial-gradient(circle 2.4px at 50% 50%,#9d8057 92%,transparent) 0 1px/6px 8px repeat-y !important}' +
+    A + ' #libReview::before{left:-3px !important}' + A + ' #libReview::after{right:-3px !important}' +
+    A + ' #libReview[aria-pressed="true"]{background:#c99f48 !important;box-shadow:inset 0 2px 4px rgba(0,0,0,.25) !important}' +
+    /* รายการรายงาน */
+    A + ' .hr-day-h span,' + A + ' .hr-day-h{' + DK + '}' + A + ' .hr-day-h span::before{content:"✂ " !important;color:#7d3a2c !important}' +
+    A + ' .hr-day-n{background:#c99f48 !important;color:#2e2112 !important;border:0 !important}' + A + ' .hr-day-line{background:radial-gradient(circle 1.6px at 50% 50%,#5e472a 92%,transparent) 0 50%/7px 4px repeat-x !important;height:4px !important;opacity:.6}' +
+    A + ' .hr-day-chev{color:#5e472a !important}' +
+    A + ' .hist-card{position:relative;overflow:visible !important;' + paper('#efe3ca', '#e6d7b9') + 'color:#2e2112 !important}' +
+    A + ' .hist-card::before{content:"" !important;display:block !important;position:absolute !important;left:-6px !important;top:12px !important;bottom:auto !important;width:12px !important;height:30px !important;border-radius:3px 0 0 3px !important;background:#bfcab1 !important;box-shadow:none !important;opacity:1 !important}' +
+    A + ' .hist-card:has(.hr-review)::before{background:#d8c493 !important}' + A + ' .hist-card.is-pinned::before{background:#d6b6a4 !important}' +
+    A + ' .hist-card::after{display:none !important}' +
+    A + ' .hist-card b{' + DK + '}' + A + ' .hist-card small,' + A + ' .hist-card .hr-time,' + A + ' .hist-card .hr-state{' + MD + '}' +
+    A + ' .hist-card .hr-chip{background:rgba(58,42,22,.1) !important;border:0 !important;' + DK + '}' +
+    A + ' .hist-card .hr-review{background:#d8c493 !important;color:#2e2112 !important;border:0 !important;border-radius:3px !important}' +
+    A + ' .hist-card .hr-menu{color:#5e472a !important;background:none !important}' +
+    A + ' .hist-card svg{color:#5e472a}' +
+    A + ' .hist-know,' + A + ' .hist-know *{' + MD + '}';
+  function on() { return document.documentElement.getAttribute('data-htheme') === 'paper'; }
+  function build() {
+    var v = document.querySelector('#authCard .vault-head'); if (!v || v.querySelector(':scope > .pzcl')) return;
+    var d = document.createElement('div'); d.className = 'pzcl'; d.setAttribute('aria-hidden', 'true'); d.innerHTML = CL; v.insertBefore(d, v.firstChild);
+  }
+  function swing() {
+    if (document.documentElement.getAttribute('data-view') !== 'home') return;
+    build(); var v = document.querySelector('#authCard .vault-head'); if (!v) return;
+    v.classList.remove('pz-sw'); void v.offsetWidth; v.classList.add('pz-sw'); setTimeout(function () { v.classList.remove('pz-sw'); }, 1500);
+  }
+  function go() {
+    if (!on()) return;
+    if (!document.getElementById('pz-hist')) { var s = document.createElement('style'); s.id = 'pz-hist'; s.textContent = css; document.head.appendChild(s); }
+    build();
+    var last = document.body.getAttribute('data-sheet');
+    new MutationObserver(function () { var v = document.body.getAttribute('data-sheet'); if (v === last) return; last = v; if (v === 'hist') setTimeout(swing, 80); })
+      .observe(document.body, { attributes: true, attributeFilter: ['data-sheet'] });
+    var c = document.getElementById('authCard');
+    if (c) { var q = 0; new MutationObserver(function () { if (q) return; q = requestAnimationFrame(function () { q = 0; build(); }); }).observe(c, { childList: true, subtree: true }); }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+})();
+/*/PZHIST*/
