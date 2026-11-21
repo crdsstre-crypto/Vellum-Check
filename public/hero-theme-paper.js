@@ -2084,3 +2084,86 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
 })();
 /*/PZDISP*/
+
+/*PZPRIV*/ /* ธีมตัดกระดาษ: แผง "ความเป็นส่วนตัวของข้อมูล" (#privPanel จาก extras.js) ในหน้าบัญชี
+   แฟ้มกระดาษครีมทึบ (แก้ฉากทะลุ) + หูแฟ้มเขียว "ความเป็นส่วนตัว" · ตรายาง "ไม่เก็บสัญญาต้นฉบับ" (ภาษาไทย)
+   หัวข้อ = การ์ดดัชนี 5 สี (เส้นหัวแดง + รูเจาะ) · ไอคอนวงกลมกระดาษ · ไฮไลต์เขียว (mark.alx-hl จาก acct-lux.js)
+   ปุ่มลบ = ตั๋วอิฐขอบปรุ + กรรไกร · ยืนยันด้วย confirm() เดิม (ไม่เปลี่ยนการทำงาน) · ระหว่างลบ (disabled) = รอยตัด + "กำลังลบ…"
+   ผล: ป้ายเขียว + ตรายาง "ลบแล้ว" / ผิดพลาด = ป้ายอิฐ */
+(function () {
+  'use strict';
+  if (window.__pzPriv) return; window.__pzPriv = 1;
+  var H = 'html[data-htheme="paper"][data-view="home"]';
+  var D = H + ' body #authCard#authCard #privPanel';
+  function u(svg) { return 'url("data:image/svg+xml,' + encodeURIComponent(svg).replace(/'/g, '%27') + '")'; }
+  var LOCKT = u('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="#d8b86a" stroke-width="2.6"/><rect x="5" y="11" width="14" height="10" rx="2" fill="#d8b86a"/></svg>');
+  var SC = u('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#f6ead2" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.5 7.5L20 18M8.5 16.5L20 6"/></svg>');
+  var CARDS = [
+    ['#e2c6b6', '#c4735a', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 11l20-8-6 19-4-8z" fill="#efe3ca"/><path d="M12 14l10-11" stroke="#c4735a" stroke-width="1.5"/></svg>'],
+    ['#c6d3d3', '#5f7f88', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="7" rx="1.5" fill="#efe3ca"/><rect x="4" y="13" width="16" height="7" rx="1.5" fill="#efe3ca"/><path d="M10 7.5h4M10 16.5h4" stroke="#5f7f88" stroke-width="2"/></svg>'],
+    ['#e4d3a6', '#a9843a', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="1.5" fill="#efe3ca"/><path d="M8 8h8M8 12h8M8 16h5" stroke="#a9843a" stroke-width="2"/></svg>'],
+    ['#cdd6c0', '#5f8a6f', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#efe3ca"/><path d="M12 7v5l3 2" stroke="#5f8a6f" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>'],
+    ['#e6d7b9', '#d1a54a', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0-3.5 10.9V17h7v-3.1A6 6 0 0 0 12 3z" fill="#efe3ca"/><rect x="9" y="18.5" width="6" height="2.5" rx="1" fill="#efe3ca"/></svg>']
+  ];
+  var DK = 'color:#2e2112 !important;-webkit-text-fill-color:#2e2112 !important;text-shadow:none !important;';
+  var css =
+    D + '.menu-panel{position:relative !important;overflow:visible !important;margin:32px 0 6px !important;padding:22px 14px 14px !important;border:0 !important;border-radius:0 6px 6px 6px !important;background:repeating-linear-gradient(180deg,transparent 0 31px,rgba(94,71,42,.07) 31px 32px),linear-gradient(180deg,#f3e9d4,#eadcbe) !important;box-shadow:2px 3px 0 #7d6233,0 12px 18px -10px rgba(0,0,0,.5) !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;' + DK + '}' +
+    D + '.menu-panel::before{content:"\\0E04\\0E27\\0E32\\0E21\\0E40\\0E1B\\0E47\\0E19\\0E2A\\0E48\\0E27\\0E19\\0E15\\0E31\\0E27" !important;display:flex !important;align-items:center;position:absolute !important;left:0 !important;top:-26px !important;right:auto !important;bottom:auto !important;width:auto !important;height:28px !important;padding:0 16px 0 30px !important;border:0 !important;border-radius:6px 10px 0 0 !important;background:' + LOCKT + ' 9px 50%/14px no-repeat,linear-gradient(180deg,#2c5b55,#224a45) !important;box-shadow:inset 0 0 0 1px rgba(184,150,78,.55) !important;color:#efe3ca !important;-webkit-text-fill-color:#efe3ca !important;font:800 12.5px/1 Prompt,sans-serif !important;opacity:1 !important;pointer-events:none;-webkit-mask:none !important;mask:none !important;transform:none !important}' +
+    'html[data-lang="en"]' + D.slice(4) + '.menu-panel::before{content:"Privacy" !important}' + 'html[data-lang="zh"]' + D.slice(4) + '.menu-panel::before{content:"\\9690\\79C1" !important}' +
+    /* ตรายาง "ลบแล้ว" = ::after ของแผง */
+    D + '.menu-panel::after{content:"\\0E25\\0E1A\\0E41\\0E25\\0E49\\0E27" !important;display:none !important;position:absolute !important;right:20px !important;bottom:18px !important;left:auto !important;top:auto !important;width:auto !important;height:auto !important;padding:4px 12px !important;border:3px solid rgba(60,92,76,.85) !important;border-radius:4px !important;background:rgba(243,233,212,.4) !important;color:rgba(60,92,76,.95) !important;-webkit-text-fill-color:rgba(60,92,76,.95) !important;font:900 18px/1.2 Prompt,sans-serif !important;transform:rotate(-12deg) !important;pointer-events:none;z-index:3;opacity:1 !important}' +
+    'html[data-lang="en"]' + D.slice(4) + '.menu-panel::after{content:"DELETED" !important}' + 'html[data-lang="zh"]' + D.slice(4) + '.menu-panel::after{content:"\\5DF2\\5220\\9664" !important}' +
+    D + '.menu-panel.pz-delok{padding-bottom:70px !important}' + D + '.menu-panel.pz-delok::after{display:block !important;animation:pzpvStp .5s cubic-bezier(.3,1.5,.5,1) both}' +
+    '@keyframes pzpvStp{0%{transform:rotate(-12deg) scale(2.2);opacity:0}60%{transform:rotate(-12deg) scale(.92);opacity:1}100%{transform:rotate(-12deg) scale(1);opacity:1}}' +
+    'html[data-calm] #privPanel.menu-panel::after{animation:none !important}@media (prefers-reduced-motion:reduce){#privPanel.menu-panel::after{animation:none !important}}' +
+    /* ตรายาง "ไม่เก็บสัญญาต้นฉบับ" (JS แทรก · ไทยเท่านั้น) */
+    '.pzpv-big{display:none}' + D + ' > .pzpv-big{display:block;position:absolute;right:10px;top:-16px;z-index:5;padding:4px 10px;border:2.5px solid rgba(60,92,76,.85);border-radius:4px;background:rgba(243,233,212,.92);color:rgba(60,92,76,.95);font:900 12px/1.2 Prompt,sans-serif;text-align:center;transform:rotate(8deg);pointer-events:none}' +
+    D + ' > .pzpv-big small{display:block;font-size:8px;font-weight:700}' +
+    'html[data-lang="en"] #privPanel > .pzpv-big,html[data-lang="zh"] #privPanel > .pzpv-big{display:none !important}' +
+    /* การ์ดดัชนี */
+    D + ' .priv-list{display:block !important;margin:0 !important;padding:6px 0 0 !important}' +
+    D + ' .priv-list li{position:relative !important;display:block !important;min-height:0 !important;margin:0 0 10px !important;padding:12px 12px 16px 62px !important;border:0 !important;border-radius:3px !important;box-shadow:1px 2px 0 #7d6233 !important;color:#3d2e1a !important;-webkit-text-fill-color:#3d2e1a !important;font-size:11.5px !important;line-height:1.5 !important;text-shadow:none !important}' +
+    D + ' .priv-list li:nth-child(odd){rotate:-.5deg}' + D + ' .priv-list li:nth-child(even){rotate:.5deg}' +
+    D + ' .priv-list li b{display:block !important;margin:0 0 7px !important;' + DK + 'font:800 13.5px/1.4 Prompt,sans-serif !important;letter-spacing:0 !important}' +
+    D + ' .priv-list li::before{content:"" !important;position:absolute !important;left:12px !important;top:12px !important;width:38px !important;height:38px !important;margin:0 !important;border:0 !important;border-radius:50% !important;box-shadow:1px 2px 0 #7d6233 !important;-webkit-mask:none !important;mask:none !important;opacity:1 !important;transform:none !important}' +
+    D + ' .priv-list li::after{content:"" !important;position:absolute !important;left:50% !important;top:auto !important;bottom:4px !important;width:8px !important;height:8px !important;margin:0 0 0 -4px !important;border-radius:50% !important;background:#9d8057 !important;box-shadow:inset 1px 1px 0 rgba(0,0,0,.25) !important;-webkit-mask:none !important;mask:none !important;opacity:1 !important}' +
+    D + ' .priv-list mark.alx-hl{background:linear-gradient(180deg,transparent 35%,rgba(127,161,132,.55) 35%,rgba(127,161,132,.55) 90%,transparent 90%) !important;background-size:auto !important;color:#1f2a1c !important;-webkit-text-fill-color:#1f2a1c !important;font-weight:800 !important;padding:0 2px !important;animation:none !important;text-decoration:none !important;border:0 !important}' +
+    D + ' .priv-list mark.alx-hl::before,' + D + ' .priv-list mark.alx-hl::after{display:none !important}' +
+    /* ปุ่มลบ */
+    D + ' .priv-del{position:relative !important;display:flex !important;align-items:center;justify-content:center;gap:8px;width:100%;min-height:50px !important;margin-top:14px !important;border:0 !important;border-radius:4px !important;background:radial-gradient(circle 2.5px at 0 50%,#eadcbe 95%,transparent) 0 0/6px 9px repeat-y,radial-gradient(circle 2.5px at 100% 50%,#eadcbe 95%,transparent) 100% 0/6px 9px repeat-y,#b8604b !important;box-shadow:2px 3px 0 #6e3f30 !important;color:#f6ead2 !important;-webkit-text-fill-color:#f6ead2 !important;text-shadow:none !important;font:800 14.5px/1.2 Prompt,sans-serif !important}' +
+    D + ' .priv-del::before{content:"" !important;flex:0 0 18px !important;width:18px !important;height:18px !important;background:' + SC + ' center/contain no-repeat !important;-webkit-mask:none !important;mask:none !important}' +
+    D + ' .priv-del:active{transform:translateY(2px) !important;box-shadow:0 1px 0 #6e3f30 !important}' +
+    D + ' .priv-del:disabled{opacity:1 !important;cursor:progress}' +
+    D + ' .priv-del:disabled::after{content:"\\0E01\\0E33\\0E25\\0E31\\0E07\\0E25\\0E1A\\2026";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border-radius:4px;background:linear-gradient(#a85440,#a85440) center/120px 26px no-repeat,repeating-linear-gradient(90deg,rgba(246,234,210,.75) 0 8px,transparent 8px 14px) center/calc(100% - 28px) 2px no-repeat,repeating-linear-gradient(90deg,#b8604b 0 10px,#a85440 10px 20px);color:#f6ead2;font:800 14.5px/1 Prompt,sans-serif}' +
+    'html[data-lang="en"]' + D.slice(4) + ' .priv-del:disabled::after{content:"Deleting\\2026"}' + 'html[data-lang="zh"]' + D.slice(4) + ' .priv-del:disabled::after{content:"\\6B63\\5728\\5220\\9664\\2026"}' +
+    D + ' .priv-note{text-align:left !important;margin:10px 0 0 !important}' +
+    D + ' .priv-note:empty{display:none !important}' +
+    D + ' .priv-note.pz-ok,' + D + ' .priv-note.pz-err{display:inline-block !important;padding:3px 9px !important;border-radius:3px !important;box-shadow:1px 2px 0 rgba(125,98,51,.5) !important;font-weight:700 !important;font-size:12px !important}' +
+    D + ' .priv-note.pz-ok{background:#cdd6c0 !important;color:#2c4a3f !important;-webkit-text-fill-color:#2c4a3f !important}' +
+    D + ' .priv-note.pz-err{background:#e2c6b6 !important;color:#7d3a2c !important;-webkit-text-fill-color:#7d3a2c !important}';
+  CARDS.forEach(function (c, i) {
+    css += D + ' .priv-list li:nth-child(' + (i + 1) + '){background:linear-gradient(180deg,transparent 33px,rgba(196,115,90,.55) 33px,rgba(196,115,90,.55) 34.5px,transparent 34.5px),' + c[0] + ' !important}' +
+      D + ' .priv-list li:nth-child(' + (i + 1) + ')::before{background:' + u(c[2]) + ' center/19px no-repeat,' + c[1] + ' !important}';
+  });
+  function on() { var h = document.documentElement; return h.getAttribute('data-htheme') === 'paper' && h.getAttribute('data-view') === 'home'; }
+  function note(p) {
+    var n = p.querySelector('#privNote'); if (!n) return;
+    var t = (n.textContent || '').trim(), ok = /^(ลบผลตรวจแล้ว|Deleted|已删除)/.test(t);
+    n.classList.toggle('pz-ok', !!t && ok); n.classList.toggle('pz-err', !!t && !ok);
+    p.classList.toggle('pz-delok', !!t && ok);
+  }
+  function dress() {
+    var p = document.getElementById('privPanel'); if (!p || p.querySelector(':scope > .pzpv-big')) return !!p;
+    p.insertAdjacentHTML('afterbegin', '<span class="pzpv-big" aria-hidden="true">ไม่เก็บ<br>สัญญาต้นฉบับ<small>VELLUM CHECK</small></span>');
+    var n = p.querySelector('#privNote'); if (n) new MutationObserver(function () { note(p); }).observe(n, { childList: true, characterData: true, subtree: true });
+    return true;
+  }
+  function go() {
+    if (document.documentElement.getAttribute('data-htheme') !== 'paper') return;
+    if (!document.getElementById('pz-priv')) { var s = document.createElement('style'); s.id = 'pz-priv'; s.textContent = css; document.head.appendChild(s); }
+    if (dress()) return;
+    var k = 0, iv = setInterval(function () { if (dress() || ++k > 60) clearInterval(iv); }, 1000);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+})();
+/*/PZPRIV*/
