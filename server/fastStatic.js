@@ -66,6 +66,16 @@ export function fastStatic(root) {
     return e;
   }
 
+  /* v4: ไฟล์ฉากหน้าปก (hero-theme-*.js) + ไฟล์หลักของหน้าแรก ย่อ/บีบเตรียมไว้ตั้งแต่ 8 วินาทีหลังเปิดเครื่อง
+     — ไม่ต้องให้คนแรกที่กดเปลี่ยนฉากหลัง deploy ต้องรอย่อไฟล์ใหญ่ ๆ (เดิมทำให้จอดำนานตอนเปลี่ยนเป็นฉากนักสืบ) · ทำทีละไฟล์ตามคิวเดิม */
+  setTimeout(() => {
+    try {
+      const pick = fs.readdirSync(root).filter(n => /^hero-theme-[a-z]+\.js$/.test(n) || /^(hero-scene|art|perf-boost)\.(js|css)$/.test(n));
+      pick.sort((a, b) => (a.startsWith('hero-theme-') ? 0 : 1) - (b.startsWith('hero-theme-') ? 0 : 1));
+      for (const n of pick) { const p = path.join(root, n); try { const st = fs.statSync(p); if (st.size >= MIN_SIZE && st.size <= MAX_SIZE) entry(p, st); } catch { /* ข้าม */ } }
+    } catch (err) { console.error('[static] early warm failed:', err.message); }
+  }, 8 * 1000).unref?.();
+
   // อุ่นเครื่อง: 3 นาทีหลังเปิด ค่อยๆ บีบไฟล์ข้อความที่เหลือทีละไฟล์ (ไม่แย่งงานช่วงเครื่องเพิ่งเปิด)
   setTimeout(() => {
     const walk = dir => {
