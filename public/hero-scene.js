@@ -578,14 +578,19 @@
     function showGroup(g) {
       pn.classList.add('sub'); ttlE.textContent = g.name; sub.textContent = g.desc + ' · ' + g.items.length + ' ฉาก';
       list.innerHTML = g.items.map(function (id) { return card({ t: id, name: TH[id][0], desc: TH[id][1], on: mode === 'pick' && cur === id, inner: thInner(id) }); }).join('');
-      anim('in'); setTimeout(function () { (list.querySelector('.cur') || list.firstChild).focus(); }, 30);
+      anim('in'); setTimeout(function () { foc(list.querySelector('.cur') || list.firstChild); }, 30);
     }
     function anim(c) { list.classList.remove('in', 'out'); if (!c) return; void list.offsetWidth; list.classList.add(c); }
-    function open() { showTop(); pn.classList.add('on'); var c = list.querySelector('.cur') || list.firstChild; setTimeout(function () { c && c.focus(); c && c.scrollIntoView && c.scrollIntoView({ inline: 'center', block: 'nearest' }); }, 60); }
-    function close() { pn.classList.remove('on'); btn.focus(); }
+    /* v24: โฟกัสการ์ดโดยไม่ให้เบราว์เซอร์เลื่อนฉากหลังไปด้านข้าง (เดิม focus/scrollIntoView ทำให้ #st เลื่อนซ้าย เห็นธีมอื่นโผล่ขอบขวา) */
+    var stg = SR.getElementById('st');
+    function unshift() { if (stg && stg.scrollLeft) stg.scrollLeft = 0; }
+    if (stg) stg.addEventListener('scroll', unshift, { passive: true });
+    function foc(c) { if (!c) return; try { c.focus({ preventScroll: true }); } catch (e) { c.focus(); } if (list.scrollWidth > list.clientWidth) { var lr = list.getBoundingClientRect(), cr = c.getBoundingClientRect(); list.scrollLeft += (cr.left - lr.left) - (lr.width - cr.width) / 2; } unshift(); }
+    function open() { showTop(); pn.classList.add('on'); var c = list.querySelector('.cur') || list.firstChild; setTimeout(function () { foc(c); }, 60); }
+    function close() { pn.classList.remove('on'); try { btn.focus({ preventScroll: true }); } catch (e) { btn.focus(); } unshift(); }
     btn.addEventListener('click', open);
     SR.getElementById('scpx').addEventListener('click', close);
-    bk.addEventListener('click', function () { showTop('out'); var c = list.querySelector('.cur') || list.firstChild; c && c.focus(); });
+    bk.addEventListener('click', function () { showTop('out'); foc(list.querySelector('.cur') || list.firstChild); });
     pn.addEventListener('click', function (e) { if (e.target === pn) close(); });
     pn.addEventListener('keydown', function (e) { if (e.key === 'Escape') { if (pn.classList.contains('sub')) bk.click(); else close(); } });
     function prefetchTheme(t) {
