@@ -583,5 +583,115 @@
     var r = w.getBoundingClientRect();
     [0, 140, 280].forEach(function (dl) { setTimeout(function () { var d = document.createElement('i'); d.className = 'nt-rip'; d.style.left = (e.clientX - r.left) + 'px'; d.style.top = (e.clientY - r.top) + 'px'; w.appendChild(d); setTimeout(function () { d.remove(); }, 750); }, dl); });
   }, true);
+  /* v60 ตอนกดเข้าสู่ระบบ (เฉพาะธีมคืนฝนตก): จดหมายพับเป็นเรือกระดาษ ลอยตามสายฝนไปจอดที่ปุ่มบัญชี — art.js เรียกผ่าน window.VCNightLogin(info, api) */
+  window.VCNightLogin = function (info, api) {
+    var email = (info && info.email) || '', nm = api.name(email) || '', red = api.reduce();
+    var seen = false; try { seen = localStorage.getItem('vc_ntb_seen') === '1'; localStorage.setItem('vc_ntb_seen', '1'); } catch (e) {}
+    var K = seen ? .7 : 1;   /* ครั้งต่อไปเร็วขึ้น */
+    if (!document.getElementById('ntb-css')) {
+      var cs = document.createElement('style'); cs.id = 'ntb-css';
+      cs.textContent = '.ntb{position:fixed;inset:0;z-index:10040;overflow:hidden;font-family:Prompt,sans-serif;-webkit-tap-highlight-color:transparent}' +
+        '.ntb-bg{position:absolute;inset:0;background:linear-gradient(180deg,#0e1628,#152240)}' +
+        '.ntb-lamp{position:absolute;left:50%;top:-12vh;width:130vw;height:130vw;margin-left:-65vw;background:radial-gradient(circle,rgba(255,206,140,.12),transparent 62%);pointer-events:none}' +
+        '.ntb-rain{position:absolute;inset:-60px 0 0;opacity:.5;background:repeating-linear-gradient(100deg,transparent 0 21px,rgba(170,195,235,.30) 21px 22px,transparent 22px 57px,rgba(170,195,235,.18) 57px 58px,transparent 58px 93px);-webkit-mask:repeating-linear-gradient(180deg,#000 0 18px,transparent 18px 46px);mask:repeating-linear-gradient(180deg,#000 0 18px,transparent 18px 46px);animation:ntbRain .7s linear infinite}' +
+        '@keyframes ntbRain{to{transform:translateY(46px)}}' +
+        '.ntb-sv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}' +
+        '.ntb-p{position:absolute;left:50%;top:50%;width:220px;height:290px;margin:-170px 0 0 -110px;border-radius:2px;background:repeating-linear-gradient(180deg,transparent 0 19px,rgba(61,84,120,.09) 19px 20px),linear-gradient(180deg,#efe6cf,#e2d6b8);box-shadow:0 18px 30px -12px rgba(0,0,0,.85);transform-style:preserve-3d;perspective:700px}' +
+        '.ntb-p b{position:absolute;left:20px;top:26px;font:700 18px/1.2 Prompt,sans-serif;color:#2a2014}' +
+        '.ntb-p em{position:absolute;right:16px;top:16px;width:46px;height:46px;border-radius:50%;border:2px solid rgba(44,74,130,.7);transform:rotate(-12deg)}' +
+        '.ntb-fl{position:absolute;left:0;top:0;width:50%;height:100%;transform-origin:100% 50%;background:linear-gradient(90deg,#d9cdb0,#e8dec5);backface-visibility:hidden}' +
+        '.ntb-fr{position:absolute;right:0;top:0;width:50%;height:46%;transform-origin:50% 100%;background:linear-gradient(180deg,#e8dec5,#d9cdb0)}' +
+        '.ntb-b{position:absolute;left:50%;top:50%;width:150px;height:110px;margin:-55px 0 0 -75px;opacity:0;filter:drop-shadow(0 8px 8px rgba(0,0,0,.5));will-change:transform}' +
+        '.ntb-pool{position:absolute;left:50%;top:50%;width:260px;height:70px;margin:20px 0 0 -130px;border-radius:50%;background:radial-gradient(closest-side,rgba(120,160,215,.30),rgba(90,130,190,.10) 70%,transparent);opacity:0}' +
+        '.ntb-rip{position:absolute;width:40px;height:12px;margin:-6px 0 0 -20px;border-radius:50%;border:1.5px solid rgba(190,212,245,.55);pointer-events:none}' +
+        '.ntb-wel{position:absolute;left:0;right:0;top:30%;text-align:center;opacity:0;pointer-events:none;text-shadow:0 2px 12px rgba(8,12,24,.9),0 0 2px rgba(8,12,24,.9)}' +
+        '.ntb-wel small{display:block;font:400 14px/1.4 Prompt,sans-serif;color:#a9b8d4}.ntb-wel b{display:block;font:600 26px/1.3 Prompt,sans-serif;color:#efe9da;margin-top:4px;padding:0 20px}' +
+        '.ntb-skip,.ntb-snd{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));z-index:3;border:0;font:500 12px/1 Prompt,sans-serif;padding:8px 12px;border-radius:14px;background:rgba(140,165,210,.16);color:#d9dfea;cursor:pointer}' +
+        '.ntb-skip{right:14px}.ntb-snd{left:14px}';
+      document.head.appendChild(cs);
+    }
+    var R = document.createElement('div'); R.className = 'ntb'; R.setAttribute('aria-hidden', 'true');
+    var BOAT = '<svg class="ntb-b" viewBox="0 0 150 110"><defs><linearGradient id="ntbG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8dec5"/><stop offset="1" stop-color="#c9bc9c"/></linearGradient></defs><path d="M10 62h130l-20 34H30z" fill="url(#ntbG)"/><path d="M75 8 40 62h70z" fill="#efe6cf"/><path d="M75 8v54h35z" fill="#e2d6b8"/><path d="M75 8v54" stroke="rgba(80,64,40,.35)"/><path d="M30 96 75 62l45 34" fill="none" stroke="rgba(80,64,40,.22)"/><path d="M48 70h54M52 78h46" stroke="rgba(61,84,120,.18)"/><circle cx="96" cy="44" r="7" fill="none" stroke="rgba(44,74,130,.55)" stroke-width="1.2"/></svg>';
+    R.innerHTML = '<div class="ntb-bg"><div class="ntb-lamp"></div><div class="ntb-rain"></div></div><svg class="ntb-sv"><path class="ntb-st" fill="none" stroke="rgba(120,160,215,.26)" stroke-width="40" stroke-linecap="round"/><path class="ntb-st2" fill="none" stroke="rgba(190,212,245,.22)" stroke-width="2" stroke-dasharray="6 10"/></svg>' +
+      '<div class="ntb-pool"></div><div class="ntb-p"><b>เข้าสู่ระบบ</b><em></em><i class="ntb-fr"></i><i class="ntb-fl"></i></div>' + BOAT +
+      '<div class="ntb-wel"><small>ยินดีต้อนรับ</small><b></b></div><button type="button" class="ntb-skip">ข้าม ›</button>' + (red ? '' : '<button type="button" class="ntb-snd"></button>');
+    R.querySelector('.ntb-wel b').textContent = nm ? 'คุณ ' + nm : 'กลับมาแล้ว';
+    document.body.appendChild(R);
+    if (window.__vcGinOff) setTimeout(window.__vcGinOff, 120);
+    var $ = function (q) { return R.querySelector(q); };
+    var P = $('.ntb-p'), B = $('.ntb-b'), pool = $('.ntb-pool'), wel = $('.ntb-wel'), st = $('.ntb-st'), st2 = $('.ntb-st2'), snd = $('.ntb-snd');
+    var alive = true, timers = [], anims = [], rain = null;
+    function T(fn, ms) { timers.push(setTimeout(function () { if (alive) fn(); }, ms * K)); }
+    function A(el, kf, o) { if (o.duration) o.duration *= K; if (o.delay) o.delay *= K; var x = el.animate(kf, o); anims.push(x); return x; }
+    /* เสียงฝน (ใช้สวิตช์เสียงเดิม · ปิดเป็นค่าเริ่มต้น) */
+    function rainOn() {
+      if (rain || !api.sndOn()) return; var a = api.ac(); if (!a) return;
+      var len = a.sampleRate * 2, b = a.createBuffer(1, len, a.sampleRate), d = b.getChannelData(0); for (var i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+      var n = a.createBufferSource(); n.buffer = b; n.loop = true; var f = a.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 1700; var g = a.createGain(); g.gain.setValueAtTime(0, a.currentTime); g.gain.linearRampToValueAtTime(.06, a.currentTime + 1.2);
+      n.connect(f); f.connect(g); g.connect(a.destination); n.start(); rain = { a: a, n: n, g: g };
+    }
+    function rainOff(ms) { if (!rain) return; var r0 = rain; rain = null; try { r0.g.gain.cancelScheduledValues(r0.a.currentTime); r0.g.gain.setValueAtTime(r0.g.gain.value, r0.a.currentTime); r0.g.gain.linearRampToValueAtTime(0, r0.a.currentTime + (ms || 600) / 1000); setTimeout(function () { try { r0.n.stop(); } catch (e) {} }, (ms || 600) + 80); } catch (e) {} }
+    function plink() { if (!api.sndOn()) return; var a = api.ac(); if (!a) return; var t = a.currentTime, o = a.createOscillator(), g = a.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(1400 + Math.random() * 500, t); o.frequency.exponentialRampToValueAtTime(700, t + .12); g.gain.setValueAtTime(.05, t); g.gain.exponentialRampToValueAtTime(.001, t + .18); o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + .2); }
+    function lab() { if (snd) { snd.textContent = api.sndOn() ? 'เสียง: เปิด' : 'เสียง: ปิด'; snd.setAttribute('aria-pressed', api.sndOn() ? 'true' : 'false'); } }
+    lab();
+    if (snd) snd.addEventListener('click', function (e) { e.stopPropagation(); try { localStorage.setItem('vc_sfx', api.sndOn() ? '0' : '1'); } catch (x) {} lab(); if (api.sndOn()) { api.ac(); rainOn(); } else rainOff(200); });
+    function end() {
+      if (!alive) return; alive = false; timers.forEach(clearTimeout); anims.forEach(function (x) { try { x.cancel(); } catch (e) {} }); rainOff(500);
+      if (R.parentNode) R.parentNode.removeChild(R);
+      if (window.__vcGinOff) window.__vcGinOff();
+      window.__vcHold = Date.now() + 7000; api.welcome(email);
+    }
+    R.addEventListener('click', end);
+    setTimeout(end, 9000);   /* กันค้าง */
+    /* ลดภาพเคลื่อนไหว: ข้อความต้อนรับจางเข้า-ออก */
+    if (red || !document.body.animate) {
+      P.style.display = 'none'; B.style.display = 'none'; $('.ntb-rain').style.animation = 'none'; wel.style.opacity = 1;
+      timers.push(setTimeout(end, 1200)); return;
+    }
+    rainOn();
+    var vw = innerWidth, vh = innerHeight, cx = vw / 2, cy = vh / 2;
+    /* 1 จดหมายปรากฏ แล้วพับตัวเอง */
+    A(P, [{ opacity: 0, transform: 'translateY(16px) scale(.96)' }, { opacity: 1, transform: 'none' }], { duration: 380, easing: 'cubic-bezier(.2,.8,.25,1)', fill: 'both' });
+    A($('.ntb-fl'), [{ transform: 'rotateY(0deg)' }, { transform: 'rotateY(-178deg)' }], { duration: 520, delay: 420, easing: 'cubic-bezier(.45,0,.25,1)', fill: 'both' });
+    A($('.ntb-fr'), [{ transform: 'rotateX(0deg)' }, { transform: 'rotateX(-170deg)' }], { duration: 420, delay: 820, easing: 'cubic-bezier(.45,0,.25,1)', fill: 'both' });
+    T(function () { try { var a = api.ac(); if (a && api.sndOn()) plink(); } catch (e) {} }, 500);
+    /* 2 กลายเป็นเรือ (จางสลับ) + แอ่งน้ำ */
+    A(P, [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'scale(.55,.32) translateY(160px)' }], { duration: 380, delay: 1180, easing: 'cubic-bezier(.5,0,.3,1)', fill: 'forwards' });
+    A(B, [{ opacity: 0, transform: 'translateY(-10px) scale(1.25)' }, { opacity: 1, transform: 'translateY(30px) scale(1)' }], { duration: 420, delay: 1260, easing: 'cubic-bezier(.2,.8,.25,1)', fill: 'forwards' });
+    A(pool, [{ opacity: 0, transform: 'scale(.6)' }, { opacity: 1, transform: 'scale(1)' }], { duration: 400, delay: 1450, fill: 'forwards' });
+    function ripple(x, y, big) { var r = document.createElement('i'); r.className = 'ntb-rip'; r.style.left = x.toFixed(0) + 'px'; r.style.top = y.toFixed(0) + 'px'; R.appendChild(r); var an = r.animate([{ transform: 'scale(.4)', opacity: .9 }, { transform: 'scale(' + (big ? 4.2 : 2.4) + ')', opacity: 0 }], { duration: big ? 900 : 700, easing: 'cubic-bezier(.2,.7,.3,1)' }); an.onfinish = function () { r.remove(); }; }
+    T(function () { ripple(cx, cy + 62, true); plink(); }, 1650);
+    T(function () { ripple(cx, cy + 62, false); }, 1950);
+    /* 3 ลอยตามสายน้ำไปที่ปุ่มบัญชี */
+    var tg = api.target(), tx = tg ? tg.r.left + tg.r.width / 2 : vw - 40, ty = tg ? tg.r.top + tg.r.height / 2 : vh - 40;
+    var x0 = cx, y0 = cy + 30, x3 = Math.max(40, Math.min(vw - 40, tx)), y3 = Math.max(70, Math.min(vh - 60, ty - 34)), up = y3 < y0, c1x = up ? vw * 1.05 : -vw * .1, c1y = y0 + (y3 - y0) * .3 + (up ? 120 : 60), c2x = up ? -vw * .05 : vw * .95, c2y = y0 + (y3 - y0) * .75 + (up ? 40 : -20);
+    function bz(t, a, b, c, d) { var u = 1 - t; return u * u * u * a + 3 * u * u * t * b + 3 * u * t * t * c + t * t * t * d; }
+    st.setAttribute('d', 'M' + x0 + ' ' + (y0 + 30) + ' C' + c1x + ' ' + (c1y + 30) + ' ' + c2x + ' ' + (c2y + 30) + ' ' + x3 + ' ' + (y3 + 36)); st2.setAttribute('d', st.getAttribute('d'));
+    var SL = st.getTotalLength ? st.getTotalLength() : 1000;
+    [st, st2].forEach(function (p) { p.style.strokeDasharray = p === st ? SL + ' ' + SL : '6 10'; });
+    st.style.strokeDashoffset = SL;
+    A(st, [{ strokeDashoffset: SL }, { strokeDashoffset: 0 }], { duration: 900, delay: 1900, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' });
+    A(st2, [{ opacity: 0 }, { opacity: 1 }], { duration: 500, delay: 2300, fill: 'both' });
+    A(pool, [{ opacity: 1 }, { opacity: 0 }], { duration: 500, delay: 2200, fill: 'forwards' });
+    var kf = [], N = 14, sEnd = Math.max(.18, Math.min(.42, 48 / 150));
+    for (var i = 0; i <= N; i++) {
+      var t = i / N, x = bz(t, x0, c1x, c2x, x3), y = bz(t, y0, c1y, c2y, y3), t2 = Math.min(1, t + .02), dx = bz(t2, x0, c1x, c2x, x3) - x, dy = bz(t2, y0, c1y, c2y, y3) - y;
+      var ang = Math.max(-28, Math.min(28, Math.atan2(dy, dx || .001) * 57.3 * .25 + (i % 2 ? 4 : -4))), sc = 1 - (1 - sEnd) * t;
+      kf.push({ transform: 'translate(' + (x - cx).toFixed(1) + 'px,' + (y - cy).toFixed(1) + 'px) rotate(' + ang.toFixed(1) + 'deg) scale(' + sc.toFixed(3) + ')', offset: t });
+    }
+    A(B, kf, { duration: 2200, delay: 2350, easing: 'cubic-bezier(.45,.05,.4,1)', fill: 'forwards' });
+    [.18, .36, .54, .72, .88].forEach(function (t, k) { T(function () { ripple(bz(t, x0, c1x, c2x, x3), bz(t, y0, c1y, c2y, y3) + 22 * (1 - .6 * t), false); if (k % 2 === 0) plink(); }, 2350 + 2200 * t); });
+    /* 4 จอดที่ปุ่มบัญชี + ยินดีต้อนรับ */
+    T(function () {
+      ripple(x3, y3 + 28, true); ripple(x3, y3 + 28, false);
+      if (tg) { try { tg.el.animate([{ transform: 'scale(1)', boxShadow: '0 0 0 0 rgba(159,184,224,0)' }, { transform: 'scale(1.16)', boxShadow: '0 0 0 5px rgba(159,184,224,.5),0 0 20px 6px rgba(159,184,224,.35)', offset: .35 }, { transform: 'scale(1)', boxShadow: '0 0 0 12px rgba(159,184,224,0)' }], { duration: 700, easing: 'cubic-bezier(.2,.8,.3,1)' }); } catch (e) {} }
+      try { if (navigator.vibrate) navigator.vibrate(14); } catch (e) {}
+    }, 4500);
+    A($('.ntb-bg'), [{ opacity: 1 }, { opacity: .74 }], { duration: 600, delay: 4100, easing: 'ease-out', fill: 'forwards' });
+    A(wel, [{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 500, delay: 4500, easing: 'cubic-bezier(.2,.8,.25,1)', fill: 'forwards' });
+    T(function () { rainOff(900); }, 4800);
+    A(R, [{ opacity: 1 }, { opacity: 0 }], { duration: 520, delay: 5600, easing: 'ease-in', fill: 'forwards' });
+    T(end, 6150);
+  };
 })();
 /*/NTSITE*/
