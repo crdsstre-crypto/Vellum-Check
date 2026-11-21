@@ -1260,8 +1260,8 @@
     L + ' .ld-scene > .pzlw svg{width:100%;height:100%;display:block}' + L + ' .ld-scene > .pzlw.t{top:0}' + L + ' .ld-scene > .pzlw.b{bottom:0;transform:scaleY(-1)}' +
     L + ' .ld-scene > .pzld{display:block;position:absolute;pointer-events:none;z-index:1;filter:drop-shadow(0 4px 4px rgba(0,0,0,.35))}' + '.pzld{display:none}' +
     L + ' .ld-scene > .pzld svg{width:100%;height:100%;display:block;overflow:visible}' +
-    L + ' .ld-scene > .pzld.cr{left:16px;top:64px;width:74px;height:56px;rotate:-10deg}' +
-    L + ' .ld-scene > .pzld.s1{right:30px;bottom:74px;width:34px;height:34px;rotate:18deg}' + L + ' .ld-scene > .pzld.s2{left:28px;bottom:80px;width:22px;height:22px;rotate:-12deg}' +
+    L + ' .ld-scene > .pzld.cr{left:14px;top:48px;width:62px;height:46px;rotate:-10deg}' +
+    L + ' .ld-scene > .pzld.s1{right:84px;bottom:58px;width:30px;height:30px;rotate:18deg;z-index:3}' + L + ' .ld-scene > .pzld.s2{right:124px;bottom:66px;width:18px;height:18px;rotate:-12deg;z-index:3}' +
     /* การ์ด */
     L + ' .auth-doc-wrap{z-index:2}' +
     L + ' .auth-doc::before{background:#b06a55 !important;border-radius:5px !important;transform:rotate(2.2deg) translate(6px,6px) !important;box-shadow:0 10px 18px rgba(0,0,0,.35) !important;opacity:1 !important}' +
@@ -1269,7 +1269,7 @@
     L + ' .ad-face{background:' + FIB + ',linear-gradient(180deg,#efe3ca,#e3d3b2) !important;border-radius:5px !important;box-shadow:none !important}' +
     L + ' .ad-face::before,' + L + ' .ad-face::after{display:none !important}' +
     L + ' .auth-doc > .pzlt{display:block;position:absolute;left:-14px;top:10px;width:62px;height:18px;rotate:-34deg;background:rgba(240,228,200,.82);border-left:2px dashed rgba(0,0,0,.08);border-right:2px dashed rgba(0,0,0,.08);z-index:5;pointer-events:none}' + '.pzlt,.pzls{display:none}' +
-    L + ' .auth-doc > .pzls{display:block;position:absolute;right:14px;bottom:44px;rotate:-10deg;padding:3px 8px;border:2.5px solid rgba(60,92,76,.85);border-radius:4px;color:rgba(60,92,76,.92);font:800 11px/1.2 Prompt,sans-serif;text-align:center;-webkit-mask:' + INK + ';mask:' + INK + ';z-index:5;pointer-events:none}' +
+    L + ' .auth-doc > .pzls{display:block;position:absolute;right:16px;top:20px;rotate:-10deg;padding:3px 8px;border:2.5px solid rgba(60,92,76,.85);border-radius:4px;color:rgba(60,92,76,.92);font:800 11px/1.2 Prompt,sans-serif;text-align:center;-webkit-mask:' + INK + ';mask:' + INK + ';z-index:5;pointer-events:none}' +
     L + ' .auth-doc > .pzls small{display:block;font-size:9px}' +
     L + ' .ad-kicker{font-size:0 !important;height:46px;margin-bottom:4px !important}' +
     L + ' .ad-kicker::before{content:"" !important;display:block !important;width:46px !important;height:46px !important;margin:0 auto !important;border-radius:6px;background:' + CUT + ' center/26px no-repeat,linear-gradient(180deg,#e6d7b9,#ddcca9) !important;box-shadow:2px 3px 0 #7d6233;-webkit-mask:none !important;mask:none !important;opacity:1 !important}' +
@@ -1297,7 +1297,25 @@
     L + ' .or-line{color:#7a6448 !important}' + L + ' .or-line::before,' + L + ' .or-line::after{background:rgba(58,42,22,.25) !important}' +
     L + ' #googleBtn{display:flex !important;align-items:center;justify-content:center;gap:10px;background:#fffaf0 !important;border:0 !important;border-radius:4px !important;box-shadow:1px 2px 0 #b8a37f !important;' + DK + 'font-weight:700 !important}' +
     L + ' #googleBtn::before{display:none !important}' + L + ' #googleBtn .pzg{width:20px;height:20px;flex:none}' +
-    L + ' .ad-fine{color:#7a6448 !important}';
+    L + ' .ad-fine{color:#7a6448 !important}' +
+    /* v2: การ์ดใหญ่ขึ้นเต็มจอ · อยู่กลางแนวตั้ง */
+    L + '{min-height:100% !important;display:flex !important;flex-direction:column}' + L + ' .ld-scene{display:flex !important;flex-direction:column;justify-content:safe center;flex:1 0 auto;min-height:0 !important}' +
+    L + ' .ld-scene .auth-doc-wrap{width:100% !important;max-width:560px;margin:0 auto !important;padding:100px 14px 92px !important;zoom:1 !important}' +
+    L + ' .ad-pose{transform:rotate(-.8deg) !important}' +
+    '@media (max-height:760px){' + L + ' .ld-scene .auth-doc-wrap{padding:66px 12px 70px !important}' + L + ' .auth-doc{padding:22px 18px 20px !important}' + L + ' .ad-title{font-size:26px !important}' + L + ' .ld-scene > .pzld.cr{top:34px;width:48px;height:36px}}' +
+    L + ' .auth-doc{padding:30px 22px 26px !important}' +
+    L + ' .ad-title{font-size:30px !important}' + L + ' .ad-sub{font-size:14px !important}' +
+    L + ' .ad-field input{font-size:16px !important;min-height:52px}' +
+    L + ' #loginBtn,' + L + ' #signupBtn,' + L + ' #googleBtn{min-height:54px !important;font-size:16px !important}' +
+    /* v2: ข้อความ "ออกจากระบบแล้ว" เป็นป้ายกระดาษห้อยมุมซ้ายล่าง (หายเองใน 4 วิ) */
+    A + ':has(#authLoggedOut:not([hidden])) #authMsg:empty{display:none !important}' +
+    A + ':has(#authLoggedOut:not([hidden])) #authMsg:not(:empty){position:fixed !important;left:14px !important;bottom:calc(env(safe-area-inset-bottom) + 18px) !important;z-index:30;width:auto !important;max-width:70vw;margin:0 !important;' +
+      'padding:9px 14px 9px 30px !important;background:linear-gradient(180deg,#f1e6cf,#e3d3b2) !important;color:#2e2112 !important;-webkit-text-fill-color:#2e2112 !important;font:700 14px/1.3 Prompt,sans-serif !important;text-align:left !important;' +
+      'border:0 !important;border-radius:3px 12px 12px 3px !important;box-shadow:2px 3px 0 #7d6233,0 8px 14px -6px rgba(0,0,0,.5) !important;rotate:-3deg;animation:pzmsg .45s cubic-bezier(.3,1.4,.5,1) both}' +
+    A + ':has(#authLoggedOut:not([hidden])) #authMsg:not(:empty)::before{content:"";position:absolute;left:11px;top:50%;width:9px;height:9px;margin-top:-4.5px;border-radius:50%;background:#1d4f4c;box-shadow:inset 0 1px 2px rgba(0,0,0,.5)}' +
+    A + ':has(#authLoggedOut:not([hidden])) #authMsg:not(:empty)::after{content:"";position:absolute;left:15px;top:-26px;width:1.5px;height:30px;background:#c4735a;rotate:-14deg;transform-origin:50% 100%}' +
+    '@keyframes pzmsg{from{translate:-30px 10px;rotate:-14deg;opacity:0}to{translate:0 0;rotate:-3deg;opacity:1}}' +
+    '@media (prefers-reduced-motion:reduce){' + A + ' #authMsg{animation:none !important}}';
   function on() { return document.documentElement.getAttribute('data-htheme') === 'paper'; }
   function build() {
     var sc = document.querySelector('#authLoggedOut .ld-scene'); if (sc && !sc.querySelector(':scope > .pzlw')) {
@@ -1308,8 +1326,17 @@
     }
     var g = document.getElementById('googleBtn'); if (g && !g.querySelector('.pzg') && !g.querySelector('svg')) g.insertAdjacentHTML('afterbegin', G);
   }
+  var msgT = 0;
+  function msgWatch() {
+    var m = document.getElementById('authMsg'); if (!m || m.__pz) return; m.__pz = 1;
+    new MutationObserver(function () {
+      clearTimeout(msgT);
+      if (on() && /^\s*ออกจากระบบแล้ว\s*$/.test(m.textContent)) msgT = setTimeout(function () { if (/^\s*ออกจากระบบแล้ว\s*$/.test(m.textContent)) m.textContent = ''; }, 4000);
+    }).observe(m, { childList: true, characterData: true, subtree: true });
+  }
   function go() {
     if (!on()) return;
+    msgWatch();
     if (!document.getElementById('pz-login')) { var s = document.createElement('style'); s.id = 'pz-login'; s.textContent = css; document.head.appendChild(s); }
     build();
     var c = document.getElementById('authCard');
