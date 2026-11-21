@@ -493,3 +493,62 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
 })();
 /*/PZHEAD*/
+
+/*PZNAV*/ /* ธีมตัดกระดาษ: แถบเมนูล่างเป็นกระดาษคราฟต์ (เฉพาะหน้าแรก) — ขอบบนซิกแซก + ชั้นมัสตาร์ด · ไอคอนตัดกระดาษ 2 สี
+   แท็บที่เลือก = ป้ายมัสตาร์ดติดเทป · กดแล้วยกขึ้นแล้ววางลง · ไอคอนบัญชีบนหัวเว็บเป็นแบบเดียวกัน (เดิมจางจนมองไม่เห็น) */
+(function () {
+  'use strict';
+  if (window.__pzNav) return; window.__pzNav = 1;
+  var H = 'html[data-htheme="paper"][data-view="home"] body';
+  function zigTop(n, d) { var a = [], i; for (i = 0; i <= n; i++) a.push((i * 100 / n).toFixed(2) + '% ' + (i % 2 ? '0' : d + 'px')); return 'polygon(' + a.join(',') + ',100% 100%,0 100%)'; }
+  function U(svg) { return 'url("data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28">' + svg + '</svg>').replace(/'/g, '%27') + '")'; }
+  var D = '#3a2a16', R = '#ef7d5e', C = '#fff0d8', M = '#f3c14d';
+  var IC = {
+    home: U('<path d="M7 3h10l5 5v15a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" fill="' + D + '"/><path d="M17 3v5h5z" fill="' + R + '"/><rect x="8" y="12" width="9" height="2.2" rx="1" fill="' + C + '"/><rect x="8" y="16.5" width="6" height="2.2" rx="1" fill="' + R + '"/>'),
+    tools: U('<circle cx="14" cy="14" r="10" fill="' + D + '"/><circle cx="14" cy="14" r="6.5" fill="' + C + '"/><path d="M17.5 10.5l-2 5-5 2 2-5z" fill="' + R + '"/>'),
+    hist: U('<path d="M7 3h14v3l-5 8 5 8v3H7v-3l5-8-5-8z" fill="' + D + '"/><path d="M10 6h8l-4 6z" fill="' + R + '"/><path d="M10 23l4-5 4 5z" fill="' + M + '"/>'),
+    acct: U('<circle cx="14" cy="9" r="5.5" fill="' + D + '"/><path d="M4 25c0-6 4.5-9 10-9s10 3 10 9z" fill="' + R + '"/>')
+  };
+  var NOISE = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 .32 0 0 0 0 .22 0 0 0 0 .1 0 0 0 .2 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23f)'/%3E%3C/svg%3E\")";
+  var FIB = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='120'%3E%3Cg fill='none' stroke='%237a5a30' stroke-opacity='.16' stroke-width='.8'%3E%3Cpath d='M10 20q20 6 34-2M80 64q14 10 30 4M150 30q18-8 32 2M30 96q12-6 26 0M190 90q10 8 24 2M120 104q16 4 28-6'/%3E%3C/g%3E%3C/svg%3E\")";
+  var B = H + ' .bottom-nav';
+  var css =
+    '.pzb{display:none}' +
+    B + '{background:none !important;box-shadow:none !important;border:0 !important;isolation:isolate;contain:layout style !important}' +
+    B + ' > .pzb{display:block;position:absolute;left:0;right:0;top:-13px;bottom:0;z-index:-1;pointer-events:none}' +
+    '.pzb i{position:absolute;left:0;right:0;bottom:0}' +
+    '.pzb .k2{top:0;background:#e0a93a;clip-path:' + zigTop(64, 11) + ';filter:drop-shadow(0 -3px 3px rgba(0,0,0,.3))}' +
+    '.pzb .k1{top:9px;background:' + FIB + ',' + NOISE + ',linear-gradient(0deg,#d2b07f,#dcbd8f);clip-path:' + zigTop(80, 7) + '}' +
+    /* ไอคอนตัดกระดาษ (แทนภาพเดิม) */
+    B + ' .bn-item svg{background:var(--pzi) center/100% 100% no-repeat !important;filter:drop-shadow(1.5px 2px 0 rgba(0,0,0,.2)) !important;opacity:1 !important}' +
+    B + ' .bn-item svg > *{display:none !important}' +
+    B + ' .bn-item[data-nav="home"]{--pzi:' + IC.home + '}' + B + ' .bn-item.vct-nb{--pzi:' + IC.tools + '}' +
+    B + ' .bn-item[data-nav="hist"]{--pzi:' + IC.hist + '}' + B + ' .bn-item[data-nav="acct"]{--pzi:' + IC.acct + '}' +
+    B + ' .bn-item span{color:#7a5f3d !important;-webkit-text-fill-color:#7a5f3d !important;text-shadow:none !important;font-weight:600}' +
+    B + ' .bn-item.is-on span{color:#3a2a16 !important;-webkit-text-fill-color:#3a2a16 !important;font-weight:700}' +
+    B + ' .bn-item::before,' + B + ' .bn-item::after{display:none !important}' +
+    B + ' .bn-item:focus-visible{outline:2px solid #1d4f4c !important;outline-offset:-4px}' +
+    /* ป้ายมัสตาร์ดติดเทป (ตัวไฮไลต์ที่เลื่อนตามแท็บเดิม) */
+    B + ' .vc-bn-ind::before{inset:0 9% !important;border-radius:4px !important;border:0 !important;background:#f3c14d !important;box-shadow:2px 3px 0 #b48a2c,0 6px 10px -5px rgba(0,0,0,.4) !important}' +
+    B + ' .vc-bn-ind::after{content:"" !important;display:block !important;position:absolute !important;top:-6px !important;left:50% !important;width:30px !important;height:11px !important;margin-left:-15px !important;border-radius:0 !important;transform:rotate(-6deg) !important;' +
+      'background:rgba(246,236,210,.85) !important;border-left:2px dashed rgba(0,0,0,.08);border-right:2px dashed rgba(0,0,0,.08);box-shadow:none !important;opacity:1 !important}' +
+    /* กด → ยกขึ้นแล้ววางลง */
+    B + ' .bn-item.vc-tap{animation:pzlift .45s cubic-bezier(.3,1.4,.5,1) !important}' +
+    B + ':has(.bn-item.vc-tap) .vc-bn-ind::before{animation:pzlift2 .45s cubic-bezier(.3,1.4,.5,1)}' +
+    '@keyframes pzlift{0%{translate:0 0}35%{translate:0 -7px;rotate:-2deg}100%{translate:0 0;rotate:0deg}}' +
+    '@keyframes pzlift2{0%{translate:0 0}35%{translate:0 -7px;rotate:-2deg;box-shadow:3px 9px 0 rgba(0,0,0,.18),0 14px 14px -6px rgba(0,0,0,.45)}100%{translate:0 0;rotate:0deg}}' +
+    /* ไอคอนบัญชีบนหัวเว็บ (ล็อกอินแล้ว) */
+    H + ' .site-header #authToggle.auth-toggle::before{-webkit-mask:none !important;mask:none !important;background:' + IC.acct + ' center/78% no-repeat !important;opacity:1 !important;filter:drop-shadow(1px 1.5px 0 rgba(0,0,0,.18)) !important}' +
+    '@media (prefers-reduced-motion:reduce){' + B + ' .bn-item.vc-tap,' + B + ':has(.bn-item.vc-tap) .vc-bn-ind::before{animation:none !important}}';
+  function on() { return document.documentElement.getAttribute('data-htheme') === 'paper'; }
+  function build() {
+    if (!on()) return true;
+    if (!document.getElementById('pz-nav')) { var s = document.createElement('style'); s.id = 'pz-nav'; s.textContent = css; document.head.appendChild(s); }
+    var n = document.querySelector('.bottom-nav'); if (!n) return false;
+    if (!n.querySelector(':scope > .pzb')) { var b = document.createElement('div'); b.className = 'pzb'; b.setAttribute('aria-hidden', 'true'); b.innerHTML = '<i class="k2"></i><i class="k1"></i>'; n.insertBefore(b, n.firstChild); }
+    return true;
+  }
+  function go() { if (build()) return; var k = 0, iv = setInterval(function () { if (build() || ++k > 40) clearInterval(iv); }, 500); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+})();
+/*/PZNAV*/
