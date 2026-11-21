@@ -1,3 +1,5 @@
+/* v293: ผิวกระดาษ/ไม้จริงเป็นไฟล์แยก โหลดทันที (เดิมฝังใน art-media.js 1.2MB ที่โหลดหลังหน้าว่าง 3 วิ → กดตรวจสัญญาแล้วกระดาษ/โต๊ะขึ้นช้า ~5 วิ) */
+html{--vc-paper:url("tex/a/20a6584db1.webp?v=1");--vc-img0:url("tex/a/8ec3b32371.webp?v=1")}
 /* art.css: รวมจาก art-tokens, art-base, art-sections, art-workspace, art-finish (ตามลำดับ) */
 
 /* ===== (จาก art-tokens.css) ===== */
