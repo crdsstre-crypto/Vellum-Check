@@ -600,6 +600,8 @@
       return function (f) { cb = f; if (fin) f(); };
     }
     function curtain(t, done) {
+      /* v26: ฉากนักสืบใช้ม่านแฟ้มคดีของหน้าเว็บ (#vcNsw ใน index.html) ซึ่งอยู่ต่อข้ามการรีโหลดได้ */
+      if (t === 'noir' && window.__vcNswShow) { try { window.__vcNswShow(); setTimeout(done, reduce ? 50 : 1250); return; } catch (x) {} }
       var html = t === 'noir' ? Array.apply(null, Array(10)).map(function (_, i) { return '<i style="top:' + (i * 10) + '%;animation-delay:' + (i * .035).toFixed(3) + 's"></i>'; }).join('') + '<b></b><u></u>' : t === 'paper' ? '<i></i><i></i>' : t === 'morning' ? Array.apply(null, Array(12)).map(function (_, i) { return '<i style="top:' + (i * 100 / 12).toFixed(3) + '%;animation-delay:' + (i * .03).toFixed(2) + 's"></i>'; }).join('') : '';
       cv.className = 'scv on scv-' + (TH[t] ? t : 'dark'); cv.innerHTML = html;
       if (t === 'noir') {
