@@ -1836,3 +1836,152 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
 })();
 /*/PZREM*/
+
+/*PZVTS*/ /* ธีมตัดกระดาษ: แผ่น "แจ้งปัญหา / ขอคืนเครดิต" (.vts จาก trust-ui.js · ไม่แตะ .vth แผ่นยืนยันทนาย)
+   พื้นคราฟต์ขอบซิกแซก · หัว = ป้ายเขียวกรอบทอง + ซองจดหมายบนเหรียญทอง
+   ฟอร์มอยู่บน "กระดาษเขียนจดหมาย" (JS ห่อ .vts-pr ถึง .vts-m ด้วย .pzv-lt) + แสตมป์นกกระเรียน + ตราไปรษณีย์
+   "ตอบกลับภายใน 7 วัน" = ตั๋วต้นขั้วเขียวเข้มเลข 7 · เรื่องที่แจ้ง = ป้ายกระดาษ 5 สี อันที่เลือกยก + กรอบเขียว + หมุดอิฐ (.pzv-pin)
+   ช่องรายละเอียด = กระดาษบรรทัดเส้นขอบแดง · รหัสอ้างอิง = ช่องตั๋วตัวพิมพ์ดีด · "ส่งเรื่อง" ตั๋วทอง · ส่งสำเร็จ → ตรายาง "รับเรื่องแล้ว" */
+(function () {
+  'use strict';
+  if (window.__pzVts) return; window.__pzVts = 1;
+  var P = 'html[data-htheme="paper"][data-view="home"] body .vts:not(.vth)';
+  function zig(n, d, top) { var a = [], i; for (i = 0; i <= n; i++) a.push((i * 100 / n).toFixed(2) + '% ' + (top ? (i % 2 ? '0' : d + 'px') : (i % 2 ? '100%' : 'calc(100% - ' + d + 'px)'))); return top ? 'polygon(' + a.join(',') + ',100% 100%,0 100%)' : 'polygon(0 0,100% 0,' + a.reverse().join(',') + ')'; }
+  function u(svg) { return 'url("data:image/svg+xml,' + encodeURIComponent(svg).replace(/'/g, '%27') + '")'; }
+  var FIB = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='120'%3E%3Cg fill='none' stroke='%237a5a30' stroke-opacity='.14' stroke-width='.8'%3E%3Cpath d='M10 20q20 6 34-2M80 64q14 10 30 4M150 30q18-8 32 2M30 96q12-6 26 0M190 90q10 8 24 2M120 104q16 4 28-6'/%3E%3C/g%3E%3C/svg%3E\")";
+  var COIN = u('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><circle cx="25" cy="26" r="22" fill="#a9843a"/><circle cx="24" cy="25" r="22" fill="#d1a54a"/><circle cx="24" cy="25" r="17.5" fill="none" stroke="#2c5b55" stroke-width="1" stroke-dasharray="2.5 2.5" opacity=".5"/><g transform="rotate(-8 24 25)"><rect x="12.5" y="17.5" width="25" height="17" rx="1.5" fill="#7d3a2c"/><rect x="11" y="16" width="25" height="17" rx="1.5" fill="#efe3ca"/><path d="M11 17 L23.5 26 L36 17" fill="none" stroke="#c4735a" stroke-width="2"/><circle cx="23.5" cy="27" r="3.2" fill="#c4735a"/></g></svg>');
+  var LOCK = u('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 16"><path d="M3 7V5a4 4 0 0 1 8 0v2" fill="none" stroke="#7d3a2c" stroke-width="2"/><rect x="1" y="7" width="12" height="9" rx="1.5" fill="#c4735a"/><circle cx="7" cy="11.5" r="1.5" fill="#efe3ca"/></svg>');
+  var TKT = u('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 16"><path d="M1 2h20v4a2 2 0 0 0 0 4v4H1v-4a2 2 0 0 0 0-4z" fill="#d1a54a" stroke="#6e4f22" stroke-width="1"/><path d="M8 3v10" stroke="#6e4f22" stroke-dasharray="1.5 1.5"/></svg>');
+  var SEND = u('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#2e2112" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>');
+  var IC = {
+    wrong: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M3 1.5h7l3 3v10H3z" fill="#efe3ca" stroke="#5e472a" stroke-width="1.2"/><path d="M5 7h6M5 9.5h6M5 12h4" stroke="#c4735a" stroke-width="1.3"/></svg>',
+    bug: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="3" fill="#efe3ca" stroke="#2c5b55" stroke-width="1.3"/><path d="M8 1v2.5M8 12.5V15M1 8h2.5M12.5 8H15M3 3l1.8 1.8M11.2 11.2L13 13M3 13l1.8-1.8M11.2 4.8L13 3" stroke="#2c5b55" stroke-width="1.3"/></svg>',
+    refund: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="#d1a54a" stroke="#6e4f22" stroke-width="1.2"/><path d="M10.5 6.5a3 3 0 1 0 0 3" fill="none" stroke="#efe3ca" stroke-width="1.5"/><path d="M10.5 4.5v2h-2" fill="none" stroke="#efe3ca" stroke-width="1.4"/></svg>',
+    privacy: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M5 7V5a3 3 0 0 1 6 0v2" fill="none" stroke="#2c4a3f" stroke-width="1.5"/><rect x="3" y="7" width="10" height="7.5" rx="1.3" fill="#2c5b55"/><circle cx="8" cy="10.7" r="1.3" fill="#efe3ca"/></svg>',
+    other: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="3.5" cy="8" r="1.6" fill="#7d3a2c"/><circle cx="8" cy="8" r="1.6" fill="#a9843a"/><circle cx="12.5" cy="8" r="1.6" fill="#2c5b55"/></svg>'
+  };
+  var COL = { wrong: '#e2c6b6', bug: '#c6d3d3', refund: '#e4d3a6', privacy: '#cdd6c0', other: '#e6d7b9' };
+  var DK = 'color:#2e2112 !important;-webkit-text-fill-color:#2e2112 !important;text-shadow:none !important;';
+  var MD = 'color:#4f3b22 !important;-webkit-text-fill-color:#4f3b22 !important;text-shadow:none !important;';
+  var css =
+    P + '{background:rgba(20,14,8,.6) !important}' +
+    P + ' .vts-p{background:' + FIB + ',linear-gradient(180deg,#ad8f64,#9d8057) !important;background-attachment:local,local !important;border:0 !important;border-radius:0 !important;box-shadow:0 -10px 30px rgba(0,0,0,.35) !important;clip-path:' + zig(50, 10, true) + ';color:#2e2112 !important;padding-top:22px !important;overflow:auto !important}' +
+    P + ' .vts-p::before{display:none !important}' +
+    P + ' .vts-p::after{display:none !important}' +
+    P + ' .vts-p > *{position:relative;z-index:1}' +
+    /* ป้ายหัว */
+    '.pzv-bn{display:contents}' + P + ' .vts-p > .pzv-bn{display:block;position:relative;margin:4px 0 14px;padding:14px 14px 20px 74px;min-height:76px;background:linear-gradient(180deg,#2c5b55,#224a45);clip-path:' + zig(34, 6, false) + '}' +
+    P + ' .pzv-bn::before{content:"";position:absolute;inset:5px 5px 11px;border:1px solid rgba(184,150,78,.75);pointer-events:none}' +
+    P + ' .pzv-bn::after{content:"";position:absolute;left:14px;top:14px;width:50px;height:50px;background:' + COIN + ' center/100% no-repeat}' +
+    P + ' .pzv-bn h3{margin:0 0 2px !important;padding:0 !important;background:none !important;box-shadow:none !important;color:#efe3ca !important;-webkit-text-fill-color:#efe3ca !important;text-shadow:none !important;font-weight:800 !important;font-size:17px !important;display:block !important}' +
+    P + ' .pzv-bn h3::before,' + P + ' .pzv-bn h3::after,' + P + ' .pzv-bn .vts-s::before,' + P + ' .pzv-bn .vts-s::after{display:none !important}' +
+    P + ' .pzv-bn .vts-s{margin:0 !important;padding:0 !important;background:none !important;box-shadow:none !important;color:#cbd9cf !important;-webkit-text-fill-color:#cbd9cf !important;font-size:11.5px !important;line-height:1.45 !important}' +
+    /* จดหมาย */
+    '.pzv-lt{display:contents}' + P + ' .pzv-lt{display:block;position:relative;margin:0 0 16px;padding:16px 14px 14px 18px;background:repeating-linear-gradient(180deg,transparent 0 27px,rgba(94,71,42,.11) 27px 28px),linear-gradient(180deg,#f3e9d4,#eadcbe);box-shadow:2px 3px 0 #7d6233,0 10px 16px -10px rgba(0,0,0,.5);rotate:-.3deg}' +
+    P + ' .pzv-lt::after{content:"";position:absolute;top:0;bottom:0;left:9px;border-left:1.5px solid rgba(196,115,90,.45);pointer-events:none}' +
+    '.pzv-x{display:none}' + P + ' .pzv-lt > .pzv-x{display:block;position:absolute;pointer-events:none}' +
+    P + ' .pzv-lt > .pzv-x.stp{right:10px;top:-14px;width:58px;height:68px;rotate:6deg;filter:drop-shadow(1px 2px 0 rgba(125,98,51,.7));z-index:3}' +
+    P + ' .pzv-lt > .pzv-x.pm{right:40px;top:30px;width:44px;height:44px;border-radius:50%;border:1.5px solid rgba(60,92,76,.55);color:rgba(60,92,76,.6);font:800 6.5px/1.2 Prompt,sans-serif;display:flex;align-items:center;justify-content:center;text-align:center;rotate:-14deg;z-index:4}' +
+    P + ' .pzv-lt > .pzv-x.rs{right:18px;top:var(--rsT,180px);z-index:5;padding:5px 12px;border:3px solid rgba(60,92,76,.85);border-radius:5px;color:rgba(60,92,76,.92);font:900 18px/1.15 Prompt,sans-serif;text-align:center;transform:rotate(-14deg);background:rgba(243,233,212,.35);display:none}' +
+    P + ' .pzv-lt > .pzv-x.rs small{display:block;font-size:9px;font-weight:700}' +
+    P + ' .pzv-lt.pz-ok.pz-okb{padding-bottom:78px}' + P + ' .pzv-lt.pz-okb > .pzv-x.rs{top:auto;bottom:14px}' +
+    P + ' .pzv-lt.pz-ok > .pzv-x.rs{display:block;animation:pzvStp .5s cubic-bezier(.3,1.5,.5,1) both}' +
+    '@keyframes pzvStp{0%{transform:rotate(-14deg) scale(2.2);opacity:0}60%{transform:rotate(-14deg) scale(.92);opacity:1}100%{transform:rotate(-14deg) scale(1);opacity:1}}' +
+    'html[data-calm] .vts .pzv-x.rs{animation:none !important}@media (prefers-reduced-motion:reduce){.vts .pzv-x.rs{animation:none !important}}' +
+    /* ตั๋ว 7 วัน */
+    P + ' .vts-pr{position:relative !important;display:block !important;margin:0 78px 14px 0 !important;padding:9px 10px 9px 76px !important;min-height:70px;border:0 !important;border-radius:4px !important;background:linear-gradient(90deg,#2c5b55 0 62px,#e3ead9 62px) !important;box-shadow:none !important;' + MD + 'font-size:11.5px !important;line-height:1.45 !important;-webkit-mask:radial-gradient(circle 6px at 62px 0,transparent 98%,#000) top/100% 51% no-repeat,radial-gradient(circle 6px at 62px 100%,transparent 98%,#000) bottom/100% 51% no-repeat;mask:radial-gradient(circle 6px at 62px 0,transparent 98%,#000) top/100% 51% no-repeat,radial-gradient(circle 6px at 62px 100%,transparent 98%,#000) bottom/100% 51% no-repeat}' +
+    P + ' .vts-pr > svg{display:none !important}' +
+    P + ' .vts-pr::before{content:"7" !important;position:absolute !important;left:0 !important;top:0 !important;bottom:0 !important;width:62px !important;height:auto !important;margin:0 !important;display:flex !important;align-items:center;justify-content:center;padding-bottom:14px;background:none !important;-webkit-mask:none !important;mask:none !important;color:#f3e6c8 !important;-webkit-text-fill-color:#f3e6c8 !important;font:900 34px/1 Prompt,sans-serif !important;text-shadow:2px 2px 0 #13302c !important}' +
+    P + ' .vts-pr::after{content:"\\0E27\\0E31\\0E19" !important;position:absolute !important;left:0 !important;right:auto !important;top:auto !important;bottom:11px !important;width:62px !important;height:auto !important;margin:0 !important;border-radius:0 !important;background:none !important;box-shadow:none !important;text-align:center;color:#e6c77a !important;-webkit-text-fill-color:#e6c77a !important;opacity:1 !important;font:800 11.5px/1 Prompt,sans-serif !important}' +
+    P + ' .vts-pr span{position:relative;display:block;' + MD + '}' + P + ' .vts-pr b{' + DK + '}' +
+    P + ' .vts-pr span::before{content:"";position:absolute;left:-14px;top:-2px;bottom:-2px;border-left:2px dashed rgba(44,74,63,.45)}' +
+    /* ป้ายหัวข้อ */
+    P + ' .vts-lb{' + DK + 'font-weight:800 !important;font-size:13.5px !important;letter-spacing:0 !important;margin:4px 0 8px !important}' +
+    P + ' .vts-lb::before{content:"\\2702" !important;color:#7d3a2c !important;font-size:12px !important}' +
+    /* ป้ายเลือกเรื่อง */
+    P + ' .vts-cat{position:relative;gap:8px !important;margin:0 0 14px !important}' +
+    P + ' .vts-cat button{position:relative !important;display:inline-flex !important;align-items:center;gap:6px !important;padding:8px 11px 8px 16px !important;border:0 !important;border-radius:3px !important;box-shadow:1px 2px 0 #7d6233 !important;' + DK + 'font-weight:700 !important;font-size:12.5px !important;clip-path:polygon(9px 0,100% 0,100% calc(100% + 6px),9px calc(100% + 6px),0 50%);transition:transform .18s ease,box-shadow .18s ease !important}' +
+    P + ' .vts-cat button::before{content:"" !important;flex:0 0 16px !important;width:16px !important;height:16px !important;opacity:1 !important;-webkit-mask:none !important;mask:none !important}' +
+    P + ' .vts-cat button.on{transform:translateY(-3px) rotate(-2deg) !important;box-shadow:2px 5px 0 #5e472a !important;outline:2px solid #2c5b55 !important;outline-offset:-4px !important;color:#2e2112 !important}' +
+    P + ' .vts-cat button:focus-visible{outline:2px solid #2c5b55 !important;outline-offset:2px !important}' +
+    '.pzv-pin{display:none}' + P + ' .vts-cat > .pzv-pin{display:block;position:absolute;z-index:3;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#e09a82,#c4735a 55%,#7d3a2c);box-shadow:1px 2px 0 rgba(0,0,0,.3);pointer-events:none;transition:left .2s ease,top .2s ease}' +
+    /* ช่องกรอก */
+    P + ' #vtsMsg{position:relative;min-height:106px !important;padding:6px 10px 6px 24px !important;border:0 !important;border-radius:3px !important;background:linear-gradient(90deg,transparent 15px,rgba(196,115,90,.6) 15px,rgba(196,115,90,.6) 16.5px,transparent 16.5px),repeating-linear-gradient(180deg,#fbf4e4 0 25px,rgba(94,71,42,.18) 25px 26px) !important;background-attachment:local !important;box-shadow:inset 0 0 0 1.5px #c9b48a !important;' + DK + 'font-size:14px !important;line-height:26px !important}' +
+    P + ' #vtsMsg::placeholder{color:#8a7454 !important;-webkit-text-fill-color:#8a7454 !important}' +
+    P + ' #vtsMsg:focus,' + P + ' #vtsRef:focus{box-shadow:inset 0 0 0 1.5px #2c5b55,0 0 0 3px rgba(44,91,85,.18) !important;outline:0 !important}' +
+    P + ' #vtsRef{height:44px;padding:0 12px 0 44px !important;border:0 !important;border-radius:3px !important;background:' + TKT + ' 12px 50%/22px 16px no-repeat,#fbf4e4 !important;box-shadow:inset 0 0 0 1.5px #c9b48a !important;' + DK + 'font:700 15px/1 "Courier New",ui-monospace,monospace !important;letter-spacing:.12em !important}' +
+    P + ' #vtsRef::placeholder{color:#9a8566 !important;-webkit-text-fill-color:#9a8566 !important}' +
+    P + ' .vts-n{' + MD + 'color:#5e472a !important;-webkit-text-fill-color:#5e472a !important;font-size:10.5px !important}' +
+    P + ' #vtsCnt{background:#2c5b55;color:#efe3ca !important;-webkit-text-fill-color:#efe3ca !important;font-weight:700;padding:1px 7px;border-radius:2px;rotate:-3deg;align-self:flex-start;margin-top:-10px}' +
+    P + ' #vtsCnt.alx-near{background:#c4735a}' +
+    P + ' .vts-m{color:#8a3a2a !important;-webkit-text-fill-color:#8a3a2a !important;font-weight:700 !important}' +
+    P + ' .vts-m.ok{display:inline-block;padding:3px 9px;background:#cdd6c0;border-radius:3px;box-shadow:1px 2px 0 rgba(125,98,51,.5);color:#2c4a3f !important;-webkit-text-fill-color:#2c4a3f !important}' +
+    /* ปุ่ม */
+    P + ' .vts-b{gap:10px !important}' +
+    P + ' .vts-no{position:relative;background:#efe3ca !important;border:0 !important;border-radius:4px !important;box-shadow:2px 3px 0 #7d6233 !important;' + DK + '}' +
+    P + ' .vts-no::after{content:"";position:absolute;inset:4px;border:1.5px dashed rgba(94,71,42,.35);border-radius:3px;pointer-events:none}' +
+    P + ' .vts-go{position:relative;overflow:visible !important;background:#d1a54a !important;border:0 !important;border-radius:4px !important;box-shadow:2px 3px 0 #6e4f22 !important;' + DK + 'font-weight:800 !important}' +
+    P + ' .vts-go::before{content:"" !important;width:18px !important;height:18px !important;background:' + SEND + ' center/contain no-repeat !important;-webkit-mask:none !important;mask:none !important}' +
+    P + ' .vts-go::after{content:"" !important;display:block !important;position:absolute !important;inset:4px -3px !important;width:auto !important;height:auto !important;background:radial-gradient(circle 2.5px at 3px 50%,#9d8057 95%,transparent) 0 0/100% 9px repeat-y,radial-gradient(circle 2.5px at calc(100% - 3px) 50%,#9d8057 95%,transparent) 0 0/100% 9px repeat-y !important;border:0 !important;opacity:1 !important;pointer-events:none}' +
+    /* เรื่องที่เคยแจ้ง */
+    P + ' .vts-my{border-top:0 !important}' + P + ' .vts-my h4{' + DK + 'font-weight:800 !important;display:flex;gap:6px}' + P + ' .vts-my h4::before{content:"\\2702";color:#7d3a2c}' +
+    P + ' .vts-my li{background:#efe3ca !important;border:0 !important;border-left:5px solid #c4735a !important;border-radius:0 !important;box-shadow:1px 2px 0 #7d6233 !important;' + MD + '}' +
+    P + ' .vts-my li:has(.vts-st.done){border-left-color:#7fa184 !important}' +
+    P + ' .vts-my li b{' + DK + '}' + P + ' .vts-my .ans{color:#2c4a3f !important;-webkit-text-fill-color:#2c4a3f !important}' +
+    P + ' .vts-st{border-radius:2px !important;background:#e4d3a6 !important;color:#5e472a !important;-webkit-text-fill-color:#5e472a !important}' + P + ' .vts-st.done{background:#2c5b55 !important;color:#efe3ca !important;-webkit-text-fill-color:#efe3ca !important}' +
+    /* ข้อความท้าย */
+    P + ' .vts-fine{position:relative !important;padding:8px 12px 8px 34px !important;background:#e6d7b9 !important;border-radius:3px !important;box-shadow:1px 2px 0 #7d6233 !important;' + MD + 'rotate:.4deg}' +
+    P + ' .vts-fine::before{left:11px !important;top:50% !important;width:14px !important;height:16px !important;margin-top:-8px !important;background:' + LOCK + ' center/contain no-repeat !important;-webkit-mask:none !important;mask:none !important}';
+  Object.keys(IC).forEach(function (k) {
+    css += P + ' .vts-cat button[data-c="' + k + '"]{background:' + COL[k] + ' !important}' + P + ' .vts-cat button[data-c="' + k + '"]::before{background:' + u(IC[k]) + ' center/contain no-repeat !important}';
+  });
+  var STAMP = (function () {
+    var c = '', x, y; for (x = 1; x < 58; x += 6) c += '<circle cx="' + x + '" cy="0" r="2.6"/><circle cx="' + x + '" cy="68" r="2.6"/>'; for (y = 4; y < 68; y += 6) c += '<circle cx="0" cy="' + y + '" r="2.6"/><circle cx="58" cy="' + y + '" r="2.6"/>';
+    return '<svg class="pzv-x stp" viewBox="0 0 58 68" aria-hidden="true"><defs><mask id="pzvpf"><rect width="58" height="68" fill="#fff"/><g fill="#000">' + c + '</g></mask></defs><g mask="url(#pzvpf)"><rect width="58" height="68" fill="#efe3ca"/><rect x="5" y="5" width="48" height="58" fill="#c6d3d3"/><g transform="translate(9 14) scale(.42)"><path d="M48 40 L20 6 L44 30 Z" fill="#f4ead6"/><path d="M48 40 L80 2 L54 32 Z" fill="#e2d2b2"/><path d="M6 44 L48 40 L34 52 Z" fill="#c4735a"/><path d="M48 40 L90 30 L62 50 Z" fill="#b06a55"/></g><text x="29" y="57" text-anchor="middle" font-size="7" font-weight="800" fill="#2c5b55" font-family="Prompt,sans-serif">VELLUM</text></g></svg>';
+  })();
+  function on() { var h = document.documentElement; return h.getAttribute('data-htheme') === 'paper' && h.getAttribute('data-view') === 'home'; }
+  function pin(p) {
+    var cat = p.querySelector('.vts-cat'); if (!cat) return;
+    var pn = cat.querySelector('.pzv-pin'); if (!pn) { pn = document.createElement('i'); pn.className = 'pzv-pin'; pn.setAttribute('aria-hidden', 'true'); cat.appendChild(pn); }
+    var b = cat.querySelector('button.on'); if (!b) { pn.style.display = 'none'; return; }
+    pn.style.display = ''; pn.style.left = (b.offsetLeft + b.offsetWidth - 12) + 'px'; pn.style.top = (b.offsetTop - 9) + 'px';
+  }
+  function okStamp(p) {
+    var lt = p.querySelector('.pzv-lt'), m = p.querySelector('#vtsM'); if (!lt || !m) return;
+    var ok = m.classList.contains('ok') && !!m.textContent;
+    if (ok && !lt.classList.contains('pz-ok')) {
+      /* วางตราในที่ว่างข้างป้ายสุดท้าย ถ้าไม่พอ → วางท้ายจดหมาย (เพิ่มที่ว่างด้านล่าง) ไม่ให้ทับตัวหนังสือ */
+      var cat = p.querySelector('.vts-cat'), last = cat && cat.querySelector('button:last-of-type');
+      if (last && lt.clientWidth - (last.offsetLeft + last.offsetWidth) > 190) { lt.classList.remove('pz-okb'); lt.style.setProperty('--rsT', (cat.offsetTop + last.offsetTop - 6) + 'px'); }
+      else lt.classList.add('pz-okb');
+    }
+    lt.classList.toggle('pz-ok', ok);
+  }
+  function dress(sheet) {
+    var p = sheet.querySelector('.vts-p'); if (!p || p.querySelector('.pzv-lt')) return;
+    var h3 = p.querySelector(':scope > h3'), s = p.querySelector(':scope > .vts-s');
+    if (h3 && s) { var bn = document.createElement('div'); bn.className = 'pzv-bn'; p.insertBefore(bn, h3); bn.appendChild(h3); bn.appendChild(s); }
+    var pr = p.querySelector(':scope > .vts-pr'), m = p.querySelector(':scope > #vtsM');
+    if (pr && m) {
+      var lt = document.createElement('div'); lt.className = 'pzv-lt'; p.insertBefore(lt, pr);
+      var n = pr, nx; while (n) { nx = n.nextSibling; lt.appendChild(n); if (n === m) break; n = nx; }
+      lt.insertAdjacentHTML('afterbegin', STAMP + '<span class="pzv-x pm" aria-hidden="true">VELLUM<br>CHECK<br>✦</span><span class="pzv-x rs" aria-hidden="true">รับเรื่องแล้ว<small>VELLUM CHECK</small></span>');
+      new MutationObserver(function () { okStamp(p); }).observe(m, { attributes: true, childList: true, characterData: true, subtree: true });
+    }
+    var cat = p.querySelector('.vts-cat');
+    if (cat) { new MutationObserver(function () { pin(p); }).observe(cat, { attributes: true, subtree: true, attributeFilter: ['class'] }); }
+    setTimeout(function () { pin(p); }, 60); setTimeout(function () { pin(p); }, 400);
+  }
+  function go() {
+    if (document.documentElement.getAttribute('data-htheme') !== 'paper') return;
+    if (!document.getElementById('pz-vts')) { var st = document.createElement('style'); st.id = 'pz-vts'; st.textContent = css; document.head.appendChild(st); }
+    new MutationObserver(function (ml) {
+      if (!on()) return;
+      ml.forEach(function (r) { [].forEach.call(r.addedNodes, function (n) { if (n.nodeType === 1 && n.classList.contains('vts') && !n.classList.contains('vth')) dress(n); }); });
+    }).observe(document.body, { childList: true });
+    var ex = document.querySelector('.vts:not(.vth)'); if (ex && on()) dress(ex);
+    window.addEventListener('resize', function () { var p = document.querySelector('.vts:not(.vth) .vts-p'); if (p) pin(p); });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+})();
+/*/PZVTS*/
