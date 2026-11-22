@@ -235,7 +235,12 @@ export function mountLibrary(app, { pool, getUserFromRequest, isAdmin }) {
       const m = /^(?:มาตรา\s*)?([0-9๐-๙]+(?:\/[0-9๐-๙]+)?)\s*([ก-๙]*)$/.exec(sec);
       if (!lawName || !m) return res.status(400).json({ error: 'ข้อมูลอ้างอิงไม่ครบ' });
       const info = titleInfo(lawName);
-      const l = await pool.query('SELECT id, slug, title, status FROM lib_laws WHERE title_norm = $1 ORDER BY id LIMIT 1', [info.titleNorm]);
+      // ตรงชื่อเต็มก่อน ถ้าไม่เจอ ลองหาแบบไม่สนปี พ.ศ. (เผื่อตอนนำเข้าตั้งชื่อสั้น/ยาวต่างกัน)
+      const base = info.titleNorm.replace(/\s*พ\.ศ\.\s*\d{4}.*$/, '').replace(/^(พระราชบัญญัติ|พ\.ร\.บ\.)\s*/, '').trim();
+      const like = '%' + base.replace(/[\\%_]/g, m => '\\' + m) + '%';
+      const l = await pool.query(
+        `SELECT id, slug, title, status FROM lib_laws WHERE title_norm = $1 OR ($2 <> '' AND title_norm LIKE $3)
+          ORDER BY (title_norm = $1) DESC, length(title_norm), id LIMIT 1`, [info.titleNorm, base.length >= 6 ? base : '', like]);
       const law = l.rows[0];
       if (!law) return res.status(404).json({ error: 'ยังไม่มีกฎหมายนี้ในคลัง' });
       const key = sectionKey(m[1], m[2] || '');
