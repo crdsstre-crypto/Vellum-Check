@@ -579,7 +579,7 @@
   let pdfLib = null;
   async function loadPdf() {
     if (pdfLib) return pdfLib;
-    const [pdfjs, conv] = await Promise.all([import('/pdfjs-6.2.108.min.mjs'), import('/pdf2law.js?v=1')]);
+    const [pdfjs, conv] = await Promise.all([import('/pdfjs-6.2.108.min.mjs'), import('/pdf2law.js?v=2')]);
     pdfjs.GlobalWorkerOptions.workerSrc = '/pdfjs-6.2.108.worker.min.mjs';
     return (pdfLib = { pdfjs, conv });
   }
