@@ -602,6 +602,7 @@
     function curtain(t, done) {
       /* v26: ฉากนักสืบใช้ม่านแฟ้มคดีของหน้าเว็บ (#vcNsw ใน index.html) ซึ่งอยู่ต่อข้ามการรีโหลดได้ */
       if (t === 'night' && window.__vcRswShow) { try { window.__vcRswShow(); setTimeout(done, reduce ? 50 : 1300); return; } catch (x) {} }
+      if (t === 'paper' && window.__vcPswShow) { try { window.__vcPswShow(); setTimeout(done, reduce ? 50 : 700); return; } catch (x) {} }
       if (t === 'noir' && window.__vcNswShow) { try { window.__vcNswShow(); setTimeout(done, reduce ? 50 : 1250); return; } catch (x) {} }
       var html = t === 'noir' ? Array.apply(null, Array(10)).map(function (_, i) { return '<i style="top:' + (i * 10) + '%;animation-delay:' + (i * .035).toFixed(3) + 's"></i>'; }).join('') + '<b></b><u></u>' : t === 'paper' ? '<i></i><i></i>' : t === 'morning' ? Array.apply(null, Array(12)).map(function (_, i) { return '<i style="top:' + (i * 100 / 12).toFixed(3) + '%;animation-delay:' + (i * .03).toFixed(2) + 's"></i>'; }).join('') : '';
       cv.className = 'scv on scv-' + (TH[t] ? t : 'dark'); cv.innerHTML = html;
@@ -635,7 +636,7 @@
       pn.classList.remove('on');
       /* v22: ระหว่างม่านปิด โหลดไฟล์ธีมใหม่เก็บไว้ก่อน → หลังรีโหลดขึ้นฉากใหม่ทันที (รอไม่เกิน 4 วิ) */
       var pf = prefetchTheme(go), cd = false, ready = false;
-      function goNow() { if (!cd || !ready) return; try { if (go === 'noir') sessionStorage.setItem('vc_nsw', String(Date.now())); if (go === 'night') sessionStorage.setItem('vc_rsw', String(Date.now())); } catch (x) {} try { var u = new URL(location.href); u.searchParams.delete('theme'); history.replaceState(history.state, '', u.pathname + u.search + u.hash); } catch (x) {} location.reload(); }
+      function goNow() { if (!cd || !ready) return; try { if (go === 'noir') sessionStorage.setItem('vc_nsw', String(Date.now())); if (go === 'night') sessionStorage.setItem('vc_rsw', String(Date.now())); if (go === 'paper') sessionStorage.setItem('vc_psw', String(Date.now())); } catch (x) {} try { var u = new URL(location.href); u.searchParams.delete('theme'); history.replaceState(history.state, '', u.pathname + u.search + u.hash); } catch (x) {} location.reload(); }
       pf(function () { ready = true; goNow(); });
       curtain(go, function () { cd = true; goNow(); });
     });
@@ -666,6 +667,7 @@
     if (window.__vchReveal) window.__vchReveal();
     if (window.__vcNswOpen) requestAnimationFrame(function () { requestAnimationFrame(window.__vcNswOpen); });
     if (window.__vcRswOpen) requestAnimationFrame(function () { requestAnimationFrame(window.__vcRswOpen); });
+    if (window.__vcPswOpen) requestAnimationFrame(function () { requestAnimationFrame(window.__vcPswOpen); });
   }
   window.__vchApply = applyTheme; window.__vchBoot = function () { boot(); };
   applyTheme();
