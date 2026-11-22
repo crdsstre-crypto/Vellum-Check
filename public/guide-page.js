@@ -72,6 +72,7 @@
   // ---------- รายการ "เรียนรู้" ----------
   // **คำ** ในข้อความการ์ด = ไฮไลต์ (escape ก่อนเสมอ แล้วค่อยแปลงเป็น <mark>)
   const hl = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<mark>$1</mark>');
+  const hlA = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<mark class="gd-hl">$1</mark>');   // คำสำคัญในคำตอบ/สรุป
   const hlB = s => esc(s || '').replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');   // กรอบคำพูดการ์ตูน
   const mascot = (mood, size) => (window.VCMascot && typeof VCMascot.svg === 'function') ? VCMascot.svg(mood || 'curious', size) : '';
   const scene = (name, key) => (window.VCScenes ? VCScenes.svg(name, key) : '');
@@ -161,11 +162,11 @@
         </div>
         <div data-pane="read" hidden><p class="gd-empty">เลื่อนลงอ่านด้านล่างได้เลย ⬇</p></div>
       </section>
-      ${g.summary.length ? `<div class="gd-sum" data-say><h2>สรุปใน 30 วินาที</h2><ul>${g.summary.map(s => `<li>${esc(s)}</li>`).join('')}</ul></div>` : ''}
+      ${g.summary.length ? `<div class="gd-sum" data-say><h2>สรุปใน 30 วินาที</h2><ul>${g.summary.map(s => `<li>${hlA(s)}</li>`).join('')}</ul></div>` : ''}
       <div id="gd-body">
       ${g.sections.map(s => `<h2 class="gd-h2" data-say><span class="gd-n" aria-hidden="true">${++n}</span>${esc(s.title)}</h2>
         ${s.panel && window.VCComic ? VCComic.panel(s.panel.scene, s.panel.mood, hlB(s.panel.say), 'ตอนที่ ' + n, 'p' + n) : ''}
-        ${s.items.map(it => `<div class="gd-item" data-say><p class="gd-q">${esc(it.q)}</p><p class="gd-a">${esc(it.a)}</p>
+        ${s.items.map(it => `<div class="gd-item" data-say><p class="gd-q">${esc(it.q)}</p><p class="gd-a">${hlA(it.a)}</p>
           ${it.cite.length ? `<div class="gd-cites">${it.cite.map(citeBtn).join('')}</div>` : ''}</div>`).join('')}`).join('')}
       ${g.redFlags.length ? `<h2 class="gd-h2" data-say>🚩 เจอแบบนี้ในสัญญา ระวัง</h2>${g.redFlags.map(f => `<div class="gd-flag" data-say><b>${esc(f.text)}</b>${f.note ? `<br>${esc(f.note)}` : ''}</div>`).join('')}` : ''}
       </div>
