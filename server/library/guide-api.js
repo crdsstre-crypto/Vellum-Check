@@ -12,7 +12,7 @@ export const GUIDE_PAGE = path.join(__dirname, '..', '..', 'public', 'guide.html
 const str = (v, max) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
 const arr = v => (Array.isArray(v) ? v : []);
 const MOODS = ['wave', 'happy', 'sleep', 'party', 'sad', 'curious', 'stop', 'alert', 'inspect'];   // ท่าน้องม้วน (public/mascot.js)
-const PANEL_SCENES = ['pay', 'nopay', 'notice', 'labor', 'sign', 'repair', 'moveout'];   // ฉากช่องการ์ตูน (public/guide-comic.js)
+const PANEL_SCENES = ['pay', 'nopay', 'notice', 'labor', 'sign', 'repair', 'moveout', 'iou', 'rate', 'guarantee', 'hourglass', 'umbrella', 'hours', 'nothreat', 'complain', 'bankcall', 'mule', 'shared', 'tilt', 'cut', 'fence'];   // ฉากช่องการ์ตูน (public/guide-comic.js)
 
 function cleanCite(c) {
   const law = str(c?.law, 200), sec = str(c?.sec, 30), label = str(c?.label, 120);
