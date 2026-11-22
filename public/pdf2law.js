@@ -42,7 +42,7 @@ async function pageLines(pdfjs, page, pno) {
     if (!G.has(b)) G.set(b, []);
     G.get(b).push(it);
   }
-  const lines = [], head = [];
+  const lines = [], head = [], p1 = [];
   for (const b of [...G.keys()].sort((a, c) => c - a)) {
     const fr = G.get(b).slice().sort((a, c) => Math.abs(a.x - c.x) < 0.6 ? (c.sup - a.sup) || a.x - c.x : a.x - c.x);   // ตำแหน่งเท่ากัน: เลขเชิงอรรถมาก่อนช่องว่าง
     const first = fr.find(i => !i.sup);
@@ -56,10 +56,11 @@ async function pageLines(pdfjs, page, pno) {
     t = t.replace(/ ((?:\[\d+\])+)(?=[ก-ฮเ-ไ])/g, '$1 ');   // "ปฏิเสธ [3]การ" → "ปฏิเสธ[3] การ"
     if (!t || MARKS.test(t)) continue;
     const y1 = b + (first.h || 10.5);
+    if (pno === 0) p1.push({ t, sp, top: y1 > 680 });
     if (pno === 0 && y1 > 680) { head.push(t); continue; }   // หัวเอกสารหน้าแรก (ชื่อหน่วยงาน/คำว่า พระราชบัญญัติ) — เก็บไว้เดาชื่อกฎหมาย
     lines.push({ y: y1, x: first.x, t, p: pno, sp });
   }
-  return { lines, bad, head };
+  return { lines, bad, head, p1 };
 }
 
 function assemble(lines) {
@@ -68,6 +69,7 @@ function assemble(lines) {
   const HRE = new RegExp(`^มาตรา ([๐-๙]+)(?:/([๐-๙]+))?(?:\\[\\d+\\])?(?: (${SUF})(?![ก-๙]))?`);
   const rank = s => { const m = HRE.exec(s); return m ? [thNum(m[1]), m[2] ? thNum(m[2]) : 0, m[3] ? SUFL.indexOf(m[3]) + 1 : 0] : null; };
   const gt = (a, b) => a[0] - b[0] || a[1] - b[1] || a[2] - b[2];
+  const REF_RE = /^มาตรา [๐-๙]+(?:\/[๐-๙]+)?\s+(?:และ|หรือ|แห่ง|ถึง|วรรค|ของ)/;   // "มาตรา ๓๑๗/๑๓ และมาตรา…" = ข้อความอ้างถึง ไม่ใช่หัวมาตรา
   const PREV_WORD = /(ตาม|แห่ง|ใน|และ|หรือ|ถึง|กับ|ของ|โดย|ด้วย|แต่|ซึ่ง|ต่อ|จาก|เว้นแต่|ยกเว้น|,)\s*(\[\d+\])?$/;
   const paras = []; let cur = null, last = [0, 0, 0];
   lines.forEach((L, k) => {
@@ -75,7 +77,7 @@ function assemble(lines) {
     const isfn = k >= fstart && /^\[\d+\]/.test(s);
     const gap = prev && prev.p === L.p && prev.y - L.y > 21;
     const r = k < fstart ? rank(s) : null;
-    const pb = prev && prev.p !== L.p && r && gt(r, last) > 0 && !PREV_WORD.test(prev.t);
+    const pb = prev && prev.p !== L.p && r && gt(r, last) > 0 && r[0] - last[0] <= 40 && !REF_RE.test(s) && !PREV_WORD.test(prev.t);
     if (r && (x > 112 || gap || pb) && gt(r, last) > 0) last = r;
     if (x > 112 || !cur || isfn || gap || pb) { if (cur) paras.push(cur); cur = [s]; }
     else cur.push((prev.sp ? '\x01' : '') + s);
@@ -101,6 +103,9 @@ function fixMarks(txt) {
     return rest.replace(/\s+$/, '') + marks.join('');
   }).join('\n');
   txt = txt.replace(new RegExp(`^(มาตรา [๐-๙]+ (?:${SUF}))((?:\\[\\d+\\])+)(/[๐-๙]+)`, 'gm'), '$1$3$2');
+  txt = txt.replace(/(ตรา(?:พระราชบัญญัติ|พระราชกำหนด|พระราชกฤษฎีกา)นี้)\s*(\*?(?:พระราชบัญญัติ|พระราชกำหนด|พระราชกฤษฎีกา)[^\n\[]{4,300}?\[\d+\])/g, '$1\n\n$2');
+  // ชื่อฉบับแก้ไขสองบรรทัดติดกัน: "…พ.ศ. ๒๕๖๑[4] พระราชกำหนด… (ฉบับที่ ๒) พ.ศ. ๒๕๖๘[5]" → แยกย่อหน้า
+  txt = txt.replace(/(\[\d+\]) (\*?(?:พระราชบัญญัติ|พระราชกำหนด|พระราชกฤษฎีกา|ประกาศ|คำสั่ง)[^\n\[]{4,300}?\[\d+\])(?=\n|$)/g, '$1\n\n$2');
   // ชื่อกฎหมายแก้ไขท้ายเอกสารที่ติดกับ "มาตรา ๒ ..." ในบรรทัดเดียว → แยกย่อหน้า
   txt = txt.replace(/^((?:\*?)(?:พระราชบัญญัติ|พระราชกำหนด|พระราชกฤษฎีกา)[^\n\[]{4,300}?(?:\[\d+\])+) (มาตรา [๐-๙]+ )/gm, '$1\n\n$2');
   return txt;
@@ -110,33 +115,38 @@ function fixMarks(txt) {
 export async function pdfToLawText(pdfjs, data, onProgress) {
   const task = pdfjs.getDocument({ data, disableFontFace: true, isEvalSupported: false, verbosity: 0 });
   const doc = await task.promise;
-  const all = []; let bad = 0, head = [];
+  const all = []; let bad = 0, head = [], p1 = [];
   for (let i = 1; i <= doc.numPages; i++) {
     const page = await doc.getPage(i);
     const r = await pageLines(pdfjs, page, i - 1);
-    all.push(...r.lines); bad += r.bad; if (i === 1) head = r.head;
+    all.push(...r.lines); bad += r.bad; if (i === 1) { head = r.head; p1 = r.p1; }
     page.cleanup();
     onProgress?.(i, doc.numPages);
   }
   const pages = doc.numPages;
   await task.destroy?.();
   const text = fixMarks(assemble(all));
-  return { text, pages, badGlyphs: (text.match(/\ufffd/g) || []).length, title: guessTitle(head, text) };
+  return { text, pages, badGlyphs: (text.match(/\ufffd/g) || []).length, title: guessTitle(p1) };
 }
 
 // เดาชื่อกฎหมายจากหัวเอกสารหน้าแรก: "พระราชบัญญัติ" + "ว่าด้วย…" + "พ.ศ. ๒๕๔๐" · ประมวลกฎหมาย → ใช้ชื่อประมวลอย่างเดียว
-function guessTitle(head, text) {
-  const top = head.filter(h => !/สำนักงานคณะกรรมการกฤษฎีกา|Office of the Council|\d{1,2}\/\d{1,2}\/\d{2}/.test(h));
-  const body = [];
-  for (const l of text.split('\n').filter(x => x.trim()).slice(0, 6)) {
-    if (/^(ภูมิพล|ในพระปรมาภิไธย|สมเด็จ|พระบาท|ให้ไว้|ตราไว้|เป็นปีที่|มาตรา)/.test(l)) break;
-    body.push(l.trim());
-    if (/(พ\.ศ\.|พุทธศักราช)\s*[๐-๙0-9]{4}\s*$/.test(l)) break;
+function guessTitle(first) {
+  const L = [];
+  for (const l of first) {
+    if (/สำนักงานคณะกรรมการกฤษฎีกา|Office of the Council|\d{1,2}\/\d{1,2}\/\d{2}/.test(l.t)) continue;
+    if (!l.top && /^(ภูมิพล|ในพระปรมาภิไธย|สมเด็จ|พระบาท|ให้ไว้|ตราไว้|เป็นปีที่|มาตรา)/.test(l.t)) break;
+    L.push(l);
+    if (!l.top && /(พ\.ศ\.|พุทธศักราช)\s*[๐-๙0-9]{4}\s*$/.test(l.t)) break;
+    if (L.length > 8) break;
   }
-  // ต่อบรรทัด: ไทยต่อไทยไม่เว้นวรรค ยกเว้นหน้าคำว่า พ.ศ./พุทธศักราช
-  let t = [...top, ...body].map(x => x.replace(/\[\d+\]/g, '').trim()).filter(Boolean)
-    .reduce((a, x) => !a ? x : a + (/[\u0e00-\u0e7f]$/.test(a) && /^[\u0e00-\u0e7f]/.test(x) && !/^(พ\.ศ\.|พุทธศักราช)/.test(x) ? '' : ' ') + x, '')
-    .replace(/\s+/g, ' ').trim();
+  // ต่อบรรทัด: ถ้าบรรทัดก่อนจบด้วยช่องว่าง = เว้นวรรค · ไทยต่อไทยไม่เว้น · หน้า พ.ศ. เว้นเสมอ
+  let t = '';
+  for (let k = 0; k < L.length; k++) {
+    const x = L[k].t.replace(/\[\d+\]/g, '').trim(); if (!x) continue;
+    const prev = L[k - 1];
+    t += !t ? x : ((prev && prev.sp) || !/[\u0e00-\u0e7f]$/.test(t) || !/^[\u0e00-\u0e7f]/.test(x) || /^(พ\.ศ\.|พุทธศักราช)/.test(x) ? ' ' : '') + x;
+  }
+  t = t.replace(/\s+/g, ' ').trim();
   const code = /ประมวล(?:กฎหมาย(?:แพ่งและพาณิชย์|วิธีพิจารณาความแพ่ง|วิธีพิจารณาความอาญา|อาญาทหาร|อาญา|ที่ดิน|ยาเสพติด)|รัษฎากร)/.exec(t);
   if (code && /(พระราชบัญญัติ|พระราชกฤษฎีกา)\s*ให้ใช้(?:บทบัญญัติแห่ง)?\s*ประมวล(?:กฎหมาย|รัษฎากร)/.test(t.slice(0, 200))) return code[0];
     return t.replace(/[๐-๙]/g, d => String('๐๑๒๓๔๕๖๗๘๙'.indexOf(d))).slice(0, 300);
