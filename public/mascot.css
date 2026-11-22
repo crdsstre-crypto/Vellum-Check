@@ -24,4 +24,17 @@
 @keyframes vmBreathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.02,.98)}}
 @keyframes vmZ{0%{opacity:0;transform:translateY(4px)}30%{opacity:1}100%{opacity:0;transform:translateY(-8px)}}
 @keyframes vmTwinkle{0%,100%{opacity:1}50%{opacity:.45}}
+/* หยุด!: ดันฝ่ามือไปข้างหน้า */
+.vm-stop .vm-body{animation:none}
+.vm-stop .vm-push{transform-origin:89px 74px;animation:vmPush 1.6s ease-in-out infinite}
+.vm-stop .vm-burst{animation:vmTwinkle 1.6s ease-in-out infinite}
+/* ตกใจ: สั่นตัว + ! เด้ง */
+.vm-alert .vm-body{animation:vmShake 2.4s ease-in-out infinite}
+.vm-alert .vm-bang{transform-origin:60px 16px;animation:vmBang 2.4s ease-in-out infinite}
+/* ส่องแว่นขยาย: เลนส์เลื่อนไปมา */
+.vm-inspect .vm-mag{transform-origin:89px 80px;animation:vmMag 3s ease-in-out infinite}
+@keyframes vmPush{0%,60%,100%{transform:translate(0,0)}70%{transform:translate(4px,-1px)}80%{transform:translate(0,0)}88%{transform:translate(3px,-1px)}}
+@keyframes vmShake{0%,55%,100%{transform:translate(0,0)}60%{transform:translate(-2px,0) rotate(-2deg)}65%{transform:translate(2px,0) rotate(2deg)}70%{transform:translate(-2px,0) rotate(-1deg)}75%{transform:translate(0,0)}}
+@keyframes vmBang{0%,50%,100%{transform:scale(1)}58%{transform:scale(1.25) translateY(-3px)}66%{transform:scale(.95)}}
+@keyframes vmMag{0%,100%{transform:rotate(0)}50%{transform:rotate(-10deg)}}
 @media (prefers-reduced-motion:reduce){.vm *{animation:none !important}}
