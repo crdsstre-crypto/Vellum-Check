@@ -36,6 +36,12 @@ function cleanGuide(g, file) {
   return {
     slug, title,
     category: str(g.category, 60) || 'ทั่วไป',
+    categoryIcon: str(g.categoryIcon, 8),          // อีโมจิหน้าหมวด เช่น 🏠
+    categoryNote: str(g.categoryNote, 160),        // คำอธิบายใต้ชื่อหมวดในหน้ารวม
+    scene: ['condo', 'office', 'money'].includes(g.scene) ? g.scene : 'condo',   // ฉากในรูปการ์ด
+    mood: ['wave', 'happy', 'sleep', 'party', 'sad', 'curious'].includes(g.mood) ? g.mood : 'curious',   // ท่าน้องม้วน
+    cardText: str(g.cardText, 300),                // คำอธิบายบนการ์ด · ใส่ **คำ** เพื่อไฮไลต์
+    coverLines: arr(g.coverLines).map(x => str(x, 60)).filter(Boolean).slice(0, 2),   // ข้อความบนปก (บรรทัดที่ 2 เป็นสีส้ม)
     order: Number.isFinite(g.order) ? g.order : 999,
     minutes: Number.isFinite(g.minutes) ? Math.max(1, Math.min(60, Math.round(g.minutes))) : null,
     updated: /^\d{4}-\d{2}-\d{2}$/.test(str(g.updated, 10)) ? str(g.updated, 10) : '',
@@ -69,7 +75,7 @@ export function loadGuides() {
 export function mountGuides(app, { getUserFromRequest, isAdmin }) {
   const guides = loadGuides();
   const viewerIsAdmin = async req => { try { const u = await getUserFromRequest(req); return !!u && isAdmin(u); } catch { return false; } };
-  const card = g => ({ slug: g.slug, title: g.title, category: g.category, minutes: g.minutes, updated: g.updated, reviewed: g.reviewed, intro: g.intro || g.summary[0] || '', hasVideo: !!g.video });
+  const card = g => ({ slug: g.slug, title: g.title, category: g.category, categoryIcon: g.categoryIcon, categoryNote: g.categoryNote, scene: g.scene, mood: g.mood, cardText: g.cardText, minutes: g.minutes, updated: g.updated, reviewed: g.reviewed, intro: g.intro || g.summary[0] || '', hasVideo: !!g.video });
 
   app.get('/api/guides', async (req, res) => {
     res.setHeader('Cache-Control', 'no-store');
