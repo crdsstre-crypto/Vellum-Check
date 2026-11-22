@@ -18,7 +18,7 @@
     if (!res.ok) throw Object.assign(new Error(d?.error || 'โหลดข้อมูลไม่สำเร็จ'), { status: res.status });
     return d;
   }
-  const errBox = e => `<div class="lb-band" role="alert"><div><b>${esc(e.message)}</b><br><a href="/guide">กลับไปหน้าคู่มือ</a></div></div>`;
+  const errBox = e => `<div class="lb-band" role="alert"><div><b>${esc(e.message)}</b><br><a href="/guide">กลับไปหน้าเรียนรู้</a></div></div>`;
 
   // ---------- เสียงอ่าน ----------
   const tts = (() => {
@@ -68,18 +68,18 @@
 
   // ---------- รายการคู่มือ ----------
   async function viewList() {
-    document.title = 'คู่มือกฎหมายภาษาง่าย · Vellum';
+    document.title = 'เรียนรู้กฎหมายแบบภาษาง่าย · Vellum';
     try {
       const d = await get('/api/guides');
       const groups = new Map();
       for (const g of d.items) { if (!groups.has(g.category)) groups.set(g.category, []); groups.get(g.category).push(g); }
-      $main.innerHTML = `<h1 class="gd-h1">คู่มือกฎหมายภาษาง่าย</h1>
+      $main.innerHTML = `<h1 class="gd-h1">เรียนรู้กฎหมายแบบภาษาง่าย</h1>
         <p class="gd-a">เลือกเรื่องที่กำลังเจอ อ่าน ฟัง หรือดูคลิป แล้วกดดูตัวบทจริงได้ทุกข้อ</p>
         ${d.isAdmin ? '<div class="gd-draft" style="margin-top:12px">คุณเห็นคู่มือฉบับร่างด้วยเพราะเป็นแอดมิน · คนทั่วไปจะเห็นเฉพาะเรื่องที่ตั้ง "reviewed": true แล้ว</div>' : ''}
         <div class="gd-list">${d.items.length ? [...groups].map(([cat, list]) => `<h2>${esc(cat)}</h2>${list.map(g => `
           <a class="gd-card" href="/guide/${esc(g.slug)}"><b>${esc(g.title)}</b>
           <span>${esc(g.intro)}${g.minutes ? ` · อ่าน ${toTh(g.minutes)} นาที` : ''}${g.reviewed ? '' : ' · ⏳ ฉบับร่าง'}</span></a>`).join('')}`).join('')
-          : '<p class="gd-empty">ยังไม่มีคู่มือที่เผยแพร่ เร็ว ๆ นี้จะมีเพิ่มครับ</p>'}</div>`;
+          : '<p class="gd-empty">ยังไม่มีเรื่องที่เผยแพร่ เร็ว ๆ นี้จะมีเพิ่มครับ</p>'}</div>`;
     } catch (e) { $main.innerHTML = errBox(e); }
   }
 
@@ -91,12 +91,12 @@
   async function viewGuide(slug) {
     let g;
     try { g = await get('/api/guides/' + encodeURIComponent(slug)); }
-    catch (e) { $main.innerHTML = e.status === 404 ? `<div class="lb-band"><div><b>ไม่พบคู่มือนี้</b><br><a href="/guide">ดูคู่มือทั้งหมด</a></div></div>` : errBox(e); return; }
-    document.title = g.title + ' · คู่มือ Vellum';
+    catch (e) { $main.innerHTML = e.status === 404 ? `<div class="lb-band"><div><b>ไม่พบคู่มือนี้</b><br><a href="/guide">ดูเรื่องทั้งหมด</a></div></div>` : errBox(e); return; }
+    document.title = g.title + ' · เรียนรู้ · Vellum';
     let n = 0;
     $main.innerHTML = `
       ${g.reviewed ? '' : `<div class="gd-draft" role="note">ฉบับร่าง · ยังไม่ผ่านการตรวจโดยนักกฎหมาย${g.isAdmin ? ' · ตอนนี้เห็นเฉพาะแอดมิน' : ''}</div>`}
-      <div class="gd-crumb"><a href="/guide">คู่มือ</a> › ${esc(g.category)}</div>
+      <div class="gd-crumb"><a href="/guide">เรียนรู้</a> › ${esc(g.category)}</div>
       <h1 class="gd-h1" data-say>${esc(g.title)}</h1>
       <div class="gd-meta">
         ${g.minutes ? `<span class="gd-chip">อ่าน ${toTh(g.minutes)} นาที</span>` : ''}
