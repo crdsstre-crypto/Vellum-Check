@@ -154,6 +154,7 @@
 .gd-cover[data-bg="cradle"] { background: linear-gradient(135deg, #ffe3ec, #e7dcff); border-color: #d7c4f2; }
 .gd-cover[data-bg="farewell"] { background: #fffdf7; border-color: #d8c09a; }
 .gd-cover[data-bg="chalk"] { background: #fffdf6; border-color: #e2d6bd; }
+.gd-cover[data-bg="pvd"] { background: linear-gradient(135deg, #f0fff7, #d3f1e3); border-color: #a8d8bf; }
 .gd-cover[data-bg="leave"] { background: linear-gradient(135deg, #e6f6ff, #c7e8fb); border-color: #9fd0e6; }
 .gd-cover[data-bg="condo"] { background: linear-gradient(135deg, #fff1dc, #f7d9b3); border-color: #ecc690; }
 
@@ -339,4 +340,30 @@
 @keyframes cmPuff { 0%, 30% { opacity: 0; } 50% { opacity: 1; } 75%, 100% { opacity: 0; } }
 @keyframes cmShackle { 0%, 30% { transform: translateY(0); } 55%, 85% { transform: translateY(-10px) rotate(0); } 100% { transform: translateY(0); } }
 @keyframes cmFlutter { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2.5deg) translateY(1px); } }
+@media (prefers-reduced-motion: reduce) { .gd-cm *, .gd-cover-bg *, .gd-scene * { animation: none !important; } }
+
+/* หยดน้ำรั่วจากข้อต่อท่อใต้อ่าง หยดลงพื้นสั้น ๆ */
+.gd-cm .cm-drip2 { animation: cmDrip2 1.6s ease-in infinite; }
+@keyframes cmDrip2 { 0%, 30% { transform: translateY(0); opacity: 1; } 85% { transform: translateY(7px); opacity: 1; } 100% { transform: translateY(8px); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .gd-cm .cm-drip2 { animation: none; } }
+
+/* ===== ปกแบบหน้าต่างโค้ง (coverLayout: "arch"): ภาพในกรอบโค้งด้านบนแบบซุ้มประตู ===== */
+.gd-cover[data-layout="arch"] .gd-cover-art { flex-basis: 124px; height: 156px; border-radius: 62px 62px 12px 12px; border: 4px solid #fff; box-shadow: 0 0 0 2px #a8d8bf, 0 8px 16px rgba(30, 90, 60, .18); }
+.gd-cover[data-layout="arch"] { gap: 14px; }
+/* ของขยับชุดใหม่ (กองทุนสำรองฯ) */
+.gd-scene .sc-leaf { transform-box: fill-box; transform-origin: 50% 100%; animation: scLeaf 3.8s ease-in-out infinite; }
+.gd-scene .sc-twinkle circle { animation: scTwinkle 2.4s ease-in-out infinite; }
+.gd-scene .sc-twinkle circle:nth-child(2) { animation-delay: .6s; } .gd-scene .sc-twinkle circle:nth-child(3) { animation-delay: 1.2s; } .gd-scene .sc-twinkle circle:nth-child(4) { animation-delay: 1.8s; }
+.gd-cm .cm-pour { animation: cmPour 1.2s ease-in infinite; }
+.gd-cm .cm-growup { transform-box: fill-box; transform-origin: 50% 100%; animation: cmGrowUp 6s ease-out infinite; }
+.gd-cm .cm-ring { transform-box: fill-box; transform-origin: 50% 50%; animation: cmRingOut 2s ease-out infinite; }
+.gd-cm .cm-scan { animation: cmScan 3.2s ease-in-out infinite; }
+.gd-cm .cm-tug { animation: cmTug 1.4s ease-in-out infinite; }
+@keyframes scLeaf { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg) scale(1.02); } }
+@keyframes scTwinkle { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.35); } }
+@keyframes cmPour { 0% { transform: translate(0, 0); opacity: 0; } 15% { opacity: 1; } 100% { transform: translate(6px, 34px); opacity: 0; } }
+@keyframes cmGrowUp { 0% { transform: scale(.2); opacity: .4; } 25%, 100% { transform: scale(1); opacity: 1; } }
+@keyframes cmRingOut { 0% { transform: scale(1); opacity: .9; } 100% { transform: scale(2.2); opacity: 0; } }
+@keyframes cmScan { 0%, 100% { transform: translate(0, 0); } 33% { transform: translate(44px, -8px); } 66% { transform: translate(60px, 10px); } }
+@keyframes cmTug { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-8px); } }
 @media (prefers-reduced-motion: reduce) { .gd-cm *, .gd-cover-bg *, .gd-scene * { animation: none !important; } }
