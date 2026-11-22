@@ -1,0 +1,76 @@
+/* Vellum คู่มือ — ใช้ตัวแปรสีจาก lib.css (โหลดก่อนไฟล์นี้) */
+.gd-subnav { display: flex; gap: 18px; padding: 8px clamp(16px, 4vw, 40px); background: var(--nv-2); font-size: 14px; }
+.gd-subnav a { color: #A9B4C4; text-decoration: none; padding: 2px 0 4px; }
+.gd-subnav a[aria-current="page"] { color: #fff; box-shadow: inset 0 -2px 0 var(--orange); }
+.gd-main { max-width: 760px; margin: 0 auto; padding: 16px clamp(16px, 4vw, 40px) 48px; outline: none; }
+.gd-draft { background: #FFF7D6; color: #6b5000; border: 1px solid #F0E2A8; border-radius: var(--r-s); padding: 8px 12px; font-size: 13px; margin-bottom: 12px; }
+.gd-crumb { font-size: 13px; color: var(--ink-3); }
+.gd-crumb a { color: var(--ink-3); }
+.gd-h1 { font-size: clamp(23px, 5.5vw, 32px); line-height: 1.35; margin: 4px 0 10px; }
+.gd-meta { display: flex; flex-wrap: wrap; gap: 6px; font-size: 12.5px; margin-bottom: 14px; }
+.gd-chip { border-radius: 999px; padding: 2px 10px; background: var(--navy-700); color: var(--ink-2); }
+.gd-chip.ok { background: #E4F4EE; color: var(--ok); }
+.gd-chip.wait { background: #FBF3DC; color: #7a5c00; }
+
+/* กล่องสื่อ: ฟัง / ดูคลิป / อ่าน */
+.gd-media { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin-bottom: 16px; box-shadow: var(--shadow); }
+.gd-tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+.gd-tabs button { flex: 1; font: inherit; font-size: 14px; border: 0; border-radius: 8px; padding: 7px 0; background: var(--navy-700); color: var(--ink-2); cursor: pointer; }
+.gd-tabs button[aria-selected="true"] { background: var(--nv); color: #fff; }
+.gd-player { display: flex; align-items: center; gap: 10px; }
+.gd-play { width: 44px; height: 44px; flex: none; border-radius: 50%; border: 0; background: var(--orange); color: #1b1006; font-size: 17px; cursor: pointer; display: grid; place-items: center; }
+.gd-play:focus-visible, .gd-tabs button:focus-visible, .gd-law:focus-visible { outline: 3px solid #1d4f91; outline-offset: 2px; }
+.gd-bar { flex: 1; min-width: 0; }
+.gd-track { height: 6px; background: #E3E7EE; border-radius: 3px; overflow: hidden; }
+.gd-track i { display: block; height: 100%; width: 0; background: var(--orange); transition: width .3s; }
+.gd-tm { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--ink-3); margin-top: 4px; font-variant-numeric: tabular-nums; }
+.gd-spd { font: inherit; font-size: 13px; border: 1px solid var(--line); border-radius: 6px; padding: 3px 8px; background: #fff; color: var(--ink); cursor: pointer; }
+.gd-stop { font: inherit; font-size: 13px; border: 0; background: none; color: var(--ink-3); cursor: pointer; padding: 4px; }
+.gd-ainote { font-size: 12px; color: var(--ink-3); margin-top: 8px; }
+.gd-video video { width: 100%; border-radius: 8px; background: #000; display: block; }
+.gd-empty { font-size: 14px; color: var(--ink-3); padding: 10px 4px; text-align: center; }
+
+.gd-sum { background: var(--o-soft); border-left: 4px solid var(--orange); border-radius: 8px; padding: 10px 14px; margin-bottom: 18px; }
+.gd-sum h2 { margin: 0 0 4px; font-size: 15px; color: var(--o-text); }
+.gd-sum ul { margin: 0; padding-left: 20px; }
+.gd-h2 { font-size: 19px; margin: 22px 0 10px; display: flex; align-items: center; gap: 8px; }
+.gd-n { width: 26px; height: 26px; flex: none; border-radius: 50%; background: var(--nv); color: #fff; font-size: 13px; display: grid; place-items: center; }
+.gd-item { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 11px 13px; margin-bottom: 9px; }
+.gd-q { font-weight: 700; margin: 0; font-size: 15.5px; }
+.gd-a { color: var(--ink-2); margin: 2px 0 0; font-size: 15px; }
+.gd-cites { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
+.gd-law { font: inherit; font-size: 12.5px; border: 1px solid #F3C79A; color: var(--o-text); background: var(--o-soft); border-radius: 6px; padding: 2px 9px; cursor: pointer; }
+.gd-law.ext { border-color: var(--line); color: var(--ink-3); background: var(--navy-700); cursor: default; }
+.gd-flag { background: #FCEBEC; border: 1px solid #F3C6CA; border-radius: 10px; padding: 10px 13px; margin-bottom: 8px; font-size: 14.5px; }
+.gd-flag b { color: var(--gone); font-weight: 600; }
+.gd-cta { background: var(--nv); color: #fff; border-radius: 12px; padding: 16px; margin: 22px 0 14px; }
+.gd-cta p { margin: 0 0 10px; color: #C9D2DE; font-size: 14.5px; }
+.gd-cta a { display: block; background: var(--orange); color: #1b1006; font-weight: 700; text-align: center; border-radius: 8px; padding: 10px; text-decoration: none; }
+.gd-disc { font-size: 12.5px; color: var(--ink-3); border-top: 1px solid var(--line); padding-top: 10px; }
+.gd-reading { outline: 3px solid var(--orange-2); outline-offset: 3px; border-radius: 8px; }
+
+/* รายการคู่มือ */
+.gd-list h2 { font-size: 15px; color: var(--ink-3); margin: 20px 0 8px; font-weight: 600; }
+.gd-card { display: block; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 13px 15px; margin-bottom: 9px; text-decoration: none; color: var(--ink); }
+.gd-card:hover { border-color: var(--orange); }
+.gd-card b { font-size: 16.5px; display: block; line-height: 1.4; }
+.gd-card span { font-size: 13.5px; color: var(--ink-3); }
+
+/* แผ่นตัวบท (bottom sheet) */
+.gd-sheet-bg { position: fixed; inset: 0; background: rgba(14, 26, 43, .45); z-index: 50; display: flex; align-items: flex-end; justify-content: center; }
+.gd-sheet { background: #fff; width: 100%; max-width: 640px; max-height: 86vh; overflow: auto; border-radius: 16px 16px 0 0; padding: 10px 16px calc(18px + env(safe-area-inset-bottom)); animation: gdUp .2s ease-out; }
+@keyframes gdUp { from { transform: translateY(30px); opacity: 0; } }
+.gd-grab { width: 40px; height: 4px; background: #CBD2DC; border-radius: 2px; margin: 0 auto 10px; }
+.gd-sheet-h { display: flex; align-items: flex-start; gap: 8px; }
+.gd-sheet-h h2 { margin: 0; font-size: 17px; flex: 1; }
+.gd-x { border: 0; background: var(--navy-700); border-radius: 50%; width: 32px; height: 32px; font-size: 16px; cursor: pointer; flex: none; }
+.gd-src { font-size: 12.5px; color: var(--ink-3); margin: 2px 0 8px; }
+.gd-src.warn { color: #8a5a00; }
+.gd-stext { font-family: var(--read); background: var(--char-800); border-radius: 8px; padding: 11px 13px; font-size: 16px; line-height: 1.85; white-space: pre-line; }
+.gd-easy { margin-top: 10px; background: #EEF6FF; border-radius: 8px; padding: 10px 13px; font-size: 14.5px; }
+.gd-easy b { color: #1d4f91; }
+.gd-sbtns { display: flex; gap: 8px; margin-top: 12px; }
+.gd-sbtns > * { flex: 1; text-align: center; font: inherit; font-size: 14px; border: 1px solid var(--line); border-radius: 8px; padding: 8px 0; background: #fff; color: var(--ink); text-decoration: none; cursor: pointer; }
+.gd-sbtns .p { background: var(--nv); color: #fff; border-color: var(--nv); }
+
+@media (prefers-reduced-motion: reduce) { .gd-sheet { animation: none; } .gd-track i { transition: none; } }
