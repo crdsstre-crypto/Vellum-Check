@@ -1,0 +1,185 @@
+// Vellum คู่มือ (/guide) — คู่มือกฎหมายภาษาง่ายตามเรื่องในชีวิตจริง
+// เนื้อหาเก็บเป็นไฟล์ JSON ใน server/library/guides/ (1 เรื่อง = 1 ไฟล์) · อ่านครั้งเดียวตอนเปิดเซิร์ฟเวอร์
+// คู่มือที่ยังไม่ผ่านการตรวจ ("reviewed": false) แสดงเฉพาะแอดมิน คนทั่วไปมองไม่เห็น
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const DIR = path.join(__dirname, 'guides');
+export const GUIDE_PAGE = path.join(__dirname, '..', '..', 'public', 'guide.html');
+
+const str = (v, max) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
+const arr = v => (Array.isArray(v) ? v : []);
+
+function cleanCite(c) {
+  const law = str(c?.law, 200), sec = str(c?.sec, 30), label = str(c?.label, 120);
+  if (law && sec) return { law, sec, easy: str(c.easy, 600) };
+  if (label) return { label, note: str(c.note, 300) };   // อ้างอิงที่ยังไม่มีในคลัง (แสดงเป็นป้ายสีเทา)
+  return null;
+}
+
+function cleanGuide(g, file) {
+  const slug = str(g?.slug, 60);
+  if (!/^[a-z0-9-]{2,60}$/.test(slug)) throw new Error(`${file}: slug ต้องเป็น a-z 0-9 และ - เท่านั้น`);
+  const title = str(g.title, 160);
+  if (!title) throw new Error(`${file}: ไม่มี title`);
+  const sections = arr(g.sections).map(s => ({
+    title: str(s?.title, 120),
+    items: arr(s?.items).map(it => ({ q: str(it?.q, 200), a: str(it?.a, 1200), cite: arr(it?.cite).map(cleanCite).filter(Boolean).slice(0, 4) }))
+      .filter(it => it.q && it.a),
+  })).filter(s => s.title && s.items.length);
+  if (!sections.length) throw new Error(`${file}: ไม่มีเนื้อหาใน sections`);
+  const video = g.video && /^\/videos\/[A-Za-z0-9._\/-]+\.(mp4|webm)$/.test(str(g.video.url, 300))
+    ? { url: str(g.video.url, 300), poster: /^\/videos\/[A-Za-z0-9._\/-]+\.(jpg|jpeg|png|webp)$/.test(str(g.video.poster, 300)) ? str(g.video.poster, 300) : '' }
+    : null;
+  return {
+    slug, title,
+    category: str(g.category, 60) || 'ทั่วไป',
+    order: Number.isFinite(g.order) ? g.order : 999,
+    minutes: Number.isFinite(g.minutes) ? Math.max(1, Math.min(60, Math.round(g.minutes))) : null,
+    updated: /^\d{4}-\d{2}-\d{2}$/.test(str(g.updated, 10)) ? str(g.updated, 10) : '',
+    reviewed: g.reviewed === true,
+    reviewer: str(g.reviewer, 120),
+    intro: str(g.intro, 600),
+    summary: arr(g.summary).map(x => str(x, 300)).filter(Boolean).slice(0, 6),
+    sections,
+    redFlags: arr(g.redFlags).map(f => ({ text: str(f?.text, 300), note: str(f?.note, 400) })).filter(f => f.text).slice(0, 8),
+    cta: g.cta && str(g.cta.text, 200) ? { text: str(g.cta.text, 200), button: str(g.cta.button, 60) || 'ตรวจสัญญา', href: /^\/[A-Za-z0-9_\-\/?=&#.]*$/.test(str(g.cta.href, 200)) ? str(g.cta.href, 200) : '/' } : null,
+    video,
+  };
+}
+
+export function loadGuides() {
+  const map = new Map();
+  let files = [];
+  try { files = fs.readdirSync(DIR).filter(f => f.endsWith('.json')); }
+  catch { console.warn('[guides] ไม่พบโฟลเดอร์ guides'); return map; }
+  for (const f of files) {
+    try {
+      const g = cleanGuide(JSON.parse(fs.readFileSync(path.join(DIR, f), 'utf8')), f);
+      if (map.has(g.slug)) throw new Error(`${f}: slug "${g.slug}" ซ้ำกับไฟล์อื่น`);
+      map.set(g.slug, g);
+    } catch (e) { console.error('[guides] ข้ามไฟล์', f, '—', e.message); }
+  }
+  console.log(`[guides] โหลดคู่มือ ${map.size} เรื่อง`);
+  return map;
+}
+
+export function mountGuides(app, { getUserFromRequest, isAdmin }) {
+  const guides = loadGuides();
+  const viewerIsAdmin = async req => { try { const u = await getUserFromRequest(req); return !!u && isAdmin(u); } catch { return false; } };
+  const card = g => ({ slug: g.slug, title: g.title, category: g.category, minutes: g.minutes, updated: g.updated, reviewed: g.reviewed, intro: g.intro || g.summary[0] || '', hasVideo: !!g.video });
+
+  app.get('/api/guides', async (req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
+    const admin = await viewerIsAdmin(req);
+    const items = [...guides.values()].filter(g => admin || g.reviewed)
+      .sort((a, b) => a.category.localeCompare(b.category, 'th') || a.order - b.order || a.title.localeCompare(b.title, 'th')).map(card);
+    res.json({ items, isAdmin: admin });
+  });
+
+  app.get('/api/guides/:slug', async (req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
+    const g = guides.get(String(req.params.slug));
+    const admin = await viewerIsAdmin(req);
+    if (!g || (!g.reviewed && !admin)) return res.status(404).json({ error: 'ไม่พบคู่มือนี้' });
+    res.json({ ...g, isAdmin: admin });
+  });
+
+  const page = (req, res) => { res.setHeader('Cache-Control', 'no-cache'); res.sendFile(GUIDE_PAGE); };
+  app.get('/guide', page);
+  app.get('/guide/:slug', page);
+}// Vellum คู่มือ (/guide) — คู่มือกฎหมายภาษาง่ายตามเรื่องในชีวิตจริง
+// เนื้อหาเก็บเป็นไฟล์ JSON ใน server/library/guides/ (1 เรื่อง = 1 ไฟล์) · อ่านครั้งเดียวตอนเปิดเซิร์ฟเวอร์
+// คู่มือที่ยังไม่ผ่านการตรวจ ("reviewed": false) แสดงเฉพาะแอดมิน คนทั่วไปมองไม่เห็น
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const DIR = path.join(__dirname, 'guides');
+export const GUIDE_PAGE = path.join(__dirname, '..', '..', 'public', 'guide.html');
+
+const str = (v, max) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
+const arr = v => (Array.isArray(v) ? v : []);
+
+function cleanCite(c) {
+  const law = str(c?.law, 200), sec = str(c?.sec, 30), label = str(c?.label, 120);
+  if (law && sec) return { law, sec, easy: str(c.easy, 600) };
+  if (label) return { label, note: str(c.note, 300) };   // อ้างอิงที่ยังไม่มีในคลัง (แสดงเป็นป้ายสีเทา)
+  return null;
+}
+
+function cleanGuide(g, file) {
+  const slug = str(g?.slug, 60);
+  if (!/^[a-z0-9-]{2,60}$/.test(slug)) throw new Error(`${file}: slug ต้องเป็น a-z 0-9 และ - เท่านั้น`);
+  const title = str(g.title, 160);
+  if (!title) throw new Error(`${file}: ไม่มี title`);
+  const sections = arr(g.sections).map(s => ({
+    title: str(s?.title, 120),
+    items: arr(s?.items).map(it => ({ q: str(it?.q, 200), a: str(it?.a, 1200), cite: arr(it?.cite).map(cleanCite).filter(Boolean).slice(0, 4) }))
+      .filter(it => it.q && it.a),
+  })).filter(s => s.title && s.items.length);
+  if (!sections.length) throw new Error(`${file}: ไม่มีเนื้อหาใน sections`);
+  const video = g.video && /^\/videos\/[A-Za-z0-9._\/-]+\.(mp4|webm)$/.test(str(g.video.url, 300))
+    ? { url: str(g.video.url, 300), poster: /^\/videos\/[A-Za-z0-9._\/-]+\.(jpg|jpeg|png|webp)$/.test(str(g.video.poster, 300)) ? str(g.video.poster, 300) : '' }
+    : null;
+  return {
+    slug, title,
+    category: str(g.category, 60) || 'ทั่วไป',
+    order: Number.isFinite(g.order) ? g.order : 999,
+    minutes: Number.isFinite(g.minutes) ? Math.max(1, Math.min(60, Math.round(g.minutes))) : null,
+    updated: /^\d{4}-\d{2}-\d{2}$/.test(str(g.updated, 10)) ? str(g.updated, 10) : '',
+    reviewed: g.reviewed === true,
+    reviewer: str(g.reviewer, 120),
+    intro: str(g.intro, 600),
+    summary: arr(g.summary).map(x => str(x, 300)).filter(Boolean).slice(0, 6),
+    sections,
+    redFlags: arr(g.redFlags).map(f => ({ text: str(f?.text, 300), note: str(f?.note, 400) })).filter(f => f.text).slice(0, 8),
+    cta: g.cta && str(g.cta.text, 200) ? { text: str(g.cta.text, 200), button: str(g.cta.button, 60) || 'ตรวจสัญญา', href: /^\/[A-Za-z0-9_\-\/?=&#.]*$/.test(str(g.cta.href, 200)) ? str(g.cta.href, 200) : '/' } : null,
+    video,
+  };
+}
+
+export function loadGuides() {
+  const map = new Map();
+  let files = [];
+  try { files = fs.readdirSync(DIR).filter(f => f.endsWith('.json')); }
+  catch { console.warn('[guides] ไม่พบโฟลเดอร์ guides'); return map; }
+  for (const f of files) {
+    try {
+      const g = cleanGuide(JSON.parse(fs.readFileSync(path.join(DIR, f), 'utf8')), f);
+      if (map.has(g.slug)) throw new Error(`${f}: slug "${g.slug}" ซ้ำกับไฟล์อื่น`);
+      map.set(g.slug, g);
+    } catch (e) { console.error('[guides] ข้ามไฟล์', f, '—', e.message); }
+  }
+  console.log(`[guides] โหลดคู่มือ ${map.size} เรื่อง`);
+  return map;
+}
+
+export function mountGuides(app, { getUserFromRequest, isAdmin }) {
+  const guides = loadGuides();
+  const viewerIsAdmin = async req => { try { const u = await getUserFromRequest(req); return !!u && isAdmin(u); } catch { return false; } };
+  const card = g => ({ slug: g.slug, title: g.title, category: g.category, minutes: g.minutes, updated: g.updated, reviewed: g.reviewed, intro: g.intro || g.summary[0] || '', hasVideo: !!g.video });
+
+  app.get('/api/guides', async (req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
+    const admin = await viewerIsAdmin(req);
+    const items = [...guides.values()].filter(g => admin || g.reviewed)
+      .sort((a, b) => a.category.localeCompare(b.category, 'th') || a.order - b.order || a.title.localeCompare(b.title, 'th')).map(card);
+    res.json({ items, isAdmin: admin });
+  });
+
+  app.get('/api/guides/:slug', async (req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
+    const g = guides.get(String(req.params.slug));
+    const admin = await viewerIsAdmin(req);
+    if (!g || (!g.reviewed && !admin)) return res.status(404).json({ error: 'ไม่พบคู่มือนี้' });
+    res.json({ ...g, isAdmin: admin });
+  });
+
+  const page = (req, res) => { res.setHeader('Cache-Control', 'no-cache'); res.sendFile(GUIDE_PAGE); };
+  app.get('/guide', page);
+  app.get('/guide/:slug', page);
+}
