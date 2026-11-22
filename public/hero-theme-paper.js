@@ -2637,3 +2637,147 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
 })();
 /*/PZVCP*/
+/*PZGIN*/ /* ธีมตัดกระดาษ: ฉากต้อนรับหลังเข้าสู่ระบบ (รอบใหม่ 22 พ.ย.)
+   ม่านแผ่นรองตัดสีเขียว (index.html) → รอหน้าปกขึ้นครบ → หน้าปกเด้งขึ้นแบบหนังสือป๊อปอัป → ป้ายชื่อมัสตาร์ดห้อยเชือกแกว่งลงมา
+   → กระดาษครีมร่วงลง มีรอยพับเส้นประ → พับ 3 จังหวะเป็นนกกระเรียน → นกบินวนเหนือหัวเรื่อง → คาบป้ายไปส่งที่การ์ด "สวัสดี คุณ…" แล้วเกาะตรา
+   ไม่มีชั้นมืดทับทั้งจอ · ปุ่ม "ข้าม" เป็นตั๋วมุมล่างซ้าย · แตะที่ไหนก็ข้าม · นิ่งเมื่อ data-calm / ลดการเคลื่อนไหว */
+(function () {
+  var css =
+    '.pzw{position:fixed;inset:0;z-index:10040;pointer-events:auto;transition:opacity .3s}' +
+    '.pzw.out{opacity:0;pointer-events:none}' +
+    '.pzw-sign{position:absolute;left:50%;top:0;width:212px;margin-left:-106px;transform-origin:50% 0;opacity:0}' +
+    '.pzw-str{position:absolute;top:0;width:1.6px;background:linear-gradient(#9d8057,#ad8f64);box-shadow:1px 0 0 rgba(0,0,0,.18)}' +
+    '.pzw-str.l{left:46px}.pzw-str.r{right:46px}' +
+    '.pzw-card{position:absolute;left:0;right:0;bottom:0;padding:12px 16px 13px;text-align:center;color:#22170a;font-family:Prompt,sans-serif;' +
+      'background:radial-gradient(120% 90% at 30% 20%,rgba(255,255,255,.25),transparent 60%),#e4d3a6;' +
+      'clip-path:polygon(0 8px,8px 0,calc(100% - 8px) 0,100% 8px,100% calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,0 calc(100% - 8px));' +
+      'filter:drop-shadow(3px 4px 0 #a9843a) drop-shadow(0 10px 12px rgba(0,0,0,.35))}' +
+    '.pzw-card::before,.pzw-card::after{content:"";position:absolute;top:9px;width:9px;height:9px;border-radius:50%;background:#7d6233;box-shadow:inset 0 1px 1px rgba(0,0,0,.5)}' +
+    '.pzw-card::before{left:41px}.pzw-card::after{right:41px}' +
+    '.pzw-card small{display:block;font-size:12px;font-weight:500;letter-spacing:.08em;color:#5a4526;margin-top:6px}' +
+    '.pzw-card b{display:block;font-size:20px;font-weight:700;line-height:1.3;margin-top:1px}' +
+    '.pzw-card i{display:block;height:1px;margin:7px 18px 0;background:repeating-linear-gradient(90deg,#a9843a 0 5px,transparent 5px 9px)}' +
+    '.pzw-pp{position:absolute;left:0;top:0;width:120px;height:120px;margin:-60px 0 0 -60px;opacity:0;filter:drop-shadow(3px 5px 0 rgba(125,98,51,.55)) drop-shadow(0 12px 14px rgba(0,0,0,.35))}' +
+    '.pzw-pp svg{width:100%;height:100%;overflow:visible}' +
+    '.pzw-pp .fd{fill:none;stroke:#a9843a;stroke-width:1.4;stroke-dasharray:5 4;opacity:0}' +
+    '.pzw-cr{position:absolute;left:0;top:0;width:132px;height:99px;margin:-50px 0 0 -66px;opacity:0;filter:drop-shadow(0 8px 8px rgba(0,0,0,.35))}' +
+    '.pzw-cr svg{width:100%;height:100%;overflow:visible}' +
+    '.pzw-cr .wl,.pzw-cr .wr{transform-box:fill-box;animation:pzflap .3s ease-in-out infinite alternate}' +
+    '.pzw-cr .wl{transform-origin:100% 100%}.pzw-cr .wr{transform-origin:0 100%;animation-delay:.05s}' +
+    '.pzw-skip{position:absolute;left:12px;bottom:calc(var(--nb,0px) + 66px);padding:7px 16px 7px 14px;border:0;color:#22170a;font:700 13px Prompt,sans-serif;cursor:pointer;' +
+      'background:radial-gradient(circle at 0 50%,transparent 5px,#c4a35a 5.5px) left/51% 100% no-repeat,radial-gradient(circle at 100% 50%,transparent 5px,#c4a35a 5.5px) right/51% 100% no-repeat;' +
+      'filter:drop-shadow(2px 3px 0 #7d6233)}' +
+    '@keyframes pzflap{from{transform:scaleY(1)}to{transform:scaleY(.45)}}' +
+    '@keyframes pzgSwing{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}' +
+    '.pzw-sign.sw{animation:pzgSwing 2.2s ease-in-out infinite}';
+  var CRANE = '<svg viewBox="0 0 96 72" aria-hidden="true"><path class="wl" d="M48 40 L20 6 L44 30 Z" fill="#e6d6b8"/><path class="wr" d="M48 40 L80 2 L54 32 Z" fill="#d9c7a3"/>' +
+    '<path d="M6 44 L48 40 L34 52 Z" fill="#efe3cb"/><path d="M48 40 L90 30 L62 50 Z" fill="#d9c7a3"/><path d="M34 52 L48 40 L62 50 L48 58 Z" fill="#c9b48c"/><path d="M90 30 L94 22 L86 30 Z" fill="#c4735a"/></svg>';
+  var PAPER = '<svg viewBox="0 0 120 120" aria-hidden="true"><rect x="2" y="2" width="116" height="116" fill="#e6d6b6"/><path d="M2 2h116v116z" fill="#ddccaa"/>' +
+    '<path class="fd" d="M2 2 118 118M118 2 2 118"/><path class="fd" d="M60 2v116M2 60h116"/></svg>';
+  function calm() { var h = document.documentElement; return h.hasAttribute('data-calm') || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); }
+  function bez(p0, p1, p2, p3, n) {
+    var K = [];
+    for (var i = 0; i <= n; i++) {
+      var t = i / n, u = 1 - t;
+      var x = u * u * u * p0[0] + 3 * u * u * t * p1[0] + 3 * u * t * t * p2[0] + t * t * t * p3[0];
+      var y = u * u * u * p0[1] + 3 * u * u * t * p1[1] + 3 * u * t * t * p2[1] + t * t * t * p3[1];
+      var dx = 3 * u * u * (p1[0] - p0[0]) + 6 * u * t * (p2[0] - p1[0]) + 3 * t * t * (p3[0] - p2[0]), dy = 3 * u * u * (p1[1] - p0[1]) + 6 * u * t * (p2[1] - p1[1]) + 3 * t * t * (p3[1] - p2[1]);
+      K.push({ x: x, y: y, flip: dx < 0 ? -1 : 1, ang: Math.max(-26, Math.min(26, Math.atan2(dy, Math.abs(dx) + 40) * 180 / Math.PI)) });
+    }
+    return K;
+  }
+  window.VCPaperLogin = function (info, api) {
+    var email = (info && info.email) || '', nm = api.name(email) || '';
+    ['.pzl', '.pzw'].forEach(function (s) { var o = document.querySelector(s); if (o) o.remove(); });
+    if (!document.getElementById('pz-gin')) { var st = document.createElement('style'); st.id = 'pz-gin'; st.textContent = css; document.head.appendChild(st); }
+    var H = document.documentElement, alive = true, anims = [], timers = [], guard = 0, welcomed = false;
+    function T(f, ms) { timers.push(setTimeout(function () { if (alive) f(); }, ms)); }
+    function welcome() { if (welcomed) return; welcomed = true; var sk = R && R.querySelector('.pzw-skip'); if (sk) sk.style.display = 'none'; window.__vcHold = Date.now() + 7000; api.welcome(email); }
+    var R = null;
+    function end() {
+      if (!alive) return; alive = false; clearTimeout(guard); timers.forEach(clearTimeout);
+      anims.forEach(function (a) { try { a.cancel(); } catch (e) {} });
+      if (window.__vcGinOff) window.__vcGinOff();
+      if (R) { R.classList.add('out'); setTimeout(function () { if (R.parentNode) R.parentNode.removeChild(R); }, 320); }
+      welcome();
+    }
+    guard = setTimeout(end, 9000);
+    if (calm() || !document.body.animate) { setTimeout(end, 300); return; }
+    /* (2) รอหน้าปกขึ้นครบก่อน · ม่านเขียวยังบังอยู่ระหว่างรอ (สูงสุด 3 วิ) */
+    var waited = 0;
+    (function wait() {
+      if (!alive) return;
+      var ready = H.classList.contains('vch-on') && !H.classList.contains('vc-boot');
+      if (!ready && H.classList.contains('vch-on') && waited > 600) ready = true;
+      if (ready || waited > 3000) { start(); return; }
+      waited += 80; setTimeout(wait, 80);
+    })();
+    function start() {
+      if (!alive) return;
+      var nav = document.getElementById('bottomNav'), nb = 0;
+      if (nav && innerWidth < 768) { var nr = nav.getBoundingClientRect(); if (nr.height > 0 && nr.top < innerHeight) nb = innerHeight - nr.top; }
+      var hd = document.querySelector('header, .vc-top, #topbar'), hb = 56;
+      if (hd) { var hr = hd.getBoundingClientRect(); if (hr.height > 0 && hr.bottom < innerHeight * .3) hb = hr.bottom; }
+      R = document.createElement('div'); R.className = 'pzw'; R.style.setProperty('--nb', nb + 'px'); R.setAttribute('aria-hidden', 'true');
+      var vw = innerWidth, vh = innerHeight, cx = vw / 2;
+      var signY = Math.max(hb + 150, vh * .38), strLen = signY - 62;
+      R.innerHTML = '<div class="pzw-sign"><i class="pzw-str l" style="height:' + strLen + 'px"></i><i class="pzw-str r" style="height:' + strLen + 'px"></i>' +
+        '<div class="pzw-card" style="top:' + strLen + 'px;bottom:auto"><small>ยินดีต้อนรับ</small><b></b><i></i></div></div>' +
+        '<i class="pzw-pp">' + PAPER + '</i><i class="pzw-cr">' + CRANE + '</i><button type="button" class="pzw-skip">ข้าม ›</button>';
+      R.querySelector('.pzw-card b').textContent = nm ? 'คุณ ' + nm : 'กลับมาแล้ว';
+      var sign = R.querySelector('.pzw-sign'); sign.style.top = hb + 'px'; sign.style.height = (strLen + 80) + 'px';
+      document.body.appendChild(R);
+      R.addEventListener('click', end);
+      /* ม่านออก + (5) หน้าปกเด้งขึ้นแบบหนังสือป๊อปอัป */
+      if (window.__vcGinOff) window.__vcGinOff();
+      var host = document.querySelector('.vch');
+      if (host && host.animate) anims.push(host.animate([{ transform: 'perspective(900px) rotateX(16deg) scale(.92)', transformOrigin: '50% 100%', opacity: .4 }, { transform: 'perspective(900px) rotateX(-3deg) scale(1.01)', transformOrigin: '50% 100%', opacity: 1, offset: .65 }, { transform: 'none', transformOrigin: '50% 100%', opacity: 1 }], { duration: 750, easing: 'cubic-bezier(.2,.8,.3,1)' }));
+      var card = R.querySelector('.pzw-card'), pp = R.querySelector('.pzw-pp'), cr = R.querySelector('.pzw-cr');
+      /* (4) ป้ายชื่อห้อยเชือกแกว่งลงมา */
+      T(function () {
+        var a = sign.animate([{ opacity: 0, transform: 'translateY(-' + (strLen + 120) + 'px) rotate(0)' }, { opacity: 1, transform: 'translateY(0) rotate(7deg)', offset: .6 }, { transform: 'rotate(-5deg)', offset: .8 }, { opacity: 1, transform: 'rotate(0)' }], { duration: 950, easing: 'cubic-bezier(.3,.7,.3,1)', fill: 'forwards' });
+        anims.push(a); a.onfinish = function () { sign.style.opacity = 1; sign.classList.add('sw'); };
+      }, 350);
+      /* (3) กระดาษร่วง → รอยพับ → พับ 3 จังหวะ → นก */
+      var py = Math.min(vh - nb - 140, signY + 210);
+      pp.style.left = cx + 'px'; pp.style.top = py + 'px';
+      T(function () {
+        anims.push(pp.animate([{ opacity: 0, transform: 'translate(40px,-' + (py + 80) + 'px) rotate(-30deg)' }, { opacity: 1, transform: 'translate(-12px,-60px) rotate(8deg)', offset: .6 }, { opacity: 1, transform: 'translate(0,0) rotate(0)' }], { duration: 700, easing: 'cubic-bezier(.3,.6,.4,1)', fill: 'forwards' }));
+      }, 700);
+      T(function () { [].forEach.call(pp.querySelectorAll('.fd'), function (f, i) { anims.push(f.animate([{ opacity: 0, strokeDashoffset: 60 }, { opacity: 1, strokeDashoffset: 0 }], { duration: 300, delay: i * 120, fill: 'forwards' })); }); }, 1420);
+      T(function () {
+        anims.push(pp.animate([
+          { transform: 'rotate(0) scale(1)', opacity: 1 },
+          { transform: 'rotate(45deg) scale(.9)', opacity: 1, offset: .3 },
+          { transform: 'rotate(45deg) scale(.9,.45)', opacity: 1, offset: .6 },
+          { transform: 'rotate(45deg) scale(.45,.25)', opacity: 0 }], { duration: 900, easing: 'ease-in-out', fill: 'forwards' }));
+        cr.style.left = cx + 'px'; cr.style.top = py + 'px';
+        anims.push(cr.animate([{ opacity: 0, transform: 'scale(.4) rotate(-10deg)' }, { opacity: 0, transform: 'scale(.4)', offset: .55 }, { opacity: 1, transform: 'scale(1.12) rotate(4deg)', offset: .85 }, { opacity: 1, transform: 'scale(1) rotate(0)' }], { duration: 1100, fill: 'forwards' }));
+      }, 1900);
+      /* นกบินวนเหนือหัวเรื่อง แล้วร่อนลงมาที่ป้าย */
+      T(function () {
+        var sr = card.getBoundingClientRect(), tx = sr.left + sr.width / 2 - cx, ty = sr.top - 18 - py;
+        var K = bez([0, 0], [vw * .42, -py * .9], [-vw * .55, -py * .75], [tx, ty], 14);
+        anims.push(cr.animate(K.map(function (k, i) { return { transform: 'translate(' + k.x.toFixed(1) + 'px,' + k.y.toFixed(1) + 'px) scaleX(' + k.flip + ') rotate(' + k.ang.toFixed(1) + 'deg) scale(' + (1 - i / K.length * .25).toFixed(3) + ')', opacity: 1 }; }), { duration: 1500, easing: 'cubic-bezier(.4,.1,.4,1)', fill: 'forwards' }));
+      }, 3050);
+      /* (7) คาบป้ายไปส่งที่การ์ดต้อนรับ แล้วเกาะตรา */
+      T(welcome, 4300);
+      T(function () {
+        var hello = document.querySelector('.vc-hello'), seal = hello && (hello.querySelector('.vh-seal') || hello);
+        var sr = card.getBoundingClientRect(), from = [sr.left + sr.width / 2, sr.top - 18];
+        var tr = seal ? seal.getBoundingClientRect() : { left: cx - 20, top: vh - nb - 120, width: 40, height: 40 }, to = [tr.left + tr.width / 2, tr.top + tr.height / 2];
+        sign.classList.remove('sw');
+        [].forEach.call(sign.querySelectorAll('.pzw-str'), function (s) { anims.push(s.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, fill: 'forwards' })); });
+        var K = bez(from, [from[0] + 60, from[1] - 40], [to[0] + 70, to[1] - 90], to, 10), d = 900;
+        anims.push(cr.animate(K.map(function (k, i) { var t = i / (K.length - 1); return { transform: 'translate(' + (k.x - cx).toFixed(1) + 'px,' + (k.y - py).toFixed(1) + 'px) scaleX(' + k.flip + ') rotate(' + k.ang.toFixed(1) + 'deg) scale(' + (.75 - t * .35).toFixed(3) + ')', opacity: t > .9 ? 0 : 1 }; }), { duration: d, easing: 'ease-in-out', fill: 'forwards' }));
+        var c0 = sign.getBoundingClientRect();
+        anims.push(card.animate(K.map(function (k, i) { var t = i / (K.length - 1); return { transform: 'translate(' + (k.x - from[0]).toFixed(1) + 'px,' + (k.y - from[1] + 18).toFixed(1) + 'px) rotate(' + (t * 14).toFixed(1) + 'deg) scale(' + (1 - t * .8).toFixed(3) + ')', opacity: t > .85 ? 0 : 1 }; }), { duration: d, easing: 'ease-in-out', fill: 'forwards' }));
+        T(function () {
+          if (seal && seal !== hello) { seal.classList.remove('pz-catch'); void seal.offsetWidth; seal.classList.add('pz-catch'); setTimeout(function () { seal.classList.remove('pz-catch'); }, 600); }
+          end();
+        }, d + 40);
+      }, 4750);
+    }
+  };
+})();
+/*/PZGIN*/
