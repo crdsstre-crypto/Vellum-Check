@@ -78,9 +78,10 @@
   $main.addEventListener('click', e => { if (e.target.closest('[data-retry]')) route(); });
 
   function markNav(which) {
-    document.querySelectorAll('.lb-topnav a').forEach(a => a.removeAttribute('aria-current'));
+    document.querySelectorAll('.lb-topnav a, .lb-subnav a').forEach(a => a.removeAttribute('aria-current'));
     const sel = { home: '.lb-topnav a[href="/library"]', browse: '.lb-topnav a[href="/library?browse=1"]', saved: '.lb-topnav a[href="/library?saved=1"]', admin: '.lb-admin-link' }[which];
     if (sel) document.querySelector(sel)?.setAttribute('aria-current', 'page');
+    document.querySelector(which === 'saved' ? '.lb-subnav a[href="/library?saved=1"]' : '.lb-subnav a[href="/library"]')?.setAttribute('aria-current', 'page');
   }
 
   function route() {
@@ -130,6 +131,7 @@
           <span class="lb-st in_force">มีผลใช้บังคับ</span><span class="lb-st not_yet_in_force">ยังไม่ถึงวันใช้</span><span class="lb-st repealed">ถูกยกเลิก</span><span class="lb-st unverified">ยังไม่ยืนยัน</span>
         </div>
       </div>
+      <div data-learn></div>
       ${last || nSaved || nHl || nNote ? `<div class="lb-mine">
         ${last ? `<a class="lb-resume" href="/library/${esc(last.slug)}#${esc(keyId(last.key))}" data-nav>
           ${ic('<path d="M5 4h10l4 4v12H5z"/><path d="M9 12h6M9 16h4"/>')}<span><small>อ่านต่อจากครั้งก่อน</small><b data-lt></b><em data-ln></em></span><i>›</i></a>` : ''}
@@ -142,6 +144,13 @@
       <section class="lb-sec"><h2>เพิ่มเข้าคลังล่าสุด <a class="lb-more" href="/library?browse=1" data-nav>ดูทั้งหมด ›</a></h2><ul class="lb-list" data-latest>${skRows(5)}</ul></section>`;
     if (last) { $main.querySelector('[data-lt]').textContent = last.title; $main.querySelector('[data-ln]').textContent = last.number || ''; }
     bindSearch();
+    // การ์ด "เรียนรู้" — แสดงเมื่อมีคู่มือที่เผยแพร่แล้ว (แอดมินเห็นฉบับร่างด้วย)
+    fetch('/api/guides', { credentials: 'same-origin' }).then(r => r.ok ? r.json() : null).then(g => {
+      const box = $main.querySelector('[data-learn]');
+      if (tok !== viewToken || !box || !g?.items?.length) return;
+      box.innerHTML = `<a class="lb-learn" href="/guide"><span class="lb-learn-ic" aria-hidden="true">📘</span><span class="t"><b>ไม่ถนัดอ่านตัวบท? เรียนรู้แบบภาษาง่าย</b>
+        <small>${esc(g.items.slice(0, 3).map(x => x.title).join(' · '))}</small></span><i aria-hidden="true">›</i></a>`;
+    }).catch(() => {});
     try {
       const d = await api('/home');
       if (tok !== viewToken) return;
