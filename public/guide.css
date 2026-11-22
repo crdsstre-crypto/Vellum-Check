@@ -118,6 +118,11 @@
 @keyframes scRing{0%,38%{opacity:0}45%,62%{opacity:1}70%,100%{opacity:0}}
 @keyframes scHook{0%,100%{transform:rotate(4deg) translateY(0)}50%{transform:rotate(-5deg) translateY(-6px)}}
 @keyframes scWarn{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+/* กระเป๋าเดินทางเด้ง + คลื่นทะเล */
+.gd-scene .sc-bob{transform-box:fill-box;transform-origin:50% 100%;animation:scBob 2.4s ease-in-out infinite}
+.gd-cm .cm-wave{animation:cmWave 2.6s ease-in-out infinite}
+@keyframes scBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes cmWave{0%,100%{transform:translateX(0)}50%{transform:translateX(-10px)}}
 @keyframes scScale{0%,100%{transform:rotate(0)}50%{transform:rotate(-5deg)}}
 @media (prefers-reduced-motion:reduce){.gd-scene *{animation:none !important}}
 
@@ -137,6 +142,7 @@
 .gd-cover[data-bg="contract"] { background: linear-gradient(135deg, #fff6d8, #f3dfa6); border-color: #e2c27a; }
 .gd-cover[data-bg="office"] { background: linear-gradient(135deg, #eef3ff, #d3e0f7); border-color: #b9c8e0; }
 .gd-cover[data-bg="money"] { background: linear-gradient(135deg, #effbf3, #cdeeda); border-color: #a8d5b5; }
+.gd-cover[data-bg="leave"] { background: linear-gradient(135deg, #e6f6ff, #c7e8fb); border-color: #9fd0e6; }
 .gd-cover[data-bg="condo"] { background: linear-gradient(135deg, #fff1dc, #f7d9b3); border-color: #ecc690; }
 
 /* ===== ช่องการ์ตูนต้นหัวข้อ (guide-comic.js · panel) ===== */
