@@ -1,4 +1,4 @@
-/* Vellum คู่มือ — ใช้ตัวแปรสีจาก lib.css (โหลดก่อนไฟล์นี้) */
+/* Vellum เรียนรู้ — ใช้ตัวแปรสีจาก lib.css (โหลดก่อนไฟล์นี้) */
 .gd-subnav { display: flex; gap: 18px; padding: 8px clamp(16px, 4vw, 40px); background: var(--nv-2); font-size: 14px; }
 .gd-subnav a { color: #A9B4C4; text-decoration: none; padding: 2px 0 4px; }
 .gd-subnav a[aria-current="page"] { color: #fff; box-shadow: inset 0 -2px 0 var(--orange); }
@@ -49,12 +49,44 @@
 .gd-disc { font-size: 12.5px; color: var(--ink-3); border-top: 1px solid var(--line); padding-top: 10px; }
 .gd-reading { outline: 3px solid var(--orange-2); outline-offset: 3px; border-radius: 8px; }
 
-/* รายการคู่มือ */
-.gd-list h2 { font-size: 15px; color: var(--ink-3); margin: 20px 0 8px; font-weight: 600; }
-.gd-card { display: block; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 13px 15px; margin-bottom: 9px; text-decoration: none; color: var(--ink); }
-.gd-card:hover { border-color: var(--orange); }
-.gd-card b { font-size: 16.5px; display: block; line-height: 1.4; }
-.gd-card span { font-size: 13.5px; color: var(--ink-3); }
+/* หน้ารวม "เรียนรู้" — การ์ดแนวนอน: รูปฉาก+น้องม้วนซ้าย เนื้อหาพื้นกรมท่าขวา */
+.gd-lh { text-align: center; margin: 10px 0 4px; font-size: clamp(25px, 6.6vw, 32px); line-height: 1.3; }
+.gd-lh em { font-style: normal; color: #E8791A; }
+.gd-lsub { text-align: center; color: var(--ink-2); font-size: 14.5px; margin: 0 0 16px; }
+.gd-chips { display: flex; gap: 8px; overflow-x: auto; margin: 0 calc(-1 * clamp(16px, 4vw, 40px)) 16px; padding: 2px clamp(16px, 4vw, 40px); scrollbar-width: none; }
+.gd-chips::-webkit-scrollbar { display: none; }
+.gd-chips button { flex: none; font: inherit; font-size: 13.5px; border: 1px solid #DCE1E8; background: #fff; color: var(--ink-2); border-radius: 999px; padding: 5px 12px; cursor: pointer; }
+.gd-chips button.on { background: #16263D; color: #fff; border-color: #16263D; }
+.gd-chips button:focus-visible, .gd-lc:focus-visible { outline: 3px solid #1d4f91; outline-offset: 2px; }
+.gd-sec h2 { font-size: 21px; margin: 6px 0 2px; }
+.gd-ic { margin-right: 6px; }
+.gd-sec-d { margin: 0 0 12px; color: var(--ink-3); font-size: 14px; }
+.gd-sec + .gd-sec { margin-top: 18px; }
+.gd-lc { display: flex; border-radius: 18px; overflow: hidden; background: #16263D; color: #fff; text-decoration: none; margin-bottom: 14px; min-height: 150px; box-shadow: 0 6px 18px rgba(14, 26, 43, .12); }
+.gd-lc-img { flex: 0 0 136px; position: relative; overflow: hidden; }
+.gd-scene { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.gd-lc-mz { position: absolute; left: 2px; bottom: 4px; z-index: 2; line-height: 0; filter: drop-shadow(0 3px 3px rgba(60, 30, 0, .18)); }
+.gd-lc-body { padding: 12px 14px; display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.gd-lc-tag { font-size: 11.5px; color: #F5A04A; margin-bottom: 3px; }
+.gd-lc-cat { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: #16263D; background: #F5A04A; border-radius: 999px; padding: 0 8px; font-weight: 700; margin-right: 6px; }
+.gd-lc-draft { display: inline-block; white-space: nowrap; font-size: 10.5px; background: #FFF7D6; color: #7a5a00; border-radius: 5px; padding: 0 5px; margin-left: 6px; }
+.gd-lc h3 { margin: 0 0 4px; font-size: 16.5px; line-height: 1.35; }
+.gd-lc p { margin: 0 0 6px; color: #C2CCD9; font-size: 13px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.gd-lc mark { background: rgba(255, 216, 77, .2); color: #FFE38A; padding: 0 3px; border-radius: 4px; -webkit-box-decoration-break: clone; box-decoration-break: clone; font-weight: 600; }
+.gd-lc-go { margin-top: auto; color: #F5A04A; font-weight: 700; font-size: 13.5px; }
+.gd-lc:hover .gd-lc-go { text-decoration: underline; }
+
+/* ปกในหน้าอ่าน: น้องม้วนซ้าย ข้อความขวา บนกระดาษครีมมีเส้น */
+.gd-cover { position: relative; display: flex; align-items: center; gap: 6px; border-radius: 16px; padding: 16px 14px 14px 8px; margin: 6px 0 14px; overflow: hidden;
+  background: radial-gradient(120% 90% at 0% 100%, #fbe3c4 0, transparent 60%), linear-gradient(135deg, #fdf6e9, #f6ead3); border: 1px solid #ecd9b4; }
+.gd-cover::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent 0 26px, rgba(160, 130, 80, .08) 26px 27px); pointer-events: none; }
+.gd-cover-m { flex: none; position: relative; line-height: 0; }
+.gd-cover-t { position: relative; min-width: 0; }
+.gd-cover small { display: inline-block; font-size: 12px; color: #B95E0E; background: #fff6ea; border: 1px solid #f3c79a; border-radius: 999px; padding: 1px 9px; margin-bottom: 6px; }
+.gd-cover h1 { margin: 0; font-size: clamp(19px, 5.6vw, 26px); line-height: 1.35; color: #2b1f0e; }
+.gd-cover h1 span { display: block; }
+.gd-cover h1 em { font-style: normal; color: #d9731a; }
+@media (min-width: 380px) { .gd-cover h1 span { white-space: nowrap; } }
 
 /* แผ่นตัวบท (bottom sheet) */
 .gd-sheet-bg { position: fixed; inset: 0; background: rgba(14, 26, 43, .45); z-index: 50; display: flex; align-items: flex-end; justify-content: center; }
