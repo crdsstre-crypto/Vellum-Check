@@ -1,4 +1,4 @@
-/* Vellum คู่มือ — /guide (รายการ) และ /guide/<slug> (อ่าน/ฟัง/ดูคลิป)
+/* Vellum เรียนรู้ — /guide (รายการ) และ /guide/<slug> (อ่าน/ฟัง/ดูคลิป)
    เนื้อหามาจาก /api/guides · ตัวบทมาตรามาจาก /api/lib/cite · ใส่ลงหน้าด้วย esc() เสมอ
    เสียงอ่านใช้ Web Speech API ของเบราว์เซอร์ (ไม่มีค่าใช้จ่าย ไม่ส่งข้อมูลออกนอกเครื่อง) */
 (() => {
@@ -66,20 +66,47 @@
   })();
   addEventListener('pagehide', () => { try { speechSynthesis.cancel(); } catch {} });
 
-  // ---------- รายการคู่มือ ----------
+  // ---------- รายการ "เรียนรู้" ----------
+  // **คำ** ในข้อความการ์ด = ไฮไลต์ (escape ก่อนเสมอ แล้วค่อยแปลงเป็น <mark>)
+  const hl = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<mark>$1</mark>');
+  const mascot = (mood, size) => (window.VCMascot && typeof VCMascot.svg === 'function') ? VCMascot.svg(mood || 'curious', size) : '';
+  const scene = (name, key) => (window.VCScenes ? VCScenes.svg(name, key) : '');
+
   async function viewList() {
     document.title = 'เรียนรู้กฎหมายแบบภาษาง่าย · Vellum';
     try {
       const d = await get('/api/guides');
       const groups = new Map();
-      for (const g of d.items) { if (!groups.has(g.category)) groups.set(g.category, []); groups.get(g.category).push(g); }
-      $main.innerHTML = `<h1 class="gd-h1">เรียนรู้กฎหมายแบบภาษาง่าย</h1>
-        <p class="gd-a">เลือกเรื่องที่กำลังเจอ อ่าน ฟัง หรือดูคลิป แล้วกดดูตัวบทจริงได้ทุกข้อ</p>
-        ${d.isAdmin ? '<div class="gd-draft" style="margin-top:12px">คุณเห็นคู่มือฉบับร่างด้วยเพราะเป็นแอดมิน · คนทั่วไปจะเห็นเฉพาะเรื่องที่ตั้ง "reviewed": true แล้ว</div>' : ''}
-        <div class="gd-list">${d.items.length ? [...groups].map(([cat, list]) => `<h2>${esc(cat)}</h2>${list.map(g => `
-          <a class="gd-card" href="/guide/${esc(g.slug)}"><b>${esc(g.title)}</b>
-          <span>${esc(g.intro)}${g.minutes ? ` · อ่าน ${toTh(g.minutes)} นาที` : ''}${g.reviewed ? '' : ' · ⏳ ฉบับร่าง'}</span></a>`).join('')}`).join('')
-          : '<p class="gd-empty">ยังไม่มีเรื่องที่เผยแพร่ เร็ว ๆ นี้จะมีเพิ่มครับ</p>'}</div>`;
+      for (const g of d.items) {
+        if (!groups.has(g.category)) groups.set(g.category, { icon: '', note: '', list: [] });
+        const G = groups.get(g.category); G.list.push(g);
+        if (!G.icon && g.categoryIcon) G.icon = g.categoryIcon;
+        if (!G.note && g.categoryNote) G.note = g.categoryNote;
+      }
+      const cats = [...groups];
+      let k = 0;
+      const card = g => `<a class="gd-lc" href="/guide/${esc(g.slug)}">
+          <div class="gd-lc-img" aria-hidden="true">${scene(g.scene, 'c' + (++k))}<span class="gd-lc-mz">${mascot(g.mood, 74)}</span></div>
+          <div class="gd-lc-body">
+            <span class="gd-lc-tag"><span class="gd-lc-cat">${g.categoryIcon ? esc(g.categoryIcon) + ' ' : ''}${esc(g.category)}</span>คู่มือ${g.minutes ? ` · ${toTh(g.minutes)} นาที` : ''}${g.reviewed ? '' : '<span class="gd-lc-draft">ฉบับร่าง</span>'}</span>
+            <h3>${esc(g.title)}</h3>
+            <p>${hl(g.cardText || g.intro)}</p>
+            <span class="gd-lc-go">อ่านคู่มือ →</span>
+          </div></a>`;
+      $main.innerHTML = `<h1 class="gd-lh">รู้ก่อนเซ็น<em>เรื่องที่คุณเจอ</em></h1>
+        <p class="gd-lsub">อ่าน ฟัง หรือดูคลิป ภาษาง่าย พร้อมตัวบทจริงทุกข้อ</p>
+        ${d.isAdmin ? '<div class="gd-draft">คุณเห็นคู่มือฉบับร่างด้วยเพราะเป็นแอดมิน · คนทั่วไปจะเห็นเฉพาะเรื่องที่ตั้ง "reviewed": true แล้ว</div>' : ''}
+        ${cats.length > 1 ? `<nav class="gd-chips" aria-label="เลือกหมวด"><button type="button" class="on" aria-pressed="true" data-cat="">ทั้งหมด</button>${cats.map(([c, G]) => `<button type="button" aria-pressed="false" data-cat="${esc(c)}">${G.icon ? esc(G.icon) + ' ' : ''}${esc(c)}</button>`).join('')}</nav>` : ''}
+        ${cats.length ? cats.map(([c, G]) => `<section class="gd-sec" data-sec="${esc(c)}">
+            <h2>${G.icon ? `<span class="gd-ic" aria-hidden="true">${esc(G.icon)}</span>` : ''}${esc(c)}</h2>
+            ${G.note ? `<p class="gd-sec-d">${esc(G.note)}</p>` : ''}
+            ${G.list.map(card).join('')}</section>`).join('')
+          : '<p class="gd-empty">ยังไม่มีเรื่องที่เผยแพร่ เร็ว ๆ นี้จะมีเพิ่มครับ</p>'}`;
+      const chips = [...$main.querySelectorAll('.gd-chips button')];
+      chips.forEach(b => b.addEventListener('click', () => {
+        chips.forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', String(x === b)); });
+        $main.querySelectorAll('.gd-sec').forEach(sec => { sec.hidden = !!b.dataset.cat && sec.dataset.sec !== b.dataset.cat; });
+      }));
     } catch (e) { $main.innerHTML = errBox(e); }
   }
 
@@ -97,7 +124,11 @@
     $main.innerHTML = `
       ${g.reviewed ? '' : `<div class="gd-draft" role="note">ฉบับร่าง · ยังไม่ผ่านการตรวจโดยนักกฎหมาย${g.isAdmin ? ' · ตอนนี้เห็นเฉพาะแอดมิน' : ''}</div>`}
       <div class="gd-crumb"><a href="/guide">เรียนรู้</a> › ${esc(g.category)}</div>
-      <h1 class="gd-h1" data-say>${esc(g.title)}</h1>
+      ${g.coverLines.length ? `<div class="gd-cover">
+        <div class="gd-cover-m" aria-hidden="true">${mascot(g.mood, 112)}</div>
+        <div class="gd-cover-t"><small>${g.categoryIcon ? esc(g.categoryIcon) + ' ' : ''}คู่มือ · ${esc(g.category)}</small>
+          <h1 data-say>${g.coverLines.map((l, i) => `<span>${i ? `<em>${esc(l)}</em>` : esc(l)}</span>`).join(' ')}</h1></div>
+      </div>` : `<h1 class="gd-h1" data-say>${esc(g.title)}</h1>`}
       <div class="gd-meta">
         ${g.minutes ? `<span class="gd-chip">อ่าน ${toTh(g.minutes)} นาที</span>` : ''}
         ${g.updated ? `<span class="gd-chip">อัปเดต ${esc(thDate(g.updated))}</span>` : ''}
