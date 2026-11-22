@@ -10,7 +10,9 @@
   const MONTHS = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
   const thDate = iso => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ''); return m ? `${Number(m[3])} ${MONTHS[Number(m[2]) - 1]} ${Number(m[1]) + 543}` : ''; };
   const keyId = k => 's-' + String(k).replace(/[^0-9a-zก-๙-]+/gi, '-');
-  const lawShort = name => name === 'ประมวลกฎหมายแพ่งและพาณิชย์' ? 'ป.พ.พ.' : name === 'ประมวลกฎหมายอาญา' ? 'ป.อ.' : name === 'ประมวลกฎหมายวิธีพิจารณาความแพ่ง' ? 'ป.วิ.พ.' : name;
+  const lawShort = name => name === 'ประมวลกฎหมายแพ่งและพาณิชย์' ? 'ป.พ.พ.' : name === 'ประมวลกฎหมายอาญา' ? 'ป.อ.' : name === 'ประมวลกฎหมายวิธีพิจารณาความแพ่ง' ? 'ป.วิ.พ.'
+    : name.startsWith('พระราชบัญญัติจัดตั้งศาลแรงงาน') ? 'พ.ร.บ.ศาลแรงงาน'
+    : name.replace(/^พระราชบัญญัติ\s*/, 'พ.ร.บ.').replace(/\s*(พ\.ศ\.|พุทธศักราช)\s*[0-9๐-๙]{4}.*$/, '');
 
   async function get(url) {
     const res = await fetch(url, { credentials: 'same-origin' });
