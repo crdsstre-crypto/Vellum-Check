@@ -128,7 +128,8 @@
       ${g.reviewed ? '' : `<div class="gd-draft" role="note">ฉบับร่าง · ยังไม่ผ่านการตรวจโดยนักกฎหมาย${g.isAdmin ? ' · ตอนนี้เห็นเฉพาะแอดมิน' : ''}</div>`}
       <div class="gd-crumb"><a href="/guide">เรียนรู้</a> › ${esc(g.category)}</div>
       ${g.coverLines.length ? `<div class="gd-cover">
-        <div class="gd-cover-m" aria-hidden="true">${mascot(g.mood, 112)}</div>
+        ${scene(g.scene, 'cv') ? `<div class="gd-cover-art" aria-hidden="true">${scene(g.scene, 'cv')}<span class="gd-cover-m">${mascot(g.mood, 66)}</span></div>`
+          : `<div class="gd-cover-m" aria-hidden="true">${mascot(g.mood, 112)}</div>`}
         <div class="gd-cover-t"><small>${g.categoryIcon ? esc(g.categoryIcon) + ' ' : ''}คู่มือ · ${esc(g.category)}</small>
           <h1 data-say>${g.coverLines.map((l, i) => `<span>${i ? `<em>${esc(l)}</em>` : esc(l)}</span>`).join(' ')}</h1></div>
       </div>` : `<h1 class="gd-h1" data-say>${esc(g.title)}</h1>`}
