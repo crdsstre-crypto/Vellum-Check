@@ -579,6 +579,20 @@
         <button class="lb-btn primary" data-seed ${d.running ? 'disabled' : ''}>นำเข้าชุดแกน</button>
         <div data-job></div>
       </section>
+      <section class="lb-box lb-upd" data-upd>
+        <h2>อัปเดตตัวบทเป็นฉบับปัจจุบัน <small>ทีละฉบับ</small></h2>
+        <ol class="lb-steps"><li>เปิดฉบับ "รวมแก้ไขล่าสุด" ของกฎหมายนั้นจากระบบค้นหากฎหมายของสำนักงานคณะกรรมการกฤษฎีกา</li><li>คัดลอกข้อความทั้งฉบับ (รวมเชิงอรรถท้ายเอกสาร) มาวางด้านล่าง หรือเลือกไฟล์ .txt</li><li>กด "ตรวจก่อนนำเข้า" ดูว่าระบบแบ่งมาตราถูก แล้วจึงนำเข้า</li></ol>
+        <form class="lb-updform" data-updf>
+          <label>กฎหมาย <select name="law"><option value="">— เลือกฉบับที่มีในคลัง —</option>${d.laws.map((l, i) => `<option value="${i}">${esc(l.title)}</option>`).join('')}<option value="new">+ กฎหมายใหม่ (พิมพ์ชื่อเอง)</option></select></label>
+          <label data-newt hidden>ชื่อกฎหมาย (ตามราชกิจจานุเบกษา) <input name="title" maxlength="400" placeholder="เช่น พระราชบัญญัติคุ้มครองแรงงาน พ.ศ. 2541"></label>
+          <label>ข้อมูล ณ วันที่ (วันที่คัดลอกจากแหล่ง) <input name="asOf" type="date" required></label>
+          <label>ข้อความทั้งฉบับ <textarea name="text" rows="7" placeholder="วางข้อความฉบับรวมแก้ไขที่นี่"></textarea></label>
+          <div class="lb-updrow"><label class="lb-btn lb-file">เลือกไฟล์ .txt<input type="file" accept=".txt,text/plain" hidden data-file></label><span class="lb-count" data-len></span></div>
+          <p class="lb-src">แหล่งที่มา: สำนักงานคณะกรรมการกฤษฎีกา · ตัวบทกฎหมายไม่มีลิขสิทธิ์ตามมาตรา ๗ พ.ร.บ.ลิขสิทธิ์ พ.ศ. ๒๕๓๗ · <b>ห้ามคัดลอกจากเว็บเอกชนหรือหนังสือที่เรียบเรียงเอง</b></p>
+          <div><button type="submit" class="lb-btn">ตรวจก่อนนำเข้า</button></div>
+          <div data-pv></div>
+        </form>
+      </section>
       <section class="lb-box"><h2 style="margin:0 0 10px;font-size:16px">กฎหมายในคลัง (${toTh(d.laws.length)})</h2>
         <div style="overflow:auto"><table class="lb-tbl"><thead><tr><th>ชื่อ</th><th>มาตรา</th><th>สถานะ</th><th></th></tr></thead><tbody data-laws></tbody></table></div>
       </section>`;
@@ -612,6 +626,49 @@
       });
     });
     const jobEl = $main.querySelector('[data-job]');
+    // ---- อัปเดตทีละฉบับ: ตรวจ (ไม่บันทึก) → นำเข้าเป็นฉบับใหม่ของกฎหมายเดิม ----
+    const uf = $main.querySelector('[data-updf]'), pvEl = uf.querySelector('[data-pv]');
+    uf.asOf.value = new Date(Date.now() + 7 * 36e5).toISOString().slice(0, 10);
+    const updTitle = () => uf.law.value === 'new' ? uf.title.value.trim() : (d.laws[Number(uf.law.value)]?.title || '');
+    const showLen = () => { uf.querySelector('[data-len]').textContent = uf.text.value ? toTh(uf.text.value.length.toLocaleString()) + ' ตัวอักษร' : ''; pvEl.innerHTML = ''; };
+    uf.law.addEventListener('change', () => { uf.querySelector('[data-newt]').hidden = uf.law.value !== 'new'; pvEl.innerHTML = ''; });
+    uf.text.addEventListener('input', showLen);
+    uf.querySelector('[data-file]').addEventListener('change', async e => { const f = e.target.files[0]; if (!f) return; uf.text.value = await f.text(); showLen(); });
+    uf.addEventListener('submit', async e => {
+      e.preventDefault();
+      const title = updTitle(), text = uf.text.value;
+      if (!title) { pvEl.innerHTML = '<p class="lb-msg err">เลือกกฎหมายหรือพิมพ์ชื่อก่อน</p>'; return; }
+      if (text.trim().length < 50) { pvEl.innerHTML = '<p class="lb-msg err">ยังไม่ได้วางข้อความกฎหมาย</p>'; return; }
+      pvEl.innerHTML = '<p class="lb-count">กำลังตรวจ…</p>';
+      let r; try { r = await api('/admin/preview', { method: 'POST', body: JSON.stringify({ title, text }) }); } catch (err) { pvEl.innerHTML = `<p class="lb-msg err">${esc(err.message)}</p>`; return; }
+      const q = r.quality, warn = [];
+      if (r.duplicateOf) warn.push('ข้อความนี้ตรงกับฉบับที่มีในคลังแล้วทุกตัวอักษร นำเข้าซ้ำไม่ได้');
+      if (!q.mainSections) warn.push('ระบบหามาตราไม่เจอ ข้อความอาจไม่ครบหรือรูปแบบไม่ตรง');
+      if (q.gaps) warn.push(`เลขมาตราขาดช่วง ${toTh(q.gaps)} จุด (${esc(q.gapList.slice(0, 4).join(', '))}) อาจคัดลอกมาไม่ครบ`);
+      if (r.existing?.mainSections && q.mainSections < r.existing.mainSections * 0.9) warn.push(`มีมาตราน้อยกว่าฉบับเดิมมาก (${toTh(q.mainSections)} จาก ${toTh(r.existing.mainSections)})`);
+      if (uf.law.value !== 'new' && !r.existing) warn.push('ชื่อในระบบไม่ตรงกับฉบับเดิม จะถูกสร้างเป็นกฎหมายใหม่');
+      const ok = !r.duplicateOf && q.mainSections > 0;
+      pvEl.innerHTML = `<div class="lb-pvcard">
+        <div class="lb-pvt">${r.existing ? `ฉบับใหม่ของ <b></b>` : `กฎหมายใหม่ <b></b>`}</div>
+        <dl><dt>มาตราในตัวบทหลัก</dt><dd>${toTh(q.mainSections)} มาตรา (${esc(toTh(q.first || '-'))} – ${esc(toTh(q.last || '-'))})</dd>
+          ${r.existing?.mainSections ? `<dt>ฉบับเดิมในคลัง</dt><dd>${toTh(r.existing.mainSections)} มาตรา</dd>` : ''}
+          <dt>เชิงอรรถ</dt><dd>${toTh(q.footnotes)}</dd>
+          <dt>แก้ไขล่าสุดที่เอกสารอ้างถึง</dt><dd>${r.latestAmendments.length ? r.latestAmendments.slice().reverse().map(a => `<div>${esc(toTh(a.title))}</div>`).join('') : 'ไม่พบ'}</dd></dl>
+        ${warn.length ? `<ul class="lb-warn">${warn.map(w => `<li>${w}</li>`).join('')}</ul>` : '<p class="lb-msg ok">แบ่งมาตราได้ครบ ไม่พบเลขขาดช่วง</p>'}
+        <p class="lb-count">นำเข้าแล้วสถานะยังเป็น "ยังไม่ยืนยัน" จนกว่าจะกดยืนยันพร้อมหลักฐาน · ฉบับเก่ายังเก็บไว้ในประวัติ</p>
+        ${ok ? '<button type="button" class="lb-btn primary" data-go>นำเข้าฉบับนี้</button>' : ''}</div>`;
+      pvEl.querySelector('.lb-pvt b').textContent = r.existing ? r.existing.title : r.title;
+      pvEl.querySelector('[data-go]')?.addEventListener('click', async ev => {
+        ev.target.disabled = true;
+        const label = 'ฉบับรวมแก้ไข (ข้อมูล ณ ' + thDate(uf.asOf.value) + ')';
+        try {
+          const j = await api('/admin/upload', { method: 'POST', body: JSON.stringify({
+            source: { name: 'สำนักงานคณะกรรมการกฤษฎีกา (ระบบค้นหากฎหมาย)', homepage: 'https://www.ocs.go.th/searchlaw', license: 'ไม่มีลิขสิทธิ์ตามมาตรา 7 พ.ร.บ.ลิขสิทธิ์ พ.ศ. 2537', note: 'แอดมินคัดลอกฉบับรวมแก้ไขทีละฉบับ' },
+            laws: [{ title: r.existing ? r.existing.title : title, text, label }] }) });
+          jobEl.scrollIntoView({ block: 'center' }); pvEl.innerHTML = '<p class="lb-msg ok">เริ่มนำเข้าแล้ว ดูความคืบหน้าที่กล่องด้านบน</p>'; poll(j.jobId);
+        } catch (err) { ev.target.disabled = false; pvEl.insertAdjacentHTML('beforeend', `<p class="lb-msg err">${esc(err.message)}</p>`); }
+      });
+    });
     const showJob = j => {
       if (!j) return;
       const pct = j.total ? Math.round(j.done / j.total * 100) : 0;
