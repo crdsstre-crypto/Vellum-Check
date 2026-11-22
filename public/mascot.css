@@ -11,6 +11,11 @@
 .vm-party .vm-conf{animation:vmTwinkle 1.4s ease-in-out infinite}
 .vm-sad .vm-body{transform:rotate(-3deg);animation:none}
 .vm-sad .vm-heart path:first-child{transform-origin:0 0;animation:vmBeat 1.6s ease-in-out infinite}
+/* สงสัย: เอียงตัว + เครื่องหมายคำถามลอย */
+.vm-curious .vm-body{transform-origin:60px 128px;animation:vmTilt 3.2s ease-in-out infinite}
+.vm-curious .vm-q g{animation:vmQ 2.4s ease-in-out infinite}.vm-curious .vm-q .q2{animation-delay:1.2s}
+@keyframes vmTilt{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(-1deg) translateY(-2px)}}
+@keyframes vmQ{0%,100%{opacity:.35;transform:translateY(2px)}50%{opacity:1;transform:translateY(-3px)}}
 @keyframes vmBeat{0%,100%{transform:scale(1)}15%{transform:scale(1.12)}30%{transform:scale(1)}}
 @keyframes vmBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 @keyframes vmWave{0%,100%{transform:rotate(0)}50%{transform:rotate(-22deg)}}
