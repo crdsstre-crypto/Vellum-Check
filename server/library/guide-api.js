@@ -12,7 +12,7 @@ export const GUIDE_PAGE = path.join(__dirname, '..', '..', 'public', 'guide.html
 const str = (v, max) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
 const arr = v => (Array.isArray(v) ? v : []);
 const MOODS = ['wave', 'happy', 'sleep', 'party', 'sad', 'curious', 'stop', 'alert', 'inspect'];   // ท่าน้องม้วน (public/mascot.js)
-const PANEL_SCENES = ['pay', 'nopay', 'notice', 'labor', 'sign', 'repair', 'moveout', 'iou', 'rate', 'guarantee', 'hourglass', 'umbrella', 'hours', 'nothreat', 'complain', 'bankcall', 'mule', 'shared', 'tilt', 'cut', 'fence', 'sick', 'errand', 'vacation', 'holiday', 'workday', 'consent', 'rates', 'manager', 'payslip', 'trial', 'dismiss', 'day120', 'court', 'deductlist', 'pie', 'broken', 'vault', 'payday', 'orbit', 'hospital', 'nursery', 'jobcenter', 'retire', 'bridge', 'verdict', 'xray', 'donut', 'roadmap', 'lantern'];   // ฉากช่องการ์ตูน (public/guide-comic.js)
+const PANEL_SCENES = ['pay', 'nopay', 'notice', 'labor', 'sign', 'repair', 'moveout', 'iou', 'rate', 'guarantee', 'hourglass', 'umbrella', 'hours', 'nothreat', 'complain', 'bankcall', 'mule', 'shared', 'tilt', 'cut', 'fence', 'sick', 'errand', 'vacation', 'holiday', 'workday', 'consent', 'rates', 'manager', 'payslip', 'trial', 'dismiss', 'day120', 'court', 'deductlist', 'pie', 'broken', 'vault', 'payday', 'orbit', 'hospital', 'nursery', 'jobcenter', 'retire', 'bridge', 'verdict', 'xray', 'donut', 'roadmap', 'lantern', 'grid120', 'jars', 'signs', 'guard', 'stroller'];   // ฉากช่องการ์ตูน (public/guide-comic.js)
 
 function cleanCite(c) {
   const law = str(c?.law, 200), sec = str(c?.sec, 30), label = str(c?.label, 120);
@@ -43,9 +43,9 @@ function cleanGuide(g, file) {
     category: str(g.category, 60) || 'ทั่วไป',
     categoryIcon: str(g.categoryIcon, 8),          // อีโมจิหน้าหมวด เช่น 🏠
     categoryNote: str(g.categoryNote, 160),        // คำอธิบายใต้ชื่อหมวดในหน้ารวม
-    scene: ['condo', 'office', 'money', 'debt', 'scam', 'contract', 'leave', 'overtime', 'probation', 'payroll', 'social', 'worksite'].includes(g.scene) ? g.scene : 'condo',   // ฉากในรูปการ์ด
+    scene: ['condo', 'office', 'money', 'debt', 'scam', 'contract', 'leave', 'overtime', 'probation', 'payroll', 'social', 'worksite', 'cradle'].includes(g.scene) ? g.scene : 'condo',   // ฉากในรูปการ์ด
     mood: MOODS.includes(g.mood) ? g.mood : 'curious',   // ท่าน้องม้วน
-    coverLayout: ['right', 'banner'].includes(g.coverLayout) ? g.coverLayout : '',   // ปก: "right" = ภาพวงกลมอยู่ขวา · "banner" = ภาพกว้างเต็มบน
+    coverLayout: ['right', 'banner', 'polaroid'].includes(g.coverLayout) ? g.coverLayout : '',   // ปก: "right" = ภาพวงกลมอยู่ขวา · "banner" = ภาพกว้างเต็มบน
     cardText: str(g.cardText, 300),                // คำอธิบายบนการ์ด · ใส่ **คำ** เพื่อไฮไลต์
     coverLines: arr(g.coverLines).map(x => str(x, 60)).filter(Boolean).slice(0, 2),   // ข้อความบนปก (บรรทัดที่ 2 เป็นสีส้ม)
     order: Number.isFinite(g.order) ? g.order : 999,
