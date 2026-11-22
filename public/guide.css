@@ -157,6 +157,7 @@
 .gd-cover[data-bg="pvd"] { background: linear-gradient(135deg, #f0fff7, #d3f1e3); border-color: #a8d8bf; }
 .gd-cover[data-bg="youth"] { background: linear-gradient(135deg, #f1ecff, #ffe6d8); border-color: #d9c8f2; }
 .gd-cover[data-bg="border"] { background: linear-gradient(135deg, #fff3e4, #e3f2ff); border-color: #f0d2ac; }
+.gd-cover[data-bg="union"] { background: linear-gradient(135deg, #fff1e2, #ffe1cf); border-color: #f2c7a4; }
 .gd-cover[data-bg="leave"] { background: linear-gradient(135deg, #e6f6ff, #c7e8fb); border-color: #9fd0e6; }
 .gd-cover[data-bg="condo"] { background: linear-gradient(135deg, #fff1dc, #f7d9b3); border-color: #ecc690; }
 
@@ -422,3 +423,28 @@
 @keyframes cmDrawer { 0%, 15% { transform: translateX(0); } 40%, 85% { transform: translateX(30px); } 100% { transform: translateX(0); } }
 @keyframes cmHop { 0%, 30% { transform: translate(30px, 30px); opacity: 0; } 50% { transform: translate(60px, -10px); opacity: 1; } 65%, 85% { transform: translate(96px, -4px); opacity: 1; } 100% { transform: translate(96px, -4px); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .gd-cm .cm-hop { opacity: 1; transform: translate(96px, -4px); } }
+
+/* ===== ปกแบบกระดาษฉีก (coverLayout: "torn"): ขอบบน-ล่างหยักเหมือนฉีกจากโปสเตอร์ ===== */
+.gd-cover[data-layout="torn"] .gd-cover-art { flex-basis: 132px; height: 160px; border: 0; border-radius: 0; transform: rotate(-2deg);
+  clip-path: polygon(0 4%, 8% 0, 17% 3%, 26% 0, 36% 4%, 46% 1%, 56% 4%, 66% 0, 76% 3%, 86% 0, 94% 4%, 100% 1%, 100% 97%, 92% 100%, 83% 96%, 73% 100%, 63% 96%, 53% 99%, 43% 95%, 33% 100%, 23% 96%, 13% 100%, 5% 96%, 0 99%); }
+.gd-cover[data-layout="torn"] { gap: 16px; }
+/* ของขยับชุดใหม่ (สหภาพ) */
+.gd-scene .sc-smoke circle { animation: scSmoke 3.6s ease-out infinite; }
+.gd-scene .sc-smoke circle:nth-child(2) { animation-delay: 1.2s; } .gd-scene .sc-smoke circle:nth-child(3) { animation-delay: 2.4s; }
+.gd-scene .sc-gear { transform-box: fill-box; transform-origin: 50% 50%; animation: scGear 6s linear infinite; }
+.gd-scene .sc-bunting path { transform-box: fill-box; transform-origin: 50% 0; animation: scBunt 1.8s ease-in-out infinite; }
+.gd-scene .sc-bunting path:nth-child(even) { animation-delay: .5s; }
+.gd-cm .cm-popin { transform-box: fill-box; transform-origin: 50% 100%; animation: cmPopin 4.5s ease-out infinite; }
+.gd-cm .cm-pend { transform-box: fill-box; transform-origin: 50% 0; animation: cmPend 2.6s ease-in-out infinite; }
+.gd-cm .cm-travel { animation: cmTravel 5s ease-in-out infinite; }
+.gd-cm .cm-sound { animation: cmSound 1.4s ease-out infinite; }
+.gd-cm .cm-deflect { animation: cmDeflect 2.2s ease-in infinite; }
+@keyframes scSmoke { 0% { transform: translate(0, 8px) scale(.5); opacity: 0; } 30% { opacity: .9; } 100% { transform: translate(8px, -10px) scale(1.2); opacity: 0; } }
+@keyframes scGear { to { transform: rotate(360deg); } }
+@keyframes scBunt { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
+@keyframes cmPopin { 0% { transform: scale(0); opacity: 0; } 12%, 85% { transform: scale(1); opacity: 1; } 100% { transform: scale(1); opacity: 0; } }
+@keyframes cmPend { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+@keyframes cmTravel { 0%, 8% { transform: translateX(0); } 25%, 33% { transform: translateX(74px); } 50%, 58% { transform: translateX(148px); } 75%, 92% { transform: translateX(222px); } 100% { transform: translateX(0); } }
+@keyframes cmSound { 0% { opacity: 0; transform: translateX(-6px); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateX(6px); } }
+@keyframes cmDeflect { 0% { transform: translate(0, 0) rotate(0); opacity: 0; } 10% { opacity: 1; } 45% { transform: translate(86px, 0) rotate(0); opacity: 1; } 100% { transform: translate(30px, -70px) rotate(-40deg); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .gd-cm .cm-deflect { opacity: 1; } }
