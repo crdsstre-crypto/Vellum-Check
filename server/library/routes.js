@@ -274,9 +274,11 @@ export function mountLibrary(app, { pool, getUserFromRequest, isAdmin }) {
   r.get('/admin/overview', admin, async (req, res) => {
     try {
       const [laws, jobs, sources] = await Promise.all([
-        pool.query(`SELECT l.id, l.slug, l.title, l.doc_type, l.year_be, l.status, l.status_evidence_url, l.topics,
-                           v.id AS version_id, v.quality, v.is_current_verified, v.gazette_ref
+        pool.query(`SELECT l.id, l.slug, l.title, l.doc_type, l.year_be, l.status, l.status_evidence_url, l.status_note, l.topics,
+                           v.id AS version_id, v.quality, v.is_current_verified, v.gazette_ref, v.label AS version_label,
+                           ev.title AS latest_amend, ev.event_date AS latest_amend_date
                       FROM lib_laws l LEFT JOIN LATERAL (SELECT * FROM lib_versions WHERE law_id = l.id ORDER BY imported_at DESC, id DESC LIMIT 1) v ON true
+                      LEFT JOIN LATERAL (SELECT title, event_date FROM lib_events WHERE law_id = l.id AND kind = 'amended' ORDER BY event_date DESC NULLS LAST, id DESC LIMIT 1) ev ON true
                      ORDER BY l.id`),
         pool.query(`SELECT * FROM lib_import_jobs ORDER BY id DESC LIMIT 10`),
         pool.query(`SELECT * FROM lib_sources ORDER BY id`),
