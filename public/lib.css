@@ -429,3 +429,28 @@ mark.hl { cursor: pointer; padding: 1px 0; border-radius: 0; }
   .lb-topic2 b { font-size: 14.5px; }
 }
 @media (prefers-reduced-motion: reduce) { .lb-bar, .lb-pop { animation: none; } .lb-toc, .lb-toc > *, .lb-toast, .lb-card { transition: none; } }
+
+/* ---------- แอดมิน: อัปเดตตัวบททีละฉบับ ---------- */
+.lb-upd h2 { margin: 0 0 8px; font-size: 16px; }
+.lb-upd h2 small { font-weight: 400; color: var(--ink-3); margin-left: 6px; font-size: 13px; }
+.lb-steps { margin: 0 0 14px; padding-left: 20px; color: var(--ink-2); font-size: 14px; }
+.lb-steps li { margin-bottom: 2px; }
+.lb-updform { display: grid; gap: 10px; }
+.lb-updform label { display: grid; gap: 4px; font-size: 13.5px; color: var(--ink-2); }
+.lb-updform select, .lb-updform input:not([type=file]), .lb-updform textarea { width: 100%; background: #fff; border: 1px solid var(--line); border-radius: var(--r-s); padding: 8px 10px; font-size: 15px; color: var(--ink); }
+.lb-updform textarea { font: 400 14px/1.6 var(--read); resize: vertical; }
+.lb-updform :is(select, input, textarea):focus { outline: none; border-color: var(--orange); }
+.lb-updrow { display: flex; align-items: center; gap: 10px; }
+.lb-updform label.lb-file { display: inline-flex; color: var(--ink); cursor: pointer; }
+.lb-src { margin: 0; font-size: 12.5px; color: var(--ink-3); background: var(--o-soft); padding: 8px 10px; border-radius: var(--r-s); }
+.lb-src b { color: var(--o-text); font-weight: 600; }
+.lb-pvcard { border: 1px solid var(--line); border-left: 3px solid var(--nv); border-radius: var(--r-m); padding: 12px 14px; display: grid; gap: 10px; background: #FAFBFC; }
+.lb-pvt { font-size: 14px; color: var(--ink-3); }
+.lb-pvt b { color: var(--ink); font-weight: 600; }
+.lb-pvcard dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 14px; }
+.lb-pvcard dt { color: var(--ink-3); }
+.lb-pvcard dd { margin: 0; }
+.lb-pvcard dd div + div { color: var(--ink-3); font-size: 13px; }
+.lb-warn { margin: 0; padding: 8px 10px 8px 28px; background: #FDEDEE; border-radius: var(--r-s); color: #8E2A33; font-size: 13.5px; }
+.lb-pvcard .lb-btn.primary { justify-self: start; }
+@media (max-width: 560px) { .lb-pvcard dl { grid-template-columns: minmax(0, 1fr); } .lb-pvcard dt { margin-top: 4px; } }
