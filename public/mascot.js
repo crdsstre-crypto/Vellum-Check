@@ -1,5 +1,5 @@
-/* ===== มาสคอต "เวลลัม" — กระดาษสัญญาม้วนน้อยถือปากกาไฮไลต์ (วาดเอง ไม่ใช้ภาพจากที่อื่น) =====
-   VCMascot.svg(mood, size) คืนสตริง SVG · mood: wave | happy | sleep | party | sad
+/* ===== มาสคอต "เวลลัม" (น้องม้วน) — กระดาษสัญญาม้วนน้อยถือปากกาไฮไลต์ (วาดเอง ไม่ใช้ภาพจากที่อื่น) =====
+   VCMascot.svg(mood, size) คืนสตริง SVG · mood: wave | happy | sleep | party | sad | curious
    ท่าขยับอยู่ใน mascot.css (คลาส vm-<mood>) */
 (function () {
   'use strict';
@@ -44,7 +44,13 @@
       '<circle cx="51.2" cy="57.6" r="1.3" fill="#fff"/><circle cx="71.2" cy="57.6" r="1.3" fill="#fff"/>' +
       '<path d="M45 51q5 1 9-3M75 51q-5 1-9-3" stroke="' + INK + '" stroke-width="2" stroke-linecap="round" fill="none"/>' +
       '<path d="M54 69q6-4 12 0" stroke="' + INK + '" stroke-width="2.2" stroke-linecap="round" fill="none"/>' +
-      '<path d="M76 62q2.4 4 0 6q-2.4-2 0-6z" fill="#8fd0ff" stroke="' + INK + '" stroke-width="1.4"/>'
+      '<path d="M76 62q2.4 4 0 6q-2.4-2 0-6z" fill="#8fd0ff" stroke="' + INK + '" stroke-width="1.4"/>',
+    // สงสัย: ตามองขึ้นขวา คิ้วซ้ายยก ปากเบี้ยว
+    curious: '<ellipse cx="51" cy="58" rx="4" ry="5" fill="' + INK + '"/><ellipse cx="71" cy="58" rx="4" ry="5" fill="' + INK + '"/>' +
+      '<circle cx="53" cy="55.6" r="1.6" fill="#fff"/><circle cx="73" cy="55.6" r="1.6" fill="#fff"/>' +
+      '<path d="M44 46q5-5 11-2" stroke="' + INK + '" stroke-width="2.2" stroke-linecap="round" fill="none"/>' +
+      '<path d="M66 50q5-1.5 9 1" stroke="' + INK + '" stroke-width="2.2" stroke-linecap="round" fill="none"/>' +
+      '<path d="M55 69q4-3 9-1" stroke="' + INK + '" stroke-width="2.3" stroke-linecap="round" fill="none"/>'
   };
 
   // แขน/ของในมือ/ของประกอบ (ด้านหลังตัว = back, ด้านหน้า = front)
@@ -70,6 +76,13 @@
       back = '<g class="vm-conf">' + sparkle(12, 30, 1, '#ffe28a') + sparkle(108, 26, 1.1, '#5fd3a6') + sparkle(98, 8, .7, '#ff9a4d') +
         '<rect x="20" y="10" width="5" height="3" rx="1" fill="#ff7aa8" transform="rotate(25 22 11)"/><rect x="104" y="40" width="5" height="3" rx="1" fill="#7ab8ff" transform="rotate(-20 106 41)"/>' +
         '<rect x="6" y="56" width="5" height="3" rx="1" fill="#5fd3a6" transform="rotate(40 8 57)"/></g>';
+    } else if (m === 'curious') {
+      // มือขวาเท้าคาง มือซ้ายถือปากกา มีเครื่องหมายคำถามลอยอยู่
+      lArm = arm('M31 78q-9 5-10 13') + pen(21, 94, -15) + hand(21, 92);
+      rArm = arm('M89 86q5-7-4-10q-7-2-12 2') + hand(72, 79);
+      back = '<g class="vm-q" fill="none" stroke="#f08a24" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">' +
+        '<g class="q1"><path d="M96 22q0-7 7-7q7 0 7 6q0 4-5 6q-2 1-2 5"/><circle cx="103" cy="37" r="1.3" fill="#f08a24"/></g>' +
+        '<g class="q2"><path d="M6 4q0-5 5-5q5 0 5 4.5q0 3-3.5 4.5q-1.5.7-1.5 3.5"/><circle cx="11" cy="15" r="1" fill="#f08a24"/></g></g>';
     } else { // sad
       lArm = arm('M31 78q-8 6-9 14') + pen(22, 96, -8) + hand(22, 93);
       // ถือหัวใจดวงเล็กไว้ข้างตัว = ยังให้กำลังใจ
@@ -102,5 +115,5 @@
       '</g></svg>';
   }
 
-  window.VCMascot = { svg: svg, moods: ['wave', 'happy', 'sleep', 'party', 'sad'] };
+  window.VCMascot = { svg: svg, moods: ['wave', 'happy', 'sleep', 'party', 'sad', 'curious'] };
 })();
