@@ -5,7 +5,8 @@ import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { initLibraryDb } from './db.js';
-import { DOC_TYPES } from './parse.js';
+import { DOC_TYPES, thToArabic } from './parse.js';
+import { tokenize } from './tokens.js';
 import { TOPICS, startSeedImport, startUploadImport, cleanUpload, isRunning } from './importer.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -84,6 +85,41 @@ export function mountLibrary(app, { pool, getUserFromRequest, isAdmin }) {
       const x = rows[0];
       res.json({ slug: x.slug, title: x.title, status: x.status, statusLabel: STATUSES[x.status], number: x.number, key: x.number_key, body: x.body.replace(/\[[๐-๙0-9]+\]/g, '') });
     } catch (e) { send500(res, 'spotlight', e); }
+  });
+
+  // ค้นในเนื้อหามาตรา (เฉพาะฉบับล่าสุดของแต่ละกฎหมาย) · "มาตรา 420" = หามาตราเลขนี้ในทุกฉบับ · อย่างอื่น = ค้นคำในเนื้อหา
+  // คืนข้อความมาตราจริงจากฐานข้อมูลเป็นตัวอย่างสั้น ๆ (ตัดตรงคำที่ค้น) พร้อมสถานะของกฎหมาย
+  r.get('/search', async (req, res) => {
+    try {
+      const q = String(req.query.q || '').trim().slice(0, 100);
+      if (q.length < 2) return res.json({ q, mode: 'text', items: [] });
+      const LATEST = 'v.id = (SELECT max(id) FROM lib_versions WHERE law_id = l.id)';
+      const BASE = `SELECT l.slug, l.title, l.status, s.ord, s.number, s.number_key, s.body FROM lib_sections s
+                      JOIN lib_versions v ON v.id = s.version_id JOIN lib_laws l ON l.id = v.law_id
+                     WHERE s.kind = 'section' AND s.is_main AND ${LATEST}`;
+      const sec = thToArabic(q).replace(/\s+/g, ' ').match(/^(?:มาตรา|ม\.)\s*(\d{1,4})(?:\s*\/\s*(\d{1,3}))?(?:\s*(ทวิ|ตรี|จัตวา|เบญจ|ฉ|สัตต|อัฏฐ|นว|ทศ))?$/);
+      let rows, mode, words = [];
+      if (sec) {
+        mode = 'section';
+        const key = sec[1] + (sec[2] ? '/' + sec[2] : '') + (sec[3] ? ' ' + sec[3] : '');
+        ({ rows } = await pool.query(`${BASE} AND s.number_key = $1 ORDER BY l.views_total DESC, l.id LIMIT 40`, [key]));
+      } else {
+        mode = 'text';
+        words = tokenize(q).split(' ').map(w => w.replace(/[^\p{L}\p{N}\p{M}]+/gu, '')).filter(w => w.length > 0).slice(0, 8);
+        if (!words.length) return res.json({ q, mode, items: [] });
+        ({ rows } = await pool.query(
+          `${BASE} AND s.search_tokens @@ to_tsquery('simple', $1) ORDER BY (strpos(s.body, $2) > 0) DESC, l.views_total DESC, l.id, s.ord LIMIT 60`,
+          [words.join(' & '), q.replace(/\s+/g, '')]));
+      }
+      const items = rows.map(x => {
+        const body = x.body.replace(/\[[๐-๙0-9]+\]/g, '');
+        const plain = thToArabic(body).toLowerCase();
+        let at = plain.indexOf(thToArabic(q).toLowerCase().replace(/\s+/g, '')); if (at < 0) for (const w of words) { at = plain.indexOf(w); if (at >= 0) break; }
+        const from = Math.max(0, at - 70), excerpt = (from > 0 ? '…' : '') + body.slice(from, from + 240) + (from + 240 < body.length ? '…' : '');
+        return { slug: x.slug, title: x.title, status: x.status, statusLabel: STATUSES[x.status], number: x.number, key: x.number_key, ord: x.ord, excerpt };
+      });
+      res.json({ q, mode, words, items });
+    } catch (e) { send500(res, 'search', e); }
   });
 
   // รายการกฎหมาย (กรองตามประเภท/หมวด/สถานะ/ชื่อ) — การค้นหาเนื้อหาเต็มรูปแบบอยู่ใน Phase 2
