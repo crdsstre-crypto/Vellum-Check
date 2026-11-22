@@ -573,6 +573,15 @@
     el.querySelectorAll('[data-ev]').forEach(s => { const e = ev[Number(s.dataset.ev)]; s.textContent = e.title + (e.gazette ? ' · ' + e.gazette : ''); });
   }
 
+  // ---------- แอดมิน: ยืนยันสถานะ ----------
+  const EVIDENCE_URL = 'https://www.ocs.go.th/searchlaw';
+  const needsVerify = l => l.status === 'unverified' || !l.is_current_verified;
+  const autoNote = l => {
+    const asOf = /ข้อมูล ณ ([^)]+)\)/.exec(l.version_label || '');
+    const am = l.latest_amend ? String(l.latest_amend).replace(/\s+/g, ' ').slice(0, 160) : '';
+    return (`ฉบับรวมกฤษฎีกา${asOf ? ' ณ ' + asOf[1] : ''}` + (am ? ` · แก้ไขล่าสุด: ${am}` : '')).slice(0, 500);
+  };
+
   // ---------- แอดมิน: นำเข้าจาก PDF ----------
   const normTitle = t => String(t || '').replace(/[๐-๙]/g, c => TH.indexOf(c)).replace(/พุทธศักราช/g, 'พ.ศ.').replace(/[\s"“”]+/g, '').toLowerCase();
   const baseTitle = t => normTitle(t).replace(/พ\.ศ\.\d{4}.*$/, '');
@@ -726,26 +735,38 @@
         </form>
       </section>
       <section class="lb-box"><h2 style="margin:0 0 10px;font-size:16px">กฎหมายในคลัง (${toTh(d.laws.length)})</h2>
-        <div style="overflow:auto"><table class="lb-tbl"><thead><tr><th>ชื่อ</th><th>มาตรา</th><th>สถานะ</th><th></th></tr></thead><tbody data-laws></tbody></table></div>
+        <div class="lb-bulk" data-bulk>
+          <div class="lb-bulk-top"><b data-bcount>เลือก ๐ ฉบับ</b>
+            <button type="button" class="lb-btn" data-bpick>เลือกที่ยังไม่ยืนยัน (${toTh(d.laws.filter(needsVerify).length)})</button>
+            <button type="button" class="lb-btn" data-bclear>ล้าง</button></div>
+          <form class="lb-verify" data-bform hidden>
+            <label>สถานะ <select name="status">${Object.entries(d.statuses).map(([k, v]) => `<option value="${k}"${k === 'in_force' ? ' selected' : ''}>${esc(v)}</option>`).join('')}</select></label>
+            <label>ลิงก์หลักฐาน (ใส่ให้อัตโนมัติ) <input name="evidenceUrl" type="url" value="${EVIDENCE_URL}"></label>
+            <label><input type="checkbox" name="current" checked> ข้อความในคลังตรงกับฉบับปัจจุบันตามหลักฐาน</label>
+            <p class="lb-count">บันทึกจะเขียนให้อัตโนมัติทีละฉบับ เช่น "ฉบับรวมกฤษฎีกา ณ ๒๒ พ.ย. ๒๕๖๙ · แก้ไขล่าสุด: …"</p>
+            <div><button class="lb-btn primary" data-bgo>ยืนยันสถานะที่เลือก</button> <span class="lb-msg" data-bmsg></span></div>
+          </form>
+        </div>
+        <div style="overflow:auto"><table class="lb-tbl"><thead><tr><th></th><th>ชื่อ</th><th>มาตรา</th><th>สถานะ</th><th></th></tr></thead><tbody data-laws></tbody></table></div>
       </section>`;
     const tbody = $main.querySelector('[data-laws]');
     tbody.innerHTML = d.laws.map((l, i) => {
       const q = l.quality || {};
-      return `<tr data-i="${i}"><td><a href="/library/${esc(l.slug)}" data-nav data-t></a>${q.gaps ? `<div class="flag">เลขมาตราขาดช่วง ${toTh(q.gaps)}: ${esc((q.gapList || []).slice(0, 4).join(', '))}</div>` : ''}</td>
+      return `<tr data-i="${i}"><td class="lb-ckcell"><input type="checkbox" data-ck aria-label="เลือกฉบับนี้"></td><td><a href="/library/${esc(l.slug)}" data-nav data-t></a>${q.gaps ? `<div class="flag">เลขมาตราขาดช่วง ${toTh(q.gaps)}: ${esc((q.gapList || []).slice(0, 4).join(', '))}</div>` : ''}</td>
         <td>${toTh(q.mainSections ?? 0)}</td><td>${status(l.status, d.statuses[l.status])}${l.is_current_verified ? '<div class="lb-count">ฉบับปัจจุบัน ✓</div>' : ''}</td>
         <td><button class="lb-btn" data-open>ยืนยันสถานะ</button></td></tr>`;
-    }).join('') || '<tr><td colspan="4" class="lb-empty">ยังไม่มีข้อมูล กด "นำเข้าชุดแกน"</td></tr>';
+    }).join('') || '<tr><td colspan="5" class="lb-empty">ยังไม่มีข้อมูล กด "นำเข้าชุดแกน"</td></tr>';
     tbody.querySelectorAll('[data-t]').forEach(a => { a.textContent = d.laws[Number(a.closest('tr').dataset.i)].title; });
     tbody.addEventListener('click', e => {
       const btn = e.target.closest('[data-open]'); if (!btn) return;
       const tr = btn.closest('tr'), l = d.laws[Number(tr.dataset.i)];
       if (tr.nextElementSibling?.classList.contains('lb-vrow')) { tr.nextElementSibling.remove(); return; }
       const row = document.createElement('tr'); row.className = 'lb-vrow';
-      row.innerHTML = `<td colspan="4"><form class="lb-verify">
+      row.innerHTML = `<td colspan="5"><form class="lb-verify">
         <label>สถานะ <select name="status">${Object.entries(d.statuses).map(([k, v]) => `<option value="${k}"${k === l.status ? ' selected' : ''}>${esc(v)}</option>`).join('')}</select></label>
-        <label>ลิงก์หลักฐานจากแหล่งทางการ (ราชกิจจานุเบกษา / กฤษฎีกา) <input name="evidenceUrl" type="url" placeholder="https://" value="${esc(l.status_evidence_url || '')}"></label>
-        <label><input type="checkbox" name="current" ${l.is_current_verified ? 'checked' : ''}> ข้อความฉบับนี้ตรงกับฉบับปัจจุบันตามหลักฐาน</label>
-        <label>บันทึก (ไม่บังคับ) <input name="note" maxlength="500"></label>
+        <label>ลิงก์หลักฐานจากแหล่งทางการ (ราชกิจจานุเบกษา / กฤษฎีกา) <input name="evidenceUrl" type="url" placeholder="https://" value="${esc(l.status_evidence_url || EVIDENCE_URL)}"></label>
+        <label><input type="checkbox" name="current" ${l.is_current_verified || needsVerify(l) ? 'checked' : ''}> ข้อความฉบับนี้ตรงกับฉบับปัจจุบันตามหลักฐาน</label>
+        <label>บันทึก (เขียนให้อัตโนมัติ แก้ได้) <input name="note" maxlength="500" value="${esc(l.status_note || autoNote(l))}"></label>
         <div><button class="lb-btn primary">บันทึกการยืนยัน</button> <span class="lb-msg" data-msg></span></div></form></td>`;
       tr.after(row);
       row.querySelector('form').addEventListener('submit', async ev => {
@@ -756,6 +777,30 @@
           msg.className = 'lb-msg ok'; msg.textContent = 'บันทึกแล้ว'; setTimeout(() => route(), 700);
         } catch (e2) { msg.className = 'lb-msg err'; msg.textContent = e2.message; }
       });
+    });
+    // ---- ยืนยันสถานะหลายฉบับ: ลิงก์หลักฐาน + บันทึกอัตโนมัติ ส่งทีละฉบับ ----
+    const bulk = $main.querySelector('[data-bulk]'), bform = bulk.querySelector('[data-bform]');
+    const picked = () => [...tbody.querySelectorAll('[data-ck]:checked')].map(c => d.laws[Number(c.closest('tr').dataset.i)]);
+    const syncBulk = () => { const n = picked().length; bulk.querySelector('[data-bcount]').textContent = `เลือก ${toTh(n)} ฉบับ`; bform.hidden = !n; bform.querySelector('[data-bgo]').textContent = `ยืนยันสถานะ ${toTh(n)} ฉบับที่เลือก`; };
+    tbody.addEventListener('change', e => { if (e.target.matches('[data-ck]')) syncBulk(); });
+    bulk.querySelector('[data-bpick]').addEventListener('click', () => { tbody.querySelectorAll('tr[data-i]').forEach(tr => { const c = tr.querySelector('[data-ck]'); if (c) c.checked = needsVerify(d.laws[Number(tr.dataset.i)]); }); syncBulk(); });
+    bulk.querySelector('[data-bclear]').addEventListener('click', () => { tbody.querySelectorAll('[data-ck]').forEach(c => { c.checked = false; }); syncBulk(); });
+    bform.addEventListener('submit', async ev => {
+      ev.preventDefault();
+      const list = picked(), msg = bform.querySelector('[data-bmsg]'), btn = bform.querySelector('[data-bgo]');
+      const ev2 = bform.evidenceUrl.value.trim(), st = bform.status.value, cur2 = bform.current.checked && st !== 'repealed' && st !== 'unverified';
+      if (!list.length) return;
+      btn.disabled = true; msg.className = 'lb-msg';
+      let ok = 0; const fail = [];
+      for (const l of list) {
+        msg.textContent = `กำลังบันทึก ${toTh(ok + fail.length + 1)}/${toTh(list.length)}…`;
+        try { await api(`/admin/laws/${l.id}/verify`, { method: 'POST', body: JSON.stringify({ status: st, evidenceUrl: ev2, note: autoNote(l), currentVersionId: cur2 ? l.version_id : 0 }) }); ok++; }
+        catch (e2) { fail.push(`${l.title.slice(0, 40)}: ${e2.message}`); }
+      }
+      btn.disabled = false;
+      msg.className = 'lb-msg ' + (fail.length ? 'err' : 'ok');
+      msg.textContent = `บันทึกแล้ว ${toTh(ok)} ฉบับ` + (fail.length ? ` · ไม่สำเร็จ ${toTh(fail.length)}: ${fail.slice(0, 3).join(' / ')}` : '');
+      if (!fail.length) setTimeout(() => tok === viewToken && route(), 900);
     });
     const jobEl = $main.querySelector('[data-job]');
     // ---- นำเข้าจาก PDF หลายไฟล์: แปลงในเบราว์เซอร์ (pdf.js) → ตรวจทีละไฟล์ (/admin/preview) → นำเข้าเป็นชุดละไม่เกิน 20 ฉบับ ----
