@@ -151,6 +151,7 @@
 .gd-cover[data-bg="payroll"] { background: linear-gradient(135deg, #eefaf3, #cfeedd); border-color: #a8d5b5; }
 .gd-cover[data-bg="social"] { background: radial-gradient(circle at 80% 30%, #fff7d6, #bfe3ff 70%); border-color: #9cc9ee; }
 .gd-cover[data-bg="worksite"] { background: linear-gradient(180deg, #ffcf8a, #fff1d6); border-color: #e8b46a; }
+.gd-cover[data-bg="cradle"] { background: linear-gradient(135deg, #ffe3ec, #e7dcff); border-color: #d7c4f2; }
 .gd-cover[data-bg="leave"] { background: linear-gradient(135deg, #e6f6ff, #c7e8fb); border-color: #9fd0e6; }
 .gd-cover[data-bg="condo"] { background: linear-gradient(135deg, #fff1dc, #f7d9b3); border-color: #ecc690; }
 
@@ -261,3 +262,27 @@
 @media (prefers-reduced-motion: reduce) { .gd-cm *, .gd-cover-bg *, .gd-scene * { animation: none !important; } }
 .gd-wide .cm-swing { transform-box: fill-box; transform-origin: 50% 0; animation: cmSwing 3.4s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { .gd-wide * { animation: none !important; } }
+
+/* ===== ปกแบบรูปโพลารอยด์ (coverLayout: "polaroid"): ภาพในกรอบขาวเอียง มีเทปแปะ ===== */
+.gd-cover[data-layout="polaroid"] { gap: 16px; padding: 18px 14px 16px 18px; }
+.gd-cover[data-layout="polaroid"] .gd-cover-art { flex-basis: 128px; height: 150px; border-radius: 3px; border: 8px solid #fff; border-bottom-width: 26px; box-shadow: 0 6px 14px rgba(60, 30, 80, .22); transform: rotate(-4deg); overflow: visible; background: #fff; }
+.gd-cover[data-layout="polaroid"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="polaroid"] .gd-cover-art::before { content: ""; position: absolute; z-index: 3; top: -16px; left: 50%; width: 54px; height: 18px; margin-left: -27px; background: rgba(255, 216, 77, .75); transform: rotate(3deg); box-shadow: 0 1px 2px rgba(0,0,0,.1); }
+.gd-cover[data-layout="polaroid"] .gd-cover-art .gd-cover-m { left: -10px; bottom: -22px; }
+/* ของขยับชุดใหม่ (ลาคลอด) */
+.gd-scene .sc-hang { transform-box: fill-box; transform-origin: 50% 0; animation: scHang 4s ease-in-out infinite; }
+.gd-scene .sc-glow { transform-box: fill-box; transform-origin: 50% 50%; animation: scGlow 3.6s ease-in-out infinite; }
+.gd-cm .cm-sweep { animation: cmSweep 3.2s linear infinite; }
+.gd-cm .cm-slosh { animation: cmSlosh 2.6s ease-in-out infinite; }
+.gd-cm .cm-flip { transform-box: fill-box; transform-origin: 50% 50%; animation: cmFlip 5s ease-in-out infinite; }
+.gd-cm .cm-bounce { animation: cmBounce 2.4s cubic-bezier(.3, 0, .3, 1) infinite; }
+.gd-cm .cm-roll { animation: cmRoll 4s ease-in-out infinite; }
+.gd-cm .cm-spin2 { transform-box: fill-box; transform-origin: 50% 50%; animation: cmOrbit 1.2s linear infinite; }
+@keyframes scHang { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+@keyframes scGlow { 0%, 100% { transform: scale(1); filter: brightness(1); } 50% { transform: scale(1.04); filter: brightness(1.08); } }
+@keyframes cmSweep { from { transform: translateX(0); } to { transform: translateX(260px); } }
+@keyframes cmSlosh { 0%, 100% { transform: translateX(0) translateY(0); } 50% { transform: translateX(-21px) translateY(2px); } }
+@keyframes cmFlip { 0%, 12% { transform: scaleX(0); } 22%, 88% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
+@keyframes cmBounce { 0%, 100% { transform: translateX(0) rotate(0); } 40% { transform: translateX(48px) rotate(6deg); } 55% { transform: translateX(10px) rotate(-8deg); } 70% { transform: translateX(22px) rotate(0); } }
+@keyframes cmRoll { 0%, 100% { transform: translateX(-18px); } 50% { transform: translateX(18px); } }
+@media (prefers-reduced-motion: reduce) { .gd-cm *, .gd-cover-bg *, .gd-scene * { animation: none !important; } }
