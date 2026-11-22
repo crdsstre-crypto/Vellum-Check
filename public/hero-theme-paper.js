@@ -2781,3 +2781,17 @@
   };
 })();
 /*/PZGIN*/
+
+/*PZOUT*/ /* ธีมตัดกระดาษ: ปุ่มออกจากระบบ = การ์ดอิฐหม่น ตัวหนังสือครีม · ท้ายแผ่น = ป้ายกระดาษครีมติดเทป ตรา V เขียวเข้มขอบทอง (บังบ้านบนเนิน) */
+(function(){if(window.__pzOut)return;window.__pzOut=1;var A='html[data-htheme="paper"]:is([data-view="home"],[data-view="desk"]) body[data-sheet="acct"] #authCard#authCard';
+var css=A+' #logoutBtn.acct-out{position:relative;z-index:2;background:linear-gradient(180deg,#c4735a,#a85f4a) !important;border:0 !important;border-radius:4px !important;box-shadow:inset 0 0 0 1.5px rgba(255,235,210,.35),0 4px 0 #7d4636,0 8px 14px rgba(60,30,20,.3) !important;color:#f4e6cc !important;-webkit-text-fill-color:#f4e6cc !important;font-weight:700 !important}'+
+A+' #logoutBtn.acct-out *{color:#f4e6cc !important;-webkit-text-fill-color:#f4e6cc !important}'+
+A+' #logoutBtn .acct-ico{background:#e6d6b6 !important;border:0 !important;box-shadow:2px 2px 0 #7d4636 !important}'+
+A+' #logoutBtn .acct-ico,'+A+' #logoutBtn .acct-ico *{color:#a85f4a !important;-webkit-text-fill-color:#a85f4a !important;stroke:#a85f4a !important}'+
+A+' .vc-acct-foot{position:relative;z-index:2;width:max-content;max-width:88%;margin:22px auto 26px !important;padding:60px 22px 14px !important;background:linear-gradient(180deg,#e6d6b6,#ddccaa) !important;clip-path:polygon(0 6px,6px 0,calc(100% - 6px) 0,100% 6px,100% calc(100% - 6px),calc(100% - 6px) 100%,6px 100%,0 calc(100% - 6px));filter:drop-shadow(3px 4px 0 #a9843a)}'+
+A+' .vc-acct-foot,'+A+' .vc-acct-foot *{color:#3a2a16 !important;-webkit-text-fill-color:#3a2a16 !important}'+
+A+' .vc-acct-foot b{color:#2c5b55 !important;-webkit-text-fill-color:#2c5b55 !important}'+
+A+' .vc-acct-foot::before{content:"";position:absolute;left:50%;top:10px;width:44px;height:44px;margin-left:-22px;border-radius:50%;background:url(\"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2040%2046%27%3E%3Cpath%20d%3D%27M4%207H15V9.4L12.6%2010L20.4%2031L27.6%2010L25%209.4V7H36V9.4L33.4%2010L22%2040H18.4L6.4%2010L4%209.4Z%27%20fill%3D%27%232c5b55%27%20stroke%3D%27%23b8964e%27%20stroke-width%3D%271.4%27%20stroke-linejoin%3D%27round%27/%3E%3Cpath%20d%3D%27M11%2044.4Q20%2041.6%2029%2044.4%27%20stroke%3D%27%23b8964e%27%20stroke-width%3D%271.4%27%20fill%3D%27none%27%20stroke-linecap%3D%27round%27/%3E%3C/svg%3E\") center/24px 28px no-repeat,radial-gradient(circle,#e4d3a6 60%,#b8964e 62%,#b8964e 68%,#e4d3a6 70%) !important;opacity:1 !important;box-shadow:2px 2px 0 rgba(125,98,51,.5)}';
+function go(){if(document.documentElement.getAttribute('data-htheme')!=='paper'||document.getElementById('pz-out'))return;var s=document.createElement('style');s.id='pz-out';s.textContent=css;document.head.appendChild(s)}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go()})();
+/*/PZOUT*/
