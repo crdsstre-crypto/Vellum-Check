@@ -236,12 +236,28 @@ export function parseLaw(raw) {
   // ราชกิจจาฯ ฉบับแรก = เชิงอรรถอ้างอิงราชกิจจาฯ ตัวแรก
   let gazette = null;
   for (const k of Object.keys(footnotes).sort((a, b) => a - b)) { const g = parseGazette(footnotes[k]); if (g) { gazette = { ...g, note: k }; break; } }
-  // ฉบับแก้ไขเพิ่มเติม: ช่วงที่แนบท้ายซึ่งมีชื่อเป็น "(ฉบับที่ n)" หรือ "แก้ไขเพิ่มเติม"
-  const amendments = blockInfo.filter(b => !b.main && /ฉบับที่|แก้ไขเพิ่มเติม/.test(b.title)).map(b => {
-    const y = /(?:พ\.ศ\.|พุทธศักราช)\s*([๐-๙0-9]{4})/.exec(b.title);
-    const g = b.notes.map(nn => footnotes[nn] && parseGazette(footnotes[nn])).find(Boolean) || null;
-    return { title: b.title, yearBE: y ? Number(thToArabic(y[1])) : null, gazette: g, block: b.id };
-  });
+  // ฉบับแก้ไขเพิ่มเติม: ชื่อกฎหมายที่แนบท้ายเอกสาร (หลังตัวบทหลัก) ที่มีเชิงอรรถอ้างราชกิจจาฯ
+  // รวม พ.ร.บ./พ.ร.ก./พ.ร.ฎ./ประกาศหรือคำสั่งคณะปฏิวัติ-คสช. และ พ.ร.บ.ปรับเป็นพินัย · ไม่นับประกาศศาลรัฐธรรมนูญ
+  const AM_RE = /^\*?((?:พระราชบัญญัติ|พระราชกำหนด|พระราชกฤษฎีกา|รัฐธรรมนูญ|ประกาศของคณะ|ประกาศคณะ|คำสั่งหัวหน้า|คำสั่งคณะ)[^\[\n]{4,300}?)\s*((?:\[[๐-๙0-9]+\])+)/;
+  const mainLinesArr = all.filter(s => mainSet.has(s.block)).map(s => s.line);
+  const tailFrom = mainLinesArr.length ? Math.max(...mainLinesArr) : lines.length;
+  const amendments = [];
+  const seenAm = new Set();
+  for (let i = tailFrom + 1; i < lines.length; i++) {
+    if (!blank(lines[i - 1])) continue;
+    const m = AM_RE.exec(lines[i].trim());
+    if (!m) continue;
+    const title = clean(m[1].replace(/\s+มาตรา\s+[๐-๙0-9].*$/, ''));
+    if (/ศาลรัฐธรรมนูญ/.test(title) || seenAm.has(title)) continue;
+    const notes = [...m[2].matchAll(/\[([๐-๙0-9]+)\]/g)].map(x => thToArabic(x[1]));
+    const g = notes.map(nn => footnotes[nn] && parseGazette(footnotes[nn])).find(Boolean) || null;
+    if (!g) continue;
+    const y = /(?:พ\.ศ\.|พุทธศักราช)\s*([๐-๙0-9]{4})/.exec(title);
+    const yearBE = y ? Number(thToArabic(y[1])) : (g.date ? Number(g.date.slice(0, 4)) + 543 : null);
+    const blk = blockInfo.find(b => !b.main && b.title && b.title === title);
+    seenAm.add(title);
+    amendments.push({ title: title.slice(0, 300), yearBE, gazette: g, block: blk ? blk.id : null, order: amendments.length });
+  }
 
   // คุณภาพการแบ่ง: ช่องว่างของเลขมาตราในตัวบทหลัก (ข้ามเกิน 1 เลข) เพื่อให้แอดมินเห็นว่าต้องตรวจ
   const mainSecs = ordered.filter(u => u.kind === 'section' && mainSet.has(u.block));
