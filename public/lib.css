@@ -486,3 +486,11 @@ mark.hl { cursor: pointer; padding: 1px 0; border-radius: 0; }
 .lb-updform .lb-pdft { font-family: inherit; font-size: 14.5px; line-height: 1.45; padding: 6px 9px; resize: none; }
 .lb-pdfrow .lb-count { overflow-wrap: anywhere; }
 .lb-pdfrow .lb-warn { margin: 2px 0 0; }
+
+/* ยืนยันสถานะหลายฉบับ */
+.lb-bulk { border: 1px dashed var(--line); border-radius: var(--r-s); padding: 10px; margin-bottom: 12px; }
+.lb-bulk-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.lb-bulk-top b { margin-right: auto; font-size: 14px; }
+.lb-bulk .lb-verify { margin-top: 10px; }
+.lb-ckcell { width: 34px; }
+.lb-ckcell input { width: 20px; height: 20px; }
