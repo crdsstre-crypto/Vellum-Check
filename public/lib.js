@@ -573,6 +573,119 @@
     el.querySelectorAll('[data-ev]').forEach(s => { const e = ev[Number(s.dataset.ev)]; s.textContent = e.title + (e.gazette ? ' · ' + e.gazette : ''); });
   }
 
+  // ---------- แอดมิน: นำเข้าจาก PDF ----------
+  const normTitle = t => String(t || '').replace(/[๐-๙]/g, c => TH.indexOf(c)).replace(/พุทธศักราช/g, 'พ.ศ.').replace(/[\s"“”]+/g, '').toLowerCase();
+  const baseTitle = t => normTitle(t).replace(/พ\.ศ\.\d{4}.*$/, '');
+  let pdfLib = null;
+  async function loadPdf() {
+    if (pdfLib) return pdfLib;
+    const [pdfjs, conv] = await Promise.all([import('/pdfjs-6.2.108.min.mjs'), import('/pdf2law.js?v=1')]);
+    pdfjs.GlobalWorkerOptions.workerSrc = '/pdfjs-6.2.108.worker.min.mjs';
+    return (pdfLib = { pdfjs, conv });
+  }
+  function pdfBatch(box, d, tok) {
+    const rowsEl = box.querySelector('[data-pdfrows]'), goEl = box.querySelector('[data-pdfgo]'), sumEl = box.querySelector('[data-pdfsum]'), dateEl = box.querySelector('[data-pdfdate]');
+    dateEl.value = new Date(Date.now() + 7 * 36e5).toISOString().slice(0, 10);
+    let rows = [], busy = false;
+    const matchLaw = title => {
+      const n = normTitle(title), b = baseTitle(title);
+      return d.laws.find(l => normTitle(l.title) === n) || (d.laws.filter(l => baseTitle(l.title) === b).length === 1 ? d.laws.find(l => baseTitle(l.title) === b) : null);
+    };
+    const LABEL = { wait: 'รอคิว', conv: 'กำลังแปลง', check: 'กำลังตรวจ', ok: 'พร้อมนำเข้า', warn: 'ควรดูก่อน', bad: 'นำเข้าไม่ได้', imp: 'กำลังนำเข้า', done: 'นำเข้าแล้ว' };
+    const draw = () => {
+      rowsEl.innerHTML = rows.map((r, i) => `<div class="lb-pdfrow ${r.state}" data-i="${i}">
+        <label class="lb-pdfck"><input type="checkbox" ${r.pick ? 'checked' : ''} ${['ok', 'warn'].includes(r.state) && !busy ? '' : 'disabled'} aria-label="เลือกไฟล์นี้"></label>
+        <div class="lb-pdfmain">
+          <div class="lb-pdfst"><b>${LABEL[r.state]}</b>${r.progress ? ` · ${esc(r.progress)}` : ''}</div>
+          <textarea class="lb-pdft" rows="2" placeholder="ชื่อกฎหมาย" ${r.text && !busy && r.state !== 'done' ? '' : 'disabled'} aria-label="ชื่อกฎหมาย (แก้ได้)">${esc(r.title || '')}</textarea>
+          <div class="lb-count">${esc(r.file.name)}${r.info ? ' · ' + r.info : ''}</div>
+          ${r.notes?.length ? `<ul class="lb-warn">${r.notes.map(n => `<li>${n}</li>`).join('')}</ul>` : ''}
+        </div></div>`).join('');
+      const picked = rows.filter(r => r.pick && ['ok', 'warn'].includes(r.state));
+      const working = rows.some(r => ['wait', 'conv', 'check'].includes(r.state));
+      sumEl.textContent = rows.length ? `${toTh(rows.length)} ไฟล์ · พร้อม ${toTh(rows.filter(r => r.state === 'ok').length)} · ควรดู ${toTh(rows.filter(r => r.state === 'warn').length)} · ไม่ได้ ${toTh(rows.filter(r => r.state === 'bad').length)}` : '';
+      goEl.innerHTML = rows.length && !working ? `<button type="button" class="lb-btn primary" data-pdfimp ${picked.length && !busy ? '' : 'disabled'}>นำเข้า ${toTh(picked.length)} ฉบับที่เลือก</button> <span class="lb-msg" data-pdfmsg></span>` : '';
+    };
+    async function check(r) {
+      r.state = 'check'; r.progress = ''; draw();
+      let p;
+      try { p = await api('/admin/preview', { method: 'POST', body: JSON.stringify({ title: r.title, text: r.text }) }); }
+      catch (e) { r.state = 'bad'; r.notes = [esc(e.message)]; draw(); return; }
+      const q = p.quality, notes = [];
+      let state = 'ok';
+      if (!q.mainSections) { state = 'bad'; notes.push('หามาตราไม่เจอ ไฟล์นี้อาจไม่ใช่ฉบับรวมของกฤษฎีกา'); }
+      if (r.bad) { state = 'bad'; notes.push(`มีตัวอักษรที่แปลงไม่ได้ ${toTh(r.bad)} ตัว ส่งไฟล์นี้ให้ผู้พัฒนาตรวจ`); }
+      if (q.gaps) { if (state === 'ok') state = 'warn'; notes.push(`เลขมาตราขาดช่วง ${toTh(q.gaps)} จุด (${esc(q.gapList.slice(0, 4).join(', '))})`); }
+      if (p.existing?.mainSections && q.mainSections < p.existing.mainSections * 0.9) { if (state === 'ok') state = 'warn'; notes.push(`มาตราน้อยกว่าฉบับเดิมในคลังมาก (${toTh(q.mainSections)} จาก ${toTh(p.existing.mainSections)})`); }
+      if (p.duplicateOf) { if (state === 'ok') state = 'warn'; notes.push('ข้อความตรงกับฉบับในคลังทุกตัวอักษร นำเข้าแล้วจะแค่เติมประวัติการแก้ไข'); }
+      const am = p.latestAmendments.length ? p.latestAmendments[p.latestAmendments.length - 1].title : '';
+      r.info = `${toTh(q.mainSections)} มาตรา (${esc(toTh(q.first || '-'))}–${esc(toTh(q.last || '-'))}) · ${p.existing ? 'ฉบับใหม่ของกฎหมายเดิม' : '<b>กฎหมายใหม่</b>'}${am ? ' · แก้ไขล่าสุด: ' + esc(toTh(am.slice(0, 90))) : ''}`;
+      r.state = state; r.notes = notes; r.pick = state === 'ok'; r.existing = p.existing;
+      draw();
+    }
+    async function convert(r) {
+      r.state = 'conv'; draw();
+      try {
+        const { pdfjs, conv } = await loadPdf();
+        const data = new Uint8Array(await r.file.arrayBuffer());
+        const out = await conv.pdfToLawText(pdfjs, data, (i, n) => { r.progress = `หน้า ${toTh(i)}/${toTh(n)}`; if (i % 5 === 0 || i === n) draw(); });
+        r.text = out.text; r.bad = out.badGlyphs;
+        const m = matchLaw(out.title);
+        r.title = m ? m.title : out.title;
+      } catch (e) { r.state = 'bad'; r.progress = ''; r.notes = ['แปลง PDF ไม่สำเร็จ: ' + esc(e.message || e)]; draw(); return; }
+      await check(r);
+    }
+    box.querySelector('[data-pdffile]').addEventListener('change', async e => {
+      const files = [...e.target.files].filter(f => /\.pdf$/i.test(f.name) || f.type === 'application/pdf');
+      e.target.value = '';
+      if (!files.length || busy) return;
+      const fresh = files.map(file => ({ file, state: 'wait', pick: false }));
+      rows = rows.filter(r => r.state !== 'done').concat(fresh); draw();
+      for (const r of fresh) { if (tok !== viewToken) return; await convert(r); }
+    });
+    rowsEl.addEventListener('change', e => {
+      const row = e.target.closest('.lb-pdfrow'); if (!row) return;
+      const r = rows[Number(row.dataset.i)];
+      if (e.target.type === 'checkbox') { r.pick = e.target.checked; draw(); }
+      else if (e.target.classList.contains('lb-pdft')) { r.title = e.target.value.trim(); if (r.title) check(r); }
+    });
+    goEl.addEventListener('click', async e => {
+      if (!e.target.closest('[data-pdfimp]') || busy) return;
+      const list = rows.filter(r => r.pick && ['ok', 'warn'].includes(r.state));
+      if (!list.length) return;
+      busy = true; list.forEach(r => { r.state = 'imp'; }); draw();
+      const msg = () => goEl.querySelector('[data-pdfmsg]');
+      const label = 'ฉบับรวมแก้ไข (ข้อมูล ณ ' + thDate(dateEl.value) + ')';
+      const source = { name: 'สำนักงานคณะกรรมการกฤษฎีกา (ระบบค้นหากฎหมาย)', homepage: 'https://www.ocs.go.th/searchlaw', license: 'ไม่มีลิขสิทธิ์ตามมาตรา 7 พ.ร.บ.ลิขสิทธิ์ พ.ศ. 2537', note: 'แอดมินอัปโหลด PDF ฉบับรวมแก้ไข แปลงเป็นข้อความในเบราว์เซอร์' };
+      // แบ่งเป็นชุด: ไม่เกิน 20 ฉบับ และไม่เกินราว 9 MB ต่อคำขอ
+      const chunks = []; let cur = [], size = 0;
+      for (const r of list) { const n = r.text.length * 3; if (cur.length && (cur.length >= 20 || size + n > 9e6)) { chunks.push(cur); cur = []; size = 0; } cur.push(r); size += n; }
+      if (cur.length) chunks.push(cur);
+      try {
+        for (let c = 0; c < chunks.length; c++) {
+          if (msg()) msg().textContent = `ชุดที่ ${toTh(c + 1)}/${toTh(chunks.length)} กำลังนำเข้า…`;
+          const { jobId } = await api('/admin/upload', { method: 'POST', body: JSON.stringify({ source, laws: chunks[c].map(r => ({ title: r.existing ? r.existing.title : r.title, text: r.text, label })) }) });
+          let j = {};
+          for (;;) {
+            await new Promise(res => setTimeout(res, 1500));
+            j = await api('/admin/jobs/' + jobId).catch(() => j);
+            if (msg() && j.total) msg().textContent = `ชุดที่ ${toTh(c + 1)}/${toTh(chunks.length)} · ${toTh(j.done)}/${toTh(j.total)} ฉบับ`;
+            if (j.status === 'done' || j.status === 'failed') break;
+          }
+          chunks[c].forEach(r => { r.state = 'done'; r.pick = false; });
+          if (j.log?.length) chunks[c][0].notes = (chunks[c][0].notes || []).concat(j.log.slice(-5).map(esc));
+          draw();
+        }
+        busy = false; draw();
+        if (msg()) { msg().className = 'lb-msg ok'; msg().textContent = 'นำเข้าเสร็จแล้ว · อย่าลืมยืนยันสถานะในตารางด้านล่าง'; }
+        setTimeout(() => tok === viewToken && route(), 2500);
+      } catch (err) {
+        busy = false; list.filter(r => r.state === 'imp').forEach(r => { r.state = 'ok'; r.pick = true; }); draw();
+        if (msg()) { msg().className = 'lb-msg err'; msg().textContent = err.message; }
+      }
+    });
+  }
+
   // ---------- แอดมิน ----------
   async function viewAdmin(tok) {
     document.title = 'จัดการข้อมูล · คลังกฎหมาย';
@@ -587,6 +700,16 @@
         <p>ข้อมูลจากเว็บไซต์สำนักงานคณะกรรมการกฤษฎีกา รวบรวมโดยโครงการ PyThaiNLP เมื่อ ๒๐ มิ.ย. ๒๕๖๔ (CC0) นำเข้าซ้ำได้ ระบบข้ามฉบับที่มีอยู่แล้ว</p>
         <button class="lb-btn primary" data-seed ${d.running ? 'disabled' : ''}>นำเข้าชุดแกน</button>
         <div data-job></div>
+      </section>
+      <section class="lb-box lb-upd" data-pdfbox>
+        <h2>นำเข้าจาก PDF กฤษฎีกา <small>หลายไฟล์พร้อมกัน</small></h2>
+        <ol class="lb-steps"><li>เปิดฉบับ "รวมแก้ไขล่าสุด" ในระบบค้นหากฎหมายของกฤษฎีกา แล้วสั่งพิมพ์/แชร์เป็น PDF</li><li>เลือกไฟล์ PDF ได้ครั้งละหลายไฟล์ ระบบแปลงในเครื่องนี้ แล้วตรวจให้ทีละไฟล์</li><li>ติ๊กเฉพาะแถวที่ต้องการ แล้วกดนำเข้า (แถวสีเขียวติ๊กไว้ให้แล้ว)</li></ol>
+        <div class="lb-updform">
+          <label>ข้อมูล ณ วันที่ (วันที่ดาวน์โหลดจากกฤษฎีกา) <input type="date" data-pdfdate></label>
+          <div class="lb-updrow"><label class="lb-btn lb-file">เลือกไฟล์ PDF<input type="file" accept="application/pdf,.pdf" multiple hidden data-pdffile></label><span class="lb-count" data-pdfsum></span></div>
+          <div class="lb-pdfrows" data-pdfrows></div>
+          <div data-pdfgo></div>
+        </div>
       </section>
       <section class="lb-box lb-upd" data-upd>
         <h2>อัปเดตตัวบทเป็นฉบับปัจจุบัน <small>ทีละฉบับ</small></h2>
@@ -635,6 +758,8 @@
       });
     });
     const jobEl = $main.querySelector('[data-job]');
+    // ---- นำเข้าจาก PDF หลายไฟล์: แปลงในเบราว์เซอร์ (pdf.js) → ตรวจทีละไฟล์ (/admin/preview) → นำเข้าเป็นชุดละไม่เกิน 20 ฉบับ ----
+    pdfBatch($main.querySelector('[data-pdfbox]'), d, tok);
     // ---- อัปเดตทีละฉบับ: ตรวจ (ไม่บันทึก) → นำเข้าเป็นฉบับใหม่ของกฎหมายเดิม ----
     const uf = $main.querySelector('[data-updf]'), pvEl = uf.querySelector('[data-pv]');
     uf.asOf.value = new Date(Date.now() + 7 * 36e5).toISOString().slice(0, 10);
@@ -651,12 +776,12 @@
       pvEl.innerHTML = '<p class="lb-count">กำลังตรวจ…</p>';
       let r; try { r = await api('/admin/preview', { method: 'POST', body: JSON.stringify({ title, text }) }); } catch (err) { pvEl.innerHTML = `<p class="lb-msg err">${esc(err.message)}</p>`; return; }
       const q = r.quality, warn = [];
-      if (r.duplicateOf) warn.push('ข้อความนี้ตรงกับฉบับที่มีในคลังแล้วทุกตัวอักษร นำเข้าซ้ำไม่ได้');
+      if (r.duplicateOf) warn.push('ข้อความนี้ตรงกับฉบับที่มีในคลังแล้วทุกตัวอักษร จะไม่สร้างฉบับใหม่ · กดปุ่มด้านล่างเพื่อเติมประวัติการแก้ไขที่ตัวอ่านรุ่นก่อนหาไม่เจอ');
       if (!q.mainSections) warn.push('ระบบหามาตราไม่เจอ ข้อความอาจไม่ครบหรือรูปแบบไม่ตรง');
       if (q.gaps) warn.push(`เลขมาตราขาดช่วง ${toTh(q.gaps)} จุด (${esc(q.gapList.slice(0, 4).join(', '))}) อาจคัดลอกมาไม่ครบ`);
       if (r.existing?.mainSections && q.mainSections < r.existing.mainSections * 0.9) warn.push(`มีมาตราน้อยกว่าฉบับเดิมมาก (${toTh(q.mainSections)} จาก ${toTh(r.existing.mainSections)})`);
       if (uf.law.value !== 'new' && !r.existing) warn.push('ชื่อในระบบไม่ตรงกับฉบับเดิม จะถูกสร้างเป็นกฎหมายใหม่');
-      const ok = !r.duplicateOf && q.mainSections > 0;
+      const ok = q.mainSections > 0;
       pvEl.innerHTML = `<div class="lb-pvcard">
         <div class="lb-pvt">${r.existing ? `ฉบับใหม่ของ <b></b>` : `กฎหมายใหม่ <b></b>`}</div>
         <dl><dt>มาตราในตัวบทหลัก</dt><dd>${toTh(q.mainSections)} มาตรา (${esc(toTh(q.first || '-'))} – ${esc(toTh(q.last || '-'))})</dd>
@@ -665,7 +790,7 @@
           <dt>แก้ไขล่าสุดที่เอกสารอ้างถึง</dt><dd>${r.latestAmendments.length ? r.latestAmendments.slice().reverse().map(a => `<div>${esc(toTh(a.title))}</div>`).join('') : 'ไม่พบ'}</dd></dl>
         ${warn.length ? `<ul class="lb-warn">${warn.map(w => `<li>${w}</li>`).join('')}</ul>` : '<p class="lb-msg ok">แบ่งมาตราได้ครบ ไม่พบเลขขาดช่วง</p>'}
         <p class="lb-count">นำเข้าแล้วสถานะยังเป็น "ยังไม่ยืนยัน" จนกว่าจะกดยืนยันพร้อมหลักฐาน · ฉบับเก่ายังเก็บไว้ในประวัติ</p>
-        ${ok ? '<button type="button" class="lb-btn primary" data-go>นำเข้าฉบับนี้</button>' : ''}</div>`;
+        ${ok ? `<button type="button" class="lb-btn primary" data-go>${r.duplicateOf ? 'เติมประวัติการแก้ไข' : 'นำเข้าฉบับนี้'}</button>` : ''}</div>`;
       pvEl.querySelector('.lb-pvt b').textContent = r.existing ? r.existing.title : r.title;
       pvEl.querySelector('[data-go]')?.addEventListener('click', async ev => {
         ev.target.disabled = true;
