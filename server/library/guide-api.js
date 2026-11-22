@@ -11,6 +11,8 @@ export const GUIDE_PAGE = path.join(__dirname, '..', '..', 'public', 'guide.html
 
 const str = (v, max) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
 const arr = v => (Array.isArray(v) ? v : []);
+const MOODS = ['wave', 'happy', 'sleep', 'party', 'sad', 'curious', 'stop', 'alert', 'inspect'];   // ท่าน้องม้วน (public/mascot.js)
+const PANEL_SCENES = ['pay', 'nopay', 'notice', 'labor', 'sign', 'repair', 'moveout'];   // ฉากช่องการ์ตูน (public/guide-comic.js)
 
 function cleanCite(c) {
   const law = str(c?.law, 200), sec = str(c?.sec, 30), label = str(c?.label, 120);
@@ -26,6 +28,8 @@ function cleanGuide(g, file) {
   if (!title) throw new Error(`${file}: ไม่มี title`);
   const sections = arr(g.sections).map(s => ({
     title: str(s?.title, 120),
+    // ช่องการ์ตูนต้นหัวข้อ (ไม่บังคับ) · scene ตามที่มีใน public/guide-comic.js · say ใส่ **คำ** เพื่อเน้น
+    panel: s?.panel && PANEL_SCENES.includes(s.panel.scene) ? { scene: s.panel.scene, mood: MOODS.includes(s.panel.mood) ? s.panel.mood : 'happy', say: str(s.panel.say, 140) } : null,
     items: arr(s?.items).map(it => ({ q: str(it?.q, 200), a: str(it?.a, 1200), cite: arr(it?.cite).map(cleanCite).filter(Boolean).slice(0, 4) }))
       .filter(it => it.q && it.a),
   })).filter(s => s.title && s.items.length);
@@ -39,7 +43,7 @@ function cleanGuide(g, file) {
     categoryIcon: str(g.categoryIcon, 8),          // อีโมจิหน้าหมวด เช่น 🏠
     categoryNote: str(g.categoryNote, 160),        // คำอธิบายใต้ชื่อหมวดในหน้ารวม
     scene: ['condo', 'office', 'money', 'debt', 'scam', 'contract'].includes(g.scene) ? g.scene : 'condo',   // ฉากในรูปการ์ด
-    mood: ['wave', 'happy', 'sleep', 'party', 'sad', 'curious', 'stop', 'alert', 'inspect'].includes(g.mood) ? g.mood : 'curious',   // ท่าน้องม้วน
+    mood: MOODS.includes(g.mood) ? g.mood : 'curious',   // ท่าน้องม้วน
     cardText: str(g.cardText, 300),                // คำอธิบายบนการ์ด · ใส่ **คำ** เพื่อไฮไลต์
     coverLines: arr(g.coverLines).map(x => str(x, 60)).filter(Boolean).slice(0, 2),   // ข้อความบนปก (บรรทัดที่ 2 เป็นสีส้ม)
     order: Number.isFinite(g.order) ? g.order : 999,
