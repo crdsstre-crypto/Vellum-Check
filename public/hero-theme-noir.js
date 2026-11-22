@@ -1239,3 +1239,17 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
 })();
 /*/NZROOM*/
+
+/*NZOUT*/ /* ธีมนักสืบ: ปุ่มออกจากระบบ = แฟ้มปกแดงทึบ (ไม่โปร่งให้ป้าย HOTEL ทะลุ) · ท้ายแผ่น = บัตรดัชนีปักหมุด ตรา V หมึกดำขอบแดง */
+(function(){if(window.__nzOut)return;window.__nzOut=1;var A='html[data-htheme="noir"]:is([data-view="home"],[data-view="desk"]) body[data-sheet="acct"] #authCard#authCard';
+var css=A+' #logoutBtn.acct-out{position:relative;z-index:2;background:linear-gradient(180deg,#5a1a1a,#3e1111) !important;border:1px solid #1a0707 !important;border-radius:3px 12px 4px 4px !important;box-shadow:inset 0 1px 0 rgba(255,180,180,.18),inset 0 0 0 3px rgba(0,0,0,.12),0 3px 0 #2a0b0b,0 10px 16px rgba(0,0,0,.5) !important;color:#ffd9d6 !important;-webkit-text-fill-color:#ffd9d6 !important;font-weight:700 !important}'+
+A+' #logoutBtn.acct-out *{color:#ffd9d6 !important;-webkit-text-fill-color:#ffd9d6 !important}'+
+A+' #logoutBtn .acct-ico{background:#f2ede2 !important;border:0 !important;box-shadow:1px 2px 0 rgba(0,0,0,.45) !important;color:#a3191c !important}'+
+A+' #logoutBtn .acct-ico{display:grid !important;place-items:center !important;background-image:none !important}'+A+' #logoutBtn .acct-ico > *{opacity:1 !important}'+A+' #logoutBtn .acct-ico *{color:#a3191c !important;stroke:#a3191c !important}'+
+A+' .vc-acct-foot{position:relative;z-index:2;width:max-content;max-width:88%;margin:22px auto 26px !important;padding:58px 22px 14px !important;background:repeating-linear-gradient(180deg,transparent 0 21px,rgba(60,90,140,.18) 21px 22px),linear-gradient(180deg,#ebe6d8,#dcd6c4) !important;color:#3a332a !important;-webkit-text-fill-color:#3a332a !important;transform:rotate(-1.5deg);box-shadow:2px 6px 12px rgba(0,0,0,.55) !important;border-radius:2px}'+
+A+' .vc-acct-foot b{color:#a3191c !important;-webkit-text-fill-color:#a3191c !important}'+
+A+' .vc-acct-foot::before{content:"";position:absolute;left:50%;top:12px;width:34px;height:40px;margin-left:-17px;background:url(\"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2040%2046%27%3E%3Cpath%20d%3D%27M4%207H15V9.4L12.6%2010L20.4%2031L27.6%2010L25%209.4V7H36V9.4L33.4%2010L22%2040H18.4L6.4%2010L4%209.4Z%27%20fill%3D%27%231f1c19%27%20stroke%3D%27%23a3191c%27%20stroke-width%3D%271.4%27%20stroke-linejoin%3D%27round%27/%3E%3Cpath%20d%3D%27M11%2044.4Q20%2041.6%2029%2044.4%27%20stroke%3D%27%23a3191c%27%20stroke-width%3D%271.4%27%20fill%3D%27none%27%20stroke-linecap%3D%27round%27/%3E%3C/svg%3E\") center/contain no-repeat !important;opacity:1 !important}'+
+A+' .vc-acct-foot::after{content:"";position:absolute;left:50%;top:-5px;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#e17070,#a3191c 58%,#560808);box-shadow:1px 2px 2px rgba(0,0,0,.5)}';
+function go(){if(document.documentElement.getAttribute('data-htheme')!=='noir'||document.getElementById('nz-out'))return;var s=document.createElement('style');s.id='nz-out';s.textContent=css;document.head.appendChild(s)}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go()})();
+/*/NZOUT*/
