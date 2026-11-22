@@ -4,8 +4,8 @@
   "category": "ภัยออนไลน์",
   "categoryIcon": "🚨",
   "categoryNote": "มิจฉาชีพออนไลน์ การหลอกโอนเงิน และบัญชีม้า",
-  "scene": "money",
-  "mood": "wave",
+  "scene": "scam",
+  "mood": "alert",
   "coverLines": [
     "โดนหลอกโอนเงิน",
     "ทำอะไรก่อน?"
