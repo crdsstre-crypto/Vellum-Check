@@ -4,8 +4,8 @@
   "category": "เงินและหนี้",
   "categoryIcon": "💰",
   "categoryNote": "กู้ยืมเงิน ดอกเบี้ย การค้ำประกัน และการทวงหนี้",
-  "scene": "money",
-  "mood": "sad",
+  "scene": "debt",
+  "mood": "stop",
   "coverLines": [
     "โดนทวงหนี้โหด",
     "ทำอะไรได้บ้าง?"
