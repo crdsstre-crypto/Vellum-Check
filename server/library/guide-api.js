@@ -38,8 +38,8 @@ function cleanGuide(g, file) {
     category: str(g.category, 60) || 'ทั่วไป',
     categoryIcon: str(g.categoryIcon, 8),          // อีโมจิหน้าหมวด เช่น 🏠
     categoryNote: str(g.categoryNote, 160),        // คำอธิบายใต้ชื่อหมวดในหน้ารวม
-    scene: ['condo', 'office', 'money'].includes(g.scene) ? g.scene : 'condo',   // ฉากในรูปการ์ด
-    mood: ['wave', 'happy', 'sleep', 'party', 'sad', 'curious'].includes(g.mood) ? g.mood : 'curious',   // ท่าน้องม้วน
+    scene: ['condo', 'office', 'money', 'debt', 'scam', 'contract'].includes(g.scene) ? g.scene : 'condo',   // ฉากในรูปการ์ด
+    mood: ['wave', 'happy', 'sleep', 'party', 'sad', 'curious', 'stop', 'alert', 'inspect'].includes(g.mood) ? g.mood : 'curious',   // ท่าน้องม้วน
     cardText: str(g.cardText, 300),                // คำอธิบายบนการ์ด · ใส่ **คำ** เพื่อไฮไลต์
     coverLines: arr(g.coverLines).map(x => str(x, 60)).filter(Boolean).slice(0, 2),   // ข้อความบนปก (บรรทัดที่ 2 เป็นสีส้ม)
     order: Number.isFinite(g.order) ? g.order : 999,
