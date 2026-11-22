@@ -153,6 +153,7 @@
 .gd-cover[data-bg="worksite"] { background: linear-gradient(180deg, #ffcf8a, #fff1d6); border-color: #e8b46a; }
 .gd-cover[data-bg="cradle"] { background: linear-gradient(135deg, #ffe3ec, #e7dcff); border-color: #d7c4f2; }
 .gd-cover[data-bg="farewell"] { background: #fffdf7; border-color: #d8c09a; }
+.gd-cover[data-bg="chalk"] { background: #fffdf6; border-color: #e2d6bd; }
 .gd-cover[data-bg="leave"] { background: linear-gradient(135deg, #e6f6ff, #c7e8fb); border-color: #9fd0e6; }
 .gd-cover[data-bg="condo"] { background: linear-gradient(135deg, #fff1dc, #f7d9b3); border-color: #ecc690; }
 
@@ -313,3 +314,29 @@
 .gd-cover[data-layout="ticket"] .gd-cover-art { overflow: visible; }
 .gd-cover[data-layout="ticket"] .gd-cover-art::after { content: ""; position: absolute; z-index: 4; left: -12px; bottom: -11px; width: 20px; height: 20px; border-radius: 50%; background: var(--bg, #f3f4f6); border: 2px solid #3a2a12; }
 .gd-cover[data-layout="ticket"] .gd-cover-art .gd-scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* ===== ปกแบบสมุดจด (coverLayout: "notebook"): กระดาษเส้นบรรทัด เส้นขอบแดง รูสันห่วง ภาพมีคลิปหนีบ ===== */
+.gd-cover[data-layout="notebook"] small { font-size: 11px; }
+.gd-cover[data-layout="notebook"] { gap: 10px; background: repeating-linear-gradient(180deg, #fffdf6 0 25px, #cfe0f5 25px 26px); padding-left: 44px; border-color: #e2d6bd; }
+.gd-cover[data-layout="notebook"]::after { content: ""; position: absolute; left: 34px; top: 0; bottom: 0; width: 2px; background: #f09a9a; }
+.gd-cover[data-layout="notebook"] .gd-cover-t::before { content: ""; position: absolute; left: -36px; top: -8px; bottom: -8px; width: 14px; background: radial-gradient(circle at 7px 14px, #f3f4f6 5px, #8a96a8 5.5px, #8a96a8 6.5px, transparent 7px) 0 0 / 14px 28px repeat-y; }
+.gd-cover[data-layout="notebook"] .gd-cover-art { order: 2; flex-basis: 118px; height: 138px; transform: rotate(3deg); border: 3px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,.18); overflow: visible; }
+.gd-cover[data-layout="notebook"] .gd-cover-art .gd-scene { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 9px; }
+.gd-cover[data-layout="notebook"] .gd-cover-art::before { content: ""; position: absolute; z-index: 3; top: -12px; right: 18px; width: 14px; height: 34px; border: 3px solid #9aa6b8; border-radius: 8px; }
+/* ของขยับชุดใหม่ (สัญญาจ้าง) */
+.gd-scene .sc-chalk path { stroke-dasharray: 100; animation: scChalk 5s ease-in-out infinite; }
+.gd-scene .sc-chalk2 * { stroke-dasharray: 100; animation: scChalk 5s ease-in-out infinite .8s; }
+.gd-cm .cm-level { transform-box: view-box; transform-origin: 180px 128px; animation: cmLevel 4s ease-in-out infinite; }
+.gd-cm .cm-gate { transform-box: view-box; transform-origin: 60px 115px; animation: cmGate 4s ease-in-out infinite; }
+.gd-cm .cm-deflate { animation: cmDeflate 4.4s ease-in-out infinite; }
+.gd-cm .cm-puff { animation: cmPuff 4.4s ease-in-out infinite; }
+.gd-cm .cm-shackle { animation: cmShackle 3.6s ease-in-out infinite; }
+.gd-cm .cm-flutter { transform-box: fill-box; transform-origin: 50% 0; animation: cmFlutter 3s ease-in-out infinite; }
+@keyframes scChalk { 0% { stroke-dashoffset: 100; } 45%, 85% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 0; opacity: .9; } }
+@keyframes cmLevel { 0%, 20% { transform: rotate(-10deg); } 60%, 90% { transform: rotate(0); } 100% { transform: rotate(-10deg); } }
+@keyframes cmGate { 0%, 15% { transform: rotate(0); } 50%, 85% { transform: rotate(-38deg); } 100% { transform: rotate(0); } }
+@keyframes cmDeflate { 0%, 20% { transform: scale(1.08); } 65%, 90% { transform: scale(.72); } 100% { transform: scale(1.08); } }
+@keyframes cmPuff { 0%, 30% { opacity: 0; } 50% { opacity: 1; } 75%, 100% { opacity: 0; } }
+@keyframes cmShackle { 0%, 30% { transform: translateY(0); } 55%, 85% { transform: translateY(-10px) rotate(0); } 100% { transform: translateY(0); } }
+@keyframes cmFlutter { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2.5deg) translateY(1px); } }
+@media (prefers-reduced-motion: reduce) { .gd-cm *, .gd-cover-bg *, .gd-scene * { animation: none !important; } }
