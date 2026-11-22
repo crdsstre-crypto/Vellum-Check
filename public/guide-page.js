@@ -129,7 +129,7 @@
     $main.innerHTML = `
       ${g.reviewed ? '' : `<div class="gd-draft" role="note">ฉบับร่าง · ยังไม่ผ่านการตรวจโดยนักกฎหมาย${g.isAdmin ? ' · ตอนนี้เห็นเฉพาะแอดมิน' : ''}</div>`}
       <div class="gd-crumb"><a href="/guide">เรียนรู้</a> › ${esc(g.category)}</div>
-      ${g.coverLines.length ? `<div class="gd-cover"${window.VCComic ? ` data-bg="${esc(g.scene)}"` : ''}>${window.VCComic ? VCComic.coverBg(g.scene) : ''}
+      ${g.coverLines.length ? `<div class="gd-cover"${window.VCComic ? ` data-bg="${esc(g.scene)}"` : ''}${g.coverLayout ? ` data-layout="${esc(g.coverLayout)}"` : ''}>${window.VCComic ? VCComic.coverBg(g.scene) : ''}
         ${scene(g.scene, 'cv') ? `<div class="gd-cover-art" aria-hidden="true">${scene(g.scene, 'cv')}<span class="gd-cover-m">${mascot(g.mood, 66)}</span></div>`
           : `<div class="gd-cover-m" aria-hidden="true">${mascot(g.mood, 112)}</div>`}
         <div class="gd-cover-t"><small>${g.categoryIcon ? esc(g.categoryIcon) + ' ' : ''}คู่มือ · ${esc(g.category)}</small>
@@ -165,7 +165,7 @@
       ${g.summary.length ? `<div class="gd-sum" data-say><h2>สรุปใน 30 วินาที</h2><ul>${g.summary.map(s => `<li>${hlA(s)}</li>`).join('')}</ul></div>` : ''}
       <div id="gd-body">
       ${g.sections.map(s => `<h2 class="gd-h2" data-say><span class="gd-n" aria-hidden="true">${++n}</span>${esc(s.title)}</h2>
-        ${s.panel && window.VCComic ? VCComic.panel(s.panel.scene, s.panel.mood, hlB(s.panel.say), 'ตอนที่ ' + n, 'p' + n) : ''}
+        ${s.panel && window.VCComic ? VCComic.panel(s.panel.scene, s.panel.mood, hlB(s.panel.say), 'ตอนที่ ' + n, 'p' + n, s.panel.layout, s.panel.bubble) : ''}
         ${s.items.map(it => `<div class="gd-item" data-say><p class="gd-q">${esc(it.q)}</p><p class="gd-a">${hlA(it.a)}</p>
           ${it.cite.length ? `<div class="gd-cites">${it.cite.map(citeBtn).join('')}</div>` : ''}</div>`).join('')}`).join('')}
       ${g.redFlags.length ? `<h2 class="gd-h2" data-say>🚩 เจอแบบนี้ในสัญญา ระวัง</h2>${g.redFlags.map(f => `<div class="gd-flag" data-say><b>${esc(f.text)}</b>${f.note ? `<br>${esc(f.note)}` : ''}</div>`).join('')}` : ''}
