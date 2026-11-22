@@ -59,8 +59,21 @@ export async function importOne(pool, item, sourceId) {
   if (text.replace(/\s/g, '').length < 50) throw new Error('เนื้อหาสั้นเกินไป');
   const hash = sha(text.replace(/\s+/g, ' ').trim());
 
-  const dup = await pool.query('SELECT v.id, l.slug FROM lib_versions v JOIN lib_laws l ON l.id = v.law_id WHERE v.content_hash = $1', [hash]);
-  if (dup.rows[0]) return { result: 'duplicate', slug: dup.rows[0].slug };
+  const dup = await pool.query('SELECT v.id, v.law_id, l.slug FROM lib_versions v JOIN lib_laws l ON l.id = v.law_id WHERE v.content_hash = $1', [hash]);
+  if (dup.rows[0]) {
+    // ข้อความเดิมทุกตัวอักษร: ไม่สร้างรุ่นใหม่ แต่เติมรายการ "แก้ไขเพิ่มเติม" ที่ตัวอ่านรุ่นก่อนอาจหาไม่เจอ (พ.ร.ก./พ.ร.ฎ./พินัย/คำสั่ง คสช.)
+    const d = dup.rows[0];
+    let added = 0;
+    for (const a of parseLaw(text).amendments) {
+      const r = await pool.query(
+        `INSERT INTO lib_events (law_id, version_id, kind, title, event_date, gazette_ref, evidence) VALUES ($1,$2,'amended',$3,$4,$5,$6)
+         ON CONFLICT (law_id, kind, title) DO NOTHING`,
+        [d.law_id, d.id, a.title.slice(0, 300), a.gazette?.date || null, a.gazette?.text || null, 'บทบัญญัติท้ายเอกสาร']
+      );
+      added += r.rowCount || 0;
+    }
+    return { result: 'duplicate', slug: d.slug, eventsAdded: added };
+  }
 
   const p = parseLaw(text);
   const flagged = p.quality.mainSections === 0 || p.quality.gaps > 0;
@@ -145,6 +158,7 @@ async function runJob(pool, jobId, items, sourceId) {
       try {
         const r = await importOne(pool, it, sourceId);
         col = r.result === 'added' ? 'added' : r.result === 'new_version' ? 'new_version' : 'duplicates';
+        if (r.eventsAdded) await log(`เติมประวัติการแก้ไข ${r.eventsAdded} รายการ: ${it.title.slice(0, 80)}`);
         if (r.flagged) { await pool.query('UPDATE lib_import_jobs SET flagged = flagged + 1 WHERE id = $1', [jobId]); await log(`ตรวจ: ${it.title.slice(0, 80)} (เลขมาตราขาดช่วง ${r.quality.gaps} · ${r.quality.gapList.slice(0, 3).join(', ')})`); }
       } catch (e) {
         await pool.query('UPDATE lib_import_jobs SET flagged = flagged + 1 WHERE id = $1', [jobId]);
@@ -224,7 +238,7 @@ export async function previewOne(pool, item) {
     pool.query(`SELECT l.slug, l.title, v.quality FROM lib_laws l LEFT JOIN LATERAL (SELECT quality FROM lib_versions WHERE law_id = l.id ORDER BY id DESC LIMIT 1) v ON true
                  WHERE l.doc_type = $1 AND l.title_norm = $2 AND COALESCE(l.year_be,0) = COALESCE($3::int,0)`, [info.docType, info.titleNorm, info.yearBE]),
   ]);
-  const am = p.amendments.filter(a => a.yearBE).sort((x, y) => x.yearBE - y.yearBE);
+  const am = p.amendments.filter(a => a.yearBE).sort((x, y) => (x.gazette?.date || String(x.yearBE - 543)).localeCompare(y.gazette?.date || String(y.yearBE - 543)) || x.order - y.order);
   return {
     title: info.title, docType: info.docType, quality: p.quality,
     duplicateOf: dup.rows[0] || null,
