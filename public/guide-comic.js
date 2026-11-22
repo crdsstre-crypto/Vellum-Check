@@ -1,7 +1,7 @@
 /* ===== ภาพการ์ตูนในหน้าอ่านคู่มือ (วาดเอง ไม่ใช้ภาพจากที่อื่น) =====
    VCComic.panel(scene, mood, sayHtml, cap, key) คืน <figure> ช่องการ์ตูนเต็มฉาก (viewBox 360×180)
      scene: pay nopay notice labor (เลิกจ้าง) · sign repair moveout (เช่า) · iou rate guarantee hourglass (กู้เงิน)
-            umbrella hours nothreat complain (ทวงหนี้) · bankcall mule shared (มิจฉาชีพ) · tilt cut fence (ข้อสัญญา) · sick errand vacation holiday (วันลา) · workday consent rates manager payslip (OT) · trial dismiss day120 court (ทดลองงาน) · deductlist pie broken vault payday (หักเงิน) · orbit hospital nursery jobcenter retire bridge (ประกันสังคม)
+            umbrella hours nothreat complain (ทวงหนี้) · bankcall mule shared (มิจฉาชีพ) · tilt cut fence (ข้อสัญญา) · sick errand vacation holiday (วันลา) · workday consent rates manager payslip (OT) · trial dismiss day120 court (ทดลองงาน) · deductlist pie broken vault payday (หักเงิน) · orbit hospital nursery jobcenter retire bridge (ประกันสังคม) · verdict xray donut roadmap lantern (เงินทดแทน)
      ของสำคัญวางช่วงล่าง/ซ้าย เพราะกรอบคำพูดทับมุมขวาบน
    VCComic.coverBg(name) คืน <svg> ลายฉากหลังปกตามฉากการ์ด (condo | office | money | debt | scam | contract) */
 (function () {
@@ -321,9 +321,48 @@ var P={
   '<g stroke="'+I+'" stroke-width="2.2"><rect x="110" y="66" width="44" height="84" fill="#9fb3d6"/>'+[0,1,2].map(function(i){return '<rect x="118" y="'+(76+i*22)+'" width="10" height="12" fill="#e9f5ff"/><rect x="136" y="'+(76+i*22)+'" width="10" height="12" fill="#e9f5ff"/>';}).join('')+'</g>'+
   '<path d="M154 122q80-40 160 0" fill="none" stroke="'+I+'" stroke-width="3"/><path d="M154 128q80-40 160 0" fill="none" stroke="#b07a45" stroke-width="5"/>'+[0,1,2,3,4,5].map(function(i){var x=170+i*24;return '<path d="M'+x+' '+(118-Math.sin((i+.5)/6*Math.PI)*18).toFixed(0)+'v14" stroke="'+I+'" stroke-width="1.6"/>';}).join('')+
   '<g stroke="'+I+'" stroke-width="2.2" stroke-linejoin="round"><path d="M300 150v-30h46v30" fill="#fff3d0"/><path d="M294 122l29-22 29 22z" fill="#f08a5d"/><rect x="316" y="132" width="14" height="18" fill="#b07a45"/></g>'+
-  '<g class="cm-float"><g transform="translate(234 52)"><path d="M-22 10q22-26 44 0q-5-4-11 0q-5-4-11 0q-5-4-11 0q-5-4-11 0z" fill="#ffd84d" stroke="'+I+'" stroke-width="2" stroke-linejoin="round"/><path d="M0-4v26q0 4-4 4" fill="none" stroke="'+I+'" stroke-width="2" stroke-linecap="round"/><text x="34" y="14" font-size="10" font-weight="800" fill="#2e7d4a" font-family="sans-serif">6 เดือน</text></g></g>';}
+  '<g class="cm-float"><g transform="translate(234 52)"><path d="M-22 10q22-26 44 0q-5-4-11 0q-5-4-11 0q-5-4-11 0q-5-4-11 0z" fill="#ffd84d" stroke="'+I+'" stroke-width="2" stroke-linejoin="round"/><path d="M0-4v26q0 4-4 4" fill="none" stroke="'+I+'" stroke-width="2" stroke-linecap="round"/><text x="34" y="14" font-size="10" font-weight="800" fill="#2e7d4a" font-family="sans-serif">6 เดือน</text></g></g>';},
+ // ===== เงินทดแทน (บาดเจ็บจากงาน) =====
+ // นับไหม: จอแยกสองฝั่งเฉียง ซ้ายโรงงาน "นับ" ขวาวงเหล้า "ไม่นับ" เส้นแบ่งกะพริบ
+ verdict:function(k){return '<defs><linearGradient id="va'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1c9"/><stop offset="1" stop-color="#ffd98f"/></linearGradient><linearGradient id="vb'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b4b9a"/><stop offset="1" stop-color="#2f2a63"/></linearGradient></defs>'+
+  '<rect width="360" height="180" fill="url(#va'+k+')"/><path d="M206 0h154v180H156z" fill="url(#vb'+k+')"/>'+
+  '<g fill="#fff" opacity=".7"><circle cx="300" cy="96" r="1.3"/><circle cx="336" cy="120" r="1"/><circle cx="268" cy="136" r="1.2"/></g>'+
+  '<g stroke="'+I+'" stroke-width="2"><g transform="translate(46 112)"><g class="cm-spin"><circle r="18" fill="#c4cbd6"/><circle r="7" fill="#fff"/>'+[0,45,90,135,180,225,270,315].map(function(a){return '<rect x="-4" y="-24" width="8" height="8" rx="1.5" fill="#c4cbd6" transform="rotate('+a+')"/>';}).join('')+'</g></g>'+
+   '<rect x="76" y="128" width="64" height="12" rx="6" fill="#8a96a8"/><circle cx="84" cy="134" r="4" fill="#3b4a66"/><circle cx="132" cy="134" r="4" fill="#3b4a66"/><rect x="92" y="114" width="20" height="14" fill="#d6a76a"/></g>'+
+  '<g transform="translate(70 86)"><rect x="-26" y="-11" width="52" height="22" rx="11" fill="#2e9e5b" stroke="'+I+'" stroke-width="2"/><text y="4" text-anchor="middle" font-size="11" font-weight="800" fill="#fff" font-family="sans-serif">✓ นับ</text></g>'+
+  '<g stroke="'+I+'" stroke-width="2" stroke-linejoin="round"><path d="M272 150v-30q0-6 4-10v-8h8v8q4 4 4 10v30z" fill="#7cc58a"/><path d="M300 150v-26q0-5 4-8v-8h8v8q4 3 4 8v26z" fill="#c98b5a"/><path d="M326 150v-16h14v16z" fill="#ffd22e"/></g>'+
+  '<g transform="translate(302 88)"><rect x="-32" y="-11" width="64" height="22" rx="11" fill="#e0453a" stroke="'+I+'" stroke-width="2"/><text y="4" text-anchor="middle" font-size="10.5" font-weight="800" fill="#fff" font-family="sans-serif">✗ ไม่นับ</text></g>'+
+  '<path class="cm-flash" d="M206 0L188 60l14 4-24 56 12 4L156 180" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>'+
+  '<rect x="0" y="152" width="360" height="28" fill="#3a2a12" opacity=".12"/>';},
+ // ค่ารักษา: ไฟส่องฟิล์มเอกซเรย์ มีเส้นสแกนเลื่อน + กระเป๋าปฐมพยาบาล + ไม้ค้ำ (น้องม้วนขวา)
+ xray:function(k){return bg(k,'#eef6fb','#d8e9f3','#b8d3e3')+
+  '<g stroke="'+I+'" stroke-width="2.2"><rect x="118" y="74" width="124" height="74" rx="6" fill="#e9eef6"/><rect x="126" y="82" width="108" height="58" rx="3" fill="#13234a"/></g>'+
+  '<g fill="#e8f3ff" opacity=".92"><path d="M146 92q6-4 10 2l48 30q8-2 10 4q-2 6-10 4l-48-30q-8 2-10-4z"/><circle cx="148" cy="94" r="5"/><circle cx="214" cy="128" r="5"/></g><path d="M176 108l4 4" stroke="#ff8a7a" stroke-width="2.4" stroke-linecap="round"/>'+
+  '<g class="cm-scan"><rect x="126" y="82" width="108" height="4" fill="#7fe0ff" opacity=".7"/></g>'+
+  '<g transform="translate(34 118)" stroke="'+I+'" stroke-width="2"><rect width="54" height="34" rx="5" fill="#fff"/><path d="M18 0v-7h18v7" fill="none" stroke-width="2.6"/><rect x="21" y="9" width="12" height="16" fill="#e0453a" stroke="none"/><rect x="19" y="13" width="16" height="8" fill="#e0453a" stroke="none"/></g>'+
+  '<g stroke="'+I+'" stroke-width="2.2" stroke-linecap="round"><path d="M260 152l12-60M276 152l-4-60M266 120h12" fill="none"/><path d="M262 92h22" stroke-width="5" stroke="#9fb3c4"/></g>'+
+  '<g class="cm-tw"><path d="M102 64l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#7fe0ff"/></g>';},
+ // 70%: กระดาษพิมพ์เขียวลายตาราง วงแหวน 70% วาดตัวเอง + ป้ายระยะเวลา
+ donut:function(k){var grid='';for(var x=0;x<=360;x+=20)grid+='<path d="M'+x+' 0v180" />';for(var y=0;y<=180;y+=20)grid+='<path d="M0 '+y+'h360" />';
+  return '<rect width="360" height="180" fill="#1d3f7a"/><g stroke="#4f74b8" stroke-width=".8" opacity=".7">'+grid+'</g><g stroke="#7fa1dd" stroke-width="1.4" opacity=".6"><path d="M0 100h360M180 0v180"/></g>'+
+  '<g transform="translate(160 120)"><circle r="38" fill="none" stroke="#2c528f" stroke-width="14"/><circle class="cm-draw" r="38" fill="none" stroke="#ffd84d" stroke-width="14" stroke-linecap="round" stroke-dasharray="167 239" transform="rotate(-90)"/><circle r="31" fill="#1d3f7a"/><text y="7" text-anchor="middle" font-size="20" font-weight="800" fill="#fff" font-family="sans-serif">70%</text></g>'+
+  '<g font-family="sans-serif" font-weight="800" font-size="10" text-anchor="middle">'+[['หยุดงาน','≤ 1 ปี',268,92],['เสียอวัยวะ','≤ 10 ปี',268,122],['ทุพพลภาพ','≥ 15 ปี',268,152]].map(function(v,i){return '<g transform="translate('+(v[2]+30)+' '+(v[3]+4)+')"><rect x="-44" y="-12" width="88" height="22" rx="4" fill="#fff" stroke="#0e2147" stroke-width="1.6"/><text x="-14" y="3" fill="#1d3f7a" font-size="8.5">'+v[0]+'</text><text x="26" y="3" fill="#d9731a">'+v[1]+'</text></g>';}).join('')+'</g>'+
+  '<g stroke="#ffd84d" stroke-width="1.6" fill="none" opacity=".8"><path d="M204 120h44" stroke-dasharray="3 3"/></g>';},
+ // ขั้นตอน: แผนที่มุมสูง ถนนคดเคี้ยวมีเส้นประวิ่ง ธงหลักไมล์ 7 / 15 / 180 วัน
+ roadmap:function(k){return '<rect width="360" height="180" fill="#bfe6a8"/><g fill="#a9d892"><ellipse cx="60" cy="40" rx="50" ry="22"/><ellipse cx="300" cy="150" rx="70" ry="26"/></g>'+
+  '<g fill="#7cc58a" stroke="'+I+'" stroke-width="1.4"><circle cx="40" cy="150" r="9"/><circle cx="52" cy="158" r="7"/><circle cx="340" cy="70" r="9"/><circle cx="96" cy="70" r="7"/></g>'+
+  '<path d="M96 180q10-36 70-34t86-22t74-30" fill="none" stroke="#e9d9b8" stroke-width="22" stroke-linecap="round"/><path d="M96 180q10-36 70-34t86-22t74-30" fill="none" stroke="'+I+'" stroke-width="1.6" opacity=".25"/>'+
+  '<path class="cm-march" d="M96 180q10-36 70-34t86-22t74-30" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="8 8"/>'+
+  [['7 วัน',150,146,'#7cc58a'],['15 วัน',236,128,'#5ab8ff'],['180 วัน',308,106,'#ff8a5a']].map(function(v){return '<g transform="translate('+v[1]+' '+v[2]+')" stroke="'+I+'" stroke-width="1.8"><path d="M0 0v-30" stroke-width="2.4"/><path d="M0-30h34l-6 7 6 7H0z" fill="'+v[3]+'"/><text x="15" y="-19" text-anchor="middle" font-size="8.5" font-weight="800" fill="#fff" stroke="none" font-family="sans-serif">'+v[0]+'</text><ellipse cx="0" cy="1" rx="6" ry="2" fill="#000" opacity=".2" stroke="none"/></g>';}).join('');},
+ // ถ้าเสียชีวิต: ริมน้ำยามค่ำ โคมลอยค่อย ๆ ลอยขึ้น ครอบครัวจับมือกัน (โทนอ่อนโยน)
+ lantern:function(k){return '<defs><linearGradient id="ln'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b2d63"/><stop offset=".7" stop-color="#7b5ea7"/><stop offset="1" stop-color="#f2a48a"/></linearGradient><radialGradient id="lg'+k+'" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffd27a" stop-opacity=".9"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient></defs><rect width="360" height="180" fill="url(#ln'+k+')"/>'+
+  '<g fill="#fff" opacity=".8"><circle cx="40" cy="20" r="1.2"/><circle cx="96" cy="44" r="1"/><circle cx="330" cy="30" r="1.3"/><circle cx="286" cy="60" r="1"/></g>'+
+  [[60,120,0],[104,90,1.2],[262,104,.6],[312,128,1.8],[40,70,2.4]].map(function(v){return '<g class="cm-rise" style="animation-delay:'+v[2]+'s"><circle cx="'+v[0]+'" cy="'+v[1]+'" r="24" fill="url(#lg'+k+')"/><path d="M'+(v[0]-9)+' '+(v[1]-12)+'h18l3 20h-24z" fill="#ffb347" stroke="'+I+'" stroke-width="1.4"/><path d="M'+(v[0]-6)+' '+(v[1]-4)+'h12" stroke="#ffe7b0" stroke-width="2"/></g>';}).join('')+
+  '<rect x="0" y="150" width="360" height="30" fill="#3d3570"/><path d="M0 150h360" stroke="#f2c4a0" stroke-width="1.4" opacity=".6"/><g stroke="#ffd27a" stroke-width="2" opacity=".35"><path d="M54 160h14M98 166h10M256 162h14M306 168h12"/></g>'+
+  '<g fill="#2a2550"><circle cx="252" cy="124" r="7"/><path d="M244 150v-16q0-6 8-6t8 6v16z"/><circle cx="276" cy="130" r="5"/><path d="M270 150v-12q0-5 6-5t6 5v12z"/><circle cx="298" cy="122" r="7"/><path d="M290 150v-16q0-6 8-6t8 6v16z"/><path d="M258 138h14M280 138h12" stroke="#2a2550" stroke-width="3"/></g>';}
 };
 var BG={
+ worksite:'<rect x="0" y="0" width="360" height="10" fill="url(#cvtape)" opacity=".85"/><rect x="0" y="166" width="360" height="10" fill="url(#cvtape)" opacity=".85"/><defs><pattern id="cvtape" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="16" fill="#2b2b2b"/><rect x="8" width="8" height="16" fill="#ffd22e"/></pattern></defs>',
  social:'<g opacity=".55">'+[[214,22,'#ff8a9a'],[252,12,'#7cc58a'],[292,24,'#f6c86b'],[330,12,'#b79cf0'],[346,150,'#5ab8ff'],[230,160,'#ff9a5a']].map(function(v){return '<circle cx="'+v[0]+'" cy="'+v[1]+'" r="7" fill="'+v[2]+'" stroke="#3a2a12" stroke-width="1.2"/>';}).join('')+'</g><path d="M268 158q30-22 60 0q-7-5-15 0q-7-5-15 0q-7-5-15 0q-7-5-15 0z" fill="#ffd84d" stroke="#3a2a12" stroke-width="1.4" opacity=".6"/>',
  payroll:'<g opacity=".45" stroke="#3a2a12" stroke-width="1.4" fill="#f4c542"><circle cx="336" cy="22" r="9"/><circle cx="316" cy="12" r="6"/></g><g opacity=".35" stroke="#3bb3a0" stroke-width="2" stroke-linecap="round"><path d="M210 160h60M210 168h40M290 164h50"/></g><path d="M262 18h16" stroke="#e0453a" stroke-width="3" stroke-linecap="round" opacity=".5"/>',
  probation:'<g opacity=".55" stroke="#3a2a12" stroke-width="1.6"><rect x="318" y="10" width="30" height="22" rx="4" fill="#fff"/><rect x="318" y="10" width="30" height="7" rx="3" fill="#3b6fd6"/><circle cx="326" cy="25" r="3.4" fill="#f7d9b3"/></g><g stroke="#2e9e5b" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".5"><path d="M220 158l4 4 7-8M250 164l4 4 7-8M330 158l4 4 7-8"/></g>',
@@ -344,8 +383,25 @@ function panel(scene, mood, say, cap, key, layout, bubble) {
     '<span class="gd-cm-m">' + (window.VCMascot ? window.VCMascot.svg(mood, 92) : '') + '</span>' +
     (say ? '<figcaption class="gd-cm-bub">' + say + '</figcaption>' : '') + (cap ? '<span class="gd-cm-cap">' + cap + '</span>' : '') + '</figure>';
 }
+
+// ===== ภาพปกแบบกว้าง (coverLayout: "banner") viewBox 360×150 =====
+var WIDE = {
+  worksite: function (k) { return '<defs><linearGradient id="wa' + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb46b"/><stop offset=".6" stop-color="#ffe0b0"/><stop offset="1" stop-color="#fff4df"/></linearGradient><pattern id="wt' + k + '" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="14" fill="#2b2b2b"/><rect x="7" width="7" height="14" fill="#ffd22e"/></pattern><radialGradient id="wb' + k + '" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ff6b3d" stop-opacity=".85"/><stop offset="1" stop-color="#ff6b3d" stop-opacity="0"/></radialGradient></defs>' +
+    '<rect width="360" height="150" fill="url(#wa' + k + ')"/><circle cx="300" cy="44" r="22" fill="#fff3c4" opacity=".9"/>' +
+    '<g fill="#e9c9a0" opacity=".8"><rect x="150" y="70" width="40" height="70"/><rect x="196" y="54" width="34" height="86"/><rect x="236" y="80" width="30" height="60"/></g>' +
+    '<g stroke="#5a4b3a" stroke-width="1.8" fill="none"><path d="M110 140V20M120 140V20M110 20h170M110 20l-24 14h34"/>' + [0,1,2,3,4,5].map(function (i) { var y = 28 + i * 18; return '<path d="M110 ' + y + 'l10 12M120 ' + y + 'l-10 12"/>'; }).join('') + '<path d="M250 20v34" stroke-width="1.4"/></g>' +
+    '<g class="cm-swing"><path d="M250 54v10" stroke="#5a4b3a" stroke-width="1.4"/><rect x="236" y="64" width="28" height="16" fill="#c48d55" stroke="#3a2a12" stroke-width="1.6"/></g>' +
+    '<rect x="0" y="126" width="360" height="24" fill="#d9b98a"/><path d="M0 126h360" stroke="#3a2a12" stroke-width="2"/><rect x="0" y="114" width="360" height="9" fill="url(#wt' + k + ')" stroke="#3a2a12" stroke-width="1.4"/>' +
+    '<g stroke="#3a2a12" stroke-width="1.8" stroke-linejoin="round"><path d="M296 128l9-30h4l9 30z" fill="#ff7a2e"/><path d="M300 116h16M302 107h12" stroke="#fff" stroke-width="3"/><path d="M326 128l7-22h3l7 22z" fill="#ff7a2e"/></g>' +
+    '<circle class="sc-blink" cx="170" cy="40" r="18" fill="url(#wb' + k + ')"/><g stroke="#3a2a12" stroke-width="1.6"><rect x="164" y="42" width="12" height="6" rx="1" fill="#5a4b3a"/><path d="M165 42a5 5 0 0 1 10 0z" fill="#ff5a3a"/></g>' +
+    '<g stroke="#3a2a12" stroke-width="2" stroke-linejoin="round"><path d="M200 112q0-16 16-16q16 0 16 16z" fill="#ffd22e"/><path d="M196 112h40" stroke-width="3" stroke-linecap="round"/></g>'; }
+};
+function coverWide(name, key) {
+  var f = WIDE[name]; if (!f) return '';
+  return '<svg class="gd-scene gd-wide" viewBox="0 0 360 150" preserveAspectRatio="xMidYMax slice" aria-hidden="true">' + f(String(key || 'w').replace(/[^a-z0-9]/gi, '')) + '</svg>';
+}
 function coverBg(name) {
   return BG[name] ? '<svg class="gd-cover-bg" viewBox="0 0 360 176" preserveAspectRatio="xMaxYMid slice" aria-hidden="true">' + BG[name] + '</svg>' : '';
 }
-window.VCComic = { panel: panel, coverBg: coverBg, scenes: Object.keys(P) };
+window.VCComic = { panel: panel, coverBg: coverBg, coverWide: coverWide, scenes: Object.keys(P) };
 })();
