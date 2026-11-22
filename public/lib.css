@@ -468,3 +468,21 @@ mark.hl { cursor: pointer; padding: 1px 0; border-radius: 0; }
 .lb-learn b { display: block; font-size: 15.5px; }
 .lb-learn small { font-size: 13px; color: var(--ink-2); }
 .lb-learn i { color: var(--o-text); font-style: normal; font-size: 20px; }
+
+/* นำเข้าจาก PDF หลายไฟล์ */
+.lb-pdfrows { display: grid; gap: 8px; }
+.lb-pdfrow { display: flex; gap: 10px; align-items: flex-start; border: 1px solid var(--line); border-left: 4px solid #CBD2DC; border-radius: var(--r-s); padding: 9px 11px; background: #fff; }
+.lb-pdfrow.ok { border-left-color: var(--ok); }
+.lb-pdfrow.warn { border-left-color: #E0A100; }
+.lb-pdfrow.bad { border-left-color: var(--gone); }
+.lb-pdfrow.done { border-left-color: var(--ok); opacity: .7; }
+.lb-pdfck { padding-top: 2px; }
+.lb-pdfck input { width: 20px; height: 20px; }
+.lb-pdfmain { flex: 1; min-width: 0; display: grid; gap: 4px; }
+.lb-pdfst { font-size: 13px; color: var(--ink-2); }
+.lb-pdfrow.ok .lb-pdfst b, .lb-pdfrow.done .lb-pdfst b { color: var(--ok); }
+.lb-pdfrow.warn .lb-pdfst b { color: #8a5a00; }
+.lb-pdfrow.bad .lb-pdfst b { color: var(--gone); }
+.lb-updform .lb-pdft { font-family: inherit; font-size: 14.5px; line-height: 1.45; padding: 6px 9px; resize: none; }
+.lb-pdfrow .lb-count { overflow-wrap: anywhere; }
+.lb-pdfrow .lb-warn { margin: 2px 0 0; }
