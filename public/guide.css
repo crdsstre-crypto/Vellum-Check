@@ -149,6 +149,7 @@
 .gd-cover[data-bg="overtime"] h1 { color: #fff; } .gd-cover[data-bg="overtime"] h1 em { color: #ffb36b; }
 .gd-cover[data-bg="probation"] { background: linear-gradient(135deg, #fff4e6, #ffdcb8); border-color: #ecc690; }
 .gd-cover[data-bg="payroll"] { background: linear-gradient(135deg, #eefaf3, #cfeedd); border-color: #a8d5b5; }
+.gd-cover[data-bg="social"] { background: radial-gradient(circle at 80% 30%, #fff7d6, #bfe3ff 70%); border-color: #9cc9ee; }
 .gd-cover[data-bg="leave"] { background: linear-gradient(135deg, #e6f6ff, #c7e8fb); border-color: #9fd0e6; }
 .gd-cover[data-bg="condo"] { background: linear-gradient(135deg, #fff1dc, #f7d9b3); border-color: #ecc690; }
 
@@ -189,3 +190,48 @@
 /* ===== ไฮไลต์คำสำคัญในคำตอบ/สรุป (ใส่ **คำ** ใน JSON) · ปากกาเน้นสีเหลืองอ่อนครึ่งล่าง ไม่แสบตา ===== */
 .gd-hl { background: linear-gradient(transparent 52%, #ffe68f 52%, #ffe68f 92%, transparent 92%); color: #1f2a3a; font-weight: 700; padding: 0 1px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 .gd-sum .gd-hl { background: linear-gradient(transparent 52%, #ffd77a 52%, #ffd77a 92%, transparent 92%); }
+
+/* ===== ช่องการ์ตูน: ท่าจัดวางและกรอบคำพูดแบบอื่น (panel.layout / panel.bubble) ===== */
+.gd-cm.l-right .gd-cm-m { left: auto; right: 4px; }
+.gd-cm.l-right .gd-cm-m .vm { transform: scaleX(-1); }
+.gd-cm.l-right .gd-cm-bub { right: auto; left: 10px; top: 12px; }
+.gd-cm.l-right .gd-cm-cap { left: auto; right: 10px; transform: rotate(3deg); }
+.gd-cm.l-right .gd-cm-bub::before { left: auto; right: 18px; transform: skewX(-25deg); }
+.gd-cm.l-right .gd-cm-bub::after { left: auto; right: 20.5px; transform: skewX(-25deg); }
+.gd-cm.l-center .gd-cm-m { left: 50%; margin-left: -46px; }
+.gd-cm.l-center .gd-cm-bub { right: auto; left: 50%; transform: translateX(-50%); top: 10px; max-width: 72%; width: max-content; text-align: center; }
+.gd-cm.l-center .gd-cm-bub::before { left: 50%; margin-left: -6px; transform: none; }
+.gd-cm.l-center .gd-cm-bub::after { left: 50%; margin-left: -3.5px; transform: none; }
+.gd-cm.l-center .gd-cm-cap { top: auto; bottom: 10px; }
+/* ความคิด: กรอบเมฆ + ฟองกลมเล็ก */
+.gd-cm.b-think .gd-cm-bub { border-radius: 40px; border-style: solid; padding: 9px 16px; box-shadow: 0 0 0 4px #fff, 0 0 0 6.5px #3a2a12; border-width: 0; }
+.gd-cm.b-think .gd-cm-bub::before { border: 2.5px solid #3a2a12; background: #fff; border-radius: 50%; width: 12px; height: 12px; bottom: -22px; left: 22px; transform: none; }
+.gd-cm.b-think .gd-cm-bub::after { border: 2.5px solid #3a2a12; background: #fff; border-radius: 50%; width: 6px; height: 6px; bottom: -32px; left: 14px; transform: none; }
+.gd-cm.l-right.b-think .gd-cm-bub::before { left: auto; right: 22px; } .gd-cm.l-right.b-think .gd-cm-bub::after { left: auto; right: 14px; }
+/* ตะโกน: พื้นเหลือง ขอบหนา เอียงนิด ๆ */
+.gd-cm.b-shout .gd-cm-bub { background: #fff3a8; border-width: 3px; border-radius: 6px; transform: rotate(-2deg); box-shadow: 3px 3px 0 #3a2a12; }
+.gd-cm.b-shout .gd-cm-bub::after { border-top-color: #fff3a8; }
+.gd-cm.l-center.b-shout .gd-cm-bub { transform: translateX(-50%) rotate(-2deg); }
+.gd-cm.b-shout .gd-cm-bub b { color: #c2410c; }
+/* กล่องบรรยาย: สี่เหลี่ยมมุมฉาก ไม่มีหาง แบบหนังสือการ์ตูน */
+.gd-cm.b-caption .gd-cm-bub { background: #16263D; color: #fff; border-color: #16263D; border-radius: 4px; box-shadow: 3px 3px 0 #ffd84d; }
+.gd-cm.b-caption .gd-cm-bub::before, .gd-cm.b-caption .gd-cm-bub::after { display: none; }
+.gd-cm.b-caption .gd-cm-bub b { color: #ffd84d; }
+/* ของขยับแบบใหม่ */
+.gd-scene .sc-rays { transform-box: view-box; transform-origin: 68px 66px; animation: cmOrbit 40s linear infinite; }
+.gd-cm .cm-orbit { transform-box: view-box; transform-origin: 180px 118px; animation: cmOrbit 18s linear infinite; }
+.gd-cm .cm-up { transform-box: fill-box; transform-origin: 50% 50%; animation: cmPop 2.4s ease-in-out infinite; }
+.gd-cm .cm-swing { transform-box: fill-box; transform-origin: 50% 0; animation: cmSwing 2.8s ease-in-out infinite; }
+.gd-cm .cm-sunset { animation: cmSunset 6s ease-in-out infinite; }
+.gd-cm .cm-drive { animation: cmDrive 5s ease-in-out infinite; }
+.gd-cm .cm-float { animation: cmFloat 3s ease-in-out infinite; }
+@keyframes cmOrbit { to { transform: rotate(360deg); } }
+@keyframes cmSwing { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
+@keyframes cmSunset { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+@keyframes cmDrive { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(14px); } }
+@keyframes cmFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+/* ปกแบบสลับข้าง: ภาพวงกลมอยู่ขวา (coverLayout: "right") */
+.gd-cover[data-layout="right"] .gd-cover-art { order: 2; flex-basis: 132px; height: 132px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 3px rgba(58, 42, 18, .18); }
+.gd-cover[data-layout="right"] { padding-left: 16px; }
+.gd-cover[data-layout="right"] .gd-cover-art .gd-cover-m { left: 50%; margin-left: -33px; bottom: -4px; }
+@media (prefers-reduced-motion: reduce) { .gd-cm *, .gd-cover-bg * { animation: none !important; } }
