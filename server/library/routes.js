@@ -5,7 +5,8 @@ import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { initLibraryDb } from './db.js';
-import { DOC_TYPES, thToArabic } from './parse.js';
+import { DOC_TYPES, thToArabic, titleInfo, sectionKey } from './parse.js';
+import { mountGuides } from './guide-api.js';
 import { tokenize } from './tokens.js';
 import { TOPICS, startSeedImport, startUploadImport, cleanUpload, isRunning, previewOne } from './importer.js';
 
@@ -227,6 +228,30 @@ export function mountLibrary(app, { pool, getUserFromRequest, isAdmin }) {
     } catch (e) { send500(res, 'toc', e); }
   });
 
+  // ตัวบทมาตราเดียว สำหรับหน้าคู่มือ: ?law=<ชื่อกฎหมาย>&sec=<เลขมาตรา> → รุ่นล่าสุดในคลัง
+  r.get('/cite', async (req, res) => {
+    try {
+      const lawName = String(req.query.law || '').slice(0, 200).trim(), sec = String(req.query.sec || '').slice(0, 30).trim();
+      const m = /^(?:มาตรา\s*)?([0-9๐-๙]+(?:\/[0-9๐-๙]+)?)\s*([ก-๙]*)$/.exec(sec);
+      if (!lawName || !m) return res.status(400).json({ error: 'ข้อมูลอ้างอิงไม่ครบ' });
+      const info = titleInfo(lawName);
+      const l = await pool.query('SELECT id, slug, title, status FROM lib_laws WHERE title_norm = $1 ORDER BY id LIMIT 1', [info.titleNorm]);
+      const law = l.rows[0];
+      if (!law) return res.status(404).json({ error: 'ยังไม่มีกฎหมายนี้ในคลัง' });
+      const key = sectionKey(m[1], m[2] || '');
+      const q = await pool.query(
+        `SELECT s.number, s.body, s.number_key, v.is_current_verified FROM lib_sections s JOIN lib_versions v ON v.id = s.version_id
+          WHERE v.id = (SELECT id FROM lib_versions WHERE law_id = $1 ORDER BY imported_at DESC, id DESC LIMIT 1)
+            AND s.kind = 'section' AND s.is_main AND s.number_key = $2 ORDER BY s.ord LIMIT 1`, [law.id, key]);
+      const s = q.rows[0];
+      if (!s) return res.status(404).json({ error: 'ไม่พบมาตรานี้ในคลัง' });
+      res.json({
+        slug: law.slug, title: law.title, status: law.status, statusLabel: STATUSES[law.status], isCurrent: !!s.is_current_verified,
+        number: s.number, key: s.number_key, body: String(s.body).replace(/\[[๐-๙0-9]+\]/g, ''),
+      });
+    } catch (e) { send500(res, 'cite', e); }
+  });
+
   // นับการเปิดอ่าน (กันกดรัว: IP เดิม + กฎหมายเดิม นับครั้งเดียวต่อ 6 ชั่วโมง)
   const seen = new Map();
   r.post('/laws/:slug/view', async (req, res) => {
@@ -336,4 +361,7 @@ export function mountLibrary(app, { pool, getUserFromRequest, isAdmin }) {
   app.get('/library', page);
   app.get('/library/admin', page);
   app.get('/library/:slug', page);
+
+  // คู่มือ (/guide, /api/guides) — เนื้อหาเป็นไฟล์ JSON ไม่ใช้ฐานข้อมูล จึงไม่ติด 503 ของคลัง
+  mountGuides(app, { getUserFromRequest, isAdmin });
 }
