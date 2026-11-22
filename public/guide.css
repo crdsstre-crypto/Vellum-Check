@@ -147,6 +147,7 @@
 .gd-cover[data-bg="money"] { background: linear-gradient(135deg, #effbf3, #cdeeda); border-color: #a8d5b5; }
 .gd-cover[data-bg="overtime"] { background: linear-gradient(135deg, #3d3a7a, #6b5aa6); border-color: #2c2960; }
 .gd-cover[data-bg="overtime"] h1 { color: #fff; } .gd-cover[data-bg="overtime"] h1 em { color: #ffb36b; }
+.gd-cover[data-bg="probation"] { background: linear-gradient(135deg, #fff4e6, #ffdcb8); border-color: #ecc690; }
 .gd-cover[data-bg="leave"] { background: linear-gradient(135deg, #e6f6ff, #c7e8fb); border-color: #9fd0e6; }
 .gd-cover[data-bg="condo"] { background: linear-gradient(135deg, #fff1dc, #f7d9b3); border-color: #ecc690; }
 
