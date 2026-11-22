@@ -67,7 +67,7 @@ app.use((req, res, next) => {
 // ไฟล์อัปโหลดส่งเป็น base64 ใน JSON จึงให้ /api/extract รับขนาดใหญ่กว่าเส้นทางอื่น
 app.use((req, res, next) => (
   req.path === '/api/extract' ? express.json({ limit: '8mb' })
-    : req.path === '/api/lib/admin/upload' ? express.json({ limit: '12mb' })   // แอดมินวางข้อความกฎหมายทั้งฉบับ
+    : (req.path === '/api/lib/admin/upload' || req.path === '/api/lib/admin/preview') ? express.json({ limit: '12mb' })   // แอดมินวางข้อความกฎหมายทั้งฉบับ
     : express.json({ limit: '200kb' })
 )(req, res, next));
 
