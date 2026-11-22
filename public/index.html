@@ -181,6 +181,74 @@ setTimeout(function(){o.classList.add("gone")},950);setTimeout(function(){o&&o.r
 try{var ts=+sessionStorage.getItem("vc_rsw");sessionStorage.removeItem("vc_rsw");if(!ts||Date.now()-ts>30000||d.getAttribute("data-htheme")!=="night")return}catch(e){return}
 d.classList.add("vc-rsw");build("wait");setTimeout(function(){if(window.__vcRswOpen)window.__vcRswOpen()},15000);
 var chk=setInterval(function(){if(done){clearInterval(chk);return}if(window.__vchThFail){clearInterval(chk);window.__vcRswOpen()}},300)})(document.documentElement)</script>
+<style>/* v100: เปลี่ยนไปฉากงานกระดาษตัด — แผ่นรองตัดเขียวเต็มจอ · ตั๋ว "งานกระดาษตัด" · กรรไกรตัดตามเส้นประ · อยู่ต่อข้ามการรีโหลด · ฉากพร้อม → ตัดขาด กระดาษแยกบน-ล่าง เผยฉาก */
+#vcPsw{position:fixed;inset:0;z-index:2147483000;overflow:hidden;font-family:Prompt,"Noto Sans Thai",sans-serif;pointer-events:auto}
+#vcPsw .ph{position:absolute;left:0;right:0;height:50%;overflow:hidden;background:repeating-linear-gradient(0deg,rgba(221,204,170,.16) 0 1px,transparent 1px 100px),repeating-linear-gradient(90deg,rgba(221,204,170,.16) 0 1px,transparent 1px 100px),repeating-linear-gradient(0deg,rgba(221,204,170,.07) 0 1px,transparent 1px 20px),repeating-linear-gradient(90deg,rgba(221,204,170,.07) 0 1px,transparent 1px 20px),#3a6654;will-change:transform}
+#vcPsw .ph.t{top:0;background-position:0 0;box-shadow:inset 0 -14px 24px -18px rgba(0,0,0,.45)}
+#vcPsw .ph.b{bottom:0;background-position:0 -50vh;box-shadow:inset 0 14px 24px -18px rgba(0,0,0,.45)}
+#vcPsw .pp{position:absolute;left:50%;width:236px;height:78px;margin-left:-118px;background:linear-gradient(180deg,#e6d6b6,#ddccaa);filter:drop-shadow(3px 4px 0 #9d8057) drop-shadow(0 10px 14px rgba(0,0,0,.3))}
+#vcPsw .t .pp{bottom:0;clip-path:polygon(0 6px,6px 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%)}
+#vcPsw .b .pp{top:0;clip-path:polygon(0 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,6px 100%,0 calc(100% - 6px));background:linear-gradient(180deg,#ddccaa,#d9c8a6)}
+#vcPsw .pp::before{content:"";position:absolute;left:16px;right:16px;height:1px;background:repeating-linear-gradient(90deg,rgba(125,98,51,.35) 0 1px,transparent 1px 100%);opacity:.0}
+#vcPsw .ln{position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;background:repeating-linear-gradient(90deg,#c4a35a 0 9px,transparent 9px 15px);opacity:.9}
+#vcPsw .cut{position:absolute;left:0;top:50%;height:2px;margin-top:-1px;width:0;background:#1d3a33;box-shadow:0 0 0 1px rgba(0,0,0,.15)}
+#vcPsw .sc{position:absolute;left:0;top:50%;width:58px;height:40px;margin:-20px 0 0 -14px;filter:drop-shadow(2px 3px 0 rgba(0,0,0,.3))}
+#vcPsw .sc svg{width:100%;height:100%;overflow:visible}
+#vcPsw .sc .bu{transform-origin:24px 20px;animation:pswSnipU .34s ease-in-out infinite alternate}
+#vcPsw .sc .bd{transform-origin:24px 20px;animation:pswSnipD .34s ease-in-out infinite alternate}
+#vcPsw .tk{position:absolute;left:50%;bottom:104px;transform:translateX(-50%) rotate(-2deg);padding:8px 22px;color:#22170a;font-weight:700;font-size:17px;white-space:nowrap;letter-spacing:.02em;
+background:radial-gradient(circle at 0 50%,transparent 7px,#c4a35a 7.5px) left/51% 100% no-repeat,radial-gradient(circle at 100% 50%,transparent 7px,#c4a35a 7.5px) right/51% 100% no-repeat;filter:drop-shadow(2px 3px 0 #7d6233)}
+#vcPsw .tk small{display:block;font-size:10.5px;font-weight:500;letter-spacing:.12em;opacity:.75;text-align:center}
+#vcPsw .tx{position:absolute;left:0;right:0;top:100px;text-align:center;color:#ddccaa;font-size:15px;letter-spacing:.03em}
+#vcPsw .bits i{position:absolute;left:50%;top:50%;width:9px;height:9px;opacity:0}
+#vcPsw.in .ph.t{animation:pswInT .5s cubic-bezier(.2,.8,.3,1) both}
+#vcPsw.in .ph.b{animation:pswInB .5s cubic-bezier(.2,.8,.3,1) both}
+#vcPsw.go .sc{transition:transform 2.6s cubic-bezier(.3,.6,.4,1)}
+#vcPsw.in.go .sc{transition:transform .9s cubic-bezier(.3,.6,.4,1) .35s}
+#vcPsw.in.go .cut{transition:width .9s cubic-bezier(.3,.6,.4,1) .35s}
+#vcPsw .ul{position:absolute;inset:0;background:#3a6654}
+#vcPsw.in .ul{animation:pswUl .3s ease both}
+@keyframes pswUl{from{opacity:0}to{opacity:1}}
+#vcPsw.open .ul{opacity:0;transition:opacity .2s}
+#vcPsw.go .cut{transition:width 2.6s cubic-bezier(.3,.6,.4,1)}
+#vcPsw.fin .sc{transition:transform .32s ease-in;transform:translateX(calc(100vw + 30px)) !important}
+#vcPsw.fin .cut{transition:width .32s ease-in;width:100% !important}
+#vcPsw.open .ph.t{transition:transform .75s cubic-bezier(.5,0,.6,1);transform:translateY(-104%) rotate(-3deg)}
+#vcPsw.open .ph.b{transition:transform .75s cubic-bezier(.5,0,.6,1) .05s;transform:translateY(104%) rotate(2deg)}
+#vcPsw.open .ln,#vcPsw.open .cut,#vcPsw.open .sc{opacity:0;transition:opacity .2s}
+#vcPsw.open{pointer-events:none}
+#vcPsw.gone{opacity:0;transition:opacity .3s}
+@keyframes pswInT{from{transform:translateY(-100%)}to{transform:none}}
+@keyframes pswInB{from{transform:translateY(100%)}to{transform:none}}
+@keyframes pswSnipU{from{transform:rotate(-14deg)}to{transform:rotate(2deg)}}
+@keyframes pswSnipD{from{transform:rotate(14deg)}to{transform:rotate(-2deg)}}
+html.vc-psw body{overflow:hidden}
+@media (prefers-reduced-motion:reduce){#vcPsw *{animation:none !important;transition:none !important}}
+</style>
+<script>(function(d){
+var o=null,done=0,ac=null,red=false,tx=null;try{red=matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){}
+function snip(){try{if(localStorage.getItem("vc_sfx")!=="1")return;ac=ac||new(window.AudioContext||window.webkitAudioContext)();if(ac.state==="suspended")ac.resume();if(ac.state!=="running")return;var t=ac.currentTime,n=Math.floor(ac.sampleRate*.05),bf=ac.createBuffer(1,n,ac.sampleRate),da=bf.getChannelData(0);for(var i=0;i<n;i++)da[i]=(Math.random()*2-1)*Math.pow(1-i/n,3);var s=ac.createBufferSource(),f=ac.createBiquadFilter(),g=ac.createGain();f.type="highpass";f.frequency.value=2400;g.gain.value=.12;s.buffer=bf;s.connect(f);f.connect(g);g.connect(ac.destination);s.start(t)}catch(e){}}
+var SC='<svg viewBox="0 0 58 40" aria-hidden="true"><g class="bu"><path d="M24 20 56 15l-2 3-30 3z" fill="#cfd6d3" stroke="#3b4a46" stroke-width="1"/><circle cx="12" cy="11" r="8" fill="none" stroke="#c4735a" stroke-width="4"/><path d="M18 15l6 5" stroke="#c4735a" stroke-width="4" stroke-linecap="round"/></g><g class="bd"><path d="M24 20 56 25l-2-3-30-3z" fill="#b8c2be" stroke="#3b4a46" stroke-width="1"/><circle cx="12" cy="29" r="8" fill="none" stroke="#a85f4a" stroke-width="4"/><path d="M18 25l6-5" stroke="#a85f4a" stroke-width="4" stroke-linecap="round"/></g><circle cx="24" cy="20" r="2.2" fill="#b8964e" stroke="#3b4a46" stroke-width=".8"/></svg>';
+var tk=0;
+function build(mode){if(o)return o;o=document.createElement("div");o.id="vcPsw";o.setAttribute("aria-hidden","true");o.className=mode==="in"&&!red?"in":"";
+var bits="",cs=["#c4735a","#b8964e","#7fa184","#93aaac","#e4d3a6","#c4735a","#b8964e","#e2c6b6"];for(var i=0;i<8;i++)bits+='<i style="background:'+cs[i]+';clip-path:polygon('+(i%2?"50% 0,100% 50%,50% 100%,0 50%":"50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%")+')"></i>';
+o.innerHTML='<i class="ul"></i><div class="ph t"><div class="pp"></div><div class="tk"><small>ฉากหน้าปก</small>งานกระดาษตัด</div></div><div class="ph b"><div class="pp"></div><div class="tx">กำลังตัดกระดาษ…</div></div><i class="ln"></i><i class="cut"></i><div class="sc">'+SC+'</div><div class="bits">'+bits+'</div>';
+(document.body||d).appendChild(o);tx=o.querySelector(".tx");
+if(!red){var sc=o.querySelector(".sc"),ct=o.querySelector(".cut"),w=(window.innerWidth||390);if(mode!=="in"){sc.style.transform="translateX("+Math.round(w*.42)+"px)";ct.style.width="42%"}requestAnimationFrame(function(){requestAnimationFrame(function(){if(!o)return;o.classList.add("go");var f=mode==="in"?.42:.84;sc.style.transform="translateX("+Math.round(w*f)+"px)";ct.style.width=(f*100)+"%"})});
+tk=setInterval(function(){if(done){clearInterval(tk);return}snip()},340)}
+return o}
+window.__vcPswShow=function(){build("in")};
+window.__vcPswOpen=function(){if(!o||done)return;done=1;clearInterval(tk);d.classList.remove("vc-psw");if(tx)tx.textContent="พร้อมแล้ว";
+if(red){o.className="gone";setTimeout(function(){o&&o.remove();o=null},350);return}
+snip();setTimeout(snip,120);o.classList.add("fin");
+setTimeout(function(){if(!o)return;o.classList.add("open");
+var bs=o.querySelectorAll(".bits i");for(var i=0;i<bs.length;i++){var a=(-160+i*45)*Math.PI/180,r=90+(i%3)*40;try{bs[i].animate([{transform:"translate(-50%,-50%) scale(.3)",opacity:1},{transform:"translate(calc(-50% + "+Math.round(Math.cos(a)*r)+"px),calc(-50% + "+Math.round(Math.sin(a)*r+60)+"px)) rotate("+(200+i*40)+"deg) scale(1)",opacity:0}],{duration:900,easing:"cubic-bezier(.2,.7,.4,1)",fill:"forwards"})}catch(e){}}
+var h=document.querySelector(".vch");if(h&&h.animate){try{h.animate([{transform:"perspective(900px) rotateX(16deg) scale(.92)",transformOrigin:"50% 100%",opacity:.5},{transform:"perspective(900px) rotateX(-3deg) scale(1.01)",transformOrigin:"50% 100%",opacity:1,offset:.65},{transform:"none",transformOrigin:"50% 100%",opacity:1}],{duration:800,easing:"cubic-bezier(.2,.8,.3,1)"})}catch(e){}}
+},380);
+setTimeout(function(){o&&o.classList.add("gone")},1250);setTimeout(function(){o&&o.remove();o=null},1600)};
+try{var ts=+sessionStorage.getItem("vc_psw");sessionStorage.removeItem("vc_psw");if(!ts||Date.now()-ts>30000||d.getAttribute("data-htheme")!=="paper")return}catch(e){return}
+d.classList.add("vc-psw");build("wait");setTimeout(function(){if(window.__vcPswOpen)window.__vcPswOpen()},15000);
+var chk=setInterval(function(){if(done){clearInterval(chk);return}if(window.__vchThFail){clearInterval(chk);window.__vcPswOpen()}},300)})(document.documentElement)</script>
 <title>เช็กสัญญา | Vellum Check</title>
 <!-- หน้าปกใหม่ (hero-scene.js) โหลดท้ายหน้า: ซ่อนหน้าปกเก่าตั้งแต่ก่อนวาดจอ ไม่ให้แวบขึ้นมา
      ถ้าหน้าปกใหม่โหลดไม่ขึ้นภายใน 6 วินาที (หรือไฟล์เสีย) หน้าปกเก่าจะกลับมาเอง -->
@@ -209,7 +277,7 @@ html.vch-pre:not(.vch-on) body{background:#0a0806}</style>
 <!-- ฟอนต์ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="script" href="hero-scene.js?v=28">
+<link rel="preload" as="script" href="hero-scene.js?v=29">
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Taviraj:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=IBM+Plex+Mono:wght@400;500&family=Charmonman:wght@400;700&family=Sriracha&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Taviraj:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=IBM+Plex+Mono:wght@400;500&family=Charmonman:wght@400;700&family=Sriracha&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet"></noscript>
 
@@ -333,7 +401,7 @@ html.vch-pre:not(.vch-on) body{background:#0a0806}</style>
     <a class="hero-cue mono" href="#manifesto" data-reveal style="--i:6"><span>ดูวิธีอ่าน</span><i aria-hidden="true"></i></a>
   </section>
 <!-- หน้าปก: โหลดทันทีหลังส่วนหัว (ไม่ต้องรอสคริปต์อื่นทั้งหมด) → ขึ้นปกเร็ว -->
-<script src="hero-scene.js?v=28" onerror="document.documentElement.classList.remove('vch-pre')"></script>
+<script src="hero-scene.js?v=29" onerror="document.documentElement.classList.remove('vch-pre')"></script>
 
   <!-- ============ II. ฉากอ่านสัญญา: ตรึงจอแล้วเล่นตามการเลื่อน (ค่า --p จาก motion.js) ============
        โหมดลดการเคลื่อนไหวหรือ JS ไม่ทำงาน: ไม่ตรึง และแสดงสภาพสุดท้ายที่อ่านครบทั้งหมด -->
