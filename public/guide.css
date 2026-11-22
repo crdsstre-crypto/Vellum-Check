@@ -155,6 +155,7 @@
 .gd-cover[data-bg="farewell"] { background: #fffdf7; border-color: #d8c09a; }
 .gd-cover[data-bg="chalk"] { background: #fffdf6; border-color: #e2d6bd; }
 .gd-cover[data-bg="pvd"] { background: linear-gradient(135deg, #f0fff7, #d3f1e3); border-color: #a8d8bf; }
+.gd-cover[data-bg="youth"] { background: linear-gradient(135deg, #f1ecff, #ffe6d8); border-color: #d9c8f2; }
 .gd-cover[data-bg="leave"] { background: linear-gradient(135deg, #e6f6ff, #c7e8fb); border-color: #9fd0e6; }
 .gd-cover[data-bg="condo"] { background: linear-gradient(135deg, #fff1dc, #f7d9b3); border-color: #ecc690; }
 
@@ -367,3 +368,29 @@
 @keyframes cmScan { 0%, 100% { transform: translate(0, 0); } 33% { transform: translate(44px, -8px); } 66% { transform: translate(60px, 10px); } }
 @keyframes cmTug { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-8px); } }
 @media (prefers-reduced-motion: reduce) { .gd-cm *, .gd-cover-bg *, .gd-scene * { animation: none !important; } }
+
+/* ===== ปกแบบหน้าจอมือถือ (coverLayout: "phone"): ภาพอยู่ในกรอบโทรศัพท์เอียงนิด ๆ มีติ่งกล้อง ===== */
+.gd-cover[data-layout="phone"] .gd-cover-art { flex-basis: 112px; height: 168px; border-radius: 22px; border: 6px solid #232846; box-shadow: 0 10px 18px rgba(40, 30, 90, .22); transform: rotate(-5deg); }
+.gd-cover[data-layout="phone"] .gd-cover-art::after { content: ""; position: absolute; top: 4px; left: 50%; width: 34px; height: 8px; margin-left: -17px; border-radius: 6px; background: #232846; z-index: 3; }
+.gd-cover[data-layout="phone"] { gap: 16px; }
+/* ของขยับชุดใหม่ (จ้างเด็ก) */
+.gd-scene .sc-steam path { animation: scSteam 2.6s ease-in-out infinite; }
+.gd-scene .sc-steam path:nth-child(2) { animation-delay: .9s; }
+.gd-scene .sc-swing2 { transform-box: fill-box; transform-origin: 50% 0; animation: scSwing2 2.4s ease-in-out infinite; }
+.gd-cm .cm-step { animation: cmStep 3s ease-out infinite; opacity: 0; }
+.gd-cm .cm-twk { animation: cmTwk 2.2s ease-in-out infinite; }
+.gd-cm .cm-hand24 { transform-box: fill-box; transform-origin: 50% 50%; animation: cmHand24 8s linear infinite; }
+.gd-cm .cm-strike circle, .gd-cm .cm-strike path { animation: cmStrike 4s ease-out infinite; animation-delay: inherit; }
+.gd-cm .cm-send { animation: cmSend 3.4s ease-in-out infinite; }
+.gd-cm .cm-sign { animation: cmSign 3.6s ease-out infinite; }
+.gd-cm .cm-pen { animation: cmPen 3.6s ease-out infinite; }
+@keyframes scSteam { 0% { transform: translateY(4px); opacity: 0; } 30% { opacity: .9; } 100% { transform: translateY(-8px); opacity: 0; } }
+@keyframes scSwing2 { 0%, 100% { transform: rotate(-7deg); } 50% { transform: rotate(7deg); } }
+@keyframes cmStep { 0% { opacity: 0; transform: scale(.6); } 12%, 70% { opacity: 1; transform: scale(1); } 100% { opacity: 0; } }
+@keyframes cmTwk { 0%, 100% { opacity: .3; } 50% { opacity: 1; } }
+@keyframes cmHand24 { to { transform: rotate(360deg); } }
+@keyframes cmStrike { 0% { stroke-dashoffset: 100; } 25%, 85% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+@keyframes cmSend { 0%, 10% { transform: translateX(0); opacity: 0; } 20% { opacity: 1; } 80% { transform: translateX(-140px); opacity: 1; } 100% { transform: translateX(-150px); opacity: 0; } }
+@keyframes cmSign { 0%, 10% { stroke-dashoffset: 100; } 70%, 100% { stroke-dashoffset: 0; } }
+@keyframes cmPen { 0%, 10% { transform: translate(-70px, 14px); } 70% { transform: translate(0, 14px); } 100% { transform: translate(0, 14px); } }
+@media (prefers-reduced-motion: reduce) { .gd-cm .cm-step { opacity: 1; } .gd-cm .cm-strike circle, .gd-cm .cm-strike path, .gd-cm .cm-sign { stroke-dashoffset: 0; } }
