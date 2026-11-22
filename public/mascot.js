@@ -1,5 +1,5 @@
 /* ===== มาสคอต "เวลลัม" (น้องม้วน) — กระดาษสัญญาม้วนน้อยถือปากกาไฮไลต์ (วาดเอง ไม่ใช้ภาพจากที่อื่น) =====
-   VCMascot.svg(mood, size) คืนสตริง SVG · mood: wave | happy | sleep | party | sad | curious
+   VCMascot.svg(mood, size) คืนสตริง SVG · mood: wave | happy | sleep | party | sad | curious | stop | alert | inspect
    ท่าขยับอยู่ใน mascot.css (คลาส vm-<mood>) */
 (function () {
   'use strict';
@@ -50,7 +50,23 @@
       '<circle cx="53" cy="55.6" r="1.6" fill="#fff"/><circle cx="73" cy="55.6" r="1.6" fill="#fff"/>' +
       '<path d="M44 46q5-5 11-2" stroke="' + INK + '" stroke-width="2.2" stroke-linecap="round" fill="none"/>' +
       '<path d="M66 50q5-1.5 9 1" stroke="' + INK + '" stroke-width="2.2" stroke-linecap="round" fill="none"/>' +
-      '<path d="M55 69q4-3 9-1" stroke="' + INK + '" stroke-width="2.3" stroke-linecap="round" fill="none"/>'
+      '<path d="M55 69q4-3 9-1" stroke="' + INK + '" stroke-width="2.3" stroke-linecap="round" fill="none"/>',
+    // ห้าม!: คิ้วขมวด ปากตรง จริงจัง
+    stop: '<ellipse cx="50" cy="59" rx="4" ry="4.6" fill="' + INK + '"/><ellipse cx="70" cy="59" rx="4" ry="4.6" fill="' + INK + '"/>' +
+      '<circle cx="51.3" cy="57.4" r="1.4" fill="#fff"/><circle cx="71.3" cy="57.4" r="1.4" fill="#fff"/>' +
+      '<path d="M44 49l10 3M76 49l-10 3" stroke="' + INK + '" stroke-width="2.6" stroke-linecap="round"/>' +
+      '<path d="M54 69h12" stroke="' + INK + '" stroke-width="2.6" stroke-linecap="round"/>',
+    // ตกใจ: ตาโต ปากกลม เหงื่อตก
+    alert: '<circle cx="50" cy="58" r="5.6" fill="#fff" stroke="' + INK + '" stroke-width="2"/><circle cx="70" cy="58" r="5.6" fill="#fff" stroke="' + INK + '" stroke-width="2"/>' +
+      '<circle cx="50" cy="58.5" r="2.4" fill="' + INK + '"/><circle cx="70" cy="58.5" r="2.4" fill="' + INK + '"/>' +
+      '<path d="M44 47q5-4 10-2M66 45q5-2 10 2" stroke="' + INK + '" stroke-width="2" stroke-linecap="round" fill="none"/>' +
+      '<ellipse cx="60" cy="70" rx="3.6" ry="4.4" fill="#c2453b" stroke="' + INK + '" stroke-width="2"/>' +
+      '<path d="M80 44q3 5 0 8q-3-3 0-8z" fill="#8fd0ff" stroke="' + INK + '" stroke-width="1.4"/>',
+    // ส่องแว่นขยาย: ตาซ้ายหรี่ ตาขวาโตผ่านเลนส์
+    inspect: '<path d="M45 58q5-2 10 0" stroke="' + INK + '" stroke-width="2.6" stroke-linecap="round" fill="none"/>' +
+      '<ellipse cx="72" cy="58" rx="5" ry="6" fill="' + INK + '"/><circle cx="73.8" cy="55.6" r="2" fill="#fff"/>' +
+      '<path d="M44 50q5-2 10 0M66 46q6-3 12 1" stroke="' + INK + '" stroke-width="2" stroke-linecap="round" fill="none"/>' +
+      '<path d="M53 69q4 2 9-1" stroke="' + INK + '" stroke-width="2.3" stroke-linecap="round" fill="none"/>'
   };
 
   // แขน/ของในมือ/ของประกอบ (ด้านหลังตัว = back, ด้านหน้า = front)
@@ -83,6 +99,25 @@
       back = '<g class="vm-q" fill="none" stroke="#f08a24" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">' +
         '<g class="q1"><path d="M96 22q0-7 7-7q7 0 7 6q0 4-5 6q-2 1-2 5"/><circle cx="103" cy="37" r="1.3" fill="#f08a24"/></g>' +
         '<g class="q2"><path d="M6 4q0-5 5-5q5 0 5 4.5q0 3-3.5 4.5q-1.5.7-1.5 3.5"/><circle cx="11" cy="15" r="1" fill="#f08a24"/></g></g>';
+    } else if (m === 'stop') {
+      // มือขวายกตั้งฝ่ามือ "หยุด!" มือซ้ายถือปากกา
+      lArm = arm('M31 76q-10 4-12 12') + pen(19, 90, -20) + hand(19, 90);
+      rArm = '<g class="vm-push">' + arm('M89 74q12-2 16-14') +
+        '<g transform="translate(108 52)"><rect x="-7" y="-10" width="14" height="17" rx="6" fill="' + PAPER + '" stroke="' + INK + '" stroke-width="2.4"/>' +
+        '<path d="M-3-6v6M0-7v7M3-6v6" stroke="' + INK + '" stroke-width="1.4" stroke-linecap="round" opacity=".55"/></g></g>';
+      back = '<g class="vm-burst" stroke="#ff5d5d" stroke-width="2.6" stroke-linecap="round"><path d="M116 34l4-6M122 44l7-2M104 32l-1-7"/></g>';
+    } else if (m === 'alert') {
+      // ตกใจ ยกสองมือข้างหน้า มี ! สีแดงเด้งบนหัว
+      lArm = arm('M31 76q-12-2-14-14') + hand(17, 60);
+      rArm = arm('M89 76q12-2 14-14') + hand(103, 60);
+      back = '<g class="vm-bang"><rect x="56" y="-8" width="8" height="18" rx="4" fill="#ff5d5d" stroke="' + INK + '" stroke-width="2"/><circle cx="60" cy="15" r="3.6" fill="#ff5d5d" stroke="' + INK + '" stroke-width="2"/></g>';
+    } else if (m === 'inspect') {
+      // ถือแว่นขยายส่องตรงหน้า
+      lArm = arm('M31 78q-9 5-10 13') + pen(21, 94, -15) + hand(21, 92);
+      rArm = '<g class="vm-mag">' + arm('M89 80q10 0 14-8') +
+        '<path d="M103 72l9-12" stroke="#8a5a08" stroke-width="5" stroke-linecap="round"/>' + hand(103, 72) +
+        '<circle cx="116" cy="52" r="11" fill="#cfefff" fill-opacity=".55" stroke="' + INK + '" stroke-width="3"/>' +
+        '<path d="M110 47q3-4 7-3" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/></g>';
     } else { // sad
       lArm = arm('M31 78q-8 6-9 14') + pen(22, 96, -8) + hand(22, 93);
       // ถือหัวใจดวงเล็กไว้ข้างตัว = ยังให้กำลังใจ
@@ -115,5 +150,5 @@
       '</g></svg>';
   }
 
-  window.VCMascot = { svg: svg, moods: ['wave', 'happy', 'sleep', 'party', 'sad', 'curious'] };
+  window.VCMascot = { svg: svg, moods: ['wave', 'happy', 'sleep', 'party', 'sad', 'curious', 'stop', 'alert', 'inspect'] };
 })();
