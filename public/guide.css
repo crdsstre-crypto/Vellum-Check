@@ -160,4 +160,19 @@
 @keyframes cmTw { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
 @keyframes cmFly { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(8px, -5px); } }
 @keyframes cmDrip { 0% { transform: translateY(0); opacity: 1; } 80% { transform: translateY(54px); opacity: 1; } 100% { transform: translateY(58px); opacity: 0; } }
+/* ของขยับเฉพาะบางฉาก */
+.gd-cm .cm-needle { transform-box: fill-box; transform-origin: 100% 100%; animation: cmNeedle 2.6s ease-in-out infinite; }
+.gd-cm .cm-sand { animation: cmTw 1.2s ease-in-out infinite; }
+.gd-cm .cm-rain { animation: cmRain 1.4s linear infinite; }
+.gd-cm .cm-vibx { transform-box: fill-box; transform-origin: 50% 100%; animation: scVib 2.2s ease-in-out infinite; }
+.gd-cm .cm-scale2 { transform-box: fill-box; transform-origin: 50% 17%; animation: cmScale 3.6s ease-in-out infinite; }
+.gd-cm .cm-snip { transform-box: fill-box; transform-origin: 20% 50%; animation: cmSnip 1.4s ease-in-out infinite; }
+@keyframes cmNeedle { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(18deg); } }
+@keyframes cmRain { from { transform: translateY(-8px); opacity: 0; } 30% { opacity: .8; } to { transform: translateY(14px); opacity: 0; } }
+@keyframes cmScale { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(3deg); } }
+@keyframes cmSnip { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-12deg); } }
 @media (prefers-reduced-motion: reduce) { .gd-cm *, .gd-cover-bg * { animation: none !important; } }
+
+/* ===== ไฮไลต์คำสำคัญในคำตอบ/สรุป (ใส่ **คำ** ใน JSON) · ปากกาเน้นสีเหลืองอ่อนครึ่งล่าง ไม่แสบตา ===== */
+.gd-hl { background: linear-gradient(transparent 52%, #ffe68f 52%, #ffe68f 92%, transparent 92%); color: #1f2a3a; font-weight: 700; padding: 0 1px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.gd-sum .gd-hl { background: linear-gradient(transparent 52%, #ffd77a 52%, #ffd77a 92%, transparent 92%); }
