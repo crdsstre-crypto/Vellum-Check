@@ -195,7 +195,8 @@ export function cleanUpload(body) {
     if (!title || title.length > 400) return { error: 'ชื่อกฎหมายว่างหรือยาวเกิน' };
     if (text.length < 50 || text.length > 3_000_000) return { error: `เนื้อหา "${title.slice(0, 40)}" สั้นหรือยาวเกินไป` };
     if (l.sourceUrl && !isUrl(l.sourceUrl)) return { error: `ลิงก์ต้นฉบับของ "${title.slice(0, 40)}" ไม่ถูกต้อง` };
-    laws.push({ title, text, sourceUrl: l.sourceUrl || null, ref: l.ref ? String(l.ref).slice(0, 100) : null, topics: Array.isArray(l.topics) ? l.topics.slice(0, 5) : [] });
+    laws.push({ title, text, sourceUrl: l.sourceUrl || null, ref: l.ref ? String(l.ref).slice(0, 100) : null, topics: Array.isArray(l.topics) ? l.topics.slice(0, 5) : [],
+      label: l.label ? String(l.label).trim().slice(0, 120) : undefined });
   }
   const code = 'upload-' + sha(String(src.homepage).toLowerCase()).slice(0, 10);
   return { laws, source: { code, name: String(src.name).trim().slice(0, 200), homepage: src.homepage, license: String(src.license).trim().slice(0, 200), note: String(src.note || '').slice(0, 500) } };
@@ -207,6 +208,29 @@ export async function startUploadImport(pool, userId, cleaned) {
   const jobId = await createJob(pool, cleaned.source.code, userId);
   runJob(pool, jobId, cleaned.laws, sourceId);
   return jobId;
+}
+
+// ตรวจก่อนนำเข้า (ไม่บันทึกอะไร): แบ่งมาตราได้กี่มาตรา · ชื่อตรงกับฉบับไหนในคลัง · แก้ไขล่าสุดที่เอกสารอ้างถึง
+export async function previewOne(pool, item) {
+  const info = titleInfo(item.title || '');
+  if (!info.title || info.title.length > 400) throw Object.assign(new Error('ชื่อกฎหมายว่างหรือยาวเกิน'), { status: 400 });
+  const text = normalizeText(String(item.text || ''));
+  if (text.replace(/\s/g, '').length < 50) throw Object.assign(new Error('เนื้อหาสั้นเกินไป'), { status: 400 });
+  if (text.length > 3_000_000) throw Object.assign(new Error('เนื้อหายาวเกินไป'), { status: 400 });
+  const hash = sha(text.replace(/\s+/g, ' ').trim());
+  const p = parseLaw(text);
+  const [dup, found] = await Promise.all([
+    pool.query('SELECT l.slug, l.title FROM lib_versions v JOIN lib_laws l ON l.id = v.law_id WHERE v.content_hash = $1 LIMIT 1', [hash]),
+    pool.query(`SELECT l.slug, l.title, v.quality FROM lib_laws l LEFT JOIN LATERAL (SELECT quality FROM lib_versions WHERE law_id = l.id ORDER BY id DESC LIMIT 1) v ON true
+                 WHERE l.doc_type = $1 AND l.title_norm = $2 AND COALESCE(l.year_be,0) = COALESCE($3::int,0)`, [info.docType, info.titleNorm, info.yearBE]),
+  ]);
+  const am = p.amendments.filter(a => a.yearBE).sort((x, y) => x.yearBE - y.yearBE);
+  return {
+    title: info.title, docType: info.docType, quality: p.quality,
+    duplicateOf: dup.rows[0] || null,
+    existing: found.rows[0] ? { slug: found.rows[0].slug, title: found.rows[0].title, mainSections: found.rows[0].quality?.mainSections ?? null } : null,
+    amendments: am.length, latestAmendments: am.slice(-3).map(a => ({ title: a.title.slice(0, 200), yearBE: a.yearBE, gazette: a.gazette?.text || null })),
+  };
 }
 
 export { thToArabic };
