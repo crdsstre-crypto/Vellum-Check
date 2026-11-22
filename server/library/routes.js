@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { initLibraryDb } from './db.js';
 import { DOC_TYPES, thToArabic } from './parse.js';
 import { tokenize } from './tokens.js';
-import { TOPICS, startSeedImport, startUploadImport, cleanUpload, isRunning } from './importer.js';
+import { TOPICS, startSeedImport, startUploadImport, cleanUpload, isRunning, previewOne } from './importer.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PAGE = path.join(__dirname, '..', '..', 'public', 'library.html');
@@ -268,6 +268,11 @@ export function mountLibrary(app, { pool, getUserFromRequest, isAdmin }) {
       if (c.error) return res.status(400).json({ error: c.error });
       res.json({ jobId: await startUploadImport(pool, req.user.id, c) });
     } catch (e) { if (e.status) return res.status(e.status).json({ error: e.message }); send500(res, 'upload', e); }
+  });
+
+  r.post('/admin/preview', admin, async (req, res) => {
+    try { res.json(await previewOne(pool, { title: req.body?.title, text: req.body?.text })); }
+    catch (e) { if (e.status) return res.status(e.status).json({ error: e.message }); send500(res, 'preview', e); }
   });
 
   r.get('/admin/jobs/:id', admin, async (req, res) => {
