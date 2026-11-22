@@ -1,12 +1,26 @@
 /* ===== ภาพการ์ตูนในหน้าอ่านคู่มือ (วาดเอง ไม่ใช้ภาพจากที่อื่น) =====
    VCComic.panel(scene, mood, sayHtml, cap, key) คืน <figure> ช่องการ์ตูนเต็มฉาก (viewBox 360×180)
-     scene: pay | nopay | notice | labor | sign | repair | moveout
+     scene: pay nopay notice labor (เลิกจ้าง) · sign repair moveout (เช่า) · iou rate guarantee hourglass (กู้เงิน)
+            umbrella hours nothreat complain (ทวงหนี้) · bankcall mule shared (มิจฉาชีพ) · tilt cut fence (ข้อสัญญา)
      ของสำคัญวางช่วงล่าง/ซ้าย เพราะกรอบคำพูดทับมุมขวาบน
    VCComic.coverBg(name) คืน <svg> ลายฉากหลังปกตามฉากการ์ด (condo | office | money | debt | scam | contract) */
 (function () {
 'use strict';
 var I='#3a2a12';
 function coins(x,y,n){var s='';for(var i=0;i<n;i++)s+='<ellipse cx="'+x+'" cy="'+(y-i*5)+'" rx="11" ry="4" fill="#f4c542" stroke="'+I+'" stroke-width="1.6"/>';return '<g class="cm-grow">'+s+'</g>';}
+// ฉากหลังห้องไล่สี + พื้น
+function bg(k, c1, c2, floor) {
+  return '<defs><linearGradient id="bgx' + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + c1 + '"/><stop offset="1" stop-color="' + c2 + '"/></linearGradient></defs>' +
+    '<rect width="360" height="180" fill="url(#bgx' + k + ')"/><rect x="0" y="152" width="360" height="28" fill="' + floor + '"/><path d="M0 152h360" stroke="' + I + '" stroke-width="2"/>';
+}
+function desk(y) { return '<rect x="100" y="' + y + '" width="260" height="10" rx="3" fill="#b07a45" stroke="' + I + '" stroke-width="2"/><path d="M116 ' + (y + 10) + 'V180M346 ' + (y + 10) + 'V180" stroke="' + I + '" stroke-width="3.4"/>'; }
+function spark(x, y, s) { return '<path class="cm-tw" transform="translate(' + x + ' ' + y + ') scale(' + s + ')" d="M0-7l1.9 5.1L7 0l-5.1 1.9L0 7l-1.9-5.1L-7 0l5.1-1.9z" fill="#ffd84d"/>'; }
+// คนตัวกลม ๆ ไม่มีหน้า (ใช้แทน "คนทั่วไป") + ป้ายชื่อ
+function person(x, y, c, label) {
+  return '<g transform="translate(' + x + ' ' + y + ')" stroke="' + I + '" stroke-width="2"><circle cx="0" cy="0" r="10" fill="#f7d9b3"/><path d="M-14 40v-18q0-10 14-10t14 10v18z" fill="' + c + '"/>' +
+    '<rect x="-20" y="22" width="40" height="13" rx="6" fill="#fff" stroke-width="1.4"/><text x="0" y="32" text-anchor="middle" font-size="8.5" font-weight="800" fill="' + I + '" stroke="none" font-family="sans-serif">' + label + '</text></g>';
+}
+
 var P={
  // ค่าชดเชยตามอายุงาน: ออฟฟิศแดดดี เหรียญซ้อนเป็นขั้นบันได + ปฏิทิน
  pay:function(k){return '<defs><linearGradient id="pa'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eaf4ff"/><stop offset="1" stop-color="#d4e5fb"/></linearGradient><radialGradient id="pb'+k+'" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff3b0" stop-opacity=".9"/><stop offset="1" stop-color="#fff3b0" stop-opacity="0"/></radialGradient></defs>'+
@@ -76,7 +90,90 @@ var P={
   '<g stroke="'+I+'" stroke-width="2.2"><rect x="286" y="34" width="60" height="118" rx="3" fill="#fff3d0"/><path d="M286 34l-26 10v118l26-10" fill="#b07a45"/><circle cx="266" cy="100" r="3" fill="#f4c542"/></g>'+
   '<g stroke="'+I+'" stroke-width="2" stroke-linejoin="round"><path d="M120 112h56v40h-56z" fill="#d6a76a"/><path d="M120 112l-8-10h56l8 10" fill="#e8bf86"/><path d="M134 126h28" stroke-width="2.4" stroke-linecap="round"/><path d="M186 122h44v30h-44z" fill="#d6a76a"/><path d="M186 122l-6-8h44l6 8" fill="#e8bf86"/><path d="M150 112h48v-26h-48z" fill="#e2b578" transform="translate(-4 0)"/></g>'+
   '<g transform="translate(232 98) scale(.8)"><g class="cm-pop"><g stroke="'+I+'" stroke-width="2.2"><rect width="50" height="36" rx="6" fill="#3b4a66"/><rect x="10" y="-6" width="14" height="8" rx="2" fill="#3b4a66"/><circle cx="25" cy="18" r="11" fill="#9fd3ff"/><circle cx="25" cy="18" r="5" fill="#3b6fd6"/><circle cx="42" cy="8" r="2.4" fill="#ffd84d" stroke="none"/></g></g></g>'+
-  '<g class="cm-tw" stroke="#ffd84d" stroke-width="3" stroke-linecap="round"><path d="M228 98l-6-6M276 96l4-7"/></g>';}
+  '<g class="cm-tw" stroke="#ffd84d" stroke-width="3" stroke-linecap="round"><path d="M228 98l-6-6M276 96l4-7"/></g>';},
+ // ===== เงินกู้ =====
+ // ก่อนยืม: โต๊ะคาเฟ่ ธนบัตร + หนังสือยืมเงินมีลายเซ็น
+ iou:function(k){return bg(k,'#fff4e0','#ffe0b8','#e5b27a')+desk(126)+
+  '<g transform="translate(150 92) rotate(-5)" stroke="'+I+'" stroke-width="2"><rect width="70" height="44" rx="3" fill="#fff"/><text x="35" y="14" text-anchor="middle" font-size="9" font-weight="800" fill="'+I+'" stroke="none" font-family="sans-serif">หนังสือยืมเงิน</text><path d="M10 22h50M10 29h36" stroke="#c4cbd6" stroke-width="2" stroke-linecap="round"/><path d="M38 38q5-7 9 0t9 0" stroke="#3b6fd6" fill="none" stroke-width="2"/></g>'+
+  '<g transform="translate(236 100)"><g class="cm-pop" stroke="'+I+'" stroke-width="1.8"><rect x="0" y="6" width="52" height="24" rx="3" fill="#8fd39f"/><rect x="4" y="0" width="52" height="24" rx="3" fill="#a8e0b4"/><circle cx="30" cy="12" r="7" fill="#e6f7ea"/><text x="30" y="16" text-anchor="middle" font-size="10" font-weight="800" fill="#2e7d4a" stroke="none" font-family="sans-serif">฿</text></g></g>'+
+  '<g transform="translate(306 96)" stroke="'+I+'" stroke-width="1.8"><path d="M2 8h22l-3 22H5z" fill="#fff"/><path d="M24 12q8 0 6 8t-8 6" fill="none"/><path d="M8 2q2 3 0 5M15 1q2 3 0 5" stroke="#c4cbd6" fill="none"/></g>'+spark(222,84,1);},
+ // ดอกเบี้ย: เครื่องคิดเลข + มิเตอร์ % มีขีดแดงเพดาน 15
+ rate:function(k){return bg(k,'#eefaf3','#cdeeda','#a8d5b5')+desk(130)+
+  '<g transform="translate(132 76)" stroke="'+I+'" stroke-width="2"><rect width="50" height="56" rx="6" fill="#3b4a66"/><rect x="6" y="6" width="38" height="14" rx="2" fill="#d7f5e1"/><text x="40" y="17" text-anchor="end" font-size="10" font-weight="800" fill="#2e7d4a" stroke="none" font-family="sans-serif">15%</text>'+
+   [0,1,2,3,4,5].map(function(i){return '<rect x="'+(7+(i%3)*13)+'" y="'+(26+Math.floor(i/3)*13)+'" width="10" height="9" rx="2" fill="#f7efdc" stroke-width="1.2"/>';}).join('')+'</g>'+
+  '<g transform="translate(270 128)"><path d="M-48 0a48 48 0 0 1 96 0" fill="#fff" stroke="'+I+'" stroke-width="2.4"/><path d="M-40 0a40 40 0 0 1 56-36.7" fill="none" stroke="#7cc58a" stroke-width="10"/><path d="M16-36.7a40 40 0 0 1 24 36.7" fill="none" stroke="#ff8a7a" stroke-width="10"/><path d="M16-36.7l5-11" stroke="#e0453a" stroke-width="3" stroke-linecap="round"/><text x="24" y="-50" font-size="10" font-weight="800" fill="#e0453a" font-family="sans-serif">15</text><g class="cm-needle"><path d="M0 0l-22-26" stroke="'+I+'" stroke-width="3.4" stroke-linecap="round"/></g><circle r="5" fill="'+I+'"/></g>';},
+ // ค้ำประกัน: สัญญามีลายเซ็นสองคน + โล่ระบุวงเงิน
+ guarantee:function(k){return bg(k,'#f3efff','#ddd6fb','#c4b9f0')+desk(130)+
+  '<g transform="translate(140 74)" stroke="'+I+'" stroke-width="2"><rect width="66" height="56" rx="3" fill="#fff"/><text x="33" y="14" text-anchor="middle" font-size="9" font-weight="800" fill="'+I+'" stroke="none" font-family="sans-serif">สัญญาค้ำประกัน</text><path d="M8 22h50M8 29h40" stroke="#c4cbd6" stroke-width="2" stroke-linecap="round"/><rect x="8" y="34" width="34" height="7" rx="2" fill="#ffd84d" stroke="none" opacity=".8"/><path d="M8 50q4-6 8 0t8 0M38 50q4-6 8 0t8 0" stroke="#3b6fd6" fill="none" stroke-width="1.8"/></g>'+
+  '<g transform="translate(236 72)"><g class="cm-pop" stroke="'+I+'" stroke-width="2.2"><path d="M28 0l26 9v18c0 18-12 28-26 34c-14-6-26-16-26-34V9z" fill="#8f7ad6"/><text x="28" y="30" text-anchor="middle" font-size="11" font-weight="800" fill="#fff" stroke="none" font-family="sans-serif">วงเงิน</text><text x="28" y="44" text-anchor="middle" font-size="10" font-weight="800" fill="#ffd84d" stroke="none" font-family="sans-serif">สูงสุด</text></g></g>'+
+  '<g stroke="#8f7ad6" stroke-width="2.4" fill="none" opacity=".6"><path d="M206 100q14 0 26-8"/></g>'+spark(318,92,.9);},
+ // อายุความ: นาฬิกาทราย + ปฏิทิน 10 ปี
+ hourglass:function(k){return bg(k,'#fff6e8','#f6e1c0','#e2bd85')+desk(130)+
+  '<g transform="translate(150 66)" stroke="'+I+'" stroke-width="2.2"><rect x="-4" y="0" width="52" height="7" rx="3" fill="#b07a45"/><rect x="-4" y="59" width="52" height="7" rx="3" fill="#b07a45"/><path d="M4 7h36q0 18-14 26q14 8 14 26H4q0-18 14-26Q4 25 4 7z" fill="#e8f6ff"/><path d="M10 14h24q-3 9-12 15q-9-6-12-15z" fill="#f4c542" stroke="none"/><path d="M8 56q14-14 28 0z" fill="#f4c542" stroke="none"/><path class="cm-sand" d="M22 31v20" stroke="#f4c542" stroke-width="2.4"/></g>'+
+  '<g transform="translate(232 82)" stroke="'+I+'" stroke-width="2"><rect width="56" height="48" rx="5" fill="#fff"/><rect width="56" height="13" rx="5" fill="#ff6b5a"/><path d="M14-5v10M42-5v10" stroke-width="2.6" stroke-linecap="round"/><text x="28" y="38" text-anchor="middle" font-size="17" font-weight="800" fill="'+I+'" stroke="none" font-family="sans-serif">10 ปี</text></g>'+spark(312,100,1);},
+ // ===== ทวงหนี้ =====
+ // ใครได้รับความคุ้มครอง: ร่มใหญ่กันฝนข้อความทวง ให้คนสองคน
+ umbrella:function(k){return bg(k,'#e9f1ff','#cbdcf7','#a9c0e6')+
+  '<g class="cm-rain" stroke="#7f9cc9" stroke-width="2" stroke-linecap="round" opacity=".7"><path d="M120 10l-4 9M150 24l-4 9M300 20l-4 9M330 40l-4 9M110 50l-4 9M340 70l-4 9"/></g>'+
+  '<g transform="translate(232 60)"><path d="M-70 26q70-60 140 0q-12-8-23 0q-12-9-24 0q-12-9-23 0q-12-9-24 0q-11-8-23 0q-12-8-23 0z" fill="#ff8a5b" stroke="'+I+'" stroke-width="2.4" stroke-linejoin="round"/><path d="M0-8v84q0 8-8 8" fill="none" stroke="'+I+'" stroke-width="3" stroke-linecap="round"/></g>'+
+  person(196,104,'#6fb3a8','ลูกหนี้')+person(268,104,'#f3a07d','ผู้ค้ำ')+'<rect x="0" y="152" width="360" height="28" fill="#a9c0e6"/><path d="M0 152h360" stroke="'+I+'" stroke-width="2"/>';},
+ // เวลาทวง: ครึ่งกลางวัน ครึ่งกลางคืน นาฬิกา 8–20
+ hours:function(k){return '<rect width="360" height="180" fill="#fff4cf"/><path d="M230 0h130v180H230z" fill="#3b4377"/><circle cx="160" cy="34" r="0" />'+
+  '<g class="cm-tw"><circle cx="128" cy="40" r="14" fill="#ffd84d" stroke="'+I+'" stroke-width="2"/></g><path d="M330 26a12 12 0 1 0 11 17a10 10 0 1 1-11-17z" fill="#ffe9a8"/><g fill="#fff"><circle cx="300" cy="20" r="1.3"/><circle cx="346" cy="70" r="1"/><circle cx="252" cy="16" r="1.2"/></g>'+
+  '<rect x="0" y="152" width="360" height="28" fill="#d8c48e"/><path d="M0 152h360" stroke="'+I+'" stroke-width="2"/>'+
+  '<g transform="translate(230 112)" stroke="'+I+'" stroke-width="2.4"><circle r="34" fill="#fff"/><path d="M0-34a34 34 0 0 1 0 68" fill="#e7e9f7" stroke="none"/><circle r="34" fill="none"/><path d="M0 0v-22M0 0l15 9" stroke-width="3" stroke-linecap="round"/><circle r="3" fill="'+I+'"/><text x="-20" y="4" font-size="9" font-weight="800" fill="#2e7d4a" stroke="none" font-family="sans-serif">8</text><text x="12" y="-14" font-size="8" font-weight="800" fill="#e0453a" stroke="none" font-family="sans-serif">20</text></g>'+
+  '<g transform="translate(132 118)"><rect width="56" height="22" rx="11" fill="#7cc58a" stroke="'+I+'" stroke-width="2"/><text x="28" y="15" text-anchor="middle" font-size="10" font-weight="800" fill="#fff" font-family="sans-serif">ทวงได้</text></g>'+
+  '<g transform="translate(282 126)"><rect width="56" height="22" rx="11" fill="#e0453a" stroke="'+I+'" stroke-width="2"/><text x="28" y="15" text-anchor="middle" font-size="10" font-weight="800" fill="#fff" font-family="sans-serif">ห้ามโทร</text></g>';},
+ // สิ่งที่ห้ามทำ: โทรโข่ง ข้อความด่า ถูกห้ามด้วยวงแดง
+ nothreat:function(k){return bg(k,'#fff0f0','#ffd6d6','#f0b3b3')+
+  '<g transform="translate(160 104)" stroke="'+I+'" stroke-width="2.2"><path d="M0 8l40-18v44L0 16z" fill="#ffd84d"/><rect x="-14" y="4" width="16" height="16" rx="3" fill="#f3a07d"/><path d="M-6 20l4 16h8l-2-16" fill="#f3a07d"/></g>'+
+  '<g transform="translate(212 74)" stroke="'+I+'" stroke-width="2"><path d="M0 0h60a8 8 0 0 1 8 8v22a8 8 0 0 1-8 8H20l-10 9v-9H0a8 8 0 0 1-8-8V8a8 8 0 0 1 8-8z" fill="#fff"/><text x="30" y="25" text-anchor="middle" font-size="14" font-weight="800" fill="#e0453a" stroke="none" font-family="sans-serif">#@!%</text></g>'+
+  '<g transform="translate(244 92)"><g class="cm-pop"><circle r="46" fill="none" stroke="#e0453a" stroke-width="7" opacity=".9"/><path d="M-32-32l64 64" stroke="#e0453a" stroke-width="7" stroke-linecap="round" opacity=".9"/></g></g>'+
+  '<g transform="translate(300 116)" stroke="'+I+'" stroke-width="2"><rect width="40" height="28" rx="3" fill="#fff"/><path d="M0 2l20 14 20-14" fill="none"/><path d="M28 -4l12 12M40 -4L28 8" stroke="#e0453a" stroke-width="3" stroke-linecap="round"/></g>';},
+ // ร้องเรียน: อาคารที่ว่าการ/สถานีตำรวจ + มือถือบันทึกหลักฐาน
+ complain:function(k){return bg(k,'#eaf6ff','#cfe6fb','#a9cde6')+
+  '<g stroke="'+I+'" stroke-width="2.2"><path d="M200 152V96h120v56" fill="#fff"/><path d="M188 96l72-30 72 30z" fill="#3b6fd6"/><rect x="246" y="120" width="28" height="32" fill="#b07a45"/>'+
+  '<rect x="212" y="106" width="20" height="16" fill="#9fd3ff"/><rect x="288" y="106" width="20" height="16" fill="#9fd3ff"/></g><text x="260" y="88" text-anchor="middle" font-size="9" font-weight="800" fill="#fff" font-family="sans-serif">ร้องเรียน</text>'+
+  '<g stroke="'+I+'" stroke-width="2"><path d="M330 96V58" stroke-width="2.6"/><rect x="330" y="58" width="22" height="15" fill="#fff"/></g><g fill="#e0453a"><rect x="331" y="59" width="21" height="3"/><rect x="331" y="69" width="21" height="3"/></g><rect x="331" y="63" width="21" height="5" fill="#3b4fd6"/>'+
+  '<g transform="translate(128 86)"><g class="cm-pop" stroke="'+I+'" stroke-width="2"><rect width="38" height="62" rx="7" fill="#24283d"/><rect x="4" y="8" width="30" height="44" rx="3" fill="#fff"/><circle cx="19" cy="24" r="7" fill="#e0453a"/><path d="M9 38h20M9 44h14" stroke="#c4cbd6" stroke-width="2.4" stroke-linecap="round"/></g></g>'+
+  '<rect x="0" y="152" width="360" height="28" fill="#a9cde6"/><path d="M0 152h360" stroke="'+I+'" stroke-width="2"/>';},
+ // ===== มิจฉาชีพ =====
+ // เพิ่งโอน: มือถือโทรหาธนาคาร + นาฬิกาจับเวลา 72 ชม.
+ bankcall:function(k){return bg(k,'#fff0f4','#fbd3df','#eeb0c4')+
+  '<g stroke="'+I+'" stroke-width="2.2"><path d="M250 152V100h96v52" fill="#fff"/><path d="M240 100l58-26 58 26z" fill="#2e7d4a"/><path d="M262 108v38M284 108v38M306 108v38M328 108v38" stroke-width="3"/></g><text x="298" y="96" text-anchor="middle" font-size="9" font-weight="800" fill="#fff" font-family="sans-serif">ธนาคาร</text>'+
+  '<g transform="translate(130 80)"><g class="cm-vibx" stroke="'+I+'" stroke-width="2"><rect width="40" height="66" rx="7" fill="#24283d"/><rect x="4" y="8" width="32" height="48" rx="3" fill="#ff7a6b"/><circle cx="20" cy="26" r="8" fill="#fff"/><path d="M16 24q0 6 7 6l1.2-2-2.4-1.6-1.3 1.1q-2-.8-2.8-2.8l1.1-1.3-1.6-2.4z" fill="#e0453a" stroke="none"/><path d="M10 44h20" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></g></g>'+
+  '<g fill="none" stroke="#e0453a" stroke-width="2.2" stroke-linecap="round" opacity=".6"><path d="M180 104q8 6 0 14M188 98q14 12 0 26"/></g>'+
+  '<g transform="translate(212 118)" stroke="'+I+'" stroke-width="2.2"><circle r="20" fill="#fff7e6"/><rect x="-5" y="-27" width="10" height="6" rx="2" fill="#8a96a8"/><text x="0" y="5" text-anchor="middle" font-size="12" font-weight="800" fill="#e0453a" stroke="none" font-family="sans-serif">72</text></g>'+
+  '<rect x="0" y="152" width="360" height="28" fill="#eeb0c4"/><path d="M0 152h360" stroke="'+I+'" stroke-width="2"/>';},
+ // บัญชีม้า: น้องม้าคาบบัตร ATM + ป้ายห้าม
+ mule:function(k){return bg(k,'#fff7e8','#fde3bd','#e8c08a')+
+  '<g transform="translate(206 76)" stroke="'+I+'" stroke-width="2.2" stroke-linejoin="round"><path d="M22 76V44h32v32z" fill="#d9a066"/><path d="M14 8l4-16 10 12zM38 6l8-14 4 16z" fill="#d9a066"/><ellipse cx="32" cy="28" rx="22" ry="25" fill="#d9a066"/><path d="M44 6q16 8 14 34q-2 18 0 36h-6q-6-30-12-62z" fill="#6b3f22"/><ellipse cx="22" cy="50" rx="19" ry="13" fill="#f0c495"/><circle cx="16" cy="49" r="2" fill="'+I+'"/><circle cx="28" cy="49" r="2" fill="'+I+'"/><path d="M16 57q6 4 12 0" fill="none"/><circle cx="38" cy="24" r="4" fill="'+I+'"/><circle cx="39.4" cy="22.6" r="1.3" fill="#fff" stroke="none"/><ellipse cx="46" cy="36" rx="4" ry="2.4" fill="#f4a7a0" stroke="none" opacity=".8"/></g>'+
+  '<g transform="translate(168 118) rotate(-14)"><g class="cm-pop" stroke="'+I+'" stroke-width="2"><rect width="44" height="28" rx="4" fill="#3b6fd6"/><rect y="6" width="44" height="6" fill="#24283d" stroke="none"/><rect x="5" y="16" width="10" height="7" rx="1.5" fill="#f4c542"/></g></g>'+
+  '<g transform="translate(298 104)"><circle r="22" fill="#fff" stroke="#e0453a" stroke-width="5"/><path d="M-15 15l30-30" stroke="#e0453a" stroke-width="5"/><text x="0" y="5" text-anchor="middle" font-size="13" font-weight="800" fill="'+I+'" font-family="sans-serif">฿</text></g>'+
+  '<rect x="0" y="152" width="360" height="28" fill="#e8c08a"/><path d="M0 152h360" stroke="'+I+'" stroke-width="2"/>';},
+ // ใครรับผิดชอบ: ธนาคาร เสาสัญญาณ แชตโซเชียล ต่อเส้นมาที่ตาชั่ง
+ shared:function(k){return bg(k,'#f2efff','#ddd7fa','#c2b8ef')+
+  '<g stroke="'+I+'" stroke-width="2"><path d="M118 132V100h40v32" fill="#fff"/><path d="M112 100l26-12 26 12z" fill="#2e7d4a"/><path d="M128 104v24M138 104v24M148 104v24" stroke-width="2.4"/></g>'+
+  '<g stroke="'+I+'" stroke-width="2.2" fill="none"><path d="M196 132l10-46 10 46M200 116h12M198 124h16"/><circle cx="206" cy="84" r="3" fill="#e0453a"/></g><g fill="none" stroke="#8f7ad6" stroke-width="2" stroke-linecap="round" class="cm-tw"><path d="M194 76q-6 8 0 16M218 76q6 8 0 16"/></g>'+
+  '<g transform="translate(240 92)" stroke="'+I+'" stroke-width="2"><path d="M0 0h40a6 6 0 0 1 6 6v18a6 6 0 0 1-6 6H14l-8 7v-7H0a6 6 0 0 1-6-6V6a6 6 0 0 1 6-6z" fill="#3b6fd6"/><circle cx="12" cy="15" r="3" fill="#fff" stroke="none"/><circle cx="20" cy="15" r="3" fill="#fff" stroke="none"/><circle cx="28" cy="15" r="3" fill="#fff" stroke="none"/></g>'+
+  '<g transform="translate(316 96)" stroke="'+I+'" stroke-width="2"><path d="M0 0v40M-14 40h28" stroke-width="2.6"/><g class="cm-pop"><path d="M-16 6h32" stroke-width="2.4"/><path d="M-16 6l-6 12h12zM16 6l-6 12h12z" fill="#ffd84d"/></g></g>'+
+  '<rect x="0" y="152" width="360" height="28" fill="#c2b8ef"/><path d="M0 152h360" stroke="'+I+'" stroke-width="2"/><path d="M0 132h360" stroke="'+I+'" stroke-width="0"/>'+'<rect x="100" y="132" width="260" height="6" fill="#a99de6"/>';},
+ // ===== ข้อสัญญา =====
+ // ไม่เป็นธรรม: ตาชั่งใหญ่ เอียงข้างที่มีสัญญาหนา ๆ
+ tilt:function(k){return bg(k,'#fff8dc','#f6e3a8','#e2c27a')+
+  '<g transform="translate(236 0)" stroke="'+I+'" stroke-width="2.4"><path d="M0 150V78" stroke-width="3.4"/><path d="M-24 152h48" stroke-width="4" stroke-linecap="round"/><circle cy="76" r="5" fill="#f4c542"/><g class="cm-scale2"><path d="M-70 66l140 24" stroke-width="3"/><path d="M-70 66l-14 26h28zM70 90l-14 26h28z" fill="none" stroke-width="1.4"/><path d="M-88 92h36q-4 9-18 9q-14 0-18-9z" fill="#f4c542"/><path d="M52 116h36q-4 9-18 9q-14 0-18-9z" fill="#f4c542"/><g stroke-width="1.8"><rect x="54" y="92" width="32" height="24" rx="2" fill="#fff"/><rect x="57" y="86" width="32" height="24" rx="2" fill="#fff"/><path d="M62 94h22M62 100h16" stroke="#c4cbd6"/></g><circle cx="-70" cy="86" r="5" fill="#fff"/></g></g>'+
+  '<rect x="0" y="152" width="360" height="28" fill="#e2c27a"/><path d="M0 152h360" stroke="'+I+'" stroke-width="2"/>';},
+ // มัดจำ ค่าปรับ: ถุงเงินมีป้ายราคาใหญ่ กรรไกรตัดลดลง
+ cut:function(k){return bg(k,'#eefaf3','#cdeeda','#a8d5b5')+desk(132)+
+  '<g transform="translate(150 70)" stroke="'+I+'" stroke-width="2.2"><path d="M20 10q-6-10 4-10h16q10 0 4 10q22 10 22 36q0 18-34 18T-2 46q0-26 22-36z" fill="#d6a76a"/><path d="M18 10h28" stroke-width="3" stroke-linecap="round"/><text x="32" y="46" text-anchor="middle" font-size="16" font-weight="800" fill="#7a4a1a" stroke="none" font-family="sans-serif">฿</text></g>'+
+  '<g transform="translate(224 84)" stroke="'+I+'" stroke-width="2"><path d="M0 8l10-10h56v36H10z" fill="#fff"/><circle cx="10" cy="8" r="3" fill="#cdeeda"/><text x="40" y="12" text-anchor="middle" font-size="11" font-weight="800" fill="#e0453a" stroke="none" font-family="sans-serif" text-decoration="line-through">ค่าปรับสูง</text><text x="40" y="28" text-anchor="middle" font-size="11" font-weight="800" fill="#2e7d4a" stroke="none" font-family="sans-serif">ลดลง ✓</text></g>'+
+  '<g transform="translate(300 74)"><g class="cm-snip" stroke="'+I+'" stroke-width="2"><circle cx="0" cy="0" r="6" fill="none" stroke-width="2.4"/><circle cx="0" cy="16" r="6" fill="none" stroke-width="2.4"/><path d="M5 3l22 14M5 13l22-14" stroke-width="2.6" stroke-linecap="round"/></g></g>'+spark(206,70,1);},
+ // ห้ามทำงานคู่แข่ง: แผนที่มีรั้วล้อมพื้นที่ + ปฏิทินระยะเวลา
+ fence:function(k){return bg(k,'#eef6ff','#d3e4f7','#b4cbe6')+
+  '<g transform="translate(150 80)" stroke="'+I+'" stroke-width="2"><path d="M0 8l40-8 40 8 40-8v60l-40 8-40-8-40 8z" fill="#e9f5e1"/><path d="M40 0v60M80 8v60" stroke="#9fc58a" stroke-width="1.6"/><path d="M14 30q20-14 40 2t40-2" fill="none" stroke="#7fb3e6" stroke-width="3"/><circle cx="62" cy="34" r="16" fill="none" stroke="#e0453a" stroke-width="2.4" stroke-dasharray="4 3"/><path d="M62 22c-6 0-8 5-8 8 0 6 8 12 8 12s8-6 8-12c0-3-2-8-8-8z" fill="#e0453a" stroke-width="1.6"/></g>'+
+  '<g transform="translate(290 94)" stroke="'+I+'" stroke-width="2"><rect width="46" height="40" rx="4" fill="#fff"/><rect width="46" height="11" rx="4" fill="#3b6fd6"/><text x="23" y="32" text-anchor="middle" font-size="12" font-weight="800" fill="'+I+'" stroke="none" font-family="sans-serif">?ปี</text></g>'+
+  '<g stroke="#b07a45" stroke-width="3" stroke-linecap="round"><path d="M110 152v-22M126 152v-22M142 152v-22M110 136h40"/></g>'+
+  '<rect x="0" y="152" width="360" height="28" fill="#b4cbe6"/><path d="M0 152h360" stroke="'+I+'" stroke-width="2"/>'+spark(332,80,.9);}
 };
 var BG={debt:'<g fill="#fff" opacity=".85"><circle cx="190" cy="14" r="1.3"/><circle cx="230" cy="24" r="1"/><circle cx="268" cy="10" r="1.5"/><circle cx="300" cy="26" r="1"/><circle cx="214" cy="166" r="1.2"/><circle cx="262" cy="160" r="1"/><circle cx="300" cy="168" r="1.4"/></g><path d="M338 10a11 11 0 1 0 10 16a9 9 0 1 1-10-16z" fill="#ffe9a8"/><g fill="none" stroke="#ffb3a6" stroke-width="2" stroke-linecap="round" opacity=".55"><path d="M318 152q-4 7 0 14M312 148q-8 11 0 22M346 152q4 7 0 14M352 148q8 11 0 22"/></g>',
  scam:'<g opacity=".55" transform="translate(326 6) scale(.7)"><path d="M14 0l16 28H-2z" fill="#ffd24d" stroke="#3a2a12" stroke-width="2.4" stroke-linejoin="round"/><path d="M14 9v9" stroke="#3a2a12" stroke-width="3" stroke-linecap="round"/><circle cx="14" cy="23" r="1.8" fill="#3a2a12"/></g><g fill="#e88aa8" opacity=".3"><circle cx="230" cy="166" r="7"/><circle cx="344" cy="160" r="9"/><circle cx="270" cy="14" r="4"/><circle cx="300" cy="170" r="3"/></g>',
