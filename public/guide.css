@@ -122,6 +122,9 @@
 .gd-scene .sc-bob{transform-box:fill-box;transform-origin:50% 100%;animation:scBob 2.4s ease-in-out infinite}
 .gd-cm .cm-wave{animation:cmWave 2.6s ease-in-out infinite}
 @keyframes scBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+/* แถบเวลาทำงานค่อย ๆ เต็ม */
+.gd-cm .cm-fill{transform-box:fill-box;transform-origin:0 50%;animation:cmFill 3.2s ease-in-out infinite}
+@keyframes cmFill{0%{transform:scaleX(.2)}60%,100%{transform:scaleX(1)}}
 @keyframes cmWave{0%,100%{transform:translateX(0)}50%{transform:translateX(-10px)}}
 @keyframes scScale{0%,100%{transform:rotate(0)}50%{transform:rotate(-5deg)}}
 @media (prefers-reduced-motion:reduce){.gd-scene *{animation:none !important}}
@@ -142,6 +145,8 @@
 .gd-cover[data-bg="contract"] { background: linear-gradient(135deg, #fff6d8, #f3dfa6); border-color: #e2c27a; }
 .gd-cover[data-bg="office"] { background: linear-gradient(135deg, #eef3ff, #d3e0f7); border-color: #b9c8e0; }
 .gd-cover[data-bg="money"] { background: linear-gradient(135deg, #effbf3, #cdeeda); border-color: #a8d5b5; }
+.gd-cover[data-bg="overtime"] { background: linear-gradient(135deg, #3d3a7a, #6b5aa6); border-color: #2c2960; }
+.gd-cover[data-bg="overtime"] h1 { color: #fff; } .gd-cover[data-bg="overtime"] h1 em { color: #ffb36b; }
 .gd-cover[data-bg="leave"] { background: linear-gradient(135deg, #e6f6ff, #c7e8fb); border-color: #9fd0e6; }
 .gd-cover[data-bg="condo"] { background: linear-gradient(135deg, #fff1dc, #f7d9b3); border-color: #ecc690; }
 
