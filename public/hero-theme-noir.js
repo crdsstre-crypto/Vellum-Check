@@ -1131,3 +1131,111 @@
     T(caseClose, SG + 900);
   };
 })();
+/*NZROOM*/ /* ธีมนักสืบ: ฉากหลังแผ่นบัญชี = "ห้องสืบคดีตอนดึก" (22 พ.ย.)
+   ชั้นหลัง (.nzr, z0): ผนังมืด · กระดานไม้ก๊อก + โพลารอยด์/ตั๋ว/แผนที่/โน้ต ปักหมุด โยงด้วยด้ายแดง (สั่นเป็นระยะ) · ป้ายนีออน "HOTEL" นอกหน้าต่าง (กะพริบ)
+   ชั้นหน้า (.nzr-fx, z3, ไม่รับการแตะ): (เอาแสงลอดมู่ลี่ออกแล้ว ลายตา) · เงาพัดลมเพดานหมุน · ควันลอย · ฝุ่นในลำแสง · แสงแดงนีออนสะท้อน
+   การ์ดล่าง = แฟ้มกระดาษสีน้ำตาล (+ คลิปหนีบที่เช็กอิน/ร้านค้า) · transform/opacity ล้วน · display:none เมื่อปิดแผ่น · โหมดสงบ = ภาพนิ่ง */
+(function () {
+  'use strict';
+  if (window.__nzRoom) return; window.__nzRoom = 1;
+  var A = 'html[data-htheme="noir"]:is([data-view="home"],[data-view="desk"]) body[data-sheet="acct"] #authCard#authCard';
+  var CALM = 'html[data-calm]';
+  var NOISE = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E\")";
+  var CORK = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.32' numOctaves='3' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 .32 0 0 0 0 .26 0 0 0 0 .2 0 0 0 1.4 -.35'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23c)'/%3E%3C/svg%3E\")";
+  var CLIP = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 40'%3E%3Cpath d='M4 34V8a4 4 0 0 1 8 0v22a2.5 2.5 0 0 1-5 0V10' fill='none' stroke='%23c9c9c9' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E\")";
+  /* ของบนกระดาน: [x%, y px, ชนิด, หมุน] — วางชิดขอบ/ช่องว่างระหว่างการ์ด จะเห็นลอดออกมา */
+  var PINS = [[2, 132, 'pol', -8], [93, 118, 'note', 7], [1, 470, 'tik', 6], [94, 430, 'pol', 9], [3, 760, 'map', -5], [92, 700, 'note', -6], [2, 1040, 'pol', 5], [93, 980, 'tik', -8], [4, 1300, 'note', 4], [92, 1280, 'pol', -4]];
+  function item(p, i) {
+    var s = 'left:' + p[0] + '%;top:' + p[1] + 'px;transform:translateX(-50%) rotate(' + p[3] + 'deg)';
+    var pin = '<b class="pn"></b>';
+    if (p[2] === 'pol') return '<i class="nzr-it pol" style="' + s + '">' + pin + '<u></u></i>';
+    if (p[2] === 'note') return '<i class="nzr-it note" style="' + s + '">' + pin + '<em></em><em></em><em></em></i>';
+    if (p[2] === 'tik') return '<i class="nzr-it tik" style="' + s + '">' + pin + '<em>No.' + (40 + i * 7) + '</em></i>';
+    return '<i class="nzr-it map" style="' + s + '">' + pin + '</i>';
+  }
+  function strings() {
+    /* ด้ายแดงโยงหมุดซ้าย-ขวา (ลอดหลังการ์ด) */
+    var o = '', pairs = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9], [0, 3], [5, 8]];
+    pairs.forEach(function (q, k) {
+      var a = PINS[q[0]], b = PINS[q[1]], x1 = a[0] * 4, y1 = a[1] + 6, x2 = b[0] * 4, y2 = b[1] + 6, my = (y1 + y2) / 2 + 26;
+      o += '<path class="st s' + (k % 3) + '" d="M' + x1 + ' ' + y1 + 'Q200 ' + my + ' ' + x2 + ' ' + y2 + '"/>';
+    });
+    return '<svg class="nzr-str" viewBox="0 0 400 1500" preserveAspectRatio="none" aria-hidden="true">' + o + '</svg>';
+  }
+  var dust = ''; for (var d = 0; d < 16; d++) dust += '<i style="left:' + (8 + (d * 37) % 84) + '%;top:' + (10 + (d * 53) % 80) + '%;--t:' + (9 + d % 5 * 2) + 's;--dl:-' + (d * 1.3).toFixed(1) + 's;--x:' + (d % 2 ? 26 : -22) + 'px"></i>';
+  var css =
+    '.nzr,.nzr-fx{display:none}' +
+    A + ' > .alx-bg{display:none !important}' +
+    A + ' > .nzr{display:block;position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;border-radius:inherit;contain:strict;' +
+      'background:' + NOISE + ' 0 0/160px 160px,radial-gradient(80% 50% at 50% 30%,#2a2724,#1a1816 60%,#100f0e)}' +
+    A + ' > .sheet-head,' + A + ' > .sheet-body{position:relative;z-index:1}' +
+    A + ' > .nzr-fx{display:block;position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden;border-radius:inherit;contain:strict}' +
+    /* กระดานไม้ก๊อก */
+    '.nzr .nzr-cork{position:absolute;left:-6px;right:-6px;top:96px;bottom:-40px;background:' + CORK + ' 0 0/120px 120px,linear-gradient(180deg,#3b3129,#2d2620);box-shadow:inset 0 0 0 6px #241d17,inset 0 0 40px rgba(0,0,0,.6);opacity:.7}' +
+    '.nzr .nzr-str{position:absolute;left:0;top:96px;width:100%;height:1500px;overflow:visible}' +
+    '.nzr .nzr-str .st{fill:none;stroke:#a3191c;stroke-width:1.6;vector-effect:non-scaling-stroke;opacity:.85;transform-box:fill-box;transform-origin:50% 0}' +
+    '.nzr .nzr-str .s0{animation:nzrTug 7s ease-in-out infinite}.nzr .nzr-str .s1{animation:nzrTug 7s ease-in-out -2.3s infinite}.nzr .nzr-str .s2{animation:nzrTug 7s ease-in-out -4.6s infinite}' +
+    '@keyframes nzrTug{0%,82%,100%{transform:none}86%{transform:scaleY(1.06)}90%{transform:scaleY(.97)}94%{transform:scaleY(1.02)}}' +
+    '.nzr .nzr-pins{position:absolute;left:0;right:0;top:96px}' +
+    '.nzr .nzr-it{position:absolute;display:block;filter:drop-shadow(1px 3px 2px rgba(0,0,0,.6))}' +
+    '.nzr .nzr-it .pn{position:absolute;left:50%;top:-2px;width:9px;height:9px;margin-left:-4.5px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#e17070,#a3191c 58%,#560808);z-index:1}' +
+    '.nzr .pol{width:46px;height:54px;background:#dcdad4;padding:4px 4px 12px}.nzr .pol u{display:block;width:100%;height:100%;background:linear-gradient(160deg,#5b5b5b,#2b2b2b 60%,#444);text-decoration:none}' +
+    '.nzr .note{width:44px;height:40px;padding:12px 6px 0;background:#cfc7a6}.nzr .note em{display:block;height:2px;margin-bottom:5px;background:rgba(40,30,20,.45)}' +
+    '.nzr .tik{width:50px;height:22px;padding:7px 0 0;text-align:center;background:radial-gradient(circle at 0 50%,transparent 4px,#b8b2a0 4.5px) left/51% 100% no-repeat,radial-gradient(circle at 100% 50%,transparent 4px,#b8b2a0 4.5px) right/51% 100% no-repeat}' +
+    '.nzr .tik em{font:700 8px/1 "IBM Plex Mono",monospace;font-style:normal;color:#3a3226}' +
+    '.nzr .map{width:52px;height:44px;background:repeating-linear-gradient(90deg,rgba(60,50,40,.25) 0 1px,transparent 1px 10px),repeating-linear-gradient(0deg,rgba(60,50,40,.25) 0 1px,transparent 1px 10px),#bdb6a0}' +
+    '.nzr .map::after{content:"";position:absolute;left:30%;top:40%;width:10px;height:10px;border:2px solid #a3191c;border-radius:50%}' +
+    /* ป้ายนีออนนอกหน้าต่าง (ขวาบน) */
+    '.nzr .nzr-neon{position:absolute;right:14px;top:398px;font:800 18px/1 "IBM Plex Mono",monospace;letter-spacing:.18em;color:#ff5a5a;text-shadow:0 0 6px #ff3b3b,0 0 18px rgba(255,40,40,.7);opacity:.75;animation:nzrNeon 6s steps(1,end) infinite}' +
+    '@keyframes nzrNeon{0%,100%{opacity:.75}61%{opacity:.2}63%{opacity:.75}65%{opacity:.15}68%{opacity:.75}}' +
+    /* ชั้นหน้า: มู่ลี่ */
+    '.nzr-fx .bl{position:absolute;left:-40%;right:-40%;top:-30%;height:160%;transform:rotate(-16deg);' +
+      'background:repeating-linear-gradient(180deg,rgba(255,236,200,.05) 0 16px,rgba(0,0,0,.085) 16px 24px);' +
+      '-webkit-mask:linear-gradient(90deg,transparent,#000 25%,#000 70%,transparent);mask:linear-gradient(90deg,transparent,#000 25%,#000 70%,transparent);will-change:transform}' +
+    '.nzr-fx .bl{animation:nzrCar 16s ease-in-out infinite}' +
+    '@keyframes nzrCar{0%,100%{transform:rotate(-16deg) translate3d(-18%,0,0)}50%{transform:rotate(-16deg) translate3d(14%,0,0)}}' +
+    /* พัดลมเพดาน (เงาหมุน มุมบน) */
+    '.nzr-fx .fan{position:absolute;left:50%;top:-250px;width:460px;height:460px;margin-left:-230px;border-radius:50%;opacity:.45;' +
+      'background:conic-gradient(rgba(0,0,0,.28) 0 14deg,transparent 30deg 76deg,rgba(0,0,0,.28) 90deg 104deg,transparent 120deg 166deg,rgba(0,0,0,.28) 180deg 194deg,transparent 210deg 256deg,rgba(0,0,0,.28) 270deg 284deg,transparent 300deg);' +
+      '-webkit-mask:radial-gradient(closest-side,transparent 12%,#000 30%,#000 70%,transparent);mask:radial-gradient(closest-side,transparent 12%,#000 30%,#000 70%,transparent);animation:nzrFan 6s linear infinite;will-change:transform}' +
+    '@keyframes nzrFan{to{transform:rotate(360deg)}}' +
+    /* ควัน */
+    '.nzr-fx .sm{position:absolute;left:-30px;bottom:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(closest-side,rgba(210,210,210,.13),transparent);opacity:0;animation:nzrSmoke 12s ease-out infinite;will-change:transform,opacity}' +
+    '.nzr-fx .sm.b{animation-delay:-4s;left:10px}.nzr-fx .sm.c{animation-delay:-8s;left:-50px}' +
+    '@keyframes nzrSmoke{0%{opacity:0;transform:translate3d(0,0,0) scale(.5)}20%{opacity:1}100%{opacity:0;transform:translate3d(70px,-460px,0) scale(1.8)}}' +
+    /* ฝุ่นในลำแสง */
+    '.nzr-fx .du i{position:absolute;width:2px;height:2px;border-radius:50%;background:rgba(255,240,210,.7);box-shadow:0 0 3px rgba(255,240,210,.6);animation:nzrDust var(--t) ease-in-out var(--dl) infinite alternate;will-change:transform}' +
+    '@keyframes nzrDust{0%{transform:translate3d(0,0,0);opacity:.2}50%{opacity:.9}100%{transform:translate3d(var(--x),-40px,0);opacity:.3}}' +
+    /* แสงแดงนีออนสะท้อน */
+    '.nzr-fx .nr{position:absolute;right:-90px;top:250px;width:220px;height:360px;background:radial-gradient(closest-side,rgba(255,50,50,.14),transparent);animation:nzrNeon 6s steps(1,end) infinite}' +
+    /* การ์ดล่าง = แฟ้มกระดาษสีน้ำตาล */
+    A + ' :is(#vdcAcct,#vrmAcct,.vc-stat,.menu-item){background:' + NOISE + ' 0 0/160px 160px,linear-gradient(180deg,#56442f,#433525) !important;' +
+      'border:1px solid #1f1810 !important;border-radius:3px 12px 4px 4px !important;box-shadow:inset 0 1px 0 rgba(255,226,180,.16),inset 0 0 0 3px rgba(0,0,0,.08),0 3px 0 #2c2218,0 5px 0 rgba(0,0,0,.25),0 10px 16px rgba(0,0,0,.45) !important}' +
+    A + ' :is(#vdcAcct,#vrmAcct,.vc-stat){position:relative}' +
+    A + ' #vdcAcct::after,' + A + ' #vstMenu::after{content:"";position:absolute;right:46px;top:-12px;width:12px;height:30px;background:' + CLIP + ' center/contain no-repeat;transform:rotate(8deg);pointer-events:none;filter:drop-shadow(1px 1px 1px rgba(0,0,0,.6))}' +
+    A + ' #vstMenu{position:relative;overflow:visible !important}' +
+    /* โหมดสงบ */
+    CALM + ' .nzr *,' + CALM + ' .nzr-fx *{animation:none !important}' +
+    '@media (prefers-reduced-motion:reduce){.nzr *,.nzr-fx *{animation:none !important}}';
+  function build() {
+    var c = document.getElementById('authCard'); if (!c) return;
+    if (!c.querySelector(':scope > .nzr')) {
+      var s = document.createElement('div'); s.className = 'nzr'; s.setAttribute('aria-hidden', 'true');
+      s.innerHTML = '<i class="nzr-cork"></i>' + strings() + '<div class="nzr-pins">' + PINS.map(item).join('') + '</div><i class="nzr-neon">HOTEL</i>';
+      var bg = c.querySelector(':scope > .alx-bg'); c.insertBefore(s, bg ? bg.nextSibling : c.firstChild);
+    }
+    if (!c.querySelector(':scope > .nzr-fx')) {
+      var f = document.createElement('div'); f.className = 'nzr-fx'; f.setAttribute('aria-hidden', 'true');
+      f.innerHTML = '<i class="nr"></i><i class="fan"></i><i class="sm"></i><i class="sm b"></i><i class="sm c"></i><span class="du">' + dust + '</span>';
+      c.appendChild(f);
+    }
+  }
+  function go() {
+    if (document.documentElement.getAttribute('data-htheme') !== 'noir') return;
+    if (!document.getElementById('nz-room')) { var st = document.createElement('style'); st.id = 'nz-room'; st.textContent = css; document.head.appendChild(st); }
+    build();
+    new MutationObserver(function () { if (document.body.getAttribute('data-sheet') === 'acct') build(); }).observe(document.body, { attributes: true, attributeFilter: ['data-sheet'] });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+})();
+/*/NZROOM*/
