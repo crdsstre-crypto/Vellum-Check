@@ -159,6 +159,7 @@
 .gd-cover[data-bg="border"] { background: linear-gradient(135deg, #fff3e4, #e3f2ff); border-color: #f0d2ac; }
 .gd-cover[data-bg="union"] { background: linear-gradient(135deg, #fff1e2, #ffe1cf); border-color: #f2c7a4; }
 .gd-cover[data-bg="court"] { background: linear-gradient(135deg, #eef6ff, #fff1df); border-color: #cfe0f2; }
+.gd-cover[data-bg="wallet"] { background: linear-gradient(135deg, #fff4e2, #f3dcc0); border-color: #e5c59c; }
 .gd-cover[data-bg="leave"] { background: linear-gradient(135deg, #e6f6ff, #c7e8fb); border-color: #9fd0e6; }
 .gd-cover[data-bg="condo"] { background: linear-gradient(135deg, #fff1dc, #f7d9b3); border-color: #ecc690; }
 
@@ -525,3 +526,30 @@
 }
 @media (min-width: 1024px) and (max-width: 1180px) { .gd-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (prefers-reduced-motion: reduce) { .gd-grid .gd-lc { transition: none; } .gd-grid .gd-lc:hover { transform: none; } }
+
+/* ===== ปกแบบกองการ์ดซ้อน (coverLayout: "stack"): ภาพหลักมีกระดาษซ้อนเยื้องอยู่ด้านหลัง 2 ใบ ===== */
+.gd-cover[data-layout="stack"] .gd-cover-art { flex-basis: 128px; height: 150px; border-radius: 14px; border: 3px solid #fff; transform: rotate(-3deg); margin: 0 14px 14px 0;
+  box-shadow: 7px 7px 0 -1px #fff, 7px 7px 0 1px #e2c49c, 14px 14px 0 -1px #fff, 14px 14px 0 1px #e2c49c, 0 14px 22px rgba(90, 60, 20, .22); }
+.gd-cover[data-layout="stack"] { gap: 12px; }
+/* ของขยับชุดใหม่ (ไม่จ่ายเงินเดือน) */
+.gd-scene .sc-dust { animation: scDust 4s ease-in-out infinite; }
+.gd-scene .sc-moth { animation: scMoth 3.6s ease-in-out infinite; }
+.gd-cm .cm-brush { animation: cmBrush 3.6s ease-out infinite; }
+.gd-cm .cm-burst { transform-box: fill-box; transform-origin: 50% 50%; animation: cmBurst 1.8s ease-in-out infinite; }
+.gd-cm .cm-stackgrow { transform-box: fill-box; transform-origin: 50% 100%; animation: cmStackGrow 3.6s ease-out infinite; }
+.gd-cm .cm-flicker { animation: cmFlicker 3s linear infinite; }
+.gd-cm .cm-fillbar { transform-box: fill-box; transform-origin: 0 50%; animation: cmFillBar 3.4s ease-out infinite; }
+.gd-cm .cm-elev { animation: cmElev 4.2s ease-in-out infinite; }
+.gd-cm .cm-sunglow { transform-box: fill-box; transform-origin: 50% 50%; animation: cmSunGlow 4s ease-in-out infinite; }
+.gd-cm .cm-sandfall { animation: cmSand .8s linear infinite; }
+@keyframes scDust { 0%, 100% { transform: translate(0, 0); opacity: .2; } 50% { transform: translate(4px, -8px); opacity: .9; } }
+@keyframes scMoth { 0% { transform: translate(0, 20px) scaleX(1); } 25% { transform: translate(6px, 8px) scaleX(.4); } 50% { transform: translate(-4px, -2px) scaleX(1); } 75% { transform: translate(4px, -12px) scaleX(.4); } 100% { transform: translate(0, 20px) scaleX(1); } }
+@keyframes cmBrush { 0%, 10% { stroke-dashoffset: 100; } 45%, 100% { stroke-dashoffset: 0; } }
+@keyframes cmBurst { 0%, 100% { transform: scale(1) rotate(0); } 50% { transform: scale(1.08) rotate(4deg); } }
+@keyframes cmStackGrow { 0% { transform: scaleY(.25); } 60%, 100% { transform: scaleY(1); } }
+@keyframes cmFlicker { 0%, 18%, 22%, 60%, 64%, 100% { opacity: 1; } 20%, 62% { opacity: .25; } }
+@keyframes cmFillBar { 0% { transform: scaleX(0); } 60%, 100% { transform: scaleX(1); } }
+@keyframes cmElev { 0%, 10% { transform: translateY(0); } 45%, 60% { transform: translateY(-48px); } 95%, 100% { transform: translateY(0); } }
+@keyframes cmSunGlow { 0%, 100% { transform: scale(.94); } 50% { transform: scale(1.06); } }
+@keyframes cmSand { to { stroke-dashoffset: -5; } }
+@media (prefers-reduced-motion: reduce) { .gd-cm .cm-brush { stroke-dashoffset: 0; } }
