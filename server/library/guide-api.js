@@ -4,6 +4,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
+import { mountComic } from './comic-split.js';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -124,6 +125,8 @@ export function mountGuides(app, { getUserFromRequest, isAdmin }) {
     if (!g || (!g.reviewed && !admin)) return sendJson(req, res, { error: 'ไม่พบคู่มือนี้' }, 404);
     sendJson(req, res, { ...g, isAdmin: admin });
   });
+
+  mountComic(app, path.dirname(GUIDE_PAGE));   // ภาพการ์ตูนแยกรายฉาก (/guide-comic-core.js, /guide-comic-scenes.js)
 
   const page = (req, res) => { res.setHeader('Cache-Control', 'no-cache'); res.sendFile(GUIDE_PAGE); };
   app.get('/guide', page);
