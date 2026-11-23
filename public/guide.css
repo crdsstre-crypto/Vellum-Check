@@ -991,3 +991,10 @@
 .gd-cover[data-layout="savingsbook"] .gd-cover-art::before { content: ""; position: absolute; inset: -3px; z-index: 3; pointer-events: none; border: 1.5px dashed #e6c25a; border-radius: 8px 12px 12px 8px; }
 .gd-cover[data-layout="savingsbook"] .gd-cover-art::after { content: "สมุดสมาชิก"; position: absolute; left: 50%; bottom: -16px; transform: translateX(-50%); z-index: 4; pointer-events: none; padding: 1px 10px; border-radius: 4px;
   background: #e6c25a; color: #1f3a2e; font: 800 10.5px/1.5 "IBM Plex Sans Thai", sans-serif; white-space: nowrap; box-shadow: 0 2px 3px rgba(0, 0, 0, .2); }
+
+/* ปกแบบ "banknote" = ธนบัตรลายกิโยเช่ขอบเขียว มีลายน้ำวงกลมและเลขมุม (คู่มือ salary-overpaid) */
+.gd-cover[data-layout="banknote"] .gd-cover-art { overflow: visible; border: 0; border-radius: 6px; padding: 0; box-shadow: 0 0 0 4px #eaf4e6, 0 0 0 6px #4f8a5a, 0 0 0 8px #eaf4e6, 0 6px 14px rgba(40, 80, 50, .25); transform: rotate(-1.2deg); }
+.gd-cover[data-layout="banknote"] .gd-cover-art .gd-scene { border-radius: 6px; }
+.gd-cover[data-layout="banknote"] .gd-cover-art::before { content: "25,000"; position: absolute; left: 6px; top: 4px; z-index: 3; pointer-events: none; font: 900 11px/1 "IBM Plex Sans Thai", sans-serif; color: #2e6a3e; background: rgba(234, 244, 230, .9); padding: 2px 5px; border-radius: 3px; }
+.gd-cover[data-layout="banknote"] .gd-cover-art::after { content: "×2"; position: absolute; right: -12px; bottom: 14px; z-index: 3; pointer-events: none; width: 30px; height: 30px; border-radius: 50%;
+  background: #e5484d; color: #fff; font: 900 12px/30px sans-serif; text-align: center; box-shadow: 0 2px 4px rgba(120, 30, 30, .3); transform: rotate(-10deg); }
