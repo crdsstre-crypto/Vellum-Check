@@ -12,6 +12,12 @@ export const GUIDE_PAGE = path.join(__dirname, '..', '..', 'public', 'guide.html
 const str = (v, max) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
 const arr = v => (Array.isArray(v) ? v : []);
 const MOODS = ['wave', 'happy', 'sleep', 'party', 'sad', 'curious', 'stop', 'alert', 'inspect'];   // ท่าน้องม้วน (public/mascot.js)
+// ท่าผสม "แขน+หน้า+ของถือ+การขยับ" (public/mascot.js) เช่น "point+smile+phone+bob"
+const MOOD_PARTS = ['wave', 'point', 'up', 'thumb', 'cross', 'scratch', 'chin', 'cheer', 'cover', 'palm', 'open', 'bow',
+  'smile', 'laugh', 'star', 'wink', 'hmm', 'think', 'shock', 'sad', 'cry', 'firm', 'relief', 'sleepy',
+  'pen', 'mag', 'coin', 'phone', 'sign', 'umbrella', 'shield', 'cal', 'money', 'clip', 'cup', 'none',
+  'sway', 'bob', 'hop', 'shake', 'spin', 'peek', 'lean', 'breathe'];
+const okMood = m => typeof m === 'string' && (MOODS.includes(m) || (m.includes('+') && m.length <= 60 && m.split('+').every(t => MOOD_PARTS.includes(t))));
 const PANEL_SCENES = ['pay', 'nopay', 'notice', 'labor', 'sign', 'repair', 'moveout', 'iou', 'rate', 'guarantee', 'hourglass', 'umbrella', 'hours', 'nothreat', 'complain', 'bankcall', 'mule', 'shared', 'tilt', 'cut', 'fence', 'sick', 'errand', 'vacation', 'holiday', 'workday', 'consent', 'rates', 'manager', 'payslip', 'trial', 'dismiss', 'day120', 'court', 'deductlist', 'pie', 'broken', 'vault', 'payday', 'orbit', 'hospital', 'nursery', 'jobcenter', 'retire', 'bridge', 'verdict', 'xray', 'donut', 'roadmap', 'lantern', 'grid120', 'jars', 'signs', 'guard', 'stroller', 'flapboard', 'stamp', 'receipt', 'certificate', 'crossroads', 'seesaw', 'barrier', 'balloon', 'chainlock', 'corkboard', 'cans', 'ledger', 'vesting', 'threeways', 'cloche', 'agegate', 'clock24', 'hazards', 'handoff', 'permit', 'permitcard', 'mailbox', 'sameenv', 'tenpct', 'drawer', 'founders', 'lanyards', 'talkline', 'megaphone', 'shield', 'puzzle', 'letter', 'twodoors', 'courtfree', 'claimlist', 'paintcal', 'popburst', 'neonshop', 'cutaway', 'sunsetglass', 'pixelstairs', 'splitretire', 'claydays', 'origami', 'retiremap', 'metroline', 'boardgame', 'sketchgraph', 'stainedladder', 'stickers', 'oneline', 'diary', 'glassphone', 'mosaic', 'constellation', 'venn', 'terminal', 'memphis', 'stitch', 'thermal'];   // ฉากช่องการ์ตูน (public/guide-comic.js)
 
 function cleanCite(c) {
@@ -29,7 +35,7 @@ function cleanGuide(g, file) {
   const sections = arr(g.sections).map(s => ({
     title: str(s?.title, 120),
     // ช่องการ์ตูนต้นหัวข้อ (ไม่บังคับ) · scene ตามที่มีใน public/guide-comic.js · say ใส่ **คำ** เพื่อเน้น
-    panel: s?.panel && PANEL_SCENES.includes(s.panel.scene) ? { scene: s.panel.scene, mood: MOODS.includes(s.panel.mood) ? s.panel.mood : 'happy', say: str(s.panel.say, 140),
+    panel: s?.panel && PANEL_SCENES.includes(s.panel.scene) ? { scene: s.panel.scene, mood: okMood(s.panel.mood) ? s.panel.mood : 'happy', say: str(s.panel.say, 140),
       layout: ['left', 'right', 'center'].includes(s.panel.layout) ? s.panel.layout : 'left', bubble: ['talk', 'think', 'shout', 'caption'].includes(s.panel.bubble) ? s.panel.bubble : 'talk' } : null,
     items: arr(s?.items).map(it => ({ q: str(it?.q, 200), a: str(it?.a, 1200), cite: arr(it?.cite).map(cleanCite).filter(Boolean).slice(0, 4) }))
       .filter(it => it.q && it.a),
@@ -44,7 +50,7 @@ function cleanGuide(g, file) {
     categoryIcon: str(g.categoryIcon, 8),          // อีโมจิหน้าหมวด เช่น 🏠
     categoryNote: str(g.categoryNote, 160),        // คำอธิบายใต้ชื่อหมวดในหน้ารวม
     scene: ['condo', 'office', 'money', 'debt', 'scam', 'contract', 'leave', 'overtime', 'probation', 'payroll', 'social', 'worksite', 'cradle', 'farewell', 'chalk', 'pvd', 'youth', 'border', 'union', 'court', 'wallet', 'porch', 'truck', 'bokeh', 'groovy'].includes(g.scene) ? g.scene : 'condo',   // ฉากในรูปการ์ด
-    mood: MOODS.includes(g.mood) ? g.mood : 'curious',   // ท่าน้องม้วน
+    mood: okMood(g.mood) ? g.mood : 'curious',   // ท่าน้องม้วน
     coverLayout: ['right', 'banner', 'polaroid', 'ticket', 'notebook', 'arch', 'phone', 'postage', 'torn', 'film', 'stack', 'pane', 'tape', 'hex', 'folder'].includes(g.coverLayout) ? g.coverLayout : '',   // ปก: "right" = ภาพวงกลมอยู่ขวา · "banner" = ภาพกว้างเต็มบน
     cardText: str(g.cardText, 300),                // คำอธิบายบนการ์ด · ใส่ **คำ** เพื่อไฮไลต์
     coverLines: arr(g.coverLines).map(x => str(x, 60)).filter(Boolean).slice(0, 2),   // ข้อความบนปก (บรรทัดที่ 2 เป็นสีส้ม)
