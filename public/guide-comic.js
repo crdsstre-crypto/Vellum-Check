@@ -706,7 +706,51 @@ var P={
   '<g fill="#2a1024"><rect x="124" y="94" width="52" height="6" rx="2"/><rect x="124" y="158" width="52" height="6" rx="2"/><path d="M130 100h40q0 22-17 29q17 7 17 29h-40q0-22 17-29q-17-7-17-29z"/></g>'+
   '<path d="M134 104h32q-2 14-16 20q-14-6-16-20z" fill="#ffcf7a" opacity=".9"/><path d="M138 156h24q-4-10-12-12q-8 2-12 12z" fill="#ffcf7a"/>'+
   '<path class="cm-sandfall" d="M150 124v22" stroke="#ffcf7a" stroke-width="1.6" stroke-dasharray="2 3"/>'+
-  '<g transform="translate(222 134)"><text text-anchor="middle" font-size="22" font-weight="900" fill="#fff" stroke="#2a1024" stroke-width="4" stroke-linejoin="round" style="paint-order:stroke" font-family="sans-serif">2 ปี</text><text y="15" text-anchor="middle" font-size="8.5" font-weight="800" fill="#fff" stroke="#2a1024" stroke-width="2.4" stroke-linejoin="round" style="paint-order:stroke" font-family="sans-serif">อายุความค่าจ้าง</text></g>';}
+  '<g transform="translate(222 134)"><text text-anchor="middle" font-size="22" font-weight="900" fill="#fff" stroke="#2a1024" stroke-width="4" stroke-linejoin="round" style="paint-order:stroke" font-family="sans-serif">2 ปี</text><text y="15" text-anchor="middle" font-size="8.5" font-weight="800" fill="#fff" stroke="#2a1024" stroke-width="2.4" stroke-linejoin="round" style="paint-order:stroke" font-family="sans-serif">อายุความค่าจ้าง</text></g>';},
+ // ===== เกษียณอายุ — 5 สไตล์ใหม่: พิกเซลอาร์ต 8 บิต / แบ่งจอสองฝั่ง / ดินปั้น 3 มิติ / พับกระดาษโอริงามิ / แผนที่มุมบน =====
+ // [พิกเซลอาร์ต] บันไดบล็อก 6 ขั้น = อายุงาน→จำนวนวันค่าชดเชย เหรียญพิกเซลกระโดดขึ้นทีละขั้น (น้องม้วนซ้าย)
+ pixelstairs:function(k){var px=function(x,y,w,h,f){return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+f+'"/>';};
+  var days=['30','90','180','240','300','400'],yrs=['4ด.+','1ปี+','3ปี+','6ปี+','10ปี+','20ปี+'],steps='';
+  for(var i=0;i<6;i++){var x=104+i*40,top=156-(i+1)*9;steps+=px(x,top,40,164-top,i%2?'#5aa64a':'#68b858')+px(x,top,40,4,'#9be27f')+px(x,top+4,40,2,'#3f7f33')+
+   '<text x="'+(x+20)+'" y="'+(top+16)+'" text-anchor="middle" font-size="10" font-weight="900" fill="#fff" font-family="monospace">'+days[i]+'</text>'+
+   '<text x="'+(x+20)+'" y="175" text-anchor="middle" font-size="7.5" font-weight="900" fill="#2b3a1e" font-family="monospace">'+yrs[i]+'</text>';}
+  return '<g shape-rendering="crispEdges">'+px(0,0,360,180,'#7ec8ff')+px(0,60,360,40,'#9dd6ff')+px(0,100,360,64,'#b9e4ff')+
+  px(30,24,24,8,'#fff')+px(26,28,32,8,'#fff')+px(300,40,20,6,'#fff')+px(296,44,28,6,'#fff')+px(214,58,12,12,'#ffe14d')+px(212,60,16,8,'#ffe14d')+
+  px(0,164,360,16,'#c9925a')+px(0,164,360,3,'#8a5a2a')+steps+
+  '<g class="cm-pxhop">'+px(112,128,10,10,'#ffd84d')+px(114,126,6,2,'#ffd84d')+px(114,138,6,2,'#ffd84d')+px(116,130,2,6,'#c9900a')+'</g></g>';},
+ // [แบ่งจอสองฝั่ง] ซ้าย = โต๊ะทำงานโทนฟ้าเย็น ขวา = ชายหาดเปลญวนโทนอุ่น เส้นแบ่งกลาง ป้าย "แจ้งแล้ว 30 วัน" (น้องม้วนกลาง)
+ splitretire:function(k){return '<defs><linearGradient id="sl'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe3ff"/><stop offset="1" stop-color="#e9f1ff"/></linearGradient><linearGradient id="sr'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd59a"/><stop offset=".62" stop-color="#ffe9c9"/><stop offset=".63" stop-color="#5ec4d8"/><stop offset="1" stop-color="#9fe0ea"/></linearGradient></defs>'+
+  '<rect width="180" height="180" fill="url(#sl'+k+')"/><rect x="180" width="180" height="180" fill="url(#sr'+k+')"/>'+
+  '<g opacity=".5" stroke="#b5cdf0" stroke-width="1"><path d="M0 40h180M0 80h180M0 120h180M45 0v180M90 0v180M135 0v180"/></g>'+
+  '<g stroke="#2f3d58" stroke-width="2"><rect x="22" y="128" width="96" height="6" fill="#8aa0c4"/><path d="M30 134v36M110 134v36"/><rect x="46" y="96" width="48" height="30" rx="3" fill="#3c4c6e"/><rect x="50" y="100" width="40" height="20" fill="#9fd0ff"/><path d="M70 126v4"/></g><g stroke="#cfe3ff" stroke-width="1.6"><path d="M54 106h20M54 112h28"/></g>'+
+  ''+
+  '<circle cx="320" cy="94" r="14" fill="#fff3b8"/><g class="cm-sway2"><path d="M246 112q40 26 80 0" fill="#ff8a5b" stroke="#6b3a1a" stroke-width="2"/><path d="M246 112l-4-8M326 112l4-8" stroke="#6b3a1a" stroke-width="2"/></g><path d="M236 150v-50q8-10 20-8M342 150v-50" stroke="#8a5a2a" stroke-width="3" fill="none"/><path d="M226 96q14-14 30-2M226 96q8 10 24 6" fill="#5fae73"/>'+
+  ''+
+  '<path d="M180 0v180" stroke="#fff" stroke-width="5"/><path d="M180 0v180" stroke="#2b1f0e" stroke-width="1.4" stroke-dasharray="6 5"/>'+
+  '<g transform="translate(250 128)"><rect width="58" height="22" rx="6" fill="#fff" stroke="#2b1f0e" stroke-width="1.6"/><text x="29" y="15" text-anchor="middle" font-size="8.5" font-weight="900" fill="#b2302a" font-family="sans-serif">มีผลใน 30 วัน</text></g>';},
+ // [ดินปั้น 3 มิติ] บล็อกดินนุ่มมนเงา radial เลข 1 2 3 ซองดินปั้นเลื่อนมาวางบนบล็อก 3 (น้องม้วนขวา)
+ claydays:function(k){var blk=function(x,n,c,d){return '<g transform="translate('+x+' 148)"><ellipse cy="22" rx="30" ry="6" fill="#6b4a8a" opacity=".16"/><g class="cm-squish" style="animation-delay:'+d+'s"><rect x="-26" y="-26" width="52" height="46" rx="16" fill="url(#cl'+c+k+')"/><ellipse cx="-8" cy="-14" rx="12" ry="6" fill="#fff" opacity=".45"/><text y="8" text-anchor="middle" font-size="20" font-weight="900" fill="#fff" opacity=".95" font-family="sans-serif">'+n+'</text></g></g>';};
+  var grad=function(id,a,b){return '<radialGradient id="cl'+id+k+'" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="'+a+'"/><stop offset="1" stop-color="'+b+'"/></radialGradient>';};
+  return '<defs>'+grad('a','#ffc3a8','#e5795a')+grad('b','#ffe39a','#e0a52a')+grad('c','#b9f0c8','#45b071')+grad('e','#ffffff','#d9d2f2')+'<linearGradient id="cbg'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4eeff"/><stop offset="1" stop-color="#ffeef3"/></linearGradient></defs>'+
+  '<rect width="360" height="180" fill="url(#cbg'+k+')"/><ellipse cx="150" cy="176" rx="200" ry="22" fill="#e8dcfa"/>'+
+  blk(60,'1','a',0)+blk(136,'2','b',.3)+blk(212,'3','c',.6)+
+  '<g class="cm-slidein"><g transform="translate(212 104)"><rect x="-24" y="-15" width="48" height="30" rx="9" fill="url(#cle'+k+')"/><path d="M-20-10l20 13 20-13" fill="none" stroke="#b7acd9" stroke-width="2.4" stroke-linecap="round"/><circle cy="6" r="6" fill="url(#clb'+k+')"/><text y="9" text-anchor="middle" font-size="7.5" font-weight="900" fill="#7a4a00" font-family="sans-serif">฿</text></g></g>'+
+  '<text x="136" y="96" text-anchor="middle" font-size="8.5" font-weight="900" fill="#6b4a8a" font-family="sans-serif">นับจากวันเกษียณ</text>';},
+ // [โอริงามิ] นกกระเรียนกระดาษพับเหลี่ยม บินขึ้นลง เรือกระดาษบนคลื่นกระดาษ ป้ายพับ 180 เดือน / 55 ปี (น้องม้วนซ้าย)
+ origami:function(k){return '<defs><linearGradient id="og'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fdf3e6"/><stop offset="1" stop-color="#f7e6d2"/></linearGradient></defs><rect width="360" height="180" fill="url(#og'+k+')"/>'+
+  '<path d="M0 158l30-8 30 8 30-8 30 8 30-8 30 8 30-8 30 8 30-8 30 8 30-8 30 8v22H0z" fill="#9cc9e8"/><path d="M0 166l30-8 30 8 30-8 30 8 30-8 30 8 30-8 30 8 30-8 30 8 30-8 30 8v14H0z" fill="#7bb5de"/>'+
+  '<g class="cm-crane"><g transform="translate(190 140)"><path d="M0 0L-38-30L-6-6z" fill="#ff8f8f"/><path d="M0 0L-6-6L-14 8z" fill="#e06a6a"/><path d="M0 0L34-34L8-4z" fill="#ffb0b0"/><path d="M0 0L8-4L16 10z" fill="#e88080"/><path d="M-14 8L0 0L16 10L2 14z" fill="#ff9f9f"/><path d="M16 10L40-2L36 4z" fill="#d95c5c"/><path d="M-14 8L-34 0L-28 6z" fill="#e06a6a"/></g></g>'+
+  '<g class="cm-boat"><g transform="translate(300 150)"><path d="M-26 0h52l-10 12h-32z" fill="#ffd27a"/><path d="M-26 0h26l-10 12h-6z" fill="#f0b850"/><path d="M0 0v-28l18 28z" fill="#fff3d6"/><path d="M0 0v-28l-14 28z" fill="#f2dfbf"/></g></g>'+
+  '<g transform="translate(236 108) rotate(-4)"><path d="M0 0h58v22H0z" fill="#b9e0c6"/><path d="M58 0l8 11-8 11z" fill="#93c9a6"/><text x="29" y="15" text-anchor="middle" font-size="9" font-weight="900" fill="#1f5e38" font-family="sans-serif">180 เดือน</text></g>'+
+  '<g transform="translate(104 146) rotate(5)"><path d="M0 0h46v22H0z" fill="#cfd8ff"/><path d="M0 0l-8 11 8 11z" fill="#aab8f0"/><text x="23" y="15" text-anchor="middle" font-size="9" font-weight="900" fill="#2f3d8a" font-family="sans-serif">อายุ 55</text></g>';},
+ // [แผนที่มุมบน] ทุ่งเบจ แม่น้ำ สวนเขียว เส้นทางประจากหมุด "เกษียณ" ไปหมุดทางเลือก หมุดเต้นเป็นวง (น้องม้วนขวา)
+ retiremap:function(k){var pin=function(x,y,c,t,d){return '<g transform="translate('+x+' '+y+')"><circle class="cm-pinpulse" style="animation-delay:'+d+'s" r="10" fill="'+c+'" opacity=".35"/><path d="M0 0q-9-10-9-16a9 9 0 0 1 18 0q0 6-9 16z" fill="'+c+'" stroke="#2b1f0e" stroke-width="1.4"/><circle cy="-16" r="3.4" fill="#fff"/><text y="12" text-anchor="middle" font-size="8" font-weight="900" fill="#2b1f0e" font-family="sans-serif" stroke="#fff7e6" stroke-width="3" stroke-linejoin="round" style="paint-order:stroke">'+t+'</text></g>';};
+  return '<defs><pattern id="mp'+k+'" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="#e6d6b4" stroke-width=".8"/></pattern></defs><rect width="360" height="180" fill="#f5ead2"/><rect width="360" height="180" fill="url(#mp'+k+')"/>'+
+  '<path d="M0 120q60-30 120 0t110-6 130 20v46H0z" fill="#e8f1d8"/><path d="M-10 60q80 20 120 70t140 50" fill="none" stroke="#8fc6e6" stroke-width="12" stroke-linecap="round"/><path d="M-10 60q80 20 120 70t140 50" fill="none" stroke="#bfe0f2" stroke-width="4" stroke-linecap="round"/>'+
+  '<g fill="#7cc58a" stroke="#4f9a5f" stroke-width="1"><circle cx="268" cy="112" r="7"/><circle cx="280" cy="118" r="6"/><circle cx="30" cy="150" r="7"/><circle cx="40" cy="158" r="5"/><circle cx="196" cy="166" r="6"/></g>'+
+  '<g fill="none" stroke="#b2302a" stroke-width="2.2" stroke-dasharray="4 5" stroke-linecap="round"><path d="M60 156q30-40 60-44"/><path d="M60 156q60 6 100 2"/><path d="M60 156q90-30 150-44"/></g>'+
+  pin(60,156,'#16263D','เกษียณ',0)+pin(120,112,'#ff8a5b','รับเป็นงวด',.4)+pin(166,158,'#7cc58a','คงไว้ในกองทุน',.8)+pin(212,112,'#5ab8ff','รับก้อนเดียว',1.2)+
+  '';}
 };
 var BG={
  cradle:'<g opacity=".7">'+[[210,20,1],[250,40,.7],[300,16,1.1],[336,46,.8]].map(function(v){return '<path transform="translate('+v[0]+' '+v[1]+') scale('+v[2]+')" d="M0-7l2 5 5 .8-3.6 3.4.8 5L0 4.6-4.2 7.2-3.4 2.2-7-1.2-2-2z" fill="#ffd84d" stroke="#3a2a12" stroke-width="1"/>';}).join('')+'</g><path d="M190 176q40-14 80-4t90-6v10z" fill="#f6c6d8" opacity=".8"/>',
