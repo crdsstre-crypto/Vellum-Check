@@ -3,6 +3,7 @@
 // คู่มือที่ยังไม่ผ่านการตรวจ ("reviewed": false) แสดงเฉพาะแอดมิน คนทั่วไปมองไม่เห็น
 import fs from 'node:fs';
 import path from 'node:path';
+import zlib from 'node:zlib';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -84,6 +85,25 @@ export function loadGuides() {
   return map;
 }
 
+// ส่ง JSON แบบบีบอัด (brotli/gzip) — ไฟล์ js/css บีบโดย fastStatic อยู่แล้ว แต่ข้อมูลคู่มือจาก API ยังส่งเต็มขนาด
+// คู่มือหนึ่งเรื่อง ~26KB → ~4–5KB · ใช้ zlib ของ Node ไม่ต้องลงแพ็กเกจ · บีบไม่สำเร็จจะส่งแบบเดิม
+function sendJson(req, res, obj, status = 200) {
+  const raw = Buffer.from(JSON.stringify(obj));
+  const ae = String(req.headers['accept-encoding'] || '');
+  const enc = raw.length < 1024 ? null : /\bbr\b/.test(ae) ? 'br' : /\bgzip\b/.test(ae) ? 'gzip' : null;
+  let body = raw;
+  if (enc) {
+    try { body = enc === 'br' ? zlib.brotliCompressSync(raw, { params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 5 } }) : zlib.gzipSync(raw, { level: 6 }); }
+    catch { body = raw; }
+  }
+  res.status(status);
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.setHeader('Vary', 'Accept-Encoding');
+  if (body !== raw) res.setHeader('Content-Encoding', enc);
+  res.setHeader('Content-Length', body.length);
+  res.end(body);
+}
+
 export function mountGuides(app, { getUserFromRequest, isAdmin }) {
   const guides = loadGuides();
   const viewerIsAdmin = async req => { try { const u = await getUserFromRequest(req); return !!u && isAdmin(u); } catch { return false; } };
@@ -94,15 +114,15 @@ export function mountGuides(app, { getUserFromRequest, isAdmin }) {
     const admin = await viewerIsAdmin(req);
     const items = [...guides.values()].filter(g => admin || g.reviewed)
       .sort((a, b) => a.category.localeCompare(b.category, 'th') || a.order - b.order || a.title.localeCompare(b.title, 'th')).map(card);
-    res.json({ items, isAdmin: admin });
+    sendJson(req, res, { items, isAdmin: admin });
   });
 
   app.get('/api/guides/:slug', async (req, res) => {
     res.setHeader('Cache-Control', 'no-store');
     const g = guides.get(String(req.params.slug));
     const admin = await viewerIsAdmin(req);
-    if (!g || (!g.reviewed && !admin)) return res.status(404).json({ error: 'ไม่พบคู่มือนี้' });
-    res.json({ ...g, isAdmin: admin });
+    if (!g || (!g.reviewed && !admin)) return sendJson(req, res, { error: 'ไม่พบคู่มือนี้' }, 404);
+    sendJson(req, res, { ...g, isAdmin: admin });
   });
 
   const page = (req, res) => { res.setHeader('Cache-Control', 'no-cache'); res.sendFile(GUIDE_PAGE); };
