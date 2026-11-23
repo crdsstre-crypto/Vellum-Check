@@ -162,6 +162,7 @@
 .gd-cover[data-bg="wallet"] { background: linear-gradient(135deg, #fff4e2, #f3dcc0); border-color: #e5c59c; }
 .gd-cover[data-bg="porch"] { background: linear-gradient(135deg, #f4efff, #ffe8dc); border-color: #e2d3f4; }
 .gd-cover[data-bg="truck"] { background: linear-gradient(135deg, #f7f0e1, #efe2c8); border-color: #dccaa4; }
+.gd-cover[data-bg="bokeh"] { background: linear-gradient(135deg, #f1ecff, #ffe6ef); border-color: #e0d2f4; }
 .gd-cover[data-bg="leave"] { background: linear-gradient(135deg, #e6f6ff, #c7e8fb); border-color: #9fd0e6; }
 .gd-cover[data-bg="condo"] { background: linear-gradient(135deg, #fff1dc, #f7d9b3); border-color: #ecc690; }
 
@@ -607,3 +608,20 @@
 @keyframes cmPencil { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(-8px, -3px); } 50% { transform: translate(-16px, 1px); } 75% { transform: translate(-8px, 3px); } }
 @keyframes cmGlass { 0%, 15% { transform: skewX(-18deg) translateX(0); } 70%, 100% { transform: skewX(-18deg) translateX(330px); } }
 @keyframes cmPeel { 0%, 55%, 100% { transform: rotate(0) scale(1); } 70% { transform: rotate(-10deg) scale(1.04); } 85% { transform: rotate(-4deg) scale(1.02); } }
+
+/* ===== ปกแบบหกเหลี่ยม (coverLayout: "hex"): ภาพตัดเป็นหกเหลี่ยมยอดแหลม น้องม้วนอยู่กลางล่าง ===== */
+.gd-cover[data-layout="hex"] .gd-cover-art { flex-basis: 136px; height: 156px; border: 0; border-radius: 0; clip-path: polygon(50% 0, 100% 24%, 100% 76%, 50% 100%, 0 76%, 0 24%); }
+.gd-cover[data-layout="hex"] .gd-cover-art .gd-cover-m { left: 50%; margin-left: -33px; bottom: 10px; }
+.gd-cover[data-layout="hex"] { gap: 14px; }
+/* ของขยับชุดใหม่ (ล่วงละเมิด) — นุ่มนวล ไม่เร่งเร้า */
+.gd-scene .sc-bokeh { animation: scBokeh 6s ease-in-out infinite; }
+.gd-cm .cm-draw2 { animation: cmDraw2 5s ease-out infinite; }
+.gd-cm .cm-hilite { transform-box: fill-box; transform-origin: 0 50%; animation: cmHilite 4.5s ease-out infinite; }
+.gd-cm .cm-callring { transform-box: fill-box; transform-origin: 50% 50%; animation: cmCallRing 1.4s ease-out infinite; }
+.gd-cm .cm-tilepop { transform-box: fill-box; transform-origin: 50% 50%; animation: cmTilePop 4s ease-out infinite; }
+@keyframes scBokeh { 0%, 100% { transform: translate(0, 0); opacity: .35; } 50% { transform: translate(4px, -6px); opacity: .8; } }
+@keyframes cmDraw2 { 0% { stroke-dashoffset: 100; } 40%, 100% { stroke-dashoffset: 0; } }
+@keyframes cmHilite { 0%, 5% { transform: scaleX(0); } 25%, 100% { transform: scaleX(1); } }
+@keyframes cmCallRing { 0% { transform: scale(1); opacity: .9; } 100% { transform: scale(2.4); opacity: 0; } }
+@keyframes cmTilePop { 0% { transform: scale(0); } 18%, 100% { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .gd-cm .cm-draw2 { stroke-dashoffset: 0; } }
