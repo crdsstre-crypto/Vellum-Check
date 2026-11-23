@@ -871,3 +871,22 @@
 @keyframes cmBubble { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(-60px); opacity: 0; } }
 @keyframes cmArm { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-8deg); } }
 @keyframes cmOrbit2 { to { transform: rotate(360deg); } }
+
+/* ===== ปกแบบห่อของขวัญ (coverLayout: "gift"): ริบบิ้นแดงกากบาทพาดภาพ ===== */
+.gd-cover[data-layout="gift"] .gd-cover-art { border: 3px solid #e5484d; border-radius: 8px; overflow: visible; }
+.gd-cover[data-layout="gift"] .gd-cover-art .gd-scene { border-radius: 6px; }
+.gd-cover[data-layout="gift"] .gd-cover-art::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(90deg, transparent calc(50% - 6px), rgba(229, 72, 77, .9) calc(50% - 6px) calc(50% + 6px), transparent calc(50% + 6px)), linear-gradient(0deg, transparent calc(50% - 6px), rgba(229, 72, 77, .9) calc(50% - 6px) calc(50% + 6px), transparent calc(50% + 6px)); border-radius: 6px; }
+.gd-cover[data-layout="gift"] .gd-cover-art::before { content: ""; position: absolute; left: 50%; top: -16px; width: 44px; height: 22px; margin-left: -22px; z-index: 3; background: radial-gradient(ellipse at 25% 60%, #e5484d 0 9px, transparent 10px), radial-gradient(ellipse at 75% 60%, #e5484d 0 9px, transparent 10px), radial-gradient(circle at 50% 70%, #b8212a 0 5px, transparent 6px); }
+/* ของขยับชุดใหม่ (โบนัส/สวัสดิการ) */
+.gd-scene .sc-bow { animation: scBow 2.4s ease-in-out infinite; }
+.gd-cm .cm-candy { animation: cmQueue 2s ease-in-out infinite; }
+.gd-cm .cm-snip2 { transform-box: fill-box; transform-origin: 20% 50%; animation: cmSnip2 1.2s ease-in-out infinite; }
+.gd-cm .cm-swing2 { transform-box: fill-box; transform-origin: 50% 0; animation: qsRock2 2.4s ease-in-out infinite; }
+.gd-cm .cm-confetti { animation: cmConfetti 2.4s ease-in infinite; }
+.gd-cm .cm-nod { animation: cmQueue 2.4s ease-in-out infinite; }
+.gd-cm .cm-wave3 { animation: cmQueue 1.4s ease-in-out infinite; }
+@keyframes scBow { 0%, 70%, 100% { transform: translateY(0); } 80% { transform: translateY(-10px); } 90% { transform: translateY(-4px); } }
+@keyframes cmSnip2 { 0%, 100% { transform: translateX(0) rotate(0); } 50% { transform: translateX(8px) rotate(-6deg); } }
+@keyframes qsRock2 { 0%, 100% { transform: rotate(-10deg); } 50% { transform: rotate(10deg); } }
+@keyframes cmConfetti { 0% { transform: translateY(-30px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(6px); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .gd-cm .cm-confetti { opacity: 1; } }
