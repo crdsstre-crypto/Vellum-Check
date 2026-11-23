@@ -1051,6 +1051,12 @@
 .gd-cover[data-layout="postcard"] .gd-cover-art::before { content: ""; position: absolute; inset: -9px -9px -24px -9px; z-index: 3; pointer-events: none; background: linear-gradient(135deg, #6a3a2a 14px, transparent 14px) top left / 26px 26px no-repeat, linear-gradient(225deg, #6a3a2a 14px, transparent 14px) top right / 26px 26px no-repeat, linear-gradient(45deg, #6a3a2a 14px, transparent 14px) bottom left / 26px 26px no-repeat, linear-gradient(315deg, #6a3a2a 14px, transparent 14px) bottom right / 26px 26px no-repeat; }
 .gd-cover[data-layout="postcard"] .gd-cover-art::after { content: "ร้านเล็ก ๆ ของเรา"; position: absolute; left: 0; right: 0; bottom: -19px; z-index: 3; pointer-events: none; text-align: center; font: italic 700 11px/16px sans-serif; color: #8a5a3a; }
 
+/* ปกแบบ "dogtag" = ป้ายห้อยคอทหาร โลหะเงินขัดเงา มุมโค้งมาก มีรูกลมด้านบนซ้าย และสร้อยลูกปัดโลหะโค้งออกนอกกรอบ (คู่มือ military-training-leave) */
+.gd-cover[data-layout="dogtag"] .gd-cover-art { overflow: visible; margin-top: 22px; padding: 8px 8px 8px 22px; border-radius: 22px; background: linear-gradient(135deg, #f6f8fa 0%, #c3cad2 45%, #eef1f4 60%, #9aa3ad 100%); box-shadow: inset 0 0 0 1.5px rgba(80,90,100,.45), 0 7px 16px rgba(40,50,60,.25); transform: rotate(2deg); }
+.gd-cover[data-layout="dogtag"] .gd-cover-art .gd-scene { border-radius: 12px; }
+.gd-cover[data-layout="dogtag"] .gd-cover-art::before { content: ""; position: absolute; left: 6px; top: 50%; width: 10px; height: 10px; margin-top: -5px; z-index: 3; pointer-events: none; border-radius: 50%; background: #fffaf0; box-shadow: inset 0 1px 2px rgba(40,50,60,.5); }
+.gd-cover[data-layout="dogtag"] .gd-cover-art::after { content: ""; position: absolute; left: -2px; top: -22px; width: 70%; height: 70px; z-index: 2; pointer-events: none; border: 3px dotted #8a929c; border-color: #8a929c transparent transparent #8a929c; border-radius: 60px 0 0 0; transform: rotate(-6deg); }
+
 /* ปกแบบ "badge" = บัตรพนักงานในซองพลาสติกใส ขอบใสมน มีช่องเจาะรูปแคปซูลด้านบน และสายคล้องสีฟ้าพร้อมตัวหนีบโลหะ (คู่มือ side-job) */
 .gd-cover[data-layout="badge"] .gd-cover-art { overflow: visible; margin-top: 30px; border: 9px solid rgba(225,238,250,.85); border-top-width: 22px; border-radius: 14px; box-shadow: inset 0 0 0 1px rgba(120,150,180,.35), 0 8px 18px rgba(40,60,90,.22); transform: rotate(-2deg); }
 .gd-cover[data-layout="badge"] .gd-cover-art .gd-scene { border-radius: 4px; }
