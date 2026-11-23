@@ -1472,7 +1472,223 @@ var P={
   cell(1,'2','จดวันและเวลา',body(18,'#7a9a3a')+head(18,30,'#6a3a1a')+'<rect x="30" y="36" width="14" height="20" rx="1.5" fill="#fff" stroke="'+ink+'" stroke-width="1"/><path d="M33 41h8M33 45h6M33 49h8" stroke="#9aa4b8" stroke-width="1"/><path d="M26 50l5-2" stroke="#7a9a3a" stroke-width="4" stroke-linecap="round"/><g transform="translate(46 20)"><circle r="8.5" fill="#fff" stroke="'+ink+'" stroke-width="1.3"/><path d="M0 0v-6" stroke="'+ink+'" stroke-width="1.4" stroke-linecap="round"/><g class="cm-spin"><path d="M0 0l4.5 2.4" stroke="#e5484d" stroke-width="1.4" stroke-linecap="round"/></g><circle r="1.2" fill="'+ink+'"/></g>')+
   cell(2,'3','แจ้งเป็นข้อความ',body(18,'#4f6d8f')+head(18,30,'#2a2a2a')+'<path d="M26 48l6-3" stroke="#4f6d8f" stroke-width="4" stroke-linecap="round"/><rect x="31" y="36" width="10" height="18" rx="2" fill="#3a4a55" stroke="'+ink+'" stroke-width="1"/><rect x="33" y="39" width="6" height="12" fill="#e9f6ff"/><g class="cm-pop"><path d="M32 12h22a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3H42l-5 4v-4h-5a3 3 0 0 1-3-3v-9a3 3 0 0 1 3-3z" fill="#d7f5dd" stroke="'+ink+'" stroke-width="1"/><path d="M34 18h14M34 22h9" stroke="#5a8a6a" stroke-width="1.2"/><path d="M47 22l2 2 3-3" stroke="#2e9e5b" stroke-width="1.3" fill="none"/></g>')+
   cell(3,'4','อ่านก่อนเซ็น',body(16,'#b05a7a')+head(16,30,'#5a3a1a','<path d="M14 33.6h4" stroke="'+ink+'" stroke-width="1" stroke-linecap="round"/>')+'<rect x="28" y="26" width="24" height="32" rx="1.5" fill="#fff" stroke="'+ink+'" stroke-width="1"/><path d="M31 31h17M31 35h15M31 39h17M31 43h11" stroke="#9aa4b8" stroke-width="1"/><path d="M31 52h12" stroke="'+ink+'" stroke-width=".8" stroke-dasharray="2 1.5"/><g class="cm-lensmove"><circle cx="44" cy="38" r="6" fill="#bfe7ff" fill-opacity=".45" stroke="'+ink+'" stroke-width="1.5"/><path d="M48 42l5 5" stroke="'+ink+'" stroke-width="2.2" stroke-linecap="round"/></g><g transform="translate(40 12)"><rect x="-13" y="-6" width="26" height="12" rx="3" fill="#fff" stroke="#e5484d" stroke-width="1.1"/><text y="2.2" text-anchor="middle" font-size="5.6" font-weight="900" fill="#e5484d" font-family="sans-serif">เซ็นเลย</text><path d="M-14-7l28 14" stroke="#e5484d" stroke-width="1.5"/></g>')+
-  '<rect x="6" y="80" width="262" height="104" rx="8" fill="url(#scs'+k+')" opacity=".5"/>';}
+  '<rect x="6" y="80" width="262" height="104" rx="8" fill="url(#scs'+k+')" opacity=".5"/>';},
+ // [เครื่องตอกบัตรโลหะยุคโรงงาน] ผนังโรงงานครีม-เขียว แสงลอดหน้าต่าง เครื่องตอกบัตรโครเมียมเงาวาว นาฬิกาเดินจริง คนงานหน้ายิ้มสวมหมวกเสียบบัตร ตู้ช่องบัตร 4 ใบ รายเดือน/รายวัน/พาร์ตไทม์/สัญญาสั้น ป้าย "ทุกใบ = ลูกจ้าง" (น้องม้วนซ้าย)
+ punchclock:function(k){var ink='#262a2f';
+  var card=function(x,y,lab,c,t){return '<g transform="translate('+x+' '+y+')"><rect x="7" y="-27" width="42" height="31" rx="1.2" fill="#fbf6e4" stroke="#a8977a" stroke-width=".8"/><rect x="7" y="-27" width="42" height="6" fill="'+c+'"/><path d="M10-18h36M10-13h36M10-8h36" stroke="#ddd1b5" stroke-width=".7"/><text x="11" y="-3" font-size="4.6" font-weight="700" fill="#7a2d8a" font-family="monospace">'+t+'</text>'+
+   '<rect x="0" y="0" width="56" height="20" rx="2" fill="url(#pcm'+k+')" stroke="#555b62" stroke-width="1"/><path d="M2 1.6h52" stroke="#fff" stroke-width=".9" opacity=".75"/><path d="M2 18.4h52" stroke="#3a3f45" stroke-width=".8" opacity=".5"/><text x="28" y="13.4" text-anchor="middle" font-size="7.4" font-weight="900" fill="#1f252b" font-family="sans-serif">'+lab+'</text></g>';};
+  var ticks='';for(var i=0;i<12;i++){var a=i*Math.PI/6;ticks+='<path d="M'+(29+Math.sin(a)*12.5).toFixed(1)+' '+(20-Math.cos(a)*12.5).toFixed(1)+'L'+(29+Math.sin(a)*(i%3?11.4:10.2)).toFixed(1)+' '+(20-Math.cos(a)*(i%3?11.4:10.2)).toFixed(1)+'" stroke="'+ink+'" stroke-width="'+(i%3?.8:1.4)+'"/>';}
+  return '<defs><linearGradient id="pcw'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4ecd8"/><stop offset="1" stop-color="#e6dbc1"/></linearGradient>'+
+   '<linearGradient id="pcb'+k+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8d949c"/><stop offset=".18" stop-color="#eef2f5"/><stop offset=".42" stop-color="#b7bec6"/><stop offset=".7" stop-color="#f6f8fa"/><stop offset="1" stop-color="#7c838b"/></linearGradient>'+
+   '<linearGradient id="pcm'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dfe4e9"/><stop offset=".5" stop-color="#b9c0c8"/><stop offset="1" stop-color="#9aa2ab"/></linearGradient>'+
+   '<linearGradient id="pcl'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff8dc" stop-opacity=".75"/><stop offset="1" stop-color="#fff8dc" stop-opacity="0"/></linearGradient>'+
+   '<radialGradient id="pcf'+k+'" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#fffef8"/><stop offset="1" stop-color="#ece6d4"/></radialGradient></defs>'+
+  // ผนัง + ผนังล่างสีเขียว + พื้น
+  '<rect width="360" height="180" fill="url(#pcw'+k+')"/><g stroke="#d9cdb1" stroke-width=".6" opacity=".7"><path d="M30 0v120M90 0v120M150 0v120M210 0v120M270 0v120M330 0v120"/></g>'+
+  '<rect y="120" width="360" height="52" fill="#7d9c8a"/><path d="M0 120h360" stroke="#55705f" stroke-width="2.4"/><path d="M0 123h360" stroke="#a9c3b2" stroke-width="1"/>'+
+  '<rect y="172" width="360" height="8" fill="#5c534a"/><path d="M0 172h360" stroke="#3a332c" stroke-width="1.4"/>'+
+  // หน้าต่าง + ลำแสง
+  '<g><rect x="16" y="10" width="62" height="46" rx="2" fill="#bfe0ef" stroke="#6b6458" stroke-width="2"/><path d="M47 10v46M16 33h62" stroke="#6b6458" stroke-width="1.6"/><path d="M20 14l14 0-10 18h-4z" fill="#fff" opacity=".55"/></g>'+
+  '<path d="M18 56L78 56L230 172L110 172z" fill="url(#pcl'+k+')" opacity=".55"/>'+
+  // ตู้ช่องบัตร
+  '<rect x="212" y="88" width="134" height="84" rx="3" fill="#6f767e" stroke="#3d4248" stroke-width="1.4"/><rect x="214" y="90" width="130" height="80" rx="2" fill="#858d95"/>'+
+  '<g>'+card(220,140,'พาร์ตไทม์','#e8833a','IN 17:02')+card(282,140,'สัญญาสั้น','#2e9e5b','IN 08:30')+'</g>'+
+  '<g>'+card(220,106,'รายเดือน','#3b6fd6','IN 08:00')+card(282,106,'รายวัน','#d64545','IN 07:58')+'</g>'+
+    // ป้ายใต้ตู้
+  '<g transform="translate(232 160)"><rect width="94" height="12" rx="2" fill="#1f252b" stroke="#000" stroke-width=".8"/><text x="47" y="9" text-anchor="middle" font-size="7.6" font-weight="900" fill="#ffd84d" font-family="sans-serif">ทุกใบ = ลูกจ้าง</text></g>'+
+  '<circle cx="216" cy="92" r="1.6" fill="#c7ccd2"/><circle cx="342" cy="92" r="1.6" fill="#c7ccd2"/>'+
+  // เครื่องตอกบัตร
+  '<g transform="translate(96 68)">'+
+   '<rect x="20" y="92" width="18" height="12" fill="#5d646c" stroke="'+ink+'" stroke-width="1.2"/><ellipse cx="29" cy="104" rx="20" ry="3" fill="#000" opacity=".22"/>'+
+   '<rect x="-3" y="-5" width="64" height="9" rx="3" fill="#5d646c" stroke="'+ink+'" stroke-width="1.2"/>'+
+   '<rect x="0" y="0" width="58" height="92" rx="6" fill="url(#pcb'+k+')" stroke="#3d4248" stroke-width="1.6"/>'+
+   '<circle cx="29" cy="20" r="16" fill="#4a5159" stroke="'+ink+'" stroke-width="1.2"/><circle cx="29" cy="20" r="14" fill="url(#pcf'+k+')"/>'+ticks+
+   '<path d="M29 20l-5.5-4" stroke="'+ink+'" stroke-width="2" stroke-linecap="round"/>'+
+   '<g transform="translate(29 20)"><g class="cm-spin"><path d="M0 0V-11" stroke="#d64545" stroke-width="1.3" stroke-linecap="round"/></g></g><circle cx="29" cy="20" r="1.6" fill="'+ink+'"/>'+
+   '<path d="M18 9q6-5 14-4" stroke="#fff" stroke-width="2.2" fill="none" opacity=".8" stroke-linecap="round"/>'+
+   '<g class="cm-bob"><rect x="17" y="37" width="24" height="18" rx="1" fill="#fbf6e4" stroke="#a8977a" stroke-width=".8"/><rect x="17" y="37" width="24" height="4" fill="#d64545"/><path d="M20 45h18M20 49h18" stroke="#ddd1b5" stroke-width=".7"/></g>'+
+   '<rect x="7" y="48" width="44" height="13" rx="2" fill="#2c3137" stroke="'+ink+'" stroke-width="1"/><rect x="12" y="51" width="34" height="3" rx="1" fill="#0d1013"/>'+
+   '<rect x="13" y="65" width="32" height="11" rx="1.5" fill="#1b2620" stroke="'+ink+'" stroke-width=".8"/><text x="29" y="73.4" text-anchor="middle" font-size="7.4" font-weight="700" fill="#7cf0a0" font-family="monospace">07:58</text>'+
+   '<rect x="9" y="80" width="40" height="8" rx="1.5" fill="#c9a227" stroke="#7a5f10" stroke-width=".8"/><text x="29" y="86.2" text-anchor="middle" font-size="5.4" font-weight="900" fill="#3a2a05" font-family="sans-serif">บันทึกเวลา</text>'+
+   '<path d="M58 56l9-9" stroke="#3d4248" stroke-width="3" stroke-linecap="round"/><circle cx="68" cy="46" r="4" fill="#d64545" stroke="'+ink+'" stroke-width="1"/><circle cx="66.8" cy="44.8" r="1.2" fill="#fff" opacity=".8"/>'+
+   '<g fill="#5d646c"><circle cx="4" cy="4" r="1.2"/><circle cx="54" cy="4" r="1.2"/><circle cx="4" cy="88" r="1.2"/><circle cx="54" cy="88" r="1.2"/></g></g>'+
+  // คนงาน หันซ้าย เสียบบัตร
+  '<g transform="translate(188 0)" stroke="'+ink+'" stroke-width="1.3" stroke-linejoin="round">'+
+   '<path d="M-9 150h7v21h-7zM2 150h7v21H2z" fill="#2e3f5c"/><path d="M-12 171h11v3h-11zM1 171h11v3H1z" fill="#1a1a1a"/>'+
+   '<path d="M-14 152v-26q0-13 14-13t14 13v26z" fill="#4a7fc1"/><path d="M-8 152v-20h16v20" fill="#2f5d99" stroke-width="1"/><path d="M-8 132l-3-8M8 132l3-8" stroke-width="1"/>'+
+   '<rect x="-6" y="136" width="9" height="6" rx="1" fill="#fbf6e4" stroke-width=".8"/>'+
+   '<path d="M-10 122L-48 112" stroke="#4a7fc1" stroke-width="7" stroke-linecap="round"/><path d="M-10 122L-48 112" stroke="'+ink+'" stroke-width="9" stroke-linecap="round" opacity=".18"/><circle cx="-51" cy="111" r="4" fill="#f2c9a0"/>'+
+   '<path d="M10 124q6 12 0 22" stroke="#4a7fc1" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="9" cy="147" r="3.6" fill="#f2c9a0"/>'+
+   '<circle cx="0" cy="102" r="11.5" fill="#f2c9a0"/><path d="M10 100q3 3 0 6" fill="#e8b88c" stroke-width="1"/>'+
+   '<path d="M-11 98q0-12 12-12q11 0 11 10z" fill="#e8833a"/><path d="M-11 97h-8q-2 2 1 3h8z" fill="#c96a24"/><path d="M-3 88q4-2 8 0" stroke="#fff" stroke-width="1" fill="none" opacity=".6"/>'+
+   '<path d="M-8 100q2-2 4 0M-1 100q2-2 4 0" fill="none" stroke-width="1.1"/>'+
+   '<circle cx="-5.6" cy="103" r="1.3" fill="'+ink+'" stroke="none"/><circle cx="1.4" cy="103" r="1.3" fill="'+ink+'" stroke="none"/>'+
+   '<path d="M-6 108q3 3 7 0" fill="#fff" stroke-width="1.1"/><circle cx="-8.5" cy="106.5" r="2" fill="#f08a8a" opacity=".5" stroke="none"/><circle cx="5" cy="106.5" r="2" fill="#f08a8a" opacity=".5" stroke="none"/></g>'+
+  spark(150,140,.8)+spark(204,90,.7);},
+ // [กระเบื้องลายครามอะซูเลโฆ่] ผนังปูนขาว แผงกระเบื้องเคลือบเงาสีคราม 4 แผ่น วาดด้วยพู่กันคราม: คนหลับวันหยุดสัปดาห์ · พระจันทร์ยิ้มกับกระทง · คนนอนเปลใต้มะพร้าว · คนป่วยอมปรอท ป้ายกระดาษห้อยบอก "ได้ค่าจ้าง" ยกเว้นหยุดสัปดาห์ของรายวัน กระถางต้นไม้แขวน (น้องม้วนขวา)
+ azulejo:function(k){var B='#1d4e9e',W='#7ea3dc';
+  var tile=function(i,lab,art){var x=18+i*62;return '<g transform="translate('+x+' 81)"><rect width="58" height="72" rx="1.5" fill="url(#azt'+k+')" stroke="#c9d3e3" stroke-width=".6"/>'+
+   '<g fill="'+W+'" stroke="'+B+'" stroke-width=".8"><path d="M0 0h9a9 9 0 0 1-9 9z"/><path d="M58 0h-9a9 9 0 0 0 9 9z"/><path d="M0 72h9a9 9 0 0 0-9-9z"/><path d="M58 72h-9a9 9 0 0 1 9-9z"/></g>'+
+   '<rect x="3.5" y="3.5" width="51" height="65" rx="1" fill="none" stroke="'+B+'" stroke-width=".7" stroke-dasharray="2 1.6" opacity=".7"/>'+
+   '<g stroke="'+B+'" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">'+art+'</g>'+
+   '<text x="29" y="64" text-anchor="middle" font-size="6.6" font-weight="900" fill="'+B+'" font-family="sans-serif">'+lab+'</text>'+
+   '<path d="M4 6q10-3 18 2q-10 0-14 10q-3-6-4-12z" fill="#fff" opacity=".65"/></g>';};
+  var tag=function(i,ok,txt){var x=20+i*62,r=[-4,3,-2,4][i];return '<g transform="rotate('+r+' '+(x+25)+' 160)"><path d="M'+(x+25)+' 153v4" stroke="#8a7a5a" stroke-width=".8"/><rect x="'+x+'" y="157" width="54" height="15" rx="3" fill="'+(ok?'#e3f6e6':'#ffe3df')+'" stroke="'+(ok?'#2e7d4a':'#c53a2c')+'" stroke-width="1.1"/><circle cx="'+(x+5)+'" cy="164.5" r="1.4" fill="#fff" stroke="#8a7a5a" stroke-width=".6"/>'+
+   (ok?'<path d="M'+(x+9)+' 164.5l2.4 2.6 4.6-5" stroke="#2e7d4a" stroke-width="1.6" fill="none" stroke-linecap="round"/>':'<path d="M'+(x+9)+' 162l5 5M'+(x+14)+' 162l-5 5" stroke="#c53a2c" stroke-width="1.6" stroke-linecap="round"/>')+
+   '<text x="'+(x+(ok?33.5:34.5))+'" y="167.4" text-anchor="middle" font-size="'+(ok?6.6:6.4)+'" font-weight="900" fill="'+(ok?'#1f5e36':'#9a2a1e')+'" font-family="sans-serif">'+txt+'</text></g>';};
+  return '<defs><linearGradient id="azw'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7f4ec"/><stop offset="1" stop-color="#e8e1d2"/></linearGradient>'+
+   '<linearGradient id="azt'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#f3f6fb"/><stop offset="1" stop-color="#dfe6f2"/></linearGradient>'+
+   '<radialGradient id="azs'+k+'" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#000" stop-opacity=".16"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient></defs>'+
+  '<rect width="360" height="180" fill="url(#azw'+k+')"/>'+
+  '<g fill="#d8cfbd" opacity=".55"><circle cx="40" cy="30" r=".9"/><circle cx="120" cy="18" r="1.1"/><circle cx="200" cy="40" r=".8"/><circle cx="300" cy="120" r="1"/><circle cx="330" cy="70" r=".8"/><circle cx="250" cy="20" r="1"/><circle cx="160" cy="62" r=".7"/></g>'+
+  '<path d="M0 172h360v8H0z" fill="#c8794a"/><path d="M0 172h360" stroke="#8f4f2a" stroke-width="1.2"/><g stroke="#a9603a" stroke-width=".8"><path d="M40 172v8M100 172v8M160 172v8M220 172v8M280 172v8M340 172v8"/></g>'+
+  // เงาแผง + กรอบคราม
+  '<ellipse cx="140" cy="160" rx="134" ry="6" fill="url(#azs'+k+')"/>'+
+  '<rect x="13" y="75" width="254" height="84" rx="3" fill="'+B+'" stroke="#123672" stroke-width="1.2"/>'+
+  '<g fill="none" stroke="#9bbcf0" stroke-width=".9" opacity=".8"><path d="M16 78h248v78H16z"/></g>'+
+  tile(0,'หยุดสัปดาห์',
+   '<path d="M8 48h42M10 48v-14M48 48v-10" fill="none"/><path d="M12 40q6-6 14-4h20v10H12z" fill="'+W+'" fill-opacity=".5"/><path d="M14 44q8-3 16 0t16 0" fill="none" stroke-width="1"/>'+
+   '<ellipse cx="18" cy="34" rx="6" ry="3.6" fill="#fff"/><circle cx="20" cy="29" r="6.5" fill="#fff"/><path d="M14 27q2-9 10-6l3 -4" fill="'+W+'" fill-opacity=".6"/><circle cx="27" cy="17" r="1.6" fill="'+B+'"/>'+
+   '<path d="M16.5 29.5q1.5 1.2 3 0M21 29.5q1.5 1.2 3 0" fill="none" stroke-width="1"/><path d="M18.5 32.6q1.5 1 3 0" fill="none" stroke-width="1"/>'+
+   '<text x="36" y="22" font-size="8" font-weight="900" fill="'+B+'" stroke="none" font-family="sans-serif">Z</text><text x="43" y="15" font-size="6" font-weight="900" fill="'+B+'" stroke="none" font-family="sans-serif">z</text>')+
+  tile(1,'หยุดประเพณี',
+   '<circle cx="40" cy="17" r="8" fill="#fff"/><path d="M44 10a8 8 0 1 0 0 14a10 10 0 0 1 0-14z" fill="'+W+'" fill-opacity=".7" stroke="none"/><circle cx="37.5" cy="16" r=".9" fill="'+B+'"/><path d="M36 19.5q2 1.6 4 0" fill="none" stroke-width="1"/>'+
+   '<path d="M6 46q6-3 12 0t12 0t12 0t10 0" fill="none" stroke-width="1.1"/><path d="M12 40l4 5h18l4-5z" fill="'+W+'" fill-opacity=".6"/><path d="M16 40q2-8 4-10q2 4 4 1q2 4 4-1q2 3 4 10" fill="#fff"/><path d="M25 30v-6" stroke-width="1"/><path d="M25 24q-2-4 0-6q2 2 0 6" fill="'+W+'" stroke-width="1"/>'+
+   '<path d="M6 10l6 6 6-6 6 6" fill="none" stroke-width="1"/>')+
+  tile(2,'พักร้อน',
+   '<circle cx="45" cy="13" r="5" fill="#fff"/><path d="M45 4v-2M53 13h2M51 7l1.6-1.6M51 19l1.6 1.6" stroke-width="1"/>'+
+   '<path d="M14 50q-2-18 4-34" fill="none" stroke-width="1.8"/><path d="M18 16q-8-4-14 2q7-1 14-2zM18 16q4-8 12-6q-7 2-12 6zM18 16q10-1 13 6q-6-4-13-6z" fill="'+W+'" fill-opacity=".7"/>'+
+   '<path d="M17 30q14 14 30 2" fill="none" stroke-width="1"/><path d="M20 32q12 10 26 0q-12 6-26 0z" fill="'+W+'" fill-opacity=".55"/><path d="M47 32v18" stroke-width="1.6"/>'+
+   '<circle cx="28" cy="31" r="5" fill="#fff"/><path d="M24 30.4h3.4M28.6 30.4H32" stroke-width="2" /><path d="M26.4 34q1.6 1.2 3.2 0" fill="none" stroke-width="1"/>'+
+   '<path d="M4 50h50" stroke-width="1"/>')+
+  tile(3,'ลาป่วย',
+   '<path d="M10 52q2-16 19-16t19 16" fill="'+W+'" fill-opacity=".5"/><circle cx="29" cy="26" r="11" fill="#fff"/>'+
+   '<path d="M20 20q9-5 18 0v-4q-9-4-18 0z" fill="'+W+'" fill-opacity=".7"/>'+
+   '<path d="M23 25.5q2-1.6 4 0M31 25.5q2-1.6 4 0" fill="none" stroke-width="1"/><path d="M22.6 22.4l3.6 1M35.4 22.4l-3.6 1" stroke-width="1"/>'+
+   '<path d="M26 31.6q3-1.4 6 0" fill="none" stroke-width="1"/><path d="M31 31l13 4" stroke-width="2.2"/><circle cx="44.5" cy="35.2" r="1.6" fill="'+B+'"/>'+
+   '<path d="M40 12q2 3 0 5q-2-2 0-5z" fill="'+W+'" stroke-width=".9"/>')+
+  tag(0,false,'รายวัน ไม่จ่าย')+tag(1,true,'ได้ค่าจ้าง')+tag(2,true,'ได้ค่าจ้าง')+tag(3,true,'ได้ค่าจ้าง')+
+  // กระถางแขวน
+  '<path d="M252 0v26" stroke="#8a7a5a" stroke-width="1"/><g class="cm-sway2"><path d="M252 26l-12 10M252 26l12 10" stroke="#8a7a5a" stroke-width=".9"/><g transform="translate(-58 0)"><path d="M296 36h28l-4 16h-20z" fill="#c8794a" stroke="#7a4424" stroke-width="1.2"/><path d="M298 40h24" stroke="#e8a27a" stroke-width="1.4"/>'+
+   '<g fill="#5f9e5a" stroke="#2f6a34" stroke-width=".8"><path d="M300 50q-6 10-2 22q2-10 4-20z"/><path d="M302 70q-5 4-3 9q4-3 3-9z"/><path d="M318 50q8 8 6 20q-3-9-8-18z"/><path d="M324 66q4 4 2 9q-4-3-2-9z"/><path d="M308 36q-4-10 4-12q2 7-4 12zM314 36q2-11 10-9q-3 8-10 9z"/></g></g></g>';},
+ // [ภาพแอนะกลิฟ 3 มิติ แว่นแดงฟ้า] กระดาษขาวลายจุด เส้นทุกเส้นแยกเหลื่อมแดง-ฟ้าแบบภาพ 3D ยุค 50 สัญญา "3 เดือน" 4 ฉบับมีช่วง "พัก" คั่น ตลับเมตรดึงยาว "นับรวมทุกช่วง" เด็กใส่แว่น 3D อ้าปากทึ่งชี้ ป้ายดำ "รวมครบ 120 วัน = ได้ค่าชดเชย" (น้องม้วนซ้าย)
+ anaglyph:function(k){var R='#ff3a5c',C='#14b9cd',ink='#1d1d22';
+  var A=function(inner,w,dx){dx=dx||1.8;return '<g style="mix-blend-mode:multiply" fill="none" stroke-width="'+w+'" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(-'+dx+' 0)" stroke="'+R+'">'+inner+'</g><g transform="translate('+dx+' 0)" stroke="'+C+'">'+inner+'</g></g>';};
+  var AT=function(x,y,s,t,dx){dx=dx||1.4;return '<g style="mix-blend-mode:multiply" font-size="'+s+'" font-weight="900" font-family="sans-serif" text-anchor="middle"><text x="'+(x-dx)+'" y="'+y+'" fill="'+R+'">'+t+'</text><text x="'+(x+dx)+'" y="'+y+'" fill="'+C+'">'+t+'</text></g>';};
+  var sheet=function(x){return '<rect x="'+x+'" y="96" width="36" height="34" rx="1.5" fill="#fffdf8"/><g style="mix-blend-mode:multiply"><rect x="'+(x-1.8)+'" y="96" width="36" height="34" rx="1.5" fill="#ffe3e8"/><rect x="'+(x+1.8)+'" y="96" width="36" height="34" rx="1.5" fill="#d9f6fa"/></g>'+
+   A('<rect x="'+x+'" y="96" width="36" height="34" rx="1.5"/><path d="M'+(x+5)+' 114h26M'+(x+5)+' 119h18"/><path d="M'+(x+6)+' 126q3-4 5 0t5 0t5-1"/>',1.1)+
+   AT(x+18,108,8.2,'3 เดือน',.9)+'<text x="'+(x+18)+'" y="108" text-anchor="middle" font-size="8.2" font-weight="900" fill="'+ink+'" font-family="sans-serif">3 เดือน</text>';};
+  var gap=function(x){return A('<path d="M'+x+' 100v28" stroke-dasharray="2 2.4"/>',1,1.2)+'<text x="'+x+'" y="136.4" text-anchor="middle" font-size="6.4" font-weight="900" fill="#6a6a72" font-family="sans-serif">พัก</text>';};
+  var ticks='';for(var i=0;i<=34;i++){var x=148+i*5;ticks+='M'+x+' 139v'+(i%5?2:3.4);}
+  return '<defs><pattern id="agd'+k+'" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r=".7" fill="#d9d2c4"/></pattern>'+
+   '<radialGradient id="agv'+k+'" cx=".55" cy=".45" r=".75"><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".12"/></radialGradient>'+
+   '<linearGradient id="agt'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe066"/><stop offset="1" stop-color="#f5c518"/></linearGradient></defs>'+
+  '<rect width="360" height="180" fill="#f6f2e9"/><rect width="360" height="180" fill="url(#agd'+k+')"/>'+
+  // เส้นพุ่งแบบ 3D
+  '<g opacity=".45">'+A('<path d="M240 104L360 60M240 104L360 150M240 104L200 0M240 104L300 0M240 104L130 180"/>',.8,2.4)+'</g>'+
+  '<rect width="360" height="180" fill="url(#agv'+k+')"/>'+
+  sheet(150)+gap(191)+sheet(196)+gap(237)+sheet(242)+gap(283)+sheet(288)+
+  // ตลับเมตร
+  '<path d="M146 139h172v14H146z" fill="url(#agt'+k+')" stroke="'+ink+'" stroke-width="1.1"/>'+A('<path d="M146 139h172v14H146z"/>',.9,1.6)+
+  '<path d="'+ticks+'" stroke="'+ink+'" stroke-width=".7"/>'+
+  '<text x="232" y="150.2" text-anchor="middle" font-size="7.6" font-weight="900" fill="'+ink+'" font-family="sans-serif" stroke="#ffe066" stroke-width="2.4" paint-order="stroke">นับรวมทุกช่วง</text>'+
+  '<g><circle cx="326" cy="146" r="11" fill="#e04848" stroke="'+ink+'" stroke-width="1.3"/><circle cx="326" cy="146" r="5.6" fill="#f6f2e9" stroke="'+ink+'" stroke-width="1"/><circle cx="326" cy="146" r="2" fill="'+ink+'"/><path d="M318 140.5q4-4 9-3" stroke="#fff" stroke-width="1.4" fill="none" opacity=".7"/></g>'+
+  '<path d="M146 138v16" stroke="'+ink+'" stroke-width="2.2"/>'+
+  // ป้ายผลลัพธ์
+  '<g class="cm-pop"><rect x="150" y="158" width="184" height="17" rx="3" fill="'+ink+'"/>'+A('<rect x="150" y="158" width="184" height="17" rx="3"/>',1,1.8)+
+   '<text x="242" y="170" text-anchor="middle" font-size="8.6" font-weight="900" fill="#fff" font-family="sans-serif">รวมครบ 120 วัน = <tspan fill="#ffd84d">ได้ค่าชดเชย</tspan></text></g>'+
+  // เด็กใส่แว่น 3D
+  '<g stroke="'+ink+'" stroke-width="1.3" stroke-linejoin="round">'+
+   '<path d="M102 176v-24q0-16 18-16t18 16v24z" fill="#ffd84d"/><path d="M110 150h20M108 158h24" stroke="#e0a800" stroke-width="2.2"/>'+
+   '<path d="M134 152L150 132" stroke="#ffd84d" stroke-width="7" stroke-linecap="round"/><path d="M134 152L150 132" stroke="'+ink+'" stroke-width="9" stroke-linecap="round" opacity=".15"/><circle cx="151.5" cy="130" r="3.6" fill="#f0c49a"/><path d="M152 127l4-6" stroke-width="2.6" stroke="#f0c49a" stroke-linecap="round"/>'+
+   '<circle cx="120" cy="118" r="15" fill="#f0c49a"/><path d="M105 116q-1-17 15-17q16 0 16 15q-6-8-16-8q-9 0-15 10z" fill="#3a2418"/><path d="M118 100q6-6 12-2" stroke="#3a2418" stroke-width="2" fill="none"/>'+
+   '<path d="M106 115h28" stroke-width="2"/><rect x="107.5" y="111" width="11" height="8.5" rx="2" fill="'+R+'" fill-opacity=".75" stroke-width="1.6"/><rect x="121.5" y="111" width="11" height="8.5" rx="2" fill="'+C+'" fill-opacity=".75" stroke-width="1.6"/>'+
+   '<path d="M109 108.5q4-3 8-.5M123 108q4-2.5 8 .5" fill="none" stroke-width="1.4"/>'+
+   '<ellipse cx="120" cy="126.5" rx="3.2" ry="4" fill="#8a2a2a"/><circle cx="110" cy="124" r="2.2" fill="#f08a8a" opacity=".55" stroke="none"/><circle cx="130" cy="124" r="2.2" fill="#f08a8a" opacity=".55" stroke="none"/>'+
+   '<path d="M109 113l3 0" stroke="#fff" stroke-width="1" opacity=".8"/><path d="M123 113l3 0" stroke="#fff" stroke-width="1" opacity=".8"/></g>'+
+  A('<circle cx="120" cy="118" r="15"/><path d="M102 176v-24q0-16 18-16t18 16v24"/>',.9,2.2)+
+  // ดาวประกาย 3D
+  AT(141,101,12,'!',1.6);},
+ // [ลายรดน้ำ ทองบนพื้นรักดำ] แผ่นไม้ลงรักดำเงา ลายเส้นทองแบบตู้พระธรรม กรอบทองซ้อน ลายกนกเปลวมุม ดอกพิกุลทองโปรย ซ้าย: ลูกจ้างลายเส้นทองยิ้มถือป้าย "ทำ 2 ปี" ขวา: แผ่นจารึกทอง ค่าจ้างวันละ 400 × 90 วัน = 36,000 บาท (น้องม้วนกลาง)
+ lacquergold:function(k){var G='url(#lqg'+k+')',g1='#e9c25a',g2='#a8781f';
+  var kanok=function(x,y,s,r){return '<g transform="translate('+x+' '+y+') rotate('+r+') scale('+s+')" fill="none" stroke="'+g1+'" stroke-width="1.2" stroke-linecap="round"><path d="M0 0q4-12-2-22q12 6 8 22q6-6 6-14q6 12-4 18q8 0 12-6q0 10-14 10z" fill="'+g2+'" fill-opacity=".35"/><path d="M2 -2q2-8-1-14M6 -2q4-4 4-9"/><circle cx="-4" cy="6" r="2" fill="'+g1+'"/></g>';};
+  var flower=function(x,y,s){return '<g transform="translate('+x+' '+y+') scale('+s+')" fill="'+g1+'" opacity=".75"><circle r="1.2"/><ellipse cx="0" cy="-2.6" rx="1.1" ry="1.8"/><ellipse cx="0" cy="2.6" rx="1.1" ry="1.8"/><ellipse cx="-2.6" cy="0" rx="1.8" ry="1.1"/><ellipse cx="2.6" cy="0" rx="1.8" ry="1.1"/></g>';};
+  var fl='';[[90,72,.9],[150,86,.7],[214,80,.8],[196,150,.7],[60,118,.8],[30,60,1],[340,58,.8],[300,176,.7],[180,30,.7],[110,20,.8],[250,22,.7],[22,150,.6]].forEach(function(v){fl+=flower(v[0],v[1],v[2]);});
+  return '<defs><radialGradient id="lqb'+k+'" cx=".5" cy=".45" r=".8"><stop offset="0" stop-color="#2e1912"/><stop offset=".6" stop-color="#170c08"/><stop offset="1" stop-color="#0a0504"/></radialGradient>'+
+   '<linearGradient id="lqg'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0b0"/><stop offset=".45" stop-color="#e9c25a"/><stop offset="1" stop-color="#a8781f"/></linearGradient>'+
+   '<linearGradient id="lqs'+k+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff6d0" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>'+
+   '<clipPath id="lqc'+k+'"><rect x="222" y="90" width="114" height="77" rx="3"/></clipPath></defs>'+
+  '<rect width="360" height="180" fill="url(#lqb'+k+')"/><path d="M0 0h360v40q-180 22-360 0z" fill="#fff" opacity=".04"/>'+
+  '<rect x="5" y="5" width="350" height="170" rx="6" fill="none" stroke="'+g2+'" stroke-width="1.4"/><rect x="9" y="9" width="342" height="162" rx="4" fill="none" stroke="'+g1+'" stroke-width=".7" stroke-dasharray="1 2.4"/>'+
+  fl+kanok(18,170,.9,-20)+kanok(342,170,.9,20)+kanok(20,16,.8,200)+kanok(340,16,.8,160)+
+  // ซ้าย: ลูกจ้างลายเส้นทอง
+  '<g stroke="'+g1+'" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">'+
+   '<path d="M88 172v-34q0-22 20-22t20 22v34" fill="#2a1710"/><path d="M100 117l8 9 8-9" fill="none"/><path d="M108 126v20" stroke-width=".8"/><circle cx="108" cy="150" r="1" fill="'+g1+'"/><circle cx="108" cy="158" r="1" fill="'+g1+'"/><path d="M114 154h8v6h-8z" fill="none" stroke-width=".8"/><path d="M92 150q16 6 32 0M94 162q14 5 28 0" fill="none" stroke-width=".8" opacity=".8"/>'+
+   '<circle cx="108" cy="100" r="12" fill="#2a1710"/><path d="M95 95q0-15 13-15t13 15z" fill="'+g2+'" fill-opacity=".55"/><path d="M91 95.5h34" stroke-width="2.2"/><path d="M108 80v-1M104 82q4-4 8 0" fill="none" stroke-width="1"/><path d="M102 86v8M114 86v8" stroke-width=".8" opacity=".8"/>'+
+   '<path d="M101 99q2-1.8 4 0M111 99q2-1.8 4 0" fill="none" stroke-width="1.1"/><path d="M102 103.5q1.6 1.2 3 0M111 103.5q1.6 1.2 3 0" fill="none" stroke-width="1"/><path d="M104 107q4 3 8 0" fill="none" stroke-width="1.1"/>'+
+   ''+
+   '<rect x="92" y="128" width="32" height="18" rx="2" fill="#1a0d08" stroke-width="1.2"/><text x="108" y="140.4" text-anchor="middle" font-size="8" font-weight="900" fill="'+G+'" stroke="none" font-family="sans-serif">ทำ 2 ปี</text>'+
+   '<path d="M89 132q-4 8 3 12M127 132q4 8-3 12" fill="none" stroke-width="5" stroke="#2a1710"/><path d="M89 132q-4 8 3 12M127 132q4 8-3 12" fill="none" stroke-width="1.2"/><circle cx="92" cy="144" r="2.6" fill="#2a1710"/><circle cx="124" cy="144" r="2.6" fill="#2a1710"/></g>'+
+  // ขวา: แผ่นจารึก
+  '<rect x="216" y="84" width="126" height="89" rx="5" fill="#120805" stroke="'+g2+'" stroke-width="1.6"/><rect x="220" y="88" width="118" height="81" rx="3.5" fill="none" stroke="'+g1+'" stroke-width="1"/>'+
+  '<g font-family="sans-serif" text-anchor="middle" font-weight="900">'+
+   '<text x="279" y="101" font-size="9" fill="'+G+'">ค่าจ้างวันละ 400</text>'+
+   '<text x="279" y="117" font-size="11" fill="'+G+'">× 90 วัน</text>'+
+   '<path d="M239 123h80" stroke="'+g1+'" stroke-width="1"/><circle cx="279" cy="123" r="2" fill="'+g1+'"/>'+
+   '<text x="279" y="142" font-size="13" fill="#ffe48c">= 36,000 บาท</text>'+
+   '<text x="279" y="158" font-size="7" font-weight="700" fill="#caa055">อายุงาน 1 ปี แต่ไม่ครบ 3 ปี</text></g>'+
+  '<g clip-path="url(#lqc'+k+')"><g transform="skewX(-14)"><rect class="cm-flash" x="262" y="90" width="18" height="77" fill="url(#lqs'+k+')"/></g></g>'+
+  spark(330,94,.7)+spark(232,160,.6)+spark(140,104,.6);},
+ // [ไดโอรามาในกล่องกระดาษลัง] กล่องลังเปิดหน้า ผนังในทาสีฟ้า ก้อนเมฆกับพระอาทิตย์กระดาษห้อยเชือก หญ้ากระดาษ ตุ๊กตากระดาษตั้งบนฐานพับ: บาริสต้าพาร์ตไทม์หน้ายิ้มใต้ร่มกระดาษ "ประกันสังคม" ถือบัตร "ผู้ประกันตน" ปฏิทิน "ภายใน 30 วัน" นายจ้างผูกเนกไทถือแบบฟอร์ม เทปกาวแปะมุมกล่อง (น้องม้วนขวา)
+ diorama:function(k){var ink='#3a2a1a',kr='#c89b67';
+  var stand=function(x,w){return '<ellipse cx="'+(x+3)+'" cy="158" rx="'+(w*.6)+'" ry="2.6" fill="#000" opacity=".18"/><path d="M'+(x-w/2)+' 156h'+w+'l-3 3h'+(-w+6)+'z" fill="#f4ecdc" stroke="'+ink+'" stroke-width=".8"/>';};
+  return '<defs><linearGradient id="dmw'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9e3d8"/><stop offset="1" stop-color="#d9d0c1"/></linearGradient>'+
+   '<linearGradient id="dms'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fd0f0"/><stop offset="1" stop-color="#e2f4fb"/></linearGradient>'+
+   '<linearGradient id="dml'+k+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9c7448"/><stop offset="1" stop-color="#b98b5a"/></linearGradient>'+
+   '<linearGradient id="dmr'+k+'" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#8a6440"/><stop offset="1" stop-color="#ad8052"/></linearGradient>'+
+   '<linearGradient id="dmt'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6e4f30"/><stop offset="1" stop-color="#8f6a42"/></linearGradient>'+
+   '<radialGradient id="dmv'+k+'" cx=".5" cy=".45" r=".7"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#2a1a0a" stop-opacity=".28"/></radialGradient></defs>'+
+  // ผนังห้อง + โต๊ะไม้
+  '<rect width="360" height="180" fill="url(#dmw'+k+')"/><rect y="160" width="360" height="20" fill="#b07a4a"/><path d="M0 160h360" stroke="#7a4f2a" stroke-width="1.4"/><g stroke="#9a6638" stroke-width=".7" opacity=".7"><path d="M0 167q90-3 180 0t180 0M0 174q100 2 200-1t160 1"/></g>'+
+  '<ellipse cx="142" cy="170" rx="132" ry="5" fill="#000" opacity=".18"/>'+
+  // ภายในกล่อง
+  '<path d="M20 64h242l-20 12H40z" fill="url(#dmt'+k+')"/>'+
+  '<rect x="40" y="76" width="202" height="70" fill="url(#dms'+k+')"/>'+
+  '<g fill="#fff" opacity=".85"><path d="M150 96q0-7 8-7q3-6 10-4q8-1 9 6q7 0 7 5z"/><path d="M52 132q0-5 6-5q3-5 9-3q6 0 6 5q5 0 5 3z" opacity=".7"/></g>'+
+  '<path d="M20 64l20 12v70l-20 18z" fill="url(#dml'+k+')"/><path d="M262 64l-20 12v70l20 18z" fill="url(#dmr'+k+')"/>'+
+  '<path d="M20 164l20-18h202l20 18z" fill="#8fc77a"/><g stroke="#5f9e4a" stroke-width="1" stroke-linecap="round"><path d="M50 160l2-5M70 162l1-5M150 162l2-6M200 161l1-5M236 160l2-5M120 152l1-4M180 151l1-4"/></g>'+
+  // ของห้อยเชือก
+  '<path d="M214 76v10" stroke="#777" stroke-width=".7"/><g class="cm-pend"><path d="M214 86v1" stroke="#777"/><circle cx="214" cy="94" r="7" fill="#ffcf3f" stroke="'+ink+'" stroke-width="1"/><g stroke="#f2a600" stroke-width="1.6" stroke-linecap="round"><path d="M214 83v-2M223 94h2M203 94h2M221 87l1.4-1.4M207 87l-1.4-1.4"/></g><path d="M211 93.4h.1M217 93.4h.1" stroke="'+ink+'" stroke-width="1.8" stroke-linecap="round"/><path d="M211.4 96.6q2.6 2 5.2 0" fill="none" stroke="'+ink+'" stroke-width=".9"/></g>'+
+  '<path d="M64 76v8" stroke="#777" stroke-width=".7"/><g class="cm-pend" style="animation-delay:.7s"><path d="M52 94q0-6 7-6q3-5 9-3q7 0 7 6q5 0 5 4H50q-2 0 2-1z" fill="#fff" stroke="#9bb3c4" stroke-width="1"/></g>'+
+  // ร่มกระดาษ + บาริสต้า
+  stand(104,30)+
+  '<g stroke="'+ink+'" stroke-width="1.1" stroke-linejoin="round">'+
+   '<path d="M104 96v58" stroke-width="1.6"/><path d="M104 154q0 5 5 5" fill="none" stroke-width="1.6"/>'+
+   '<path d="M60 116q4-24 44-24t44 24q-5-4-11 0q-5-4-11 0q-5-4-11 0q-5-4-11 0q-5-4-11 0q-5-4-11 0q-6-4-11 0z" fill="#2fa59a"/>'+
+   '<path d="M82 114q2-18 22-22M126 114q-2-18-22-22M104 92v20" fill="none" stroke="#1d7a70" stroke-width=".9"/>'+
+   '<path d="M66 109q38-14 76 0" fill="none" stroke="#fff" stroke-width="7" opacity=".9"/><text x="104" y="107.6" text-anchor="middle" font-size="7" font-weight="900" fill="#1d6a62" stroke="none" font-family="sans-serif">ประกันสังคม</text>'+
+   '<path d="M90 156v-18q0-10 12-10t12 10v18z" fill="#fff"/><path d="M94 156v-20h16v20z" fill="#8a5a36"/><path d="M96 134l6 4 6-4" fill="none" stroke="#fff" stroke-width=".8"/>'+
+   '<circle cx="102" cy="120" r="8.5" fill="#f1c9a2"/><path d="M93.5 118q1-10 8.5-10q8 0 9 9q-4-4-9-4t-8.5 5z" fill="#2b1c14"/><path d="M93 116h-4l2 2" fill="#2b1c14"/>'+
+   '<circle cx="99" cy="121" r="1.1" fill="'+ink+'" stroke="none"/><circle cx="105" cy="121" r="1.1" fill="'+ink+'" stroke="none"/><path d="M99.5 124.4q2.5 2 5 0" fill="none" stroke-width=".9"/><circle cx="96.6" cy="123.6" r="1.4" fill="#f29a8a" opacity=".6" stroke="none"/><circle cx="107.4" cy="123.6" r="1.4" fill="#f29a8a" opacity=".6" stroke="none"/>'+
+   '<path d="M112 136l8-4" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M112 136l8-4" fill="none"/>'+
+   '<g transform="rotate(-6 138 132)"><rect x="118" y="124" width="48" height="16" rx="2" fill="#fff8e6"/><rect x="118" y="124" width="9" height="16" rx="2" fill="#2fa59a" stroke="none"/><circle cx="122.5" cy="130" r="2.2" fill="#fff" stroke="none"/><text x="146.5" y="134.6" text-anchor="middle" font-size="6.4" font-weight="900" fill="'+ink+'" stroke="none" font-family="sans-serif">ผู้ประกันตน</text></g>'+
+   '<circle cx="120" cy="132" r="2.6" fill="#f1c9a2"/></g>'+
+  // ปฏิทิน 30 วัน
+  stand(186,24)+
+  '<g stroke="'+ink+'" stroke-width="1.1"><path d="M186 156v-16" stroke-width="1.6"/><g transform="rotate(3 186 120)"><rect x="166" y="100" width="40" height="40" rx="2" fill="#fff"/><rect x="166" y="100" width="40" height="11" rx="2" fill="#e5484d"/><circle cx="174" cy="100" r="1.6" fill="#fff"/><circle cx="198" cy="100" r="1.6" fill="#fff"/>'+
+   '<text x="186" y="108.6" text-anchor="middle" font-size="6.6" font-weight="900" fill="#fff" stroke="none" font-family="sans-serif">ภายใน</text><text x="186" y="128" text-anchor="middle" font-size="15" font-weight="900" fill="'+ink+'" stroke="none" font-family="sans-serif">30</text><text x="186" y="136.6" text-anchor="middle" font-size="6.4" font-weight="800" fill="#6a5a4a" stroke="none" font-family="sans-serif">วัน</text></g></g>'+
+  // นายจ้าง
+  stand(226,22)+
+  '<g stroke="'+ink+'" stroke-width="1.1" stroke-linejoin="round"><path d="M215 156v-16q0-10 11-10t11 10v16z" fill="#3f5a7a"/><path d="M222 131l4 4 4-4" fill="#fff"/><path d="M226 135l-1.6 3 1.6 9 1.6-9z" fill="#e5484d" stroke-width=".7"/>'+
+   '<circle cx="226" cy="121" r="8" fill="#f1c9a2"/><path d="M218 119q0-9 8-9t8 8q-3-4-8-4t-8 5z" fill="#5a5a5a"/><circle cx="223.2" cy="122" r="1" fill="'+ink+'" stroke="none"/><circle cx="228.8" cy="122" r="1" fill="'+ink+'" stroke="none"/><path d="M223.6 125.4q2.4 1.4 4.8 0" fill="none" stroke-width=".9"/>'+
+   '<path d="M216 138l-6 4" stroke="#3f5a7a" stroke-width="4.6" stroke-linecap="round"/><g transform="rotate(-10 206 142)"><rect x="198" y="134" width="13" height="17" rx="1" fill="#fff"/><path d="M200 138h9M200 141h9M200 144h6" stroke="#9aa4b8" stroke-width=".7"/></g><circle cx="209" cy="143" r="2.2" fill="#f1c9a2"/></g>'+
+  // แสงเงาในกล่อง
+  '<path d="M20 64h242v100H20z" fill="url(#dmv'+k+')"/>'+
+  // ขอบกล่องด้านหน้า
+  '<path fill-rule="evenodd" d="M14 58h254v112H14zM20 64v100h242V64z" fill="'+kr+'" stroke="#6e4c2c" stroke-width="1.2"/>'+
+  '<path d="M16 61h250" stroke="#e2c091" stroke-width="1" stroke-dasharray="2 1.4"/><path d="M16 167h250" stroke="#a37848" stroke-width="1" stroke-dasharray="2 1.4"/>'+
+  '<g transform="rotate(-32 26 64)"><rect x="8" y="58" width="36" height="11" fill="#f3e3a6" opacity=".9"/><path d="M8 58v11M44 58v11" stroke="#d9c37a" stroke-width="1" stroke-dasharray="1.4 1.2"/></g>'+
+  '<g transform="rotate(28 258 166)"><rect x="240" y="160" width="34" height="10" fill="#f3e3a6" opacity=".9"/></g>';}
 };
 var BG={
  cradle:'<g opacity=".7">'+[[210,20,1],[250,40,.7],[300,16,1.1],[336,46,.8]].map(function(v){return '<path transform="translate('+v[0]+' '+v[1]+') scale('+v[2]+')" d="M0-7l2 5 5 .8-3.6 3.4.8 5L0 4.6-4.2 7.2-3.4 2.2-7-1.2-2-2z" fill="#ffd84d" stroke="#3a2a12" stroke-width="1"/>';}).join('')+'</g><path d="M190 176q40-14 80-4t90-6v10z" fill="#f6c6d8" opacity=".8"/>',
