@@ -166,6 +166,7 @@
 .gd-cover[data-bg="groovy"] { background: linear-gradient(135deg, #fff1db, #f7d9b0); border-color: #ebc28a; }
 .gd-cover[data-bg="conveyor"] { background: linear-gradient(135deg, #eaf4ff, #dbe9f8); border-color: #bcd3ee; }
 .gd-cover[data-bg="shutter"] { background: linear-gradient(135deg, #fff1df, #ffd9b5); border-color: #f2c08e; }
+.gd-cover[data-bg="chess"] { background: linear-gradient(135deg, #efeaf7, #e0d6ef); border-color: #cfc2e4; }
 .gd-cover[data-bg="leave"] { background: linear-gradient(135deg, #e6f6ff, #c7e8fb); border-color: #9fd0e6; }
 .gd-cover[data-bg="condo"] { background: linear-gradient(135deg, #fff1dc, #f7d9b3); border-color: #ecc690; }
 
@@ -700,3 +701,22 @@
 @keyframes cmSeg { 0%, 90% { opacity: 1; } 95% { opacity: .4; } }
 @keyframes cmNet { 0%, 40%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.35); } 65% { transform: scaleY(.9); } }
 @keyframes cmFall { 0% { transform: translateY(-40px); opacity: 0; } 15% { opacity: 1; } 50% { transform: translateY(26px); } 65% { transform: translateY(12px); } 80%, 100% { transform: translateY(22px); opacity: 1; } }
+
+/* ===== ปกแบบซองจดหมาย (coverLayout: "envelope"): ภาพสอดอยู่ในซอง มีฝาซองสามเหลี่ยมด้านหลัง ===== */
+.gd-cover[data-layout="envelope"] .gd-cover-art { flex-basis: 132px; height: 148px; overflow: visible; border: 0; border-radius: 6px; margin-top: 22px; box-shadow: 0 0 0 5px #fff, 0 10px 18px rgba(60, 40, 90, .2); }
+.gd-cover[data-layout="envelope"] .gd-cover-art::before { content: ""; position: absolute; left: -5px; right: -5px; top: -30px; height: 34px; background: #d9cdf0; clip-path: polygon(0 100%, 50% 0, 100% 100%); z-index: -1; }
+.gd-cover[data-layout="envelope"] .gd-cover-art .gd-scene { border-radius: 6px; }
+.gd-cover[data-layout="envelope"] { gap: 16px; }
+/* ของขยับชุดใหม่ (ข้อบังคับ/วินัย) */
+.gd-scene .sc-piece { transform-box: fill-box; transform-origin: 50% 100%; animation: scPiece 3s ease-in-out infinite; }
+.gd-cm .cm-tab { animation: cmTab 4s ease-out infinite; }
+.gd-cm .cm-move { animation: cmMove 5s ease-in-out infinite; }
+.gd-cm .cm-progress { transform-box: fill-box; transform-origin: 0 50%; animation: cmProgress 5s linear infinite; }
+.gd-cm .cm-card { transform-box: fill-box; transform-origin: 50% 100%; animation: cmCard 2.4s ease-out infinite; }
+.gd-cm .cm-magnet { animation: cmDraw2 3.6s ease-out infinite; stroke-dasharray: 80; }
+@keyframes scPiece { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+@keyframes cmTab { 0% { transform: translateX(-10px); opacity: 0; } 20%, 100% { transform: translateX(0); opacity: 1; } }
+@keyframes cmMove { 0%, 15% { transform: translateX(0); } 40%, 55% { transform: translateX(78px); } 80%, 100% { transform: translateX(156px) translateY(28px); } }
+@keyframes cmProgress { 0% { transform: scaleX(0); } 100% { transform: scaleX(1); } }
+@keyframes cmCard { 0% { transform: translateY(24px) rotate(-14deg); opacity: 0; } 30%, 100% { transform: translateY(0) rotate(4deg); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .gd-cm .cm-tab, .gd-cm .cm-card { opacity: 1; } }
