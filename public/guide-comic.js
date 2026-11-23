@@ -904,7 +904,43 @@ var P={
   '<g fill="#1f1f1f"><rect x="52" y="116" width="120" height="7" rx="1"/><rect x="52" y="160" width="90" height="7" rx="1"/></g>'+
   '<text x="52" y="138" font-size="8" font-weight="700" fill="#3b3b3b" font-family="sans-serif">ข้อ 7: ลาออกต้องจ่ายค่าปรับ 5 เท่าของเงินเดือน</text>'+
   '<path class="cm-redact" d="M50 136h170" stroke="#e0453a" stroke-width="2.6" stroke-linecap="round" pathLength="100" stroke-dasharray="100"/>'+
-  '<text x="150" y="152" font-size="8.5" font-weight="900" fill="#e0453a" font-family="sans-serif" class="cm-type" style="animation-delay:1.4s">ใช้ได้เท่าที่เป็นธรรม</text>';}
+  '<text x="150" y="152" font-size="8.5" font-weight="900" fill="#e0453a" font-family="sans-serif" class="cm-type" style="animation-delay:1.4s">ใช้ได้เท่าที่เป็นธรรม</text>';},
+ // ===== ปิดกิจการ/ล้มละลาย — 5 สไตล์ใหม่: หนังสือพิมพ์เก่า / การ์ดพยากรณ์อากาศ / ป้ายคนแบบพิกโตแกรม / ตัวเลข LED / ตาข่ายนิรภัยละครสัตว์ =====
+ // [หนังสือพิมพ์เก่า] กระดาษเหลือง หัวข่าวตัวโต คอลัมน์ข่าว ตรายาง "= เลิกจ้าง" กระแทก (น้องม้วนกลาง)
+ newspaper:function(k){var col=function(x,y,n){var s='';for(var i=0;i<n;i++)s+='<path d="M'+x+' '+(y+i*6)+'h'+(i%4==3?34:48)+'" stroke="#9c9282" stroke-width="2"/>';return s;};
+  return '<defs><filter id="np'+k+'" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="1" seed="2"/><feColorMatrix values="0 0 0 0 .4  0 0 0 0 .32  0 0 0 0 .18  0 0 0 .08 0"/></filter></defs>'+
+  '<rect width="360" height="180" fill="#efe6cf"/><rect width="360" height="180" filter="url(#np'+k+')"/>'+
+  '<g transform="rotate(-2 180 130)"><rect x="18" y="80" width="324" height="96" fill="#f8f1dc" stroke="#7a705e" stroke-width="1.4"/><path d="M26 92h308" stroke="#2b2620" stroke-width="2"/>'+
+  '<text x="80" y="88" text-anchor="middle" font-size="7" font-weight="900" fill="#2b2620" font-family="serif">ข่าวแรงงานรายวัน</text>'+
+  '<text x="88" y="112" text-anchor="middle" font-size="16" font-weight="900" fill="#1c1813" font-family="serif">ปิดกิจการ!</text>'+col(30,122,8)+col(84,122,8)+
+  '<rect x="244" y="98" width="88" height="54" fill="#d9cfb6" stroke="#7a705e" stroke-width="1"/><path d="M252 140l18-20 14 12 16-22 24 30z" fill="#a59a82"/>'+col(244,158,3)+'</g>'+
+  '<g transform="translate(288 120) rotate(-12)"><g class="cm-stampin"><rect x="-44" y="-15" width="88" height="30" rx="4" fill="none" stroke="#c0392b" stroke-width="3"/><text y="6" text-anchor="middle" font-size="13" font-weight="900" fill="#c0392b" font-family="sans-serif">= เลิกจ้าง</text></g></g>';},
+ // [การ์ดพยากรณ์อากาศ] วิดเจ็ตสภาพอากาศ "หยุดชั่วคราว" เมฆลอย แถบความชื้น 75% (น้องม้วนซ้าย)
+ forecast:function(k){return '<defs><linearGradient id="fc'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6aa8ff"/><stop offset="1" stop-color="#3d6fd6"/></linearGradient></defs><rect width="360" height="180" fill="#eaf2ff"/>'+
+  '<rect x="112" y="90" width="232" height="84" rx="18" fill="url(#fc'+k+')"/>'+
+  '<g class="cm-cloud"><g transform="translate(150 124)" fill="#fff"><circle r="12"/><circle cx="12" cy="-6" r="14"/><circle cx="26" r="11"/><rect x="0" y="0" width="26" height="11"/></g></g><circle cx="140" cy="112" r="9" fill="#ffd84d"/>'+
+  '<text x="208" y="112" font-size="9" font-weight="800" fill="#e6efff" font-family="sans-serif">วันนี้: หยุดกิจการชั่วคราว</text><text x="208" y="134" font-size="20" font-weight="900" fill="#fff" font-family="sans-serif">75%</text><text x="256" y="134" font-size="8" font-weight="800" fill="#e6efff" font-family="sans-serif">ของค่าจ้าง</text>'+
+  '<rect x="208" y="146" width="120" height="8" rx="4" fill="#2c57b0"/><rect class="cm-rainbar" x="208" y="146" width="90" height="8" rx="4" fill="#9fe0ff"/>'+
+  '<text x="208" y="168" font-size="7.5" font-weight="700" fill="#e6efff" font-family="sans-serif">ต้องแจ้งล่วงหน้า 3 วันทำการ</text>';},
+ // [พิกโตแกรม] คนสัญลักษณ์เข้าคิว ลูกจ้างอยู่หัวแถวคู่กับภาษีอากร ป้ายลำดับ (น้องม้วนขวา)
+ queue:function(k){var man=function(x,c,lab,d){return '<g transform="translate('+x+' 160)"><g class="cm-queue" style="animation-delay:'+d+'s"><circle cy="-46" r="7" fill="'+c+'"/><path d="M-9-36h18l3 22h-5v14h-5v-14h-4v14h-5v-14h-5z" fill="'+c+'"/></g><text y="14" text-anchor="middle" font-size="7.5" font-weight="900" fill="#2a2f3a" font-family="sans-serif">'+lab+'</text></g>';};
+  return '<rect width="360" height="180" fill="#f7f7f2"/><path d="M0 160h360" stroke="#2a2f3a" stroke-width="2"/><g stroke="#e3e3da" stroke-width="1"><path d="M0 40h360M0 80h360M0 120h360"/></g>'+
+  '<rect x="20" y="92" width="40" height="68" rx="4" fill="#2a2f3a"/><rect x="26" y="98" width="28" height="16" rx="2" fill="#7cd3a4"/><text x="40" y="110" text-anchor="middle" font-size="8" font-weight="900" fill="#0f3d26" font-family="sans-serif">จ่าย</text>'+
+  '<rect x="81" y="88" width="40" height="18" rx="9" fill="#ffd84d" stroke="#2a2f3a" stroke-width="1.6"/><text x="101" y="100" text-anchor="middle" font-size="7.5" font-weight="900" fill="#2a2f3a" font-family="sans-serif">ลำดับต้น</text>'+
+  man(84,'#e8791a','ลูกจ้าง',0)+man(118,'#5a6a86','ภาษีอากร',0)+man(170,'#b4bccb','เจ้าหนี้ทั่วไป',.3)+man(210,'#b4bccb','',.6)+man(244,'#b4bccb','',.9);},
+ // [ตัวเลข LED 7 ส่วน] นาฬิกานับถอยหลัง "60" วัน ไฟแดงกะพริบ จุดคั่นเต้น (น้องม้วนซ้าย)
+ ledcount:function(k){var seg=function(x,on){var S={a:'M4 0h16l-3 3H7z',b:'M21 1l3 3v14l-3 2-2-2V4z',c:'M21 22l3 2v14l-3 3-2-3V24z',d:'M4 42h16l-3-3H7z',e:'M3 22l2 2v14l-2 3-3-3V24z',f:'M3 1l2 3v14l-2 2-3-2V4z',g:'M4 21l3-2h10l3 2-3 2H7z'};var o='';for(var s in S)o+='<path d="'+S[s]+'" fill="'+(on.indexOf(s)>=0?'#ff4d4d':'#3a1a1a')+'"/>';return '<g transform="translate('+x+' 104)">'+o+'</g>';};
+  return '<rect width="360" height="180" fill="#20242c"/><rect x="118" y="92" width="190" height="66" rx="10" fill="#0c0d10" stroke="#3a3f4a" stroke-width="3"/>'+
+  '<g class="cm-seg">'+seg(136,'acdefg')+seg(166,'abcdef')+'</g><g class="cm-blink"><circle cx="198" cy="116" r="2.6" fill="#ff4d4d"/><circle cx="198" cy="132" r="2.6" fill="#ff4d4d"/></g>'+
+  '<text x="216" y="126" font-size="13" font-weight="900" fill="#ff8080" font-family="sans-serif">วัน</text><text x="216" y="142" font-size="7.5" font-weight="800" fill="#c9cdd6" font-family="sans-serif">ยื่นขอรับชำระหนี้</text>'+
+  '<text x="213" y="172" text-anchor="middle" font-size="7.5" font-weight="800" fill="#8a93a6" font-family="sans-serif">2 เดือนนับแต่โฆษณาคำสั่งพิทักษ์ทรัพย์เด็ดขาด</text>';},
+ // [ละครสัตว์ ตาข่ายนิรภัย] เต็นท์ลายทาง ตาข่ายรับคนตกลงมาแล้วเด้ง ป้าย "กองทุนสงเคราะห์ลูกจ้าง" (น้องม้วนขวา)
+ safetynet:function(k){var stripes='';for(var i=0;i<12;i++)stripes+='<path d="M'+(i*30)+' 0h15l-30 80h-15z" fill="#ffffff" opacity=".9"/>';
+  var net='';for(var x=40;x<=230;x+=14)net+='<path d="M'+x+' 140l7 20" stroke="#7a5a3a" stroke-width="1.2"/><path d="M'+(x+14)+' 140l-7 20" stroke="#7a5a3a" stroke-width="1.2"/>';
+  return '<rect width="360" height="180" fill="#ffe4e4"/><g>'+'<rect width="360" height="80" fill="#e85a6a"/>'+stripes+'</g><path d="M0 80q30 14 60 0t60 0 60 0 60 0 60 0 60 0" fill="#e85a6a"/>'+
+  '<g class="cm-net"><path d="M36 140q100 30 200 0" fill="none" stroke="#7a5a3a" stroke-width="2.4"/><path d="M36 160q100 14 200 0" fill="none" stroke="#7a5a3a" stroke-width="2"/>'+net+'</g><path d="M36 136v40M236 136v40" stroke="#5a3a1a" stroke-width="4"/>'+
+  '<g class="cm-fall"><g transform="translate(136 120)"><circle r="9" fill="#f4c542" stroke="#3a2a12" stroke-width="1.8"/><text y="3.5" text-anchor="middle" font-size="9" font-weight="900" fill="#8a5a08" font-family="sans-serif">฿</text></g></g>'+
+  '<g transform="translate(136 100)"><rect x="-58" y="-11" width="116" height="18" rx="9" fill="#fff" stroke="#3a2a12" stroke-width="1.6"/><text y="2" text-anchor="middle" font-size="7.8" font-weight="900" fill="#b2302a" font-family="sans-serif">กองทุนสงเคราะห์ลูกจ้าง</text></g>';}
 };
 var BG={
  cradle:'<g opacity=".7">'+[[210,20,1],[250,40,.7],[300,16,1.1],[336,46,.8]].map(function(v){return '<path transform="translate('+v[0]+' '+v[1]+') scale('+v[2]+')" d="M0-7l2 5 5 .8-3.6 3.4.8 5L0 4.6-4.2 7.2-3.4 2.2-7-1.2-2-2z" fill="#ffd84d" stroke="#3a2a12" stroke-width="1"/>';}).join('')+'</g><path d="M190 176q40-14 80-4t90-6v10z" fill="#f6c6d8" opacity=".8"/>',
