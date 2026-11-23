@@ -744,3 +744,68 @@
 @keyframes cmBillfly { 0%, 100% { transform: rotate(-6deg) translateY(0); } 50% { transform: rotate(5deg) translateY(-4px); } }
 @keyframes cmSwipe { 0%, 100% { transform: translateX(-3px); } 50% { transform: translateX(3px); } }
 @media (prefers-reduced-motion: reduce) { .gd-cm .cm-blueline { stroke-dashoffset: 0; } .gd-cm .cm-ringfill { stroke-dashoffset: 30; } }
+
+/* ===== คลังคำถาม (/guide/q) ===== */
+.qa-banner { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); background: #fff; border: 2px solid #e6dcc6; border-radius: 16px; padding: 8px 14px 8px 8px; margin: 0 auto 16px; max-width: 520px; box-shadow: 0 3px 0 #efe6d2; }
+.qa-banner-m { width: 54px; height: 54px; flex: none; border-radius: 12px; background: #fff1d6; display: grid; place-items: center; line-height: 0; }
+.qa-banner b { display: block; font-size: 15.5px; }
+.qa-banner span:last-of-type { font-size: 13px; color: var(--ink-2); }
+.qa-banner i { margin-left: auto; font-style: normal; font-weight: 800; color: #E8791A; font-size: 18px; }
+.qa-search { display: block; margin: 0 0 12px; }
+.qa-search input { width: 100%; box-sizing: border-box; font: inherit; font-size: 16px; border: 2px solid #e6dcc6; border-radius: 12px; padding: 10px 14px; background: #fff; }
+.qa-list { display: flex; flex-direction: column; gap: 8px; }
+.qa-row { display: flex; gap: 12px; align-items: center; text-decoration: none; color: var(--ink); background: #fff; border: 2px solid #e6dcc6; border-radius: 14px; padding: 8px; box-shadow: 0 2px 0 #efe6d2; }
+.qa-row[hidden] { display: none; }
+.qa-row:focus-visible { outline: 3px solid #1d4f91; outline-offset: 2px; }
+.qa-th { width: 112px; height: 56px; flex: none; border-radius: 10px; overflow: hidden; background: #fff4e2; line-height: 0; }
+.qa-th.none { display: grid; place-items: center; background: #f3efe6; }
+.qa-th .qa-art { margin: 0; border: 0; border-radius: 0; box-shadow: none; }
+.qa-th .qa-art-m { width: 30%; }
+.qa-rb { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.qa-rb b { font-size: 14.5px; line-height: 1.45; }
+.qa-rb > span { font-size: 13px; color: var(--ink-2); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.qa-rb small { font-size: 11.5px; color: var(--ink-3); }
+.qa-rb small i { font-style: normal; color: #7a5c00; }
+/* ภาพประกอบเฉพาะข้อ: น้องม้วนวางทับฝั่งที่เว้นไว้ */
+.qa-art { position: relative; margin: 8px 0 14px; border-radius: 18px; overflow: hidden; border: 2px solid #2b2540; box-shadow: 0 4px 0 #2b2540; line-height: 0; aspect-ratio: 2 / 1; background: #fff4e2; }
+.qa-art .qa-spot, .qa-art .gd-scene { width: 100%; height: 100%; display: block; }
+.qa-art.none .gd-scene { position: absolute; inset: 0; }
+.qa-art-m { position: absolute; left: 3%; bottom: 3%; width: 25%; z-index: 2; filter: drop-shadow(0 3px 3px rgba(43, 37, 64, .22)); }
+.qa-art-m svg { width: 100%; height: auto; }
+.qa-art.r .qa-art-m { left: auto; right: 3%; }
+.qa-from { font-size: 13px; color: var(--ink-3); margin: 0 0 4px; }
+.qa-from a { color: var(--o-text); }
+.qa-h1 { font-size: clamp(22px, 5.6vw, 30px); line-height: 1.4; margin: 0 0 10px; }
+.qa-ans { font-size: 16.5px; line-height: 1.75; color: var(--ink); background: #fbf6ea; border: 2px solid #efe2c4; border-radius: 14px; padding: 12px 14px; }
+.qa-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 12px 0 4px; font-size: 12.5px; }
+.qa-btn { font: inherit; font-size: 13.5px; font-weight: 600; border: 1.5px solid #e6dcc6; background: #fff; color: var(--ink); border-radius: 999px; padding: 6px 14px; min-height: 36px; cursor: pointer; }
+.qa-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 18px 0 6px; }
+.qa-nav a { text-decoration: none; color: var(--ink); background: #fff; border: 1.5px solid #e6dcc6; border-radius: 12px; padding: 8px 10px; font-size: 13.5px; line-height: 1.45; }
+.qa-nav a.nx { text-align: right; }
+.qa-nav small { display: block; color: var(--ink-3); font-size: 11.5px; }
+.gd-qlink { display: inline-block; margin-top: 6px; font-size: 12.5px; color: var(--ink-3); }
+@media (min-width: 1024px) { .qa-one { display: grid; grid-template-columns: 1fr; } .qa-th { width: 132px; height: 66px; } }
+/* อนิเมชันภาพประกอบคำถาม */
+.qa-spot .qs-twk { animation: qsTwk 2.4s ease-in-out infinite; }
+.qa-spot .qs-tick { transform-box: fill-box; transform-origin: 50% 100%; animation: qsTick 6s linear infinite; }
+.qa-spot .qs-bob { animation: qsBob 2.2s ease-in-out infinite; }
+.qa-spot .qs-rise { transform-box: fill-box; transform-origin: 50% 100%; animation: qsRise 3s ease-in-out infinite; }
+.qa-spot .qs-steam { animation: qsSteam 2.6s ease-out infinite; }
+.qa-spot .qs-drop { animation: qsDrop 2.8s cubic-bezier(.5, 0, .8, 1) infinite; }
+.qa-spot .qs-rock { transform-box: fill-box; transform-origin: 50% 0; animation: qsRock 3.2s ease-in-out infinite; }
+.qa-spot .qs-swing { transform-box: fill-box; transform-origin: 50% 0; animation: qsRock 3.6s ease-in-out infinite; }
+.qa-spot .qs-snip { animation: qsSnip 1.6s ease-in-out infinite; }
+.qa-spot .qs-zz { animation: qsSteam 2.4s ease-out infinite; }
+.qa-spot .qs-buzz { transform-box: fill-box; transform-origin: 50% 100%; animation: qsBuzz 1.6s ease-in-out infinite; }
+.qa-spot .qs-flick { animation: qsFlick 3s steps(1) infinite; }
+@keyframes qsTwk { 0%, 100% { opacity: 1; } 50% { opacity: .7; } }
+@keyframes qsTick { to { transform: rotate(360deg); } }
+@keyframes qsBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes qsRise { 0%, 100% { transform: scaleY(.45); } 50% { transform: scaleY(1); } }
+@keyframes qsSteam { 0% { opacity: 0; transform: translateY(4px); } 40% { opacity: .9; } 100% { opacity: 0; transform: translateY(-10px); } }
+@keyframes qsDrop { 0% { transform: translateY(-14px); opacity: 0; } 15% { opacity: 1; } 70% { transform: translateY(56px); opacity: 1; } 100% { transform: translateY(56px); opacity: 0; } }
+@keyframes qsRock { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+@keyframes qsSnip { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-8px); } }
+@keyframes qsBuzz { 0%, 60%, 100% { transform: rotate(0); } 10%, 30%, 50% { transform: rotate(-7deg); } 20%, 40% { transform: rotate(7deg); } }
+@keyframes qsFlick { 0%, 85%, 100% { opacity: 1; } 90% { opacity: .2; } }
+@media (prefers-reduced-motion: reduce) { .qa-spot * { animation: none !important; } }
