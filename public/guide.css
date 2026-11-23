@@ -913,3 +913,7 @@
 @keyframes cmKnob2 { 0%, 20% { transform: translateX(-14px); } 40%, 100% { transform: translateX(0); } }
 @keyframes cmSealpress { 0%, 50% { transform: translateY(-10px) scale(1.15); opacity: 0; } 60% { transform: translateY(0) scale(.95); opacity: 1; } 70%, 100% { transform: none; opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .gd-cm .cm-sealpress { opacity: 1; } }
+
+/* หน้ารวม: การ์ดที่อยู่นอกจอหยุดอนิเมชัน (guide-page.js ใส่ .is-off) · ระหว่างรอวาดแสดงพื้นสีอ่อน */
+.gd-lc.is-off .gd-lc-img * { animation-play-state: paused !important; }
+.gd-lc-img[data-sc]:empty { background: linear-gradient(135deg, #f6efe2, #ece3d2); }
