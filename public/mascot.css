@@ -37,4 +37,35 @@
 @keyframes vmShake{0%,55%,100%{transform:translate(0,0)}60%{transform:translate(-2px,0) rotate(-2deg)}65%{transform:translate(2px,0) rotate(2deg)}70%{transform:translate(-2px,0) rotate(-1deg)}75%{transform:translate(0,0)}}
 @keyframes vmBang{0%,50%,100%{transform:scale(1)}58%{transform:scale(1.25) translateY(-3px)}66%{transform:scale(.95)}}
 @keyframes vmMag{0%,100%{transform:rotate(0)}50%{transform:rotate(-10deg)}}
+/* ===== ท่าผสม (vmx) ===== */
+.vmx .vm-body{transform-origin:60px 128px;animation:vmBob 2.6s ease-in-out infinite}
+.vmx-m-sway .vm-body{animation:vmTilt 3.2s ease-in-out infinite}
+.vmx-m-hop .vm-body{animation:vmHop .9s cubic-bezier(.3,0,.3,1) infinite}
+.vmx-m-shake .vm-body{animation:vmShake 2.4s ease-in-out infinite}
+.vmx-m-spin .vm-body{animation:vmxSpin 3.4s ease-in-out infinite}
+.vmx-m-peek .vm-body{animation:vmxPeek 2.8s ease-in-out infinite}
+.vmx-m-lean .vm-body{animation:vmxLean 3.6s ease-in-out infinite}
+.vmx-m-breathe .vm-body{animation:vmBreathe 3.2s ease-in-out infinite}
+.vmx-a-bow .vm-body{transform:rotate(4deg)}
+.vmx .vmx-wavearm{transform-origin:89px 72px;animation:vmWave 1.2s ease-in-out infinite}
+.vmx .vmx-point{transform-origin:89px 76px;animation:vmxPoint 1.8s ease-in-out infinite}
+.vmx .vmx-thumb{transform-origin:89px 80px;animation:vmxThumb 1.6s ease-in-out infinite}
+.vmx .vmx-push{transform-origin:89px 74px;animation:vmPush 1.6s ease-in-out infinite}
+.vmx .vmx-coin{transform-box:fill-box;transform-origin:50% 50%;animation:vmSpin 1.8s linear infinite}
+.vmx .vmx-mag{transform-origin:0 0;animation:vmMag 3s ease-in-out infinite}
+.vmx .vmx-q{animation:vmQ 2.4s ease-in-out infinite}
+.vmx .vmx-tw{animation:vmTwinkle 1.4s ease-in-out infinite}
+.vmx .vmx-bang{transform-origin:60px 16px;animation:vmBang 2.4s ease-in-out infinite}
+.vmx .vmx-z path{animation:vmZ 3s ease-in-out infinite}.vmx .vmx-z path:nth-child(2){animation-delay:1s}
+.vmx .vmx-tear path{animation:vmxTear 1.6s ease-in infinite}.vmx .vmx-tear path:nth-child(2){animation-delay:.8s}
+.vmx .vmx-puff{animation:vmxPuff 2.6s ease-out infinite}
+.vmx .vmx-ring{animation:vmTwinkle .8s ease-in-out infinite}
+.vmx .vmx-steam path{animation:vmZ 2.4s ease-in-out infinite}.vmx .vmx-steam path:nth-child(2){animation-delay:1.2s}
+@keyframes vmxSpin{0%,70%,100%{transform:scaleX(1)}80%{transform:scaleX(-1) translateY(-4px)}90%{transform:scaleX(1)}}
+@keyframes vmxPeek{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(3px) rotate(5deg)}}
+@keyframes vmxLean{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(-3deg)}}
+@keyframes vmxPoint{0%,100%{transform:translateX(0)}50%{transform:translateX(3px)}}
+@keyframes vmxThumb{0%,100%{transform:rotate(0)}50%{transform:rotate(-8deg) translateY(-2px)}}
+@keyframes vmxTear{0%{transform:translateY(0);opacity:1}100%{transform:translateY(8px);opacity:0}}
+@keyframes vmxPuff{0%{opacity:0;transform:translate(-4px,4px) scale(.6)}40%{opacity:1}100%{opacity:0;transform:translate(6px,-6px) scale(1.1)}}
 @media (prefers-reduced-motion:reduce){.vm *{animation:none !important}}
