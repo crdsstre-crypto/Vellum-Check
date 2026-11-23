@@ -1033,3 +1033,9 @@
 .gd-cover[data-layout="airmail"] .gd-cover-art .gd-scene { border-radius: 3px; }
 .gd-cover[data-layout="airmail"] .gd-cover-art::before { content: "ด่วน"; position: absolute; right: -12px; top: -14px; z-index: 3; pointer-events: none; width: 40px; height: 46px; display: flex; align-items: center; justify-content: center; font: 900 12px/1 sans-serif; color: #fff; background: #2e8a6e; border: 3px dotted #fffdf6; outline: 2px solid #2e8a6e; transform: rotate(8deg); box-shadow: 0 3px 6px rgba(0,0,0,.2); }
 .gd-cover[data-layout="airmail"] .gd-cover-art::after { content: ""; position: absolute; right: 22px; top: 8px; z-index: 3; pointer-events: none; width: 40px; height: 40px; border: 2px solid rgba(60,60,80,.55); border-radius: 50%; background: repeating-linear-gradient(0deg, transparent 0 6px, rgba(60,60,80,.4) 6px 7.5px); transform: rotate(-14deg); }
+
+/* ปกแบบ "bubbleframe" = กรอบรูปทรงกล่องคำพูดขอบหนาสีกรมท่า มีหางชี้ลงซ้ายล่าง และป้ายวงกลม "!" สีเหลืองมุมขวาบน (คู่มือ refuse-orders) */
+.gd-cover[data-layout="bubbleframe"] .gd-cover-art { overflow: visible; border: 4px solid #2f3f5f; border-radius: 22px; box-shadow: 5px 6px 0 #ffd166; margin-bottom: 14px; }
+.gd-cover[data-layout="bubbleframe"] .gd-cover-art .gd-scene { border-radius: 18px; }
+.gd-cover[data-layout="bubbleframe"] .gd-cover-art::before { content: ""; position: absolute; left: 22px; bottom: -17px; z-index: 3; pointer-events: none; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 16px solid #2f3f5f; transform: skewX(-20deg); }
+.gd-cover[data-layout="bubbleframe"] .gd-cover-art::after { content: "!"; position: absolute; right: -12px; top: -12px; z-index: 3; pointer-events: none; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font: 900 18px/1 sans-serif; color: #2f3f5f; background: #ffd166; border: 3px solid #2f3f5f; border-radius: 50%; transform: rotate(10deg); }
