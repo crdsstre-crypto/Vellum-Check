@@ -78,6 +78,37 @@
   const pickMood = (mood, seed, prev) => (window.VCMascot && VCMascot.pick) ? VCMascot.pick(mood || 'curious', seed, prev) : mood;
   const mascot = (mood, size) => (window.VCMascot && typeof VCMascot.svg === 'function') ? VCMascot.svg(mood || 'curious', size) : '';
   const scene = (name, key) => (window.VCScenes ? VCScenes.svg(name, key) : '');
+  // ภาพช่องการ์ตูนโหลดเฉพาะฉากที่คู่มือเรื่องนี้ใช้ (server/library/comic-split.js) · โหลดไม่ได้ใน 8 วิ ก็แสดงหน้าต่อโดยไม่มีภาพ
+  const comicReady = names => new Promise(ok => {
+    const C = window.VCComic;
+    if (!C || !C.add || !C.ver) return ok();   // ใช้ไฟล์เต็ม หรือไม่มีระบบภาพ
+    const need = [...new Set(names.filter(Boolean))].filter(n => !C.has(n)).sort();
+    if (!need.length) return ok();
+    const el = document.createElement('script');
+    el.src = '/guide-comic-scenes.js?s=' + encodeURIComponent(need.join(',')) + '&v=' + encodeURIComponent(C.ver);
+    const t = setTimeout(ok, 8000);
+    el.onload = el.onerror = () => { clearTimeout(t); ok(); };
+    document.head.appendChild(el);
+  });
+
+  // หน้ารวม: วาดรูปการ์ดเมื่อเลื่อนมาใกล้ (เผื่อ 400px) และหยุดอนิเมชันของการ์ดที่อยู่นอกจอ → การ์ดเป็นร้อยใบก็ไม่หนักเครื่อง
+  let cardIO = null;
+  function lazyCards() {
+    const imgs = [...$main.querySelectorAll('.gd-lc-img[data-sc]')];
+    const draw = el => {
+      if (el.dataset.done) return;
+      el.dataset.done = '1';
+      const k = el.dataset.k, sc = el.dataset.sc;
+      el.innerHTML = `<div class="gd-lc-amb">${scene(sc, 'a' + k)}</div><div class="gd-lc-frame">${scene(sc, 'c' + k)}<span class="gd-lc-mz">${mascot(el.dataset.mz, 74)}</span></div>`;
+    };
+    if (!('IntersectionObserver' in window)) { imgs.forEach(draw); return; }
+    cardIO?.disconnect();
+    cardIO = new IntersectionObserver(es => es.forEach(e => {
+      const card = e.target.closest('.gd-lc');
+      if (e.isIntersecting) { draw(e.target); card?.classList.remove('is-off'); } else card?.classList.add('is-off');
+    }), { rootMargin: '400px 0px' });
+    imgs.forEach(el => cardIO.observe(el));
+  }
 
   async function viewList() {
     document.title = 'เรียนรู้กฎหมายแบบภาษาง่าย · Vellum';
@@ -93,7 +124,7 @@
       const cats = [...groups];
       let k = 0;
       const card = g => `<a class="gd-lc" href="/guide/${esc(g.slug)}" data-q="${esc((g.title + ' ' + (g.cardText || '') + ' ' + (g.intro || '')).replace(/\*\*/g, '').toLowerCase())}">
-          <div class="gd-lc-img" aria-hidden="true"><div class="gd-lc-amb">${scene(g.scene, 'a' + (++k))}</div><div class="gd-lc-frame">${scene(g.scene, 'c' + k)}<span class="gd-lc-mz">${mascot(pickMood(g.mood, g.slug + '#c'), 74)}</span></div></div>
+          <div class="gd-lc-img" aria-hidden="true" data-sc="${esc(g.scene)}" data-mz="${esc(pickMood(g.mood, g.slug + '#c'))}" data-k="${++k}"></div>
           <div class="gd-lc-body">
             <span class="gd-lc-tag"><span class="gd-lc-cat">${g.categoryIcon ? esc(g.categoryIcon) + ' ' : ''}${esc(g.category)}</span>คู่มือ${g.minutes ? ` · ${toTh(g.minutes)} นาที` : ''}${g.reviewed ? '' : '<span class="gd-lc-draft">ฉบับร่าง</span>'}</span>
             <h3>${esc(g.title)}</h3>
@@ -139,6 +170,7 @@
         apply();
       }));
       if ($q) $q.addEventListener('input', apply);
+      lazyCards();
     } catch (e) { $main.innerHTML = errBox(e); }
   }
 
@@ -152,6 +184,7 @@
     let g;
     try { g = await get('/api/guides/' + encodeURIComponent(slug)); }
     catch (e) { $main.innerHTML = e.status === 404 ? `<div class="lb-band"><div><b>ไม่พบคู่มือนี้</b><br><a href="/guide">ดูเรื่องทั้งหมด</a></div></div>` : errBox(e); return; }
+    await comicReady(g.sections.map(s => s.panel && s.panel.scene));
     document.title = g.title + ' · เรียนรู้ · Vellum';
     let n = 0;
     const coverMood = pickMood(g.mood, g.slug + '#c');
