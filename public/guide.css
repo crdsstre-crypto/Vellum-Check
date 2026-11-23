@@ -814,3 +814,20 @@
 @keyframes cmFlame { from { transform: scaleY(.75); } to { transform: scaleY(1.15); } }
 @keyframes cmLightc { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
 @media (prefers-reduced-motion: reduce) { .gd-scene .sc-burst { opacity: 1; } }
+
+/* ===== ปกแบบแถบเตือนภัย (coverLayout: "hazard"): กรอบลายทางเหลืองดำ ===== */
+.gd-cover[data-layout="hazard"] .gd-cover-art { border: 0; border-radius: 10px; background: repeating-linear-gradient(45deg, #ffd22e 0 9px, #222 9px 18px); box-shadow: 0 6px 12px rgba(0, 0, 0, .2); }
+.gd-cover[data-layout="hazard"] .gd-cover-art .gd-scene { inset: 7px; width: calc(100% - 14px); height: calc(100% - 14px); border-radius: 5px; }
+.gd-cover[data-layout="hazard"] .gd-cover-art .gd-cover-m { left: 4px; bottom: 6px; }
+/* ของขยับชุดใหม่ (กะดึก/งานอันตราย) */
+.gd-scene .sc-win { animation: scLamp 3s ease-in-out infinite; }
+.gd-scene .sc-smokeline { animation: cmQueue 3s ease-in-out infinite; }
+.gd-cm .cm-drizzle { animation: cmDrizzle .9s linear infinite; }
+.gd-cm .cm-steam2 { animation: cmSteam2 2.4s ease-out infinite; }
+.gd-cm .cm-puppet { transform-box: fill-box; transform-origin: 50% 100%; animation: cmPuppet 2.6s ease-in-out infinite; }
+.gd-cm .cm-gleam { animation: cmGleam 2.4s ease-in-out infinite; }
+.gd-cm .cm-plus { transform-box: fill-box; transform-origin: 50% 50%; animation: cmWax 1.6s ease-out infinite; }
+@keyframes cmDrizzle { 0% { transform: translateY(-6px); opacity: 0; } 30% { opacity: .9; } 100% { transform: translateY(60px); opacity: 0; } }
+@keyframes cmSteam2 { 0% { transform: translateY(2px); opacity: 0; } 40% { opacity: .9; } 100% { transform: translateY(-8px); opacity: 0; } }
+@keyframes cmPuppet { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg) translateY(-2px); } }
+@keyframes cmGleam { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
