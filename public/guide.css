@@ -720,3 +720,27 @@
 @keyframes cmProgress { 0% { transform: scaleX(0); } 100% { transform: scaleX(1); } }
 @keyframes cmCard { 0% { transform: translateY(24px) rotate(-14deg); opacity: 0; } 30%, 100% { transform: translateY(0) rotate(4deg); opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .gd-cm .cm-tab, .gd-cm .cm-card { opacity: 1; } }
+
+/* ===== ปกแบบหน้าต่างบ้าน (coverLayout: "window"): กรอบไม้หนา ซี่กลางรูปกากบาท กระบะดอกไม้ใต้หน้าต่าง ===== */
+.gd-cover[data-layout="window"] .gd-cover-art { flex-basis: 132px; height: 140px; overflow: visible; border: 7px solid #9a6440; border-radius: 4px; margin-bottom: 14px; box-shadow: inset 0 0 0 2px #7a4a2c, 0 8px 14px rgba(90, 50, 20, .2); }
+.gd-cover[data-layout="window"] .gd-cover-art .gd-scene { border-radius: 0; }
+.gd-cover[data-layout="window"] .gd-cover-art::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(#9a6440, #9a6440) 50% 0 / 5px 100% no-repeat, linear-gradient(#9a6440, #9a6440) 0 42% / 100% 5px no-repeat; }
+.gd-cover[data-layout="window"] .gd-cover-art::before { content: ""; position: absolute; left: -14px; right: -14px; bottom: -20px; height: 14px; z-index: 3; border-radius: 3px; background: radial-gradient(circle at 12% 0, #ff6b8a 4px, transparent 5px), radial-gradient(circle at 30% 0, #ffd84d 4px, transparent 5px), radial-gradient(circle at 52% 0, #ff6b8a 4px, transparent 5px), radial-gradient(circle at 72% 0, #b28cff 4px, transparent 5px), radial-gradient(circle at 90% 0, #ffd84d 4px, transparent 5px), linear-gradient(#c0593c, #a8452c); }
+.gd-cover[data-layout="window"] { gap: 18px; }
+/* ของขยับชุดใหม่ (WFH) */
+.gd-scene .sc-tail { transform-box: fill-box; transform-origin: 0 100%; animation: scTail 1.8s ease-in-out infinite; }
+.gd-cm .cm-blueline { stroke-dasharray: 40; animation: cmBlueline 4.5s ease-out infinite; }
+.gd-cm .cm-ringfill { animation: cmRingfill 5s ease-in-out infinite; }
+.gd-cm .cm-twinkle { transform-box: fill-box; transform-origin: 50% 50%; animation: cmTwinkle 2.2s ease-in-out infinite; }
+.gd-cm .cm-moon { animation: cmQueue 4s ease-in-out infinite; }
+.gd-cm .cm-wave2 path { animation: cmWave2 1.8s ease-out infinite; }
+.gd-cm .cm-billfly { transform-box: fill-box; transform-origin: 50% 0; animation: cmBillfly 3s ease-in-out infinite; }
+.gd-cm .cm-swipe { animation: cmSwipe 2.6s ease-in-out infinite; }
+@keyframes scTail { 0%, 100% { transform: rotate(-8deg); } 50% { transform: rotate(14deg); } }
+@keyframes cmBlueline { 0% { stroke-dashoffset: 40; } 35%, 100% { stroke-dashoffset: 0; } }
+@keyframes cmRingfill { 0% { stroke-dashoffset: 157; } 60%, 100% { stroke-dashoffset: 30; } }
+@keyframes cmTwinkle { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(.55); opacity: .5; } }
+@keyframes cmWave2 { 0% { opacity: 0; } 40% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes cmBillfly { 0%, 100% { transform: rotate(-6deg) translateY(0); } 50% { transform: rotate(5deg) translateY(-4px); } }
+@keyframes cmSwipe { 0%, 100% { transform: translateX(-3px); } 50% { transform: translateX(3px); } }
+@media (prefers-reduced-motion: reduce) { .gd-cm .cm-blueline { stroke-dashoffset: 0; } .gd-cm .cm-ringfill { stroke-dashoffset: 30; } }
