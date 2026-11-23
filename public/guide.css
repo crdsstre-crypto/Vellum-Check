@@ -165,6 +165,7 @@
 .gd-cover[data-bg="bokeh"] { background: linear-gradient(135deg, #f1ecff, #ffe6ef); border-color: #e0d2f4; }
 .gd-cover[data-bg="groovy"] { background: linear-gradient(135deg, #fff1db, #f7d9b0); border-color: #ebc28a; }
 .gd-cover[data-bg="conveyor"] { background: linear-gradient(135deg, #eaf4ff, #dbe9f8); border-color: #bcd3ee; }
+.gd-cover[data-bg="shutter"] { background: linear-gradient(135deg, #fff1df, #ffd9b5); border-color: #f2c08e; }
 .gd-cover[data-bg="leave"] { background: linear-gradient(135deg, #e6f6ff, #c7e8fb); border-color: #9fd0e6; }
 .gd-cover[data-bg="condo"] { background: linear-gradient(135deg, #fff1dc, #f7d9b3); border-color: #ecc690; }
 
@@ -530,6 +531,15 @@
   .gd-grid .gd-lc-go { color: #E8791A; }
 }
 @media (min-width: 1024px) and (max-width: 1180px) { .gd-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* จอกว้าง ≥ 1280px: แถวละ 4 ใบ */
+@media (min-width: 1280px) {
+  .gd-main.is-list { max-width: 1360px; }
+  .gd-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  .gd-grid .gd-lc-img { height: 164px; }
+  .gd-grid .gd-lc-frame { width: 140px; }
+  .gd-grid .gd-lc h3 { font-size: 16px; }
+  .gd-grid .gd-lc p { font-size: 13px; }
+}
 @media (prefers-reduced-motion: reduce) { .gd-grid .gd-lc { transition: none; } .gd-grid .gd-lc:hover { transform: none; } }
 
 /* ===== ปกแบบกองการ์ดซ้อน (coverLayout: "stack"): ภาพหลักมีกระดาษซ้อนเยื้องอยู่ด้านหลัง 2 ใบ ===== */
@@ -671,3 +681,22 @@
 @keyframes cmPass { 0%, 10% { transform: translateX(0); opacity: 0; } 20% { opacity: 1; } 80% { transform: translateX(-164px); opacity: 1; } 100% { transform: translateX(-164px); opacity: 0; } }
 @keyframes cmBeam2 { 0%, 100% { transform: rotate(-8deg); } 50% { transform: rotate(10deg); } }
 @media (prefers-reduced-motion: reduce) { .gd-cm .cm-toggle { opacity: 1; } .gd-cm .cm-knob { transform: translateX(20px); } }
+
+/* ===== ปกแบบลูกโป่งคำพูด (coverLayout: "bubble"): ภาพตัดเป็นกรอบคำพูดมีหางชี้ลง ===== */
+.gd-cover[data-layout="bubble"] .gd-cover-art { flex-basis: 140px; height: 156px; border: 0; border-radius: 0; clip-path: path("M20 0H120Q140 0 140 20V114Q140 134 120 134H52L30 156L34 134H20Q0 134 0 114V20Q0 0 20 0Z"); }
+.gd-cover[data-layout="bubble"] .gd-cover-art .gd-cover-m { bottom: 22px; }
+.gd-cover[data-layout="bubble"] { gap: 14px; }
+/* ของขยับชุดใหม่ (ปิดกิจการ) */
+.gd-scene .sc-leaf2 { animation: scLeaf2 5s linear infinite; }
+.gd-cm .cm-cloud { animation: cmCloud 4s ease-in-out infinite; }
+.gd-cm .cm-rainbar { transform-box: fill-box; transform-origin: 0 50%; animation: cmFillBar 3.4s ease-out infinite; }
+.gd-cm .cm-queue { animation: cmQueue 2s ease-in-out infinite; }
+.gd-cm .cm-seg { animation: cmSeg 2s steps(1) infinite; }
+.gd-cm .cm-net { transform-box: fill-box; transform-origin: 50% 0; animation: cmNet 2.4s ease-in-out infinite; }
+.gd-cm .cm-fall { animation: cmFall 2.4s cubic-bezier(.5, 0, .7, 1) infinite; }
+@keyframes scLeaf2 { 0% { transform: translate(0, -10px) rotate(0); opacity: 0; } 10% { opacity: 1; } 100% { transform: translate(-30px, 150px) rotate(240deg); opacity: 0; } }
+@keyframes cmCloud { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(8px); } }
+@keyframes cmQueue { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+@keyframes cmSeg { 0%, 90% { opacity: 1; } 95% { opacity: .4; } }
+@keyframes cmNet { 0%, 40%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.35); } 65% { transform: scaleY(.9); } }
+@keyframes cmFall { 0% { transform: translateY(-40px); opacity: 0; } 15% { opacity: 1; } 50% { transform: translateY(26px); } 65% { transform: translateY(12px); } 80%, 100% { transform: translateY(22px); opacity: 1; } }
