@@ -831,3 +831,24 @@
 @keyframes cmSteam2 { 0% { transform: translateY(2px); opacity: 0; } 40% { opacity: .9; } 100% { transform: translateY(-8px); opacity: 0; } }
 @keyframes cmPuppet { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg) translateY(-2px); } }
 @keyframes cmGleam { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+
+/* ===== ปกแบบกระจกวงรี (coverLayout: "mirror"): ภาพในวงรี กรอบทองแกะลาย ===== */
+.gd-cover[data-layout="mirror"] .gd-cover-art { flex-basis: 120px; height: 150px; overflow: visible; border: 0; border-radius: 50%; margin: 8px; box-shadow: 0 0 0 4px #f4d06f, 0 0 0 7px #a87a2a, 0 0 0 9px #f4d06f, 0 10px 18px rgba(90, 50, 30, .25); }
+.gd-cover[data-layout="mirror"] .gd-cover-art .gd-scene { clip-path: ellipse(50% 50%); }
+.gd-cover[data-layout="mirror"] .gd-cover-art::before { content: ""; position: absolute; left: 50%; top: -18px; width: 22px; height: 14px; margin-left: -11px; border-radius: 50% 50% 4px 4px; background: #a87a2a; z-index: -1; }
+.gd-cover[data-layout="mirror"] .gd-cover-art .gd-cover-m { left: -16px; bottom: -6px; }
+.gd-cover[data-layout="mirror"] { gap: 20px; }
+/* ของขยับชุดใหม่ (ถูกบังคับลาออก) */
+.gd-scene .sc-ball { animation: scBall 2.4s cubic-bezier(.5, 0, .7, 1) infinite; }
+.gd-cm .cm-dealcard { transform-box: fill-box; transform-origin: 50% 100%; animation: cmDealcard 3.4s ease-in-out infinite; }
+.gd-cm .cm-loom2 { animation: cmLoom2 3.2s ease-in-out infinite; }
+.gd-cm .cm-scan2 { animation: cmSungrid 1s linear infinite; }
+.gd-cm .cm-rewind { animation: cmRowflash 1.6s steps(1) infinite; }
+.gd-cm .cm-wash { stroke-dasharray: 22; animation: cmWash 4s ease-out infinite; }
+.gd-cm .cm-plane { animation: cmPlane 3s ease-in-out infinite; }
+@keyframes scBall { 0% { transform: translate(-40px, -50px); opacity: 0; } 15% { opacity: 1; } 70% { transform: translate(0, 0); } 80% { transform: translate(0, -6px); } 100% { transform: translate(0, 14px); opacity: 0; } }
+@keyframes cmDealcard { 0%, 100% { transform: rotate(-2deg) translateY(0); } 50% { transform: rotate(2deg) translateY(-3px); } }
+@keyframes cmLoom2 { 0%, 100% { transform: translateX(8px); } 50% { transform: translateX(-6px); } }
+@keyframes cmWash { 0% { stroke-dashoffset: 22; } 40%, 100% { stroke-dashoffset: 0; } }
+@keyframes cmPlane { 0%, 100% { transform: translate(-3px, 2px) rotate(-3deg); } 50% { transform: translate(4px, -4px) rotate(3deg); } }
+@media (prefers-reduced-motion: reduce) { .gd-cm .cm-wash { stroke-dashoffset: 0; } .gd-scene .sc-ball { opacity: 1; } }
