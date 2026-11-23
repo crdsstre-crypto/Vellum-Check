@@ -1399,5 +1399,9 @@ function coverWide(name, key) {
 function coverBg(name) {
   return BG[name] ? '<svg class="gd-cover-bg" viewBox="0 0 360 176" preserveAspectRatio="xMaxYMid slice" aria-hidden="true">' + BG[name] + '</svg>' : '';
 }
-window.VCComic = { panel: panel, coverBg: coverBg, coverWide: coverWide, scenes: Object.keys(P) };
+// add/has/_h/_P: ใช้กับระบบแยกภาพรายเรื่อง (server/library/comic-split.js) — เบราว์เซอร์โหลดแค่แกน แล้วขอเฉพาะฉากที่ใช้
+window.VCComic = { panel: panel, coverBg: coverBg, coverWide: coverWide, scenes: Object.keys(P),
+  add: function (o) { for (var n in o) if (Object.prototype.hasOwnProperty.call(o, n)) P[n] = o[n]; },
+  has: function (n) { return !!P[n]; },
+  _h: { I: I, coins: coins, bg: bg, desk: desk, spark: spark, person: person }, _P: P };
 })();
