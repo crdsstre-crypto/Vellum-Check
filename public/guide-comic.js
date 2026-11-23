@@ -1895,13 +1895,13 @@ var P={
    '<filter id="lps'+k+'" x="-10%" y="-10%" width="125%" height="130%"><feDropShadow dx="2" dy="3" stdDeviation="2" flood-opacity=".35"/></filter></defs>'+
   '<rect width="360" height="180" fill="url(#lpw'+k+')"/><g stroke="#5a3820" stroke-width=".8" opacity=".5" fill="none"><path d="M0 40q120 8 360-4M0 84q150-6 360 6M0 128q140 6 360-2M0 166q120-4 360 4"/></g>'+
   // กระดาษ
-  '<g transform="translate(0 18)">'+  '<g filter="url(#lps'+k+')"><path d="M26 74l4-2 6 1 5-2 6 2 8-1 7 2 6-2 9 1 7-1 6 2 8-1 7 1 6-2 8 2 7-1 6 1 4 2 2 4-1 7 1 8-1 9 1 8-1 9 1 7-1 8 1 9-1 8 1 6-3 3-6-1-7 2-8-1-6 1-8-1-7 2-9-1-6 1-7-1-8 2-6-1-8 1-7-1-6 1-7-1-5 1-3-3 1-7-1-8 1-9-1-8 1-7-1-9 1-8-1-7 1-8z" fill="#f8f3e6"/></g>'+
-  '<g filter="url(#lpd'+k+')"><text x="98" y="104" text-anchor="middle" font-size="20" font-weight="900" fill="#c8302a" font-family="sans-serif">รับทราบ</text>'+
-   '<text x="98" y="122" text-anchor="middle" font-size="7.8" font-weight="900" fill="#2a2a2a" font-family="sans-serif">แต่ไม่ยอมรับว่ากระทำผิด</text>'+
-   '<path d="M46 130h104" stroke="#c8302a" stroke-width="1.2"/>'+
-   '<text x="50" y="146" font-size="7" font-weight="800" fill="#2a2a2a" font-family="sans-serif">ลงชื่อ</text><text x="50" y="160" font-size="7" font-weight="800" fill="#2a2a2a" font-family="sans-serif">วันที่</text></g>'+
-  '<path d="M74 146h72M74 160h52" stroke="#555" stroke-width=".7" stroke-dasharray="2 1.6"/><path d="M80 143q6-8 10-1t8-3t8 2t8-3" fill="none" stroke="#1f4fa8" stroke-width="1.2" stroke-linecap="round"/>'+
-  '<g transform="rotate(-6 144 80)"><rect x="128" y="74" width="32" height="12" rx="2" fill="#1f4fa8" opacity=".9"/><text x="144" y="82.6" text-anchor="middle" font-size="6.2" font-weight="900" fill="#fff" font-family="sans-serif">ขอสำเนา</text></g></g>'+
+  '<g transform="translate(3.2 36.4) scale(.8)">'+  '<g filter="url(#lps'+k+')"><path d="M26 74l4-2 6 1 5-2 6 2 8-1 7 2 6-2 9 1 7-1 6 2 8-1 7 1 6-2 8 2 7-1 6 1 4 2 2 4-1 7 1 8-1 9 1 8-1 9 1 7-1 8 1 9-1 8 1 6-3 3-6-1-7 2-8-1-6 1-8-1-7 2-9-1-6 1-7-1-8 2-6-1-8 1-7-1-6 1-7-1-5 1-3-3 1-7-1-8 1-9-1-8 1-7-1-9 1-8-1-7 1-8z" fill="#f8f3e6"/></g>'+
+  '<g filter="url(#lpd'+k+')"><text x="84" y="101" text-anchor="middle" font-size="22" font-weight="900" fill="#c8302a" font-family="sans-serif">รับทราบ</text>'+
+   '<text x="84" y="116" text-anchor="middle" font-size="11" font-weight="900" fill="#2a2a2a" font-family="sans-serif">แต่ไม่ยอมรับ</text><text x="84" y="129" text-anchor="middle" font-size="11" font-weight="900" fill="#2a2a2a" font-family="sans-serif">ว่ากระทำผิด</text>'+
+   '<path d="M36 135h96" stroke="#c8302a" stroke-width="1.2"/>'+
+   '<text x="38" y="149" font-size="8" font-weight="800" fill="#2a2a2a" font-family="sans-serif">ลงชื่อ</text><text x="38" y="162" font-size="8" font-weight="800" fill="#2a2a2a" font-family="sans-serif">วันที่</text></g>'+
+  '<path d="M64 150h66M64 163h28" stroke="#555" stroke-width=".7" stroke-dasharray="2 1.6"/><path d="M70 147q6-8 10-1t8-3t8 2t8-3" fill="none" stroke="#1f4fa8" stroke-width="1.2" stroke-linecap="round"/>'+
+  '<g transform="rotate(-6 118 158)"><rect x="96" y="151" width="44" height="15" rx="2" fill="#1f4fa8" opacity=".9"/><text x="118" y="161.8" text-anchor="middle" font-size="8.4" font-weight="900" fill="#fff" font-family="sans-serif">ขอสำเนา</text></g></g>'+
   // ตัวพิมพ์ไม้
   blk(178,150,'ร',-8)+blk(194,154,'บ',6)+blk(186,136,'ท',3)+blk(170,162,'า',12)+
   // ช่างพิมพ์
@@ -1979,7 +1979,122 @@ var P={
    '<text x="128" y="130" font-size="7.4" font-weight="900" fill="'+ink+'" font-family="sans-serif">เหตุ:</text><path d="M148 128q8-3 14 0t14-1t14 1M128 140q12-3 22 0t20-1" stroke="'+ink+'" stroke-width="1.3" fill="none" stroke-linecap="round"/>'+
    '<g class="cm-pop"><g transform="rotate(-8 186 146)"><rect x="170" y="136" width="32" height="20" rx="2" fill="none" stroke="#c8302a" stroke-width="2"/><text x="186" y="149.4" text-anchor="middle" font-size="7.6" font-weight="900" fill="#c8302a" font-family="sans-serif">ระบุเหตุ</text></g></g></g>'+
   // ตราชื่อ
-  '<rect x="246" y="148" width="14" height="18" rx="1" fill="#c8302a" opacity=".85"/><path d="M249 152h8M249 156h8M249 160h5" stroke="#f4eee0" stroke-width="1.2"/>';}
+  '<rect x="246" y="148" width="14" height="18" rx="1" fill="#c8302a" opacity=".85"/><path d="M249 152h8M249 156h8M249 160h5" stroke="#f4eee0" stroke-width="1.2"/>';},
+ // [ผ้าบาติกเส้นแตกขี้ผึ้ง] ผ้าครามมีรอยแตกของเทียนไขเป็นเส้นฟ้าอ่อน ลายวงกลมกาวุงสีเหลืองมัสตาร์ด แถบลายปารังด้านล่าง แม่กับลูกหน้าสงบถือซอง "เงินเดือนที่ค้างจ่าย" ผูกริบบิ้น "มรดก" ดอกบัวบาติกมุมซ้าย (น้องม้วนซ้าย)
+ batik:function(k){var ink='#13203a',oc='#e0a63a';
+  var crack='';var s=7;for(var i=0;i<34;i++){s=(s*9301+49297)%233280;var x=90+(s/233280)*270;s=(s*9301+49297)%233280;var y=(s/233280)*170;s=(s*9301+49297)%233280;var a=(s/233280)*6.28;crack+='M'+x.toFixed(1)+' '+y.toFixed(1)+'l'+(Math.cos(a)*14).toFixed(1)+' '+(Math.sin(a)*14).toFixed(1)+'l'+(Math.cos(a+1)*8).toFixed(1)+' '+(Math.sin(a+1)*8).toFixed(1);}
+  var kaw=function(x,y,r){return '<g fill="none" stroke="'+oc+'" stroke-width="1.4" opacity=".55"><ellipse cx="'+x+'" cy="'+(y-r/2)+'" rx="'+(r/3)+'" ry="'+(r/2)+'"/><ellipse cx="'+x+'" cy="'+(y+r/2)+'" rx="'+(r/3)+'" ry="'+(r/2)+'"/><ellipse cx="'+(x-r/2)+'" cy="'+y+'" rx="'+(r/2)+'" ry="'+(r/3)+'"/><ellipse cx="'+(x+r/2)+'" cy="'+y+'" rx="'+(r/2)+'" ry="'+(r/3)+'"/><circle cx="'+x+'" cy="'+y+'" r="2" fill="'+oc+'"/></g>';};
+  return '<defs><pattern id="btp'+k+'" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="14" height="14" fill="#7a3e1a"/><path d="M0 7h14" stroke="'+oc+'" stroke-width="3"/><path d="M0 3h14M0 11h14" stroke="#f3dca6" stroke-width=".8"/></pattern>'+
+   '<radialGradient id="btg'+k+'" cx=".6" cy=".5" r=".7"><stop offset="0" stop-color="#2e5596"/><stop offset="1" stop-color="#1a3263"/></radialGradient></defs>'+
+  '<rect width="360" height="180" fill="url(#btg'+k+')"/>'+kaw(150,60,26)+kaw(320,140,26)+kaw(250,40,22)+kaw(110,120,22)+
+  '<path d="'+crack+'" fill="none" stroke="#9cc3f0" stroke-width=".6" opacity=".45"/>'+
+  '<rect y="166" width="360" height="14" fill="url(#btp'+k+')"/><path d="M0 166h360" stroke="'+oc+'" stroke-width="1.4"/>'+
+  // ดอกบัว
+  '<g transform="translate(118 150)" stroke="'+oc+'" stroke-width="1.2"><path d="M0 0q-14-6-16-22q12 4 16 22zM0 0q14-6 16-22q-12 4-16 22z" fill="#f3dca6" fill-opacity=".85"/><path d="M0 0q-6-14 0-28q6 14 0 28z" fill="#f6e9c6"/><path d="M-22 10q22-10 44 0" fill="none"/></g>'+
+  // แม่
+  '<g stroke="'+ink+'" stroke-width="1.3" stroke-linejoin="round">'+
+   '<path d="M212 166v-36q0-16 18-16t18 16v36z" fill="#e0a63a"/><g fill="#7a3e1a" stroke="none"><circle cx="222" cy="138" r="1.4"/><circle cx="236" cy="146" r="1.4"/><circle cx="226" cy="156" r="1.4"/><circle cx="240" cy="132" r="1.4"/></g><path d="M216 150q14 4 28 0" fill="none" stroke="#7a3e1a" stroke-width="1"/>'+
+   '<circle cx="230" cy="100" r="12" fill="#e9c09a"/><path d="M218 100q-2-16 12-16q14 0 12 16q-2-8-12-9q-10 1-12 9z" fill="#2a1a12"/><path d="M240 92q8 6 4 20" fill="none" stroke="#2a1a12" stroke-width="4"/>'+
+   '<path d="M224 99.6q2.4 1.6 4 .2M232 99.8q1.6 1.4 4-.2" fill="none" stroke-width="1"/><path d="M223.4 96.4l3 .8M236.6 96.4l-3 .8" stroke-width=".9"/><path d="M226.6 106q3.4 1.6 6.8 0" fill="none" stroke-width="1"/>'+
+   // ลูก
+   '<path d="M250 166v-22q0-11 13-11t13 11v22z" fill="#6aa0d8"/><circle cx="263" cy="122" r="9" fill="#e9c09a"/><path d="M254 121q0-10 9-10t9 9q-4-4-9-4t-9 5z" fill="#2a1a12"/>'+
+   '<circle cx="260" cy="123" r="1.1" fill="'+ink+'" stroke="none"/><circle cx="266" cy="123" r="1.1" fill="'+ink+'" stroke="none"/><path d="M261 127.4q2 1 4 0" fill="none" stroke-width=".9"/>'+
+   '<path d="M252 146q-8-2-12-8" fill="none" stroke="#6aa0d8" stroke-width="5" stroke-linecap="round"/>'+
+   '<path d="M214 132q-12 2-18 0" fill="none" stroke="#e0a63a" stroke-width="6" stroke-linecap="round"/></g>'+
+  // ซอง
+  '<g transform="rotate(-6 176 130)"><rect x="152" y="116" width="50" height="32" rx="2" fill="#fbf6ea" stroke="'+ink+'" stroke-width="1.2"/><path d="M152 116l25 16 25-16" fill="none" stroke="#c9b58a" stroke-width="1"/>'+
+   '<text x="177" y="135" text-anchor="middle" font-size="7.2" font-weight="900" fill="'+ink+'" font-family="sans-serif">เงินเดือน</text><text x="177" y="144" text-anchor="middle" font-size="6.6" font-weight="800" fill="#7a3e1a" font-family="sans-serif">ที่ค้างจ่าย</text>'+
+   '<rect x="186" y="108" width="28" height="11" rx="2" fill="'+oc+'" stroke="'+ink+'" stroke-width=".8"/><text x="200" y="116.2" text-anchor="middle" font-size="6.8" font-weight="900" fill="'+ink+'" font-family="sans-serif">มรดก</text></g>'+
+  '<circle cx="196" cy="132" r="3.4" fill="#e9c09a" stroke="'+ink+'" stroke-width="1"/><circle cx="240" cy="139" r="3" fill="#e9c09a" stroke="'+ink+'" stroke-width="1"/>';},
+ // [โคมกระดาษเรืองแสงยามค่ำ] ฟ้าสีครามไล่ม่วง สายโคมกระดาษสีส้มเรืองแสงอุ่น โต๊ะไม้มีเทียนสองเล่ม พวงมาลัยดอกมะลิ ซอง "ค่าทำศพ" ป้ายไม้ "ส่งสมทบ 1 เดือน ภายใน 6 เดือน" คนในครอบครัวหน้าสงบจุดเทียน (น้องม้วนขวา)
+ lanternglow:function(k){var ink='#1c1830';
+  var lan=function(x,y,s,d){return '<g transform="translate('+x+' '+y+') scale('+s+')"><g class="cm-pend" style="animation-delay:'+d+'s"><circle r="16" fill="url(#lgh'+k+')"/><path d="M0-14v-4" stroke="#5a4030" stroke-width="1.2"/><rect x="-6" y="-14" width="12" height="3" rx="1" fill="#5a3a1a"/><ellipse rx="10" ry="11" fill="url(#lgl'+k+')" stroke="#b5501a" stroke-width=".8"/><path d="M-10 0h20M-9-5h18M-9 5h18" stroke="#c96a2a" stroke-width=".5" opacity=".6"/><rect x="-6" y="10" width="12" height="3" rx="1" fill="#5a3a1a"/><path d="M0 13v6" stroke="#d9483b" stroke-width="1.4"/></g></g>';};
+  return '<defs><linearGradient id="lgs'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e2350"/><stop offset=".7" stop-color="#4a2f6a"/><stop offset="1" stop-color="#7a4a6e"/></linearGradient>'+
+   '<radialGradient id="lgl'+k+'" cx=".45" cy=".4" r=".7"><stop offset="0" stop-color="#fff4c0"/><stop offset=".5" stop-color="#ffb347"/><stop offset="1" stop-color="#e0682a"/></radialGradient>'+
+   '<radialGradient id="lgh'+k+'" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffb347" stop-opacity=".55"/><stop offset="1" stop-color="#ffb347" stop-opacity="0"/></radialGradient>'+
+   '<radialGradient id="lgc'+k+'" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffe9a0" stop-opacity=".7"/><stop offset="1" stop-color="#ffe9a0" stop-opacity="0"/></radialGradient></defs>'+
+  '<rect width="360" height="180" fill="url(#lgs'+k+')"/><g fill="#fff" opacity=".7"><circle cx="40" cy="20" r=".9"/><circle cx="120" cy="12" r="1.1"/><circle cx="230" cy="30" r=".8"/><circle cx="300" cy="14" r="1"/></g>'+
+  '<path d="M0 74q140 24 270 0" fill="none" stroke="#3a2a1a" stroke-width="1"/>'+lan(36,82,.9,0)+lan(92,90,1,.5)+lan(150,92,1,1)+lan(206,88,.95,.3)+lan(256,78,.85,.8)+
+  '<rect y="150" width="360" height="30" fill="#3a2436"/>'+
+  // โต๊ะ
+  '<ellipse cx="130" cy="140" rx="80" ry="30" fill="url(#lgc'+k+')"/>'+
+  '<rect x="60" y="138" width="150" height="8" rx="2" fill="#7a4a2a" stroke="'+ink+'" stroke-width="1"/><path d="M70 146v30M200 146v30" stroke="#5a3418" stroke-width="5"/>'+
+  // เทียน
+  '<g><rect x="78" y="116" width="7" height="22" fill="#fff6e6" stroke="#c9b58a" stroke-width=".6"/><path class="cm-flash" d="M81.5 115q-4-6 0-12q4 6 0 12z" fill="#ffcf3f"/><rect x="190" y="118" width="7" height="20" fill="#fff6e6" stroke="#c9b58a" stroke-width=".6"/><path class="cm-flash" style="animation-delay:.6s" d="M193.5 117q-4-6 0-12q4 6 0 12z" fill="#ffcf3f"/></g>'+
+  // มาลัย
+  '<g fill="#fffdf4" stroke="#c9b58a" stroke-width=".4">'+[96,102,108,114,120,126,132,138].map(function(x,i){return '<circle cx="'+x+'" cy="'+(132-Math.sin(i/7*3.14)*6)+'" r="2.6"/>';}).join('')+'</g><path d="M117 136l-2 6M119 136l2 6" stroke="#d9483b" stroke-width="1.4"/>'+
+  // ซอง
+  '<g transform="rotate(4 166 128)"><rect x="146" y="118" width="40" height="20" rx="1.5" fill="#fbf6ea" stroke="'+ink+'" stroke-width="1"/><text x="166" y="131.4" text-anchor="middle" font-size="7.4" font-weight="900" fill="'+ink+'" font-family="sans-serif">ค่าทำศพ</text></g>'+
+  // ป้ายไม้
+  '<g><path d="M244 176v-20" stroke="#5a3418" stroke-width="3"/><rect x="214" y="118" width="60" height="38" rx="3" fill="#c89664" stroke="#5a3418" stroke-width="1.2"/><g font-family="sans-serif" text-anchor="middle" font-weight="900" fill="#2a1a0a"><text x="244" y="132" font-size="7.4">ส่งสมทบ 1 เดือน</text><text x="244" y="144" font-size="7.4">ภายใน 6 เดือน</text></g><text x="244" y="152.6" text-anchor="middle" font-size="5.6" font-weight="800" fill="#5a3418" font-family="sans-serif">ก่อนเสียชีวิต</text></g>'+
+  // คนจุดเทียน
+  '<g stroke="'+ink+'" stroke-width="1.2" stroke-linejoin="round"><path d="M18 176v-30q0-14 16-14t16 14v30z" fill="#f4f0e6"/><circle cx="34" cy="116" r="11" fill="#e9c09a"/><path d="M23 114q0-13 11-13t11 12q-4-6-11-6t-11 7z" fill="#2a1a12"/>'+
+   '<path d="M29 117q2 1.2 4 0M36 117q2 1.2 4 0" fill="none" stroke-width="1"/><path d="M31 122q3 1.6 6 0" fill="none" stroke-width="1"/>'+
+   '<path d="M48 142q14-2 24-14" fill="none" stroke="#f4f0e6" stroke-width="5" stroke-linecap="round"/><circle cx="73" cy="127" r="3" fill="#e9c09a"/><path d="M74 126l4-6" stroke="#8a6a3a" stroke-width="1.6"/></g>';},
+ // [สมุดบัญชีธนาคารลายกิโยเช่] กระดาษลายเส้นคลื่นกันปลอม ซ้าย: ผู้ประกันตนวัยกลางคนหน้ายิ้มถือสมุดปกกรมท่าปั๊มทอง ขวา: หน้าสมุดเปิดตารางพิมพ์ดอตเมทริกซ์ "36–119 เดือน ×4" "120 เดือนขึ้นไป ×12" ตราประทับวงกลม (น้องม้วนกลาง)
+ passbook:function(k){var ink='#1e2a3a',nv='#1f3a5f';
+  var g='';for(var i=0;i<9;i++){g+='<path d="M0 '+(20+i*18)+'q30-8 60 0t60 0t60 0t60 0t60 0t60 0" fill="none" stroke="#b8d4c8" stroke-width=".6" opacity=".7"/>';}
+  return '<defs><linearGradient id="pbk'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef6f0"/><stop offset="1" stop-color="#dcebe2"/></linearGradient>'+
+   '<linearGradient id="pbc'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2c4f7a"/><stop offset="1" stop-color="#152c4a"/></linearGradient>'+
+   '<filter id="pbs'+k+'" x="-10%" y="-10%" width="125%" height="130%"><feDropShadow dx="1.5" dy="2.5" stdDeviation="1.8" flood-opacity=".3"/></filter></defs>'+
+  '<rect width="360" height="180" fill="url(#pbk'+k+')"/>'+g+
+  // ซ้าย: คนถือสมุด
+  '<g stroke="'+ink+'" stroke-width="1.2" stroke-linejoin="round"><path d="M84 180v-28q0-14 20-14t20 14v28z" fill="#8fb39a"/><path d="M98 140l6 6 6-6" fill="#fff" stroke-width=".9"/>'+
+   '<circle cx="104" cy="118" r="12" fill="#e9c09a"/><path d="M92 116q0-14 12-14q12 0 12 12q-3-5-12-5t-12 7z" fill="#6a6a6a"/><path d="M95 114q4-4 9-3" fill="none" stroke="#9a9a9a" stroke-width="1"/>'+
+   '<path d="M97 117.4q2.4-1.8 4.6 0M106.6 117.4q2.4-1.8 4.6 0" fill="none" stroke-width="1"/><path d="M99 124q5 3.4 10 0" fill="#fff" stroke-width="1"/><circle cx="96" cy="122" r="1.8" fill="#f08a8a" opacity=".5" stroke="none"/><circle cx="112" cy="122" r="1.8" fill="#f08a8a" opacity=".5" stroke="none"/>'+
+   '<g filter="url(#pbs'+k+')"><rect x="88" y="146" width="34" height="26" rx="2" fill="url(#pbc'+k+')" transform="rotate(-6 105 159)"/></g><text x="105" y="161" text-anchor="middle" font-size="5.8" font-weight="900" fill="#e9c25a" stroke="none" font-family="sans-serif" transform="rotate(-6 105 159)">สมุดสมทบ</text>'+
+   '<circle cx="88" cy="160" r="3.4" fill="#e9c09a"/><circle cx="122" cy="156" r="3.4" fill="#e9c09a"/></g>'+
+  // ขวา: หน้าสมุด
+  '<g transform="translate(0 14)">'+'<g filter="url(#pbs'+k+')"><rect x="220" y="72" width="122" height="92" rx="3" fill="#fbfdfb" stroke="#b9c9c0" stroke-width=".8"/></g>'+
+  '<rect x="220" y="72" width="122" height="14" rx="3" fill="'+nv+'"/><text x="338" y="82" text-anchor="end" font-size="7" font-weight="900" fill="#fff" font-family="sans-serif">เงินสงเคราะห์กรณีตาย</text>'+
+  '<g stroke="#c9d6ce" stroke-width=".6"><path d="M224 102h114M224 122h114M224 142h114M294 88v58"/></g>'+
+  '<g font-family="sans-serif" font-weight="900"><text x="227" y="97" font-size="6.6" fill="#6a7a70">ส่งสมทบ</text><text x="298" y="97" font-size="6.6" fill="#6a7a70">ได้ (50%×)</text>'+
+   '<text x="226" y="115" font-size="8" fill="'+ink+'">36–119 เดือน</text><text x="316" y="116" text-anchor="middle" font-size="11" fill="#c0392b">× 4</text>'+
+   '<text x="226" y="135" font-size="8" fill="'+ink+'">120 เดือน+</text><text x="316" y="136" text-anchor="middle" font-size="11" fill="#c0392b">× 12</text></g>'+
+  '<text x="226" y="158" font-size="5.8" font-weight="800" fill="#6a7a70" font-family="sans-serif">ของค่าจ้างรายเดือนที่ใช้คำนวณ</text>'+
+  '</g>';},
+ // [ดอกไม้กดแห้งบนกระดาษสา] กระดาษสาเส้นใยสีนวล ก้านดอกไม้แห้งแตกกิ่งเป็นแผนผังทายาท ดอกและใบโปร่งแสงสีจาง ป้ายกระดาษติดเทปวาชิ "ลูก 2 ส่วน" "คู่สมรส 1 ส่วน" "พ่อแม่ 1 ส่วน" "ผู้ที่ระบุไว้ 1 ส่วน" เต่าทองหน้ายิ้มเดินบนกิ่ง (น้องม้วนซ้าย)
+ pressedflower:function(k){var ink='#3a3226',st='#7a8a4a';
+  var fl=function(x,y,c,n,r){var s='';for(var i=0;i<n;i++){var a=i*6.283/n;s+='<ellipse cx="'+(x+Math.cos(a)*r).toFixed(1)+'" cy="'+(y+Math.sin(a)*r).toFixed(1)+'" rx="'+(r*.9).toFixed(1)+'" ry="'+(r*.5).toFixed(1)+'" transform="rotate('+(a*57.3).toFixed(0)+' '+(x+Math.cos(a)*r).toFixed(1)+' '+(y+Math.sin(a)*r).toFixed(1)+')" fill="'+c+'" fill-opacity=".72" stroke="'+c+'" stroke-width=".4"/>';}return s+'<circle cx="'+x+'" cy="'+y+'" r="'+(r*.45).toFixed(1)+'" fill="#e8b64a" opacity=".9"/>';};
+  var leaf=function(x,y,r){return '<path transform="translate('+x+' '+y+') rotate('+r+')" d="M0 0q6-8 16-6q-4 10-16 6z" fill="#9fb06a" fill-opacity=".75" stroke="'+st+'" stroke-width=".5"/>';};
+  var tag=function(x,y,t1,t2,r){return '<g transform="rotate('+r+' '+(x+28)+' '+(y+10)+')"><rect x="'+x+'" y="'+y+'" width="56" height="21" rx="1.5" fill="#fffdf6" stroke="#d8ccb2" stroke-width=".7"/><rect x="'+(x+18)+'" y="'+(y-4)+'" width="20" height="7" fill="#f2a6b4" opacity=".75"/><text x="'+(x+28)+'" y="'+(y+9.6)+'" text-anchor="middle" font-size="7.4" font-weight="900" fill="'+ink+'" font-family="sans-serif">'+t1+'</text><text x="'+(x+28)+'" y="'+(y+18)+'" text-anchor="middle" font-size="6.8" font-weight="900" fill="#b0402a" font-family="sans-serif">'+t2+'</text></g>';};
+  return '<defs><filter id="pfp'+k+'" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9 .04" numOctaves="2" seed="5"/><feColorMatrix values="0 0 0 0 .6  0 0 0 0 .52  0 0 0 0 .38  0 0 0 .22 0"/></filter></defs>'+
+  '<rect width="360" height="180" fill="#f3ecdc"/><rect width="360" height="180" filter="url(#pfp'+k+')"/>'+
+  // ก้านหลักแตกกิ่ง
+  '<path d="M220 178q-4-40 0-70M220 132q-30-10-60-22M220 120q26-12 60-20M220 108q-10-20-30-28M220 108q14-18 44-22" fill="none" stroke="'+st+'" stroke-width="1.6" stroke-linecap="round"/>'+
+  leaf(214,160,-140)+leaf(222,150,-40)+leaf(190,122,200)+leaf(252,112,-20)+
+  fl(160,110,'#d98aa6',6,6)+fl(280,100,'#9db4e0',5,6)+fl(190,80,'#e8c46a',7,5)+fl(264,86,'#c9a0e0',6,5)+
+  tag(104,118,'ลูก','2 ส่วน*',-3)+tag(280,110,'คู่สมรส','1 ส่วน',4)+tag(110,82,'พ่อแม่','1 ส่วน',-4)+tag(276,146,'ผู้ที่ระบุไว้','1 ส่วน',3)+
+  '<text x="108" y="154" font-size="6" font-weight="800" fill="#6a5a3a" font-family="sans-serif">*ลูก 3 คนขึ้นไป = 3 ส่วน</text>'+
+  // เต่าทอง
+  '<g transform="translate(222 140)"><g class="cm-bob"><ellipse cx="0" cy="0" rx="7" ry="6" fill="#d9483b" stroke="'+ink+'" stroke-width=".8"/><path d="M0-6v12" stroke="'+ink+'" stroke-width=".7"/><circle cx="-3" cy="-1" r="1.2" fill="'+ink+'"/><circle cx="3" cy="2" r="1.2" fill="'+ink+'"/><circle cx="0" cy="-8" r="3.6" fill="'+ink+'"/><circle cx="-1.3" cy="-8.4" r=".8" fill="#fff"/><circle cx="1.3" cy="-8.4" r=".8" fill="#fff"/><path d="M-1.2-6.6q1.2.8 2.4 0" stroke="#fff" stroke-width=".5" fill="none"/></g></g>';},
+ // [ภาพสีน้ำมันแสงเงาเข้ม chiaroscuro] ห้องมืดโทนน้ำตาลอุ่น ตะเกียงดวงเดียวส่องโต๊ะ ผู้สูงอายุกับหลานหน้าอ่อนโยนรับแสงครึ่งหน้า กำลังเรียงเอกสาร "มรณบัตร" "ทะเบียนบ้าน" "ใบเสร็จงานศพ" รายการเช็กลิสต์ติ๊กถูก ฝีแปรงหนาบนผนัง (น้องม้วนขวา)
+ chiaroscuro:function(k){var ink='#1a120c';
+  var doc=function(x,y,w,t,r){return '<g transform="rotate('+r+' '+(x+w/2)+' '+(y+10)+')"><rect x="'+x+'" y="'+y+'" width="'+w+'" height="22" rx="1.2" fill="#f2e6cc" stroke="#8a6a3a" stroke-width=".6"/><text x="'+(x+w/2)+'" y="'+(y+13.6)+'" text-anchor="middle" font-size="7" font-weight="900" fill="'+ink+'" font-family="sans-serif">'+t+'</text></g>';};
+  return '<defs><radialGradient id="chl'+k+'" cx=".52" cy=".42" r=".62"><stop offset="0" stop-color="#e8b56a"/><stop offset=".35" stop-color="#8a5a2a"/><stop offset=".75" stop-color="#2e1c10"/><stop offset="1" stop-color="#140c06"/></radialGradient>'+
+   '<radialGradient id="chg'+k+'" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff1c0" stop-opacity=".85"/><stop offset="1" stop-color="#ffcf6a" stop-opacity="0"/></radialGradient>'+
+   '<linearGradient id="chf'+k+'" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#f2c79a"/><stop offset=".6" stop-color="#b07a4a"/><stop offset="1" stop-color="#4a2e18"/></linearGradient>'+
+   '<linearGradient id="chf2'+k+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f2c79a"/><stop offset=".6" stop-color="#b07a4a"/><stop offset="1" stop-color="#4a2e18"/></linearGradient></defs>'+
+  '<rect width="360" height="180" fill="url(#chl'+k+')"/>'+
+  '<g stroke="#5a3a1e" stroke-width="5" opacity=".18" stroke-linecap="round" fill="none"><path d="M10 30q60-6 120 4M20 60q80 6 160-4M150 20q50 10 110-6"/></g>'+
+  // ตะเกียง
+  '<circle cx="140" cy="96" r="42" fill="url(#chg'+k+')"/><path d="M134 128h12l-2-8h-8z" fill="#7a5a2a" stroke="'+ink+'" stroke-width=".8"/><path d="M132 120q8-34 16 0z" fill="#fff4c8" fill-opacity=".55" stroke="#c9a46a" stroke-width=".8"/><path class="cm-flash" d="M140 116q-4-6 0-12q4 6 0 12z" fill="#ffcf3f"/>'+
+  // โต๊ะ
+  '<path d="M20 132h250l14 48H6z" fill="#5a3418"/><path d="M20 132h250" stroke="#c98a4a" stroke-width="1.6" opacity=".7"/>'+
+  doc(78,138,48,'มรณบัตร',-6)+doc(150,140,52,'ทะเบียนบ้าน',4)+doc(112,154,62,'ใบเสร็จงานศพ',-2)+
+  // เช็กลิสต์
+  '<g transform="rotate(5 220 150)"><rect x="196" y="136" width="50" height="38" rx="1.5" fill="#efe2c4" stroke="#8a6a3a" stroke-width=".6"/>'+
+   [0,1,2].map(function(i){return '<rect x="200" y="'+(142+i*10)+'" width="6" height="6" fill="none" stroke="'+ink+'" stroke-width=".7"/><path d="M201 '+(145+i*10)+'l2 2 4-5" stroke="#2e7d4a" stroke-width="1.3" fill="none"/><path d="M210 '+(145+i*10)+'h30" stroke="#8a7a5a" stroke-width=".8"/>';}).join('')+'</g>'+
+  // ผู้สูงอายุ (ซ้าย หันขวา)
+  '<g transform="translate(0 24)"><g stroke="'+ink+'" stroke-width="1" stroke-linejoin="round"><path d="M28 132v-26q0-16 22-16t22 16v26z" fill="#5a4a6a"/>'+
+   '<circle cx="54" cy="76" r="13" fill="url(#chf'+k+')"/><path d="M41 74q0-15 13-15q13 0 13 13q-4-6-13-7q-8 2-13 9z" fill="#d8d2c6"/>'+
+   '<path d="M56 76q2-1.4 4 0M62 76.6l1 0" fill="none" stroke-width="1"/><path d="M58 83q3 1.6 6-.4" fill="none" stroke-width="1"/><path d="M60 70l4 1" stroke-width=".8"/>'+
+   '<path d="M70 114q14 6 20 18" fill="none" stroke="#5a4a6a" stroke-width="6" stroke-linecap="round"/><circle cx="91" cy="134" r="3.4" fill="#e0a878"/></g></g>'+
+  // หลาน (ขวา หันซ้าย)
+  '<g stroke="'+ink+'" stroke-width="1" stroke-linejoin="round"><path d="M200 132v-22q0-13 18-13t18 13v22z" fill="#3a5a7a"/>'+
+   '<circle cx="216" cy="88" r="11" fill="url(#chf2'+k+')"/><path d="M205 86q0-13 11-13t11 12q-4-5-11-5t-11 6z" fill="#2a1a12"/>'+
+   '<path d="M209 88q2-1.4 4 0M216 88.6l1 0" fill="none" stroke-width="1"/><path d="M209 94q3 1.6 6 0" fill="none" stroke-width="1"/>'+
+   '<path d="M202 118q-12 4-18 16" fill="none" stroke="#3a5a7a" stroke-width="5.4" stroke-linecap="round"/><circle cx="183" cy="136" r="3.2" fill="#e0a878"/></g>';}
 };
 var BG={
  cradle:'<g opacity=".7">'+[[210,20,1],[250,40,.7],[300,16,1.1],[336,46,.8]].map(function(v){return '<path transform="translate('+v[0]+' '+v[1]+') scale('+v[2]+')" d="M0-7l2 5 5 .8-3.6 3.4.8 5L0 4.6-4.2 7.2-3.4 2.2-7-1.2-2-2z" fill="#ffd84d" stroke="#3a2a12" stroke-width="1"/>';}).join('')+'</g><path d="M190 176q40-14 80-4t90-6v10z" fill="#f6c6d8" opacity=".8"/>',
