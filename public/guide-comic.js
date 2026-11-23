@@ -827,7 +827,46 @@ var P={
   return '<defs><radialGradient id="cn2'+k+'" cx=".4" cy=".2" r="1"><stop offset="0" stop-color="#2d3b7a"/><stop offset="1" stop-color="#11152e"/></radialGradient></defs><rect width="360" height="180" fill="url(#cn2'+k+')"/>'+
   '<g fill="#fff" opacity=".6"><circle cx="20" cy="150" r=".9"/><circle cx="96" cy="170" r="1"/><circle cx="250" cy="160" r=".8"/><circle cx="182" cy="134" r=".9"/><circle cx="26" cy="104" r=".8"/></g>'+
   '<path class="cm-draw2" pathLength="100" stroke-dasharray="100" d="'+path+'" fill="none" stroke="#9fb6ff" stroke-width="1.4" stroke-linejoin="round" opacity=".9"/>'+stars+
-  '<text x="140" y="176" text-anchor="middle" font-size="8" font-weight="900" fill="#cfd8ff" font-family="sans-serif">นายจ้างร่วมรับผิดกับลูกจ้างที่ทำละเมิดในงาน</text>';}
+  '<text x="140" y="176" text-anchor="middle" font-size="8" font-weight="900" fill="#cfd8ff" font-family="sans-serif">นายจ้างร่วมรับผิดกับลูกจ้างที่ทำละเมิดในงาน</text>';},
+ // ===== ฟรีแลนซ์กับลูกจ้าง — 5 สไตล์ใหม่: เบาเฮาส์เรขาคณิต / หน้าจอโค้ด / เมมฟิส / งานปักผ้า / ใบเสร็จความร้อน =====
+ // [เบาเฮาส์] วงกลม 2 วงซ้อนแบบเวนน์ สีแม่สี เส้นเรขาคณิต ป้ายในแต่ละวง (น้องม้วนกลาง)
+ venn:function(k){return '<rect width="360" height="180" fill="#f2ece0"/><rect x="0" y="150" width="360" height="30" fill="#1f1f1f"/><path d="M300 0h60v60z" fill="#e8b10c"/><rect x="14" y="20" width="10" height="120" fill="#1f1f1f"/>'+
+  '<g style="mix-blend-mode:multiply"><circle cx="96" cy="118" r="54" fill="#e04a2f" opacity=".9"/><circle cx="266" cy="118" r="54" fill="#2f5fd0" opacity=".9"/></g>'+
+  '<g font-family="sans-serif" font-weight="900" fill="#fff" text-anchor="middle"><text x="84" y="104" font-size="11">ลูกจ้าง</text><text x="84" y="120" font-size="7.5">ทำงานให้ตลอดเวลา</text><text x="84" y="131" font-size="7.5">นายจ้างสั่งงาน</text><text x="278" y="104" font-size="11">ฟรีแลนซ์</text><text x="278" y="120" font-size="7.5">ทำงานให้สำเร็จ</text><text x="278" y="131" font-size="7.5">เครื่องมือของตัวเอง</text></g>'+
+  '<g transform="translate(181 118)"><g class="cm-spin2"><path d="M0-14L14 0 0 14-14 0z" fill="#e8b10c" stroke="#1f1f1f" stroke-width="2"/></g></g>'+
+  '<text x="96" y="168" text-anchor="middle" font-size="8" font-weight="900" fill="#f2ece0" font-family="sans-serif">จ้างแรงงาน</text><text x="266" y="168" text-anchor="middle" font-size="8" font-weight="900" fill="#f2ece0" font-family="sans-serif">จ้างทำของ</text>';},
+ // [หน้าจอโค้ด] หน้าต่างเทอร์มินัลมืด บรรทัดเงื่อนไขพิมพ์ขึ้นทีละตัว เคอร์เซอร์กะพริบ (น้องม้วนซ้าย)
+ terminal:function(k){var L=function(y,t,d){return '<g class="cm-type" style="animation-delay:'+d+'s"><text x="128" y="'+y+'" font-size="8.2" font-family="monospace" fill="#d6deeb">'+t+'</text></g>';};
+  return '<rect width="360" height="180" fill="#dfe6f2"/><g fill="#c9d4e6"><circle cx="40" cy="40" r="26"/><circle cx="330" cy="160" r="30"/></g>'+
+  '<rect x="114" y="92" width="232" height="84" rx="8" fill="#1e2230"/><rect x="114" y="92" width="232" height="14" rx="8" fill="#2b3042"/><rect x="114" y="100" width="232" height="6" fill="#2b3042"/><g><circle cx="124" cy="99" r="2.6" fill="#ff5f57"/><circle cx="133" cy="99" r="2.6" fill="#febc2e"/><circle cx="142" cy="99" r="2.6" fill="#28c840"/></g>'+
+  L(120,'<tspan fill="#c792ea">if</tspan> (นายจ้าง<tspan fill="#89ddff">.</tspan>สั่งงาน <tspan fill="#89ddff">&amp;&amp;</tspan> คุมเวลา)',0)+
+  L(134,'&#160;&#160;<tspan fill="#c792ea">return</tspan> <tspan fill="#c3e88d">"ลูกจ้าง"</tspan>',.8)+
+  L(148,'<tspan fill="#546e7a">// ชื่อสัญญาไม่ใช่ตัวตัดสิน</tspan>',1.6)+
+  L(162,'<tspan fill="#c792ea">return</tspan> <tspan fill="#c3e88d">"ดูข้อเท็จจริง"</tspan>',2.4)+
+  '<rect class="cm-caret" x="250" y="155" width="5" height="9" fill="#ffcb6b"/>';},
+ // [เมมฟิส] ลายหยัก จุด สามเหลี่ยมสีสด กล่องงานส่งมอบ เหรียญหล่นลงตอนรับงาน (น้องม้วนขวา)
+ memphis:function(k){return '<rect width="360" height="180" fill="#fff4f8"/>'+
+  '<g fill="none" stroke="#1f1f1f" stroke-width="2.4" stroke-linecap="round"><path d="M20 120q8-10 16 0t16 0 16 0"/><path d="M200 168q8-10 16 0t16 0"/></g><g fill="#ffd23f"><path d="M30 150l12-20 12 20z"/></g><g fill="#3ecfcf"><circle cx="246" cy="104" r="7"/></g><g fill="#ff5c8a"><rect x="18" y="98" width="10" height="10" transform="rotate(20 23 103)"/></g>'+
+  '<g fill="#1f1f1f"><circle cx="70" cy="170" r="1.6"/><circle cx="80" cy="170" r="1.6"/><circle cx="90" cy="170" r="1.6"/><circle cx="160" cy="98" r="1.6"/><circle cx="170" cy="98" r="1.6"/></g>'+
+  '<g transform="translate(118 150)"><rect x="-30" y="-34" width="60" height="40" fill="#ff8a5b" stroke="#1f1f1f" stroke-width="2.4"/><path d="M-30-34l8-10h44l8 10" fill="#ffb08a" stroke="#1f1f1f" stroke-width="2.4" stroke-linejoin="round"/><path d="M-6-34v40" stroke="#1f1f1f" stroke-width="2"/><g transform="translate(4 -14)"><path d="M0 0l5 5 10-10" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/></g><text y="20" text-anchor="middle" font-size="8.5" font-weight="900" fill="#1f1f1f" font-family="sans-serif">ส่งมอบงาน</text></g>'+
+  '<g class="cm-coindrop"><g transform="translate(200 120)"><circle r="12" fill="#ffd23f" stroke="#1f1f1f" stroke-width="2.4"/><text y="4.5" text-anchor="middle" font-size="12" font-weight="900" fill="#1f1f1f" font-family="sans-serif">฿</text></g></g>'+
+  '<path d="M150 136h28" stroke="#1f1f1f" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="4 5"/><path d="M174 130l8 6-8 6" fill="none" stroke="#1f1f1f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>';},
+ // [งานปักผ้า] ผ้าลายสาน ไอคอนปักด้วยฝีเข็มประ ตะเข็บรอบ เข็มเย็บขึ้นลง (น้องม้วนซ้าย)
+ stitch:function(k){var row=function(y,ok,t){return '<g transform="translate(136 '+y+')"><rect x="-8" y="-8" width="14" height="14" fill="none" stroke="'+(ok?'#2f8f66':'#c0392b')+'" stroke-width="2" stroke-dasharray="3 2"/>'+(ok?'<path d="M-5-1l3 3 6-6" fill="none" stroke="#2f8f66" stroke-width="2" stroke-dasharray="3 1.6"/>':'<path d="M-5-5l8 8M3-5l-8 8" stroke="#c0392b" stroke-width="2" stroke-dasharray="3 1.6"/>')+'<text x="14" y="4" font-size="8.5" font-weight="800" fill="#4a3426" font-family="sans-serif">'+t+'</text></g>';};
+  return '<defs><pattern id="wv'+k+'" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="#f3e6d0"/><path d="M0 1.5h6M1.5 0v6" stroke="#e6d4b6" stroke-width="1"/><path d="M0 4.5h6M4.5 0v6" stroke="#ecdcc2" stroke-width="1"/></pattern></defs><rect width="360" height="180" fill="url(#wv'+k+')"/>'+
+  '<rect x="120" y="90" width="226" height="80" rx="10" fill="none" stroke="#b5683a" stroke-width="2" stroke-dasharray="5 3"/>'+
+  '<text x="233" y="103" text-anchor="middle" font-size="8" font-weight="900" fill="#b5683a" font-family="sans-serif">ฟรีแลนซ์ (ไม่ใช่ลูกจ้าง)</text>'+
+  row(118,false,'ค่าชดเชย · OT · วันลา')+row(136,false,'ประกันสังคมมาตรา 33')+row(154,true,'สมัครมาตรา 40 เองได้')+
+  '<g class="cm-sew"><g transform="translate(318 146) rotate(30)"><path d="M0-22v32" stroke="#9aa6ba" stroke-width="2.4" stroke-linecap="round"/><ellipse cy="-18" rx="1.4" ry="3" fill="#f3e6d0" stroke="#9aa6ba" stroke-width="1"/><path d="M0-18q-14 8-6 26" fill="none" stroke="#e0453a" stroke-width="1.4"/></g></g>';},
+ // [ใบเสร็จความร้อน] กระดาษใบเสร็จยาวพิมพ์ออกจากเครื่อง ขอบหยัก บาร์โค้ด "ทวงได้ใน 2 ปี" (น้องม้วนขวา)
+ thermal:function(k){var bars='';for(var i=0;i<26;i++){bars+='<rect x="'+(92+i*3.4)+'" y="0" width="'+((i*7)%3+1)+'" height="12" fill="#2b2b2b"/>';}
+  return '<rect width="360" height="180" fill="#e7eef0"/><g fill="#d6e2e6"><circle cx="300" cy="40" r="30"/></g>'+
+  '<defs><clipPath id="tc'+k+'"><rect x="60" y="114" width="140" height="70"/></clipPath></defs><g clip-path="url(#tc'+k+')">'+
+  '<g class="cm-printout"><g transform="translate(86 114)"><path d="M0 0h88v58l-4 4-4-4-4 4-4-4-4 4-4-4-4 4-4-4-4 4-4-4-4 4-4-4-4 4-4-4-4 4-4-4-4 4-4-4-4 4-4-4-4 4-4-4-4 4z" fill="#fffef9" stroke="#c9d1d6" stroke-width="1"/>'+
+  '<g font-family="monospace" font-size="7" fill="#3b3b3b"><text x="6" y="12">ค่าออกแบบโลโก้</text><text x="82" y="12" text-anchor="end">8,000</text><text x="6" y="22">ส่งงานแล้ว 1/10</text><text x="6" y="34" font-weight="900">ค้างชำระ</text><text x="82" y="34" text-anchor="end" font-weight="900">8,000</text></g>'+
+  '<g transform="translate(-86 40)">'+bars+'</g></g></g></g>'+
+  '<rect x="70" y="96" width="120" height="22" rx="6" fill="#4a5568"/><rect x="80" y="112" width="100" height="5" rx="2" fill="#1f2530"/><circle cx="174" cy="106" r="3" fill="#7cff9e"/>'+
+  '<g transform="translate(232 128)"><rect x="-26" y="-18" width="52" height="40" rx="8" fill="#fff" stroke="#3b3b3b" stroke-width="2"/><text y="2" text-anchor="middle" font-size="14" font-weight="900" fill="#c0392b" font-family="sans-serif">2 ปี</text><text y="15" text-anchor="middle" font-size="7" font-weight="800" fill="#3b3b3b" font-family="sans-serif">อายุความ</text></g>';}
 };
 var BG={
  cradle:'<g opacity=".7">'+[[210,20,1],[250,40,.7],[300,16,1.1],[336,46,.8]].map(function(v){return '<path transform="translate('+v[0]+' '+v[1]+') scale('+v[2]+')" d="M0-7l2 5 5 .8-3.6 3.4.8 5L0 4.6-4.2 7.2-3.4 2.2-7-1.2-2-2z" fill="#ffd84d" stroke="#3a2a12" stroke-width="1"/>';}).join('')+'</g><path d="M190 176q40-14 80-4t90-6v10z" fill="#f6c6d8" opacity=".8"/>',
