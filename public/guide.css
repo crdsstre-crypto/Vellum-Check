@@ -1039,3 +1039,9 @@
 .gd-cover[data-layout="bubbleframe"] .gd-cover-art .gd-scene { border-radius: 18px; }
 .gd-cover[data-layout="bubbleframe"] .gd-cover-art::before { content: ""; position: absolute; left: 22px; bottom: -17px; z-index: 3; pointer-events: none; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 16px solid #2f3f5f; transform: skewX(-20deg); }
 .gd-cover[data-layout="bubbleframe"] .gd-cover-art::after { content: "!"; position: absolute; right: -12px; top: -12px; z-index: 3; pointer-events: none; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font: 900 18px/1 sans-serif; color: #2f3f5f; background: #ffd166; border: 3px solid #2f3f5f; border-radius: 50%; transform: rotate(10deg); }
+
+/* ปกแบบ "hangtag" = ป้ายแขวนกระดาษคราฟต์ ขอบซ้ายตัดมุม มีรูตาไก่และเชือกโค้งลอยขึ้นด้านบน (คู่มือ arrested-employee) */
+.gd-cover[data-layout="hangtag"] .gd-cover-art { overflow: visible; border: 6px solid #d9b98a; border-radius: 6px 6px 6px 6px; box-shadow: 0 8px 18px rgba(80,60,40,.22); transform: rotate(-3deg); margin-top: 14px; }
+.gd-cover[data-layout="hangtag"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="hangtag"] .gd-cover-art::before { content: ""; position: absolute; left: 50%; top: -14px; width: 16px; height: 16px; margin-left: -8px; z-index: 3; pointer-events: none; border-radius: 50%; background: #fffaf0; border: 3px solid #b08a5a; box-shadow: inset 0 0 0 2px #fffaf0; }
+.gd-cover[data-layout="hangtag"] .gd-cover-art::after { content: ""; position: absolute; left: 50%; top: -42px; width: 46px; height: 34px; z-index: 2; pointer-events: none; border: 2px solid #8a6a4a; border-color: #8a6a4a transparent transparent #8a6a4a; border-radius: 50% 0 0 0; transform: rotate(18deg); }
