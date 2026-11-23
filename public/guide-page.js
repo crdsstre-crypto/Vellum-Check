@@ -90,28 +90,53 @@
       }
       const cats = [...groups];
       let k = 0;
-      const card = g => `<a class="gd-lc" href="/guide/${esc(g.slug)}">
-          <div class="gd-lc-img" aria-hidden="true">${scene(g.scene, 'c' + (++k))}<span class="gd-lc-mz">${mascot(g.mood, 74)}</span></div>
+      const card = g => `<a class="gd-lc" href="/guide/${esc(g.slug)}" data-q="${esc((g.title + ' ' + (g.cardText || '') + ' ' + (g.intro || '')).replace(/\*\*/g, '').toLowerCase())}">
+          <div class="gd-lc-img" aria-hidden="true"><div class="gd-lc-amb">${scene(g.scene, 'a' + (++k))}</div><div class="gd-lc-frame">${scene(g.scene, 'c' + k)}<span class="gd-lc-mz">${mascot(g.mood, 74)}</span></div></div>
           <div class="gd-lc-body">
             <span class="gd-lc-tag"><span class="gd-lc-cat">${g.categoryIcon ? esc(g.categoryIcon) + ' ' : ''}${esc(g.category)}</span>คู่มือ${g.minutes ? ` · ${toTh(g.minutes)} นาที` : ''}${g.reviewed ? '' : '<span class="gd-lc-draft">ฉบับร่าง</span>'}</span>
             <h3>${esc(g.title)}</h3>
             <p>${hl(g.cardText || g.intro)}</p>
             <span class="gd-lc-go">อ่านคู่มือ →</span>
           </div></a>`;
+      $main.classList.add('is-list');
+      const side = cats.length ? `<aside class="gd-side" aria-label="ค้นหาและเลือกหมวด">
+          <label class="gd-search"><span class="gd-sr">ค้นหาคู่มือ</span><input type="search" placeholder="ค้นหา เช่น ลาคลอด" autocomplete="off"></label>
+          <p class="gd-side-h">หมวด</p>
+          <button type="button" class="gd-side-c on" aria-pressed="true" data-cat=""><span>ทั้งหมด</span><b>${toTh(d.items.length)}</b></button>
+          ${cats.map(([c, G]) => `<button type="button" class="gd-side-c" aria-pressed="false" data-cat="${esc(c)}"><span>${G.icon ? esc(G.icon) + ' ' : ''}${esc(c)}</span><b>${toTh(G.list.length)}</b></button>`).join('')}
+        </aside>` : '';
       $main.innerHTML = `<h1 class="gd-lh">รู้ก่อนเซ็น<em>เรื่องที่คุณเจอ</em></h1>
         <p class="gd-lsub">อ่าน ฟัง หรือดูคลิป ภาษาง่าย พร้อมตัวบทจริงทุกข้อ</p>
         ${d.isAdmin ? '<div class="gd-draft">คุณเห็นคู่มือฉบับร่างด้วยเพราะเป็นแอดมิน · คนทั่วไปจะเห็นเฉพาะเรื่องที่ตั้ง "reviewed": true แล้ว</div>' : ''}
         ${cats.length > 1 ? `<nav class="gd-chips" aria-label="เลือกหมวด"><button type="button" class="on" aria-pressed="true" data-cat="">ทั้งหมด</button>${cats.map(([c, G]) => `<button type="button" aria-pressed="false" data-cat="${esc(c)}">${G.icon ? esc(G.icon) + ' ' : ''}${esc(c)}</button>`).join('')}</nav>` : ''}
+        <div class="gd-lay">${side}<div class="gd-lmain">
         ${cats.length ? cats.map(([c, G]) => `<section class="gd-sec" data-sec="${esc(c)}">
             <h2>${G.icon ? `<span class="gd-ic" aria-hidden="true">${esc(G.icon)}</span>` : ''}${esc(c)}</h2>
             ${G.note ? `<p class="gd-sec-d">${esc(G.note)}</p>` : ''}
-            ${G.list.map(card).join('')}</section>`).join('')
-          : '<p class="gd-empty">ยังไม่มีเรื่องที่เผยแพร่ เร็ว ๆ นี้จะมีเพิ่มครับ</p>'}`;
-      const chips = [...$main.querySelectorAll('.gd-chips button')];
+            <div class="gd-grid">${G.list.map(card).join('')}</div></section>`).join('')
+          : '<p class="gd-empty">ยังไม่มีเรื่องที่เผยแพร่ เร็ว ๆ นี้จะมีเพิ่มครับ</p>'}
+        <p class="gd-empty gd-nofind" hidden>ไม่พบคู่มือที่ตรงกับคำค้น ลองคำอื่นดูนะครับ</p></div></div>`;
+      // ตัวกรองหมวด (ปุ่มบนมือถือ + แถบข้างบนคอม ใช้ร่วมกัน) และช่องค้นหา (บนคอม)
+      const chips = [...$main.querySelectorAll('.gd-chips button, .gd-side-c')];
+      const $q = $main.querySelector('.gd-search input');
+      let cat = '';
+      const apply = () => {
+        const q = ($q && $q.value || '').trim().toLowerCase();
+        let shown = 0;
+        $main.querySelectorAll('.gd-sec').forEach(sec => {
+          let n = 0;
+          sec.querySelectorAll('.gd-lc').forEach(a => { const ok = !q || a.dataset.q.includes(q); a.hidden = !ok; if (ok) n++; });
+          sec.hidden = (!!cat && sec.dataset.sec !== cat) || n === 0;
+          if (!sec.hidden) shown += n;
+        });
+        const nf = $main.querySelector('.gd-nofind'); if (nf) nf.hidden = shown > 0;
+      };
       chips.forEach(b => b.addEventListener('click', () => {
-        chips.forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', String(x === b)); });
-        $main.querySelectorAll('.gd-sec').forEach(sec => { sec.hidden = !!b.dataset.cat && sec.dataset.sec !== b.dataset.cat; });
+        cat = b.dataset.cat;
+        chips.forEach(x => { const on = x.dataset.cat === cat; x.classList.toggle('on', on); x.setAttribute('aria-pressed', String(on)); });
+        apply();
       }));
+      if ($q) $q.addEventListener('input', apply);
     } catch (e) { $main.innerHTML = errBox(e); }
   }
 
@@ -121,6 +146,7 @@
     : `<span class="gd-law ext" title="${esc(c.note || '')}">${esc(c.label)}</span>`;
 
   async function viewGuide(slug) {
+    $main.classList.remove('is-list');
     let g;
     try { g = await get('/api/guides/' + encodeURIComponent(slug)); }
     catch (e) { $main.innerHTML = e.status === 404 ? `<div class="lb-band"><div><b>ไม่พบคู่มือนี้</b><br><a href="/guide">ดูเรื่องทั้งหมด</a></div></div>` : errBox(e); return; }
