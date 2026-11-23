@@ -890,3 +890,26 @@
 @keyframes qsRock2 { 0%, 100% { transform: rotate(-10deg); } 50% { transform: rotate(10deg); } }
 @keyframes cmConfetti { 0% { transform: translateY(-30px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(6px); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .gd-cm .cm-confetti { opacity: 1; } }
+
+/* ===== ปกแบบเลนส์กล้อง (coverLayout: "lens"): วงกลมขอบดำหลายชั้น แสงสะท้อนบนกระจก ===== */
+.gd-cover[data-layout="lens"] .gd-cover-art { flex-basis: 138px; height: 138px; overflow: visible; border: 0; border-radius: 50%; margin: 8px; box-shadow: 0 0 0 4px #2a2e38, 0 0 0 7px #4a5262, 0 0 0 10px #1a1d24, 0 10px 18px rgba(0, 0, 0, .3); }
+.gd-cover[data-layout="lens"] .gd-cover-art .gd-scene { clip-path: circle(50%); }
+.gd-cover[data-layout="lens"] .gd-cover-art::after { content: ""; position: absolute; inset: 0; border-radius: 50%; z-index: 1; pointer-events: none; background: radial-gradient(ellipse at 30% 22%, rgba(255, 255, 255, .55) 0 10%, transparent 26%), radial-gradient(circle at 70% 75%, rgba(120, 180, 255, .18) 0 18%, transparent 40%); }
+.gd-cover[data-layout="lens"] .gd-cover-art .gd-cover-m { left: -16px; bottom: -8px; }
+.gd-cover[data-layout="lens"] { gap: 22px; }
+/* ของขยับชุดใหม่ (ข้อมูลส่วนตัวในที่ทำงาน) */
+.gd-scene .sc-pan { transform-box: fill-box; transform-origin: 95% 30%; animation: scPan 5s ease-in-out infinite; }
+.gd-scene .sc-rec { animation: scLamp 1s steps(2) infinite; }
+.gd-cm .cm-lensmove { animation: cmLensmove 4s ease-in-out infinite; }
+.gd-cm .cm-screenflick { animation: cmFlick2 1.4s steps(2) infinite; }
+@keyframes cmFlick2 { 0%, 100% { opacity: .04; } 50% { opacity: .14; } }
+.gd-cm .cm-scanline { animation: cmScanline 2.4s ease-in-out infinite; }
+.gd-cm .cm-knob2 { animation: cmKnob2 3s ease-in-out infinite; }
+.gd-cm .cm-keyswing { transform-box: fill-box; transform-origin: 50% 0; animation: qsRock2 3s ease-in-out infinite; }
+.gd-cm .cm-sealpress { animation: cmSealpress 3.2s ease-out infinite; }
+@keyframes scPan { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(8deg); } }
+@keyframes cmLensmove { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(6px, -4px); } }
+@keyframes cmScanline { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(26px); } }
+@keyframes cmKnob2 { 0%, 20% { transform: translateX(-14px); } 40%, 100% { transform: translateX(0); } }
+@keyframes cmSealpress { 0%, 50% { transform: translateY(-10px) scale(1.15); opacity: 0; } 60% { transform: translateY(0) scale(.95); opacity: 1; } 70%, 100% { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .gd-cm .cm-sealpress { opacity: 1; } }
