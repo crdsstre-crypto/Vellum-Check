@@ -109,7 +109,6 @@
         </aside>` : '';
       $main.innerHTML = `<h1 class="gd-lh">รู้ก่อนเซ็น<em>เรื่องที่คุณเจอ</em></h1>
         <p class="gd-lsub">อ่าน ฟัง หรือดูคลิป ภาษาง่าย พร้อมตัวบทจริงทุกข้อ</p>
-        <a class="qa-banner" href="/guide/q"><span class="qa-banner-m" aria-hidden="true">${mascot('point+star+mag+bob', 46)}</span><span><b>คลังคำถาม</b>มีคำถามเฉพาะเรื่อง ตอบสั้น พร้อมมาตรา</span><i aria-hidden="true">→</i></a>
         ${d.isAdmin ? '<div class="gd-draft">คุณเห็นคู่มือฉบับร่างด้วยเพราะเป็นแอดมิน · คนทั่วไปจะเห็นเฉพาะเรื่องที่ตั้ง "reviewed": true แล้ว</div>' : ''}
         ${cats.length > 1 ? `<nav class="gd-chips" aria-label="เลือกหมวด"><button type="button" class="on" aria-pressed="true" data-cat="">ทั้งหมด</button>${cats.map(([c, G]) => `<button type="button" aria-pressed="false" data-cat="${esc(c)}">${G.icon ? esc(G.icon) + ' ' : ''}${esc(c)}</button>`).join('')}</nav>` : ''}
         <div class="gd-lay">${side}<div class="gd-lmain">
@@ -199,7 +198,7 @@
       ${g.sections.map(s => `<h2 class="gd-h2" data-say><span class="gd-n" aria-hidden="true">${++n}</span>${esc(s.title)}</h2>
         ${s.panel && window.VCComic ? VCComic.panel(s.panel.scene, (prevMood = pickMood(s.panel.mood, g.slug + '#' + n, prevMood)), hlB(s.panel.say), 'ตอนที่ ' + n, 'p' + n, s.panel.layout, s.panel.bubble) : ''}
         ${s.items.map(it => `<div class="gd-item" data-say><p class="gd-q">${esc(it.q)}</p><p class="gd-a">${hlA(it.a)}</p>
-          ${it.cite.length ? `<div class="gd-cites">${it.cite.map(citeBtn).join('')}</div>` : ''}${it.id ? `<a class="gd-qlink" href="/guide/q/${esc(it.id)}">เปิดข้อนี้เป็นหน้าเดียว ›</a>` : ''}</div>`).join('')}`).join('')}
+          ${it.cite.length ? `<div class="gd-cites">${it.cite.map(citeBtn).join('')}</div>` : ''}</div>`).join('')}`).join('')}
       ${g.redFlags.length ? `<h2 class="gd-h2" data-say>🚩 เจอแบบนี้ในสัญญา ระวัง</h2>${g.redFlags.map(f => `<div class="gd-flag" data-say><b>${esc(f.text)}</b>${f.note ? `<br>${esc(f.note)}` : ''}</div>`).join('')}` : ''}
       </div>
       ${g.cta ? `<div class="gd-cta"><p>${esc(g.cta.text)}</p><a href="${esc(g.cta.href)}">${esc(g.cta.button)}</a></div>` : ''}
@@ -236,95 +235,6 @@
     $main.addEventListener('click', e => { const b = e.target.closest('button.gd-law'); if (b) openCite(b); });
   }
 
-  // ---------- คลังคำถาม: /guide/q (รายการ) และ /guide/q/<id> (หน้าเดียว) ----------
-  const spot = (art, key) => (art && window.VCSpots) ? VCSpots.svg(art.spot, key, art.alt) : '';
-  const spotFig = (art, key, seed, size) => {
-    const s = spot(art, key); if (!s) return '';
-    return `<figure class="qa-art${art.side === 'right' ? ' r' : ''}">${s}<span class="qa-art-m" aria-hidden="true">${mascot(pickMood(art.mood, seed), size)}</span></figure>`;
-  };
-  // ภาพย่อในรายการ วาดเมื่อเลื่อนมาถึง (คำถามเป็นพันข้อ ไม่วาดทีเดียวทั้งหมด)
-  let thumbIO = null;
-  const lazyThumbs = root => {
-    const els = [...root.querySelectorAll('.qa-th[data-spot]')];
-    const draw = el => { const art = { spot: el.dataset.spot, mood: el.dataset.mood, side: el.dataset.side, alt: '' }; el.innerHTML = spotFig(art, 't' + el.dataset.k, el.dataset.seed, 40); el.removeAttribute('data-spot'); };
-    if (!('IntersectionObserver' in window)) { els.forEach(draw); return; }
-    thumbIO?.disconnect();
-    thumbIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { thumbIO.unobserve(e.target); draw(e.target); } }), { rootMargin: '300px' });
-    els.forEach(el => thumbIO.observe(el));
-  };
-
-  async function viewQList() {
-    document.title = 'คลังคำถามกฎหมาย · เรียนรู้ · Vellum';
-    $main.classList.remove('is-list');
-    try {
-      const d = await get('/api/qa');
-      const cats = [...new Set(d.items.map(x => x.category))];
-      const nArt = d.items.filter(x => x.art).length;
-      let k = 0;
-      const row = x => `<a class="qa-row" href="/guide/q/${esc(x.id)}" data-cat="${esc(x.category)}" data-q="${esc((x.q + ' ' + x.short + ' ' + x.guide.title).toLowerCase())}">
-          ${x.art ? `<span class="qa-th" data-spot="${esc(x.art.spot)}" data-mood="${esc(x.art.mood)}" data-side="${esc(x.art.side)}" data-seed="${esc(x.id)}" data-k="${++k}"></span>` : `<span class="qa-th none" aria-hidden="true">${mascot('curious', 34)}</span>`}
-          <span class="qa-rb"><b>${esc(x.q)}</b><span>${esc(x.short)}</span>
-          <small>${x.cite.length ? esc(x.cite.map(c => lawShort(c.law) + ' ม.' + toTh(c.sec)).join(' · ')) + ' · ' : ''}${esc(x.guide.title)}${x.reviewed ? '' : ' · <i>ร่าง</i>'}</small></span></a>`;
-      $main.innerHTML = `<div class="gd-crumb"><a href="/guide">เรียนรู้</a> › คลังคำถาม</div>
-        <h1 class="gd-lh">คลังคำถาม <em>ตอบสั้น มีมาตรา</em></h1>
-        <p class="gd-lsub">${toTh(d.items.length)} คำถามจากคู่มือทุกเรื่อง · มีภาพประกอบแล้ว ${toTh(nArt)} ข้อ</p>
-        ${d.isAdmin ? '<div class="gd-draft">คุณเห็นคำถามจากคู่มือฉบับร่างด้วยเพราะเป็นแอดมิน</div>' : ''}
-        <label class="gd-search qa-search"><span class="gd-sr">ค้นหาคำถาม</span><input type="search" placeholder="พิมพ์คำถาม เช่น ลาป่วย ไม่ตอบไลน์" autocomplete="off"></label>
-        ${cats.length > 1 ? `<nav class="gd-chips" aria-label="เลือกหมวด"><button type="button" class="on" aria-pressed="true" data-cat="">ทั้งหมด</button>${cats.map(c => `<button type="button" aria-pressed="false" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}</nav>` : ''}
-        <div class="qa-list">${d.items.map(row).join('')}</div>
-        <p class="gd-empty gd-nofind" hidden>ไม่พบคำถามที่ตรงกับคำค้น ลองคำอื่นดูนะครับ</p>`;
-      const $q = $main.querySelector('.qa-search input'), chips = [...$main.querySelectorAll('.gd-chips button')];
-      let cat = '';
-      const apply = () => {
-        const q = ($q.value || '').trim().toLowerCase(); let n = 0;
-        $main.querySelectorAll('.qa-row').forEach(a => { const ok = (!cat || a.dataset.cat === cat) && (!q || a.dataset.q.includes(q)); a.hidden = !ok; if (ok) n++; });
-        $main.querySelector('.gd-nofind').hidden = n > 0;
-      };
-      chips.forEach(b => b.addEventListener('click', () => { cat = b.dataset.cat; chips.forEach(x => { const on = x === b; x.classList.toggle('on', on); x.setAttribute('aria-pressed', String(on)); }); apply(); }));
-      $q.addEventListener('input', apply);
-      lazyThumbs($main);
-    } catch (e) { $main.innerHTML = errBox(e); }
-  }
-
-  async function viewQ(id) {
-    $main.classList.remove('is-list');
-    let x;
-    try { x = await get('/api/qa/' + encodeURIComponent(id)); }
-    catch (e) { $main.innerHTML = e.status === 404 ? `<div class="lb-band"><div><b>ไม่พบคำถามนี้</b><br><a href="/guide/q">ดูคำถามทั้งหมด</a></div></div>` : errBox(e); return; }
-    const g = x.guide;
-    document.title = x.q + ' · Vellum';
-    const md = document.querySelector('meta[name="description"]'); if (md) md.setAttribute('content', x.a.replace(/\*\*/g, '').slice(0, 155));
-    $main.innerHTML = `
-      ${g.reviewed ? '' : `<div class="gd-draft" role="note">ฉบับร่าง · ยังไม่ผ่านการตรวจโดยนักกฎหมาย${x.isAdmin ? ' · ตอนนี้เห็นเฉพาะแอดมิน' : ''}</div>`}
-      <div class="gd-crumb"><a href="/guide">เรียนรู้</a> › <a href="/guide/q">คลังคำถาม</a> › ${esc(g.category)}</div>
-      <article class="qa-one">
-        ${spotFig(x.art, 'q1', x.id, 84) || `<figure class="qa-art none" aria-hidden="true">${scene(g.scene, 'qf')}<span class="qa-art-m">${mascot(pickMood(g.mood, x.id), 76)}</span></figure>`}
-        <p class="qa-from">${g.categoryIcon ? esc(g.categoryIcon) + ' ' : ''}จากคู่มือ <a href="/guide/${esc(g.slug)}">${esc(g.title)}</a> · ข้อ ${toTh(x.n)}/${toTh(x.total)}</p>
-        <h1 class="qa-h1" data-say>${esc(x.q)}</h1>
-        <div class="qa-ans" data-say>${hlA(x.a)}</div>
-        ${x.cite.length ? `<div class="gd-cites">${x.cite.map(citeBtn).join('')}</div>` : ''}
-        <div class="qa-tools">
-          ${tts.ok ? '<button type="button" class="qa-btn" data-sayq>🔊 ฟังคำตอบ</button>' : ''}
-          <button type="button" class="qa-btn" data-share>🔗 คัดลอกลิงก์</button>
-          <span class="gd-chip ${g.reviewed ? 'ok' : 'wait'}">${g.reviewed ? '✓ ตรวจโดยนักกฎหมาย' + (g.reviewer ? ' · ' + esc(g.reviewer) : '') : '⏳ รอนักกฎหมายตรวจ'}</span>
-        </div>
-      </article>
-      <nav class="qa-nav" aria-label="คำถามก่อนหน้าและถัดไป">
-        ${x.prev ? `<a href="/guide/q/${esc(x.prev.id)}"><small>‹ ข้อก่อนหน้า</small>${esc(x.prev.q)}</a>` : '<span></span>'}
-        ${x.next ? `<a class="nx" href="/guide/q/${esc(x.next.id)}"><small>ข้อถัดไป ›</small>${esc(x.next.q)}</a>` : '<span></span>'}
-      </nav>
-      ${x.related.length ? `<h2 class="gd-h2">คำถามใกล้เคียง · ${esc(x.secTitle)}</h2><div class="qa-list">${x.related.map(r => `<a class="qa-row" href="/guide/q/${esc(r.id)}">${r.art ? `<span class="qa-th" data-spot="${esc(r.art.spot)}" data-mood="${esc(r.art.mood)}" data-side="${esc(r.art.side)}" data-seed="${esc(r.id)}" data-k="r${esc(r.id)}"></span>` : `<span class="qa-th none" aria-hidden="true">${mascot('curious', 34)}</span>`}<span class="qa-rb"><b>${esc(r.q)}</b><span>${esc(r.short)}</span></span></a>`).join('')}</div>` : ''}
-      <div class="gd-cta"><p>อยากเข้าใจทั้งเรื่อง? อ่านคู่มือเต็มพร้อมภาพการ์ตูนและสรุป 30 วินาที</p><a href="/guide/${esc(g.slug)}">อ่านคู่มือเต็ม →</a></div>
-      <p class="gd-disc">ข้อมูลทั่วไปเพื่อการศึกษา ไม่ใช่คำปรึกษากฎหมาย · ตัวบทที่อ้างอิงดึงจากคลังกฎหมายของ Vellum (ฉบับรวมกฤษฎีกา) · หากมีข้อพิพาทควรปรึกษาทนายความ</p>`;
-    lazyThumbs($main);
-    $main.querySelector('[data-sayq]')?.addEventListener('click', () => tts.once(x.q + ' ' + x.a.replace(/\*\*/g, '')));
-    $main.querySelector('[data-share]')?.addEventListener('click', async e => {
-      const b = e.currentTarget, url = location.origin + '/guide/q/' + x.id;
-      try { if (navigator.share) await navigator.share({ title: x.q, url }); else { await navigator.clipboard.writeText(url); b.textContent = '✓ คัดลอกแล้ว'; } } catch {}
-    });
-    $main.addEventListener('click', e => { const b = e.target.closest('button.gd-law'); if (b) openCite(b); });
-  }
-
   // ---------- แผ่นตัวบท ----------
   let lastFocus = null;
   function closeSheet() { document.querySelector('.gd-sheet-bg')?.remove(); document.removeEventListener('keydown', onKey); lastFocus?.focus(); }
@@ -355,6 +265,5 @@
 
   // ---------- เริ่ม ----------
   const parts = location.pathname.replace(/\/+$/, '').split('/');
-  if (parts[1] === 'guide' && parts[2] === 'q') { if (parts[3]) viewQ(decodeURIComponent(parts[3])); else viewQList(); }
-  else if (parts[1] === 'guide' && parts[2]) viewGuide(decodeURIComponent(parts[2])); else viewList();
+  if (parts[1] === 'guide' && parts[2]) viewGuide(decodeURIComponent(parts[2])); else viewList();
 })();
