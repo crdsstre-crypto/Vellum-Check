@@ -925,3 +925,13 @@
 .gd-more:hover { background: #FFF0DC; }
 .gd-more:disabled { opacity: .55; cursor: progress; }
 .gd-res[aria-busy="true"] { opacity: .5; transition: opacity .15s; }
+
+/* ===== ปกแบบพลาสเตอร์ยา (coverLayout: "bandage"): พลาสเตอร์ 2 แผ่นแปะไขว้มุมขวาบนของภาพ ===== */
+.gd-cover[data-layout="bandage"] .gd-cover-art { overflow: visible; border: 2px solid #e9b98a; transform: rotate(-1.5deg); }
+.gd-cover[data-layout="bandage"] .gd-cover-art .gd-scene { border-radius: 10px; }
+.gd-cover[data-layout="bandage"] .gd-cover-art::before,
+.gd-cover[data-layout="bandage"] .gd-cover-art::after { content: ""; position: absolute; right: -16px; top: 10px; width: 66px; height: 19px; z-index: 3; pointer-events: none; border-radius: 10px;
+  background: radial-gradient(circle, rgba(150, 90, 40, .35) 0 1.1px, transparent 1.4px) 0 0 / 6px 6px, linear-gradient(90deg, transparent 34%, #fbe3c6 34% 66%, transparent 66%), #f2c08f;
+  box-shadow: 0 2px 3px rgba(80, 40, 0, .22); }
+.gd-cover[data-layout="bandage"] .gd-cover-art::before { transform: rotate(38deg); }
+.gd-cover[data-layout="bandage"] .gd-cover-art::after { transform: rotate(-38deg); }
