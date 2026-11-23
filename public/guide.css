@@ -1051,6 +1051,12 @@
 .gd-cover[data-layout="postcard"] .gd-cover-art::before { content: ""; position: absolute; inset: -9px -9px -24px -9px; z-index: 3; pointer-events: none; background: linear-gradient(135deg, #6a3a2a 14px, transparent 14px) top left / 26px 26px no-repeat, linear-gradient(225deg, #6a3a2a 14px, transparent 14px) top right / 26px 26px no-repeat, linear-gradient(45deg, #6a3a2a 14px, transparent 14px) bottom left / 26px 26px no-repeat, linear-gradient(315deg, #6a3a2a 14px, transparent 14px) bottom right / 26px 26px no-repeat; }
 .gd-cover[data-layout="postcard"] .gd-cover-art::after { content: "ร้านเล็ก ๆ ของเรา"; position: absolute; left: 0; right: 0; bottom: -19px; z-index: 3; pointer-events: none; text-align: center; font: italic 700 11px/16px sans-serif; color: #8a5a3a; }
 
+/* ปกแบบ "badge" = บัตรพนักงานในซองพลาสติกใส ขอบใสมน มีช่องเจาะรูปแคปซูลด้านบน และสายคล้องสีฟ้าพร้อมตัวหนีบโลหะ (คู่มือ side-job) */
+.gd-cover[data-layout="badge"] .gd-cover-art { overflow: visible; margin-top: 30px; border: 9px solid rgba(225,238,250,.85); border-top-width: 22px; border-radius: 14px; box-shadow: inset 0 0 0 1px rgba(120,150,180,.35), 0 8px 18px rgba(40,60,90,.22); transform: rotate(-2deg); }
+.gd-cover[data-layout="badge"] .gd-cover-art .gd-scene { border-radius: 4px; }
+.gd-cover[data-layout="badge"] .gd-cover-art::before { content: ""; position: absolute; left: 50%; top: -15px; width: 34px; height: 8px; margin-left: -17px; z-index: 3; pointer-events: none; border-radius: 4px; background: #fffdf8; box-shadow: inset 0 1px 2px rgba(60,80,110,.35); }
+.gd-cover[data-layout="badge"] .gd-cover-art::after { content: ""; position: absolute; left: 50%; top: -52px; width: 20px; height: 38px; margin-left: -10px; z-index: 2; pointer-events: none; border-radius: 3px 3px 5px 5px; background: linear-gradient(#4a8fd8 0 64%, #c7ccd4 64% 74%, #9aa2ae 74% 100%); box-shadow: 0 2px 4px rgba(40,60,90,.25); }
+
 /* ปกแบบ "perforated" = แสตมป์ ขอบปรุรอบด้านสีขาว ตราประทับวันที่วงรีสีม่วงมุมขวาล่าง (คู่มือ ss-not-remitted) */
 .gd-cover[data-layout="perforated"] .gd-cover-art { overflow: visible; padding: 7px; border-radius: 2px; background: radial-gradient(circle at 50% 50%, transparent 3px, #fffdf6 3.6px) -5px -5px / 10px 10px; box-shadow: 0 6px 16px rgba(60,40,20,.22); transform: rotate(-2deg); }
 .gd-cover[data-layout="perforated"] .gd-cover-art .gd-scene { border-radius: 1px; }
