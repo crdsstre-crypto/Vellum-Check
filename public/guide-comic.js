@@ -1859,7 +1859,127 @@ var P={
   // เกรนฟิล์ม รอยขีด ขอบฟิล์ม
   '<rect width="360" height="180" filter="url(#rhn'+k+')" opacity=".55"/>'+
   '<g stroke="'+ink+'" stroke-width=".5" opacity=".35"><path d="M120 0v180M268 20v120M40 60v50"/></g>'+
-  '<rect width="360" height="180" fill="url(#rhv'+k+')"/>';}
+  '<rect width="360" height="180" fill="url(#rhv'+k+')"/>';},
+ // [ตู้พินบอลไฟกระพริบ] โต๊ะพินบอลสีน้ำเงินม่วงลายดาว รางโครเมียม บัมเปอร์ไฟ "ใบเตือน" กะพริบ จอคะแนนจุดไฟส้ม "เตือนแล้ว 1" ลูกเหล็กมีหน้าตาตกใจพุ่งลงหาช่องตก ป้ายหน้าเครื่อง "ผิดซ้ำ = ไม่ได้ค่าชดเชย" ฟลิปเปอร์สองข้าง (น้องม้วนซ้าย)
+ pinball:function(k){var ink='#0e0b1e';
+  var bump=function(x,y,r,c,t,d){return '<g><circle cx="'+x+'" cy="'+(y+2)+'" r="'+r+'" fill="#000" opacity=".35"/><circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="#e9edf2" stroke="#6b7280" stroke-width="1"/><circle class="cm-flash" style="animation-delay:'+d+'s" cx="'+x+'" cy="'+y+'" r="'+(r-3)+'" fill="'+c+'"/><circle cx="'+x+'" cy="'+y+'" r="'+(r-3)+'" fill="none" stroke="#fff" stroke-width=".8" opacity=".6"/><path d="M'+(x-r+5)+' '+(y-4)+'q'+(r-5)+' -'+(r-4)+' '+(2*r-10)+' 0" stroke="#fff" stroke-width="1.4" fill="none" opacity=".6"/><text x="'+x+'" y="'+(y+2.6)+'" text-anchor="middle" font-size="'+(t.length>4?6.6:7.6)+'" font-weight="900" fill="#1a1030" stroke="#fff" stroke-width="2" paint-order="stroke" font-family="sans-serif">'+t+'</text></g>';};
+  var stars='';[[110,96],[130,150],[180,70],[300,140],[330,80],[200,104],[150,118],[318,104]].forEach(function(v){stars+='<path transform="translate('+v[0]+' '+v[1]+')" d="M0-3l.9 2.1L3 0l-2.1.9L0 3l-.9-2.1L-3 0l2.1-.9z" fill="#fff" opacity=".55"/>';});
+  return '<defs><linearGradient id="pbf'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b1b6e"/><stop offset=".6" stop-color="#1b2a8a"/><stop offset="1" stop-color="#0f1b5a"/></linearGradient>'+
+   '<radialGradient id="pbb'+k+'" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#c9d0d8"/><stop offset="1" stop-color="#5d646c"/></radialGradient>'+
+   '<linearGradient id="pbr'+k+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7a8088"/><stop offset=".5" stop-color="#f4f6f8"/><stop offset="1" stop-color="#7a8088"/></linearGradient>'+
+   '<radialGradient id="pbg'+k+'" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ff4fd8" stop-opacity=".5"/><stop offset="1" stop-color="#ff4fd8" stop-opacity="0"/></radialGradient></defs>'+
+  '<rect width="360" height="180" fill="#120d24"/><path d="M0 0h90v180H0z" fill="#1a1236"/>'+
+  '<rect x="92" y="58" width="258" height="124" rx="6" fill="url(#pbf'+k+')" stroke="#ff4fd8" stroke-width="2"/><rect x="92" y="58" width="258" height="124" rx="6" fill="none" stroke="#fff" stroke-width=".6" opacity=".35"/>'+stars+
+  '<circle cx="240" cy="110" r="60" fill="url(#pbg'+k+')"/>'+
+  // ราง
+  '<path d="M100 172V96q0-26 30-30" fill="none" stroke="url(#pbr'+k+')" stroke-width="3"/><path d="M342 172V100" fill="none" stroke="url(#pbr'+k+')" stroke-width="3"/>'+
+  // จอคะแนน
+  '<rect x="104" y="72" width="78" height="22" rx="3" fill="#1a0a00" stroke="#ff9a2a" stroke-width="1.2"/><g opacity=".2" fill="#ff9a2a"><rect x="107" y="75" width="72" height="16"/></g><text x="143" y="87" text-anchor="middle" font-size="9" font-weight="900" fill="#ffb347" font-family="monospace" style="letter-spacing:.5px">เตือนแล้ว 1</text>'+
+  // บัมเปอร์
+  bump(222,98,18,'#ff3b6b','ใบเตือน',0)+bump(276,112,16,'#2bd4ff','ระเบียบ',.5)+bump(196,132,11,'#ffd23a','สาย',.9)+
+  // สลิงช็อต + ฟลิปเปอร์
+  '<path d="M150 136l18 26h-18z" fill="#ff4fd8" stroke="#fff" stroke-width="1"/><path d="M322 136l-18 26h18z" fill="#ff4fd8" stroke="#fff" stroke-width="1"/>'+
+  '<path d="M168 156l40 10a3 3 0 0 1-1 6l-41-8a4 4 0 0 1 2-8z" fill="#f4f6f8" stroke="#ff3b6b" stroke-width="1.6"/><path d="M304 156l-40 10a3 3 0 0 0 1 6l41-8a4 4 0 0 0-2-8z" fill="#f4f6f8" stroke="#ff3b6b" stroke-width="1.6"/>'+
+  // ลูกเหล็กมีหน้า
+  '<g class="cm-bob"><path d="M226 130l10 12M220 134l8 10M232 128l8 10" stroke="#9ad7ff" stroke-width="1.2" opacity=".7" stroke-linecap="round"/>'+
+   '<circle cx="244" cy="150" r="9" fill="url(#pbb'+k+')" stroke="#2a2a30" stroke-width=".8"/><ellipse cx="241" cy="148.6" rx="1.6" ry="2.2" fill="'+ink+'"/><ellipse cx="247" cy="148.6" rx="1.6" ry="2.2" fill="'+ink+'"/><ellipse cx="244" cy="154" rx="1.8" ry="1.4" fill="'+ink+'"/><path d="M238.6 145l3-1M249.4 145l-3-1" stroke="'+ink+'" stroke-width=".9"/></g>'+
+  // ป้ายหน้าเครื่อง
+  '<rect x="186" y="168" width="104" height="12" rx="2" fill="#ff3b6b" stroke="#fff" stroke-width="1"/><text x="238" y="177" text-anchor="middle" font-size="7.4" font-weight="900" fill="#fff" font-family="sans-serif">ผิดซ้ำ = ไม่ได้ค่าชดเชย</text>'+
+  '<g class="cm-flash" style="animation-delay:.3s" fill="#ffd23a"><circle cx="122" cy="110" r="2.4"/><circle cx="122" cy="122" r="2.4"/><circle cx="122" cy="134" r="2.4"/></g><g class="cm-flash" style="animation-delay:1.1s" fill="#2bd4ff"><circle cx="330" cy="120" r="2.4"/><circle cx="330" cy="132" r="2.4"/></g>';},
+ // [ตัวพิมพ์ตะกั่ว letterpress] โต๊ะไม้ช่างพิมพ์ กระดาษฝ้ายขอบขาดพิมพ์นูนลึก "รับทราบ" สีแดง "แต่ไม่ยอมรับว่ากระทำผิด" สีดำ พร้อมช่องลงชื่อ ตัวพิมพ์ไม้วางกอง ลูกกลิ้งหมึกดำเงา ช่างพิมพ์ผ้ากันเปื้อนหน้ายิ้มถือลูกกลิ้ง (น้องม้วนขวา)
+ letterpress:function(k){var ink='#2a1f18';
+  var blk=function(x,y,ch,r){return '<g transform="rotate('+r+' '+(x+7)+' '+(y+7)+')"><rect x="'+x+'" y="'+y+'" width="14" height="14" rx="1.2" fill="#c89664" stroke="#7a5230" stroke-width=".8"/><rect x="'+(x+2)+'" y="'+(y+2)+'" width="10" height="10" fill="#2a2a2a"/><text x="'+(x+7)+'" y="'+(y+10.4)+'" text-anchor="middle" font-size="8.6" font-weight="900" fill="#d9d9d9" font-family="sans-serif" transform="scale(-1 1) translate('+(-2*(x+7))+' 0)">'+ch+'</text></g>';};
+  return '<defs><linearGradient id="lpw'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9a6a3e"/><stop offset="1" stop-color="#6e4526"/></linearGradient>'+
+   '<filter id="lpd'+k+'" x="-5%" y="-20%" width="110%" height="140%"><feOffset dx=".6" dy=".7" in="SourceAlpha" result="o"/><feFlood flood-color="#fff" flood-opacity=".9"/><feComposite in2="o" operator="in" result="lt"/><feOffset dx="-.5" dy="-.6" in="SourceAlpha" result="o2"/><feFlood flood-color="#000" flood-opacity=".35"/><feComposite in2="o2" operator="in" result="dk"/><feMerge><feMergeNode in="lt"/><feMergeNode in="dk"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'+
+   '<radialGradient id="lpr'+k+'" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#5a5a62"/><stop offset="1" stop-color="#0d0d10"/></radialGradient>'+
+   '<filter id="lps'+k+'" x="-10%" y="-10%" width="125%" height="130%"><feDropShadow dx="2" dy="3" stdDeviation="2" flood-opacity=".35"/></filter></defs>'+
+  '<rect width="360" height="180" fill="url(#lpw'+k+')"/><g stroke="#5a3820" stroke-width=".8" opacity=".5" fill="none"><path d="M0 40q120 8 360-4M0 84q150-6 360 6M0 128q140 6 360-2M0 166q120-4 360 4"/></g>'+
+  // กระดาษ
+  '<g transform="translate(0 18)">'+  '<g filter="url(#lps'+k+')"><path d="M26 74l4-2 6 1 5-2 6 2 8-1 7 2 6-2 9 1 7-1 6 2 8-1 7 1 6-2 8 2 7-1 6 1 4 2 2 4-1 7 1 8-1 9 1 8-1 9 1 7-1 8 1 9-1 8 1 6-3 3-6-1-7 2-8-1-6 1-8-1-7 2-9-1-6 1-7-1-8 2-6-1-8 1-7-1-6 1-7-1-5 1-3-3 1-7-1-8 1-9-1-8 1-7-1-9 1-8-1-7 1-8z" fill="#f8f3e6"/></g>'+
+  '<g filter="url(#lpd'+k+')"><text x="98" y="104" text-anchor="middle" font-size="20" font-weight="900" fill="#c8302a" font-family="sans-serif">รับทราบ</text>'+
+   '<text x="98" y="122" text-anchor="middle" font-size="7.8" font-weight="900" fill="#2a2a2a" font-family="sans-serif">แต่ไม่ยอมรับว่ากระทำผิด</text>'+
+   '<path d="M46 130h104" stroke="#c8302a" stroke-width="1.2"/>'+
+   '<text x="50" y="146" font-size="7" font-weight="800" fill="#2a2a2a" font-family="sans-serif">ลงชื่อ</text><text x="50" y="160" font-size="7" font-weight="800" fill="#2a2a2a" font-family="sans-serif">วันที่</text></g>'+
+  '<path d="M74 146h72M74 160h52" stroke="#555" stroke-width=".7" stroke-dasharray="2 1.6"/><path d="M80 143q6-8 10-1t8-3t8 2t8-3" fill="none" stroke="#1f4fa8" stroke-width="1.2" stroke-linecap="round"/>'+
+  '<g transform="rotate(-6 144 80)"><rect x="128" y="74" width="32" height="12" rx="2" fill="#1f4fa8" opacity=".9"/><text x="144" y="82.6" text-anchor="middle" font-size="6.2" font-weight="900" fill="#fff" font-family="sans-serif">ขอสำเนา</text></g></g>'+
+  // ตัวพิมพ์ไม้
+  blk(178,150,'ร',-8)+blk(194,154,'บ',6)+blk(186,136,'ท',3)+blk(170,162,'า',12)+
+  // ช่างพิมพ์
+  '<g stroke="'+ink+'" stroke-width="1.2" stroke-linejoin="round">'+
+   '<path d="M216 180v-40q0-14 16-14t16 14v40z" fill="#4f6d8f"/><path d="M222 180v-38h20v38z" fill="#d8c3a0"/><path d="M222 142l-4-12M242 142l4-12" stroke-width="1"/>'+
+   '<circle cx="232" cy="110" r="12" fill="#f0c49a"/><path d="M220 108q0-14 12-14t12 12q-5-6-12-6t-12 8z" fill="#3a2418"/><path d="M222 100h20" stroke="#c8302a" stroke-width="3"/>'+
+   '<path d="M226 109q2-1.6 4 0M234 109q2-1.6 4 0" fill="none" stroke-width="1"/><circle cx="228" cy="112" r="1.2" fill="'+ink+'" stroke="none"/><circle cx="236" cy="112" r="1.2" fill="'+ink+'" stroke="none"/><path d="M228.6 117q3.4 2.6 6.8 0" fill="#fff" stroke-width="1"/><circle cx="225" cy="115.6" r="1.8" fill="#f08a8a" opacity=".5" stroke="none"/><circle cx="239" cy="115.6" r="1.8" fill="#f08a8a" opacity=".5" stroke="none"/>'+
+   '<path d="M218 140q-14 4-22-6" fill="none" stroke="#4f6d8f" stroke-width="6" stroke-linecap="round"/><circle cx="195" cy="133" r="3.6" fill="#f0c49a"/></g>'+
+  '<g class="cm-bob"><path d="M195 133l-14-10" stroke="#555" stroke-width="2"/><rect x="164" y="114" width="26" height="10" rx="5" fill="url(#lpr'+k+')" stroke="#000" stroke-width=".8" transform="rotate(35 177 119)"/><path d="M168 116q8-2 14 2" stroke="#fff" stroke-width=".8" fill="none" opacity=".5"/></g>'+
+  '<g fill="#111" opacity=".85"><circle cx="160" cy="132" r="1.4"/><circle cx="166" cy="140" r="1"/></g>';},
+ // [ราวตากผ้าหนีบไม้กลางแดด] สนามหลังบ้านฟ้าใส หญ้า เสาไม้สองต้น เชือกหย่อนโค้ง กระดาษโน้ตสามใบหนีบไม้ไหวตามลม "ทำผิด 10 มี.ค." "ได้ใบเตือน 20 มี.ค." "หมดผล 10 มี.ค. ปีหน้า" นกกระจิบหน้ายิ้มเกาะเชือก เส้นวัด "1 ปี" ใต้โน้ต (น้องม้วนกลาง)
+ clothesline:function(k){var ink='#2d2a24';
+  var note=function(x,y,w,c,t1,t2,r,d){var cx=x+w/2;return '<g transform="rotate('+r+' '+cx+' '+y+')"><g class="cm-pend" style="animation-delay:'+d+'s"><rect x="'+(x+2)+'" y="'+(y+4)+'" width="'+w+'" height="40" rx="1.5" fill="#000" opacity=".12"/><rect x="'+x+'" y="'+(y+2)+'" width="'+w+'" height="40" rx="1.5" fill="'+c+'" stroke="#b9ad98" stroke-width=".7"/>'+
+   '<text x="'+cx+'" y="'+(y+21)+'" text-anchor="middle" font-size="8.4" font-weight="900" fill="'+ink+'" font-family="sans-serif">'+t1+'</text><text x="'+cx+'" y="'+(y+34)+'" text-anchor="middle" font-size="7.6" font-weight="800" fill="#c0392b" font-family="sans-serif">'+t2+'</text>'+
+   '<rect x="'+(cx-3)+'" y="'+(y-7)+'" width="6" height="14" rx="1.4" fill="#d8b07a" stroke="#8a6a3a" stroke-width=".7"/><path d="M'+cx+' '+(y-6)+'v12" stroke="#8a6a3a" stroke-width=".5"/></g></g>';};
+  return '<defs><linearGradient id="clsk'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7cc7f2"/><stop offset=".7" stop-color="#d6f0ff"/><stop offset="1" stop-color="#f4fbff"/></linearGradient>'+
+   '<linearGradient id="clg'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fd06a"/><stop offset="1" stop-color="#5aa645"/></linearGradient></defs>'+
+  '<rect width="360" height="180" fill="url(#clsk'+k+')"/><circle cx="40" cy="30" r="16" fill="#fff3a6"/><circle cx="40" cy="30" r="24" fill="#fff3a6" opacity=".35"/>'+
+  '<g fill="#fff" opacity=".9"><path d="M250 40q0-8 9-8q4-7 12-4q9 0 9 8q7 1 6 6h-38q-4 0 2-2z"/><path d="M120 30q0-6 7-6q3-5 9-3q7 0 7 6q5 0 5 4h-30q-3 0 2-1z"/></g>'+
+  '<path d="M0 156q90-10 180-2t180 0v26H0z" fill="url(#clg'+k+')"/><g stroke="#3f8a33" stroke-width="1" stroke-linecap="round"><path d="M20 168l2-5M60 172l1-5M110 166l2-6M260 170l1-5M300 166l2-5M340 172l1-5"/></g>'+
+  // เสา
+  '<g fill="#a47148" stroke="#5a3a1a" stroke-width="1.2"><rect x="74" y="76" width="7" height="90"/><rect x="340" y="76" width="7" height="90"/><rect x="68" y="76" width="19" height="5"/><rect x="334" y="76" width="19" height="5"/></g>'+
+  '<path d="M80 80q130 22 262 0" fill="none" stroke="#f4f0e6" stroke-width="1.4"/><path d="M80 80q130 22 262 0" fill="none" stroke="#8a7a5a" stroke-width=".5"/>'+
+  note(86,85,52,'#fff3a6','ทำผิด','10 มี.ค.',-4,0)+note(222,93,56,'#ffffff','ได้ใบเตือน','20 มี.ค.',3,.6)+note(284,85,58,'#d9f5d0','หมดผล','10 มี.ค. ปีหน้า',-3,1.1)+
+  // เส้นวัด 1 ปี
+  '<path d="M112 146v8M313 146v8M112 150h201" stroke="#c0392b" stroke-width="1.4" fill="none"/><rect x="282" y="152" width="44" height="13" rx="6.5" fill="#c0392b"/><text x="304" y="161.4" text-anchor="middle" font-size="8" font-weight="900" fill="#fff" font-family="sans-serif">= 1 ปี</text>'+
+  // นก
+  '<g transform="translate(268 79)"><g class="cm-bob"><path d="M-9 0q0-9 9-9q8 0 9 7l6-2-4 5q-2 7-11 7q-9 0-9-8z" fill="#8a5a3a" stroke="'+ink+'" stroke-width=".9"/><path d="M-6 2q6 5 12 0q-6 2-12 0z" fill="#f4e0c0"/><circle cx="3" cy="-4" r="1.2" fill="'+ink+'"/><path d="M8-4l4 1-4 1z" fill="#f2a600"/><path d="M1-1q1.4 1 2.6 0" stroke="'+ink+'" stroke-width=".6" fill="none"/><circle cx="5" cy="-1.4" r="1" fill="#f08a8a" opacity=".6"/><path d="M-1 8v4M3 8v4" stroke="'+ink+'" stroke-width=".8"/></g></g>';},
+ // [ภาพสลักหินนูนต่ำ] แผ่นหินทรายสลักนูน แสงส่องจากซ้ายบนจนเกิดขอบสว่างและเงาลึก ตาชั่งสลักกลางแผ่น จานซ้ายเป็นสมุด "ระเบียบ" จานขวาเป็นลูกจ้างหน้าเรียบยิ้ม แถบริบบิ้นสลัก "ต้องเป็นธรรม" ลายเถาที่ขอบ (น้องม้วนซ้าย)
+ basrelief:function(k){var st='#d8c4a0';
+  var R=function(inner,w){w=w||1.4;return '<g fill="none" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(-.9 -.9)" stroke="#fff5dc" stroke-width="'+w+'" opacity=".9">'+inner+'</g><g transform="translate(1 1)" stroke="#6a5332" stroke-width="'+w+'" opacity=".75">'+inner+'</g><g stroke="#b59d74" stroke-width="'+(w*.6)+'">'+inner+'</g></g>';};
+  var RT=function(x,y,s,t){return '<g font-size="'+s+'" font-weight="900" font-family="sans-serif" text-anchor="middle"><text x="'+(x-.8)+'" y="'+(y-.8)+'" fill="#fff5dc">'+t+'</text><text x="'+(x+.9)+'" y="'+(y+.9)+'" fill="#5a4428" opacity=".8">'+t+'</text><text x="'+x+'" y="'+y+'" fill="#7a5f38">'+t+'</text></g>';};
+  return '<defs><filter id="brn'+k+'" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".75" numOctaves="3" seed="7"/><feColorMatrix values="0 0 0 0 .35  0 0 0 0 .27  0 0 0 0 .15  0 0 0 .32 0"/></filter>'+
+   '<radialGradient id="brl'+k+'" cx=".3" cy=".2" r="1"><stop offset="0" stop-color="#efe0c0"/><stop offset=".7" stop-color="#d2bb92"/><stop offset="1" stop-color="#a88f66"/></radialGradient></defs>'+
+  '<rect width="360" height="180" fill="#5d4b36"/>'+
+  '<rect x="92" y="58" width="256" height="122" fill="url(#brl'+k+')"/><rect x="92" y="58" width="256" height="122" filter="url(#brn'+k+')"/>'+
+  R('<rect x="98" y="64" width="244" height="112" rx="2"/>',1.6)+
+  R('<path d="M104 170q10-14 0-28q-10-14 0-28q10-14 0-28M336 170q-10-14 0-28q10-14 0-28q-10-14 0-28"/><circle cx="104" cy="142" r="3"/><circle cx="104" cy="114" r="3"/><circle cx="336" cy="128" r="3"/><circle cx="336" cy="100" r="3"/>',1.2)+
+  // ตาชั่ง
+  '<g class="cm-scale2">'+R('<path d="M220 82v66M196 152h48M206 148h28"/><path d="M160 92h120"/><circle cx="220" cy="88" r="4"/><path d="M168 92l-14 26M168 92l14 26M272 92l-14 26M272 92l14 26"/><path d="M150 118h36q-2 10-18 10t-18-10zM254 118h36q-2 10-18 10t-18-10z"/>',1.6)+
+   // สมุดระเบียบ
+   R('<path d="M146 117v-19h44v19z"/>',1.2)+RT(168,111.4,8,'ระเบียบ')+
+   // ลูกจ้าง
+   R('<circle cx="272" cy="98" r="6"/><path d="M264 116v-6q0-6 8-6t8 6v6"/>',1.3)+
+   R('<path d="M270 97.4h.1M274 97.4h.1"/>',1.8)+R('<path d="M269.6 100.6q2.4 1.8 4.8 0"/>',.9)+'</g>'+
+  // ริบบิ้น
+  R('<path d="M164 155h112l-6 8 6 8h-112l6-8z"/>',1.4)+RT(220,167,10,'ต้องเป็นธรรม')+
+  // เศษหินแตก
+  R('<path d="M320 64l-6 8 4 4M100 176l8-6"/>',.9)+
+  // แสงไฟฉาย
+  '<path d="M92 58L200 58L92 140z" fill="#fff6d8" opacity=".12"/>';},
+ // [ภาพหมึกจีนพู่กัน sumi-e] กระดาษสาเส้นใย ภูเขาหมึกซึมหลายชั้น กอไผ่ปัดพู่กัน ลูกจ้างวาดด้วยพู่กันหน้าสงบ ถือม้วนหนังสือเลิกจ้าง ช่อง "เหตุ" เขียนชัด ตราประทับสีชาด "ระบุเหตุ" และตราชื่อมุมภาพ (น้องม้วนขวา)
+ sumie:function(k){var ink='#1e1c1a';
+  return '<defs><filter id="smb'+k+'" x="-20%" y="-30%" width="140%" height="160%"><feGaussianBlur stdDeviation="2.6"/></filter><filter id="smr'+k+'" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="2" seed="3" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="2.4"/></filter>'+
+   '<filter id="smp'+k+'" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".02 .9" numOctaves="2" seed="9"/><feColorMatrix values="0 0 0 0 .55  0 0 0 0 .48  0 0 0 0 .36  0 0 0 .18 0"/></filter>'+
+   '<linearGradient id="sms'+k+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e9dfc6"/><stop offset=".5" stop-color="#fbf6ea"/><stop offset="1" stop-color="#e9dfc6"/></linearGradient></defs>'+
+  '<rect width="360" height="180" fill="#f4eee0"/><rect width="360" height="180" filter="url(#smp'+k+')"/>'+
+  // ภูเขา
+  '<g filter="url(#smb'+k+')"><path d="M0 120q40-50 80-30t70-20t60 30t60-10t90 10v80H0z" fill="#b8b2a6" opacity=".5"/><path d="M0 140q50-30 90-14t80-10t70 20t120-6v50H0z" fill="#8a847a" opacity=".55"/></g>'+
+  '<circle cx="236" cy="70" r="11" fill="#d9483b" opacity=".75"/>'+
+  // ไผ่
+  '<g filter="url(#smr'+k+')" stroke="'+ink+'" stroke-linecap="round" fill="none"><path d="M26 180V96" stroke-width="3.6"/><path d="M26 150h4M26 124h4M26 104h4" stroke="#f4eee0" stroke-width="1.6"/><path d="M38 180V112" stroke-width="2.6" opacity=".7"/></g>'+
+  '<g fill="'+ink+'" filter="url(#smr'+k+')"><path d="M27 104q12-8 26-6q-12 3-26 6z"/><path d="M27 124q-10-6-20-2q10-1 20 2z"/><path d="M39 118q12-4 22 2q-12-2-22-2z" opacity=".7"/></g>'+
+  // พื้นหมึก
+  '<path d="M44 168q80-8 220 0" stroke="'+ink+'" stroke-width="2" opacity=".5" fill="none" filter="url(#smr'+k+')"/>'+
+  // คน
+  '<g transform="translate(0 8)"><g filter="url(#smr'+k+')" stroke="'+ink+'" stroke-linecap="round" stroke-linejoin="round" fill="none">'+
+   '<path d="M70 158q-4-30 4-44q10-8 20 0q8 16 4 44" stroke-width="3.2"/><path d="M76 128q-4 14 0 30" stroke-width="1.2" opacity=".6"/>'+
+   '<circle cx="84" cy="108" r="11" stroke-width="2.2" fill="#fbf6ea"/><path d="M73 104q4-12 14-10q8 2 8 10" stroke-width="4" opacity=".85"/>'+
+   '<path d="M79 109q2-1.4 4 0M86 109q2-1.4 4 0" stroke-width="1.2"/><path d="M81 115q3 2 6 0" stroke-width="1.2"/>'+
+   '<path d="M98 132q12-4 22-6" stroke-width="3"/></g></g>'+
+  // ม้วนหนังสือ
+  '<g><rect x="118" y="96" width="90" height="62" fill="url(#sms'+k+')" stroke="#a89a7a" stroke-width=".8"/><rect x="114" y="93" width="6" height="68" rx="3" fill="#6a3a1a"/><rect x="206" y="93" width="6" height="68" rx="3" fill="#6a3a1a"/>'+
+   '<text x="163" y="112" text-anchor="middle" font-size="8.4" font-weight="900" fill="'+ink+'" font-family="sans-serif">หนังสือเลิกจ้าง</text><path d="M128 117h70" stroke="'+ink+'" stroke-width=".6" opacity=".5"/>'+
+   '<text x="128" y="130" font-size="7.4" font-weight="900" fill="'+ink+'" font-family="sans-serif">เหตุ:</text><path d="M148 128q8-3 14 0t14-1t14 1M128 140q12-3 22 0t20-1" stroke="'+ink+'" stroke-width="1.3" fill="none" stroke-linecap="round"/>'+
+   '<g class="cm-pop"><g transform="rotate(-8 186 146)"><rect x="170" y="136" width="32" height="20" rx="2" fill="none" stroke="#c8302a" stroke-width="2"/><text x="186" y="149.4" text-anchor="middle" font-size="7.6" font-weight="900" fill="#c8302a" font-family="sans-serif">ระบุเหตุ</text></g></g></g>'+
+  // ตราชื่อ
+  '<rect x="246" y="148" width="14" height="18" rx="1" fill="#c8302a" opacity=".85"/><path d="M249 152h8M249 156h8M249 160h5" stroke="#f4eee0" stroke-width="1.2"/>';}
 };
 var BG={
  cradle:'<g opacity=".7">'+[[210,20,1],[250,40,.7],[300,16,1.1],[336,46,.8]].map(function(v){return '<path transform="translate('+v[0]+' '+v[1]+') scale('+v[2]+')" d="M0-7l2 5 5 .8-3.6 3.4.8 5L0 4.6-4.2 7.2-3.4 2.2-7-1.2-2-2z" fill="#ffd84d" stroke="#3a2a12" stroke-width="1"/>';}).join('')+'</g><path d="M190 176q40-14 80-4t90-6v10z" fill="#f6c6d8" opacity=".8"/>',
