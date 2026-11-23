@@ -967,3 +967,20 @@
   background: radial-gradient(circle at 50% 50%, #f2c94c 0 4px, transparent 4.5px), radial-gradient(circle at 50% 18%, #f6c2d4 0 7px, transparent 7.5px), radial-gradient(circle at 82% 42%, #f2a6c0 0 7px, transparent 7.5px),
     radial-gradient(circle at 70% 80%, #f6c2d4 0 7px, transparent 7.5px), radial-gradient(circle at 30% 80%, #f2a6c0 0 7px, transparent 7.5px), radial-gradient(circle at 18% 42%, #f6c2d4 0 7px, transparent 7.5px);
   filter: drop-shadow(0 2px 2px rgba(90, 40, 60, .25)); }
+
+/* ปกแบบ "wristband" = สายรัดข้อมือโรงพยาบาลพันรอบล่างของภาพ มีบาร์โค้ดและป้ายชื่อ (คู่มือ long-illness) */
+.gd-cover[data-layout="wristband"] .gd-cover-art { overflow: visible; border: 2px solid #cfe3ef; border-radius: 14px; }
+.gd-cover[data-layout="wristband"] .gd-cover-art .gd-scene { border-radius: 12px; }
+.gd-cover[data-layout="wristband"] .gd-cover-art::after { content: "ลาป่วย"; position: absolute; left: -8px; right: -8px; top: 12px; height: 20px; z-index: 3; pointer-events: none; border-radius: 10px;
+  padding-left: 44px; font: 800 10px/20px "IBM Plex Sans Thai", sans-serif; color: #2a4f7a; box-shadow: 0 2px 4px rgba(30, 60, 90, .25); transform: rotate(-4deg);
+  background: repeating-linear-gradient(90deg, #2a3440 0 1.4px, transparent 1.4px 3px, #2a3440 3px 3.8px, transparent 3.8px 6px) right 10px center / 46px 12px no-repeat, linear-gradient(#e9f6ff, #cfe8f7); }
+.gd-cover[data-layout="wristband"] .gd-cover-art::before { content: ""; position: absolute; left: 14px; top: 16px; width: 22px; height: 12px; z-index: 4; pointer-events: none; border-radius: 3px; background: #fff; box-shadow: inset 0 0 0 1px #9fc3dc; transform: rotate(-4deg); }
+
+/* ปกแบบ "artboard" = กรอบเลือกวัตถุในโปรแกรมออกแบบ เส้นฟ้ามีจุดจับสี่มุม ป้ายชื่อไฟล์ และตรา © (คู่มือ work-copyright) */
+.gd-cover[data-layout="artboard"] .gd-cover-art { overflow: visible; border: 0; border-radius: 4px; box-shadow: 0 6px 14px rgba(40, 60, 90, .18); }
+.gd-cover[data-layout="artboard"] .gd-cover-art .gd-scene { border-radius: 4px; }
+.gd-cover[data-layout="artboard"] .gd-cover-art::before { content: ""; position: absolute; inset: -6px; z-index: 3; pointer-events: none; border: 1.5px solid #3b82f6;
+  background: linear-gradient(#fff, #fff) 0 0 / 8px 8px no-repeat, linear-gradient(#fff, #fff) 100% 0 / 8px 8px no-repeat, linear-gradient(#fff, #fff) 0 100% / 8px 8px no-repeat, linear-gradient(#fff, #fff) 100% 100% / 8px 8px no-repeat;
+  outline: 0; box-shadow: inset 0 0 0 0 transparent; }
+.gd-cover[data-layout="artboard"] .gd-cover-art::after { content: "©"; position: absolute; right: -14px; top: -14px; z-index: 4; pointer-events: none; width: 26px; height: 26px; border-radius: 50%;
+  background: #f2b33d; color: #fff; font: 900 15px/26px sans-serif; text-align: center; box-shadow: 0 2px 4px rgba(90, 60, 0, .3); }
