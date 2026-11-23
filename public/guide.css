@@ -935,3 +935,11 @@
   box-shadow: 0 2px 3px rgba(80, 40, 0, .22); }
 .gd-cover[data-layout="bandage"] .gd-cover-art::before { transform: rotate(38deg); }
 .gd-cover[data-layout="bandage"] .gd-cover-art::after { transform: rotate(-38deg); }
+
+/* ปกแบบ "punch" = บัตรตอกเวลา: กระดาษครีม รูเจาะแถวบน ตราประทับเวลาเข้างานมุมขวาล่าง (คู่มือ daily-parttime) */
+.gd-cover[data-layout="punch"] .gd-cover-art { overflow: visible; border: 0; border-radius: 5px; background: #fbf3dc; box-shadow: 0 0 0 2px #cdb98c, 0 0 0 5px #fbf3dc, 0 0 0 6px #b9a274, 3px 6px 0 6px rgba(90, 70, 30, .18); transform: rotate(1.2deg); }
+.gd-cover[data-layout="punch"] .gd-cover-art .gd-scene { border-radius: 5px; }
+.gd-cover[data-layout="punch"] .gd-cover-art::before { content: ""; position: absolute; left: 10px; right: 10px; top: 5px; height: 8px; z-index: 3; pointer-events: none;
+  background: radial-gradient(circle at 4px 4px, rgba(40, 28, 10, .78) 0 2.4px, rgba(255, 255, 255, .7) 2.6px 3.1px, transparent 3.3px) 0 0 / 13px 8px repeat-x; }
+.gd-cover[data-layout="punch"] .gd-cover-art::after { content: "เข้างาน 07:58"; position: absolute; right: -6px; top: 18px; z-index: 3; pointer-events: none; padding: 3px 6px; border: 2px solid #7a2d8a; border-radius: 4px;
+  font: 800 11px/1.1 "IBM Plex Sans Thai", sans-serif; color: #7a2d8a; letter-spacing: .02em; background: rgba(255, 250, 236, .9); transform: rotate(8deg); box-shadow: 0 0 0 1px rgba(122, 45, 138, .25) inset; }
