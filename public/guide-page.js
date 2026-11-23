@@ -74,6 +74,8 @@
   const hl = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<mark>$1</mark>');
   const hlA = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<mark class="gd-hl">$1</mark>');   // คำสำคัญในคำตอบ/สรุป
   const hlB = s => esc(s || '').replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');   // กรอบคำพูดการ์ตูน
+  // เลือกท่าผสมของน้องม้วนให้ไม่ซ้ำ (ชื่อท่าเดิม → ท่าผสมในตระกูลเดียวกัน แบบคงที่ตาม slug)
+  const pickMood = (mood, seed, prev) => (window.VCMascot && VCMascot.pick) ? VCMascot.pick(mood || 'curious', seed, prev) : mood;
   const mascot = (mood, size) => (window.VCMascot && typeof VCMascot.svg === 'function') ? VCMascot.svg(mood || 'curious', size) : '';
   const scene = (name, key) => (window.VCScenes ? VCScenes.svg(name, key) : '');
 
@@ -91,7 +93,7 @@
       const cats = [...groups];
       let k = 0;
       const card = g => `<a class="gd-lc" href="/guide/${esc(g.slug)}" data-q="${esc((g.title + ' ' + (g.cardText || '') + ' ' + (g.intro || '')).replace(/\*\*/g, '').toLowerCase())}">
-          <div class="gd-lc-img" aria-hidden="true"><div class="gd-lc-amb">${scene(g.scene, 'a' + (++k))}</div><div class="gd-lc-frame">${scene(g.scene, 'c' + k)}<span class="gd-lc-mz">${mascot(g.mood, 74)}</span></div></div>
+          <div class="gd-lc-img" aria-hidden="true"><div class="gd-lc-amb">${scene(g.scene, 'a' + (++k))}</div><div class="gd-lc-frame">${scene(g.scene, 'c' + k)}<span class="gd-lc-mz">${mascot(pickMood(g.mood, g.slug + '#c'), 74)}</span></div></div>
           <div class="gd-lc-body">
             <span class="gd-lc-tag"><span class="gd-lc-cat">${g.categoryIcon ? esc(g.categoryIcon) + ' ' : ''}${esc(g.category)}</span>คู่มือ${g.minutes ? ` · ${toTh(g.minutes)} นาที` : ''}${g.reviewed ? '' : '<span class="gd-lc-draft">ฉบับร่าง</span>'}</span>
             <h3>${esc(g.title)}</h3>
@@ -152,13 +154,15 @@
     catch (e) { $main.innerHTML = e.status === 404 ? `<div class="lb-band"><div><b>ไม่พบคู่มือนี้</b><br><a href="/guide">ดูเรื่องทั้งหมด</a></div></div>` : errBox(e); return; }
     document.title = g.title + ' · เรียนรู้ · Vellum';
     let n = 0;
+    const coverMood = pickMood(g.mood, g.slug + '#c');
+    let prevMood = coverMood;
     $main.innerHTML = `
       ${g.reviewed ? '' : `<div class="gd-draft" role="note">ฉบับร่าง · ยังไม่ผ่านการตรวจโดยนักกฎหมาย${g.isAdmin ? ' · ตอนนี้เห็นเฉพาะแอดมิน' : ''}</div>`}
       <div class="gd-crumb"><a href="/guide">เรียนรู้</a> › ${esc(g.category)}</div>
       ${g.coverLines.length ? `<div class="gd-cover"${window.VCComic ? ` data-bg="${esc(g.scene)}"` : ''}${g.coverLayout ? ` data-layout="${esc(g.coverLayout)}"` : ''}>${window.VCComic ? VCComic.coverBg(g.scene) : ''}
-        ${g.coverLayout === 'banner' && window.VCComic && VCComic.coverWide && VCComic.coverWide(g.scene) ? `<div class="gd-cover-art" aria-hidden="true">${VCComic.coverWide(g.scene, 'cw')}<span class="gd-cover-m">${mascot(g.mood, 78)}</span></div>`
-          : scene(g.scene, 'cv') ? `<div class="gd-cover-art" aria-hidden="true">${scene(g.scene, 'cv')}<span class="gd-cover-m">${mascot(g.mood, 66)}</span></div>`
-          : `<div class="gd-cover-m" aria-hidden="true">${mascot(g.mood, 112)}</div>`}
+        ${g.coverLayout === 'banner' && window.VCComic && VCComic.coverWide && VCComic.coverWide(g.scene) ? `<div class="gd-cover-art" aria-hidden="true">${VCComic.coverWide(g.scene, 'cw')}<span class="gd-cover-m">${mascot(coverMood, 78)}</span></div>`
+          : scene(g.scene, 'cv') ? `<div class="gd-cover-art" aria-hidden="true">${scene(g.scene, 'cv')}<span class="gd-cover-m">${mascot(coverMood, 66)}</span></div>`
+          : `<div class="gd-cover-m" aria-hidden="true">${mascot(coverMood, 112)}</div>`}
         <div class="gd-cover-t"><small>${g.categoryIcon ? esc(g.categoryIcon) + ' ' : ''}คู่มือ · ${esc(g.category)}</small>
           <h1 data-say>${g.coverLines.map((l, i) => `<span>${i ? `<em>${esc(l)}</em>` : esc(l)}</span>`).join(' ')}</h1></div>
       </div>` : `<h1 class="gd-h1" data-say>${esc(g.title)}</h1>`}
@@ -192,7 +196,7 @@
       ${g.summary.length ? `<div class="gd-sum" data-say><h2>สรุปใน 30 วินาที</h2><ul>${g.summary.map(s => `<li>${hlA(s)}</li>`).join('')}</ul></div>` : ''}
       <div id="gd-body">
       ${g.sections.map(s => `<h2 class="gd-h2" data-say><span class="gd-n" aria-hidden="true">${++n}</span>${esc(s.title)}</h2>
-        ${s.panel && window.VCComic ? VCComic.panel(s.panel.scene, s.panel.mood, hlB(s.panel.say), 'ตอนที่ ' + n, 'p' + n, s.panel.layout, s.panel.bubble) : ''}
+        ${s.panel && window.VCComic ? VCComic.panel(s.panel.scene, (prevMood = pickMood(s.panel.mood, g.slug + '#' + n, prevMood)), hlB(s.panel.say), 'ตอนที่ ' + n, 'p' + n, s.panel.layout, s.panel.bubble) : ''}
         ${s.items.map(it => `<div class="gd-item" data-say><p class="gd-q">${esc(it.q)}</p><p class="gd-a">${hlA(it.a)}</p>
           ${it.cite.length ? `<div class="gd-cites">${it.cite.map(citeBtn).join('')}</div>` : ''}</div>`).join('')}`).join('')}
       ${g.redFlags.length ? `<h2 class="gd-h2" data-say>🚩 เจอแบบนี้ในสัญญา ระวัง</h2>${g.redFlags.map(f => `<div class="gd-flag" data-say><b>${esc(f.text)}</b>${f.note ? `<br>${esc(f.note)}` : ''}</div>`).join('')}` : ''}
