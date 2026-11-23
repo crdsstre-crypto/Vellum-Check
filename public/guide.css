@@ -164,6 +164,7 @@
 .gd-cover[data-bg="truck"] { background: linear-gradient(135deg, #f7f0e1, #efe2c8); border-color: #dccaa4; }
 .gd-cover[data-bg="bokeh"] { background: linear-gradient(135deg, #f1ecff, #ffe6ef); border-color: #e0d2f4; }
 .gd-cover[data-bg="groovy"] { background: linear-gradient(135deg, #fff1db, #f7d9b0); border-color: #ebc28a; }
+.gd-cover[data-bg="conveyor"] { background: linear-gradient(135deg, #eaf4ff, #dbe9f8); border-color: #bcd3ee; }
 .gd-cover[data-bg="leave"] { background: linear-gradient(135deg, #e6f6ff, #c7e8fb); border-color: #9fd0e6; }
 .gd-cover[data-bg="condo"] { background: linear-gradient(135deg, #fff1dc, #f7d9b3); border-color: #ecc690; }
 
@@ -646,3 +647,27 @@
 @keyframes cmCoinDrop { 0%, 10% { transform: translateY(-60px); opacity: 0; } 30% { opacity: 1; } 50%, 90% { transform: translateY(0); opacity: 1; } 100% { opacity: 0; } }
 @keyframes cmSew { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
 @keyframes cmPrintout { 0% { transform: translateY(-58px); } 60%, 100% { transform: translateY(0); } }
+
+/* ===== ปกแบบริบบิ้นมุม (coverLayout: "ribbon"): แถบริบบิ้นเฉียงพาดมุมขวาบนของภาพ ===== */
+.gd-cover[data-layout="ribbon"] .gd-cover-art { flex-basis: 136px; height: 152px; border-radius: 14px; border: 3px solid #fff; box-shadow: 0 8px 18px rgba(30, 60, 110, .2); }
+.gd-cover[data-layout="ribbon"] .gd-cover-art::after { content: "เหมาค่าแรง"; position: absolute; top: 16px; right: -30px; width: 120px; transform: rotate(40deg); text-align: center; font-size: 10px; font-weight: 800; line-height: 18px; color: #fff; background: #e8791a; box-shadow: 0 2px 4px rgba(0, 0, 0, .2); z-index: 3; }
+.gd-cover[data-layout="ribbon"] { gap: 14px; }
+/* ของขยับชุดใหม่ (เหมาค่าแรง) */
+.gd-scene .sc-crate { animation: scCrate 4s linear infinite; }
+.gd-scene .sc-belt { animation: scBelt .8s linear infinite; }
+.gd-scene .sc-blink { animation: scBlink 1.2s steps(2) infinite; }
+.gd-cm .cm-spot { transform-box: view-box; transform-origin: 270px 0; animation: cmSpot 4s ease-in-out infinite; }
+.gd-cm .cm-toggle { animation: cmToggle 4s ease-out infinite; }
+.gd-cm .cm-knob { animation: cmKnob 4s ease-out infinite; }
+.gd-cm .cm-pass { animation: cmPass 3.6s ease-in-out infinite; }
+.gd-cm .cm-beam2 { transform-box: fill-box; transform-origin: 0 50%; animation: cmBeam2 5s ease-in-out infinite; }
+.gd-cm .cm-redact { animation: cmDraw2 4.4s ease-out infinite; }
+@keyframes scCrate { to { transform: translateX(40px); } }
+@keyframes scBelt { to { transform: translateX(12px); } }
+@keyframes scBlink { 50% { opacity: .2; } }
+@keyframes cmSpot { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+@keyframes cmToggle { 0%, 10% { opacity: 0; } 30%, 100% { opacity: 1; } }
+@keyframes cmKnob { 0%, 10% { transform: translateX(0); } 30%, 100% { transform: translateX(20px); } }
+@keyframes cmPass { 0%, 10% { transform: translateX(0); opacity: 0; } 20% { opacity: 1; } 80% { transform: translateX(-164px); opacity: 1; } 100% { transform: translateX(-164px); opacity: 0; } }
+@keyframes cmBeam2 { 0%, 100% { transform: rotate(-8deg); } 50% { transform: rotate(10deg); } }
+@media (prefers-reduced-motion: reduce) { .gd-cm .cm-toggle { opacity: 1; } .gd-cm .cm-knob { transform: translateX(20px); } }
