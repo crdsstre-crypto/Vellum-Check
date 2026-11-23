@@ -160,6 +160,7 @@
 .gd-cover[data-bg="union"] { background: linear-gradient(135deg, #fff1e2, #ffe1cf); border-color: #f2c7a4; }
 .gd-cover[data-bg="court"] { background: linear-gradient(135deg, #eef6ff, #fff1df); border-color: #cfe0f2; }
 .gd-cover[data-bg="wallet"] { background: linear-gradient(135deg, #fff4e2, #f3dcc0); border-color: #e5c59c; }
+.gd-cover[data-bg="porch"] { background: linear-gradient(135deg, #f4efff, #ffe8dc); border-color: #e2d3f4; }
 .gd-cover[data-bg="leave"] { background: linear-gradient(135deg, #e6f6ff, #c7e8fb); border-color: #9fd0e6; }
 .gd-cover[data-bg="condo"] { background: linear-gradient(135deg, #fff1dc, #f7d9b3); border-color: #ecc690; }
 
@@ -553,3 +554,31 @@
 @keyframes cmSunGlow { 0%, 100% { transform: scale(.94); } 50% { transform: scale(1.06); } }
 @keyframes cmSand { to { stroke-dashoffset: -5; } }
 @media (prefers-reduced-motion: reduce) { .gd-cm .cm-brush { stroke-dashoffset: 0; } }
+
+/* ===== ปกแบบหน้าต่าง (coverLayout: "pane"): ภาพอยู่หลังกรอบหน้าต่างไม้สีขาว มีเสากากบาท + ขอบหน้าต่าง ===== */
+.gd-cover[data-layout="pane"] .gd-cover-art { flex-basis: 132px; height: 150px; border-radius: 8px; border: 7px solid #fffaf3; box-shadow: 0 0 0 1.5px #d9c6a6, 0 14px 0 -6px #e8d3b0, 0 18px 22px rgba(90, 60, 20, .2); margin-bottom: 12px; }
+.gd-cover[data-layout="pane"] .gd-cover-art::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: linear-gradient(#fffaf3, #fffaf3) 50% 0 / 5px 100% no-repeat, linear-gradient(#fffaf3, #fffaf3) 0 46% / 100% 5px no-repeat; }
+.gd-cover[data-layout="pane"] .gd-cover-art .gd-cover-m { z-index: 3; }
+.gd-cover[data-layout="pane"] { gap: 14px; }
+/* ของขยับชุดใหม่ (เกษียณ) */
+.gd-scene .sc-rock { transform-box: fill-box; transform-origin: 50% 100%; animation: scRock 3.2s ease-in-out infinite; }
+.gd-scene .sc-wave2 path { animation: scWave2 2.4s ease-in-out infinite; }
+.gd-scene .sc-wave2 path:nth-child(2) { animation-delay: .6s; } .gd-scene .sc-wave2 path:nth-child(3) { animation-delay: 1.2s; }
+.gd-scene .sc-gull { animation: scGull 8s linear infinite; }
+.gd-cm .cm-pxhop { animation: cmPxHop 6s steps(1) infinite; }
+.gd-cm .cm-sway2 { transform-box: fill-box; transform-origin: 50% 0; animation: cmSway2 3s ease-in-out infinite; }
+.gd-cm .cm-squish { transform-box: fill-box; transform-origin: 50% 100%; animation: cmSquish 2.4s ease-in-out infinite; }
+.gd-cm .cm-slidein { animation: cmSlideIn 3.6s cubic-bezier(.3, 1.4, .5, 1) infinite; }
+.gd-cm .cm-crane { animation: cmCrane 3.4s ease-in-out infinite; }
+.gd-cm .cm-boat { transform-box: fill-box; transform-origin: 50% 100%; animation: cmBoat 2.6s ease-in-out infinite; }
+.gd-cm .cm-pinpulse { transform-box: fill-box; transform-origin: 50% 50%; animation: cmPinPulse 2s ease-out infinite; }
+@keyframes scRock { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+@keyframes scWave2 { 0%, 100% { opacity: .3; transform: translateX(0); } 50% { opacity: 1; transform: translateX(3px); } }
+@keyframes scGull { 0% { transform: translate(-30px, 6px); } 50% { transform: translate(50px, -4px); } 100% { transform: translate(130px, 6px); } }
+@keyframes cmPxHop { 0% { transform: translate(0, 0); } 16% { transform: translate(40px, -9px); } 33% { transform: translate(80px, -18px); } 50% { transform: translate(120px, -27px); } 66% { transform: translate(160px, -36px); } 83% { transform: translate(200px, -45px); } }
+@keyframes cmSway2 { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+@keyframes cmSquish { 0%, 100% { transform: scale(1, 1); } 45% { transform: scale(1.06, .92); } 60% { transform: scale(.97, 1.04); } }
+@keyframes cmSlideIn { 0%, 8% { transform: translate(-170px, 0); opacity: 0; } 20% { opacity: 1; } 45%, 90% { transform: translate(0, 0); opacity: 1; } 100% { opacity: 0; } }
+@keyframes cmCrane { 0%, 100% { transform: translate(0, 0) rotate(0); } 50% { transform: translate(6px, -8px) rotate(-3deg); } }
+@keyframes cmBoat { 0%, 100% { transform: rotate(-4deg) translateY(0); } 50% { transform: rotate(4deg) translateY(-2px); } }
+@keyframes cmPinPulse { 0% { transform: scale(.6); opacity: .6; } 100% { transform: scale(2); opacity: 0; } }
