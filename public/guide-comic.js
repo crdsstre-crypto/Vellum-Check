@@ -3237,7 +3237,225 @@ var P={
    '<path d="M154 126q6-8 4-22" stroke="#f2b33d" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="158" cy="102" r="3.4" fill="#eab89a"/></g>'+
   // ชายชูนิ้ว
   '<g transform="translate(22 16)"><g filter="url(#wsh'+k+')"><path d="M206 164v-34q0-18 24-18t24 18v34z" fill="#4fb3a8"/></g><path d="M224 100h12v12q-6 3-12 0z" fill="#e2b088"/>'+M(230,86,1,'smile',true)+
-   '<path d="M252 128q10-6 10-20" stroke="#4fb3a8" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="262" cy="106" r="4" fill="#e2b088"/><path d="M262 103v-6" stroke="#e2b088" stroke-width="3" stroke-linecap="round"/></g>';}
+   '<path d="M252 128q10-6 10-20" stroke="#4fb3a8" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="262" cy="106" r="4" fill="#e2b088"/><path d="M262 103v-6" stroke="#e2b088" stroke-width="3" stroke-linecap="round"/></g>';},
+ // [ภาพประกอบร้านสะดวกซื้อแสงเย็นอุ่น] เคาน์เตอร์แคชเชียร์ ลิ้นชักเงินเปิด หญิงแคชเชียร์หน้ากังวล ผู้จัดการชายถือใบรายงาน "ยอดขาด ฿1,200" (น้องม้วนซ้าย)
+ cashdrawer:function(k){
+  var W=function(x,y,s,f){var e=f==='tired'?'<path d="M-11 -1.6q3-1.6 6 .2M5 -1.4q3-1.8 6-.2" stroke="#5a4636" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M-10.4 3q2.6 2.4 5.2 0M4.6 3q2.6 2.4 5.2 0" stroke="#5a4636" stroke-width="1.4" fill="none" stroke-linecap="round"/><path d="M-3.6 12q3.6 2.8 7.2 0" stroke="#b0503a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+   :'<ellipse cx="-7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><ellipse cx="7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><circle cx="-6.8" cy="2.2" r=".7" fill="#fff"/><circle cx="8" cy="2.2" r=".7" fill="#fff"/>'+
+    (f==='worried'?'<path d="M-11 -1.2l6-2.6M11 -1.2l-6-2.6" stroke="#5a4636" stroke-width="1.1" stroke-linecap="round"/><path d="M-2.8 12.6q2.8-1.8 5.6 0" stroke="#b0503a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+    :f==='firm'?'<path d="M-11 -2.6l6 .8M11 -2.6l-6 .8" stroke="#5a4636" stroke-width="1.2" stroke-linecap="round"/><path d="M-3.4 11.6q3.4 1.6 6.8 0" stroke="#b0503a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+    :'<path d="M-11 -2.4q3-2 6-.4M5 -2.8q3-1.6 6 .4" stroke="#5a4636" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M-4.6 10.4q4.6 4.6 9.2 0z" fill="#fff" stroke="#b0503a" stroke-width="1.1" stroke-linejoin="round"/>');
+   return '<g transform="translate('+x+' '+y+') scale('+s+')"><circle cx="16" cy="-14" r="8" fill="url(#wh'+k+')"/><circle cx="0" cy="0" r="16" fill="url(#wk'+k+')"/>'+
+    '<path d="M-16 -2q-1-18 16-19q17 1 17 18q-4-9-12-11q-4 6-12 7q-6 1-9 5z" fill="url(#wh'+k+')"/><path d="M-16 -2q-3 8 0 16" stroke="url(#wh'+k+')" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M-2 -18q6-2 10 1" stroke="#8a6450" stroke-width="1.2" fill="none" opacity=".7"/>'+
+    e+'<ellipse cx="-11" cy="8" rx="3.4" ry="2" fill="#f2a0a0" opacity=".45"/><ellipse cx="11" cy="8" rx="3.4" ry="2" fill="#f2a0a0" opacity=".45"/><path d="M0 5.5q.8 2.6-.6 3.4" stroke="#c9896a" stroke-width=".9" fill="none" stroke-linecap="round"/></g>';};
+  var WD='<radialGradient id="wk'+k+'" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#fbe4cf"/><stop offset=".7" stop-color="#f0c6a4"/><stop offset="1" stop-color="#e2ad8a"/></radialGradient><linearGradient id="wh'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5a3a2a"/><stop offset="1" stop-color="#2e1c14"/></linearGradient><filter id="wsh'+k+'" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#5a3a2a" flood-opacity=".25"/></filter><filter id="wbl'+k+'" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3"/></filter>';
+  var M=function(x,y,s,f,gl){var e=(f==='think'?'<path d="M-10.4 3h5.2M4.6 3h5.2" stroke="#3a2a20" stroke-width="1.6" stroke-linecap="round"/>':'<ellipse cx="-7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><ellipse cx="7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><circle cx="-6.8" cy="2.2" r=".7" fill="#fff"/><circle cx="8" cy="2.2" r=".7" fill="#fff"/>')+
+    (f==='worried'?'<path d="M-11 -1.2l6-2.6M11 -1.2l-6-2.6" stroke="#3a2a20" stroke-width="1.3" stroke-linecap="round"/><path d="M-2.8 12.6q2.8-1.8 5.6 0" stroke="#9a4a3a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+    :f==='firm'?'<path d="M-11 -2.6l6 .8M11 -2.6l-6 .8" stroke="#3a2a20" stroke-width="1.4" stroke-linecap="round"/><path d="M-3.4 11.6q3.4 1.6 6.8 0" stroke="#9a4a3a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+    :f==='think'?'<path d="M-11 -3q3-1.6 6 0M5 -1.6q3-1.6 6 0" stroke="#3a2a20" stroke-width="1.3" fill="none" stroke-linecap="round"/><path d="M-1 11.6h5" stroke="#9a4a3a" stroke-width="1.3" stroke-linecap="round"/>'
+    :'<path d="M-11 -2.4q3-2 6-.4M5 -2.8q3-1.6 6 .4" stroke="#3a2a20" stroke-width="1.2" fill="none" stroke-linecap="round"/><path d="M-4.6 10.4q4.6 4.6 9.2 0z" fill="#fff" stroke="#9a4a3a" stroke-width="1.1" stroke-linejoin="round"/>');
+   return '<g transform="translate('+x+' '+y+') scale('+s+')"><circle cx="-16" cy="3" r="3.4" fill="url(#mk'+k+')"/><circle cx="16" cy="3" r="3.4" fill="url(#mk'+k+')"/><circle cx="0" cy="0" r="16" fill="url(#mk'+k+')"/>'+
+    '<path d="M-16 0q-2-20 16-20q16 0 17 16q-2-6-6-8q-8 4-18 3q-6 2-9 9z" fill="url(#mh'+k+')"/><path d="M-4 -17q8-4 14 2" stroke="#6a6a7a" stroke-width="1.2" fill="none" opacity=".6"/>'+e+
+    (gl?'<g fill="none" stroke="#2a2a32" stroke-width="1.1"><rect x="-12" y="-1" width="9" height="7" rx="2.4"/><rect x="3" y="-1" width="9" height="7" rx="2.4"/><path d="M-3 1.6h6"/></g>':'')+
+    '<ellipse cx="-11" cy="8" rx="3" ry="1.8" fill="#f2a0a0" opacity=".35"/><ellipse cx="11" cy="8" rx="3" ry="1.8" fill="#f2a0a0" opacity=".35"/><path d="M0 5.5q.8 2.6-.6 3.4" stroke="#b9805a" stroke-width=".9" fill="none" stroke-linecap="round"/></g>';};
+  var MD='<radialGradient id="mk'+k+'" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#f6d2b0"/><stop offset=".7" stop-color="#e2b088"/><stop offset="1" stop-color="#cf9870"/></radialGradient><linearGradient id="mh'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a3440"/><stop offset="1" stop-color="#16141c"/></linearGradient>';
+
+  var B=function(x,c,sk){return '<g filter="url(#wsh'+k+')"><path d="M'+(x-24)+' 164v-34q0-18 24-18t24 18v34z" fill="'+c+'"/></g><path d="M'+(x-6)+' 100h12v12q-6 3-12 0z" fill="'+sk+'"/>';};
+  return '<defs>'+WD+MD+'<linearGradient id="cdw'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e6f0ea"/><stop offset="1" stop-color="#cfe2d6"/></linearGradient>'+
+   '<radialGradient id="cdl'+k+'" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff7dc" stop-opacity=".95"/><stop offset="1" stop-color="#fff7dc" stop-opacity="0"/></radialGradient>'+
+   '<linearGradient id="cdc'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f6f8"/><stop offset="1" stop-color="#cfd6de"/></linearGradient></defs>'+
+  '<rect width="360" height="180" fill="url(#cdw'+k+')"/><circle cx="190" cy="60" r="120" fill="url(#cdl'+k+')"/>'+
+  // ชั้นวางของ
+  '<g opacity=".9"><rect x="250" y="40" width="104" height="64" rx="3" fill="#f7fbf8" stroke="#bcd3c4"/><path d="M250 62h104M250 84h104" stroke="#bcd3c4" stroke-width="1.6"/>'+
+  '<rect x="258" y="48" width="10" height="13" rx="2" fill="#f28c6b"/><rect x="272" y="50" width="10" height="11" rx="2" fill="#ffd166"/><rect x="286" y="47" width="10" height="14" rx="2" fill="#6bc1d9"/><rect x="300" y="49" width="10" height="12" rx="2" fill="#a58bd8"/><rect x="318" y="48" width="12" height="13" rx="2" fill="#7fcf9c"/>'+
+  '<rect x="258" y="70" width="14" height="13" rx="2" fill="#ffb4a2"/><rect x="276" y="72" width="12" height="11" rx="2" fill="#8ecae6"/><rect x="292" y="69" width="10" height="14" rx="2" fill="#ffd166"/><rect x="306" y="71" width="14" height="12" rx="2" fill="#f28c6b"/><rect x="326" y="70" width="12" height="13" rx="2" fill="#6bc1d9"/></g>'+
+  '<rect y="164" width="360" height="16" fill="#b9cbbf"/><path d="M0 164h360" stroke="#93ab9b" stroke-width="1.4"/>'+
+  // ผู้จัดการชาย ถือรายงาน
+  '<g transform="translate(0 16)">'+B(214,'#3d5a80','#e2b088')+M(214,86,1,'firm',true)+
+   '<path d="M230 126q6 2 10-2" stroke="#3d5a80" stroke-width="7" fill="none" stroke-linecap="round"/>'+
+   '<g transform="rotate(-8 250 100)"><g filter="url(#wsh'+k+')"><rect x="236" y="84" width="34" height="42" rx="2" fill="#fffdf6"/></g><rect x="236" y="84" width="34" height="8" fill="#e5484d"/><text x="253" y="90" text-anchor="middle" font-size="5" font-weight="900" fill="#fff" font-family="sans-serif">รายงานยอด</text>'+
+   '<text x="253" y="104" text-anchor="middle" font-size="5.6" font-weight="900" fill="#c0392b" font-family="sans-serif">ขาด</text><text x="253" y="114" text-anchor="middle" font-size="6.6" font-weight="900" fill="#c0392b" font-family="sans-serif">฿1,200</text><path d="M241 119h24" stroke="#d8cfc0" stroke-width="1.4"/></g>'+
+   '<circle cx="240" cy="124" r="3.6" fill="#e2b088"/></g>'+
+  // หญิงแคชเชียร์ กังวล
+  '<g transform="translate(0 16)">'+B(150,'#4fb3a8','#e8b896')+W(150,86,1,'worried')+'<path d="M140 108q10 6 20 0" stroke="#fff" stroke-width="2" fill="none"/></g>'+
+  // เคาน์เตอร์ + ลิ้นชัก
+  '<g filter="url(#wsh'+k+')"><rect x="96" y="138" width="196" height="30" rx="3" fill="url(#cdc'+k+')"/></g><rect x="96" y="138" width="196" height="5" rx="2" fill="#e9eef2"/>'+
+  '<g filter="url(#wsh'+k+')"><rect x="118" y="120" width="44" height="20" rx="3" fill="#2f3a46"/></g><rect x="122" y="123" width="26" height="9" rx="1.4" fill="#7fe0c4"/><text x="135" y="130" text-anchor="middle" font-size="5.6" font-weight="900" fill="#14532d" font-family="sans-serif">0.00</text>'+
+  '<g filter="url(#wsh'+k+')"><path d="M112 146h56l6 14h-68z" fill="#4a5664"/></g><rect x="116" y="148" width="11" height="8" rx="1" fill="#7fcf9c"/><rect x="130" y="148" width="11" height="8" rx="1" fill="#7fcf9c"/><circle cx="148" cy="152" r="3.4" fill="#ffd166" stroke="#c9993a" stroke-width=".8"/><circle cx="157" cy="152" r="3.4" fill="#ffd166" stroke="#c9993a" stroke-width=".8"/>'+
+  '<text x="230" y="157" text-anchor="middle" font-size="6.4" font-weight="900" fill="#7a8794" font-family="sans-serif">ชำระเงิน</text>';},
+ // [ภาพประกอบห้องเรียนรู้แสงอ่อน] การ์ดเปรียบเทียบ 2 ใบ "ยักยอก: ถืออยู่แล้วเอาไปใช้" กับ "ลักทรัพย์: แอบเอาจากลิ้นชักนายจ้าง" ชายใส่แว่นชี้อธิบาย (น้องม้วนขวา)
+ twopaths:function(k){
+  var W=function(x,y,s,f){var e=f==='tired'?'<path d="M-11 -1.6q3-1.6 6 .2M5 -1.4q3-1.8 6-.2" stroke="#5a4636" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M-10.4 3q2.6 2.4 5.2 0M4.6 3q2.6 2.4 5.2 0" stroke="#5a4636" stroke-width="1.4" fill="none" stroke-linecap="round"/><path d="M-3.6 12q3.6 2.8 7.2 0" stroke="#b0503a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+   :'<ellipse cx="-7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><ellipse cx="7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><circle cx="-6.8" cy="2.2" r=".7" fill="#fff"/><circle cx="8" cy="2.2" r=".7" fill="#fff"/>'+
+    (f==='worried'?'<path d="M-11 -1.2l6-2.6M11 -1.2l-6-2.6" stroke="#5a4636" stroke-width="1.1" stroke-linecap="round"/><path d="M-2.8 12.6q2.8-1.8 5.6 0" stroke="#b0503a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+    :f==='firm'?'<path d="M-11 -2.6l6 .8M11 -2.6l-6 .8" stroke="#5a4636" stroke-width="1.2" stroke-linecap="round"/><path d="M-3.4 11.6q3.4 1.6 6.8 0" stroke="#b0503a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+    :'<path d="M-11 -2.4q3-2 6-.4M5 -2.8q3-1.6 6 .4" stroke="#5a4636" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M-4.6 10.4q4.6 4.6 9.2 0z" fill="#fff" stroke="#b0503a" stroke-width="1.1" stroke-linejoin="round"/>');
+   return '<g transform="translate('+x+' '+y+') scale('+s+')"><circle cx="16" cy="-14" r="8" fill="url(#wh'+k+')"/><circle cx="0" cy="0" r="16" fill="url(#wk'+k+')"/>'+
+    '<path d="M-16 -2q-1-18 16-19q17 1 17 18q-4-9-12-11q-4 6-12 7q-6 1-9 5z" fill="url(#wh'+k+')"/><path d="M-16 -2q-3 8 0 16" stroke="url(#wh'+k+')" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M-2 -18q6-2 10 1" stroke="#8a6450" stroke-width="1.2" fill="none" opacity=".7"/>'+
+    e+'<ellipse cx="-11" cy="8" rx="3.4" ry="2" fill="#f2a0a0" opacity=".45"/><ellipse cx="11" cy="8" rx="3.4" ry="2" fill="#f2a0a0" opacity=".45"/><path d="M0 5.5q.8 2.6-.6 3.4" stroke="#c9896a" stroke-width=".9" fill="none" stroke-linecap="round"/></g>';};
+  var WD='<radialGradient id="wk'+k+'" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#fbe4cf"/><stop offset=".7" stop-color="#f0c6a4"/><stop offset="1" stop-color="#e2ad8a"/></radialGradient><linearGradient id="wh'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5a3a2a"/><stop offset="1" stop-color="#2e1c14"/></linearGradient><filter id="wsh'+k+'" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#5a3a2a" flood-opacity=".25"/></filter><filter id="wbl'+k+'" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3"/></filter>';
+  var M=function(x,y,s,f,gl){var e=(f==='think'?'<path d="M-10.4 3h5.2M4.6 3h5.2" stroke="#3a2a20" stroke-width="1.6" stroke-linecap="round"/>':'<ellipse cx="-7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><ellipse cx="7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><circle cx="-6.8" cy="2.2" r=".7" fill="#fff"/><circle cx="8" cy="2.2" r=".7" fill="#fff"/>')+
+    (f==='worried'?'<path d="M-11 -1.2l6-2.6M11 -1.2l-6-2.6" stroke="#3a2a20" stroke-width="1.3" stroke-linecap="round"/><path d="M-2.8 12.6q2.8-1.8 5.6 0" stroke="#9a4a3a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+    :f==='firm'?'<path d="M-11 -2.6l6 .8M11 -2.6l-6 .8" stroke="#3a2a20" stroke-width="1.4" stroke-linecap="round"/><path d="M-3.4 11.6q3.4 1.6 6.8 0" stroke="#9a4a3a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+    :f==='think'?'<path d="M-11 -3q3-1.6 6 0M5 -1.6q3-1.6 6 0" stroke="#3a2a20" stroke-width="1.3" fill="none" stroke-linecap="round"/><path d="M-1 11.6h5" stroke="#9a4a3a" stroke-width="1.3" stroke-linecap="round"/>'
+    :'<path d="M-11 -2.4q3-2 6-.4M5 -2.8q3-1.6 6 .4" stroke="#3a2a20" stroke-width="1.2" fill="none" stroke-linecap="round"/><path d="M-4.6 10.4q4.6 4.6 9.2 0z" fill="#fff" stroke="#9a4a3a" stroke-width="1.1" stroke-linejoin="round"/>');
+   return '<g transform="translate('+x+' '+y+') scale('+s+')"><circle cx="-16" cy="3" r="3.4" fill="url(#mk'+k+')"/><circle cx="16" cy="3" r="3.4" fill="url(#mk'+k+')"/><circle cx="0" cy="0" r="16" fill="url(#mk'+k+')"/>'+
+    '<path d="M-16 0q-2-20 16-20q16 0 17 16q-2-6-6-8q-8 4-18 3q-6 2-9 9z" fill="url(#mh'+k+')"/><path d="M-4 -17q8-4 14 2" stroke="#6a6a7a" stroke-width="1.2" fill="none" opacity=".6"/>'+e+
+    (gl?'<g fill="none" stroke="#2a2a32" stroke-width="1.1"><rect x="-12" y="-1" width="9" height="7" rx="2.4"/><rect x="3" y="-1" width="9" height="7" rx="2.4"/><path d="M-3 1.6h6"/></g>':'')+
+    '<ellipse cx="-11" cy="8" rx="3" ry="1.8" fill="#f2a0a0" opacity=".35"/><ellipse cx="11" cy="8" rx="3" ry="1.8" fill="#f2a0a0" opacity=".35"/><path d="M0 5.5q.8 2.6-.6 3.4" stroke="#b9805a" stroke-width=".9" fill="none" stroke-linecap="round"/></g>';};
+  var MD='<radialGradient id="mk'+k+'" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#f6d2b0"/><stop offset=".7" stop-color="#e2b088"/><stop offset="1" stop-color="#cf9870"/></radialGradient><linearGradient id="mh'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a3440"/><stop offset="1" stop-color="#16141c"/></linearGradient>';
+
+  var card=function(x,head,col,body,txt){return '<g filter="url(#wsh'+k+')"><rect x="'+x+'" y="92" width="100" height="68" rx="6" fill="#fffdf8"/></g><rect x="'+x+'" y="92" width="100" height="15" rx="6" fill="'+col+'"/><rect x="'+x+'" y="100" width="100" height="7" fill="'+col+'"/>'+
+   '<text x="'+(x+50)+'" y="103" text-anchor="middle" font-size="8" font-weight="900" fill="#fff" font-family="sans-serif">'+head+'</text>'+body+
+   '<text x="'+(x+50)+'" y="154" text-anchor="middle" font-size="6.4" font-weight="900" fill="#3a3a44" font-family="sans-serif">'+txt+'</text>';};
+  return '<defs>'+WD+MD+'<linearGradient id="tpw'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8e6f7"/><stop offset="1" stop-color="#d4d0ee"/></linearGradient>'+
+   '<radialGradient id="tpl'+k+'" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fffbe8" stop-opacity=".95"/><stop offset="1" stop-color="#fffbe8" stop-opacity="0"/></radialGradient></defs>'+
+  '<rect width="360" height="180" fill="url(#tpw'+k+')"/><circle cx="140" cy="80" r="120" fill="url(#tpl'+k+')"/>'+
+  '<rect y="164" width="360" height="16" fill="#bdb6dc"/><path d="M0 164h360" stroke="#9a92c4" stroke-width="1.4"/>'+
+  card(10,'ยักยอก','#3b6fd6',
+   // มือถือถุงเงิน -> กระเป๋าตัวเอง
+   '<g transform="translate(10 8)"><path d="M22 128q0-10 10-12h12" stroke="#e2b088" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M40 108q-4-6 2-8h8q6 2 2 8z" fill="#c9993a"/><ellipse cx="46" cy="122" rx="11" ry="12" fill="#f2c14e"/><text x="46" y="126" text-anchor="middle" font-size="9" font-weight="900" fill="#8a5a00" font-family="sans-serif">฿</text>'+
+   '<path d="M60 122h12" stroke="#3b6fd6" stroke-width="2.4" stroke-linecap="round"/><path d="M69 118l4 4-4 4" stroke="#3b6fd6" stroke-width="2.4" fill="none" stroke-linecap="round"/><rect x="76" y="114" width="0" height="0"/></g>'+
+   '<g transform="translate(10 8)"><path d="M77 114h14l-2 18h-10z" fill="#5c4a3a"/><path d="M77 114q7 5 14 0" stroke="#3a2e24" stroke-width="1.2" fill="none"/></g>',
+   'ถือไว้อยู่แล้ว → เอาไปใช้')+
+  '<g transform="translate(-12 0)">'+card(130,'ลักทรัพย์','#e5484d',
+   // ลิ้นชักนายจ้าง + มือแอบหยิบ
+   '<g filter="url(#wsh'+k+')"><rect x="148" y="116" width="44" height="22" rx="3" fill="#8a6a4a"/></g><rect x="152" y="112" width="36" height="10" rx="2" fill="#a88560"/><circle cx="170" cy="130" r="2.4" fill="#e9d6b4"/>'+
+   '<rect x="160" y="108" width="10" height="6" rx="1" fill="#7fcf9c"/><rect x="172" y="109" width="10" height="5" rx="1" fill="#7fcf9c"/>'+
+   '<path d="M214 104q-12 0-20 6" stroke="#e8b896" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="193" cy="111" r="3.2" fill="#e8b896"/>'+
+   '<text x="170" y="146" text-anchor="middle" font-size="5" font-weight="900" fill="#8a6a4a" font-family="sans-serif">ของนายจ้าง</text>',
+   'แอบเอาไปจากนายจ้าง')+'</g>'+
+  '<text x="114" y="130" text-anchor="middle" font-size="10" font-weight="900" fill="#7a72a8" font-family="sans-serif">vs</text>'+
+  // ชายใส่แว่นชี้
+  '<g transform="translate(-30 16)"><g filter="url(#wsh'+k+')"><path d="M248 164v-34q0-18 24-18t24 18v34z" fill="#f2b33d"/></g><path d="M266 100h12v12q-6 3-12 0z" fill="#e2b088"/>'+M(272,86,1,'smile',true)+
+   '<path d="M250 124q-12-6-18-18" stroke="#f2b33d" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="231" cy="104" r="3.6" fill="#e2b088"/></g>';},
+ // [ภาพประกอบโต๊ะ HR แสงโคมไฟอุ่น] ซ้าย: สลิปเงินเดือนมีตรา "หักชดใช้?" ถูกกากบาท ขวา: หนังสือ "ยอมรับผิด" กับปากกาและโน้ต "อ่านก่อนเซ็น" หญิง HR ซ้าย ชายลูกจ้างขวา (น้องม้วนกลาง)
+ deductnote:function(k){
+  var W=function(x,y,s,f){var e=f==='tired'?'<path d="M-11 -1.6q3-1.6 6 .2M5 -1.4q3-1.8 6-.2" stroke="#5a4636" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M-10.4 3q2.6 2.4 5.2 0M4.6 3q2.6 2.4 5.2 0" stroke="#5a4636" stroke-width="1.4" fill="none" stroke-linecap="round"/><path d="M-3.6 12q3.6 2.8 7.2 0" stroke="#b0503a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+   :'<ellipse cx="-7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><ellipse cx="7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><circle cx="-6.8" cy="2.2" r=".7" fill="#fff"/><circle cx="8" cy="2.2" r=".7" fill="#fff"/>'+
+    (f==='worried'?'<path d="M-11 -1.2l6-2.6M11 -1.2l-6-2.6" stroke="#5a4636" stroke-width="1.1" stroke-linecap="round"/><path d="M-2.8 12.6q2.8-1.8 5.6 0" stroke="#b0503a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+    :f==='firm'?'<path d="M-11 -2.6l6 .8M11 -2.6l-6 .8" stroke="#5a4636" stroke-width="1.2" stroke-linecap="round"/><path d="M-3.4 11.6q3.4 1.6 6.8 0" stroke="#b0503a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+    :'<path d="M-11 -2.4q3-2 6-.4M5 -2.8q3-1.6 6 .4" stroke="#5a4636" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M-4.6 10.4q4.6 4.6 9.2 0z" fill="#fff" stroke="#b0503a" stroke-width="1.1" stroke-linejoin="round"/>');
+   return '<g transform="translate('+x+' '+y+') scale('+s+')"><circle cx="16" cy="-14" r="8" fill="url(#wh'+k+')"/><circle cx="0" cy="0" r="16" fill="url(#wk'+k+')"/>'+
+    '<path d="M-16 -2q-1-18 16-19q17 1 17 18q-4-9-12-11q-4 6-12 7q-6 1-9 5z" fill="url(#wh'+k+')"/><path d="M-16 -2q-3 8 0 16" stroke="url(#wh'+k+')" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M-2 -18q6-2 10 1" stroke="#8a6450" stroke-width="1.2" fill="none" opacity=".7"/>'+
+    e+'<ellipse cx="-11" cy="8" rx="3.4" ry="2" fill="#f2a0a0" opacity=".45"/><ellipse cx="11" cy="8" rx="3.4" ry="2" fill="#f2a0a0" opacity=".45"/><path d="M0 5.5q.8 2.6-.6 3.4" stroke="#c9896a" stroke-width=".9" fill="none" stroke-linecap="round"/></g>';};
+  var WD='<radialGradient id="wk'+k+'" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#fbe4cf"/><stop offset=".7" stop-color="#f0c6a4"/><stop offset="1" stop-color="#e2ad8a"/></radialGradient><linearGradient id="wh'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5a3a2a"/><stop offset="1" stop-color="#2e1c14"/></linearGradient><filter id="wsh'+k+'" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#5a3a2a" flood-opacity=".25"/></filter><filter id="wbl'+k+'" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3"/></filter>';
+  var M=function(x,y,s,f,gl){var e=(f==='think'?'<path d="M-10.4 3h5.2M4.6 3h5.2" stroke="#3a2a20" stroke-width="1.6" stroke-linecap="round"/>':'<ellipse cx="-7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><ellipse cx="7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><circle cx="-6.8" cy="2.2" r=".7" fill="#fff"/><circle cx="8" cy="2.2" r=".7" fill="#fff"/>')+
+    (f==='worried'?'<path d="M-11 -1.2l6-2.6M11 -1.2l-6-2.6" stroke="#3a2a20" stroke-width="1.3" stroke-linecap="round"/><path d="M-2.8 12.6q2.8-1.8 5.6 0" stroke="#9a4a3a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+    :f==='firm'?'<path d="M-11 -2.6l6 .8M11 -2.6l-6 .8" stroke="#3a2a20" stroke-width="1.4" stroke-linecap="round"/><path d="M-3.4 11.6q3.4 1.6 6.8 0" stroke="#9a4a3a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+    :f==='think'?'<path d="M-11 -3q3-1.6 6 0M5 -1.6q3-1.6 6 0" stroke="#3a2a20" stroke-width="1.3" fill="none" stroke-linecap="round"/><path d="M-1 11.6h5" stroke="#9a4a3a" stroke-width="1.3" stroke-linecap="round"/>'
+    :'<path d="M-11 -2.4q3-2 6-.4M5 -2.8q3-1.6 6 .4" stroke="#3a2a20" stroke-width="1.2" fill="none" stroke-linecap="round"/><path d="M-4.6 10.4q4.6 4.6 9.2 0z" fill="#fff" stroke="#9a4a3a" stroke-width="1.1" stroke-linejoin="round"/>');
+   return '<g transform="translate('+x+' '+y+') scale('+s+')"><circle cx="-16" cy="3" r="3.4" fill="url(#mk'+k+')"/><circle cx="16" cy="3" r="3.4" fill="url(#mk'+k+')"/><circle cx="0" cy="0" r="16" fill="url(#mk'+k+')"/>'+
+    '<path d="M-16 0q-2-20 16-20q16 0 17 16q-2-6-6-8q-8 4-18 3q-6 2-9 9z" fill="url(#mh'+k+')"/><path d="M-4 -17q8-4 14 2" stroke="#6a6a7a" stroke-width="1.2" fill="none" opacity=".6"/>'+e+
+    (gl?'<g fill="none" stroke="#2a2a32" stroke-width="1.1"><rect x="-12" y="-1" width="9" height="7" rx="2.4"/><rect x="3" y="-1" width="9" height="7" rx="2.4"/><path d="M-3 1.6h6"/></g>':'')+
+    '<ellipse cx="-11" cy="8" rx="3" ry="1.8" fill="#f2a0a0" opacity=".35"/><ellipse cx="11" cy="8" rx="3" ry="1.8" fill="#f2a0a0" opacity=".35"/><path d="M0 5.5q.8 2.6-.6 3.4" stroke="#b9805a" stroke-width=".9" fill="none" stroke-linecap="round"/></g>';};
+  var MD='<radialGradient id="mk'+k+'" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#f6d2b0"/><stop offset=".7" stop-color="#e2b088"/><stop offset="1" stop-color="#cf9870"/></radialGradient><linearGradient id="mh'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a3440"/><stop offset="1" stop-color="#16141c"/></linearGradient>';
+
+  var B=function(x,c,sk){return '<g filter="url(#wsh'+k+')"><path d="M'+(x-24)+' 164v-34q0-18 24-18t24 18v34z" fill="'+c+'"/></g><path d="M'+(x-6)+' 100h12v12q-6 3-12 0z" fill="'+sk+'"/>';};
+  return '<defs>'+WD+MD+'<linearGradient id="dnw'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7e9dc"/><stop offset="1" stop-color="#ead2bc"/></linearGradient>'+
+   '<radialGradient id="dnl'+k+'" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff4d6" stop-opacity=".95"/><stop offset="1" stop-color="#fff4d6" stop-opacity="0"/></radialGradient>'+
+   '<linearGradient id="dnt'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a87650"/><stop offset="1" stop-color="#7a5234"/></linearGradient></defs>'+
+  '<rect width="360" height="180" fill="url(#dnw'+k+')"/><circle cx="180" cy="70" r="130" fill="url(#dnl'+k+')"/>'+
+  '<path d="M0 40h360M0 76h360" stroke="#e2c6aa" stroke-width="1.4" opacity=".7"/>'+
+  // คน (ต่ำลง)
+  '<g transform="translate(-6 34)">'+B(52,'#a58bd8','#e8b896')+W(52,86,1,'firm')+'</g>'+
+  '<g transform="translate(6 34)">'+B(308,'#4fb3a8','#e2b088')+M(308,86,1,'worried',true)+'</g>'+
+  // โต๊ะ
+  '<g filter="url(#wsh'+k+')"><rect x="0" y="150" width="360" height="30" fill="url(#dnt'+k+')"/></g><rect x="0" y="150" width="360" height="4" fill="#c08a60"/>'+
+  // สลิปเงินเดือน (ซ้าย)
+  '<g transform="rotate(-5 112 124)"><g filter="url(#wsh'+k+')"><rect x="84" y="90" width="58" height="66" rx="2" fill="#fffdf6"/></g><rect x="84" y="90" width="58" height="11" fill="#3b6fd6"/><text x="113" y="98" text-anchor="middle" font-size="6" font-weight="900" fill="#fff" font-family="sans-serif">สลิปเงินเดือน</text>'+
+   '<path d="M90 108h30M90 116h40M90 124h34" stroke="#d8cfc0" stroke-width="2" stroke-linecap="round"/>'+
+   '<g transform="rotate(-10 113 140)"><rect x="92" y="132" width="42" height="15" rx="2" fill="none" stroke="#e5484d" stroke-width="1.6"/><text x="113" y="142.6" text-anchor="middle" font-size="6.4" font-weight="900" fill="#e5484d" font-family="sans-serif">หักชดใช้?</text></g>'+
+   '<path d="M90 130l46 20M136 130l-46 20" stroke="#e5484d" stroke-width="2.6" stroke-linecap="round" opacity=".85"/></g>'+
+  // หนังสือยอมรับผิด (ขวา)
+  '<g transform="rotate(4 248 124)"><g filter="url(#wsh'+k+')"><rect x="218" y="90" width="60" height="66" rx="2" fill="#fffdf6"/></g><text x="248" y="102" text-anchor="middle" font-size="6.6" font-weight="900" fill="#2a2a32" font-family="sans-serif">หนังสือยอมรับผิด</text>'+
+   '<path d="M224 110h48M224 117h44M224 124h48M224 131h36" stroke="#d8cfc0" stroke-width="1.8" stroke-linecap="round"/><path d="M228 148h40" stroke="#9aa3ad" stroke-width="1" stroke-dasharray="2 2"/><text x="230" y="146" font-size="5" fill="#9aa3ad" font-family="sans-serif">ลงชื่อ</text></g>'+
+  '<g transform="rotate(-30 268 134)"><rect x="252" y="131" width="30" height="5" rx="2" fill="#2f3a46"/><path d="M282 131l6 2.5-6 2.5z" fill="#c9993a"/></g>'+
+  // โน้ตอ่านก่อนเซ็น
+  '<g transform="translate(36 -10) rotate(8 262 92)"><g filter="url(#wsh'+k+')"><rect x="244" y="80" width="40" height="22" rx="1" fill="#ffe27a"/></g><text x="264" y="89" text-anchor="middle" font-size="5.6" font-weight="900" fill="#8a4a1a" font-family="sans-serif">อ่านก่อน</text><text x="264" y="97" text-anchor="middle" font-size="5.6" font-weight="900" fill="#8a4a1a" font-family="sans-serif">ค่อยเซ็น!</text></g>';},
+ // [ภาพประกอบห้องรับแจ้งความแสงเช้าสีฟ้า] เคาน์เตอร์รับเรื่อง ปฏิทินบนผนังวง "3 เดือน" แฟ้ม "ยักยอก = ยอมความได้" หญิงยื่นแฟ้มเอกสาร เจ้าหน้าที่ชายใส่แว่นรับเรื่อง (น้องม้วนซ้าย)
+ policedesk:function(k){
+  var W=function(x,y,s,f){var e=f==='tired'?'<path d="M-11 -1.6q3-1.6 6 .2M5 -1.4q3-1.8 6-.2" stroke="#5a4636" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M-10.4 3q2.6 2.4 5.2 0M4.6 3q2.6 2.4 5.2 0" stroke="#5a4636" stroke-width="1.4" fill="none" stroke-linecap="round"/><path d="M-3.6 12q3.6 2.8 7.2 0" stroke="#b0503a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+   :'<ellipse cx="-7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><ellipse cx="7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><circle cx="-6.8" cy="2.2" r=".7" fill="#fff"/><circle cx="8" cy="2.2" r=".7" fill="#fff"/>'+
+    (f==='worried'?'<path d="M-11 -1.2l6-2.6M11 -1.2l-6-2.6" stroke="#5a4636" stroke-width="1.1" stroke-linecap="round"/><path d="M-2.8 12.6q2.8-1.8 5.6 0" stroke="#b0503a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+    :f==='firm'?'<path d="M-11 -2.6l6 .8M11 -2.6l-6 .8" stroke="#5a4636" stroke-width="1.2" stroke-linecap="round"/><path d="M-3.4 11.6q3.4 1.6 6.8 0" stroke="#b0503a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+    :'<path d="M-11 -2.4q3-2 6-.4M5 -2.8q3-1.6 6 .4" stroke="#5a4636" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M-4.6 10.4q4.6 4.6 9.2 0z" fill="#fff" stroke="#b0503a" stroke-width="1.1" stroke-linejoin="round"/>');
+   return '<g transform="translate('+x+' '+y+') scale('+s+')"><circle cx="16" cy="-14" r="8" fill="url(#wh'+k+')"/><circle cx="0" cy="0" r="16" fill="url(#wk'+k+')"/>'+
+    '<path d="M-16 -2q-1-18 16-19q17 1 17 18q-4-9-12-11q-4 6-12 7q-6 1-9 5z" fill="url(#wh'+k+')"/><path d="M-16 -2q-3 8 0 16" stroke="url(#wh'+k+')" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M-2 -18q6-2 10 1" stroke="#8a6450" stroke-width="1.2" fill="none" opacity=".7"/>'+
+    e+'<ellipse cx="-11" cy="8" rx="3.4" ry="2" fill="#f2a0a0" opacity=".45"/><ellipse cx="11" cy="8" rx="3.4" ry="2" fill="#f2a0a0" opacity=".45"/><path d="M0 5.5q.8 2.6-.6 3.4" stroke="#c9896a" stroke-width=".9" fill="none" stroke-linecap="round"/></g>';};
+  var WD='<radialGradient id="wk'+k+'" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#fbe4cf"/><stop offset=".7" stop-color="#f0c6a4"/><stop offset="1" stop-color="#e2ad8a"/></radialGradient><linearGradient id="wh'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5a3a2a"/><stop offset="1" stop-color="#2e1c14"/></linearGradient><filter id="wsh'+k+'" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#5a3a2a" flood-opacity=".25"/></filter><filter id="wbl'+k+'" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3"/></filter>';
+  var M=function(x,y,s,f,gl){var e=(f==='think'?'<path d="M-10.4 3h5.2M4.6 3h5.2" stroke="#3a2a20" stroke-width="1.6" stroke-linecap="round"/>':'<ellipse cx="-7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><ellipse cx="7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><circle cx="-6.8" cy="2.2" r=".7" fill="#fff"/><circle cx="8" cy="2.2" r=".7" fill="#fff"/>')+
+    (f==='worried'?'<path d="M-11 -1.2l6-2.6M11 -1.2l-6-2.6" stroke="#3a2a20" stroke-width="1.3" stroke-linecap="round"/><path d="M-2.8 12.6q2.8-1.8 5.6 0" stroke="#9a4a3a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+    :f==='firm'?'<path d="M-11 -2.6l6 .8M11 -2.6l-6 .8" stroke="#3a2a20" stroke-width="1.4" stroke-linecap="round"/><path d="M-3.4 11.6q3.4 1.6 6.8 0" stroke="#9a4a3a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+    :f==='think'?'<path d="M-11 -3q3-1.6 6 0M5 -1.6q3-1.6 6 0" stroke="#3a2a20" stroke-width="1.3" fill="none" stroke-linecap="round"/><path d="M-1 11.6h5" stroke="#9a4a3a" stroke-width="1.3" stroke-linecap="round"/>'
+    :'<path d="M-11 -2.4q3-2 6-.4M5 -2.8q3-1.6 6 .4" stroke="#3a2a20" stroke-width="1.2" fill="none" stroke-linecap="round"/><path d="M-4.6 10.4q4.6 4.6 9.2 0z" fill="#fff" stroke="#9a4a3a" stroke-width="1.1" stroke-linejoin="round"/>');
+   return '<g transform="translate('+x+' '+y+') scale('+s+')"><circle cx="-16" cy="3" r="3.4" fill="url(#mk'+k+')"/><circle cx="16" cy="3" r="3.4" fill="url(#mk'+k+')"/><circle cx="0" cy="0" r="16" fill="url(#mk'+k+')"/>'+
+    '<path d="M-16 0q-2-20 16-20q16 0 17 16q-2-6-6-8q-8 4-18 3q-6 2-9 9z" fill="url(#mh'+k+')"/><path d="M-4 -17q8-4 14 2" stroke="#6a6a7a" stroke-width="1.2" fill="none" opacity=".6"/>'+e+
+    (gl?'<g fill="none" stroke="#2a2a32" stroke-width="1.1"><rect x="-12" y="-1" width="9" height="7" rx="2.4"/><rect x="3" y="-1" width="9" height="7" rx="2.4"/><path d="M-3 1.6h6"/></g>':'')+
+    '<ellipse cx="-11" cy="8" rx="3" ry="1.8" fill="#f2a0a0" opacity=".35"/><ellipse cx="11" cy="8" rx="3" ry="1.8" fill="#f2a0a0" opacity=".35"/><path d="M0 5.5q.8 2.6-.6 3.4" stroke="#b9805a" stroke-width=".9" fill="none" stroke-linecap="round"/></g>';};
+  var MD='<radialGradient id="mk'+k+'" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#f6d2b0"/><stop offset=".7" stop-color="#e2b088"/><stop offset="1" stop-color="#cf9870"/></radialGradient><linearGradient id="mh'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a3440"/><stop offset="1" stop-color="#16141c"/></linearGradient>';
+
+  var B=function(x,c,sk){return '<g filter="url(#wsh'+k+')"><path d="M'+(x-24)+' 164v-34q0-18 24-18t24 18v34z" fill="'+c+'"/></g><path d="M'+(x-6)+' 100h12v12q-6 3-12 0z" fill="'+sk+'"/>';};
+  return '<defs>'+WD+MD+'<linearGradient id="pdw'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e3edf8"/><stop offset="1" stop-color="#c8d8ec"/></linearGradient>'+
+   '<radialGradient id="pdl'+k+'" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffffff" stop-opacity=".9"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>'+
+   '<linearGradient id="pdc'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5b7aa6"/><stop offset="1" stop-color="#3d5a80"/></linearGradient></defs>'+
+  '<rect width="360" height="180" fill="url(#pdw'+k+')"/><circle cx="150" cy="70" r="120" fill="url(#pdl'+k+')"/>'+
+  // ปฏิทิน
+  '<g transform="rotate(-3 130 98)"><g filter="url(#wsh'+k+')"><rect x="104" y="70" width="58" height="56" rx="4" fill="#fff"/></g><rect x="104" y="70" width="58" height="13" rx="4" fill="#e5484d"/><rect x="104" y="78" width="58" height="5" fill="#e5484d"/><text x="133" y="79.6" text-anchor="middle" font-size="6.4" font-weight="900" fill="#fff" font-family="sans-serif">ภายใน</text>'+
+   '<text x="133" y="105" text-anchor="middle" font-size="17" font-weight="900" fill="#2a2a32" font-family="sans-serif">3</text><text x="133" y="118" text-anchor="middle" font-size="7" font-weight="900" fill="#e5484d" font-family="sans-serif">เดือน</text>'+
+   '<circle cx="133" cy="104" r="14" fill="none" stroke="#e5484d" stroke-width="1.6" stroke-dasharray="3 2"/></g>'+
+  // เจ้าหน้าที่ (หลังเคาน์เตอร์)
+  '<g transform="translate(0 22)">'+B(296,'#2f4a6e','#e2b088')+'<path d="M290 112l6 8 6-8" fill="#fff"/>'+M(296,86,1,'smile',true)+'</g>'+
+  // หญิงยื่นแฟ้ม
+  '<g transform="translate(0 20)">'+B(206,'#f2b33d','#e8b896')+W(206,86,1,'firm')+
+   '<path d="M226 124q14-2 22-10" stroke="#f2b33d" stroke-width="7" fill="none" stroke-linecap="round"/></g>'+
+  // เคาน์เตอร์
+  '<g filter="url(#wsh'+k+')"><rect x="150" y="146" width="210" height="34" fill="url(#pdc'+k+')"/></g><rect x="150" y="146" width="210" height="5" fill="#8aa4c8"/>'+
+  '<rect y="164" width="150" height="16" fill="#aebfd6"/><path d="M0 164h150" stroke="#8fa3c0" stroke-width="1.4"/>'+
+  // แฟ้มยื่น
+  '<g transform="rotate(-6 262 132)"><g filter="url(#wsh'+k+')"><rect x="240" y="118" width="48" height="30" rx="2" fill="#7fcf9c"/></g><rect x="244" y="122" width="40" height="22" rx="1" fill="#fffdf6"/><text x="264" y="131" text-anchor="middle" font-size="5.6" font-weight="900" fill="#2a2a32" font-family="sans-serif">ยักยอก</text><text x="264" y="140" text-anchor="middle" font-size="5.6" font-weight="900" fill="#2e8a6e" font-family="sans-serif">= ยอมความได้</text></g>'+
+  '<circle cx="250" cy="134" r="3.6" fill="#e8b896"/>';},
+ // [ภาพประกอบโต๊ะที่บ้านแสงบ่ายอุ่น] กล่องหลักฐานมีแฟ้ม "สำเนา" "แชตคำสั่งงาน" "บันทึกส่งกะ" มือถือแสดงแชต หญิงยิ้มชูนิ้ว (น้องม้วนขวา)
+ evidencebox:function(k){
+  var W=function(x,y,s,f){var e=f==='tired'?'<path d="M-11 -1.6q3-1.6 6 .2M5 -1.4q3-1.8 6-.2" stroke="#5a4636" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M-10.4 3q2.6 2.4 5.2 0M4.6 3q2.6 2.4 5.2 0" stroke="#5a4636" stroke-width="1.4" fill="none" stroke-linecap="round"/><path d="M-3.6 12q3.6 2.8 7.2 0" stroke="#b0503a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+   :'<ellipse cx="-7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><ellipse cx="7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><circle cx="-6.8" cy="2.2" r=".7" fill="#fff"/><circle cx="8" cy="2.2" r=".7" fill="#fff"/>'+
+    (f==='worried'?'<path d="M-11 -1.2l6-2.6M11 -1.2l-6-2.6" stroke="#5a4636" stroke-width="1.1" stroke-linecap="round"/><path d="M-2.8 12.6q2.8-1.8 5.6 0" stroke="#b0503a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+    :f==='firm'?'<path d="M-11 -2.6l6 .8M11 -2.6l-6 .8" stroke="#5a4636" stroke-width="1.2" stroke-linecap="round"/><path d="M-3.4 11.6q3.4 1.6 6.8 0" stroke="#b0503a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+    :'<path d="M-11 -2.4q3-2 6-.4M5 -2.8q3-1.6 6 .4" stroke="#5a4636" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M-4.6 10.4q4.6 4.6 9.2 0z" fill="#fff" stroke="#b0503a" stroke-width="1.1" stroke-linejoin="round"/>');
+   return '<g transform="translate('+x+' '+y+') scale('+s+')"><circle cx="16" cy="-14" r="8" fill="url(#wh'+k+')"/><circle cx="0" cy="0" r="16" fill="url(#wk'+k+')"/>'+
+    '<path d="M-16 -2q-1-18 16-19q17 1 17 18q-4-9-12-11q-4 6-12 7q-6 1-9 5z" fill="url(#wh'+k+')"/><path d="M-16 -2q-3 8 0 16" stroke="url(#wh'+k+')" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M-2 -18q6-2 10 1" stroke="#8a6450" stroke-width="1.2" fill="none" opacity=".7"/>'+
+    e+'<ellipse cx="-11" cy="8" rx="3.4" ry="2" fill="#f2a0a0" opacity=".45"/><ellipse cx="11" cy="8" rx="3.4" ry="2" fill="#f2a0a0" opacity=".45"/><path d="M0 5.5q.8 2.6-.6 3.4" stroke="#c9896a" stroke-width=".9" fill="none" stroke-linecap="round"/></g>';};
+  var WD='<radialGradient id="wk'+k+'" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#fbe4cf"/><stop offset=".7" stop-color="#f0c6a4"/><stop offset="1" stop-color="#e2ad8a"/></radialGradient><linearGradient id="wh'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5a3a2a"/><stop offset="1" stop-color="#2e1c14"/></linearGradient><filter id="wsh'+k+'" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#5a3a2a" flood-opacity=".25"/></filter><filter id="wbl'+k+'" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3"/></filter>';
+  var M=function(x,y,s,f,gl){var e=(f==='think'?'<path d="M-10.4 3h5.2M4.6 3h5.2" stroke="#3a2a20" stroke-width="1.6" stroke-linecap="round"/>':'<ellipse cx="-7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><ellipse cx="7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><circle cx="-6.8" cy="2.2" r=".7" fill="#fff"/><circle cx="8" cy="2.2" r=".7" fill="#fff"/>')+
+    (f==='worried'?'<path d="M-11 -1.2l6-2.6M11 -1.2l-6-2.6" stroke="#3a2a20" stroke-width="1.3" stroke-linecap="round"/><path d="M-2.8 12.6q2.8-1.8 5.6 0" stroke="#9a4a3a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+    :f==='firm'?'<path d="M-11 -2.6l6 .8M11 -2.6l-6 .8" stroke="#3a2a20" stroke-width="1.4" stroke-linecap="round"/><path d="M-3.4 11.6q3.4 1.6 6.8 0" stroke="#9a4a3a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+    :f==='think'?'<path d="M-11 -3q3-1.6 6 0M5 -1.6q3-1.6 6 0" stroke="#3a2a20" stroke-width="1.3" fill="none" stroke-linecap="round"/><path d="M-1 11.6h5" stroke="#9a4a3a" stroke-width="1.3" stroke-linecap="round"/>'
+    :'<path d="M-11 -2.4q3-2 6-.4M5 -2.8q3-1.6 6 .4" stroke="#3a2a20" stroke-width="1.2" fill="none" stroke-linecap="round"/><path d="M-4.6 10.4q4.6 4.6 9.2 0z" fill="#fff" stroke="#9a4a3a" stroke-width="1.1" stroke-linejoin="round"/>');
+   return '<g transform="translate('+x+' '+y+') scale('+s+')"><circle cx="-16" cy="3" r="3.4" fill="url(#mk'+k+')"/><circle cx="16" cy="3" r="3.4" fill="url(#mk'+k+')"/><circle cx="0" cy="0" r="16" fill="url(#mk'+k+')"/>'+
+    '<path d="M-16 0q-2-20 16-20q16 0 17 16q-2-6-6-8q-8 4-18 3q-6 2-9 9z" fill="url(#mh'+k+')"/><path d="M-4 -17q8-4 14 2" stroke="#6a6a7a" stroke-width="1.2" fill="none" opacity=".6"/>'+e+
+    (gl?'<g fill="none" stroke="#2a2a32" stroke-width="1.1"><rect x="-12" y="-1" width="9" height="7" rx="2.4"/><rect x="3" y="-1" width="9" height="7" rx="2.4"/><path d="M-3 1.6h6"/></g>':'')+
+    '<ellipse cx="-11" cy="8" rx="3" ry="1.8" fill="#f2a0a0" opacity=".35"/><ellipse cx="11" cy="8" rx="3" ry="1.8" fill="#f2a0a0" opacity=".35"/><path d="M0 5.5q.8 2.6-.6 3.4" stroke="#b9805a" stroke-width=".9" fill="none" stroke-linecap="round"/></g>';};
+  var MD='<radialGradient id="mk'+k+'" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#f6d2b0"/><stop offset=".7" stop-color="#e2b088"/><stop offset="1" stop-color="#cf9870"/></radialGradient><linearGradient id="mh'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a3440"/><stop offset="1" stop-color="#16141c"/></linearGradient>';
+
+  var tab=function(x,y,c,t,r){return '<g transform="rotate('+r+' '+(x+22)+' '+(y+10)+')"><g filter="url(#wsh'+k+')"><rect x="'+x+'" y="'+y+'" width="44" height="34" rx="2" fill="'+c+'"/></g><rect x="'+(x+3)+'" y="'+(y+3)+'" width="38" height="11" rx="1" fill="#fffdf6"/><text x="'+(x+22)+'" y="'+(y+11)+'" text-anchor="middle" font-size="5.6" font-weight="900" fill="#2a2a32" font-family="sans-serif">'+t+'</text></g>';};
+  return '<defs>'+WD+MD+'<linearGradient id="ebw'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fdebd3"/><stop offset="1" stop-color="#f3d2ad"/></linearGradient>'+
+   '<radialGradient id="ebl'+k+'" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff8df" stop-opacity=".95"/><stop offset="1" stop-color="#fff8df" stop-opacity="0"/></radialGradient>'+
+   '<linearGradient id="ebb'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9a86c"/><stop offset="1" stop-color="#b07e48"/></linearGradient></defs>'+
+  '<rect width="360" height="180" fill="url(#ebw'+k+')"/><circle cx="200" cy="80" r="120" fill="url(#ebl'+k+')"/>'+
+  // หน้าต่าง
+  '<g opacity=".9"><rect x="150" y="30" width="80" height="56" rx="4" fill="#cfe8f6" stroke="#fff" stroke-width="4"/><path d="M190 30v56M150 58h80" stroke="#fff" stroke-width="3"/></g>'+
+  // หญิง
+  '<g transform="translate(0 26)"><g filter="url(#wsh'+k+')"><path d="M42 164v-34q0-18 24-18t24 18v34z" fill="#e57a6b"/></g><path d="M60 100h12v12q-6 3-12 0z" fill="#e8b896"/>'+W(66,86,1,'smile')+
+   '<path d="M88 126q10-6 12-18" stroke="#e57a6b" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="100" cy="106" r="4" fill="#e8b896"/><path d="M100 102v-6" stroke="#e8b896" stroke-width="3" stroke-linecap="round"/></g>'+
+  // โต๊ะ
+  '<g filter="url(#wsh'+k+')"><rect x="0" y="152" width="360" height="28" fill="#a87650"/></g><rect x="0" y="152" width="360" height="4" fill="#c08a60"/>'+
+  // กล่องหลักฐาน + แฟ้ม
+  tab(116,104,'#3b6fd6','สำเนาเอกสาร',-8)+tab(156,98,'#7fcf9c','แชตคำสั่งงาน',4)+tab(198,106,'#f2b33d','บันทึกส่งกะ',10)+
+  '<g filter="url(#wsh'+k+')"><path d="M110 124h138l-8 32h-122z" fill="url(#ebb'+k+')"/></g><rect x="110" y="122" width="138" height="6" rx="1" fill="#e6bd88"/>'+
+  '<rect x="150" y="134" width="58" height="14" rx="2" fill="#fffdf6"/><text x="179" y="144" text-anchor="middle" font-size="7.4" font-weight="900" fill="#8a4a1a" font-family="sans-serif">หลักฐาน</text>'+
+  // มือถือ
+  '<g transform="translate(-20 0) rotate(-12 286 138)"><g filter="url(#wsh'+k+')"><rect x="272" y="114" width="28" height="44" rx="5" fill="#2f3a46"/></g><rect x="275" y="119" width="22" height="34" rx="2" fill="#f4f7fb"/>'+
+   '<rect x="277" y="123" width="14" height="6" rx="3" fill="#d6e4f5"/><rect x="281" y="132" width="14" height="6" rx="3" fill="#7fcf9c"/><rect x="277" y="141" width="12" height="6" rx="3" fill="#d6e4f5"/></g>';}
 };
 var BG={
  cradle:'<g opacity=".7">'+[[210,20,1],[250,40,.7],[300,16,1.1],[336,46,.8]].map(function(v){return '<path transform="translate('+v[0]+' '+v[1]+') scale('+v[2]+')" d="M0-7l2 5 5 .8-3.6 3.4.8 5L0 4.6-4.2 7.2-3.4 2.2-7-1.2-2-2z" fill="#ffd84d" stroke="#3a2a12" stroke-width="1"/>';}).join('')+'</g><path d="M190 176q40-14 80-4t90-6v10z" fill="#f6c6d8" opacity=".8"/>',
