@@ -18,11 +18,7 @@ const MOOD_PARTS = ['wave', 'point', 'up', 'thumb', 'cross', 'scratch', 'chin', 
   'pen', 'mag', 'coin', 'phone', 'sign', 'umbrella', 'shield', 'cal', 'money', 'clip', 'cup', 'none',
   'sway', 'bob', 'hop', 'shake', 'spin', 'peek', 'lean', 'breathe'];
 const okMood = m => typeof m === 'string' && (MOODS.includes(m) || (m.includes('+') && m.length <= 60 && m.split('+').every(t => MOOD_PARTS.includes(t))));
-const PANEL_SCENES = ['pay', 'nopay', 'notice', 'labor', 'sign', 'repair', 'moveout', 'iou', 'rate', 'guarantee', 'hourglass', 'umbrella', 'hours', 'nothreat', 'complain', 'bankcall', 'mule', 'shared', 'tilt', 'cut', 'fence', 'sick', 'errand', 'vacation', 'holiday', 'workday', 'consent', 'rates', 'manager', 'payslip', 'trial', 'dismiss', 'day120', 'court', 'deductlist', 'pie', 'broken', 'vault', 'payday', 'orbit', 'hospital', 'nursery', 'jobcenter', 'retire', 'bridge', 'verdict', 'xray', 'donut', 'roadmap', 'lantern', 'grid120', 'jars', 'signs', 'guard', 'stroller', 'flapboard', 'stamp', 'receipt', 'certificate', 'crossroads', 'seesaw', 'barrier', 'balloon', 'chainlock', 'corkboard', 'cans', 'ledger', 'vesting', 'threeways', 'cloche', 'agegate', 'clock24', 'hazards', 'handoff', 'permit', 'permitcard', 'mailbox', 'sameenv', 'tenpct', 'drawer', 'founders', 'lanyards', 'talkline', 'megaphone', 'shield', 'puzzle', 'letter', 'twodoors', 'courtfree', 'claimlist', 'paintcal', 'popburst', 'neonshop', 'cutaway', 'sunsetglass', 'pixelstairs', 'splitretire', 'claydays', 'origami', 'retiremap', 'metroline', 'boardgame', 'sketchgraph', 'stainedladder', 'stickers', 'oneline', 'diary', 'glassphone', 'mosaic', 'constellation', 'venn', 'terminal', 'memphis', 'stitch', 'thermal', 'spotstage', 'neumorph', 'steelchain', 'lighthouse', 'redact', 'newspaper', 'forecast', 'queue', 'ledcount', 'safetynet', 'binder', 'kanban', 'mediaplayer', 'refcard', 'fridge', 'blueprint', 'smartwatch', 'woodcut', 'papercut', 'swissarrow'];   // ฉากช่องการ์ตูน (public/guide-comic.js)
-
-// ภาพประกอบเฉพาะคำถาม (public/qa-art.js) · ลายเส้นประจำบ้านแบบเดียวกันทุกภาพ
-const SPOTS = ['tenure', 'sameday', 'sickbed', 'vacationjar', 'otconsent', 'otrate', 'maternity', 'finalfine', 'latechat', 'brokenlaptop'];
-const cleanArt = a => a && SPOTS.includes(a.spot) ? { spot: a.spot, mood: okMood(a.mood) ? a.mood : 'curious', side: a.side === 'right' ? 'right' : 'left', alt: str(a.alt, 160) } : null;
+const PANEL_SCENES = ['pay', 'nopay', 'notice', 'labor', 'sign', 'repair', 'moveout', 'iou', 'rate', 'guarantee', 'hourglass', 'umbrella', 'hours', 'nothreat', 'complain', 'bankcall', 'mule', 'shared', 'tilt', 'cut', 'fence', 'sick', 'errand', 'vacation', 'holiday', 'workday', 'consent', 'rates', 'manager', 'payslip', 'trial', 'dismiss', 'day120', 'court', 'deductlist', 'pie', 'broken', 'vault', 'payday', 'orbit', 'hospital', 'nursery', 'jobcenter', 'retire', 'bridge', 'verdict', 'xray', 'donut', 'roadmap', 'lantern', 'grid120', 'jars', 'signs', 'guard', 'stroller', 'flapboard', 'stamp', 'receipt', 'certificate', 'crossroads', 'seesaw', 'barrier', 'balloon', 'chainlock', 'corkboard', 'cans', 'ledger', 'vesting', 'threeways', 'cloche', 'agegate', 'clock24', 'hazards', 'handoff', 'permit', 'permitcard', 'mailbox', 'sameenv', 'tenpct', 'drawer', 'founders', 'lanyards', 'talkline', 'megaphone', 'shield', 'puzzle', 'letter', 'twodoors', 'courtfree', 'claimlist', 'paintcal', 'popburst', 'neonshop', 'cutaway', 'sunsetglass', 'pixelstairs', 'splitretire', 'claydays', 'origami', 'retiremap', 'metroline', 'boardgame', 'sketchgraph', 'stainedladder', 'stickers', 'oneline', 'diary', 'glassphone', 'mosaic', 'constellation', 'venn', 'terminal', 'memphis', 'stitch', 'thermal', 'spotstage', 'neumorph', 'steelchain', 'lighthouse', 'redact', 'newspaper', 'forecast', 'queue', 'ledcount', 'safetynet', 'binder', 'kanban', 'mediaplayer', 'refcard', 'fridge', 'blueprint', 'smartwatch', 'woodcut', 'papercut', 'swissarrow', 'abacus', 'dashboard', 'skilltree', 'riso', 'lowpoly'];   // ฉากช่องการ์ตูน (public/guide-comic.js)
 
 function cleanCite(c) {
   const law = str(c?.law, 200), sec = str(c?.sec, 30), label = str(c?.label, 120);
@@ -41,8 +37,7 @@ function cleanGuide(g, file) {
     // ช่องการ์ตูนต้นหัวข้อ (ไม่บังคับ) · scene ตามที่มีใน public/guide-comic.js · say ใส่ **คำ** เพื่อเน้น
     panel: s?.panel && PANEL_SCENES.includes(s.panel.scene) ? { scene: s.panel.scene, mood: okMood(s.panel.mood) ? s.panel.mood : 'happy', say: str(s.panel.say, 140),
       layout: ['left', 'right', 'center'].includes(s.panel.layout) ? s.panel.layout : 'left', bubble: ['talk', 'think', 'shout', 'caption'].includes(s.panel.bubble) ? s.panel.bubble : 'talk' } : null,
-    // id = ที่อยู่หน้าคำถาม /guide/q/<id> (ไม่ใส่ จะได้ <slug>-<ลำดับ>) · art = ภาพประกอบเฉพาะข้อ
-    items: arr(s?.items).map(it => ({ id: /^[a-z0-9-]{3,80}$/.test(str(it?.id, 80)) ? str(it.id, 80) : '', q: str(it?.q, 200), a: str(it?.a, 1200), cite: arr(it?.cite).map(cleanCite).filter(Boolean).slice(0, 4), art: cleanArt(it?.art) }))
+    items: arr(s?.items).map(it => ({ q: str(it?.q, 200), a: str(it?.a, 1200), cite: arr(it?.cite).map(cleanCite).filter(Boolean).slice(0, 4) }))
       .filter(it => it.q && it.a),
   })).filter(s => s.title && s.items.length);
   if (!sections.length) throw new Error(`${file}: ไม่มีเนื้อหาใน sections`);
@@ -54,9 +49,9 @@ function cleanGuide(g, file) {
     category: str(g.category, 60) || 'ทั่วไป',
     categoryIcon: str(g.categoryIcon, 8),          // อีโมจิหน้าหมวด เช่น 🏠
     categoryNote: str(g.categoryNote, 160),        // คำอธิบายใต้ชื่อหมวดในหน้ารวม
-    scene: ['condo', 'office', 'money', 'debt', 'scam', 'contract', 'leave', 'overtime', 'probation', 'payroll', 'social', 'worksite', 'cradle', 'farewell', 'chalk', 'pvd', 'youth', 'border', 'union', 'court', 'wallet', 'porch', 'truck', 'bokeh', 'groovy', 'conveyor', 'shutter', 'chess', 'isoroom'].includes(g.scene) ? g.scene : 'condo',   // ฉากในรูปการ์ด
+    scene: ['condo', 'office', 'money', 'debt', 'scam', 'contract', 'leave', 'overtime', 'probation', 'payroll', 'social', 'worksite', 'cradle', 'farewell', 'chalk', 'pvd', 'youth', 'border', 'union', 'court', 'wallet', 'porch', 'truck', 'bokeh', 'groovy', 'conveyor', 'shutter', 'chess', 'isoroom', 'foodcart'].includes(g.scene) ? g.scene : 'condo',   // ฉากในรูปการ์ด
     mood: okMood(g.mood) ? g.mood : 'curious',   // ท่าน้องม้วน
-    coverLayout: ['right', 'banner', 'polaroid', 'ticket', 'notebook', 'arch', 'phone', 'postage', 'torn', 'film', 'stack', 'pane', 'tape', 'hex', 'folder', 'ribbon', 'bubble', 'envelope', 'window'].includes(g.coverLayout) ? g.coverLayout : '',   // ปก: "right" = ภาพวงกลมอยู่ขวา · "banner" = ภาพกว้างเต็มบน
+    coverLayout: ['right', 'banner', 'polaroid', 'ticket', 'notebook', 'arch', 'phone', 'postage', 'torn', 'film', 'stack', 'pane', 'tape', 'hex', 'folder', 'ribbon', 'bubble', 'envelope', 'window', 'coin'].includes(g.coverLayout) ? g.coverLayout : '',   // ปก: "right" = ภาพวงกลมอยู่ขวา · "banner" = ภาพกว้างเต็มบน
     cardText: str(g.cardText, 300),                // คำอธิบายบนการ์ด · ใส่ **คำ** เพื่อไฮไลต์
     coverLines: arr(g.coverLines).map(x => str(x, 60)).filter(Boolean).slice(0, 2),   // ข้อความบนปก (บรรทัดที่ 2 เป็นสีส้ม)
     order: Number.isFinite(g.order) ? g.order : 999,
@@ -89,27 +84,8 @@ export function loadGuides() {
   return map;
 }
 
-// คลังคำถาม: แตกทุกข้อในทุกคู่มือเป็นหน้าของตัวเอง
-function buildQA(guides) {
-  const list = [], byId = new Map();
-  for (const g of guides.values()) {
-    let n = 0;
-    g.sections.forEach((s, si) => s.items.forEach(it => {
-      n++;
-      if (!it.id) it.id = `${g.slug}-${n}`;
-      if (byId.has(it.id)) { console.error('[qa] id ซ้ำ', it.id, '—', g.slug); it.id = `${g.slug}-${n}`; }
-      const q = { id: it.id, q: it.q, a: it.a, cite: it.cite, art: it.art, n, sec: si + 1, secTitle: s.title, guide: g };
-      list.push(q); byId.set(it.id, q);
-    }));
-  }
-  console.log(`[qa] คำถาม ${list.length} ข้อ (มีภาพ ${list.filter(x => x.art).length})`);
-  return { list, byId };
-}
-const shortA = a => { const t = a.replace(/\*\*/g, ''); return t.length > 150 ? t.slice(0, 148).replace(/\s+\S*$/, '') + '…' : t; };
-
 export function mountGuides(app, { getUserFromRequest, isAdmin }) {
   const guides = loadGuides();
-  const qa = buildQA(guides);
   const viewerIsAdmin = async req => { try { const u = await getUserFromRequest(req); return !!u && isAdmin(u); } catch { return false; } };
   const card = g => ({ slug: g.slug, title: g.title, category: g.category, categoryIcon: g.categoryIcon, categoryNote: g.categoryNote, scene: g.scene, mood: g.mood, cardText: g.cardText, minutes: g.minutes, updated: g.updated, reviewed: g.reviewed, intro: g.intro || g.summary[0] || '', hasVideo: !!g.video });
 
@@ -129,37 +105,7 @@ export function mountGuides(app, { getUserFromRequest, isAdmin }) {
     res.json({ ...g, isAdmin: admin });
   });
 
-  const qOrder = (a, b) => a.guide.category.localeCompare(b.guide.category, 'th') || a.guide.order - b.guide.order || a.n - b.n;
-  const qCard = x => ({ id: x.id, q: x.q, short: shortA(x.a), art: x.art, category: x.guide.category, categoryIcon: x.guide.categoryIcon, guide: { slug: x.guide.slug, title: x.guide.title }, reviewed: x.guide.reviewed,
-    cite: x.cite.filter(c => c.law).slice(0, 2).map(c => ({ law: c.law, sec: c.sec })) });
-
-  app.get('/api/qa', async (req, res) => {
-    res.setHeader('Cache-Control', 'no-store');
-    const admin = await viewerIsAdmin(req);
-    const items = qa.list.filter(x => admin || x.guide.reviewed).sort(qOrder).map(qCard);
-    res.json({ items, isAdmin: admin });
-  });
-
-  app.get('/api/qa/:id', async (req, res) => {
-    res.setHeader('Cache-Control', 'no-store');
-    const x = qa.byId.get(String(req.params.id));
-    const admin = await viewerIsAdmin(req);
-    if (!x || (!x.guide.reviewed && !admin)) return res.status(404).json({ error: 'ไม่พบคำถามนี้' });
-    const same = qa.list.filter(y => y.guide === x.guide);
-    const i = same.indexOf(x);
-    const g = x.guide;
-    res.json({
-      id: x.id, q: x.q, a: x.a, cite: x.cite, art: x.art, secTitle: x.secTitle, n: x.n, total: same.length,
-      guide: { slug: g.slug, title: g.title, category: g.category, categoryIcon: g.categoryIcon, reviewed: g.reviewed, reviewer: g.reviewer, updated: g.updated, scene: g.scene, mood: g.mood },
-      prev: i > 0 ? { id: same[i - 1].id, q: same[i - 1].q } : null,
-      next: i < same.length - 1 ? { id: same[i + 1].id, q: same[i + 1].q } : null,
-      related: same.filter(y => y !== x && y.sec === x.sec).slice(0, 4).map(qCard),
-      isAdmin: admin,
-    });
-  });
-
   const page = (req, res) => { res.setHeader('Cache-Control', 'no-cache'); res.sendFile(GUIDE_PAGE); };
-  app.get('/guide/q/:id', page);
   app.get('/guide', page);
   app.get('/guide/:slug', page);
 }
