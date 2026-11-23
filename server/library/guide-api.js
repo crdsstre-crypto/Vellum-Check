@@ -1,5 +1,5 @@
 // Vellum คู่มือ (/guide) — คู่มือกฎหมายภาษาง่ายตามเรื่องในชีวิตจริง
-// เนื้อหาเก็บเป็นไฟล์ JSON ใน server/library/guides/ (1 เรื่อง = 1 ไฟล์) · อ่านครั้งเดียวตอนเปิดเซิร์ฟเวอร์
+// เนื้อหาเก็บเป็นไฟล์ JSON ใน server/library/guides/ (1 เรื่อง = 1 ไฟล์) · ตอนเปิดเซิร์ฟเวอร์ทำสารบัญ เนื้อหาเต็มอ่านทีละเรื่องตอนมีคนเปิด
 // คู่มือที่ยังไม่ผ่านการตรวจ ("reviewed": false) แสดงเฉพาะแอดมิน คนทั่วไปมองไม่เห็น
 import fs from 'node:fs';
 import path from 'node:path';
@@ -70,20 +70,73 @@ function cleanGuide(g, file) {
   };
 }
 
-export function loadGuides() {
-  const map = new Map();
+// ---------- สารบัญ + อ่านไฟล์ทีละเรื่อง ----------
+// รองรับคู่มือหลักหมื่นเรื่อง: ตอนเปิดเซิร์ฟเวอร์อ่านทุกไฟล์ครั้งเดียวเพื่อตรวจและทำ "สารบัญ" (ข้อมูลการ์ด + คำค้น)
+// แล้วทิ้งเนื้อหาเต็มไป · เนื้อหาเต็มอ่านจากไฟล์เฉพาะตอนมีคนเปิด และจำไว้ล่าสุด CACHE_MAX เรื่อง
+// (ถ้าวันหนึ่งย้ายไป Postgres แก้แค่ buildIndex/readGuide หน้าเว็บไม่ต้องแก้)
+const CACHE_MAX = 200;
+const plain = t => String(t || '').replace(/\*\*/g, '').toLowerCase();
+const cardOf = g => ({ slug: g.slug, title: g.title, category: g.category, categoryIcon: g.categoryIcon, categoryNote: g.categoryNote, scene: g.scene, mood: g.mood, cardText: g.cardText, minutes: g.minutes, updated: g.updated, reviewed: g.reviewed, intro: g.intro || g.summary[0] || '', hasVideo: !!g.video });
+
+export function buildIndex() {
+  const list = [];
+  const seen = new Set();
   let files = [];
   try { files = fs.readdirSync(DIR).filter(f => f.endsWith('.json')); }
-  catch { console.warn('[guides] ไม่พบโฟลเดอร์ guides'); return map; }
+  catch { console.warn('[guides] ไม่พบโฟลเดอร์ guides'); }
   for (const f of files) {
     try {
       const g = cleanGuide(JSON.parse(fs.readFileSync(path.join(DIR, f), 'utf8')), f);
-      if (map.has(g.slug)) throw new Error(`${f}: slug "${g.slug}" ซ้ำกับไฟล์อื่น`);
-      map.set(g.slug, g);
+      if (seen.has(g.slug)) throw new Error(`${f}: slug "${g.slug}" ซ้ำกับไฟล์อื่น`);
+      seen.add(g.slug);
+      // คำค้น: ชื่อเรื่อง ข้อความการ์ด บทนำ สรุป หัวข้อตอน และคำถามทุกข้อ
+      const words = [g.title, g.cardText, g.intro, ...g.summary, ...g.sections.flatMap(s => [s.title, ...(s.items || []).map(i => i.q)])];
+      list.push({ card: cardOf(g), order: g.order, file: f, find: plain(words.join(' ')).slice(0, 2000) });   // จำกัดขนาดคำค้นต่อเรื่อง กันหน่วยความจำบวมเมื่อมีหลายหมื่นเรื่อง
     } catch (e) { console.error('[guides] ข้ามไฟล์', f, '—', e.message); }
   }
-  console.log(`[guides] โหลดคู่มือ ${map.size} เรื่อง`);
-  return map;
+  list.sort((a, b) => a.card.category.localeCompare(b.card.category, 'th') || a.order - b.order || a.card.title.localeCompare(b.card.title, 'th'));
+  const bySlug = new Map(list.map(x => [x.card.slug, x]));
+  console.log(`[guides] สารบัญคู่มือ ${list.length} เรื่อง`);
+  return { list, bySlug };
+}
+
+const cache = new Map();   // slug → เนื้อหาเต็ม (จำล่าสุด CACHE_MAX เรื่อง)
+export function readGuide(index, slug) {
+  const x = index.bySlug.get(slug);
+  if (!x) return null;
+  if (cache.has(slug)) { const g = cache.get(slug); cache.delete(slug); cache.set(slug, g); return g; }
+  let g;
+  try { g = cleanGuide(JSON.parse(fs.readFileSync(path.join(DIR, x.file), 'utf8')), x.file); }
+  catch (e) { console.error('[guides] อ่านไม่ได้', x.file, '—', e.message); return null; }
+  if (g.slug !== slug) return null;
+  cache.set(slug, g);
+  if (cache.size > CACHE_MAX) cache.delete(cache.keys().next().value);
+  return g;
+}
+
+// ค้นหา/แบ่งหน้า: ?q=คำค้น&cat=หมวด&offset=0&limit=24
+// ตอบ { cats:[{name,icon,note,count,offset,items}], total, all:[{name,icon,count}] }
+//   cats = หมวดที่มีผลลัพธ์ (ถ้าระบุ cat จะมีหมวดเดียว) · items = การ์ดช่วง offset..offset+limit ของหมวดนั้น
+//   all = ทุกหมวดพร้อมจำนวนทั้งหมด (ไม่สนคำค้น) ใช้ทำปุ่มเลือกหมวด
+export function searchGuides(index, { q = '', cat = '', offset = 0, limit = 24, admin = false } = {}) {
+  const terms = plain(q).split(/\s+/).filter(Boolean).slice(0, 8);
+  const groups = new Map(), all = new Map();
+  for (const x of index.list) {
+    const c = x.card;
+    if (!admin && !c.reviewed) continue;
+    if (!all.has(c.category)) all.set(c.category, { name: c.category, icon: '', count: 0 });
+    const A = all.get(c.category); A.count++; if (!A.icon && c.categoryIcon) A.icon = c.categoryIcon;
+    if (cat && c.category !== cat) continue;
+    if (terms.length && !terms.every(t => x.find.includes(t))) continue;
+    if (!groups.has(c.category)) groups.set(c.category, { name: c.category, icon: '', note: '', count: 0, offset, items: [] });
+    const G = groups.get(c.category);
+    if (!G.icon && c.categoryIcon) G.icon = c.categoryIcon;
+    if (!G.note && c.categoryNote) G.note = c.categoryNote;
+    if (G.count >= offset && G.items.length < limit) G.items.push(c);
+    G.count++;
+  }
+  const cats = [...groups.values()];
+  return { cats, total: cats.reduce((n, G) => n + G.count, 0), all: [...all.values()] };
 }
 
 // ส่ง JSON แบบบีบอัด (brotli/gzip) — ไฟล์ js/css บีบโดย fastStatic อยู่แล้ว แต่ข้อมูลคู่มือจาก API ยังส่งเต็มขนาด
@@ -106,21 +159,24 @@ function sendJson(req, res, obj, status = 200) {
 }
 
 export function mountGuides(app, { getUserFromRequest, isAdmin }) {
-  const guides = loadGuides();
+  const index = buildIndex();
   const viewerIsAdmin = async req => { try { const u = await getUserFromRequest(req); return !!u && isAdmin(u); } catch { return false; } };
-  const card = g => ({ slug: g.slug, title: g.title, category: g.category, categoryIcon: g.categoryIcon, categoryNote: g.categoryNote, scene: g.scene, mood: g.mood, cardText: g.cardText, minutes: g.minutes, updated: g.updated, reviewed: g.reviewed, intro: g.intro || g.summary[0] || '', hasVideo: !!g.video });
+  const int = (v, d, lo, hi) => { const n = parseInt(v, 10); return Number.isFinite(n) ? Math.max(lo, Math.min(hi, n)) : d; };
 
   app.get('/api/guides', async (req, res) => {
     res.setHeader('Cache-Control', 'no-store');
     const admin = await viewerIsAdmin(req);
-    const items = [...guides.values()].filter(g => admin || g.reviewed)
-      .sort((a, b) => a.category.localeCompare(b.category, 'th') || a.order - b.order || a.title.localeCompare(b.title, 'th')).map(card);
-    sendJson(req, res, { items, isAdmin: admin });
+    const qs = req.query || {};
+    const out = searchGuides(index, {
+      q: str(qs.q, 80), cat: str(qs.cat, 80),
+      offset: int(qs.offset, 0, 0, 1e7), limit: int(qs.limit, 24, 1, 60), admin,
+    });
+    sendJson(req, res, { ...out, isAdmin: admin });
   });
 
   app.get('/api/guides/:slug', async (req, res) => {
     res.setHeader('Cache-Control', 'no-store');
-    const g = guides.get(String(req.params.slug));
+    const g = readGuide(index, String(req.params.slug));
     const admin = await viewerIsAdmin(req);
     if (!g || (!g.reviewed && !admin)) return sendJson(req, res, { error: 'ไม่พบคู่มือนี้' }, 404);
     sendJson(req, res, { ...g, isAdmin: admin });
