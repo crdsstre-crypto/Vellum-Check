@@ -1,0 +1,5 @@
+/* ปกแบบ "paddlenumber" = ภาพในกรอบแดงไวน์ขอบทองบาง มีป้ายประมูลวงกลมสีขาวมีด้ามไม้ยื่นออกมาจากขอบล่างซ้าย เขียนเลข "27" และเส้นทองคู่เป็นกรอบด้านใน (คู่มือ auction-bid) */
+.gd-cover[data-layout="paddlenumber"] .gd-cover-art { overflow: visible; border: 5px solid #8a2a3a; border-radius: 10px; box-shadow: inset 0 0 0 2px #d8b25a, 0 6px 14px rgba(80,20,30,.25); }
+.gd-cover[data-layout="paddlenumber"] .gd-cover-art .gd-scene { border-radius: 5px; }
+.gd-cover[data-layout="paddlenumber"] .gd-cover-art::before { content: ""; position: absolute; left: 6px; bottom: -22px; width: 6px; height: 26px; z-index: 3; pointer-events: none; background: #a86c44; border-radius: 2px; transform: rotate(-14deg); }
+.gd-cover[data-layout="paddlenumber"] .gd-cover-art::after { content: "27"; position: absolute; left: -12px; bottom: -6px; z-index: 4; pointer-events: none; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font: 900 12px/1 sans-serif; color: #2a3a5a; background: #fffdf6; border: 2px solid #8a2a3a; border-radius: 50%; transform: rotate(-14deg); box-shadow: 0 2px 4px rgba(0,0,0,.25); }
