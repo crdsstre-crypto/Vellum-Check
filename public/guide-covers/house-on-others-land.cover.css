@@ -1,0 +1,3 @@
+/* ปกแบบ "brickcourse" = กรอบอิฐแดงส้มก่อเรียงสลับแนวพร้อมรอยปูนสีครีม ขอบล่างหนากว่าเหมือนฐานราก (คู่มือ house-on-others-land) */
+.gd-cover[data-layout="brickcourse"] .gd-cover-art { padding: 8px 8px 12px; border-radius: 6px; background-color: #c8643a; background-image: linear-gradient(0deg, #f0e2c8 1.5px, transparent 1.5px), linear-gradient(90deg, #f0e2c8 1.5px, transparent 1.5px), linear-gradient(90deg, #f0e2c8 1.5px, transparent 1.5px); background-size: 100% 8px, 20px 16px, 20px 16px; background-position: 0 0, 0 0, 10px 8px; box-shadow: 0 6px 14px rgba(110,40,20,.25); }
+.gd-cover[data-layout="brickcourse"] .gd-cover-art .gd-scene { border-radius: 4px; box-shadow: 0 0 0 2px #f0e2c8; }
