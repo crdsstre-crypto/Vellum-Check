@@ -1,0 +1,4 @@
+/* ปกแบบ "pebblepath" = กรอบสีครีมทราย มีก้อนกรวดกลมรีหลากเฉดเทาน้ำตาลเรียงเป็นทางเดินตลอดขอบล่าง (คู่มือ landlocked-right-of-way) */
+.gd-cover[data-layout="pebblepath"] .gd-cover-art { overflow: visible; padding: 7px 7px 16px; border-radius: 10px; background: #f2e8d0; box-shadow: inset 0 0 0 1.5px #dccca4, 0 6px 14px rgba(90,70,40,.2); }
+.gd-cover[data-layout="pebblepath"] .gd-cover-art .gd-scene { border-radius: 6px; }
+.gd-cover[data-layout="pebblepath"] .gd-cover-art::after { content: ""; position: absolute; left: 6px; right: 6px; bottom: 3px; height: 10px; z-index: 3; pointer-events: none; background: radial-gradient(ellipse 5px 3.4px at 6px 5px, #a89a88 0 4.6px, transparent 5px) 0 0/22px 10px repeat-x, radial-gradient(ellipse 4px 3px at 17px 4px, #c8b8a0 0 3.6px, transparent 4px) 0 0/22px 10px repeat-x, radial-gradient(ellipse 3px 2.4px at 13px 8px, #8a7a6a 0 2.6px, transparent 3px) 0 0/22px 10px repeat-x; }
