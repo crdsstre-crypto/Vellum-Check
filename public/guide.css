@@ -1074,6 +1074,12 @@
 .gd-cover[data-layout="lacedoily"] .gd-cover-art .gd-scene { border-radius: 3px; }
 .gd-cover[data-layout="lacedoily"] .gd-cover-art::after { content: "✿"; position: absolute; left: -12px; bottom: -10px; z-index: 3; pointer-events: none; font: 22px/1 sans-serif; color: #d98aa0; text-shadow: 6px 4px 0 #c9a060, -4px 6px 0 #a8c890; transform: rotate(-12deg); }
 
+/* ปกแบบ "jigsawedge" = ชิ้นจิ๊กซอว์ ขอบหนาสีเหลืองอำพัน มีปุ่มจิ๊กซอว์นูนกลางขอบซ้ายและรอยเว้ากลางขอบขวา (คู่มือ set-off-debt) */
+.gd-cover[data-layout="jigsawedge"] .gd-cover-art { overflow: visible; border: 5px solid #f2b33d; border-radius: 6px; box-shadow: 0 8px 16px rgba(80,60,20,.22); margin-left: 12px; }
+.gd-cover[data-layout="jigsawedge"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="jigsawedge"] .gd-cover-art::before { content: ""; position: absolute; left: -19px; top: 50%; width: 22px; height: 22px; margin-top: -11px; z-index: 3; pointer-events: none; border-radius: 50%; background: #f2b33d; box-shadow: -2px 2px 4px rgba(0,0,0,.15); }
+.gd-cover[data-layout="jigsawedge"] .gd-cover-art::after { content: ""; position: absolute; left: 50%; bottom: -14px; width: 22px; height: 22px; margin-left: -11px; z-index: 3; pointer-events: none; border-radius: 50%; background: #fdf3e2; border: 5px solid #f2b33d; border-left-color: transparent; border-top-color: transparent; transform: rotate(45deg); }
+
 /* ปกแบบ "tornticket" = ตั๋วฉีกครึ่ง พื้นครีม ขอบล่างรอยปรุเป็นฟันเลื่อย เส้นประแนวตั้งด้านขวาพร้อมรอยเจาะครึ่งวงกลมบนล่าง (คู่มือ debt-prescription) */
 .gd-cover[data-layout="tornticket"] .gd-cover-art { overflow: visible; padding: 6px 18px 10px 6px; background: #fbf3df; border-radius: 4px; box-shadow: 0 6px 16px rgba(60,40,20,.22); }
 .gd-cover[data-layout="tornticket"] .gd-cover-art .gd-scene { border-radius: 2px; }
