@@ -1051,6 +1051,12 @@
 .gd-cover[data-layout="postcard"] .gd-cover-art::before { content: ""; position: absolute; inset: -9px -9px -24px -9px; z-index: 3; pointer-events: none; background: linear-gradient(135deg, #6a3a2a 14px, transparent 14px) top left / 26px 26px no-repeat, linear-gradient(225deg, #6a3a2a 14px, transparent 14px) top right / 26px 26px no-repeat, linear-gradient(45deg, #6a3a2a 14px, transparent 14px) bottom left / 26px 26px no-repeat, linear-gradient(315deg, #6a3a2a 14px, transparent 14px) bottom right / 26px 26px no-repeat; }
 .gd-cover[data-layout="postcard"] .gd-cover-art::after { content: "ร้านเล็ก ๆ ของเรา"; position: absolute; left: 0; right: 0; bottom: -19px; z-index: 3; pointer-events: none; text-align: center; font: italic 700 11px/16px sans-serif; color: #8a5a3a; }
 
+/* ปกแบบ "calendarpage" = หน้าปฏิทินแขวน หัวกระดาษสีแดงมีห่วงเหล็กสองห่วง และป้ายวงกลม "30" สีแดงมุมขวาล่าง (คู่มือ ss-appeal) */
+.gd-cover[data-layout="calendarpage"] .gd-cover-art { overflow: visible; margin-top: 10px; border: 6px solid #fffdf8; border-top: 22px solid #d23a2e; border-radius: 6px; box-shadow: 0 1px 0 #e8e0d0, 0 7px 16px rgba(60,20,10,.22); }
+.gd-cover[data-layout="calendarpage"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="calendarpage"] .gd-cover-art::before { content: ""; position: absolute; left: 20%; right: 20%; top: -31px; height: 16px; z-index: 3; pointer-events: none; background: radial-gradient(circle at 50% 50%, transparent 3px, #8a929c 3.5px, #8a929c 5.5px, transparent 6px) 0 0 / 22px 16px repeat-x; }
+.gd-cover[data-layout="calendarpage"] .gd-cover-art::after { content: "30"; position: absolute; right: -12px; bottom: -12px; width: 34px; height: 34px; z-index: 3; pointer-events: none; display: flex; align-items: center; justify-content: center; font: 900 15px/1 sans-serif; color: #fff; background: #d23a2e; border: 3px solid #fffdf8; border-radius: 50%; box-shadow: 0 2px 5px rgba(60,20,10,.3); }
+
 /* ปกแบบ "roadsign" = ป้ายเตือนจราจร กรอบเหลืองสะท้อนแสงขอบดำมุมมน มีเสาป้ายเทาลงด้านล่าง (คู่มือ commute-accident) */
 .gd-cover[data-layout="roadsign"] .gd-cover-art { overflow: visible; margin-bottom: 16px; border: 9px solid #f6c834; border-radius: 14px; box-shadow: 0 0 0 3px #1c1c22, 0 8px 18px rgba(30,30,30,.28); }
 .gd-cover[data-layout="roadsign"] .gd-cover-art .gd-scene { border-radius: 6px; }
