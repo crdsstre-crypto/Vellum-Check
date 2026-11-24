@@ -1,0 +1,3 @@
+/* ปกแบบ "schoolruler" = กรอบไม้บรรทัดสีเหลืองสดพร้อมขีดสเกลสีดำถี่ ๆ ตามขอบบนและขอบล่าง ขอบซ้ายขวาสีเหลืองเรียบ (คู่มือ child-support) */
+.gd-cover[data-layout="schoolruler"] .gd-cover-art { overflow: visible; padding: 12px 8px; border-radius: 4px; background: linear-gradient(180deg, transparent 0 0), repeating-linear-gradient(90deg, #3a2a10 0 1px, transparent 1px 6px) 0 0/100% 6px no-repeat, repeating-linear-gradient(90deg, #3a2a10 0 1px, transparent 1px 6px) 0 100%/100% 6px no-repeat, #f6cf3a; box-shadow: inset 0 0 0 1.5px #d8a820, 0 6px 14px rgba(90,70,10,.25); }
+.gd-cover[data-layout="schoolruler"] .gd-cover-art .gd-scene { border-radius: 2px; }
