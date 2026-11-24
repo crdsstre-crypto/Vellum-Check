@@ -1,0 +1,5 @@
+/* ปกแบบ "seatbeltframe" = กรอบสายเข็มขัดนิรภัยสีเทาเข้มลายทอแนวทแยง มีหัวล็อกเงินสี่เหลี่ยมมนกลางขอบล่าง และไฟสัญญาณ "รัดเข็มขัด" สีส้มเล็ก ๆ มุมขวาบน (คู่มือ passenger-carrier) */
+.gd-cover[data-layout="seatbeltframe"] .gd-cover-art { overflow: visible; padding: 9px; border-radius: 6px; background: repeating-linear-gradient(45deg, #4a4e58 0 2px, #3a3e48 2px 4px); box-shadow: 0 6px 16px rgba(20,24,30,.3); }
+.gd-cover[data-layout="seatbeltframe"] .gd-cover-art .gd-scene { border-radius: 3px; }
+.gd-cover[data-layout="seatbeltframe"] .gd-cover-art::before { content: ""; position: absolute; left: calc(50% - 16px); bottom: -9px; width: 32px; height: 18px; z-index: 3; pointer-events: none; border-radius: 5px; background: linear-gradient(180deg, #f4f6f8, #9aa4ae); box-shadow: inset 0 0 0 2px #6a727c, 0 2px 4px rgba(0,0,0,.3); }
+.gd-cover[data-layout="seatbeltframe"] .gd-cover-art::after { content: ""; position: absolute; right: 4px; top: -7px; width: 14px; height: 14px; z-index: 4; pointer-events: none; border-radius: 50%; background: radial-gradient(circle, #ffd890 0 35%, #f2903a 40% 70%, #a85a1a 72%); box-shadow: 0 0 8px #f2a04a; }
