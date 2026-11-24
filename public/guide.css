@@ -1160,6 +1160,11 @@
 .gd-cover[data-layout="doublemat"] .gd-cover-art .gd-scene { border-radius: 2px; }
 .gd-cover[data-layout="doublemat"] .gd-cover-art::before { content: ""; position: absolute; inset: -11px 9px 9px -11px; z-index: 3; pointer-events: none; border: 2px solid #3b6fd6; border-radius: 4px; }
 
+/* ปกแบบ "rivetplate" = ภาพในกรอบโลหะสีเงินหนา ขอบไล่เงาเหมือนแผ่นเหล็ก และหมุดย้ำกลมสี่ตัวที่มุมทั้งสี่ (คู่มือ repair-shop-retention) */
+.gd-cover[data-layout="rivetplate"] .gd-cover-art { overflow: visible; border: 7px solid #b4bcc6; border-radius: 6px; box-shadow: inset 0 0 0 1px #8a949e, 0 0 0 1px #8a949e, 0 7px 14px rgba(30,30,40,.25); background: linear-gradient(135deg, #d6dce2, #9aa4ae); }
+.gd-cover[data-layout="rivetplate"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="rivetplate"] .gd-cover-art::before { content: ""; position: absolute; inset: -5px; z-index: 3; pointer-events: none; background: radial-gradient(circle at 3px 3px, #eef2f6 0 1.2px, #7a848e 1.6px 3.2px, transparent 3.6px) 0 0 / 100% 100% no-repeat, radial-gradient(circle at calc(100% - 3px) 3px, #eef2f6 0 1.2px, #7a848e 1.6px 3.2px, transparent 3.6px), radial-gradient(circle at 3px calc(100% - 3px), #eef2f6 0 1.2px, #7a848e 1.6px 3.2px, transparent 3.6px), radial-gradient(circle at calc(100% - 3px) calc(100% - 3px), #eef2f6 0 1.2px, #7a848e 1.6px 3.2px, transparent 3.6px); }
+
 /* ปกแบบ "tornticket" = ตั๋วฉีกครึ่ง พื้นครีม ขอบล่างรอยปรุเป็นฟันเลื่อย เส้นประแนวตั้งด้านขวาพร้อมรอยเจาะครึ่งวงกลมบนล่าง (คู่มือ debt-prescription) */
 .gd-cover[data-layout="tornticket"] .gd-cover-art { overflow: visible; padding: 6px 18px 10px 6px; background: #fbf3df; border-radius: 4px; box-shadow: 0 6px 16px rgba(60,40,20,.22); }
 .gd-cover[data-layout="tornticket"] .gd-cover-art .gd-scene { border-radius: 2px; }
