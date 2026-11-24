@@ -10,6 +10,7 @@ import path from 'node:path';
 import vm from 'node:vm';
 import zlib from 'node:zlib';
 import crypto from 'node:crypto';
+import { listParts, panelSources } from './guide-parts.js';
 
 const NAME = /^[a-z0-9]{1,40}$/;
 const MAX_SCENES = 12;
@@ -21,10 +22,11 @@ export function mountComic(app, publicDir) {
   const zcache = new Map(); // key → { raw, br, gz }
 
   function build() {
-    const m = fs.statSync(SRC).mtimeMs;
+    // ภาพช่องการ์ตูนของเรื่องใหม่อยู่ใน public/guide-panels/*.panels.js (ดู guide-parts.js) รวมเข้ามาด้วย
+    const m = fs.statSync(SRC).mtimeMs + '|' + listParts(publicDir, 'panels').sig;
     if (st && st.mtime === m) return st;
-    const text = fs.readFileSync(SRC, 'utf8');
-    const hash = crypto.createHash('sha1').update(text).digest('hex').slice(0, 10);
+    const text = fs.readFileSync(SRC, 'utf8'), parts = panelSources(publicDir);
+    const hash = crypto.createHash('sha1').update(text).update(parts.text).digest('hex').slice(0, 10);
     let core = text, src = new Map(), helpers = [];
     try {
       const a = text.indexOf('\nvar P={'), b = text.indexOf('\n};\nvar BG={', a);
@@ -35,6 +37,7 @@ export function mountComic(app, publicDir) {
       if (!C || !C._P || !C._h) throw new Error('ไฟล์ไม่มี VCComic._P/_h');
       helpers = Object.keys(C._h).filter(n => /^[A-Za-z_$][\w$]*$/.test(n));
       for (const n of Object.keys(C._P)) src.set(n, String(C._P[n]));
+      for (const [n, s2] of parts.src) src.set(n, s2);
       core = text.slice(0, a) + '\nvar P={' + text.slice(b) +
         `\nwindow.VCComic && (window.VCComic.ver = ${JSON.stringify(hash)});\n`;
     } catch (e) {
