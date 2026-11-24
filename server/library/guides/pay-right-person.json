@@ -30,7 +30,7 @@
       "title": "จ่ายให้ใครถึงหลุดหนี้",
       "panel": {
         "scene": "pwcollector",
-        "mood": "hmm+think+mag+peek",
+        "mood": "up+think+mag+peek",
         "layout": "left",
         "bubble": "talk",
         "say": "จ่ายให้คนที่**มีอำนาจรับแทน**เท่านั้นนะ"
