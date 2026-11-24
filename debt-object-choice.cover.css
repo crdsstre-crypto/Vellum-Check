@@ -1,0 +1,5 @@
+/* ปกแบบ "banknoteband" = ภาพในกรอบสีเขียวธนบัตรมีลายกิโยเช่เส้นโค้งบาง ๆ และแถบรัดธนบัตรกระดาษสีน้ำตาลอ่อนพันรอบแนวตั้งค่อนซ้าย (คู่มือ debt-object-choice) */
+.gd-cover[data-layout="banknoteband"] .gd-cover-art { overflow: visible; border: 6px solid transparent; border-radius: 4px; background: repeating-radial-gradient(circle at 50% 50%, #5aa07a 0 1px, #7ac09a 1px 4px) border-box; box-shadow: 0 5px 12px rgba(30,80,50,.22); }
+.gd-cover[data-layout="banknoteband"] .gd-cover-art .gd-scene { border-radius: 1px; }
+.gd-cover[data-layout="banknoteband"] .gd-cover-art::before { content: ""; position: absolute; left: 22%; top: -9px; bottom: -9px; width: 16px; z-index: 3; pointer-events: none; background: linear-gradient(90deg, #c8a87a, #e8d4a8 40%, #c8a87a); box-shadow: 0 1px 3px rgba(0,0,0,.25); border-radius: 2px; }
+.gd-cover[data-layout="banknoteband"] .gd-cover-art::after { content: "฿"; position: absolute; left: 22%; top: 46%; width: 16px; z-index: 4; pointer-events: none; text-align: center; color: #6a4a2a; font: 900 10px/1 sans-serif; }
