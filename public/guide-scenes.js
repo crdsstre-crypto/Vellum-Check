@@ -814,5 +814,6 @@
     var f = S[name]; if (!f) return '';
     return '<svg class="gd-scene" viewBox="0 0 136 160" preserveAspectRatio="xMidYMax slice" aria-hidden="true">' + f(String(key || '0').replace(/[^a-z0-9]/gi, '')) + '</svg>';
   }
-  window.VCScenes = { svg: svg, names: Object.keys(S) };
+  // add: ภาพการ์ดของเรื่องใหม่ (public/guide-cards/*.card.js ส่งรวมที่ /guide-cards.js)
+  window.VCScenes = { svg: svg, names: Object.keys(S), add: function (o) { for (var n in o) if (Object.prototype.hasOwnProperty.call(o, n)) S[n] = o[n]; window.VCScenes.names = Object.keys(S); } };
 })();
