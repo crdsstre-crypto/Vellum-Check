@@ -46,11 +46,11 @@ const readAll = l => l.files.map(x => ({ ...x, text: fs.readFileSync(x.path, 'ut
 
 // รันไฟล์ภาพแบบแยกส่วน เก็บซอร์สของแต่ละฟังก์ชัน → Map(ชื่อ → ซอร์ส) · ไฟล์ไหนพังข้ามไฟล์นั้น
 export function evalParts(parts, fnName) {
-  const out = new Map();
+  const out = new Map(); globalThis.__vcPartErr = [];
   for (const p of parts) {
     try {
-      vm.runInNewContext(p.text, { window: {}, [fnName]: o => { for (const n of Object.keys(o || {})) if (NAME.test(n) && typeof o[n] === 'function') out.set(n, String(o[n])); } }, { timeout: 1000 });
-    } catch (e) { console.error('[guide-parts] อ่านไฟล์ไม่ได้', p.file, e.message); }
+      vm.runInNewContext(p.text, { window: {}, [fnName]: o => { for (const n of Object.keys(o || {})) if (NAME.test(n) && typeof o[n] === 'function') out.set(n, String(o[n])); } }, { timeout: 15000 });
+    } catch (e) { console.error('[guide-parts] อ่านไฟล์ไม่ได้', p.file, e.message); globalThis.__vcPartErr.push(p.file + ': ' + e.message); }
   }
   return out;
 }
