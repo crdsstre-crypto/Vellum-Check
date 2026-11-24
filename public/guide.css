@@ -1051,6 +1051,12 @@
 .gd-cover[data-layout="postcard"] .gd-cover-art::before { content: ""; position: absolute; inset: -9px -9px -24px -9px; z-index: 3; pointer-events: none; background: linear-gradient(135deg, #6a3a2a 14px, transparent 14px) top left / 26px 26px no-repeat, linear-gradient(225deg, #6a3a2a 14px, transparent 14px) top right / 26px 26px no-repeat, linear-gradient(45deg, #6a3a2a 14px, transparent 14px) bottom left / 26px 26px no-repeat, linear-gradient(315deg, #6a3a2a 14px, transparent 14px) bottom right / 26px 26px no-repeat; }
 .gd-cover[data-layout="postcard"] .gd-cover-art::after { content: "ร้านเล็ก ๆ ของเรา"; position: absolute; left: 0; right: 0; bottom: -19px; z-index: 3; pointer-events: none; text-align: center; font: italic 700 11px/16px sans-serif; color: #8a5a3a; }
 
+/* ปกแบบ "plateframe" = ป้ายทะเบียนรถ ขอบขาวหนาตัดเส้นดำ มุมมน มีหมุดเกลียวสองตัวด้านบน และแถบล่างสีเขียวอ่อนแบบป้าย (คู่มือ hire-purchase-car) */
+.gd-cover[data-layout="plateframe"] .gd-cover-art { overflow: visible; border: 8px solid #fdfdfb; border-bottom-width: 16px; border-radius: 12px; box-shadow: 0 0 0 2.5px #1c1c22, inset 0 -10px 0 -2px #cfe8d4, 0 8px 18px rgba(20,20,30,.25); }
+.gd-cover[data-layout="plateframe"] .gd-cover-art .gd-scene { border-radius: 4px; }
+.gd-cover[data-layout="plateframe"] .gd-cover-art::before { content: ""; position: absolute; left: 18%; top: -6px; width: 8px; height: 8px; z-index: 3; pointer-events: none; border-radius: 50%; background: radial-gradient(circle, #8a929c 30%, #c9ced6 32%); box-shadow: inset 0 0 0 1px #6a7078; }
+.gd-cover[data-layout="plateframe"] .gd-cover-art::after { content: ""; position: absolute; right: 18%; top: -6px; width: 8px; height: 8px; z-index: 3; pointer-events: none; border-radius: 50%; background: radial-gradient(circle, #8a929c 30%, #c9ced6 32%); box-shadow: inset 0 0 0 1px #6a7078; }
+
 /* ปกแบบ "signline" = กระดาษสัญญาขาวนวล ขอบล่างกว้างมีเส้นประสำหรับลงชื่อ ข้อความ "ลงชื่อ ผู้ค้ำประกัน" และเครื่องหมาย X สีแดงหน้าช่องเซ็น (คู่มือ guarantor-rights) */
 .gd-cover[data-layout="signline"] .gd-cover-art { overflow: visible; border: 7px solid #fffdf6; border-bottom-width: 30px; border-radius: 3px; box-shadow: 0 0 0 1px #e8e0d0, 0 7px 16px rgba(50,40,20,.2); }
 .gd-cover[data-layout="signline"] .gd-cover-art .gd-scene { border-radius: 1px; }
