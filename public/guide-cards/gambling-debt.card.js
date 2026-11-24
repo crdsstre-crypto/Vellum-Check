@@ -1,0 +1,10 @@
+// ภาพการ์ดของคู่มือ gambling-debt
+VCCards({
+// [ภาพนิ่งมุมบน โต๊ะไม้เข้มใต้แสงโคมเดี่ยว] สมุดหนี้ถูกขีดฆ่าด้วยกากบาทแดง ลูกเต๋าสองลูกกลิ้งข้าง และมือถือจอแตกเล็กน้อยแสดงสกอร์บอล (คู่มือ gambling-debt)
+    carddice: function (k) { var gr='';for(var i=0;i<8;i++){gr+='<path d="M0 '+(i*22)+'q68 8 136 0" stroke="#3a2214" stroke-width="1.2" fill="none" opacity=".5"/>';}
+      var dc=function(x,y,r,n){var d={1:[[0,0]],3:[[-6,-6],[0,0],[6,6]],5:[[-6,-6],[6,-6],[0,0],[-6,6],[6,6]]}[n],o='<g transform="translate('+x+' '+y+') rotate('+r+')" filter="url(#gds'+k+')"><rect x="-11" y="-11" width="22" height="22" rx="5" fill="#fffaf0"/>';for(var i=0;i<d.length;i++)o+='<circle cx="'+d[i][0]+'" cy="'+d[i][1]+'" r="2.2" fill="'+(n==1?'#d9483b':'#2a2a32')+'"/>';return o+'</g>';};
+      return '<defs><radialGradient id="gd1'+k+'" cx=".6" cy=".3" r=".9"><stop offset="0" stop-color="#8a5a3a"/><stop offset="1" stop-color="#3a2214"/></radialGradient><filter id="gds'+k+'" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="2" dy="4" stdDeviation="2.4" flood-color="#100804" flood-opacity=".55"/></filter></defs><rect width="136" height="160" fill="url(#gd1'+k+')"/>'+gr+
+      '<g transform="rotate(-6 92 52)" filter="url(#gds'+k+')"><rect x="56" y="20" width="74" height="64" rx="2" fill="#f4ecd8"/></g><g transform="rotate(-6 92 52)"><text x="93" y="32" text-anchor="middle" font-size="6.4" font-weight="900" fill="#3a2a20" font-family="sans-serif">หนี้พนัน</text><path d="M62 42h60M62 50h52M62 58h56M62 66h44" stroke="#c8b898" stroke-width="1.4"/><path d="M64 36l56 40M120 36l-56 40" stroke="#d9483b" stroke-width="3" stroke-linecap="round" opacity=".9"/></g>'+
+      '<g class="sc-bob">'+dc(96,118,18,5)+dc(120,134,-12,1)+'</g>'+
+      '<g transform="rotate(14 32 36)" filter="url(#gds'+k+')"><rect x="18" y="12" width="28" height="46" rx="4" fill="#1e1e28"/><rect x="21" y="16" width="22" height="36" fill="#2e8a4a"/><text x="32" y="38" text-anchor="middle" font-size="7" font-weight="900" fill="#fff" font-family="sans-serif">2:1</text><path d="M24 20l10 12-4 6" stroke="#fff" stroke-width=".8" fill="none" opacity=".7"/></g>'; }
+});
