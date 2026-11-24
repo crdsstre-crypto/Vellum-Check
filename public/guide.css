@@ -1114,6 +1114,12 @@
 .gd-cover[data-layout="bakertwine"] .gd-cover-art::before { content: ""; position: absolute; right: -16px; top: 22px; width: 84px; height: 5px; z-index: 3; pointer-events: none; background: repeating-linear-gradient(90deg, #e5484d 0 6px, #fffdf6 6px 12px); border-radius: 3px; transform: rotate(40deg); box-shadow: 0 1px 2px rgba(0,0,0,.2); }
 .gd-cover[data-layout="bakertwine"] .gd-cover-art::after { content: ""; position: absolute; left: -10px; bottom: 14px; width: 26px; height: 16px; z-index: 3; pointer-events: none; background: radial-gradient(circle at 6px 50%, #b8955f 0 2px, transparent 2.5px), #fff8de; clip-path: polygon(0 50%, 22% 0, 100% 0, 100% 100%, 22% 100%); transform: rotate(-14deg); box-shadow: 0 1px 2px rgba(0,0,0,.2); }
 
+/* ปกแบบ "waxseal" = ภาพในกรอบกระดาษสีงาช้าง มีริบบิ้นสีแดงเลือดหมูพาดแนวตั้งชิดขอบซ้าย และตราครั่งสีแดงกลมขอบหยักแปะทับริบบิ้นด้านล่าง (คู่มือ debtor-hides-assets) */
+.gd-cover[data-layout="waxseal"] .gd-cover-art { overflow: visible; border: 5px solid #f7f0e1; border-radius: 3px; box-shadow: 0 0 0 1px #e2d6bd, 0 8px 16px rgba(60,30,20,.2); }
+.gd-cover[data-layout="waxseal"] .gd-cover-art .gd-scene { border-radius: 1px; }
+.gd-cover[data-layout="waxseal"] .gd-cover-art::before { content: ""; position: absolute; left: 18px; top: -8px; bottom: -8px; width: 12px; z-index: 3; pointer-events: none; background: linear-gradient(90deg, #8e2a2a, #b33a3a 50%, #8e2a2a); box-shadow: 0 1px 3px rgba(0,0,0,.25); }
+.gd-cover[data-layout="waxseal"] .gd-cover-art::after { content: ""; position: absolute; left: 6px; bottom: 12px; width: 36px; height: 36px; z-index: 4; pointer-events: none; border-radius: 46% 54% 50% 50% / 52% 46% 54% 48%; background: radial-gradient(circle at 50% 50%, transparent 0 9px, rgba(255,255,255,.25) 9.5px 11px, transparent 11.5px), radial-gradient(circle at 38% 34%, #d9534f, #a32626 70%); box-shadow: 0 2px 4px rgba(0,0,0,.3); }
+
 /* ปกแบบ "tornticket" = ตั๋วฉีกครึ่ง พื้นครีม ขอบล่างรอยปรุเป็นฟันเลื่อย เส้นประแนวตั้งด้านขวาพร้อมรอยเจาะครึ่งวงกลมบนล่าง (คู่มือ debt-prescription) */
 .gd-cover[data-layout="tornticket"] .gd-cover-art { overflow: visible; padding: 6px 18px 10px 6px; background: #fbf3df; border-radius: 4px; box-shadow: 0 6px 16px rgba(60,40,20,.22); }
 .gd-cover[data-layout="tornticket"] .gd-cover-art .gd-scene { border-radius: 2px; }
