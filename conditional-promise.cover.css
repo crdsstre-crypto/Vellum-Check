@@ -1,0 +1,5 @@
+/* ปกแบบ "tasselhang" = ภาพในกรอบสีน้ำเงินกรมท่า มีพู่หมวกรับปริญญาสีทองห้อยลงจากขอบบนด้านขวา (เชือกเส้นเล็กกับพู่ทรงกรวย) (คู่มือ conditional-promise) */
+.gd-cover[data-layout="tasselhang"] .gd-cover-art { overflow: visible; border: 4px solid #2a3a6a; border-radius: 8px; box-shadow: 0 5px 12px rgba(30,40,90,.25); }
+.gd-cover[data-layout="tasselhang"] .gd-cover-art .gd-scene { border-radius: 4px; }
+.gd-cover[data-layout="tasselhang"] .gd-cover-art::before { content: ""; position: absolute; right: 18px; top: -6px; width: 2px; height: 30px; z-index: 3; pointer-events: none; background: #e0b030; }
+.gd-cover[data-layout="tasselhang"] .gd-cover-art::after { content: ""; position: absolute; right: 13px; top: 22px; width: 12px; height: 18px; z-index: 4; pointer-events: none; background: repeating-linear-gradient(90deg, #f2c94c 0 1.5px, #d4a62a 1.5px 3px); clip-path: polygon(35% 0, 65% 0, 100% 100%, 0 100%); filter: drop-shadow(0 2px 2px rgba(0,0,0,.25)); }
