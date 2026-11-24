@@ -1,0 +1,5 @@
+/* ปกแบบ "receiptrollcurl" = ภาพเป็นสลิปใบเสร็จสีขาว ขอบล่างเป็นรอยฉีกฟันเลื่อย และมีม้วนกระดาษใบเสร็จม้วนกลมสีขาวขอบเทาเกาะอยู่ที่ขอบบน (คู่มือ agent-duties-money) */
+.gd-cover[data-layout="receiptrollcurl"] .gd-cover-art { overflow: visible; border: 5px solid #fff; border-bottom-width: 0; border-radius: 3px 3px 0 0; box-shadow: 0 6px 12px rgba(120,80,30,.18); }
+.gd-cover[data-layout="receiptrollcurl"] .gd-cover-art .gd-scene { border-radius: 1px; }
+.gd-cover[data-layout="receiptrollcurl"] .gd-cover-art::before { content: ""; position: absolute; left: -5px; right: -5px; bottom: -7px; height: 8px; z-index: 3; pointer-events: none; background: linear-gradient(135deg, #fff 33%, transparent 34%) 0 0 / 8px 8px repeat-x, linear-gradient(225deg, #fff 33%, transparent 34%) 0 0 / 8px 8px repeat-x; }
+.gd-cover[data-layout="receiptrollcurl"] .gd-cover-art::after { content: ""; position: absolute; left: -9px; right: -9px; top: -13px; height: 14px; z-index: 4; pointer-events: none; border-radius: 7px; background: linear-gradient(180deg, #fff 0 45%, #e2e2e8 55%, #c8c8d0); box-shadow: 0 2px 3px rgba(0,0,0,.2); }
