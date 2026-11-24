@@ -1,0 +1,6 @@
+/* ปกแบบ "twinkeytags" = ภาพในกรอบสีเหลืองมะนาว มีป้ายกุญแจหน้าตัดหกเหลี่ยมสองอันสีเขียวกับสีแดงห้อยซ้อนกันที่มุมบนซ้าย เขียน "A" และ "B" เหมือนห้องเดียวมีผู้เช่าสองคน (คู่มือ double-leased) */
+.gd-cover[data-layout="twinkeytags"] .gd-cover-art { overflow: visible; border: 5px solid #e2dc7a; border-radius: 10px; box-shadow: 0 6px 14px rgba(110,100,20,.2); }
+.gd-cover[data-layout="twinkeytags"] .gd-cover-art .gd-scene { border-radius: 5px; }
+.gd-cover[data-layout="twinkeytags"] .gd-cover-art::before, .gd-cover[data-layout="twinkeytags"] .gd-cover-art::after { position: absolute; top: -8px; width: 20px; height: 26px; z-index: 3; pointer-events: none; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4px; box-sizing: border-box; font: 900 10px/1 sans-serif; color: #fff; clip-path: polygon(50% 0, 100% 22%, 100% 100%, 0 100%, 0 22%); box-shadow: 0 2px 3px rgba(0,0,0,.2); }
+.gd-cover[data-layout="twinkeytags"] .gd-cover-art::before { content: "A"; left: -6px; background: #2e8a6e; transform: rotate(-12deg); }
+.gd-cover[data-layout="twinkeytags"] .gd-cover-art::after { content: "B"; left: 12px; background: #d9363e; transform: rotate(10deg); }
