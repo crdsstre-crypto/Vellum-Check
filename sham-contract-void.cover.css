@@ -1,0 +1,6 @@
+/* ปกแบบ "theatercurtain" = ภาพในกรอบสีทองหม่น มีม่านกำมะหยี่สีแดงไวน์ห้อยโค้งเป็นชายผ้าที่มุมบนซ้ายและบนขวา เหมือนเปิดม่านเวที (คู่มือ sham-contract-void) */
+.gd-cover[data-layout="theatercurtain"] .gd-cover-art { overflow: visible; border: 4px solid #c8a05a; border-radius: 6px; box-shadow: 0 5px 12px rgba(100,30,40,.25); }
+.gd-cover[data-layout="theatercurtain"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="theatercurtain"] .gd-cover-art::before, .gd-cover[data-layout="theatercurtain"] .gd-cover-art::after { content: ""; position: absolute; top: -4px; width: 26%; height: 46%; z-index: 3; pointer-events: none; background: repeating-linear-gradient(90deg, #8a1a2e 0 6px, #a82a40 6px 10px); filter: drop-shadow(0 2px 2px rgba(0,0,0,.25)); }
+.gd-cover[data-layout="theatercurtain"] .gd-cover-art::before { left: -4px; border-radius: 4px 0 0 0; clip-path: polygon(0 0, 100% 0, 30% 100%, 0 100%); }
+.gd-cover[data-layout="theatercurtain"] .gd-cover-art::after { right: -4px; border-radius: 0 4px 0 0; clip-path: polygon(0 0, 100% 0, 100% 100%, 70% 100%); }
