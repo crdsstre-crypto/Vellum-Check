@@ -1,0 +1,5 @@
+/* ปกแบบ "bankbookframe" = กรอบปกสมุดบัญชีธนาคารสีกรมท่าหนังเทียม เย็บด้ายขาวขอบใน มีแถบแม่เหล็กสีน้ำตาลเข้มพาดด้านล่าง และตราธนาคารวงกลมสีทองมุมซ้ายบน (คู่มือ overdraft-account) */
+.gd-cover[data-layout="bankbookframe"] .gd-cover-art { overflow: visible; padding: 10px 10px 18px; border-radius: 8px; background: linear-gradient(135deg, #2e4a7a, #1a2a4e); box-shadow: inset 0 -10px 0 -4px #3a2a20, 0 6px 16px rgba(10,20,40,.35); }
+.gd-cover[data-layout="bankbookframe"] .gd-cover-art .gd-scene { border-radius: 3px; }
+.gd-cover[data-layout="bankbookframe"] .gd-cover-art::before { content: ""; position: absolute; inset: 4px; z-index: 3; pointer-events: none; border-radius: 6px; border: 1.4px dashed rgba(255,255,255,.6); }
+.gd-cover[data-layout="bankbookframe"] .gd-cover-art::after { content: "฿"; position: absolute; left: -8px; top: -8px; width: 22px; height: 22px; z-index: 4; pointer-events: none; border-radius: 50%; font: 900 12px/22px sans-serif; text-align: center; color: #5a3a0a; background: radial-gradient(circle at 40% 35%, #ffe9a0, #c8901a); box-shadow: 0 2px 4px rgba(0,0,0,.3); }
