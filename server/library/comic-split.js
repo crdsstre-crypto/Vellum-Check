@@ -32,7 +32,7 @@ export function mountComic(app, publicDir) {
       const a = text.indexOf('\nvar P={'), b = text.indexOf('\n};\nvar BG={', a);
       if (a < 0 || b < 0) throw new Error('ไม่พบช่วง var P={ … };');
       const win = {};
-      vm.runInNewContext(text, { window: win }, { timeout: 2000 });
+      vm.runInNewContext(text, { window: win }, { timeout: 20000 });
       const C = win.VCComic;
       if (!C || !C._P || !C._h) throw new Error('ไฟล์ไม่มี VCComic._P/_h');
       helpers = Object.keys(C._h).filter(n => /^[A-Za-z_$][\w$]*$/.test(n));
@@ -43,6 +43,9 @@ export function mountComic(app, publicDir) {
     } catch (e) {
       console.error('[comic] แยกไฟล์ไม่สำเร็จ ส่งไฟล์เต็มแทน:', e.message);
       src = new Map(); core = text;
+      // ส่งไฟล์เต็มแทน: แนบภาพช่องการ์ตูนจากไฟล์แยกรายเรื่องต่อท้ายด้วย ไม่งั้นเรื่องใหม่จะไม่มีภาพ
+      if (parts.src.size) core += '\n(function(){var C=window.VCComic;if(!C||!C.add)return;var h=C._h||{},I=h.I,coins=h.coins,bg=h.bg,desk=h.desk,spark=h.spark,person=h.person;\nC.add({' +
+        [...parts.src].map(([n, f]) => JSON.stringify(n) + ':' + f).join(',\n') + '});})();\n';
     }
     zcache.clear();
     st = { mtime: m, hash, core, src, helpers };
