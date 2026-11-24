@@ -1,0 +1,5 @@
+/* ปกแบบ "stakeropecorner" = ภาพในกรอบสีดินเหนียวอ่อน มีหลักไม้ปักที่มุมบนซ้ายและมุมบนขวา และเชือกสีแดงขึงโค้งระหว่างหลักทั้งสองตามขอบบนเหมือนแนวเขตที่ดิน (คู่มือ possessory-land-sale) */
+.gd-cover[data-layout="stakeropecorner"] .gd-cover-art { overflow: visible; border: 5px solid #d8b88a; border-radius: 8px; box-shadow: 0 6px 14px rgba(90,60,30,.22); }
+.gd-cover[data-layout="stakeropecorner"] .gd-cover-art .gd-scene { border-radius: 3px; }
+.gd-cover[data-layout="stakeropecorner"] .gd-cover-art::before { content: ""; position: absolute; left: -9px; right: -9px; top: -14px; height: 34px; z-index: 3; pointer-events: none; background: linear-gradient(180deg, #a8743a, #7a4a22) left top/6px 34px no-repeat, linear-gradient(180deg, #a8743a, #7a4a22) right top/6px 34px no-repeat; border-radius: 2px; }
+.gd-cover[data-layout="stakeropecorner"] .gd-cover-art::after { content: ""; position: absolute; left: -4px; right: -4px; top: -10px; height: 12px; z-index: 4; pointer-events: none; border-bottom: 2px solid #d9363e; border-radius: 0 0 50% 50%; }
