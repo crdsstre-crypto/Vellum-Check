@@ -1080,6 +1080,11 @@
 .gd-cover[data-layout="jigsawedge"] .gd-cover-art::before { content: ""; position: absolute; left: -19px; top: 50%; width: 22px; height: 22px; margin-top: -11px; z-index: 3; pointer-events: none; border-radius: 50%; background: #f2b33d; box-shadow: -2px 2px 4px rgba(0,0,0,.15); }
 .gd-cover[data-layout="jigsawedge"] .gd-cover-art::after { content: ""; position: absolute; left: 50%; bottom: -14px; width: 22px; height: 22px; margin-left: -11px; z-index: 3; pointer-events: none; border-radius: 50%; background: #fdf3e2; border: 5px solid #f2b33d; border-left-color: transparent; border-top-color: transparent; transform: rotate(45deg); }
 
+/* ปกแบบ "receiptspike" = ใบเสร็จเสียบเหล็กแหลม ขอบล่างฟันปลาเล็ก มีเหล็กเสียบใบเสร็จสีเงินทะลุมุมซ้ายบน และป้ายเขียว "จ่ายครบ" มุมขวาบน (คู่มือ debt-settlement) */
+.gd-cover[data-layout="receiptspike"] .gd-cover-art { overflow: visible; border: 5px solid #fffdf6; border-bottom-width: 12px; border-radius: 2px; box-shadow: 0 8px 16px rgba(30,60,50,.22); transform: rotate(2deg); margin-top: 14px; }
+.gd-cover[data-layout="receiptspike"] .gd-cover-art::before { content: ""; position: absolute; left: 14px; top: -24px; width: 4px; height: 40px; z-index: 3; pointer-events: none; background: linear-gradient(90deg, #8a939e, #d6dde4, #8a939e); border-radius: 2px 2px 0 0; box-shadow: -6px 38px 0 2px #5a6a7a; clip-path: polygon(50% 0, 100% 12%, 100% 100%, 0 100%, 0 12%); }
+.gd-cover[data-layout="receiptspike"] .gd-cover-art::after { content: "จ่ายครบ"; position: absolute; right: -12px; top: -10px; z-index: 3; pointer-events: none; padding: 3px 8px; font: 900 10px/1.3 sans-serif; color: #fff; background: #2e9e5b; border-radius: 4px; transform: rotate(10deg); box-shadow: 0 2px 4px rgba(0,0,0,.2); }
+
 /* ปกแบบ "tornticket" = ตั๋วฉีกครึ่ง พื้นครีม ขอบล่างรอยปรุเป็นฟันเลื่อย เส้นประแนวตั้งด้านขวาพร้อมรอยเจาะครึ่งวงกลมบนล่าง (คู่มือ debt-prescription) */
 .gd-cover[data-layout="tornticket"] .gd-cover-art { overflow: visible; padding: 6px 18px 10px 6px; background: #fbf3df; border-radius: 4px; box-shadow: 0 6px 16px rgba(60,40,20,.22); }
 .gd-cover[data-layout="tornticket"] .gd-cover-art .gd-scene { border-radius: 2px; }
