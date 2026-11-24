@@ -1,0 +1,5 @@
+/* ปกแบบ "doublecrossbars" = ภาพในกรอบเขียวหยกอ่อนแบบกระดาษเช็ค มีแถบเส้นขนานคู่สีน้ำเงินพาดเฉียงข้ามมุมบนซ้ายเหมือนรอยขีดคร่อมเช็ค และตัวหนังสือเล็ก "& Co." อยู่ระหว่างเส้น (คู่มือ lost-cheque-crossing) */
+.gd-cover[data-layout="doublecrossbars"] .gd-cover-art { overflow: hidden; border: 4px solid #7ac4a0; border-radius: 6px; background: #f2fbf6; box-shadow: 0 6px 14px rgba(20,80,50,.2); }
+.gd-cover[data-layout="doublecrossbars"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="doublecrossbars"] .gd-cover-art::before { content: ""; position: absolute; left: -24px; top: 14px; width: 110px; height: 14px; z-index: 3; pointer-events: none; transform: rotate(-45deg); border-top: 2.5px solid #2f5aa8; border-bottom: 2.5px solid #2f5aa8; }
+.gd-cover[data-layout="doublecrossbars"] .gd-cover-art::after { content: "& Co."; position: absolute; left: 6px; top: 16px; z-index: 3; pointer-events: none; font: italic 800 8px/1 serif; color: #2f5aa8; transform: rotate(-45deg); }
