@@ -103,6 +103,7 @@ export function mountParts(app, publicDir) {
     const o = {};
     for (const k of Object.keys(DIRS)) o[k] = listParts(publicDir, k).files.map(x => rel(x.path));
     o.names = partNames(publicDir);
+    o.comic = globalThis.__vcComicState || 'ยังไม่ได้สร้าง (เปิดหน้าคู่มือก่อน 1 ครั้ง)';
     res.setHeader('Content-Type', 'application/json; charset=utf-8'); res.setHeader('Cache-Control', 'no-store');
     res.end(JSON.stringify(o, null, 2));
   });
