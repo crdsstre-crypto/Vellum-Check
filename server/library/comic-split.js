@@ -42,6 +42,7 @@ export function mountComic(app, publicDir) {
         `\nwindow.VCComic && (window.VCComic.ver = ${JSON.stringify(hash)});\n`;
     } catch (e) {
       console.error('[comic] แยกไฟล์ไม่สำเร็จ ส่งไฟล์เต็มแทน:', e.message);
+      globalThis.__vcComicErr = e.message;
       src = new Map(); core = text;
       // ส่งไฟล์เต็มแทน: แนบภาพช่องการ์ตูนจากไฟล์แยกรายเรื่องต่อท้ายด้วย ไม่งั้นเรื่องใหม่จะไม่มีภาพ
       if (parts.src.size) core += '\n(function(){var C=window.VCComic;if(!C||!C.add)return;var h=C._h||{},I=h.I,coins=h.coins,bg=h.bg,desk=h.desk,spark=h.spark,person=h.person;\nC.add({' +
@@ -49,6 +50,7 @@ export function mountComic(app, publicDir) {
     }
     zcache.clear();
     st = { mtime: m, hash, core, src, helpers };
+    globalThis.__vcComicState = { at: new Date().toISOString(), mode: src.size ? 'split' : 'full', scenes: src.size, coreKB: Math.round(Buffer.byteLength(core) / 1024), partScenes: [...parts.src.keys()], hash, err: globalThis.__vcComicErr || null, version: 3 };
     console.log(`[comic] แกน ${(Buffer.byteLength(core) / 1024).toFixed(0)}KB · ${src.size} ฉาก · ver ${hash}`);
     return st;
   }
