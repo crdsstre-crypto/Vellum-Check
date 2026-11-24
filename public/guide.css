@@ -1051,6 +1051,12 @@
 .gd-cover[data-layout="postcard"] .gd-cover-art::before { content: ""; position: absolute; inset: -9px -9px -24px -9px; z-index: 3; pointer-events: none; background: linear-gradient(135deg, #6a3a2a 14px, transparent 14px) top left / 26px 26px no-repeat, linear-gradient(225deg, #6a3a2a 14px, transparent 14px) top right / 26px 26px no-repeat, linear-gradient(45deg, #6a3a2a 14px, transparent 14px) bottom left / 26px 26px no-repeat, linear-gradient(315deg, #6a3a2a 14px, transparent 14px) bottom right / 26px 26px no-repeat; }
 .gd-cover[data-layout="postcard"] .gd-cover-art::after { content: "ร้านเล็ก ๆ ของเรา"; position: absolute; left: 0; right: 0; bottom: -19px; z-index: 3; pointer-events: none; text-align: center; font: italic 700 11px/16px sans-serif; color: #8a5a3a; }
 
+/* ปกแบบ "signline" = กระดาษสัญญาขาวนวล ขอบล่างกว้างมีเส้นประสำหรับลงชื่อ ข้อความ "ลงชื่อ ผู้ค้ำประกัน" และเครื่องหมาย X สีแดงหน้าช่องเซ็น (คู่มือ guarantor-rights) */
+.gd-cover[data-layout="signline"] .gd-cover-art { overflow: visible; border: 7px solid #fffdf6; border-bottom-width: 30px; border-radius: 3px; box-shadow: 0 0 0 1px #e8e0d0, 0 7px 16px rgba(50,40,20,.2); }
+.gd-cover[data-layout="signline"] .gd-cover-art .gd-scene { border-radius: 1px; }
+.gd-cover[data-layout="signline"] .gd-cover-art::before { content: "ลงชื่อ ผู้ค้ำประกัน"; position: absolute; left: 22px; right: 8px; bottom: -24px; height: 16px; z-index: 3; pointer-events: none; padding-left: 4px; font: 700 9px/16px sans-serif; color: #8a7a64; border-bottom: 1.5px dashed #8a7a64; text-align: right; }
+.gd-cover[data-layout="signline"] .gd-cover-art::after { content: "✕"; position: absolute; left: 4px; bottom: -24px; z-index: 3; pointer-events: none; font: 900 14px/16px sans-serif; color: #d23a2e; }
+
 /* ปกแบบ "creased" = แผ่นกระดาษพับสามทบ มีรอยพับแนวตั้งสองเส้นเป็นเงาไล่ระดับ ขอบกระดาษขาวนวล และมุมขวาล่างพับเผยด้านหลัง (คู่มือ mortgage-default) */
 .gd-cover[data-layout="creased"] .gd-cover-art { overflow: visible; padding: 7px; border-radius: 2px; background: #fdfaf2; box-shadow: 0 1px 0 #e6dcc8, 0 8px 16px rgba(50,40,20,.2); }
 .gd-cover[data-layout="creased"] .gd-cover-art .gd-scene { border-radius: 1px; }
