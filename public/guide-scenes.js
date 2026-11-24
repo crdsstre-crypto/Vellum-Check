@@ -1,1147 +1,620 @@
-/* Vellum เรียนรู้ — ใช้ตัวแปรสีจาก lib.css (โหลดก่อนไฟล์นี้) */
-.gd-subnav { display: flex; gap: 18px; padding: 8px clamp(16px, 4vw, 40px); background: var(--nv-2); font-size: 14px; }
-.gd-subnav a { color: #A9B4C4; text-decoration: none; padding: 2px 0 4px; }
-.gd-subnav a[aria-current="page"] { color: #fff; box-shadow: inset 0 -2px 0 var(--orange); }
-.gd-main { max-width: 760px; margin: 0 auto; padding: 16px clamp(16px, 4vw, 40px) 48px; outline: none; }
-.gd-draft { background: #FFF7D6; color: #6b5000; border: 1px solid #F0E2A8; border-radius: var(--r-s); padding: 8px 12px; font-size: 13px; margin-bottom: 12px; }
-.gd-crumb { font-size: 13px; color: var(--ink-3); }
-.gd-crumb a { color: var(--ink-3); }
-.gd-h1 { font-size: clamp(23px, 5.5vw, 32px); line-height: 1.35; margin: 4px 0 10px; }
-.gd-meta { display: flex; flex-wrap: wrap; gap: 6px; font-size: 12.5px; margin-bottom: 14px; }
-.gd-chip { border-radius: 999px; padding: 2px 10px; background: var(--navy-700); color: var(--ink-2); }
-.gd-chip.ok { background: #E4F4EE; color: var(--ok); }
-.gd-chip.wait { background: #FBF3DC; color: #7a5c00; }
-
-/* กล่องสื่อ: ฟัง / ดูคลิป / อ่าน */
-.gd-media { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin-bottom: 16px; box-shadow: var(--shadow); }
-.gd-tabs { display: flex; gap: 6px; margin-bottom: 12px; }
-.gd-tabs button { flex: 1; font: inherit; font-size: 14px; border: 0; border-radius: 8px; padding: 7px 0; background: var(--navy-700); color: var(--ink-2); cursor: pointer; }
-.gd-tabs button[aria-selected="true"] { background: var(--nv); color: #fff; }
-.gd-player { display: flex; align-items: center; gap: 10px; }
-.gd-play { width: 44px; height: 44px; flex: none; border-radius: 50%; border: 0; background: var(--orange); color: #1b1006; font-size: 17px; cursor: pointer; display: grid; place-items: center; }
-.gd-play:focus-visible, .gd-tabs button:focus-visible, .gd-law:focus-visible { outline: 3px solid #1d4f91; outline-offset: 2px; }
-.gd-bar { flex: 1; min-width: 0; }
-.gd-track { height: 6px; background: #E3E7EE; border-radius: 3px; overflow: hidden; }
-.gd-track i { display: block; height: 100%; width: 0; background: var(--orange); transition: width .3s; }
-.gd-tm { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--ink-3); margin-top: 4px; font-variant-numeric: tabular-nums; }
-.gd-spd { font: inherit; font-size: 13px; border: 1px solid var(--line); border-radius: 6px; padding: 3px 8px; background: #fff; color: var(--ink); cursor: pointer; }
-.gd-stop { font: inherit; font-size: 13px; border: 0; background: none; color: var(--ink-3); cursor: pointer; padding: 4px; }
-.gd-ainote { font-size: 12px; color: var(--ink-3); margin-top: 8px; }
-.gd-video video { width: 100%; border-radius: 8px; background: #000; display: block; }
-.gd-empty { font-size: 14px; color: var(--ink-3); padding: 10px 4px; text-align: center; }
-
-.gd-sum { background: var(--o-soft); border-left: 4px solid var(--orange); border-radius: 8px; padding: 10px 14px; margin-bottom: 18px; }
-.gd-sum h2 { margin: 0 0 4px; font-size: 15px; color: var(--o-text); }
-.gd-sum ul { margin: 0; padding-left: 20px; }
-.gd-h2 { font-size: 19px; margin: 22px 0 10px; display: flex; align-items: center; gap: 8px; }
-.gd-n { width: 26px; height: 26px; flex: none; border-radius: 50%; background: var(--nv); color: #fff; font-size: 13px; display: grid; place-items: center; }
-.gd-item { position: relative; background: #fff; border: 2px solid #e6dcc6; border-radius: 16px; padding: 12px 14px 12px 48px; margin-bottom: 10px; box-shadow: 0 3px 0 #efe6d2; }
-.gd-item::before { content: "Q"; position: absolute; left: 11px; top: 11px; width: 28px; height: 28px; border-radius: 50%; background: #16263D; color: #ffd84d; font-weight: 800; font-size: 14px; display: grid; place-items: center; }
-.gd-q { font-weight: 700; margin: 0; font-size: 15.5px; line-height: 1.5; }
-.gd-a { color: var(--ink-2); margin: 6px 0 0; font-size: 15px; line-height: 1.65; background: #fbf6ea; border-radius: 10px; padding: 8px 10px; }
-.gd-cites { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
-.gd-law { font: inherit; font-size: 12.5px; font-weight: 600; border: 1.5px solid #F3C79A; color: var(--o-text); background: var(--o-soft); border-radius: 999px; padding: 3px 12px; cursor: pointer; }
-.gd-law.ext { border-color: var(--line); color: var(--ink-3); background: var(--navy-700); cursor: default; }
-.gd-flag { background: #FCEBEC; border: 1px solid #F3C6CA; border-radius: 10px; padding: 10px 13px; margin-bottom: 8px; font-size: 14.5px; }
-.gd-flag b { color: var(--gone); font-weight: 600; }
-.gd-cta { background: var(--nv); color: #fff; border-radius: 12px; padding: 16px; margin: 22px 0 14px; }
-.gd-cta p { margin: 0 0 10px; color: #C9D2DE; font-size: 14.5px; }
-.gd-cta a { display: block; background: var(--orange); color: #1b1006; font-weight: 700; text-align: center; border-radius: 8px; padding: 10px; text-decoration: none; }
-.gd-disc { font-size: 12.5px; color: var(--ink-3); border-top: 1px solid var(--line); padding-top: 10px; }
-.gd-reading { outline: 3px solid var(--orange-2); outline-offset: 3px; border-radius: 8px; }
-
-/* หน้ารวม "เรียนรู้" — การ์ดแนวนอน: รูปฉาก+น้องม้วนซ้าย เนื้อหาพื้นกรมท่าขวา */
-.gd-lh { text-align: center; margin: 10px 0 4px; font-size: clamp(25px, 6.6vw, 32px); line-height: 1.3; }
-.gd-lh em { font-style: normal; color: #E8791A; }
-.gd-lsub { text-align: center; color: var(--ink-2); font-size: 14.5px; margin: 0 0 16px; }
-.gd-chips { display: flex; gap: 8px; overflow-x: auto; margin: 0 calc(-1 * clamp(16px, 4vw, 40px)) 16px; padding: 2px clamp(16px, 4vw, 40px); scrollbar-width: none; }
-.gd-chips::-webkit-scrollbar { display: none; }
-.gd-chips button { flex: none; font: inherit; font-size: 13.5px; border: 1px solid #DCE1E8; background: #fff; color: var(--ink-2); border-radius: 999px; padding: 5px 12px; cursor: pointer; }
-.gd-chips button.on { background: #16263D; color: #fff; border-color: #16263D; }
-.gd-chips button:focus-visible, .gd-lc:focus-visible { outline: 3px solid #1d4f91; outline-offset: 2px; }
-.gd-sec h2 { font-size: 21px; margin: 6px 0 2px; }
-.gd-ic { margin-right: 6px; }
-.gd-sec-d { margin: 0 0 12px; color: var(--ink-3); font-size: 14px; }
-.gd-sec + .gd-sec { margin-top: 18px; }
-.gd-lc { display: flex; border-radius: 18px; overflow: hidden; background: #16263D; color: #fff; text-decoration: none; margin-bottom: 14px; min-height: 150px; box-shadow: 0 6px 18px rgba(14, 26, 43, .12); }
-.gd-lc-img { flex: 0 0 136px; position: relative; overflow: hidden; }
-.gd-scene { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.gd-lc-mz { position: absolute; left: 2px; bottom: 4px; z-index: 2; line-height: 0; filter: drop-shadow(0 3px 3px rgba(60, 30, 0, .18)); }
-.gd-lc-body { padding: 12px 14px; display: flex; flex-direction: column; min-width: 0; flex: 1; }
-.gd-lc-tag { font-size: 11.5px; color: #F5A04A; margin-bottom: 3px; }
-.gd-lc-cat { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: #16263D; background: #F5A04A; border-radius: 999px; padding: 0 8px; font-weight: 700; margin-right: 6px; }
-.gd-lc-draft { display: inline-block; white-space: nowrap; font-size: 10.5px; background: #FFF7D6; color: #7a5a00; border-radius: 5px; padding: 0 5px; margin-left: 6px; }
-.gd-lc h3 { margin: 0 0 4px; font-size: 16.5px; line-height: 1.35; }
-.gd-lc p { margin: 0 0 6px; color: #C2CCD9; font-size: 13px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-.gd-lc mark { background: rgba(255, 216, 77, .2); color: #FFE38A; padding: 0 3px; border-radius: 4px; -webkit-box-decoration-break: clone; box-decoration-break: clone; font-weight: 600; }
-.gd-lc-go { margin-top: auto; color: #F5A04A; font-weight: 700; font-size: 13.5px; }
-.gd-lc:hover .gd-lc-go { text-decoration: underline; }
-
-/* ปกในหน้าอ่าน: น้องม้วนซ้าย ข้อความขวา บนกระดาษครีมมีเส้น */
-.gd-cover { position: relative; display: flex; align-items: center; gap: 6px; border-radius: 16px; padding: 16px 14px 14px 8px; margin: 6px 0 14px; overflow: hidden;
-  background: radial-gradient(120% 90% at 0% 100%, #fbe3c4 0, transparent 60%), linear-gradient(135deg, #fdf6e9, #f6ead3); border: 1px solid #ecd9b4; }
-.gd-cover::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent 0 26px, rgba(160, 130, 80, .08) 26px 27px); pointer-events: none; }
-.gd-cover-m { flex: none; position: relative; line-height: 0; }
-.gd-cover-t { position: relative; min-width: 0; }
-.gd-cover small { display: inline-block; font-size: 12px; color: #B95E0E; background: #fff6ea; border: 1px solid #f3c79a; border-radius: 999px; padding: 1px 9px; margin-bottom: 6px; }
-.gd-cover h1 { margin: 0; font-size: clamp(19px, 5.6vw, 26px); line-height: 1.35; color: #2b1f0e; }
-.gd-cover h1 span { display: block; }
-.gd-cover h1 em { font-style: normal; color: #d9731a; }
-@media (min-width: 380px) { .gd-cover h1 span { white-space: nowrap; } }
-
-/* แผ่นตัวบท (bottom sheet) */
-.gd-sheet-bg { position: fixed; inset: 0; background: rgba(14, 26, 43, .45); z-index: 50; display: flex; align-items: flex-end; justify-content: center; }
-.gd-sheet { background: #fff; width: 100%; max-width: 640px; max-height: 86vh; overflow: auto; border-radius: 16px 16px 0 0; padding: 10px 16px calc(18px + env(safe-area-inset-bottom)); animation: gdUp .2s ease-out; }
-@keyframes gdUp { from { transform: translateY(30px); opacity: 0; } }
-.gd-grab { width: 40px; height: 4px; background: #CBD2DC; border-radius: 2px; margin: 0 auto 10px; }
-.gd-sheet-h { display: flex; align-items: flex-start; gap: 8px; }
-.gd-sheet-h h2 { margin: 0; font-size: 17px; flex: 1; }
-.gd-x { border: 0; background: var(--navy-700); border-radius: 50%; width: 32px; height: 32px; font-size: 16px; cursor: pointer; flex: none; }
-.gd-src { font-size: 12.5px; color: var(--ink-3); margin: 2px 0 8px; }
-.gd-src.warn { color: #8a5a00; }
-.gd-stext { font-family: var(--read); background: var(--char-800); border-radius: 8px; padding: 11px 13px; font-size: 16px; line-height: 1.85; white-space: pre-line; }
-.gd-easy { margin-top: 10px; background: #EEF6FF; border-radius: 8px; padding: 10px 13px; font-size: 14.5px; }
-.gd-easy b { color: #1d4f91; }
-.gd-sbtns { display: flex; gap: 8px; margin-top: 12px; }
-.gd-sbtns > * { flex: 1; text-align: center; font: inherit; font-size: 14px; border: 1px solid var(--line); border-radius: 8px; padding: 8px 0; background: #fff; color: var(--ink); text-decoration: none; cursor: pointer; }
-.gd-sbtns .p { background: var(--nv); color: #fff; border-color: var(--nv); }
-
-@media (prefers-reduced-motion: reduce) { .gd-sheet { animation: none; } .gd-track i { transition: none; } }
-
-/* ===== ของในฉากขยับได้ (guide-scenes.js) ===== */
-.gd-scene .sc-vib{transform-box:fill-box;transform-origin:50% 100%;animation:scVib 2.2s ease-in-out infinite}
-.gd-scene .sc-ring{animation:scRing 2.2s ease-in-out infinite}
-.gd-scene .sc-hook{transform-box:view-box;transform-origin:100px 0;animation:scHook 3.4s ease-in-out infinite}
-.gd-scene .sc-warn{transform-box:fill-box;transform-origin:50% 100%;animation:scWarn 2s ease-in-out infinite}
-.gd-scene .sc-scale{transform-box:view-box;transform-origin:100px 92px;animation:scScale 3.6s ease-in-out infinite}
-@keyframes scVib{0%,40%,100%{transform:rotate(0)}45%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}55%{transform:rotate(-4deg)}60%{transform:rotate(3deg)}65%{transform:rotate(0)}}
-@keyframes scRing{0%,38%{opacity:0}45%,62%{opacity:1}70%,100%{opacity:0}}
-@keyframes scHook{0%,100%{transform:rotate(4deg) translateY(0)}50%{transform:rotate(-5deg) translateY(-6px)}}
-@keyframes scWarn{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
-/* กระเป๋าเดินทางเด้ง + คลื่นทะเล */
-.gd-scene .sc-bob{transform-box:fill-box;transform-origin:50% 100%;animation:scBob 2.4s ease-in-out infinite}
-.gd-cm .cm-wave{animation:cmWave 2.6s ease-in-out infinite}
-@keyframes scBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
-/* แถบเวลาทำงานค่อย ๆ เต็ม */
-.gd-cm .cm-fill{transform-box:fill-box;transform-origin:0 50%;animation:cmFill 3.2s ease-in-out infinite}
-@keyframes cmFill{0%{transform:scaleX(.2)}60%,100%{transform:scaleX(1)}}
-@keyframes cmWave{0%,100%{transform:translateX(0)}50%{transform:translateX(-10px)}}
-@keyframes scScale{0%,100%{transform:rotate(0)}50%{transform:rotate(-5deg)}}
-@media (prefers-reduced-motion:reduce){.gd-scene *{animation:none !important}}
-
-/* ===== ปก: ฉากเดียวกับการ์ด อยู่ซ้าย + น้องม้วนยืนในฉาก ===== */
-.gd-cover-art { flex: 0 0 136px; height: 152px; position: relative; border-radius: 12px; overflow: hidden; border: 2px solid rgba(58, 42, 18, .12); }
-.gd-cover-art .gd-scene { position: absolute; inset: 0; width: 100%; height: 100%; }
-.gd-cover-art .gd-cover-m { position: absolute; left: -4px; bottom: 2px; z-index: 2; filter: drop-shadow(0 3px 3px rgba(60, 30, 0, .18)); }
-.gd-cover:has(.gd-cover-art) { gap: 12px; padding: 12px; }
-
-/* ===== ปก: ลายฉากหลังตามหัวข้อ (guide-comic.js · coverBg) ===== */
-.gd-cover[data-bg]::before { display: none; }
-.gd-cover-bg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.gd-cover-art, .gd-cover-t { z-index: 1; }
-.gd-cover[data-bg="debt"] { background: linear-gradient(135deg, #2b3566, #4a4f8c); border-color: #1d2448; }
-.gd-cover[data-bg="debt"] h1 { color: #fff; } .gd-cover[data-bg="debt"] h1 em { color: #ffb36b; }
-.gd-cover[data-bg="scam"] { background: linear-gradient(135deg, #ffe8ef, #f6c7d8); border-color: #eaa9c0; }
-.gd-cover[data-bg="contract"] { background: linear-gradient(135deg, #fff6d8, #f3dfa6); border-color: #e2c27a; }
-.gd-cover[data-bg="office"] { background: linear-gradient(135deg, #eef3ff, #d3e0f7); border-color: #b9c8e0; }
-.gd-cover[data-bg="money"] { background: linear-gradient(135deg, #effbf3, #cdeeda); border-color: #a8d5b5; }
-.gd-cover[data-bg="overtime"] { background: linear-gradient(135deg, #3d3a7a, #6b5aa6); border-color: #2c2960; }
-.gd-cover[data-bg="overtime"] h1 { color: #fff; } .gd-cover[data-bg="overtime"] h1 em { color: #ffb36b; }
-.gd-cover[data-bg="probation"] { background: linear-gradient(135deg, #fff4e6, #ffdcb8); border-color: #ecc690; }
-.gd-cover[data-bg="payroll"] { background: linear-gradient(135deg, #eefaf3, #cfeedd); border-color: #a8d5b5; }
-.gd-cover[data-bg="social"] { background: radial-gradient(circle at 80% 30%, #fff7d6, #bfe3ff 70%); border-color: #9cc9ee; }
-.gd-cover[data-bg="worksite"] { background: linear-gradient(180deg, #ffcf8a, #fff1d6); border-color: #e8b46a; }
-.gd-cover[data-bg="cradle"] { background: linear-gradient(135deg, #ffe3ec, #e7dcff); border-color: #d7c4f2; }
-.gd-cover[data-bg="farewell"] { background: #fffdf7; border-color: #d8c09a; }
-.gd-cover[data-bg="chalk"] { background: #fffdf6; border-color: #e2d6bd; }
-.gd-cover[data-bg="pvd"] { background: linear-gradient(135deg, #f0fff7, #d3f1e3); border-color: #a8d8bf; }
-.gd-cover[data-bg="youth"] { background: linear-gradient(135deg, #f1ecff, #ffe6d8); border-color: #d9c8f2; }
-.gd-cover[data-bg="border"] { background: linear-gradient(135deg, #fff3e4, #e3f2ff); border-color: #f0d2ac; }
-.gd-cover[data-bg="union"] { background: linear-gradient(135deg, #fff1e2, #ffe1cf); border-color: #f2c7a4; }
-.gd-cover[data-bg="court"] { background: linear-gradient(135deg, #eef6ff, #fff1df); border-color: #cfe0f2; }
-.gd-cover[data-bg="wallet"] { background: linear-gradient(135deg, #fff4e2, #f3dcc0); border-color: #e5c59c; }
-.gd-cover[data-bg="porch"] { background: linear-gradient(135deg, #f4efff, #ffe8dc); border-color: #e2d3f4; }
-.gd-cover[data-bg="truck"] { background: linear-gradient(135deg, #f7f0e1, #efe2c8); border-color: #dccaa4; }
-.gd-cover[data-bg="bokeh"] { background: linear-gradient(135deg, #f1ecff, #ffe6ef); border-color: #e0d2f4; }
-.gd-cover[data-bg="groovy"] { background: linear-gradient(135deg, #fff1db, #f7d9b0); border-color: #ebc28a; }
-.gd-cover[data-bg="conveyor"] { background: linear-gradient(135deg, #eaf4ff, #dbe9f8); border-color: #bcd3ee; }
-.gd-cover[data-bg="shutter"] { background: linear-gradient(135deg, #fff1df, #ffd9b5); border-color: #f2c08e; }
-.gd-cover[data-bg="chess"] { background: linear-gradient(135deg, #efeaf7, #e0d6ef); border-color: #cfc2e4; }
-.gd-cover[data-bg="leave"] { background: linear-gradient(135deg, #e6f6ff, #c7e8fb); border-color: #9fd0e6; }
-.gd-cover[data-bg="condo"] { background: linear-gradient(135deg, #fff1dc, #f7d9b3); border-color: #ecc690; }
-
-/* ===== ช่องการ์ตูนต้นหัวข้อ (guide-comic.js · panel) ===== */
-.gd-cm { position: relative; margin: 4px 0 14px; height: 190px; border: 2.5px solid #3a2a12; border-radius: 18px; overflow: hidden; box-shadow: 4px 4px 0 #3a2a12; background: #fff; }
-.gd-cm-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
-.gd-cm-m { position: absolute; left: 4px; bottom: 2px; line-height: 0; z-index: 2; filter: drop-shadow(0 3px 3px rgba(60, 30, 0, .2)); }
-.gd-cm-bub { position: absolute; z-index: 3; top: 12px; right: 10px; max-width: 58%; margin: 0; background: #fff; border: 2.5px solid #3a2a12; border-radius: 18px; padding: 7px 11px; font-weight: 800; font-size: 14.5px; line-height: 1.45; color: #2b1f0e; box-shadow: 2px 2px 0 rgba(58, 42, 18, .25); }
-.gd-cm-bub::before { content: ""; position: absolute; left: 18px; bottom: -14px; border: 8px solid transparent; border-top: 14px solid #3a2a12; border-bottom: 0; transform: skewX(25deg); }
-.gd-cm-bub::after { content: ""; position: absolute; left: 20.5px; bottom: -9px; border: 5.5px solid transparent; border-top: 10px solid #fff; border-bottom: 0; transform: skewX(25deg); }
-.gd-cm-bub b { color: #d9731a; }
-.gd-cm-cap { position: absolute; z-index: 3; top: 10px; left: 10px; background: #ffd84d; border: 2px solid #3a2a12; border-radius: 6px; padding: 0 8px; font-size: 11.5px; font-weight: 800; color: #3a2a12; transform: rotate(-3deg); }
-@media (min-width: 560px) { .gd-cm { height: 230px; } .gd-cm-bub { max-width: 50%; font-size: 15.5px; } }
-.gd-cm .cm-grow { transform-box: fill-box; transform-origin: 50% 100%; animation: cmGrow 3s ease-in-out infinite; }
-.gd-cm .cm-grow:nth-of-type(2) { animation-delay: .2s; } .gd-cm .cm-grow:nth-of-type(3) { animation-delay: .4s; } .gd-cm .cm-grow:nth-of-type(4) { animation-delay: .6s; } .gd-cm .cm-grow:nth-of-type(5) { animation-delay: .8s; }
-.gd-cm .cm-pop { transform-box: fill-box; transform-origin: 50% 100%; animation: cmPop 2.4s ease-in-out infinite; }
-.gd-cm .cm-tw { animation: cmTw 1.6s ease-in-out infinite; }
-.gd-cm .cm-fly { animation: cmFly 3.2s ease-in-out infinite; }
-.gd-cm .cm-drip { animation: cmDrip 1.8s ease-in infinite; }
-@keyframes cmGrow { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.06); } }
-@keyframes cmPop { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
-@keyframes cmTw { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
-@keyframes cmFly { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(8px, -5px); } }
-@keyframes cmDrip { 0% { transform: translateY(0); opacity: 1; } 80% { transform: translateY(54px); opacity: 1; } 100% { transform: translateY(58px); opacity: 0; } }
-/* ของขยับเฉพาะบางฉาก */
-.gd-cm .cm-needle { transform-box: fill-box; transform-origin: 100% 100%; animation: cmNeedle 2.6s ease-in-out infinite; }
-.gd-cm .cm-sand { animation: cmTw 1.2s ease-in-out infinite; }
-.gd-cm .cm-rain { animation: cmRain 1.4s linear infinite; }
-.gd-cm .cm-vibx { transform-box: fill-box; transform-origin: 50% 100%; animation: scVib 2.2s ease-in-out infinite; }
-.gd-cm .cm-scale2 { transform-box: fill-box; transform-origin: 50% 17%; animation: cmScale 3.6s ease-in-out infinite; }
-.gd-cm .cm-snip { transform-box: fill-box; transform-origin: 20% 50%; animation: cmSnip 1.4s ease-in-out infinite; }
-@keyframes cmNeedle { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(18deg); } }
-@keyframes cmRain { from { transform: translateY(-8px); opacity: 0; } 30% { opacity: .8; } to { transform: translateY(14px); opacity: 0; } }
-@keyframes cmScale { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(3deg); } }
-@keyframes cmSnip { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-12deg); } }
-@media (prefers-reduced-motion: reduce) { .gd-cm *, .gd-cover-bg * { animation: none !important; } }
-
-/* ===== ไฮไลต์คำสำคัญในคำตอบ/สรุป (ใส่ **คำ** ใน JSON) · ปากกาเน้นสีเหลืองอ่อนครึ่งล่าง ไม่แสบตา ===== */
-.gd-hl { background: linear-gradient(transparent 52%, #ffe68f 52%, #ffe68f 92%, transparent 92%); color: #1f2a3a; font-weight: 700; padding: 0 1px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
-.gd-sum .gd-hl { background: linear-gradient(transparent 52%, #ffd77a 52%, #ffd77a 92%, transparent 92%); }
-
-/* ===== ช่องการ์ตูน: ท่าจัดวางและกรอบคำพูดแบบอื่น (panel.layout / panel.bubble) ===== */
-.gd-cm.l-right .gd-cm-m { left: auto; right: 4px; }
-.gd-cm.l-right .gd-cm-m .vm { transform: scaleX(-1); }
-.gd-cm.l-right .gd-cm-bub { right: auto; left: 10px; top: 12px; }
-.gd-cm.l-right .gd-cm-cap { left: auto; right: 10px; transform: rotate(3deg); }
-.gd-cm.l-right .gd-cm-bub::before { left: auto; right: 18px; transform: skewX(-25deg); }
-.gd-cm.l-right .gd-cm-bub::after { left: auto; right: 20.5px; transform: skewX(-25deg); }
-.gd-cm.l-center .gd-cm-m { left: 50%; margin-left: -46px; }
-.gd-cm.l-center .gd-cm-bub { right: auto; left: 50%; transform: translateX(-50%); top: 10px; max-width: 72%; width: max-content; text-align: center; }
-.gd-cm.l-center .gd-cm-bub::before { left: 50%; margin-left: -6px; transform: none; }
-.gd-cm.l-center .gd-cm-bub::after { left: 50%; margin-left: -3.5px; transform: none; }
-.gd-cm.l-center .gd-cm-cap { top: auto; bottom: 10px; }
-/* ความคิด: กรอบเมฆ + ฟองกลมเล็ก */
-.gd-cm.b-think .gd-cm-bub { border-radius: 40px; border-style: solid; padding: 9px 16px; box-shadow: 0 0 0 4px #fff, 0 0 0 6.5px #3a2a12; border-width: 0; }
-.gd-cm.b-think .gd-cm-bub::before { border: 2.5px solid #3a2a12; background: #fff; border-radius: 50%; width: 12px; height: 12px; bottom: -22px; left: 22px; transform: none; }
-.gd-cm.b-think .gd-cm-bub::after { border: 2.5px solid #3a2a12; background: #fff; border-radius: 50%; width: 6px; height: 6px; bottom: -32px; left: 14px; transform: none; }
-.gd-cm.l-right.b-think .gd-cm-bub::before { left: auto; right: 22px; } .gd-cm.l-right.b-think .gd-cm-bub::after { left: auto; right: 14px; }
-/* ตะโกน: พื้นเหลือง ขอบหนา เอียงนิด ๆ */
-.gd-cm.b-shout .gd-cm-bub { background: #fff3a8; border-width: 3px; border-radius: 6px; transform: rotate(-2deg); box-shadow: 3px 3px 0 #3a2a12; }
-.gd-cm.b-shout .gd-cm-bub::after { border-top-color: #fff3a8; }
-.gd-cm.l-center.b-shout .gd-cm-bub { transform: translateX(-50%) rotate(-2deg); }
-.gd-cm.b-shout .gd-cm-bub b { color: #c2410c; }
-/* กล่องบรรยาย: สี่เหลี่ยมมุมฉาก ไม่มีหาง แบบหนังสือการ์ตูน */
-.gd-cm.b-caption .gd-cm-bub { background: #16263D; color: #fff; border-color: #16263D; border-radius: 4px; box-shadow: 3px 3px 0 #ffd84d; }
-.gd-cm.b-caption .gd-cm-bub::before, .gd-cm.b-caption .gd-cm-bub::after { display: none; }
-.gd-cm.b-caption .gd-cm-bub b { color: #ffd84d; }
-/* ของขยับแบบใหม่ */
-.gd-scene .sc-rays { transform-box: view-box; transform-origin: 68px 66px; animation: cmOrbit 40s linear infinite; }
-.gd-cm .cm-orbit { transform-box: view-box; transform-origin: 180px 118px; animation: cmOrbit 18s linear infinite; }
-.gd-cm .cm-up { transform-box: fill-box; transform-origin: 50% 50%; animation: cmPop 2.4s ease-in-out infinite; }
-.gd-cm .cm-swing { transform-box: fill-box; transform-origin: 50% 0; animation: cmSwing 2.8s ease-in-out infinite; }
-.gd-cm .cm-sunset { animation: cmSunset 6s ease-in-out infinite; }
-.gd-cm .cm-drive { animation: cmDrive 5s ease-in-out infinite; }
-.gd-cm .cm-float { animation: cmFloat 3s ease-in-out infinite; }
-@keyframes cmOrbit { to { transform: rotate(360deg); } }
-@keyframes cmSwing { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
-@keyframes cmSunset { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
-@keyframes cmDrive { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(14px); } }
-@keyframes cmFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
-/* ปกแบบสลับข้าง: ภาพวงกลมอยู่ขวา (coverLayout: "right") */
-.gd-cover[data-layout="right"] .gd-cover-art { order: 2; flex-basis: 132px; height: 132px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 3px rgba(58, 42, 18, .18); }
-.gd-cover[data-layout="right"] { padding-left: 16px; }
-.gd-cover[data-layout="right"] .gd-cover-art .gd-cover-m { left: 50%; margin-left: -33px; bottom: -4px; }
-@media (prefers-reduced-motion: reduce) { .gd-cm *, .gd-cover-bg * { animation: none !important; } }
-
-/* ===== ปกแบบแบนเนอร์ (coverLayout: "banner"): ภาพเต็มความกว้างอยู่บน ตัวหนังสืออยู่ล่าง ===== */
-.gd-cover[data-layout="banner"] { flex-direction: column; align-items: stretch; padding: 0 0 14px; gap: 10px; }
-.gd-cover[data-layout="banner"] .gd-cover-art { flex: none; width: 100%; height: 150px; border-radius: 0; border: 0; border-bottom: 2.5px solid #3a2a12; }
-.gd-cover[data-layout="banner"] .gd-cover-art .gd-cover-m { left: 18px; bottom: -2px; }
-.gd-cover[data-layout="banner"] .gd-cover-t { padding: 0 16px; }
-.gd-cover[data-layout="banner"] .gd-cover-bg { display: none; }
-/* ของขยับชุดใหม่ (เงินทดแทน) */
-.gd-scene .sc-blink { animation: scBlink 1.1s ease-in-out infinite; }
-.gd-scene .sc-sway { transform-box: fill-box; transform-origin: 50% 0; animation: cmSwing 3.4s ease-in-out infinite; }
-.gd-cm .cm-spin { animation: cmOrbit 6s linear infinite; }
-.gd-cm .cm-flash { animation: cmFlash 2.2s ease-in-out infinite; }
-.gd-cm .cm-scan { animation: cmScan 2.6s ease-in-out infinite; }
-.gd-cm .cm-draw { animation: cmDraw 3.6s ease-out infinite; }
-.gd-cm .cm-march { animation: cmMarch 1.2s linear infinite; }
-.gd-cm .cm-rise { animation: cmRise 6s ease-in-out infinite; }
-@keyframes scBlink { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
-@keyframes cmFlash { 0%, 70%, 100% { opacity: .35; } 78% { opacity: 1; } 84% { opacity: .5; } 90% { opacity: 1; } }
-@keyframes cmScan { 0% { transform: translateY(0); } 50% { transform: translateY(54px); } 100% { transform: translateY(0); } }
-@keyframes cmDraw { 0% { stroke-dasharray: 0 239; } 60%, 100% { stroke-dasharray: 167 239; } }
-@keyframes cmMarch { to { stroke-dashoffset: -16; } }
-@keyframes cmRise { 0% { transform: translateY(8px); opacity: .5; } 50% { opacity: 1; } 100% { transform: translateY(-14px); opacity: .6; } }
-@media (prefers-reduced-motion: reduce) { .gd-cm *, .gd-cover-bg *, .gd-scene * { animation: none !important; } }
-.gd-wide .cm-swing { transform-box: fill-box; transform-origin: 50% 0; animation: cmSwing 3.4s ease-in-out infinite; }
-@media (prefers-reduced-motion: reduce) { .gd-wide * { animation: none !important; } }
-
-/* ===== ปกแบบรูปโพลารอยด์ (coverLayout: "polaroid"): ภาพในกรอบขาวเอียง มีเทปแปะ ===== */
-.gd-cover[data-layout="polaroid"] { gap: 16px; padding: 18px 14px 16px 18px; }
-.gd-cover[data-layout="polaroid"] .gd-cover-art { flex-basis: 128px; height: 150px; border-radius: 3px; border: 8px solid #fff; border-bottom-width: 26px; box-shadow: 0 6px 14px rgba(60, 30, 80, .22); transform: rotate(-4deg); overflow: visible; background: #fff; }
-.gd-cover[data-layout="polaroid"] .gd-cover-art .gd-scene { border-radius: 2px; }
-.gd-cover[data-layout="polaroid"] .gd-cover-art::before { content: ""; position: absolute; z-index: 3; top: -16px; left: 50%; width: 54px; height: 18px; margin-left: -27px; background: rgba(255, 216, 77, .75); transform: rotate(3deg); box-shadow: 0 1px 2px rgba(0,0,0,.1); }
-.gd-cover[data-layout="polaroid"] .gd-cover-art .gd-cover-m { left: -10px; bottom: -22px; }
-/* ของขยับชุดใหม่ (ลาคลอด) */
-.gd-scene .sc-hang { transform-box: fill-box; transform-origin: 50% 0; animation: scHang 4s ease-in-out infinite; }
-.gd-scene .sc-glow { transform-box: fill-box; transform-origin: 50% 50%; animation: scGlow 3.6s ease-in-out infinite; }
-.gd-cm .cm-sweep { animation: cmSweep 3.2s linear infinite; }
-.gd-cm .cm-slosh { animation: cmSlosh 2.6s ease-in-out infinite; }
-.gd-cm .cm-flip { transform-box: fill-box; transform-origin: 50% 50%; animation: cmFlip 5s ease-in-out infinite; }
-.gd-cm .cm-bounce { animation: cmBounce 2.4s cubic-bezier(.3, 0, .3, 1) infinite; }
-.gd-cm .cm-roll { animation: cmRoll 4s ease-in-out infinite; }
-.gd-cm .cm-spin2 { transform-box: fill-box; transform-origin: 50% 50%; animation: cmOrbit 1.2s linear infinite; }
-@keyframes scHang { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
-@keyframes scGlow { 0%, 100% { transform: scale(1); filter: brightness(1); } 50% { transform: scale(1.04); filter: brightness(1.08); } }
-@keyframes cmSweep { from { transform: translateX(0); } to { transform: translateX(260px); } }
-@keyframes cmSlosh { 0%, 100% { transform: translateX(0) translateY(0); } 50% { transform: translateX(-21px) translateY(2px); } }
-@keyframes cmFlip { 0%, 12% { transform: scaleX(0); } 22%, 88% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
-@keyframes cmBounce { 0%, 100% { transform: translateX(0) rotate(0); } 40% { transform: translateX(48px) rotate(6deg); } 55% { transform: translateX(10px) rotate(-8deg); } 70% { transform: translateX(22px) rotate(0); } }
-@keyframes cmRoll { 0%, 100% { transform: translateX(-18px); } 50% { transform: translateX(18px); } }
-@media (prefers-reduced-motion: reduce) { .gd-cm *, .gd-cover-bg *, .gd-scene * { animation: none !important; } }
-
-/* ===== ปกแบบตั๋ว (coverLayout: "ticket"): ภาพอยู่ส่วนต้นขั้วด้านขวา มีรอยปรุและรอยเว้า ===== */
-.gd-cover[data-layout="ticket"] { padding: 14px 0 14px 18px; gap: 0; border-style: solid; border-width: 2px; border-color: #3a2a12; box-shadow: 4px 4px 0 #3a2a12; }
-.gd-cover[data-layout="ticket"] .gd-cover-t { flex: 1; padding-right: 12px; }
-.gd-cover[data-layout="ticket"] .gd-cover-art { order: 2; flex: 0 0 118px; height: auto; align-self: stretch; margin: -14px 0; border: 0; border-left: 2.5px dashed #3a2a12; border-radius: 0; }
-.gd-cover[data-layout="ticket"]::after { content: ""; position: absolute; z-index: 4; right: 108px; top: -11px; width: 20px; height: 20px; border-radius: 50%; background: var(--bg, #f3f4f6); border: 2px solid #3a2a12; box-shadow: 0 calc(100% + 0px) 0 0 transparent; }
-.gd-cover[data-layout="ticket"] .gd-cover-t::after { content: "BOARDING · ทางออก"; display: block; margin-top: 8px; font: 700 10px/1 monospace; letter-spacing: 2px; color: #8a6a3a; }
-/* ของขยับชุดใหม่ (ลาออก) */
-.gd-scene .sc-neon { animation: scNeon 3s steps(1) infinite; }
-.gd-cm .cm-flap { transform-box: fill-box; transform-origin: 50% 50%; animation: cmFlap 4s ease-in-out infinite; }
-.gd-cm .cm-stamp { animation: cmStamp 2.8s cubic-bezier(.5, 0, .5, 1) infinite; }
-.gd-cm .cm-inkmark { animation: cmInk 2.8s steps(1) infinite; }
-.gd-cm .cm-print { animation: cmPrint 4.5s ease-out infinite; }
-.gd-cm .cm-shine { animation: cmShine 3.4s ease-in-out infinite; }
-.gd-cm .cm-birds { animation: cmBirds 7s linear infinite; }
-@keyframes scNeon { 0%, 100% { opacity: 1; } 8% { opacity: .3; } 10% { opacity: 1; } 12% { opacity: .4; } 14% { opacity: 1; } }
-@keyframes cmFlap { 0%, 18%, 100% { transform: scaleY(1); } 6% { transform: scaleY(.1); } 12% { transform: scaleY(1); } }
-@keyframes cmStamp { 0%, 100% { transform: translateY(0); } 35% { transform: translateY(0); } 50% { transform: translateY(62px); } 60% { transform: translateY(56px); } 75% { transform: translateY(0); } }
-@keyframes cmInk { 0%, 49% { opacity: 0; } 50%, 100% { opacity: 1; } }
-@keyframes cmPrint { 0% { transform: translateY(-90px); } 70%, 100% { transform: translateY(0); } }
-@keyframes cmShine { 0%, 40% { transform: skewX(-20deg) translateX(0); } 80%, 100% { transform: skewX(-20deg) translateX(260px); } }
-@keyframes cmBirds { from { transform: translateX(-40px); } to { transform: translateX(120px); } }
-@media (prefers-reduced-motion: reduce) { .gd-cm *, .gd-cover-bg *, .gd-scene * { animation: none !important; } .gd-cm .cm-inkmark { opacity: 1; } }
-.gd-cover[data-layout="ticket"] .gd-cover-art { overflow: visible; }
-.gd-cover[data-layout="ticket"] .gd-cover-art::after { content: ""; position: absolute; z-index: 4; left: -12px; bottom: -11px; width: 20px; height: 20px; border-radius: 50%; background: var(--bg, #f3f4f6); border: 2px solid #3a2a12; }
-.gd-cover[data-layout="ticket"] .gd-cover-art .gd-scene { position: absolute; inset: 0; width: 100%; height: 100%; }
-
-/* ===== ปกแบบสมุดจด (coverLayout: "notebook"): กระดาษเส้นบรรทัด เส้นขอบแดง รูสันห่วง ภาพมีคลิปหนีบ ===== */
-.gd-cover[data-layout="notebook"] small { font-size: 11px; }
-.gd-cover[data-layout="notebook"] { gap: 10px; background: repeating-linear-gradient(180deg, #fffdf6 0 25px, #cfe0f5 25px 26px); padding-left: 44px; border-color: #e2d6bd; }
-.gd-cover[data-layout="notebook"]::after { content: ""; position: absolute; left: 34px; top: 0; bottom: 0; width: 2px; background: #f09a9a; }
-.gd-cover[data-layout="notebook"] .gd-cover-t::before { content: ""; position: absolute; left: -36px; top: -8px; bottom: -8px; width: 14px; background: radial-gradient(circle at 7px 14px, #f3f4f6 5px, #8a96a8 5.5px, #8a96a8 6.5px, transparent 7px) 0 0 / 14px 28px repeat-y; }
-.gd-cover[data-layout="notebook"] .gd-cover-art { order: 2; flex-basis: 118px; height: 138px; transform: rotate(3deg); border: 3px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,.18); overflow: visible; }
-.gd-cover[data-layout="notebook"] .gd-cover-art .gd-scene { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 9px; }
-.gd-cover[data-layout="notebook"] .gd-cover-art::before { content: ""; position: absolute; z-index: 3; top: -12px; right: 18px; width: 14px; height: 34px; border: 3px solid #9aa6b8; border-radius: 8px; }
-/* ของขยับชุดใหม่ (สัญญาจ้าง) */
-.gd-scene .sc-chalk path { stroke-dasharray: 100; animation: scChalk 5s ease-in-out infinite; }
-.gd-scene .sc-chalk2 * { stroke-dasharray: 100; animation: scChalk 5s ease-in-out infinite .8s; }
-.gd-cm .cm-level { transform-box: view-box; transform-origin: 180px 128px; animation: cmLevel 4s ease-in-out infinite; }
-.gd-cm .cm-gate { transform-box: view-box; transform-origin: 60px 115px; animation: cmGate 4s ease-in-out infinite; }
-.gd-cm .cm-deflate { animation: cmDeflate 4.4s ease-in-out infinite; }
-.gd-cm .cm-puff { animation: cmPuff 4.4s ease-in-out infinite; }
-.gd-cm .cm-shackle { animation: cmShackle 3.6s ease-in-out infinite; }
-.gd-cm .cm-flutter { transform-box: fill-box; transform-origin: 50% 0; animation: cmFlutter 3s ease-in-out infinite; }
-@keyframes scChalk { 0% { stroke-dashoffset: 100; } 45%, 85% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 0; opacity: .9; } }
-@keyframes cmLevel { 0%, 20% { transform: rotate(-10deg); } 60%, 90% { transform: rotate(0); } 100% { transform: rotate(-10deg); } }
-@keyframes cmGate { 0%, 15% { transform: rotate(0); } 50%, 85% { transform: rotate(-38deg); } 100% { transform: rotate(0); } }
-@keyframes cmDeflate { 0%, 20% { transform: scale(1.08); } 65%, 90% { transform: scale(.72); } 100% { transform: scale(1.08); } }
-@keyframes cmPuff { 0%, 30% { opacity: 0; } 50% { opacity: 1; } 75%, 100% { opacity: 0; } }
-@keyframes cmShackle { 0%, 30% { transform: translateY(0); } 55%, 85% { transform: translateY(-10px) rotate(0); } 100% { transform: translateY(0); } }
-@keyframes cmFlutter { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2.5deg) translateY(1px); } }
-@media (prefers-reduced-motion: reduce) { .gd-cm *, .gd-cover-bg *, .gd-scene * { animation: none !important; } }
-
-/* หยดน้ำรั่วจากข้อต่อท่อใต้อ่าง หยดลงพื้นสั้น ๆ */
-.gd-cm .cm-drip2 { animation: cmDrip2 1.6s ease-in infinite; }
-@keyframes cmDrip2 { 0%, 30% { transform: translateY(0); opacity: 1; } 85% { transform: translateY(7px); opacity: 1; } 100% { transform: translateY(8px); opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .gd-cm .cm-drip2 { animation: none; } }
-
-/* ===== ปกแบบหน้าต่างโค้ง (coverLayout: "arch"): ภาพในกรอบโค้งด้านบนแบบซุ้มประตู ===== */
-.gd-cover[data-layout="arch"] .gd-cover-art { flex-basis: 124px; height: 156px; border-radius: 62px 62px 12px 12px; border: 4px solid #fff; box-shadow: 0 0 0 2px #a8d8bf, 0 8px 16px rgba(30, 90, 60, .18); }
-.gd-cover[data-layout="arch"] { gap: 14px; }
-/* ของขยับชุดใหม่ (กองทุนสำรองฯ) */
-.gd-scene .sc-leaf { transform-box: fill-box; transform-origin: 50% 100%; animation: scLeaf 3.8s ease-in-out infinite; }
-.gd-scene .sc-twinkle circle { animation: scTwinkle 2.4s ease-in-out infinite; }
-.gd-scene .sc-twinkle circle:nth-child(2) { animation-delay: .6s; } .gd-scene .sc-twinkle circle:nth-child(3) { animation-delay: 1.2s; } .gd-scene .sc-twinkle circle:nth-child(4) { animation-delay: 1.8s; }
-.gd-cm .cm-pour { animation: cmPour 1.2s ease-in infinite; }
-.gd-cm .cm-growup { transform-box: fill-box; transform-origin: 50% 100%; animation: cmGrowUp 6s ease-out infinite; }
-.gd-cm .cm-ring { transform-box: fill-box; transform-origin: 50% 50%; animation: cmRingOut 2s ease-out infinite; }
-.gd-cm .cm-scan { animation: cmScan 3.2s ease-in-out infinite; }
-.gd-cm .cm-tug { animation: cmTug 1.4s ease-in-out infinite; }
-@keyframes scLeaf { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg) scale(1.02); } }
-@keyframes scTwinkle { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.35); } }
-@keyframes cmPour { 0% { transform: translate(0, 0); opacity: 0; } 15% { opacity: 1; } 100% { transform: translate(6px, 34px); opacity: 0; } }
-@keyframes cmGrowUp { 0% { transform: scale(.2); opacity: .4; } 25%, 100% { transform: scale(1); opacity: 1; } }
-@keyframes cmRingOut { 0% { transform: scale(1); opacity: .9; } 100% { transform: scale(2.2); opacity: 0; } }
-@keyframes cmScan { 0%, 100% { transform: translate(0, 0); } 33% { transform: translate(44px, -8px); } 66% { transform: translate(60px, 10px); } }
-@keyframes cmTug { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-8px); } }
-@media (prefers-reduced-motion: reduce) { .gd-cm *, .gd-cover-bg *, .gd-scene * { animation: none !important; } }
-
-/* ===== ปกแบบหน้าจอมือถือ (coverLayout: "phone"): ภาพอยู่ในกรอบโทรศัพท์เอียงนิด ๆ มีติ่งกล้อง ===== */
-.gd-cover[data-layout="phone"] .gd-cover-art { flex-basis: 112px; height: 168px; border-radius: 22px; border: 6px solid #232846; box-shadow: 0 10px 18px rgba(40, 30, 90, .22); transform: rotate(-5deg); }
-.gd-cover[data-layout="phone"] .gd-cover-art::after { content: ""; position: absolute; top: 4px; left: 50%; width: 34px; height: 8px; margin-left: -17px; border-radius: 6px; background: #232846; z-index: 3; }
-.gd-cover[data-layout="phone"] { gap: 16px; }
-/* ของขยับชุดใหม่ (จ้างเด็ก) */
-.gd-scene .sc-steam path { animation: scSteam 2.6s ease-in-out infinite; }
-.gd-scene .sc-steam path:nth-child(2) { animation-delay: .9s; }
-.gd-scene .sc-swing2 { transform-box: fill-box; transform-origin: 50% 0; animation: scSwing2 2.4s ease-in-out infinite; }
-.gd-cm .cm-step { animation: cmStep 3s ease-out infinite; opacity: 0; }
-.gd-cm .cm-twk { animation: cmTwk 2.2s ease-in-out infinite; }
-.gd-cm .cm-hand24 { transform-box: fill-box; transform-origin: 50% 50%; animation: cmHand24 8s linear infinite; }
-.gd-cm .cm-strike circle, .gd-cm .cm-strike path { animation: cmStrike 4s ease-out infinite; animation-delay: inherit; }
-.gd-cm .cm-send { animation: cmSend 3.4s ease-in-out infinite; }
-.gd-cm .cm-sign { animation: cmSign 3.6s ease-out infinite; }
-.gd-cm .cm-pen { animation: cmPen 3.6s ease-out infinite; }
-@keyframes scSteam { 0% { transform: translateY(4px); opacity: 0; } 30% { opacity: .9; } 100% { transform: translateY(-8px); opacity: 0; } }
-@keyframes scSwing2 { 0%, 100% { transform: rotate(-7deg); } 50% { transform: rotate(7deg); } }
-@keyframes cmStep { 0% { opacity: 0; transform: scale(.6); } 12%, 70% { opacity: 1; transform: scale(1); } 100% { opacity: 0; } }
-@keyframes cmTwk { 0%, 100% { opacity: .3; } 50% { opacity: 1; } }
-@keyframes cmHand24 { to { transform: rotate(360deg); } }
-@keyframes cmStrike { 0% { stroke-dashoffset: 100; } 25%, 85% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 0; opacity: 0; } }
-@keyframes cmSend { 0%, 10% { transform: translateX(0); opacity: 0; } 20% { opacity: 1; } 80% { transform: translateX(-140px); opacity: 1; } 100% { transform: translateX(-150px); opacity: 0; } }
-@keyframes cmSign { 0%, 10% { stroke-dashoffset: 100; } 70%, 100% { stroke-dashoffset: 0; } }
-@keyframes cmPen { 0%, 10% { transform: translate(-70px, 14px); } 70% { transform: translate(0, 14px); } 100% { transform: translate(0, 14px); } }
-@media (prefers-reduced-motion: reduce) { .gd-cm .cm-step { opacity: 1; } .gd-cm .cm-strike circle, .gd-cm .cm-strike path, .gd-cm .cm-sign { stroke-dashoffset: 0; } }
-
-/* ===== ปกแบบแสตมป์ไปรษณีย์ (coverLayout: "postage"): ขอบหยักรูพรุน พื้นขาว เอียงนิด ๆ ===== */
-.gd-cover[data-layout="postage"] .gd-cover-art { flex-basis: 128px; height: 156px; border: 0; border-radius: 0; padding: 8px; background: #fff; transform: rotate(3deg); filter: drop-shadow(0 6px 8px rgba(90, 60, 20, .2));
-  -webkit-mask: linear-gradient(#000 0 0) content-box, radial-gradient(circle at 5px 5px, transparent 3.6px, #000 4px) -5px -5px / 10px 10px; mask: linear-gradient(#000 0 0) content-box, radial-gradient(circle at 5px 5px, transparent 3.6px, #000 4px) -5px -5px / 10px 10px; }
-.gd-cover[data-layout="postage"] .gd-cover-art .gd-scene { inset: 8px; width: calc(100% - 16px); height: calc(100% - 16px); }
-.gd-cover[data-layout="postage"] { gap: 16px; }
-/* ของขยับชุดใหม่ (ต่างด้าว) */
-.gd-scene .sc-drift { animation: scDrift 9s linear infinite; }
-.gd-scene .sc-shimmer path { animation: scShimmer 2s ease-in-out infinite; }
-.gd-scene .sc-shimmer path:nth-child(2) { animation-delay: .5s; } .gd-scene .sc-shimmer path:nth-child(3) { animation-delay: 1s; } .gd-scene .sc-shimmer path:nth-child(4) { animation-delay: 1.5s; }
-.gd-cm .cm-holo { animation: cmHolo 3.2s ease-in-out infinite; }
-.gd-cm .cm-post { animation: cmPost 3.2s ease-in infinite; }
-.gd-cm .cm-flag { transform-box: fill-box; transform-origin: 0 100%; animation: cmFlag 3.2s ease-in-out infinite; }
-.gd-cm .cm-rays2 { transform-box: view-box; transform-origin: 180px 120px; animation: cmRays2 3s ease-in-out infinite; }
-.gd-cm .cm-lift { animation: cmLift 3s ease-in-out infinite; }
-.gd-cm .cm-drawer { animation: cmDrawer 3.6s ease-in-out infinite; }
-.gd-cm .cm-hop { animation: cmHop 3.6s ease-in-out infinite; }
-@keyframes scDrift { 0% { transform: translateX(-40px); } 100% { transform: translateX(120px); } }
-@keyframes scShimmer { 0%, 100% { opacity: .2; } 50% { opacity: .9; } }
-@keyframes cmHolo { 0% { transform: skewX(-20deg) translateX(0); } 60%, 100% { transform: skewX(-20deg) translateX(300px); } }
-@keyframes cmPost { 0% { transform: translate(0, -30px); opacity: 0; } 20% { opacity: 1; } 60% { transform: translate(0, 0); opacity: 1; } 100% { transform: translate(0, 0); opacity: 1; } }
-@keyframes cmFlag { 0%, 55% { transform: rotate(90deg); } 70%, 100% { transform: rotate(0); } }
-@keyframes cmRays2 { 0%, 100% { opacity: .35; } 50% { opacity: .7; } }
-@keyframes cmLift { 0%, 20% { transform: translate(0, 0); } 50%, 75% { transform: translate(14px, -26px); } 100% { transform: translate(0, 0); } }
-@keyframes cmDrawer { 0%, 15% { transform: translateX(0); } 40%, 85% { transform: translateX(30px); } 100% { transform: translateX(0); } }
-@keyframes cmHop { 0%, 30% { transform: translate(30px, 30px); opacity: 0; } 50% { transform: translate(60px, -10px); opacity: 1; } 65%, 85% { transform: translate(96px, -4px); opacity: 1; } 100% { transform: translate(96px, -4px); opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .gd-cm .cm-hop { opacity: 1; transform: translate(96px, -4px); } }
-
-/* ===== ปกแบบกระดาษฉีก (coverLayout: "torn"): ขอบบน-ล่างหยักเหมือนฉีกจากโปสเตอร์ ===== */
-.gd-cover[data-layout="torn"] .gd-cover-art { flex-basis: 132px; height: 160px; border: 0; border-radius: 0; transform: rotate(-2deg);
-  clip-path: polygon(0 4%, 8% 0, 17% 3%, 26% 0, 36% 4%, 46% 1%, 56% 4%, 66% 0, 76% 3%, 86% 0, 94% 4%, 100% 1%, 100% 97%, 92% 100%, 83% 96%, 73% 100%, 63% 96%, 53% 99%, 43% 95%, 33% 100%, 23% 96%, 13% 100%, 5% 96%, 0 99%); }
-.gd-cover[data-layout="torn"] { gap: 16px; }
-/* ของขยับชุดใหม่ (สหภาพ) */
-.gd-scene .sc-smoke circle { animation: scSmoke 3.6s ease-out infinite; }
-.gd-scene .sc-smoke circle:nth-child(2) { animation-delay: 1.2s; } .gd-scene .sc-smoke circle:nth-child(3) { animation-delay: 2.4s; }
-.gd-scene .sc-gear { transform-box: fill-box; transform-origin: 50% 50%; animation: scGear 6s linear infinite; }
-.gd-scene .sc-bunting path { transform-box: fill-box; transform-origin: 50% 0; animation: scBunt 1.8s ease-in-out infinite; }
-.gd-scene .sc-bunting path:nth-child(even) { animation-delay: .5s; }
-.gd-cm .cm-popin { transform-box: fill-box; transform-origin: 50% 100%; animation: cmPopin 4.5s ease-out infinite; }
-.gd-cm .cm-pend { transform-box: fill-box; transform-origin: 50% 0; animation: cmPend 2.6s ease-in-out infinite; }
-.gd-cm .cm-travel { animation: cmTravel 5s ease-in-out infinite; }
-.gd-cm .cm-sound { animation: cmSound 1.4s ease-out infinite; }
-.gd-cm .cm-deflect { animation: cmDeflect 2.2s ease-in infinite; }
-@keyframes scSmoke { 0% { transform: translate(0, 8px) scale(.5); opacity: 0; } 30% { opacity: .9; } 100% { transform: translate(8px, -10px) scale(1.2); opacity: 0; } }
-@keyframes scGear { to { transform: rotate(360deg); } }
-@keyframes scBunt { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
-@keyframes cmPopin { 0% { transform: scale(0); opacity: 0; } 12%, 85% { transform: scale(1); opacity: 1; } 100% { transform: scale(1); opacity: 0; } }
-@keyframes cmPend { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
-@keyframes cmTravel { 0%, 8% { transform: translateX(0); } 25%, 33% { transform: translateX(74px); } 50%, 58% { transform: translateX(148px); } 75%, 92% { transform: translateX(222px); } 100% { transform: translateX(0); } }
-@keyframes cmSound { 0% { opacity: 0; transform: translateX(-6px); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateX(6px); } }
-@keyframes cmDeflect { 0% { transform: translate(0, 0) rotate(0); opacity: 0; } 10% { opacity: 1; } 45% { transform: translate(86px, 0) rotate(0); opacity: 1; } 100% { transform: translate(30px, -70px) rotate(-40deg); opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .gd-cm .cm-deflect { opacity: 1; } }
-
-/* ===== ปกแบบฟิล์มภาพยนตร์ (coverLayout: "film"): แถบฟิล์มดำมีรูหนามเตยซ้าย-ขวา ===== */
-.gd-cover[data-layout="film"] .gd-cover-art { flex-basis: 136px; height: 158px; border: 0; border-radius: 6px; padding: 0 16px; background:
-  radial-gradient(circle, #fff 0 2.6px, transparent 3px) 4px 4px / 8px 14px repeat-y, radial-gradient(circle, #fff 0 2.6px, transparent 3px) calc(100% - 4px) 4px / 8px 14px repeat-y, #1f2233; box-shadow: 0 8px 16px rgba(20, 30, 60, .25); }
-.gd-cover[data-layout="film"] .gd-cover-art .gd-scene { left: 16px; right: auto; width: calc(100% - 32px); }
-.gd-cover[data-layout="film"] { gap: 16px; }
-/* ของขยับชุดใหม่ (เลิกจ้างไม่เป็นธรรม) */
-.gd-scene .sc-sunpulse { transform-box: fill-box; transform-origin: 50% 50%; animation: scSunpulse 4s ease-in-out infinite; }
-.gd-scene .sc-birds { animation: scBirds 7s linear infinite; }
-.gd-scene .sc-glint { animation: scGlint 2.4s ease-in-out infinite; }
-.gd-cm .cm-jiggle { transform-box: fill-box; transform-origin: 50% 50%; animation: cmJiggle 2.8s ease-in-out infinite; }
-.gd-cm .cm-unfold { transform-box: fill-box; transform-origin: 50% 50%; animation: cmUnfold 4s ease-out infinite; }
-.gd-cm .cm-blink { animation: cmBlink 1s steps(2) infinite; }
-.gd-cm .cm-swingdoor { transform-box: fill-box; transform-origin: 0 50%; animation: cmSwingDoor 3.6s ease-in-out infinite; }
-.gd-cm .cm-beam { animation: cmBeam 3.6s ease-in-out infinite; }
-.gd-cm .cm-bob { animation: cmBob2 2.4s ease-in-out infinite; }
-.gd-cm .cm-tagswing { transform-box: fill-box; transform-origin: 50% 0; animation: cmTagSwing 2.2s ease-in-out infinite; }
-.gd-cm .cm-tick { animation: cmTick 4s ease-out infinite; }
-@keyframes scSunpulse { 0%, 100% { transform: scale(.9); opacity: .8; } 50% { transform: scale(1.08); opacity: 1; } }
-@keyframes scBirds { 0% { transform: translateX(-30px); } 100% { transform: translateX(130px); } }
-@keyframes scGlint { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.5) drop-shadow(0 0 2px #fff6b0); } }
-@keyframes cmJiggle { 0%, 100% { transform: translate(0, 0) rotate(0); } 30% { transform: translate(-60px, 4px) rotate(-6deg); } 40% { transform: translate(-56px, 0) rotate(6deg); } 50% { transform: translate(-60px, 4px) rotate(-6deg); } 70% { transform: translate(0, 0) rotate(0); } }
-@keyframes cmUnfold { 0% { transform: scaleY(.1); opacity: 0; } 20%, 100% { transform: scaleY(1); opacity: 1; } }
-@keyframes cmBlink { 50% { opacity: 0; } }
-@keyframes cmSwingDoor { 0%, 15% { transform: scaleX(1); } 45%, 85% { transform: scaleX(.35) skewY(8deg); } 100% { transform: scaleX(1); } }
-@keyframes cmBeam { 0%, 15% { opacity: 0; } 45%, 85% { opacity: 1; } 100% { opacity: 0; } }
-@keyframes cmBob2 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-@keyframes cmTagSwing { 0%, 100% { transform: rotate(-10deg); } 50% { transform: rotate(10deg); } }
-@keyframes cmTick { 0%, 5% { stroke-dashoffset: 100; } 20%, 100% { stroke-dashoffset: 0; } }
-@media (prefers-reduced-motion: reduce) { .gd-cm .cm-tick { stroke-dashoffset: 0; } }
-
-/* เลิกจ้างไม่เป็นธรรม v2: ตราประทับกระแทก + ลูกบาศก์สว่างทีละก้อน */
-.gd-cm .cm-stampin { transform-box: fill-box; transform-origin: 50% 50%; animation: cmStampIn 3.2s ease-out infinite; }
-.gd-cm .cm-light { animation: cmLight 4s ease-out infinite; }
-@keyframes cmStampIn { 0%, 10% { transform: scale(2.2); opacity: 0; } 22% { transform: scale(.92); opacity: 1; } 28%, 90% { transform: scale(1); opacity: 1; } 100% { opacity: 0; } }
-@keyframes cmLight { 0%, 5% { fill: #dbe9f8; } 20%, 100% { fill: #6fd39a; } }
-@media (prefers-reduced-motion: reduce) { .gd-cm .cm-light { fill: #6fd39a; } }
-.gd-scene .sc-rays2 { transform-box: view-box; transform-origin: 68px 54px; animation: scRays2 6s ease-in-out infinite; }
-@keyframes scRays2 { 0%, 100% { opacity: .35; transform: rotate(-3deg); } 50% { opacity: .75; transform: rotate(3deg); } }
-
-/* ===== หน้ารวม "เรียนรู้" บนคอม (กว้าง ≥ 1024px): แถบข้างค้าง + ตารางการ์ด 3 คอลัมน์ · มือถือเหมือนเดิม ===== */
-.gd-side, .gd-lc-amb { display: none; }
-.gd-lc-frame { position: absolute; inset: 0; }
-.gd-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.gd-lc[hidden], .gd-sec[hidden] { display: none !important; }
-@media (min-width: 1024px) {
-  .gd-main.is-list { max-width: 1240px; }
-  .gd-main.is-list > .gd-chips { display: none; }
-  .gd-lay { display: grid; grid-template-columns: 228px minmax(0, 1fr); gap: 28px; align-items: start; }
-  .gd-side { display: flex; flex-direction: column; gap: 4px; position: sticky; top: 76px; background: #fff; border: 1px solid #E6EAF0; border-radius: 16px; padding: 14px; box-shadow: 0 4px 14px rgba(14, 26, 43, .05); }
-  .gd-search input { width: 100%; box-sizing: border-box; font: inherit; font-size: 14px; border: 1.5px solid #DCE1E8; border-radius: 10px; padding: 8px 10px 8px 34px; background: #F7F8FA url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2378859a' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='7' cy='7' r='5'/%3E%3Cpath d='M11 11l4 4'/%3E%3C/svg%3E") 11px 50% no-repeat; }
-  .gd-search input:focus { outline: none; border-color: #E8791A; background-color: #fff; box-shadow: 0 0 0 3px rgba(232, 121, 26, .15); }
-  .gd-side-h { margin: 12px 0 4px; font-size: 12.5px; color: var(--ink-3); }
-  .gd-side-c { display: flex; justify-content: space-between; align-items: center; gap: 8px; width: 100%; font: inherit; font-size: 14px; text-align: left; color: var(--ink-2); background: none; border: 0; border-radius: 10px; padding: 8px 10px; cursor: pointer; }
-  .gd-side-c b { font-weight: 600; font-size: 12.5px; color: var(--ink-3); background: #F1F3F6; border-radius: 999px; padding: 0 8px; min-width: 22px; text-align: center; }
-  .gd-side-c:hover { background: #F5F7FA; }
-  .gd-side-c.on { background: #FFF1E3; color: #9A4A06; font-weight: 600; }
-  .gd-side-c.on b { background: #E8791A; color: #fff; }
-  .gd-side-c:focus-visible { outline: 3px solid #1d4f91; outline-offset: 1px; }
-  .gd-lmain .gd-sec h2 { font-size: 22px; }
-  .gd-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
-  .gd-grid .gd-lc { flex-direction: column; margin: 0; min-height: 0; background: #fff; color: var(--ink); border: 1px solid #E6EAF0; box-shadow: 0 4px 14px rgba(14, 26, 43, .06); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
-  .gd-grid .gd-lc:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(14, 26, 43, .14); border-color: #F3C79A; }
-  .gd-grid .gd-lc-img { flex: none; height: 176px; }
-  .gd-lc-amb { display: block; position: absolute; inset: -18px; filter: blur(16px) saturate(1.15); opacity: .85; transform: scale(1.1); }
-  .gd-lc-amb * { animation: none !important; }
-  .gd-grid .gd-lc-frame { left: 50%; right: auto; width: 150px; transform: translateX(-50%); border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 3px rgba(255, 255, 255, .55); }
-  .gd-grid .gd-lc-body { padding: 14px 16px 16px; }
-  .gd-grid .gd-lc-tag { color: #9A4A06; }
-  .gd-grid .gd-lc h3 { font-size: 17px; color: #16263D; }
-  .gd-grid .gd-lc p { color: var(--ink-2); font-size: 13.5px; }
-  .gd-grid .gd-lc mark { background: #FFF0B8; color: #5a3a00; }
-  .gd-grid .gd-lc-go { color: #E8791A; }
-}
-@media (min-width: 1024px) and (max-width: 1180px) { .gd-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-/* จอกว้าง ≥ 1280px: แถวละ 4 ใบ */
-@media (min-width: 1280px) {
-  .gd-main.is-list { max-width: 1360px; }
-  .gd-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
-  .gd-grid .gd-lc-img { height: 164px; }
-  .gd-grid .gd-lc-frame { width: 140px; }
-  .gd-grid .gd-lc h3 { font-size: 16px; }
-  .gd-grid .gd-lc p { font-size: 13px; }
-}
-@media (prefers-reduced-motion: reduce) { .gd-grid .gd-lc { transition: none; } .gd-grid .gd-lc:hover { transform: none; } }
-
-/* ===== ปกแบบกองการ์ดซ้อน (coverLayout: "stack"): ภาพหลักมีกระดาษซ้อนเยื้องอยู่ด้านหลัง 2 ใบ ===== */
-.gd-cover[data-layout="stack"] .gd-cover-art { flex-basis: 128px; height: 150px; border-radius: 14px; border: 3px solid #fff; transform: rotate(-3deg); margin: 0 14px 14px 0;
-  box-shadow: 7px 7px 0 -1px #fff, 7px 7px 0 1px #e2c49c, 14px 14px 0 -1px #fff, 14px 14px 0 1px #e2c49c, 0 14px 22px rgba(90, 60, 20, .22); }
-.gd-cover[data-layout="stack"] { gap: 12px; }
-/* ของขยับชุดใหม่ (ไม่จ่ายเงินเดือน) */
-.gd-scene .sc-dust { animation: scDust 4s ease-in-out infinite; }
-.gd-scene .sc-moth { animation: scMoth 3.6s ease-in-out infinite; }
-.gd-cm .cm-brush { animation: cmBrush 3.6s ease-out infinite; }
-.gd-cm .cm-burst { transform-box: fill-box; transform-origin: 50% 50%; animation: cmBurst 1.8s ease-in-out infinite; }
-.gd-cm .cm-stackgrow { transform-box: fill-box; transform-origin: 50% 100%; animation: cmStackGrow 3.6s ease-out infinite; }
-.gd-cm .cm-flicker { animation: cmFlicker 3s linear infinite; }
-.gd-cm .cm-fillbar { transform-box: fill-box; transform-origin: 0 50%; animation: cmFillBar 3.4s ease-out infinite; }
-.gd-cm .cm-elev { animation: cmElev 4.2s ease-in-out infinite; }
-.gd-cm .cm-sunglow { transform-box: fill-box; transform-origin: 50% 50%; animation: cmSunGlow 4s ease-in-out infinite; }
-.gd-cm .cm-sandfall { animation: cmSand .8s linear infinite; }
-@keyframes scDust { 0%, 100% { transform: translate(0, 0); opacity: .2; } 50% { transform: translate(4px, -8px); opacity: .9; } }
-@keyframes scMoth { 0% { transform: translate(0, 20px) scaleX(1); } 25% { transform: translate(6px, 8px) scaleX(.4); } 50% { transform: translate(-4px, -2px) scaleX(1); } 75% { transform: translate(4px, -12px) scaleX(.4); } 100% { transform: translate(0, 20px) scaleX(1); } }
-@keyframes cmBrush { 0%, 10% { stroke-dashoffset: 100; } 45%, 100% { stroke-dashoffset: 0; } }
-@keyframes cmBurst { 0%, 100% { transform: scale(1) rotate(0); } 50% { transform: scale(1.08) rotate(4deg); } }
-@keyframes cmStackGrow { 0% { transform: scaleY(.25); } 60%, 100% { transform: scaleY(1); } }
-@keyframes cmFlicker { 0%, 18%, 22%, 60%, 64%, 100% { opacity: 1; } 20%, 62% { opacity: .25; } }
-@keyframes cmFillBar { 0% { transform: scaleX(0); } 60%, 100% { transform: scaleX(1); } }
-@keyframes cmElev { 0%, 10% { transform: translateY(0); } 45%, 60% { transform: translateY(-48px); } 95%, 100% { transform: translateY(0); } }
-@keyframes cmSunGlow { 0%, 100% { transform: scale(.94); } 50% { transform: scale(1.06); } }
-@keyframes cmSand { to { stroke-dashoffset: -5; } }
-@media (prefers-reduced-motion: reduce) { .gd-cm .cm-brush { stroke-dashoffset: 0; } }
-
-/* ===== ปกแบบหน้าต่าง (coverLayout: "pane"): ภาพอยู่หลังกรอบหน้าต่างไม้สีขาว มีเสากากบาท + ขอบหน้าต่าง ===== */
-.gd-cover[data-layout="pane"] .gd-cover-art { flex-basis: 132px; height: 150px; border-radius: 8px; border: 7px solid #fffaf3; box-shadow: 0 0 0 1.5px #d9c6a6, 0 14px 0 -6px #e8d3b0, 0 18px 22px rgba(90, 60, 20, .2); margin-bottom: 12px; }
-.gd-cover[data-layout="pane"] .gd-cover-art::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: linear-gradient(#fffaf3, #fffaf3) 50% 0 / 5px 100% no-repeat, linear-gradient(#fffaf3, #fffaf3) 0 46% / 100% 5px no-repeat; }
-.gd-cover[data-layout="pane"] .gd-cover-art .gd-cover-m { z-index: 3; }
-.gd-cover[data-layout="pane"] { gap: 14px; }
-/* ของขยับชุดใหม่ (เกษียณ) */
-.gd-scene .sc-rock { transform-box: fill-box; transform-origin: 50% 100%; animation: scRock 3.2s ease-in-out infinite; }
-.gd-scene .sc-wave2 path { animation: scWave2 2.4s ease-in-out infinite; }
-.gd-scene .sc-wave2 path:nth-child(2) { animation-delay: .6s; } .gd-scene .sc-wave2 path:nth-child(3) { animation-delay: 1.2s; }
-.gd-scene .sc-gull { animation: scGull 8s linear infinite; }
-.gd-cm .cm-pxhop { animation: cmPxHop 6s steps(1) infinite; }
-.gd-cm .cm-sway2 { transform-box: fill-box; transform-origin: 50% 0; animation: cmSway2 3s ease-in-out infinite; }
-.gd-cm .cm-squish { transform-box: fill-box; transform-origin: 50% 100%; animation: cmSquish 2.4s ease-in-out infinite; }
-.gd-cm .cm-slidein { animation: cmSlideIn 3.6s cubic-bezier(.3, 1.4, .5, 1) infinite; }
-.gd-cm .cm-crane { animation: cmCrane 3.4s ease-in-out infinite; }
-.gd-cm .cm-boat { transform-box: fill-box; transform-origin: 50% 100%; animation: cmBoat 2.6s ease-in-out infinite; }
-.gd-cm .cm-pinpulse { transform-box: fill-box; transform-origin: 50% 50%; animation: cmPinPulse 2s ease-out infinite; }
-@keyframes scRock { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
-@keyframes scWave2 { 0%, 100% { opacity: .3; transform: translateX(0); } 50% { opacity: 1; transform: translateX(3px); } }
-@keyframes scGull { 0% { transform: translate(-30px, 6px); } 50% { transform: translate(50px, -4px); } 100% { transform: translate(130px, 6px); } }
-@keyframes cmPxHop { 0% { transform: translate(0, 0); } 16% { transform: translate(40px, -9px); } 33% { transform: translate(80px, -18px); } 50% { transform: translate(120px, -27px); } 66% { transform: translate(160px, -36px); } 83% { transform: translate(200px, -45px); } }
-@keyframes cmSway2 { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
-@keyframes cmSquish { 0%, 100% { transform: scale(1, 1); } 45% { transform: scale(1.06, .92); } 60% { transform: scale(.97, 1.04); } }
-@keyframes cmSlideIn { 0%, 8% { transform: translate(-170px, 0); opacity: 0; } 20% { opacity: 1; } 45%, 90% { transform: translate(0, 0); opacity: 1; } 100% { opacity: 0; } }
-@keyframes cmCrane { 0%, 100% { transform: translate(0, 0) rotate(0); } 50% { transform: translate(6px, -8px) rotate(-3deg); } }
-@keyframes cmBoat { 0%, 100% { transform: rotate(-4deg) translateY(0); } 50% { transform: rotate(4deg) translateY(-2px); } }
-@keyframes cmPinPulse { 0% { transform: scale(.6); opacity: .6; } 100% { transform: scale(2); opacity: 0; } }
-
-/* ===== ปกแบบรูปถ่ายติดเทป (coverLayout: "tape"): ภาพขอบขาวแบบรูปพิมพ์ มีเทปกระดาษ 2 ชิ้นแปะมุมบน ===== */
-.gd-cover[data-layout="tape"] .gd-cover-art { flex-basis: 128px; height: 150px; overflow: visible; border: 6px solid #fffdf7; border-radius: 3px; transform: rotate(2deg); box-shadow: 0 10px 18px rgba(60, 40, 10, .22); margin-top: 8px; }
-.gd-cover[data-layout="tape"] .gd-cover-art::before, .gd-cover[data-layout="tape"] .gd-cover-art::after { content: ""; position: absolute; top: -14px; width: 54px; height: 20px; z-index: 4; background: repeating-linear-gradient(90deg, rgba(255, 216, 77, .82) 0 6px, rgba(255, 226, 120, .82) 6px 12px); box-shadow: 0 1px 2px rgba(0, 0, 0, .12); }
-.gd-cover[data-layout="tape"] .gd-cover-art::before { left: -16px; transform: rotate(-32deg); }
-.gd-cover[data-layout="tape"] .gd-cover-art::after { right: -16px; transform: rotate(30deg); background: repeating-linear-gradient(90deg, rgba(126, 200, 255, .8) 0 6px, rgba(160, 214, 255, .8) 6px 12px); }
-.gd-cover[data-layout="tape"] { gap: 16px; }
-/* ของขยับชุดใหม่ (ย้ายสาขา/ลดตำแหน่ง) */
-.gd-scene .sc-road { animation: scRoad 1s linear infinite; }
-.gd-scene .sc-truck { animation: scTruck .5s ease-in-out infinite; }
-.gd-cm .cm-train { animation: cmTrain 4.4s ease-in-out infinite; }
-.gd-cm .cm-token { animation: cmToken 6s ease-in-out infinite; }
-.gd-cm .cm-dice { transform-box: fill-box; transform-origin: 50% 50%; animation: cmDice 2.4s ease-in-out infinite; }
-.gd-cm .cm-pencil { animation: cmPencil 2.2s ease-in-out infinite; }
-.gd-cm .cm-glass { animation: cmGlass 3.6s ease-in-out infinite; }
-.gd-cm .cm-peel { transform-box: fill-box; transform-origin: 0 100%; animation: cmPeel 3s ease-in-out infinite; }
-@keyframes scRoad { to { stroke-dashoffset: 22; } }
-@keyframes scTruck { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-1.2px); } }
-@keyframes cmTrain { 0%, 8% { transform: translateX(0); } 70%, 100% { transform: translateX(178px); } }
-@keyframes cmToken { 0%, 6% { transform: translate(0, 0); } 12% { transform: translate(20px, -12px); } 16%, 22% { transform: translate(40px, 0); } 28% { transform: translate(60px, -12px); } 32%, 38% { transform: translate(80px, 0); } 44% { transform: translate(100px, -12px); } 48%, 54% { transform: translate(120px, 0); } 60% { transform: translate(140px, -12px); } 64%, 70% { transform: translate(160px, 0); } 76% { transform: translate(180px, -12px); } 80%, 100% { transform: translate(200px, 0); } }
-@keyframes cmDice { 0%, 60%, 100% { transform: rotate(0); } 20% { transform: rotate(200deg) translateY(-6px); } 40% { transform: rotate(360deg); } }
-@keyframes cmPencil { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(-8px, -3px); } 50% { transform: translate(-16px, 1px); } 75% { transform: translate(-8px, 3px); } }
-@keyframes cmGlass { 0%, 15% { transform: skewX(-18deg) translateX(0); } 70%, 100% { transform: skewX(-18deg) translateX(330px); } }
-@keyframes cmPeel { 0%, 55%, 100% { transform: rotate(0) scale(1); } 70% { transform: rotate(-10deg) scale(1.04); } 85% { transform: rotate(-4deg) scale(1.02); } }
-
-/* ===== ปกแบบหกเหลี่ยม (coverLayout: "hex"): ภาพตัดเป็นหกเหลี่ยมยอดแหลม น้องม้วนอยู่กลางล่าง ===== */
-.gd-cover[data-layout="hex"] .gd-cover-art { flex-basis: 136px; height: 156px; border: 0; border-radius: 0; clip-path: polygon(50% 0, 100% 24%, 100% 76%, 50% 100%, 0 76%, 0 24%); }
-.gd-cover[data-layout="hex"] .gd-cover-art .gd-cover-m { left: 50%; margin-left: -33px; bottom: 10px; }
-.gd-cover[data-layout="hex"] { gap: 14px; }
-/* ของขยับชุดใหม่ (ล่วงละเมิด) — นุ่มนวล ไม่เร่งเร้า */
-.gd-scene .sc-bokeh { animation: scBokeh 6s ease-in-out infinite; }
-.gd-cm .cm-draw2 { animation: cmDraw2 5s ease-out infinite; }
-.gd-cm .cm-hilite { transform-box: fill-box; transform-origin: 0 50%; animation: cmHilite 4.5s ease-out infinite; }
-.gd-cm .cm-callring { transform-box: fill-box; transform-origin: 50% 50%; animation: cmCallRing 1.4s ease-out infinite; }
-.gd-cm .cm-tilepop { transform-box: fill-box; transform-origin: 50% 50%; animation: cmTilePop 4s ease-out infinite; }
-@keyframes scBokeh { 0%, 100% { transform: translate(0, 0); opacity: .35; } 50% { transform: translate(4px, -6px); opacity: .8; } }
-@keyframes cmDraw2 { 0% { stroke-dashoffset: 100; } 40%, 100% { stroke-dashoffset: 0; } }
-@keyframes cmHilite { 0%, 5% { transform: scaleX(0); } 25%, 100% { transform: scaleX(1); } }
-@keyframes cmCallRing { 0% { transform: scale(1); opacity: .9; } 100% { transform: scale(2.4); opacity: 0; } }
-@keyframes cmTilePop { 0% { transform: scale(0); } 18%, 100% { transform: scale(1); } }
-@media (prefers-reduced-motion: reduce) { .gd-cm .cm-draw2 { stroke-dashoffset: 0; } }
-
-/* ===== ปกแบบแฟ้มเอกสาร (coverLayout: "folder"): ภาพอยู่ในแฟ้มสีน้ำตาลอ่อนมีหูแฟ้มด้านบน ===== */
-.gd-cover[data-layout="folder"] .gd-cover-art { flex-basis: 136px; height: 150px; border: 6px solid #e8c98f; border-top-width: 6px; border-radius: 4px 10px 10px 10px; margin-top: 14px; overflow: visible; box-shadow: 0 10px 18px rgba(90, 60, 20, .2); }
-.gd-cover[data-layout="folder"] .gd-cover-art::before { content: "งานฟรีแลนซ์"; position: absolute; left: -6px; top: -22px; height: 16px; padding: 0 12px; line-height: 16px; font-size: 10px; font-weight: 700; color: #6b4a1a; background: #e8c98f; border-radius: 6px 10px 0 0; z-index: 3; }
-.gd-cover[data-layout="folder"] .gd-cover-art .gd-scene { border-radius: 4px; }
-.gd-cover[data-layout="folder"] { gap: 14px; }
-/* ของขยับชุดใหม่ (ฟรีแลนซ์) */
-.gd-scene .sc-sunburst { transform-box: view-box; transform-origin: 68px 96px; animation: scSunburst 30s linear infinite; }
-.gd-cm .cm-spin2 { transform-box: fill-box; transform-origin: 50% 50%; animation: cmSpin2 4s ease-in-out infinite; }
-.gd-cm .cm-type { animation: cmType 5s steps(1) infinite; }
-.gd-cm .cm-caret { animation: cmBlink 1s steps(2) infinite; }
-.gd-cm .cm-coindrop { animation: cmCoinDrop 3.2s cubic-bezier(.3, 1.5, .6, 1) infinite; }
-.gd-cm .cm-sew { animation: cmSew .9s ease-in-out infinite; }
-.gd-cm .cm-printout { animation: cmPrintout 4.4s ease-out infinite; }
-@keyframes scSunburst { to { transform: rotate(360deg); } }
-@keyframes cmSpin2 { 0%, 100% { transform: rotate(0) scale(1); } 50% { transform: rotate(90deg) scale(1.15); } }
-@keyframes cmType { 0% { opacity: 0; } 4%, 100% { opacity: 1; } }
-@keyframes cmCoinDrop { 0%, 10% { transform: translateY(-60px); opacity: 0; } 30% { opacity: 1; } 50%, 90% { transform: translateY(0); opacity: 1; } 100% { opacity: 0; } }
-@keyframes cmSew { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
-@keyframes cmPrintout { 0% { transform: translateY(-58px); } 60%, 100% { transform: translateY(0); } }
-
-/* ===== ปกแบบริบบิ้นมุม (coverLayout: "ribbon"): แถบริบบิ้นเฉียงพาดมุมขวาบนของภาพ ===== */
-.gd-cover[data-layout="ribbon"] .gd-cover-art { flex-basis: 136px; height: 152px; border-radius: 14px; border: 3px solid #fff; box-shadow: 0 8px 18px rgba(30, 60, 110, .2); }
-.gd-cover[data-layout="ribbon"] .gd-cover-art::after { content: "เหมาค่าแรง"; position: absolute; top: 16px; right: -30px; width: 120px; transform: rotate(40deg); text-align: center; font-size: 10px; font-weight: 800; line-height: 18px; color: #fff; background: #e8791a; box-shadow: 0 2px 4px rgba(0, 0, 0, .2); z-index: 3; }
-.gd-cover[data-layout="ribbon"] { gap: 14px; }
-/* ของขยับชุดใหม่ (เหมาค่าแรง) */
-.gd-scene .sc-crate { animation: scCrate 4s linear infinite; }
-.gd-scene .sc-belt { animation: scBelt .8s linear infinite; }
-.gd-scene .sc-blink { animation: scBlink 1.2s steps(2) infinite; }
-.gd-cm .cm-spot { transform-box: view-box; transform-origin: 270px 0; animation: cmSpot 4s ease-in-out infinite; }
-.gd-cm .cm-toggle { animation: cmToggle 4s ease-out infinite; }
-.gd-cm .cm-knob { animation: cmKnob 4s ease-out infinite; }
-.gd-cm .cm-pass { animation: cmPass 3.6s ease-in-out infinite; }
-.gd-cm .cm-beam2 { transform-box: fill-box; transform-origin: 0 50%; animation: cmBeam2 5s ease-in-out infinite; }
-.gd-cm .cm-redact { animation: cmDraw2 4.4s ease-out infinite; }
-@keyframes scCrate { to { transform: translateX(40px); } }
-@keyframes scBelt { to { transform: translateX(12px); } }
-@keyframes scBlink { 50% { opacity: .2; } }
-@keyframes cmSpot { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
-@keyframes cmToggle { 0%, 10% { opacity: 0; } 30%, 100% { opacity: 1; } }
-@keyframes cmKnob { 0%, 10% { transform: translateX(0); } 30%, 100% { transform: translateX(20px); } }
-@keyframes cmPass { 0%, 10% { transform: translateX(0); opacity: 0; } 20% { opacity: 1; } 80% { transform: translateX(-164px); opacity: 1; } 100% { transform: translateX(-164px); opacity: 0; } }
-@keyframes cmBeam2 { 0%, 100% { transform: rotate(-8deg); } 50% { transform: rotate(10deg); } }
-@media (prefers-reduced-motion: reduce) { .gd-cm .cm-toggle { opacity: 1; } .gd-cm .cm-knob { transform: translateX(20px); } }
-
-/* ===== ปกแบบลูกโป่งคำพูด (coverLayout: "bubble"): ภาพตัดเป็นกรอบคำพูดมีหางชี้ลง ===== */
-.gd-cover[data-layout="bubble"] .gd-cover-art { flex-basis: 140px; height: 156px; border: 0; border-radius: 0; clip-path: path("M20 0H120Q140 0 140 20V114Q140 134 120 134H52L30 156L34 134H20Q0 134 0 114V20Q0 0 20 0Z"); }
-.gd-cover[data-layout="bubble"] .gd-cover-art .gd-cover-m { bottom: 22px; }
-.gd-cover[data-layout="bubble"] { gap: 14px; }
-/* ของขยับชุดใหม่ (ปิดกิจการ) */
-.gd-scene .sc-leaf2 { animation: scLeaf2 5s linear infinite; }
-.gd-cm .cm-cloud { animation: cmCloud 4s ease-in-out infinite; }
-.gd-cm .cm-rainbar { transform-box: fill-box; transform-origin: 0 50%; animation: cmFillBar 3.4s ease-out infinite; }
-.gd-cm .cm-queue { animation: cmQueue 2s ease-in-out infinite; }
-.gd-cm .cm-seg { animation: cmSeg 2s steps(1) infinite; }
-.gd-cm .cm-net { transform-box: fill-box; transform-origin: 50% 0; animation: cmNet 2.4s ease-in-out infinite; }
-.gd-cm .cm-fall { animation: cmFall 2.4s cubic-bezier(.5, 0, .7, 1) infinite; }
-@keyframes scLeaf2 { 0% { transform: translate(0, -10px) rotate(0); opacity: 0; } 10% { opacity: 1; } 100% { transform: translate(-30px, 150px) rotate(240deg); opacity: 0; } }
-@keyframes cmCloud { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(8px); } }
-@keyframes cmQueue { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
-@keyframes cmSeg { 0%, 90% { opacity: 1; } 95% { opacity: .4; } }
-@keyframes cmNet { 0%, 40%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.35); } 65% { transform: scaleY(.9); } }
-@keyframes cmFall { 0% { transform: translateY(-40px); opacity: 0; } 15% { opacity: 1; } 50% { transform: translateY(26px); } 65% { transform: translateY(12px); } 80%, 100% { transform: translateY(22px); opacity: 1; } }
-
-/* ===== ปกแบบซองจดหมาย (coverLayout: "envelope"): ภาพสอดอยู่ในซอง มีฝาซองสามเหลี่ยมด้านหลัง ===== */
-.gd-cover[data-layout="envelope"] .gd-cover-art { flex-basis: 132px; height: 148px; overflow: visible; border: 0; border-radius: 6px; margin-top: 22px; box-shadow: 0 0 0 5px #fff, 0 10px 18px rgba(60, 40, 90, .2); }
-.gd-cover[data-layout="envelope"] .gd-cover-art::before { content: ""; position: absolute; left: -5px; right: -5px; top: -30px; height: 34px; background: #d9cdf0; clip-path: polygon(0 100%, 50% 0, 100% 100%); z-index: -1; }
-.gd-cover[data-layout="envelope"] .gd-cover-art .gd-scene { border-radius: 6px; }
-.gd-cover[data-layout="envelope"] { gap: 16px; }
-/* ของขยับชุดใหม่ (ข้อบังคับ/วินัย) */
-.gd-scene .sc-piece { transform-box: fill-box; transform-origin: 50% 100%; animation: scPiece 3s ease-in-out infinite; }
-.gd-cm .cm-tab { animation: cmTab 4s ease-out infinite; }
-.gd-cm .cm-move { animation: cmMove 5s ease-in-out infinite; }
-.gd-cm .cm-progress { transform-box: fill-box; transform-origin: 0 50%; animation: cmProgress 5s linear infinite; }
-.gd-cm .cm-card { transform-box: fill-box; transform-origin: 50% 100%; animation: cmCard 2.4s ease-out infinite; }
-.gd-cm .cm-magnet { animation: cmDraw2 3.6s ease-out infinite; stroke-dasharray: 80; }
-@keyframes scPiece { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
-@keyframes cmTab { 0% { transform: translateX(-10px); opacity: 0; } 20%, 100% { transform: translateX(0); opacity: 1; } }
-@keyframes cmMove { 0%, 15% { transform: translateX(0); } 40%, 55% { transform: translateX(78px); } 80%, 100% { transform: translateX(156px) translateY(28px); } }
-@keyframes cmProgress { 0% { transform: scaleX(0); } 100% { transform: scaleX(1); } }
-@keyframes cmCard { 0% { transform: translateY(24px) rotate(-14deg); opacity: 0; } 30%, 100% { transform: translateY(0) rotate(4deg); opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .gd-cm .cm-tab, .gd-cm .cm-card { opacity: 1; } }
-
-/* ===== ปกแบบหน้าต่างบ้าน (coverLayout: "window"): กรอบไม้หนา ซี่กลางรูปกากบาท กระบะดอกไม้ใต้หน้าต่าง ===== */
-.gd-cover[data-layout="window"] .gd-cover-art { flex-basis: 132px; height: 140px; overflow: visible; border: 7px solid #9a6440; border-radius: 4px; margin-bottom: 14px; box-shadow: inset 0 0 0 2px #7a4a2c, 0 8px 14px rgba(90, 50, 20, .2); }
-.gd-cover[data-layout="window"] .gd-cover-art .gd-scene { border-radius: 0; }
-.gd-cover[data-layout="window"] .gd-cover-art::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(#9a6440, #9a6440) 50% 0 / 5px 100% no-repeat, linear-gradient(#9a6440, #9a6440) 0 42% / 100% 5px no-repeat; }
-.gd-cover[data-layout="window"] .gd-cover-art::before { content: ""; position: absolute; left: -14px; right: -14px; bottom: -20px; height: 14px; z-index: 3; border-radius: 3px; background: radial-gradient(circle at 12% 0, #ff6b8a 4px, transparent 5px), radial-gradient(circle at 30% 0, #ffd84d 4px, transparent 5px), radial-gradient(circle at 52% 0, #ff6b8a 4px, transparent 5px), radial-gradient(circle at 72% 0, #b28cff 4px, transparent 5px), radial-gradient(circle at 90% 0, #ffd84d 4px, transparent 5px), linear-gradient(#c0593c, #a8452c); }
-.gd-cover[data-layout="window"] { gap: 18px; }
-/* ของขยับชุดใหม่ (WFH) */
-.gd-scene .sc-tail { transform-box: fill-box; transform-origin: 0 100%; animation: scTail 1.8s ease-in-out infinite; }
-.gd-cm .cm-blueline { stroke-dasharray: 40; animation: cmBlueline 4.5s ease-out infinite; }
-.gd-cm .cm-ringfill { animation: cmRingfill 5s ease-in-out infinite; }
-.gd-cm .cm-twinkle { transform-box: fill-box; transform-origin: 50% 50%; animation: cmTwinkle 2.2s ease-in-out infinite; }
-.gd-cm .cm-moon { animation: cmQueue 4s ease-in-out infinite; }
-.gd-cm .cm-wave2 path { animation: cmWave2 1.8s ease-out infinite; }
-.gd-cm .cm-billfly { transform-box: fill-box; transform-origin: 50% 0; animation: cmBillfly 3s ease-in-out infinite; }
-.gd-cm .cm-swipe { animation: cmSwipe 2.6s ease-in-out infinite; }
-@keyframes scTail { 0%, 100% { transform: rotate(-8deg); } 50% { transform: rotate(14deg); } }
-@keyframes cmBlueline { 0% { stroke-dashoffset: 40; } 35%, 100% { stroke-dashoffset: 0; } }
-@keyframes cmRingfill { 0% { stroke-dashoffset: 157; } 60%, 100% { stroke-dashoffset: 30; } }
-@keyframes cmTwinkle { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(.55); opacity: .5; } }
-@keyframes cmWave2 { 0% { opacity: 0; } 40% { opacity: 1; } 100% { opacity: 0; } }
-@keyframes cmBillfly { 0%, 100% { transform: rotate(-6deg) translateY(0); } 50% { transform: rotate(5deg) translateY(-4px); } }
-@keyframes cmSwipe { 0%, 100% { transform: translateX(-3px); } 50% { transform: translateX(3px); } }
-@media (prefers-reduced-motion: reduce) { .gd-cm .cm-blueline { stroke-dashoffset: 0; } .gd-cm .cm-ringfill { stroke-dashoffset: 30; } }
-
-
-/* ===== ปกแบบเหรียญ (coinLayout: "coin"): ภาพในวงกลม ขอบเหรียญหยัก ===== */
-.gd-cover[data-layout="coin"] .gd-cover-art { flex-basis: 136px; height: 136px; overflow: visible; border: 0; border-radius: 50%; margin: 6px; box-shadow: 0 0 0 4px #f4d06f, 0 0 0 7px #b8862b, 0 10px 16px rgba(120, 80, 10, .25); }
-.gd-cover[data-layout="coin"] .gd-cover-art::before { content: ""; position: absolute; inset: -12px; z-index: -1; border-radius: 50%; background: repeating-conic-gradient(#c9962e 0 5deg, #f4d06f 5deg 10deg); }
-.gd-cover[data-layout="coin"] .gd-cover-art .gd-scene { clip-path: circle(50%); }
-.gd-cover[data-layout="coin"] .gd-cover-art .gd-cover-m { left: -14px; bottom: -6px; }
-.gd-cover[data-layout="coin"] { gap: 20px; }
-/* ของขยับชุดใหม่ (ค่าจ้างขั้นต่ำ) */
-.gd-scene .sc-lamp { animation: scLamp 2.1s ease-in-out infinite; }
-.gd-scene .sc-puff { animation: cmQueue 2.4s ease-in-out infinite; }
-.gd-cm .cm-bead { animation: cmBead 4.5s ease-in-out infinite; }
-.gd-cm .cm-gauge { transform-box: fill-box; transform-origin: 50% 100%; animation: cmGauge 4s ease-in-out infinite; }
-.gd-cm .cm-hexglow { animation: cmHexglow 2.2s ease-in-out infinite; }
-.gd-cm .cm-misreg { animation: cmMisreg 3s steps(1) infinite; }
-.gd-cm .cm-pinbob { animation: cmPinbob 1.6s ease-in-out infinite; }
-@keyframes scLamp { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
-@keyframes cmBead { 0%, 15% { transform: translateX(0); } 40%, 70% { transform: translateX(14px); } 90%, 100% { transform: translateX(0); } }
-@keyframes cmGauge { 0%, 100% { transform: rotate(-20deg); } 30% { transform: rotate(48deg); } 60% { transform: rotate(12deg); } }
-@keyframes cmHexglow { 0%, 100% { stroke-width: 2.4; filter: none; } 50% { stroke-width: 3.6; filter: drop-shadow(0 0 4px #ffd84d); } }
-@keyframes cmMisreg { 0%, 100% { transform: translate(0, 0); } 33% { transform: translate(1.5px, -1px); } 66% { transform: translate(-1px, 1px); } }
-@keyframes cmPinbob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
-
-/* ===== ปกแบบกรอบประกาศนียบัตร (coverLayout: "diploma"): กรอบทองสองชั้น ดอกริบบิ้นแดงมุมขวาล่าง ===== */
-.gd-cover[data-layout="diploma"] .gd-cover-art { flex-basis: 128px; height: 148px; overflow: visible; border: 0; border-radius: 2px; margin: 8px; box-shadow: inset 0 0 0 3px #fff6dc, 0 0 0 5px #d9b25a, 0 0 0 7px #8a6a2a, 0 0 0 10px #e9cf8a, 0 10px 18px rgba(90, 60, 10, .3); }
-.gd-cover[data-layout="diploma"] .gd-cover-art .gd-scene { border-radius: 2px; }
-.gd-cover[data-layout="diploma"] .gd-cover-art::after { content: ""; position: absolute; right: -18px; bottom: -18px; width: 36px; height: 36px; z-index: 3; border-radius: 50%; background: radial-gradient(circle, #ffd0c8 0 5px, #c0392b 6px 11px, #e5484d 12px 15px, #8e1a14 16px); box-shadow: 0 3px 4px rgba(0, 0, 0, .25); }
-.gd-cover[data-layout="diploma"] { gap: 22px; }
-/* ของขยับชุดใหม่ (เอกสารตอนออกจากงาน) */
-.gd-scene .sc-paper { transform-box: fill-box; transform-origin: 0 50%; animation: scPaper 3.6s steps(8) infinite; }
-.gd-cm .cm-quill { transform-box: fill-box; transform-origin: 0 100%; animation: cmQuill 2s ease-in-out infinite; }
-.gd-cm .cm-wax { transform-box: fill-box; transform-origin: 50% 50%; animation: cmWax 3s ease-out infinite; }
-.gd-cm .cm-tear { transform-box: fill-box; transform-origin: 0 0; animation: cmTear 3.2s ease-in infinite; }
-.gd-cm .cm-wavey { animation: cmWavey 4s linear infinite; }
-.gd-cm .cm-bob2 { animation: cmBob2 3s ease-in-out infinite; }
-.gd-cm .cm-drop2 { animation: cmDrop2 3s steps(4) infinite; }
-.gd-cm .cm-rowflash { animation: cmRowflash 3s steps(1) infinite; }
-.gd-cm .cm-scanbar { animation: cmScanbar 2.4s ease-in-out infinite; }
-.gd-cm .cm-paperout { animation: cmPaperout 3s ease-out infinite; }
-@keyframes scPaper { 0% { transform: scaleX(0); } 60%, 100% { transform: scaleX(1); } }
-@keyframes cmQuill { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(5deg); } }
-@keyframes cmWax { 0%, 60%, 100% { transform: scale(1); } 10% { transform: scale(1.18); } 20% { transform: scale(.94); } }
-@keyframes cmTear { 0%, 45% { transform: none; opacity: 1; } 70% { transform: translate(6px, 30px) rotate(24deg); opacity: .8; } 85%, 100% { transform: translate(10px, 70px) rotate(40deg); opacity: 0; } }
-@keyframes cmWavey { 0% { transform: translateX(0); } 100% { transform: translateX(40px); } }
-@keyframes cmBob2 { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-5px) rotate(4deg); } }
-@keyframes cmDrop2 { 0% { transform: translateY(0); } 100% { transform: translateY(36px); } }
-@keyframes cmRowflash { 0%, 70% { opacity: 1; } 75% { opacity: .25; } 80% { opacity: 1; } 85% { opacity: .25; } 90%, 100% { opacity: 1; } }
-@keyframes cmScanbar { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(90px); } }
-@keyframes cmPaperout { 0% { transform: translateX(-30px); opacity: 0; } 30% { opacity: 1; } 70%, 100% { transform: translateX(0); opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .gd-cm .cm-tear { opacity: 1; } }
-
-/* ===== ปกแบบป้ายแขวน (coverLayout: "tag"): มุมซ้ายตัดเฉียง รูร้อยเชือก น้องม้วนย้ายไปขวา ===== */
-.gd-cover[data-layout="tag"] .gd-cover-art { flex-basis: 150px; height: 128px; border: 0; border-radius: 10px; clip-path: polygon(20% 0, 100% 0, 100% 100%, 20% 100%, 0 78%, 0 22%); filter: drop-shadow(0 6px 8px rgba(40, 20, 80, .25)); }
-.gd-cover[data-layout="tag"] .gd-cover-art::after { content: ""; position: absolute; left: 9%; top: 50%; width: 12px; height: 12px; margin-top: -6px; border-radius: 50%; background: #fbf3e2; box-shadow: inset 0 0 0 2.5px #c9a14a; z-index: 3; }
-.gd-cover[data-layout="tag"] .gd-cover-art .gd-cover-m { left: auto; right: -2px; }
-.gd-cover[data-layout="tag"] { gap: 16px; }
-/* ของขยับชุดใหม่ (ทำงานวันหยุด) */
-.gd-scene .sc-burst { transform-box: fill-box; transform-origin: 50% 50%; animation: scBurst 2.1s ease-out infinite; }
-.gd-cm .cm-page { transform-box: fill-box; transform-origin: 50% 100%; animation: cmPage 4s ease-out infinite; }
-.gd-cm .cm-sungrid { animation: cmSungrid 1.6s linear infinite; }
-.gd-cm .cm-reel { animation: cmReel 3s cubic-bezier(.3, 0, .2, 1) infinite; }
-.gd-cm .cm-flame { transform-box: fill-box; transform-origin: 50% 0; animation: cmFlame .3s ease-in-out infinite alternate; }
-.gd-cm .cm-lightc { animation: cmLightc 2s steps(1) infinite; }
-@keyframes scBurst { 0% { transform: scale(.2); opacity: 0; } 20% { opacity: 1; } 70% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.1); opacity: 0; } }
-@keyframes cmPage { 0% { transform: scaleY(.1); } 25%, 100% { transform: scaleY(1); } }
-@keyframes cmSungrid { from { transform: translateY(0); } to { transform: translateY(6px); } }
-@keyframes cmReel { 0% { transform: translateY(-100px); } 40%, 100% { transform: translateY(0); } }
-@keyframes cmFlame { from { transform: scaleY(.75); } to { transform: scaleY(1.15); } }
-@keyframes cmLightc { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
-@media (prefers-reduced-motion: reduce) { .gd-scene .sc-burst { opacity: 1; } }
-
-/* ===== ปกแบบแถบเตือนภัย (coverLayout: "hazard"): กรอบลายทางเหลืองดำ ===== */
-.gd-cover[data-layout="hazard"] .gd-cover-art { border: 0; border-radius: 10px; background: repeating-linear-gradient(45deg, #ffd22e 0 9px, #222 9px 18px); box-shadow: 0 6px 12px rgba(0, 0, 0, .2); }
-.gd-cover[data-layout="hazard"] .gd-cover-art .gd-scene { inset: 7px; width: calc(100% - 14px); height: calc(100% - 14px); border-radius: 5px; }
-.gd-cover[data-layout="hazard"] .gd-cover-art .gd-cover-m { left: 4px; bottom: 6px; }
-/* ของขยับชุดใหม่ (กะดึก/งานอันตราย) */
-.gd-scene .sc-win { animation: scLamp 3s ease-in-out infinite; }
-.gd-scene .sc-smokeline { animation: cmQueue 3s ease-in-out infinite; }
-.gd-cm .cm-drizzle { animation: cmDrizzle .9s linear infinite; }
-.gd-cm .cm-steam2 { animation: cmSteam2 2.4s ease-out infinite; }
-.gd-cm .cm-puppet { transform-box: fill-box; transform-origin: 50% 100%; animation: cmPuppet 2.6s ease-in-out infinite; }
-.gd-cm .cm-gleam { animation: cmGleam 2.4s ease-in-out infinite; }
-.gd-cm .cm-plus { transform-box: fill-box; transform-origin: 50% 50%; animation: cmWax 1.6s ease-out infinite; }
-@keyframes cmDrizzle { 0% { transform: translateY(-6px); opacity: 0; } 30% { opacity: .9; } 100% { transform: translateY(60px); opacity: 0; } }
-@keyframes cmSteam2 { 0% { transform: translateY(2px); opacity: 0; } 40% { opacity: .9; } 100% { transform: translateY(-8px); opacity: 0; } }
-@keyframes cmPuppet { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg) translateY(-2px); } }
-@keyframes cmGleam { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
-
-/* ===== ปกแบบกระจกวงรี (coverLayout: "mirror"): ภาพในวงรี กรอบทองแกะลาย ===== */
-.gd-cover[data-layout="mirror"] .gd-cover-art { flex-basis: 120px; height: 150px; overflow: visible; border: 0; border-radius: 50%; margin: 8px; box-shadow: 0 0 0 4px #f4d06f, 0 0 0 7px #a87a2a, 0 0 0 9px #f4d06f, 0 10px 18px rgba(90, 50, 30, .25); }
-.gd-cover[data-layout="mirror"] .gd-cover-art .gd-scene { clip-path: ellipse(50% 50%); }
-.gd-cover[data-layout="mirror"] .gd-cover-art::before { content: ""; position: absolute; left: 50%; top: -18px; width: 22px; height: 14px; margin-left: -11px; border-radius: 50% 50% 4px 4px; background: #a87a2a; z-index: -1; }
-.gd-cover[data-layout="mirror"] .gd-cover-art .gd-cover-m { left: -16px; bottom: -6px; }
-.gd-cover[data-layout="mirror"] { gap: 20px; }
-/* ของขยับชุดใหม่ (ถูกบังคับลาออก) */
-.gd-scene .sc-ball { animation: scBall 2.4s cubic-bezier(.5, 0, .7, 1) infinite; }
-.gd-cm .cm-dealcard { transform-box: fill-box; transform-origin: 50% 100%; animation: cmDealcard 3.4s ease-in-out infinite; }
-.gd-cm .cm-loom2 { animation: cmLoom2 3.2s ease-in-out infinite; }
-.gd-cm .cm-scan2 { animation: cmSungrid 1s linear infinite; }
-.gd-cm .cm-rewind { animation: cmRowflash 1.6s steps(1) infinite; }
-.gd-cm .cm-wash { stroke-dasharray: 22; animation: cmWash 4s ease-out infinite; }
-.gd-cm .cm-plane { animation: cmPlane 3s ease-in-out infinite; }
-@keyframes scBall { 0% { transform: translate(-40px, -50px); opacity: 0; } 15% { opacity: 1; } 70% { transform: translate(0, 0); } 80% { transform: translate(0, -6px); } 100% { transform: translate(0, 14px); opacity: 0; } }
-@keyframes cmDealcard { 0%, 100% { transform: rotate(-2deg) translateY(0); } 50% { transform: rotate(2deg) translateY(-3px); } }
-@keyframes cmLoom2 { 0%, 100% { transform: translateX(8px); } 50% { transform: translateX(-6px); } }
-@keyframes cmWash { 0% { stroke-dashoffset: 22; } 40%, 100% { stroke-dashoffset: 0; } }
-@keyframes cmPlane { 0%, 100% { transform: translate(-3px, 2px) rotate(-3deg); } 50% { transform: translate(4px, -4px) rotate(3deg); } }
-@media (prefers-reduced-motion: reduce) { .gd-cm .cm-wash { stroke-dashoffset: 0; } .gd-scene .sc-ball { opacity: 1; } }
-
-/* ===== ปกแบบสองสีแนวทแยง (coverLayout: "split"): กรอบครึ่งส้มครึ่งฟ้า ===== */
-.gd-cover[data-layout="split"] .gd-cover-art { border: 0; border-radius: 14px; background: linear-gradient(135deg, #ffb37a 50%, #8ec5ff 50%); box-shadow: 0 6px 14px rgba(40, 60, 100, .2); }
-.gd-cover[data-layout="split"] .gd-cover-art .gd-scene { inset: 8px; width: calc(100% - 16px); height: calc(100% - 16px); border-radius: 8px; }
-.gd-cover[data-layout="split"] .gd-cover-art .gd-cover-m { left: 4px; bottom: 6px; }
-/* ของขยับชุดใหม่ (เปลี่ยนนายจ้าง) */
-.gd-scene .sc-link { animation: scLamp 1.2s ease-in-out infinite; }
-.gd-cm .cm-run { animation: cmRun 2.4s ease-in-out infinite; }
-.gd-cm .cm-chug { animation: cmQueue .6s ease-in-out infinite; }
-.gd-cm .cm-ring2 { animation: cmGleam 2s ease-in-out infinite; }
-.gd-cm .cm-fish { animation: cmFish 4s ease-in-out infinite; }
-.gd-cm .cm-bubble { animation: cmBubble 2.4s ease-in infinite; }
-.gd-cm .cm-arm { transform-box: fill-box; transform-origin: 0 100%; animation: cmArm 3s ease-in-out infinite; }
-.gd-cm .cm-orbit2 { transform-box: fill-box; transform-origin: 50% 50%; animation: cmOrbit2 6s linear infinite; }
-@keyframes cmRun { 0%, 100% { transform: translateX(-10px); } 50% { transform: translateX(4px); } }
-@keyframes cmFish { 0%, 100% { transform: translateX(-14px); } 50% { transform: translateX(10px); } }
-@keyframes cmBubble { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(-60px); opacity: 0; } }
-@keyframes cmArm { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-8deg); } }
-@keyframes cmOrbit2 { to { transform: rotate(360deg); } }
-
-/* ===== ปกแบบห่อของขวัญ (coverLayout: "gift"): ริบบิ้นแดงกากบาทพาดภาพ ===== */
-.gd-cover[data-layout="gift"] .gd-cover-art { border: 3px solid #e5484d; border-radius: 8px; overflow: visible; }
-.gd-cover[data-layout="gift"] .gd-cover-art .gd-scene { border-radius: 6px; }
-.gd-cover[data-layout="gift"] .gd-cover-art::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(90deg, transparent calc(50% - 6px), rgba(229, 72, 77, .9) calc(50% - 6px) calc(50% + 6px), transparent calc(50% + 6px)), linear-gradient(0deg, transparent calc(50% - 6px), rgba(229, 72, 77, .9) calc(50% - 6px) calc(50% + 6px), transparent calc(50% + 6px)); border-radius: 6px; }
-.gd-cover[data-layout="gift"] .gd-cover-art::before { content: ""; position: absolute; left: 50%; top: -16px; width: 44px; height: 22px; margin-left: -22px; z-index: 3; background: radial-gradient(ellipse at 25% 60%, #e5484d 0 9px, transparent 10px), radial-gradient(ellipse at 75% 60%, #e5484d 0 9px, transparent 10px), radial-gradient(circle at 50% 70%, #b8212a 0 5px, transparent 6px); }
-/* ของขยับชุดใหม่ (โบนัส/สวัสดิการ) */
-.gd-scene .sc-bow { animation: scBow 2.4s ease-in-out infinite; }
-.gd-cm .cm-candy { animation: cmQueue 2s ease-in-out infinite; }
-.gd-cm .cm-snip2 { transform-box: fill-box; transform-origin: 20% 50%; animation: cmSnip2 1.2s ease-in-out infinite; }
-.gd-cm .cm-swing2 { transform-box: fill-box; transform-origin: 50% 0; animation: qsRock2 2.4s ease-in-out infinite; }
-.gd-cm .cm-confetti { animation: cmConfetti 2.4s ease-in infinite; }
-.gd-cm .cm-nod { animation: cmQueue 2.4s ease-in-out infinite; }
-.gd-cm .cm-wave3 { animation: cmQueue 1.4s ease-in-out infinite; }
-@keyframes scBow { 0%, 70%, 100% { transform: translateY(0); } 80% { transform: translateY(-10px); } 90% { transform: translateY(-4px); } }
-@keyframes cmSnip2 { 0%, 100% { transform: translateX(0) rotate(0); } 50% { transform: translateX(8px) rotate(-6deg); } }
-@keyframes qsRock2 { 0%, 100% { transform: rotate(-10deg); } 50% { transform: rotate(10deg); } }
-@keyframes cmConfetti { 0% { transform: translateY(-30px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(6px); opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .gd-cm .cm-confetti { opacity: 1; } }
-
-/* ===== ปกแบบเลนส์กล้อง (coverLayout: "lens"): วงกลมขอบดำหลายชั้น แสงสะท้อนบนกระจก ===== */
-.gd-cover[data-layout="lens"] .gd-cover-art { flex-basis: 138px; height: 138px; overflow: visible; border: 0; border-radius: 50%; margin: 8px; box-shadow: 0 0 0 4px #2a2e38, 0 0 0 7px #4a5262, 0 0 0 10px #1a1d24, 0 10px 18px rgba(0, 0, 0, .3); }
-.gd-cover[data-layout="lens"] .gd-cover-art .gd-scene { clip-path: circle(50%); }
-.gd-cover[data-layout="lens"] .gd-cover-art::after { content: ""; position: absolute; inset: 0; border-radius: 50%; z-index: 1; pointer-events: none; background: radial-gradient(ellipse at 30% 22%, rgba(255, 255, 255, .55) 0 10%, transparent 26%), radial-gradient(circle at 70% 75%, rgba(120, 180, 255, .18) 0 18%, transparent 40%); }
-.gd-cover[data-layout="lens"] .gd-cover-art .gd-cover-m { left: -16px; bottom: -8px; }
-.gd-cover[data-layout="lens"] { gap: 22px; }
-/* ของขยับชุดใหม่ (ข้อมูลส่วนตัวในที่ทำงาน) */
-.gd-scene .sc-pan { transform-box: fill-box; transform-origin: 95% 30%; animation: scPan 5s ease-in-out infinite; }
-.gd-scene .sc-rec { animation: scLamp 1s steps(2) infinite; }
-.gd-cm .cm-lensmove { animation: cmLensmove 4s ease-in-out infinite; }
-.gd-cm .cm-screenflick { animation: cmFlick2 1.4s steps(2) infinite; }
-@keyframes cmFlick2 { 0%, 100% { opacity: .04; } 50% { opacity: .14; } }
-.gd-cm .cm-scanline { animation: cmScanline 2.4s ease-in-out infinite; }
-.gd-cm .cm-knob2 { animation: cmKnob2 3s ease-in-out infinite; }
-.gd-cm .cm-keyswing { transform-box: fill-box; transform-origin: 50% 0; animation: qsRock2 3s ease-in-out infinite; }
-.gd-cm .cm-sealpress { animation: cmSealpress 3.2s ease-out infinite; }
-@keyframes scPan { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(8deg); } }
-@keyframes cmLensmove { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(6px, -4px); } }
-@keyframes cmScanline { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(26px); } }
-@keyframes cmKnob2 { 0%, 20% { transform: translateX(-14px); } 40%, 100% { transform: translateX(0); } }
-@keyframes cmSealpress { 0%, 50% { transform: translateY(-10px) scale(1.15); opacity: 0; } 60% { transform: translateY(0) scale(.95); opacity: 1; } 70%, 100% { transform: none; opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .gd-cm .cm-sealpress { opacity: 1; } }
-
-/* หน้ารวม: การ์ดที่อยู่นอกจอหยุดอนิเมชัน (guide-page.js ใส่ .is-off) · ระหว่างรอวาดแสดงพื้นสีอ่อน */
-.gd-lc.is-off .gd-lc-img * { animation-play-state: paused !important; }
-.gd-lc-img[data-sc]:empty { background: linear-gradient(135deg, #f6efe2, #ece3d2); }
-
-/* หน้ารวมแบบแบ่งหน้า: จำนวนเรื่องในหมวด + ปุ่มดูเพิ่ม + สถานะกำลังโหลด */
-.gd-sec-n { margin-left: 8px; font-size: 13px; font-weight: 600; color: var(--ink-3); vertical-align: middle; }
-.gd-more { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 100%; margin: 12px 0 4px; padding: 12px 16px; border: 1.5px dashed #F3C79A; border-radius: 14px; background: #FFF8EF; color: #C2620F; font: inherit; font-weight: 700; font-size: 15px; cursor: pointer; }
-.gd-more small { font-weight: 500; font-size: 12px; color: var(--ink-3); }
-.gd-more:hover { background: #FFF0DC; }
-.gd-more:disabled { opacity: .55; cursor: progress; }
-.gd-res[aria-busy="true"] { opacity: .5; transition: opacity .15s; }
-
-/* ===== ปกแบบพลาสเตอร์ยา (coverLayout: "bandage"): พลาสเตอร์ 2 แผ่นแปะไขว้มุมขวาบนของภาพ ===== */
-.gd-cover[data-layout="bandage"] .gd-cover-art { overflow: visible; border: 2px solid #e9b98a; transform: rotate(-1.5deg); }
-.gd-cover[data-layout="bandage"] .gd-cover-art .gd-scene { border-radius: 10px; }
-.gd-cover[data-layout="bandage"] .gd-cover-art::before,
-.gd-cover[data-layout="bandage"] .gd-cover-art::after { content: ""; position: absolute; right: -16px; top: 10px; width: 66px; height: 19px; z-index: 3; pointer-events: none; border-radius: 10px;
-  background: radial-gradient(circle, rgba(150, 90, 40, .35) 0 1.1px, transparent 1.4px) 0 0 / 6px 6px, linear-gradient(90deg, transparent 34%, #fbe3c6 34% 66%, transparent 66%), #f2c08f;
-  box-shadow: 0 2px 3px rgba(80, 40, 0, .22); }
-.gd-cover[data-layout="bandage"] .gd-cover-art::before { transform: rotate(38deg); }
-.gd-cover[data-layout="bandage"] .gd-cover-art::after { transform: rotate(-38deg); }
-
-/* ปกแบบ "punch" = บัตรตอกเวลา: กระดาษครีม รูเจาะแถวบน ตราประทับเวลาเข้างานมุมขวาล่าง (คู่มือ daily-parttime) */
-.gd-cover[data-layout="punch"] .gd-cover-art { overflow: visible; border: 0; border-radius: 5px; background: #fbf3dc; box-shadow: 0 0 0 2px #cdb98c, 0 0 0 5px #fbf3dc, 0 0 0 6px #b9a274, 3px 6px 0 6px rgba(90, 70, 30, .18); transform: rotate(1.2deg); }
-.gd-cover[data-layout="punch"] .gd-cover-art .gd-scene { border-radius: 5px; }
-.gd-cover[data-layout="punch"] .gd-cover-art::before { content: ""; position: absolute; left: 10px; right: 10px; top: 5px; height: 8px; z-index: 3; pointer-events: none;
-  background: radial-gradient(circle at 4px 4px, rgba(40, 28, 10, .78) 0 2.4px, rgba(255, 255, 255, .7) 2.6px 3.1px, transparent 3.3px) 0 0 / 13px 8px repeat-x; }
-.gd-cover[data-layout="punch"] .gd-cover-art::after { content: "เข้างาน 07:58"; position: absolute; right: -6px; top: 18px; z-index: 3; pointer-events: none; padding: 3px 6px; border: 2px solid #7a2d8a; border-radius: 4px;
-  font: 800 11px/1.1 "IBM Plex Sans Thai", sans-serif; color: #7a2d8a; letter-spacing: .02em; background: rgba(255, 250, 236, .9); transform: rotate(8deg); box-shadow: 0 0 0 1px rgba(122, 45, 138, .25) inset; }
-
-/* ปกแบบ "rollup" = ประตูเหล็กม้วนดึงลงครึ่งบนของภาพ + ป้ายแขวน "ปิดชั่วคราว" (คู่มือ temporary-shutdown) */
-.gd-cover[data-layout="rollup"] .gd-cover-art { border: 3px solid #5d646c; border-radius: 6px; box-shadow: inset 0 0 0 1px #9aa1a9, 0 4px 0 #3d4248; }
-.gd-cover[data-layout="rollup"] .gd-cover-art::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 24%; z-index: 3; pointer-events: none;
-  background: linear-gradient(180deg, transparent calc(100% - 5px), #5d646c calc(100% - 5px)), repeating-linear-gradient(180deg, #d5dade 0 4px, #a9b0b8 4px 5.5px, #eef1f4 5.5px 6.5px);
-  box-shadow: 0 3px 4px rgba(0, 0, 0, .25); }
-.gd-cover[data-layout="rollup"] .gd-cover-art::after { content: "ปิดชั่วคราว"; position: absolute; left: 50%; top: 5%; z-index: 4; pointer-events: none; transform: translateX(-50%) rotate(-5deg); transform-origin: 50% 0;
-  padding: 2px 8px; border: 2px solid #d11f2a; border-radius: 4px; background: #fff; color: #d11f2a; font: 800 11px/1.3 "IBM Plex Sans Thai", sans-serif; white-space: nowrap; box-shadow: 0 2px 3px rgba(0, 0, 0, .2); }
-
-/* ปกแบบ "carbon" = เอกสารพร้อมสำเนาคาร์บอนสีชมพูซ้อนด้านหลัง รอยปรุฉีกด้านบน ตรา "สำเนา" (คู่มือ warning-letter) */
-.gd-cover[data-layout="carbon"] .gd-cover-art { overflow: visible; border: 1px solid #cdbfa4; border-radius: 3px; box-shadow: 7px 7px 0 -1px #f6cdd9, 7px 7px 0 0 #d99fb2, 7px 9px 8px 0 rgba(120, 60, 80, .18); transform: rotate(-1deg); }
-.gd-cover[data-layout="carbon"] .gd-cover-art .gd-scene { border-radius: 3px; }
-.gd-cover[data-layout="carbon"] .gd-cover-art::before { content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 6px; z-index: 3; pointer-events: none;
-  background: radial-gradient(circle at 3px 0, transparent 0 2.2px, #fbf6ea 2.6px) 0 0 / 7px 6px repeat-x; border-bottom: 1px dashed rgba(90, 70, 40, .35); }
-.gd-cover[data-layout="carbon"] .gd-cover-art::after { content: "สำเนา"; position: absolute; right: -10px; top: 14px; z-index: 3; pointer-events: none; padding: 1px 7px; border: 2px solid #c2456a; border-radius: 4px;
-  color: #c2456a; background: rgba(255, 245, 248, .85); font: 800 11px/1.3 "IBM Plex Sans Thai", sans-serif; transform: rotate(10deg); }
-
-/* ปกแบบ "bloom" = กรอบขาวนุ่มเหมือนรูปที่ระลึก ดอกไม้พับกระดาษมุมขวาบน (คู่มือ employee-death) */
-.gd-cover[data-layout="bloom"] .gd-cover-art { overflow: visible; border: 0; border-radius: 10px; box-shadow: 0 0 0 5px #fffaf3, 0 0 0 6px #e8d9c4, 0 8px 16px rgba(90, 60, 40, .16); }
-.gd-cover[data-layout="bloom"] .gd-cover-art .gd-scene { border-radius: 10px; }
-.gd-cover[data-layout="bloom"] .gd-cover-art::after { content: ""; position: absolute; right: -12px; top: -12px; width: 34px; height: 34px; z-index: 3; pointer-events: none;
-  background: radial-gradient(circle at 50% 50%, #f2c94c 0 4px, transparent 4.5px), radial-gradient(circle at 50% 18%, #f6c2d4 0 7px, transparent 7.5px), radial-gradient(circle at 82% 42%, #f2a6c0 0 7px, transparent 7.5px),
-    radial-gradient(circle at 70% 80%, #f6c2d4 0 7px, transparent 7.5px), radial-gradient(circle at 30% 80%, #f2a6c0 0 7px, transparent 7.5px), radial-gradient(circle at 18% 42%, #f6c2d4 0 7px, transparent 7.5px);
-  filter: drop-shadow(0 2px 2px rgba(90, 40, 60, .25)); }
-
-/* ปกแบบ "wristband" = สายรัดข้อมือโรงพยาบาลพันรอบล่างของภาพ มีบาร์โค้ดและป้ายชื่อ (คู่มือ long-illness) */
-.gd-cover[data-layout="wristband"] .gd-cover-art { overflow: visible; border: 2px solid #cfe3ef; border-radius: 14px; }
-.gd-cover[data-layout="wristband"] .gd-cover-art .gd-scene { border-radius: 12px; }
-.gd-cover[data-layout="wristband"] .gd-cover-art::after { content: "ลาป่วย"; position: absolute; left: -8px; right: -8px; top: 12px; height: 20px; z-index: 3; pointer-events: none; border-radius: 10px;
-  padding-left: 44px; font: 800 10px/20px "IBM Plex Sans Thai", sans-serif; color: #2a4f7a; box-shadow: 0 2px 4px rgba(30, 60, 90, .25); transform: rotate(-4deg);
-  background: repeating-linear-gradient(90deg, #2a3440 0 1.4px, transparent 1.4px 3px, #2a3440 3px 3.8px, transparent 3.8px 6px) right 10px center / 46px 12px no-repeat, linear-gradient(#e9f6ff, #cfe8f7); }
-.gd-cover[data-layout="wristband"] .gd-cover-art::before { content: ""; position: absolute; left: 14px; top: 16px; width: 22px; height: 12px; z-index: 4; pointer-events: none; border-radius: 3px; background: #fff; box-shadow: inset 0 0 0 1px #9fc3dc; transform: rotate(-4deg); }
-
-/* ปกแบบ "artboard" = กรอบเลือกวัตถุในโปรแกรมออกแบบ เส้นฟ้ามีจุดจับสี่มุม ป้ายชื่อไฟล์ และตรา © (คู่มือ work-copyright) */
-.gd-cover[data-layout="artboard"] .gd-cover-art { overflow: visible; border: 0; border-radius: 4px; box-shadow: 0 6px 14px rgba(40, 60, 90, .18); }
-.gd-cover[data-layout="artboard"] .gd-cover-art .gd-scene { border-radius: 4px; }
-.gd-cover[data-layout="artboard"] .gd-cover-art::before { content: ""; position: absolute; inset: -6px; z-index: 3; pointer-events: none; border: 1.5px solid #3b82f6;
-  background: linear-gradient(#fff, #fff) 0 0 / 8px 8px no-repeat, linear-gradient(#fff, #fff) 100% 0 / 8px 8px no-repeat, linear-gradient(#fff, #fff) 0 100% / 8px 8px no-repeat, linear-gradient(#fff, #fff) 100% 100% / 8px 8px no-repeat;
-  outline: 0; box-shadow: inset 0 0 0 0 transparent; }
-.gd-cover[data-layout="artboard"] .gd-cover-art::after { content: "©"; position: absolute; right: -14px; top: -14px; z-index: 4; pointer-events: none; width: 26px; height: 26px; border-radius: 50%;
-  background: #f2b33d; color: #fff; font: 900 15px/26px sans-serif; text-align: center; box-shadow: 0 2px 4px rgba(90, 60, 0, .3); }
-
-/* ปกแบบ "savingsbook" = สมุดสมาชิกปกเขียวเข้ม ตะเข็บทองรอบขอบ ป้าย "สมุดสมาชิก" (คู่มือ employee-welfare-fund) */
-.gd-cover[data-layout="savingsbook"] .gd-cover-art { overflow: visible; border: 0; border-radius: 6px 10px 10px 6px; box-shadow: 0 0 0 5px #1f5e4a, 0 0 0 6px #e6c25a, 0 6px 14px rgba(20, 60, 40, .3); }
-.gd-cover[data-layout="savingsbook"] .gd-cover-art .gd-scene { border-radius: 6px 10px 10px 6px; }
-.gd-cover[data-layout="savingsbook"] .gd-cover-art::before { content: ""; position: absolute; inset: -3px; z-index: 3; pointer-events: none; border: 1.5px dashed #e6c25a; border-radius: 8px 12px 12px 8px; }
-.gd-cover[data-layout="savingsbook"] .gd-cover-art::after { content: "สมุดสมาชิก"; position: absolute; left: 50%; bottom: -16px; transform: translateX(-50%); z-index: 4; pointer-events: none; padding: 1px 10px; border-radius: 4px;
-  background: #e6c25a; color: #1f3a2e; font: 800 10.5px/1.5 "IBM Plex Sans Thai", sans-serif; white-space: nowrap; box-shadow: 0 2px 3px rgba(0, 0, 0, .2); }
-
-/* ปกแบบ "banknote" = ธนบัตรลายกิโยเช่ขอบเขียว มีลายน้ำวงกลมและเลขมุม (คู่มือ salary-overpaid) */
-.gd-cover[data-layout="banknote"] .gd-cover-art { overflow: visible; border: 0; border-radius: 6px; padding: 0; box-shadow: 0 0 0 4px #eaf4e6, 0 0 0 6px #4f8a5a, 0 0 0 8px #eaf4e6, 0 6px 14px rgba(40, 80, 50, .25); transform: rotate(-1.2deg); }
-.gd-cover[data-layout="banknote"] .gd-cover-art .gd-scene { border-radius: 6px; }
-.gd-cover[data-layout="banknote"] .gd-cover-art::before { content: "25,000"; position: absolute; left: 6px; top: 4px; z-index: 3; pointer-events: none; font: 900 11px/1 "IBM Plex Sans Thai", sans-serif; color: #2e6a3e; background: rgba(234, 244, 230, .9); padding: 2px 5px; border-radius: 3px; }
-.gd-cover[data-layout="banknote"] .gd-cover-art::after { content: "×2"; position: absolute; right: -12px; bottom: 14px; z-index: 3; pointer-events: none; width: 30px; height: 30px; border-radius: 50%;
-  background: #e5484d; color: #fff; font: 900 12px/30px sans-serif; text-align: center; box-shadow: 0 2px 4px rgba(120, 30, 30, .3); transform: rotate(-10deg); }
-
-/* ปกแบบ "ballot" = บัตรเลือกตั้งพับครึ่ง มีช่องกากบาท เสียบลงช่องหีบด้านบน (คู่มือ employee-committee) */
-.gd-cover[data-layout="ballot"] .gd-cover-art { overflow: visible; border: 2px solid #c9d6e2; border-radius: 4px; margin-top: 8px; }
-.gd-cover[data-layout="ballot"] .gd-cover-art .gd-scene { border-radius: 3px; }
-.gd-cover[data-layout="ballot"] .gd-cover-art::before { content: ""; position: absolute; left: 18%; right: 18%; top: -10px; height: 8px; z-index: 3; pointer-events: none; border-radius: 4px; background: #3a4a5a; box-shadow: inset 0 2px 0 #1a2430; }
-.gd-cover[data-layout="ballot"] .gd-cover-art::after { content: "✓"; position: absolute; right: -10px; bottom: 12px; z-index: 3; pointer-events: none; width: 28px; height: 28px; border: 2px solid #1f6fd0; border-radius: 4px;
-  background: #fff; color: #1f6fd0; font: 900 18px/26px sans-serif; text-align: center; transform: rotate(6deg); box-shadow: 0 2px 4px rgba(20, 40, 80, .2); }
-
-/* ปกแบบ "evidence" = ภาพหลักฐานติดคลิปหนีบ มีแว่นขยายมุมขวาล่าง (คู่มือ theft-accusation) */
-.gd-cover[data-layout="evidence"] .gd-cover-art { overflow: visible; border: 3px solid #fff; border-radius: 4px; box-shadow: 0 6px 16px rgba(58,42,90,.22); transform: rotate(-2deg); margin-top: 8px; }
-.gd-cover[data-layout="evidence"] .gd-cover-art::before { content: ""; position: absolute; left: 50%; top: -12px; width: 26px; height: 18px; margin-left: -13px; z-index: 3; pointer-events: none; border-radius: 4px 4px 2px 2px; background: linear-gradient(#c9ced6,#8a939e); box-shadow: 0 2px 3px rgba(0,0,0,.25); }
-.gd-cover[data-layout="evidence"] .gd-cover-art::after { content: ""; position: absolute; right: -12px; bottom: 8px; z-index: 3; pointer-events: none; width: 24px; height: 24px; border: 4px solid #3a4a5a; border-radius: 50%; background: rgba(233,244,255,.75); box-shadow: 8px 8px 0 -5px #3a4a5a; }
-
-/* ปกแบบ "flatlay" = ภาพถ่ายมุมบนวางบนโต๊ะ ติดเทปวาชิลายจุดมุมซ้าย และป้ายกระดาษ "ของเรา" มุมขวาล่าง (คู่มือ document-seizure) */
-.gd-cover[data-layout="flatlay"] .gd-cover-art { overflow: visible; border-radius: 10px; box-shadow: 0 10px 22px rgba(90,50,20,.28), 0 0 0 4px #fffaf0; transform: rotate(2deg); margin-top: 6px; }
-.gd-cover[data-layout="flatlay"] .gd-cover-art .gd-scene { border-radius: 10px; }
-.gd-cover[data-layout="flatlay"] .gd-cover-art::before { content: ""; position: absolute; left: -12px; top: 6px; width: 54px; height: 16px; z-index: 3; pointer-events: none; transform: rotate(-32deg); opacity: .9; background: radial-gradient(circle, #fff 1.6px, transparent 2px) 0 0 / 7px 7px, #f29c8a; }
-.gd-cover[data-layout="flatlay"] .gd-cover-art::after { content: "ของเรา"; position: absolute; right: -14px; bottom: 10px; z-index: 3; pointer-events: none; padding: 3px 8px 3px 12px; font: 900 11px/1.2 sans-serif; color: #2e8a6e; background: #effaf4; border: 1.5px solid #2e8a6e; border-radius: 3px 10px 10px 3px; transform: rotate(-8deg); box-shadow: 0 2px 4px rgba(0,0,0,.18); }
-
-/* ปกแบบ "receiptroll" = ใบเสร็จยาว ขอบล่างหยักฟันเลื่อย มีตราประทับแดงกลม "ค่าจ้าง?" มุมขวาบน (คู่มือ what-counts-as-wage) */
-.gd-cover[data-layout="receiptroll"] .gd-cover-art { overflow: visible; border: 4px solid #fffdf6; border-bottom-width: 10px; border-radius: 4px 4px 0 0; box-shadow: 0 8px 18px rgba(30,60,55,.22); margin-bottom: 10px; }
-.gd-cover[data-layout="receiptroll"] .gd-cover-art::before { content: ""; position: absolute; left: -4px; right: -4px; bottom: -18px; height: 9px; z-index: 3; pointer-events: none; background: linear-gradient(135deg, #fffdf6 50%, transparent 50%) 0 0 / 10px 10px repeat-x, linear-gradient(-135deg, #fffdf6 50%, transparent 50%) 0 0 / 10px 10px repeat-x; }
-.gd-cover[data-layout="receiptroll"] .gd-cover-art::after { content: "ค่าจ้าง?"; position: absolute; right: -16px; top: -12px; z-index: 3; pointer-events: none; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font: 900 11px/1 sans-serif; color: #d6453d; border: 2.5px solid #d6453d; border-radius: 50%; background: rgba(255,250,245,.85); transform: rotate(14deg); box-shadow: inset 0 0 0 3px rgba(255,250,245,.85), inset 0 0 0 4.5px #d6453d; }
-
-/* ปกแบบ "ticketstub" = ตั๋วโดยสาร ขอบปรุรอยหยักวงกลมด้านขวา ตอนท้ายเป็นต้นขั้วสีครีมเขียนว่า "ยกเลิก" ตั้งแนวตั้ง (คู่มือ offer-withdrawn) */
-.gd-cover[data-layout="ticketstub"] .gd-cover-art { overflow: visible; border-radius: 8px 0 0 8px; box-shadow: 0 8px 18px rgba(40,70,110,.22); margin-right: 22px; }
-.gd-cover[data-layout="ticketstub"] .gd-cover-art .gd-scene { border-radius: 8px 0 0 8px; }
-.gd-cover[data-layout="ticketstub"] .gd-cover-art::before { content: ""; position: absolute; top: 0; bottom: 0; right: -24px; width: 24px; z-index: 3; pointer-events: none; border-radius: 0 8px 8px 0; background: radial-gradient(circle at 0 50%, transparent 3px, #fff4dc 3.5px) 0 0 / 24px 10px repeat-y; box-shadow: 4px 8px 14px rgba(40,70,110,.18); }
-.gd-cover[data-layout="ticketstub"] .gd-cover-art::after { content: "ยกเลิก"; position: absolute; top: 50%; right: -24px; width: 24px; z-index: 4; pointer-events: none; transform: translateY(-50%); writing-mode: vertical-rl; text-align: center; font: 900 11px/24px sans-serif; letter-spacing: 2px; color: #e5484d; }
-
-/* ปกแบบ "airmail" = ขอบซองไปรษณีย์ลายทางแดงน้ำเงิน แสตมป์ "ด่วน" ขอบหยักมุมขวาบน และตราไปรษณีย์วงกลมเส้นคลื่น (คู่มือ sued-by-employer) */
-.gd-cover[data-layout="airmail"] .gd-cover-art { overflow: visible; padding: 6px; border-radius: 6px; background: repeating-linear-gradient(135deg, #d6453d 0 10px, #fffdf6 10px 16px, #2f5aa8 16px 26px, #fffdf6 26px 32px); box-shadow: 0 8px 18px rgba(60,40,30,.22); }
-.gd-cover[data-layout="airmail"] .gd-cover-art .gd-scene { border-radius: 3px; }
-.gd-cover[data-layout="airmail"] .gd-cover-art::before { content: "ด่วน"; position: absolute; right: -12px; top: -14px; z-index: 3; pointer-events: none; width: 40px; height: 46px; display: flex; align-items: center; justify-content: center; font: 900 12px/1 sans-serif; color: #fff; background: #2e8a6e; border: 3px dotted #fffdf6; outline: 2px solid #2e8a6e; transform: rotate(8deg); box-shadow: 0 3px 6px rgba(0,0,0,.2); }
-.gd-cover[data-layout="airmail"] .gd-cover-art::after { content: ""; position: absolute; right: 22px; top: 8px; z-index: 3; pointer-events: none; width: 40px; height: 40px; border: 2px solid rgba(60,60,80,.55); border-radius: 50%; background: repeating-linear-gradient(0deg, transparent 0 6px, rgba(60,60,80,.4) 6px 7.5px); transform: rotate(-14deg); }
-
-/* ปกแบบ "bubbleframe" = กรอบรูปทรงกล่องคำพูดขอบหนาสีกรมท่า มีหางชี้ลงซ้ายล่าง และป้ายวงกลม "!" สีเหลืองมุมขวาบน (คู่มือ refuse-orders) */
-.gd-cover[data-layout="bubbleframe"] .gd-cover-art { overflow: visible; border: 4px solid #2f3f5f; border-radius: 22px; box-shadow: 5px 6px 0 #ffd166; margin-bottom: 14px; }
-.gd-cover[data-layout="bubbleframe"] .gd-cover-art .gd-scene { border-radius: 18px; }
-.gd-cover[data-layout="bubbleframe"] .gd-cover-art::before { content: ""; position: absolute; left: 22px; bottom: -17px; z-index: 3; pointer-events: none; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 16px solid #2f3f5f; transform: skewX(-20deg); }
-.gd-cover[data-layout="bubbleframe"] .gd-cover-art::after { content: "!"; position: absolute; right: -12px; top: -12px; z-index: 3; pointer-events: none; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font: 900 18px/1 sans-serif; color: #2f3f5f; background: #ffd166; border: 3px solid #2f3f5f; border-radius: 50%; transform: rotate(10deg); }
-
-/* ปกแบบ "hangtag" = ป้ายแขวนกระดาษคราฟต์ ขอบซ้ายตัดมุม มีรูตาไก่และเชือกโค้งลอยขึ้นด้านบน (คู่มือ arrested-employee) */
-.gd-cover[data-layout="hangtag"] .gd-cover-art { overflow: visible; border: 6px solid #d9b98a; border-radius: 6px 6px 6px 6px; box-shadow: 0 8px 18px rgba(80,60,40,.22); transform: rotate(-3deg); margin-top: 14px; }
-.gd-cover[data-layout="hangtag"] .gd-cover-art .gd-scene { border-radius: 2px; }
-.gd-cover[data-layout="hangtag"] .gd-cover-art::before { content: ""; position: absolute; left: 50%; top: -14px; width: 16px; height: 16px; margin-left: -8px; z-index: 3; pointer-events: none; border-radius: 50%; background: #fffaf0; border: 3px solid #b08a5a; box-shadow: inset 0 0 0 2px #fffaf0; }
-.gd-cover[data-layout="hangtag"] .gd-cover-art::after { content: ""; position: absolute; left: 50%; top: -42px; width: 46px; height: 34px; z-index: 2; pointer-events: none; border: 2px solid #8a6a4a; border-color: #8a6a4a transparent transparent #8a6a4a; border-radius: 50% 0 0 0; transform: rotate(18deg); }
-
-/* ปกแบบ "postcard" = รูปในอัลบั้ม ขอบขาวกว้าง มีมุมกระดาษสามเหลี่ยมสีน้ำตาลเข้มยึดสี่มุม และคำบรรยายลายมือใต้ภาพ (คู่มือ employer-death) */
-.gd-cover[data-layout="postcard"] .gd-cover-art { overflow: visible; border: 7px solid #fffdf6; border-bottom-width: 22px; border-radius: 2px; box-shadow: 0 6px 16px rgba(90,50,30,.2); transform: rotate(1.5deg); }
-.gd-cover[data-layout="postcard"] .gd-cover-art::before { content: ""; position: absolute; inset: -9px -9px -24px -9px; z-index: 3; pointer-events: none; background: linear-gradient(135deg, #6a3a2a 14px, transparent 14px) top left / 26px 26px no-repeat, linear-gradient(225deg, #6a3a2a 14px, transparent 14px) top right / 26px 26px no-repeat, linear-gradient(45deg, #6a3a2a 14px, transparent 14px) bottom left / 26px 26px no-repeat, linear-gradient(315deg, #6a3a2a 14px, transparent 14px) bottom right / 26px 26px no-repeat; }
-.gd-cover[data-layout="postcard"] .gd-cover-art::after { content: "ร้านเล็ก ๆ ของเรา"; position: absolute; left: 0; right: 0; bottom: -19px; z-index: 3; pointer-events: none; text-align: center; font: italic 700 11px/16px sans-serif; color: #8a5a3a; }
-
-/* ปกแบบ "roadsign" = ป้ายเตือนจราจร กรอบเหลืองสะท้อนแสงขอบดำมุมมน มีเสาป้ายเทาลงด้านล่าง (คู่มือ commute-accident) */
-.gd-cover[data-layout="roadsign"] .gd-cover-art { overflow: visible; margin-bottom: 16px; border: 9px solid #f6c834; border-radius: 14px; box-shadow: 0 0 0 3px #1c1c22, 0 8px 18px rgba(30,30,30,.28); }
-.gd-cover[data-layout="roadsign"] .gd-cover-art .gd-scene { border-radius: 6px; }
-.gd-cover[data-layout="roadsign"] .gd-cover-art::before { content: ""; position: absolute; left: 50%; bottom: -30px; width: 10px; height: 18px; margin-left: -5px; z-index: 0; pointer-events: none; background: linear-gradient(90deg, #8a929c, #c9ced6, #8a929c); }
-.gd-cover[data-layout="roadsign"] .gd-cover-art::after { content: "!"; position: absolute; right: -14px; top: -14px; width: 26px; height: 26px; z-index: 3; pointer-events: none; display: flex; align-items: center; justify-content: center; font: 900 16px/1 sans-serif; color: #1c1c22; background: #f6c834; border: 2.5px solid #1c1c22; border-radius: 4px; transform: rotate(45deg); }
-
-/* ปกแบบ "calcbody" = ตัวเครื่องคิดเลขพลาสติกสีเทาอ่อน มุมมน มีจอ LCD สีเขียวอมเหลืองแสดง "93.75" บนขอบบน และแถวปุ่มกลมสามสีที่ขอบล่าง (คู่มือ ot-lumpsum) */
-.gd-cover[data-layout="calcbody"] .gd-cover-art { overflow: visible; margin-top: 6px; margin-bottom: 4px; border: 8px solid #c9ced6; border-top-width: 30px; border-bottom-width: 18px; border-radius: 16px; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.6), 0 8px 18px rgba(30,40,60,.25); }
-.gd-cover[data-layout="calcbody"] .gd-cover-art .gd-scene { border-radius: 6px; }
-.gd-cover[data-layout="calcbody"] .gd-cover-art::before { content: "93.75"; position: absolute; left: 10%; right: 10%; top: -25px; height: 20px; z-index: 3; pointer-events: none; text-align: right; padding-right: 8px; font: 900 14px/20px monospace; color: #2a3a2a; background: linear-gradient(#c8d8a0, #b4c88a); border-radius: 4px; box-shadow: inset 0 1px 3px rgba(20,30,10,.35); }
-.gd-cover[data-layout="calcbody"] .gd-cover-art::after { content: ""; position: absolute; left: 50%; bottom: -14px; width: 10px; height: 10px; margin-left: -5px; z-index: 3; pointer-events: none; border-radius: 50%; background: #f2b33d; box-shadow: -22px 0 0 #8a929c, 22px 0 0 #8a929c, -44px 0 0 #8a929c, 44px 0 0 #e5484d; }
-
-/* ปกแบบ "lockertag" = ประตูตู้ล็อกเกอร์เหล็กสีเขียวอมฟ้า ขอบหนา มีช่องระบายอากาศสามเส้นด้านบน และป้ายหมายเลข "12" ทองเหลืองมุมขวาบน (คู่มือ lost-belongings-work) */
-.gd-cover[data-layout="lockertag"] .gd-cover-art { overflow: visible; margin-top: 6px; border: 8px solid #5a9aa0; border-top-width: 24px; border-radius: 5px; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.25), 0 7px 16px rgba(20,50,60,.28); }
-.gd-cover[data-layout="lockertag"] .gd-cover-art .gd-scene { border-radius: 2px; }
-.gd-cover[data-layout="lockertag"] .gd-cover-art::before { content: ""; position: absolute; left: 10px; top: -19px; width: 46%; height: 3px; z-index: 3; pointer-events: none; border-radius: 2px; background: #3a6a70; box-shadow: 0 5px 0 #3a6a70, 0 10px 0 #3a6a70; }
-.gd-cover[data-layout="lockertag"] .gd-cover-art::after { content: "12"; position: absolute; right: 8px; top: -20px; z-index: 3; pointer-events: none; padding: 1px 7px; font: 900 11px/14px sans-serif; color: #5a3a10; background: linear-gradient(#f2d27a, #c9a24a); border-radius: 3px; box-shadow: 0 1px 2px rgba(20,30,40,.35); }
-
-/* ปกแบบ "docket" = ปกแฟ้มเอกสารกระดาษแข็งสีน้ำตาลอ่อน ขอบล่างหนา มีกระดุมกลมสองเม็ดและเชือกแดงพาดที่ขอบล่าง (คู่มือ public-sector-workers) */
-.gd-cover[data-layout="docket"] .gd-cover-art { overflow: visible; margin-bottom: 8px; border: 8px solid #d8b47a; border-bottom-width: 22px; border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(120,80,30,.3), 0 7px 16px rgba(80,50,20,.22); }
-.gd-cover[data-layout="docket"] .gd-cover-art .gd-scene { border-radius: 2px; }
-.gd-cover[data-layout="docket"] .gd-cover-art::before { content: ""; position: absolute; left: 50%; bottom: -18px; width: 14px; height: 14px; margin-left: -26px; z-index: 3; pointer-events: none; border-radius: 50%; background: #b8864a; box-shadow: inset 0 0 0 2px #8a5e2a, 38px 0 0 #b8864a; }
-.gd-cover[data-layout="docket"] .gd-cover-art::after { content: ""; position: absolute; left: 50%; bottom: -12px; width: 40px; height: 2px; margin-left: -20px; z-index: 4; pointer-events: none; background: #c8281e; transform: rotate(-8deg); }
-
-/* ปกแบบ "dressform" = ป้ายผ้าแบบป้ายคอเสื้อ ขอบผ้าทอสีกรมท่า มีตะเข็บเหลืองรอบ และป้ายไซซ์ผ้าสีขาว "M" เย็บติดขอบบน (คู่มือ dress-code) */
-.gd-cover[data-layout="dressform"] .gd-cover-art { overflow: visible; margin-top: 12px; padding: 8px; border-radius: 6px; background: repeating-linear-gradient(90deg, #2a3a5a 0 2px, #33466a 2px 4px); box-shadow: inset 0 0 0 3px #2a3a5a, inset 0 0 0 4.5px #e6b84a, 0 7px 16px rgba(20,30,50,.28); }
-.gd-cover[data-layout="dressform"] .gd-cover-art .gd-scene { border-radius: 3px; }
-.gd-cover[data-layout="dressform"] .gd-cover-art::before { content: "M"; position: absolute; left: 50%; top: -14px; width: 30px; height: 22px; margin-left: -15px; z-index: 3; pointer-events: none; display: flex; align-items: center; justify-content: center; font: 900 12px/1 sans-serif; color: #2a3a5a; background: #fffdf6; border-radius: 2px 2px 4px 4px; box-shadow: 0 2px 4px rgba(20,30,50,.3), inset 0 -2px 0 #e8e0d0; }
-.gd-cover[data-layout="dressform"] .gd-cover-art::after { content: ""; position: absolute; left: 50%; top: -16px; width: 36px; height: 4px; margin-left: -18px; z-index: 4; pointer-events: none; border-top: 1.5px dashed #c9a24a; }
-
-/* ปกแบบ "flipclock" = นาฬิกาพลิกตัวเลขยุคเก่า กรอบพลาสติกดำมันขอบบนหนา มีป้ายตัวเลข "07:30" สีเหลืองอำพันบนกรอบ และขาตั้งสองข้างด้านล่าง (คู่มือ schedule-change) */
-.gd-cover[data-layout="flipclock"] .gd-cover-art { overflow: visible; margin-top: 6px; margin-bottom: 8px; border: 7px solid #2a2a32; border-top-width: 26px; border-radius: 14px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.12), 0 8px 18px rgba(20,20,30,.3); }
-.gd-cover[data-layout="flipclock"] .gd-cover-art .gd-scene { border-radius: 5px; }
-.gd-cover[data-layout="flipclock"] .gd-cover-art::before { content: "07:30"; position: absolute; left: 50%; top: -23px; z-index: 3; pointer-events: none; transform: translateX(-50%); padding: 2px 8px; font: 900 14px/16px monospace; letter-spacing: 2px; color: #ffc84a; background: linear-gradient(#1a1a20 50%, #22222a 50%); border-radius: 3px; box-shadow: inset 0 0 0 1px #3a3a44; }
-.gd-cover[data-layout="flipclock"] .gd-cover-art::after { content: ""; position: absolute; left: 14%; right: 14%; bottom: -15px; height: 8px; z-index: 1; pointer-events: none; border-left: 10px solid #2a2a32; border-right: 10px solid #2a2a32; border-radius: 0 0 3px 3px; }
-
-/* ปกแบบ "napkin" = ข้อตกลงที่เขียนบนกระดาษเช็ดปาก ขอบหยักลอนสีขาวนวล มีลายนูนจุดรอบ และข้อความลายมือหมึกน้ำเงิน "ตกลงจ้าง ✓" มุมขวาล่าง (คู่มือ no-written-contract) */
-.gd-cover[data-layout="napkin"] .gd-cover-art { overflow: visible; padding: 11px; border-radius: 4px; background: radial-gradient(circle at 50% 50%, #e8e0d0 1px, transparent 1.6px) 0 0 / 8px 8px, #fffdf6; box-shadow: 0 6px 14px rgba(60,40,20,.18); transform: rotate(-2deg); }
-.gd-cover[data-layout="napkin"] .gd-cover-art .gd-scene { border-radius: 2px; }
-.gd-cover[data-layout="napkin"] .gd-cover-art::before { content: ""; position: absolute; inset: 4px; z-index: 2; pointer-events: none; border: 1.5px dashed rgba(200,186,160,.8); border-radius: 3px; }
-.gd-cover[data-layout="napkin"] .gd-cover-art::after { content: "ตกลงจ้าง ✓"; position: absolute; right: -8px; bottom: -10px; z-index: 3; pointer-events: none; padding: 3px 7px; font: italic 700 12px/1 sans-serif; color: #2a4aa8; background: #fffdf6; border-radius: 3px; box-shadow: 0 2px 4px rgba(60,40,20,.18); transform: rotate(-6deg); }
-
-/* ปกแบบ "scorecard" = กรอบขาวหนา มีแถบวัดผลแนวตั้งไล่สีแดง-เหลือง-เขียวชิดขอบขวา และหมุดสามเหลี่ยมชี้ระดับเส้นเป้า (คู่มือ resume-performance) */
-.gd-cover[data-layout="scorecard"] .gd-cover-art { overflow: visible; margin-right: 18px; border: 7px solid #fffdf8; border-radius: 8px; box-shadow: 0 0 0 1px #e6dccb, 0 7px 16px rgba(40,30,20,.2); }
-.gd-cover[data-layout="scorecard"] .gd-cover-art .gd-scene { border-radius: 3px; }
-.gd-cover[data-layout="scorecard"] .gd-cover-art::before { content: ""; position: absolute; right: -24px; top: 6px; bottom: 6px; width: 10px; z-index: 2; pointer-events: none; border-radius: 5px; background: linear-gradient(#3cb371, #f2c94c 50%, #e5484d); box-shadow: 0 0 0 2px #fffdf8, 0 2px 4px rgba(40,30,20,.25); }
-.gd-cover[data-layout="scorecard"] .gd-cover-art::after { content: ""; position: absolute; right: -14px; top: 34%; width: 0; height: 0; z-index: 3; pointer-events: none; border-top: 7px solid transparent; border-bottom: 7px solid transparent; border-right: 11px solid #3a2a20; }
-
-/* ปกแบบ "luggagetag" = ป้ายชื่อกระเป๋าเดินทางหนังสีคาราเมล มุมโค้ง มีสายหนังคาดออกทางซ้ายพร้อมหัวเข็มขัดทอง (คู่มือ business-trip) */
-.gd-cover[data-layout="luggagetag"] .gd-cover-art { overflow: visible; margin-left: 18px; border: 8px solid #b8742e; border-left-width: 16px; border-radius: 14px 18px 18px 14px; box-shadow: inset 0 0 0 1.5px rgba(255,230,190,.5), 0 7px 16px rgba(80,40,10,.25); transform: rotate(-2deg); }
-.gd-cover[data-layout="luggagetag"] .gd-cover-art .gd-scene { border-radius: 6px; }
-.gd-cover[data-layout="luggagetag"] .gd-cover-art::before { content: ""; position: absolute; left: -38px; top: 50%; width: 34px; height: 14px; margin-top: -7px; z-index: 2; pointer-events: none; border-radius: 3px; background: linear-gradient(#a8642a, #8a4e1e); box-shadow: 0 2px 3px rgba(60,30,10,.3); }
-.gd-cover[data-layout="luggagetag"] .gd-cover-art::after { content: ""; position: absolute; left: -26px; top: 50%; width: 12px; height: 18px; margin-top: -9px; z-index: 3; pointer-events: none; border-radius: 3px; border: 3px solid #e6b84a; box-shadow: 0 1px 2px rgba(60,30,10,.35); }
-
-/* ปกแบบ "stitched" = ผ้าเย็บปะ ขอบผ้าเดนิมฟ้าเข้ม มีรอยเย็บเส้นประสีขาวรอบภาพ และป้ายผ้าสีแดงเย็บติดมุมซ้ายบน (คู่มือ workplace-assault) */
-.gd-cover[data-layout="stitched"] .gd-cover-art { overflow: visible; padding: 10px; border-radius: 12px; background: repeating-linear-gradient(45deg, #3e5c8a 0 3px, #4a6a9a 3px 6px); box-shadow: 0 7px 16px rgba(30,40,70,.28); }
-.gd-cover[data-layout="stitched"] .gd-cover-art .gd-scene { border-radius: 6px; outline: 2px dashed rgba(255,255,255,.85); outline-offset: 4px; }
-.gd-cover[data-layout="stitched"] .gd-cover-art::before { content: ""; position: absolute; left: -8px; top: -8px; width: 30px; height: 30px; z-index: 3; pointer-events: none; border-radius: 6px; background: #d9483b; box-shadow: inset 0 0 0 3px #d9483b, inset 0 0 0 4.5px #fff, 0 3px 5px rgba(60,20,10,.3); transform: rotate(-10deg); }
-.gd-cover[data-layout="stitched"] .gd-cover-art::after { content: "+"; position: absolute; left: -8px; top: -8px; width: 30px; height: 30px; z-index: 4; pointer-events: none; display: flex; align-items: center; justify-content: center; font: 900 22px/1 sans-serif; color: #fff; transform: rotate(-10deg); }
-
-/* ปกแบบ "corkpin" = รูปปักบนบอร์ดไม้ก๊อก กรอบก๊อกลายจุด มีหมุดหัวกลมสีแดงปักกลางด้านบน และกระดาษโน้ตเหลืองเสียบมุมขวาล่าง (คู่มือ chat-email-legal) */
-.gd-cover[data-layout="corkpin"] .gd-cover-art { overflow: visible; padding: 9px; border-radius: 6px; background: radial-gradient(circle at 30% 40%, #b07a4a 1px, transparent 1.6px) 0 0 / 7px 7px, radial-gradient(circle at 70% 70%, #9a6a3a 1px, transparent 1.6px) 0 0 / 9px 9px, #d4a26a; box-shadow: inset 0 0 0 3px #8a5a32, 0 7px 16px rgba(70,40,20,.25); }
-.gd-cover[data-layout="corkpin"] .gd-cover-art .gd-scene { border-radius: 2px; transform: rotate(-1.5deg); box-shadow: 0 3px 6px rgba(60,30,10,.3); }
-.gd-cover[data-layout="corkpin"] .gd-cover-art::before { content: ""; position: absolute; left: 50%; top: 2px; width: 16px; height: 16px; margin-left: -8px; z-index: 3; pointer-events: none; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ff8a7a, #c8281e 60%, #8a1a12); box-shadow: 2px 3px 3px rgba(60,20,10,.4); }
-.gd-cover[data-layout="corkpin"] .gd-cover-art::after { content: ""; position: absolute; right: -10px; bottom: -8px; width: 34px; height: 30px; z-index: 3; pointer-events: none; background: linear-gradient(#ffe873 0 70%, #f6d84a 70%); box-shadow: 0 3px 5px rgba(60,40,10,.25); transform: rotate(10deg); }
-
-/* ปกแบบ "redacted" = เอกสารลับขอบขาว มีแถบหมึกดำขีดทับมุมซ้ายบนแบบเซ็นเซอร์ และตรายางแดงสี่เหลี่ยม "ไม่จริง" เอียงมุมขวาล่าง (คู่มือ bad-reference) */
-.gd-cover[data-layout="redacted"] .gd-cover-art { overflow: visible; border: 6px solid #fffdf8; border-radius: 3px; box-shadow: 0 1px 0 #e8e0d0, 0 7px 16px rgba(40,30,20,.22); transform: rotate(1deg); }
-.gd-cover[data-layout="redacted"] .gd-cover-art .gd-scene { border-radius: 1px; }
-.gd-cover[data-layout="redacted"] .gd-cover-art::before { content: ""; position: absolute; left: -12px; top: 10px; width: 46%; height: 12px; z-index: 3; pointer-events: none; background: #1c1a20; border-radius: 2px; box-shadow: 14px 18px 0 -2px #1c1a20; transform: rotate(-3deg); }
-.gd-cover[data-layout="redacted"] .gd-cover-art::after { content: "ไม่จริง"; position: absolute; right: -14px; bottom: 8px; z-index: 3; pointer-events: none; padding: 4px 8px; font: 900 11px/1 sans-serif; letter-spacing: 1px; color: #d23a2e; border: 2.5px solid #d23a2e; border-radius: 3px; background: rgba(255,253,248,.8); transform: rotate(-12deg); }
-
-/* ปกแบบ "clipboard" = กระดาษบนกระดานรองเขียนไม้อัด ขอบไม้สีน้ำตาลอ่อน มีตัวหนีบโลหะกว้างด้านบนกลาง (คู่มือ company-property-return) */
-.gd-cover[data-layout="clipboard"] .gd-cover-art { overflow: visible; margin-top: 16px; border: 10px solid #c99a62; border-top-width: 22px; border-radius: 10px; background: #c99a62; box-shadow: inset 0 0 0 2px rgba(120,80,40,.25), 0 8px 18px rgba(80,50,20,.25); transform: rotate(-1.5deg); }
-.gd-cover[data-layout="clipboard"] .gd-cover-art .gd-scene { border-radius: 2px; box-shadow: 0 2px 0 #fffdf6, 0 4px 0 #efe6d4; }
-.gd-cover[data-layout="clipboard"] .gd-cover-art::before { content: ""; position: absolute; left: 50%; top: -34px; width: 64px; height: 26px; margin-left: -32px; z-index: 3; pointer-events: none; border-radius: 6px 6px 3px 3px; background: linear-gradient(#eef1f4, #a9b2bc); box-shadow: inset 0 -3px 0 rgba(60,70,80,.25), 0 3px 5px rgba(40,50,60,.3); }
-.gd-cover[data-layout="clipboard"] .gd-cover-art::after { content: ""; position: absolute; left: 50%; top: -28px; width: 22px; height: 8px; margin-left: -11px; z-index: 4; pointer-events: none; border-radius: 4px; background: #c99a62; box-shadow: inset 0 1px 2px rgba(60,40,20,.5); }
-
-/* ปกแบบ "dogtag" = ป้ายห้อยคอทหาร โลหะเงินขัดเงา มุมโค้งมาก มีรูกลมด้านบนซ้าย และสร้อยลูกปัดโลหะโค้งออกนอกกรอบ (คู่มือ military-training-leave) */
-.gd-cover[data-layout="dogtag"] .gd-cover-art { overflow: visible; margin-top: 22px; padding: 8px 8px 8px 22px; border-radius: 22px; background: linear-gradient(135deg, #f6f8fa 0%, #c3cad2 45%, #eef1f4 60%, #9aa3ad 100%); box-shadow: inset 0 0 0 1.5px rgba(80,90,100,.45), 0 7px 16px rgba(40,50,60,.25); transform: rotate(2deg); }
-.gd-cover[data-layout="dogtag"] .gd-cover-art .gd-scene { border-radius: 12px; }
-.gd-cover[data-layout="dogtag"] .gd-cover-art::before { content: ""; position: absolute; left: 6px; top: 50%; width: 10px; height: 10px; margin-top: -5px; z-index: 3; pointer-events: none; border-radius: 50%; background: #fffaf0; box-shadow: inset 0 1px 2px rgba(40,50,60,.5); }
-.gd-cover[data-layout="dogtag"] .gd-cover-art::after { content: ""; position: absolute; left: -2px; top: -22px; width: 70%; height: 70px; z-index: 2; pointer-events: none; border: 3px dotted #8a929c; border-color: #8a929c transparent transparent #8a929c; border-radius: 60px 0 0 0; transform: rotate(-6deg); }
-
-/* ปกแบบ "badge" = บัตรพนักงานในซองพลาสติกใส ขอบใสมน มีช่องเจาะรูปแคปซูลด้านบน และสายคล้องสีฟ้าพร้อมตัวหนีบโลหะ (คู่มือ side-job) */
-.gd-cover[data-layout="badge"] .gd-cover-art { overflow: visible; margin-top: 30px; border: 9px solid rgba(225,238,250,.85); border-top-width: 22px; border-radius: 14px; box-shadow: inset 0 0 0 1px rgba(120,150,180,.35), 0 8px 18px rgba(40,60,90,.22); transform: rotate(-2deg); }
-.gd-cover[data-layout="badge"] .gd-cover-art .gd-scene { border-radius: 4px; }
-.gd-cover[data-layout="badge"] .gd-cover-art::before { content: ""; position: absolute; left: 50%; top: -15px; width: 34px; height: 8px; margin-left: -17px; z-index: 3; pointer-events: none; border-radius: 4px; background: #fffdf8; box-shadow: inset 0 1px 2px rgba(60,80,110,.35); }
-.gd-cover[data-layout="badge"] .gd-cover-art::after { content: ""; position: absolute; left: 50%; top: -52px; width: 20px; height: 38px; margin-left: -10px; z-index: 2; pointer-events: none; border-radius: 3px 3px 5px 5px; background: linear-gradient(#4a8fd8 0 64%, #c7ccd4 64% 74%, #9aa2ae 74% 100%); box-shadow: 0 2px 4px rgba(40,60,90,.25); }
-
-/* ปกแบบ "perforated" = แสตมป์ ขอบปรุรอบด้านสีขาว ตราประทับวันที่วงรีสีม่วงมุมขวาล่าง (คู่มือ ss-not-remitted) */
-.gd-cover[data-layout="perforated"] .gd-cover-art { overflow: visible; padding: 7px; border-radius: 2px; background: radial-gradient(circle at 50% 50%, transparent 3px, #fffdf6 3.6px) -5px -5px / 10px 10px; box-shadow: 0 6px 16px rgba(60,40,20,.22); transform: rotate(-2deg); }
-.gd-cover[data-layout="perforated"] .gd-cover-art .gd-scene { border-radius: 1px; }
-.gd-cover[data-layout="perforated"] .gd-cover-art::after { content: "15 / ทุกเดือน"; position: absolute; right: -16px; bottom: 6px; z-index: 3; pointer-events: none; padding: 4px 8px; font: 900 10px/1 sans-serif; color: #6a4ab0; border: 2px solid #6a4ab0; border-radius: 50%; background: rgba(255,253,246,.8); transform: rotate(-14deg); }
+/* ===== ฉากประกอบการ์ด/ปกในหน้า "เรียนรู้" (วาดเอง ไม่ใช้ภาพจากที่อื่น) =====
+   VCScenes.svg(name, key) คืนสตริง SVG ขนาด viewBox 136×160 · name: condo | office | money | debt | scam | contract | leave | overtime | probation | payroll | social | worksite | cradle | farewell | chalk | pvd
+   key = ตัวต่อท้าย id ของ gradient (กันชนกันเมื่อมีฉากเดียวกันหลายจุดในหน้า) */
+(function () {
+  'use strict';
+  var S = {
+    condo: function (k) { return '<defs><linearGradient id="wa'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff1dc"/><stop offset="1" stop-color="#f7d9b3"/></linearGradient><linearGradient id="sk'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7b6fd6"/><stop offset=".55" stop-color="#ff9f8a"/><stop offset="1" stop-color="#ffd49a"/></linearGradient><radialGradient id="lamp'+k+'" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff3b0" stop-opacity=".9"/><stop offset="1" stop-color="#fff3b0" stop-opacity="0"/></radialGradient></defs><rect width="136" height="160" fill="url(#wa'+k+')"/><rect x="58" y="12" width="70" height="66" rx="5" fill="url(#sk'+k+')" stroke="#3a2a12" stroke-width="2.2"/><circle cx="112" cy="30" r="7" fill="#fff4c9"/><g fill="#5a4b8a"><rect x="62" y="48" width="12" height="30"/><rect x="76" y="38" width="14" height="40"/><rect x="92" y="52" width="10" height="26"/><rect x="104" y="44" width="16" height="34"/></g><g fill="#ffe27a"><rect x="79" y="43" width="3" height="3"/><rect x="85" y="49" width="3" height="3"/><rect x="79" y="55" width="3" height="3"/><rect x="108" y="50" width="3" height="3"/><rect x="114" y="58" width="3" height="3"/><rect x="65" y="54" width="3" height="3"/><rect x="95" y="58" width="3" height="3"/></g><path d="M93 12v66M58 45h70" stroke="#3a2a12" stroke-width="2"/><path d="M54 8h78" stroke="#3a2a12" stroke-width="2.6" stroke-linecap="round"/><path d="M56 9c6 20 2 44 8 72l-10 0c-3-26-2-50 2-72z" fill="#f08a5d" stroke="#3a2a12" stroke-width="1.8" stroke-linejoin="round"/><path d="M130 9c-5 20-2 44-7 72l9 0c2-26 2-50-2-72z" fill="#f08a5d" stroke="#3a2a12" stroke-width="1.8" stroke-linejoin="round"/><rect x="0" y="122" width="136" height="38" fill="#d9a46a"/><path d="M0 122h136" stroke="#3a2a12" stroke-width="2"/><path d="M0 136h136M0 150h136M30 122v14M80 136v14M110 122v14M50 150v10" stroke="#b9844e" stroke-width="1.4"/><ellipse cx="96" cy="132" rx="34" ry="5" fill="#000" opacity=".08"/><g stroke="#3a2a12" stroke-width="1.8" stroke-linejoin="round"><rect x="74" y="98" width="56" height="26" rx="8" fill="#6fb3a8"/><rect x="70" y="92" width="12" height="32" rx="6" fill="#5c9f94"/><rect x="122" y="92" width="12" height="32" rx="6" fill="#5c9f94"/><rect x="82" y="94" width="20" height="14" rx="5" fill="#f6c86b"/><rect x="104" y="94" width="18" height="14" rx="5" fill="#f3a07d"/></g><g stroke="#3a2a12" stroke-width="1.6"><path d="M118 84l0-6" /><rect x="113" y="66" width="10" height="12" rx="2" fill="#fff4c9"/></g><circle cx="118" cy="72" r="16" fill="url(#lamp'+k+')"/><g transform="translate(66 104) rotate(-15)" stroke="#3a2a12" stroke-width="1.5" fill="#f4c542"><circle r="5.5"/><circle r="1.8" fill="#fff6d0"/><path d="M5 0h13v3.5h-3v3h-3v-3h-7z" stroke-linejoin="round"/></g>'; },
+    office: function (k) { return '<defs><linearGradient id="wb'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef3ff"/><stop offset="1" stop-color="#d3e0f7"/></linearGradient><linearGradient id="rain'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fa3c4"/><stop offset="1" stop-color="#b9c8e0"/></linearGradient></defs><rect width="136" height="160" fill="url(#wb'+k+')"/><rect x="62" y="12" width="64" height="54" rx="5" fill="url(#rain'+k+')" stroke="#3a2a12" stroke-width="2.2"/><g fill="#dfe7f3" stroke="#3a2a12" stroke-width="1.6"><path d="M72 30q0-7 7-7q3-5 9-3q6-2 8 4q6 1 5 6z"/><path d="M98 22q1-5 6-5q3-3 7 0q5 0 5 5z"/></g><g stroke="#e9f0fb" stroke-width="1.6" stroke-linecap="round" opacity=".9"><path d="M74 38l-3 7M84 40l-3 7M94 36l-3 7M104 40l-3 7M114 36l-3 7M80 50l-3 7M100 52l-3 7M118 50l-3 7"/></g><path d="M94 12v54" stroke="#3a2a12" stroke-width="2"/><g stroke="#3a2a12" stroke-width="1.6"><path d="M18 26h28" stroke-width="2"/><rect x="22" y="12" width="9" height="14" rx="1.5" fill="#f3a07d"/><rect x="32" y="15" width="8" height="11" rx="1.5" fill="#6fb3a8"/><rect x="41" y="10" width="5" height="16" rx="1.5" fill="#f6c86b"/></g><rect x="50" y="108" width="86" height="8" rx="2" fill="#b07a45" stroke="#3a2a12" stroke-width="2"/><path d="M58 116v44M128 116v44" stroke="#3a2a12" stroke-width="3"/><g stroke="#3a2a12" stroke-width="1.8" stroke-linejoin="round"><path d="M84 80h44l-4 28h-36z" fill="#d6a76a"/><path d="M84 80l-6-8h44l6 8" fill="#e8bf86"/><path d="M98 92h16" stroke-width="2.4" stroke-linecap="round"/></g><g stroke="#3a2a12" stroke-width="1.6"><rect x="90" y="62" width="14" height="20" rx="1.5" fill="#fff" transform="rotate(-10 97 72)"/><path d="M114 80q0-14 6-18q2 8-2 18" fill="#7cc58a"/><path d="M116 80q-6-10-2-16q5 5 4 16" fill="#5fae73"/></g><rect x="60" y="96" width="22" height="13" rx="2" fill="#5b6b86" stroke="#3a2a12" stroke-width="1.6"/><rect x="56" y="108" width="30" height="3" rx="1.5" fill="#3a2a12"/><rect x="0" y="146" width="136" height="14" fill="#c3d1e8"/><path d="M0 146h136" stroke="#3a2a12" stroke-width="1.6"/>'; },
+    // ทวงหนี้: ห้องตอนดึก นาฬิกาเลยสองทุ่ม มือถือสั่นรัว ๆ
+    debt: function (k) { return '<defs><linearGradient id="wd'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b3566"/><stop offset="1" stop-color="#4a4f8c"/></linearGradient><radialGradient id="ph'+k+'" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ff8a7a" stop-opacity=".75"/><stop offset="1" stop-color="#ff8a7a" stop-opacity="0"/></radialGradient></defs><rect width="136" height="160" fill="url(#wd'+k+')"/><g fill="#fff" opacity=".8"><circle cx="20" cy="18" r="1"/><circle cx="44" cy="10" r="1.3"/><circle cx="58" cy="30" r=".9"/><circle cx="12" cy="44" r="1.1"/></g><path d="M30 14a10 10 0 1 0 9 14a8 8 0 1 1-9-14z" fill="#ffe9a8"/><g transform="translate(-14 4)"><g stroke="#3a2a12" stroke-width="2"><circle cx="110" cy="30" r="17" fill="#fff7e6"/><path d="M110 30v-10M110 30l-9 4" stroke-width="2.6" stroke-linecap="round"/><circle cx="110" cy="30" r="2" fill="#3a2a12" stroke="none"/></g><g fill="#3a2a12"><circle cx="110" cy="16" r="1.3"/><circle cx="124" cy="30" r="1.3"/><circle cx="110" cy="44" r="1.3"/><circle cx="96" cy="30" r="1.3"/></g><rect x="118" y="40" width="16" height="10" rx="5" fill="#ff5d5d" stroke="#3a2a12" stroke-width="1.4"/><path d="M122 45h8" stroke="#fff" stroke-width="2" stroke-linecap="round"/></g><rect x="0" y="128" width="136" height="32" fill="#6a5a9e"/><rect x="48" y="122" width="88" height="8" rx="2" fill="#8d6b4a" stroke="#3a2a12" stroke-width="2"/><circle cx="98" cy="88" r="34" fill="url(#ph'+k+')"/><g class="sc-vib"><g stroke="#3a2a12" stroke-width="2" stroke-linejoin="round"><rect x="80" y="58" width="36" height="64" rx="7" fill="#24283d"/><rect x="84" y="66" width="28" height="46" rx="3" fill="#ff7a6b"/></g><circle cx="98" cy="84" r="9" fill="#fff" stroke="#3a2a12" stroke-width="1.6"/><path d="M93.5 81.5q0 7 9 7l1.5-2.5-3-2-1.6 1.4q-2.6-1-3.6-3.6l1.4-1.6-2-3z" fill="#e0453a"/><path d="M89 100h18M92 105h12" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".9"/><path d="M94 61.5h8" stroke="#555b78" stroke-width="2" stroke-linecap="round"/></g><g class="sc-ring" stroke="#ffd2c8" stroke-width="2.4" stroke-linecap="round" fill="none"><path d="M74 70q-5 8 0 16M68 66q-8 12 0 24"/><path d="M122 70q5 8 0 16M128 66q8 12 0 24"/></g>'; },
+    // มิจฉาชีพ: มือถือมีแชตหลอก เบ็ดตกปลาเกี่ยวเหรียญออกจากจอ
+    scam: function (k) { return '<defs><linearGradient id="we'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe8ef"/><stop offset="1" stop-color="#f6c7d8"/></linearGradient></defs><rect width="136" height="160" fill="url(#we'+k+')"/><g opacity=".35" fill="#e88aa8"><circle cx="18" cy="24" r="4"/><circle cx="40" cy="12" r="2.5"/><circle cx="120" cy="140" r="5"/></g><rect x="0" y="134" width="136" height="26" fill="#eaa9c0"/><g stroke="#3a2a12" stroke-width="2" stroke-linejoin="round"><rect x="62" y="48" width="44" height="80" rx="8" fill="#24283d"/><rect x="66" y="56" width="36" height="62" rx="3" fill="#fff"/></g><g stroke="#3a2a12" stroke-width="1.3" stroke-linejoin="round"><path d="M70 62h22a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3h-16l-4 3v-3h-2a3 3 0 0 1-3-3v-6a3 3 0 0 1 3-3z" fill="#d7f5e1"/><path d="M98 80h-18a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h14l4 3v-3a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3z" fill="#ffe08a"/></g><path d="M73 67h16M73 71h10M81 85h14M81 89h8" stroke="#6b7a8c" stroke-width="1.6" stroke-linecap="round"/><text x="74" y="110" font-size="9" font-weight="700" fill="#e0453a" font-family="sans-serif">฿฿฿</text><g transform="translate(-14 0)"><g class="sc-hook"><path d="M100 0v40" stroke="#3a2a12" stroke-width="1.4"/><path d="M100 40v10q0 7 6 7q5 0 5-5" fill="none" stroke="#6b7a8c" stroke-width="2.6" stroke-linecap="round"/><g stroke="#3a2a12" stroke-width="1.8"><circle cx="112" cy="62" r="8" fill="#f4c542"/><path d="M110.3 58.5v7M113.7 58.5v7" stroke="#8a5a08" stroke-linecap="round"/></g></g></g><g class="sc-warn" stroke="#3a2a12" stroke-width="1.8" stroke-linejoin="round"><path d="M30 26l14 24h-28z" fill="#ffd24d"/><path d="M30 34v8" stroke-width="2.6" stroke-linecap="round"/><circle cx="30" cy="46" r="1.4" fill="#3a2a12"/></g>'; },
+    // สัญญาเอาเปรียบ: กระดาษสัญญาบนบอร์ด มีข้อหนึ่งวงแดง + ตาชั่งเอียง
+    contract: function (k) { return '<defs><linearGradient id="wf'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6d8"/><stop offset="1" stop-color="#f3dfa6"/></linearGradient></defs><rect width="136" height="160" fill="url(#wf'+k+')"/><g transform="translate(-12 0)"><rect x="58" y="10" width="72" height="72" rx="4" fill="#c89a62" stroke="#3a2a12" stroke-width="2"/><g stroke="#3a2a12" stroke-width="1.6"><rect x="66" y="16" width="44" height="60" rx="2" fill="#fff" transform="rotate(-3 88 46)"/></g><g transform="rotate(-3 88 46)" stroke-linecap="round"><path d="M72 24h30M72 30h24M72 36h30M72 52h26M72 58h30M72 64h18" stroke="#c4cbd6" stroke-width="2"/><rect x="70" y="40" width="34" height="8" rx="2" fill="#ffd84d" opacity=".8"/><ellipse cx="87" cy="44" rx="21" ry="7.5" fill="none" stroke="#e0453a" stroke-width="2.2"/></g><circle cx="110" cy="18" r="3.5" fill="#e0453a" stroke="#3a2a12" stroke-width="1.2"/><path d="M114 40l8-5M114 46h10" stroke="#e0453a" stroke-width="2.4" stroke-linecap="round"/></g><rect x="48" y="122" width="88" height="8" rx="2" fill="#b07a45" stroke="#3a2a12" stroke-width="2"/><rect x="0" y="130" width="136" height="30" fill="#e8c98a"/><g transform="translate(-10 0)" stroke="#3a2a12" stroke-width="1.8" stroke-linejoin="round"><path d="M100 120v-26" stroke-width="2.4"/><path d="M92 122h16" stroke-width="3" stroke-linecap="round"/><circle cx="100" cy="92" r="3" fill="#f4c542"/><g class="sc-scale"><path d="M80 88l40 8" stroke-width="2.4" stroke-linecap="round"/><path d="M80 88l-7 14h14z" fill="none" stroke-width="1.2"/><path d="M71 102h18q-2 6-9 6q-7 0-9-6z" fill="#f4c542"/><path d="M120 96l-7 14h14z" fill="none" stroke-width="1.2"/><path d="M111 110h18q-2 6-9 6q-7 0-9-6z" fill="#f4c542"/><rect x="114" y="100" width="12" height="9" rx="1.5" fill="#6a5a9e"/><circle cx="80" cy="99" r="3" fill="#fff"/></g></g>'; },
+    // วันลา/วันหยุด: ปฏิทินติดผนังมีวันติ๊กเขียว กระเป๋าเดินทาง แดดอ่อน
+    leave: function (k) { return '<defs><linearGradient id="wl'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e6f6ff"/><stop offset="1" stop-color="#c7e8fb"/></linearGradient></defs><rect width="136" height="160" fill="url(#wl'+k+')"/><circle cx="28" cy="22" r="11" fill="#ffe27a" opacity=".9"/><g stroke="#3a2a12" stroke-width="2"><rect x="50" y="14" width="66" height="60" rx="5" fill="#fff"/><rect x="50" y="14" width="66" height="15" rx="5" fill="#3bb3a0"/><path d="M62 9v10M104 9v10" stroke-width="2.6" stroke-linecap="round"/></g><g fill="#e9eef6"><rect x="56" y="34" width="10" height="9" rx="1.5"/><rect x="70" y="34" width="10" height="9" rx="1.5"/><rect x="98" y="34" width="10" height="9" rx="1.5"/><rect x="56" y="48" width="10" height="9" rx="1.5"/><rect x="84" y="48" width="10" height="9" rx="1.5"/><rect x="98" y="48" width="10" height="9" rx="1.5"/><rect x="70" y="62" width="10" height="7" rx="1.5"/></g><g stroke="#2e9e5b" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M85 38l3 3 5-6M71 52l3 3 5-6M57 65l3 3 5-6"/></g><rect x="0" y="128" width="136" height="32" fill="#9fd0e6"/><path d="M0 128h136" stroke="#3a2a12" stroke-width="2"/><g class="sc-bob" stroke="#3a2a12" stroke-width="2" stroke-linejoin="round"><rect x="80" y="92" width="40" height="36" rx="5" fill="#f08a5d"/><path d="M92 92v-8h16v8" fill="none" stroke-width="2.6"/><path d="M80 104h40" stroke-width="1.6"/><circle cx="92" cy="116" r="4" fill="#ffd84d" stroke-width="1.4"/><rect x="100" y="112" width="12" height="8" rx="2" fill="#7cc58a" stroke-width="1.4"/></g><path d="M124 80l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#fff"/>'; },
+    // OT: ออฟฟิศตอนค่ำ โคมไฟโต๊ะ แล็ปท็อป กาแฟ นาฬิกาเลยเวลาเลิกงาน
+    overtime: function (k) { return '<defs><linearGradient id="wo'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3d3a7a"/><stop offset="1" stop-color="#6b5aa6"/></linearGradient><radialGradient id="lo'+k+'" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffe9a0" stop-opacity=".85"/><stop offset="1" stop-color="#ffe9a0" stop-opacity="0"/></radialGradient></defs><rect width="136" height="160" fill="url(#wo'+k+')"/><g fill="#fff" opacity=".8"><circle cx="20" cy="16" r="1.2"/><circle cx="44" cy="30" r="1"/><circle cx="12" cy="48" r="1.3"/></g><g stroke="#3a2a12" stroke-width="2"><circle cx="100" cy="30" r="16" fill="#fff7e6"/><path d="M100 30v-10M100 30l10 4" stroke-width="2.6" stroke-linecap="round"/></g><text x="100" y="58" text-anchor="middle" font-size="8" font-weight="800" fill="#ffd2a0" font-family="sans-serif">19:00</text><circle cx="76" cy="96" r="34" fill="url(#lo'+k+')"/><rect x="48" y="118" width="88" height="8" rx="2" fill="#8d6b4a" stroke="#3a2a12" stroke-width="2"/><rect x="0" y="126" width="136" height="34" fill="#4a3f7d"/><g stroke="#3a2a12" stroke-width="2" stroke-linejoin="round"><path d="M62 118l4-28h40l4 28z" fill="#3b4a66"/><rect x="70" y="96" width="32" height="18" rx="2" fill="#9fd3ff"/><path d="M58 118h56" stroke-width="3"/></g><g class="sc-bob" stroke="#3a2a12" stroke-width="1.8"><path d="M118 104h12l-2 14h-8z" fill="#fff"/><path d="M130 107q5 0 4 5t-5 3" fill="none"/></g>'; },
+    // ทดลองงาน: ป้ายชื่อพนักงานใหม่ + คลิปบอร์ดเช็กลิสต์ + ปฏิทิน 120
+    probation: function (k) { return '<defs><linearGradient id="wp'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff4e6"/><stop offset="1" stop-color="#ffdcb8"/></linearGradient></defs><rect width="136" height="160" fill="url(#wp'+k+')"/><g stroke="#3a2a12" stroke-width="2"><rect x="58" y="14" width="50" height="62" rx="4" fill="#c89a62"/><rect x="63" y="20" width="40" height="52" rx="2" fill="#fff"/><rect x="74" y="10" width="18" height="8" rx="2" fill="#8a96a8"/></g><g stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M67 30l3 3 5-6M67 44l3 3 5-6" stroke="#2e9e5b"/><rect x="67" y="56" width="8" height="8" rx="1.5" stroke="#8a96a8"/><path d="M80 31h18M80 45h18M80 60h14" stroke="#c4cbd6"/></g><g transform="translate(84 88)"><g class="sc-bob" stroke="#3a2a12" stroke-width="2"><path d="M18 0v10" stroke="#3b6fd6" stroke-width="3"/><rect x="0" y="10" width="36" height="26" rx="4" fill="#fff"/><rect x="0" y="10" width="36" height="8" rx="4" fill="#3b6fd6"/><circle cx="10" cy="26" r="5" fill="#f7d9b3" stroke-width="1.4"/><path d="M18 24h12M18 30h9" stroke="#c4cbd6" stroke-width="2" stroke-linecap="round"/></g></g><rect x="0" y="128" width="136" height="32" fill="#e8b98a"/><path d="M0 128h136" stroke="#3a2a12" stroke-width="2"/><path d="M122 66l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#ffd84d"/>'; },
+    // หักเงินเดือน: สลิปเงินเดือนมีบรรทัดหักสีแดง + กรรไกร + เหรียญ
+    payroll: function (k) { return '<defs><linearGradient id="wy'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eefaf3"/><stop offset="1" stop-color="#cfeedd"/></linearGradient></defs><rect width="136" height="160" fill="url(#wy'+k+')"/><g transform="translate(54 14) rotate(4)" stroke="#3a2a12" stroke-width="2"><rect width="62" height="78" rx="3" fill="#fff"/><rect width="62" height="14" rx="3" fill="#3bb3a0"/><path d="M8 24h30M8 33h40M8 42h26" stroke="#c4cbd6" stroke-width="2.2" stroke-linecap="round"/><path d="M8 54h6" stroke="#e0453a" stroke-width="3" stroke-linecap="round"/><path d="M18 54h30" stroke="#ff9a8f" stroke-width="2.2" stroke-linecap="round"/><path d="M8 66h22" stroke="#2e7d4a" stroke-width="2.6" stroke-linecap="round"/></g><g transform="translate(100 100)"><g class="sc-bob" stroke="#3a2a12" stroke-width="2"><circle cx="0" cy="0" r="6" fill="none" stroke-width="2.4"/><circle cx="0" cy="14" r="6" fill="none" stroke-width="2.4"/><path d="M5 3l20 12M5 11l20-12" stroke-width="2.6" stroke-linecap="round"/></g></g><rect x="0" y="128" width="136" height="32" fill="#a8d5b5"/><path d="M0 128h136" stroke="#3a2a12" stroke-width="2"/><g stroke="#3a2a12" stroke-width="1.6" fill="#f4c542"><ellipse cx="114" cy="126" rx="10" ry="3.6"/><ellipse cx="114" cy="122" rx="10" ry="3.6"/></g>'; },
+    // ประกันสังคม: ตราวงกลมใหญ่ มีร่มคุ้มครอง + ไอคอนสิทธิ์ล้อมรอบ บนพื้นแสงแผ่รัศมี (คนละแบบกับฉากห้อง)
+    social: function (k) { var ic = function (x, y, c, inner) { return '<g transform="translate(' + x + ' ' + y + ')"><circle r="11" fill="' + c + '" stroke="#3a2a12" stroke-width="1.8"/>' + inner + '</g>'; };
+      return '<defs><radialGradient id="ws'+k+'" cx=".5" cy=".42" r=".7"><stop offset="0" stop-color="#fff7d6"/><stop offset="1" stop-color="#bfe3ff"/></radialGradient></defs><rect width="136" height="160" fill="url(#ws'+k+')"/>' +
+      '<g class="sc-rays" opacity=".35" stroke="#ffffff" stroke-width="7">' + [0,30,60,90,120,150].map(function (a) { return '<path d="M68 66l' + (Math.cos(a*Math.PI/180)*90).toFixed(1) + ' ' + (Math.sin(a*Math.PI/180)*90).toFixed(1) + 'M68 66l' + (-Math.cos(a*Math.PI/180)*90).toFixed(1) + ' ' + (-Math.sin(a*Math.PI/180)*90).toFixed(1) + '"/>'; }).join('') + '</g>' +
+      '<circle cx="68" cy="66" r="34" fill="#fff" stroke="#3a2a12" stroke-width="2.4"/><circle cx="68" cy="66" r="28" fill="#3b6fd6" stroke="#3a2a12" stroke-width="1.6"/>' +
+      '<path d="M68 52v28q0 5-5 5q-4 0-4-4" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><path d="M46 66Q48 46 68 45Q88 46 90 66q-5.5-4-11 0q-5.5-4-11 0q-5.5-4-11 0q-5.5-4-11 0z" fill="#ffd84d" stroke="#3a2a12" stroke-width="1.6" stroke-linejoin="round"/><path d="M68 45v-4" stroke="#3a2a12" stroke-width="2" stroke-linecap="round"/><path d="M57 63Q60 52 68 47M79 63Q76 52 68 47" fill="none" stroke="#e0b52e" stroke-width="1.2"/>' +
+      ic(26, 30, '#ff8a9a', '<path d="M0 4c-4-3-6-5-6-7.5a3 3 0 0 1 6-1a3 3 0 0 1 6 1c0 2.5-2 4.5-6 7.5z" fill="#fff"/>') +
+      ic(110, 30, '#7cc58a', '<circle cy="-2" r="3" fill="#fff"/><path d="M-5 6q5-6 10 0" fill="#fff"/>') +
+      ic(18, 96, '#f6c86b', '<path d="M-5 0h10M0-5v10" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>') +
+      ic(118, 96, '#b79cf0', '<circle r="5" fill="none" stroke="#fff" stroke-width="1.8"/><path d="M0 0v-3M0 0l2.5 1.5" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>') +
+      '<rect x="0" y="134" width="136" height="26" fill="#9cc9ee"/><path d="M0 134h136" stroke="#3a2a12" stroke-width="2"/>'; },
+    // บาดเจ็บจากงาน: ไซต์ก่อสร้างกลางแจ้ง ปั้นจั่น หมวกนิรภัย กรวยจราจร เทปกั้นลายเหลืองดำ ไฟเตือนหมุน
+    worksite: function (k) { return '<defs><linearGradient id="wk'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffcf8a"/><stop offset=".55" stop-color="#ffe9c2"/><stop offset="1" stop-color="#fff6e3"/></linearGradient><pattern id="tp'+k+'" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="14" fill="#2b2b2b"/><rect x="7" width="7" height="14" fill="#ffd22e"/></pattern><radialGradient id="bl'+k+'" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ff6b3d" stop-opacity=".8"/><stop offset="1" stop-color="#ff6b3d" stop-opacity="0"/></radialGradient></defs><rect width="136" height="160" fill="url(#wk'+k+')"/>' +
+      '<g stroke="#5a4b3a" stroke-width="1.6" fill="none" opacity=".75"><path d="M96 128V18M104 128V18M96 18h52M96 18L78 30h22"/><path d="M96 28l8 10M104 28l-8 10M96 48l8 10M104 48l-8 10M96 68l8 10M104 68l-8 10M96 88l8 10M104 88l-8 10M96 108l8 10M104 108l-8 10"/><path d="M126 18v28" stroke-width="1.2"/></g><g class="sc-sway"><path d="M126 46v8" stroke="#5a4b3a" stroke-width="1.2"/><path d="M122 54h8l-4 8z" fill="#5a4b3a"/></g>' +
+      '<rect x="0" y="122" width="136" height="38" fill="#d9b98a"/><path d="M0 122h136" stroke="#3a2a12" stroke-width="2"/><rect x="0" y="110" width="136" height="9" fill="url(#tp'+k+')" stroke="#3a2a12" stroke-width="1.4"/>' +
+      '<g stroke="#3a2a12" stroke-width="1.8" stroke-linejoin="round"><path d="M62 122l8-26h4l8 26z" fill="#ff7a2e"/><path d="M66 112h14M68 104h10" stroke="#fff" stroke-width="3"/><rect x="58" y="120" width="28" height="5" rx="1.5" fill="#ff7a2e"/></g>' +
+      
+      '<g stroke="#3a2a12" stroke-width="2" stroke-linejoin="round"><path d="M100 104q0-16 16-16q16 0 16 16z" fill="#ffd22e"/><path d="M96 104h40" stroke-width="3" stroke-linecap="round"/><path d="M116 88v16" stroke-width="1.4"/></g>'; },
+    // ลาคลอด: ภาพแบบกระดาษตัดซ้อนชั้น (papercraft) เมฆหลายชั้นมีเงา จันทร์เสี้ยวเป็นเปลเด็ก ดาวห้อย
+    cradle: function (k) { var sh = 'filter="url(#ps' + k + ')"'; return '<defs><linearGradient id="wm'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe3ec"/><stop offset="1" stop-color="#e7dcff"/></linearGradient><filter id="ps'+k+'" x="-10%" y="-10%" width="130%" height="140%"><feDropShadow dx="0" dy="3" stdDeviation="2" flood-color="#7a4b8a" flood-opacity=".25"/></filter></defs><rect width="136" height="160" fill="url(#wm'+k+')"/>' +
+      '<g class="sc-hang"><path d="M86 0v22M108 0v34M64 0v14" stroke="#b9a3d6" stroke-width="1.2"/><path d="M86 22l3 6 6 1-4 4 1 6-6-3-6 3 1-6-4-4 6-1z" fill="#ffd84d" stroke="#3a2a12" stroke-width="1.2"/><path d="M108 34l2.4 5 5 .8-3.6 3.4.8 5-4.6-2.4-4.6 2.4.8-5-3.6-3.4 5-.8z" fill="#fff" stroke="#3a2a12" stroke-width="1.2"/><circle cx="64" cy="18" r="4.4" fill="#ffb3c8" stroke="#3a2a12" stroke-width="1.2"/></g>' +
+      '<g class="sc-glow"><path d="M70 50a30 30 0 1 0 44 34a24 24 0 1 1-44-34z" fill="#fff3c4" stroke="#3a2a12" stroke-width="2" ' + sh + '/></g><path d="M86 82q8 6 18 0" fill="none" stroke="#3a2a12" stroke-width="1.6" stroke-linecap="round"/><ellipse cx="94" cy="70" rx="12" ry="9" fill="#ffc6d6" stroke="#3a2a12" stroke-width="1.6"/><circle cx="90" cy="64" r="6" fill="#f7d9b3" stroke="#3a2a12" stroke-width="1.4"/>' +
+      '<path d="M0 118q20-14 40-6t40-8t56 2v54H0z" fill="#d7c4f2" ' + sh + '/><path d="M0 130q30-12 60-2t76-6v38H0z" fill="#f6c6d8" ' + sh + '/><path d="M0 144q40-10 80-2t56-4v22H0z" fill="#ffe3ec" ' + sh + '/>'; },
+    // ลาออก: มุมมองไอโซเมตริก โต๊ะทำงาน + ลังเก็บของ + ประตูมีป้ายทางออกไฟนีออนเขียว
+    farewell: function (k) { return '<defs><linearGradient id="wf2'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d3b5e"/><stop offset="1" stop-color="#46598a"/></linearGradient></defs><rect width="136" height="160" fill="url(#wf2'+k+')"/>' +
+      '<g fill="#fff" opacity=".5"><circle cx="20" cy="10" r="1.2"/><circle cx="110" cy="8" r="1"/></g>' +
+      // ผนังห้องสองด้าน (ซ้าย/ขวา) แบบไอโซเมตริก + พื้น
+      '<path d="M0 108L68 76V18L0 50z" fill="#5a6c9c" stroke="#3a2a12" stroke-width="1.6" stroke-linejoin="round"/><path d="M68 76l68 32V50L68 18z" fill="#6f82b4" stroke="#3a2a12" stroke-width="1.6" stroke-linejoin="round"/>' +
+      '<path d="M0 108L68 76l68 32-68 34z" fill="#c7b08a" stroke="#3a2a12" stroke-width="1.6" stroke-linejoin="round"/><path d="M0 108v52h136v-52l-68 34z" fill="#a8916c"/>' +
+      '<path d="M14 64l40-18v22l-40 18z" fill="#9fd3ff" stroke="#3a2a12" stroke-width="1.4"/><path d="M34 55v22" stroke="#3a2a12" stroke-width="1.2"/>' +
+      // ประตูบนผนังขวา (ขนานแนวผนัง)
+      '<g stroke="#3a2a12" stroke-width="1.6" stroke-linejoin="round"><path d="M90 86l26 12V58L90 46z" fill="#8d6b4a"/><path d="M93 84l20 9.5V60l-20-9.5z" fill="#5b4632"/><circle cx="108" cy="78" r="1.8" fill="#ffd84d"/></g>' +
+      // ป้าย EXIT เหนือประตู เอียงตามผนัง
+      '<g class="sc-neon"><path d="M92 42l22 10.4v-9L92 33z" fill="#112018" stroke="#3a2a12" stroke-width="1.2" stroke-linejoin="round"/><text font-size="6.2" font-weight="800" fill="#4dff9a" font-family="sans-serif" text-anchor="middle" transform="translate(103 45.5) rotate(25.3)">EXIT</text></g>' +
+      // ลังเก็บของบนพื้น
+      '<g stroke="#3a2a12" stroke-width="1.6" stroke-linejoin="round"><path d="M44 104l26-12 26 12-26 12z" fill="#e8bf86"/><path d="M44 104v18l26 12v-18z" fill="#d6a76a"/><path d="M96 104v18l-26 12v-18z" fill="#c48d55"/><path d="M58 98v-12h8v16M74 96l6-10 6 4-4 8" fill="#fff"/><circle cx="76" cy="88" r="5" fill="#7cc58a"/></g>'; },
+    // สัญญาจ้าง: สไตล์กระดานดำ ลายเส้นชอล์กค่อย ๆ วาดสัญญา + วงกลมเตือน
+    chalk: function (k) { var ch = 'fill="none" stroke="#f4f1e6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"'; return '<defs><radialGradient id="wc3'+k+'" cx=".4" cy=".35" r=".9"><stop offset="0" stop-color="#3f6b52"/><stop offset="1" stop-color="#23402f"/></radialGradient></defs><rect width="136" height="160" fill="url(#wc3'+k+')"/><rect x="0" y="0" width="136" height="160" fill="none" stroke="#8d5a33" stroke-width="10"/>' +
+      '<g opacity=".12" fill="#fff"><ellipse cx="40" cy="30" rx="30" ry="8"/><ellipse cx="100" cy="120" rx="34" ry="9"/></g>' +
+      '<g class="sc-chalk" ' + ch + '><path d="M60 20h44l8 8v56H60z" pathLength="100"/><path d="M104 20v8h8" pathLength="100"/><path d="M67 36h30M67 46h36M67 56h24" pathLength="100"/><path d="M68 72q5-8 10 0t10 0" pathLength="100"/></g>' +
+      '<g class="sc-chalk2" fill="none" stroke="#ffd84d" stroke-width="2.4" stroke-linecap="round"><circle cx="102" cy="58" r="14" pathLength="100"/><path d="M102 50v9M102 64v.5" pathLength="100"/></g>' +
+      '<rect x="18" y="140" width="22" height="5" rx="2" fill="#f4f1e6" transform="rotate(-8 29 142)"/><rect x="100" y="146" width="26" height="8" rx="2" fill="#c9b49a"/>'; },
+    // กองทุนสำรองเลี้ยงชีพ: ตู้กระจกเลี้ยงต้นไม้เงิน ใบไหว ผลเป็นเหรียญ (สไตล์กระจกใส)
+    pvd: function (k) { return '<defs><linearGradient id="wp2'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9fff3"/><stop offset="1" stop-color="#c9efe0"/></linearGradient><linearGradient id="gl'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".55"/><stop offset="1" stop-color="#bfe8ff" stop-opacity=".15"/></linearGradient></defs><rect width="136" height="160" fill="url(#wp2'+k+')"/>' +
+      '<circle cx="30" cy="26" r="40" fill="#fff" opacity=".35"/><rect x="0" y="130" width="136" height="30" fill="#a8d8bf"/><path d="M0 130h136" stroke="#3a2a12" stroke-width="2"/>' +
+      '<path d="M50 130V54q0-26 34-26t34 26v76z" fill="url(#gl'+k+')" stroke="#3a2a12" stroke-width="2"/><rect x="46" y="124" width="76" height="10" rx="3" fill="#8d6b4a" stroke="#3a2a12" stroke-width="1.8"/>' +
+      '<path d="M84 124V82" stroke="#6b4a2a" stroke-width="4" stroke-linecap="round"/><path d="M84 100q-12-4-16-14M84 92q12-4 16-14" stroke="#6b4a2a" stroke-width="2.4" fill="none" stroke-linecap="round"/>' +
+      '<g class="sc-leaf"><ellipse cx="84" cy="66" rx="24" ry="18" fill="#5fae73" stroke="#3a2a12" stroke-width="1.8"/><ellipse cx="66" cy="82" rx="12" ry="9" fill="#6fbf7f" stroke="#3a2a12" stroke-width="1.6"/><ellipse cx="102" cy="76" rx="12" ry="9" fill="#6fbf7f" stroke="#3a2a12" stroke-width="1.6"/></g>' +
+      '<g class="sc-twinkle" stroke="#3a2a12" stroke-width="1.4" fill="#f4c542"><circle cx="76" cy="62" r="4.5"/><circle cx="94" cy="70" r="4.5"/><circle cx="66" cy="84" r="4"/><circle cx="102" cy="78" r="4"/></g>' +
+      '<path d="M58 44q8-14 22-16" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".8"/>'; },
+    // จ้างเด็ก/นักศึกษา: ร้านกาแฟยามเย็น กันสาดลายทาง หน้าต่างอุ่น ป้าย OPEN แกว่ง ไอกาแฟลอย
+    youth: function (k) { return '<defs><linearGradient id="ys'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a6cd6"/><stop offset=".55" stop-color="#f39a8c"/><stop offset="1" stop-color="#ffd18a"/></linearGradient><radialGradient id="yw'+k+'" cx=".5" cy=".5" r=".7"><stop offset="0" stop-color="#fff3c4"/><stop offset="1" stop-color="#ffc766"/></radialGradient></defs><rect width="136" height="160" fill="url(#ys'+k+')"/>' +
+      '<circle cx="104" cy="22" r="9" fill="#fff6d6" opacity=".9"/><g fill="#fff"><circle cx="30" cy="16" r="1.2"/><circle cx="58" cy="30" r="1"/><circle cx="84" cy="10" r="1.1"/></g>' +
+      '<rect x="14" y="52" width="110" height="108" fill="#f7efe6" stroke="#3a2a12" stroke-width="2"/><rect x="0" y="146" width="136" height="14" fill="#cbb79f"/><path d="M0 146h136" stroke="#3a2a12" stroke-width="2"/>' +
+      '<g stroke="#3a2a12" stroke-width="2"><path d="M8 52h122l-6 18H14z" fill="#e85a6a"/></g><g fill="#fff"><path d="M26 52h12l-2 18h-12zM50 52h12l-1 18h-12zM74 52h12v18H74zM98 52h12l1 18H99z"/></g><path d="M14 70q6 6 12 0t12 0 12 0 12 0 12 0 12 0 12 0 12 0 12 0" fill="none" stroke="#3a2a12" stroke-width="1.6"/>' +
+      '<rect x="22" y="82" width="56" height="46" rx="4" fill="url(#yw'+k+')" stroke="#3a2a12" stroke-width="2"/><path d="M50 82v46M22 105h56" stroke="#3a2a12" stroke-width="1.4"/><circle class="sc-glow" cx="50" cy="105" r="24" fill="#fff3c4" opacity=".35"/>' +
+      '<g stroke="#3a2a12" stroke-width="1.6"><path d="M32 120h12v-7q0-3-3-3h-6q-3 0-3 3z" fill="#fff"/><path d="M44 113q5 0 5 3t-5 3" fill="none"/></g><g class="sc-steam" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"><path d="M35 106q-3-4 0-8t0-8"/><path d="M41 106q-3-4 0-8t0-8"/></g>' +
+      '<rect x="88" y="88" width="28" height="58" rx="3" fill="#8d6b4a" stroke="#3a2a12" stroke-width="2"/><rect x="92" y="94" width="20" height="22" rx="2" fill="url(#yw'+k+')" stroke="#3a2a12" stroke-width="1.4"/><circle cx="110" cy="122" r="1.8" fill="#f4c542"/>' +
+      '<path d="M96 88l6-8 6 8" fill="none" stroke="#3a2a12" stroke-width="1.2"/><g class="sc-swing2"><rect x="91" y="76" width="22" height="9" rx="2" fill="#2f9e5b" stroke="#3a2a12" stroke-width="1.2" transform="translate(0 6)"/><text x="102" y="89" text-anchor="middle" font-size="6.5" font-weight="900" fill="#fff" font-family="sans-serif">OPEN</text></g>' +
+      '<g stroke="#3a2a12" stroke-width="1.6"><path d="M64 146v-10q0-8 8-8h4q8 0 8 8v10z" fill="#5ab8ff"/><path d="M68 130q6-8 12 0" fill="none"/><rect x="69" y="136" width="10" height="6" rx="1.5" fill="#ffd84d"/></g>'; },
+    // แรงงานต่างด้าว: ภูเขาซ้อนชั้นยามเช้า สะพานข้ามแม่น้ำ กระเป๋าเดินทางติดสติกเกอร์ เมฆลอยผ่าน น้ำระยิบ
+    border: function (k) { return '<defs><linearGradient id="bs'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd9b0"/><stop offset=".6" stop-color="#ffeedd"/><stop offset="1" stop-color="#e5f4ff"/></linearGradient><linearGradient id="br'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7cc4ee"/><stop offset="1" stop-color="#4a9bd1"/></linearGradient></defs><rect width="136" height="160" fill="url(#bs'+k+')"/>' +
+      '<circle cx="92" cy="40" r="14" fill="#fff4c4"/><circle cx="92" cy="40" r="22" fill="#fff4c4" opacity=".35"/>' +
+      '<g class="sc-drift" fill="#fff"><ellipse cx="30" cy="26" rx="14" ry="5"/><ellipse cx="40" cy="22" rx="9" ry="5"/></g>' +
+      '<path d="M0 78l26-22 18 14 28-28 30 30 18-12 16 12v30H0z" fill="#b9a6d8"/><path d="M0 92l20-12 26 14 24-18 30 20 18-10 18 10v18H0z" fill="#8fb39a"/>' +
+      '<rect x="0" y="104" width="136" height="24" fill="url(#br'+k+')"/><g class="sc-shimmer" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".8"><path d="M14 112h12M60 118h16M100 112h10M36 122h10"/></g>' +
+      '<path d="M0 104q68-30 136 0" fill="none" stroke="#3a2a12" stroke-width="2.4"/><path d="M0 108q68-30 136 0" fill="none" stroke="#c48d55" stroke-width="3"/><g stroke="#3a2a12" stroke-width="1.4"><path d="M24 92v14M46 84v22M68 80v26M90 84v22M112 92v14"/></g>' +
+      '<rect x="0" y="128" width="136" height="32" fill="#e8d6b8"/><path d="M0 128h136" stroke="#3a2a12" stroke-width="2"/>' +
+      '<g stroke="#3a2a12" stroke-width="1.8"><rect x="76" y="118" width="34" height="30" rx="5" fill="#ff8a5b"/><path d="M86 118v-6h14v6" fill="none"/><path d="M80 148v4M106 148v4"/></g><circle cx="86" cy="130" r="4" fill="#fff3a8" stroke="#3a2a12" stroke-width="1"/><rect x="94" y="132" width="11" height="7" rx="1.5" fill="#bfe6ff" stroke="#3a2a12" stroke-width="1" transform="rotate(10 99 135)"/>'; },
+    // สหภาพแรงงาน: หน้าโรงงานยามเย็น ธงราวสามเหลี่ยมพลิ้ว เฟืองหมุน ควันปล่องลอย
+    union: function (k) { return '<defs><linearGradient id="us'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb88c"/><stop offset=".55" stop-color="#ffd9a8"/><stop offset="1" stop-color="#fff0d8"/></linearGradient></defs><rect width="136" height="160" fill="url(#us'+k+')"/>' +
+      '<g class="sc-smoke" fill="#fff" opacity=".8"><circle cx="104" cy="26" r="6"/><circle cx="112" cy="18" r="8"/><circle cx="122" cy="10" r="9"/></g>' +
+      '<g stroke="#3a2a12" stroke-width="2"><rect x="96" y="30" width="14" height="46" fill="#b0563f"/><path d="M14 150V76l26-16v16l26-16v16l26-16v90z" fill="#e9dcc9"/><rect x="92" y="76" width="34" height="74" fill="#d8c8b2"/></g>' +
+      '<g fill="#8fd0ff" stroke="#3a2a12" stroke-width="1.4"><rect x="22" y="92" width="14" height="12" rx="2"/><rect x="44" y="92" width="14" height="12" rx="2"/><rect x="66" y="92" width="14" height="12" rx="2"/></g>' +
+      '<rect x="36" y="118" width="40" height="32" fill="#7c8ba8" stroke="#3a2a12" stroke-width="2"/><path d="M36 126h40M36 134h40M36 142h40" stroke="#3a2a12" stroke-width="1"/>' +
+      '<g transform="translate(109 100)"><g class="sc-gear"><path d="M0-13l3 0 1 4 4 2 3-3 3 3-3 3 2 4 4 1v4l-4 1-2 4 3 3-3 3-3-3-4 2-1 4h-4l-1-4-4-2-3 3-3-3 3-3-2-4-4-1v-4l4-1 2-4-3-3 3-3 3 3 4-2 1-4z" fill="#f4c542" stroke="#3a2a12" stroke-width="1.4"/><circle r="4" fill="#fff" stroke="#3a2a12" stroke-width="1.2"/></g></g>' +
+      '<path d="M0 56q34 14 68 4t68 4" fill="none" stroke="#3a2a12" stroke-width="1.4"/>' +
+      '<g class="sc-bunting" stroke="#3a2a12" stroke-width="1"><path d="M10 59l6 12 6-11z" fill="#e85a6a"/><path d="M30 63l6 12 6-12z" fill="#5ab8ff"/><path d="M50 63l6 12 6-12z" fill="#f4c542"/><path d="M70 60l6 12 6-12z" fill="#7cc58a"/><path d="M90 59l6 12 6-12z" fill="#c9a6ff"/><path d="M110 61l6 12 6-12z" fill="#e85a6a"/></g>' +
+      '<rect x="0" y="150" width="136" height="10" fill="#c9b08f"/><path d="M0 150h136" stroke="#3a2a12" stroke-width="2"/>'; },
+    // เลิกจ้างไม่เป็นธรรม v2: มุมเงยแบบภาพยนตร์ ลำแสงอาทิตย์หลังอาคาร เมฆฟุ้งนุ่ม (blur) บันไดกว้างไล่ระดับ ต้นไม้กระถางสองข้าง
+    court: function (k) { return '<defs><linearGradient id="cs'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6fa8e8"/><stop offset=".55" stop-color="#ffcf9e"/><stop offset="1" stop-color="#ffe9cf"/></linearGradient><filter id="cb'+k+'" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.2"/></filter><filter id="cd'+k+'" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="3" stdDeviation="2.5" flood-color="#5a3a1a" flood-opacity=".3"/></filter>' +
+      '<linearGradient id="cc'+k+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e9dcc6"/><stop offset=".5" stop-color="#fffaf1"/><stop offset="1" stop-color="#e9dcc6"/></linearGradient></defs><rect width="136" height="160" fill="url(#cs'+k+')"/>' +
+      '<g class="sc-rays2" fill="#fff6d0" opacity=".55"><path d="M68 54L20 0h14zM68 54L52 0h12zM68 54L84 0h12zM68 54L106 0h14zM68 54L136 20v12z M68 54L0 20v12z"/></g><circle cx="68" cy="54" r="16" fill="#fff3b8"/>' +
+      '<g filter="url(#cb'+k+')" fill="#fff" opacity=".9"><ellipse class="sc-drift" cx="26" cy="30" rx="22" ry="7"/><ellipse cx="112" cy="42" rx="18" ry="6"/></g>' +
+      '<g filter="url(#cd'+k+')"><path d="M10 78L68 50l58 28z" fill="#fffaf1" stroke="#3a2a12" stroke-width="1.8"/><path d="M24 74L68 54l44 20z" fill="none" stroke="#d8c7a8" stroke-width="1"/><rect x="14" y="78" width="108" height="9" fill="#efe3cf" stroke="#3a2a12" stroke-width="1.8"/>' +
+      [22,42,62,82,102].map(function (x) { return '<rect x="' + x + '" y="87" width="12" height="40" fill="url(#cc'+k+')" stroke="#3a2a12" stroke-width="1.4"/><path d="M' + (x + 4) + ' 90v34M' + (x + 8) + ' 90v34" stroke="#d8c7a8" stroke-width=".8"/>'; }).join('') + '</g>' +
+      '<g stroke="#3a2a12" stroke-width="1.4"><rect x="8" y="127" width="120" height="6" fill="#e6d6ba"/><rect x="2" y="133" width="132" height="7" fill="#dccaa9"/><rect x="-4" y="140" width="144" height="8" fill="#d0bc98"/></g><rect x="0" y="148" width="136" height="12" fill="#c2ab84"/>' +
+      '<g transform="translate(68 67)"><g class="sc-glint" stroke="#3a2a12" stroke-width="1.1" fill="#f4c542"><path d="M0-7v11M-8-4h16" fill="none"/><path d="M-8-4l-3 5h6zM8-4l-3 5h6z"/></g></g>' +
+      '<g class="sc-birds" fill="none" stroke="#3a2a12" stroke-width="1.2" stroke-linecap="round"><path d="M14 22q4-4 8 0q4-4 8 0"/><path d="M30 12q3-3 6 0q3-3 6 0"/></g>' +
+      '<g filter="url(#cd'+k+')"><path d="M118 148h14l-2 10h-10z" fill="#b8693e" stroke="#3a2a12" stroke-width="1.2"/><circle cx="125" cy="132" r="11" fill="#5fae73" stroke="#3a2a12" stroke-width="1.4"/><circle cx="120" cy="128" r="4" fill="#7cc58a"/><path d="M4 148h14l-2 10H6z" fill="#b8693e" stroke="#3a2a12" stroke-width="1.2"/><circle cx="11" cy="132" r="11" fill="#5fae73" stroke="#3a2a12" stroke-width="1.4"/><circle cx="6" cy="128" r="4" fill="#7cc58a"/></g>'; },
+    // ไม่จ่ายเงินเดือน: [โคลสอัพมาโคร] กระเป๋าสตางค์หนังเปิดว่างเปล่าใต้สปอตไลต์ ผีเสื้อกลางคืนบินออก ฝุ่นลอย ใบค้างจ่ายโผล่
+    wallet: function (k) { return '<defs><radialGradient id="wl'+k+'" cx=".5" cy=".42" r=".7"><stop offset="0" stop-color="#fff1d6"/><stop offset=".55" stop-color="#e9c99a"/><stop offset="1" stop-color="#8c6238"/></radialGradient><linearGradient id="wlt'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a5643a"/><stop offset="1" stop-color="#7b4524"/></linearGradient><filter id="wls'+k+'" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#3a1f08" flood-opacity=".45"/></filter></defs>' +
+      '<rect width="136" height="160" fill="url(#wl'+k+')"/>' +
+      '<g fill="#fff" opacity=".7"><circle class="sc-dust" cx="30" cy="40" r="1.2"/><circle class="sc-dust" style="animation-delay:1s" cx="98" cy="30" r="1"/><circle class="sc-dust" style="animation-delay:2s" cx="64" cy="22" r="1.4"/></g>' +
+      '<g filter="url(#wls'+k+')"><path d="M16 96q0-8 8-8h88q8 0 8 8v40q0 8-8 8H24q-8 0-8-8z" fill="url(#wlt'+k+')"/></g>' +
+      '<path d="M22 94h92v42q0 4-4 4H26q-4 0-4-4z" fill="#5e3219"/><path d="M26 96h84" stroke="#3a1d0c" stroke-width="2"/>' +
+      '<rect x="28" y="70" width="52" height="30" rx="3" fill="#fffdf6" stroke="#3a2a12" stroke-width="1.4" transform="rotate(-8 54 85)"/><text x="54" y="88" text-anchor="middle" font-size="8" font-weight="900" fill="#c0392b" font-family="sans-serif" transform="rotate(-8 54 85)">ค้างจ่าย</text>' +
+      '<path d="M16 108h104" stroke="#c99a6e" stroke-width="1.2" stroke-dasharray="3 3"/><path d="M20 140h96" stroke="#c99a6e" stroke-width="1.2" stroke-dasharray="3 3"/>' +
+      '<path d="M16 100q0-8 8-8h88q8 0 8 8v4H16z" fill="#b87445" stroke="#3a2a12" stroke-width="1.4"/>' +
+      '<g transform="translate(92 54)"><g class="sc-moth"><path d="M0 0q-12-12-16-2q4 8 16 2zM0 0q12-12 16-2q-4 8-16 2z" fill="#d8cbb8" stroke="#3a2a12" stroke-width="1"/><ellipse rx="2" ry="5" fill="#6b5a4a"/></g></g>'; },
+    // เกษียณ: [โลไฟยามเย็น] ระเบียงไม้มองทะเล เก้าอี้โยกโยกเบา ๆ พระอาทิตย์ต่ำ ทะเลระยิบ นกนางนวล เกรนฟิล์มบาง ๆ
+    porch: function (k) { return '<defs><linearGradient id="ps'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b9a6e6"/><stop offset=".5" stop-color="#ffb8a0"/><stop offset=".62" stop-color="#ffd9a0"/></linearGradient><linearGradient id="pw'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9f7a"/><stop offset="1" stop-color="#6f78c4"/></linearGradient>' +
+      '<filter id="pg'+k+'" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="1" seed="5"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .06 0"/></filter></defs>' +
+      '<rect width="136" height="100" fill="url(#ps'+k+')"/><circle cx="84" cy="86" r="20" fill="#fff0c4"/><circle cx="84" cy="86" r="30" fill="#fff0c4" opacity=".3"/><rect y="94" width="136" height="30" fill="url(#pw'+k+')"/>' +
+      '<g class="sc-wave2" stroke="#ffe0b0" stroke-width="1.6" stroke-linecap="round" opacity=".85"><path d="M70 100h28"/><path d="M76 106h18"/><path d="M80 112h10"/></g>' +
+      '<g class="sc-gull" fill="none" stroke="#4a3a6a" stroke-width="1.3" stroke-linecap="round"><path d="M24 40q4-4 8 0q4-4 8 0"/></g>' +
+      '<path d="M0 124h136v36H0z" fill="#b07a4a"/><g stroke="#8a5a32" stroke-width="1"><path d="M0 132h136M0 142h136M0 152h136"/></g><path d="M0 120h136v4H0z" fill="#7a4e2a"/><g fill="#7a4e2a"><rect x="6" y="104" width="4" height="18"/><rect x="40" y="104" width="4" height="18"/><rect x="74" y="104" width="4" height="18"/><rect x="108" y="104" width="4" height="18"/><rect x="0" y="102" width="136" height="4"/></g>' +
+      '<g transform="translate(96 150)"><g class="sc-rock"><path d="M-22 0q22 8 44 0" fill="none" stroke="#5a3418" stroke-width="3" stroke-linecap="round"/><path d="M-14 -2v-30q0-6 6-6h14q6 0 6 6v30" fill="#d9864f" stroke="#5a3418" stroke-width="2"/><path d="M-18 -16h34" stroke="#5a3418" stroke-width="2.4"/><path d="M-8-34v18M2-34v18" stroke="#b5683a" stroke-width="1.4"/></g></g>' +
+      '<g transform="translate(120 140)"><path d="M-8 0h16l-2 12h-12z" fill="#c9673e" stroke="#5a3418" stroke-width="1.2"/><path d="M0 0q-8-14-2-20M0 0q6-12 10-16M0 0q-1-10 4-22" fill="none" stroke="#4f9a5f" stroke-width="2.4" stroke-linecap="round"/></g>' +
+      '<rect width="136" height="160" filter="url(#pg'+k+')"/>'; },
+    // ย้ายสาขา: [ภาพพิมพ์แกะไม้ linocut] หมึก 2 สี (กรมท่า+แดง) บนกระดาษครีม รถบรรทุกขนกล่อง ถนนเลื่อน พระอาทิตย์มีรอยแกะ
+    truck: function (k) { var N = '#1f2a44', R = '#c8432f'; return '<defs><filter id="lt'+k+'" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".75" numOctaves="2" seed="9"/><feColorMatrix values="0 0 0 0 .3  0 0 0 0 .22  0 0 0 0 .1  0 0 0 .09 0"/></filter></defs>' +
+      '<rect width="136" height="160" fill="#f3ead6"/>' +
+      '<circle cx="100" cy="36" r="16" fill="' + R + '"/><g stroke="#f3ead6" stroke-width="1.4"><path d="M90 30h20M88 36h24M90 42h20"/></g><g stroke="' + R + '" stroke-width="2" stroke-linecap="round"><path d="M100 12v-6M122 22l5-4M78 22l-5-4M124 40h6"/></g>' +
+      '<path d="M0 92q30-26 60-6t76-10v24H0z" fill="' + N + '"/><g stroke="#f3ead6" stroke-width="1"><path d="M10 92q14-10 26-6M70 88q16-6 30-2M100 84q12-4 22-2"/></g>' +
+      '<rect x="0" y="118" width="136" height="42" fill="' + N + '"/><g class="sc-road" stroke="#f3ead6" stroke-width="3" stroke-dasharray="12 10"><path d="M-30 140h200"/></g>' +
+      '<g transform="translate(22 76)"><g class="sc-truck"><rect x="34" y="14" width="66" height="34" fill="#f3ead6" stroke="' + N + '" stroke-width="2.4"/><g fill="' + R + '" stroke="' + N + '" stroke-width="1.6"><rect x="40" y="2" width="20" height="16"/><rect x="62" y="6" width="18" height="12"/><rect x="50" y="-10" width="16" height="12"/></g><path d="M44 10h12M68 12h8" stroke="#f3ead6" stroke-width="1.2"/>' +
+      '<path d="M2 48V28l10-14h22v34z" fill="' + R + '" stroke="' + N + '" stroke-width="2.4"/><path d="M8 28l7-10h12v10z" fill="#f3ead6" stroke="' + N + '" stroke-width="1.6"/><g fill="' + N + '"><circle cx="18" cy="50" r="7"/><circle cx="82" cy="50" r="7"/></g><g fill="#f3ead6"><circle cx="18" cy="50" r="2.4"/><circle cx="82" cy="50" r="2.4"/></g><path d="M40 28h54M40 36h54" stroke="' + N + '" stroke-width="1" opacity=".5"/></g></g>' +
+      '<rect width="136" height="160" filter="url(#lt'+k+')"/>'; },
+    // ล่วงละเมิดในที่ทำงาน: [โบเก้ฟุ้ง soft-focus] ดวงไฟเบลอลอย ประตูแง้มมีแสงอุ่น ต้นไม้ ป้ายหัวใจ "ปลอดภัย"
+    bokeh: function (k) { return '<defs><linearGradient id="bk'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5b4d9a"/><stop offset="1" stop-color="#e79ab5"/></linearGradient><filter id="bkb'+k+'" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.5"/></filter><linearGradient id="bkl'+k+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffe6a8"/><stop offset="1" stop-color="#ffe6a8" stop-opacity="0"/></linearGradient></defs>' +
+      '<rect width="136" height="160" fill="url(#bk'+k+')"/>' +
+      '<g filter="url(#bkb'+k+')"><circle class="sc-bokeh" cx="24" cy="30" r="10" fill="#ffd6a8" opacity=".55"/><circle class="sc-bokeh" style="animation-delay:1.2s" cx="104" cy="22" r="13" fill="#ffc2dc" opacity=".5"/><circle class="sc-bokeh" style="animation-delay:2.4s" cx="70" cy="50" r="7" fill="#fff2c0" opacity=".6"/><circle class="sc-bokeh" style="animation-delay:.6s" cx="120" cy="70" r="8" fill="#c8b8ff" opacity=".5"/></g>' +
+      '<path d="M0 132h136v28H0z" fill="#3e3470"/>' +
+      '<rect x="40" y="58" width="44" height="76" rx="3" fill="#fff3c9"/><path d="M84 134L118 160H50z" fill="url(#bkl'+k+')" opacity=".7"/><path d="M40 58l-14 6v74l14-4z" fill="#8a6bd1" stroke="#2b2350" stroke-width="1.6"/><rect x="40" y="58" width="44" height="76" rx="3" fill="none" stroke="#2b2350" stroke-width="2"/><circle cx="31" cy="100" r="2" fill="#ffd84d"/>' +
+      '<g transform="translate(62 46)"><path d="M0 8q-10-8-10-14a5 5 0 0 1 10-2a5 5 0 0 1 10 2q0 6-10 14z" fill="#ff6f91" stroke="#2b2350" stroke-width="1.4"/></g>' +
+      '<g transform="translate(108 132)"><path d="M-9 0h18l-2 14H-7z" fill="#d9864f" stroke="#2b2350" stroke-width="1.2"/><path d="M0 0q-12-12-6-24M0 0q8-10 12-20M0 0q0-12 2-28" fill="none" stroke="#7cc58a" stroke-width="3" stroke-linecap="round"/></g>' +
+      '<g transform="translate(104 40)"><rect x="-24" y="-8" width="48" height="14" rx="7" fill="#fff" stroke="#2b2350" stroke-width="1.2"/><text y="2.5" text-anchor="middle" font-size="7.5" font-weight="900" fill="#5b4d9a" font-family="sans-serif">ปลอดภัย</text></g>'; },
+    // ฟรีแลนซ์: [เรโทร 70s groovy] พระอาทิตย์รัศมีลายทางส้ม-น้ำตาลหมุนช้า แล็ปท็อปกับกาแฟบนโต๊ะคาเฟ่ ต้นไม้ลายหยัก
+    groovy: function (k) { var rays = ''; for (var i = 0; i < 12; i++) { rays += '<path d="M68 96L' + (68 + 140 * Math.cos(i * Math.PI / 6)).toFixed(1) + ' ' + (96 + 140 * Math.sin(i * Math.PI / 6)).toFixed(1) + 'L' + (68 + 140 * Math.cos((i + .5) * Math.PI / 6)).toFixed(1) + ' ' + (96 + 140 * Math.sin((i + .5) * Math.PI / 6)).toFixed(1) + 'z"/>'; }
+      return '<rect width="136" height="160" fill="#f6d7a7"/><g class="sc-sunburst" fill="#f0b66d">' + rays + '</g>' +
+      '<circle cx="68" cy="96" r="40" fill="#e8743b"/><circle cx="68" cy="96" r="30" fill="#f29a4a"/><circle cx="68" cy="96" r="20" fill="#f8c15c"/>' +
+      '<path d="M0 116h136v44H0z" fill="#8a4b2a"/><path d="M0 116h136" stroke="#5a2e18" stroke-width="3"/>' +
+      '<g transform="translate(56 116)"><path d="M-30 0l6-30h48l6 30z" fill="#cfd6e0" stroke="#3a2a12" stroke-width="2"/><path d="M-22-4l4-22h38l4 22z" fill="#5ab8ff"/><path d="M-12-14h22M-10-8h16" stroke="#e6f5ff" stroke-width="1.6"/><rect x="-36" y="0" width="72" height="4" rx="2" fill="#b7c0cc" stroke="#3a2a12" stroke-width="1.4"/></g>' +
+      '<g transform="translate(108 112)"><path d="M-8-14h16l-2 14h-12z" fill="#fff6e6" stroke="#3a2a12" stroke-width="1.6"/><path d="M8-10q6 0 6 4t-6 4" fill="none" stroke="#3a2a12" stroke-width="1.6"/><g class="sc-steam" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"><path d="M-3-18q-3-4 0-8t0-8"/><path d="M3-18q-3-4 0-8t0-8"/></g></g>' +
+      '<g transform="translate(18 116)"><path d="M-8 0h16l-3-14h-10z" fill="#e8743b" stroke="#3a2a12" stroke-width="1.4"/><path d="M0-14q-10-14-4-30M0-14q10-10 8-26M0-14q2-16 0-34" fill="none" stroke="#4f8a3c" stroke-width="3.4" stroke-linecap="round"/></g>'; },
+    // เหมาค่าแรง: [สายพานโรงงานแบบเกมเลื่อนข้าง] สายพานวิ่ง กล่องเลื่อนผ่าน หมวกนิรภัย 2 สี (ตรง/เหมา) ไฟสัญญาณกะพริบ
+    conveyor: function (k) { var crate = function (x, c) { return '<g transform="translate(' + x + ' 96)"><rect x="-11" y="-11" width="22" height="22" rx="2" fill="' + c + '" stroke="#2a2a3a" stroke-width="1.8"/><path d="M-11 0h22M0-11v22" stroke="#2a2a3a" stroke-width="1" opacity=".4"/></g>'; };
+      return '<defs><linearGradient id="cv2'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe6ff"/><stop offset="1" stop-color="#eef6ff"/></linearGradient><pattern id="bt'+k+'" width="12" height="8" patternUnits="userSpaceOnUse"><rect width="12" height="8" fill="#3a3f52"/><path d="M0 0l6 8" stroke="#555b72" stroke-width="2"/></pattern></defs>' +
+      '<rect width="136" height="160" fill="url(#cv2'+k+')"/><g fill="#b8cfe8"><rect x="8" y="20" width="26" height="60"/><rect x="40" y="36" width="20" height="44"/><rect x="104" y="28" width="24" height="52"/></g><path d="M80 80V40l12-10v50" fill="#9fb8d6"/>' +
+      '<g class="sc-crate">' + crate(-10, '#ffb347') + crate(30, '#7cc58a') + crate(70, '#5ab8ff') + crate(110, '#ff8a8a') + crate(150, '#ffb347') + '</g>' +
+      '<rect x="-4" y="107" width="144" height="12" rx="6" fill="url(#bt'+k+')"/><g class="sc-belt"><rect x="-4" y="107" width="160" height="12" fill="url(#bt'+k+')" opacity=".6"/></g><g fill="#2a2a3a"><circle cx="8" cy="113" r="5"/><circle cx="128" cy="113" r="5"/></g>' +
+      '<path d="M10 119v30M126 119v30" stroke="#2a2a3a" stroke-width="3"/><rect x="0" y="148" width="136" height="12" fill="#8a96a8"/>' +
+      '<g transform="translate(42 140)"><path d="M-10 0a10 9 0 0 1 20 0z" fill="#ffd23f" stroke="#2a2a3a" stroke-width="1.6"/><rect x="-12" y="-1" width="24" height="3" rx="1.5" fill="#ffd23f" stroke="#2a2a3a" stroke-width="1.2"/></g>' +
+      '<g transform="translate(94 140)"><path d="M-10 0a10 9 0 0 1 20 0z" fill="#5ab8ff" stroke="#2a2a3a" stroke-width="1.6"/><rect x="-12" y="-1" width="24" height="3" rx="1.5" fill="#5ab8ff" stroke="#2a2a3a" stroke-width="1.2"/></g>' +
+      '<g transform="translate(118 18)"><rect x="-6" y="-6" width="12" height="12" rx="3" fill="#2a2a3a"/><circle class="sc-blink" r="3.4" fill="#ff5d5d"/></g>'; },
+    // ปิดกิจการ: [เงายาว long-shadow แฟลต] ร้านปิดประตูม้วน ใบไม้ร่วงปลิว ป้าย "ปิดกิจการ" เงาทอดเฉียง 45°
+    shutter: function (k) { return '<defs><linearGradient id="sh2'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffcf8a"/><stop offset="1" stop-color="#f7a76a"/></linearGradient></defs>' +
+      '<rect width="136" height="160" fill="url(#sh2'+k+')"/><path d="M20 40L136 156V160H60L20 120z" fill="#000" opacity=".08"/>' +
+      '<rect x="20" y="40" width="96" height="98" fill="#f3e6d3"/><path d="M116 40l20 20v98l-20-20z" fill="#000" opacity=".1"/>' +
+      '<rect x="14" y="34" width="108" height="16" fill="#c0563f"/><text x="68" y="46" text-anchor="middle" font-size="9" font-weight="900" fill="#fff" font-family="sans-serif">ร้านค้า</text>' +
+      '<rect x="28" y="58" width="80" height="80" fill="#8d98ab"/><g stroke="#6f7a8f" stroke-width="2"><path d="M28 66h80M28 74h80M28 82h80M28 90h80M28 98h80M28 106h80M28 114h80M28 122h80M28 130h80"/></g>' +
+      '<g transform="translate(68 92) rotate(-6)"><rect x="-26" y="-9" width="52" height="18" fill="#fff8e6" stroke="#3a2a12" stroke-width="1.4"/><text y="4" text-anchor="middle" font-size="8.5" font-weight="900" fill="#c0392b" font-family="sans-serif">ปิดกิจการ</text></g>' +
+      '<rect x="0" y="138" width="136" height="22" fill="#a9673f"/>' +
+      '<g class="sc-leaf2"><path d="M20 20q6-6 12 0q-6 6-12 0z" fill="#e8743b"/></g><g class="sc-leaf2" style="animation-delay:1.5s"><path d="M90 10q6-6 12 0q-6 6-12 0z" fill="#c9922f"/></g><g class="sc-leaf2" style="animation-delay:3s"><path d="M60 0q5-5 10 0q-5 5-10 0z" fill="#b5462e"/></g>'; },
+    // ข้อบังคับ/วินัย: [กระดานหมากรุกเปอร์สเปกทีฟ] ตาหมากรุกลึก หมากเบี้ย ม้า เรือ ขุนสีขาว-ดำ ขุนโยกตัว
+    chess: function (k) { var sq = ''; for (var r = 0; r < 6; r++) for (var c = 0; c < 8; c++) { var y0 = 92 + r * r * 1.6 + r * 9, y1 = 92 + (r + 1) * (r + 1) * 1.6 + (r + 1) * 9, s0 = 0.55 + r * 0.09, s1 = 0.55 + (r + 1) * 0.09, xa = 68 + (c - 4) * 17 * s0, xb = 68 + (c - 3) * 17 * s0, xc = 68 + (c - 3) * 17 * s1, xd = 68 + (c - 4) * 17 * s1; sq += '<path d="M' + xa.toFixed(1) + ' ' + y0.toFixed(1) + 'L' + xb.toFixed(1) + ' ' + y0.toFixed(1) + 'L' + xc.toFixed(1) + ' ' + y1.toFixed(1) + 'L' + xd.toFixed(1) + ' ' + y1.toFixed(1) + 'z" fill="' + ((r + c) % 2 ? '#7a5a3a' : '#f0dfc0') + '"/>'; }
+      var pawn = function (x, y, s, c) { return '<g transform="translate(' + x + ' ' + y + ') scale(' + s + ')"><ellipse cy="0" rx="9" ry="3" fill="#000" opacity=".25"/><path d="M-8 0h16l-3-6h-10zM-4-6l1-10h6l1 10z" fill="' + c + '" stroke="#2a1a0a" stroke-width="1.4"/><circle cy="-19" r="5" fill="' + c + '" stroke="#2a1a0a" stroke-width="1.4"/></g>'; };
+      return '<defs><linearGradient id="cs2'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3d3a5c"/><stop offset="1" stop-color="#6e5a8a"/></linearGradient></defs><rect width="136" height="160" fill="url(#cs2'+k+')"/>' +
+      '<circle cx="68" cy="40" r="34" fill="#fff6d6" opacity=".18"/>' + sq +
+      pawn(38, 128, 1, '#f8f1e2') + pawn(96, 124, .95, '#2a2238') + pawn(56, 108, .8, '#2a2238') +
+      '<g transform="translate(78 112)"><g class="sc-piece"><ellipse cy="0" rx="10" ry="3" fill="#000" opacity=".25"/><path d="M-9 0h18l-3-7h-12zM-5-7l1-20h8l1 20z" fill="#f8f1e2" stroke="#2a1a0a" stroke-width="1.4"/><path d="M-7-27h14l-2-6h-10z" fill="#f8f1e2" stroke="#2a1a0a" stroke-width="1.4"/><path d="M0-33v-9M-4-38h8" stroke="#2a1a0a" stroke-width="2"/></g></g>'; },
+    // WFH: [ห้องไอโซเมตริก] มุมทำงานในบ้าน ผนังสองด้าน หน้าต่างมีพระอาทิตย์ โต๊ะ โน้ตบุ๊กเรืองแสง ต้นไม้ แมวกระดิกหาง
+    isoroom: function (k) { return '<defs><linearGradient id="ir'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff1d6"/><stop offset="1" stop-color="#ffd6a8"/></linearGradient></defs><rect width="136" height="160" fill="url(#ir'+k+')"/>' +
+      '<path d="M10 120V52L68 22v68z" fill="#f6c99c"/><path d="M68 90V22l58 30v68z" fill="#fbe0bd"/><path d="M68 90l58 30-58 30-58-30z" fill="#d8a06a"/><g stroke="#c48a55" stroke-width=".8" opacity=".6"><path d="M39 105l58 30M24 113l58 30M53 98l58 30"/></g>' +
+      '<path d="M84 50l28 14v24l-28-14z" fill="#9bd8f5" stroke="#fff" stroke-width="2.4"/><path d="M98 57v24M84 62l28 14" stroke="#fff" stroke-width="1.6"/><circle cx="92" cy="60" r="4" fill="#ffd84d"/>' +
+      '<path d="M24 64l30-15v18l-30 15z" fill="#fff" opacity=".8"/><path d="M28 70l22-11M28 76l16-8" stroke="#e4a66e" stroke-width="1.6"/>' +
+      '<g stroke="#5a3a22" stroke-width="1.4" stroke-linejoin="round"><path d="M50 106l26-13 26 13-26 13z" fill="#a8704a"/><path d="M50 106v4l26 13 26-13v-4" fill="#8a5a3a"/><path d="M54 110v16M98 110v16M76 123v12" fill="none"/></g>' +
+      '<path d="M66 104l14-7 0-14-14 7z" fill="#3f4a6b" stroke="#2a2a3a" stroke-width="1"/><path d="M67.5 102l11-5.5v-11l-11 5.5z" fill="#9ee8ff"/><path d="M66 104l14-7 10 5-14 7z" fill="#cfd6e6" stroke="#2a2a3a" stroke-width="1"/>' +
+      '<g transform="translate(88 98)"><path d="M0 0h6v6H0z" fill="#fff" stroke="#5a3a22" stroke-width="1"/><path d="M2-2q1-3 0-5M4-2q1-3 0-5" stroke="#c48a55" stroke-width=".8" fill="none"/></g>' +
+      '<g stroke="#3a5a2a" stroke-width="1.2" stroke-linejoin="round"><path d="M20 118l4-12h10l4 12z" fill="#e4744a"/><path d="M29 106q-10-14-2-24q4 10 2 24zM29 106q4-16 14-18q-4 12-14 18zM29 106q-12-6-14-16q10 2 14 16z" fill="#6fbf5a"/></g>' +
+      '<g transform="translate(100 140)"><path d="M-10 0q0-10 10-10q10 0 10 10z" fill="#4a4a5a"/><path d="M-6-9l1-6 4 4M6-9l-1-6-4 4" fill="#4a4a5a"/><circle cx="-3" cy="-5" r="1" fill="#ffd84d"/><circle cx="3" cy="-5" r="1" fill="#ffd84d"/><g class="sc-tail"><path d="M9-2q10-2 8-12" fill="none" stroke="#4a4a5a" stroke-width="3" stroke-linecap="round"/></g></g>'; },
+    // ค่าจ้างขั้นต่ำ: [รถเข็นขายของยามเย็น] ฟ้าส้มอมม่วง ไฟประดับ ร่มลาย รถเข็น หม้อมีไอ ป้ายราคา
+    foodcart: function (k) { var bulbs = ''; for (var i = 0; i < 7; i++) bulbs += '<circle class="sc-lamp" style="animation-delay:' + (i * .3) + 's" cx="' + (8 + i * 20) + '" cy="' + (22 + Math.sin(i) * 4) + '" r="3" fill="#ffe08a"/>';
+      return '<defs><linearGradient id="fcs'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a5aa8"/><stop offset=".55" stop-color="#f08a6c"/><stop offset="1" stop-color="#ffcf8a"/></linearGradient></defs><rect width="136" height="160" fill="url(#fcs'+k+')"/>' +
+      '<path d="M0 20q34 12 68 2t68 4" fill="none" stroke="#3a2a40" stroke-width="1"/>' + bulbs +
+      '<g fill="#5a3f78" opacity=".6"><rect x="0" y="92" width="18" height="40"/><rect x="112" y="84" width="24" height="48"/></g>' +
+      '<path d="M0 130h136v30H0z" fill="#3d2f4a"/>' +
+      '<g transform="translate(18 0)"><path d="M30 58q38-26 76 0z" fill="#e94b4b" stroke="#2a1a2a" stroke-width="1.6"/><path d="M49 58q19-26 19-26q0 0 19 26" fill="#fff" opacity=".85"/><path d="M68 32v80" stroke="#2a1a2a" stroke-width="2"/>' +
+      '<rect x="34" y="92" width="68" height="34" rx="3" fill="#2f9e8f" stroke="#2a1a2a" stroke-width="1.6"/><rect x="30" y="86" width="76" height="8" rx="2" fill="#f4e3c1" stroke="#2a1a2a" stroke-width="1.6"/>' +
+      '<rect x="44" y="100" width="48" height="14" rx="2" fill="#fff6dc" stroke="#2a1a2a" stroke-width="1.2"/><text x="68" y="110" text-anchor="middle" font-size="7.5" font-weight="900" fill="#c0392b" font-family="sans-serif">฿ ค่าแรง</text>' +
+      '<circle cx="44" cy="130" r="7" fill="#3a3a48" stroke="#2a1a2a" stroke-width="1.6"/><circle cx="92" cy="130" r="7" fill="#3a3a48" stroke="#2a1a2a" stroke-width="1.6"/>' +
+      '<rect x="76" y="74" width="20" height="12" rx="2" fill="#9aa4b8" stroke="#2a1a2a" stroke-width="1.4"/><g class="sc-puff"><path d="M82 70q-4-5 0-10t0-10M90 70q-4-5 0-10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".85"/></g></g>'; },
+    // เอกสารตอนออกจากงาน: [พิมพ์ดีดโบราณ] พื้นเหลืองมัสตาร์ด เครื่องพิมพ์ดีดสีเขียว กระดาษหนังสือรับรอง บรรทัดถูกพิมพ์ทีละบรรทัด
+    typewriter: function (k) { var keys = ''; for (var r = 0; r < 3; r++) for (var c = 0; c < 7 - r; c++) keys += '<circle cx="' + (34 + r * 5 + c * 11) + '" cy="' + (122 + r * 9) + '" r="3.6" fill="#f4efe2" stroke="#1d2a24" stroke-width="1"/>';
+      return '<rect width="136" height="160" fill="#f2c14e"/><circle cx="110" cy="26" r="40" fill="#f6d27a"/><path d="M0 146h136v14H0z" fill="#8a5a2b"/>' +
+      '<g transform="rotate(-3 68 60)"><rect x="34" y="14" width="68" height="84" fill="#fffdf6" stroke="#c9b892" stroke-width="1"/><text x="68" y="30" text-anchor="middle" font-size="7.4" font-weight="700" fill="#3a2a1a" font-family="Taviraj,serif">หนังสือรับรอง</text>' +
+      '<rect class="sc-paper" x="42" y="40" width="52" height="3" fill="#6a5a4a"/><rect class="sc-paper" style="animation-delay:.8s" x="42" y="50" width="44" height="3" fill="#6a5a4a"/><rect class="sc-paper" style="animation-delay:1.6s" x="42" y="60" width="48" height="3" fill="#6a5a4a"/></g>' +
+      '<rect x="14" y="88" width="108" height="16" rx="5" fill="#2f7a5f" stroke="#1d2a24" stroke-width="1.6"/><circle cx="12" cy="96" r="6" fill="#1d2a24"/><circle cx="124" cy="96" r="6" fill="#1d2a24"/>' +
+      '<path d="M16 104h104l10 40H6z" fill="#3a9a75" stroke="#1d2a24" stroke-width="1.6"/>' + keys + '<rect x="40" y="140" width="56" height="5" rx="2" fill="#f4efe2" stroke="#1d2a24" stroke-width="1"/>'; },
+    // วันหยุด: [พลุกลางคืน] ฟ้าม่วงกรมท่า เส้นขอบฟ้าเมือง หน้าต่างไฟ พลุสามลูกบานสลับกัน
+    fireworks: function (k) { var burst = function (x, y, c, d, r) { var t = ''; for (var i = 0; i < 12; i++) { var a = i * Math.PI / 6; t += '<path d="M' + (x + Math.cos(a) * r * .35).toFixed(1) + ' ' + (y + Math.sin(a) * r * .35).toFixed(1) + 'L' + (x + Math.cos(a) * r).toFixed(1) + ' ' + (y + Math.sin(a) * r).toFixed(1) + '" stroke="' + c + '" stroke-width="2.2" stroke-linecap="round"/>'; } return '<g class="sc-burst" style="animation-delay:' + d + 's">' + t + '<circle cx="' + x + '" cy="' + y + '" r="2.4" fill="#fff"/></g>'; };
+      return '<defs><linearGradient id="fw' + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b1740"/><stop offset="1" stop-color="#4a2a6a"/></linearGradient></defs><rect width="136" height="160" fill="url(#fw' + k + ')"/>' +
+      burst(40, 40, '#ffd84d', 0, 22) + burst(98, 30, '#ff71ce', .7, 18) + burst(76, 70, '#4fd1ff', 1.4, 16) +
+      '<g fill="#2a2450"><rect x="0" y="100" width="22" height="60"/><rect x="24" y="86" width="18" height="74"/><rect x="44" y="108" width="24" height="52"/><rect x="70" y="92" width="20" height="68"/><rect x="92" y="104" width="18" height="56"/><rect x="112" y="80" width="24" height="80"/></g>' +
+      '<g fill="#ffd27a" opacity=".8"><rect x="6" y="108" width="4" height="4"/><rect x="28" y="96" width="4" height="4"/><rect x="34" y="112" width="4" height="4"/><rect x="74" y="100" width="4" height="4"/><rect x="118" y="90" width="4" height="4"/><rect x="126" y="104" width="4" height="4"/><rect x="96" y="114" width="4" height="4"/></g>' +
+      '<path d="M0 148h136v12H0z" fill="#16122e"/>'; },
+    // กะดึก/งานอันตราย: [โรงงานกลางคืน] ฟ้ากรมท่า จันทร์ โรงงานหลังคาฟันเลื่อย หน้าต่างไฟกะพริบ ปล่องควัน
+    nightshift: function (k) { var w = ''; for (var i = 0; i < 6; i++) w += '<rect class="sc-win" style="animation-delay:' + (i * .4).toFixed(1) + 's" x="' + (14 + i * 18) + '" y="112" width="10" height="10" fill="#ffd27a"/>';
+      return '<defs><linearGradient id="ns' + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f1430"/><stop offset="1" stop-color="#2a3166"/></linearGradient></defs><rect width="136" height="160" fill="url(#ns' + k + ')"/>' +
+      '<circle cx="104" cy="30" r="13" fill="#f4e7c4"/><circle cx="110" cy="26" r="11" fill="#0f1430"/><g fill="#fff"><circle cx="30" cy="20" r="1"/><circle cx="62" cy="40" r="1.2"/><circle cx="86" cy="60" r=".9"/></g>' +
+      '<rect x="96" y="58" width="12" height="44" fill="#3a3f6e"/><rect x="96" y="58" width="12" height="6" fill="#e5484d"/><g class="sc-smokeline"><path d="M102 54q-6-8 2-14t0-14" fill="none" stroke="#8a90b8" stroke-width="4" stroke-linecap="round" opacity=".6"/></g>' +
+      '<path d="M4 100l20-14v14l20-14v14l20-14v14l20-14v14l20-14v14h28v40H4z" fill="#4a5088"/><path d="M4 100h128v40H4z" fill="#3a3f6e"/>' + w +
+      '<rect x="56" y="126" width="22" height="14" fill="#1d2142"/><path d="M0 140h136v20H0z" fill="#1a1d3a"/><g fill="#ffd22e"><rect x="10" y="146" width="14" height="3"/><rect x="40" y="146" width="14" height="3"/><rect x="70" y="146" width="14" height="3"/><rect x="100" y="146" width="14" height="3"/></g>'; },
+    // ถูกบังคับลาออก: [โต๊ะมุมบน พาสเทล] ใบลาออกที่ยังไม่เซ็น ปากกาวางขวาง ลูกกระดาษขยำเด้งลงถังขยะ
+    crumple: function (k) { return '<rect width="136" height="160" fill="#f6d6c8"/><g fill="#efc6b6"><circle cx="20" cy="20" r="3"/><circle cx="110" cy="140" r="4"/><circle cx="120" cy="30" r="2.4"/></g>' +
+      '<g transform="rotate(-6 50 70)"><rect x="18" y="30" width="64" height="84" rx="2" fill="#fffdf6" stroke="#c9a892" stroke-width="1"/><text x="50" y="46" text-anchor="middle" font-size="7.6" font-weight="900" fill="#5a3a2a" font-family="sans-serif">ใบลาออก</text><g stroke="#d9c7b8" stroke-width="2"><path d="M26 56h48M26 64h40M26 72h44"/></g><path d="M28 100h42" stroke="#5a3a2a" stroke-width="1" stroke-dasharray="2 2"/><text x="72" y="96" text-anchor="end" font-size="9" font-weight="900" fill="#e5484d" font-family="sans-serif">?</text></g>' +
+      '<g transform="rotate(30 70 120)"><rect x="40" y="116" width="54" height="6" rx="3" fill="#2b3a55"/><path d="M94 116l8 3-8 3z" fill="#2b3a55"/></g>' +
+      '<path d="M96 122l4 30h24l4-30z" fill="#9fb6c8" stroke="#3a4a5a" stroke-width="1.6"/><path d="M94 122h36" stroke="#3a4a5a" stroke-width="2.4" stroke-linecap="round"/>' +
+      '<g class="sc-ball"><path d="M104 92q4-8 12-6q8 2 8 10q-2 8-10 8q-10-2-10-12z" fill="#fffdf6" stroke="#c9a892" stroke-width="1.2"/><path d="M108 94l6 4M116 90l-2 8M112 100l8-2" stroke="#c9a892" stroke-width=".8"/></g>'; },
+    // เปลี่ยนนายจ้าง: [ตึกสองหลังเชื่อมสะพาน] ฟ้าพาสเทล ตึกส้มกับตึกฟ้า สะพานลอยเชื่อม ไฟสะพานเต้น
+    merger: function (k) { return '<rect width="136" height="160" fill="#eaf3ff"/><circle cx="68" cy="40" r="26" fill="#fff3d6"/>' +
+      '<rect x="10" y="50" width="44" height="100" fill="#ffb37a" stroke="#3a3a5a" stroke-width="1.6"/><rect x="84" y="36" width="42" height="114" fill="#8ec5ff" stroke="#3a3a5a" stroke-width="1.6"/>' +
+      '<g fill="#fff6e6"><rect x="18" y="60" width="10" height="10"/><rect x="36" y="60" width="10" height="10"/><rect x="18" y="80" width="10" height="10"/><rect x="36" y="80" width="10" height="10"/><rect x="18" y="100" width="10" height="10"/><rect x="36" y="100" width="10" height="10"/></g>' +
+      '<g fill="#eef6ff"><rect x="92" y="48" width="10" height="10"/><rect x="108" y="48" width="10" height="10"/><rect x="92" y="68" width="10" height="10"/><rect x="108" y="68" width="10" height="10"/><rect x="92" y="88" width="10" height="10"/><rect x="108" y="88" width="10" height="10"/></g>' +
+      '<rect x="54" y="74" width="30" height="14" fill="#fff" stroke="#3a3a5a" stroke-width="1.6"/><g class="sc-link"><circle cx="62" cy="81" r="2" fill="#ffd84d"/><circle cx="69" cy="81" r="2" fill="#ffd84d"/><circle cx="76" cy="81" r="2" fill="#ffd84d"/></g>' +
+      '<path d="M0 150h136v10H0z" fill="#b9d6a8"/>'; },
+    // โบนัส/สวัสดิการ: [กล่องของขวัญ] พื้นชมพูอ่อน กล่องลายจุด ริบบิ้นแดง ฝาเด้ง เหรียญลอยออก
+    giftbox: function (k) { return '<rect width="136" height="160" fill="#ffe3ec"/><g fill="#ffd0de"><circle cx="20" cy="30" r="10"/><circle cx="116" cy="20" r="14"/></g>' +
+      '<rect x="30" y="86" width="76" height="58" rx="4" fill="#4fb3e8" stroke="#2a4a6a" stroke-width="1.8"/><g fill="#fff" opacity=".6"><circle cx="44" cy="100" r="3"/><circle cx="92" cy="104" r="3"/><circle cx="56" cy="128" r="3"/><circle cx="88" cy="134" r="3"/></g><rect x="62" y="86" width="12" height="58" fill="#e5484d"/>' +
+      '<g class="sc-bow"><rect x="26" y="72" width="84" height="16" rx="3" fill="#6cc4f0" stroke="#2a4a6a" stroke-width="1.8"/><rect x="62" y="72" width="12" height="16" fill="#e5484d"/><path d="M68 72q-20-18-24-4q4 8 24 4zM68 72q20-18 24-4q-4 8-24 4z" fill="#e5484d" stroke="#8a1a20" stroke-width="1.2"/></g>' +
+      '<g fill="#ffd84d" stroke="#8a6a00" stroke-width="1.2"><circle cx="40" cy="50" r="6"/><circle cx="98" cy="44" r="5"/><circle cx="70" cy="36" r="5"/></g><path d="M0 144h136v16H0z" fill="#f7c6d6"/>'; },
+    // ข้อมูลส่วนตัวในที่ทำงาน: [กล้องวงจรปิดบนผนัง] ผนังครีม กล้องขาวแขนยึด หมุนส่าย ไฟ REC กะพริบ กรวยมุมมองโปร่ง โต๊ะทำงานด้านล่าง
+    cctv: function (k) { return '<rect width="136" height="160" fill="#f3ead8"/><rect x="0" y="0" width="136" height="14" fill="#e6d9bf"/><path d="M0 120h136v40H0z" fill="#d6c7a6"/>' +
+      '<rect x="14" y="100" width="56" height="8" rx="2" fill="#a8703a"/><rect x="24" y="80" width="30" height="20" rx="2" fill="#3f4a6b"/><rect x="27" y="83" width="24" height="14" fill="#9be8ff"/><path d="M20 108v20M64 108v20" stroke="#8a5a2a" stroke-width="3"/>' +
+      '<rect x="108" y="24" width="20" height="10" rx="2" fill="#9aa4b8"/><path d="M118 34v8" stroke="#6a7488" stroke-width="4"/>' +
+      '<g class="sc-pan"><path d="M96 54L20 96L60 120z" fill="#ffe27a" opacity=".22"/><rect x="88" y="40" width="40" height="18" rx="6" fill="#fff" stroke="#3a3f4a" stroke-width="1.8"/><rect x="80" y="44" width="12" height="10" rx="3" fill="#2a2e38"/><circle cx="84" cy="49" r="3" fill="#4cc9f0"/><circle class="sc-rec" cx="122" cy="45" r="2.4" fill="#e5484d"/></g>' +
+      '<g transform="translate(96 132)"><rect width="34" height="18" rx="3" fill="#ffd22e" stroke="#2a2a2a" stroke-width="1.2"/><text x="17" y="12" text-anchor="middle" font-size="6.4" font-weight="900" fill="#2a2a2a" font-family="sans-serif">มีกล้อง</text></g>'; },
+    // ทำของเสียหายระหว่างทำงาน: [ถนนยามบ่าย] ท้องฟ้าส้มอ่อน ท้ายรถเก๋งสีฟ้ามีรอยบุบ รถส่งของกล่องส้มสั่น ดาวชนกะพริบ กรวยจราจร
+    scooter: function (k) { return '<defs><linearGradient id="sk' + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd9b0"/><stop offset="1" stop-color="#fff1df"/></linearGradient></defs><rect width="136" height="160" fill="url(#sk' + k + ')"/><circle cx="30" cy="30" r="14" fill="#fff6d6"/>' +
+      '<g fill="#f2c9a0" opacity=".7"><rect x="0" y="66" width="22" height="50"/><rect x="24" y="54" width="18" height="62"/></g><rect x="0" y="116" width="136" height="44" fill="#6b7280"/><path d="M0 116h136" stroke="#3f4552" stroke-width="2"/><path d="M6 140h18M40 140h18M74 140h18M108 140h18" stroke="#fff" stroke-width="3" opacity=".8"/>' +
+      '<g stroke="#2a3340" stroke-width="1.6" stroke-linejoin="round"><path d="M92 120V84q0-8 8-9l10-1 12-16h14v62z" fill="#5aa9e6"/><path d="M114 72l8-10h14v10z" fill="#d8f0ff"/><rect x="92" y="88" width="6" height="12" rx="1.5" fill="#e5484d"/><rect x="90" y="104" width="14" height="8" rx="2" fill="#c9d3de"/><circle cx="122" cy="122" r="10" fill="#2a3340"/><circle cx="122" cy="122" r="4" fill="#c9d3de"/><path d="M94 98l4 2-3 3 4 2" fill="none" stroke-width="1.2"/></g>' +
+      '<g class="sc-vib"><g stroke="#2a3340" stroke-width="1.6" stroke-linejoin="round"><circle cx="46" cy="124" r="9" fill="#2a3340"/><circle cx="46" cy="124" r="3.4" fill="#c9d3de"/><circle cx="82" cy="124" r="9" fill="#2a3340"/><circle cx="82" cy="124" r="3.4" fill="#c9d3de"/><path d="M40 118q0-10 12-10h14l6 8h12l4-24" fill="#ffffff"/><path d="M80 92h10" stroke-width="2.4" stroke-linecap="round"/><rect x="30" y="82" width="26" height="22" rx="3" fill="#ff8a3d"/><path d="M30 90h26" /><circle cx="64" cy="71" r="7.5" fill="#f6d2b0"/><path d="M56 70a8 8 0 0 1 16 0h-4q-4-3-8 0z" fill="#ffd22e"/><circle cx="62" cy="73" r="1" fill="#2a3340" stroke="none"/><circle cx="67" cy="73" r="1" fill="#2a3340" stroke="none"/><ellipse cx="64.5" cy="76.5" rx="1.2" ry="1.5" fill="#2a3340" stroke="none"/><path d="M60 80q-4 10-2 22l16 2" fill="none" stroke="#2f6fd6" stroke-width="6" stroke-linecap="round"/></g></g>' +
+      '<g transform="translate(92 98)"><path class="sc-burst" d="M0-11l3 7 8-2-5 6 6 5-8 0 1 8-5-6-5 6 1-8-8 0 6-5-5-6 8 2z" fill="#fff36b" stroke="#2a3340" stroke-width="1.2"/></g>' +
+      '<g stroke="#2a3340" stroke-width="1.2"><path d="M18 140l5-16h4l5 16z" fill="#ff7a2e"/><path d="M20 134h10" stroke="#fff" stroke-width="2.4"/></g>'; },
+    // [ป้ายโลหะเคลือบอีนาเมลวินเทจ] ป้ายเหล็กเคลือบสีครีมขอบกรมท่า สีกะเทาะเห็นเนื้อเหล็ก แขวนโซ่บนผนังเขียวหม่น นาฬิกาเดินได้ คนงานหน้ายิ้มถือบัตรตอกเวลา (น้องม้วนบังมุมซ้ายล่าง)
+    timecard: function (k) { var nv = '#1f3a5f', ink = '#2a2a30'; return '<defs><linearGradient id="tcw' + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5e8f86"/><stop offset="1" stop-color="#3f6d66"/></linearGradient>' +
+      '<linearGradient id="tce' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbf3dc"/><stop offset="1" stop-color="#ecdcb6"/></linearGradient>' +
+      '<linearGradient id="tcg' + k + '" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>' +
+      '<clipPath id="tcc' + k + '"><rect x="8" y="16" width="120" height="76" rx="9"/></clipPath></defs>' +
+      '<rect width="136" height="160" fill="url(#tcw' + k + ')"/><g stroke="#4f7d75" stroke-width=".6" opacity=".6"><path d="M0 40h136M0 80h136M0 120h136"/></g>' +
+      '<rect y="146" width="136" height="14" fill="#2f3a3a"/><path d="M0 146h136" stroke="#1d2424" stroke-width="1.2"/>' +
+      // โซ่ + ป้าย
+      '<g transform="translate(18 28) scale(.75)"><g class="sc-hang"><path d="M36 -40v58M100 -40v58" stroke="#8b8f94" stroke-width="1.6" stroke-dasharray="3 1.6"/>' +
+      '<rect x="10" y="19" width="120" height="76" rx="9" fill="#000" opacity=".22"/>' +
+      '<rect x="8" y="16" width="120" height="76" rx="9" fill="url(#tce' + k + ')" stroke="' + nv + '" stroke-width="5"/><rect x="13" y="21" width="110" height="66" rx="6" fill="none" stroke="' + nv + '" stroke-width="1"/>' +
+      '<circle cx="36" cy="22" r="2.4" fill="#c9ccd0" stroke="' + ink + '" stroke-width=".8"/><circle cx="100" cy="22" r="2.4" fill="#c9ccd0" stroke="' + ink + '" stroke-width=".8"/>' +
+      '<text x="18" y="44" font-size="13" font-weight="900" fill="' + nv + '" font-family="sans-serif">รายวัน</text><text x="18" y="62" font-size="12" font-weight="900" fill="#d9731a" font-family="sans-serif">พาร์ตไทม์</text>' +
+      '<rect x="18" y="68" width="62" height="12" rx="3" fill="' + nv + '"/><text x="49" y="77" text-anchor="middle" font-size="7.4" font-weight="900" fill="#ffd84d" font-family="sans-serif">ก็คือลูกจ้าง</text>' +
+      '<g transform="translate(103 54)"><circle r="15.5" fill="#d64545" stroke="' + ink + '" stroke-width="1.1"/><circle r="12" fill="#fffdf4"/><path d="M0-10v2.4M10 0h-2.4M0 10v-2.4M-10 0h2.4" stroke="' + ink + '" stroke-width="1.3"/><path d="M0 0l-4.6-3.6" stroke="' + ink + '" stroke-width="1.8" stroke-linecap="round"/>' +
+      '<g class="sc-gear"><circle r="10" fill="none"/><path d="M0 0V-8.6" stroke="#d64545" stroke-width="1.2" stroke-linecap="round"/></g><circle r="1.4" fill="' + ink + '"/></g>' +
+      '<g clip-path="url(#tcc' + k + ')" fill="#3b3f45"><path d="M8 30q4 2 2 6q-3 1-2-6z"/><path d="M122 84q4 0 5 4q-5 3-5-4z"/><path d="M60 16q3 3 8 1q-1 3-8-1z"/><path d="M128 40q-4 1-3 5q3 0 3-5z"/></g>' +
+      '<g clip-path="url(#tcc' + k + ')"><g transform="rotate(20 48 55)"><rect class="sc-glint" x="40" y="10" width="16" height="90" fill="url(#tcg' + k + ')" opacity=".6"/></g></g></g></g>' +
+      // คนงานถือบัตร
+      '<g stroke="' + ink + '" stroke-width="1.2" stroke-linejoin="round">' +
+      '<path d="M84 147v-24q0-12 15-12t15 12v24z" fill="#4a7fc1"/><path d="M90 147v-14h18v14" fill="#2f5d99" stroke-width=".9"/>' +
+      '<g transform="rotate(-6 97 132)"><rect x="88" y="121" width="18" height="22" rx="1" fill="#fbf6e4" stroke="#a8977a" stroke-width=".8"/><rect x="88" y="121" width="18" height="4.4" fill="#d64545" stroke="none"/><path d="M90.5 130h13M90.5 134h13M90.5 138h13" stroke="#ddd1b5" stroke-width=".7"/></g>' +
+      '<circle cx="88" cy="133" r="3.2" fill="#f2c9a0"/><circle cx="106" cy="131" r="3.2" fill="#f2c9a0"/>' +
+      '<circle cx="99" cy="103" r="10.5" fill="#f2c9a0"/><path d="M88.5 100q0-11.5 10.5-11.5q10.5 0 10.5 10.5z" fill="#e8833a"/><path d="M109.5 99h6q1 2-1 3h-5z" fill="#c96a24"/>' +
+      '<path d="M92.4 101q2-1.6 4 0M101.6 101q2-1.6 4 0" fill="none" stroke-width="1"/><circle cx="94.4" cy="104.4" r="1.2" fill="' + ink + '" stroke="none"/><circle cx="103.6" cy="104.4" r="1.2" fill="' + ink + '" stroke="none"/>' +
+      '<path d="M95.5 108.6q3.5 3 7 0" fill="#fff" stroke-width="1"/><circle cx="91.6" cy="107.6" r="1.8" fill="#f08a8a" opacity=".55" stroke="none"/><circle cx="106.4" cy="107.6" r="1.8" fill="#f08a8a" opacity=".55" stroke="none"/></g>'; },
+    // [ปกแผ่นเสียงไวนิลยุค 60] ซองแผ่นเสียงลายวงกลมโมเดิร์นสีส้ม-เขียวหัวเป็ด ขอบซองถลอก แผ่นเสียงดำเงาโผล่มุมขวาบน ฉลากกลางแผ่น "75%" ตัวหนังสือ "หยุดชั่วคราว" แบบปกเพลง คนงานหน้ายิ้มนั่งเก้าอี้ฟังเพลงรอ (น้องม้วนบังมุมซ้ายล่าง)
+    vinyl: function (k) { var ink = '#23201c'; var grooves = ''; for (var i = 0; i < 6; i++) grooves += '<circle r="' + (14 + i * 2.6) + '" fill="none" stroke="#3a3a40" stroke-width=".5"/>'; return '<defs><linearGradient id="vyb' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6e9cf"/><stop offset="1" stop-color="#ead6ae"/></linearGradient>' +
+      '<radialGradient id="vyd' + k + '" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#3a3a42"/><stop offset="1" stop-color="#0d0d10"/></radialGradient>' +
+      '<linearGradient id="vyg' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset=".35" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".35"/><stop offset=".65" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>' +
+      '<rect width="136" height="160" fill="#1f6f6a"/>' +
+      // แผ่นเสียง
+      '<g transform="translate(96 62)"><g class="sc-gear"><circle r="32" fill="url(#vyd' + k + ')"/>' + grooves + '<circle r="11" fill="#e8622c"/><circle r="11" fill="none" stroke="#fff" stroke-width=".6" opacity=".6"/><circle r="1.4" cy="7" fill="' + ink + '"/></g><text y="3" text-anchor="middle" font-size="8" font-weight="900" fill="#fff8e6" font-family="sans-serif">75%</text><circle r="32" fill="url(#vyg' + k + ')"/></g>' +
+      // ซอง
+      '<path d="M0 46h70v114H0z" fill="url(#vyb' + k + ')"/><path d="M70 46v114" stroke="#b89a6a" stroke-width="1.2"/>' +
+      '<g opacity=".9"><circle cx="40" cy="104" r="20" fill="#e8622c"/><circle cx="40" cy="104" r="12" fill="#f6e9cf"/><circle cx="40" cy="104" r="6" fill="#1f6f6a"/></g>' +
+      '<path d="M0 46h70v114H0z" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="6 3 2 5" opacity=".4"/>' +
+      '<text x="28" y="60" font-size="9" font-weight="900" fill="' + ink + '" font-family="sans-serif">หยุด</text><text x="28" y="72" font-size="9" font-weight="900" fill="#e8622c" font-family="sans-serif">ชั่วคราว</text>' +
+      // คนงานบนเก้าอี้
+      '<g stroke="' + ink + '" stroke-width="1.1" stroke-linejoin="round"><path d="M80 150v-12h28v12M82 150v8M106 150v8" fill="none" stroke="#c9a46a" stroke-width="2.4"/><path d="M78 138h32" stroke="#c9a46a" stroke-width="3"/>' +
+      '<path d="M84 138v-20q0-10 11-10t11 10v20z" fill="#f2b33d"/><path d="M90 138l-4 14M100 138l6 14" stroke="#3b4a5e" stroke-width="4" stroke-linecap="round"/>' +
+      '<circle cx="95" cy="98" r="9.5" fill="#f2c9a0"/><path d="M85.5 96q0-10 9.5-10q9.5 0 9.5 9q-4-5-9.5-5t-9.5 6z" fill="#2b1c14"/>' +
+      '<path d="M85 97q0-12 10-12t10 12" fill="none" stroke="#e8622c" stroke-width="2"/><rect x="83" y="95" width="4" height="7" rx="2" fill="#e8622c"/><rect x="103" y="95" width="4" height="7" rx="2" fill="#e8622c"/>' +
+      '<path d="M90.5 98q1.6-1.4 3.2 0M96.3 98q1.6-1.4 3.2 0" fill="none" stroke-width=".9"/><path d="M92 102.6q3 2.6 6 0" fill="#fff" stroke-width=".9"/><circle cx="89" cy="101.6" r="1.6" fill="#f08a8a" opacity=".55" stroke="none"/><circle cx="101" cy="101.6" r="1.6" fill="#f08a8a" opacity=".55" stroke="none"/></g>' +
+      '<g fill="#fff8e6" class="sc-blink"><path d="M112 96q2-4 4 0v6a2 2 0 1 1-1-2v-4" /></g>'; },
+    // [ภาพสีโปสเตอร์โกวอช] พื้นเหลืองมัสตาร์ดปัดพู่กันเห็นเนื้อสี โคมไฟโต๊ะส่องลำแสงอุ่น ลูกจ้างหน้าครุ่นคิดถือใบเตือนที่มีแถบเหลืองไฮไลต์ ปากกาเหน็บหู (น้องม้วนบังมุมซ้ายล่าง)
+    gouache: function (k) { var ink = '#2b2420'; return '<defs><linearGradient id="goa' + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2c14e"/><stop offset="1" stop-color="#e8a93a"/></linearGradient>' +
+      '<linearGradient id="gol' + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6d6" stop-opacity=".85"/><stop offset="1" stop-color="#fff6d6" stop-opacity="0"/></linearGradient></defs>' +
+      '<rect width="136" height="160" fill="url(#goa' + k + ')"/>' +
+      '<g fill="none" stroke-linecap="round" opacity=".35"><path d="M-4 22q40-6 90 2t60-4" stroke="#f7d27a" stroke-width="9"/><path d="M-4 56q50 6 80-2t70 4" stroke="#d99a2e" stroke-width="7"/><path d="M-4 94q30-4 70 2t80-2" stroke="#f7d27a" stroke-width="8"/></g>' +
+      '<rect y="138" width="136" height="22" fill="#2f5d62"/><path d="M0 138q30-3 68 0t68 0" stroke="#24494d" stroke-width="3" fill="none"/>' +
+      // โคมไฟ
+      '<g stroke="' + ink + '" stroke-width="1.4" stroke-linejoin="round"><path d="M30 52L18 30l12-10" fill="none" stroke-width="2.6"/><path d="M26 14l18 6-8 16-18-6z" fill="#2f5d62"/></g><path d="M36 34L120 120H40z" fill="url(#gol' + k + ')"/>' +
+      // ลูกจ้าง
+      '<g stroke="' + ink + '" stroke-width="1.3" stroke-linejoin="round">' +
+      '<path d="M66 160v-34q0-16 22-16t22 16v34z" fill="#c8553d"/><path d="M80 112l8 8 8-8" fill="#f4e8d0" stroke-width="1"/>' +
+      '<circle cx="88" cy="90" r="14" fill="#f2c9a0"/><path d="M74 88q0-16 14-16q14 0 14 14q-6-7-14-7q-6 4-14 9z" fill="#3a2418"/><path d="M101 82l7-6" stroke="#2f5d62" stroke-width="2.2"/>' +
+      '<path d="M80 86l4 1.4M96 86l-4 1.4" stroke-width="1.2"/><circle cx="83" cy="91" r="1.5" fill="' + ink + '" stroke="none"/><circle cx="93" cy="91" r="1.5" fill="' + ink + '" stroke="none"/><path d="M84 98.6q4-1.8 8 0" fill="none" stroke-width="1.2"/><circle cx="79" cy="95" r="2.2" fill="#e8846a" opacity=".5" stroke="none"/><circle cx="97" cy="95" r="2.2" fill="#e8846a" opacity=".5" stroke="none"/>' +
+      '<g transform="rotate(-8 92 128)"><rect x="74" y="112" width="40" height="34" rx="1.5" fill="#fffaf0"/><text x="94" y="123" text-anchor="middle" font-size="7.8" font-weight="900" fill="#c8302a" stroke="none" font-family="sans-serif">ใบเตือน</text><rect x="78" y="127" width="32" height="5" fill="#ffe14a" stroke="none" opacity=".9"/><path d="M79 129.6h30M79 136h26M79 141h18" stroke="#9a8a6a" stroke-width=".9"/></g>' +
+      '<circle cx="76" cy="134" r="4" fill="#f2c9a0"/><circle cx="112" cy="128" r="4" fill="#f2c9a0"/></g>' +
+      '<g fill="#fff6d6" opacity=".8"><path d="M118 48l1.6 4 4 1.6-4 1.6-1.6 4-1.6-4-4-1.6 4-1.6z"/></g>'; },
+    // [สีชอล์กพาสเทลเกลี่ยนุ่ม] ฟ้าโพล้เพล้ม่วงชมพูเนื้อชอล์กหยาบ ดอกบัวบานกลางน้ำนิ่ง โคมลอยน้ำแสงอุ่น พระจันทร์เสี้ยวยิ้มบาง ๆ (น้องม้วนบังมุมซ้ายล่าง)
+    pastel: function (k) { return '<defs><linearGradient id="psk' + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a5a9e"/><stop offset=".55" stop-color="#e3a0b8"/><stop offset="1" stop-color="#f6d6b8"/></linearGradient>' +
+      '<linearGradient id="psw' + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fa8d0"/><stop offset="1" stop-color="#5a6e9e"/></linearGradient>' +
+      '<filter id="psn' + k + '" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="2" seed="11"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .28 0"/></filter>' +
+      '<radialGradient id="psg' + k + '" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffe6a0" stop-opacity=".8"/><stop offset="1" stop-color="#ffe6a0" stop-opacity="0"/></radialGradient></defs>' +
+      '<rect width="136" height="160" fill="url(#psk' + k + ')"/><rect y="104" width="136" height="56" fill="url(#psw' + k + ')"/>' +
+      '<g stroke="#c8d6f0" stroke-width="2" opacity=".5" stroke-linecap="round"><path d="M30 116h30M74 124h40M40 140h26M86 150h30"/></g>' +
+      // พระจันทร์
+      '<path d="M98 24a12 12 0 1 0 8 22a10 10 0 1 1-8-22z" fill="#fff4d0"/><circle cx="97" cy="34" r=".9" fill="#7a6a5a"/><path d="M95 38q2 1.4 3.6 0" stroke="#7a6a5a" stroke-width=".7" fill="none"/>' +
+      // โคมลอย
+      '<circle cx="104" cy="140" r="15" fill="url(#psg' + k + ')"/><path d="M96 142h16l-3 6h-10z" fill="#e8a24a"/><path d="M100 141q4-10 8 0z" fill="#ffcf6a"/><path d="M104 137q-2-4 0-7q2 3 0 7z" fill="#fff4c0"/>' +
+      // ดอกบัว
+      '<g transform="translate(84 96)"><path d="M0 8q-22-2-26-18q16 0 26 18zM0 8q22-2 26-18q-16 0-26 18z" fill="#e86f98" stroke="#b94a72" stroke-width=".6"/><path d="M0 8q-12-10-10-30q10 12 10 30zM0 8q12-10 10-30q-10 12-10 30z" fill="#f29ab8" stroke="#c45a82" stroke-width=".5"/><path d="M0 8q-5-18 0-36q5 18 0 36z" fill="#fbd3e2" stroke="#d07a9a" stroke-width=".4"/><path d="M-30 12q30 8 60 0q-30 4-60 0z" fill="#6a9a6a"/></g>' +
+      '<rect width="136" height="160" filter="url(#psn' + k + ')"/>'; },
+    // [ภาพพอร์เทรตนุ่มแสงหน้าต่าง] ผนังครีมแสงเช้าเฉียงจากหน้าต่าง คนเดิมห่มผ้าคลุมไหล่สีชมพู ถือแก้วชาอุ่นไอกรุ่น ยิ้มบาง ๆ ต้นไม้ในกระถางข้างหน้าต่าง (น้องม้วนบังมุมซ้ายล่าง)
+    teaportrait: function (k) { var ink = '#5a4636'; return '<defs><linearGradient id="tpw' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fdf3e4"/><stop offset="1" stop-color="#ecd6b6"/></linearGradient>' +
+      '<linearGradient id="tps' + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe2f6"/><stop offset="1" stop-color="#eaf6fd"/></linearGradient>' +
+      '<linearGradient id="tpl' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff8e0" stop-opacity=".8"/><stop offset="1" stop-color="#fff8e0" stop-opacity="0"/></linearGradient>' +
+      '<radialGradient id="tpk' + k + '" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#fbe4cf"/><stop offset=".7" stop-color="#f0c6a4"/><stop offset="1" stop-color="#e2ad8a"/></radialGradient>' +
+      '<linearGradient id="tph' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5a3a2a"/><stop offset="1" stop-color="#2e1c14"/></linearGradient>' +
+      '<linearGradient id="tpc' + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7c9d6"/><stop offset="1" stop-color="#e79ab0"/></linearGradient>' +
+      '<filter id="tpd' + k + '" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#5a3a2a" flood-opacity=".25"/></filter></defs>' +
+      '<rect width="136" height="160" fill="url(#tpw' + k + ')"/>' +
+      '<rect x="26" y="20" width="44" height="52" rx="2" fill="url(#tps' + k + ')" stroke="#cdb48e" stroke-width="2"/><path d="M48 20v52M26 46h44" stroke="#cdb48e" stroke-width="1.4"/>' +
+      '<path d="M26 72L70 72L128 150L40 150z" fill="url(#tpl' + k + ')" opacity=".7"/>' +
+      '<g fill="#8fb58a"><path d="M112 70q-8-16 0-28q8 12 0 28z"/><path d="M112 70q8-14 18-14q-6 12-18 14z"/><path d="M112 70q-12-6-14-18q12 4 14 18z"/></g><path d="M104 70h16l-2 14h-12z" fill="#c8794a"/>' +
+      // ตัว
+      '<g filter="url(#tpd' + k + ')"><path d="M62 160v-30q0-24 30-24t30 24v30z" fill="url(#tpc' + k + ')"/></g><path d="M74 118q18 14 36 0" stroke="#fff" stroke-width="1.6" fill="none" opacity=".5"/>' +
+      '<path d="M86 96h12v12q-6 3-12 0z" fill="#e8b896"/>' +
+      '<circle cx="108" cy="68" r="8" fill="url(#tph' + k + ')"/><circle cx="92" cy="82" r="16" fill="url(#tpk' + k + ')"/>' +
+      '<path d="M76 80q-1-18 16-19q17 1 17 18q-4-9-12-11q-4 6-12 7q-6 1-9 5z" fill="url(#tph' + k + ')"/><path d="M76 80q-3 8 0 16" stroke="url(#tph' + k + ')" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+      '<path d="M81.6 85q2.6 2.4 5.2 0M96.6 85q2.6 2.4 5.2 0" stroke="' + ink + '" stroke-width="1.4" fill="none" stroke-linecap="round"/><path d="M81 79.6q3-1.6 6 .2M96 79.8q3-1.8 6-.2" stroke="' + ink + '" stroke-width="1" fill="none" stroke-linecap="round"/>' +
+      '<ellipse cx="81" cy="90" rx="3.4" ry="2" fill="#f2a0a0" opacity=".45"/><ellipse cx="103" cy="90" rx="3.4" ry="2" fill="#f2a0a0" opacity=".45"/><path d="M88.4 94q3.6 2.8 7.2 0" stroke="#b0503a" stroke-width="1.3" fill="none" stroke-linecap="round"/>' +
+      // แก้วชา
+      '<path d="M72 132q8 10 20 6M114 132q-8 10-20 6" stroke="url(#tpc' + k + ')" stroke-width="8" fill="none" stroke-linecap="round"/>' +
+      '<rect x="84" y="124" width="18" height="18" rx="4" fill="#7fb3d6" stroke="#4f86b0" stroke-width=".9"/><path d="M102 128q6 0 5 5t-5 4" fill="none" stroke="#4f86b0" stroke-width="1.4"/><ellipse cx="93" cy="125" rx="7" ry="2" fill="#c98a5a"/>' +
+      '<g class="sc-glint"><path d="M89 120q-2-5 0-10M96 120q-2-5 0-10" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round" opacity=".9"/></g>' +
+      '<ellipse cx="84" cy="140" rx="4" ry="3.4" fill="#eab89a"/><ellipse cx="102" cy="140" rx="4" ry="3.4" fill="#eab89a"/>'; },
+    // [ภาพพอร์เทรตนักออกแบบแสงจอเย็นตา] ผนังฟ้าเทาไล่เฉด นักออกแบบชายแว่นสเวตเตอร์เขียวน้ำทะเล ถือแท็บเล็ตที่มีโลโก้ใบไม้ส้ม ปากกาสไตลัส สัญลักษณ์ © ลอยเรืองแสง (น้องม้วนบังมุมซ้ายล่าง)
+    designerportrait: function (k) { return '<defs><linearGradient id="dpw' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e9eef4"/><stop offset="1" stop-color="#cdd8e4"/></linearGradient>' +
+      '<radialGradient id="dpk' + k + '" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#f6d2b0"/><stop offset=".7" stop-color="#e2b088"/><stop offset="1" stop-color="#cf9870"/></radialGradient>' +
+      '<linearGradient id="dph' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a3440"/><stop offset="1" stop-color="#16141c"/></linearGradient>' +
+      '<linearGradient id="dpc' + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4fb3a8"/><stop offset="1" stop-color="#2f8a80"/></linearGradient>' +
+      '<radialGradient id="dpg' + k + '" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff1c8" stop-opacity=".9"/><stop offset="1" stop-color="#fff1c8" stop-opacity="0"/></radialGradient>' +
+      '<filter id="dpd' + k + '" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#2a3a4a" flood-opacity=".25"/></filter></defs>' +
+      '<rect width="136" height="160" fill="url(#dpw' + k + ')"/><circle cx="104" cy="44" r="26" fill="url(#dpg' + k + ')"/>' +
+      '<g class="sc-glint"><circle cx="104" cy="44" r="11" fill="none" stroke="#f2b33d" stroke-width="2.6"/><path d="M108.6 39.6a6 6 0 1 0 0 8.8" fill="none" stroke="#f2b33d" stroke-width="2.6" stroke-linecap="round"/></g>' +
+      '<g filter="url(#dpd' + k + ')"><path d="M60 160v-34q0-24 30-24t30 24v34z" fill="url(#dpc' + k + ')"/></g><path d="M76 106q14 10 28 0" stroke="#2f8a80" stroke-width="2" fill="none"/>' +
+      '<path d="M84 92h12v12q-6 3-12 0z" fill="#e2b088"/>' +
+      '<g transform="translate(90 78)"><circle cx="-16" cy="3" r="3.4" fill="url(#dpk' + k + ')"/><circle cx="16" cy="3" r="3.4" fill="url(#dpk' + k + ')"/><circle r="16" fill="url(#dpk' + k + ')"/><path d="M-16 0q-2-20 16-20q16 0 17 16q-2-6-6-8q-8 4-18 3q-6 2-9 9z" fill="url(#dph' + k + ')"/>' +
+       '<ellipse cx="-7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><ellipse cx="7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><circle cx="-6.8" cy="2.2" r=".7" fill="#fff"/><circle cx="8" cy="2.2" r=".7" fill="#fff"/>' +
+       '<g fill="none" stroke="#2a2a32" stroke-width="1.1"><rect x="-12" y="-1" width="9" height="7" rx="2.4"/><rect x="3" y="-1" width="9" height="7" rx="2.4"/><path d="M-3 1.6h6"/></g>' +
+       '<path d="M-11 -2.4q3-2 6-.4M5 -2.8q3-1.6 6 .4" stroke="#3a2a20" stroke-width="1.2" fill="none" stroke-linecap="round"/><path d="M-4.6 10.4q4.6 4.6 9.2 0z" fill="#fff" stroke="#9a4a3a" stroke-width="1.1"/><ellipse cx="-11" cy="8" rx="3" ry="1.8" fill="#f2a0a0" opacity=".35"/><ellipse cx="11" cy="8" rx="3" ry="1.8" fill="#f2a0a0" opacity=".35"/></g>' +
+      '<g transform="rotate(-8 92 128)"><g filter="url(#dpd' + k + ')"><rect x="72" y="112" width="40" height="30" rx="3" fill="#2a2f3a"/></g><rect x="75" y="115" width="34" height="24" rx="1.4" fill="#fff"/><circle cx="92" cy="127" r="8" fill="#fde3cc"/><path d="M88 131q-1-9 7-12q2 8-7 12z" fill="#f08a3a"/><path d="M93 132q6-1 7-8q-5 2-7 8z" fill="#f2b33d"/></g>' +
+      '<path d="M112 132l8-14" stroke="#3a404c" stroke-width="2" stroke-linecap="round"/><circle cx="112" cy="134" r="4" fill="#e2b088"/><circle cx="74" cy="138" r="4" fill="#e2b088"/>'; },
+    // [ภาพพอร์เทรตอุ่นกับโหลออมเงิน] พื้นเขียวมิ้นต์ไล่ครีม พนักงานหญิงยูนิฟอร์มฟ้ายิ้ม กอดโหลแก้วใหญ่ที่มีเหรียญทองกับต้นกล้า ประกายเล็ก ๆ (น้องม้วนบังมุมซ้ายล่าง)
+    fundjar: function (k) { return '<defs><linearGradient id="fjb' + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d6efe2"/><stop offset="1" stop-color="#fbf3e2"/></linearGradient>' +
+      '<radialGradient id="fjk' + k + '" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#fbe4cf"/><stop offset=".7" stop-color="#f0c6a4"/><stop offset="1" stop-color="#e2ad8a"/></radialGradient>' +
+      '<linearGradient id="fjh' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5a3a2a"/><stop offset="1" stop-color="#2e1c14"/></linearGradient>' +
+      '<radialGradient id="fjc' + k + '" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffe98a"/><stop offset="1" stop-color="#e3a43a"/></radialGradient>' +
+      '<filter id="fjd' + k + '" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#2a4a3a" flood-opacity=".25"/></filter></defs>' +
+      '<rect width="136" height="160" fill="url(#fjb' + k + ')"/><circle cx="104" cy="30" r="22" fill="#fff6d0" opacity=".7"/>' +
+      '<g filter="url(#fjd' + k + ')"><path d="M58 160v-34q0-24 30-24t30 24v34z" fill="#7fb3e0"/></g><path d="M82 92h12v12q-6 3-12 0z" fill="#e8b896"/>' +
+      '<g transform="translate(88 76)"><circle cx="16" cy="-14" r="8" fill="url(#fjh' + k + ')"/><circle r="16" fill="url(#fjk' + k + ')"/><path d="M-16 -2q-1-18 16-19q17 1 17 18q-4-9-12-11q-4 6-12 7q-6 1-9 5z" fill="url(#fjh' + k + ')"/>' +
+       '<path d="M-11 -2.4q3-2 6-.4M5 -2.8q3-1.6 6 .4" stroke="#5a4636" stroke-width="1" fill="none"/><path d="M-10.4 3q2.6 2.4 5.2 0M4.6 3q2.6 2.4 5.2 0" stroke="#5a4636" stroke-width="1.4" fill="none" stroke-linecap="round"/><path d="M-4.6 9.4q4.6 4.6 9.2 0z" fill="#fff" stroke="#b0503a" stroke-width="1.1"/><ellipse cx="-11" cy="7" rx="3.4" ry="2" fill="#f2a0a0" opacity=".45"/><ellipse cx="11" cy="7" rx="3.4" ry="2" fill="#f2a0a0" opacity=".45"/></g>' +
+      '<g filter="url(#fjd' + k + ')"><path d="M70 152v-26q0-6 6-6h24q6 0 6 6v26q0 6-6 6H76q-6 0-6-6z" fill="#ffffff" fill-opacity=".35"/></g>' +
+      '<g fill="url(#fjc' + k + ')" stroke="#a8741a" stroke-width=".6"><ellipse cx="80" cy="150" rx="7" ry="2.6"/><ellipse cx="94" cy="150" rx="7" ry="2.6"/><ellipse cx="87" cy="146" rx="7" ry="2.6"/><ellipse cx="80" cy="142" rx="7" ry="2.6"/><ellipse cx="94" cy="142" rx="7" ry="2.6"/></g>' +
+      '<path d="M88 140q-1-8 0-12" stroke="#5a9a4a" stroke-width="1.4" fill="none"/><path d="M88 130q-8-3-9-8q8 0 9 8zM88 128q6-5 11-3q-5 6-11 3z" fill="#7fbf6a"/>' +
+      '<path d="M70 152v-26q0-6 6-6h24q6 0 6 6v26q0 6-6 6H76q-6 0-6-6z" fill="none" stroke="#9fc3d6" stroke-width="1.6"/><rect x="72" y="114" width="32" height="7" rx="2" fill="#c99a6a"/><path d="M75 126v22" stroke="#fff" stroke-width="2" opacity=".7" stroke-linecap="round"/>' +
+      '<path d="M62 128q4 14 10 18M114 128q-4 14-10 18" stroke="#7fb3e0" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="72" cy="146" r="3.6" fill="#eab89a"/><circle cx="104" cy="146" r="3.6" fill="#eab89a"/>' +
+      '<g class="sc-glint" fill="#fff"><path d="M116 104l1.4 3.4 3.4 1.4-3.4 1.4-1.4 3.4-1.4-3.4-3.4-1.4 3.4-1.4z"/></g>'; },
+    // [ภาพพอร์เทรตแสงเช้าโทนพีช] ผนังพีชไล่เฉด หญิงเดิมในชุดนอนลายจุดถือมือถือ หน้าตาตกใจ จอแสดง "+25,000 ×2" ฟองแจ้งเตือนลอย (น้องม้วนบังมุมซ้ายล่าง)
+    phoneportrait: function (k) { var ink = '#5a4636'; return '<defs><linearGradient id="ppw' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fdeee0"/><stop offset="1" stop-color="#f3cfb0"/></linearGradient>' +
+      '<radialGradient id="ppk' + k + '" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#fbe4cf"/><stop offset=".7" stop-color="#f0c6a4"/><stop offset="1" stop-color="#e2ad8a"/></radialGradient>' +
+      '<linearGradient id="pph' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5a3a2a"/><stop offset="1" stop-color="#2e1c14"/></linearGradient>' +
+      '<pattern id="ppd' + k + '" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#9cc4e2"/><circle cx="4" cy="4" r="1.3" fill="#fff" opacity=".8"/></pattern>' +
+      '<filter id="ppf' + k + '" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#5a3a2a" flood-opacity=".25"/></filter></defs>' +
+      '<rect width="136" height="160" fill="url(#ppw' + k + ')"/><circle cx="30" cy="30" r="40" fill="#fff4e4" opacity=".6"/>' +
+      '<g filter="url(#ppf' + k + ')"><path d="M60 160v-34q0-24 30-24t30 24v34z" fill="url(#ppd' + k + ')"/></g>' +
+      '<path d="M84 92h12v12q-6 3-12 0z" fill="#e8b896"/><circle cx="106" cy="64" r="8" fill="url(#pph' + k + ')"/><circle cx="90" cy="78" r="16" fill="url(#ppk' + k + ')"/>' +
+      '<path d="M74 76q-1-18 16-19q17 1 17 18q-4-9-12-11q-4 6-12 7q-6 1-9 5z" fill="url(#pph' + k + ')"/><path d="M74 76q-3 8 0 16" stroke="url(#pph' + k + ')" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+      '<ellipse cx="82.6" cy="81" rx="2.2" ry="2.9" fill="#3a2a20"/><ellipse cx="97.4" cy="81" rx="2.2" ry="2.9" fill="#3a2a20"/><circle cx="83.2" cy="80.2" r=".8" fill="#fff"/><circle cx="98" cy="80.2" r=".8" fill="#fff"/>' +
+      '<path d="M79 75.6l6-2.6M101 75.6l-6-2.6" stroke="' + ink + '" stroke-width="1.1" stroke-linecap="round"/><ellipse cx="90" cy="90" rx="2.6" ry="3.2" fill="#b0503a"/><ellipse cx="79" cy="86" rx="3.4" ry="2" fill="#f2a0a0" opacity=".45"/><ellipse cx="101" cy="86" rx="3.4" ry="2" fill="#f2a0a0" opacity=".45"/>' +
+      '<path d="M66 128q-4 10 10 14M114 128q4 10-10 14" stroke="url(#ppd' + k + ')" stroke-width="8" fill="none" stroke-linecap="round"/>' +
+      '<g transform="rotate(-6 90 136)"><rect x="80" y="120" width="20" height="30" rx="3" fill="#2e3440"/><rect x="82" y="123" width="16" height="24" rx="1.6" fill="#fff"/><rect x="82" y="123" width="16" height="6" fill="#1f6fd0"/><path d="M84 133h12M84 139h12" stroke="#2e9e5b" stroke-width="2"/></g>' +
+      '<ellipse cx="80" cy="144" rx="4" ry="3.4" fill="#eab89a"/><ellipse cx="100" cy="143" rx="4" ry="3.4" fill="#eab89a"/>' +
+      '<g class="sc-bob"><g filter="url(#ppf' + k + ')"><rect x="84" y="20" width="48" height="26" rx="6" fill="#fff"/></g><path d="M96 46l-4 6 10-6z" fill="#fff"/><text x="108" y="31" text-anchor="middle" font-size="7.6" font-weight="900" fill="#2e9e5b" font-family="sans-serif">+25,000</text><text x="108" y="41" text-anchor="middle" font-size="7.2" font-weight="900" fill="#e5484d" font-family="sans-serif">× 2 ครั้ง</text></g>'; },
+    // [ภาพพอร์เทรตตัวแทนพนักงานแสงหน้าต่างเขียวมิ้นต์] ผนังมิ้นต์ไล่เฉด ชายแว่นสวมป้ายคล้องคอ "กรรมการลูกจ้าง" ยิ้มมั่นใจ ถือแฟ้มวาระ ด้านหลังมีกล่องคำพูดเล็ก ๆ สามอันลอยแทนเสียงพนักงาน (น้องม้วนบังมุมซ้ายล่าง)
+    committeeportrait: function (k) { return '<defs><linearGradient id="cpw' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e3f4ec"/><stop offset="1" stop-color="#bfe0d0"/></linearGradient>' +
+      '<radialGradient id="cpk' + k + '" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#f6d2b0"/><stop offset=".7" stop-color="#e2b088"/><stop offset="1" stop-color="#cf9870"/></radialGradient>' +
+      '<linearGradient id="cph' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a3440"/><stop offset="1" stop-color="#16141c"/></linearGradient>' +
+      '<filter id="cpd' + k + '" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#2a4a3a" flood-opacity=".25"/></filter></defs>' +
+      '<rect width="136" height="160" fill="url(#cpw' + k + ')"/>' +
+      '<g class="sc-bob"><g filter="url(#cpd' + k + ')"><rect x="10" y="14" width="34" height="16" rx="6" fill="#fff"/><rect x="96" y="10" width="30" height="16" rx="6" fill="#fff"/><rect x="104" y="36" width="26" height="14" rx="6" fill="#fff"/></g>' +
+       '<path d="M16 22h22M102 18h18M110 43h14" stroke="#9cc8b0" stroke-width="2" stroke-linecap="round"/></g>' +
+      '<g filter="url(#cpd' + k + ')"><path d="M58 160v-36q0-24 32-24t32 24v36z" fill="#2f4a6e"/></g><path d="M80 102l10 10 10-10" fill="#fff"/><path d="M90 112l-2 4 2 18 2-18z" fill="#c9553a"/>' +
+      '<path d="M84 90h12v12q-6 3-12 0z" fill="#e2b088"/>' +
+      '<g transform="translate(90 76)"><circle cx="-16" cy="3" r="3.4" fill="url(#cpk' + k + ')"/><circle cx="16" cy="3" r="3.4" fill="url(#cpk' + k + ')"/><circle r="16" fill="url(#cpk' + k + ')"/><path d="M-16 0q-2-20 16-20q16 0 17 16q-2-6-6-8q-8 4-18 3q-6 2-9 9z" fill="url(#cph' + k + ')"/>' +
+       '<ellipse cx="-7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><ellipse cx="7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><g fill="none" stroke="#2a2a32" stroke-width="1.1"><rect x="-12" y="-1" width="9" height="7" rx="2.4"/><rect x="3" y="-1" width="9" height="7" rx="2.4"/><path d="M-3 1.6h6"/></g>' +
+       '<path d="M-11 -2.4q3-2 6-.4M5 -2.8q3-1.6 6 .4" stroke="#3a2a20" stroke-width="1.2" fill="none"/><path d="M-4.6 10.4q4.6 4.6 9.2 0z" fill="#fff" stroke="#9a4a3a" stroke-width="1.1"/></g>' +
+      '<path d="M78 104l12 26 12-26" fill="none" stroke="#f2b33d" stroke-width="1.4"/><g filter="url(#cpd' + k + ')"><rect x="74" y="128" width="32" height="18" rx="2" fill="#fff"/></g><text x="90" y="135.6" text-anchor="middle" font-size="5.4" font-weight="900" fill="#2a2a32" font-family="sans-serif">กรรมการ</text><text x="90" y="142.6" text-anchor="middle" font-size="5.4" font-weight="900" fill="#2a2a32" font-family="sans-serif">ลูกจ้าง</text>' +
+      '<g transform="rotate(-8 118 128)"><rect x="108" y="112" width="20" height="28" rx="2" fill="#2e8a6e"/><rect x="111" y="116" width="14" height="20" fill="#fff"/><path d="M113 121h10M113 125h10M113 129h7" stroke="#9cc8b0" stroke-width="1"/></g><circle cx="112" cy="132" r="3.6" fill="#e2b088"/>'; },
+    accusedportrait: function (k) { return '<defs><linearGradient id="apw' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eeeafb"/><stop offset="1" stop-color="#cfc6ef"/></linearGradient>' +
+      '<radialGradient id="apk' + k + '" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#f8dcc2"/><stop offset=".7" stop-color="#e8b896"/><stop offset="1" stop-color="#d49e78"/></radialGradient>' +
+      '<linearGradient id="aph' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5a3a2a"/><stop offset="1" stop-color="#2e1c14"/></linearGradient>' +
+      '<filter id="apd' + k + '" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#3a2a5a" flood-opacity=".25"/></filter></defs>' +
+      '<rect width="136" height="160" fill="url(#apw' + k + ')"/><circle cx="70" cy="70" r="60" fill="#fff" opacity=".35"/>' +
+      '<g class="sc-bob"><g filter="url(#apd' + k + ')"><circle cx="112" cy="30" r="12" fill="#fff"/></g><text x="112" y="35" text-anchor="middle" font-size="15" font-weight="900" fill="#7a6ac8" font-family="sans-serif">?</text>' +
+       '<g transform="rotate(-20 24 34)"><circle cx="24" cy="30" r="9" fill="#e9f4ff" stroke="#3a4a5a" stroke-width="3"/><path d="M30 37l8 8" stroke="#3a4a5a" stroke-width="4" stroke-linecap="round"/></g></g>' +
+      '<g filter="url(#apd' + k + ')"><path d="M38 160v-36q0-24 32-24t32 24v36z" fill="#4fb3a8"/></g><path d="M58 104q12 8 24 0" stroke="#fff" stroke-width="2.4" fill="none"/>' +
+      '<path d="M64 90h12v12q-6 3-12 0z" fill="#e8b896"/>' +
+      '<g transform="translate(70 76)"><circle cx="0" cy="-22" r="9" fill="url(#aph' + k + ')"/><circle cx="-16" cy="3" r="3.4" fill="url(#apk' + k + ')"/><circle cx="16" cy="3" r="3.4" fill="url(#apk' + k + ')"/><circle r="16" fill="url(#apk' + k + ')"/>' +
+       '<path d="M-17 4q-3-22 17-22q20 0 17 22q-2-10-8-14q-10 6-26 4q-2 4 0 10z" fill="url(#aph' + k + ')"/>' +
+       '<path d="M-11 -2.6l6 1.6M11 -2.6l-6 1.6" stroke="#3a2a20" stroke-width="1.3" stroke-linecap="round"/><ellipse cx="-7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><ellipse cx="7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><circle cx="-6.8" cy="2.2" r=".7" fill="#fff"/><circle cx="8" cy="2.2" r=".7" fill="#fff"/>' +
+       '<ellipse cx="-10" cy="8" rx="3" ry="1.8" fill="#f29c8a" opacity=".5"/><ellipse cx="10" cy="8" rx="3" ry="1.8" fill="#f29c8a" opacity=".5"/><path d="M-4 11h8" stroke="#9a4a3a" stroke-width="1.4" stroke-linecap="round"/></g>' +
+      '<g transform="rotate(-6 92 132)"><g filter="url(#apd' + k + ')"><rect x="74" y="116" width="40" height="32" rx="2" fill="#3b6fd6"/></g><rect x="78" y="120" width="32" height="12" rx="1" fill="#fffdf6"/><text x="94" y="128.6" text-anchor="middle" font-size="6" font-weight="900" fill="#2a2a32" font-family="sans-serif">หลักฐาน</text></g>' +
+      '<circle cx="80" cy="140" r="4.6" fill="url(#apk' + k + ')"/>'; },
+    docflatlay: function (k) { return '<defs><linearGradient id="dfw' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d9a978"/><stop offset="1" stop-color="#b57f4e"/></linearGradient>' +
+      '<linearGradient id="dfs' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff6d8" stop-opacity=".55"/><stop offset="1" stop-color="#fff6d8" stop-opacity="0"/></linearGradient>' +
+      '<filter id="dfd' + k + '" x="-20%" y="-20%" width="150%" height="160%"><feDropShadow dx="2" dy="3" stdDeviation="2" flood-color="#4a2a10" flood-opacity=".3"/></filter></defs>' +
+      '<rect width="136" height="160" fill="url(#dfw' + k + ')"/><path d="M0 34q68-8 136 0M0 78q68-6 136 2M0 122q68-8 136 0" stroke="#a86f40" stroke-width="1.2" fill="none" opacity=".5"/>' +
+      '<path d="M40 0h26l-66 110v-44z" fill="url(#dfs' + k + ')"/><path d="M96 0h18l-114 190v-30z" fill="url(#dfs' + k + ')"/>' +
+      '<g transform="rotate(-10 44 40)" filter="url(#dfd' + k + ')"><rect x="18" y="24" width="52" height="34" rx="4" fill="#e9f3ff"/><rect x="18" y="24" width="52" height="9" rx="4" fill="#7fb2e8"/><rect x="18" y="29" width="52" height="4" fill="#7fb2e8"/><rect x="23" y="37" width="14" height="17" rx="2" fill="#c9d6e2"/><circle cx="30" cy="43" r="3.4" fill="#8a9aab"/><path d="M26 53q4-5 8 0" fill="#8a9aab"/><path d="M42 39h22M42 45h16M42 51h20" stroke="#9fb4c8" stroke-width="2" stroke-linecap="round"/></g>' +
+      '<g transform="rotate(12 98 66)" filter="url(#dfd' + k + ')"><rect x="74" y="50" width="50" height="32" rx="4" fill="#3b6fd6"/><rect x="80" y="59" width="10" height="8" rx="1.4" fill="#f2d27a"/><path d="M80 74h28" stroke="#fff" stroke-width="2" stroke-dasharray="4 2" opacity=".8"/><circle cx="110" cy="74" r="4" fill="#fff" opacity=".5"/></g>' +
+      '<g transform="translate(62 4) rotate(-6 46 112)" filter="url(#dfd' + k + ')"><rect x="26" y="88" width="40" height="50" rx="3" fill="#2e8a6e"/><path d="M26 88v50" stroke="#1f6a54" stroke-width="3"/><rect x="31" y="94" width="30" height="10" rx="1.4" fill="#e9f7f0"/><text x="46" y="101.4" text-anchor="middle" font-size="5.6" font-weight="900" fill="#2e8a6e" font-family="sans-serif">สมุดบัญชี</text></g>' +
+      '<g transform="translate(-62 -6)"><g class="sc-bob"><g filter="url(#dfd' + k + ')"><rect x="88" y="106" width="22" height="18" rx="3" fill="#f2b33d"/></g><path d="M92 106v-6a7 7 0 0 1 14 0" stroke="#c9993a" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="99" cy="114" r="2.4" fill="#8a5a00"/></g></g>' +
+      '<g filter="url(#dfd' + k + ')"><circle cx="112" cy="140" r="7" fill="none" stroke="#c9ced6" stroke-width="2.6"/><path d="M117 145l12 8" stroke="#c9ced6" stroke-width="4" stroke-linecap="round"/></g>' +
+      '<g transform="rotate(30 80 146)"><rect x="62" y="143" width="36" height="5" rx="2.4" fill="#e5484d"/><path d="M98 143l7 2.5-7 2.5z" fill="#f2d9b0"/></g>' +
+      '<ellipse cx="128" cy="18" rx="10" ry="18" fill="#5fbf8f" transform="rotate(40 128 18)"/><path d="M120 8l14 20" stroke="#2e8a6e" stroke-width="1.2"/>'; },
+    paypieces: function (k) { var g = ''; for (var i = 0; i < 9; i++) g += '<path d="M' + (i * 17) + ' 0v160M0 ' + (i * 20) + 'h136" stroke="#fff" stroke-width=".6" opacity=".35"/>';
+      return '<defs><linearGradient id="ppw' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5fb3a3"/><stop offset="1" stop-color="#3f8f86"/></linearGradient>' +
+      '<filter id="ppd' + k + '" x="-20%" y="-20%" width="150%" height="160%"><feDropShadow dx="1.5" dy="2.5" stdDeviation="1.6" flood-color="#123a34" flood-opacity=".35"/></filter></defs>' +
+      '<rect width="136" height="160" fill="url(#ppw' + k + ')"/>' + g + '<circle cx="110" cy="20" r="40" fill="#fff" opacity=".12"/>' +
+      '<g transform="rotate(-8 70 46)" filter="url(#ppd' + k + ')"><rect x="38" y="22" width="66" height="46" rx="3" fill="#f2d9a8"/><path d="M38 22l33 22 33-22" fill="#f7e4bc" stroke="#d9b87a" stroke-width="1.2"/><rect x="58" y="50" width="26" height="10" rx="1" fill="#fff"/><text x="71" y="57.6" text-anchor="middle" font-size="6" font-weight="900" fill="#8a5a00" font-family="sans-serif">ค่าจ้าง</text></g>' +
+      '<g filter="url(#ppd' + k + ')"><g transform="rotate(6 98 90)"><rect x="76" y="78" width="44" height="22" fill="#ffd166"/><text x="98" y="92" text-anchor="middle" font-size="7" font-weight="900" fill="#8a4a1a" font-family="sans-serif">ค่าคอม</text></g>' +
+       '<g transform="rotate(-5 104 122)"><rect x="80" y="110" width="48" height="22" fill="#ffb4a2"/><text x="104" y="124" text-anchor="middle" font-size="6.6" font-weight="900" fill="#8a2a1a" font-family="sans-serif">ค่าตำแหน่ง</text></g>' +
+       '<g transform="rotate(4 64 100)"><rect x="46" y="88" width="34" height="22" fill="#a5c8ff"/><text x="63" y="102" text-anchor="middle" font-size="6" font-weight="900" fill="#1a3a8a" font-family="sans-serif">เบี้ยขยัน</text></g></g>' +
+      '<g class="sc-bob"><g filter="url(#ppd' + k + ')"><circle cx="116" cy="146" r="11" fill="#fff"/></g><text x="116" y="151.6" text-anchor="middle" font-size="15" font-weight="900" fill="#3f8f86" font-family="sans-serif">?</text></g>' +
+      '<g filter="url(#ppd' + k + ')"><ellipse cx="22" cy="30" rx="12" ry="5" fill="#c9993a"/><ellipse cx="22" cy="26" rx="12" ry="5" fill="#f2c14e"/><ellipse cx="22" cy="22" rx="12" ry="5" fill="#f2c14e" stroke="#c9993a" stroke-width=".8"/></g>' +
+      '<g transform="rotate(-35 66 146)"><rect x="50" y="143" width="34" height="5" rx="2.4" fill="#3a4a5a"/><path d="M84 143l7 2.5-7 2.5z" fill="#f2d9b0"/></g>'; },
+    offerplane: function (k) { return '<defs><linearGradient id="opw' + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8ecdf2"/><stop offset=".7" stop-color="#cdeafb"/><stop offset="1" stop-color="#fde7c8"/></linearGradient>' +
+      '<filter id="opd' + k + '" x="-20%" y="-20%" width="150%" height="160%"><feDropShadow dx="2" dy="3" stdDeviation="2" flood-color="#2a4a6a" flood-opacity=".28"/></filter></defs>' +
+      '<rect width="136" height="160" fill="url(#opw' + k + ')"/><circle cx="112" cy="26" r="13" fill="#fff6c4"/>' +
+      '<g fill="#fff" opacity=".95"><ellipse cx="30" cy="34" rx="18" ry="7"/><ellipse cx="42" cy="30" rx="12" ry="8"/><ellipse cx="96" cy="70" rx="16" ry="6"/><ellipse cx="106" cy="66" rx="10" ry="7"/></g>' +
+      '<path d="M0 150l10-14 8 6 10-18 10 12 8-8 10 16 12-10 10 12 12-20 10 14 10-6 16 16v20H0z" fill="#9fb8d0" opacity=".7"/>' +
+      '<path d="M24 118q30-30 58-40" stroke="#fff" stroke-width="2" stroke-dasharray="4 4" fill="none"/>' +
+      '<g class="sc-bob"><g transform="rotate(-18 92 74)" filter="url(#opd' + k + ')"><path d="M60 74l64-22-30 44-8-14z" fill="#fffdf6"/><path d="M86 82l38-30-30 30z" fill="#e6ded0"/><path d="M86 82l-26-8 64-22" fill="none" stroke="#d8cfc0" stroke-width="1"/>' +
+       '<text x="86" y="72" text-anchor="middle" font-size="7.4" font-weight="900" fill="#3b6fd6" font-family="sans-serif" transform="rotate(-18 86 72)">OFFER</text></g>' +
+       '<g transform="rotate(-12 100 100)"><rect x="80" y="92" width="44" height="16" rx="3" fill="none" stroke="#e5484d" stroke-width="2.2"/><text x="102" y="104" text-anchor="middle" font-size="8.6" font-weight="900" fill="#e5484d" font-family="sans-serif">ยกเลิก</text></g></g>'; },
+    summonsdoormat: function (k) { var t = ''; for (var i = 0; i < 40; i++) t += '<circle cx="' + ((i * 37) % 136) + '" cy="' + ((i * 53) % 160) + '" r="' + (1 + (i % 3)) + '" fill="' + ['#c9a98a', '#8fb3a8', '#e7b8a0', '#a8a0c8'][i % 4] + '" opacity=".7"/>';
+      return '<defs><linearGradient id="sdw' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4efe6"/><stop offset="1" stop-color="#e4dccf"/></linearGradient>' +
+      '<filter id="sdd' + k + '" x="-20%" y="-20%" width="150%" height="160%"><feDropShadow dx="2" dy="3" stdDeviation="2" flood-color="#4a3a2a" flood-opacity=".3"/></filter></defs>' +
+      '<rect width="136" height="160" fill="url(#sdw' + k + ')"/>' + t +
+      '<g filter="url(#sdd' + k + ')"><rect x="18" y="40" width="108" height="86" rx="8" fill="#c9883e"/></g><rect x="24" y="46" width="96" height="74" rx="5" fill="none" stroke="#a86a2a" stroke-width="2" stroke-dasharray="3 3"/>' +
+      '<path d="M28 60h88M28 74h88M28 88h88M28 102h88" stroke="#b5762f" stroke-width="1" opacity=".6"/>' +
+      '<g transform="rotate(-10 76 84)" filter="url(#sdd' + k + ')"><rect x="46" y="64" width="62" height="40" rx="2" fill="#d9a86c"/><path d="M46 64l31 20 31-20" fill="none" stroke="#b5803e" stroke-width="1.2"/><rect x="54" y="86" width="46" height="12" rx="1" fill="#fffdf6"/><text x="77" y="94.6" text-anchor="middle" font-size="6.6" font-weight="900" fill="#c0392b" font-family="sans-serif">หมายเรียก</text></g>' +
+      '<g class="sc-bob"><g transform="rotate(8 108 30)" filter="url(#sdd' + k + ')"><rect x="92" y="12" width="32" height="34" rx="3" fill="#fff"/><rect x="92" y="12" width="32" height="9" rx="3" fill="#e5484d"/><text x="108" y="38" text-anchor="middle" font-size="13" font-weight="900" fill="#2a2a32" font-family="sans-serif">9</text><circle cx="108" cy="34" r="8" fill="none" stroke="#e5484d" stroke-width="1.4"/></g></g>' +
+      '<g transform="rotate(-20 100 140)"><path d="M84 132q8-4 14 2l6 10q-6 6-14 2z" fill="#4a6a8a"/><path d="M98 134l10-4" stroke="#4a6a8a" stroke-width="3" stroke-linecap="round"/></g>'; },
+    ordersticky: function (k) { return '<defs><linearGradient id="osw' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f3f5f"/><stop offset="1" stop-color="#1f2a40"/></linearGradient>' +
+      '<filter id="osd' + k + '" x="-20%" y="-20%" width="150%" height="160%"><feDropShadow dx="2" dy="3" stdDeviation="2" flood-color="#000" flood-opacity=".35"/></filter></defs>' +
+      '<rect width="136" height="160" fill="url(#osw' + k + ')"/><circle cx="108" cy="134" r="14" fill="none" stroke="#6a5040" stroke-width="3" opacity=".45"/>' +
+      '<g transform="rotate(-6 70 70)" filter="url(#osd' + k + ')"><path d="M28 34h30l6 6h44v66H28z" fill="#e9c27a"/><rect x="34" y="46" width="68" height="54" rx="2" fill="#fffdf6"/><text x="68" y="58" text-anchor="middle" font-size="7" font-weight="900" fill="#2a2a32" font-family="sans-serif">คำสั่งงาน</text><path d="M40 66h56M40 73h48M40 80h54M40 87h40" stroke="#d8cfc0" stroke-width="2" stroke-linecap="round"/></g>' +
+      '<g filter="url(#osd' + k + ')"><g transform="rotate(8 104 30)"><rect x="86" y="14" width="36" height="32" fill="#7fcf9c"/><path d="M95 30l6 6 11-12" stroke="#14532d" stroke-width="3" fill="none" stroke-linecap="round"/></g>' +
+       '<g transform="rotate(-10 96 120)"><rect x="76" y="104" width="38" height="32" fill="#ff9a8a"/><path d="M88 112l14 14M102 112l-14 14" stroke="#7a1a1a" stroke-width="3" stroke-linecap="round"/></g></g>' +
+      '<g class="sc-bob"><g filter="url(#osd' + k + ')"><circle cx="118" cy="76" r="11" fill="#ffd166"/></g><text x="118" y="81.6" text-anchor="middle" font-size="15" font-weight="900" fill="#2f3f5f" font-family="sans-serif">?</text></g>' +
+      '<g transform="rotate(-38 60 140)"><rect x="40" y="138" width="40" height="5" rx="2.4" fill="#e5484d"/><path d="M80 138l7 2.5-7 2.5z" fill="#f2d9b0"/></g>'; },
+    absencenote: function (k) { var kn = ''; for (var j = 0; j < 9; j++) for (var i = 0; i < 8; i++) kn += '<path d="M' + (i * 18 + 2) + ' ' + (j * 18 + 4) + 'l5 8 5-8" stroke="#fff" stroke-width="1.4" fill="none" opacity=".35"/>';
+      return '<defs><linearGradient id="anw' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c9b8e0"/><stop offset="1" stop-color="#a996c8"/></linearGradient>' +
+      '<filter id="and' + k + '" x="-20%" y="-20%" width="150%" height="160%"><feDropShadow dx="2" dy="3" stdDeviation="2" flood-color="#3a2a5a" flood-opacity=".3"/></filter></defs>' +
+      '<rect width="136" height="160" fill="url(#anw' + k + ')"/>' + kn +
+      '<g transform="rotate(-8 60 50)" filter="url(#and' + k + ')"><rect x="30" y="18" width="62" height="58" rx="4" fill="#fff"/><rect x="30" y="18" width="62" height="13" rx="4" fill="#e5484d"/><rect x="30" y="25" width="62" height="6" fill="#e5484d"/>' +
+       '<g fill="#eef1f5"><rect x="36" y="36" width="14" height="12" rx="2"/><rect x="54" y="36" width="14" height="12" rx="2"/><rect x="72" y="36" width="14" height="12" rx="2"/><rect x="36" y="54" width="14" height="12" rx="2"/><rect x="54" y="54" width="14" height="12" rx="2"/><rect x="72" y="54" width="14" height="12" rx="2"/></g>' +
+       '<path d="M38 38l10 8M48 38l-10 8M56 38l10 8M66 38l-10 8M74 38l10 8M84 38l-10 8" stroke="#e5484d" stroke-width="1.8" stroke-linecap="round"/></g>' +
+      '<g class="sc-bob"><g transform="rotate(10 106 104)" filter="url(#and' + k + ')"><rect x="88" y="74" width="36" height="62" rx="6" fill="#2f3a46"/><rect x="91" y="80" width="30" height="50" rx="2" fill="#f4f7fb"/><rect x="94" y="86" width="24" height="12" rx="5" fill="#d6f5e4"/><path d="M97 91h16M97 95h12" stroke="#2e8a6e" stroke-width="1.4"/><rect x="94" y="102" width="20" height="9" rx="4" fill="#e9eef5"/></g></g>' +
+      '<g filter="url(#and' + k + ')"><ellipse cx="54" cy="128" rx="16" ry="6" fill="#fff"/><rect x="44" y="108" width="20" height="20" rx="3" fill="#fffaf0"/></g><path d="M64 112q7 0 7 6t-7 6" stroke="#fffaf0" stroke-width="2.4" fill="none"/><ellipse cx="54" cy="110" rx="8" ry="2.4" fill="#c98a4a"/>'; },
+    storefrontkey: function (k) { return '<defs><linearGradient id="sfw' + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd8c2"/><stop offset="1" stop-color="#f7b9a0"/></linearGradient>' +
+      '<filter id="sfd' + k + '" x="-20%" y="-20%" width="150%" height="160%"><feDropShadow dx="2" dy="3" stdDeviation="2" flood-color="#6a3a2a" flood-opacity=".3"/></filter></defs>' +
+      '<rect width="136" height="160" fill="url(#sfw' + k + ')"/><circle cx="104" cy="30" r="30" fill="#fff3d6" opacity=".55"/>' +
+      '<g filter="url(#sfd' + k + ')"><rect x="40" y="40" width="86" height="96" fill="#f0d9b5"/></g><rect x="40" y="40" width="86" height="9" fill="#e5484d"/><path d="M40 49l6 6 6-6 6 6 6-6 6 6 6-6 6 6 6-6 6 6 6-6 6 6 6-6 6 6 6-6" fill="#fffdf6" opacity=".7"/>' +
+      '<rect x="48" y="60" width="70" height="76" fill="#6a7480"/><rect x="51" y="60" width="64" height="40" fill="#e6ebf0"/><path d="M51 66h64M51 72h64M51 78h64M51 84h64M51 90h64M51 96h64" stroke="#9aa3ad" stroke-width="1"/>' +
+      '<g class="sc-bob"><path d="M96 20v18" stroke="#8a6a4a" stroke-width="1.4"/><g filter="url(#sfd' + k + ')"><circle cx="96" cy="44" r="8" fill="none" stroke="#c9993a" stroke-width="3.4"/><path d="M96 52v24M96 64h7M96 71h5" stroke="#c9993a" stroke-width="3.4" stroke-linecap="round"/></g>' +
+       '<g transform="rotate(-12 76 60)"><rect x="62" y="52" width="26" height="14" rx="2" fill="#fffdf6"/><circle cx="66" cy="59" r="1.6" fill="#8a6a4a"/><text x="78" y="61.6" text-anchor="middle" font-size="6" font-weight="900" fill="#c0392b" font-family="sans-serif">ร้าน</text></g></g>' +
+      '<g filter="url(#sfd' + k + ')"><path d="M110 124h14l-2 12h-10z" fill="#c9783e"/></g><ellipse cx="117" cy="118" rx="7" ry="9" fill="#5fbf8f"/>'; },
+    stampbook: function (k) { var s = ''; for (var r = 0; r < 3; r++) for (var c = 0; c < 3; c++) { var x = 30 + c * 30, y = 46 + r * 30, miss = (r == 1 && c == 2); s += '<rect x="' + x + '" y="' + y + '" width="24" height="24" rx="2" fill="' + (miss ? '#fff' : ['#7fcf9c', '#a5c8ff', '#ffd166'][(r + c) % 3]) + '" stroke="' + (miss ? '#e5484d' : '#fff') + '" stroke-width="1.6" stroke-dasharray="' + (miss ? '3 2' : '0') + '"/>' + (miss ? '<text x="' + (x + 12) + '" y="' + (y + 17) + '" text-anchor="middle" font-size="13" font-weight="900" fill="#e5484d" font-family="sans-serif">?</text>' : '<path d="M' + (x + 6) + ' ' + (y + 12) + 'l4 4 8-8" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"/>'); }
+      return '<defs><linearGradient id="sbk' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d8b98e"/><stop offset="1" stop-color="#c29a6a"/></linearGradient>' +
+      '<filter id="sbd' + k + '" x="-20%" y="-20%" width="150%" height="160%"><feDropShadow dx="2" dy="3" stdDeviation="2" flood-color="#4a2a10" flood-opacity=".3"/></filter></defs>' +
+      '<rect width="136" height="160" fill="url(#sbk' + k + ')"/><path d="M0 30h136M0 90h136M0 140h136" stroke="#b5895a" stroke-width=".8" opacity=".5"/>' +
+      '<g transform="rotate(-4 72 86)" filter="url(#sbd' + k + ')"><rect x="20" y="26" width="104" height="120" rx="4" fill="#2e6a8a"/><rect x="24" y="30" width="96" height="112" rx="3" fill="#fffdf6"/><rect x="24" y="30" width="96" height="12" rx="3" fill="#2e6a8a"/><text x="72" y="39" text-anchor="middle" font-size="6.4" font-weight="900" fill="#fff" font-family="sans-serif">เงินสมทบรายเดือน</text>' + s + '</g>' +
+      '<g class="sc-bob"><g filter="url(#sbd' + k + ')"><circle cx="112" cy="132" r="12" fill="#e5484d"/></g><text x="112" y="136.6" text-anchor="middle" font-size="7" font-weight="900" fill="#fff" font-family="sans-serif">15</text></g>'; },
+    // [ภาพนิ่งมุมบน ผ้าปูโต๊ะลายตารางแดงขาว] บัตรพนักงานสองใบสายคล้องฟ้า/ส้ม "งาน 1" "งาน 2" แก้วกาแฟ และนาฬิกาปลุก (คู่มือ side-job)
+    twolanyards: function (k) { var chk='';for(var i=0;i<9;i++){chk+='<rect x="'+(i*16)+'" y="0" width="8" height="160" fill="#e86a5a" opacity=".28"/><rect x="0" y="'+(i*18)+'" width="136" height="9" fill="#e86a5a" opacity=".28"/>';}
+      var BD=function(x,y,r,c,t){return '<g transform="rotate('+r+' '+(x+16)+' '+(y+20)+')"><rect x="'+(x+2)+'" y="'+(y+3)+'" width="32" height="42" rx="4" fill="#5a3a2a" opacity=".22"/><rect x="'+x+'" y="'+y+'" width="32" height="42" rx="4" fill="#fff" stroke="#3a2a12" stroke-width="1.4"/><rect x="'+(x+12)+'" y="'+(y+3)+'" width="8" height="2.6" rx="1.3" fill="#c9c2b4"/><rect x="'+x+'" y="'+(y+8)+'" width="32" height="7" fill="'+c+'"/><circle cx="'+(x+16)+'" cy="'+(y+23)+'" r="5.4" fill="#f0c6a4" stroke="#3a2a12" stroke-width="1"/><path d="M'+(x+10.6)+' '+(y+21)+'q5.4-7 10.8 0" fill="#3a2a20"/><text x="'+(x+16)+'" y="'+(y+38)+'" text-anchor="middle" font-size="6.6" font-weight="900" fill="#3a2a12" font-family="sans-serif">'+t+'</text></g>';};
+      return '<defs><radialGradient id="tly'+k+'" cx=".6" cy=".35" r=".7"><stop offset="0" stop-color="#fffaf2"/><stop offset="1" stop-color="#f3e6d6"/></radialGradient></defs><rect width="136" height="160" fill="url(#tly'+k+')"/>'+chk+
+      '<path d="M78 0q-10 30 8 52M96 0q14 34-2 52" fill="none" stroke="#4a8fd8" stroke-width="5" stroke-linecap="round"/><path d="M136 66q-30 4-34 36M136 80q-18 8-16 22" fill="none" stroke="#f08a3a" stroke-width="5" stroke-linecap="round"/>'+
+      '<g class="sc-bob">'+BD(66,44,-8,'#4a8fd8','งาน 1')+BD(84,96,8,'#f08a3a','งาน 2')+'</g>'+
+      '<circle cx="30" cy="30" r="17" fill="#5a3a2a" opacity=".2"/><circle cx="28" cy="28" r="17" fill="#fff" stroke="#3a2a12" stroke-width="1.6"/><circle cx="28" cy="28" r="12" fill="#7a4a2a"/><path d="M22 24q6-4 12 2" stroke="#c99a6a" stroke-width="1.6" fill="none"/>'+
+      '<g transform="translate(110 22)"><circle cx="1" cy="2" r="13" fill="#5a3a2a" opacity=".2"/><circle r="13" fill="#fff" stroke="#3a2a12" stroke-width="1.6"/><path d="M0 0v-8M0 0l6 3" stroke="#3a2a12" stroke-width="1.6" stroke-linecap="round"/><circle cx="-9" cy="-11" r="4" fill="#e86a5a" stroke="#3a2a12" stroke-width="1.2"/><circle cx="9" cy="-11" r="4" fill="#e86a5a" stroke="#3a2a12" stroke-width="1.2"/></g>'; },
+    // [ภาพนิ่งมุมบน ผ้าใบสีกากีเนื้อหยาบ] ผ้าลายพรางพับ หมวกแก๊ปเขียวขี้ม้า ป้ายห้อยคอโลหะ และหมายเรียกมีตราแดง (คู่มือ military-training-leave)
+    camofold: function (k) { var dots='';for(var i=0;i<60;i++){dots+='<circle cx="'+((i*37)%136)+'" cy="'+((i*53)%160)+'" r=".9" fill="#a8946a" opacity=".5"/>';}
+      return '<defs><linearGradient id="cmf'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e3d4ae"/><stop offset="1" stop-color="#cdb98a"/></linearGradient><linearGradient id="cmt'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4f6f8"/><stop offset="1" stop-color="#a9b2bc"/></linearGradient></defs><rect width="136" height="160" fill="url(#cmf'+k+')"/>'+dots+
+      '<rect x="64" y="8" width="64" height="44" rx="4" fill="#5a3a2a" opacity=".2"/><rect x="62" y="6" width="64" height="44" rx="4" fill="#7a8a52" stroke="#3a2a12" stroke-width="1.6"/><path d="M68 16q8-6 14 2t12-2M90 34q10-8 18 0M70 38q6-4 12 2M104 14q8 0 14 8" stroke="#4a5a32" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M98 26q6-6 12 0M76 26q4 4 10 0" stroke="#a89a62" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M62 28h64" stroke="#3a2a12" stroke-width="1" opacity=".5"/>'+
+      '<g transform="translate(30 30)"><ellipse cx="1" cy="3" rx="22" ry="15" fill="#5a3a2a" opacity=".2"/><ellipse rx="20" ry="14" fill="#5a6a3a" stroke="#3a2a12" stroke-width="1.6"/><path d="M-6 8q14 14 30 8" fill="#4a5a32" stroke="#3a2a12" stroke-width="1.4"/><circle cy="-2" r="3" fill="#d9a83a" stroke="#3a2a12" stroke-width="1"/></g>'+
+      '<g class="sc-bob"><g transform="rotate(8 96 92)"><rect x="76" y="64" width="44" height="56" rx="2" fill="#5a3a2a" opacity=".2"/><rect x="74" y="62" width="44" height="56" rx="2" fill="#fffdf2" stroke="#3a2a12" stroke-width="1.4"/><rect x="74" y="62" width="44" height="10" fill="#3a5a3a"/><text x="96" y="69.6" text-anchor="middle" font-size="6" font-weight="900" fill="#fff" font-family="sans-serif">หมายเรียก</text><path d="M80 80h32M80 87h26M80 94h30M80 101h20" stroke="#cfc6b0" stroke-width="2" stroke-linecap="round"/><circle cx="106" cy="106" r="7" fill="none" stroke="#d9483b" stroke-width="1.6"/><text x="106" y="108.4" text-anchor="middle" font-size="5" font-weight="900" fill="#d9483b" font-family="sans-serif">ฝึก</text></g></g>'+
+      '<path d="M112 120q-6 14 6 22q10 6 14-6" fill="none" stroke="#8a8f96" stroke-width="2" stroke-dasharray="1.6 1.6"/><g transform="rotate(-14 122 140)"><rect x="110" y="132" width="24" height="15" rx="6" fill="url(#cmt'+k+')" stroke="#3a2a12" stroke-width="1.2"/><circle cx="114" cy="139.5" r="1.6" fill="#8a8f96"/><path d="M119 137h11M119 141h8" stroke="#6a7078" stroke-width="1"/></g>'; },
+    // [ภาพนิ่งมุมบน ผ้ายีนส์สีน้ำเงินมีตะเข็บส้ม] พวงกุญแจรถ บัตรพนักงาน มือถือ และมุมโน้ตบุ๊ก วางเรียงรอคืน มีป้ายกระดาษ "คืน" (คู่มือ company-property-return)
+    returnkeys: function (k) { var tw='';for(var i=0;i<30;i++){tw+='<path d="M'+(i*8-40)+' 0l40 160" stroke="#3a5a8a" stroke-width="1" opacity=".35"/>';}
+      return '<defs><linearGradient id="rkd'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5a7ab0"/><stop offset="1" stop-color="#3e5c90"/></linearGradient></defs><rect width="136" height="160" fill="url(#rkd'+k+')"/>'+tw+'<path d="M8 0v160M128 0v160" stroke="#e8a04a" stroke-width="1.4" stroke-dasharray="4 3"/>'+
+      '<g transform="rotate(-8 100 30)"><rect x="66" y="6" width="74" height="48" rx="4" fill="#1e2232" opacity=".3" transform="translate(3 3)"/><rect x="66" y="6" width="74" height="48" rx="4" fill="#3a3f52" stroke="#1e2232" stroke-width="1.6"/><rect x="72" y="12" width="62" height="36" rx="2" fill="#9fc3e8"/></g>'+
+      '<g class="sc-bob"><g transform="rotate(10 96 88)"><rect x="82" y="66" width="30" height="40" rx="3" fill="#1e2232" opacity=".3" transform="translate(2 3)"/><rect x="82" y="66" width="30" height="40" rx="3" fill="#fff" stroke="#3a2a12" stroke-width="1.4"/><rect x="82" y="66" width="30" height="8" fill="#4a8a7a"/><circle cx="97" cy="84" r="5" fill="#e2b088" stroke="#3a2a12" stroke-width="1"/><path d="M88 98h18" stroke="#c9c2b4" stroke-width="2.4" stroke-linecap="round"/></g></g>'+
+      '<g transform="rotate(-14 30 40)"><rect x="18" y="16" width="24" height="44" rx="5" fill="#1e2232" opacity=".3" transform="translate(2 3)"/><rect x="18" y="16" width="24" height="44" rx="5" fill="#222" stroke="#111" stroke-width="1.2"/><rect x="21" y="21" width="18" height="32" rx="2" fill="#bfe6d0"/></g>'+
+      '<g transform="translate(110 118)"><circle r="8" fill="none" stroke="#d8c08a" stroke-width="2.6"/><path d="M5 6l10 16 4-2M10 14l4-2" stroke="#e8d09a" stroke-width="3.2" stroke-linecap="round" fill="none"/><rect x="-22" y="4" width="18" height="12" rx="3" fill="#2a2a32"/><circle cx="-13" cy="10" r="2" fill="#d9483b"/></g>'+
+      '<g transform="rotate(6 106 146)"><rect x="90" y="138" width="34" height="14" rx="2" fill="#fff6d0" stroke="#3a2a12" stroke-width="1.2"/><text x="107" y="148" text-anchor="middle" font-size="7.4" font-weight="900" fill="#c96a3a" font-family="sans-serif">คืน ✓</text></g>'; },
+    // [ภาพนิ่งมุมบน พื้นหินขัดเทอร์ราซโซครีมมีเศษหินสี] โทรศัพท์หมุนสีเขียวมิ้นต์ สายขด ใบประวัติย่อมีกากบาทแดง และแก้วชา (คู่มือ bad-reference)
+    terrazzocall: function (k) { var ch='';var cs=['#e8a07a','#7ab0a8','#c9b27a','#a89ac8','#e2c4b0'];for(var i=0;i<46;i++){ch+='<path d="M'+((i*41)%136)+' '+((i*67)%160)+'l3 -2 2 3 -3 2z" fill="'+cs[i%5]+'"/>';}
+      return '<defs><linearGradient id="tzc'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6efe4"/><stop offset="1" stop-color="#e6dccb"/></linearGradient></defs><rect width="136" height="160" fill="url(#tzc'+k+')"/>'+ch+
+      '<g transform="rotate(8 98 40)"><rect x="72" y="10" width="54" height="66" rx="2" fill="#5a3a2a" opacity=".2" transform="translate(3 3)"/><rect x="72" y="10" width="54" height="66" rx="2" fill="#fff" stroke="#3a2a12" stroke-width="1.4"/><circle cx="84" cy="24" r="6" fill="#e2b088" stroke="#3a2a12" stroke-width="1"/><path d="M94 20h24M94 26h18M78 40h42M78 47h36M78 54h40M78 61h30" stroke="#cfc6b0" stroke-width="2" stroke-linecap="round"/><path d="M80 32l38 36M118 32l-38 36" stroke="#d9483b" stroke-width="3" stroke-linecap="round" opacity=".85"/></g>'+
+      '<g class="sc-bob"><path d="M86 118q-10 10 0 18q10 6 4 16" stroke="#3a2a12" stroke-width="1.6" fill="none"/><rect x="74" y="98" width="56" height="30" rx="10" fill="#5a3a2a" opacity=".2" transform="translate(2 3)"/><path d="M74 126q0-28 28-28q28 0 28 28z" fill="#7acbb8" stroke="#3a2a12" stroke-width="1.6"/><circle cx="102" cy="116" r="8" fill="#f6efe4" stroke="#3a2a12" stroke-width="1.2"/><circle cx="102" cy="116" r="3" fill="#7acbb8"/><path d="M76 96q26-14 52 0" stroke="#3a2a12" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M76 96q26-14 52 0" stroke="#7acbb8" stroke-width="4.6" fill="none" stroke-linecap="round"/></g>'+
+      '<circle cx="28" cy="30" r="15" fill="#5a3a2a" opacity=".2"/><circle cx="26" cy="28" r="15" fill="#fff" stroke="#3a2a12" stroke-width="1.6"/><circle cx="26" cy="28" r="10" fill="#d9a85a"/>'; },
+    // [ภาพนิ่งมุมบน ผ้าลินินสีเทาอ่อนลายทอ] มือถือแสดงแชตฟองเขียวขาว อีเมลพิมพ์ออกมาพับมุม ปากกา และคลิปหนีบกระดาษ (คู่มือ chat-email-legal)
+    linenchat: function (k) { var wv='';for(var i=0;i<34;i++){wv+='<path d="M0 '+(i*5)+'h136" stroke="#c9c4ba" stroke-width=".6" opacity=".6"/><path d="M'+(i*4)+' 0v160" stroke="#d6d1c6" stroke-width=".5" opacity=".5"/>';}
+      return '<defs><linearGradient id="lnc'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eae6de"/><stop offset="1" stop-color="#d8d2c6"/></linearGradient></defs><rect width="136" height="160" fill="url(#lnc'+k+')"/>'+wv+
+      '<g transform="rotate(-6 96 44)"><rect x="66" y="10" width="62" height="70" rx="1" fill="#5a3a2a" opacity=".18" transform="translate(3 3)"/><path d="M66 10h50l12 12v58h-62z" fill="#fff" stroke="#3a2a12" stroke-width="1.4"/><path d="M116 10v12h12" fill="#e8e2d6" stroke="#3a2a12" stroke-width="1.2"/><rect x="72" y="18" width="30" height="5" rx="1" fill="#4a7ab8"/><path d="M72 32h48M72 39h40M72 46h44M72 53h34M72 60h42" stroke="#cfc6b0" stroke-width="2" stroke-linecap="round"/></g>'+
+      '<g class="sc-bob"><g transform="rotate(8 96 112)"><rect x="76" y="80" width="42" height="72" rx="7" fill="#1e2232" opacity=".25" transform="translate(2 3)"/><rect x="76" y="80" width="42" height="72" rx="7" fill="#222" stroke="#111" stroke-width="1.2"/><rect x="80" y="88" width="34" height="56" rx="2" fill="#dff2e6"/><rect x="83" y="94" width="20" height="8" rx="4" fill="#fff"/><rect x="92" y="106" width="19" height="8" rx="4" fill="#7ad08a"/><rect x="83" y="118" width="24" height="8" rx="4" fill="#fff"/><rect x="94" y="130" width="17" height="8" rx="4" fill="#7ad08a"/></g></g>'+
+      '<g transform="rotate(-30 40 40)"><rect x="12" y="36" width="58" height="7" rx="3.5" fill="#d9483b" stroke="#3a2a12" stroke-width="1.2"/><path d="M70 36l8 3.5-8 3.5z" fill="#f2d2b0" stroke="#3a2a12" stroke-width="1"/></g>'+
+      '<path d="M120 128q8 0 8 8v14q0 6-6 6t-6-6v-16" fill="none" stroke="#8a929c" stroke-width="2"/>'; },
+    // [ภาพนิ่งมุมบน ผ้าขนหนูลายทางฟ้าขาว] กล่องปฐมพยาบาลเปิดฝา ผ้าก๊อซม้วน พลาสเตอร์ไขว้ และใบรับรองแพทย์ (คู่มือ workplace-assault)
+    medkitflat: function (k) { var st='';for(var i=0;i<9;i++){st+='<rect x="0" y="'+(i*18)+'" width="136" height="7" fill="#9ac8e8" opacity=".6"/>';}
+      return '<defs><linearGradient id="mkf'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f8fbfd"/><stop offset="1" stop-color="#e6eef4"/></linearGradient></defs><rect width="136" height="160" fill="url(#mkf'+k+')"/>'+st+
+      '<g transform="rotate(6 98 44)"><rect x="66" y="14" width="64" height="58" rx="1" fill="#1e2232" opacity=".18" transform="translate(3 3)"/><rect x="66" y="14" width="64" height="58" rx="1" fill="#fff" stroke="#3a2a12" stroke-width="1.4"/><rect x="66" y="14" width="64" height="10" fill="#2e8a6e"/><path d="M72 32h50M72 39h42M72 46h46M72 53h30" stroke="#cfd6dc" stroke-width="2" stroke-linecap="round"/><circle cx="116" cy="62" r="6" fill="none" stroke="#2e8a6e" stroke-width="1.4"/></g>'+
+      '<g class="sc-bob"><rect x="74" y="90" width="58" height="42" rx="5" fill="#1e2232" opacity=".2" transform="translate(2 3)"/><rect x="74" y="90" width="58" height="42" rx="5" fill="#e5484d" stroke="#3a2a12" stroke-width="1.6"/><rect x="96" y="100" width="14" height="22" rx="2" fill="#fff"/><rect x="92" y="104" width="22" height="14" rx="2" fill="#fff"/><rect x="96" y="86" width="14" height="6" rx="2" fill="#b8282e" stroke="#3a2a12" stroke-width="1.2"/></g>'+
+      '<g transform="rotate(-20 32 34)"><circle cx="32" cy="34" r="15" fill="#fff" stroke="#3a2a12" stroke-width="1.4"/><circle cx="32" cy="34" r="5" fill="#e6eef4" stroke="#3a2a12" stroke-width="1"/><path d="M47 34h22v9H47z" fill="#fff" stroke="#3a2a12" stroke-width="1.2"/></g>'+
+      '<g transform="translate(112 146) rotate(30)"><rect x="-14" y="-4" width="28" height="8" rx="4" fill="#f2c4a0" stroke="#3a2a12" stroke-width="1"/><rect x="-5" y="-4" width="10" height="8" fill="#e8b088"/></g><g transform="translate(112 146) rotate(-30)"><rect x="-14" y="-4" width="28" height="8" rx="4" fill="#f2c4a0" stroke="#3a2a12" stroke-width="1"/></g>'; },
+    // [ภาพนิ่งมุมบน แผนที่กระดาษพับมีเส้นทางจุดประแดง] กระเป๋าเดินทางใบเล็ก บัตรขึ้นเครื่อง หมุดปลายทาง และเหรียญค่าเดินทาง (คู่มือ business-trip)
+    suitcasemap: function (k) {
+      return '<defs><linearGradient id="smp'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4ecd6"/><stop offset="1" stop-color="#e6d8b4"/></linearGradient></defs><rect width="136" height="160" fill="url(#smp'+k+')"/>'+
+      '<path d="M45 0v160M90 0v160M0 53h136M0 106h136" stroke="#d2c29a" stroke-width="1.2"/><path d="M0 30q30 10 50-6t50 20 36-4" stroke="#9ac8e0" stroke-width="5" fill="none" opacity=".8"/><path d="M10 120q20-20 40-10t30-30" fill="#b8d89a" opacity=".6"/>'+
+      '<path d="M22 140q20-40 50-50t48-60" stroke="#d9483b" stroke-width="2" stroke-dasharray="4 3" fill="none"/>'+
+      '<g transform="translate(118 26)"><path d="M0 0q-9 0-9 9q0 7 9 17q9-10 9-17q0-9-9-9z" fill="#d9483b" stroke="#3a2a12" stroke-width="1.4"/><circle cy="9" r="3.4" fill="#fff"/></g>'+
+      '<g class="sc-bob"><g transform="rotate(-8 96 96)"><rect x="74" y="76" width="46" height="40" rx="6" fill="#5a3a2a" opacity=".2" transform="translate(2 3)"/><rect x="74" y="76" width="46" height="40" rx="6" fill="#e0603a" stroke="#3a2a12" stroke-width="1.6"/><rect x="88" y="70" width="18" height="7" rx="3" fill="none" stroke="#3a2a12" stroke-width="2"/><path d="M84 76v40M110 76v40" stroke="#b9482a" stroke-width="3"/></g></g>'+
+      '<g transform="rotate(12 104 140)"><rect x="80" y="128" width="50" height="22" rx="3" fill="#fff" stroke="#3a2a12" stroke-width="1.2"/><rect x="80" y="128" width="11" height="22" rx="3" fill="#2e6a8a"/><path d="M96 136h28M96 142h20" stroke="#cfd6dc" stroke-width="2"/></g>'+
+      '<g fill="#f2c94c" stroke="#3a2a12" stroke-width="1"><circle cx="60" cy="58" r="6"/><circle cx="70" cy="64" r="5"/></g>'; },
+    // [ภาพนิ่งมุมบน แผ่นรองตัดสีเขียวมีกริด] เรซูเม่มีดาวทักษะ วงปากกาแดงรอบบรรทัดหนึ่ง กราฟผลงานบนกระดาษโน้ต และแก้วกาแฟ (คู่มือ resume-performance)
+    resumedesk: function (k) { var gr='';for(var i=0;i<18;i++){gr+='<path d="M'+(i*8)+' 0v160" stroke="#5aa87a" stroke-width=".6"/><path d="M0 '+(i*9)+'h136" stroke="#5aa87a" stroke-width=".6"/>';}
+      return '<defs><linearGradient id="rsd'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3e8a62"/><stop offset="1" stop-color="#2e7050"/></linearGradient></defs><rect width="136" height="160" fill="url(#rsd'+k+')"/>'+gr+
+      '<g transform="rotate(6 96 52)"><rect x="66" y="12" width="60" height="78" rx="1" fill="#1e2232" opacity=".25" transform="translate(3 3)"/><rect x="66" y="12" width="60" height="78" rx="1" fill="#fff" stroke="#3a2a12" stroke-width="1.4"/><circle cx="78" cy="26" r="7" fill="#e8b896" stroke="#3a2a12" stroke-width="1"/><path d="M90 22h28M90 29h20" stroke="#cfc6b0" stroke-width="2.4" stroke-linecap="round"/><path d="M72 44h46M72 64h40M72 72h44M72 80h30" stroke="#cfc6b0" stroke-width="2" stroke-linecap="round"/><text x="72" y="58" font-size="7" fill="#e0a020" font-family="sans-serif">★★★★★</text><ellipse cx="90" cy="55" rx="22" ry="7" fill="none" stroke="#d9483b" stroke-width="1.8"/></g>'+
+      '<g class="sc-bob"><g transform="rotate(-8 104 122)"><rect x="80" y="100" width="48" height="42" fill="#1e2232" opacity=".2" transform="translate(2 3)"/><rect x="80" y="100" width="48" height="42" fill="#ffe873" stroke="#3a2a12" stroke-width="1.2"/><path d="M84 112h40" stroke="#d9483b" stroke-width="1.4" stroke-dasharray="3 2"/><g fill="#5a7ab8"><rect x="88" y="124" width="6" height="14"/><rect x="98" y="118" width="6" height="20"/><rect x="108" y="128" width="6" height="10"/><rect x="118" y="120" width="6" height="18"/></g></g></g>'+
+      '<circle cx="30" cy="34" r="15" fill="#1e2232" opacity=".25"/><circle cx="28" cy="32" r="15" fill="#fff" stroke="#3a2a12" stroke-width="1.6"/><circle cx="28" cy="32" r="10" fill="#7a4a2a"/>'; },
+    // [ภาพนิ่งมุมบน เสื่อไม้ไผ่สานลายขัด] สมุดจดรายรับรายวันเปิดอยู่ ธนบัตรพับ กุญแจร้านพวงใหญ่ และแก้วชาเย็น (คู่มือ no-written-contract)
+    bamboomat: function (k) { var bm='';for(var i=0;i<12;i++){for(var j=0;j<14;j++){bm+='<rect x="'+(i*12)+'" y="'+(j*12)+'" width="12" height="6" fill="'+((i+j)%2?'#d8b878':'#e6c98a')+'"/><rect x="'+(i*12+((i+j)%2?0:6))+'" y="'+(j*12+6)+'" width="6" height="6" fill="#caa868"/>';}}
+      return '<rect width="136" height="160" fill="#e0c282"/>'+bm+
+      '<g transform="rotate(-6 94 50)"><rect x="60" y="18" width="70" height="56" rx="2" fill="#5a3a2a" opacity=".2" transform="translate(3 3)"/><rect x="60" y="18" width="70" height="56" rx="2" fill="#fffdf2" stroke="#3a2a12" stroke-width="1.4"/><path d="M95 18v56" stroke="#3a2a12" stroke-width="1"/><g stroke="#cfc6b0" stroke-width="1.6"><path d="M65 30h26M65 38h22M65 46h24M65 54h18M100 30h24M100 38h20M100 46h22"/></g><text x="112" y="66" text-anchor="middle" font-size="7" font-weight="900" fill="#2e8a6e" font-family="sans-serif">฿</text></g>'+
+      '<g class="sc-bob"><g transform="rotate(10 100 112)"><rect x="76" y="98" width="52" height="26" rx="2" fill="#5a3a2a" opacity=".2" transform="translate(2 3)"/><rect x="76" y="98" width="52" height="26" rx="2" fill="#a8d8b0" stroke="#3a2a12" stroke-width="1.4"/><circle cx="102" cy="111" r="7" fill="#d8eedc" stroke="#3a2a12" stroke-width="1"/><path d="M80 102h8M116 120h8" stroke="#3a2a12" stroke-width="1"/></g></g>'+
+      '<g transform="translate(110 142)"><circle r="8" fill="none" stroke="#9aa4ac" stroke-width="2.6"/><path d="M5 5l12 10M8 9l3-3M-6 6l-8 12M-8 12l-3-2" stroke="#c9b07a" stroke-width="3" stroke-linecap="round"/></g>'+
+      '<circle cx="28" cy="30" r="15" fill="#5a3a2a" opacity=".2"/><circle cx="26" cy="28" r="15" fill="#fff" stroke="#3a2a12" stroke-width="1.6"/><circle cx="26" cy="28" r="10" fill="#f2a05a"/><circle cx="22" cy="24" r="3" fill="#fff" opacity=".7"/>'; },
+    // [ภาพนิ่งมุมบน โต๊ะเหล็กผิวขัดลายเส้นเงิน] ไวต์บอร์ดตารางกะเล็ก แม่เหล็กสีติดช่อง นาฬิกาปลุกแบบกระดิ่ง และปากกาไวต์บอร์ด (คู่มือ schedule-change)
+    rosterboard: function (k) { var br='';for(var i=0;i<40;i++){br+='<path d="M0 '+(i*4)+'h136" stroke="#fff" stroke-width=".5" opacity=".35"/>';}
+      var gd='';var cl=['#f2c94c','#9a7ad8','#4a6ab8','#e86a5a'];for(var r=0;r<4;r++){for(var i=0;i<5;i++){gd+='<rect x="'+(70+i*11)+'" y="'+(30+r*12)+'" width="9" height="10" rx="1" fill="'+((r*5+i)%3?'#eef2f6':cl[(r+i)%4])+'"/>';}}
+      return '<defs><linearGradient id="rsb'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c8ced6"/><stop offset="1" stop-color="#9aa4b0"/></linearGradient></defs><rect width="136" height="160" fill="url(#rsb'+k+')"/>'+br+
+      '<g class="sc-bob"><g transform="rotate(5 96 52)"><rect x="62" y="16" width="68" height="74" rx="3" fill="#1e2232" opacity=".25" transform="translate(3 3)"/><rect x="62" y="16" width="68" height="74" rx="3" fill="#fbfcfe" stroke="#3a2a12" stroke-width="1.6"/><rect x="62" y="16" width="68" height="10" rx="3" fill="#3a3f52"/>'+gd+'<rect x="70" y="80" width="40" height="3" rx="1.5" fill="#cfd6dc"/></g></g>'+
+      '<g transform="translate(30 36)"><circle cx="1" cy="3" r="17" fill="#1e2232" opacity=".2"/><circle r="17" fill="#e86a5a" stroke="#3a2a12" stroke-width="1.6"/><circle r="12" fill="#fff" stroke="#3a2a12" stroke-width="1"/><path d="M0 0v-8M0 0l5 3" stroke="#3a2a12" stroke-width="1.6" stroke-linecap="round"/><circle cx="-12" cy="-14" r="5" fill="#f2c94c" stroke="#3a2a12" stroke-width="1.2"/><circle cx="12" cy="-14" r="5" fill="#f2c94c" stroke="#3a2a12" stroke-width="1.2"/></g>'+
+      '<g transform="rotate(-24 104 132)"><rect x="80" y="126" width="50" height="10" rx="5" fill="#4a6ab8" stroke="#3a2a12" stroke-width="1.2"/><rect x="122" y="126" width="12" height="10" rx="3" fill="#2a2a32"/></g>'; },
+    // [ภาพนิ่งมุมบน ผ้าลินินสีเขียวเสจ] ไม้แขวนเสื้อไม้ เสื้อยูนิฟอร์มพับมีป้ายชื่อ รองเท้าคัตชูคู่หนึ่ง และหวีกับยางรัดผม (คู่มือ dress-code)
+    hangerrail: function (k) { var wv='';for(var i=0;i<34;i++){wv+='<path d="M0 '+(i*5)+'h136" stroke="#9ab89a" stroke-width=".6" opacity=".5"/>';}
+      return '<defs><linearGradient id="hgr'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c8dcc4"/><stop offset="1" stop-color="#a8c4a4"/></linearGradient></defs><rect width="136" height="160" fill="url(#hgr'+k+')"/>'+wv+
+      '<g transform="rotate(-6 98 30)"><path d="M98 8q6 0 6 6t-6 6v4" fill="none" stroke="#9aa4ac" stroke-width="2"/><path d="M98 24l-34 16h68z" fill="none" stroke="#b8864a" stroke-width="4" stroke-linejoin="round"/></g>'+
+      '<g class="sc-bob"><g transform="rotate(4 98 78)"><rect x="66" y="50" width="64" height="54" rx="3" fill="#1e2232" opacity=".22" transform="translate(3 3)"/><rect x="66" y="50" width="64" height="54" rx="3" fill="#3d5a80" stroke="#3a2a12" stroke-width="1.6"/><path d="M88 50l10 12 10-12" fill="#fff" stroke="#3a2a12" stroke-width="1.2"/><rect x="74" y="72" width="20" height="9" rx="1.5" fill="#fff" stroke="#3a2a12" stroke-width="1"/><path d="M77 76.5h14" stroke="#9aa4ac" stroke-width="1.6"/><path d="M98 66v34" stroke="#2a3a5a" stroke-width="1"/><circle cx="102" cy="74" r="1.4" fill="#fff"/><circle cx="102" cy="86" r="1.4" fill="#fff"/></g></g>'+
+      '<g transform="translate(96 132)"><path d="M-18 6q0-12 12-12h8q6 0 6 6v6z" fill="#2a2a32" stroke="#111" stroke-width="1"/><path d="M8 10q0-12 12-12h8q6 0 6 6v6z" fill="#2a2a32" stroke="#111" stroke-width="1"/></g>'+
+      '<g transform="rotate(-20 30 40)"><rect x="12" y="34" width="40" height="8" rx="2" fill="#e8a05a" stroke="#3a2a12" stroke-width="1.2"/><path d="M16 42v6M21 42v6M26 42v6M31 42v6M36 42v6M41 42v6M46 42v6" stroke="#3a2a12" stroke-width="1.4"/></g><circle cx="32" cy="70" r="7" fill="none" stroke="#d9486a" stroke-width="3"/>'; },
+    // [ภาพนิ่งมุมบน โต๊ะไม้โอ๊กสีอ่อนลายเสี้ยน] แฟ้มเอกสารสีน้ำตาลมีตรายางกลมสีแดง บัตรผู้ประกันตน และคลิปหนีบกระดาษสีเงิน (คู่มือ public-sector-workers)
+    stampedfolder: function (k) { var gr='';for(var i=0;i<18;i++){gr+='<path d="M0 '+(i*9+3)+'q34 '+(i%2?3:-3)+' 68 0t68 0" stroke="#c9a072" stroke-width=".8" fill="none" opacity=".6"/>';}
+      return '<defs><linearGradient id="spf'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ecd4ac"/><stop offset="1" stop-color="#dcbc8a"/></linearGradient></defs><rect width="136" height="160" fill="url(#spf'+k+')"/>'+gr+
+      '<g class="sc-bob"><g transform="rotate(-6 94 60)"><rect x="58" y="20" width="72" height="80" rx="3" fill="#5a3a2a" opacity=".22" transform="translate(3 3)"/><path d="M58 26h24l6-6h42v80H58z" fill="#c9965a" stroke="#3a2a12" stroke-width="1.6"/><rect x="66" y="40" width="46" height="10" rx="1" fill="#fffdf2" stroke="#3a2a12" stroke-width="1"/><circle cx="108" cy="78" r="13" fill="none" stroke="#d9483b" stroke-width="2.4"/><circle cx="108" cy="78" r="9" fill="none" stroke="#d9483b" stroke-width="1"/><path d="M103 78h10M108 73v10" stroke="#d9483b" stroke-width="1.6"/></g></g>'+
+      '<g transform="rotate(10 100 130)"><rect x="76" y="114" width="54" height="34" rx="4" fill="#1e2232" opacity=".2" transform="translate(2 3)"/><rect x="76" y="114" width="54" height="34" rx="4" fill="#fff" stroke="#3a2a12" stroke-width="1.4"/><rect x="76" y="114" width="54" height="9" rx="4" fill="#3d7ab8"/><circle cx="88" cy="134" r="5" fill="#e8b896"/><path d="M98 132h24M98 138h18" stroke="#cfd6dc" stroke-width="2"/></g>'+
+      '<path d="M30 28q-8 0-8 8v22q0 6 6 6t6-6V38" fill="none" stroke="#9aa4ac" stroke-width="2.4"/>'; },
+    // [ภาพนิ่งมุมบน แผ่นเหล็กเจาะรูสีเทาเงิน] พวงกุญแจล็อกเกอร์ป้ายหมายเลข "12" กระเป๋าสตางค์หนัง โทรศัพท์ และบัตรจอดรถ (คู่มือ lost-belongings-work)
+    lockerkeys: function (k) { var ho='';for(var i=0;i<17;i++){for(var j=0;j<20;j++){ho+='<circle cx="'+(4+i*8)+'" cy="'+(4+j*8)+'" r="1.6" fill="#7a8494"/>';}}
+      return '<defs><linearGradient id="lck'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d6dce4"/><stop offset="1" stop-color="#aab2be"/></linearGradient></defs><rect width="136" height="160" fill="url(#lck'+k+')"/>'+ho+
+      '<g transform="rotate(-10 96 40)"><rect x="70" y="18" width="52" height="40" rx="5" fill="#1e2232" opacity=".22" transform="translate(2 3)"/><rect x="70" y="18" width="52" height="40" rx="5" fill="#8a5a34" stroke="#3a2a12" stroke-width="1.6"/><path d="M70 30h52" stroke="#6a4224" stroke-width="2"/><rect x="104" y="34" width="14" height="10" rx="2" fill="#a8744a" stroke="#3a2a12" stroke-width="1"/></g>'+
+      '<g class="sc-bob"><g transform="translate(100 96)"><circle r="9" fill="none" stroke="#c9b07a" stroke-width="3"/><path d="M6 6l14 16 4-3M14 15l4-3" stroke="#d8c08a" stroke-width="3.4" stroke-linecap="round" fill="none"/><path d="M-6 6l-10 10" stroke="#c9b07a" stroke-width="2"/><g transform="rotate(-20 -20 22)"><rect x="-32" y="14" width="24" height="16" rx="3" fill="#f2c94c" stroke="#3a2a12" stroke-width="1.4"/><text x="-20" y="26" text-anchor="middle" font-size="9" font-weight="900" fill="#3a2a12" font-family="sans-serif">12</text></g></g></g>'+
+      '<g transform="rotate(12 34 44)"><rect x="20" y="20" width="26" height="46" rx="5" fill="#222" stroke="#111" stroke-width="1.2"/><rect x="23" y="25" width="20" height="34" rx="2" fill="#bfe6d0"/></g>'+
+      '<g transform="rotate(8 102 142)"><rect x="82" y="132" width="42" height="20" rx="3" fill="#fff" stroke="#3a2a12" stroke-width="1.2"/><rect x="82" y="132" width="10" height="20" rx="3" fill="#d9483b"/><text x="108" y="145" text-anchor="middle" font-size="6.4" font-weight="900" fill="#3a2a12" font-family="sans-serif">P 24</text></g>'; },
+    // [ภาพนิ่งมุมบน ผ้าสักหลาดสีเทาเข้ม] บัตรตอกเวลาสองใบมีตราประทับเวลา เหรียญเรียงตั้ง และนาฬิกาข้อมือหน้าปัดกลม (คู่มือ ot-lumpsum)
+    punchclockflat: function (k) { var fz='';for(var i=0;i<50;i++){fz+='<circle cx="'+((i*37)%136)+'" cy="'+((i*59)%160)+'" r=".8" fill="#7a7e88" opacity=".6"/>';}
+      var TC=function(x,y,r,a,b){return '<g transform="rotate('+r+' '+(x+22)+' '+(y+34)+')"><rect x="'+(x+2)+'" y="'+(y+3)+'" width="44" height="68" rx="2" fill="#000" opacity=".25"/><rect x="'+x+'" y="'+y+'" width="44" height="68" rx="2" fill="#f4ecd6" stroke="#3a2a12" stroke-width="1.2"/><rect x="'+x+'" y="'+y+'" width="44" height="9" rx="2" fill="#c96a4a"/><path d="M'+(x+4)+' '+(y+20)+'h36M'+(x+4)+' '+(y+30)+'h36M'+(x+4)+' '+(y+40)+'h36M'+(x+4)+' '+(y+50)+'h36" stroke="#d8ccb0" stroke-width="1"/><text x="'+(x+8)+'" y="'+(y+18)+'" font-size="5.6" font-weight="900" fill="#2a4aa8" font-family="monospace">'+a+'</text><text x="'+(x+8)+'" y="'+(y+28)+'" font-size="5.6" font-weight="900" fill="#d9483b" font-family="monospace">'+b+'</text></g>';};
+      return '<defs><linearGradient id="pcf'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5a5e68"/><stop offset="1" stop-color="#44474f"/></linearGradient></defs><rect width="136" height="160" fill="url(#pcf'+k+')"/>'+fz+
+      TC(68,10,-8,'IN 08:00','OUT 20:00')+'<g class="sc-bob">'+TC(84,78,8,'IN 08:00','OUT 18:00')+'</g>'+
+      '<g fill="#f2c94c" stroke="#3a2a12" stroke-width="1"><ellipse cx="36" cy="40" rx="11" ry="4"/><ellipse cx="36" cy="35" rx="11" ry="4"/><ellipse cx="36" cy="30" rx="11" ry="4"/><ellipse cx="36" cy="25" rx="11" ry="4"/></g>'+
+      '<g transform="translate(36 76)"><rect x="-5" y="-20" width="10" height="40" rx="3" fill="#8a5a34"/><circle r="11" fill="#fff" stroke="#3a2a12" stroke-width="1.6"/><path d="M0 0v-7M0 0l5 2" stroke="#3a2a12" stroke-width="1.4" stroke-linecap="round"/></g>'; },
+    // [ภาพนิ่งมุมบน ถนนยางมะตอยมีแถบทางม้าลายขาว] หมวกกันน็อกสีเหลือง ใบรับรองแพทย์ ม้วนผ้าก๊อซ และกุญแจรถมอเตอร์ไซค์ (คู่มือ commute-accident)
+    helmetroad: function (k) { var gv='';for(var i=0;i<60;i++){gv+='<circle cx="'+((i*29)%136)+'" cy="'+((i*47)%160)+'" r=".9" fill="#9a9aa2" opacity=".7"/>';}
+      return '<rect width="136" height="160" fill="#6e6e76"/>'+gv+'<g fill="#f4f4f4" opacity=".92"><rect x="0" y="0" width="136" height="12"/><rect x="0" y="24" width="136" height="12"/></g>'+
+      '<g class="sc-bob"><g transform="translate(98 84)"><ellipse cx="2" cy="4" rx="28" ry="24" fill="#000" opacity=".25"/><path d="M-26 6q0-30 26-30t26 30z" fill="#f2c94c" stroke="#3a2a12" stroke-width="1.6"/><path d="M-26 6h52v6h-52z" fill="#2a2a32"/><path d="M-6 -16q10-4 18 4" stroke="#fff" stroke-width="3" fill="none" opacity=".7"/><path d="M4 12q8 10 0 18" stroke="#2a2a32" stroke-width="2.4" fill="none"/></g></g>'+
+      '<g transform="rotate(-8 40 74)"><rect x="18" y="48" width="46" height="54" rx="1" fill="#000" opacity=".2" transform="translate(2 3)"/><rect x="18" y="48" width="46" height="54" rx="1" fill="#fff" stroke="#3a2a12" stroke-width="1.2"/><rect x="18" y="48" width="46" height="9" fill="#2e8a6e"/><path d="M23 66h36M23 72h28M23 78h32M23 84h24" stroke="#cfd6dc" stroke-width="2"/><circle cx="54" cy="94" r="5" fill="none" stroke="#2e8a6e" stroke-width="1.2"/></g>'+
+      '<g transform="translate(110 138)"><circle r="11" fill="#fff" stroke="#3a2a12" stroke-width="1.4"/><circle r="4" fill="#e6e6e6" stroke="#3a2a12" stroke-width="1"/><path d="M11 0h16v8h-16" fill="#fff" stroke="#3a2a12" stroke-width="1.2"/></g>'; },
+    money: function (k) { return '<defs><linearGradient id="wc'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#effbf3"/><stop offset="1" stop-color="#cdeeda"/></linearGradient><radialGradient id="glow'+k+'" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff4b0" stop-opacity=".95"/><stop offset="1" stop-color="#fff4b0" stop-opacity="0"/></radialGradient></defs><rect width="136" height="160" fill="url(#wc'+k+')"/><circle cx="104" cy="70" r="34" fill="url(#glow'+k+')"/><g stroke="#3a2a12" stroke-width="1.6"><rect x="62" y="14" width="30" height="22" rx="2" fill="#fff" transform="rotate(6 77 25)"/><path d="M68 22h16M68 27h12M68 32h8" stroke="#9db3a4" transform="rotate(6 77 25)"/><circle cx="88" cy="34" r="4" fill="#e45b5b" stroke-width="1.2" transform="rotate(6 77 25)"/></g><rect x="52" y="118" width="84" height="8" rx="2" fill="#a8d5b5" stroke="#3a2a12" stroke-width="2"/><rect x="0" y="126" width="136" height="34" fill="#bfe3cb"/><g stroke="#3a2a12" stroke-width="1.8" stroke-linejoin="round"><path d="M86 96q0-20 22-20q22 0 22 18q0 16-20 18h-6q-18-1-18-16z" fill="#f7a8b8"/><path d="M92 108l-2 10h7l1-8M120 108l2 10h-7l-1-8" fill="#f290a5"/><ellipse cx="130" cy="94" rx="4" ry="5" fill="#f290a5"/><circle cx="118" cy="88" r="1.8" fill="#3a2a12"/><path d="M98 78q2-6 6-4" fill="none"/><rect x="102" y="74" width="12" height="3" rx="1.5" fill="#3a2a12"/></g><g stroke="#3a2a12" stroke-width="1.6" fill="#f4c542"><ellipse cx="68" cy="116" rx="9" ry="3.5"/><ellipse cx="68" cy="112" rx="9" ry="3.5"/><ellipse cx="68" cy="108" rx="9" ry="3.5"/><ellipse cx="68" cy="104" rx="9" ry="3.5"/></g><g stroke="#3a2a12" stroke-width="1.6" fill="#f4c542"><circle cx="112" cy="50" r="7"/><circle cx="96" cy="58" r="5"/></g><path d="M124 40l1.6 4.4L130 46l-4.4 1.6L124 52l-1.6-4.4L118 46l4.4-1.6z" fill="#fff" opacity=".9"/>'; }
+  };
+  function svg(name, key) {
+    var f = S[name]; if (!f) return '';
+    return '<svg class="gd-scene" viewBox="0 0 136 160" preserveAspectRatio="xMidYMax slice" aria-hidden="true">' + f(String(key || '0').replace(/[^a-z0-9]/gi, '')) + '</svg>';
+  }
+  window.VCScenes = { svg: svg, names: Object.keys(S) };
+})();
