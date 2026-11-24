@@ -1051,6 +1051,12 @@
 .gd-cover[data-layout="postcard"] .gd-cover-art::before { content: ""; position: absolute; inset: -9px -9px -24px -9px; z-index: 3; pointer-events: none; background: linear-gradient(135deg, #6a3a2a 14px, transparent 14px) top left / 26px 26px no-repeat, linear-gradient(225deg, #6a3a2a 14px, transparent 14px) top right / 26px 26px no-repeat, linear-gradient(45deg, #6a3a2a 14px, transparent 14px) bottom left / 26px 26px no-repeat, linear-gradient(315deg, #6a3a2a 14px, transparent 14px) bottom right / 26px 26px no-repeat; }
 .gd-cover[data-layout="postcard"] .gd-cover-art::after { content: "ร้านเล็ก ๆ ของเรา"; position: absolute; left: 0; right: 0; bottom: -19px; z-index: 3; pointer-events: none; text-align: center; font: italic 700 11px/16px sans-serif; color: #8a5a3a; }
 
+/* ปกแบบ "tornticket" = ตั๋วฉีกครึ่ง พื้นครีม ขอบล่างรอยปรุเป็นฟันเลื่อย เส้นประแนวตั้งด้านขวาพร้อมรอยเจาะครึ่งวงกลมบนล่าง (คู่มือ debt-prescription) */
+.gd-cover[data-layout="tornticket"] .gd-cover-art { overflow: visible; padding: 6px 18px 10px 6px; background: #fbf3df; border-radius: 4px; box-shadow: 0 6px 16px rgba(60,40,20,.22); }
+.gd-cover[data-layout="tornticket"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="tornticket"] .gd-cover-art::before { content: ""; position: absolute; right: 8px; top: 0; bottom: 0; width: 0; z-index: 3; pointer-events: none; border-left: 2px dashed #c9a870; }
+.gd-cover[data-layout="tornticket"] .gd-cover-art::after { content: ""; position: absolute; left: 0; right: 0; bottom: -7px; height: 8px; z-index: 3; pointer-events: none; background: linear-gradient(-45deg, transparent 5px, #fbf3df 0) 0 0/10px 8px repeat-x, linear-gradient(45deg, transparent 5px, #fbf3df 0) 0 0/10px 8px repeat-x; }
+
 /* ปกแบบ "plateframe" = ป้ายทะเบียนรถ ขอบขาวหนาตัดเส้นดำ มุมมน มีหมุดเกลียวสองตัวด้านบน และแถบล่างสีเขียวอ่อนแบบป้าย (คู่มือ hire-purchase-car) */
 .gd-cover[data-layout="plateframe"] .gd-cover-art { overflow: visible; border: 8px solid #fdfdfb; border-bottom-width: 16px; border-radius: 12px; box-shadow: 0 0 0 2.5px #1c1c22, inset 0 -10px 0 -2px #cfe8d4, 0 8px 18px rgba(20,20,30,.25); }
 .gd-cover[data-layout="plateframe"] .gd-cover-art .gd-scene { border-radius: 4px; }
