@@ -1,0 +1,6 @@
+/* ปกแบบ "bindercliprim" = กรอบกระดาษคราฟท์สีน้ำตาลอ่อนขอบเย็บประจุด มีคลิปหนีบดำสองตัวหนีบขอบบนซ้ายและขวา (คู่มือ deed-as-collateral) */
+.gd-cover[data-layout="bindercliprim"] .gd-cover-art { overflow: visible; padding: 10px; border-radius: 4px; background: #e8cfa4; box-shadow: inset 0 0 0 4px #e8cfa4, inset 0 0 0 5.5px #b8925a, 0 6px 14px rgba(80,50,20,.25); }
+.gd-cover[data-layout="bindercliprim"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="bindercliprim"] .gd-cover-art::before, .gd-cover[data-layout="bindercliprim"] .gd-cover-art::after { content: ""; position: absolute; top: -9px; width: 22px; height: 18px; z-index: 3; pointer-events: none; background: linear-gradient(180deg, transparent 0 6px, #2a2e38 6px); border-radius: 2px 2px 3px 3px; box-shadow: inset 0 0 0 0 transparent, 0 2px 3px rgba(0,0,0,.3); }
+.gd-cover[data-layout="bindercliprim"] .gd-cover-art::before { left: 16%; border-top: 3px solid #a8b4c0; border-left: 3px solid #a8b4c0; border-right: 3px solid #a8b4c0; border-radius: 8px 8px 3px 3px; }
+.gd-cover[data-layout="bindercliprim"] .gd-cover-art::after { right: 16%; border-top: 3px solid #a8b4c0; border-left: 3px solid #a8b4c0; border-right: 3px solid #a8b4c0; border-radius: 8px 8px 3px 3px; }
