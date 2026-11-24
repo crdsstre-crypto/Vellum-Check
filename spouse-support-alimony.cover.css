@@ -1,0 +1,4 @@
+/* ปกแบบ "ginghamtowel" = ภาพในกรอบผ้าเช็ดมือลายตารางหมากรุกสีแดงขาว (gingham) ขอบหนา มีห่วงผ้าเล็กห้อยตรงกลางขอบบนเหมือนผ้าแขวนในครัว (คู่มือ spouse-support-alimony) */
+.gd-cover[data-layout="ginghamtowel"] .gd-cover-art { overflow: visible; border: 7px solid transparent; border-radius: 8px; background: repeating-linear-gradient(0deg, rgba(217,54,62,.55) 0 4px, transparent 4px 8px), repeating-linear-gradient(90deg, rgba(217,54,62,.55) 0 4px, #fff 4px 8px) border-box; box-shadow: 0 6px 14px rgba(120,30,40,.2); }
+.gd-cover[data-layout="ginghamtowel"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="ginghamtowel"] .gd-cover-art::before { content: ""; position: absolute; left: 50%; top: -18px; width: 16px; height: 14px; margin-left: -8px; z-index: 3; pointer-events: none; border: 3px solid #d9363e; border-bottom: 0; border-radius: 9px 9px 0 0; }
