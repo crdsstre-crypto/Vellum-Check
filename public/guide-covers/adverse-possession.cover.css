@@ -1,0 +1,6 @@
+/* ปกแบบ "surveypeg" = กรอบดินสีน้ำตาลอ่อน มีหลักหมุดเขตที่ดินสีขาวหัวแดงปักทั้งสี่มุม และเชือกแนวเขตเส้นประสีแดงลากรอบ (คู่มือ adverse-possession) */
+.gd-cover[data-layout="surveypeg"] .gd-cover-art { overflow: visible; padding: 9px; border-radius: 6px; background: #e8d4b0; box-shadow: inset 0 0 0 4px #e8d4b0, inset 0 0 0 5.5px #d9483b, 0 6px 14px rgba(90,60,30,.22); }
+.gd-cover[data-layout="surveypeg"] .gd-cover-art .gd-scene { border-radius: 4px; }
+.gd-cover[data-layout="surveypeg"] .gd-cover-art::before, .gd-cover[data-layout="surveypeg"] .gd-cover-art::after { content: ""; position: absolute; left: -3px; right: -3px; height: 12px; z-index: 3; pointer-events: none; background: radial-gradient(circle at 4px 3px, #d9483b 0 2.6px, transparent 3px) 0 0/calc(100% - 2px) 12px no-repeat, radial-gradient(circle at calc(100% - 4px) 3px, #d9483b 0 2.6px, transparent 3px), linear-gradient(90deg, #f4f0e8 2.5px 5.5px, transparent 5.5px calc(100% - 5.5px), #f4f0e8 calc(100% - 5.5px) calc(100% - 2.5px), transparent calc(100% - 2.5px)); }
+.gd-cover[data-layout="surveypeg"] .gd-cover-art::before { top: -3px; }
+.gd-cover[data-layout="surveypeg"] .gd-cover-art::after { bottom: -3px; }
