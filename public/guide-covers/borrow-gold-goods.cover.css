@@ -1,0 +1,6 @@
+/* ปกแบบ "goldleafcorner" = ภาพในกรอบสีเขียวหัวเป็ดเข้มบาง มีแผ่นทองคำเปลวทรงสามเหลี่ยมขอบหยักแปะที่มุมซ้ายบนและมุมขวาล่าง (คู่มือ borrow-gold-goods) */
+.gd-cover[data-layout="goldleafcorner"] .gd-cover-art { overflow: visible; border: 4px solid #1f5a58; border-radius: 6px; box-shadow: 0 0 0 1px #c9a24a, 0 8px 16px rgba(10,40,40,.28); }
+.gd-cover[data-layout="goldleafcorner"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="goldleafcorner"] .gd-cover-art::before, .gd-cover[data-layout="goldleafcorner"] .gd-cover-art::after { content: ""; position: absolute; width: 42px; height: 42px; z-index: 3; pointer-events: none; background: linear-gradient(135deg, #fff2b0, #e2b13a 45%, #b8861e); filter: drop-shadow(0 2px 2px rgba(0,0,0,.25)); }
+.gd-cover[data-layout="goldleafcorner"] .gd-cover-art::before { left: -8px; top: -8px; clip-path: polygon(0 0, 100% 0, 88% 14%, 72% 10%, 60% 28%, 40% 30%, 30% 52%, 12% 58%, 14% 80%, 0 100%); }
+.gd-cover[data-layout="goldleafcorner"] .gd-cover-art::after { right: -8px; bottom: -8px; clip-path: polygon(100% 100%, 0 100%, 12% 86%, 28% 90%, 40% 72%, 60% 70%, 70% 48%, 88% 42%, 86% 20%, 100% 0); }
