@@ -1,0 +1,4 @@
+/* ปกแบบ "qrdotframe" = กรอบหนาสีกรมท่าลายจุดสี่เหลี่ยมแบบ QR มีมาร์คมุม QR สามมุม (บนซ้าย บนขวา ล่างซ้าย) (คู่มือ mistaken-transfer) */
+.gd-cover[data-layout="qrdotframe"] .gd-cover-art { overflow: visible; padding: 9px; border-radius: 6px; background: #1e2e5a radial-gradient(#5a8ae0 1.4px, transparent 1.8px) 0 0/6px 6px; box-shadow: 0 6px 16px rgba(10,20,50,.35); }
+.gd-cover[data-layout="qrdotframe"] .gd-cover-art .gd-scene { border-radius: 3px; }
+.gd-cover[data-layout="qrdotframe"] .gd-cover-art::before { content: ""; position: absolute; inset: -4px; z-index: 3; pointer-events: none; background-image: radial-gradient(circle at 9px 9px, #fff 0 3px, #1e2e5a 3.2px 5px, #fff 5.2px 8px, transparent 8.4px), radial-gradient(circle at calc(100% - 9px) 9px, #fff 0 3px, #1e2e5a 3.2px 5px, #fff 5.2px 8px, transparent 8.4px), radial-gradient(circle at 9px calc(100% - 9px), #fff 0 3px, #1e2e5a 3.2px 5px, #fff 5.2px 8px, transparent 8.4px); }
