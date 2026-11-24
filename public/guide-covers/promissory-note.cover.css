@@ -1,0 +1,5 @@
+/* ปกแบบ "ribbonseal" = กรอบกระดาษงาช้างขอบเส้นคู่สีน้ำเงินเข้ม มีริบบิ้นแดงสองชายห้อยมุมล่างขวาใต้ตราประทับวงกลมสีทอง (คู่มือ promissory-note) */
+.gd-cover[data-layout="ribbonseal"] .gd-cover-art { overflow: visible; padding: 8px; border-radius: 3px; background: #fbf6e8; border: 3px double #2e3e6a; box-shadow: 0 6px 16px rgba(30,30,60,.22); }
+.gd-cover[data-layout="ribbonseal"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="ribbonseal"] .gd-cover-art::before { content: ""; position: absolute; right: 10px; bottom: -16px; width: 18px; height: 22px; z-index: 3; pointer-events: none; background: linear-gradient(100deg, #c8382e 0 45%, transparent 45% 55%, #a82a22 55%); clip-path: polygon(0 0, 100% 0, 100% 100%, 75% 80%, 50% 100%, 25% 80%, 0 100%); }
+.gd-cover[data-layout="ribbonseal"] .gd-cover-art::after { content: ""; position: absolute; right: 6px; bottom: -6px; width: 26px; height: 26px; z-index: 4; pointer-events: none; border-radius: 50%; background: radial-gradient(circle, #f2d270 0 45%, #c9a040 46% 60%, #e8c460 61%); box-shadow: 0 2px 3px rgba(0,0,0,.25); }
