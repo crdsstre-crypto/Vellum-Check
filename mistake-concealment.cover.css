@@ -1,0 +1,5 @@
+/* ปกแบบ "loupecorner" = ภาพในกรอบขาวบาง มีแว่นขยายของช่างเพชร (ทรงกลม ขอบดำ เลนส์ฟ้าใส) ทับมุมล่างขวา และประกายเพชรสี่แฉกที่มุมบนซ้าย (คู่มือ mistake-concealment) */
+.gd-cover[data-layout="loupecorner"] .gd-cover-art { overflow: visible; border: 3px solid #fff; border-radius: 10px; box-shadow: 0 0 0 1px #d8c8ec, 0 5px 12px rgba(80,50,110,.2); }
+.gd-cover[data-layout="loupecorner"] .gd-cover-art .gd-scene { border-radius: 7px; }
+.gd-cover[data-layout="loupecorner"] .gd-cover-art::before { content: ""; position: absolute; right: -14px; bottom: -14px; width: 32px; height: 32px; z-index: 4; pointer-events: none; border-radius: 50%; border: 5px solid #2a2a32; background: radial-gradient(circle at 35% 35%, rgba(255,255,255,.85), rgba(190,225,245,.5)); box-shadow: 0 2px 4px rgba(0,0,0,.3); }
+.gd-cover[data-layout="loupecorner"] .gd-cover-art::after { content: ""; position: absolute; left: -9px; top: -9px; width: 18px; height: 18px; z-index: 4; pointer-events: none; background: #fff; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); filter: drop-shadow(0 0 2px #b89ad8); }
