@@ -1,0 +1,4 @@
+/* ปกแบบ "stampedge" = กรอบขาวขอบหยักแบบแสตมป์ไปรษณีย์ (รูพรุนวงกลมรอบขอบ) เอียงเล็กน้อย มีเส้นประด้านใน (คู่มือ penalty-clause) */
+.gd-cover[data-layout="stampedge"] .gd-cover-art { overflow: visible; padding: 9px; border-radius: 0; background: radial-gradient(circle, rgba(0,0,0,0) 3px, #fffdf6 3.5px) -5px -5px/10px 10px; transform: rotate(-1.5deg); filter: drop-shadow(0 5px 8px rgba(60,20,10,.28)); }
+.gd-cover[data-layout="stampedge"] .gd-cover-art::before { content: ""; position: absolute; inset: 5px; z-index: 0; background: #fffdf6; pointer-events: none; }
+.gd-cover[data-layout="stampedge"] .gd-cover-art .gd-scene { position: relative; z-index: 1; border-radius: 0; outline: 1.5px dashed #d9a088; outline-offset: 2px; }
