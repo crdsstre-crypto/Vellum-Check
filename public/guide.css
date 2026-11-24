@@ -1155,6 +1155,11 @@
 .gd-cover[data-layout="wavypostmark"] .gd-cover-art::before { content: ""; position: absolute; right: -6px; top: 8px; width: 74px; height: 30px; z-index: 3; pointer-events: none; opacity: .75; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='74' height='30'%3E%3Cg fill='none' stroke='%232f4a9a' stroke-width='1.6'%3E%3Cpath d='M0 3q6-3 12 0t12 0 12 0 12 0 12 0 12 0'/%3E%3Cpath d='M0 9q6-3 12 0t12 0 12 0 12 0 12 0 12 0'/%3E%3Cpath d='M0 15q6-3 12 0t12 0 12 0 12 0 12 0 12 0'/%3E%3Cpath d='M0 21q6-3 12 0t12 0 12 0 12 0 12 0 12 0'/%3E%3Cpath d='M0 27q6-3 12 0t12 0 12 0 12 0 12 0 12 0'/%3E%3C/g%3E%3C/svg%3E") no-repeat; }
 .gd-cover[data-layout="wavypostmark"] .gd-cover-art::after { content: ""; position: absolute; right: 52px; top: 2px; width: 38px; height: 38px; z-index: 3; pointer-events: none; border: 2px solid rgba(47,74,154,.75); border-radius: 50%; box-shadow: inset 0 0 0 3px transparent, inset 0 0 0 4.5px rgba(47,74,154,.6); transform: rotate(-12deg); }
 
+/* ปกแบบ "doublemat" = ภาพมีกรอบซ้อนสองชั้น ชั้นในสีขาว ชั้นนอกสีส้มพีชเยื้องออกไปทางขวาล่าง และเส้นกรอบสีน้ำเงินบางเยื้องไปทางซ้ายบน เหมือนภาพสองใบวางซ้อน (คู่มือ co-borrower) */
+.gd-cover[data-layout="doublemat"] .gd-cover-art { overflow: visible; border: 4px solid #fff; border-radius: 4px; box-shadow: 9px 9px 0 0 #f4b89a, 0 8px 18px rgba(70,40,30,.22); }
+.gd-cover[data-layout="doublemat"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="doublemat"] .gd-cover-art::before { content: ""; position: absolute; inset: -11px 9px 9px -11px; z-index: 3; pointer-events: none; border: 2px solid #3b6fd6; border-radius: 4px; }
+
 /* ปกแบบ "tornticket" = ตั๋วฉีกครึ่ง พื้นครีม ขอบล่างรอยปรุเป็นฟันเลื่อย เส้นประแนวตั้งด้านขวาพร้อมรอยเจาะครึ่งวงกลมบนล่าง (คู่มือ debt-prescription) */
 .gd-cover[data-layout="tornticket"] .gd-cover-art { overflow: visible; padding: 6px 18px 10px 6px; background: #fbf3df; border-radius: 4px; box-shadow: 0 6px 16px rgba(60,40,20,.22); }
 .gd-cover[data-layout="tornticket"] .gd-cover-art .gd-scene { border-radius: 2px; }
