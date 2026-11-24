@@ -1069,6 +1069,11 @@
 .gd-cover[data-layout="knotframe"] .gd-cover-art::before { content: ""; position: absolute; left: -10px; top: -10px; width: 30px; height: 18px; z-index: 3; pointer-events: none; background: radial-gradient(ellipse at 25% 50%, #e98aa0 45%, transparent 47%), radial-gradient(ellipse at 75% 50%, #e98aa0 45%, transparent 47%); transform: rotate(-30deg); }
 .gd-cover[data-layout="knotframe"] .gd-cover-art::after { content: "ร่วม?"; position: absolute; right: -12px; bottom: -6px; z-index: 3; pointer-events: none; padding: 4px 8px; font: 900 10px/1.2 sans-serif; color: #fff; background: #d6586f; border-radius: 12px 12px 12px 2px; transform: rotate(-6deg); box-shadow: 0 2px 4px rgba(0,0,0,.2); }
 
+/* ปกแบบ "lacedoily" = กระดาษลูกไม้ขอบหยักวงกลมสีครีมรอบภาพ วางเอียง มีดอกไม้แห้งเล็กมุมซ้ายล่าง (คู่มือ inherited-debt) */
+.gd-cover[data-layout="lacedoily"] .gd-cover-art { overflow: visible; padding: 9px; border-radius: 6px; background: radial-gradient(circle at 50% 50%, #fffaf0 4px, transparent 4.6px) -6px -6px / 12px 12px, radial-gradient(circle, #f3e6cf 2px, transparent 2.4px) 0 0 / 6px 6px, #fffaf0; box-shadow: 0 6px 16px rgba(90,60,40,.2); transform: rotate(-1.5deg); }
+.gd-cover[data-layout="lacedoily"] .gd-cover-art .gd-scene { border-radius: 3px; }
+.gd-cover[data-layout="lacedoily"] .gd-cover-art::after { content: "✿"; position: absolute; left: -12px; bottom: -10px; z-index: 3; pointer-events: none; font: 22px/1 sans-serif; color: #d98aa0; text-shadow: 6px 4px 0 #c9a060, -4px 6px 0 #a8c890; transform: rotate(-12deg); }
+
 /* ปกแบบ "tornticket" = ตั๋วฉีกครึ่ง พื้นครีม ขอบล่างรอยปรุเป็นฟันเลื่อย เส้นประแนวตั้งด้านขวาพร้อมรอยเจาะครึ่งวงกลมบนล่าง (คู่มือ debt-prescription) */
 .gd-cover[data-layout="tornticket"] .gd-cover-art { overflow: visible; padding: 6px 18px 10px 6px; background: #fbf3df; border-radius: 4px; box-shadow: 0 6px 16px rgba(60,40,20,.22); }
 .gd-cover[data-layout="tornticket"] .gd-cover-art .gd-scene { border-radius: 2px; }
