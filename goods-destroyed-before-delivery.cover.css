@@ -1,0 +1,4 @@
+/* ปกแบบ "scorchedcorner" = ภาพในกรอบกระดาษครีม มุมล่างขวาเป็นรอยไหม้เกรียมสีน้ำตาลเข้มไล่เป็นขอบส้มเรือง เหมือนกระดาษโดนไฟลามมุม (คู่มือ goods-destroyed-before-delivery) */
+.gd-cover[data-layout="scorchedcorner"] .gd-cover-art { overflow: hidden; border: 5px solid #f4ead4; border-radius: 6px; box-shadow: 0 6px 14px rgba(90,40,20,.22); }
+.gd-cover[data-layout="scorchedcorner"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="scorchedcorner"] .gd-cover-art::after { content: ""; position: absolute; right: -8px; bottom: -8px; width: 70px; height: 70px; z-index: 3; pointer-events: none; border-radius: 46% 54% 40% 60%; background: radial-gradient(circle at 70% 70%, #2a1a10 0 34%, #6a3418 44%, #f28a3a 56%, rgba(242,138,58,0) 70%); }
