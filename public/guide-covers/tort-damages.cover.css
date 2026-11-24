@@ -1,0 +1,5 @@
+/* ปกแบบ "zigzagtape" = กรอบเทปกั้นเขตลายทแยงเหลืองดำ ขอบในหยักฟันปลาสีขาว และป้ายสามเหลี่ยมเตือนเล็กมุมขวาบน (คู่มือ tort-damages) */
+.gd-cover[data-layout="zigzagtape"] .gd-cover-art { overflow: visible; padding: 9px; border-radius: 4px; background: repeating-linear-gradient(45deg, #f2c94c 0 8px, #2a2a32 8px 16px); box-shadow: 0 6px 16px rgba(40,30,0,.25); }
+.gd-cover[data-layout="zigzagtape"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="zigzagtape"] .gd-cover-art::before { content: ""; position: absolute; left: 5px; right: 5px; top: 5px; height: 5px; z-index: 3; pointer-events: none; background: linear-gradient(135deg, #fff 2.5px, transparent 0) 0 0/6px 5px repeat-x, linear-gradient(225deg, #fff 2.5px, transparent 0) 0 0/6px 5px repeat-x; }
+.gd-cover[data-layout="zigzagtape"] .gd-cover-art::after { content: "!"; position: absolute; right: -8px; top: -10px; width: 22px; height: 20px; z-index: 4; pointer-events: none; font: 900 11px/24px sans-serif; text-align: center; color: #2a2a32; background: #f2c94c; clip-path: polygon(50% 0, 100% 100%, 0 100%); }
