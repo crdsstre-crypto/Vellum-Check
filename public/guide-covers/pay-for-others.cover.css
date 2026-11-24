@@ -1,0 +1,5 @@
+/* ปกแบบ "chainlinkpay" = กรอบกระดาษใบเสร็จสีขาวนวล ขอบล่างหยักฟันเลื่อย มีเส้นประพิมพ์จางและรูปม้วนกระดาษที่ขอบบน (คู่มือ pay-for-others) */
+.gd-cover[data-layout="chainlinkpay"] .gd-cover-art { overflow: visible; padding: 10px 9px 14px; border-radius: 4px 4px 0 0; background: #fffdf6 repeating-linear-gradient(0deg, transparent 0 7px, rgba(180,170,150,.18) 7px 8px); box-shadow: 0 6px 12px rgba(40,60,50,.2); }
+.gd-cover[data-layout="chainlinkpay"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="chainlinkpay"] .gd-cover-art::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 7px; z-index: 2; pointer-events: none; background: linear-gradient(-45deg, transparent 4px, #fffdf6 4px) 0 0/8px 7px repeat-x, linear-gradient(45deg, transparent 4px, #fffdf6 4px) 0 0/8px 7px repeat-x; }
+.gd-cover[data-layout="chainlinkpay"] .gd-cover-art::before { content: ""; position: absolute; left: -4px; right: -4px; top: -5px; height: 9px; z-index: 3; pointer-events: none; border-radius: 6px; background: linear-gradient(180deg, #e8e2d4, #fffdf6 45%, #d8d0c0); box-shadow: 0 2px 3px rgba(0,0,0,.15); }
