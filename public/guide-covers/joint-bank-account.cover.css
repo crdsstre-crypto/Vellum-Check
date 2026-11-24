@@ -1,0 +1,6 @@
+/* ปกแบบ "ribbonbookmark" = กรอบปกสมุดหนังสีกรมท่า มีริบบิ้นคั่นหน้าสองเส้นสีทองกับแดงห้อยลงจากขอบบนเลยขอบล่าง ปลายตัดเป็นหางนกแซงแซว (คู่มือ joint-bank-account) */
+.gd-cover[data-layout="ribbonbookmark"] .gd-cover-art { overflow: visible; padding: 9px; border-radius: 4px 10px 10px 4px; background: linear-gradient(90deg, #142448 0 8px, #1e3366 8px); box-shadow: inset 0 0 0 1.5px #3a5aa0, 0 6px 14px rgba(20,30,70,.3); }
+.gd-cover[data-layout="ribbonbookmark"] .gd-cover-art .gd-scene { border-radius: 2px 6px 6px 2px; }
+.gd-cover[data-layout="ribbonbookmark"] .gd-cover-art::before, .gd-cover[data-layout="ribbonbookmark"] .gd-cover-art::after { content: ""; position: absolute; top: -2px; bottom: -12px; width: 7px; z-index: 3; pointer-events: none; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 5px), 0 100%); box-shadow: 0 2px 3px rgba(0,0,0,.25); }
+.gd-cover[data-layout="ribbonbookmark"] .gd-cover-art::before { right: 22px; background: linear-gradient(180deg, #f6d27a, #c9a040); }
+.gd-cover[data-layout="ribbonbookmark"] .gd-cover-art::after { right: 12px; bottom: -6px; background: linear-gradient(180deg, #e8584e, #b83a32); }
