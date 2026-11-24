@@ -1,0 +1,5 @@
+/* ปกแบบ "perforatedstub" = ภาพในกรอบแบบต้นขั้วใบเสร็จสีเขียวมิ้นต์ มีรอยปรุจุดเรียงเป็นแถวตามขอบขวา และตราประทับ "ชำระแล้ว" สีน้ำเงินเอียงที่มุมบนซ้าย (คู่มือ pay-right-person) */
+.gd-cover[data-layout="perforatedstub"] .gd-cover-art { overflow: visible; border: 4px solid #6ac0a8; border-right-width: 12px; border-radius: 6px 2px 2px 6px; box-shadow: 0 6px 14px rgba(20,80,60,.22); }
+.gd-cover[data-layout="perforatedstub"] .gd-cover-art .gd-scene { border-radius: 3px 0 0 3px; }
+.gd-cover[data-layout="perforatedstub"] .gd-cover-art::before { content: ""; position: absolute; right: -9px; top: 4px; bottom: 4px; width: 6px; z-index: 3; pointer-events: none; background: radial-gradient(circle, #fffdf6 0 2px, transparent 2.4px) 0 0/6px 9px repeat-y; }
+.gd-cover[data-layout="perforatedstub"] .gd-cover-art::after { content: "ชำระแล้ว"; position: absolute; left: -8px; top: -8px; z-index: 3; pointer-events: none; padding: 3px 6px; font: 900 9px/1 sans-serif; color: #2f5aa8; background: rgba(255,255,255,.9); border: 2px solid #2f5aa8; border-radius: 4px; transform: rotate(-12deg); }
