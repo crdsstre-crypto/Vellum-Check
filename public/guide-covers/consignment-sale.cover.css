@@ -1,0 +1,5 @@
+/* ปกแบบ "shelflabel" = ภาพวางบนชั้นไม้สีน้ำตาลอ่อนที่ยื่นออกมาใต้ขอบล่าง และป้ายราคาชั้นวางสีเหลืองติดหน้าชั้นตรงกลาง เขียนว่า "ฝากขาย" (คู่มือ consignment-sale) */
+.gd-cover[data-layout="shelflabel"] .gd-cover-art { overflow: visible; border: 4px solid #fff8ec; border-radius: 4px; box-shadow: 0 6px 12px rgba(60,30,20,.2); margin-bottom: 12px; }
+.gd-cover[data-layout="shelflabel"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="shelflabel"] .gd-cover-art::before { content: ""; position: absolute; left: -12px; right: -12px; bottom: -14px; height: 10px; z-index: 3; pointer-events: none; border-radius: 2px; background: linear-gradient(#c9965e, #a8744a); box-shadow: 0 3px 4px rgba(0,0,0,.25); }
+.gd-cover[data-layout="shelflabel"] .gd-cover-art::after { content: "ฝากขาย"; position: absolute; left: 50%; bottom: -20px; z-index: 4; pointer-events: none; transform: translateX(-50%); padding: 3px 10px; font: 900 10px/1 sans-serif; color: #5a3a1a; background: #ffe58a; border: 1px solid #e0c060; border-radius: 2px; }
