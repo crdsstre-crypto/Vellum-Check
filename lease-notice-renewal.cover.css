@@ -1,0 +1,5 @@
+/* ปกแบบ "keyhookrail" = ภาพในกรอบไม้สักสีน้ำตาลอุ่น มีราวแขวนกุญแจไม้พาดใต้ขอบบน พร้อมตะขอทองเหลืองสามตัวและพวงกุญแจห้อยหนึ่งพวงที่มุมบนขวา (คู่มือ lease-notice-renewal) */
+.gd-cover[data-layout="keyhookrail"] .gd-cover-art { overflow: visible; border: 6px solid #8a5a32; border-radius: 6px; box-shadow: inset 0 0 0 1px #b07a4a, 0 6px 14px rgba(70,40,20,.25); }
+.gd-cover[data-layout="keyhookrail"] .gd-cover-art .gd-scene { border-radius: 1px; }
+.gd-cover[data-layout="keyhookrail"] .gd-cover-art::before { content: ""; position: absolute; left: 10px; right: 10px; top: -14px; height: 8px; z-index: 3; pointer-events: none; background: linear-gradient(180deg, #b07a4a, #7a4a22); border-radius: 3px; box-shadow: 0 2px 2px rgba(0,0,0,.25); }
+.gd-cover[data-layout="keyhookrail"] .gd-cover-art::after { content: "🔑"; position: absolute; right: 18px; top: -8px; z-index: 4; pointer-events: none; font: 14px/1 sans-serif; transform: rotate(80deg); filter: drop-shadow(0 1px 1px rgba(0,0,0,.3)); }
