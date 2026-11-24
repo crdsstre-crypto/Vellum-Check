@@ -1,0 +1,5 @@
+/* ปกแบบ "awningstripe" = กันสาดผ้าใบลายทางแดงขาวพาดขอบบน ปลายเป็นชายหยักโค้งครึ่งวงกลม กรอบล่างสีไม้อ่อน (คู่มือ shop-lease-takeover) */
+.gd-cover[data-layout="awningstripe"] .gd-cover-art { overflow: visible; padding: 20px 8px 8px; border-radius: 4px; background: #e8cfa4; box-shadow: 0 6px 14px rgba(80,40,20,.22); }
+.gd-cover[data-layout="awningstripe"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="awningstripe"] .gd-cover-art::before { content: ""; position: absolute; left: -4px; right: -4px; top: -2px; height: 14px; z-index: 3; pointer-events: none; background: repeating-linear-gradient(90deg, #e8584e 0 10px, #fffaf0 10px 20px); border-radius: 3px 3px 0 0; box-shadow: 0 2px 2px rgba(0,0,0,.15); }
+.gd-cover[data-layout="awningstripe"] .gd-cover-art::after { content: ""; position: absolute; left: -4px; right: -4px; top: 12px; height: 6px; z-index: 3; pointer-events: none; background: radial-gradient(circle at 5px 0, #e8584e 0 4.6px, transparent 5px) 0 0/20px 6px repeat-x, radial-gradient(circle at 5px 0, #fffaf0 0 4.6px, transparent 5px) 10px 0/20px 6px repeat-x; }
