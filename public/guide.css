@@ -1051,6 +1051,12 @@
 .gd-cover[data-layout="postcard"] .gd-cover-art::before { content: ""; position: absolute; inset: -9px -9px -24px -9px; z-index: 3; pointer-events: none; background: linear-gradient(135deg, #6a3a2a 14px, transparent 14px) top left / 26px 26px no-repeat, linear-gradient(225deg, #6a3a2a 14px, transparent 14px) top right / 26px 26px no-repeat, linear-gradient(45deg, #6a3a2a 14px, transparent 14px) bottom left / 26px 26px no-repeat, linear-gradient(315deg, #6a3a2a 14px, transparent 14px) bottom right / 26px 26px no-repeat; }
 .gd-cover[data-layout="postcard"] .gd-cover-art::after { content: "ร้านเล็ก ๆ ของเรา"; position: absolute; left: 0; right: 0; bottom: -19px; z-index: 3; pointer-events: none; text-align: center; font: italic 700 11px/16px sans-serif; color: #8a5a3a; }
 
+/* ปกแบบ "napkin" = ข้อตกลงที่เขียนบนกระดาษเช็ดปาก ขอบหยักลอนสีขาวนวล มีลายนูนจุดรอบ และข้อความลายมือหมึกน้ำเงิน "ตกลงจ้าง ✓" มุมขวาล่าง (คู่มือ no-written-contract) */
+.gd-cover[data-layout="napkin"] .gd-cover-art { overflow: visible; padding: 11px; border-radius: 4px; background: radial-gradient(circle at 50% 50%, #e8e0d0 1px, transparent 1.6px) 0 0 / 8px 8px, #fffdf6; box-shadow: 0 6px 14px rgba(60,40,20,.18); transform: rotate(-2deg); }
+.gd-cover[data-layout="napkin"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="napkin"] .gd-cover-art::before { content: ""; position: absolute; inset: 4px; z-index: 2; pointer-events: none; border: 1.5px dashed rgba(200,186,160,.8); border-radius: 3px; }
+.gd-cover[data-layout="napkin"] .gd-cover-art::after { content: "ตกลงจ้าง ✓"; position: absolute; right: -8px; bottom: -10px; z-index: 3; pointer-events: none; padding: 3px 7px; font: italic 700 12px/1 sans-serif; color: #2a4aa8; background: #fffdf6; border-radius: 3px; box-shadow: 0 2px 4px rgba(60,40,20,.18); transform: rotate(-6deg); }
+
 /* ปกแบบ "scorecard" = กรอบขาวหนา มีแถบวัดผลแนวตั้งไล่สีแดง-เหลือง-เขียวชิดขอบขวา และหมุดสามเหลี่ยมชี้ระดับเส้นเป้า (คู่มือ resume-performance) */
 .gd-cover[data-layout="scorecard"] .gd-cover-art { overflow: visible; margin-right: 18px; border: 7px solid #fffdf8; border-radius: 8px; box-shadow: 0 0 0 1px #e6dccb, 0 7px 16px rgba(40,30,20,.2); }
 .gd-cover[data-layout="scorecard"] .gd-cover-art .gd-scene { border-radius: 3px; }
