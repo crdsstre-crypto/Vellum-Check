@@ -1,0 +1,5 @@
+/* ปกแบบ "swatchedge" = กรอบขาวนวล มีแถบสีตัวอย่างผ้า 5 สีเรียงแนวตั้งชิดขอบซ้าย และห่วงร้อยสีทองมุมซ้ายบน (คู่มือ sample-sale) */
+.gd-cover[data-layout="swatchedge"] .gd-cover-art { overflow: visible; padding: 7px 7px 7px 20px; border-radius: 5px; background: #fffdf6; box-shadow: 0 6px 16px rgba(60,40,30,.22); }
+.gd-cover[data-layout="swatchedge"] .gd-cover-art .gd-scene { border-radius: 3px; }
+.gd-cover[data-layout="swatchedge"] .gd-cover-art::before { content: ""; position: absolute; left: 5px; top: 16px; bottom: 7px; width: 10px; z-index: 3; pointer-events: none; border-radius: 2px; background: linear-gradient(180deg, #e88a6a 0 20%, #f2c94c 20% 40%, #8ac08a 40% 60%, #6aa8c8 60% 80%, #c88ab8 80%); }
+.gd-cover[data-layout="swatchedge"] .gd-cover-art::after { content: ""; position: absolute; left: 4px; top: 3px; width: 8px; height: 8px; z-index: 3; pointer-events: none; border-radius: 50%; border: 2.5px solid #c9a040; background: #fffdf6; }
