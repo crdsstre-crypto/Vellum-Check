@@ -1,6 +1,6 @@
 // ภาพช่องการ์ตูนของคู่มือ tort-damages
 VCPanels({
-// [ภาพประกอบนิทาน สี่แยกในซอยยามเย็น ฟ้าม่วงส้ม ตึกแถวเงาดำ] รถเก๋งเฉี่ยวจักรยาน ชายกังวลจับแขน หญิงคนขับยิ้มเจื่อนถือใบขับขี่ (น้องม้วนซ้าย)
+// [ภาพประกอบนิทาน ซอยหน้าตึกแถวยามเย็น ฟ้าไล่สีม่วงส้ม ไฟหน้าต่างอุ่น ป้ายร้านโคมไฟ] รถเก๋งแดงเงาวาวเบรกเฉี่ยวจักรยานที่ล้มอยู่ ชายกังวลจับข้อศอก (น้องม้วนซ้าย)
  tdcrash:function(k){
   var W=function(x,y,s,f){var e=f==='tired'?'<path d="M-11 -1.6q3-1.6 6 .2M5 -1.4q3-1.8 6-.2" stroke="#5a4636" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M-10.4 3q2.6 2.4 5.2 0M4.6 3q2.6 2.4 5.2 0" stroke="#5a4636" stroke-width="1.4" fill="none" stroke-linecap="round"/><path d="M-3.6 12q3.6 2.8 7.2 0" stroke="#b0503a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
    :'<ellipse cx="-7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><ellipse cx="7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><circle cx="-6.8" cy="2.2" r=".7" fill="#fff"/><circle cx="8" cy="2.2" r=".7" fill="#fff"/>'+
@@ -22,14 +22,25 @@ VCPanels({
     '<ellipse cx="-11" cy="8" rx="3" ry="1.8" fill="#f2a0a0" opacity=".35"/><ellipse cx="11" cy="8" rx="3" ry="1.8" fill="#f2a0a0" opacity=".35"/><path d="M0 5.5q.8 2.6-.6 3.4" stroke="#b9805a" stroke-width=".9" fill="none" stroke-linecap="round"/></g>';};
   var MD='<radialGradient id="mk'+k+'" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#f6d2b0"/><stop offset=".7" stop-color="#e2b088"/><stop offset="1" stop-color="#cf9870"/></radialGradient><linearGradient id="mh'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a3440"/><stop offset="1" stop-color="#16141c"/></linearGradient>';
   var B=function(x,c,sk){return '<g filter="url(#wsh'+k+')"><path d="M'+(x-24)+' 164v-34q0-18 24-18t24 18v34z" fill="'+c+'"/></g><path d="M'+(x-6)+' 100h12v12q-6 3-12 0z" fill="'+sk+'"/>';};
-  var bl='';for(var i=0;i<9;i++){var h=30+(i*13)%30;bl+='<rect x="'+(i*42)+'" y="'+(120-h)+'" width="38" height="'+h+'" fill="#4a3a5a"/><rect x="'+(i*42+8)+'" y="'+(126-h)+'" width="6" height="6" fill="#ffd88a"/>';}
-  return '<defs>'+WD+MD+'<linearGradient id="tdc1'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a6aa8"/><stop offset="1" stop-color="#f4a87a"/></linearGradient></defs><rect width="360" height="180" fill="url(#tdc1'+k+')"/>'+bl+'<rect y="120" width="360" height="60" fill="#7a7880"/><path d="M0 150h360" stroke="#fff" stroke-width="2" stroke-dasharray="16 12"/>'+
-  '<g filter="url(#wsh'+k+')"><path d="M110 150q4-22 26-22h22q18 0 22 22z" fill="#e05a4a"/></g><rect x="106" y="146" width="80" height="10" rx="4" fill="#c84a3a"/><circle cx="124" cy="158" r="7" fill="#2a2a32"/><circle cx="168" cy="158" r="7" fill="#2a2a32"/><path d="M134 132h16v10h-20zM154 132h14l6 10h-20z" fill="#bfe0f0"/>'+
-  '<g transform="rotate(-18 214 150)"><circle cx="200" cy="156" r="10" fill="none" stroke="#2a2a32" stroke-width="2.4"/><circle cx="232" cy="156" r="10" fill="none" stroke="#2a2a32" stroke-width="2.4"/><path d="M200 156l12-14h14l6 14M212 142l-4-6" stroke="#3a8a6a" stroke-width="2.4" fill="none"/></g>'+
-  '<g class="cm-burst"><path d="M190 140l4-8 3 7 7-4-3 8 7 3-8 2" fill="#ffe08a"/></g>'+
-  '<g transform="translate(0 24)">'+B(304,'#3a6a8a','#e2b088')+'<path d="M298 112l6 7 6-7" fill="#fff"/>'+M(304,86,1,'worried',false)+'</g>'+
-  '<path d="M284 140q-6 6-2 12" stroke="#3a6a8a" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="283" cy="152" r="3.6" fill="#e2b088"/>';},
- // [ภาพประกอบนิทาน หน้าบ้านทาวน์เฮาส์ รั้วเหล็กดัดสีเขียว ต้นเฟื่องฟ้าชมพู] หมาสีน้ำตาลเห่าหลังรั้ว หญิงจริงจังชี้ป้าย "ระวังสุนัข" (น้องม้วนขวา)
+  var bl='',cl=['#6a4a7a','#5a3e6e','#74507e','#62467a'];for(var i=0;i<9;i++){var h=40+(i*13)%26;bl+='<rect x="'+(i*42)+'" y="'+(122-h)+'" width="40" height="'+h+'" fill="'+cl[i%4]+'"/><rect x="'+(i*42)+'" y="'+(122-h)+'" width="40" height="4" fill="#8a6a9a"/>';for(var w=0;w<2;w++)bl+='<rect x="'+(i*42+7+w*16)+'" y="'+(130-h)+'" width="9" height="9" rx="1" fill="'+((i+w)%3?'#ffd88a':'#a88ab8')+'"/>';}
+  return '<defs>'+WD+MD+'<linearGradient id="tdc1'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a5aa0"/><stop offset=".6" stop-color="#e88a8a"/><stop offset="1" stop-color="#f8c08a"/></linearGradient><linearGradient id="tdc2'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f26a5a"/><stop offset="1" stop-color="#b8382e"/></linearGradient><linearGradient id="tdc3'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e6f6ff"/><stop offset="1" stop-color="#8ec4e4"/></linearGradient><radialGradient id="tdc4'+k+'" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff6c0" stop-opacity=".9"/><stop offset="1" stop-color="#fff6c0" stop-opacity="0"/></radialGradient></defs>'+
+  '<rect width="360" height="180" fill="url(#tdc1'+k+')"/>'+bl+
+  '<rect y="122" width="360" height="58" fill="#6e6a76"/><rect y="122" width="360" height="5" fill="#9a96a0"/><path d="M0 162h360" stroke="#f4f0e6" stroke-width="2.4" stroke-dasharray="18 12" opacity=".8"/>'+
+  // เงารถ
+  '<ellipse cx="148" cy="160" rx="54" ry="5" fill="#2a2632" opacity=".35"/>'+
+  // รถ
+  '<g filter="url(#wsh'+k+')"><path d="M96 154v-14q0-8 8-10l14-3 14-14q4-4 10-4h30q8 0 12 6l10 12 12 2q8 2 8 10v15z" fill="url(#tdc2'+k+')"/></g>'+
+  '<path d="M134 127l10-10q2-2 6-2h12v12z" fill="url(#tdc3'+k+')"/><path d="M166 115h8q4 0 6 3l7 9h-21z" fill="url(#tdc3'+k+')"/><path d="M138 120l6-4" stroke="#fff" stroke-width="2" opacity=".8"/>'+
+  '<path d="M102 134q40-4 96-1" stroke="#ff9a8a" stroke-width="2" fill="none" opacity=".8"/><rect x="164" y="136" width="8" height="2" rx="1" fill="#8a2a22"/>'+
+  '<circle cx="200" cy="138" r="7" fill="url(#tdc4'+k+')"/><rect x="196" y="135" width="6" height="5" rx="2" fill="#fff4b0"/>'+
+  '<g><circle cx="118" cy="154" r="10" fill="#2a2a32"/><circle cx="118" cy="154" r="4.4" fill="#c9ced6"/><circle cx="178" cy="154" r="10" fill="#2a2a32"/><circle cx="178" cy="154" r="4.4" fill="#c9ced6"/></g>'+
+  // จักรยานล้ม
+  '<g transform="rotate(-14 236 150)"><g fill="none" stroke-linecap="round"><circle cx="222" cy="152" r="11" stroke="#2a2a32" stroke-width="2.6"/><circle cx="254" cy="152" r="11" stroke="#2a2a32" stroke-width="2.6"/><path d="M222 152l12-15h16l4 15M234 137l-4-6h8M250 137l2-5h6" stroke="#2e9a7a" stroke-width="3"/></g><circle cx="222" cy="152" r="2" fill="#9aa4ac"/><circle cx="254" cy="152" r="2" fill="#9aa4ac"/></g>'+
+  '<g class="cm-burst"><path d="M208 136l5-9 2 8 8-5-3 9 9 2-9 3 3 8-8-4-3 8-2-8-8 2z" fill="#ffe08a" stroke="#f2a03a" stroke-width="1"/></g>'+
+  // คน
+  '<g transform="translate(0 24)">'+B(312,'#3a6a8a','#e2b088')+'<path d="M306 112l6 7 6-7" fill="#fff"/>'+M(312,86,1,'worried',false)+'</g>'+
+  '<path d="M292 140q-10 6-4 14" stroke="#3a6a8a" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="290" cy="154" r="3.6" fill="#e2b088"/><path d="M292 138l-6 -3" stroke="#e86a5a" stroke-width="1.6" stroke-linecap="round"/>';},
+ // [ภาพประกอบนิทาน หน้าบ้านทาวน์เฮาส์ยามสาย รั้วเหล็กดัดเขียวหัวลูกศร ซุ้มเฟื่องฟ้าชมพูฟุ้ง ทางเท้าอิฐ] หมาพันธุ์ไทยตัวกลมเห่าออกนอกช่องรั้วที่เปิดค้าง หญิงจริงจังชี้ป้าย "ระวังสุนัข" (น้องม้วนขวา)
  tddog:function(k){
   var W=function(x,y,s,f){var e=f==='tired'?'<path d="M-11 -1.6q3-1.6 6 .2M5 -1.4q3-1.8 6-.2" stroke="#5a4636" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M-10.4 3q2.6 2.4 5.2 0M4.6 3q2.6 2.4 5.2 0" stroke="#5a4636" stroke-width="1.4" fill="none" stroke-linecap="round"/><path d="M-3.6 12q3.6 2.8 7.2 0" stroke="#b0503a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
    :'<ellipse cx="-7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><ellipse cx="7.4" cy="3" rx="1.9" ry="2.5" fill="#3a2a20"/><circle cx="-6.8" cy="2.2" r=".7" fill="#fff"/><circle cx="8" cy="2.2" r=".7" fill="#fff"/>'+
@@ -51,13 +62,26 @@ VCPanels({
     '<ellipse cx="-11" cy="8" rx="3" ry="1.8" fill="#f2a0a0" opacity=".35"/><ellipse cx="11" cy="8" rx="3" ry="1.8" fill="#f2a0a0" opacity=".35"/><path d="M0 5.5q.8 2.6-.6 3.4" stroke="#b9805a" stroke-width=".9" fill="none" stroke-linecap="round"/></g>';};
   var MD='<radialGradient id="mk'+k+'" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#f6d2b0"/><stop offset=".7" stop-color="#e2b088"/><stop offset="1" stop-color="#cf9870"/></radialGradient><linearGradient id="mh'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a3440"/><stop offset="1" stop-color="#16141c"/></linearGradient>';
   var B=function(x,c,sk){return '<g filter="url(#wsh'+k+')"><path d="M'+(x-24)+' 164v-34q0-18 24-18t24 18v34z" fill="'+c+'"/></g><path d="M'+(x-6)+' 100h12v12q-6 3-12 0z" fill="'+sk+'"/>';};
-  var fn='';for(var i=0;i<14;i++){fn+='<rect x="'+(96+i*12)+'" y="96" width="3" height="54" fill="#3a7a5a"/><circle cx="'+(97.5+i*12)+'" cy="94" r="2.6" fill="#3a7a5a"/>';}
-  var bg='';for(var i=0;i<18;i++){bg+='<circle cx="'+(90+(i*23)%110)+'" cy="'+(66+(i*11)%26)+'" r="5" fill="#e86aa8" opacity=".8"/>';}
-  return '<defs>'+WD+MD+'</defs><rect width="360" height="180" fill="#f6e4cc"/><rect x="84" y="56" width="130" height="44" fill="#5a9a5a"/>'+bg+'<rect y="150" width="360" height="30" fill="#b8a890"/>'+
-  '<g filter="url(#wsh'+k+')"><ellipse cx="160" cy="138" rx="22" ry="12" fill="#a8703a"/></g><circle cx="180" cy="124" r="11" fill="#a8703a"/><path d="M172 116l-4-8 8 4zM186 116l4-8-8 4z" fill="#7a4a20"/><circle cx="184" cy="122" r="1.6" fill="#2a2a32"/><path d="M188 128q4 2 2 5" stroke="#2a2a32" fill="none"/><path d="M146 148v8M172 148v8" stroke="#a8703a" stroke-width="5"/>'+
-  '<g class="cm-vibx"><path d="M196 116l10-4M198 122l12 0M196 128l10 4" stroke="#d9483b" stroke-width="1.8" stroke-linecap="round"/></g>'+fn+'<rect x="94" y="106" width="166" height="3" fill="#3a7a5a"/><rect x="94" y="140" width="166" height="3" fill="#3a7a5a"/>'+
-  '<g filter="url(#wsh'+k+')"><rect x="112" y="112" width="40" height="16" rx="2" fill="#f2c94c"/></g><text x="132" y="123" text-anchor="middle" font-size="5.8" font-weight="900" fill="#3a2a20" font-family="sans-serif">ระวังสุนัข</text>'+
-  '<g transform="translate(0 24)">'+B(46,'#2e6a8a','#e8b896')+W(46,86,1,'firm')+'</g><path d="M66 148q14-12 30-24" stroke="#2e6a8a" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="98" cy="123" r="3.6" fill="#e8b896"/>';},
+  var bg='';for(var i=0;i<34;i++){var x=150+(i*37)%120,y=60+(i*13)%34;bg+='<circle cx="'+x+'" cy="'+y+'" r="'+(4+i%3)+'" fill="'+(i%3?'#ef7ab4':'#f7a6cc')+'"/>';}
+  var lf='';for(var i=0;i<14;i++){lf+='<ellipse cx="'+(150+(i*29)%118)+'" cy="'+(66+(i*17)%30)+'" rx="5" ry="3" fill="#4e8a4a"/>';}
+  var fn='';for(var i=0;i<10;i++){var x=150+i*12;if(i==3||i==4)continue;fn+='<rect x="'+x+'" y="102" width="3" height="48" fill="#2e6e52"/><path d="M'+(x-2)+' 102l3.5-6 3.5 6z" fill="#2e6e52"/>';}
+  var br='';for(var r=0;r<2;r++)for(var i=0;i<16;i++){br+='<rect x="'+(i*24-(r%2)*12)+'" y="'+(150+r*10)+'" width="22" height="8" rx="1" fill="'+((i+r)%2?'#c9a488':'#bf9878')+'"/>';}
+  return '<defs>'+WD+MD+'<linearGradient id="tdg1'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fdf0dc"/><stop offset="1" stop-color="#f4dcbc"/></linearGradient><radialGradient id="tdg2'+k+'" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#e0a464"/><stop offset="1" stop-color="#b0703a"/></radialGradient></defs>'+
+  '<rect width="360" height="180" fill="url(#tdg1'+k+')"/><rect x="140" y="56" width="140" height="94" fill="#f6e8d0"/><rect x="140" y="56" width="140" height="94" fill="none" stroke="#e0ccac" stroke-width="2"/>'+lf+bg+
+  '<rect y="148" width="360" height="32" fill="#b88a6a"/>'+br+fn+'<rect x="146" y="112" width="130" height="3" fill="#2e6e52"/><rect x="146" y="138" width="130" height="3" fill="#2e6e52"/>'+
+  // ประตูรั้วเปิดค้าง
+  '<g transform="skewY(-12)"><rect x="186" y="140" width="22" height="3" fill="#2e6e52"/></g>'+
+  // ป้าย
+  '<g filter="url(#wsh'+k+')"><rect x="236" y="116" width="40" height="18" rx="3" fill="#f2c94c" stroke="#b8862a"/></g><text x="256" y="128" text-anchor="middle" font-size="6" font-weight="900" fill="#3a2a20" font-family="sans-serif">ระวังสุนัข</text>'+
+  // หมา (ออกมาหน้ารั้ว)
+  '<ellipse cx="128" cy="160" rx="26" ry="4" fill="#5a3a2a" opacity=".3"/>'+
+  '<g filter="url(#wsh'+k+')"><path d="M150 140q8-10 4-18" stroke="#b0703a" stroke-width="5" fill="none" stroke-linecap="round"/><ellipse cx="132" cy="142" rx="22" ry="13" fill="url(#tdg2'+k+')"/></g>'+
+  '<path d="M116 150v10M126 152v8M138 152v8M148 150v10" stroke="#a8683a" stroke-width="6" stroke-linecap="round"/>'+
+  '<ellipse cx="132" cy="146" rx="12" ry="5" fill="#f4dcbc" opacity=".7"/>'+
+  '<g><circle cx="108" cy="128" r="13" fill="url(#tdg2'+k+')"/><path d="M98 120l-4-12 10 6zM116 118l6-11 1 12z" fill="#8a4e24"/><ellipse cx="100" cy="134" rx="7" ry="5" fill="#f4dcbc"/><circle cx="96" cy="131" r="2.2" fill="#2a2a32"/><circle cx="104" cy="125" r="1.8" fill="#2a2a32"/><circle cx="113" cy="125" r="1.8" fill="#2a2a32"/><circle cx="104.6" cy="124.4" r=".6" fill="#fff"/><circle cx="113.6" cy="124.4" r=".6" fill="#fff"/><path d="M94 136q4 5 9 1" fill="#c84a4a" stroke="#6a2a1a" stroke-width="1"/><path d="M108 124l3-2M115 124l-3-2" stroke="#5a2e14" stroke-width="1.2"/></g>'+
+  '<g class="cm-vibx"><path d="M84 122l-8-4M82 130l-10 0M84 138l-8 4" stroke="#d9483b" stroke-width="2" stroke-linecap="round"/></g>'+
+  // หญิง
+  '<g transform="translate(0 24)">'+B(46,'#2e6a8a','#e8b896')+W(46,86,1,'firm')+'</g><path d="M66 148q8-14 14-30" stroke="#2e6a8a" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="80" cy="117" r="3.6" fill="#e8b896"/>';},
  // [ภาพประกอบนิทาน ห้องตรวจโรงพยาบาล ผนังฟ้าอ่อน ม่านเขียว เตียงขาว] ซ้าย: ใบเสร็จค่ารักษายาว ขวา: ชายแขนเข้าเฝือกนั่งบนเตียงหน้าครุ่นคิด (น้องม้วนกลาง)
  tdbill:function(k){
   var W=function(x,y,s,f){var e=f==='tired'?'<path d="M-11 -1.6q3-1.6 6 .2M5 -1.4q3-1.8 6-.2" stroke="#5a4636" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M-10.4 3q2.6 2.4 5.2 0M4.6 3q2.6 2.4 5.2 0" stroke="#5a4636" stroke-width="1.4" fill="none" stroke-linecap="round"/><path d="M-3.6 12q3.6 2.8 7.2 0" stroke="#b0503a" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
