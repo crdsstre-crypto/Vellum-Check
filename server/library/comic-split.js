@@ -43,10 +43,11 @@ export function mountComic(app, publicDir) {
     } catch (e) {
       console.error('[comic] แยกไฟล์ไม่สำเร็จ ส่งไฟล์เต็มแทน:', e.message);
       globalThis.__vcComicErr = e.message;
-      src = new Map(); core = text;
-      // ส่งไฟล์เต็มแทน: แนบภาพช่องการ์ตูนจากไฟล์แยกรายเรื่องต่อท้ายด้วย ไม่งั้นเรื่องใหม่จะไม่มีภาพ
-      if (parts.src.size) core += '\n(function(){var C=window.VCComic;if(!C||!C.add)return;var h=C._h||{},I=h.I,coins=h.coins,bg=h.bg,desk=h.desk,spark=h.spark,person=h.person;\nC.add({' +
-        [...parts.src].map(([n, f]) => JSON.stringify(n) + ':' + f).join(',\n') + '});})();\n';
+      // ส่งไฟล์เต็มเป็นแกน แต่ภาพของเรื่องใหม่ (ไฟล์แยกรายเรื่อง) ยังส่งผ่าน /guide-comic-scenes.js เหมือนเดิม
+      //   → เพิ่มเรื่องใหม่แล้วแกนไม่เปลี่ยน แคชในเครื่องผู้ใช้ไม่ค้างภาพเก่า
+      src = new Map(parts.src); helpers = ['I', 'coins', 'bg', 'desk', 'spark', 'person'];
+      const th = crypto.createHash('sha1').update(text).digest('hex').slice(0, 10);
+      core = text + `\nwindow.VCComic && (window.VCComic.ver = ${JSON.stringify(th + '-' + hash)});\n`;
     }
     zcache.clear();
     st = { mtime: m, hash, core, src, helpers };
