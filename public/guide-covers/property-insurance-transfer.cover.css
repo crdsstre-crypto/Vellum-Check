@@ -1,0 +1,5 @@
+/* ปกแบบ "policyribbon" = ภาพในกรอบน้ำเงินกรมธรรม์ มีริบบิ้นสีทองพาดแนวตั้งที่ขอบขวาและปลายริบบิ้นตัดเป็นหางนกนางแอ่นยื่นลงใต้กรอบ พร้อมดาวทองเล็กบนริบบิ้น (คู่มือ property-insurance-transfer) */
+.gd-cover[data-layout="policyribbon"] .gd-cover-art { overflow: visible; border: 4px solid #2f5aa8; border-radius: 8px; box-shadow: 0 6px 14px rgba(20,40,90,.22); }
+.gd-cover[data-layout="policyribbon"] .gd-cover-art .gd-scene { border-radius: 4px; }
+.gd-cover[data-layout="policyribbon"] .gd-cover-art::before { content: ""; position: absolute; right: 12px; top: -4px; bottom: -14px; width: 14px; z-index: 3; pointer-events: none; background: linear-gradient(90deg, #d8a82a, #f6d45a 50%, #d8a82a); clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 7px), 0 100%); box-shadow: 0 1px 2px rgba(0,0,0,.2); }
+.gd-cover[data-layout="policyribbon"] .gd-cover-art::after { content: "★"; position: absolute; right: 13px; top: 8px; z-index: 4; pointer-events: none; width: 12px; text-align: center; font: 900 10px/1 sans-serif; color: #fffdf0; }
