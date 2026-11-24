@@ -1,0 +1,5 @@
+/* ปกแบบ "ledgerspine" = สมุดบัญชีปกหนังสีเขียวเข้ม สันซ้ายหนามีแถบหนังคาดสีทองสองเส้น มุมขวาบนมีมุมโลหะทองเหลือง (คู่มือ estate-dispute-heirs) */
+.gd-cover[data-layout="ledgerspine"] .gd-cover-art { overflow: visible; padding: 7px 7px 7px 18px; border-radius: 4px 8px 8px 4px; background: linear-gradient(90deg, #1e3a2c 0 12px, #2e5240 12px); box-shadow: 0 6px 14px rgba(20,40,30,.3); }
+.gd-cover[data-layout="ledgerspine"] .gd-cover-art .gd-scene { border-radius: 3px; }
+.gd-cover[data-layout="ledgerspine"] .gd-cover-art::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 12px; z-index: 3; pointer-events: none; background: linear-gradient(180deg, transparent 18%, #c9a040 18% 22%, transparent 22% 78%, #c9a040 78% 82%, transparent 82%); }
+.gd-cover[data-layout="ledgerspine"] .gd-cover-art::after { content: ""; position: absolute; right: -2px; top: -2px; width: 16px; height: 16px; z-index: 3; pointer-events: none; background: linear-gradient(225deg, #d8b45a 50%, transparent 50%); border-top-right-radius: 6px; }
