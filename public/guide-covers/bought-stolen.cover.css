@@ -1,0 +1,5 @@
+/* ปกแบบ "ropeborder" = กรอบเชือกป่านบิดเกลียว ลายเฉียงสีน้ำตาลอ่อนสลับเข้ม มีปมเชือกที่มุมซ้ายล่าง และป้ายกระดาษผูกเชือกที่มุมขวาบน (คู่มือ bought-stolen) */
+.gd-cover[data-layout="ropeborder"] .gd-cover-art { overflow: visible; padding: 8px; border-radius: 10px; background: repeating-linear-gradient(-45deg, #d8b27a 0 4px, #a8804a 4px 7px); box-shadow: 0 6px 16px rgba(60,40,20,.25); }
+.gd-cover[data-layout="ropeborder"] .gd-cover-art .gd-scene { border-radius: 4px; }
+.gd-cover[data-layout="ropeborder"] .gd-cover-art::before { content: ""; position: absolute; left: -6px; bottom: -6px; width: 18px; height: 18px; z-index: 3; pointer-events: none; border-radius: 50%; background: radial-gradient(circle at 40% 40%, #e8c48a, #8a6430 70%); box-shadow: 0 2px 3px rgba(0,0,0,.25); }
+.gd-cover[data-layout="ropeborder"] .gd-cover-art::after { content: ""; position: absolute; right: -8px; top: -6px; width: 22px; height: 14px; z-index: 3; pointer-events: none; background: #fbf3df; border: 1px solid #c9a870; border-radius: 2px 6px 6px 2px; transform: rotate(18deg); box-shadow: 0 2px 3px rgba(0,0,0,.2); }
