@@ -1,0 +1,5 @@
+/* ปกแบบ "feltedge" = กรอบผ้าสักหลาดสีเขียวเข้มมีขอบไม้มะฮอกกานีโค้งมน ด้านในมีเส้นทองบางรอบ และป้าย "STOP" แปดเหลี่ยมสีแดงเล็กมุมขวาบน (คู่มือ gambling-debt) */
+.gd-cover[data-layout="feltedge"] .gd-cover-art { overflow: visible; padding: 9px; border-radius: 16px; background: radial-gradient(ellipse at 50% 40%, #3e8a5e, #1e4a32); border: 5px solid #6a3420; box-shadow: inset 0 0 0 1.5px #c9a040, 0 6px 16px rgba(20,10,5,.35); }
+.gd-cover[data-layout="feltedge"] .gd-cover-art .gd-scene { border-radius: 8px; }
+.gd-cover[data-layout="feltedge"] .gd-cover-art::before { content: ""; position: absolute; inset: 3px; z-index: 3; pointer-events: none; border-radius: 10px; border: 1px solid rgba(201,160,64,.7); }
+.gd-cover[data-layout="feltedge"] .gd-cover-art::after { content: "STOP"; position: absolute; right: -10px; top: -12px; width: 28px; height: 28px; z-index: 4; pointer-events: none; font: 900 7px/28px sans-serif; text-align: center; color: #fff; background: #d9483b; clip-path: polygon(30% 0, 70% 0, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0 70%, 0 30%); }
