@@ -1,0 +1,5 @@
+/* ปกแบบ "spiralringtop" = ภาพในกรอบแบบสมุดบัญชีออมทรัพย์ของเด็กสีชมพูพาสเทล มีห่วงเกลียวโลหะสีเงินเรียงเป็นแถวพาดตามขอบบน และป้ายเล็ก "ของลูก" สีม่วงที่มุมล่างขวา (คู่มือ child-property-parents) */
+.gd-cover[data-layout="spiralringtop"] .gd-cover-art { overflow: visible; border: 5px solid #f2a8c4; border-top-width: 12px; border-radius: 6px 6px 12px 12px; box-shadow: 0 6px 14px rgba(120,40,80,.2); }
+.gd-cover[data-layout="spiralringtop"] .gd-cover-art .gd-scene { border-radius: 2px 2px 7px 7px; }
+.gd-cover[data-layout="spiralringtop"] .gd-cover-art::before { content: ""; position: absolute; left: 8px; right: 8px; top: -18px; height: 14px; z-index: 3; pointer-events: none; background: radial-gradient(ellipse 4px 6px at 50% 50%, transparent 2.4px, #c8d0d8 2.8px 4.2px, transparent 4.6px) 0 0/12px 14px repeat-x; filter: drop-shadow(0 1px 1px rgba(0,0,0,.25)); }
+.gd-cover[data-layout="spiralringtop"] .gd-cover-art::after { content: "ของลูก"; position: absolute; right: 6px; bottom: 6px; z-index: 3; pointer-events: none; padding: 3px 7px; font: 900 9px/1 sans-serif; color: #fff; background: #8a5ac0; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,.2); }
