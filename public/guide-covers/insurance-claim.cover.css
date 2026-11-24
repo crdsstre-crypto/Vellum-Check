@@ -1,0 +1,5 @@
+/* ปกแบบ "umbrellascallop" = ชายร่มด้านบนเป็นครึ่งวงกลมสีแดงสลับขาวต่อเนื่องเหนือภาพ กรอบสีครีม และหยดน้ำสีฟ้าเล็ก ๆ มุมล่างขวา (คู่มือ insurance-claim) */
+.gd-cover[data-layout="umbrellascallop"] .gd-cover-art { overflow: visible; padding: 7px; border-radius: 6px; background: #fbf4e6; box-shadow: 0 6px 16px rgba(80,30,30,.22); }
+.gd-cover[data-layout="umbrellascallop"] .gd-cover-art .gd-scene { border-radius: 3px; }
+.gd-cover[data-layout="umbrellascallop"] .gd-cover-art::before { content: ""; position: absolute; left: 0; right: 0; top: -8px; height: 10px; z-index: 3; pointer-events: none; background: radial-gradient(circle at 7px 10px, #d9483b 6.5px, transparent 7px) 0 0/28px 10px repeat-x, radial-gradient(circle at 21px 10px, #fff 6.5px, transparent 7px) 0 0/28px 10px repeat-x; }
+.gd-cover[data-layout="umbrellascallop"] .gd-cover-art::after { content: ""; position: absolute; right: -4px; bottom: -6px; width: 11px; height: 14px; z-index: 4; pointer-events: none; background: #6ab0e0; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; clip-path: polygon(50% 0, 100% 60%, 85% 100%, 15% 100%, 0 60%); box-shadow: inset -2px -2px 0 rgba(0,0,0,.12); }
