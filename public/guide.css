@@ -1097,6 +1097,11 @@
 .gd-cover[data-layout="chequeedge"] .gd-cover-art::before { content: ""; position: absolute; left: -11px; top: 4px; bottom: 4px; width: 0; z-index: 3; pointer-events: none; border-left: 2px dashed #e8f6f0; }
 .gd-cover[data-layout="chequeedge"] .gd-cover-art::after { content: "฿ ______"; position: absolute; right: -12px; bottom: -10px; z-index: 3; pointer-events: none; padding: 3px 8px; font: 900 11px/1.2 sans-serif; color: #2e8a6e; background: #e8f6f0; border: 2px solid #2e8a6e; border-radius: 3px; transform: rotate(-4deg); box-shadow: 0 2px 4px rgba(0,0,0,.18); }
 
+/* ปกแบบ "cornertape" = เทปกั้นเขตลายทางเหลืองดำพาดทแยงมุมขวาบน มีข้อความ "บังคับคดี" บนเทป ขอบภาพสีเทาอ่อนหนา (คู่มือ debt-enforcement) */
+.gd-cover[data-layout="cornertape"] .gd-cover-art { overflow: hidden; border: 5px solid #e6e1d8; border-radius: 8px; box-shadow: 0 8px 18px rgba(60,50,40,.22); position: relative; }
+.gd-cover[data-layout="cornertape"] .gd-cover-art .gd-scene { border-radius: 3px; }
+.gd-cover[data-layout="cornertape"] .gd-cover-art::before { content: "บังคับคดี · บังคับคดี"; position: absolute; right: -40px; top: 18px; width: 150px; z-index: 3; pointer-events: none; text-align: center; font: 900 9px/16px sans-serif; color: #2a2a32; letter-spacing: 1px; background: repeating-linear-gradient(45deg, #ffd166 0 10px, #ffe9a0 10px 20px); box-shadow: 0 2px 4px rgba(0,0,0,.25); transform: rotate(40deg); }
+
 /* ปกแบบ "tornticket" = ตั๋วฉีกครึ่ง พื้นครีม ขอบล่างรอยปรุเป็นฟันเลื่อย เส้นประแนวตั้งด้านขวาพร้อมรอยเจาะครึ่งวงกลมบนล่าง (คู่มือ debt-prescription) */
 .gd-cover[data-layout="tornticket"] .gd-cover-art { overflow: visible; padding: 6px 18px 10px 6px; background: #fbf3df; border-radius: 4px; box-shadow: 0 6px 16px rgba(60,40,20,.22); }
 .gd-cover[data-layout="tornticket"] .gd-cover-art .gd-scene { border-radius: 2px; }
