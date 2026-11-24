@@ -1,0 +1,5 @@
+/* ปกแบบ "queueticketstub" = ภาพเป็นบัตรคิวสีเหลืองนวล ขอบซ้ายเป็นรอยปรุครึ่งวงกลมเว้าเรียงลงมา และเลขคิวสีน้ำเงินเข้ม "A1" ติดมุมบนขวา (คู่มือ land-registration-priority) */
+.gd-cover[data-layout="queueticketstub"] .gd-cover-art { overflow: visible; border: 5px solid #fbefc4; border-left-width: 12px; border-radius: 4px; box-shadow: 0 5px 12px rgba(60,60,90,.2); }
+.gd-cover[data-layout="queueticketstub"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="queueticketstub"] .gd-cover-art::before { content: ""; position: absolute; left: -12px; top: 0; bottom: 0; width: 6px; z-index: 3; pointer-events: none; background: radial-gradient(circle at 0 50%, #fff 0 3.5px, transparent 4px) 0 0 / 6px 12px repeat-y; }
+.gd-cover[data-layout="queueticketstub"] .gd-cover-art::after { content: "A1"; position: absolute; right: -8px; top: -10px; z-index: 4; pointer-events: none; padding: 2px 6px; border-radius: 5px; background: #2a3a5a; color: #f2c94c; font: 900 11px/1.2 sans-serif; box-shadow: 0 2px 4px rgba(0,0,0,.25); }
