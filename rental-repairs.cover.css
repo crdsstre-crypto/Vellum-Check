@@ -1,0 +1,5 @@
+/* ปกแบบ "paintrollerstripe" = ภาพในกรอบสีขาวนวล มีแถบรอยลูกกลิ้งทาสีสีเขียวมิ้นต์พาดเฉียงที่มุมล่างซ้าย ขอบแถบเป็นเส้นหยัก และลูกกลิ้งทาสีเล็กวางที่ปลายแถบ (คู่มือ rental-repairs) */
+.gd-cover[data-layout="paintrollerstripe"] .gd-cover-art { overflow: visible; border: 5px solid #fbf6ec; border-radius: 8px; box-shadow: 0 0 0 1px #e8dcc8, 0 6px 14px rgba(80,60,40,.18); }
+.gd-cover[data-layout="paintrollerstripe"] .gd-cover-art .gd-scene { border-radius: 3px; }
+.gd-cover[data-layout="paintrollerstripe"] .gd-cover-art::before { content: ""; position: absolute; left: -14px; bottom: 10px; width: 70px; height: 14px; z-index: 3; pointer-events: none; background: #7ad0b4; opacity: .9; transform: rotate(-24deg); border-radius: 3px 8px 6px 3px; }
+.gd-cover[data-layout="paintrollerstripe"] .gd-cover-art::after { content: ""; position: absolute; left: 40px; bottom: 26px; width: 16px; height: 8px; z-index: 4; pointer-events: none; background: #4ab894; border-radius: 3px; box-shadow: 7px 6px 0 -2px #8a6a4a; transform: rotate(-24deg); }
