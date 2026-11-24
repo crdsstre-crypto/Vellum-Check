@@ -1,0 +1,4 @@
+/* ปกแบบ "lacecurtain" = กรอบสีครีมนวล ขอบบนเป็นผ้าลูกไม้โค้งเป็นคลื่นกลมเล็ก ๆ ลายรูโปร่งสองแถว และขอบล่างเรียบสีชมพูอ่อน (คู่มือ elder-parent-support) */
+.gd-cover[data-layout="lacecurtain"] .gd-cover-art { overflow: visible; padding: 16px 8px 8px; border-radius: 6px; background: linear-gradient(180deg, transparent 0 0), radial-gradient(circle at 6px 0, #fffaf2 0 6px, transparent 6.4px) 0 0/12px 8px repeat-x, radial-gradient(circle, #e8d8c4 0 1.2px, transparent 1.6px) 3px 9px/6px 4px repeat-x, #fffaf2; box-shadow: inset 0 -4px 0 #f6d8d8, 0 6px 14px rgba(90,60,40,.2); }
+.gd-cover[data-layout="lacecurtain"] .gd-cover-art .gd-scene { border-radius: 4px; }
+.gd-cover[data-layout="lacecurtain"] .gd-cover-art::before { content: ""; position: absolute; left: 0; right: 0; top: -5px; height: 8px; z-index: 3; pointer-events: none; background: radial-gradient(circle at 6px 8px, #fffaf2 0 5.6px, #e8d8c4 6px 6.6px, transparent 7px) 0 0/12px 8px repeat-x; }
