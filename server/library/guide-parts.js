@@ -13,10 +13,33 @@ import crypto from 'node:crypto';
 const DIRS = { panels: ['guide-panels', '.panels.js'], cards: ['guide-cards', '.card.js'], covers: ['guide-covers', '.cover.css'] };
 const NAME = /^[a-z0-9]{1,40}$/;
 
+// หาไฟล์ตามนามสกุลทั้งในโฟลเดอร์หลัก (public/guide-panels ฯลฯ) และที่อื่นในโปรเจกต์ (ลึกไม่เกิน 3 ชั้น) — กันอัปโหลดผิดโฟลเดอร์แล้วภาพหาย
+const SKIP = new Set(['node_modules', '.git', 'videos', 'fonts', 'img', 'images']);
+let scanMemo = { at: 0, root: '', files: [] };
+function scanAll(root) {
+  const now = Date.now();
+  if (scanMemo.root === root && now - scanMemo.at < 5000) return scanMemo.files;
+  const out = [];
+  const walk = (dir, depth) => {
+    let ents; try { ents = fs.readdirSync(dir, { withFileTypes: true }); } catch { return; }
+    for (const e of ents) {
+      if (e.isDirectory()) { if (depth < 3 && !SKIP.has(e.name) && !e.name.startsWith('.')) walk(path.join(dir, e.name), depth + 1); }
+      else if (/\.(panels\.js|card\.js|cover\.css)$/.test(e.name)) out.push(path.join(dir, e.name));
+    }
+  };
+  walk(root, 0);
+  scanMemo = { at: now, root, files: out };
+  return out;
+}
 export function listParts(publicDir, kind) {
-  const [d, ext] = DIRS[kind], dir = path.join(publicDir, d);
-  let fl; try { fl = fs.readdirSync(dir).filter(f => f.endsWith(ext)).sort(); } catch { return { sig: '', files: [] }; }
-  const files = fl.map(f => { const p = path.join(dir, f); return { file: f, path: p, mtime: fs.statSync(p).mtimeMs }; });
+  const ext = DIRS[kind][1], seen = new Set(), files = [];
+  for (const p of scanAll(path.join(publicDir, '..'))) {
+    const f = path.basename(p);
+    if (!f.endsWith(ext) || seen.has(f)) continue;   // ชื่อซ้ำ ใช้ไฟล์แรกที่เจอ
+    seen.add(f);
+    try { files.push({ file: f, path: p, mtime: fs.statSync(p).mtimeMs }); } catch {}
+  }
+  files.sort((a, b) => a.file.localeCompare(b.file));
   return { sig: files.map(x => x.file + ':' + x.mtime).join('|'), files };
 }
 const readAll = l => l.files.map(x => ({ ...x, text: fs.readFileSync(x.path, 'utf8') }));
@@ -74,5 +97,14 @@ export function mountParts(app, publicDir) {
     res.end(req.method === 'HEAD' ? undefined : b);
   });
   route('/guide-cards.js', 'cards', 'text/javascript; charset=utf-8');
+  // ตรวจว่าเซิร์ฟเวอร์เห็นไฟล์แยกไฟล์ไหนบ้าง: เปิด /guide-parts-status ในเบราว์เซอร์
+  app.get('/guide-parts-status', (req, res) => {
+    const root = path.join(publicDir, '..'), rel = p => path.relative(root, p);
+    const o = {};
+    for (const k of Object.keys(DIRS)) o[k] = listParts(publicDir, k).files.map(x => rel(x.path));
+    o.names = partNames(publicDir);
+    res.setHeader('Content-Type', 'application/json; charset=utf-8'); res.setHeader('Cache-Control', 'no-store');
+    res.end(JSON.stringify(o, null, 2));
+  });
   route('/guide-covers.css', 'covers', 'text/css; charset=utf-8');
 }
