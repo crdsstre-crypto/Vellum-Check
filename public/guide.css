@@ -1165,6 +1165,11 @@
 .gd-cover[data-layout="rivetplate"] .gd-cover-art .gd-scene { border-radius: 2px; }
 .gd-cover[data-layout="rivetplate"] .gd-cover-art::before { content: ""; position: absolute; inset: -5px; z-index: 3; pointer-events: none; background: radial-gradient(circle at 3px 3px, #eef2f6 0 1.2px, #7a848e 1.6px 3.2px, transparent 3.6px) 0 0 / 100% 100% no-repeat, radial-gradient(circle at calc(100% - 3px) 3px, #eef2f6 0 1.2px, #7a848e 1.6px 3.2px, transparent 3.6px), radial-gradient(circle at 3px calc(100% - 3px), #eef2f6 0 1.2px, #7a848e 1.6px 3.2px, transparent 3.6px), radial-gradient(circle at calc(100% - 3px) calc(100% - 3px), #eef2f6 0 1.2px, #7a848e 1.6px 3.2px, transparent 3.6px); }
 
+/* ปกแบบ "arrowloop" = ภาพในกรอบสีเขียวมิ้นต์อ่อนมุมมน และป้ายวงกลมสีเขียวเข้มที่มุมซ้ายล่าง มีลูกศรหมุนวนสีขาวอยู่ข้างใน (คู่มือ debt-novation) */
+.gd-cover[data-layout="arrowloop"] .gd-cover-art { overflow: visible; border: 5px solid #cdeedd; border-radius: 14px; box-shadow: 0 0 0 1px #a8d8be, 0 7px 14px rgba(20,60,40,.2); }
+.gd-cover[data-layout="arrowloop"] .gd-cover-art .gd-scene { border-radius: 9px; }
+.gd-cover[data-layout="arrowloop"] .gd-cover-art::after { content: "⟳"; position: absolute; left: -12px; bottom: -12px; width: 34px; height: 34px; z-index: 3; pointer-events: none; display: flex; align-items: center; justify-content: center; font: 900 20px/1 sans-serif; color: #fff; background: #2e8a6e; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,.25); }
+
 /* ปกแบบ "tornticket" = ตั๋วฉีกครึ่ง พื้นครีม ขอบล่างรอยปรุเป็นฟันเลื่อย เส้นประแนวตั้งด้านขวาพร้อมรอยเจาะครึ่งวงกลมบนล่าง (คู่มือ debt-prescription) */
 .gd-cover[data-layout="tornticket"] .gd-cover-art { overflow: visible; padding: 6px 18px 10px 6px; background: #fbf3df; border-radius: 4px; box-shadow: 0 6px 16px rgba(60,40,20,.22); }
 .gd-cover[data-layout="tornticket"] .gd-cover-art .gd-scene { border-radius: 2px; }
