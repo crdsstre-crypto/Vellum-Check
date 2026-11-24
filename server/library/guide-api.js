@@ -25,6 +25,7 @@ const PANEL_SCENES = ['pay', 'gfdeed', 'gfdinner', 'gfelder', 'gfcourt', 'sdbuy'
 // ชื่อจากไฟล์แยกรายเรื่อง (public/guide-panels · guide-cards · guide-covers) เพิ่มให้อัตโนมัติ
 const PARTS = partNames(path.join(__dirname, '..', '..', 'public'));
 PANEL_SCENES.push(...PARTS.panels);
+console.log(`[guide-parts] ไฟล์แยก: ฉาก ${PARTS.panels.length} · การ์ด ${PARTS.cards.length} · ปก ${PARTS.covers.length}`);
 
 function cleanCite(c) {
   const law = str(c?.law, 200), sec = str(c?.sec, 30), label = str(c?.label, 120);
@@ -41,7 +42,8 @@ function cleanGuide(g, file) {
   const sections = arr(g.sections).map(s => ({
     title: str(s?.title, 120),
     // ช่องการ์ตูนต้นหัวข้อ (ไม่บังคับ) · scene ตามที่มีใน public/guide-comic.js · say ใส่ **คำ** เพื่อเน้น
-    panel: s?.panel && PANEL_SCENES.includes(s.panel.scene) ? { scene: s.panel.scene, mood: okMood(s.panel.mood) ? s.panel.mood : 'happy', say: str(s.panel.say, 140),
+    panel: s?.panel && (PANEL_SCENES.includes(s.panel.scene) || /^[a-z0-9]{1,40}$/.test(String(s.panel.scene || '')))   // ฉากจากไฟล์แยกรายเรื่อง: ยอมรับชื่อรูปแบบถูกต้องเสมอ (ภาพที่หาไม่เจอ หน้าเว็บจะข้ามเอง)
+      ? { scene: s.panel.scene, mood: okMood(s.panel.mood) ? s.panel.mood : 'happy', say: str(s.panel.say, 140),
       layout: ['left', 'right', 'center'].includes(s.panel.layout) ? s.panel.layout : 'left', bubble: ['talk', 'think', 'shout', 'caption'].includes(s.panel.bubble) ? s.panel.bubble : 'talk' } : null,
     items: arr(s?.items).map(it => ({ q: str(it?.q, 200), a: str(it?.a, 1200), cite: arr(it?.cite).map(cleanCite).filter(Boolean).slice(0, 4) }))
       .filter(it => it.q && it.a),
