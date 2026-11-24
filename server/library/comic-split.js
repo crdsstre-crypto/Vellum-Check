@@ -25,7 +25,8 @@ export function mountComic(app, publicDir) {
     // ภาพช่องการ์ตูนของเรื่องใหม่อยู่ใน public/guide-panels/*.panels.js (ดู guide-parts.js) รวมเข้ามาด้วย
     const m = fs.statSync(SRC).mtimeMs + '|' + listParts(publicDir, 'panels').sig;
     if (st && st.mtime === m) return st;
-    const text = fs.readFileSync(SRC, 'utf8'), parts = panelSources(publicDir);
+    // อัปโหลดผ่าน GitHub บางครั้งได้บรรทัดแบบ CRLF ทำให้หา \n};\nvar BG={ ไม่เจอ → แปลงเป็น LF ก่อน
+    const text = fs.readFileSync(SRC, 'utf8').replace(/\r\n/g, '\n'), parts = panelSources(publicDir);
     const hash = crypto.createHash('sha1').update(text).update(parts.text).digest('hex').slice(0, 10);
     let core = text, src = new Map(), helpers = [];
     try {
@@ -51,7 +52,7 @@ export function mountComic(app, publicDir) {
     }
     zcache.clear();
     st = { mtime: m, hash, core, src, helpers };
-    globalThis.__vcComicState = { at: new Date().toISOString(), mode: src.size ? 'split' : 'full', scenes: src.size, coreKB: Math.round(Buffer.byteLength(core) / 1024), partScenes: [...parts.src.keys()], hash, err: globalThis.__vcComicErr || null, version: 3 };
+    globalThis.__vcComicState = { at: new Date().toISOString(), mode: src.size ? 'split' : 'full', scenes: src.size, coreKB: Math.round(Buffer.byteLength(core) / 1024), partScenes: [...parts.src.keys()], hash, err: globalThis.__vcComicErr || null, version: 4, partErrors: globalThis.__vcPartErr || [] };
     console.log(`[comic] แกน ${(Buffer.byteLength(core) / 1024).toFixed(0)}KB · ${src.size} ฉาก · ver ${hash}`);
     return st;
   }
