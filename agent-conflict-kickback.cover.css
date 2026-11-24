@@ -1,0 +1,5 @@
+/* ปกแบบ "scallopframe" = ภาพในกรอบสีม่วงลาเวนเดอร์ ขอบนอกเป็นลอนครึ่งวงกลมสีม่วงเรียงรอบทั้ง 4 ด้าน เหมือนกรอบแสตมป์หยัก และจุดทองเล็กที่มุมล่างซ้าย (คู่มือ agent-conflict-kickback) */
+.gd-cover[data-layout="scallopframe"] .gd-cover-art { overflow: visible; border: 4px solid #b8a4e0; border-radius: 4px; box-shadow: 0 5px 12px rgba(90,60,140,.2); }
+.gd-cover[data-layout="scallopframe"] .gd-cover-art .gd-scene { border-radius: 1px; }
+.gd-cover[data-layout="scallopframe"] .gd-cover-art::before { content: ""; position: absolute; inset: -9px; z-index: -1; pointer-events: none; background: radial-gradient(circle, #b8a4e0 4px, transparent 4.5px) 0 0 / 10px 10px; -webkit-mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); padding: 5px; }
+.gd-cover[data-layout="scallopframe"] .gd-cover-art::after { content: ""; position: absolute; left: -8px; bottom: -8px; width: 16px; height: 16px; z-index: 4; pointer-events: none; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fbe38a, #d4a62a); box-shadow: 0 1px 3px rgba(0,0,0,.25); }
