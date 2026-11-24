@@ -1,0 +1,5 @@
+/* ปกแบบ "halfsplitframe" = ภาพในกรอบสองสี ครึ่งซ้ายส้มพีช ครึ่งขวาฟ้า ต่อกันตรงกลางขอบบนและล่าง มีรอยเส้นประแนวตั้งกลางภาพจาง ๆ เหมือนแบ่งครึ่ง (คู่มือ co-owned-property) */
+.gd-cover[data-layout="halfsplitframe"] .gd-cover-art { overflow: visible; border: 5px solid transparent; border-radius: 12px; background: linear-gradient(90deg, #f2a26a 50%, #6aa8e0 50%) border-box; box-shadow: 0 6px 14px rgba(40,40,80,.2); }
+.gd-cover[data-layout="halfsplitframe"] .gd-cover-art .gd-scene { border-radius: 7px; }
+.gd-cover[data-layout="halfsplitframe"] .gd-cover-art::before { content: ""; position: absolute; left: 50%; top: -5px; bottom: -5px; width: 0; z-index: 3; pointer-events: none; border-left: 2px dashed rgba(255,255,255,.75); }
+.gd-cover[data-layout="halfsplitframe"] .gd-cover-art::after { content: "½"; position: absolute; left: 50%; bottom: -12px; z-index: 4; pointer-events: none; width: 22px; height: 22px; margin-left: -11px; display: flex; align-items: center; justify-content: center; font: 900 12px/1 sans-serif; color: #2a3a5a; background: #fffdf6; border-radius: 50%; box-shadow: 0 2px 3px rgba(0,0,0,.2); }
