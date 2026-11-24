@@ -1,0 +1,6 @@
+/* ปกแบบ "barterloop" = ภาพในกรอบสองสีไล่เฉียง เขียวสะระแหน่มุมบนซ้ายไปส้มพีชมุมล่างขวา มีลูกศรโค้งวนสองอันสีเขียวและส้มเกาะที่มุมบนขวาและมุมล่างซ้ายเหมือนกำลังสลับของกัน (คู่มือ swap-trade) */
+.gd-cover[data-layout="barterloop"] .gd-cover-art { overflow: visible; border: 5px solid transparent; border-radius: 16px; background: linear-gradient(135deg, #5ac49a, #f2a26a) border-box; box-shadow: 0 6px 14px rgba(40,60,40,.2); }
+.gd-cover[data-layout="barterloop"] .gd-cover-art .gd-scene { border-radius: 11px; }
+.gd-cover[data-layout="barterloop"] .gd-cover-art::before, .gd-cover[data-layout="barterloop"] .gd-cover-art::after { content: ""; position: absolute; width: 22px; height: 22px; z-index: 3; pointer-events: none; border: 4px solid; border-radius: 50%; border-left-color: transparent !important; }
+.gd-cover[data-layout="barterloop"] .gd-cover-art::before { right: -10px; top: -10px; border-color: #2e8a6e; transform: rotate(20deg); background: radial-gradient(circle at 100% 50%, #2e8a6e 0 3px, transparent 3.5px); }
+.gd-cover[data-layout="barterloop"] .gd-cover-art::after { left: -10px; bottom: -10px; border-color: #e58a3a; transform: rotate(200deg); background: radial-gradient(circle at 100% 50%, #e58a3a 0 3px, transparent 3.5px); }
