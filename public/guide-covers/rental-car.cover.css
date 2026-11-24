@@ -1,0 +1,5 @@
+/* ปกแบบ "filmstripedge" = กรอบแถบฟิล์มสีดำ มีรูหนามเตยสี่เหลี่ยมมนเรียงบนล่าง และหมายเลขเฟรม "35" สีส้มมุมขวาล่าง (คู่มือ rental-car) */
+.gd-cover[data-layout="filmstripedge"] .gd-cover-art { overflow: visible; padding: 14px 6px; border-radius: 4px; background: #1c1c22; box-shadow: 0 6px 16px rgba(0,0,0,.3); }
+.gd-cover[data-layout="filmstripedge"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="filmstripedge"] .gd-cover-art::before { content: ""; position: absolute; left: 4px; right: 4px; top: 3px; bottom: 3px; z-index: 3; pointer-events: none; background: linear-gradient(90deg, #f4efe4 0 6px, transparent 6px 12px) 0 0/12px 7px repeat-x, linear-gradient(90deg, #f4efe4 0 6px, transparent 6px 12px) 0 100%/12px 7px repeat-x; border-radius: 1px; }
+.gd-cover[data-layout="filmstripedge"] .gd-cover-art::after { content: "35"; position: absolute; right: 8px; bottom: -1px; z-index: 4; pointer-events: none; font: 900 9px/14px sans-serif; color: #f29a3a; }
