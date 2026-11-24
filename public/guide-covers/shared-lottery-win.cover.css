@@ -1,0 +1,5 @@
+/* ปกแบบ "lotterystrip" = แถบสลากสีเขียวพาดขอบบนมีเลขรางวัลลายจุดเรียงซ้ำ ขอบล่างเป็นรอยฉีกปรุตามเส้นจุด และดาวทองมุมขวาล่าง (คู่มือ shared-lottery-win) */
+.gd-cover[data-layout="lotterystrip"] .gd-cover-art { overflow: visible; padding: 16px 8px 10px; border-radius: 6px; background: linear-gradient(180deg, #2e8a5e 0 10px, #fffaf0 10px); box-shadow: 0 6px 14px rgba(20,70,40,.22), inset 0 -2px 0 #e8dcc0; }
+.gd-cover[data-layout="lotterystrip"] .gd-cover-art .gd-scene { border-radius: 3px; }
+.gd-cover[data-layout="lotterystrip"] .gd-cover-art::before { content: ""; position: absolute; left: 6px; right: 6px; top: 2px; height: 6px; z-index: 3; pointer-events: none; background: radial-gradient(circle, #fde9b0 0 1.6px, transparent 2px) 0 0/8px 6px repeat-x; }
+.gd-cover[data-layout="lotterystrip"] .gd-cover-art::after { content: ""; position: absolute; right: -6px; bottom: -6px; width: 22px; height: 22px; z-index: 3; pointer-events: none; background: #f2c94c; clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); filter: drop-shadow(0 2px 2px rgba(120,80,0,.35)); }
