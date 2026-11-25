@@ -1,0 +1,4 @@
+/* ปกแบบ "scalebeamedge" = ภาพในกรอบสีฟ้าน้ำทะเล ใต้ขอบล่างมีคานตาชั่งทองเหลืองยาวพาดพร้อมจานกลมสองข้างห้อยไม่เท่ากัน (คู่มือ unfair-trade-partner) */
+.gd-cover[data-layout="scalebeamedge"] .gd-cover-art { overflow: visible; border: 4px solid #cfe8f0; border-radius: 6px; box-shadow: 0 5px 12px rgba(30,90,120,.22); }
+.gd-cover[data-layout="scalebeamedge"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="scalebeamedge"] .gd-cover-art::after { content: ""; position: absolute; left: 14%; right: 14%; bottom: -14px; height: 14px; z-index: 3; pointer-events: none; background: radial-gradient(ellipse 9px 3.4px at 9px 11px, #c8962a 0 8px, transparent 8.6px), radial-gradient(ellipse 9px 3.4px at calc(100% - 9px) 7px, #c8962a 0 8px, transparent 8.6px), linear-gradient(176deg, transparent 2px, #b8862a 2px 4.4px, transparent 4.4px) 0 0/100% 8px no-repeat; filter: drop-shadow(0 1px 1px rgba(30,60,90,.35)); }
