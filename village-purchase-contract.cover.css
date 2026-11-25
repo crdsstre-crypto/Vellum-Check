@@ -1,0 +1,5 @@
+/* ปกแบบ "blueprintcorner" = ภาพในกรอบสีน้ำเงินพิมพ์เขียวมีเส้นกริดสีฟ้าจาง และมุมล่างขวามีมุมกระดาษพิมพ์เขียวพับเปิดเห็นด้านหลังสีขาว (คู่มือ village-purchase-contract) */
+.gd-cover[data-layout="blueprintcorner"] .gd-cover-art { overflow: visible; border: 6px solid transparent; border-radius: 4px; background: linear-gradient(90deg, rgba(140,180,240,.5) 1px, transparent 1px) 0 0 / 6px 6px border-box, linear-gradient(rgba(140,180,240,.5) 1px, #2e5ab0 1px) 0 0 / 6px 6px border-box; box-shadow: 0 5px 12px rgba(30,60,120,.25); }
+.gd-cover[data-layout="blueprintcorner"] .gd-cover-art .gd-scene { border-radius: 1px; }
+.gd-cover[data-layout="blueprintcorner"] .gd-cover-art::before { content: ""; position: absolute; right: -6px; bottom: -6px; width: 22px; height: 22px; z-index: 4; pointer-events: none; background: linear-gradient(135deg, #f4f6fa 50%, transparent 50%); box-shadow: -2px -2px 3px rgba(0,0,0,.2); clip-path: polygon(0 0, 100% 0, 0 100%); transform: rotate(180deg); }
+.gd-cover[data-layout="blueprintcorner"] .gd-cover-art::after { content: none; }
