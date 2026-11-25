@@ -1,0 +1,5 @@
+/* ปกแบบ "cautionconeedge" = ภาพในกรอบสีเทาอมม่วง มีกรวยจราจรสีส้มคาดแถบขาววางชิดมุมล่างซ้ายนอกกรอบ (คู่มือ building-use-safety) */
+.gd-cover[data-layout="cautionconeedge"] .gd-cover-art { overflow: visible; border: 4px solid #a89ab8; border-radius: 6px; box-shadow: 0 5px 12px rgba(70,60,90,.22); }
+.gd-cover[data-layout="cautionconeedge"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="cautionconeedge"] .gd-cover-art::before { content: ""; position: absolute; left: -12px; bottom: -6px; width: 18px; height: 24px; z-index: 4; pointer-events: none; background: linear-gradient(transparent 0 40%, #fff 40% 52%, transparent 52% 68%, #fff 68% 78%, transparent 78%), #f2843a; clip-path: polygon(40% 0, 60% 0, 100% 100%, 0 100%); filter: drop-shadow(0 2px 2px rgba(0,0,0,.3)); }
+.gd-cover[data-layout="cautionconeedge"] .gd-cover-art::after { content: ""; position: absolute; left: -15px; bottom: -8px; width: 24px; height: 3px; z-index: 4; pointer-events: none; border-radius: 1px; background: #d8641a; }
