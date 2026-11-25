@@ -1,0 +1,6 @@
+/* ปกแบบ "olivesprigedge" = ภาพในกรอบสีครีมเขียวอ่อน มุมซ้ายบนมีกิ่งมะกอกเล็กสองใบเอียงพาดขอบ และมุมขวาล่างมีอีกกิ่งกลับด้าน (คู่มือ customer-mediation) */
+.gd-cover[data-layout="olivesprigedge"] .gd-cover-art { overflow: visible; border: 4px solid #f2f6e6; border-radius: 8px; box-shadow: 0 0 0 1.5px #c8dca8, 0 5px 12px rgba(70,100,40,.2); }
+.gd-cover[data-layout="olivesprigedge"] .gd-cover-art .gd-scene { border-radius: 4px; }
+.gd-cover[data-layout="olivesprigedge"] .gd-cover-art::before, .gd-cover[data-layout="olivesprigedge"] .gd-cover-art::after { content: ""; position: absolute; width: 26px; height: 16px; z-index: 3; pointer-events: none; background: radial-gradient(ellipse 6px 3px at 8px 6px, #6aa04a 0 5.6px, transparent 6px), radial-gradient(ellipse 6px 3px at 18px 10px, #7ab05a 0 5.6px, transparent 6px), linear-gradient(20deg, transparent 46%, #7a5a3a 46% 54%, transparent 54%); }
+.gd-cover[data-layout="olivesprigedge"] .gd-cover-art::before { left: -8px; top: -6px; transform: rotate(-20deg); }
+.gd-cover[data-layout="olivesprigedge"] .gd-cover-art::after { right: -8px; bottom: -6px; transform: rotate(160deg); }
