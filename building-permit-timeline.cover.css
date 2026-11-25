@@ -1,0 +1,4 @@
+/* ปกแบบ "stampcircleedge" = ภาพในกรอบสีทรายอ่อน มุมขวาล่างมีตราประทับวงกลมสีแดงอิฐขอบสองชั้นทับขอบกรอบเหมือนตราอนุญาต (คู่มือ building-permit-timeline) */
+.gd-cover[data-layout="stampcircleedge"] .gd-cover-art { overflow: visible; border: 4px solid #e2d6c2; border-radius: 6px; box-shadow: 0 5px 12px rgba(110,80,40,.2); }
+.gd-cover[data-layout="stampcircleedge"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="stampcircleedge"] .gd-cover-art::after { content: ""; position: absolute; right: 2px; bottom: -12px; width: 26px; height: 26px; z-index: 3; pointer-events: none; border-radius: 50%; border: 2px solid #c8643a; box-shadow: inset 0 0 0 2px #fff8ee, inset 0 0 0 3.5px #c8643a; background: #fff8ee radial-gradient(circle, #c8643a 0 3px, transparent 3.5px); transform: rotate(-12deg); }
