@@ -1,0 +1,4 @@
+/* ปกแบบ "pricetagedge" = ภาพในกรอบสีชมพูอ่อน มุมขวาล่างมีป้ายราคาสีส้มทรงห้าเหลี่ยมมีรูกลมห้อยเอียงอยู่ใต้ขอบกรอบ (คู่มือ trademark-register-basics) */
+.gd-cover[data-layout="pricetagedge"] .gd-cover-art { overflow: visible; border: 4px solid #f2d0d8; border-radius: 6px; box-shadow: 0 5px 12px rgba(140,60,90,.2); }
+.gd-cover[data-layout="pricetagedge"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="pricetagedge"] .gd-cover-art::after { content: ""; position: absolute; right: 10px; bottom: -14px; width: 30px; height: 16px; z-index: 3; pointer-events: none; background: radial-gradient(circle at 8px 8px, #fffafb 0 2.4px, transparent 3px), #e8843a; clip-path: polygon(0 50%, 8px 0, 100% 0, 100% 100%, 8px 100%); transform: rotate(-10deg); filter: drop-shadow(0 1px 1px rgba(140,60,90,.4)); }
