@@ -1,0 +1,6 @@
+/* แก้สระ/วรรณยุกต์ภาษาไทยชนบรรทัดบน (เช่น "ใบอนุญาต" กับ "อยู่ได้กี่ปี") — เพิ่มระยะบรรทัดหัวข้อ ไม่แก้ guide.css · โหลดหลัง guide.css จึงทับได้ */
+.gd-lc h3 { line-height: 1.6; padding-top: 2px; }
+.gd-lc p { line-height: 1.65; }
+.gd-h1, .gd-cover h1 { line-height: 1.55; }
+.gd-lh { line-height: 1.5; }
+.gd-q { line-height: 1.65; }
