@@ -1,0 +1,5 @@
+/* ปกแบบ "doorframetrim" = ภาพในกรอบวงกบประตูไม้สีน้ำตาลเข้ม มุมบนโค้งเล็กน้อย และลูกบิดประตูกลมสีทองยื่นอยู่ที่กลางขอบซ้าย (คู่มือ condo-unit-renovation) */
+.gd-cover[data-layout="doorframetrim"] .gd-cover-art { overflow: visible; border: 6px solid #6a4a32; border-bottom-width: 4px; border-radius: 12px 12px 3px 3px; box-shadow: inset 0 0 0 2px #8a6a4a, 0 5px 12px rgba(70,40,20,.25); }
+.gd-cover[data-layout="doorframetrim"] .gd-cover-art .gd-scene { border-radius: 7px 7px 1px 1px; }
+.gd-cover[data-layout="doorframetrim"] .gd-cover-art::before { content: ""; position: absolute; left: -12px; top: 50%; width: 12px; height: 12px; margin-top: -6px; z-index: 4; pointer-events: none; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff2a8, #d4a62a); box-shadow: 0 2px 2px rgba(0,0,0,.3); }
+.gd-cover[data-layout="doorframetrim"] .gd-cover-art::after { content: ""; position: absolute; left: -8px; top: calc(50% + 10px); width: 5px; height: 8px; z-index: 3; pointer-events: none; border-radius: 1px; background: #8a6a4a; }
