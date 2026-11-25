@@ -1,0 +1,4 @@
+/* ปกแบบ "polaroidcornersedge" = ภาพแบบรูปโพลารอยด์ขอบขาว ขอบล่างหนากว่า มีมุมติดรูปสามเหลี่ยมสีดำสองมุมล่าง (คู่มือ copied-photo-music) */
+.gd-cover[data-layout="polaroidcornersedge"] .gd-cover-art { overflow: visible; padding: 5px 5px 14px; border-radius: 3px; background: #fffefa; box-shadow: 0 5px 12px rgba(90,60,40,.24); }
+.gd-cover[data-layout="polaroidcornersedge"] .gd-cover-art .gd-scene { border-radius: 1px; }
+.gd-cover[data-layout="polaroidcornersedge"] .gd-cover-art::after { content: ""; position: absolute; left: -2px; right: -2px; bottom: -2px; height: 13px; z-index: 3; pointer-events: none; background: linear-gradient(45deg, #2a2a32 50%, transparent 50%) 0 100%/13px 13px no-repeat, linear-gradient(-45deg, #2a2a32 50%, transparent 50%) 100% 100%/13px 13px no-repeat; }
