@@ -1,0 +1,5 @@
+/* ปกแบบ "rulertickedge" = ภาพในกรอบสีไม้บรรทัดเหลืองอ่อน ใต้ขอบล่างมีขีดสเกลสีดำยาวสั้นสลับแบบไม้บรรทัดวัดระยะ (คู่มือ long-commercial-lease) */
+.gd-cover[data-layout="rulertickedge"] .gd-cover-art { overflow: visible; border: 4px solid #f2dc8a; border-bottom-width: 12px; border-radius: 4px; box-shadow: 0 5px 12px rgba(120,100,30,.2); }
+.gd-cover[data-layout="rulertickedge"] .gd-cover-art .gd-scene { border-radius: 1px; }
+.gd-cover[data-layout="rulertickedge"] .gd-cover-art::before { content: ""; position: absolute; left: 2px; right: 2px; bottom: -12px; height: 8px; z-index: 3; pointer-events: none; background: linear-gradient(90deg, #3a3a32 1px, transparent 1px) 0 0 / 4px 4px repeat-x, linear-gradient(90deg, #3a3a32 1.2px, transparent 1.2px) 0 0 / 20px 8px repeat-x; }
+.gd-cover[data-layout="rulertickedge"] .gd-cover-art::after { content: none; }
