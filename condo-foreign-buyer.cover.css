@@ -1,0 +1,4 @@
+/* ปกแบบ "airmailstripeedge" = ภาพในกรอบสีฟ้าอมเทา ใต้ขอบล่างฝั่งซ้ายมีแถบลายเฉียงแดงขาวน้ำเงินแบบซองจดหมายต่างประเทศ (คู่มือ condo-foreign-buyer) */
+.gd-cover[data-layout="airmailstripeedge"] .gd-cover-art { overflow: visible; border: 4px solid #d0d8ec; border-radius: 6px; box-shadow: 0 5px 12px rgba(50,70,120,.2); }
+.gd-cover[data-layout="airmailstripeedge"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="airmailstripeedge"] .gd-cover-art::after { content: ""; position: absolute; left: 8px; bottom: -13px; width: 64px; height: 7px; z-index: 3; pointer-events: none; border-radius: 2px; background: repeating-linear-gradient(-45deg, #d9363e 0 5px, #fff 5px 8px, #2e5aa8 8px 13px, #fff 13px 16px); box-shadow: 0 1px 2px rgba(50,70,120,.3); }
