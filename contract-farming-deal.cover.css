@@ -1,0 +1,4 @@
+/* ปกแบบ "hayplankedge" = ภาพในกรอบไม้กระดานสีน้ำผึ้งมีลายเสี้ยนไม้ ขอบล่างมีฟางข้าวสีเหลืองทองโผล่เป็นเส้นสั้น ๆ เรียงกัน (คู่มือ contract-farming-deal) */
+.gd-cover[data-layout="hayplankedge"] .gd-cover-art { overflow: visible; padding: 6px; border-radius: 6px; background: repeating-linear-gradient(90deg, #c8904a 0 3px, #d8a05a 3px 9px, #c08848 9px 11px, #d8a05a 11px 20px); box-shadow: 0 5px 12px rgba(110,70,20,.25); }
+.gd-cover[data-layout="hayplankedge"] .gd-cover-art .gd-scene { border-radius: 3px; }
+.gd-cover[data-layout="hayplankedge"] .gd-cover-art::after { content: ""; position: absolute; left: 4px; right: 4px; bottom: -6px; height: 10px; z-index: 3; pointer-events: none; background: linear-gradient(80deg, transparent 45%, #f2d06a 45% 55%, transparent 55%) 0 0/7px 10px repeat-x, linear-gradient(100deg, transparent 45%, #e0b84a 45% 55%, transparent 55%) 3px 2px/9px 8px repeat-x; }
