@@ -1,0 +1,5 @@
+/* ปกแบบ "ropeknotframe" = ภาพในกรอบเชือกป่านสีน้ำตาลอ่อนลายเกลียวเฉียง และปมเชือกกลมที่มุมบนขวา (คู่มือ abandoned-items-animals) */
+.gd-cover[data-layout="ropeknotframe"] .gd-cover-art { overflow: visible; border: 6px solid transparent; border-radius: 10px; background: repeating-linear-gradient(45deg, #c8a06a 0 3px, #e0c08a 3px 6px) border-box; box-shadow: 0 5px 12px rgba(100,70,30,.22); }
+.gd-cover[data-layout="ropeknotframe"] .gd-cover-art .gd-scene { border-radius: 5px; }
+.gd-cover[data-layout="ropeknotframe"] .gd-cover-art::before { content: ""; position: absolute; right: -12px; top: -12px; width: 22px; height: 22px; z-index: 4; pointer-events: none; border-radius: 50%; background: repeating-conic-gradient(#b8905a 0 30deg, #e0c08a 30deg 60deg); box-shadow: 0 2px 3px rgba(0,0,0,.25); }
+.gd-cover[data-layout="ropeknotframe"] .gd-cover-art::after { content: ""; position: absolute; right: -4px; top: 8px; width: 6px; height: 16px; z-index: 3; pointer-events: none; border-radius: 3px; background: repeating-linear-gradient(45deg, #c8a06a 0 2px, #e0c08a 2px 4px); transform: rotate(-20deg); }
