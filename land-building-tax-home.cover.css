@@ -1,0 +1,5 @@
+/* ปกแบบ "calculatorkeys" = ภาพในกรอบสีเทาเข้มแบบเครื่องคิดเลข ใต้ขอบล่างมีปุ่มสี่เหลี่ยมมนเล็ก ๆ สีเทาอ่อนเรียงหนึ่งแถว ปุ่มขวาสุดเป็นสีส้ม (คู่มือ land-building-tax-home) */
+.gd-cover[data-layout="calculatorkeys"] .gd-cover-art { overflow: visible; border: 5px solid #3a3a46; border-radius: 8px; box-shadow: 0 5px 12px rgba(30,30,40,.25); }
+.gd-cover[data-layout="calculatorkeys"] .gd-cover-art .gd-scene { border-radius: 3px; }
+.gd-cover[data-layout="calculatorkeys"] .gd-cover-art::before { content: ""; position: absolute; left: 2px; right: 18px; bottom: -14px; height: 8px; z-index: 3; pointer-events: none; background: linear-gradient(90deg, #c8c8d0 0 10px, transparent 10px 13px) 0 0 / 13px 8px repeat-x; border-radius: 2px; }
+.gd-cover[data-layout="calculatorkeys"] .gd-cover-art::after { content: ""; position: absolute; right: 2px; bottom: -14px; width: 12px; height: 8px; z-index: 3; pointer-events: none; border-radius: 2px; background: #f2843a; }
