@@ -1,0 +1,5 @@
+/* ปกแบบ "dashedcutline" = ภาพในกรอบขาว มีเส้นประตัดกระดาษสีเทาวิ่งรอบด้านนอกห่างขอบเล็กน้อย และไอคอนกรรไกรสีแดงที่กลางขอบล่าง (คู่มือ co-owner-partition-debts) */
+.gd-cover[data-layout="dashedcutline"] .gd-cover-art { overflow: visible; border: 4px solid #fff; border-radius: 4px; box-shadow: 0 4px 10px rgba(120,70,30,.18); }
+.gd-cover[data-layout="dashedcutline"] .gd-cover-art .gd-scene { border-radius: 1px; }
+.gd-cover[data-layout="dashedcutline"] .gd-cover-art::before { content: ""; position: absolute; inset: -9px; z-index: -1; pointer-events: none; border: 1.6px dashed #9a9aa4; border-radius: 6px; }
+.gd-cover[data-layout="dashedcutline"] .gd-cover-art::after { content: "✂"; position: absolute; left: 50%; bottom: -17px; margin-left: -9px; width: 18px; z-index: 4; pointer-events: none; text-align: center; color: #d9363e; font: 900 15px/16px sans-serif; background: #fff; border-radius: 50%; }
