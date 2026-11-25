@@ -1,0 +1,5 @@
+/* ปกแบบ "fireplanktag" = ภาพในกรอบสีน้ำเงินกรมธรรม์ มุมล่างซ้ายมีป้ายแขวนรูปโล่สีน้ำเงินห้อยเชือกแดง และขอบล่างมีแถบไล่สีส้มแดงจาง ๆ เหมือนแสงเปลวไฟ (คู่มือ secured-insurance-subrogation) */
+.gd-cover[data-layout="fireplanktag"] .gd-cover-art { overflow: visible; border: 4px solid #2e5a98; border-radius: 6px; box-shadow: 0 6px 12px -2px rgba(242,116,58,.45), 0 4px 10px rgba(30,50,100,.2); }
+.gd-cover[data-layout="fireplanktag"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="fireplanktag"] .gd-cover-art::before { content: ""; position: absolute; left: 8px; bottom: -22px; width: 2px; height: 14px; z-index: 3; pointer-events: none; background: #d9363e; }
+.gd-cover[data-layout="fireplanktag"] .gd-cover-art::after { content: ""; position: absolute; left: 0; bottom: -40px; width: 18px; height: 20px; z-index: 4; pointer-events: none; background: linear-gradient(135deg, #4a8ac8, #2e5a98); clip-path: polygon(50% 0, 100% 18%, 100% 55%, 50% 100%, 0 55%, 0 18%); filter: drop-shadow(0 2px 2px rgba(0,0,0,.3)); }
