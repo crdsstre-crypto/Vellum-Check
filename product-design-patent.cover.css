@@ -1,0 +1,4 @@
+/* ปกแบบ "claytexturedge" = ภาพในกรอบดินเผาสีส้มอิฐ มีจุดเม็ดดินเล็ก ๆ กระจายเป็นเนื้อหยาบ และรอยนิ้วกดโค้งสามรอยเรียงที่ขอบล่าง (คู่มือ product-design-patent) */
+.gd-cover[data-layout="claytexturedge"] .gd-cover-art { overflow: visible; padding: 6px 6px 10px; border-radius: 10px; background: radial-gradient(circle, rgba(120,50,20,.25) 0 .8px, transparent 1.2px) 0 0/6px 6px, radial-gradient(circle, rgba(255,230,200,.35) 0 .7px, transparent 1px) 3px 3px/7px 7px, #c8744a; box-shadow: 0 5px 12px rgba(120,50,20,.25); }
+.gd-cover[data-layout="claytexturedge"] .gd-cover-art .gd-scene { border-radius: 6px; }
+.gd-cover[data-layout="claytexturedge"] .gd-cover-art::after { content: ""; position: absolute; left: 50%; bottom: 1px; width: 54px; height: 8px; margin-left: -27px; z-index: 3; pointer-events: none; background: radial-gradient(ellipse 7px 3px at 9px 4px, #a85a34 0 6px, transparent 6.6px) 0 0/18px 8px repeat-x; }
