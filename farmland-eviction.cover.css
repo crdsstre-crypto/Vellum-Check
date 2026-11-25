@@ -1,0 +1,5 @@
+/* ปกแบบ "bamboostalkedge" = ภาพในกรอบสีเขียวไผ่ ขอบซ้ายหนาเป็นลำไม้ไผ่สีเขียวอมเหลืองมีข้อปล้องสีเข้มเป็นระยะ (คู่มือ farmland-eviction) */
+.gd-cover[data-layout="bamboostalkedge"] .gd-cover-art { overflow: visible; border: 4px solid #b8d48a; border-left-width: 11px; border-radius: 4px; box-shadow: 0 5px 12px rgba(70,100,30,.22); }
+.gd-cover[data-layout="bamboostalkedge"] .gd-cover-art .gd-scene { border-radius: 1px; }
+.gd-cover[data-layout="bamboostalkedge"] .gd-cover-art::before { content: ""; position: absolute; left: -11px; top: -4px; bottom: -4px; width: 11px; z-index: 3; pointer-events: none; border-radius: 5px; background: linear-gradient(90deg, #8ab04a, #c8e08a 45%, #8ab04a), #9ac45a; -webkit-mask: none; box-shadow: inset 0 0 0 1px rgba(60,90,20,.3); }
+.gd-cover[data-layout="bamboostalkedge"] .gd-cover-art::after { content: ""; position: absolute; left: -12px; top: 0; bottom: 0; width: 13px; z-index: 4; pointer-events: none; background: linear-gradient(transparent 0 26px, #5a7a2a 26px 28px, transparent 28px) 0 0 / 13px 30px repeat-y; }
