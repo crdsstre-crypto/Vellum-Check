@@ -1,0 +1,5 @@
+/* ปกแบบ "hazardtapeedge" = ภาพในกรอบสีเทาปูน ใต้ขอบล่างมีเทปกั้นเขตลายเฉียงเหลืองดำพาดเอียงเล็กน้อย (คู่มือ home-extension-permit) */
+.gd-cover[data-layout="hazardtapeedge"] .gd-cover-art { overflow: visible; border: 4px solid #c8c4bc; border-radius: 4px; box-shadow: 0 5px 12px rgba(60,60,60,.22); }
+.gd-cover[data-layout="hazardtapeedge"] .gd-cover-art .gd-scene { border-radius: 1px; }
+.gd-cover[data-layout="hazardtapeedge"] .gd-cover-art::before { content: ""; position: absolute; left: -6px; right: -6px; bottom: -14px; height: 9px; z-index: 3; pointer-events: none; background: repeating-linear-gradient(-45deg, #f2c94c 0 6px, #2a2a32 6px 12px); transform: rotate(-1.5deg); box-shadow: 0 1px 2px rgba(0,0,0,.3); }
+.gd-cover[data-layout="hazardtapeedge"] .gd-cover-art::after { content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 3px; z-index: 2; pointer-events: none; background: rgba(0,0,0,.08); }
