@@ -1,0 +1,6 @@
+/* ปกแบบ "gearcogedge" = ภาพในกรอบสีเทาเหล็ก มีเฟืองทองเล็กครึ่งซีกโผล่ที่มุมซ้ายบนและเฟืองฟ้าที่มุมขวาล่าง ฟันเฟืองเป็นซี่รอบวง (คู่มือ employee-invention) */
+.gd-cover[data-layout="gearcogedge"] .gd-cover-art { overflow: visible; border: 4px solid #d8dce4; border-radius: 6px; box-shadow: 0 0 0 1.5px #a8b0bc, 0 5px 12px rgba(40,50,70,.22); }
+.gd-cover[data-layout="gearcogedge"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="gearcogedge"] .gd-cover-art::before, .gd-cover[data-layout="gearcogedge"] .gd-cover-art::after { content: ""; position: absolute; width: 24px; height: 24px; z-index: 3; pointer-events: none; border-radius: 50%; background: radial-gradient(circle, #fff 0 3px, transparent 3.4px), repeating-conic-gradient(var(--g) 0 22.5deg, transparent 22.5deg 45deg); -webkit-mask: radial-gradient(circle, #000 0 12px, transparent 12.5px); mask: radial-gradient(circle, #000 0 12px, transparent 12.5px); }
+.gd-cover[data-layout="gearcogedge"] .gd-cover-art::before { --g: #e8b83a; left: -10px; top: -10px; background-color: transparent; box-shadow: inset 0 0 0 7px #e8b83a; }
+.gd-cover[data-layout="gearcogedge"] .gd-cover-art::after { --g: #5a8ab0; right: -10px; bottom: -10px; box-shadow: inset 0 0 0 7px #5a8ab0; }
