@@ -1,0 +1,4 @@
+/* ปกแบบ "grasstuftedge" = ภาพในกรอบสีเขียวหญ้าแห้ง ใต้ขอบล่างฝั่งซ้ายมีกอหญ้าเล็ก ๆ ยอดแหลมเรียงกันเหมือนหญ้ารกในที่ดินเปล่า (คู่มือ land-tax-vacant-refund) */
+.gd-cover[data-layout="grasstuftedge"] .gd-cover-art { overflow: visible; border: 4px solid #dcd8a8; border-radius: 6px; box-shadow: 0 5px 12px rgba(100,100,40,.2); }
+.gd-cover[data-layout="grasstuftedge"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="grasstuftedge"] .gd-cover-art::after { content: ""; position: absolute; left: 6px; bottom: -14px; width: 66px; height: 11px; z-index: 3; pointer-events: none; background: linear-gradient(to top right, transparent 48%, #8a9a4a 50%) 0 0 / 5px 11px repeat-x, linear-gradient(to top left, transparent 48%, #8a9a4a 50%) 5px 0 / 5px 11px repeat-x; }
