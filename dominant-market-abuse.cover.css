@@ -1,0 +1,4 @@
+/* ปกแบบ "crownstripeedge" = ภาพในกรอบสีกรมท่าเข้ม มีแถบลายทางเฉียงสีทองบางที่ขอบล่าง และมงกุฎทองเล็กเอียงแปะมุมซ้ายบน (คู่มือ dominant-market-abuse) */
+.gd-cover[data-layout="crownstripeedge"] .gd-cover-art { overflow: visible; padding: 5px 5px 10px; border-radius: 6px; background: repeating-linear-gradient(-45deg, #e8b83a 0 3px, #2a3460 3px 7px) 0 100%/100% 6px no-repeat, #2a3460; box-shadow: 0 5px 12px rgba(20,30,70,.3); }
+.gd-cover[data-layout="crownstripeedge"] .gd-cover-art .gd-scene { border-radius: 3px; }
+.gd-cover[data-layout="crownstripeedge"] .gd-cover-art::after { content: ""; position: absolute; left: -6px; top: -9px; width: 22px; height: 15px; z-index: 3; pointer-events: none; background: #e8b83a; clip-path: polygon(0 100%, 0 30%, 25% 60%, 50% 0, 75% 60%, 100% 30%, 100% 100%); transform: rotate(-14deg); filter: drop-shadow(0 1px 1px rgba(60,40,0,.4)); }
