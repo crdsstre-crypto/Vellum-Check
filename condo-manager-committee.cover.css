@@ -1,0 +1,4 @@
+/* ปกแบบ "keytagedge" = ภาพในกรอบสีน้ำเงินอมเทา มุมขวาล่างมีป้ายกุญแจห้องคอนโดสามอันห้อยจากขอบล่าง (คู่มือ condo-manager-committee) */
+.gd-cover[data-layout="keytagedge"] .gd-cover-art { overflow: visible; border: 4px solid #c4d2e4; border-radius: 8px; box-shadow: 0 5px 12px rgba(40,60,100,.2); }
+.gd-cover[data-layout="keytagedge"] .gd-cover-art .gd-scene { border-radius: 4px; }
+.gd-cover[data-layout="keytagedge"] .gd-cover-art::after { content: ""; position: absolute; right: 10px; bottom: -14px; width: 46px; height: 16px; z-index: 3; pointer-events: none; background: radial-gradient(circle at 7px 5px, #fff 0 2px, transparent 2.5px) 0 0 / 16px 16px repeat-x, linear-gradient(#f2c94c, #f2c94c) 2px 0 / 10px 14px no-repeat, linear-gradient(#7ab0e0, #7ab0e0) 18px 0 / 10px 14px no-repeat, linear-gradient(#e88a6a, #e88a6a) 34px 0 / 10px 14px no-repeat; border-radius: 0 0 4px 4px; }
