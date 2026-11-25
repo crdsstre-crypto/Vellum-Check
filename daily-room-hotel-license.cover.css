@@ -1,0 +1,4 @@
+/* ปกแบบ "doorhangeredge" = ภาพในกรอบสีฟ้าอมเขียว มุมขวาล่างมีป้ายแขวนประตูสีเหลืองรูปทรงยาวมีรูกลมด้านบนห้อยลงใต้ขอบกรอบ (คู่มือ daily-room-hotel-license) */
+.gd-cover[data-layout="doorhangeredge"] .gd-cover-art { overflow: visible; border: 4px solid #cce4e2; border-radius: 8px; box-shadow: 0 5px 12px rgba(40,100,100,.2); }
+.gd-cover[data-layout="doorhangeredge"] .gd-cover-art .gd-scene { border-radius: 4px; }
+.gd-cover[data-layout="doorhangeredge"] .gd-cover-art::after { content: ""; position: absolute; right: 12px; bottom: -18px; width: 14px; height: 26px; z-index: 3; pointer-events: none; border-radius: 7px 7px 3px 3px; background: radial-gradient(circle at 7px 6px, #cce4e2 0 3px, transparent 3.5px), #f2c94c; box-shadow: 0 2px 3px rgba(40,100,100,.3); transform: rotate(6deg); }
