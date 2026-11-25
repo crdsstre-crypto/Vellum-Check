@@ -1,0 +1,5 @@
+/* ปกแบบ "bricktopborder" = ภาพในกรอบสีอิฐ ขอบบนหนาเป็นแนวก้อนอิฐสีส้มแดงเรียงสลับแถว มีร่องปูนสีครีม (คู่มือ mixed-materials-ownership) */
+.gd-cover[data-layout="bricktopborder"] .gd-cover-art { overflow: visible; border: 4px solid #b8583a; border-top-width: 14px; border-radius: 4px; box-shadow: 0 5px 12px rgba(120,50,30,.25); }
+.gd-cover[data-layout="bricktopborder"] .gd-cover-art .gd-scene { border-radius: 1px; }
+.gd-cover[data-layout="bricktopborder"] .gd-cover-art::before { content: ""; position: absolute; left: -4px; right: -4px; top: -14px; height: 14px; z-index: 3; pointer-events: none; border-radius: 4px 4px 0 0; background: linear-gradient(#f2e4c8 0 0) 0 6.5px / 100% 1px no-repeat, repeating-linear-gradient(90deg, #c8643a 0 13px, #f2e4c8 13px 14px) 0 0 / 100% 6.5px no-repeat, repeating-linear-gradient(90deg, #d8744a 0 13px, #f2e4c8 13px 14px) 7px 7.5px / 100% 6.5px no-repeat; }
+.gd-cover[data-layout="bricktopborder"] .gd-cover-art::after { content: ""; position: absolute; left: -4px; right: -4px; top: 0; height: 2px; z-index: 3; pointer-events: none; background: rgba(0,0,0,.15); }
