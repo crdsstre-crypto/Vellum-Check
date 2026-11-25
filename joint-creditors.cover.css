@@ -1,0 +1,5 @@
+/* ปกแบบ "puzzletab" = ภาพเป็นชิ้นจิ๊กซอว์สีเหลืองทอง มีปุ่มนูนครึ่งวงกลมยื่นออกที่กลางขอบซ้ายและกลางขอบบน (คู่มือ joint-creditors) */
+.gd-cover[data-layout="puzzletab"] .gd-cover-art { overflow: visible; border: 5px solid #e8b83a; border-radius: 4px; box-shadow: 0 5px 12px rgba(140,100,20,.22); }
+.gd-cover[data-layout="puzzletab"] .gd-cover-art .gd-scene { border-radius: 1px; }
+.gd-cover[data-layout="puzzletab"] .gd-cover-art::before { content: ""; position: absolute; left: -16px; top: 50%; width: 18px; height: 22px; margin-top: -11px; z-index: 3; pointer-events: none; background: #e8b83a; border-radius: 50% 0 0 50%; }
+.gd-cover[data-layout="puzzletab"] .gd-cover-art::after { content: ""; position: absolute; left: 50%; top: -16px; width: 22px; height: 18px; margin-left: -11px; z-index: 3; pointer-events: none; background: #e8b83a; border-radius: 50% 50% 0 0; box-shadow: -60px 30px 0 -4px transparent; }
