@@ -1,0 +1,5 @@
+/* ปกแบบ "notebooklines" = ภาพในกรอบกระดาษสมุดสีขาวมีเส้นบรรทัดสีฟ้าอ่อนแนวนอนในขอบ และเส้นกั้นหน้าสีแดงแนวตั้งที่ขอบซ้าย (คู่มือ student-dorm-deposit) */
+.gd-cover[data-layout="notebooklines"] .gd-cover-art { overflow: visible; border: 7px solid transparent; border-left-width: 12px; border-radius: 4px; background: linear-gradient(90deg, transparent 8px, #e8584a 8px 9.5px, transparent 9.5px) border-box, repeating-linear-gradient(#fff 0 5px, #bcd8f0 5px 6px) border-box; box-shadow: 0 5px 12px rgba(40,70,110,.18); }
+.gd-cover[data-layout="notebooklines"] .gd-cover-art .gd-scene { border-radius: 1px; }
+.gd-cover[data-layout="notebooklines"] .gd-cover-art::before { content: ""; position: absolute; left: -9px; top: 12px; bottom: 12px; width: 4px; z-index: 3; pointer-events: none; background: radial-gradient(circle, #d8d8e0 1.6px, transparent 2px) 0 0 / 4px 16px repeat-y; }
+.gd-cover[data-layout="notebooklines"] .gd-cover-art::after { content: none; }
