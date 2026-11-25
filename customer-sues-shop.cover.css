@@ -1,0 +1,4 @@
+/* ปกแบบ "ticketstubedge" = ภาพในกรอบแบบตั๋วเข้างาน สีครีม มีรอยปรุครึ่งวงกลมเว้าสองข้างกลางขอบซ้ายขวา และเส้นประตัดตั๋วสีแดงจางที่ขอบล่าง (คู่มือ customer-sues-shop) */
+.gd-cover[data-layout="ticketstubedge"] .gd-cover-art { overflow: visible; padding: 6px 6px 12px; border-radius: 8px; background: radial-gradient(circle at 0 50%, transparent 7px, #fbf2e4 7.5px) left/51% 100% no-repeat, radial-gradient(circle at 100% 50%, transparent 7px, #fbf2e4 7.5px) right/51% 100% no-repeat; filter: drop-shadow(0 5px 8px rgba(120,60,50,.22)); }
+.gd-cover[data-layout="ticketstubedge"] .gd-cover-art .gd-scene { border-radius: 4px; }
+.gd-cover[data-layout="ticketstubedge"] .gd-cover-art::after { content: ""; position: absolute; left: 10px; right: 10px; bottom: 5px; height: 2px; z-index: 3; pointer-events: none; background: repeating-linear-gradient(90deg, #d0605a 0 4px, transparent 4px 8px); opacity: .7; }
