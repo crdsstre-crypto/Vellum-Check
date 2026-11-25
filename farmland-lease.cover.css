@@ -1,0 +1,5 @@
+/* ปกแบบ "paddyterraceedge" = ภาพในกรอบสีเขียวข้าว ใต้ขอบล่างมีแนวคันนาโค้งสองชั้นสีเขียวเข้มและเขียวอ่อนแบบนาขั้นบันได (คู่มือ farmland-lease) */
+.gd-cover[data-layout="paddyterraceedge"] .gd-cover-art { overflow: visible; border: 4px solid #8ac45a; border-radius: 6px; box-shadow: 0 5px 12px rgba(60,100,30,.22); }
+.gd-cover[data-layout="paddyterraceedge"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="paddyterraceedge"] .gd-cover-art::before { content: ""; position: absolute; left: -4px; right: -4px; bottom: -10px; height: 8px; z-index: 3; pointer-events: none; background: radial-gradient(ellipse 14px 6px at 50% 0, #5a9a3a 0 92%, transparent) 0 0 / 26px 8px repeat-x; }
+.gd-cover[data-layout="paddyterraceedge"] .gd-cover-art::after { content: ""; position: absolute; left: 9px; right: -4px; bottom: -16px; height: 7px; z-index: 2; pointer-events: none; background: radial-gradient(ellipse 13px 5px at 50% 0, #9ad46a 0 92%, transparent) 0 0 / 26px 7px repeat-x; }
