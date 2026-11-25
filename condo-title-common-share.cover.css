@@ -1,0 +1,4 @@
+/* ปกแบบ "tilecheckedge" = ภาพในกรอบสีลาเวนเดอร์อ่อน ใต้ขอบล่างฝั่งซ้ายมีแถบกระเบื้องสี่เหลี่ยมเล็กสลับม่วงอ่อนกับเหลือง เหมือนผังห้องชุดที่มีห้องหนึ่งไฮไลต์ (คู่มือ condo-title-common-share) */
+.gd-cover[data-layout="tilecheckedge"] .gd-cover-art { overflow: visible; border: 4px solid #dcd2ec; border-radius: 6px; box-shadow: 0 5px 12px rgba(90,60,130,.2); }
+.gd-cover[data-layout="tilecheckedge"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="tilecheckedge"] .gd-cover-art::after { content: ""; position: absolute; left: 8px; bottom: -14px; width: 60px; height: 9px; z-index: 3; pointer-events: none; border-radius: 2px; background: linear-gradient(90deg, #c8bcd8 0 9px, #fff 9px 10px, #c8bcd8 10px 19px, #fff 19px 20px, #f2c94c 20px 29px, #fff 29px 30px, #c8bcd8 30px 39px, #fff 39px 40px, #c8bcd8 40px 49px, #fff 49px 50px, #c8bcd8 50px 60px); box-shadow: 0 1px 2px rgba(90,60,130,.3); }
