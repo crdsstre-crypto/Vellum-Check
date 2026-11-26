@@ -1,0 +1,3 @@
+/* ปกแบบ "erasercrumbedge" = กรอบภาพสีชมพูยางลบ มีเศษยางลบเม็ดเล็กสีชมพูกับฟ้ากระจายตามขอบล่าง (คู่มือ trademark-cancel-board) */
+.gd-cover[data-layout="erasercrumbedge"] .gd-cover-art { overflow: visible; padding: 6px 6px 12px; border-radius: 8px; background: radial-gradient(circle at 12% 92%, #5a8ac8 0 2px, transparent 2.4px), radial-gradient(circle at 30% 96%, #fff 0 1.8px, transparent 2.2px), radial-gradient(circle at 52% 90%, #5a8ac8 0 1.6px, transparent 2px), radial-gradient(circle at 74% 95%, #fff 0 2px, transparent 2.4px), radial-gradient(circle at 90% 91%, #5a8ac8 0 1.8px, transparent 2.2px), #f4a8b8; box-shadow: 0 4px 10px rgba(90,40,50,.2); }
+.gd-cover[data-layout="erasercrumbedge"] .gd-cover-art .gd-scene { border-radius: 5px; }

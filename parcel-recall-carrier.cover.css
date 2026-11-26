@@ -1,0 +1,4 @@
+/* ปกแบบ "shippinglabeledge" = ภาพเหมือนติดอยู่บนกล่องพัสดุสีน้ำตาลคราฟต์ มีเทปกาวใสพาดแนวนอนที่ขอบบนกลาง (คู่มือ parcel-recall-carrier) */
+.gd-cover[data-layout="shippinglabeledge"] .gd-cover-art { overflow: visible; padding: 8px 6px 6px; border-radius: 4px; background: #c89a62; box-shadow: 0 4px 10px rgba(80,50,20,.25); }
+.gd-cover[data-layout="shippinglabeledge"] .gd-cover-art .gd-scene { border-radius: 3px; }
+.gd-cover[data-layout="shippinglabeledge"] .gd-cover-art::after { content: ""; position: absolute; left: calc(50% - 22px); top: -4px; width: 44px; height: 11px; z-index: 3; pointer-events: none; background: rgba(240,230,200,.75); box-shadow: 0 1px 2px rgba(0,0,0,.15); }
