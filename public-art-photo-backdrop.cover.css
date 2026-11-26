@@ -1,0 +1,4 @@
+/* ปกแบบ "brickgraffitiedge" = กรอบภาพเป็นกำแพงอิฐสีส้มอิฐ มีรอยพ่นสีสเปรย์หลากสีกระเซ็นที่มุมขวาล่าง (คู่มือ public-art-photo-backdrop) */
+.gd-cover[data-layout="brickgraffitiedge"] .gd-cover-art { overflow: visible; padding: 7px; border-radius: 6px; background: linear-gradient(#e8d4c0 1px, transparent 1px) 0 0 / 100% 7px, linear-gradient(90deg, #e8d4c0 1px, transparent 1px) 0 0 / 14px 14px, #c8643a; box-shadow: 0 4px 10px rgba(90,40,20,.25); }
+.gd-cover[data-layout="brickgraffitiedge"] .gd-cover-art .gd-scene { border-radius: 4px; }
+.gd-cover[data-layout="brickgraffitiedge"] .gd-cover-art::after { content: ""; position: absolute; right: -3px; bottom: -3px; width: 24px; height: 18px; z-index: 3; pointer-events: none; background: radial-gradient(circle at 30% 40%, #f2608a 0 4px, transparent 5px), radial-gradient(circle at 70% 60%, #5aa0e8 0 3px, transparent 4px), radial-gradient(circle at 55% 20%, #f2c94c 0 2.5px, transparent 3px); }
