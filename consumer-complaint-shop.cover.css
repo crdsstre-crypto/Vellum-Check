@@ -1,0 +1,4 @@
+/* ปกแบบ "stampedenvelopeedge" = ภาพอยู่ในซองจดหมายสีครีม ขอบเป็นเส้นไปรษณีย์อากาศแดงน้ำเงินสลับเฉียง มุมขวาบนมีแสตมป์ขอบหยักเล็ก (คู่มือ consumer-complaint-shop) */
+.gd-cover[data-layout="stampedenvelopeedge"] .gd-cover-art { overflow: visible; padding: 6px; border-radius: 6px; background: repeating-linear-gradient(135deg, #d9363e 0 7px, #fffaf0 7px 12px, #2e5a9a 12px 19px, #fffaf0 19px 24px); box-shadow: 0 4px 10px rgba(60,40,20,.22); }
+.gd-cover[data-layout="stampedenvelopeedge"] .gd-cover-art .gd-scene { border-radius: 3px; }
+.gd-cover[data-layout="stampedenvelopeedge"] .gd-cover-art::after { content: ""; position: absolute; right: -4px; top: -6px; width: 18px; height: 22px; z-index: 3; pointer-events: none; background: radial-gradient(circle, #fff 1.4px, transparent 1.6px) -2px -2px / 4px 4px, linear-gradient(#f2c94c, #e8a83a); border: 2px solid #fff; transform: rotate(8deg); box-shadow: 0 2px 4px rgba(0,0,0,.25); }
