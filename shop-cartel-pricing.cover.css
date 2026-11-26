@@ -1,0 +1,4 @@
+/* ปกแบบ "ropeknotedge" = ภาพผูกด้วยเชือกป่านสีน้ำตาลเส้นคู่พาดขอบบนและล่าง มุมซ้ายบนมีปมเชือกกลมเล็ก (คู่มือ shop-cartel-pricing) */
+.gd-cover[data-layout="ropeknotedge"] .gd-cover-art { overflow: visible; padding: 8px 4px; border-radius: 8px; background: repeating-linear-gradient(60deg, #c8965a 0 3px, #a8763a 3px 6px) top / 100% 5px no-repeat, repeating-linear-gradient(60deg, #c8965a 0 3px, #a8763a 3px 6px) bottom / 100% 5px no-repeat, #fff8ee; box-shadow: 0 4px 10px rgba(70,40,10,.22); }
+.gd-cover[data-layout="ropeknotedge"] .gd-cover-art .gd-scene { border-radius: 4px; }
+.gd-cover[data-layout="ropeknotedge"] .gd-cover-art::after { content: ""; position: absolute; left: -4px; top: -4px; width: 14px; height: 14px; z-index: 3; pointer-events: none; border-radius: 50%; background: radial-gradient(circle at 40% 40%, #e0b070, #a8763a 70%); box-shadow: 0 2px 3px rgba(0,0,0,.3); }
