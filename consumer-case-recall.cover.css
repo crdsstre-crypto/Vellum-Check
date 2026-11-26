@@ -1,0 +1,4 @@
+/* ปกแบบ "recalltagedge" = กรอบภาพสีเทาเหล็ก มีแถบเทปเตือนเหลืองแดงลายเฉียงพาดมุมขวาล่าง และป้ายแขวนสีแดงห้อยมุมซ้ายบน (คู่มือ consumer-case-recall) */
+.gd-cover[data-layout="recalltagedge"] .gd-cover-art { overflow: hidden; padding: 5px; border-radius: 8px; background: #8a949c; box-shadow: 0 4px 10px rgba(30,30,40,.25); }
+.gd-cover[data-layout="recalltagedge"] .gd-cover-art .gd-scene { border-radius: 5px; }
+.gd-cover[data-layout="recalltagedge"] .gd-cover-art::after { content: ""; position: absolute; right: -18px; bottom: 10px; width: 70px; height: 9px; z-index: 3; pointer-events: none; background: repeating-linear-gradient(45deg, #f2c94c 0 5px, #d9363e 5px 10px); transform: rotate(-38deg); box-shadow: 0 1px 3px rgba(0,0,0,.3); }
