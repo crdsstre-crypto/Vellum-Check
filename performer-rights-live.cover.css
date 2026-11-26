@@ -1,0 +1,4 @@
+/* ปกแบบ "stagecurtainedge" = ภาพอยู่บนเวที มีม่านกำมะหยี่แดงรวบไว้สองข้างด้านบน และขอบล่างเป็นพื้นเวทีไม้ (คู่มือ performer-rights-live) */
+.gd-cover[data-layout="stagecurtainedge"] .gd-cover-art { overflow: visible; padding: 6px 6px 10px; border-radius: 8px; background: linear-gradient(#a86a3a, #8a5a2a) bottom / 100% 6px no-repeat, linear-gradient(90deg, #b8283a 0 6px, transparent 6px calc(100% - 6px), #b8283a calc(100% - 6px)), #8a1e2c; box-shadow: 0 4px 10px rgba(80,10,20,.3); }
+.gd-cover[data-layout="stagecurtainedge"] .gd-cover-art .gd-scene { border-radius: 4px; }
+.gd-cover[data-layout="stagecurtainedge"] .gd-cover-art::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 9px; z-index: 3; pointer-events: none; border-radius: 8px 8px 0 0; background: radial-gradient(ellipse at 50% 0, #d8384a 0 60%, #8a1e2c 61%) 0 0 / 16px 9px repeat-x; }
