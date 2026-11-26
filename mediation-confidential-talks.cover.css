@@ -1,0 +1,4 @@
+/* ปกแบบ "zipperedge" = ขอบบนของภาพเป็นซิปโลหะสีเงินฟันสลับ มีหัวซิปห้อยที่มุมขวาบน กรอบสีน้ำเงินผ้าแคนวาส (คู่มือ mediation-confidential-talks) */
+.gd-cover[data-layout="zipperedge"] .gd-cover-art { overflow: visible; padding: 11px 5px 5px; border-radius: 8px; background: repeating-linear-gradient(90deg, #c8ccd4 0 3px, transparent 3px 6px) top 3px left 4px / calc(100% - 8px) 5px no-repeat, #3a5a8a; box-shadow: 0 4px 10px rgba(20,40,80,.25); }
+.gd-cover[data-layout="zipperedge"] .gd-cover-art .gd-scene { border-radius: 4px; }
+.gd-cover[data-layout="zipperedge"] .gd-cover-art::after { content: ""; position: absolute; right: 10px; top: 1px; width: 8px; height: 16px; z-index: 3; pointer-events: none; border-radius: 3px 3px 4px 4px; background: linear-gradient(#e8ecf2, #9aa2ae); box-shadow: 0 2px 3px rgba(0,0,0,.3); }
