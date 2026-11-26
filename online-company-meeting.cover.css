@@ -1,0 +1,4 @@
+/* ปกแบบ "webcamframeedge" = ภาพในกรอบจอสีดำมุมมนแบบหน้าจอแล็ปท็อป ขอบบนกลางมีจุดกล้องเว็บแคม และมุมซ้ายล่างมีจุดแดง REC เล็ก (คู่มือ online-company-meeting) */
+.gd-cover[data-layout="webcamframeedge"] .gd-cover-art { overflow: visible; padding: 9px 6px 6px; border-radius: 10px; background: radial-gradient(circle at 50% 4.5px, #5a6a8a 0 2px, #2a2a32 2.4px 3.4px, transparent 3.8px), #1e1e26; box-shadow: 0 5px 12px rgba(20,20,40,.3); }
+.gd-cover[data-layout="webcamframeedge"] .gd-cover-art .gd-scene { border-radius: 4px; }
+.gd-cover[data-layout="webcamframeedge"] .gd-cover-art::after { content: ""; position: absolute; left: 12px; bottom: 12px; width: 9px; height: 9px; z-index: 3; pointer-events: none; border-radius: 50%; background: #e0303a; box-shadow: 0 0 0 2px rgba(255,255,255,.85), 0 0 6px 1px rgba(224,48,58,.7); }
