@@ -1,0 +1,4 @@
+/* ปกแบบ "blueprintfoldedge" = ภาพอยู่บนกระดาษพิมพ์เขียวสีน้ำเงินมีเส้นตารางขาวจาง และมุมขวาล่างพับเผยหลังกระดาษสีฟ้าอ่อน (คู่มือ patent-marking-coowner) */
+.gd-cover[data-layout="blueprintfoldedge"] .gd-cover-art { overflow: visible; padding: 6px; border-radius: 4px; background: linear-gradient(rgba(255,255,255,.18) 1px, transparent 1px) 0 0 / 8px 8px, linear-gradient(90deg, rgba(255,255,255,.18) 1px, transparent 1px) 0 0 / 8px 8px, #2a5a9a; box-shadow: 0 4px 10px rgba(20,40,80,.25); clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%); }
+.gd-cover[data-layout="blueprintfoldedge"] .gd-cover-art .gd-scene { border-radius: 3px; }
+.gd-cover[data-layout="blueprintfoldedge"] .gd-cover-art::after { content: ""; position: absolute; right: 0; bottom: 0; width: 14px; height: 14px; z-index: 3; pointer-events: none; background: linear-gradient(135deg, #a8c8ec 50%, transparent 50%); }
