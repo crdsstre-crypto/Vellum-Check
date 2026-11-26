@@ -1,0 +1,4 @@
+/* ปกแบบ "barcodestripedge" = ขอบล่างของภาพเป็นแถบบาร์โค้ดเส้นดำขาวบางหนาสลับ มุมขวาบนมีป้ายราคาสีแดงเอียงเล็ก (คู่มือ website-price-error) */
+.gd-cover[data-layout="barcodestripedge"] .gd-cover-art { overflow: visible; padding: 4px 4px 16px; border-radius: 8px; background: repeating-linear-gradient(90deg, #22222a 0 2px, #fff 2px 4px, #22222a 4px 5px, #fff 5px 8px, #22222a 8px 11px, #fff 11px 13px) bottom 3px left 8px / calc(100% - 16px) 9px no-repeat, #fff; box-shadow: 0 4px 10px rgba(60,30,30,.22); }
+.gd-cover[data-layout="barcodestripedge"] .gd-cover-art .gd-scene { border-radius: 5px; }
+.gd-cover[data-layout="barcodestripedge"] .gd-cover-art::after { content: ""; position: absolute; right: -5px; top: -5px; width: 22px; height: 13px; z-index: 3; pointer-events: none; background: #d9363e; clip-path: polygon(0 0, 75% 0, 100% 50%, 75% 100%, 0 100%); transform: rotate(18deg); box-shadow: 0 2px 4px rgba(0,0,0,.25); }
