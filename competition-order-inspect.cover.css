@@ -1,0 +1,4 @@
+/* ปกแบบ "redtapeedge" = กรอบภาพกระดาษราชการสีขาวนวล มีริบบิ้นแดงพาดแนวทแยงมุมซ้ายบน (คู่มือ competition-order-inspect) */
+.gd-cover[data-layout="redtapeedge"] .gd-cover-art { overflow: hidden; padding: 6px; border-radius: 6px; background: #f8f4ea; box-shadow: 0 4px 10px rgba(60,30,30,.2); }
+.gd-cover[data-layout="redtapeedge"] .gd-cover-art .gd-scene { border-radius: 4px; }
+.gd-cover[data-layout="redtapeedge"] .gd-cover-art::after { content: ""; position: absolute; left: -16px; top: 10px; width: 60px; height: 7px; z-index: 3; pointer-events: none; background: linear-gradient(#e0403e, #b8282a); transform: rotate(-40deg); box-shadow: 38px 0 0 -1px transparent, 0 1px 2px rgba(0,0,0,.25); }
