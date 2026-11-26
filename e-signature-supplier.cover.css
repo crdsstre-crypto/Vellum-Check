@@ -1,0 +1,4 @@
+/* ปกแบบ "fountainnibedge" = ขอบภาพเป็นกระดาษงาช้างมีเส้นเซ็นชื่อหมึกน้ำเงินลากใต้ภาพ มุมขวาล่างมีปลายปากกาหมึกซึมสีทองเอียง (คู่มือ e-signature-supplier) */
+.gd-cover[data-layout="fountainnibedge"] .gd-cover-art { overflow: visible; padding: 5px 5px 14px; border-radius: 8px; background: linear-gradient(90deg, transparent 10%, #2e5a9a 10% 70%, transparent 70%) bottom 6px left 0 / 100% 1.6px no-repeat, #fbf8ef; box-shadow: 0 4px 10px rgba(30,40,70,.22); }
+.gd-cover[data-layout="fountainnibedge"] .gd-cover-art .gd-scene { border-radius: 5px; }
+.gd-cover[data-layout="fountainnibedge"] .gd-cover-art::after { content: ""; position: absolute; right: 6px; bottom: -2px; width: 10px; height: 20px; z-index: 3; pointer-events: none; background: radial-gradient(circle at 50% 55%, #2a2a34 1.2px, transparent 1.6px), linear-gradient(#e8c24a, #b8902a); clip-path: polygon(50% 100%, 0 30%, 15% 0, 85% 0, 100% 30%); transform: rotate(35deg); }
