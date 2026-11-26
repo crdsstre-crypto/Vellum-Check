@@ -1,0 +1,3 @@
+/* ปกแบบ "billboardbulbedge" = กรอบภาพเป็นป้ายบิลบอร์ดสีแดงเข้ม มีหลอดไฟกลมสีเหลืองเรียงรอบขอบแบบป้ายโรงละคร (คู่มือ ad-order-proof) */
+.gd-cover[data-layout="billboardbulbedge"] .gd-cover-art { overflow: visible; padding: 8px; border-radius: 8px; background: radial-gradient(circle, #ffe68a 2px, #f2c94c 2.4px, transparent 3px) 0 0 / 10px 10px, #a8282e; box-shadow: 0 4px 10px rgba(90,20,20,.3); }
+.gd-cover[data-layout="billboardbulbedge"] .gd-cover-art .gd-scene { border-radius: 4px; }
