@@ -1,0 +1,3 @@
+/* ปกแบบ "stairstepedge" = กรอบภาพสีน้ำเงินกรมท่า ขอบล่างเป็นขั้นบันไดสามขั้นไล่ระดับขึ้นจากซ้ายไปขวา (คู่มือ trademark-appeal-disclaim) */
+.gd-cover[data-layout="stairstepedge"] .gd-cover-art { overflow: visible; padding: 5px 5px 14px; border-radius: 8px 8px 0 0; background: #2e4a7a; box-shadow: 0 4px 10px rgba(20,40,80,.25); clip-path: polygon(0 0, 100% 0, 100% 100%, 66% 100%, 66% calc(100% - 4px), 33% calc(100% - 4px), 33% calc(100% - 8px), 0 calc(100% - 8px)); }
+.gd-cover[data-layout="stairstepedge"] .gd-cover-art .gd-scene { border-radius: 5px; }
