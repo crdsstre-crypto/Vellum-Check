@@ -1,0 +1,4 @@
+/* ปกแบบ "ribbonbanneredge" = ภาพมีแถบริบบิ้นแดงคาดล่างปลายตัดหางนกนางแอ่นยื่นออกนอกกรอบทั้งสองข้าง (คู่มือ unregistrable-brand-name) */
+.gd-cover[data-layout="ribbonbanneredge"] .gd-cover-art { overflow: visible; padding: 4px 4px 12px; border-radius: 8px; background: #fffaf0; box-shadow: 0 4px 10px rgba(90,40,20,.2); }
+.gd-cover[data-layout="ribbonbanneredge"] .gd-cover-art .gd-scene { border-radius: 5px; }
+.gd-cover[data-layout="ribbonbanneredge"] .gd-cover-art::after { content: ""; position: absolute; left: -7px; right: -7px; bottom: 2px; height: 10px; z-index: 3; pointer-events: none; background: linear-gradient(#e0463e, #b8282a); clip-path: polygon(0 0, 100% 0, 94% 50%, 100% 100%, 0 100%, 6% 50%); box-shadow: 0 2px 3px rgba(0,0,0,.2); }
