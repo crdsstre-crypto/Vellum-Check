@@ -1,0 +1,3 @@
+/* ปกแบบ "doublecarbonedge" = ภาพมีกระดาษสำเนาสีฟ้าอ่อนซ้อนเยื้องอยู่ด้านหลังมุมขวาล่าง เหมือนใบสั่งซื้อสองชั้น (คู่มือ order-error-duplicate) */
+.gd-cover[data-layout="doublecarbonedge"] .gd-cover-art { overflow: visible; padding: 5px; border-radius: 4px; background: #fff; box-shadow: 6px 6px 0 0 #bcd4f0, 6px 6px 0 1px #9ab8e0, 0 4px 10px rgba(20,40,80,.2); }
+.gd-cover[data-layout="doublecarbonedge"] .gd-cover-art .gd-scene { border-radius: 3px; }

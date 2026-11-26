@@ -1,0 +1,4 @@
+/* ปกแบบ "passportstampedge" = ภาพอยู่บนหน้าพาสปอร์ตสีครีม มีตราประทับวงรีสีน้ำเงินจางเอียงที่มุมขวาบน และเส้นลายกิโยเชคลื่นบางที่ขอบ (คู่มือ copyright-lawsuit-basics) */
+.gd-cover[data-layout="passportstampedge"] .gd-cover-art { overflow: visible; padding: 7px; border-radius: 6px; background: repeating-radial-gradient(circle at 0 0, transparent 0 6px, rgba(58,138,192,.12) 6px 7px), #f6efdc; box-shadow: 0 4px 10px rgba(40,60,90,.2); }
+.gd-cover[data-layout="passportstampedge"] .gd-cover-art .gd-scene { border-radius: 4px; }
+.gd-cover[data-layout="passportstampedge"] .gd-cover-art::after { content: ""; position: absolute; right: -6px; top: -5px; width: 26px; height: 16px; z-index: 3; pointer-events: none; border-radius: 50%; border: 2px solid rgba(58,90,170,.75); transform: rotate(-14deg); }
