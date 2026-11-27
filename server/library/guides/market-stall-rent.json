@@ -17,7 +17,7 @@
   "title": "เช่าแผงในตลาดนัดหรือตลาด เจ้าของตลาดขึ้นค่าแผง ไล่ออกกะทันหัน หรือยึดของในแผงเพราะค้างค่าเช่า ทำได้แค่ไหน?",
   "scene": "cardmarketstall",
   "mood": "palm+sad+coin+sway",
-  "coverLayout": "awningstripe",
+  "coverLayout": "stallawning",
   "coverLines": [
     "เช่าแผงตลาดนัด",
     "โดนไล่ทำยังไง?"

@@ -1,0 +1,3 @@
+/* ปกแบบ "splitfacade" = กรอบแบ่งครึ่งซ้ายส้มขวาฟ้า เส้นแบ่งกลางสีขาว และลูกศรสลับสองทางวงกลมดำบนเส้นแบ่งด้านบน (คู่มือ partner-rival-shop) */
+.gd-cover[data-layout="splitfacade"] .gd-cover-art { overflow: visible; border: 8px solid transparent; border-radius: 8px; background: linear-gradient(90deg, #ea580c 50%, #2563eb 50%) border-box; box-shadow: 0 6px 14px rgba(0,0,0,.2); }
+.gd-cover[data-layout="splitfacade"] .gd-cover-art::after { content: "⇄"; position: absolute; left: 50%; top: -14px; z-index: 5; width: 26px; height: 26px; margin-left: -13px; border-radius: 50%; background: #111; color: #fff; font: 900 14px/26px sans-serif; text-align: center; pointer-events: none; }
