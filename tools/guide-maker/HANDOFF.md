@@ -9,7 +9,7 @@
 > "สิ่งที่ผมจะให้ทำคือ**ทำตามหมวดหมู่** และทำให้**สวยขึ้น พัฒนาเรื่อยๆ ไม่ซ้ำซากจำเจ** **เปลี่ยนท่าทางน้องม้วนเยอะๆ** และ**เนื้อหาด้านในพัฒนามากขึ้นเรื่อยๆ โดยที่ผมไม่ต้องสั่ง** และสวยขึ้นอีก ไม่จำเจ"
 
 แปลเป็นงาน:
-- ผู้ใช้พิมพ์แค่ **"ทำอีก5เรื่อง"** → ทำ 5 เรื่องในหมวดปัจจุบัน (ตอนนี้ **ค้าขายและแบรนด์ ถึงเรื่องที่ 236 แล้ว เรื่องถัดไป 237**) commit + push เอง ไม่ต้องถาม
+- ผู้ใช้พิมพ์แค่ **"ทำอีก5เรื่อง"** → ทำ 5 เรื่องในหมวดปัจจุบัน (ตอนนี้ **ค้าขายและแบรนด์ ถึงเรื่องที่ 241 แล้ว เรื่องถัดไป 242**) commit + push เอง ไม่ต้องถาม
 - **ทุกชุดต้องดีกว่าชุดก่อนอย่างน้อย 2 อย่าง** โดยไม่ต้องรอผู้ใช้สั่ง (ภาพ ฉาก ท่าน้องม้วน ความลึกของเนื้อหา) และบอกผู้ใช้สั้นๆ ว่าชุดนี้พัฒนาอะไร
 - ผู้ใช้ **ขอให้ใช้เครดิตน้อยที่สุด**: อ่านไฟล์เฉพาะที่จำเป็น ตอบสั้น ทำ 5 เรื่องรวดเดียว ดูภาพรวม 5 เรื่องในรูปเดียว ไม่ต้องส่ง zip
 - ผู้ใช้ใช้ **iPhone** ตอบภาษาไทยสั้นๆ ทุกครั้งต้องปิดท้ายว่า **"ยังไม่ได้ลองบน iPhone จริงครับ"**
@@ -97,9 +97,12 @@
 ### น้องม้วน: เปลี่ยนท่าให้หลากหลายจริงๆ
 - mood = `แขน+หน้า+ของในมือ+การขยับ` ห้ามซ้ำในชุดเดียวกัน (ปก 1 + ฉาก 3 × 5 เรื่อง = 20 ท่า)
 - **ห้ามใช้**: `point+smile+clip+bob`, `cross+firm+…`, `scratch+hmm…`, `scratch+shock…`
+- ชุด 237–241 (ตั๋วแลกเงิน: ออกตั๋ว/รับรองเบี่ยงบ่าย/ข้อต่อสู้ผู้ทรง/แก้หน้า/ไล่เบี้ยได้เท่าไร) ใช้ท่าไปแล้ว: point+think+pen+tiptoe, cheer+proud+stamp+bob, grip+wink+map+breathe, both+joy+receipt+lean, fold+laugh+hourglass+shake, hip+sad+mag+hop, elbow+relief+shield+stomp, rub+firm+lamp+peek, tap+hmm+folder+duck, palm+calm+key+spin, ok+cry+bag+tilt, pray+star+clip+sway, pinch+proud+umbrella+breathe, wave+joy+cal+duck, fist+think+receipt+peek, bow+shock+coin+tiptoe, chin+wink+money+stomp, thumb+sad+phone+tilt, open+star+bell+lean, cover+laugh+cup+hop
+  - สิ่งที่พัฒนา: (1) `gx.py` เพิ่ม `BILL` (ตั๋วแลกเงินมีต้นขั้วรอยปรุ+หมายเหตุ) และ `FLOW` (ลูกศรประบอกเส้นทางตั๋ว/เงิน มีป้าย) (2) เนื้อหามีตัวอย่างคำนวณจริง (ดอกเบี้ย 5%) + ร่างตั๋วครบ 8 รายการ (3) ปก `b19.py` มีตัวช่วย `bl()` วาดตั๋ว
+  - ระวัง: FLOW อย่าวางทับหัวคน (x 40–90 ฝั่งซ้าย / 290–340 ฝั่งขวา)
 - ชุด 232–236 (จำนอง/จำนำสิทธิ/ตั๋วเงิน/เช็ครับรอง) ใช้ท่าไปแล้ว: palm+star+mag+breathe, cover+hmm+pen+hop, thumb+relief+shield+peek, chin+laugh+money+sway, up+cry+coin+spin, open+wink+cal+lean, wave+sleepy+umbrella+bob, bow+smile+phone+shake, fist+proud+key+lean, pray+firm+folder+tilt, grip+shock+bell+duck, rub+joy+cup+stomp, elbow+calm+bag+sway, both+hmm+receipt+tiptoe, scratch+wink+hourglass+bob, ok+relief+map+breathe, hip+star+stamp+peek, tap+laugh+key+hop, fold+calm+clip+tilt, pinch+shock+lamp+stomp
   - สิ่งที่พัฒนาในชุดนี้: (1) ตัวช่วยฉากใหม่ `examples/gx.py` → `GLOW` (แสงนุ่มรอบเอกสารสำคัญ) + `SKYWIN` (หน้าต่างบอกเวลา day/dusk/night) (2) ทุกเรื่องมี "ตัวอย่างข้อความ/หนังสือ" ที่คัดลอกไปใช้ได้ + เช็กลิสต์ (3) ปกพาสเทลไฟล์ `examples/b18.py` + `run18.py` (ต้องตั้ง tagc เอง) 
-  - มาตราที่ยังว่างในคลัง (ใช้ต่อได้): 740–743, 902–904, 906–913, 915–916, 918, 924, 926, 930, 932–936, 942–943, 950–958, 962, 965–966, 969–981, 985
+  - มาตราที่ยังว่างในคลัง (ใช้ต่อได้ หลังชุด 241): 740–743, 962, 965–966, 975–981 (ตั๋วสำรับ), 985, 1004, 1005, 1010, 1011
   - mini2: ต้องรัน `ROOT=/home/claude/vellum-check ADMIN=1 PORT=3410 node /tmp/mini2.mjs` และรีสตาร์ตหลังเพิ่ม JSON
 - ชุดล่าสุด (192–196) ใช้ไปแล้ว (เลือกด้วย `moodpick.py` แล้วแก้ท่าต้องห้ามเอง): point+relief+cup+breathe, palm+sleepy+cal+shake, cheer+sad+mag+peek, cover+cry+none+spin, up+shock+sign+lean, cross+wink+phone+sway, wave+hmm+coin+hop, thumb+laugh+shield+peek, open+cry+none+sway, chin+hmm+cal+bob, up+shock+shield+lean, palm+relief+clip+hop, bow+firm+shield+shake, wave+star+sign+breathe, thumb+smile+cal+spin, open+think+cup+bob, cheer+sleepy+coin+shake, point+sad+clip+breathe, cover+cry+money+spin, cross+laugh+sign+peek → **ชุดถัดไปให้จับคู่ใหม่**
 - 💡 พัฒนาต่อได้: เพิ่มท่าใหม่ใน `public/mascot.js` (ราวบรรทัด 150–180) เช่น ถือป้ายสองมือ กระโดดดีใจ นั่ง ชี้กระดาน
@@ -171,7 +174,7 @@
     - **ภัยออนไลน์** (1 เรื่อง)
     - **ที่อยู่อาศัย** (27 เรื่อง)
   - ผู้ใช้เคยบอกว่าอยากให้**แต่ละหมวดครบประมาณ 1,000 เรื่องขึ้นไปก่อน แล้วค่อยขยับไปหมวดถัดไป**
-  - ถ้าผู้ใช้ไม่ได้ระบุหมวด ให้**ทำหมวดค้าขายและแบรนด์ต่อ** (เรื่องถัดไปคือเรื่องที่ 237) และแตกหัวข้อย่อยให้หลากหลาย เช่น ร้านอาหาร ร้านออนไลน์ ร้านเสริมสวย ร้านซ่อม โรงงานเล็ก แบรนด์ เครื่องหมายการค้า และนำเข้า-ส่งออก
+  - ถ้าผู้ใช้ไม่ได้ระบุหมวด ให้**ทำหมวดค้าขายและแบรนด์ต่อ** (เรื่องถัดไปคือเรื่องที่ 242) และแตกหัวข้อย่อยให้หลากหลาย เช่น ร้านอาหาร ร้านออนไลน์ ร้านเสริมสวย ร้านซ่อม โรงงานเล็ก แบรนด์ เครื่องหมายการค้า และนำเข้า-ส่งออก
   - ถ้าผู้ใช้ระบุหมวด ให้ทำตามนั้น
   - ดูจำนวนเรื่องในแต่ละหมวดได้ด้วยคำสั่งนี้ (นับจาก category ในไฟล์ `server/library/guides/*.json`):
     ```
