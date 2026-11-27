@@ -111,3 +111,30 @@ def MONEYFLOW(x0,y0,x1,y1,n=4,c='#16a34a'):
 def SIREN(x,y,c='#ef4444'):
   return (f'<rect x="{x-9}" y="{y}" width="18" height="5" rx="1" fill="#334155"/><path d="M{x-7} {y}q0-12 7-12t7 12z" fill="{c}"/>'
    f'<g class="cm-blink"><path d="M{x-14} {y-10}l-6-3M{x+14} {y-10}l6-3M{x} {y-16}v-6" stroke="{c}" stroke-width="2"/></g>')
+
+def BELL(x,y,s=1):
+  # กริ่งเคาน์เตอร์โรงแรม มีประกายและเงาสะท้อน
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="12" rx="20" ry="4" fill="#000" opacity=".15"/>'
+   '<rect x="-19" y="6" width="38" height="6" rx="3" fill="#78716c"/><path d="M-15 6a15 15 0 0 1 30 0z" fill="#fbbf24"/>'
+   '<path d="M-9 1a10 12 0 0 1 7-8" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none" opacity=".8"/>'
+   '<rect x="-2" y="-14" width="4" height="6" fill="#a16207"/><circle cx="0" cy="-15" r="4" fill="#fde68a" stroke="#a16207"/>'
+   '<path d="M20 -16l5-4M24 -8h6M-20 -16l-5-4" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/></g>')
+
+def CRANE(x,y,s=1,c='#f59e0b'):
+  # ทาวเวอร์เครน โครงถัก แขนยื่น ตะขอแขวนคาน
+  mast=''.join(f'<path d="M-5 {yy}l10 -12M5 {yy}l-10 -12" stroke="{c}" stroke-width="1.4"/>' for yy in range(0,-108,-12))
+  jib=''.join(f'<path d="M{xx} -116l6 -6l6 6" stroke="{c}" stroke-width="1.2" fill="none"/>' for xx in range(-30,72,12))
+  return (f'<g transform="translate({x} {y}) scale({s})"><rect x="-6" y="-108" width="12" height="108" fill="none" stroke="{c}" stroke-width="2"/>'+mast+
+   f'<rect x="-32" y="-122" width="106" height="6" fill="none" stroke="{c}" stroke-width="2"/>'+jib+
+   f'<rect x="-30" y="-116" width="14" height="10" fill="#57534e"/><rect x="-4" y="-132" width="12" height="12" rx="2" fill="{c}"/><rect x="-2" y="-130" width="8" height="5" fill="#bae6fd"/>'
+   f'<path d="M58 -116v46" stroke="#334155" stroke-width="1.2"/><path d="M55 -70h6l-3 6z" fill="#334155"/><rect x="40" y="-62" width="38" height="6" fill="#94a3b8"/></g>')
+
+def OWL(x,y,s=1,c='#a16207'):
+  # นกฮูกตัวเล็ก ขนอก ตากลมแวว แก้ม เท้าเกาะกิ่ง
+  feathers=''.join(f'<path d="M{fx} {fy}q3 3 6 0" stroke="#78350f" stroke-width="1" fill="none" opacity=".5"/>' for fx,fy in ((-6,6),(0,6),(-3,11),(3,11),(-6,16),(0,16)))
+  return (f'<g transform="translate({x} {y}) scale({s})"><path d="M-18 24h36" stroke="#78350f" stroke-width="4" stroke-linecap="round"/>'
+   f'<ellipse cx="0" cy="8" rx="13" ry="16" fill="{c}"/><ellipse cx="0" cy="12" rx="8" ry="10" fill="#fde68a"/>'+feathers+
+   f'<path d="M-12 -4l-3 -10l8 5zM12 -4l3 -10l-8 5z" fill="{c}"/><circle cx="-5" cy="-1" r="5.5" fill="#fff"/><circle cx="5" cy="-1" r="5.5" fill="#fff"/>'
+   '<circle cx="-4.5" cy="-1" r="3" fill="#1c1917"/><circle cx="5.5" cy="-1" r="3" fill="#1c1917"/><circle cx="-3.5" cy="-2.2" r="1" fill="#fff"/><circle cx="6.5" cy="-2.2" r="1" fill="#fff"/>'
+   '<path d="M-1.5 4l1.5 3l1.5 -3z" fill="#f97316"/><ellipse cx="-9" cy="5" rx="2.5" ry="1.5" fill="#fb7185" opacity=".5"/><ellipse cx="9" cy="5" rx="2.5" ry="1.5" fill="#fb7185" opacity=".5"/>'
+   '<path d="M-5 23v-2M-3 23v-2M3 23v-2M5 23v-2" stroke="#f97316" stroke-width="1.5"/></g>')
