@@ -1,3 +1,5 @@
-/* ปกแบบ "couponedge" = กรอบคูปองสีแดงขอบหยักครึ่งวงกลมรอบด้าน มีเส้นปรุตัดและไอคอนกรรไกรที่ขอบซ้าย (คู่มือ promo-coupon-soldout) */
-.gd-cover[data-layout="couponedge"] .gd-cover-art { overflow: visible; border: 10px solid transparent; border-radius: 4px; background: radial-gradient(circle at 50% 0, transparent 4px, #dc2626 4.5px) 0 0 / 14px 10px border-box, #dc2626 border-box; outline: 2px dashed rgba(255,255,255,.8); outline-offset: -6px; box-shadow: 0 6px 14px rgba(220,38,38,.28); }
-.gd-cover[data-layout="couponedge"] .gd-cover-art::before { content: "✂"; position: absolute; left: -18px; top: 50%; z-index: 4; margin-top: -13px; width: 26px; height: 26px; border-radius: 50%; background: #fde047; color: #111; font: 900 15px/26px sans-serif; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,.25); pointer-events: none; }
+/* ปกแบบ "couponedge" = กรอบพาสเทลบาง ๆ สีเดียวกับภาพ + ป้ายเล็กมุมล่าง (คู่มือ promo-coupon-soldout) */
+.gd-cover[data-layout="couponedge"] .gd-cover-art { overflow: visible; border: 5px solid #fecdd3; border-radius: 10px; box-shadow: 0 0 0 2px #fb7185 inset, 0 6px 14px rgba(30,41,59,.16); }
+.gd-cover[data-layout="couponedge"] .gd-cover-art .gd-scene { border-radius: 6px; }
+.gd-cover[data-layout="couponedge"] .gd-cover-art::before { content: none; }
+.gd-cover[data-layout="couponedge"] .gd-cover-art::after { content: "%"; right: -8px; bottom: 10px; width: 24px; height: 24px; border-radius: 50%; font: 900 13px/24px sans-serif; text-align: center; position: absolute; z-index: 4; background: #e11d48; color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,.15); pointer-events: none; }

@@ -1,3 +1,5 @@
-/* ปกแบบ "paperstack" = ภาพวางบนปึกกระดาษถ่ายเอกสารหลายแผ่นเหลื่อมกันด้านหลัง เอียงคนละมุม และคลิปหนีบดำที่ขอบบน (คู่มือ photocopy-shop-books) */
-.gd-cover[data-layout="paperstack"] .gd-cover-art { overflow: visible; border: 6px solid #fff; border-radius: 3px; background: #fff; box-shadow: 6px 6px 0 -1px #f8fafc, 6px 6px 0 0 #cbd5e1, 12px 11px 0 -1px #f1f5f9, 12px 11px 0 0 #cbd5e1, 0 8px 16px rgba(0,0,0,.18); }
-.gd-cover[data-layout="paperstack"] .gd-cover-art::before { content: ""; position: absolute; left: 50%; top: -13px; z-index: 4; width: 38px; height: 16px; margin-left: -19px; border-radius: 3px 3px 6px 6px; background: linear-gradient(#374151, #111827); box-shadow: 0 2px 4px rgba(0,0,0,.3); pointer-events: none; }
+/* ปกแบบ "paperstack" = กรอบพาสเทลบาง ๆ สีเดียวกับภาพ + ป้ายเล็กมุมล่าง (คู่มือ photocopy-shop-books) */
+.gd-cover[data-layout="paperstack"] .gd-cover-art { overflow: visible; border: 5px solid #bae6fd; border-radius: 10px; box-shadow: 0 0 0 2px #38bdf8 inset, 0 6px 14px rgba(30,41,59,.16); }
+.gd-cover[data-layout="paperstack"] .gd-cover-art .gd-scene { border-radius: 6px; }
+.gd-cover[data-layout="paperstack"] .gd-cover-art::before { content: none; }
+.gd-cover[data-layout="paperstack"] .gd-cover-art::after { content: "©"; right: -8px; bottom: 10px; width: 24px; height: 24px; border-radius: 50%; font: 900 13px/24px sans-serif; text-align: center; position: absolute; z-index: 4; background: #0284c7; color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,.15); pointer-events: none; }
