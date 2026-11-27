@@ -1,0 +1,13 @@
+T='font-family="sans-serif" font-weight="900"'
+def pill(x,y,t,c,w=44):
+  return f'<g transform="translate({x} {y})"><rect x="{-w/2}" y="-8" width="{w}" height="15" rx="7" fill="#fff" stroke="{c}" stroke-width="2"/><text y="3" text-anchor="middle" font-size="7" fill="{c}" {T}>{t}</text></g>'
+D['shareholder-inspector-request']=dict(c1='#f5f0e6',c2='#dbeafe',sh='#44403c',bd='#e7e5e4',ln='#78716c',bg='#57534e',badge='⅕',tint='#fafaf9',
+ hero='<rect x="58" y="66" width="56" height="70" rx="4" fill="#fff" stroke="#78716c" stroke-width="2"/>'+''.join(f'<path d="M66 {80+i*10}h40" stroke="#cbd5e1" stroke-width="3"/>' for i in range(5))+'<circle cx="112" cy="98" r="18" fill="#f8fafc" stroke="#1e3a8a" stroke-width="4"/><path d="M125 111l12 12" stroke="#1e3a8a" stroke-width="6" stroke-linecap="round"/>'+f'<text x="112" y="102" text-anchor="middle" font-size="9" fill="#b91c1c" {T}>฿?</text>',tag=None)
+D['agm-running-rules']=dict(c1='#e9d5ff',c2='#a5f3fc',sh='#3b0764',bd='#e9d5ff',ln='#a855f7',bg='#7c3aed',badge='⏰',tint='#faf5ff',
+ hero='<circle cx="92" cy="90" r="30" fill="#fff" stroke="#7c3aed" stroke-width="3"/><path d="M92 90V70M92 90l14 8" stroke="#3b0764" stroke-width="3" stroke-linecap="round"/>'+pill(92,134,'เลย 1 ชม.','#7c3aed',54),tag=None)
+D['year-end-reserve-report']=dict(c1='#fef08a',c2='#fce7f3',sh='#713f12',bd='#fef08a',ln='#eab308',bg='#ca8a04',badge='5%',tint='#fefce8',
+ hero='<path d="M66 132v-46q0-8 8-8h36q8 0 8 8v46z" fill="#e0f2fe" stroke="#94a3b8" stroke-width="2"/><rect x="62" y="70" width="60" height="10" rx="3" fill="#ca8a04"/><rect x="68" y="104" width="48" height="26" fill="#fbbf24"/>'+''.join(f'<circle cx="{78+i*14}" cy="100" r="6" fill="#facc15" stroke="#a16207"/>' for i in range(3)),tag=None)
+D['liquidator-appointment']=dict(c1='#e2e8f0',c2='#ecfccb',sh='#1e293b',bd='#e2e8f0',ln='#64748b',bg='#475569',badge='14',tint='#f8fafc',
+ hero=f'<g transform="translate(92 90) rotate(-20)"><circle r="16" fill="none" stroke="#f59e0b" stroke-width="7"/><rect x="14" y="-4" width="34" height="8" rx="2" fill="#f59e0b"/><rect x="38" y="4" width="5" height="8" fill="#f59e0b"/><rect x="28" y="4" width="5" height="6" fill="#f59e0b"/></g>'+pill(92,132,'ผู้ชำระบัญชี','#475569',58),tag=None)
+D['liquidation-finish-steps']=dict(c1='#99f6e4',c2='#dbeafe',sh='#064e3b',bd='#99f6e4',ln='#14b8a6',bg='#0f766e',badge='🏁',tint='#f0fdfa',
+ hero='<path d="M60 132V62" stroke="#334155" stroke-width="3"/>'+''.join(f'<rect x="{60+(i%4)*10}" y="{62+(i//4)*10}" width="10" height="10" fill="{"#0f172a" if (i+i//4)%2 else "#fff"}"/>' for i in range(12))+''.join(f'<circle cx="{72+i*18}" cy="118" r="6" fill="#0f766e"/>' for i in range(3))+'<path d="M72 118h36" stroke="#0f766e" stroke-width="3"/>'+pill(114,138,'จบ','#0f766e',30),tag=None)

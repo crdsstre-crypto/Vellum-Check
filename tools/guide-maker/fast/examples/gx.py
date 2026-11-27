@@ -39,3 +39,11 @@ def TABLE(x,y=146,w=110,n=4,c='#a16207',chairs=('#64748b',)):
     cx=x-w/2+12+i*(w-24)/max(n-1,1); cc=chairs[i%len(chairs)]
     s=f'<rect x="{cx-7}" y="{y-34}" width="14" height="16" rx="3" fill="{cc}"/>'+s
   return s
+# ชุด 247–251: ZOOM (แว่นขยายซูมตัวเลขสำคัญบนเอกสาร) + SEAL (ตรายางใหญ่เอียง เช่น อนุมัติ/จดแล้ว)
+def ZOOM(x,y,t,r=17,c='#0f172a',fc='#b91c1c'):
+  return (f'<g filter="url(#wsh{K})"><circle cx="{x}" cy="{y}" r="{r}" fill="#fff"/></g><circle cx="{x}" cy="{y}" r="{r}" fill="#f8fafc" stroke="{c}" stroke-width="3"/>'
+   f'<path d="M{x+r*.7} {y+r*.7}l9 9" stroke="{c}" stroke-width="5" stroke-linecap="round"/>'
+   f'<text x="{x}" y="{y+3}" text-anchor="middle" font-size="{max(6.5,r*.42):.1f}" font-weight="900" fill="{fc}" font-family="sans-serif">{t}</text>')
+def SEAL(x,y,t,c='#dc2626',rot=-12,w=56):
+  return (f'<g transform="translate({x} {y}) rotate({rot})" opacity=".85"><rect x="{-w/2}" y="-10" width="{w}" height="20" rx="4" fill="none" stroke="{c}" stroke-width="2.4"/>'
+   f'<rect x="{-w/2+3}" y="-7" width="{w-6}" height="14" rx="3" fill="none" stroke="{c}" stroke-width=".8"/><text y="3.4" text-anchor="middle" font-size="8" font-weight="900" fill="{c}" font-family="sans-serif">{t}</text></g>')
