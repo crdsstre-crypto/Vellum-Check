@@ -1,5 +1,5 @@
-/* ปกแบบ "scrollsealframe" = ภาพในกรอบสีครีมเหมือนกระดาษสัญญา ขอบบนล่างเป็นแท่งม้วนไม้ และมุมขวาล่างมีตราครั่งแดง (คู่มือ consumer-contract-precheck) */
-.gd-cover[data-layout="scrollsealframe"] .gd-cover-art { overflow: visible; border: 6px solid #f2e8cc; border-radius: 3px; box-shadow: inset 0 0 0 1.5px #c8b07a, 0 5px 12px rgba(60,50,20,.25); }
-.gd-cover[data-layout="scrollsealframe"] .gd-cover-art .gd-scene { border-radius: 2px; }
-.gd-cover[data-layout="scrollsealframe"] .gd-cover-art::before { content: ""; position: absolute; left: -8px; right: -6px; bottom: -9px; height: 8px; z-index: 3; pointer-events: none; border-radius: 4px; background: linear-gradient(#a8784a, #7a5030); box-shadow: 0 1px 2px rgba(0,0,0,.25); }
-.gd-cover[data-layout="scrollsealframe"] .gd-cover-art::after { content: ""; position: absolute; right: 4px; bottom: 2px; width: 16px; height: 16px; z-index: 4; pointer-events: none; border-radius: 50%; background: radial-gradient(circle at 40% 38%, #e8584a, #a82a22 70%); box-shadow: 0 0 0 2px rgba(168,42,34,.35), 0 1px 2px rgba(0,0,0,.3); }
+/* ปกแบบ "scrollsealframe" = กรอบพาสเทลบาง ๆ สีเดียวกับภาพ + ป้ายเล็กมุมล่าง (คู่มือ consumer-contract-precheck) */
+.gd-cover[data-layout="scrollsealframe"] .gd-cover-art { overflow: visible; border: 5px solid #d9f99d; border-radius: 10px; box-shadow: 0 0 0 2px #a3e635 inset, 0 6px 14px rgba(30,41,59,.16); }
+.gd-cover[data-layout="scrollsealframe"] .gd-cover-art .gd-scene { border-radius: 6px; }
+.gd-cover[data-layout="scrollsealframe"] .gd-cover-art::before { content: none; }
+.gd-cover[data-layout="scrollsealframe"] .gd-cover-art::after { content: "30"; right: -8px; bottom: 10px; width: 24px; height: 24px; border-radius: 50%; font: 900 13px/24px sans-serif; text-align: center; position: absolute; z-index: 4; background: #4d7c0f; color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,.15); pointer-events: none; }
