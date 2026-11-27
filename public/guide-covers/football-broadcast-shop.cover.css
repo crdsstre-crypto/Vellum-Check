@@ -1,0 +1,4 @@
+/* ปกแบบ "scoreboard" = กรอบกระดานคะแนนสนามสีดำเขียว มีไฟหลอดเหลืองเรียงด้านบน และป้าย LIVE สีแดงติดมุมขวาบน (คู่มือ football-broadcast-shop) */
+.gd-cover[data-layout="scoreboard"] .gd-cover-art { overflow: visible; border: 7px solid #111827; border-top-width: 14px; border-radius: 10px; background: #14532d; box-shadow: 0 0 0 2px #22c55e, 0 6px 14px rgba(0,0,0,.3); }
+.gd-cover[data-layout="scoreboard"] .gd-cover-art::before { content: ""; position: absolute; left: 6px; right: 6px; top: -11px; height: 7px; z-index: 4; background: radial-gradient(circle, #fde68a 0 2.2px, transparent 2.8px) 0 0 / 12px 7px repeat-x; pointer-events: none; }
+.gd-cover[data-layout="scoreboard"] .gd-cover-art::after { content: "● LIVE"; position: absolute; right: -10px; top: -18px; z-index: 5; padding: 3px 8px; border-radius: 6px; background: #dc2626; color: #fff; font: 900 11px/1.2 sans-serif; letter-spacing: .5px; box-shadow: 0 2px 6px rgba(0,0,0,.3); pointer-events: none; }

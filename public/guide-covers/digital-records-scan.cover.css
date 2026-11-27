@@ -1,0 +1,5 @@
+/* ปกแบบ "cloudsync" = กรอบฟ้าอ่อนมุมมนมาก มีแถบความคืบหน้าอัปโหลดสีเขียวที่ขอบล่าง และป้ายเมฆลูกศรขึ้นมุมขวาบน (คู่มือ digital-records-scan) */
+.gd-cover[data-layout="cloudsync"] .gd-cover-art { overflow: visible; border: 6px solid #e0f2fe; border-bottom-width: 12px; border-radius: 18px; background: #e0f2fe; box-shadow: inset 0 -6px 0 -2px #e0f2fe, 0 6px 16px rgba(3,105,161,.22); }
+.gd-cover[data-layout="cloudsync"] .gd-cover-art .gd-scene { border-radius: 12px; }
+.gd-cover[data-layout="cloudsync"] .gd-cover-art::before { content: ""; position: absolute; left: 10px; right: 30%; bottom: -9px; z-index: 4; height: 5px; border-radius: 3px; background: linear-gradient(90deg, #22c55e, #4ade80); pointer-events: none; }
+.gd-cover[data-layout="cloudsync"] .gd-cover-art::after { content: "☁↑"; position: absolute; right: -12px; top: -14px; z-index: 5; padding: 2px 8px; border-radius: 12px; background: #0369a1; color: #fff; font: 900 13px/1.3 sans-serif; box-shadow: 0 2px 6px rgba(0,0,0,.25); pointer-events: none; }

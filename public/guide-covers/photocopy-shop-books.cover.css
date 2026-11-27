@@ -1,0 +1,3 @@
+/* ปกแบบ "paperstack" = ภาพวางบนปึกกระดาษถ่ายเอกสารหลายแผ่นเหลื่อมกันด้านหลัง เอียงคนละมุม และคลิปหนีบดำที่ขอบบน (คู่มือ photocopy-shop-books) */
+.gd-cover[data-layout="paperstack"] .gd-cover-art { overflow: visible; border: 6px solid #fff; border-radius: 3px; background: #fff; box-shadow: 6px 6px 0 -1px #f8fafc, 6px 6px 0 0 #cbd5e1, 12px 11px 0 -1px #f1f5f9, 12px 11px 0 0 #cbd5e1, 0 8px 16px rgba(0,0,0,.18); }
+.gd-cover[data-layout="paperstack"] .gd-cover-art::before { content: ""; position: absolute; left: 50%; top: -13px; z-index: 4; width: 38px; height: 16px; margin-left: -19px; border-radius: 3px 3px 6px 6px; background: linear-gradient(#374151, #111827); box-shadow: 0 2px 4px rgba(0,0,0,.3); pointer-events: none; }
