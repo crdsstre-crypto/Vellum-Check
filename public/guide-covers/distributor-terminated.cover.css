@@ -1,0 +1,3 @@
+/* ปกแบบ "territorymap" = กรอบแผนที่สีเขียวกากี มีเส้นประเขตแดนสีเขียวเข้มด้านใน และหมุดแดงปักมุมขวาบน (คู่มือ distributor-terminated) */
+.gd-cover[data-layout="territorymap"] .gd-cover-art { overflow: visible; border: 8px solid #a3a380; border-radius: 6px; background: #a3a380; outline: 2px dashed #15803d; outline-offset: -5px; box-shadow: 0 6px 14px rgba(63,63,42,.25); }
+.gd-cover[data-layout="territorymap"] .gd-cover-art::after { content: "📍"; position: absolute; right: -10px; top: -16px; z-index: 5; font: 24px/1 sans-serif; pointer-events: none; }

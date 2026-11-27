@@ -1,0 +1,4 @@
+/* ปกแบบ "allergenicons" = กรอบส้มอ่อนขอบมน มีวงกลมไอคอนสารก่อภูมิแพ้เรียงตามขอบล่าง และป้ายแดงเตือนมุมขวาบน (คู่มือ customer-food-allergy) */
+.gd-cover[data-layout="allergenicons"] .gd-cover-art { overflow: visible; border: 8px solid #fed7aa; border-bottom-width: 22px; border-radius: 14px; background: #fed7aa; box-shadow: 0 6px 14px rgba(154,52,18,.2); }
+.gd-cover[data-layout="allergenicons"] .gd-cover-art::before { content: "🥜 🥛 🥚 🦐 🌾"; position: absolute; left: 0; right: 0; bottom: -19px; z-index: 4; text-align: center; font: 11px/1 sans-serif; letter-spacing: 2px; pointer-events: none; }
+.gd-cover[data-layout="allergenicons"] .gd-cover-art::after { content: "แพ้!"; position: absolute; right: -10px; top: -12px; z-index: 5; padding: 3px 8px; border-radius: 10px; background: #dc2626; color: #fff; font: 900 10px/1.3 sans-serif; pointer-events: none; }

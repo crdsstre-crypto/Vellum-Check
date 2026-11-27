@@ -1,0 +1,2 @@
+/* ปกแบบ "mirrorbulbs" = กรอบกระจกแต่งหน้าสีชมพูเข้ม มีหลอดไฟกลมสีครีมเรียงรอบขอบบน (คู่มือ salon-service-injury) */
+.gd-cover[data-layout="mirrorbulbs"] .gd-cover-art { overflow: visible; border: 12px solid transparent; border-radius: 12px; background: radial-gradient(circle, #fff7d6 0 3.4px, transparent 4px) 4px 2px / 16px 12px repeat-x border-box, #be185d border-box; box-shadow: 0 6px 14px rgba(190,24,93,.25); }
