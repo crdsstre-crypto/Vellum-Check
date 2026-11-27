@@ -1419,3 +1419,4 @@ vellum-check/                    ← root ของ repo บน GitHub
 - 2026-11-27: ปรับปกร้านค้าเรื่องที่ 92–131 (40 ปก) เป็นสไตล์พาสเทลเดียวกับปกชุดแรก ใช้ตัวสร้าง /tmp/pastel/gen.py
 - 2026-11-27: เพิ่มคู่มือค้าขายและแบรนด์ 132–136: child-buyer-refund, fake-shop-page, food-foreign-object-claim, price-tag-swap, tips-service-charge (ปกสไตล์พาสเทล ป้ายข้อความอยู่ด้านบน ทุกเรื่อง reviewed:false)
 - 2026-11-27: เพิ่มคู่มือค้าขายและแบรนด์ 137–141: clearance-sale-defect, unhappy-service-nopay, wrong-change-given, car-blocks-shop, inflated-receipt-request (ภาพช่องใช้พื้นทัศนียภาพ FL/CT ใน /tmp/art/fl.js)
+- 2026-11-27: เพิ่มคู่มือค้าขายและแบรนด์ 142–146: supplier-price-hike, staff-posts-about-shop, shop-website-ownership, qr-code-swap-scam, page-admin-hijack
