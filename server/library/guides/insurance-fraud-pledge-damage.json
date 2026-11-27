@@ -5,7 +5,7 @@
   "mood": "rub+calm+umbrella+hop",
   "coverLayout": "fakeclaimpastel",
   "coverLines": [
-    "แกล้งพังเคลมประกัน",
+    "แกล้งพังเพื่อเคลม",
     "ผิดอาญาไหม?"
   ],
   "order": 269,
@@ -21,7 +21,7 @@
   ],
   "sections": [
     {
-      "title": "แกล้งพังเคลมประกัน",
+      "title": "แกล้งพังเพื่อเคลม",
       "panel": {
         "scene": "ifstock",
         "mood": "hip+shock+lamp+stomp",
