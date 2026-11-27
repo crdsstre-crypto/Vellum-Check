@@ -1,0 +1,5 @@
+/* ปกแบบ "ransomnote" = กรอบสีดำด้านเหมือนฟิล์มนัวร์ มีเทปกาวสีเหลืองติดสองมุมบนแบบกระดาษจดหมายขู่ (คู่มือ shop-extortion-threat) */
+.gd-cover[data-layout="ransomnote"] .gd-cover-art { overflow: visible; border: 8px solid #1f1f1f; border-radius: 4px; background: #1f1f1f; box-shadow: 0 0 0 2px #444, 0 8px 16px rgba(0,0,0,.35); }
+.gd-cover[data-layout="ransomnote"] .gd-cover-art::before, .gd-cover[data-layout="ransomnote"] .gd-cover-art::after { content: ""; position: absolute; top: -12px; z-index: 4; width: 42px; height: 16px; background: rgba(250,204,21,.85); pointer-events: none; }
+.gd-cover[data-layout="ransomnote"] .gd-cover-art::before { left: -12px; transform: rotate(-30deg); }
+.gd-cover[data-layout="ransomnote"] .gd-cover-art::after { right: -12px; transform: rotate(30deg); }
