@@ -1,0 +1,7 @@
+// ภาพการ์ดของคู่มือ trade-credit-unpaid
+VCCards({
+cardledgerbook: function (k) { return '<defs><linearGradient id="clbg' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e6f4ea"/><stop offset="1" stop-color="#fff4d6"/></linearGradient></defs><rect width="136" height="160" fill="url(#clbg' + k + ')"/><g transform="translate(-22 0)">' +
+  '<circle cx="118" cy="22" r="24" fill="#fff" opacity=".4"/><path d="M0 132q36-10 70-4t66-6V160H0z" fill="#fff" opacity=".35"/>' +
+  '<g transform="rotate(-6 96 74)"><rect x="60" y="30" width="72" height="90" rx="4" fill="#1f3a5f"/><rect x="66" y="34" width="62" height="82" rx="2" fill="#fffdf5"/><path d="M72 46h50M72 56h50M72 66h50M72 76h50M72 86h50M72 96h50" stroke="#cbd5e1"/><path d="M102 42v70" stroke="#fca5a5"/><text x="118" y="54" text-anchor="end" font-size="6.6" font-weight="900" fill="#dc2626" font-family="sans-serif">ค้าง</text><text x="118" y="74" text-anchor="end" font-size="6.6" font-weight="900" fill="#dc2626" font-family="sans-serif">ค้าง</text><text x="118" y="94" text-anchor="end" font-size="6.6" font-weight="900" fill="#16a34a" font-family="sans-serif">จ่าย</text></g>' +
+  '<g transform="translate(124 34)"><g class="sc-swing2"><rect x="-12" y="0" width="24" height="22" rx="3" fill="#fff" stroke="#94a3b8"/><rect x="-12" y="0" width="24" height="6" rx="2" fill="#ef4444"/><text y="18" text-anchor="middle" font-size="9" font-weight="900" fill="#111827" font-family="sans-serif">2</text></g></g></g>'; }
+});

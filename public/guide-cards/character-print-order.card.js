@@ -1,0 +1,8 @@
+// ภาพการ์ดของคู่มือ character-print-order
+VCCards({
+cardcakecharacter: function (k) { return '<defs><linearGradient id="cccg' + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fdf2f8"/><stop offset="1" stop-color="#e0f2fe"/></linearGradient><linearGradient id="ccck' + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe3ff"/><stop offset="1" stop-color="#7cb7ea"/></linearGradient></defs><rect width="136" height="160" fill="url(#cccg' + k + ')"/><g transform="translate(-22 0)">' +
+  '<circle cx="118" cy="22" r="24" fill="#fff" opacity=".5"/><path d="M0 134q36-10 70-4t66-6V160H0z" fill="#fff" opacity=".4"/>' +
+  '<rect x="62" y="116" width="66" height="6" rx="2" fill="#cbd5e1"/><rect x="66" y="84" width="58" height="32" rx="5" fill="url(#ccck' + k + ')"/><path d="M66 86q6 6 12 0t12 0t12 0t12 0t12 0" fill="#fff" stroke="#fff" stroke-width="3"/>' +
+  '<g transform="translate(95 64)"><circle r="16" fill="#c08457"/><circle cx="-12" cy="-12" r="6" fill="#c08457"/><circle cx="12" cy="-12" r="6" fill="#c08457"/><circle r="12" fill="#fff" fill-opacity=".55" stroke="#e2e8f0" stroke-width="2"/><circle cx="-4" cy="-1" r="1.8" fill="#3a2416"/><circle cx="4" cy="-1" r="1.8" fill="#3a2416"/><ellipse cy="5" rx="3.4" ry="2.2" fill="#8a5a33"/></g>' +
+  '<g class="sc-twinkle" fill="#facc15"><path d="M122 46l2 4 4 1-4 1-2 4-2-4-4-1 4-1z"/></g><g transform="translate(70 40)"><circle r="9" fill="#fff" stroke="#16a34a" stroke-width="1.6"/><text y="3.4" text-anchor="middle" font-size="6" font-weight="900" fill="#16a34a" font-family="sans-serif">ของร้าน</text></g></g>'; }
+});

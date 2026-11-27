@@ -1,0 +1,4 @@
+/* ปกแบบ "spotlightframe" = กรอบภาพสีม่วงเข้มมีหลอดไฟเวทีเรียงรอบขอบแบบกระจกแต่งหน้า และดาวทองติดมุมซ้ายบน (คู่มือ celebrity-photo-promo) */
+.gd-cover[data-layout="spotlightframe"] .gd-cover-art { overflow: visible; border: 9px solid transparent; border-radius: 12px; background: radial-gradient(circle, #fff7c2 0 2.6px, #fbbf24 3px, transparent 4px) 0 0 / 18px 18px border-box, #3b1f6e border-box; box-shadow: 0 6px 16px rgba(60,20,110,.3); }
+.gd-cover[data-layout="spotlightframe"] .gd-cover-art .gd-scene { border-radius: 4px; }
+.gd-cover[data-layout="spotlightframe"] .gd-cover-art::before { content: "★"; position: absolute; left: -14px; top: -14px; z-index: 4; width: 32px; height: 32px; border-radius: 50%; background: #fbbf24; color: #fff; font: 900 20px/32px sans-serif; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,.25); pointer-events: none; }

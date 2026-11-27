@@ -1,0 +1,5 @@
+/* ปกแบบ "returnarrow" = กรอบภาพสีชมพูพีช มีลูกศรวนกลับสีชมพูเข้มเกาะมุมขวาบน และป้ายห้อยราคาสินค้ามุมซ้ายล่าง (คู่มือ return-change-mind) */
+.gd-cover[data-layout="returnarrow"] .gd-cover-art { overflow: visible; border: 4px solid #fbcfe8; border-radius: 16px; box-shadow: 0 6px 14px rgba(150,40,90,.16); }
+.gd-cover[data-layout="returnarrow"] .gd-cover-art .gd-scene { border-radius: 12px; }
+.gd-cover[data-layout="returnarrow"] .gd-cover-art::before { content: "↺"; position: absolute; right: -12px; top: -12px; z-index: 4; width: 30px; height: 30px; border-radius: 50%; background: #ec4899; color: #fff; font: 900 20px/30px sans-serif; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,.2); pointer-events: none; }
+.gd-cover[data-layout="returnarrow"] .gd-cover-art::after { content: ""; position: absolute; left: -9px; bottom: 16px; width: 26px; height: 15px; z-index: 4; background: radial-gradient(circle at 6px 50%, #fff 0 2px, #be185d 2.2px 2.8px, transparent 3px), #fde68a; clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%); transform: rotate(-14deg); filter: drop-shadow(0 1px 2px rgba(0,0,0,.25)); pointer-events: none; }

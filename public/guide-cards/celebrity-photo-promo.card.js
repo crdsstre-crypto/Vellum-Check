@@ -1,0 +1,7 @@
+// ภาพการ์ดของคู่มือ celebrity-photo-promo
+VCCards({
+cardstarposter: function (k) { return '<defs><linearGradient id="cspg' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2e1f5e"/><stop offset="1" stop-color="#7c3aed"/></linearGradient><radialGradient id="cspf' + k + '" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><rect width="136" height="160" fill="url(#cspg' + k + ')"/><g transform="translate(-22 0)">' +
+  '<g fill="#fff" opacity=".18"><circle cx="70" cy="20" r="3"/><circle cx="100" cy="30" r="2"/><circle cx="126" cy="14" r="2.6"/></g><circle class="sc-glow" cx="118" cy="30" r="20" fill="url(#cspf' + k + ')"/>' +
+  '<g transform="rotate(4 96 78)"><rect x="62" y="34" width="66" height="88" rx="3" fill="#fff"/><rect x="67" y="39" width="56" height="60" fill="#fcd34d"/><circle cx="95" cy="62" r="13" fill="#f3c9a5"/><path d="M82 60q0-18 13-18t13 18q-4-8-13-8t-13 8z" fill="#c08a3e"/><g fill="#111827"><rect x="86" y="58" width="8" height="5" rx="2"/><rect x="96" y="58" width="8" height="5" rx="2"/></g><path d="M78 99q17-20 34 0" fill="#f8fafc"/><text x="95" y="111" text-anchor="middle" font-size="7" font-weight="900" fill="#be185d" font-family="sans-serif">ดาราใช้?</text></g>' +
+  '<g transform="translate(122 104)"><circle r="10" fill="#fff" stroke="#dc2626" stroke-width="2"/><text y="4.4" text-anchor="middle" font-size="13" font-weight="900" fill="#dc2626" font-family="sans-serif">©</text></g></g>'; }
+});

@@ -1,0 +1,4 @@
+/* ปกแบบ "ledgerlines" = ภาพในกรอบเหมือนหน้าสมุดบัญชี เส้นบรรทัดฟ้าและเส้นกั้นหน้าแดงที่ขอบซ้าย มีแถบผ้าคั่นสีเขียวห้อยจากขอบบน (คู่มือ trade-credit-unpaid) */
+.gd-cover[data-layout="ledgerlines"] .gd-cover-art { overflow: visible; border: 8px solid transparent; border-left-width: 14px; border-radius: 6px; background: linear-gradient(90deg, transparent 8px, #f87171 8px 10px, transparent 10px) border-box, repeating-linear-gradient(0deg, #fffdf5 0 9px, #bfdbfe 9px 10px) border-box; box-shadow: 0 6px 14px rgba(40,60,90,.18); }
+.gd-cover[data-layout="ledgerlines"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="ledgerlines"] .gd-cover-art::after { content: ""; position: absolute; right: 18px; top: -10px; width: 12px; height: 46px; z-index: 4; background: #16a34a; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%); box-shadow: 0 2px 3px rgba(0,0,0,.2); pointer-events: none; }
