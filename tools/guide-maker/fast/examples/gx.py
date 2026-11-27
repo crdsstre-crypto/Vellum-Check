@@ -87,3 +87,17 @@ def STICKER(x,y,t,c='#dc2626',r=13):
   import math
   pts=' '.join(f'{x+(r+(2 if i%2 else 0))*math.cos(i*math.pi/10):.1f},{y+(r+(2 if i%2 else 0))*math.sin(i*math.pi/10):.1f}' for i in range(20))
   return f'<polygon points="{pts}" fill="{c}"/><circle cx="{x}" cy="{y}" r="{r-3}" fill="none" stroke="#fff" stroke-width=".8"/><text x="{x}" y="{y+2.6}" text-anchor="middle" font-size="6.5" font-weight="900" fill="#fff" font-family="sans-serif">{t}</text>'
+# GOAT: แพะน่ารักมีหน้า เขา หู เครา คาบผักสลัด (แก้ตามที่ผู้ใช้ขอ ชุด 265)
+def GOAT(x,y,s=1,flip=False):
+  f=-1 if flip else 1
+  legs=''.join(f'<rect x="{lx}" y="10" width="7" height="20" rx="3" fill="#f5f0e6"/><rect x="{lx}" y="27" width="7" height="5" rx="2" fill="#57534e"/>' for lx in (-22,-11,8,18))
+  return (f'<g transform="translate({x} {y}) scale({s*f} {s})"><ellipse cx="0" cy="34" rx="34" ry="5" fill="#000" opacity=".12"/>'+legs+
+   '<path d="M-30 -6q-8-8-4-14" stroke="#e7e2d8" stroke-width="5" stroke-linecap="round" fill="none"/>'
+   '<ellipse cx="0" cy="0" rx="32" ry="18" fill="#fffdf8" stroke="#d6cfc2" stroke-width="1.5"/><ellipse cx="-6" cy="-4" rx="14" ry="7" fill="#fff" opacity=".7"/>'
+   '<path d="M20 -8q10-10 14-22" stroke="#fffdf8" stroke-width="14" stroke-linecap="round" fill="none"/><g transform="translate(36 -30)">'
+   '<path d="M-6 -10q-6-14 4-18" stroke="#a8a29e" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M4 -10q2-14 12-14" stroke="#a8a29e" stroke-width="4" stroke-linecap="round" fill="none"/>'
+   '<ellipse cx="-14" cy="-4" rx="8" ry="4" fill="#f5d0c5" transform="rotate(-25 -14 -4)"/><ellipse cx="16" cy="-4" rx="8" ry="4" fill="#f5d0c5" transform="rotate(25 16 -4)"/>'
+   '<ellipse cx="0" cy="2" rx="13" ry="15" fill="#fffdf8" stroke="#d6cfc2" stroke-width="1.5"/><ellipse cx="0" cy="11" rx="9" ry="7" fill="#fde7e1"/>'
+   '<circle cx="-5" cy="-1" r="2.6" fill="#1f2937"/><circle cx="5" cy="-1" r="2.6" fill="#1f2937"/><circle cx="-4.2" cy="-1.8" r=".9" fill="#fff"/><circle cx="5.8" cy="-1.8" r=".9" fill="#fff"/>'
+   '<circle cx="-9" cy="5" r="2.4" fill="#fda4af" opacity=".7"/><circle cx="9" cy="5" r="2.4" fill="#fda4af" opacity=".7"/><path d="M-2 10q2 2 4 0" stroke="#9f6b5a" stroke-width="1.2" fill="none"/>'
+   '<path d="M-3 17q3 9 6 0z" fill="#e7e2d8"/><path d="M4 13q10-6 16 2q-4 8-14 4z" fill="#4ade80" stroke="#16a34a" stroke-width="1"/></g></g>')
