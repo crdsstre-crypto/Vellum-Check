@@ -1436,3 +1436,4 @@ vellum-check/                    ← root ของ repo บน GitHub
 - 2026-11-27: เพิ่มคู่มือค้าขายและแบรนด์ 212–216: supplier-late-for-festival, partner-death-shop, carwash-staff-damage, foreign-currency-invoice, shop-space-sublet (+ปกพาสเทล, CHART)
 - 2026-11-27: เพิ่มคู่มือค้าขายและแบรนด์ 217–221: carpenter-paid-vanished, landlord-locks-shop, customer-claims-paid, staff-security-deposit, quote-validity-expired (+ปกพาสเทล)
 - 2026-11-27: เพิ่มคู่มือค้าขายและแบรนด์ 222–226: guesthouse-guest-unpaid, shop-relocation-staff, seller-holds-until-paid, custom-pos-system, brand-collab-profit (+ปกพาสเทล)
+- 2026-11-27: เพิ่มคู่มือค้าขายและแบรนด์ 227–231: shared-order-split, shop-dog-bites, gas-fire-neighbor, neighbor-tree-roots, subcontract-quality (+ปกพาสเทล)
