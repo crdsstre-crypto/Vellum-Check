@@ -1,0 +1,13 @@
+T='font-family="sans-serif" font-weight="900"'
+def pill(x,y,t,c,w=44):
+  return f'<g transform="translate({x} {y})"><rect x="{-w/2}" y="-8" width="{w}" height="15" rx="7" fill="#fff" stroke="{c}" stroke-width="2"/><text y="3" text-anchor="middle" font-size="7" fill="{c}" {T}>{t}</text></g>'
+D['sales-agent-scope']=dict(c1='#fed7aa',c2='#bbf7d0',sh='#7c2d12',bd='#fed7aa',ln='#f97316',bg='#c2410c',badge='%',tint='#fff7ed',
+ hero='<rect x="66" y="64" width="52" height="68" rx="6" fill="#fff" stroke="#c2410c" stroke-width="2.4"/><rect x="84" y="58" width="16" height="10" rx="3" fill="#c2410c"/><circle cx="92" cy="88" r="10" fill="#fed7aa"/><path d="M76 116q16-14 32 0" fill="#fdba74"/>'+pill(92,142,'ตัวแทน','#c2410c',40),tag=None)
+D['agent-termination-notice']=dict(c1='#e9d5ff',c2='#a5f3fc',sh='#3b0764',bd='#e9d5ff',ln='#a855f7',bg='#7c3aed',badge='✕',tint='#faf5ff',
+ hero='<rect x="60" y="72" width="64" height="44" rx="4" fill="#fffaf0" stroke="#7c3aed" stroke-width="2"/><path d="M60 74l32 22 32-22" fill="#e9d5ff" stroke="#7c3aed" stroke-width="2"/>'+pill(92,134,'เลิกตัวแทน','#7c3aed',56)+'<circle cx="124" cy="70" r="9" fill="#dc2626"/><path d="M120 66l8 8M128 66l-8 8" stroke="#fff" stroke-width="2"/>',tag=None)
+D['paid-storage-fees-lien']=dict(c1='#ccfbf1',c2='#fef9c3',sh='#134e4a',bd='#ccfbf1',ln='#14b8a6',bg='#0f766e',badge='🔒',tint='#f0fdfa',
+ hero='<rect x="62" y="70" width="60" height="62" rx="4" fill="#d6b48a" stroke="#92400e" stroke-width="2"/><path d="M62 92h60" stroke="#92400e" stroke-width="2"/><rect x="84" y="100" width="16" height="16" rx="2" fill="#f59e0b"/><path d="M87 100v-5a5 5 0 0 1 10 0v5" stroke="#334155" stroke-width="2.4" fill="none"/>'+pill(92,60,'ค้างค่าฝาก','#0f766e',54),tag=None)
+D['credit-guarantor-claim']=dict(c1='#e5e7eb',c2='#fed7aa',sh='#292524',bd='#e5e7eb',ln='#ea580c',bg='#c2410c',badge='∞',tint='#fafaf9',
+ hero='<path d="M92 56l30 12v22c0 20-14 32-30 38c-16-6-30-18-30-38V68z" fill="#fff7ed" stroke="#c2410c" stroke-width="2.6"/><path d="M76 94q8-10 16 0t16 0" stroke="#c2410c" stroke-width="3" fill="none"/>'+pill(92,140,'ผู้ค้ำ','#c2410c',36),tag=None)
+D['sale-option-withhold-price']=dict(c1='#fde3c4',c2='#dcfce7',sh='#78350f',bd='#fde3c4',ln='#d97706',bg='#92400e',badge='⏳',tint='#fffbeb',
+ hero='<rect x="58" y="96" width="68" height="10" rx="3" fill="#92400e"/><rect x="64" y="106" width="6" height="26" fill="#78350f"/><rect x="114" y="106" width="6" height="26" fill="#78350f"/>'+f'<g transform="translate(96 76) rotate(-8)"><path d="M-26 -9h44l8 9-8 9h-44z" fill="#16a34a"/><text x="-4" y="3" text-anchor="middle" font-size="8" fill="#fff" {T}>85,000</text></g>',tag=None)

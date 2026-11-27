@@ -59,3 +59,13 @@ def CHAT(x,y,msgs,w=70,h=96,c='#0f172a'):
 def CHIP(x,y,t,c='#7c3aed',fg='#fff'):
   w=len(t)*4.2+12
   return f'<rect x="{x}" y="{y-7}" width="{w}" height="13" rx="6.5" fill="{c}"/><text x="{x+w/2}" y="{y+2.4}" text-anchor="middle" font-size="6.5" font-weight="900" fill="{fg}" font-family="sans-serif">{t}</text>'
+# ชุด 257–261: HANGTAG (ป้ายแขวนแกว่งได้ บอกราคา/สถานะ) + RIBBON (ริบบิ้นแบนเนอร์ปลายแฉก)
+def HANGTAG(x,y,t,c='#f59e0b',fg='#1f2937'):
+  w=len(t)*4.4+14
+  return (f'<g class="cm-bob"><path d="M{x} {y-14}v8" stroke="#64748b" stroke-width="1"/><g transform="translate({x} {y}) rotate(-6)">'
+   f'<path d="M{-w/2} -6h{w-6}l6 6-6 6h{-(w-6)}z" fill="{c}"/><circle cx="{w/2-5}" cy="0" r="1.6" fill="#fff"/>'
+   f'<text x="-2" y="2.6" text-anchor="middle" font-size="6.5" font-weight="900" fill="{fg}" font-family="sans-serif">{t}</text></g></g>')
+def RIBBON(x,y,t,c='#7c3aed',w=None):
+  w=w or len(t)*4.6+20
+  return (f'<path d="M{x-w/2-8} {y-6}h8v12h-8l4-6z" fill="{c}" opacity=".7"/><path d="M{x+w/2} {y-6}h8l-4 6 4 6h-8z" fill="{c}" opacity=".7"/>'
+   f'<rect x="{x-w/2}" y="{y-8}" width="{w}" height="16" rx="2" fill="{c}"/><text x="{x}" y="{y+3}" text-anchor="middle" font-size="7" font-weight="900" fill="#fff" font-family="sans-serif">{t}</text>')
