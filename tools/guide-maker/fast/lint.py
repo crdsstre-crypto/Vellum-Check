@@ -16,6 +16,8 @@ for x in g['sections']:
     if '**' not in it['a']: E.append('คำตอบไม่มีไฮไลต์: '+it['q'][:20])
 for k,n in (('summary',5),('redFlags',4)):
   if len(g[k])!=n: E.append(f'{k} ต้อง {n} ข้อ')
+LIMIT_T=95
+if len(g['title'])>LIMIT_T: E.append(f'หัวข้อยาว {len(g["title"])} > {LIMIT_T} (หน้ารายการบนมือถืออ่านไม่จบ)')
 titles={json.load(open(f))['title'] for f in glob.glob('server/library/guides/*.json')}
 for q in re.findall(r'"([^"]{25,})"',' '.join(it['a'] for x in g['sections'] for it in x['items'])):
   if q.endswith('?') and not any(q in T for T in titles) and q!=g['title']: E.append('อ้างชื่อคู่มือไม่ตรง: '+q[:40])
