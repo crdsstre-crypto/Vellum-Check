@@ -1,4 +1,5 @@
-/* ปกแบบ "allergenicons" = กรอบส้มอ่อนขอบมน มีวงกลมไอคอนสารก่อภูมิแพ้เรียงตามขอบล่าง และป้ายแดงเตือนมุมขวาบน (คู่มือ customer-food-allergy) */
-.gd-cover[data-layout="allergenicons"] .gd-cover-art { overflow: visible; border: 8px solid #fed7aa; border-bottom-width: 22px; border-radius: 14px; background: #fed7aa; box-shadow: 0 6px 14px rgba(154,52,18,.2); }
-.gd-cover[data-layout="allergenicons"] .gd-cover-art::before { content: "🥜 🥛 🥚 🦐 🌾"; position: absolute; left: 0; right: 0; bottom: -19px; z-index: 4; text-align: center; font: 11px/1 sans-serif; letter-spacing: 2px; pointer-events: none; }
-.gd-cover[data-layout="allergenicons"] .gd-cover-art::after { content: "แพ้!"; position: absolute; right: -10px; top: -12px; z-index: 5; padding: 3px 8px; border-radius: 10px; background: #dc2626; color: #fff; font: 900 10px/1.3 sans-serif; pointer-events: none; }
+/* ปกแบบ "allergenicons" = กรอบพาสเทลบาง ๆ สีเดียวกับภาพ + ป้ายเล็กมุมล่าง (คู่มือ customer-food-allergy) */
+.gd-cover[data-layout="allergenicons"] .gd-cover-art { overflow: visible; border: 5px solid #fed7aa; border-radius: 10px; box-shadow: 0 0 0 2px #fb923c inset, 0 6px 14px rgba(30,41,59,.16); }
+.gd-cover[data-layout="allergenicons"] .gd-cover-art .gd-scene { border-radius: 6px; }
+.gd-cover[data-layout="allergenicons"] .gd-cover-art::before { content: none; }
+.gd-cover[data-layout="allergenicons"] .gd-cover-art::after { content: "!"; right: -8px; bottom: 10px; width: 24px; height: 24px; border-radius: 50%; font: 900 13px/24px sans-serif; text-align: center; position: absolute; z-index: 4; background: #ea580c; color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,.15); pointer-events: none; }

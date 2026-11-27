@@ -1,3 +1,5 @@
-/* ปกแบบ "pixelgrid" = กรอบไล่สีมุกรุ้ง ขอบเป็นช่องพิกเซลสี่เหลี่ยมเล็ก ๆ และป้าย "AI" ม่วงมุมขวาบน (คู่มือ ai-shop-images) */
-.gd-cover[data-layout="pixelgrid"] .gd-cover-art { overflow: visible; border: 9px solid transparent; border-radius: 6px; background: conic-gradient(#c4b5fd 25%, #fbcfe8 0 50%, #a5f3fc 0 75%, #fde68a 0) 0 0 / 9px 9px border-box; box-shadow: 0 6px 14px rgba(124,58,237,.22); }
-.gd-cover[data-layout="pixelgrid"] .gd-cover-art::after { content: "AI"; position: absolute; right: -12px; top: -12px; z-index: 5; width: 30px; height: 30px; border-radius: 8px; background: #7c3aed; color: #fff; font: 900 13px/30px monospace; text-align: center; pointer-events: none; }
+/* ปกแบบ "pixelgrid" = กรอบพาสเทลบาง ๆ สีเดียวกับภาพ + ป้ายเล็กมุมล่าง (คู่มือ ai-shop-images) */
+.gd-cover[data-layout="pixelgrid"] .gd-cover-art { overflow: visible; border: 5px solid #ddd6fe; border-radius: 10px; box-shadow: 0 0 0 2px #a78bfa inset, 0 6px 14px rgba(30,41,59,.16); }
+.gd-cover[data-layout="pixelgrid"] .gd-cover-art .gd-scene { border-radius: 6px; }
+.gd-cover[data-layout="pixelgrid"] .gd-cover-art::before { content: none; }
+.gd-cover[data-layout="pixelgrid"] .gd-cover-art::after { content: "AI"; right: -8px; bottom: 10px; width: 24px; height: 24px; border-radius: 50%; font: 900 13px/24px sans-serif; text-align: center; position: absolute; z-index: 4; background: #7c3aed; color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,.15); pointer-events: none; }

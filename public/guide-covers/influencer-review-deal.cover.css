@@ -1,4 +1,5 @@
-/* ปกแบบ "storyframe" = กรอบแนวตั้งแบบหน้าจอสตอรี่ มีแถบความคืบหน้าสีขาวหลายท่อนเรียงด้านบน และป้ายหัวใจชมพูมุมขวาล่าง (คู่มือ influencer-review-deal) */
-.gd-cover[data-layout="storyframe"] .gd-cover-art { overflow: visible; border: 7px solid #111; border-top-width: 16px; border-radius: 16px; background: #111; box-shadow: 0 6px 14px rgba(0,0,0,.25); }
-.gd-cover[data-layout="storyframe"] .gd-cover-art::before { content: ""; position: absolute; left: 8px; right: 8px; top: -10px; z-index: 4; height: 3px; background: linear-gradient(90deg, #fff 0 30%, transparent 30% 34%, #fff 34% 64%, transparent 64% 68%, rgba(255,255,255,.4) 68%); pointer-events: none; }
-.gd-cover[data-layout="storyframe"] .gd-cover-art::after { content: "♥"; position: absolute; right: -10px; bottom: -10px; z-index: 5; width: 28px; height: 28px; border-radius: 50%; background: #f43f5e; color: #fff; font: 900 15px/28px sans-serif; text-align: center; pointer-events: none; }
+/* ปกแบบ "storyframe" = กรอบพาสเทลบาง ๆ สีเดียวกับภาพ + ป้ายเล็กมุมล่าง (คู่มือ influencer-review-deal) */
+.gd-cover[data-layout="storyframe"] .gd-cover-art { overflow: visible; border: 5px solid #fbcfe8; border-radius: 10px; box-shadow: 0 0 0 2px #f472b6 inset, 0 6px 14px rgba(30,41,59,.16); }
+.gd-cover[data-layout="storyframe"] .gd-cover-art .gd-scene { border-radius: 6px; }
+.gd-cover[data-layout="storyframe"] .gd-cover-art::before { content: none; }
+.gd-cover[data-layout="storyframe"] .gd-cover-art::after { content: "♥"; right: -8px; bottom: 10px; width: 24px; height: 24px; border-radius: 50%; font: 900 13px/24px sans-serif; text-align: center; position: absolute; z-index: 4; background: #ec4899; color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,.15); pointer-events: none; }

@@ -1,3 +1,5 @@
-/* ปกแบบ "territorymap" = กรอบแผนที่สีเขียวกากี มีเส้นประเขตแดนสีเขียวเข้มด้านใน และหมุดแดงปักมุมขวาบน (คู่มือ distributor-terminated) */
-.gd-cover[data-layout="territorymap"] .gd-cover-art { overflow: visible; border: 8px solid #a3a380; border-radius: 6px; background: #a3a380; outline: 2px dashed #15803d; outline-offset: -5px; box-shadow: 0 6px 14px rgba(63,63,42,.25); }
-.gd-cover[data-layout="territorymap"] .gd-cover-art::after { content: "📍"; position: absolute; right: -10px; top: -16px; z-index: 5; font: 24px/1 sans-serif; pointer-events: none; }
+/* ปกแบบ "territorymap" = กรอบพาสเทลบาง ๆ สีเดียวกับภาพ + ป้ายเล็กมุมล่าง (คู่มือ distributor-terminated) */
+.gd-cover[data-layout="territorymap"] .gd-cover-art { overflow: visible; border: 5px solid #bbf7d0; border-radius: 10px; box-shadow: 0 0 0 2px #4ade80 inset, 0 6px 14px rgba(30,41,59,.16); }
+.gd-cover[data-layout="territorymap"] .gd-cover-art .gd-scene { border-radius: 6px; }
+.gd-cover[data-layout="territorymap"] .gd-cover-art::before { content: none; }
+.gd-cover[data-layout="territorymap"] .gd-cover-art::after { content: "?"; right: -8px; bottom: 10px; width: 24px; height: 24px; border-radius: 50%; font: 900 13px/24px sans-serif; text-align: center; position: absolute; z-index: 4; background: #16a34a; color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,.15); pointer-events: none; }

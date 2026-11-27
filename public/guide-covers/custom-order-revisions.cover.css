@@ -1,3 +1,5 @@
-/* ปกแบบ "revisionstamp" = กรอบกระดาษจุดสีครีม ขอบเส้นประเทาเหมือนกระดาษร่าง และตราประทับแดง "แก้ไข" เอียงมุมขวาล่าง (คู่มือ custom-order-revisions) */
-.gd-cover[data-layout="revisionstamp"] .gd-cover-art { overflow: visible; border: 8px solid #fffdf7; border-radius: 4px; background: #fffdf7; outline: 2px dashed #94a3b8; outline-offset: -4px; box-shadow: 0 6px 14px rgba(51,65,85,.18); }
-.gd-cover[data-layout="revisionstamp"] .gd-cover-art::after { content: "แก้ไข"; position: absolute; right: -12px; bottom: -10px; z-index: 5; padding: 3px 9px; border: 2.5px solid #dc2626; border-radius: 4px; background: rgba(255,255,255,.9); color: #dc2626; font: 900 11px/1.3 sans-serif; transform: rotate(-10deg); pointer-events: none; }
+/* ปกแบบ "revisionstamp" = กรอบพาสเทลบาง ๆ สีเดียวกับภาพ + ป้ายเล็กมุมล่าง (คู่มือ custom-order-revisions) */
+.gd-cover[data-layout="revisionstamp"] .gd-cover-art { overflow: visible; border: 5px solid #fde68a; border-radius: 10px; box-shadow: 0 0 0 2px #fbbf24 inset, 0 6px 14px rgba(30,41,59,.16); }
+.gd-cover[data-layout="revisionstamp"] .gd-cover-art .gd-scene { border-radius: 6px; }
+.gd-cover[data-layout="revisionstamp"] .gd-cover-art::before { content: none; }
+.gd-cover[data-layout="revisionstamp"] .gd-cover-art::after { content: "8"; right: -8px; bottom: 10px; width: 24px; height: 24px; border-radius: 50%; font: 900 13px/24px sans-serif; text-align: center; position: absolute; z-index: 4; background: #ea580c; color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,.15); pointer-events: none; }

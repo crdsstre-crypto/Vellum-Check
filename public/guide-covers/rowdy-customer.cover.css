@@ -1,3 +1,5 @@
-/* ปกแบบ "neonbarsign" = กรอบม่วงเข้มมีเส้นนีออนชมพูเรืองแสงรอบขอบ และป้ายนีออน "BAR" สีเขียวมุมซ้ายบน (คู่มือ rowdy-customer) */
-.gd-cover[data-layout="neonbarsign"] .gd-cover-art { overflow: visible; border: 7px solid #1e0b2e; border-radius: 10px; background: #1e0b2e; box-shadow: inset 0 0 0 2px #f472b6, 0 0 0 2px #f472b6, 0 0 14px rgba(244,114,182,.6); }
-.gd-cover[data-layout="neonbarsign"] .gd-cover-art::after { content: "BAR"; position: absolute; left: -10px; top: -14px; z-index: 5; padding: 2px 8px; border: 2px solid #4ade80; border-radius: 6px; background: #1e0b2e; color: #4ade80; font: 900 11px/1.3 sans-serif; letter-spacing: 2px; text-shadow: 0 0 6px #4ade80; pointer-events: none; }
+/* ปกแบบ "neonbarsign" = กรอบพาสเทลบาง ๆ สีเดียวกับภาพ + ป้ายเล็กมุมล่าง (คู่มือ rowdy-customer) */
+.gd-cover[data-layout="neonbarsign"] .gd-cover-art { overflow: visible; border: 5px solid #fde68a; border-radius: 10px; box-shadow: 0 0 0 2px #f59e0b inset, 0 6px 14px rgba(30,41,59,.16); }
+.gd-cover[data-layout="neonbarsign"] .gd-cover-art .gd-scene { border-radius: 6px; }
+.gd-cover[data-layout="neonbarsign"] .gd-cover-art::before { content: none; }
+.gd-cover[data-layout="neonbarsign"] .gd-cover-art::after { content: "!"; right: -8px; bottom: 10px; width: 24px; height: 24px; border-radius: 50%; font: 900 13px/24px sans-serif; text-align: center; position: absolute; z-index: 4; background: #d97706; color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,.15); pointer-events: none; }
