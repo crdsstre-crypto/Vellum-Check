@@ -3,7 +3,7 @@
 N=$1; S=$2; SRC=/home/claude/src/Vellum-Check-main; R=/home/claude/vellum-check
 F="server/library/guides/$S.json public/guide-panels/$S.panels.js public/guide-cards/$S.card.js public/guide-covers/$S.cover.css"
 for f in $F; do cp $SRC/$f $R/$f; done
-cd $R && git pull -q --rebase origin main 2>/dev/null; git add $F && git commit -qm "Add guide: $S (${CAT:-ค้าขายและแบรนด์} order $3)
+cd $R && git pull -q --rebase origin main 2>/dev/null; git add $F && git commit -qm "Add guide: $S (${CAT:-ค้าขายและแบรนด์} order $3) [skip render]
 
 ${ATTRIB:?ตั้ง ATTRIB เป็นบรรทัด Co-Authored-By/Claude-Session ตามที่ระบบของแชตใหม่กำหนดก่อนรัน}" && git -c push.negotiate=true push -q origin main 2>&1 | tail -1
 git log --oneline -1

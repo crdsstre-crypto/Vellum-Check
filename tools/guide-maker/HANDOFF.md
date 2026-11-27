@@ -28,6 +28,11 @@
 - `setup_fast.sh` ใช้ rsync ซึ่งบางเครื่องไม่มี ถ้าล้ม ให้ `cp -a /home/claude/vellum-check /home/claude/src/Vellum-Check-main && rm -rf /home/claude/src/Vellum-Check-main/.git`
 - ATTRIB ต้อง export ใหม่ทุกครั้งที่เรียก shell (เก็บไว้ในไฟล์แล้ว `. attrib.sh`)
 
+### ⚠️ ประหยัดเวลา build ของ Render (สำคัญ · 27 พ.ย. 2569)
+- Render แผนฟรีให้ build **500 นาที/เดือน** ทุก push = 1 build (~40 วินาที) เดือน พ.ย. 2569 หมดโควตาเพราะ push ทีละเรื่องหลายสิบครั้ง ผู้ใช้เลยต้องซื้อเพิ่ม
+- **กติกาใหม่:** commit ย่อยทุกอันต้องมี **`[skip render]`** ในข้อความ (publish.sh ใส่ให้แล้ว) และ **build แค่ครั้งเดียวต่อชุด 5 เรื่อง** = commit สุดท้าย (ปก/การ์ด) ไม่ใส่ `[skip render]`
+- commit ที่แก้แค่ tools/ HANDOFF.md PROJECT_NOTES.md ให้ใส่ `[skip render]` เสมอ
+
 ### ปกและการ์ด: สไตล์ "พาสเทลมีมิติ" (ผู้ใช้ชมว่าสวย ห้ามถอยกลับ)
 - ใช้ `pastel/gen.py` เหมือนเดิม แต่ **เติมชั้นกระดาษซ้อนด้านหลัง 2 แผ่น + เส้นไฮไลต์** ด้วย `fast/examples/enrich.py` (ดูวิธีรวมใน `fast/examples/run9.py` และตัวอย่าง hero ใน `fast/examples/b9.py`)
 - ภาพหลักชิ้นใหญ่ชิ้นเดียว + **ของประกอบชิ้นเล็ก 1 ชิ้นที่เล่าเรื่อง** (ตรายาง ค้อน ลูกศร คลิป แว่นขยาย) แบบเรื่อง 147–151
