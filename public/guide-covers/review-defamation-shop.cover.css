@@ -1,0 +1,5 @@
+/* ปกแบบ "starribbon" = กรอบภาพขอบส้มอ่อน มีป้ายดาวรีวิว 1 ดาวแปะมุมซ้ายบน และป้ายแชตเล็กมุมขวาล่าง (คู่มือ review-defamation-shop) */
+.gd-cover[data-layout="starribbon"] .gd-cover-art { overflow: visible; border: 3px solid #ffb98a; border-radius: 14px; box-shadow: 0 6px 14px rgba(120,60,20,.18); }
+.gd-cover[data-layout="starribbon"] .gd-cover-art .gd-scene { border-radius: 11px; }
+.gd-cover[data-layout="starribbon"] .gd-cover-art::before { content: "★☆☆☆☆"; position: absolute; left: 10px; top: -12px; z-index: 4; padding: 2px 9px; border-radius: 999px; background: #fff; color: #f5a700; font-size: 13px; letter-spacing: 1px; box-shadow: 0 2px 6px rgba(0,0,0,.18); pointer-events: none; }
+.gd-cover[data-layout="starribbon"] .gd-cover-art::after { content: ""; position: absolute; right: -8px; bottom: 14px; width: 26px; height: 18px; z-index: 4; border-radius: 9px 9px 9px 2px; background: radial-gradient(circle at 7px 9px, #ff7a45 0 1.6px, transparent 2px), radial-gradient(circle at 13px 9px, #ff7a45 0 1.6px, transparent 2px), radial-gradient(circle at 19px 9px, #ff7a45 0 1.6px, transparent 2px), #fff; box-shadow: 0 2px 5px rgba(0,0,0,.2); pointer-events: none; }

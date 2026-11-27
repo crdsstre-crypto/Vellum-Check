@@ -1,0 +1,8 @@
+// ภาพการ์ดของคู่มือ fake-slip-scam
+VCCards({
+cardfakeslip: function (k) { return '<defs><linearGradient id="cfsg' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#dcfce7"/><stop offset="1" stop-color="#fee2e2"/></linearGradient><filter id="cfsf' + k + '" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="1" dy="3" stdDeviation="2.4" flood-color="#1f2937" flood-opacity=".22"/></filter></defs>' +
+  '<rect width="136" height="160" fill="url(#cfsg' + k + ')"/><g transform="translate(-22 0)"><circle cx="112" cy="24" r="30" fill="#fff" opacity=".35"/><path d="M0 132q36-10 70-4t66-6V160H0z" fill="#fff" opacity=".3"/>' +
+  '<g class="sc-bob"><g filter="url(#cfsf' + k + ')" transform="rotate(8 92 72)"><rect x="60" y="20" width="62" height="104" rx="10" fill="#1f2937"/><rect x="64" y="26" width="54" height="92" rx="6" fill="#fff"/></g>' +
+  '<g transform="rotate(8 92 72)"><circle cx="91" cy="46" r="11" fill="#22c55e"/><path d="M86 46l3.6 3.8 7-7.4" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"/><text x="91" y="70" text-anchor="middle" font-size="7.6" font-weight="900" fill="#166534" font-family="sans-serif">โอนสำเร็จ</text><text x="91" y="82" text-anchor="middle" font-size="9" font-weight="900" fill="#111827" font-family="sans-serif">฿1,990</text><path d="M72 92h38M72 99h28M72 106h34" stroke="#d1d5db" stroke-width="2.4"/></g></g>' +
+  '<g transform="translate(96 96) rotate(-16)"><rect x="-26" y="-11" width="52" height="22" rx="4" fill="#fff" fill-opacity=".8" stroke="#dc2626" stroke-width="2.6"/><text y="5.4" text-anchor="middle" font-size="13" font-weight="900" fill="#dc2626" font-family="sans-serif">ปลอม</text></g></g>'; }
+});

@@ -1,0 +1,4 @@
+/* ปกแบบ "cautionstripe" = กรอบภาพแถบเตือนเหลือง-ดำเฉียงรอบขอบ มุมซ้ายบนมีพลาสเตอร์ปิดแผลแปะเฉียง (คู่มือ customer-injury-shop) */
+.gd-cover[data-layout="cautionstripe"] .gd-cover-art { overflow: visible; border: 7px solid transparent; border-radius: 8px; background: repeating-linear-gradient(-45deg, #facc15 0 10px, #1f2937 10px 20px) border-box; box-shadow: 0 6px 14px rgba(60,50,0,.22); }
+.gd-cover[data-layout="cautionstripe"] .gd-cover-art .gd-scene { border-radius: 2px; }
+.gd-cover[data-layout="cautionstripe"] .gd-cover-art::before { content: ""; position: absolute; left: -14px; top: 10px; width: 50px; height: 15px; z-index: 4; border-radius: 8px; background: radial-gradient(circle, rgba(150,90,40,.35) 0 1px, transparent 1.3px) 0 0 / 5px 5px, linear-gradient(90deg, transparent 34%, #fbe3c6 34% 66%, transparent 66%), #f2c08f; transform: rotate(-32deg); box-shadow: 0 2px 3px rgba(80,40,0,.25); pointer-events: none; }

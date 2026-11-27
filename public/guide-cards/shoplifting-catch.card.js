@@ -1,0 +1,9 @@
+// ภาพการ์ดของคู่มือ shoplifting-catch
+VCCards({
+cardshopmirror: function (k) { return '<defs><linearGradient id="csmg' + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cdeff5"/><stop offset="1" stop-color="#eef7ff"/></linearGradient><radialGradient id="csmm' + k + '" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#cfe2ea"/><stop offset="1" stop-color="#7f9aa8"/></radialGradient><clipPath id="csmc' + k + '"><circle cx="88" cy="58" r="34"/></clipPath></defs>' +
+  '<rect width="136" height="160" fill="url(#csmg' + k + ')"/><g transform="translate(-20 0)"><path d="M0 132q36-10 70-4t66-6V160H0z" fill="#fff" opacity=".35"/><g opacity=".5"><rect x="12" y="96" width="44" height="6" fill="#9fb3bf"/><rect x="12" y="116" width="44" height="6" fill="#9fb3bf"/></g>' +
+  '<path d="M88 14v10" stroke="#4b5563" stroke-width="3"/><circle cx="88" cy="58" r="37" fill="#4b5563"/><circle cx="88" cy="58" r="34" fill="url(#csmm' + k + ')"/>' +
+  '<g clip-path="url(#csmc' + k + ')"><g transform="translate(88 64) scale(1.1 .95)"><path d="M-30 40q0-26 30-28t30 28z" fill="#64748b"/><circle cy="-2" r="13" fill="#f3c9a5"/><path d="M-14 -6q0-14 14-14t14 14z" fill="#334155"/><path d="M0 -9h20q3 2-1 4H0z" fill="#334155"/><path d="M-8 -1h5M3 -1h5" stroke="#2a1a12" stroke-width="1.4" stroke-linecap="round"/><path d="M-3 6q3 2 6-1" stroke="#9b3b3b" stroke-width="1.3" fill="none"/></g><g class="sc-sway"><path d="M104 74h12l1 16h-14z" fill="#f59e0b"/></g></g>' +
+  '<ellipse cx="74" cy="40" rx="12" ry="6" fill="#fff" opacity=".55" transform="rotate(-30 74 40)"/>' +
+  '<g transform="translate(110 108)"><rect width="18" height="12" rx="2" fill="#ef4444"/><circle class="sc-blink" cx="5" cy="6" r="2.2" fill="#fff"/><text x="12.5" y="8.4" text-anchor="middle" font-size="5" font-weight="900" fill="#fff" font-family="sans-serif">REC</text></g></g>'; }
+});

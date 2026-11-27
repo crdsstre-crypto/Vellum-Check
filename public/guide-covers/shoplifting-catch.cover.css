@@ -1,0 +1,7 @@
+/* ปกแบบ "receipttear" = ภาพในกรอบเหมือนใบเสร็จความร้อนขอบล่างฉีกเป็นฟันเลื่อย มีป้ายบันทึกกล้องสีแดงกะพริบมุมขวาบน (คู่มือ shoplifting-catch) */
+.gd-cover[data-layout="receipttear"] .gd-cover-art { overflow: visible; border: 6px solid #fff; border-bottom-width: 14px; border-radius: 4px 4px 0 0; box-shadow: 0 6px 14px rgba(20,40,60,.2); }
+.gd-cover[data-layout="receipttear"] .gd-cover-art .gd-scene { border-radius: 1px; }
+.gd-cover[data-layout="receipttear"] .gd-cover-art::after { content: ""; position: absolute; left: -6px; right: -6px; bottom: -22px; height: 9px; z-index: 3; background: linear-gradient(135deg, #fff 33%, transparent 34%) 0 0 / 10px 9px, linear-gradient(225deg, #fff 33%, transparent 34%) 0 0 / 10px 9px; pointer-events: none; }
+.gd-cover[data-layout="receipttear"] .gd-cover-art::before { content: "● REC"; position: absolute; right: 8px; top: -11px; z-index: 4; padding: 2px 8px; border-radius: 6px; background: #ef4444; color: #fff; font: 800 10px/1.4 monospace; letter-spacing: .5px; box-shadow: 0 2px 5px rgba(0,0,0,.25); pointer-events: none; animation: gdRecBlink 1.4s steps(2) infinite; }
+@keyframes gdRecBlink { 50% { opacity: .55; } }
+@media (prefers-reduced-motion: reduce) { .gd-cover[data-layout="receipttear"] .gd-cover-art::before { animation: none; } }

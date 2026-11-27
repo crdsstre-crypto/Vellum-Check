@@ -1,0 +1,4 @@
+/* ปกแบบ "stampedslip" = ภาพอยู่ในกรอบสลิปสีเขียวอ่อนขอบหยัก มีป้ายเขียว "เช็กยอดก่อนส่งของ" แปะมุมซ้ายล่าง (คู่มือ fake-slip-scam) */
+.gd-cover[data-layout="stampedslip"] .gd-cover-art { overflow: visible; border: 5px solid #bbf7d0; border-radius: 10px; box-shadow: 0 0 0 2px #22c55e inset, 0 6px 14px rgba(20,80,40,.18); }
+.gd-cover[data-layout="stampedslip"] .gd-cover-art .gd-scene { border-radius: 6px; }
+.gd-cover[data-layout="stampedslip"] .gd-cover-art::after { content: "✓ เช็กยอดก่อนส่งของ"; position: absolute; left: -8px; bottom: 10px; z-index: 4; padding: 2px 9px; border-radius: 999px; color: #fff; font-size: 10.5px; font-weight: 800; background: #16a34a; transform: rotate(-4deg); box-shadow: 0 2px 5px rgba(0,0,0,.15); pointer-events: none; }
