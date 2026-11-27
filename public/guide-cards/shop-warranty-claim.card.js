@@ -1,8 +1,10 @@
 // ภาพการ์ดของคู่มือ shop-warranty-claim
 VCCards({
-cardwarrantycard: function (k) { return '<rect width="136" height="160" fill="#1d4ed8"/><g transform="translate(-22 0)">' +
-  '<path d="M40 30l130 0v30L40 100z" fill="#facc15"/>' +
-  '<g transform="translate(72 52)"><ellipse cx="22" cy="36" rx="24" ry="7" fill="#cbd5e1"/><rect y="8" width="44" height="28" rx="6" fill="#fff" stroke="#94a3b8" stroke-width="1.6"/><path d="M10 8q12-12 24 0" stroke="#94a3b8" fill="none" stroke-width="1.6"/><circle cx="34" cy="22" r="3" fill="#dc2626" class="sc-blink"/></g>' +
-  '<g transform="translate(74 100) rotate(-6)"><rect width="52" height="20" rx="3" fill="#fff" stroke="#16a34a" stroke-width="2"/><text x="26" y="13.6" text-anchor="middle" font-size="7.4" font-weight="900" fill="#16a34a" font-family="sans-serif">รับประกัน</text></g>' +
-  '<g transform="translate(84 134)"><rect width="46" height="18" rx="9" fill="#dc2626"/><text x="23" y="12.6" text-anchor="middle" font-size="7.4" font-weight="900" fill="#fff" font-family="sans-serif">เคลม?</text></g></g>'; }
+cardwarrantycard: function (k) { return '<defs><linearGradient id="cwcg' + k + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#dbeafe"/><stop offset="1" stop-color="#fef3c7"/></linearGradient><linearGradient id="cwcb' + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e2e8f0"/></linearGradient><filter id="cwcf' + k + '" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="1" dy="3" stdDeviation="2.4" flood-color="#1e3a8a" flood-opacity=".22"/></filter></defs>' +
+  '<rect width="136" height="160" fill="url(#cwcg' + k + ')"/><g transform="translate(-22 0)"><circle cx="118" cy="26" r="30" fill="#fff" opacity=".4"/><path d="M0 132q36-10 70-4t66-6V160H0z" fill="#fff" opacity=".3"/>' +
+  '<g class="sc-twinkle" fill="#fff"><path d="M54 30l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/><path d="M140 70l1.6 4 4 1.6-4 1.6-1.6 4-1.6-4-4-1.6 4-1.6z"/></g>' +
+  '<ellipse cx="96" cy="124" rx="34" ry="6" fill="#1e3a8a" opacity=".12"/>' +
+  '<g class="sc-bob"><g filter="url(#cwcf' + k + ')" transform="translate(0 12) rotate(-6 96 80)"><path d="M66 58q0-12 12-12h36q12 0 12 12v40q0 10-10 10H76q-10 0-10-10z" fill="url(#cwcb' + k + ')" stroke="#94a3b8" stroke-width="1.4"/><path d="M74 46q22-18 44 0" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.4"/><rect x="88" y="36" width="16" height="6" rx="3" fill="#cbd5e1"/>' +
+  '<rect x="74" y="66" width="44" height="18" rx="4" fill="#0f172a"/><text x="96" y="78.6" text-anchor="middle" font-size="8" font-weight="900" fill="#f87171" font-family="monospace">E-01</text><circle class="sc-blink" cx="112" cy="94" r="3" fill="#ef4444"/></g></g>' +
+  '<g transform="translate(110 118) rotate(10)"><g filter="url(#cwcf' + k + ')"><rect x="-20" y="-11" width="40" height="22" rx="4" fill="#fff" stroke="#16a34a" stroke-width="2"/></g><text y="-1" text-anchor="middle" font-size="6.4" font-weight="900" fill="#16a34a" font-family="sans-serif">รับประกัน</text><text y="7" text-anchor="middle" font-size="5" font-weight="800" fill="#64748b" font-family="sans-serif">เคลมได้ไหม?</text></g></g>'; }
 });
