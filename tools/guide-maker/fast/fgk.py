@@ -15,3 +15,12 @@ def BEAM(x0=40,w=60,c='#fff',op=.22,n=3,tilt=50):
   return f'<g opacity="{op}">'+''.join(f'<path d="M{x0+i*w*0.7} 0h{w*0.45}l{tilt} 150h{-w*0.45}z" fill="{c}"/>' for i in range(n))+'</g>'
 def TX(x,y,t,fs=5,c='#334155',a='start'):
   return f'<text x="{x}" y="{y}" text-anchor="{a}" font-size="{fs}" font-weight="900" fill="{c}" font-family="sans-serif">{t}</text>'
+def FLOOR(c='#000',op=.08,fy=146):
+  """เส้นพื้นแบบมีระยะ (perspective) เพิ่มความลึกของพื้น (ชุด 207–211)"""
+  return f'<g opacity="{op}" stroke="{c}" stroke-width="1">'+''.join(f'<path d="M{170+(i-6)*20} {fy}L{170+(i-6)*60} 182"/>' for i in range(13))+''.join(f'<path d="M0 {fy+k*k*3+4}h340"/>' for k in range(1,5))+'</g>'
+def DOC(x,y,w,h,title,rows,head='#0f766e',sig=True):
+  """เอกสารในฉาก: หัวสี + แถวข้อความ [(text,color)] + ลายเซ็น"""
+  s=f'<g filter="url(#wsh{K})"><rect x="{x}" y="{y}" width="{w}" height="{h}" rx="5" fill="#fff"/></g><rect x="{x}" y="{y}" width="{w}" height="11" rx="5" fill="{head}"/>'+TX(x+w/2,y+8,title,5,'#fff','middle')
+  for i,(t,c) in enumerate(rows): s+=TX(x+6,y+21+i*9,t,4.5,c)
+  if sig: s+=f'<path d="M{x+w-34} {y+h-8}q6-7 11 0t11-3" stroke="#1d4ed8" fill="none" stroke-width="1.2"/>'
+  return s
