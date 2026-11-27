@@ -1,0 +1,5 @@
+/* ปกแบบ "copierlidframe" = ภาพในกรอบสีเทาเครื่องถ่ายเอกสาร ขอบล่างมีแถบแสงสแกนสีฟ้า มุมขวาล่างมีปุ่มเขียวกลม (คู่มือ e-scan-notice-records) */
+.gd-cover[data-layout="copierlidframe"] .gd-cover-art { overflow: visible; border: 7px solid #c8ced8; border-radius: 6px; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.6), 0 5px 12px rgba(30,40,60,.25); }
+.gd-cover[data-layout="copierlidframe"] .gd-cover-art .gd-scene { border-radius: 3px; }
+.gd-cover[data-layout="copierlidframe"] .gd-cover-art::before { content: ""; position: absolute; left: 4px; right: 22px; bottom: -5px; height: 3px; z-index: 3; pointer-events: none; border-radius: 2px; background: linear-gradient(90deg, transparent, #5ab8f8 20% 80%, transparent); box-shadow: 0 0 6px 1px rgba(90,184,248,.7); }
+.gd-cover[data-layout="copierlidframe"] .gd-cover-art::after { content: ""; position: absolute; right: -4px; bottom: -6px; width: 11px; height: 11px; z-index: 4; pointer-events: none; border-radius: 50%; background: radial-gradient(circle at 38% 36%, #8af0a8, #2a9a4a); box-shadow: 0 0 0 2px #c8ced8, 0 1px 2px rgba(0,0,0,.3); }
