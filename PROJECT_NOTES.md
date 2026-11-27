@@ -1431,3 +1431,4 @@ vellum-check/                    ← root ของ repo บน GitHub
 - 2026-11-27: เพิ่มคู่มือค้าขายและแบรนด์ 187–191 (สร้างบนที่ดินจำนอง, จำนองลำดับสอง, สลักหลังตั๋วแลกเงิน, ลายเซ็นปลอม/แก้ไขตั๋ว, ใบกำกับของและใบตราส่ง) ปกพาสเทลมีมิติ
 - 2026-11-27: เพิ่มคู่มือค้าขายและแบรนด์ 192–196: live-auction-nonpayer, supplier-fire-cant-deliver, equipment-lease-breakdown, brand-fridge-loan, intern-at-shop (ส่วนละ 3 คำถาม ตัวอย่างข้อความ ฉากต่อเนื่อง + ชั้นหน้า FG)
 - 2026-11-27: เพิ่มคู่มือค้าขายและแบรนด์ 197–201: event-booth-cancelled, repair-fake-parts, repost-customer-video, first-employee-checklist, catering-event-cancel (+ปกพาสเทล, DUST)
+- 2026-11-27: เพิ่มคู่มือค้าขายและแบรนด์ 202–206: used-equipment-as-is, shop-building-sold-lease, tab-customer-prescription, try-before-buy-sale, costume-rental-not-returned (+ปกพาสเทล, BEAM)
