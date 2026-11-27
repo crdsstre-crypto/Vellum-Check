@@ -69,3 +69,13 @@ def RIBBON(x,y,t,c='#7c3aed',w=None):
   w=w or len(t)*4.6+20
   return (f'<path d="M{x-w/2-8} {y-6}h8v12h-8l4-6z" fill="{c}" opacity=".7"/><path d="M{x+w/2} {y-6}h8l-4 6 4 6h-8z" fill="{c}" opacity=".7"/>'
    f'<rect x="{x-w/2}" y="{y-8}" width="{w}" height="16" rx="2" fill="{c}"/><text x="{x}" y="{y+3}" text-anchor="middle" font-size="7" font-weight="900" fill="#fff" font-family="sans-serif">{t}</text>')
+# ชุด 262–266: ROUTE (เส้นทางมีหมุดและชื่อจุด บอกเส้นทางขนส่ง) + CRACK (รอยแตกบนของ)
+def ROUTE(pts,labels=None,c='#0f766e'):
+  d='M'+' L'.join(f'{x} {y}' for x,y in pts)
+  s=f'<path d="{d}" stroke="#fff" stroke-width="5" fill="none" stroke-linejoin="round"/><path d="{d}" stroke="{c}" stroke-width="2.4" fill="none" stroke-dasharray="5 3" stroke-linejoin="round"/>'
+  for i,(x,y) in enumerate(pts):
+    s+=f'<path d="M{x} {y}c-5-6-6-9-6-11a6 6 0 0 1 12 0c0 2-1 5-6 11z" fill="{c}"/><circle cx="{x}" cy="{y-11}" r="2.2" fill="#fff"/>'
+    if labels and i<len(labels) and labels[i]: s+=f'<text x="{x}" y="{y+9}" text-anchor="middle" font-size="6.5" font-weight="900" fill="{c}" font-family="sans-serif">{labels[i]}</text>'
+  return s
+def CRACK(x,y,s=1,c='#334155'):
+  return f'<path d="M{x} {y}l{4*s} {6*s}l{-3*s} {5*s}l{5*s} {6*s}M{x+4*s} {y+6*s}l{6*s} {2*s}" stroke="{c}" stroke-width="1.4" fill="none"/>'
