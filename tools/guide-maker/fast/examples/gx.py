@@ -101,3 +101,13 @@ def GOAT(x,y,s=1,flip=False):
    '<circle cx="-5" cy="-1" r="2.6" fill="#1f2937"/><circle cx="5" cy="-1" r="2.6" fill="#1f2937"/><circle cx="-4.2" cy="-1.8" r=".9" fill="#fff"/><circle cx="5.8" cy="-1.8" r=".9" fill="#fff"/>'
    '<circle cx="-9" cy="5" r="2.4" fill="#fda4af" opacity=".7"/><circle cx="9" cy="5" r="2.4" fill="#fda4af" opacity=".7"/><path d="M-2 10q2 2 4 0" stroke="#9f6b5a" stroke-width="1.2" fill="none"/>'
    '<path d="M-3 17q3 9 6 0z" fill="#e7e2d8"/><path d="M4 13q10-6 16 2q-4 8-14 4z" fill="#4ade80" stroke="#16a34a" stroke-width="1"/></g></g>')
+# ชุด 272–276: MONEYFLOW (เหรียญไหลตามลูกศร บอกเงินไหลไปทางไหน) + SIREN (ไฟไซเรนกระพริบ)
+def MONEYFLOW(x0,y0,x1,y1,n=4,c='#16a34a'):
+  s=f'<path d="M{x0} {y0}L{x1} {y1}" stroke="{c}" stroke-width="2" stroke-dasharray="3 3"/><path d="M{x1} {y1}l-7 -4v8z" fill="{c}" transform="rotate(0)"/>'
+  for i in range(n):
+    t=(i+.5)/n; x=x0+(x1-x0)*t; y=y0+(y1-y0)*t
+    s+=f'<circle cx="{x:.0f}" cy="{y:.0f}" r="4.4" fill="#facc15" stroke="#a16207"/><text x="{x:.0f}" y="{y+2:.0f}" text-anchor="middle" font-size="5" font-weight="900" fill="#713f12" font-family="sans-serif">฿</text>'
+  return s
+def SIREN(x,y,c='#ef4444'):
+  return (f'<rect x="{x-9}" y="{y}" width="18" height="5" rx="1" fill="#334155"/><path d="M{x-7} {y}q0-12 7-12t7 12z" fill="{c}"/>'
+   f'<g class="cm-blink"><path d="M{x-14} {y-10}l-6-3M{x+14} {y-10}l6-3M{x} {y-16}v-6" stroke="{c}" stroke-width="2"/></g>')
