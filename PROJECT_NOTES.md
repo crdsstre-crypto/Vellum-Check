@@ -1433,3 +1433,4 @@ vellum-check/                    ← root ของ repo บน GitHub
 - 2026-11-27: เพิ่มคู่มือค้าขายและแบรนด์ 197–201: event-booth-cancelled, repair-fake-parts, repost-customer-video, first-employee-checklist, catering-event-cancel (+ปกพาสเทล, DUST)
 - 2026-11-27: เพิ่มคู่มือค้าขายและแบรนด์ 202–206: used-equipment-as-is, shop-building-sold-lease, tab-customer-prescription, try-before-buy-sale, costume-rental-not-returned (+ปกพาสเทล, BEAM)
 - 2026-11-27: เพิ่มคู่มือค้าขายและแบรนด์ 207–211: retention-of-title-sale, staff-advance-quit, equipment-sold-twice, order-by-unauthorized-staff, pay-debt-with-goods (+ปกพาสเทล, FLOOR/DOC)
+- 2026-11-27: เพิ่มคู่มือค้าขายและแบรนด์ 212–216: supplier-late-for-festival, partner-death-shop, carwash-staff-damage, foreign-currency-invoice, shop-space-sublet (+ปกพาสเทล, CHART)

@@ -24,3 +24,10 @@ def DOC(x,y,w,h,title,rows,head='#0f766e',sig=True):
   for i,(t,c) in enumerate(rows): s+=TX(x+6,y+21+i*9,t,4.5,c)
   if sig: s+=f'<path d="M{x+w-34} {y+h-8}q6-7 11 0t11-3" stroke="#1d4ed8" fill="none" stroke-width="1.2"/>'
   return s
+def CHART(x,y,w,h,vals,c='#dc2626',lab=None):
+  """กราฟเส้นเล็กบนบอร์ด (ชุด 212–216) vals = ลิสต์ตัวเลข"""
+  lo,hi=min(vals),max(vals); n=len(vals)
+  pts=' '.join(f'{x+6+i*(w-12)/(n-1):.1f},{y+h-6-(v-lo)/((hi-lo) or 1)*(h-16):.1f}' for i,v in enumerate(vals))
+  s=f'<g filter="url(#wsh{K})"><rect x="{x}" y="{y}" width="{w}" height="{h}" rx="4" fill="#fff"/></g><path d="M{x+6} {y+h-6}h{w-12}" stroke="#e2e8f0"/><polyline points="{pts}" fill="none" stroke="{c}" stroke-width="2"/>'
+  if lab: s+=TX(x+6,y+9,lab,4.4,'#334155')
+  return s
