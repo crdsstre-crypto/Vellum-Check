@@ -21,3 +21,21 @@ def FLOW(x0,y0,x1,y1,c='#0f766e',lab=None):
   s=f'<path d="M{x0} {y0}Q{mx} {my} {x1} {y1}" stroke="{c}" stroke-width="2" fill="none" stroke-dasharray="4 3" class="cm-blink"/><circle cx="{x1}" cy="{y1}" r="3" fill="{c}"/>'
   if lab: s+=f'<rect x="{mx-16}" y="{my-2}" width="32" height="10" rx="5" fill="#fff" stroke="{c}"/><text x="{mx}" y="{my+5.6}" text-anchor="middle" font-size="5" font-weight="900" fill="{c}" font-family="sans-serif">{lab}</text>'
   return s
+# ชุด 242–246: STEPS (แถบขั้นตอนบอกว่าอยู่ขั้นไหน) + VOTE (ป้ายนับเสียง เห็นด้วย/ไม่เห็นด้วย) + TABLE (โต๊ะประชุมมีเก้าอี้)
+def STEPS(x,y,labels,active=0,c='#7c3aed',gap=38):
+  s=f'<path d="M{x} {y}h{gap*(len(labels)-1)}" stroke="#cbd5e1" stroke-width="3"/>'
+  if active: s+=f'<path d="M{x} {y}h{gap*active}" stroke="{c}" stroke-width="3"/>'
+  for i,t in enumerate(labels):
+    on=i<=active; s+=f'<circle cx="{x+i*gap}" cy="{y}" r="5" fill="{c if on else "#fff"}" stroke="{c}" stroke-width="2"/>'
+    s+=f'<text x="{x+i*gap}" y="{y+12}" text-anchor="middle" font-size="4.8" font-weight="900" fill="{c if on else "#64748b"}" font-family="sans-serif">{t}</text>'
+  return s
+def VOTE(x,y,yes,no,c='#16a34a'):
+  return (f'<g transform="translate({x} {y})"><rect x="-22" y="-12" width="44" height="22" rx="6" fill="#fff" stroke="#cbd5e1"/>'
+   f'<text x="-11" y="3" text-anchor="middle" font-size="8" font-weight="900" fill="{c}" font-family="sans-serif">✓{yes}</text>'
+   f'<text x="11" y="3" text-anchor="middle" font-size="8" font-weight="900" fill="#dc2626" font-family="sans-serif">✗{no}</text></g>')
+def TABLE(x,y=146,w=110,n=4,c='#a16207',chairs=('#64748b',)):
+  s=f'<ellipse cx="{x}" cy="{y-12}" rx="{w/2}" ry="9" fill="{c}"/><rect x="{x-3}" y="{y-12}" width="6" height="12" fill="{c}"/>'
+  for i in range(n):
+    cx=x-w/2+12+i*(w-24)/max(n-1,1); cc=chairs[i%len(chairs)]
+    s=f'<rect x="{cx-7}" y="{y-34}" width="14" height="16" rx="3" fill="{cc}"/>'+s
+  return s
