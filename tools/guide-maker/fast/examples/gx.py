@@ -47,3 +47,15 @@ def ZOOM(x,y,t,r=17,c='#0f172a',fc='#b91c1c'):
 def SEAL(x,y,t,c='#dc2626',rot=-12,w=56):
   return (f'<g transform="translate({x} {y}) rotate({rot})" opacity=".85"><rect x="{-w/2}" y="-10" width="{w}" height="20" rx="4" fill="none" stroke="{c}" stroke-width="2.4"/>'
    f'<rect x="{-w/2+3}" y="-7" width="{w-6}" height="14" rx="3" fill="none" stroke="{c}" stroke-width=".8"/><text y="3.4" text-anchor="middle" font-size="8" font-weight="900" fill="{c}" font-family="sans-serif">{t}</text></g>')
+# ชุด 252–256: CHAT (มือถือมีบับเบิลแชตซ้าย/ขวา อ่านได้) + CHIP (ป้ายแท็กเล็ก เช่น #โฆษณา ®)
+def CHAT(x,y,msgs,w=70,h=96,c='#0f172a'):
+  s=f'<g filter="url(#wsh{K})"><rect x="{x}" y="{y}" width="{w}" height="{h}" rx="10" fill="{c}"/></g><rect x="{x+4}" y="{y+8}" width="{w-8}" height="{h-14}" rx="5" fill="#f1f5f9"/>'
+  yy=y+16
+  for side,t in msgs:
+    bw=min(w-14,len(t)*3.1+10); bx=x+7 if side=='l' else x+w-7-bw; bc='#fff' if side=='l' else '#bbf7d0'
+    s+=f'<rect x="{bx}" y="{yy}" width="{bw}" height="11" rx="5" fill="{bc}" stroke="#cbd5e1" stroke-width=".5"/><text x="{bx+5}" y="{yy+7.6}" font-size="5" font-weight="900" fill="#334155" font-family="sans-serif">{t}</text>'
+    yy+=15
+  return s
+def CHIP(x,y,t,c='#7c3aed',fg='#fff'):
+  w=len(t)*4.2+12
+  return f'<rect x="{x}" y="{y-7}" width="{w}" height="13" rx="6.5" fill="{c}"/><text x="{x+w/2}" y="{y+2.4}" text-anchor="middle" font-size="6.5" font-weight="900" fill="{fg}" font-family="sans-serif">{t}</text>'
