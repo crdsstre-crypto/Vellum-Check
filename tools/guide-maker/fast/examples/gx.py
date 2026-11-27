@@ -79,3 +79,11 @@ def ROUTE(pts,labels=None,c='#0f766e'):
   return s
 def CRACK(x,y,s=1,c='#334155'):
   return f'<path d="M{x} {y}l{4*s} {6*s}l{-3*s} {5*s}l{5*s} {6*s}M{x+4*s} {y+6*s}l{6*s} {2*s}" stroke="{c}" stroke-width="1.4" fill="none"/>'
+# ชุด 267–271: TAPE (เทปกั้นลายทแยงมีข้อความ) + STICKER (สติกเกอร์วงกลมขอบหยัก เช่น ยึดแล้ว/ตรวจแล้ว)
+def TAPE(x0,x1,y,t,c='#facc15',fg='#1f2937'):
+  w=x1-x0; s=f'<rect x="{x0}" y="{y-6}" width="{w}" height="12" fill="{c}"/>'+''.join(f'<path d="M{x0+i*12} {y+6}l8-12" stroke="{fg}" stroke-width="3" opacity=".25"/>' for i in range(int(w/12)))
+  return s+f'<rect x="{x0+w/2-len(t)*2.4-4}" y="{y-5}" width="{len(t)*4.8+8}" height="10" fill="{c}"/><text x="{x0+w/2}" y="{y+2.6}" text-anchor="middle" font-size="6.5" font-weight="900" fill="{fg}" font-family="sans-serif">{t}</text>'
+def STICKER(x,y,t,c='#dc2626',r=13):
+  import math
+  pts=' '.join(f'{x+(r+(2 if i%2 else 0))*math.cos(i*math.pi/10):.1f},{y+(r+(2 if i%2 else 0))*math.sin(i*math.pi/10):.1f}' for i in range(20))
+  return f'<polygon points="{pts}" fill="{c}"/><circle cx="{x}" cy="{y}" r="{r-3}" fill="none" stroke="#fff" stroke-width=".8"/><text x="{x}" y="{y+2.6}" text-anchor="middle" font-size="6.5" font-weight="900" fill="#fff" font-family="sans-serif">{t}</text>'
