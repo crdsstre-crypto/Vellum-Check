@@ -339,3 +339,28 @@ def RACCOON(x,y,s=1,c='#9ca3af'):
    '<path d="M-12 -7q6-5 12 0q6-5 12 0q-2 6-12 6q-10 0-12-6z" fill="#1f2937"/><path d="M-4 0q4 6 8 0z" fill="#f3f4f6"/>'
    '<circle cx="-5" cy="-6" r="2.2" fill="#fff"/><circle cx="5" cy="-6" r="2.2" fill="#fff"/><circle cx="-5" cy="-6" r="1.3" fill="#111827"/><circle cx="5" cy="-6" r="1.3" fill="#111827"/>'
    '<ellipse cx="0" cy="1" rx="1.8" ry="1.2" fill="#111827"/><ellipse cx="-9" cy="1" rx="2" ry="1.2" fill="#fb7185" opacity=".55"/><ellipse cx="9" cy="1" rx="2" ry="1.2" fill="#fb7185" opacity=".55"/></g>')
+
+def STAND(x,y,c='#92400e'):
+  # คอกพยานไม้ มีไมค์และแก้วน้ำ
+  return (f'<g transform="translate({x} {y})"><rect x="-26" y="-6" width="52" height="40" rx="3" fill="{c}"/><rect x="-30" y="-12" width="60" height="8" rx="3" fill="#b45309"/>'
+   '<path d="M-20 4h40M-20 14h40M-20 24h40" stroke="#78350f" stroke-width="1"/><path d="M6 -12v-14" stroke="#334155" stroke-width="2"/><rect x="3" y="-34" width="6" height="10" rx="3" fill="#1e293b"/>'
+   '<path d="M-16 -12v-10h8v10z" fill="#bae6fd" stroke="#64748b"/></g>')
+
+def FEEJAR(x,y,t='คืน',c='#16a34a'):
+  # โหลเหรียญค่าธรรมเนียมพร้อมลูกศรคืนเงิน
+  coins=''.join(f'<ellipse cx="{-8+(i%3)*8}" cy="{14-(i//3)*6}" rx="5" ry="2.5" fill="#facc15" stroke="#a16207"/>' for i in range(6))
+  return (f'<g transform="translate({x} {y})"><path d="M-16 -16h32v4q4 2 4 8v24q0 6-6 6h-28q-6 0-6-6v-24q0-6 4-8z" fill="#e0f2fe" fill-opacity=".85" stroke="#94a3b8" stroke-width="1.5"/>'
+   f'<rect x="-14" y="-22" width="28" height="7" rx="2" fill="#64748b"/>'+coins+
+   f'<path d="M22 -6q14 6 4 20" stroke="{c}" stroke-width="2.5" fill="none"/><path d="M26 14l-7 -1l4 -6z" fill="{c}"/>'
+   f'<text x="30" y="-10" font-size="8" font-weight="900" fill="{c}">{t}</text></g>')
+
+def BEAVER(x,y,s=1,c='#92400e'):
+  # บีเวอร์ฟันหน้าใหญ่ หางแบนลายตาราง ตาวาว แก้ม
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="24" rx="18" ry="3" fill="#000" opacity=".12"/>'
+   '<ellipse cx="18" cy="20" rx="12" ry="5" fill="#57534e" transform="rotate(-15 18 20)"/><path d="M10 18l16 -4M12 22l16 -4M16 14l4 10M22 13l4 10" stroke="#3f3f46" stroke-width=".8"/>'
+   f'<ellipse cx="0" cy="10" rx="13" ry="14" fill="{c}"/><ellipse cx="0" cy="14" rx="8" ry="9" fill="#d6a77a"/>'
+   f'<circle cx="0" cy="-8" r="12" fill="{c}"/><circle cx="-10" cy="-17" r="3.5" fill="{c}"/><circle cx="10" cy="-17" r="3.5" fill="{c}"/>'
+   '<ellipse cx="0" cy="-3" rx="7" ry="5" fill="#d6a77a"/><ellipse cx="0" cy="-6" rx="2.5" ry="1.6" fill="#1c1917"/>'
+   '<rect x="-2.5" y="-2" width="5" height="5" rx="1" fill="#fff" stroke="#e7e5e4"/><path d="M0 -2v5" stroke="#e7e5e4" stroke-width=".6"/>'
+   '<circle cx="-5" cy="-11" r="2" fill="#1c1917"/><circle cx="5" cy="-11" r="2" fill="#1c1917"/><circle cx="-4.4" cy="-11.6" r=".7" fill="#fff"/><circle cx="5.6" cy="-11.6" r=".7" fill="#fff"/>'
+   '<ellipse cx="-9" cy="-4" rx="2.2" ry="1.3" fill="#fb7185" opacity=".55"/><ellipse cx="9" cy="-4" rx="2.2" ry="1.3" fill="#fb7185" opacity=".55"/></g>')
