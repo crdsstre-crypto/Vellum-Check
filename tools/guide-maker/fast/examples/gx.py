@@ -386,3 +386,26 @@ def PINBOARD(x,y,w,h,items,c='#a16207'):
     nx=x+6+(i%2)*(w/2-2); ny=y+6+(i//2)*22; r=(-4,3,2,-3)[i%4]
     s+=f'<g transform="rotate({r} {nx+w/4} {ny+9})"><rect x="{nx}" y="{ny}" width="{w/2-10}" height="18" fill="{cc}"/><circle cx="{nx+(w/2-10)/2}" cy="{ny+2}" r="1.8" fill="#dc2626"/>'+TX(nx+3,ny+12,t,4.6,'#1f2937')+'</g>'
   return s
+
+# ---- ชุด 332–336 ----
+def CALGRID(x,y,title,marks=None,hol=None,c='#2563eb',w=70):
+  """ปฏิทินเดือนย่อ 5x7 ช่อง marks={วัน:สี} วงวันสำคัญ hol=[วันหยุดสีแดง]"""
+  from fgk import TX; from pk import K
+  marks=marks or {}; hol=hol or []; cw=w/7; ch=8
+  s=f'<g filter="url(#wsh{K})"><rect x="{x}" y="{y}" width="{w}" height="{12+ch*5+4}" rx="4" fill="#fff"/></g><rect x="{x}" y="{y}" width="{w}" height="11" rx="4" fill="{c}"/>'+TX(x+w/2,y+8,title,5,'#fff','middle')
+  for d in range(1,32):
+    i=d-1; cx=x+cw*(i%7)+cw/2; cy=y+18+ch*(i//7)
+    if d in hol: s+=f'<rect x="{cx-cw/2+.5}" y="{cy-5.5}" width="{cw-1}" height="{ch-1}" rx="1.5" fill="#fecaca"/>'
+    if d in marks: s+=f'<circle cx="{cx}" cy="{cy-1.6}" r="3.8" fill="none" stroke="{marks[d]}" stroke-width="1.4"/>'
+    s+=TX(cx,cy,str(d),3.8,'#b91c1c' if d in hol else '#334155','middle')
+  return s
+def THERMO(x,y,val='39°',c='#ef4444'):
+  """ปรอทวัดไข้ มีสเกลและค่าตัวเลข"""
+  from fgk import TX
+  return (f'<g transform="translate({x} {y})"><rect x="-4" y="-34" width="8" height="34" rx="4" fill="#fff" stroke="#94a3b8"/><circle cy="2" r="6" fill="{c}"/><rect x="-2" y="-26" width="4" height="28" rx="2" fill="{c}"/>'
+   +''.join(f'<path d="M4 {-30+i*6}h3" stroke="#94a3b8"/>' for i in range(5))+'</g>'+TX(x+12,y-22,val,6,c))
+def DUCKLING(x,y,s=1):
+  """ลูกเป็ดเหลือง ตาวาว แก้มชมพู ปากส้ม ปีกเล็ก ขนบนหัว"""
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="0" rx="13" ry="10" fill="#fde047"/><path d="M-6 -2q-6 4 0 8" fill="#facc15"/><circle cx="8" cy="-12" r="8" fill="#fde047"/>'
+   '<path d="M7 -20q2 -4 4 0q2 -3 3 1" stroke="#facc15" stroke-width="1.6" fill="none"/><path d="M15 -12l6 1.5l-6 2z" fill="#fb923c"/><circle cx="10" cy="-14" r="1.6" fill="#1c1917"/><circle cx="10.5" cy="-14.6" r=".5" fill="#fff"/>'
+   '<ellipse cx="9" cy="-9.6" rx="2" ry="1.2" fill="#fb7185" opacity=".6"/><path d="M-4 10v4M3 10v4" stroke="#fb923c" stroke-width="1.6"/></g>')
