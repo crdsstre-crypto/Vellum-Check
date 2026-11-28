@@ -389,3 +389,26 @@ def HAMSTER(x,y,s=1,c='#fdba74'):
    '<ellipse cx="0" cy="-1" rx="1.6" ry="1.1" fill="#f472b6"/><path d="M-2 1q2 2 4 0" stroke="#7c2d12" stroke-width=".8" fill="none"/>'
    '<ellipse cx="-10" cy="2" rx="2.4" ry="1.4" fill="#fb7185" opacity=".55"/><ellipse cx="10" cy="2" rx="2.4" ry="1.4" fill="#fb7185" opacity=".55"/>'
    '<ellipse cx="0" cy="10" rx="3" ry="4.5" fill="#a16207"/><circle cx="-3" cy="10" r="2" fill="'+c+'"/><circle cx="3" cy="10" r="2" fill="'+c+'"/></g>')
+
+def SHRINE(x,y,c='#dc2626'):
+  # ศาลเจ้าเล็ก หลังคาโค้ง ธูป ดอกไม้
+  return (f'<g transform="translate({x} {y})"><rect x="-4" y="8" width="8" height="22" fill="#a8a29e"/><rect x="-18" y="-14" width="36" height="24" rx="2" fill="{c}"/>'
+   '<path d="M-24 -14q24 -16 48 0z" fill="#facc15" stroke="#a16207"/><rect x="-8" y="-8" width="16" height="14" fill="#7f1d1d"/>'
+   '<path d="M-3 -12v-8M0 -12v-10M3 -12v-8" stroke="#a16207" stroke-width="1.2"/><circle cx="0" cy="-23" r="1.4" fill="#f97316" opacity=".8"/>'
+   '<circle cx="-14" cy="6" r="3" fill="#fde047"/><circle cx="14" cy="6" r="3" fill="#fde047"/></g>')
+
+def WHEEL(x,y,c='#0f766e'):
+  # ล้อวัดระยะของพนักงานสำรวจ + ป้ายตัวเลขเมตร
+  return (f'<g transform="translate({x} {y})"><circle r="12" fill="#fff" stroke="{c}" stroke-width="3"/><circle r="2" fill="{c}"/>'
+   f'<path d="M0 0l-26 -40" stroke="#475569" stroke-width="3"/><rect x="-34" y="-50" width="16" height="10" rx="2" fill="#1e293b"/><text x="-26" y="-43" text-anchor="middle" font-size="6" font-weight="900" fill="#4ade80">24.5</text>'
+   f'<path d="M12 10h40" stroke="{c}" stroke-width="2" stroke-dasharray="3 3"/></g>')
+
+def RABBIT(x,y,s=1,c='#f5f5f4'):
+  # กระต่ายหูยาวด้านในชมพู ตาวาว แก้ม จมูกกระดิก หางปุย
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="24" rx="16" ry="3" fill="#000" opacity=".12"/><circle cx="14" cy="16" r="5" fill="#fff" stroke="#e7e5e4"/>'
+   f'<ellipse cx="0" cy="10" rx="14" ry="14" fill="{c}" stroke="#e7e5e4"/><ellipse cx="-6" cy="22" rx="6" ry="3" fill="{c}" stroke="#e7e5e4"/><ellipse cx="6" cy="22" rx="6" ry="3" fill="{c}" stroke="#e7e5e4"/>'
+   f'<ellipse cx="-6" cy="-26" rx="4.5" ry="13" fill="{c}" stroke="#e7e5e4" transform="rotate(-10 -6 -26)"/><ellipse cx="6" cy="-26" rx="4.5" ry="13" fill="{c}" stroke="#e7e5e4" transform="rotate(10 6 -26)"/>'
+   '<ellipse cx="-6" cy="-26" rx="2.2" ry="9" fill="#fbcfe8" transform="rotate(-10 -6 -26)"/><ellipse cx="6" cy="-26" rx="2.2" ry="9" fill="#fbcfe8" transform="rotate(10 6 -26)"/>'
+   f'<circle cx="0" cy="-7" r="11" fill="{c}" stroke="#e7e5e4"/><circle cx="-4.5" cy="-9" r="2" fill="#1c1917"/><circle cx="4.5" cy="-9" r="2" fill="#1c1917"/><circle cx="-3.9" cy="-9.6" r=".7" fill="#fff"/><circle cx="5.1" cy="-9.6" r=".7" fill="#fff"/>'
+   '<path d="M-1.5 -4h3l-1.5 1.8z" fill="#f472b6"/><path d="M0 -2.2q-2 2 -3.5 1M0 -2.2q2 2 3.5 1" stroke="#78716c" stroke-width=".7" fill="none"/>'
+   '<ellipse cx="-8" cy="-4" rx="2.3" ry="1.3" fill="#fb7185" opacity=".55"/><ellipse cx="8" cy="-4" rx="2.3" ry="1.3" fill="#fb7185" opacity=".55"/></g>')

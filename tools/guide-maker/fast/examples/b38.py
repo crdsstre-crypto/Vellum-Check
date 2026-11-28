@@ -1,18 +1,19 @@
-import sys; sys.path.insert(0,'/home/claude/tools'); sys.path.insert(0,'/home/claude/work')
-from gx import JSCALE, OWL, SEAL, BEAVER, CALGRID, PENGUIN, TAPE, HEDGEHOG, THERMO, DUCKLING, SANDGLASS
 T='font-family="sans-serif" font-weight="900"'
-D['judge-recusal-shop']=dict(c1='#fef3c7',c2='#e0e7ff',sh='#78350f',bd='#fef3c7',ln='#f59e0b',bg='#a16207',badge='11',tint='#fffbeb',
- hero=JSCALE(92,116,0,'#a16207','','')+'<g transform="translate(92 60)"><circle cx="-20" r="11" fill="#fde68a" stroke="#a16207" stroke-width="2"/><circle cx="20" r="11" fill="#fecaca" stroke="#be123c" stroke-width="2"/><path d="M-9 0h18" stroke="#be123c" stroke-width="3" stroke-dasharray="4 3"/></g>'+OWL(140,128,.5),
- tag=None,tagc='#a16207')
-D['court-mediation-settle']=dict(c1='#d1fae5',c2='#ffedd5',sh='#14532d',bd='#d1fae5',ln='#34d399',bg='#047857',badge='20',tint='#ecfdf5',
- hero='<ellipse cx="92" cy="114" rx="48" ry="10" fill="#a16207"/><rect x="88" y="114" width="8" height="18" fill="#78350f"/><g transform="translate(92 82)"><rect x="-30" y="-22" width="60" height="38" rx="4" fill="#fff" stroke="#047857" stroke-width="2"/><path d="M-20 -10h40M-20 -2h40M-20 6h26" stroke="#94a3b8" stroke-width="2"/></g>'+SEAL(128,60,'ตกลง','#16a34a',-12,40)+BEAVER(50,132,.45),
- tag=None,tagc='#047857')
-D['court-deadline-holiday']=dict(c1='#cffafe',c2='#fce7f3',sh='#164e63',bd='#cffafe',ln='#22d3ee',bg='#0891b2',badge='+1',tint='#ecfeff',
- hero=CALGRID(52,52,'เม.ย.',{17:'#16a34a'},[13,14,15,16],'#0891b2',80)+PENGUIN(146,130,.45),
- tag=None,tagc='#0891b2')
-D['contempt-of-court-shop']=dict(c1='#e0e7ff',c2='#fee2e2',sh='#1e1b4b',bd='#e0e7ff',ln='#818cf8',bg='#4338ca',badge='31',tint='#eef2ff',
- hero='<g transform="translate(92 92)"><rect x="-26" y="-36" width="52" height="60" rx="6" fill="#1f2937"/><rect x="-21" y="-30" width="42" height="46" rx="2" fill="#bfdbfe"/><circle cx="0" cy="-7" r="9" fill="#ef4444"/><text y="-4" text-anchor="middle" font-size="7" fill="#fff" '+T+'>LIVE</text><circle r="34" fill="none" stroke="#dc2626" stroke-width="5"/><path d="M-24 -24L24 24" stroke="#dc2626" stroke-width="5"/></g>'+HEDGEHOG(146,136,.45),
- tag=None,tagc='#4338ca')
-D['adjournment-illness-proof']=dict(c1='#e0f2fe',c2='#fef9c3',sh='#0c4a6e',bd='#e0f2fe',ln='#38bdf8',bg='#0369a1',badge='40',tint='#f0f9ff',
- hero=THERMO(58,66,'39°','#ef4444')+'<g transform="translate(108 92)"><rect x="-26" y="-30" width="52" height="58" rx="3" fill="#fff" stroke="#0369a1" stroke-width="2"/><path d="M-6 -16h12M0 -22v12" stroke="#ef4444" stroke-width="4"/><path d="M-18 2h36M-18 10h36M-18 18h22" stroke="#94a3b8" stroke-width="2"/></g>'+DUCKLING(146,136,.5),
- tag=None,tagc='#0369a1')
+def pill(x,y,t,c,w=44):
+  return f'<g transform="translate({x} {y})"><rect x="{-w/2}" y="-8" width="{w}" height="15" rx="7" fill="#fff" stroke="{c}" stroke-width="2"/><text y="3" text-anchor="middle" font-size="7" fill="{c}" {T}>{t}</text></g>'
+D={} if 'D' not in dir() else D
+def rab(x,y,s=.45):
+  c='#f5f5f4'
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="10" rx="14" ry="14" fill="{c}" stroke="#d6d3d1"/><ellipse cx="-6" cy="-26" rx="4.5" ry="13" fill="{c}" stroke="#d6d3d1" transform="rotate(-10 -6 -26)"/><ellipse cx="6" cy="-26" rx="4.5" ry="13" fill="{c}" stroke="#d6d3d1" transform="rotate(10 6 -26)"/>'
+   '<ellipse cx="-6" cy="-26" rx="2.2" ry="9" fill="#fbcfe8" transform="rotate(-10 -6 -26)"/><ellipse cx="6" cy="-26" rx="2.2" ry="9" fill="#fbcfe8" transform="rotate(10 6 -26)"/>'
+   f'<circle cx="0" cy="-7" r="11" fill="{c}" stroke="#d6d3d1"/><circle cx="-4.5" cy="-9" r="2" fill="#1c1917"/><circle cx="4.5" cy="-9" r="2" fill="#1c1917"/><circle cx="-3.9" cy="-9.6" r=".7" fill="#fff"/><circle cx="5.1" cy="-9.6" r=".7" fill="#fff"/><path d="M-1.5 -4h3l-1.5 1.8z" fill="#f472b6"/><ellipse cx="-8" cy="-4" rx="2.3" ry="1.3" fill="#fb7185" opacity=".6"/><ellipse cx="8" cy="-4" rx="2.3" ry="1.3" fill="#fb7185" opacity=".6"/></g>')
+D['land-tax-survey-shop-list']=dict(c1='#d1fae5',c2='#ccfbf1',sh='#134e4a',bd='#d1fae5',ln='#5eead4',bg='#0f766e',badge='📏',tint='#f0fdfa',
+ hero='<g transform="translate(96 112)"><circle r="14" fill="#fff" stroke="#0f766e" stroke-width="4"/><circle r="3" fill="#0f766e"/><path d="M0 0l-28 -42" stroke="#475569" stroke-width="4"/><rect x="-40" y="-56" width="22" height="13" rx="2" fill="#1e293b"/><text x="-29" y="-46" text-anchor="middle" font-size="8" '+T+' fill="#4ade80">24.5</text><path d="M14 12h34" stroke="#0f766e" stroke-width="2.5" stroke-dasharray="4 3"/></g>'+rab(138,118)+pill(90,140,'สำรวจที่ดิน','#0f766e',54),tag=None)
+D['land-tax-exempt-adjacent-plots']=dict(c1='#ede9fe',c2='#fae8ff',sh='#2e1065',bd='#ede9fe',ln='#c4b5fd',bg='#6d28d9',badge='🏮',tint='#f5f3ff',
+ hero=''.join(f'<rect x="{56+i*24}" y="{84+(i%2)*4}" width="22" height="36" fill="{c}" stroke="#fff" stroke-width="2"/>' for i,c in enumerate(['#c4b5fd','#a78bfa','#8b5cf6']))+'<ellipse cx="91" cy="104" rx="44" ry="28" fill="none" stroke="#dc2626" stroke-width="3" stroke-dasharray="6 4"/><g transform="translate(138 92)"><rect x="-10" y="-6" width="20" height="16" fill="#dc2626"/><path d="M-14 -6q14 -10 28 0z" fill="#facc15"/></g>'+pill(90,140,'รวมแปลง','#6d28d9',48),tag=None)
+D['shop-criminal-mediation-police']=dict(c1='#e0e7ff',c2='#dbeafe',sh='#1e1b4b',bd='#e0e7ff',ln='#a5b4fc',bg='#3730a3',badge='🚓',tint='#eef2ff',
+ hero='<g transform="translate(84 100)"><rect x="-30" y="-26" width="60" height="48" fill="#bae6fd" fill-opacity=".7" stroke="#475569" stroke-width="3"/><path d="M-4 -4l-14 -18M-4 -4l16 -20M-4 -4l-22 12M-4 -4l12 24" stroke="#475569" stroke-width="1.6"/></g><g transform="translate(134 82)"><path d="M0 -16l14 7v9q0 12 -14 18q-14 -6 -14 -18v-9z" fill="#1e3a8a" stroke="#facc15" stroke-width="2"/><circle r="5" fill="#facc15"/></g>'+pill(90,140,'ไกล่เกลี่ย','#3730a3',50),tag=None)
+D['criminal-mediation-session-shop']=dict(c1='#ecfccb',c2='#dcfce7',sh='#365314',bd='#ecfccb',ln='#bef264',bg='#4d7c0f',badge='🪑',tint='#f7fee7',
+ hero='<g transform="translate(90 112)"><ellipse rx="40" ry="11" fill="#a16207"/><path d="M0 11v16" stroke="#78350f" stroke-width="5"/></g>'+''.join(f'<g transform="translate({x} 104)"><rect x="-9" y="-22" width="18" height="24" rx="4" fill="#65a30d"/></g>' for x in (48,132))+'<g transform="translate(90 70)"><circle r="14" fill="#fff" stroke="#4d7c0f" stroke-width="3"/><text y="4" text-anchor="middle" font-size="10" '+T+' fill="#4d7c0f">30</text></g>'+pill(90,140,'30 วัน','#4d7c0f',40),tag=None)
+D['criminal-mediation-deal-done']=dict(c1='#fef9c3',c2='#fef3c7',sh='#713f12',bd='#fef9c3',ln='#fde047',bg='#a16207',badge='🤝',tint='#fefce8',
+ hero='<g transform="translate(84 100)"><rect x="-28" y="-30" width="56" height="58" rx="3" fill="#fff" stroke="#a16207" stroke-width="2"/><path d="M-20 -16h40M-20 -8h32M-20 0h36" stroke="#e7e5e4" stroke-width="2.5"/><path d="M-20 14q6 -6 10 0t10 0" stroke="#1e293b" stroke-width="1.6" fill="none"/></g><g transform="translate(132 86) rotate(-12)"><rect x="-20" y="-12" width="40" height="24" rx="4" fill="none" stroke="#15803d" stroke-width="3"/><text y="4" text-anchor="middle" font-size="9" '+T+' fill="#15803d">ยุติคดี</text></g>'+pill(88,140,'ตกลงแล้ว','#a16207',48),tag=None)
