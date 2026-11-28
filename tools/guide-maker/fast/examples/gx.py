@@ -438,3 +438,23 @@ def HANDOVER(x,y,c='#7c3aed'):
    f'<rect x="{x+28}" y="{y-10}" width="8" height="10" rx="1" fill="#b91c1c"/><ellipse cx="{x+32}" cy="{y-11}" rx="6" ry="3" fill="#dc2626"/>'
    f'<circle cx="{x+46}" cy="{y-8}" r="4" fill="none" stroke="#ca8a04" stroke-width="2"/><path d="M{x+46} {y-4}v8M{x+46} {y+1}h3" stroke="#ca8a04" stroke-width="2"/>'
    +TX(x+28,y+16,'ส่งมอบ',5.2,c,'middle'))
+
+# ---- ชุด 397–401 ----
+def GAVEL(x,y,s=1,rot=-25):
+  """ค้อนศาลไม้ + แท่นรอง (cm-bob ที่หัวค้อน) — สื่อคำสั่งศาล"""
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="8" rx="16" ry="4" fill="#78350f"/><ellipse cx="0" cy="6" rx="16" ry="4" fill="#a16207"/>'
+   f'<g class="cm-bob" transform="rotate({rot})"><rect x="-2" y="-30" width="4" height="30" rx="2" fill="#92400e"/><rect x="-12" y="-38" width="24" height="11" rx="3" fill="#b45309"/><rect x="-14" y="-37" width="3" height="9" rx="1" fill="#fbbf24"/><rect x="11" y="-37" width="3" height="9" rx="1" fill="#fbbf24"/></g></g>')
+def HIPPO(x,y,s=1,c='#c4b5fd'):
+  """ฮิปโปตัวกลม หูเล็ก รูจมูก ตาวาว แก้มชมพู ฟันสองซี่"""
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="20" rx="22" ry="3" fill="#000" opacity=".12"/>'
+   f'<ellipse cx="0" cy="6" rx="20" ry="14" fill="{c}"/><rect x="-14" y="12" width="7" height="8" rx="3" fill="{c}"/><rect x="7" y="12" width="7" height="8" rx="3" fill="{c}"/>'
+   f'<ellipse cx="14" cy="-8" rx="13" ry="11" fill="{c}"/><ellipse cx="22" cy="-4" rx="9" ry="7" fill="#ddd6fe"/>'
+   '<circle cx="20" cy="-6" r="1.2" fill="#4c1d95"/><circle cx="25" cy="-6" r="1.2" fill="#4c1d95"/><rect x="19" y="0" width="2.4" height="3" fill="#fff"/><rect x="23" y="0" width="2.4" height="3" fill="#fff"/>'
+   f'<circle cx="7" cy="-18" r="3" fill="{c}"/><circle cx="16" cy="-19" r="3" fill="{c}"/><circle cx="7" cy="-18" r="1.4" fill="#f9a8d4"/><circle cx="16" cy="-19" r="1.4" fill="#f9a8d4"/>'
+   '<circle cx="10" cy="-12" r="1.8" fill="#1c1917"/><circle cx="10.6" cy="-12.6" r=".6" fill="#fff"/><ellipse cx="7" cy="-6" rx="2.4" ry="1.4" fill="#fb7185" opacity=".55"/></g>')
+def MINIBUB(x,y,t,c='#334155',bgc='#fff',w=None):
+  """บับเบิลคำพูดเล็กของตัวประกอบในฉาก (ข้อความ ≤ 12 ตัว) ปลายชี้ลงซ้าย"""
+  from fgk import TX
+  w=w or 8+len(t)*4.4
+  return (f'<g><rect x="{x}" y="{y-9}" width="{w}" height="14" rx="7" fill="{bgc}" stroke="{c}" stroke-width="1"/><path d="M{x+8} {y+5}l-4 6l9 -6" fill="{bgc}" stroke="{c}" stroke-width="1"/>'
+   +TX(x+w/2,y+1.6,t,5,c,'middle')+'</g>')
