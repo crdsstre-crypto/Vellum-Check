@@ -239,3 +239,27 @@ def PANDA(x,y,s=1):
    '<ellipse cx="-5" cy="-11" rx="3.2" ry="4" fill="#262626" transform="rotate(-20 -5 -11)"/><ellipse cx="5" cy="-11" rx="3.2" ry="4" fill="#262626" transform="rotate(20 5 -11)"/>'
    '<circle cx="-4.5" cy="-11.5" r="1.3" fill="#fff"/><circle cx="5.5" cy="-11.5" r="1.3" fill="#fff"/><ellipse cy="-5" rx="2" ry="1.4" fill="#262626"/>'
    '<ellipse cx="-9" cy="-5" rx="2.4" ry="1.4" fill="#fb7185" opacity=".55"/><ellipse cx="9" cy="-5" rx="2.4" ry="1.4" fill="#fb7185" opacity=".55"/></g>')
+
+def PLOTS(x,y,w=90,h=56,n=4,c='#16a34a'):
+  # ที่ดินแบ่งเป็นแปลง เส้นประแบ่ง เลขแปลง หมุดมุม
+  out=f'<g transform="translate({x} {y})"><rect width="{w}" height="{h}" fill="#dcfce7" stroke="{c}" stroke-width="2"/>'
+  for i in range(1,n): out+=f'<path d="M{w*i/n:.0f} 0v{h}" stroke="{c}" stroke-width="1.5" stroke-dasharray="4 3"/>'
+  for i in range(n): out+=f'<text x="{w*(i+.5)/n:.0f}" y="{h/2+4:.0f}" text-anchor="middle" font-size="10" font-weight="900" fill="{c}">{i+1}</text>'
+  for px,py in ((0,0),(w,0),(0,h),(w,h)): out+=f'<circle cx="{px}" cy="{py}" r="3" fill="#dc2626"/>'
+  return out+f'<path d="M0 {h+8}h{w}" stroke="#64748b"/><path d="M0 {h+5}v6M{w} {h+5}v6" stroke="#64748b"/></g>'
+
+def TRIPOD(x,y,c='#f59e0b'):
+  # กล้องรังวัดบนขาตั้งสามขา
+  return (f'<g transform="translate({x} {y})"><path d="M0 -30l-14 30M0 -30l14 30M0 -30v30" stroke="#78716c" stroke-width="2.4"/>'
+   f'<rect x="-10" y="-44" width="20" height="14" rx="3" fill="{c}"/><circle cx="11" cy="-37" r="4" fill="#1e293b"/><circle cx="11" cy="-37" r="1.6" fill="#7dd3fc"/>'
+   '<rect x="-4" y="-50" width="8" height="6" rx="1" fill="#334155"/></g>')
+
+def FOX(x,y,s=1,c='#ea580c'):
+  # จิ้งจอกนั่ง หางพุ่มปลายขาว หน้ากากขาว ตาวาว แก้ม
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="24" rx="18" ry="3" fill="#000" opacity=".12"/>'
+   f'<path d="M10 20q22 0 18-20q-2 10-12 12z" fill="{c}"/><path d="M24 4q4-2 4-6q-2 6-6 6z" fill="#fff"/>'
+   f'<path d="M-12 22q-2-18 12-20q14 2 12 20z" fill="{c}"/><path d="M-6 22q0-12 6-14q6 2 6 14z" fill="#fff7ed"/>'
+   f'<path d="M-14 -6l-2-16l10 8zM14 -6l2-16l-10 8z" fill="{c}"/><path d="M-12 -10l-1-8l5 4zM12 -10l1-8l-5 4z" fill="#3f1d0a"/>'
+   f'<path d="M-15 -6q15-14 30 0q-4 14-15 16q-11-2-15-16z" fill="{c}"/><path d="M-10 0q10 4 20 0q-3 9-10 10q-7-1-10-10z" fill="#fff"/>'
+   '<circle cx="-5" cy="-3" r="2" fill="#1c1917"/><circle cx="5" cy="-3" r="2" fill="#1c1917"/><circle cx="-4.4" cy="-3.6" r=".7" fill="#fff"/><circle cx="5.6" cy="-3.6" r=".7" fill="#fff"/>'
+   '<ellipse cy="6" rx="2" ry="1.4" fill="#1c1917"/><ellipse cx="-9" cy="2" rx="2.2" ry="1.3" fill="#fb7185" opacity=".55"/><ellipse cx="9" cy="2" rx="2.2" ry="1.3" fill="#fb7185" opacity=".55"/></g>')
