@@ -263,3 +263,26 @@ def FOX(x,y,s=1,c='#ea580c'):
    f'<path d="M-15 -6q15-14 30 0q-4 14-15 16q-11-2-15-16z" fill="{c}"/><path d="M-10 0q10 4 20 0q-3 9-10 10q-7-1-10-10z" fill="#fff"/>'
    '<circle cx="-5" cy="-3" r="2" fill="#1c1917"/><circle cx="5" cy="-3" r="2" fill="#1c1917"/><circle cx="-4.4" cy="-3.6" r=".7" fill="#fff"/><circle cx="5.6" cy="-3.6" r=".7" fill="#fff"/>'
    '<ellipse cy="6" rx="2" ry="1.4" fill="#1c1917"/><ellipse cx="-9" cy="2" rx="2.2" ry="1.3" fill="#fb7185" opacity=".55"/><ellipse cx="9" cy="2" rx="2.2" ry="1.3" fill="#fb7185" opacity=".55"/></g>')
+
+def EVIBAG(x,y,t='A',c='#2563eb'):
+  # ถุงหลักฐานซิปล็อก มีป้ายหมายเลข และของข้างใน
+  return (f'<g transform="translate({x} {y})"><rect x="-16" y="-20" width="32" height="40" rx="3" fill="#e0f2fe" fill-opacity=".85" stroke="#94a3b8" stroke-width="1.5"/>'
+   f'<rect x="-16" y="-20" width="32" height="6" fill="#ef4444"/><rect x="-10" y="-6" width="20" height="14" rx="2" fill="#fff" stroke="#cbd5e1"/>'
+   f'<path d="M-6 0h12M-6 4h8" stroke="#94a3b8"/><circle cx="10" cy="14" r="7" fill="{c}"/><text x="10" y="17" text-anchor="middle" font-size="8" font-weight="900" fill="#fff">{t}</text></g>')
+
+def PCT(x,y,p=30,c='#7c3aed',r=18):
+  # วงกลมเปอร์เซ็นต์ เติมสัดส่วน พร้อมตัวเลข
+  import math
+  a=2*math.pi*p/100; ex=x+r*math.sin(a); ey=y-r*math.cos(a); big=1 if p>50 else 0
+  return (f'<g><circle cx="{x}" cy="{y}" r="{r}" fill="#f1f5f9" stroke="#cbd5e1"/><path d="M{x} {y}L{x} {y-r}A{r} {r} 0 {big} 1 {ex:.1f} {ey:.1f}z" fill="{c}"/>'
+   f'<circle cx="{x}" cy="{y}" r="{r*.55:.1f}" fill="#fff"/><text x="{x}" y="{y+4}" text-anchor="middle" font-size="9" font-weight="900" fill="{c}">≤{p}%</text></g>')
+
+def KOALA(x,y,s=1,c='#9ca3af'):
+  # โคอาล่าเกาะกิ่ง หูฟู จมูกใหญ่ ตาวาว แก้ม
+  return (f'<g transform="translate({x} {y}) scale({s})"><path d="M-26 24h52" stroke="#78350f" stroke-width="5" stroke-linecap="round"/><path d="M14 22q6-4 10 2" stroke="#65a30d" stroke-width="3" fill="none"/><ellipse cx="18" cy="18" rx="4" ry="2" fill="#84cc16"/>'
+   f'<ellipse cx="0" cy="10" rx="14" ry="13" fill="{c}"/><ellipse cx="0" cy="14" rx="8" ry="8" fill="#e5e7eb"/>'
+   f'<circle cx="-15" cy="-12" r="9" fill="{c}"/><circle cx="15" cy="-12" r="9" fill="{c}"/><circle cx="-15" cy="-12" r="5" fill="#f3f4f6"/><circle cx="15" cy="-12" r="5" fill="#f3f4f6"/>'
+   f'<circle cx="0" cy="-6" r="13" fill="{c}"/><ellipse cx="0" cy="-3" rx="4.5" ry="6" fill="#374151"/><ellipse cx="-1.5" cy="-6" rx="1.2" ry="1.6" fill="#9ca3af"/>'
+   '<circle cx="-6" cy="-9" r="2" fill="#111827"/><circle cx="6" cy="-9" r="2" fill="#111827"/><circle cx="-5.4" cy="-9.6" r=".7" fill="#fff"/><circle cx="6.6" cy="-9.6" r=".7" fill="#fff"/>'
+   '<ellipse cx="-9" cy="-2" rx="2.4" ry="1.4" fill="#fb7185" opacity=".55"/><ellipse cx="9" cy="-2" rx="2.4" ry="1.4" fill="#fb7185" opacity=".55"/>'
+   '<path d="M-8 20q-2 4 2 6M8 20q2 4 -2 6" stroke="#6b7280" stroke-width="4" stroke-linecap="round" fill="none"/></g>')
