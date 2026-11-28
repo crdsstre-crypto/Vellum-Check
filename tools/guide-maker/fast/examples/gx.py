@@ -587,3 +587,27 @@ def HIPPO(x,y,s=1,c='#c4b5fd'):
    '<circle cx="-5" cy="-11" r="2" fill="#1c1917"/><circle cx="5" cy="-11" r="2" fill="#1c1917"/><circle cx="-4.4" cy="-11.6" r=".7" fill="#fff"/><circle cx="5.6" cy="-11.6" r=".7" fill="#fff"/>'
    '<path d="M-5 4q5 3 10 0" stroke="#6d28d9" stroke-width=".9" fill="none"/>'
    '<ellipse cx="-11" cy="-3" rx="2.3" ry="1.3" fill="#fb7185" opacity=".6"/><ellipse cx="11" cy="-3" rx="2.3" ry="1.3" fill="#fb7185" opacity=".6"/></g>')
+
+def MANGOCRATE(x,y,c='#a16207'):
+  # ลังไม้ใส่มะม่วงเหลือง มีป้ายเกรด
+  m=''.join(f'<ellipse cx="{-22+i*11}" cy="{-6-(i%2)*3}" rx="6" ry="4.5" fill="#facc15" stroke="#ca8a04" transform="rotate(-20 {-22+i*11} -6)"/><path d="M{-20+i*11} -10q2 -3 4 -2" stroke="#16a34a" stroke-width="1.5" fill="none"/>' for i in range(5))
+  return (f'<g transform="translate({x} {y})"><ellipse cx="0" cy="16" rx="34" ry="3" fill="#000" opacity=".12"/>'+m+
+   f'<rect x="-30" y="-4" width="60" height="20" rx="2" fill="{c}"/><path d="M-30 3h60M-30 10h60" stroke="#78350f" stroke-width="1.2"/><rect x="-10" y="0" width="20" height="9" rx="1.5" fill="#fff"/><text x="0" y="7" font-size="6" font-weight="900" text-anchor="middle" fill="#a16207">เกรด A</text></g>')
+
+def EVIDBOX(x,y,c='#b45309'):
+  # กล่องหลักฐานคาดเทปแดง "อายัด" แฟ้มโผล่
+  return (f'<g transform="translate({x} {y})"><ellipse cx="0" cy="22" rx="30" ry="3" fill="#000" opacity=".12"/>'
+   '<rect x="-14" y="-22" width="12" height="16" fill="#fef3c7" stroke="#d97706" transform="rotate(-8)"/><rect x="0" y="-24" width="12" height="18" fill="#dbeafe" stroke="#2563eb" transform="rotate(6)"/>'
+   f'<rect x="-26" y="-8" width="52" height="30" rx="2" fill="{c}"/><path d="M-26 -8l8 -6h36l8 6" fill="#d97706"/>'
+   '<path d="M-28 2l56 10" stroke="#dc2626" stroke-width="6"/><text x="0" y="10" font-size="6" font-weight="900" text-anchor="middle" fill="#fff" transform="rotate(10 0 8)">อายัด</text></g>')
+
+def FROG(x,y,s=1,c='#86efac'):
+  # กบเขียวพาสเทล ตาโตบนหัว ม่านตาวาว แก้มชมพู ยิ้มกว้าง ขาพับ
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="20" rx="18" ry="3" fill="#000" opacity=".12"/>'
+   f'<ellipse cx="-13" cy="15" rx="7" ry="4" fill="{c}" stroke="#16a34a"/><ellipse cx="13" cy="15" rx="7" ry="4" fill="{c}" stroke="#16a34a"/>'
+   f'<ellipse cx="0" cy="6" rx="16" ry="12" fill="{c}" stroke="#16a34a"/><ellipse cx="0" cy="10" rx="9" ry="6" fill="#dcfce7"/>'
+   f'<circle cx="-8" cy="-6" r="6" fill="{c}" stroke="#16a34a"/><circle cx="8" cy="-6" r="6" fill="{c}" stroke="#16a34a"/>'
+   '<circle cx="-8" cy="-6" r="3.6" fill="#fff"/><circle cx="8" cy="-6" r="3.6" fill="#fff"/><circle cx="-7.4" cy="-5.6" r="2.2" fill="#1c1917"/><circle cx="8.6" cy="-5.6" r="2.2" fill="#1c1917"/>'
+   '<circle cx="-6.6" cy="-6.6" r=".8" fill="#fff"/><circle cx="9.4" cy="-6.6" r=".8" fill="#fff"/>'
+   '<path d="M-7 3q7 5 14 0" stroke="#15803d" stroke-width="1.1" fill="none"/>'
+   '<ellipse cx="-11" cy="3" rx="2.4" ry="1.3" fill="#fb7185" opacity=".6"/><ellipse cx="11" cy="3" rx="2.4" ry="1.3" fill="#fb7185" opacity=".6"/></g>')
