@@ -1,0 +1,15 @@
+import sys; sys.path.insert(0,'/home/claude/tools'); sys.path.insert(0,'/home/claude/work')
+from gx import COURTHOUSE, SANDGLASS, RACCOON, HEDGEHOG, SEAL, SQUIRREL, PENGUIN, CAPY
+T='font-family="sans-serif" font-weight="900"'
+def doc(x,y,w,h,c,head):
+  return f'<g transform="translate({x} {y})"><rect x="{-w/2}" y="{-h/2}" width="{w}" height="{h}" rx="4" fill="#fff" stroke="{c}" stroke-width="2.5"/><rect x="{-w/2}" y="{-h/2}" width="{w}" height="12" rx="4" fill="{c}"/><text y="{-h/2+9}" text-anchor="middle" font-size="8" fill="#fff" {T}>{head}</text>'+''.join(f'<path d="M{-w/2+8} {-h/2+20+i*8}h{w-16}" stroke="#cbd5e1" stroke-width="2.5"/>' for i in range(int((h-24)/8)))+'</g>'
+D['court-waits-criminal-case']=dict(c1='#d1fae5',c2='#cbd5e1',sh='#064e3b',bd='#d1fae5',ln='#34d399',bg='#047857',badge='39',tint='#ecfdf5',
+ hero=COURTHOUSE(70,100,.7)+SANDGLASS(128,96,'#f59e0b',1.2)+RACCOON(110,140,.38),tag=None,tagc='#047857')
+D['trade-secret-testimony']=dict(c1='#fee2e2',c2='#fff7ed',sh='#7f1d1d',bd='#fee2e2',ln='#f87171',bg='#b91c1c',badge='92',tint='#fef2f2',
+ hero='<g transform="translate(88 92)"><rect x="-34" y="-34" width="68" height="54" rx="4" fill="#7f1d1d"/><rect x="-29" y="-29" width="58" height="44" rx="3" fill="#fecaca"/><text y="-8" text-anchor="middle" font-size="12" fill="#7f1d1d" '+T+'>สูตรลับ</text><rect x="-9" y="2" width="18" height="15" rx="3" fill="#facc15"/><path d="M-6 2v-6a6 6 0 0 1 12 0v6" stroke="#a16207" stroke-width="2.5" fill="none"/></g>'+HEDGEHOG(140,138,.38),tag=None,tagc='#b91c1c')
+D['company-authority-sue']=dict(c1='#e0f2fe',c2='#fef9c3',sh='#0c4a6e',bd='#e0f2fe',ln='#38bdf8',bg='#0369a1',badge='66',tint='#f0f9ff',
+ hero=doc(74,94,56,70,'#0369a1','รับรอง')+SEAL(126,74,'มีอำนาจ?','#b91c1c',-12,46)+SQUIRREL(132,136,.36),tag=None,tagc='#0369a1')
+D['court-efiling-shop']=dict(c1='#fce7f3',c2='#e0f2fe',sh='#831843',bd='#fce7f3',ln='#f472b6',bg='#be185d',badge='@',tint='#fdf2f8',
+ hero='<g transform="translate(90 96)"><rect x="-40" y="-30" width="80" height="50" rx="4" fill="#1f2937"/><rect x="-36" y="-26" width="72" height="42" fill="#f8fafc"/><rect x="-36" y="-26" width="72" height="10" fill="#be185d"/><rect x="-28" y="-8" width="40" height="6" rx="3" fill="#cbd5e1"/><rect x="-28" y="4" width="26" height="9" rx="4" fill="#16a34a"/><path d="M-46 20h92" stroke="#475569" stroke-width="5"/></g>'+PENGUIN(142,138,.36),tag=None,tagc='#be185d')
+D['court-inspect-expert']=dict(c1='#fef3c7',c2='#fde68a',sh='#78350f',bd='#fef3c7',ln='#f59e0b',bg='#b45309',badge='128',tint='#fffbeb',
+ hero='<g transform="translate(84 94)"><rect x="-34" y="-34" width="68" height="64" rx="5" fill="#9ca3af"/><rect x="-27" y="-26" width="54" height="32" rx="3" fill="#1f2937"/><rect x="-23" y="-22" width="46" height="24" rx="2" fill="#ea580c" opacity=".7"/><circle cx="-18" cy="18" r="4" fill="#ef4444"/><circle cx="-6" cy="18" r="4" fill="#facc15"/></g><g transform="translate(132 72)"><circle r="12" fill="none" stroke="#1d4ed8" stroke-width="4"/><path d="M8 8l12 12" stroke="#1d4ed8" stroke-width="5" stroke-linecap="round"/></g>'+CAPY(140,140,.38),tag=None,tagc='#b45309')
