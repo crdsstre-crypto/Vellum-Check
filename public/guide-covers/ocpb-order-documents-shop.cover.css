@@ -1,1 +1,5 @@
-.gd-cover[data-layout="ocpbletterpastel"] .gd-cover-art { border: 5px solid #e2e8f0; border-radius: 10px; } /* stub (ocpb-order-documents-shop) */
+/* ปกแบบ "ocpbletterpastel" = กรอบพาสเทลบาง ๆ สีเดียวกับภาพ + ป้ายเล็กมุมล่าง (คู่มือ ocpb-order-documents-shop) */
+.gd-cover[data-layout="ocpbletterpastel"] .gd-cover-art { overflow: visible; border: 5px solid #e0e7ff; border-radius: 10px; box-shadow: 0 0 0 2px #a5b4fc inset, 0 6px 14px rgba(30,41,59,.16); }
+.gd-cover[data-layout="ocpbletterpastel"] .gd-cover-art .gd-scene { border-radius: 6px; }
+.gd-cover[data-layout="ocpbletterpastel"] .gd-cover-art::before { content: none; }
+.gd-cover[data-layout="ocpbletterpastel"] .gd-cover-art::after { content: "17"; right: -8px; bottom: 10px; width: 24px; height: 24px; border-radius: 50%; font: 900 13px/24px sans-serif; text-align: center; position: absolute; z-index: 4; background: #4338ca; color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,.15); pointer-events: none; }
