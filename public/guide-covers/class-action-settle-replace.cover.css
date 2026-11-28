@@ -1,1 +1,5 @@
-.gd-cover[data-layout="classsettlepastel"] .gd-cover-art { border: 5px solid #e2e8f0; border-radius: 10px; } /* stub (class-action-settle-replace) */
+/* ปกแบบ "classsettlepastel" = กรอบพาสเทลบาง ๆ สีเดียวกับภาพ + ป้ายเล็กมุมล่าง (คู่มือ class-action-settle-replace) */
+.gd-cover[data-layout="classsettlepastel"] .gd-cover-art { overflow: visible; border: 5px solid #ffedd5; border-radius: 10px; box-shadow: 0 0 0 2px #fb923c inset, 0 6px 14px rgba(30,41,59,.16); }
+.gd-cover[data-layout="classsettlepastel"] .gd-cover-art .gd-scene { border-radius: 6px; }
+.gd-cover[data-layout="classsettlepastel"] .gd-cover-art::before { content: none; }
+.gd-cover[data-layout="classsettlepastel"] .gd-cover-art::after { content: "🤝"; right: -8px; bottom: 10px; width: 24px; height: 24px; border-radius: 50%; font: 900 13px/24px sans-serif; text-align: center; position: absolute; z-index: 4; background: #c2410c; color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,.15); pointer-events: none; }
