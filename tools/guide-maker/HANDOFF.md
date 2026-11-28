@@ -9,7 +9,7 @@
 > "สิ่งที่ผมจะให้ทำคือ**ทำตามหมวดหมู่** และทำให้**สวยขึ้น พัฒนาเรื่อยๆ ไม่ซ้ำซากจำเจ** **เปลี่ยนท่าทางน้องม้วนเยอะๆ** และ**เนื้อหาด้านในพัฒนามากขึ้นเรื่อยๆ โดยที่ผมไม่ต้องสั่ง** และสวยขึ้นอีก ไม่จำเจ"
 
 แปลเป็นงาน:
-- ผู้ใช้พิมพ์แค่ **"ทำอีก5เรื่อง"** → ทำ 5 เรื่องในหมวดปัจจุบัน (ตอนนี้ **ค้าขายและแบรนด์ ถึงเรื่องที่ 376 แล้ว เรื่องถัดไป 377**) commit + push เอง ไม่ต้องถาม
+- ผู้ใช้พิมพ์แค่ **"ทำอีก5เรื่อง"** → ทำ 5 เรื่องในหมวดปัจจุบัน (ตอนนี้ **ค้าขายและแบรนด์ ถึงเรื่องที่ 381 แล้ว เรื่องถัดไป 382**) commit + push เอง ไม่ต้องถาม
 - **ทุกชุดต้องดีกว่าชุดก่อนอย่างน้อย 2 อย่าง** โดยไม่ต้องรอผู้ใช้สั่ง (ภาพ ฉาก ท่าน้องม้วน ความลึกของเนื้อหา) และบอกผู้ใช้สั้นๆ ว่าชุดนี้พัฒนาอะไร
 - ผู้ใช้ **ขอให้ใช้เครดิตน้อยที่สุด**: อ่านไฟล์เฉพาะที่จำเป็น ตอบสั้น ทำ 5 เรื่องรวดเดียว ดูภาพรวม 5 เรื่องในรูปเดียว ไม่ต้องส่ง zip
 - ผู้ใช้ใช้ **iPhone** ตอบภาษาไทยสั้นๆ ทุกครั้งต้องปิดท้ายว่า **"ยังไม่ได้ลองบน iPhone จริงครับ"**
@@ -129,6 +129,8 @@
 - ชุด 372–376 ย้ายมาใช้ พ.ร.บ.ล้มละลาย (ชื่อกฎหมายใน cite: "พระราชบัญญัติล้มละลาย พุทธศักราช 2483") ฝั่งร้านเป็นเจ้าหนี้: ค่าเช่าตามส่วน/ดอกเบี้ยหลังพิทักษ์/เงินต่างประเทศ 98–100, ตรวจและโต้แย้งคำขอรับชำระหนี้ 104–106, 108, ประนอมหนี้ 48, 52, 53, 55, 57, 59, บังคับคดีชนล้มละลาย 110–112, 62, ธุรกิจลูกหนี้ดำเนินต่อ 120 ใช้ท่าไปแล้ว: open+laugh+shield+lean, chin+hmm+cal+bob, thumb+firm+clip+sway, up+wink+none+hop, point+think+phone+spin, cross+wink+shield+breathe, open+star+cup+shake, thumb+sleepy+cal+bob, bow+shock+pen+shake, palm+relief+cup+peek, wave+sleepy+clip+breathe, cheer+cry+money+spin, cover+smile+sign+sway, scratch+sad+none+lean, palm+shock+cup+hop, wave+think+phone+peek, up+firm+sign+hop, chin+laugh+money+bob, cheer+hmm+pen+lean, thumb+star+none+sway
   - ปก examples/b46.py ; coverLines บรรทัดแรก ≤ 14–15 ตัว (คำว่า "พิทักษ์ทรัพย์" ยาว ใช้ "ล้มละลาย" แทนบนปก)
   - พ.ร.บ.ล้มละลาย ยังว่างอีกมาก เช่น 7, 44, 49, 51, 58, 61, 64–66, 68–71, 76, 92, 93, 97, 101, 103, 117, 118, 121–129 ; เครื่องหมายการค้าเหลือแต่มาตราธุรการ ; ดูลิขสิทธิ์/สิทธิบัตร/ธุรกรรมอิเล็กทรอนิกส์ที่ยังว่างได้
+- ชุด 377–381 พ.ร.บ.ล้มละลาย ต่อ (รอบแบ่งทรัพย์/กันส่วน/ต่ำกว่า 1 บาท/คู่สมรส 124, 125, 128, 129, ตรวจและคัดค้านบัญชีส่วนแบ่ง 126–127, ผู้ค้ำ/ลูกหนี้ร่วมยื่นล่วงหน้า 101, เจ้าพนักงานไม่ยอมรับสัญญา 122 + 92, ซื้อทรัพย์จากกอง/ถูกหมายเรียก 123, 117) ใช้ท่าไปแล้ว: cross+wink+phone+breathe, point+sleepy+mag+bob, open+laugh+coin+spin, up+sad+cal+shake, bow+cry+mag+breathe, cheer+relief+pen+shake, cross+laugh+coin+spin, open+sleepy+none+peek, wave+shock+cup+sway, scratch+think+shield+peek, palm+smile+none+lean, cover+hmm+phone+hop, thumb+star+none+hop, chin+hmm+pen+lean, bow+smile+coin+bob, palm+think+sign+sway, point+laugh+shield+breathe, up+wink+phone+shake, chin+sad+none+spin, cover+relief+clip+bob
+  - ปก examples/b47.py ; พ.ร.บ.ล้มละลาย ที่ยังว่าง: 7, 44, 49, 51, 58, 61, 64–66, 68–71, 76, 93, 97, 103, 118, 121 และมาตรา 131+ (ยังไม่ได้เช็ก)
 - ชุด 322–326 (พยานบุคคลเบิกความ/บันทึกถ้อยคำ, คืนค่าขึ้นศาล/ค่าบังคับคดี, วางเงินต่อศาล, ชี้สองสถาน/แถลงปิดคดี, คำแก้อุทธรณ์/อำนาจศาลอุทธรณ์) ใช้ท่าไปแล้ว: wave+worried+mic+sway, tap+think+card+sway, palm+shock+notebook+stomp, nod+relief+pen+hop, ok+hopeful+cash+bob, palm+think+cash+sway, grip+shock+coin+stomp, thumb+relief+table+hop, nod+focus+pen+tiptoe, tap+think+bottle+sway, grip+shock+envelope+stomp, thumb+relief+gavel+hop, rub+hopeful+coin+lean, count+think+coin+sway, grip+shock+receipt+stomp, fold+relief+scale+duck, count+focus+clip+lean, tap+think+wrench+sway, palm+shock+gavel+stomp, fist+relief+mic+hop
 - ชุด 317–321 (ขาดนัดพิจารณาวันสืบพยาน, ผู้เชี่ยวชาญ/ตรวจสถานที่/สืบพยานไว้ก่อน, ต้นฉบับอยู่กับอีกฝ่าย/คัดค้านเอกสาร, แก้คำพิพากษาพิมพ์ผิด/ถึงที่สุด, ขออนุญาตฎีกา) ใช้ท่าไปแล้ว: cover+shock+calendar+tilt, grip+shock+car+stomp, palm+think+gavel+lean, fold+relief+envelope+duck, nod+focus+helmet+sway, tap+think+tile+sway, palm+shock+mag+stomp, pray+relief+camera+hop, elbow+focus+folder+lean, count+think+receipt+sway, palm+shock+fire+stomp, thumb+relief+stamp+hop, rub+hmm+pen+tilt, nod+focus+pen+sway, palm+shock+gavel+stomp, cheer+relief+calendar+hop, pray+hopeful+scroll+breathe, count+focus+cup+sway, palm+think+scale+lean, cheer+relief+gavel+hop
   - สิ่งที่พัฒนา: `SCROLL` (ม้วนคำพิพากษามีตรา) + `SAFEBOX` (ตู้เซฟเอกสาร) + `RACCOON` (แรคคูนหน้ากากดำ หางลาย) ใน gx.py; ปก `b35.py`
@@ -278,7 +280,7 @@
     - **ภัยออนไลน์** (1 เรื่อง)
     - **ที่อยู่อาศัย** (27 เรื่อง)
   - ผู้ใช้เคยบอกว่าอยากให้**แต่ละหมวดครบประมาณ 1,000 เรื่องขึ้นไปก่อน แล้วค่อยขยับไปหมวดถัดไป**
-  - ถ้าผู้ใช้ไม่ได้ระบุหมวด ให้**ทำหมวดค้าขายและแบรนด์ต่อ** (เรื่องถัดไปคือเรื่องที่ 377) และแตกหัวข้อย่อยให้หลากหลาย เช่น ร้านอาหาร ร้านออนไลน์ ร้านเสริมสวย ร้านซ่อม โรงงานเล็ก แบรนด์ เครื่องหมายการค้า และนำเข้า-ส่งออก
+  - ถ้าผู้ใช้ไม่ได้ระบุหมวด ให้**ทำหมวดค้าขายและแบรนด์ต่อ** (เรื่องถัดไปคือเรื่องที่ 382) และแตกหัวข้อย่อยให้หลากหลาย เช่น ร้านอาหาร ร้านออนไลน์ ร้านเสริมสวย ร้านซ่อม โรงงานเล็ก แบรนด์ เครื่องหมายการค้า และนำเข้า-ส่งออก
   - ถ้าผู้ใช้ระบุหมวด ให้ทำตามนั้น
   - ดูจำนวนเรื่องในแต่ละหมวดได้ด้วยคำสั่งนี้ (นับจาก category ในไฟล์ `server/library/guides/*.json`):
     ```
