@@ -536,3 +536,29 @@ def PIGLET(x,y,s=1,c='#fbcfe8'):
    '<ellipse cx="0" cy="-2" rx="5" ry="3.6" fill="#f9a8d4" stroke="#ec4899" stroke-width=".8"/><ellipse cx="-1.8" cy="-2" rx=".9" ry="1.3" fill="#9d174d"/><ellipse cx="1.8" cy="-2" rx=".9" ry="1.3" fill="#9d174d"/>'
    '<circle cx="-4.5" cy="-9" r="1.8" fill="#1c1917"/><circle cx="4.5" cy="-9" r="1.8" fill="#1c1917"/><circle cx="-4" cy="-9.6" r=".6" fill="#fff"/><circle cx="5" cy="-9.6" r=".6" fill="#fff"/>'
    '<ellipse cx="-8" cy="-3" rx="2.2" ry="1.3" fill="#fb7185" opacity=".7"/><ellipse cx="8" cy="-3" rx="2.2" ry="1.3" fill="#fb7185" opacity=".7"/></g>')
+
+def PIEHOLD(x,y,pct=45,c='#dc2626'):
+  # วงกลมสัดส่วนหุ้นต่างชาติ เส้นเกณฑ์ 49%
+  import math
+  a=pct/100*2*math.pi; ex=22*math.sin(a); ey=-22*math.cos(a); big=1 if pct>50 else 0
+  t=49/100*2*math.pi; tx=26*math.sin(t); ty=-26*math.cos(t)
+  return (f'<g transform="translate({x} {y})"><circle r="22" fill="#e0f2fe"/><path d="M0 0v-22a22 22 0 {big} 1 {ex:.1f} {ey:.1f}z" fill="{c}" opacity=".8"/>'
+   f'<path d="M0 0L{tx:.1f} {ty:.1f}" stroke="#1e293b" stroke-width="2" stroke-dasharray="3 2"/><text x="{tx+4:.1f}" y="{ty+10:.1f}" font-size="7" font-weight="900" fill="#1e293b">49%</text>'
+   f'<text y="36" text-anchor="middle" font-size="8" font-weight="900" fill="{c}">ต่างชาติ {pct}%</text></g>')
+
+def GLOBEPIN(x,y,c='#0891b2'):
+  # ลูกโลกพร้อมหมุดที่ดินในไทย
+  return (f'<g transform="translate({x} {y})"><circle r="20" fill="#bae6fd" stroke="{c}" stroke-width="2"/><path d="M-20 0h40M0 -20q12 20 0 40M0 -20q-12 20 0 40" stroke="{c}" fill="none"/>'
+   '<path d="M-6 -6q4 -6 10 -2q2 6 -4 10q-6 0 -6 -8z" fill="#86efac"/><g transform="translate(2 -14)"><path d="M0 0c-6 -8 -6 -14 0 -14s6 6 0 14z" fill="#dc2626"/><circle cy="-9" r="2" fill="#fff"/></g></g>')
+
+def CALF(x,y,s=1,c='#fafaf9'):
+  # ลูกวัวลายจุด จมูกชมพู ตาวาว หูกาง เขาเล็ก แก้ม
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="24" rx="16" ry="3" fill="#000" opacity=".12"/>'
+   f'<rect x="-11" y="14" width="5" height="10" rx="2" fill="{c}" stroke="#d6d3d1"/><rect x="6" y="14" width="5" height="10" rx="2" fill="{c}" stroke="#d6d3d1"/>'
+   f'<ellipse cx="0" cy="8" rx="15" ry="11" fill="{c}" stroke="#d6d3d1"/><ellipse cx="-6" cy="6" rx="5" ry="4" fill="#44403c"/><ellipse cx="8" cy="11" rx="4" ry="3" fill="#44403c"/>'
+   '<path d="M-6 -20l-2 -5M6 -20l2 -5" stroke="#fde68a" stroke-width="3" stroke-linecap="round"/>'
+   f'<ellipse cx="-14" cy="-14" rx="6" ry="3" fill="{c}" stroke="#d6d3d1" transform="rotate(-20 -14 -14)"/><ellipse cx="14" cy="-14" rx="6" ry="3" fill="{c}" stroke="#d6d3d1" transform="rotate(20 14 -14)"/>'
+   f'<circle cx="0" cy="-10" r="11" fill="{c}" stroke="#d6d3d1"/><ellipse cx="4" cy="-16" rx="4" ry="3" fill="#44403c"/>'
+   '<ellipse cx="0" cy="-3" rx="7" ry="5" fill="#fbcfe8" stroke="#f9a8d4"/><circle cx="-2.5" cy="-3" r="1" fill="#9d174d"/><circle cx="2.5" cy="-3" r="1" fill="#9d174d"/>'
+   '<circle cx="-4.5" cy="-11" r="2" fill="#1c1917"/><circle cx="4.5" cy="-11" r="2" fill="#1c1917"/><circle cx="-4" cy="-11.6" r=".7" fill="#fff"/><circle cx="5" cy="-11.6" r=".7" fill="#fff"/>'
+   '<ellipse cx="-8.5" cy="-6" rx="2" ry="1.2" fill="#fb7185" opacity=".6"/><ellipse cx="8.5" cy="-6" rx="2" ry="1.2" fill="#fb7185" opacity=".6"/></g>')
