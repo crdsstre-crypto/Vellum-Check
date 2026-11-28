@@ -409,3 +409,32 @@ def DUCKLING(x,y,s=1):
   return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="0" rx="13" ry="10" fill="#fde047"/><path d="M-6 -2q-6 4 0 8" fill="#facc15"/><circle cx="8" cy="-12" r="8" fill="#fde047"/>'
    '<path d="M7 -20q2 -4 4 0q2 -3 3 1" stroke="#facc15" stroke-width="1.6" fill="none"/><path d="M15 -12l6 1.5l-6 2z" fill="#fb923c"/><circle cx="10" cy="-14" r="1.6" fill="#1c1917"/><circle cx="10.5" cy="-14.6" r=".5" fill="#fff"/>'
    '<ellipse cx="9" cy="-9.6" rx="2" ry="1.2" fill="#fb7185" opacity=".6"/><path d="M-4 10v4M3 10v4" stroke="#fb923c" stroke-width="1.6"/></g>')
+
+# ---- ชุด 392–396 ----
+def TIMELINE(x,y,w,pts,c='#2563eb'):
+  """เส้นเวลาแนวนอน pts=[(สัดส่วน0-1, ป้าย, สี)] หมุดวงกลม + ป้ายใต้หมุด — ใช้เล่าลำดับวันตามมาตรา"""
+  from fgk import TX
+  s=f'<path d="M{x} {y}h{w}" stroke="{c}" stroke-width="2.4" stroke-linecap="round"/><path d="M{x+w} {y}l-5 -3.5v7z" fill="{c}"/>'
+  for f,t,cc in pts:
+    px=x+f*w
+    s+=f'<circle cx="{px}" cy="{y}" r="4.2" fill="#fff" stroke="{cc}" stroke-width="2"/><circle cx="{px}" cy="{y}" r="1.6" fill="{cc}"/>'+TX(px,y+12,t,4.6,cc,'middle')
+  return s
+def ALPACA(x,y,s=1,c='#fef3c7'):
+  """อัลปากาขนฟู คอยาว หูตั้ง ตาวาว แก้มชมพู ผ้าพันคอ"""
+  fluff=''.join(f'<circle cx="{dx}" cy="{dy}" r="5" fill="{c}"/>' for dx,dy in [(-12,0),(-6,-4),(0,-5),(6,-4),(12,0),(-8,6),(0,7),(8,6)])
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="22" rx="16" ry="3" fill="#000" opacity=".12"/>'
+   f'<rect x="-11" y="8" width="5" height="14" rx="2.5" fill="#e7d3a8"/><rect x="6" y="8" width="5" height="14" rx="2.5" fill="#e7d3a8"/>{fluff}'
+   f'<rect x="4" y="-26" width="11" height="24" rx="5.5" fill="{c}"/><path d="M3 -8h13" stroke="#f472b6" stroke-width="3.2" stroke-linecap="round"/>'
+   f'<ellipse cx="10" cy="-30" rx="9" ry="8" fill="{c}"/><circle cx="6" cy="-37" r="3.2" fill="{c}"/><circle cx="10" cy="-38" r="3.4" fill="{c}"/><circle cx="14" cy="-37" r="3.2" fill="{c}"/>'
+   '<path d="M4 -36l-2 -7l4 3z" fill="#e7d3a8"/><path d="M16 -36l2 -7l-4 3z" fill="#e7d3a8"/>'
+   '<ellipse cx="12" cy="-26" rx="4.5" ry="3.4" fill="#fff7ed"/><path d="M11 -26.5l1 1l1 -1M12 -25.5v1.2" stroke="#78350f" stroke-width=".7" fill="none"/>'
+   '<circle cx="7" cy="-31" r="1.6" fill="#1c1917"/><circle cx="14" cy="-31" r="1.6" fill="#1c1917"/><circle cx="7.5" cy="-31.5" r=".5" fill="#fff"/><circle cx="14.5" cy="-31.5" r=".5" fill="#fff"/>'
+   '<ellipse cx="4.5" cy="-27.5" rx="1.8" ry="1.1" fill="#fb7185" opacity=".6"/><ellipse cx="17" cy="-27.5" rx="1.8" ry="1.1" fill="#fb7185" opacity=".6"/></g>')
+def HANDOVER(x,y,c='#7c3aed'):
+  """กล่องส่งมอบ: ดวงตรา + สมุดบัญชี + กุญแจ (อำนาจจัดการเปลี่ยนมือ)"""
+  from fgk import TX; from pk import K
+  return (f'<g filter="url(#wsh{K})"><path d="M{x} {y}h56l-6 26h-44z" fill="#e9d5ff" stroke="{c}" stroke-width="1.6"/></g>'
+   f'<rect x="{x+6}" y="{y-16}" width="18" height="22" rx="2" fill="#1e3a8a"/><rect x="{x+9}" y="{y-13}" width="12" height="3" fill="#fde68a"/>'
+   f'<rect x="{x+28}" y="{y-10}" width="8" height="10" rx="1" fill="#b91c1c"/><ellipse cx="{x+32}" cy="{y-11}" rx="6" ry="3" fill="#dc2626"/>'
+   f'<circle cx="{x+46}" cy="{y-8}" r="4" fill="none" stroke="#ca8a04" stroke-width="2"/><path d="M{x+46} {y-4}v8M{x+46} {y+1}h3" stroke="#ca8a04" stroke-width="2"/>'
+   +TX(x+28,y+16,'ส่งมอบ',5.2,c,'middle'))

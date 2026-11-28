@@ -6,6 +6,8 @@ cp $F/*.py $F/*.sh $F/*.md $F/*.mjs $F/*.json /home/claude/tools/ 2>/dev/null
 cp $F/c206gen.py /home/claude/work/
 cp $F/examples/enrich.py $F/examples/run9.py /tmp/pc/
 # สำเนา repo สำหรับ build (publish.sh จะคัดลอกผลลัพธ์กลับเข้า repo จริงแล้ว commit/push ให้)
-mkdir -p /home/claude/src && rsync -a --delete --exclude .git $R/ /home/claude/src/Vellum-Check-main/
+mkdir -p /home/claude/src && if command -v rsync >/dev/null; then rsync -a --delete --exclude .git $R/ /home/claude/src/Vellum-Check-main/; else rm -rf /home/claude/src/Vellum-Check-main && cp -a $R /home/claude/src/Vellum-Check-main && rm -rf /home/claude/src/Vellum-Check-main/.git; fi
+cp $F/examples/gx.py /home/claude/work/; mkdir -p /home/claude/tools/examples
+python3 -m playwright install chromium >/dev/null 2>&1
 pip install --break-system-packages -q pillow playwright >/dev/null 2>&1
 echo "พร้อม: ดูวิธีใช้ใน tools/guide-maker/HANDOFF.md หัวข้อ 0"
