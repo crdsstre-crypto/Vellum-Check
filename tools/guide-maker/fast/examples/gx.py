@@ -562,3 +562,25 @@ def TOUCAN(x,y,s=1):
    '<path d="M6 -8q16 -2 18 6q-10 4 -18 0z" fill="#fb923c"/><path d="M6 -8q16 -2 18 6l-18 -3z" fill="#facc15"/><circle cx="23" cy="-2" r="1.4" fill="#dc2626"/>'
    '<circle cx="3" cy="-7" r="2.6" fill="#38bdf8"/><circle cx="3" cy="-7" r="1.2" fill="#111"/><circle cx="3.5" cy="-7.5" r=".4" fill="#fff"/>'
    '<path d="M-6 10l-2 6M2 10l1 6" stroke="#38bdf8" stroke-width="1.6"/><path d="M-8 4q-6 6 -4 12" stroke="#111" stroke-width="3" fill="none"/></g>')
+
+# ---- ชุด 422–426 ----
+def RECEIPTSLIP(x,y,amt='12,000',c='#0f766e',stamp='ชำระแล้ว'):
+  """ใบเสร็จขอบหยัก ยอดเงิน ตราประทับ"""
+  from fgk import TX
+  zig=''.join(f'l3 4l3 -4' for _ in range(8))
+  return (f'<path d="M{x} {y}h48v54{zig.replace("l3 4l3 -4","l-3 4l-3 -4")}z" fill="#fff" stroke="#cbd5e1"/>'
+   +TX(x+24,y+9,'ใบเสร็จรับเงิน',4.8,c,'middle')+''.join(f'<path d="M{x+6} {y+16+i*6}h36" stroke="#e2e8f0" stroke-width="2"/>' for i in range(3))
+   +TX(x+24,y+42,amt,6.4,'#1e293b','middle')+f'<g transform="rotate(-12 {x+30} {y+48})"><rect x="{x+12}" y="{y+43}" width="36" height="10" rx="2" fill="none" stroke="{c}" stroke-width="1.4"/>'+TX(x+30,y+50.5,stamp,4.4,c,'middle')+'</g>')
+def TRIO(x,y,cols=('#f59e0b','#3b82f6','#ec4899'),s=1):
+  """หุ้นส่วน 3 คน หัวกลม+ไหล่ ยืนเรียง (ตัวประกอบเล็ก)"""
+  out=f'<g transform="translate({x} {y}) scale({s})">'
+  for i,c in enumerate(cols):
+    dx=i*16; out+=f'<path d="M{dx-8} 18q8 -12 16 0z" fill="{c}"/><circle cx="{dx}" cy="0" r="6" fill="#e8b896"/><path d="M{dx-6} -2q6 -8 12 0" fill="#3f2a1a"/>'
+  return out+'</g>'
+def SNAIL(x,y,s=1,c='#f9a8d4'):
+  """หอยทากเปลือกก้นหอย ตาบนก้าน ยิ้ม (สื่อมาช้า)"""
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="10" rx="18" ry="3" fill="#000" opacity=".1"/>'
+   '<path d="M-16 8q0 -4 6 -4h22q6 0 8 4z" fill="#bef264"/><path d="M14 4q4 -10 2 -16M18 4q6 -10 6 -15" stroke="#84cc16" stroke-width="2" fill="none"/>'
+   '<circle cx="16" cy="-12" r="2" fill="#1f2937"/><circle cx="24" cy="-11" r="2" fill="#1f2937"/>'
+   f'<circle cx="-2" cy="-4" r="11" fill="{c}"/><path d="M-2 -4m-7 0a7 7 0 1 0 7 -7a5 5 0 1 1 -5 5a3 3 0 1 0 3 -3" stroke="#be185d" stroke-width="1.6" fill="none"/>'
+   '<path d="M14 2q2 2 4 0" stroke="#3f6212" stroke-width="1" fill="none"/></g>')
