@@ -286,3 +286,31 @@ def KOALA(x,y,s=1,c='#9ca3af'):
    '<circle cx="-6" cy="-9" r="2" fill="#111827"/><circle cx="6" cy="-9" r="2" fill="#111827"/><circle cx="-5.4" cy="-9.6" r=".7" fill="#fff"/><circle cx="6.6" cy="-9.6" r=".7" fill="#fff"/>'
    '<ellipse cx="-9" cy="-2" rx="2.4" ry="1.4" fill="#fb7185" opacity=".55"/><ellipse cx="9" cy="-2" rx="2.4" ry="1.4" fill="#fb7185" opacity=".55"/>'
    '<path d="M-8 20q-2 4 2 6M8 20q2 4 -2 6" stroke="#6b7280" stroke-width="4" stroke-linecap="round" fill="none"/></g>')
+
+def JSCALE(x,y,tilt=8,c='#a16207',l='',r=''):
+  # ตาชั่งความยุติธรรม เอียงได้ มีป้ายสองข้าง
+  import math
+  dx=34*math.cos(math.radians(tilt)); dy=34*math.sin(math.radians(tilt))
+  return (f'<g transform="translate({x} {y})"><path d="M0 0v40M-14 40h28" stroke="{c}" stroke-width="3"/><circle r="4" fill="{c}"/>'
+   f'<path d="M{-dx:.1f} {dy:.1f}L{dx:.1f} {-dy:.1f}" stroke="{c}" stroke-width="3"/>'
+   f'<path d="M{-dx:.1f} {dy:.1f}l-10 14h20z" fill="#fde68a" stroke="{c}"/><path d="M{dx:.1f} {-dy:.1f}l-10 14h20z" fill="#fde68a" stroke="{c}"/>'
+   f'<text x="{-dx:.1f}" y="{dy+12:.1f}" text-anchor="middle" font-size="6.5" font-weight="900" fill="#7c2d12">{l}</text>'
+   f'<text x="{dx:.1f}" y="{-dy+12:.1f}" text-anchor="middle" font-size="6.5" font-weight="900" fill="#7c2d12">{r}</text></g>')
+
+def STAIRS(x,y,labels,c='#4f46e5'):
+  # บันไดขึ้นศาลสูง แต่ละขั้นมีป้าย ลูกศรขึ้น
+  out=f'<g transform="translate({x} {y})">'
+  for i,t in enumerate(labels):
+    out+=f'<rect x="{i*34}" y="{-i*14}" width="34" height="{14*(i+1)}" fill="{c}" opacity="{.35+i*.2:.2f}"/><text x="{i*34+17}" y="{-i*14+10}" text-anchor="middle" font-size="6.5" font-weight="900" fill="#fff">{t}</text>'
+  n=len(labels); return out+f'<path d="M4 -8L{n*34-6} {-n*14+4}" stroke="#16a34a" stroke-width="2" stroke-dasharray="3 3"/><path d="M{n*34-6} {-n*14+4}l-8 1l4 6z" fill="#16a34a"/></g>'
+
+def PENGUIN(x,y,s=1):
+  # เพนกวินตัวกลม พุงขาว ปากส้ม แก้มชมพู ถือซอง
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="26" rx="16" ry="3" fill="#000" opacity=".12"/>'
+   '<ellipse cx="0" cy="8" rx="15" ry="19" fill="#1e293b"/><ellipse cx="0" cy="12" rx="10" ry="14" fill="#f8fafc"/>'
+   '<circle cx="0" cy="-10" r="11" fill="#1e293b"/><path d="M-7 -12q7-6 14 0q0 8-7 9q-7-1-7-9z" fill="#f8fafc"/>'
+   '<circle cx="-3.5" cy="-11" r="1.8" fill="#0f172a"/><circle cx="3.5" cy="-11" r="1.8" fill="#0f172a"/><circle cx="-3" cy="-11.6" r=".6" fill="#fff"/><circle cx="4" cy="-11.6" r=".6" fill="#fff"/>'
+   '<path d="M-3 -7h6l-3 4z" fill="#f97316"/><ellipse cx="-7" cy="-6" rx="2" ry="1.2" fill="#fb7185" opacity=".6"/><ellipse cx="7" cy="-6" rx="2" ry="1.2" fill="#fb7185" opacity=".6"/>'
+   '<path d="M-15 2q-8 8-4 14M15 2q8 8 4 14" stroke="#1e293b" stroke-width="5" stroke-linecap="round" fill="none"/>'
+   '<path d="M-7 26h6M1 26h6" stroke="#f97316" stroke-width="3" stroke-linecap="round"/>'
+   '<g transform="translate(16 12) rotate(-12)"><rect x="-7" y="-5" width="14" height="10" rx="1" fill="#fff" stroke="#94a3b8"/><path d="M-7 -5l7 5l7-5" stroke="#94a3b8" fill="none"/></g></g>')
