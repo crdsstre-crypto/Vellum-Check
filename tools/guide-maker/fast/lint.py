@@ -26,7 +26,7 @@ th=str.maketrans('0123456789','๐๑๒๓๔๕๖๗๘๙')
 for x in g['sections']:
   for it in x['items']:
     for c in it['cite']:
-      if 'sec' in c and ('มาตรา '+c['sec'].translate(th)) not in seed: E.append('ไม่พบมาตรา '+c['sec'])
+      if 'sec' in c and not re.search(r'มาตรา(?:\\n|\s)+'+re.escape(c['sec'].translate(th))+r'(?![๐-๙/])',seed): E.append('ไม่พบมาตรา '+c['sec'])
 for f in ('guide-panels/%s.panels.js','guide-cards/%s.card.js','guide-covers/%s.cover.css'):
   try: open('public/'+f%s)
   except: E.append('ขาดไฟล์ '+f%s)
