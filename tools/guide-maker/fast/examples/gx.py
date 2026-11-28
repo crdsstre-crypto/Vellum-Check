@@ -562,3 +562,28 @@ def CALF(x,y,s=1,c='#fafaf9'):
    '<ellipse cx="0" cy="-3" rx="7" ry="5" fill="#fbcfe8" stroke="#f9a8d4"/><circle cx="-2.5" cy="-3" r="1" fill="#9d174d"/><circle cx="2.5" cy="-3" r="1" fill="#9d174d"/>'
    '<circle cx="-4.5" cy="-11" r="2" fill="#1c1917"/><circle cx="4.5" cy="-11" r="2" fill="#1c1917"/><circle cx="-4" cy="-11.6" r=".7" fill="#fff"/><circle cx="5" cy="-11.6" r=".7" fill="#fff"/>'
    '<ellipse cx="-8.5" cy="-6" rx="2" ry="1.2" fill="#fb7185" opacity=".6"/><ellipse cx="8.5" cy="-6" rx="2" ry="1.2" fill="#fb7185" opacity=".6"/></g>')
+
+def SLIDE(x,y,c='#f97316'):
+  # สไลเดอร์เด็ก บันได ราวจับ พื้นยาง
+  return (f'<g transform="translate({x} {y})"><rect x="-40" y="22" width="80" height="6" rx="3" fill="#86efac"/>'
+   '<path d="M-26 22v-44M-14 22v-44" stroke="#3b82f6" stroke-width="3"/>'+''.join(f'<path d="M-26 {14-i*10}h12" stroke="#3b82f6" stroke-width="2"/>' for i in range(4))+
+   f'<rect x="-30" y="-26" width="20" height="5" rx="2" fill="#facc15"/><path d="M-12 -22q20 4 36 40l6 4" stroke="{c}" stroke-width="7" fill="none" stroke-linecap="round"/>'
+   '<path d="M-12 -28q18 4 34 38" stroke="#fde68a" stroke-width="1.5" fill="none"/></g>')
+
+def RAINWALL(x,y,c='#64748b'):
+  # ผนังร้าวน้ำฝนไหลจากหลังคาข้างเคียง
+  drops=''.join(f'<path d="M{-14+i*7} {-30+(i%2)*6}l-2 6" stroke="#38bdf8" stroke-width="1.6"/>' for i in range(6))
+  return (f'<g transform="translate({x} {y})"><rect x="-24" y="-24" width="48" height="50" fill="#e7e5e4" stroke="{c}"/>'
+   '<path d="M-6 -24l4 12l-6 8l8 10l-4 12" stroke="#44403c" stroke-width="1.8" fill="none"/><path d="M-30 -34h60l-6 8h-48z" fill="#9ca3af"/>'+drops+
+   '<path d="M-24 26q24 6 48 0" stroke="#38bdf8" stroke-width="3" fill="none" opacity=".6"/></g>')
+
+def HIPPO(x,y,s=1,c='#c4b5fd'):
+  # ฮิปโปม่วงพาสเทล ปากกว้าง รูจมูก ตาวาวบนหัว หูเล็ก แก้มชมพู
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="24" rx="18" ry="3" fill="#000" opacity=".12"/>'
+   f'<ellipse cx="0" cy="10" rx="17" ry="13" fill="{c}" stroke="#a78bfa"/><rect x="-12" y="18" width="7" height="7" rx="3" fill="{c}"/><rect x="5" y="18" width="7" height="7" rx="3" fill="{c}"/>'
+   f'<ellipse cx="0" cy="-6" rx="13" ry="10" fill="{c}" stroke="#a78bfa"/><ellipse cx="0" cy="0" rx="12" ry="7" fill="#ddd6fe" stroke="#a78bfa"/>'
+   '<ellipse cx="-4" cy="-2" rx="1.3" ry="1" fill="#6d28d9"/><ellipse cx="4" cy="-2" rx="1.3" ry="1" fill="#6d28d9"/>'
+   f'<circle cx="-9" cy="-16" r="3" fill="{c}" stroke="#a78bfa"/><circle cx="9" cy="-16" r="3" fill="{c}" stroke="#a78bfa"/>'
+   '<circle cx="-5" cy="-11" r="2" fill="#1c1917"/><circle cx="5" cy="-11" r="2" fill="#1c1917"/><circle cx="-4.4" cy="-11.6" r=".7" fill="#fff"/><circle cx="5.6" cy="-11.6" r=".7" fill="#fff"/>'
+   '<path d="M-5 4q5 3 10 0" stroke="#6d28d9" stroke-width=".9" fill="none"/>'
+   '<ellipse cx="-11" cy="-3" rx="2.3" ry="1.3" fill="#fb7185" opacity=".6"/><ellipse cx="11" cy="-3" rx="2.3" ry="1.3" fill="#fb7185" opacity=".6"/></g>')
