@@ -1,1 +1,5 @@
-.gd-cover[data-layout="anpettypastel"] .gd-cover-art { border: 5px solid #e2e8f0; border-radius: 10px; } /* stub (shop-animals-petty-crime) */
+/* ปกแบบ "anpettypastel" = กรอบพาสเทลบาง ๆ สีเดียวกับภาพ + ป้ายเล็กมุมล่าง (คู่มือ shop-animals-petty-crime) */
+.gd-cover[data-layout="anpettypastel"] .gd-cover-art { overflow: visible; border: 5px solid #ffedd5; border-radius: 10px; box-shadow: 0 0 0 2px #fdba74 inset, 0 6px 14px rgba(30,41,59,.16); }
+.gd-cover[data-layout="anpettypastel"] .gd-cover-art .gd-scene { border-radius: 6px; }
+.gd-cover[data-layout="anpettypastel"] .gd-cover-art::before { content: none; }
+.gd-cover[data-layout="anpettypastel"] .gd-cover-art::after { content: "377"; right: -8px; bottom: 10px; padding: 2px 9px; border-radius: 999px; font-size: 10.5px; font-weight: 800; transform: rotate(-4deg); position: absolute; z-index: 4; background: #ea580c; color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,.15); pointer-events: none; }
