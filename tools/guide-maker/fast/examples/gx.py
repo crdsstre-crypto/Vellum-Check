@@ -167,3 +167,26 @@ def SQUIRREL(x,y,s=1,c='#c2763a'):
    '<circle cx="-5" cy="-3" r="2.6" fill="#1c1917"/><circle cx="1" cy="-3" r="2.6" fill="#1c1917"/><circle cx="-4.2" cy="-4" r=".9" fill="#fff"/><circle cx="1.8" cy="-4" r=".9" fill="#fff"/>'
    '<ellipse cx="-2" cy="1" rx="1.6" ry="1.1" fill="#7c2d12"/><ellipse cx="-9" cy="1" rx="2.2" ry="1.3" fill="#fb7185" opacity=".55"/><ellipse cx="5" cy="1" rx="2.2" ry="1.3" fill="#fb7185" opacity=".55"/>'
    '<g transform="translate(-6 12)"><ellipse rx="4" ry="5" fill="#a16207"/><path d="M-4 -3q4-5 8 0z" fill="#713f12"/></g><path d="M-10 12q2 2 6 0M-2 12q-2 2-4 0" stroke="#7c2d12" stroke-width="1.3" fill="none"/></g>')
+
+def CHEQUE(x,y,amt,c='#0e7490',rot=-6):
+  # เช็คธนาคาร มีแถบหัว ช่องจำนวนเงิน ลายเซ็น
+  return (f'<g transform="translate({x} {y}) rotate({rot})"><rect x="2" y="3" width="76" height="34" rx="3" fill="#000" opacity=".12"/>'
+   f'<rect width="76" height="34" rx="3" fill="#f0fdfa" stroke="{c}" stroke-width="1.6"/><rect width="76" height="8" rx="3" fill="{c}"/>'
+   f'<text x="5" y="6.5" font-size="5.5" fill="#fff" font-weight="700">BANK CHEQUE</text><path d="M6 16h34M6 22h26" stroke="#99f6e4" stroke-width="2"/>'
+   f'<rect x="44" y="12" width="28" height="11" rx="2" fill="#fff" stroke="{c}"/><text x="58" y="20.5" text-anchor="middle" font-size="7" font-weight="900" fill="{c}">{amt}</text>'
+   f'<path d="M46 30q4-5 7 0t7 0t6-2" stroke="#334155" stroke-width="1.2" fill="none"/></g>')
+
+def DOUBLE(x,y,t='×2',c='#dc2626'):
+  # ป้ายโทษสองเท่า ซ้อนเงาสองชั้น
+  return (f'<g transform="translate({x} {y})"><rect x="-18" y="-14" width="36" height="28" rx="6" fill="{c}" opacity=".25" transform="translate(6 5)"/>'
+   f'<rect x="-18" y="-14" width="36" height="28" rx="6" fill="{c}" opacity=".5" transform="translate(3 2.5)"/>'
+   f'<rect x="-18" y="-14" width="36" height="28" rx="6" fill="{c}"/><text y="6" text-anchor="middle" font-size="16" font-weight="900" fill="#fff">{t}</text></g>')
+
+def HEDGEHOG(x,y,s=1,c='#8b5e3c'):
+  # เม่นตัวกลม หนามเป็นชั้น หน้าครีม ตาวาว แก้ม จมูกดำ
+  sp=''.join(f'<path d="M{-14+i*5} {-6+abs(i-3)*2}l-3 -9l7 5z" fill="{c}"/>' for i in range(7))
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="14" rx="20" ry="3" fill="#000" opacity=".12"/>'+sp+
+   f'<ellipse cx="-2" cy="2" rx="18" ry="12" fill="{c}"/><path d="M-12 -4q4-4 8 0M-2 -6q4-4 8 0M6 -3q4-4 8 0" stroke="#5c3a20" stroke-width="1.2" fill="none"/>'
+   '<path d="M10 -2q12 2 14 9q-6 5-16 3z" fill="#fde7c8"/><circle cx="24" cy="7" r="2" fill="#1c1917"/>'
+   '<circle cx="14" cy="2" r="2.2" fill="#1c1917"/><circle cx="14.7" cy="1.3" r=".8" fill="#fff"/><ellipse cx="16" cy="7" rx="2.2" ry="1.3" fill="#fb7185" opacity=".55"/>'
+   '<path d="M-10 13v2M-4 13v2M4 13v2M10 13v2" stroke="#5c3a20" stroke-width="2" stroke-linecap="round"/></g>')
