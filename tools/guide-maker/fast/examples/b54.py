@@ -1,0 +1,18 @@
+import sys; sys.path.insert(0,'/home/claude/tools'); sys.path.insert(0,'/home/claude/work')
+from gx import FLAMINGO, FOX, PENGUIN, KOALA, SLOTH, SUITCASE
+T='font-family="sans-serif" font-weight="900"'
+def doc(x,y,w,h,c,head):
+  return f'<g transform="translate({x} {y})"><rect x="{-w/2}" y="{-h/2}" width="{w}" height="{h}" rx="4" fill="#fff" stroke="{c}" stroke-width="2.5"/><rect x="{-w/2}" y="{-h/2}" width="{w}" height="12" rx="4" fill="{c}"/><text y="{-h/2+9}" text-anchor="middle" font-size="8" fill="#fff" {T}>{head}</text>'+''.join(f'<path d="M{-w/2+8} {-h/2+20+i*8}h{w-16}" stroke="#cbd5e1" stroke-width="2.5"/>' for i in range(int((h-24)/8)))+'</g>'
+def ring(x,y,t,c,fs=10):
+  return f'<g transform="translate({x} {y})"><circle r="16" fill="#fff" stroke="{c}" stroke-width="3"/><path d="M0 -16a16 16 0 1 1 -15 6" stroke="{c}" stroke-width="5" fill="none" opacity=".35"/><text y="4" text-anchor="middle" font-size="{fs}" fill="{c}" {T}>{t}</text></g>'
+ENV='<g transform="translate(48 78)"><rect width="62" height="40" rx="4" fill="#fef3c7" stroke="#b45309" stroke-width="2.5"/><path d="M0 0l31 22l31 -22" fill="none" stroke="#b45309" stroke-width="2.5"/><text x="31" y="35" text-anchor="middle" font-size="10" fill="#15803d" '+T+'>+50,000</text></g>'
+D['bankrupt-buyer-credit-crime']=dict(c1='#ffedd5',c2='#ede9fe',sh='#7c2d12',bd='#ffedd5',ln='#fb923c',bg='#c2410c',badge='165',tint='#fff7ed',
+ hero=doc(72,94,58,72,'#c2410c','เงินเชื่อ')+'<rect x="52" y="104" width="40" height="9" rx="2" fill="#fee2e2" stroke="#dc2626"/><text x="72" y="111.5" text-anchor="middle" font-size="7" fill="#dc2626" '+T+'>☐ ล้มละลาย?</text>'+ring(122,68,'2,000','#dc2626',7.5)+FLAMINGO(136,128,.62),tag=None,tagc='#c2410c')
+D['bankrupt-prefiling-fraud']=dict(c1='#fce7f3',c2='#e0f2fe',sh='#831843',bd='#fce7f3',ln='#f472b6',bg='#be185d',badge='164',tint='#fdf2f8',
+ hero='<g transform="translate(46 70) rotate(-8 30 24)"><rect width="60" height="46" rx="4" fill="#a16207"/><rect x="5" y="5" width="50" height="36" rx="2" fill="#fef3c7"/><path d="M8 26q22 10 44 0" stroke="#60a5fa" stroke-width="4" fill="none"/><text x="30" y="20" text-anchor="middle" font-size="9" fill="#7c2d12" '+T+'>บัญชี</text></g>'+ring(124,68,'1 ปี','#be185d')+FOX(134,142,.3),tag=None,tagc='#be185d')
+D['bankrupt-asset-hiding']=dict(c1='#e0e7ff',c2='#fef9c3',sh='#1e1b4b',bd='#e0e7ff',ln='#818cf8',bg='#4338ca',badge='173',tint='#eef2ff',
+ hero=SUITCASE(80,104,1.5,'#0ea5e9')+'<rect x="94" y="80" width="18" height="9" rx="1" fill="#fbbf24" stroke="#b45309"/>'+ring(126,64,'2 ปี','#dc2626')+PENGUIN(138,142,.3),tag=None,tagc='#4338ca')
+D['bankrupt-creditor-crimes']=dict(c1='#ffe4e6',c2='#fef3c7',sh='#881337',bd='#ffe4e6',ln='#fb7185',bg='#be123c',badge='172',tint='#fff1f2',
+ hero=ENV+'<g transform="translate(124 70)"><circle r="16" fill="#fff" stroke="#dc2626" stroke-width="3"/><text y="4" text-anchor="middle" font-size="10" fill="#dc2626" '+T+'>×5</text></g>'+KOALA(136,142,.3),tag=None,tagc='#be123c')
+D['bankrupt-unclaimed-fees']=dict(c1='#f5e6d3',c2='#dcfce7',sh='#78350f',bd='#f5e6d3',ln='#d6a77a',bg='#a16207',badge='176',tint='#fefce8',
+ hero='<g transform="translate(46 90)"><rect x="0" y="0" width="58" height="36" rx="3" fill="#e7d3a8" stroke="#a16207" stroke-width="2.4"/>'+''.join(f'<rect x="{8+i*14}" y="-5" width="12" height="16" rx="2" fill="{c}"/>' for i,c in enumerate(['#93c5fd','#fca5a5','#86efac']))+'<rect x="-3" y="-7" width="64" height="10" rx="2" fill="#d6b77a" stroke="#a16207" stroke-width="2"/><circle cx="29" cy="20" r="9" fill="#fbbf24" stroke="#d97706" stroke-width="2"/><text x="29" y="24" text-anchor="middle" font-size="10" fill="#92400e" '+T+'>฿</text></g>'+ring(124,66,'5 ปี','#a16207')+SLOTH(132,132,.42),tag=None,tagc='#a16207')

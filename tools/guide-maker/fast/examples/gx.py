@@ -514,3 +514,27 @@ def TALLY(x,y,rows,c='#1e293b',w=80):
   for i,(n,t) in enumerate(rows):
     yy=y+14+i*12; s+=TX(x+8,yy,n,6.4,'#fde047')+TX(x+30,yy,t,4.8,'#e2e8f0')
   return s
+
+# ---- ชุด 412–416 ----
+def SUITCASE(x,y,s=1,c='#0ea5e9'):
+  """กระเป๋าเดินทางมีล้อ ป้ายห้อย สติกเกอร์เครื่องบิน (สื่อหนีไปต่างประเทศ)"""
+  from fgk import TX
+  return (f'<g transform="translate({x} {y}) scale({s})"><rect x="-4" y="-34" width="8" height="10" rx="2" fill="none" stroke="#475569" stroke-width="2.4"/>'
+   f'<rect x="-16" y="-26" width="32" height="40" rx="5" fill="{c}"/><path d="M-8 -22v32M8 -22v32" stroke="#fff" stroke-width="1.6" opacity=".6"/>'
+   '<circle cx="-10" cy="17" r="3" fill="#1e293b"/><circle cx="10" cy="17" r="3" fill="#1e293b"/>'
+   '<path d="M14 -18l8 4v8" stroke="#a16207" stroke-width="1" fill="none"/><rect x="18" y="-6" width="9" height="6" rx="1" fill="#fde68a"/>'
+   '<path d="M-6 -6l12 -4l-2 3l4 1l-3 1l-1 3l-2 -3z" fill="#fff"/></g>')
+def FLAMINGO(x,y,s=1):
+  """ฟลามิงโกยืนขาเดียว คอโค้ง จะงอยดำปลาย ตาเล็ก"""
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="26" rx="10" ry="2.4" fill="#000" opacity=".12"/>'
+   '<path d="M0 0v26M0 12l7 -6" stroke="#f472b6" stroke-width="1.8" fill="none"/>'
+   '<ellipse cx="0" cy="-4" rx="12" ry="8" fill="#f9a8d4"/><path d="M-10 -6q-6 -2 -8 4q6 0 8 -1" fill="#f472b6"/>'
+   '<path d="M8 -8q6 -10 0 -18q-6 -8 2 -12" stroke="#f9a8d4" stroke-width="4" fill="none" stroke-linecap="round"/>'
+   '<circle cx="11" cy="-38" r="5" fill="#f9a8d4"/><path d="M15 -38q6 1 5 6l-3 -2z" fill="#fff"/><path d="M19 -34l1 3l-3 -2z" fill="#1f2937"/>'
+   '<circle cx="12" cy="-39.4" r="1.1" fill="#1f2937"/><ellipse cx="9.5" cy="-36.4" rx="1.4" ry=".8" fill="#fb7185" opacity=".6"/></g>')
+def NAMESWAP(x,y,old,new,c='#7c3aed'):
+  """ป้ายร้านชื่อใหม่แปะทับชื่อเก่า (มุมชื่อเก่าโผล่) — สื่อใช้ชื่ออื่นค้าขาย"""
+  from fgk import TX; from pk import K
+  return (f'<g filter="url(#wsh{K})"><rect x="{x}" y="{y}" width="70" height="22" rx="3" fill="#e5e7eb"/></g>'+TX(x+35,y+14,old,5.6,'#94a3b8','middle')
+   +f'<rect x="{x+6}" y="{y-6}" width="66" height="20" rx="3" fill="{c}" transform="rotate(-5 {x+39} {y+4})"/>'
+   +f'<g transform="rotate(-5 {x+39} {y+4})">'+TX(x+39,y+7.5,new,6,'#fff','middle')+'</g>')
