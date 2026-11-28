@@ -433,3 +433,32 @@ def TURTLE(x,y,s=1,c='#16a34a'):
    f'<path d="M-20 8q0 -24 20 -24q20 0 20 24z" fill="{c}" stroke="#14532d" stroke-width="1.2"/>'+hexes+
    '<circle cx="24" cy="-2" r="8" fill="#86efac" stroke="#15803d"/><circle cx="26" cy="-4" r="1.8" fill="#14532d"/><circle cx="26.5" cy="-4.6" r=".6" fill="#fff"/>'
    '<path d="M25 1q3 2 6 0" stroke="#14532d" stroke-width=".8" fill="none"/><ellipse cx="22" cy="1" rx="2" ry="1.2" fill="#fb7185" opacity=".6"/></g>')
+
+def SACKS(x,y,n=5,c='#f5f5f4',t='ข้าว'):
+  # กองกระสอบข้าว/น้ำตาล ซ้อนเป็นพีระมิด
+  out=''
+  rows=[(0,3),(1,2)] if n<=5 else [(0,4),(1,3),(2,2)]
+  for r,k in rows:
+    for i in range(k):
+      cx=(i-(k-1)/2)*26; cy=-r*16
+      out+=f'<g transform="translate({cx} {cy})"><path d="M-12 -8q12 -5 24 0v14q-12 5 -24 0z" fill="{c}" stroke="#a8a29e"/><path d="M-12 -8l-3 -3M12 -8l3 -3" stroke="#a8a29e"/><text y="3" text-anchor="middle" font-size="5.5" font-weight="900" fill="#78716c">{t}</text></g>'
+  return f'<g transform="translate({x} {y})">{out}</g>'
+
+def BILLSET(x,y,c='#0369a1'):
+  # ตั๋วแลกเงินคู่ฉีก 2 ฉบับ มีเลขลำดับ 1/2 2/2
+  out=''
+  for i in range(2):
+    out+=(f'<g transform="translate({i*14} {i*10}) rotate({-6+i*8})"><rect x="-30" y="-16" width="60" height="32" rx="2" fill="#f0f9ff" stroke="{c}" stroke-width="1.5"/>'
+      f'<path d="M-30 -16l6 4l6 -4l6 4l6 -4l6 4l6 -4l6 4l6 -4l6 4l6 -4" stroke="{c}" fill="none" stroke-width=".8"/><path d="M-22 0h30M-22 6h22" stroke="#bae6fd" stroke-width="2"/>'
+      f'<rect x="12" y="-4" width="14" height="10" rx="2" fill="{c}"/><text x="19" y="3.5" text-anchor="middle" font-size="6" font-weight="900" fill="#fff">{i+1}/2</text></g>')
+  return f'<g transform="translate({x} {y})">{out}</g>'
+
+def DUCK(x,y,s=1,c='#fde047'):
+  # ลูกเป็ดขนฟู ปากส้ม ตาวาว แก้มชมพู ปีกเล็ก
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="22" rx="15" ry="3" fill="#000" opacity=".12"/>'
+   '<path d="M-6 18v4h-4M6 18v4h4" stroke="#f97316" stroke-width="2" fill="none"/>'
+   f'<ellipse cx="0" cy="8" rx="14" ry="12" fill="{c}" stroke="#eab308"/><path d="M8 4q8 2 6 10q-6 -2 -8 -6z" fill="#facc15" stroke="#eab308" stroke-width=".8"/>'
+   f'<circle cx="-2" cy="-10" r="11" fill="{c}" stroke="#eab308"/><path d="M-4 -21q2 -5 5 -2q2 -4 4 0" stroke="#eab308" fill="none"/>'
+   '<path d="M-14 -8q-8 1 -9 4q6 3 10 0z" fill="#fb923c" stroke="#ea580c" stroke-width=".8"/>'
+   '<circle cx="-6" cy="-13" r="2" fill="#1c1917"/><circle cx="2" cy="-13" r="2" fill="#1c1917"/><circle cx="-5.4" cy="-13.6" r=".7" fill="#fff"/><circle cx="2.6" cy="-13.6" r=".7" fill="#fff"/>'
+   '<ellipse cx="-9" cy="-6" rx="2.2" ry="1.3" fill="#fb7185" opacity=".6"/><ellipse cx="5" cy="-7" rx="2.2" ry="1.3" fill="#fb7185" opacity=".6"/></g>')
