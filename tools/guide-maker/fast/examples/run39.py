@@ -1,6 +1,6 @@
 import re,sys
 D={}
-for f in ["b39"]: exec(open(f'/tmp/pc/{f}.py').read())
+for f in ['b39']: exec(open(f'/tmp/pc/{f}.py').read())
 exec(open('/tmp/pc/enrich.py').read().split("D={}")[0])  # back(), gloss
 def big(m):
   fs=float(m.group(1))

@@ -412,3 +412,24 @@ def RABBIT(x,y,s=1,c='#f5f5f4'):
    f'<circle cx="0" cy="-7" r="11" fill="{c}" stroke="#e7e5e4"/><circle cx="-4.5" cy="-9" r="2" fill="#1c1917"/><circle cx="4.5" cy="-9" r="2" fill="#1c1917"/><circle cx="-3.9" cy="-9.6" r=".7" fill="#fff"/><circle cx="5.1" cy="-9.6" r=".7" fill="#fff"/>'
    '<path d="M-1.5 -4h3l-1.5 1.8z" fill="#f472b6"/><path d="M0 -2.2q-2 2 -3.5 1M0 -2.2q2 2 3.5 1" stroke="#78716c" stroke-width=".7" fill="none"/>'
    '<ellipse cx="-8" cy="-4" rx="2.3" ry="1.3" fill="#fb7185" opacity=".55"/><ellipse cx="8" cy="-4" rx="2.3" ry="1.3" fill="#fb7185" opacity=".55"/></g>')
+
+def AWARD(x,y,t='คำชี้ขาด',c='#b45309'):
+  # คำชี้ขาดอนุญาโต ม้วนกระดาษ ตราครั่ง ริบบิ้น
+  return (f'<g transform="translate({x} {y})"><rect x="-28" y="-30" width="56" height="60" rx="3" fill="#fffbeb" stroke="{c}" stroke-width="1.5"/>'
+   f'<rect x="-28" y="-30" width="56" height="11" fill="{c}"/><text y="-22" text-anchor="middle" font-size="7" font-weight="900" fill="#fff">{t}</text>'
+   '<path d="M-20 -10h40M-20 -3h32M-20 4h36" stroke="#e7e5e4" stroke-width="2"/>'
+   '<circle cx="14" cy="18" r="8" fill="#dc2626"/><circle cx="14" cy="18" r="4.5" fill="none" stroke="#fecaca"/><path d="M10 24l-3 10l6 -4l4 5l1 -10" fill="#dc2626"/></g>')
+
+def KEYRACK(x,y,n=6,c='#a16207'):
+  # แผงกุญแจห้องพักโรงแรม มีป้ายเลขห้อง
+  ks=''.join(f'<g transform="translate({-30+(i%3)*30} {-8+(i//3)*22})"><circle r="2" fill="#475569"/><path d="M0 2v6" stroke="#475569"/><circle cy="12" r="4" fill="none" stroke="#facc15" stroke-width="2"/><rect x="-6" y="16" width="12" height="7" rx="1" fill="#fef3c7"/><text y="21.5" text-anchor="middle" font-size="5" font-weight="900" fill="#92400e">{101+i}</text></g>' for i in range(n))
+  return f'<g transform="translate({x} {y})"><rect x="-44" y="-18" width="88" height="56" rx="4" fill="{c}"/>{ks}</g>'
+
+def TURTLE(x,y,s=1,c='#16a34a'):
+  # เต่ากระดองลายหกเหลี่ยม หน้ายิ้ม ตาวาว แก้มชมพู
+  hexes=''.join(f'<path d="M{dx-5} {dy}l2.5 -4.3h5l2.5 4.3l-2.5 4.3h-5z" fill="#4ade80" stroke="#15803d" stroke-width=".8"/>' for dx,dy in [(0,-2),(-10,2),(10,2),(-5,-8),(5,-8)])
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="16" rx="22" ry="3" fill="#000" opacity=".12"/>'
+   '<ellipse cx="-14" cy="12" rx="5" ry="4" fill="#86efac"/><ellipse cx="12" cy="12" rx="5" ry="4" fill="#86efac"/><path d="M-20 4l-6 2l6 2" fill="#86efac"/>'
+   f'<path d="M-20 8q0 -24 20 -24q20 0 20 24z" fill="{c}" stroke="#14532d" stroke-width="1.2"/>'+hexes+
+   '<circle cx="24" cy="-2" r="8" fill="#86efac" stroke="#15803d"/><circle cx="26" cy="-4" r="1.8" fill="#14532d"/><circle cx="26.5" cy="-4.6" r=".6" fill="#fff"/>'
+   '<path d="M25 1q3 2 6 0" stroke="#14532d" stroke-width=".8" fill="none"/><ellipse cx="22" cy="1" rx="2" ry="1.2" fill="#fb7185" opacity=".6"/></g>')
