@@ -1,0 +1,15 @@
+import sys; sys.path.insert(0,'/home/claude/tools'); sys.path.insert(0,'/home/claude/work')
+from gx import GOAT, FOX, KOALA, RACCOON, DUCKLING, SANDGLASS
+T='font-family="sans-serif" font-weight="900"'
+def doc(x,y,w,h,c,head):
+  return f'<g transform="translate({x} {y})"><rect x="{-w/2}" y="{-h/2}" width="{w}" height="{h}" rx="4" fill="#fff" stroke="{c}" stroke-width="2.5"/><rect x="{-w/2}" y="{-h/2}" width="{w}" height="12" rx="4" fill="{c}"/><text y="{-h/2+9}" text-anchor="middle" font-size="8" fill="#fff" {T}>{head}</text>'+''.join(f'<path d="M{-w/2+8} {-h/2+20+i*8}h{w-16}" stroke="#cbd5e1" stroke-width="2.5"/>' for i in range(int((h-24)/8)))+'</g>'
+D['rehab-stay-relief']=dict(c1='#fef9c3',c2='#e7e5e4',sh='#57534e',bd='#fef9c3',ln='#facc15',bg='#a16207',badge='13',tint='#fefce8',
+ hero='<g transform="translate(44 88)"><rect x="0" y="16" width="70" height="26" rx="3" fill="#facc15" stroke="#a16207" stroke-width="2"/><rect x="42" y="0" width="24" height="18" rx="2" fill="#fde68a" stroke="#a16207" stroke-width="2"/><circle cx="14" cy="44" r="7" fill="#1f2937"/><circle cx="56" cy="44" r="7" fill="#1f2937"/></g>'+SANDGLASS(134,74,'#c2410c',.8),tag=None,tagc='#a16207')
+D['rehab-setoff-fx']=dict(c1='#fde68a',c2='#fff7ed',sh='#78350f',bd='#fde68a',ln='#f59e0b',bg='#92400e',badge='33',tint='#fffbeb',
+ hero='<path d="M52 82h70M122 82l-8 -6M122 82l-8 6" stroke="#16a34a" stroke-width="4" fill="none"/><path d="M122 110h-70M52 110l8 -6M52 110l8 6" stroke="#dc2626" stroke-width="4" fill="none"/><text x="88" y="74" text-anchor="middle" font-size="9" fill="#166534" '+T+'>350,000</text><text x="88" y="126" text-anchor="middle" font-size="9" fill="#991b1b" '+T+'>120,000</text>'+FOX(136,140,.3),tag=None,tagc='#92400e')
+D['rehab-plan-amend']=dict(c1='#e7e5e4',c2='#ffedd5',sh='#44403c',bd='#e7e5e4',ln='#a8a29e',bg='#c2410c',badge='45',tint='#fafaf9',
+ hero=doc(78,94,60,72,'#57534e','แผน')+'<path d="M58 90h40" stroke="#dc2626" stroke-width="3"/><text x="78" y="104" text-anchor="middle" font-size="8" fill="#047857" '+T+'>20% → 40%</text>'+KOALA(134,136,.3),tag=None,tagc='#c2410c')
+D['rehab-planner-removal']=dict(c1='#e2e8f0',c2='#e0f2fe',sh='#334155',bd='#e2e8f0',ln='#94a3b8',bg='#475569',badge='67',tint='#f8fafc',
+ hero=doc(76,94,58,70,'#475569','งวดตามแผน')+'<g transform="translate(126 68)"><circle r="15" fill="#dc2626"/><path d="M-7 -7l14 14M7 -7l-14 14" stroke="#fff" stroke-width="3"/></g>'+RACCOON(134,138,.3),tag=None,tagc='#475569')
+D['rehab-cancel-effect']=dict(c1='#dcfce7',c2='#fef9c3',sh='#365314',bd='#dcfce7',ln='#4ade80',bg='#4d7c0f',badge='75',tint='#f7fee7',
+ hero='<g transform="translate(46 70)"><rect x="0" y="0" width="80" height="22" rx="11" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/><rect x="0" y="30" width="80" height="22" rx="11" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/><text x="40" y="15" text-anchor="middle" font-size="8" fill="#166534" '+T+'>สำเร็จ</text><text x="40" y="45" text-anchor="middle" font-size="8" fill="#991b1b" '+T+'>ล้มเหลว</text></g>'+DUCKLING(136,138,.34),tag=None,tagc='#4d7c0f')
