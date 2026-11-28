@@ -458,3 +458,32 @@ def MINIBUB(x,y,t,c='#334155',bgc='#fff',w=None):
   w=w or 8+len(t)*4.4
   return (f'<g><rect x="{x}" y="{y-9}" width="{w}" height="14" rx="7" fill="{bgc}" stroke="{c}" stroke-width="1"/><path d="M{x+8} {y+5}l-4 6l9 -6" fill="{bgc}" stroke="{c}" stroke-width="1"/>'
    +TX(x+w/2,y+1.6,t,5,c,'middle')+'</g>')
+
+# ---- ชุด 402–406 ----
+def COMPARE2(x,y,w,h,la,lb,rows,ca='#64748b',cb='#0f766e'):
+  """การ์ดเทียบ 2 คอลัมน์ (เช่น ฟื้นฟูทั่วไป vs SME) rows=[(ซ้าย,ขวา)]"""
+  from fgk import TX; from pk import K
+  s=f'<g filter="url(#wsh{K})"><rect x="{x}" y="{y}" width="{w}" height="{h}" rx="6" fill="#fff"/></g>'
+  s+=f'<rect x="{x}" y="{y}" width="{w/2}" height="12" rx="6" fill="{ca}"/><rect x="{x+w/2}" y="{y}" width="{w/2}" height="12" rx="6" fill="{cb}"/>'
+  s+=TX(x+w/4,y+8.5,la,5,'#fff','middle')+TX(x+w*3/4,y+8.5,lb,5,'#fff','middle')+f'<path d="M{x+w/2} {y+14}v{h-18}" stroke="#e2e8f0"/>'
+  for i,(a,b) in enumerate(rows):
+    yy=y+22+i*9; s+=TX(x+w/4,yy,a,4.6,'#475569','middle')+TX(x+w*3/4,yy,b,4.6,cb,'middle')
+  return s
+def SLOTH(x,y,s=1,c='#c8a27a'):
+  """สลอธห้อยกิ่ง ยิ้มง่วงๆ หน้ากากตา แขนยาวกอดกิ่ง"""
+  return (f'<g transform="translate({x} {y}) scale({s})"><path d="M-30 -22h60" stroke="#78350f" stroke-width="4" stroke-linecap="round"/>'
+   '<path d="M-24 -26q3 -6 6 0" stroke="#4d7c0f" stroke-width="3" fill="#84cc16"/><path d="M20 -26q3 -6 6 0" stroke="#4d7c0f" stroke-width="3" fill="#84cc16"/>'
+   f'<path d="M-12 -22q-2 14 4 20M12 -22q2 14 -4 20" stroke="{c}" stroke-width="6" fill="none" stroke-linecap="round"/>'
+   f'<ellipse cx="0" cy="6" rx="14" ry="16" fill="{c}"/><circle cx="0" cy="-6" r="10" fill="#f5e6d3"/>'
+   '<ellipse cx="-4.5" cy="-7" rx="3.4" ry="2.2" fill="#78350f" transform="rotate(-15 -4.5 -7)"/><ellipse cx="4.5" cy="-7" rx="3.4" ry="2.2" fill="#78350f" transform="rotate(15 4.5 -7)"/>'
+   '<path d="M-6 -7.4q1.4 1 2.6 0M3.4 -7.4q1.4 1 2.6 0" stroke="#fff" stroke-width=".9" fill="none"/><ellipse cx="0" cy="-3.6" rx="1.6" ry="1.1" fill="#3f2a1a"/>'
+   '<path d="M-2.6 -1.4q2.6 2 5.2 0" stroke="#3f2a1a" stroke-width=".9" fill="none"/><ellipse cx="-7" cy="-2.4" rx="1.8" ry="1" fill="#fb7185" opacity=".55"/><ellipse cx="7" cy="-2.4" rx="1.8" ry="1" fill="#fb7185" opacity=".55"/></g>')
+def PIGGY(x,y,s=1,c='#f9a8d4',t=''):
+  """กระปุกหมูออมสิน + ช่องหยอด + เหรียญลอย (ป้ายบนตัวได้)"""
+  from fgk import TX
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="16" rx="18" ry="3" fill="#000" opacity=".12"/>'
+   f'<rect x="-12" y="8" width="5" height="8" rx="2" fill="{c}"/><rect x="7" y="8" width="5" height="8" rx="2" fill="{c}"/>'
+   f'<ellipse cx="0" cy="0" rx="18" ry="13" fill="{c}"/><ellipse cx="17" cy="1" rx="5" ry="4.4" fill="#f472b6"/><circle cx="16" cy="0" r=".9" fill="#831843"/><circle cx="18.6" cy="0" r=".9" fill="#831843"/>'
+   f'<path d="M4 -12l3 -6l4 6z" fill="{c}"/><circle cx="9" cy="-4" r="1.5" fill="#1c1917"/><rect x="-6" y="-13" width="10" height="2.4" rx="1.2" fill="#831843"/>'
+   '<circle cx="-1" cy="-22" r="5" fill="#fbbf24" stroke="#d97706"/><path d="M-18 0q-6 -3 -4 -8" stroke="#f472b6" stroke-width="1.6" fill="none"/>'
+   +(TX(-2,5,t,5.4,'#831843','middle') if t else '')+'</g>')

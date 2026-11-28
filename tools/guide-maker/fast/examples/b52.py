@@ -1,0 +1,18 @@
+import sys; sys.path.insert(0,'/home/claude/tools'); sys.path.insert(0,'/home/claude/work')
+from gx import SLOTH, CAPY, OTTER, DUCKLING, PIGGY
+T='font-family="sans-serif" font-weight="900"'
+def doc(x,y,w,h,c,head):
+  return f'<g transform="translate({x} {y})"><rect x="{-w/2}" y="{-h/2}" width="{w}" height="{h}" rx="4" fill="#fff" stroke="{c}" stroke-width="2.5"/><rect x="{-w/2}" y="{-h/2}" width="{w}" height="12" rx="4" fill="{c}"/><text y="{-h/2+9}" text-anchor="middle" font-size="8" fill="#fff" {T}>{head}</text>'+''.join(f'<path d="M{-w/2+8} {-h/2+20+i*8}h{w-16}" stroke="#cbd5e1" stroke-width="2.5"/>' for i in range(int((h-24)/8)))+'</g>'
+def ring(x,y,t,c,fs=10):
+  return f'<g transform="translate({x} {y})"><circle r="16" fill="#fff" stroke="{c}" stroke-width="3"/><path d="M0 -16a16 16 0 1 1 -15 6" stroke="{c}" stroke-width="5" fill="none" opacity=".35"/><text y="4" text-anchor="middle" font-size="{fs}" fill="{c}" {T}>{t}</text></g>'
+CM='<g transform="translate(52 72)"><rect width="44" height="50" rx="6" fill="#57534e" stroke="#292524" stroke-width="2.5"/><rect x="6" y="7" width="32" height="13" rx="3" fill="#d6d3d1"/><circle cx="32" cy="13.5" r="3" fill="#22c55e"/><rect x="14" y="26" width="16" height="7" fill="#1c1917"/><path d="M15 38h14v9h-14z" fill="#fff" stroke="#a8a29e"/></g>'
+D['sme-plan-contents-approval']=dict(c1='#fef9c3',c2='#d1fae5',sh='#713f12',bd='#fef9c3',ln='#facc15',bg='#a16207',badge='96',tint='#fefce8',
+ hero=doc(74,94,60,74,'#ca8a04','แผน SME')+ring(124,70,'3 ปี','#dc2626')+SLOTH(130,132,.44),tag=None,tagc='#a16207')
+D['sme-rehab-stay-rules']=dict(c1='#e0f2fe',c2='#f5e6d3',sh='#0c4a6e',bd='#e0f2fe',ln='#38bdf8',bg='#0369a1',badge='104',tint='#f0f9ff',
+ hero=CM+'<g transform="translate(122 72)"><circle r="16" fill="#fff" stroke="#0369a1" stroke-width="3"/><rect x="-6" y="-7" width="4" height="14" rx="1.5" fill="#0369a1"/><rect x="2" y="-7" width="4" height="14" rx="1.5" fill="#0369a1"/></g>'+CAPY(134,140,.32),tag=None,tagc='#0369a1')
+D['sme-plan-binding-missing-debt']=dict(c1='#ccfbf1',c2='#fed7aa',sh='#134e4a',bd='#ccfbf1',ln='#2dd4bf',bg='#0f766e',badge='108',tint='#f0fdfa',
+ hero=doc(74,94,60,74,'#0f766e','เจ้าหนี้')+'<rect x="52" y="104" width="44" height="9" rx="2" fill="#fee2e2" stroke="#dc2626" stroke-dasharray="3 2"/><text x="74" y="112" text-anchor="middle" font-size="8" fill="#dc2626" '+T+'>?</text>'+'<g transform="translate(122 72)"><circle r="13" fill="#fff" stroke="#134e4a" stroke-width="3"/><path d="M9 9l9 9" stroke="#134e4a" stroke-width="5" stroke-linecap="round"/></g>'+OTTER(136,140,.3),tag=None,tagc='#0f766e')
+D['sme-plan-administrator']=dict(c1='#dbeafe',c2='#fee2e2',sh='#1e3a8a',bd='#dbeafe',ln='#60a5fa',bg='#1d4ed8',badge='113',tint='#eff6ff',
+ hero='<g transform="translate(54 74)"><rect x="0" y="0" width="40" height="34" rx="6" fill="#bfdbfe" stroke="#1d4ed8" stroke-width="2.5"/><rect x="-4" y="32" width="48" height="10" rx="3" fill="#93c5fd" stroke="#1d4ed8" stroke-width="2.5"/><path d="M4 42v18M36 42v18" stroke="#1d4ed8" stroke-width="4"/><text x="20" y="23" text-anchor="middle" font-size="11" fill="#1d4ed8" '+T+'>แผน</text></g>'+ring(122,70,'3 ด.','#1d4ed8')+DUCKLING(134,140,.42),tag=None,tagc='#1d4ed8')
+D['sme-rehab-end-cancel']=dict(c1='#ffe4e6',c2='#ffedd5',sh='#881337',bd='#ffe4e6',ln='#fb7185',bg='#be123c',badge='119',tint='#fff1f2',
+ hero='<g transform="translate(58 62)"><path d="M0 0v64" stroke="#475569" stroke-width="3.5"/>'+''.join(f'<rect x="{2+(i%4)*9}" y="{2+(i//4)*9}" width="9" height="9" fill="{"#1e293b" if (i+i//4)%2 else "#fff"}"/>' for i in range(12))+'<rect x="2" y="2" width="36" height="27" fill="none" stroke="#1e293b" stroke-width="1.5"/></g>'+PIGGY(112,112,.95,'#f9a8d4','✓'),tag=None,tagc='#be123c')
