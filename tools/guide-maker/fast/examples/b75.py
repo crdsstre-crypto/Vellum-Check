@@ -1,0 +1,15 @@
+import sys; sys.path.insert(0,'/home/claude/tools'); sys.path.insert(0,'/home/claude/work')
+from gx import KITTEN, BEAVER, OWL, TOUCAN, GOAT
+T='font-family="sans-serif" font-weight="900"'
+def ring(x,y,t,c,fs=10):
+  return f'<g transform="translate({x} {y})"><circle r="16" fill="#fff" stroke="{c}" stroke-width="3"/><path d="M0 -16a16 16 0 1 1 -15 6" stroke="{c}" stroke-width="5" fill="none" opacity=".35"/><text y="4" text-anchor="middle" font-size="{fs}" fill="{c}" {T}>{t}</text></g>'
+SIGNB='<g transform="translate(44 62)"><path d="M6 0v70" stroke="#57534e" stroke-width="4"/><rect x="6" y="6" width="64" height="30" rx="4" fill="#fef08a" stroke="#dc2626" stroke-width="2.6"/><rect x="14" y="14" width="40" height="5" rx="2" fill="#dc2626"/><rect x="14" y="24" width="28" height="4" rx="2" fill="#fca5a5"/><path d="M6 50h64" stroke="#2563eb" stroke-width="2" stroke-dasharray="3 3"/></g>'
+HELMET='<g transform="translate(46 70)"><path d="M4 34a30 28 0 0 1 60 0z" fill="#facc15" stroke="#a16207" stroke-width="2.4"/><rect x="-2" y="32" width="72" height="8" rx="3" fill="#ca8a04"/><path d="M34 6v26" stroke="#a16207" stroke-width="3"/></g>'
+TAPE='<g transform="translate(42 70)"><rect width="76" height="14" fill="#fff" stroke="#b91c1c" stroke-width="2"/>'+''.join(f'<path d="M{6+i*14} 0l8 14" stroke="#dc2626" stroke-width="5"/>' for i in range(5))+'<path d="M10 14v30M66 14v30" stroke="#57534e" stroke-width="3"/><rect x="24" y="22" width="30" height="16" rx="2" fill="#dc2626"/></g>'
+LAYERS='<g transform="translate(44 60)">'+''.join(f'<rect x="{i*6}" y="{i*14}" width="58" height="12" rx="3" fill="{c}" stroke="#15803d" stroke-width="1.6"/>' for i,c in enumerate(['#bbf7d0','#86efac','#4ade80','#fbcfe8']))+'</g>'
+FENCE='<g transform="translate(42 68)">'+''.join(f'<rect x="{i*16}" y="0" width="12" height="44" fill="#d6d3d1" stroke="#57534e" stroke-width="1.6"/><path d="M{i*16} 0l6 -8l6 8z" fill="#a8a29e"/>' for i in range(5))+'<rect x="-4" y="44" width="84" height="6" fill="#57534e"/></g>'
+D['shop-sign-is-building']=dict(c1='#fee2e2',c2='#fef9c3',sh='#7f1d1d',bd='#fee2e2',ln='#fca5a5',bg='#dc2626',badge='4',tint='#fef2f2',hero=SIGNB+ring(126,62,'1ตร.ม.','#dc2626',6.5)+KITTEN(138,142,.42),tag=None,tagc='#dc2626')
+D['shop-contractor-who-liable']=dict(c1='#fef9c3',c2='#dbeafe',sh='#713f12',bd='#fef9c3',ln='#fde047',bg='#a16207',badge='71',tint='#fefce8',hero=HELMET+ring(126,62,'x2','#a16207',9)+BEAVER(138,142,.38),tag=None,tagc='#a16207')
+D['shop-stop-order-still-open']=dict(c1='#fee2e2',c2='#ede9fe',sh='#7f1d1d',bd='#fee2e2',ln='#fca5a5',bg='#b91c1c',badge='40',tint='#fef2f2',hero=TAPE+ring(126,62,'3หมื่น','#b91c1c',6.5)+OWL(138,142,.38),tag=None,tagc='#b91c1c')
+D['shop-local-rules-vs-ministry']=dict(c1='#dcfce7',c2='#fce7f3',sh='#14532d',bd='#dcfce7',ln='#86efac',bg='#15803d',badge='12',tint='#f0fdf4',hero=LAYERS+ring(126,62,'1ปี','#15803d',8)+TOUCAN(138,142,.36),tag=None,tagc='#15803d')
+D['shop-fence-parking-is-building']=dict(c1='#e7e5e4',c2='#dcfce7',sh='#292524',bd='#e7e5e4',ln='#d6d3d1',bg='#57534e',badge='22',tint='#fafaf9',hero=FENCE+ring(126,62,'2ม.','#57534e',8)+GOAT(138,142,.34),tag=None,tagc='#57534e')
