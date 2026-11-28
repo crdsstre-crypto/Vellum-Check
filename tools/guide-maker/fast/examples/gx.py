@@ -462,3 +462,29 @@ def DUCK(x,y,s=1,c='#fde047'):
    '<path d="M-14 -8q-8 1 -9 4q6 3 10 0z" fill="#fb923c" stroke="#ea580c" stroke-width=".8"/>'
    '<circle cx="-6" cy="-13" r="2" fill="#1c1917"/><circle cx="2" cy="-13" r="2" fill="#1c1917"/><circle cx="-5.4" cy="-13.6" r=".7" fill="#fff"/><circle cx="2.6" cy="-13.6" r=".7" fill="#fff"/>'
    '<ellipse cx="-9" cy="-6" rx="2.2" ry="1.3" fill="#fb7185" opacity=".6"/><ellipse cx="5" cy="-7" rx="2.2" ry="1.3" fill="#fb7185" opacity=".6"/></g>')
+
+def BURNT(x,y,n=3):
+  # ห้องแถวไหม้เกรียม คานดำ ควันลอย
+  out=''
+  for i in range(n):
+    out+=(f'<g transform="translate({(i-(n-1)/2)*34} 0)"><rect x="-16" y="-30" width="32" height="44" fill="#57534e"/><path d="M-16 -30l8 -10h16l8 10" fill="#292524"/>'
+      '<rect x="-10" y="-20" width="8" height="10" fill="#1c1917"/><rect x="2" y="-20" width="8" height="10" fill="#1c1917"/><path d="M-12 14l6 -14l4 10l6 -12l4 16" stroke="#0c0a09" stroke-width="2" fill="none"/></g>')
+  smoke=''.join(f'<circle cx="{-20+i*16}" cy="{-50-i*6}" r="{8+i*2}" fill="#a8a29e" opacity="{.35-i*.06:.2f}"/>' for i in range(4))
+  return f'<g transform="translate({x} {y})">{smoke}{out}</g>'
+
+def CONDO(x,y,floors=5,c='#7c3aed'):
+  # อาคารชุดหลายชั้น หน้าต่างเรียง มีห้องร้านชั้นล่างไฮไลต์
+  win=''.join(f'<rect x="{-22+j*12}" y="{-12-i*14}" width="8" height="9" rx="1" fill="#e0e7ff"/>' for i in range(floors) for j in range(4))
+  return (f'<g transform="translate({x} {y})"><rect x="-28" y="{-18-floors*14}" width="56" height="{floors*14+30}" rx="2" fill="{c}"/>{win}'
+   '<rect x="-24" y="2" width="22" height="10" fill="#fde047"/><text x="-13" y="9.5" text-anchor="middle" font-size="5.5" font-weight="900" fill="#713f12">ร้าน</text></g>')
+
+def LAMB(x,y,s=1):
+  # ลูกแกะขนหยิกปุยเมฆ หน้าครีม ตาวาว หูตก แก้มชมพู
+  fluff=''.join(f'<circle cx="{dx}" cy="{dy}" r="7" fill="#fafaf9" stroke="#e7e5e4"/>' for dx,dy in [(-10,4),(0,0),(10,4),(-12,14),(0,16),(12,14),(-4,8),(6,8)])
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="26" rx="16" ry="3" fill="#000" opacity=".12"/>'
+   '<rect x="-9" y="18" width="4" height="8" rx="2" fill="#44403c"/><rect x="5" y="18" width="4" height="8" rx="2" fill="#44403c"/>'+fluff+
+   '<circle cx="-6" cy="-12" r="5" fill="#fafaf9"/><circle cx="2" cy="-14" r="5" fill="#fafaf9"/><circle cx="8" cy="-11" r="4.5" fill="#fafaf9"/>'
+   '<ellipse cx="0" cy="-4" rx="9" ry="10" fill="#fde7cf" stroke="#e7c9a8"/><ellipse cx="-11" cy="-4" rx="5" ry="2.6" fill="#fde7cf" transform="rotate(25 -11 -4)"/><ellipse cx="11" cy="-4" rx="5" ry="2.6" fill="#fde7cf" transform="rotate(-25 11 -4)"/>'
+   '<circle cx="-3.5" cy="-5" r="1.8" fill="#1c1917"/><circle cx="3.5" cy="-5" r="1.8" fill="#1c1917"/><circle cx="-3" cy="-5.6" r=".6" fill="#fff"/><circle cx="4" cy="-5.6" r=".6" fill="#fff"/>'
+   '<path d="M-1.5 0h3l-1.5 1.5z" fill="#f472b6"/><path d="M0 1.5q-2 2 -3 1M0 1.5q2 2 3 1" stroke="#a8a29e" stroke-width=".6" fill="none"/>'
+   '<ellipse cx="-6" cy="-1" rx="2" ry="1.2" fill="#fb7185" opacity=".55"/><ellipse cx="6" cy="-1" rx="2" ry="1.2" fill="#fb7185" opacity=".55"/></g>')
