@@ -538,3 +538,27 @@ def NAMESWAP(x,y,old,new,c='#7c3aed'):
   return (f'<g filter="url(#wsh{K})"><rect x="{x}" y="{y}" width="70" height="22" rx="3" fill="#e5e7eb"/></g>'+TX(x+35,y+14,old,5.6,'#94a3b8','middle')
    +f'<rect x="{x+6}" y="{y-6}" width="66" height="20" rx="3" fill="{c}" transform="rotate(-5 {x+39} {y+4})"/>'
    +f'<g transform="rotate(-5 {x+39} {y+4})">'+TX(x+39,y+7.5,new,6,'#fff','middle')+'</g>')
+
+# ---- ชุด 417–421 ----
+def QUOTESLIP(x,y,no='QT-0912',exp='ยืนราคา 7 วัน',c='#0f766e'):
+  """ใบเสนอราคา หัวสี มีเลขที่ แถบวันหมดอายุ และช่องลายเซ็นลูกค้า"""
+  from fgk import TX; from pk import K
+  return (f'<g filter="url(#wsh{K})"><rect x="{x}" y="{y}" width="64" height="76" rx="4" fill="#fff"/></g><rect x="{x}" y="{y}" width="64" height="13" rx="4" fill="{c}"/>'
+   +TX(x+32,y+9.4,'ใบเสนอราคา',5.4,'#fff','middle')+TX(x+6,y+21,no,4.4,'#64748b')
+   +''.join(f'<path d="M{x+6} {y+28+i*7}h52" stroke="#e2e8f0" stroke-width="2"/>' for i in range(4))
+   +f'<rect x="{x+4}" y="{y+56}" width="56" height="8" rx="2" fill="#fef3c7"/>'+TX(x+32,y+62,exp,4.4,'#b45309','middle')
+   +f'<path d="M{x+8} {y+71}h26" stroke="#94a3b8" stroke-dasharray="2 2"/>'+TX(x+44,y+72,'ลงชื่อ',4,'#94a3b8','middle'))
+def SCAFFOLD(x,y,w=70,h=56,c='#f59e0b'):
+  """บ้านกำลังต่อเติม: โครงหลังคา + นั่งร้านเหล็ก + ผนังใหม่สีอ่อน"""
+  s=f'<path d="M{x} {y}l{w/2} -22l{w/2} 22z" fill="#fca5a5" stroke="#b91c1c" stroke-width="1.2"/><rect x="{x+4}" y="{y}" width="{w-8}" height="{h}" fill="#fef3c7" stroke="#d6d3d1"/>'
+  s+=f'<rect x="{x+w/2-7}" y="{y+h-20}" width="14" height="20" fill="#a16207"/>'
+  for i in range(4): s+=f'<path d="M{x-6+i*((w+12)/3)} {y-8}v{h+8}" stroke="{c}" stroke-width="2"/>'
+  for j in range(3): s+=f'<path d="M{x-6} {y+j*h/2.4}h{w+12}" stroke="{c}" stroke-width="2"/>'
+  return s
+def TOUCAN(x,y,s=1):
+  """นกทูแคนปากใหญ่สีส้มเหลือง เกาะกิ่ง"""
+  return (f'<g transform="translate({x} {y}) scale({s})"><path d="M-14 12h28" stroke="#78350f" stroke-width="3" stroke-linecap="round"/>'
+   '<ellipse cx="0" cy="0" rx="9" ry="12" fill="#1f2937"/><ellipse cx="2" cy="-2" rx="5" ry="6" fill="#fef9c3"/>'
+   '<path d="M6 -8q16 -2 18 6q-10 4 -18 0z" fill="#fb923c"/><path d="M6 -8q16 -2 18 6l-18 -3z" fill="#facc15"/><circle cx="23" cy="-2" r="1.4" fill="#dc2626"/>'
+   '<circle cx="3" cy="-7" r="2.6" fill="#38bdf8"/><circle cx="3" cy="-7" r="1.2" fill="#111"/><circle cx="3.5" cy="-7.5" r=".4" fill="#fff"/>'
+   '<path d="M-6 10l-2 6M2 10l1 6" stroke="#38bdf8" stroke-width="1.6"/><path d="M-8 4q-6 6 -4 12" stroke="#111" stroke-width="3" fill="none"/></g>')
