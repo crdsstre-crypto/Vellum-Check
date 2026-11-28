@@ -634,3 +634,26 @@ def PCTBAR(x,y,pct=30,line=50,c='#2563eb',w=90):
   return (f'<g transform="translate({x} {y})"><rect x="{-w/2}" y="-8" width="{w}" height="16" rx="8" fill="#fff" stroke="#cbd5e1"/>'
    f'<rect x="{-w/2}" y="-8" width="{w*pct/100}" height="16" rx="8" fill="{c}"/><text x="{-w/2+w*pct/200}" y="3.5" font-size="8" font-weight="900" text-anchor="middle" fill="#fff">{pct}%</text>'
    f'<path d="M{-w/2+w*line/100} -14v28" stroke="#dc2626" stroke-width="2" stroke-dasharray="3 2"/><text x="{-w/2+w*line/100}" y="-17" font-size="6.5" font-weight="900" text-anchor="middle" fill="#dc2626">เกณฑ์ {line}%</text></g>')
+
+def OWL(x,y,s=1,c='#d6b48a'):
+  # นกฮูกน้ำตาลอ่อน ตากลมโตวงขาว ม่านตาวาว จะงอยปากส้ม แก้มชมพู ขนหู
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="22" rx="16" ry="3" fill="#000" opacity=".12"/>'
+   f'<ellipse cx="0" cy="4" rx="15" ry="18" fill="{c}" stroke="#92400e"/><ellipse cx="0" cy="10" rx="9" ry="10" fill="#fef3c7"/>'
+   '<path d="M-13 -12l-3 -9 8 5zM13 -12l3 -9 -8 5z" fill="#a16207"/>'
+   '<circle cx="-6" cy="-6" r="6" fill="#fff" stroke="#92400e"/><circle cx="6" cy="-6" r="6" fill="#fff" stroke="#92400e"/>'
+   '<circle cx="-6" cy="-5.5" r="3.4" fill="#1c1917"/><circle cx="6" cy="-5.5" r="3.4" fill="#1c1917"/><circle cx="-5" cy="-6.6" r="1.2" fill="#fff"/><circle cx="7" cy="-6.6" r="1.2" fill="#fff"/>'
+   '<path d="M-2 0l2 4 2-4z" fill="#f97316"/>'
+   '<ellipse cx="-11" cy="2" rx="2.4" ry="1.3" fill="#fb7185" opacity=".55"/><ellipse cx="11" cy="2" rx="2.4" ry="1.3" fill="#fb7185" opacity=".55"/>'
+   '<path d="M-6 22v3M-3 22v3M3 22v3M6 22v3" stroke="#f97316" stroke-width="1.5"/></g>')
+
+def DORMBLDG(x,y,c='#f472b6',sign='หอพักหญิง',shop='ร้าน'):
+  # ตึกหอพักเหนือร้าน ป้ายไทย "หอพัก" หน้าต่าง 3 ชั้น
+  w=''.join(f'<rect x="{-30+(i%3)*22}" y="{-50+(i//3)*16}" width="14" height="10" rx="1.5" fill="#e0f2fe" stroke="#94a3b8"/>' for i in range(9))
+  return (f'<g transform="translate({x} {y})"><ellipse cy="22" rx="46" ry="4" fill="#000" opacity=".1"/><rect x="-38" y="-58" width="76" height="80" rx="2" fill="#fff7ed" stroke="#a8a29e"/>'+w+
+   f'<rect x="-38" y="0" width="76" height="22" fill="{c}" opacity=".35"/><path d="M-40 0h80" stroke="{c}" stroke-width="3"/><text y="14" font-size="7" font-weight="900" text-anchor="middle" fill="#7c2d12">{shop}</text>'
+   f'<rect x="-30" y="-72" width="60" height="13" rx="3" fill="{c}"/><text y="-62.5" font-size="7.5" font-weight="900" text-anchor="middle" fill="#fff">{sign}</text></g>')
+
+def FIREKIT(x,y):
+  # ถังดับเพลิงแดง + กล่องยากากบาทเขียว
+  return (f'<g transform="translate({x} {y})"><ellipse cy="20" rx="26" ry="3" fill="#000" opacity=".12"/><rect x="-22" y="-14" width="14" height="34" rx="6" fill="#dc2626"/><rect x="-19" y="-20" width="8" height="7" fill="#1e293b"/><path d="M-11 -18q8 -2 8 8" stroke="#1e293b" stroke-width="2" fill="none"/>'
+   '<rect x="0" y="0" width="24" height="20" rx="3" fill="#fff" stroke="#16a34a" stroke-width="2"/><path d="M12 4v12M6 10h12" stroke="#16a34a" stroke-width="3.5"/></g>')
