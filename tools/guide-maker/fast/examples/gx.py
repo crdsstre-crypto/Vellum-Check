@@ -364,3 +364,25 @@ def BEAVER(x,y,s=1,c='#92400e'):
    '<rect x="-2.5" y="-2" width="5" height="5" rx="1" fill="#fff" stroke="#e7e5e4"/><path d="M0 -2v5" stroke="#e7e5e4" stroke-width=".6"/>'
    '<circle cx="-5" cy="-11" r="2" fill="#1c1917"/><circle cx="5" cy="-11" r="2" fill="#1c1917"/><circle cx="-4.4" cy="-11.6" r=".7" fill="#fff"/><circle cx="5.6" cy="-11.6" r=".7" fill="#fff"/>'
    '<ellipse cx="-9" cy="-4" rx="2.2" ry="1.3" fill="#fb7185" opacity=".55"/><ellipse cx="9" cy="-4" rx="2.2" ry="1.3" fill="#fb7185" opacity=".55"/></g>')
+
+# ---- ชุด 327–331 ----
+def SANDGLASS(x,y,c='#a16207',s=1):
+  """นาฬิกาทรายตั้งโต๊ะ ทรายไหล (cm-bob) — ใช้สื่อ 'เวลาใกล้หมด'"""
+  return (f'<g transform="translate({x} {y}) scale({s})"><rect x="-14" y="-34" width="28" height="5" rx="2" fill="{c}"/><rect x="-14" y="0" width="28" height="5" rx="2" fill="{c}"/>'
+   f'<path d="M-10 -29q0 12 10 15q10-3 10-15z" fill="#e0f2fe" stroke="#94a3b8"/><path d="M-10 0q0-12 10-15q10 3 10 15z" fill="#e0f2fe" stroke="#94a3b8"/>'
+   f'<path d="M-6 -27q0 8 6 10q6-2 6-10z" fill="#fbbf24"/><path d="M-8 0q2-7 8-7q6 0 8 7z" fill="#fbbf24"/><path class="cm-bob" d="M0 -16v9" stroke="#f59e0b" stroke-width="1.6"/>'
+   f'<path d="M-13 -29v29M13 -29v29" stroke="{c}" stroke-width="2"/></g>')
+def CAPY(x,y,s=1,c='#b07a4a'):
+  """คาปิบารานั่งชิล มีส้มบนหัว ตา หู แก้มชมพู จมูกใหญ่"""
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="0" rx="20" ry="13" fill="{c}"/><rect x="-14" y="8" width="6" height="7" rx="3" fill="#8a5a32"/><rect x="8" y="8" width="6" height="7" rx="3" fill="#8a5a32"/>'
+   f'<rect x="8" y="-22" width="20" height="18" rx="8" fill="{c}"/><ellipse cx="25" cy="-10" rx="6" ry="5" fill="#8a5a32"/><circle cx="23" cy="-11" r=".9" fill="#1c1917"/><circle cx="27" cy="-11" r=".9" fill="#1c1917"/>'
+   f'<circle cx="16" cy="-16" r="1.8" fill="#1c1917"/><circle cx="16.6" cy="-16.6" r=".6" fill="#fff"/><ellipse cx="12" cy="-23" rx="3" ry="2.2" fill="#8a5a32"/><ellipse cx="14" cy="-10" rx="2.6" ry="1.4" fill="#fb7185" opacity=".55"/>'
+   f'<circle cx="18" cy="-27" r="4" fill="#fb923c"/><path d="M18 -31l2 -3" stroke="#16a34a" stroke-width="1.4"/></g>')
+def PINBOARD(x,y,w,h,items,c='#a16207'):
+  """บอร์ดไม้ก๊อกมีกระดาษโน้ตปักหมุด items=[(text,color)]"""
+  from fgk import TX; from pk import K
+  s=f'<g filter="url(#wsh{K})"><rect x="{x}" y="{y}" width="{w}" height="{h}" rx="3" fill="#d6a77a" stroke="{c}" stroke-width="3"/></g>'
+  for i,(t,cc) in enumerate(items):
+    nx=x+6+(i%2)*(w/2-2); ny=y+6+(i//2)*22; r=(-4,3,2,-3)[i%4]
+    s+=f'<g transform="rotate({r} {nx+w/4} {ny+9})"><rect x="{nx}" y="{ny}" width="{w/2-10}" height="18" fill="{cc}"/><circle cx="{nx+(w/2-10)/2}" cy="{ny+2}" r="1.8" fill="#dc2626"/>'+TX(nx+3,ny+12,t,4.6,'#1f2937')+'</g>'
+  return s
