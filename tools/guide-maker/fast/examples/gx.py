@@ -214,3 +214,28 @@ def OTTER(x,y,s=1,c='#92603a'):
    '<ellipse cx="19" cy="-2" rx="2" ry="1.4" fill="#3f2a1a"/><path d="M13 -1h-6M13 1h-5M25 -1h6M25 1h5" stroke="#3f2a1a" stroke-width=".6"/>'
    '<ellipse cx="12" cy="0" rx="2" ry="1.2" fill="#fb7185" opacity=".55"/><ellipse cx="26" cy="0" rx="2" ry="1.2" fill="#fb7185" opacity=".55"/>'
    '<path d="M2 2q6-6 10 0z" fill="#fbcfe8" stroke="#db2777" stroke-width=".8"/><path d="M-6 16q-4 4-8 2M8 17q4 4 8 2" stroke="#3f2a1a" stroke-width="2.5" stroke-linecap="round" fill="none"/></g>')
+
+def COURTHOUSE(x,y,s=1,c='#64748b'):
+  # อาคารศาล หน้าจั่ว เสา 4 ต้น บันได ธง
+  cols=''.join(f'<rect x="{-26+i*16}" y="-30" width="6" height="30" fill="#f8fafc" stroke="{c}" stroke-width="1"/>' for i in range(4))
+  return (f'<g transform="translate({x} {y}) scale({s})"><path d="M-36 -30l36-20l36 20z" fill="#e2e8f0" stroke="{c}" stroke-width="1.5"/><circle cy="-38" r="4" fill="#fbbf24"/>'
+   f'<rect x="-34" y="-32" width="68" height="4" fill="{c}"/>'+cols+f'<rect x="-38" y="0" width="76" height="4" fill="{c}"/><rect x="-42" y="4" width="84" height="4" fill="#94a3b8"/>'
+   f'<path d="M30 -46v-18" stroke="#334155" stroke-width="1.2"/><path d="M30 -64h12l-3 4l3 4h-12z" fill="#dc2626"/></g>')
+
+def CROWD(x,y,n=5,c='#f97316'):
+  # กลุ่มคนตัวเล็กเรียงสองแถว แทนสมาชิกกลุ่ม
+  out=''
+  for i in range(n):
+    px=x+(i%3)*18+(9 if i>=3 else 0); py=y+(14 if i>=3 else 0); col=c if i%2==0 else '#fb7185'
+    out+=f'<g transform="translate({px} {py})"><circle r="5" fill="#fcd9b6"/><path d="M-7 14q0-9 7-9t7 9z" fill="{col}"/></g>'
+  return out
+
+def PANDA(x,y,s=1):
+  # แพนด้านั่งกอดไผ่ หูดำ ตาดำ แก้มชมพู
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="22" rx="18" ry="3" fill="#000" opacity=".12"/>'
+   '<ellipse cx="0" cy="10" rx="15" ry="13" fill="#fafafa" stroke="#e5e5e5"/><ellipse cx="-11" cy="18" rx="6" ry="5" fill="#262626"/><ellipse cx="11" cy="18" rx="6" ry="5" fill="#262626"/>'
+   '<path d="M-14 4q8 6 14 2q6 4 14 -2" stroke="#262626" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M10 -4v26" stroke="#65a30d" stroke-width="3"/><path d="M10 2l7-4M10 10l-6-3" stroke="#84cc16" stroke-width="2.5" stroke-linecap="round"/>'
+   '<circle cx="0" cy="-10" r="12" fill="#fafafa" stroke="#e5e5e5"/><circle cx="-9" cy="-20" r="4" fill="#262626"/><circle cx="9" cy="-20" r="4" fill="#262626"/>'
+   '<ellipse cx="-5" cy="-11" rx="3.2" ry="4" fill="#262626" transform="rotate(-20 -5 -11)"/><ellipse cx="5" cy="-11" rx="3.2" ry="4" fill="#262626" transform="rotate(20 5 -11)"/>'
+   '<circle cx="-4.5" cy="-11.5" r="1.3" fill="#fff"/><circle cx="5.5" cy="-11.5" r="1.3" fill="#fff"/><ellipse cy="-5" rx="2" ry="1.4" fill="#262626"/>'
+   '<ellipse cx="-9" cy="-5" rx="2.4" ry="1.4" fill="#fb7185" opacity=".55"/><ellipse cx="9" cy="-5" rx="2.4" ry="1.4" fill="#fb7185" opacity=".55"/></g>')
