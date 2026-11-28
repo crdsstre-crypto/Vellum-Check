@@ -1,15 +1,20 @@
-import sys; sys.path.insert(0,'/home/claude/tools'); sys.path.insert(0,'/home/claude/work')
-from gx import FOX, OTTER, DAYRING, PENGUIN, KOALA, SEAL, THERMO
 T='font-family="sans-serif" font-weight="900"'
-def doc(x,y,w,h,c,head):
-  return f'<g transform="translate({x} {y})"><rect x="{-w/2}" y="{-h/2}" width="{w}" height="{h}" rx="4" fill="#fff" stroke="{c}" stroke-width="2.5"/><rect x="{-w/2}" y="{-h/2}" width="{w}" height="12" rx="4" fill="{c}"/><text y="{-h/2+9}" text-anchor="middle" font-size="8" fill="#fff" {T}>{head}</text>'+''.join(f'<path d="M{-w/2+8} {-h/2+20+i*8}h{w-16}" stroke="#cbd5e1" stroke-width="2.5"/>' for i in range(int((h-24)/8)))+'</g>'
-D['case-struck-off']=dict(c1='#cffafe',c2='#e7e5e4',sh='#164e63',bd='#cffafe',ln='#22d3ee',bg='#0891b2',badge='132',tint='#ecfeff',
- hero=doc(80,94,58,72,'#57534e','สารบบ')+'<path d="M58 96h44" stroke="#dc2626" stroke-width="4"/>'+'<g transform="translate(128 70)"><circle r="15" fill="#16a34a"/><text y="4" text-anchor="middle" font-size="9" fill="#fff" '+T+'>≠แพ้</text></g>'+FOX(136,138,.36),tag=None,tagc='#0891b2')
-D['court-fee-basics']=dict(c1='#fef3c7',c2='#ffe4e6',sh='#78350f',bd='#fef3c7',ln='#f59e0b',bg='#a16207',badge='฿',tint='#fffbeb',
- hero='<g transform="translate(76 96)"><rect x="-30" y="-16" width="60" height="32" rx="3" fill="#86efac" stroke="#16a34a" stroke-width="2.5"/><circle r="9" fill="#bbf7d0" stroke="#16a34a" stroke-width="2"/><text y="4" text-anchor="middle" font-size="10" fill="#166534" '+T+'>฿</text></g>'+doc(124,78,44,52,'#1d4ed8','ใบรับ')+OTTER(130,140,.36),tag=None,tagc='#a16207')
-D['enforcement-cost-deposit']=dict(c1='#fef9c3',c2='#e5e7eb',sh='#1f2937',bd='#fef9c3',ln='#facc15',bg='#a16207',badge='7',tint='#fefce8',
- hero=''.join(f'<ellipse cx="72" cy="{130-i*14}" rx="28" ry="8" fill="#1f2937" stroke="#4b5563" stroke-width="2"/>' for i in range(4))+DAYRING(128,70,'7','วัน',.6,'#a16207',18),tag=None,tagc='#a16207')
-D['court-hearing-schedule']=dict(c1='#e0f2fe',c2='#ffedd5',sh='#0c4a6e',bd='#e0f2fe',ln='#38bdf8',bg='#0369a1',badge='35',tint='#f0f9ff',
- hero=''.join(f'<rect x="{50+(i%2)*40}" y="{108-(i//2)*28}" width="36" height="26" rx="2" fill="#d97706" stroke="#92400e" stroke-width="2"/>' for i in range(4))+THERMO(136,74,'4°','#0284c7')+PENGUIN(138,140,.34),tag=None,tagc='#0369a1')
-D['closed-hearing-shop']=dict(c1='#dbeafe',c2='#fce7f3',sh='#172554',bd='#dbeafe',ln='#60a5fa',bg='#1e40af',badge='36',tint='#eff6ff',
- hero='<g transform="translate(84 96)"><rect x="-34" y="-40" width="68" height="76" rx="3" fill="#1e3a8a"/><path d="M0 -40v76" stroke="#172554" stroke-width="2.5"/><rect x="-28" y="-26" width="56" height="22" rx="2" fill="#fff"/><text y="-11" text-anchor="middle" font-size="9" fill="#b91c1c" '+T+'>พิจารณาลับ</text><circle cx="-6" cy="10" r="2.5" fill="#facc15"/><circle cx="6" cy="10" r="2.5" fill="#facc15"/></g>'+KOALA(138,138,.34),tag=None,tagc='#1e40af')
+def pill(x,y,t,c,w=44):
+  return f'<g transform="translate({x} {y})"><rect x="{-w/2}" y="-8" width="{w}" height="15" rx="7" fill="#fff" stroke="{c}" stroke-width="2"/><text y="3" text-anchor="middle" font-size="7" fill="{c}" {T}>{t}</text></g>'
+D={} if 'D' not in dir() else D
+def kit(x,y,s=.45):
+  c='#fdba74'
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="10" rx="12" ry="12" fill="{c}"/><path d="M-11 -14l-2 -10l8 6zM11 -14l2 -10l-8 6z" fill="{c}"/><circle cx="0" cy="-8" r="11" fill="{c}"/>'
+   '<ellipse cx="-4.5" cy="-9" rx="2.4" ry="2.8" fill="#1c1917"/><ellipse cx="4.5" cy="-9" rx="2.4" ry="2.8" fill="#1c1917"/><circle cx="-3.8" cy="-10" r=".9" fill="#fff"/><circle cx="5.2" cy="-10" r=".9" fill="#fff"/><path d="M-1.2 -5h2.4l-1.2 1.4z" fill="#f472b6"/><ellipse cx="-7.5" cy="-4.5" rx="2" ry="1.2" fill="#fb7185" opacity=".6"/><ellipse cx="7.5" cy="-4.5" rx="2" ry="1.2" fill="#fb7185" opacity=".6"/></g>')
+def condo(x,y,c):
+  return f'<g transform="translate({x} {y})"><rect x="-24" y="-78" width="48" height="88" rx="2" fill="{c}"/>'+''.join(f'<rect x="{-18+j*12}" y="{-10-i*14}" width="8" height="9" rx="1" fill="#fff" opacity=".8"/>' for i in range(5) for j in range(3))+'<rect x="-20" y="0" width="18" height="8" fill="#fde047"/></g>'
+D['condo-title-lost-mortgage-fix']=dict(c1='#fce7f3',c2='#e0e7ff',sh='#831843',bd='#fce7f3',ln='#f9a8d4',bg='#be185d',badge='📃',tint='#fdf2f8',
+ hero=condo(74,120,'#be185d')+'<g transform="translate(130 86)"><rect x="-16" y="-20" width="32" height="40" rx="2" fill="#fff" stroke="#be185d" stroke-width="2"/><text y="6" text-anchor="middle" font-size="16" '+T+' fill="#dc2626">?</text></g>'+pill(88,140,'ขอใบแทน','#be185d',46),tag=None)
+D['condo-annual-accounts-check']=dict(c1='#ccfbf1',c2='#f0fdfa',sh='#134e4a',bd='#ccfbf1',ln='#5eead4',bg='#0f766e',badge='📊',tint='#f0fdfa',
+ hero='<g transform="translate(86 102)"><path d="M-38 -26h36q2 0 2 2v46q0 -2 -2 -2h-36z" fill="#fff" stroke="#0f766e" stroke-width="1.5"/><path d="M38 -26h-36q-2 0 -2 2v46q0 -2 2 -2h36z" fill="#fff" stroke="#0f766e" stroke-width="1.5"/><path d="M-30 -14h24M-30 -6h20M-30 2h24" stroke="#cbd5e1" stroke-width="2.5"/><rect x="8" y="2" width="6" height="14" fill="#0f766e"/><rect x="17" y="-6" width="6" height="22" fill="#14b8a6"/><rect x="26" y="-14" width="6" height="30" fill="#5eead4"/></g>'+pill(88,140,'งบดุล','#0f766e',40),tag=None)
+D['condo-shop-cost-proxy-lien']=dict(c1='#fae8ff',c2='#e0f2fe',sh='#701a75',bd='#fae8ff',ln='#f0abfc',bg='#a21caf',badge='🗳️',tint='#fdf4ff',
+ hero=condo(74,120,'#a21caf')+'<g transform="translate(132 86)"><rect x="-16" y="-14" width="32" height="28" rx="3" fill="#fff" stroke="#a21caf" stroke-width="2"/><path d="M-8 0l5 5l11 -11" stroke="#16a34a" stroke-width="3" fill="none"/></g>'+pill(88,140,'มอบฉันทะ','#a21caf',48),tag=None)
+D['building-rule-query-local']=dict(c1='#fef3c7',c2='#ffedd5',sh='#78350f',bd='#fef3c7',ln='#fcd34d',bg='#b45309',badge='📐',tint='#fffbeb',
+ hero='<g transform="translate(80 104)"><rect x="-30" y="-16" width="60" height="36" fill="#fde68a" stroke="#a16207"/><path d="M-36 -16h72l-8 -12h-56z" fill="#dc2626"/></g><path d="M50 132h60" stroke="#475569" stroke-width="2"/><path d="M50 128v8M110 128v8" stroke="#475569" stroke-width="2"/><g transform="translate(136 80)"><circle r="14" fill="#fff" stroke="#b45309" stroke-width="3"/><text y="4" text-anchor="middle" font-size="11" '+T+' fill="#b45309">30</text></g>'+pill(88,146,'หารือ','#b45309',40),tag=None)
+D['cafe-screening-theater-license']=dict(c1='#e0e7ff',c2='#ffe4e6',sh='#1e1b4b',bd='#e0e7ff',ln='#a5b4fc',bg='#3730a3',badge='🎬',tint='#eef2ff',
+ hero='<g transform="translate(86 96)"><rect x="-36" y="-30" width="72" height="40" rx="2" fill="#f8fafc" stroke="#1e293b" stroke-width="3"/><path d="M-26 -6l12 -10l10 6l14 -12l16 16v6h-52z" fill="#93c5fd"/>'+''.join(f'<rect x="{-32+i*13}" y="18" width="10" height="8" rx="3" fill="#be123c"/>' for i in range(6))+'</g>'+kit(140,124)+pill(86,142,'โรงมหรสพ','#3730a3',50),tag=None)

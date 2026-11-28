@@ -488,3 +488,29 @@ def LAMB(x,y,s=1):
    '<circle cx="-3.5" cy="-5" r="1.8" fill="#1c1917"/><circle cx="3.5" cy="-5" r="1.8" fill="#1c1917"/><circle cx="-3" cy="-5.6" r=".6" fill="#fff"/><circle cx="4" cy="-5.6" r=".6" fill="#fff"/>'
    '<path d="M-1.5 0h3l-1.5 1.5z" fill="#f472b6"/><path d="M0 1.5q-2 2 -3 1M0 1.5q2 2 3 1" stroke="#a8a29e" stroke-width=".6" fill="none"/>'
    '<ellipse cx="-6" cy="-1" rx="2" ry="1.2" fill="#fb7185" opacity=".55"/><ellipse cx="6" cy="-1" rx="2" ry="1.2" fill="#fb7185" opacity=".55"/></g>')
+
+def CINEMA(x,y,c='#1e293b'):
+  # จอฉายหนัง ลำแสงโปรเจกเตอร์ แถวเก้าอี้
+  seats=''.join(f'<rect x="{-36+i*14}" y="{18+r*10}" width="11" height="8" rx="3" fill="#be123c"/>' for r in range(2) for i in range(6))
+  return (f'<g transform="translate({x} {y})"><rect x="-40" y="-36" width="80" height="44" rx="2" fill="#f8fafc" stroke="{c}" stroke-width="3"/>'
+   '<path d="M-30 -10l14 -12l12 8l16 -14l18 18v6h-60z" fill="#93c5fd"/><circle cx="22" cy="-26" r="5" fill="#fde047"/>'
+   '<path d="M50 -40l-90 16l90 30z" fill="#fef9c3" opacity=".25"/>'+seats+'</g>')
+
+def LEDGERBOOK(x,y,c='#0f766e'):
+  # สมุดงบดุลเปิด กราฟแท่ง เครื่องหมายผู้สอบบัญชี
+  return (f'<g transform="translate({x} {y})"><path d="M-34 -22h32q2 0 2 2v40q0 -2 -2 -2h-32z" fill="#fff" stroke="{c}"/><path d="M34 -22h-32q-2 0 -2 2v40q0 -2 2 -2h32z" fill="#fff" stroke="{c}"/>'
+   '<path d="M-28 -12h22M-28 -6h18M-28 0h22M-28 6h14" stroke="#cbd5e1" stroke-width="2"/>'
+   f'<rect x="8" y="2" width="5" height="12" fill="{c}"/><rect x="15" y="-4" width="5" height="18" fill="#14b8a6"/><rect x="22" y="-10" width="5" height="24" fill="#5eead4"/>'
+   '<circle cx="26" cy="-16" r="5" fill="none" stroke="#dc2626" stroke-width="1.5"/><path d="M23.5 -16l2 2l3 -4" stroke="#dc2626" stroke-width="1.3" fill="none"/></g>')
+
+def KITTEN(x,y,s=1,c='#fdba74'):
+  # ลูกแมวส้มลายทาง ตาโต หนวด แก้มชมพู หางม้วน
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="22" rx="15" ry="3" fill="#000" opacity=".12"/>'
+   f'<path d="M12 16q14 -2 10 -16" stroke="{c}" stroke-width="5" fill="none" stroke-linecap="round"/>'
+   f'<ellipse cx="0" cy="10" rx="12" ry="12" fill="{c}"/><path d="M-6 2q6 2 12 0M-8 8q8 2 16 0" stroke="#ea580c" stroke-width="1.5" fill="none"/><ellipse cx="0" cy="14" rx="6" ry="6" fill="#fff7ed"/>'
+   f'<path d="M-11 -14l-2 -10l8 6zM11 -14l2 -10l-8 6z" fill="{c}"/><path d="M-10 -15l-1 -6l4 3zM10 -15l1 -6l-4 3z" fill="#fda4af"/>'
+   f'<circle cx="0" cy="-8" r="11" fill="{c}"/><path d="M-4 -18l1 4M0 -19v4M4 -18l-1 4" stroke="#ea580c" stroke-width="1.3"/>'
+   '<ellipse cx="-4.5" cy="-9" rx="2.4" ry="2.8" fill="#1c1917"/><ellipse cx="4.5" cy="-9" rx="2.4" ry="2.8" fill="#1c1917"/><circle cx="-3.8" cy="-10" r=".9" fill="#fff"/><circle cx="5.2" cy="-10" r=".9" fill="#fff"/>'
+   '<path d="M-1.2 -5h2.4l-1.2 1.4z" fill="#f472b6"/><path d="M0 -3.6q-2 2 -3.5 1M0 -3.6q2 2 3.5 1" stroke="#7c2d12" stroke-width=".7" fill="none"/>'
+   '<path d="M-6 -5h-8M-6 -3.5l-7 2M6 -5h8M6 -3.5l7 2" stroke="#7c2d12" stroke-width=".5"/>'
+   '<ellipse cx="-7.5" cy="-4.5" rx="2" ry="1.2" fill="#fb7185" opacity=".55"/><ellipse cx="7.5" cy="-4.5" rx="2" ry="1.2" fill="#fb7185" opacity=".55"/></g>')
