@@ -6,7 +6,7 @@
   "coverLayout": "ptcarepastel",
   "coverLines": [
     "หุ้นส่วนสะเพร่า",
-    "ครบสัญญาแต่ยังขาย"
+    "ครบสัญญายังขาย"
   ],
   "order": 491,
   "minutes": 7,
@@ -66,7 +66,7 @@
       ]
     },
     {
-      "title": "ครบสัญญาแต่ยังขาย",
+      "title": "ครบสัญญายังขาย",
       "panel": {
         "scene": "ptterm",
         "mood": "point+cry+phone+bob",
