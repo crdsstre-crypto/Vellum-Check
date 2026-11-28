@@ -514,3 +514,25 @@ def KITTEN(x,y,s=1,c='#fdba74'):
    '<path d="M-1.2 -5h2.4l-1.2 1.4z" fill="#f472b6"/><path d="M0 -3.6q-2 2 -3.5 1M0 -3.6q2 2 3.5 1" stroke="#7c2d12" stroke-width=".7" fill="none"/>'
    '<path d="M-6 -5h-8M-6 -3.5l-7 2M6 -5h8M6 -3.5l7 2" stroke="#7c2d12" stroke-width=".5"/>'
    '<ellipse cx="-7.5" cy="-4.5" rx="2" ry="1.2" fill="#fb7185" opacity=".55"/><ellipse cx="7.5" cy="-4.5" rx="2" ry="1.2" fill="#fb7185" opacity=".55"/></g>')
+
+def PEG(x,y,c='#dc2626',t='หลักเขต'):
+  # หมุดหลักเขตคอนกรีต หัวแดง ป้ายห้ามเคลื่อนย้าย
+  return (f'<g transform="translate({x} {y})"><ellipse cy="14" rx="14" ry="4" fill="#000" opacity=".15"/><path d="M-7 14v-26h14v26z" fill="#e7e5e4" stroke="#a8a29e"/><rect x="-7" y="-16" width="14" height="6" fill="{c}"/>'
+   f'<path d="M-4 -2h8M-4 4h8" stroke="#a8a29e"/><g transform="translate(22 -12)"><rect x="-16" y="-7" width="32" height="13" rx="2" fill="#fff" stroke="{c}"/><text y="2.5" text-anchor="middle" font-size="6" font-weight="900" fill="{c}">{t}</text></g></g>')
+
+def PRICEBOARD(x,y,a='2.6 ล้าน',b='4 ล้าน',c='#0369a1'):
+  # ป้ายเทียบราคาประเมินกับราคาซื้อขาย ลูกศรชี้ราคาประเมิน
+  return (f'<g transform="translate({x} {y})"><rect x="-38" y="-24" width="76" height="48" rx="4" fill="#fff" stroke="{c}" stroke-width="2"/>'
+   f'<text x="-30" y="-8" font-size="6.5" font-weight="900" fill="{c}">ราคาประเมิน</text><text x="30" y="-8" text-anchor="end" font-size="7.5" font-weight="900" fill="#15803d">{a}</text>'
+   f'<text x="-30" y="12" font-size="6.5" font-weight="900" fill="#64748b">ราคาซื้อขาย</text><text x="30" y="12" text-anchor="end" font-size="7.5" font-weight="900" fill="#64748b">{b}</text>'
+   '<path d="M-44 -10l-8 0M-48 -14l-4 4l4 4" stroke="#15803d" stroke-width="2" fill="none"/></g>')
+
+def PIGLET(x,y,s=1,c='#fbcfe8'):
+  # ลูกหมูชมพู จมูกกลมสองรู หูพับ ตาวาว แก้มแดง หางม้วน
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="22" rx="16" ry="3" fill="#000" opacity=".12"/>'
+   f'<path d="M14 8q8 -2 6 4q-2 4 2 4" stroke="#f472b6" stroke-width="1.5" fill="none"/>'
+   f'<ellipse cx="0" cy="10" rx="15" ry="12" fill="{c}" stroke="#f9a8d4"/><rect x="-10" y="18" width="5" height="5" rx="2" fill="#f9a8d4"/><rect x="5" y="18" width="5" height="5" rx="2" fill="#f9a8d4"/>'
+   f'<circle cx="0" cy="-6" r="11" fill="{c}" stroke="#f9a8d4"/><path d="M-10 -14l-4 -6l8 2zM10 -14l4 -6l-8 2z" fill="#f9a8d4"/>'
+   '<ellipse cx="0" cy="-2" rx="5" ry="3.6" fill="#f9a8d4" stroke="#ec4899" stroke-width=".8"/><ellipse cx="-1.8" cy="-2" rx=".9" ry="1.3" fill="#9d174d"/><ellipse cx="1.8" cy="-2" rx=".9" ry="1.3" fill="#9d174d"/>'
+   '<circle cx="-4.5" cy="-9" r="1.8" fill="#1c1917"/><circle cx="4.5" cy="-9" r="1.8" fill="#1c1917"/><circle cx="-4" cy="-9.6" r=".6" fill="#fff"/><circle cx="5" cy="-9.6" r=".6" fill="#fff"/>'
+   '<ellipse cx="-8" cy="-3" rx="2.2" ry="1.3" fill="#fb7185" opacity=".7"/><ellipse cx="8" cy="-3" rx="2.2" ry="1.3" fill="#fb7185" opacity=".7"/></g>')
