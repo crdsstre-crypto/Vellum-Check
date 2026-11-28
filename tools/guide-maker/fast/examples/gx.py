@@ -314,3 +314,28 @@ def PENGUIN(x,y,s=1):
    '<path d="M-15 2q-8 8-4 14M15 2q8 8 4 14" stroke="#1e293b" stroke-width="5" stroke-linecap="round" fill="none"/>'
    '<path d="M-7 26h6M1 26h6" stroke="#f97316" stroke-width="3" stroke-linecap="round"/>'
    '<g transform="translate(16 12) rotate(-12)"><rect x="-7" y="-5" width="14" height="10" rx="1" fill="#fff" stroke="#94a3b8"/><path d="M-7 -5l7 5l7-5" stroke="#94a3b8" fill="none"/></g></g>')
+
+def SCROLL(x,y,t='',c='#a16207',w=70):
+  # ม้วนกระดาษคำพิพากษา ปลายม้วนสองด้าน ริบบิ้นตรา
+  return (f'<g transform="translate({x} {y})"><rect x="{-w/2}" y="-18" width="{w}" height="36" fill="#fffbeb" stroke="{c}" stroke-width="1.5"/>'
+   f'<rect x="{-w/2-5}" y="-21" width="8" height="42" rx="4" fill="#fde68a" stroke="{c}"/><rect x="{w/2-3}" y="-21" width="8" height="42" rx="4" fill="#fde68a" stroke="{c}"/>'
+   f'<path d="M{-w/2+8} -8h{w-20}M{-w/2+8} 0h{w-30}M{-w/2+8} 8h{w-24}" stroke="#e7d7b0" stroke-width="2"/>'
+   f'<circle cx="{w/2-14}" cy="10" r="6" fill="#dc2626"/><path d="M{w/2-17} 15l-2 8l5-3l3 4l1-8" fill="#dc2626"/>'
+   f'<text y="-24" text-anchor="middle" font-size="7" font-weight="900" fill="{c}">{t}</text></g>')
+
+def SAFEBOX(x,y,c='#475569'):
+  # ตู้เซฟเก็บเอกสาร มีหน้าปัดหมุนและเอกสารโผล่
+  return (f'<g transform="translate({x} {y})"><rect x="-20" y="-22" width="40" height="44" rx="4" fill="{c}"/><rect x="-16" y="-18" width="32" height="36" rx="3" fill="#64748b"/>'
+   '<circle cx="2" cy="0" r="8" fill="#e2e8f0" stroke="#334155" stroke-width="2"/><path d="M2 -6v6l4 3" stroke="#334155" stroke-width="1.5"/>'
+   '<rect x="-14" y="-28" width="18" height="10" fill="#fff" stroke="#cbd5e1" transform="rotate(-8)"/><rect x="-12" y="20" width="6" height="4" fill="#334155"/><rect x="6" y="20" width="6" height="4" fill="#334155"/></g>')
+
+def RACCOON(x,y,s=1,c='#9ca3af'):
+  # แรคคูนหน้ากากดำ หางลายวง ตาวาว แก้ม
+  tail=''.join(f'<path d="M{14+i*4} {18-i*4}l6 -2" stroke="#374151" stroke-width="3"/>' for i in range(4))
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="24" rx="18" ry="3" fill="#000" opacity=".12"/>'
+   f'<path d="M10 20q16-2 18-18" stroke="{c}" stroke-width="8" stroke-linecap="round" fill="none"/>'+tail+
+   f'<ellipse cx="0" cy="12" rx="13" ry="12" fill="{c}"/><ellipse cx="0" cy="15" rx="7" ry="7" fill="#e5e7eb"/>'
+   f'<path d="M-12 -12l-3-9l8 5zM12 -12l3-9l-8 5z" fill="{c}"/><ellipse cx="0" cy="-6" rx="13" ry="11" fill="{c}"/>'
+   '<path d="M-12 -7q6-5 12 0q6-5 12 0q-2 6-12 6q-10 0-12-6z" fill="#1f2937"/><path d="M-4 0q4 6 8 0z" fill="#f3f4f6"/>'
+   '<circle cx="-5" cy="-6" r="2.2" fill="#fff"/><circle cx="5" cy="-6" r="2.2" fill="#fff"/><circle cx="-5" cy="-6" r="1.3" fill="#111827"/><circle cx="5" cy="-6" r="1.3" fill="#111827"/>'
+   '<ellipse cx="0" cy="1" rx="1.8" ry="1.2" fill="#111827"/><ellipse cx="-9" cy="1" rx="2" ry="1.2" fill="#fb7185" opacity=".55"/><ellipse cx="9" cy="1" rx="2" ry="1.2" fill="#fb7185" opacity=".55"/></g>')
