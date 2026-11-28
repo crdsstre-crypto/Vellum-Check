@@ -657,3 +657,25 @@ def FIREKIT(x,y):
   # ถังดับเพลิงแดง + กล่องยากากบาทเขียว
   return (f'<g transform="translate({x} {y})"><ellipse cy="20" rx="26" ry="3" fill="#000" opacity=".12"/><rect x="-22" y="-14" width="14" height="34" rx="6" fill="#dc2626"/><rect x="-19" y="-20" width="8" height="7" fill="#1e293b"/><path d="M-11 -18q8 -2 8 8" stroke="#1e293b" stroke-width="2" fill="none"/>'
    '<rect x="0" y="0" width="24" height="20" rx="3" fill="#fff" stroke="#16a34a" stroke-width="2"/><path d="M12 4v12M6 10h12" stroke="#16a34a" stroke-width="3.5"/></g>')
+
+def KOALA(x,y,s=1,c='#cbd5e1'):
+  # โคอาลาเทาฟู หูกลมใหญ่ขนในหูขาว จมูกดำโต ตาวาว แก้มชมพู
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="22" rx="17" ry="3" fill="#000" opacity=".12"/>'
+   f'<ellipse cx="0" cy="10" rx="15" ry="13" fill="{c}" stroke="#64748b"/><ellipse cx="0" cy="13" rx="8" ry="8" fill="#f1f5f9"/>'
+   f'<circle cx="-14" cy="-12" r="8" fill="{c}" stroke="#64748b"/><circle cx="14" cy="-12" r="8" fill="{c}" stroke="#64748b"/><circle cx="-14" cy="-12" r="4.5" fill="#f8fafc"/><circle cx="14" cy="-12" r="4.5" fill="#f8fafc"/>'
+   f'<circle cx="0" cy="-5" r="12" fill="{c}" stroke="#64748b"/>'
+   '<circle cx="-5" cy="-7" r="2.2" fill="#1c1917"/><circle cx="5" cy="-7" r="2.2" fill="#1c1917"/><circle cx="-4.3" cy="-7.7" r=".8" fill="#fff"/><circle cx="5.7" cy="-7.7" r=".8" fill="#fff"/>'
+   '<ellipse cx="0" cy="-1" rx="3.4" ry="4.2" fill="#334155"/><path d="M-3 5q3 2 6 0" stroke="#334155" stroke-width=".9" fill="none"/>'
+   '<ellipse cx="-8" cy="1" rx="2.3" ry="1.3" fill="#fb7185" opacity=".55"/><ellipse cx="8" cy="1" rx="2.3" ry="1.3" fill="#fb7185" opacity=".55"/></g>')
+
+def TROPHY(x,y,c='#f59e0b',t='ดีเด่น'):
+  # ถ้วยรางวัลทอง ริบบิ้น ประกาย
+  return (f'<g transform="translate({x} {y})"><ellipse cy="26" rx="22" ry="3" fill="#000" opacity=".12"/><path d="M-18 -26h36v8a18 18 0 0 1-36 0z" fill="{c}" stroke="#b45309" stroke-width="2"/>'
+   '<path d="M-18 -20h-8a8 8 0 0 0 8 12M18 -20h8a8 8 0 0 1-8 12" stroke="#b45309" stroke-width="2.5" fill="none"/><rect x="-4" y="0" width="8" height="12" fill="#d97706"/><rect x="-16" y="12" width="32" height="12" rx="2" fill="#78350f"/>'
+   f'<text y="21" font-size="6.5" font-weight="900" text-anchor="middle" fill="#fde68a">{t}</text><path d="M24 -32l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#fde047"/></g>')
+
+def FINESLIP(x,y,amt='300,000',c='#dc2626'):
+  # ใบแจ้งค่าปรับ ตัวเลขใหญ่ ตราแดง
+  return (f'<g transform="translate({x} {y}) rotate(-4)"><rect x="-34" y="-24" width="68" height="48" rx="3" fill="#fff" stroke="{c}" stroke-width="2"/><rect x="-34" y="-24" width="68" height="11" rx="3" fill="{c}"/>'
+   f'<text y="-16" font-size="6.5" font-weight="900" text-anchor="middle" fill="#fff">ค่าปรับไม่เกิน</text><text y="6" font-size="11" font-weight="900" text-anchor="middle" fill="{c}">{amt}</text>'
+   '<text y="17" font-size="6" font-weight="800" text-anchor="middle" fill="#64748b">บาท</text></g>')
