@@ -884,3 +884,62 @@ def PANGOLIN(x,y,s=1,c='#a16207'):
    f'<path d="M-18 6q-10 -2 -14 -10q6 6 14 4z" fill="{c}"/><ellipse cx="0" cy="0" rx="18" ry="9" fill="#d97706"/>{sc}'
    f'<path d="M16 -2q10 0 14 4q-6 3 -14 2z" fill="#fcd34d"/><circle cx="20" cy="-1" r="1.3" fill="#1f2937"/><circle cx="20.4" cy="-1.4" r=".4" fill="#fff"/>'
    '<rect x="-10" y="6" width="4" height="5" rx="2" fill="#92400e"/><rect x="6" y="6" width="4" height="5" rx="2" fill="#92400e"/></g>')
+
+# ---- ชุด 489–496: เอกสารติ๊กถูก / การ์ดขั้นตอน / แถบโน้ต (ตำแหน่ง: เนื้อหาเริ่ม y≥64) ----
+_F='font-family="sans-serif" font-weight="900"'
+def LETTER(x,y,title,items,c='#ea580c',w=112,rot=-2,cols=2,rowh=12):
+    per=(len(items)+cols-1)//cols; h=18+per*rowh
+    s=(f'<g transform="translate({x} {y}) rotate({rot})"><g filter="drop-shadow(0 3px 4px rgba(0,0,0,.18))"><rect width="{w}" height="{h}" rx="3" fill="#fffdf7"/></g>'
+       f'<rect width="{w}" height="13" rx="3" fill="{c}"/><text x="{w/2}" y="9.5" text-anchor="middle" font-size="6.4" fill="#fff" {_F}>{title}</text>')
+    cw=(w-8)/cols
+    for i,t in enumerate(items):
+        cx=6+(i//per)*cw; cy=22+(i%per)*rowh
+        s+=(f'<circle cx="{cx+4}" cy="{cy}" r="4.2" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/><path d="M{cx+2} {cy}l1.6 1.8l3 -3.4" stroke="#16a34a" stroke-width="1.3" fill="none"/>'
+            f'<text x="{cx+11}" y="{cy+2.2}" font-size="5.6" fill="#334155" {_F}>{t}</text>')
+    return s+'</g>'
+def STEPCARD(x,y,n,t,sub,c,icon=''):
+    return (f'<g transform="translate({x} {y})"><g filter="drop-shadow(0 2px 3px rgba(0,0,0,.15))"><rect width="58" height="36" rx="7" fill="#fff" stroke="{c}" stroke-width="2"/></g>'
+      f'<circle cx="10" cy="10" r="6" fill="{c}"/><text x="10" y="13" text-anchor="middle" font-size="7" fill="#fff" {_F}>{n}</text>{icon}'
+      f'<text x="29" y="24" text-anchor="middle" font-size="6.6" fill="#1e293b" {_F}>{t}</text><text x="29" y="32" text-anchor="middle" font-size="5.2" fill="#64748b" {_F}>{sub}</text></g>')
+def ARROW(x,y,c='#334155',l=8):
+    return f'<path d="M{x} {y}h{l}" stroke="{c}" stroke-width="2.2"/><path d="M{x+l} {y}l-4 -3v6z" fill="{c}"/>'
+def NOTEBAR(x,y,t,c='#047857',w=132,rot=-2):
+    return f'<g transform="translate({x} {y}) rotate({rot})"><rect width="{w}" height="15" rx="7.5" fill="{c}"/><text x="{w/2}" y="10" text-anchor="middle" font-size="5.4" fill="#fff" {_F}>{t}</text></g>'
+def ICON(k,c):
+    d={'mag':f'<g transform="translate(44 10) scale(.7)"><circle r="6" fill="#fff" stroke="{c}" stroke-width="2"/><path d="M4 4l5 5" stroke="{c}" stroke-width="2.6"/></g>',
+       'pen':f'<g transform="translate(46 10) rotate(35) scale(.7)"><rect x="-2.5" y="-9" width="5" height="16" rx="1" fill="{c}"/><path d="M-2.5 7l2.5 5l2.5 -5z" fill="#fde68a"/></g>',
+       'mail':f'<g transform="translate(40 4) scale(.75)"><rect width="16" height="12" rx="1.5" fill="#fff" stroke="{c}" stroke-width="1.4"/><path d="M0 0l8 6l8 -6" stroke="{c}" stroke-width="1.4" fill="none"/></g>',
+       'clock':f'<g transform="translate(46 10)"><circle r="6" fill="#fff" stroke="{c}" stroke-width="1.6"/><path d="M0 -3.5v3.5l2.5 2" stroke="{c}" stroke-width="1.4" fill="none"/></g>',
+       'shield':f'<g transform="translate(46 10)"><path d="M0 -7l6 2v4c0 4 -3 6 -6 7c-3 -1 -6 -3 -6 -7v-4z" fill="#fff" stroke="{c}" stroke-width="1.6"/></g>',
+       'coin':f'<g transform="translate(46 10)"><circle r="6" fill="#fde68a" stroke="{c}" stroke-width="1.6"/><text y="2.6" text-anchor="middle" font-size="7" fill="{c}" {_F}>฿</text></g>'}
+    return d.get(k,'')
+def CRACKWALL(x,y,w=70,h=80,c='#a8a29e'):
+    return (f'<g transform="translate({x} {y})"><rect width="{w}" height="{h}" fill="#e7e5e4" stroke="{c}" stroke-width="1.6"/>'
+      +''.join(f'<path d="M0 {i*12}h{w}" stroke="#d6d3d1" stroke-width="1"/>' for i in range(1,h//12+1))
+      +f'<path d="M{w*.6} 0l-6 16l8 10l-10 14l6 12l-8 {h-52}" stroke="#57534e" stroke-width="1.8" fill="none"/></g>')
+def TILTSIGN(x,y,t='ร้านร้าง',c='#64748b',rot=14):
+    return (f'<g transform="translate({x} {y})"><path d="M0 0v34" stroke="#57534e" stroke-width="3"/><g transform="rotate({rot})"><rect x="-4" y="-2" width="60" height="22" rx="2" fill="#f1f5f9" stroke="{c}" stroke-width="2"/>'
+      f'<text x="26" y="12.5" text-anchor="middle" font-size="7" fill="{c}" {_F}>{t}</text><circle cx="2" cy="2" r="1.4" fill="#78716c"/></g>'
+      f'<path d="M40 30l4 6M48 26l6 4" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/></g>')
+def FRUITSTALL(x,y,fallen=False):
+    s=f'<g transform="translate({x} {y})"><rect x="0" y="20" width="70" height="26" fill="#a16207"/><path d="M-4 20h78l-6 -8h-66z" fill="#facc15"/>'
+    cols=['#f97316','#ef4444','#84cc16','#facc15','#f97316','#a855f7']
+    for i,cc in enumerate(cols):
+        cx=8+i*11; cy=(30+((i*7)%9)) if fallen else 14
+        s+=f'<circle cx="{cx}" cy="{cy if not fallen else cy+18}" r="4.6" fill="{cc}"/>'
+    return s+'</g>'
+def TENT(x,y,torn=False,c='#0ea5e9'):
+    return (f'<g transform="translate({x} {y})"><path d="M0 40l30 -40l30 40z" fill="{c}"/><path d="M30 0l-6 40h12z" fill="#0c4a6e" opacity=".5"/>'
+      +(f'<path d="M14 22l6 4l-4 4l7 3" stroke="#fff" stroke-width="2" fill="none"/><path d="M40 18l5 6" stroke="#fff" stroke-width="2"/>' if torn else '')+'</g>')
+def WINDLINES(x,y,c='#94a3b8'):
+    return ''.join(f'<path d="M{x} {y+i*10}q14 -6 28 0t28 0" stroke="{c}" stroke-width="1.6" fill="none" opacity=".7"/>' for i in range(3))
+def SHOPFRONT(x,y,w=96,c='#0f766e',t='ร้าน'):
+    return (f'<g transform="translate({x} {y})"><rect width="{w}" height="70" fill="#fff7ed" stroke="#78716c" stroke-width="1.4"/><path d="M-4 0h{w+8}l-6 -12h-{w-4}z" fill="{c}"/>'
+      +''.join(f'<path d="M{-4+i*((w+8)/6)} 0l{(w+8)/12} -12" stroke="#fff" stroke-width="3" opacity=".5"/>' for i in range(6))
+      +f'<rect x="8" y="10" width="{w/2-12}" height="26" fill="#bae6fd" stroke="#78716c"/><rect x="{w/2+4}" y="10" width="{w/2-12}" height="60" fill="#e7e5e4" stroke="#78716c"/>'
+      f'<rect x="{w/2-30}" y="-30" width="60" height="14" rx="3" fill="#fff" stroke="{c}" stroke-width="1.6"/><text x="{w/2}" y="-20" text-anchor="middle" font-size="7" fill="{c}" {_F}>{t}</text></g>')
+def STAIRS(x,y,n=5,c='#a8a29e'):
+    return ''.join(f'<rect x="{x+i*9}" y="{y-i*8}" width="{(n-i)*9}" height="8" fill="#e7e5e4" stroke="{c}" stroke-width="1"/>' for i in range(n))
+def SPEAKER(x,y,c='#7c3aed'):
+    return (f'<g transform="translate({x} {y})"><rect width="20" height="30" rx="3" fill="#1e1b4b"/><circle cx="10" cy="10" r="5" fill="#4c1d95"/><circle cx="10" cy="22" r="6" fill="#4c1d95"/>'
+      f'<path d="M24 8q6 6 0 14M28 4q10 10 0 22" stroke="{c}" stroke-width="2" fill="none"/><text x="40" y="6" font-size="9" fill="{c}" {_F}>♪</text></g>')
