@@ -138,3 +138,32 @@ def OWL(x,y,s=1,c='#a16207'):
    '<circle cx="-4.5" cy="-1" r="3" fill="#1c1917"/><circle cx="5.5" cy="-1" r="3" fill="#1c1917"/><circle cx="-3.5" cy="-2.2" r="1" fill="#fff"/><circle cx="6.5" cy="-2.2" r="1" fill="#fff"/>'
    '<path d="M-1.5 4l1.5 3l1.5 -3z" fill="#f97316"/><ellipse cx="-9" cy="5" rx="2.5" ry="1.5" fill="#fb7185" opacity=".5"/><ellipse cx="9" cy="5" rx="2.5" ry="1.5" fill="#fb7185" opacity=".5"/>'
    '<path d="M-5 23v-2M-3 23v-2M3 23v-2M5 23v-2" stroke="#f97316" stroke-width="1.5"/></g>')
+
+def ENVFLY(x0,y0,x1,y1,n=3,c='#2563eb'):
+  # ซองจดหมายลอยตามเส้นโค้งเป็นจุดๆ
+  out=f'<path d="M{x0} {y0}Q{(x0+x1)/2} {min(y0,y1)-26} {x1} {y1}" stroke="{c}" stroke-width="1.6" stroke-dasharray="3 4" fill="none" opacity=".6"/>'
+  for i in range(n):
+    t=(i+1)/(n+1); mx=(x0+x1)/2; my=min(y0,y1)-26
+    px=(1-t)**2*x0+2*(1-t)*t*mx+t*t*x1; py=(1-t)**2*y0+2*(1-t)*t*my+t*t*y1
+    out+=(f'<g transform="translate({px:.0f} {py:.0f}) rotate({-14+i*12})"><rect x="-10" y="-7" width="20" height="14" rx="2" fill="#fff" stroke="{c}" stroke-width="1.5"/>'
+          f'<path d="M-10 -7l10 8l10-8" stroke="{c}" stroke-width="1.3" fill="none"/></g>')
+  return out
+
+def DAYRING(x,y,d,t,frac=.7,c='#e11d48',r=22):
+  # วงนับวันถอยหลัง ตัวเลขกลางวง
+  import math
+  a=2*math.pi*frac; ex=x+r*math.sin(a); ey=y-r*math.cos(a); big=1 if frac>.5 else 0
+  return (f'<g><circle cx="{x}" cy="{y}" r="{r+5}" fill="#fff" opacity=".9"/><circle cx="{x}" cy="{y}" r="{r}" stroke="#e5e7eb" stroke-width="5" fill="none"/>'
+   f'<path d="M{x} {y-r}A{r} {r} 0 {big} 1 {ex:.1f} {ey:.1f}" stroke="{c}" stroke-width="5" stroke-linecap="round" fill="none"/>'
+   f'<text x="{x}" y="{y+3}" text-anchor="middle" font-size="13" font-weight="900" fill="{c}">{d}</text>'
+   f'<text x="{x}" y="{y+13}" text-anchor="middle" font-size="6.5" font-weight="700" fill="#475569">{t}</text></g>')
+
+def SQUIRREL(x,y,s=1,c='#c2763a'):
+  # กระรอกถือลูกโอ๊ก หางพุ่ม ตาวาว แก้ม หูมีขนปลาย
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="2" cy="26" rx="18" ry="3" fill="#000" opacity=".12"/>'
+   f'<path d="M10 22q22-4 18-26q-3-16-16-12q8 6 4 16q-4 10-12 14z" fill="{c}"/><path d="M14 4q6 6 2 14" stroke="#fed7aa" stroke-width="2" fill="none" opacity=".7"/>'
+   f'<ellipse cx="0" cy="14" rx="10" ry="12" fill="{c}"/><ellipse cx="-1" cy="17" rx="6" ry="8" fill="#fed7aa"/>'
+   f'<circle cx="-2" cy="-2" r="9" fill="{c}"/><path d="M-9 -8l-2-8l5 5zM3 -9l2-8l2 7z" fill="{c}"/><path d="M-11 -16l1 -2M5 -17l1-2" stroke="#7c2d12" stroke-width="1.2"/>'
+   '<circle cx="-5" cy="-3" r="2.6" fill="#1c1917"/><circle cx="1" cy="-3" r="2.6" fill="#1c1917"/><circle cx="-4.2" cy="-4" r=".9" fill="#fff"/><circle cx="1.8" cy="-4" r=".9" fill="#fff"/>'
+   '<ellipse cx="-2" cy="1" rx="1.6" ry="1.1" fill="#7c2d12"/><ellipse cx="-9" cy="1" rx="2.2" ry="1.3" fill="#fb7185" opacity=".55"/><ellipse cx="5" cy="1" rx="2.2" ry="1.3" fill="#fb7185" opacity=".55"/>'
+   '<g transform="translate(-6 12)"><ellipse rx="4" ry="5" fill="#a16207"/><path d="M-4 -3q4-5 8 0z" fill="#713f12"/></g><path d="M-10 12q2 2 6 0M-2 12q-2 2-4 0" stroke="#7c2d12" stroke-width="1.3" fill="none"/></g>')
