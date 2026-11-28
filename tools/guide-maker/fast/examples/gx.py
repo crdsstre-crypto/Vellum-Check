@@ -365,222 +365,27 @@ def BEAVER(x,y,s=1,c='#92400e'):
    '<circle cx="-5" cy="-11" r="2" fill="#1c1917"/><circle cx="5" cy="-11" r="2" fill="#1c1917"/><circle cx="-4.4" cy="-11.6" r=".7" fill="#fff"/><circle cx="5.6" cy="-11.6" r=".7" fill="#fff"/>'
    '<ellipse cx="-9" cy="-4" rx="2.2" ry="1.3" fill="#fb7185" opacity=".55"/><ellipse cx="9" cy="-4" rx="2.2" ry="1.3" fill="#fb7185" opacity=".55"/></g>')
 
-# ---- ชุด 327–331 ----
-def SANDGLASS(x,y,c='#a16207',s=1):
-  """นาฬิกาทรายตั้งโต๊ะ ทรายไหล (cm-bob) — ใช้สื่อ 'เวลาใกล้หมด'"""
-  return (f'<g transform="translate({x} {y}) scale({s})"><rect x="-14" y="-34" width="28" height="5" rx="2" fill="{c}"/><rect x="-14" y="0" width="28" height="5" rx="2" fill="{c}"/>'
-   f'<path d="M-10 -29q0 12 10 15q10-3 10-15z" fill="#e0f2fe" stroke="#94a3b8"/><path d="M-10 0q0-12 10-15q10 3 10 15z" fill="#e0f2fe" stroke="#94a3b8"/>'
-   f'<path d="M-6 -27q0 8 6 10q6-2 6-10z" fill="#fbbf24"/><path d="M-8 0q2-7 8-7q6 0 8 7z" fill="#fbbf24"/><path class="cm-bob" d="M0 -16v9" stroke="#f59e0b" stroke-width="1.6"/>'
-   f'<path d="M-13 -29v29M13 -29v29" stroke="{c}" stroke-width="2"/></g>')
-def CAPY(x,y,s=1,c='#b07a4a'):
-  """คาปิบารานั่งชิล มีส้มบนหัว ตา หู แก้มชมพู จมูกใหญ่"""
-  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="0" rx="20" ry="13" fill="{c}"/><rect x="-14" y="8" width="6" height="7" rx="3" fill="#8a5a32"/><rect x="8" y="8" width="6" height="7" rx="3" fill="#8a5a32"/>'
-   f'<rect x="8" y="-22" width="20" height="18" rx="8" fill="{c}"/><ellipse cx="25" cy="-10" rx="6" ry="5" fill="#8a5a32"/><circle cx="23" cy="-11" r=".9" fill="#1c1917"/><circle cx="27" cy="-11" r=".9" fill="#1c1917"/>'
-   f'<circle cx="16" cy="-16" r="1.8" fill="#1c1917"/><circle cx="16.6" cy="-16.6" r=".6" fill="#fff"/><ellipse cx="12" cy="-23" rx="3" ry="2.2" fill="#8a5a32"/><ellipse cx="14" cy="-10" rx="2.6" ry="1.4" fill="#fb7185" opacity=".55"/>'
-   f'<circle cx="18" cy="-27" r="4" fill="#fb923c"/><path d="M18 -31l2 -3" stroke="#16a34a" stroke-width="1.4"/></g>')
-def PINBOARD(x,y,w,h,items,c='#a16207'):
-  """บอร์ดไม้ก๊อกมีกระดาษโน้ตปักหมุด items=[(text,color)]"""
-  from fgk import TX; from pk import K
-  s=f'<g filter="url(#wsh{K})"><rect x="{x}" y="{y}" width="{w}" height="{h}" rx="3" fill="#d6a77a" stroke="{c}" stroke-width="3"/></g>'
-  for i,(t,cc) in enumerate(items):
-    nx=x+6+(i%2)*(w/2-2); ny=y+6+(i//2)*22; r=(-4,3,2,-3)[i%4]
-    s+=f'<g transform="rotate({r} {nx+w/4} {ny+9})"><rect x="{nx}" y="{ny}" width="{w/2-10}" height="18" fill="{cc}"/><circle cx="{nx+(w/2-10)/2}" cy="{ny+2}" r="1.8" fill="#dc2626"/>'+TX(nx+3,ny+12,t,4.6,'#1f2937')+'</g>'
-  return s
+def PROXY(x,y,t='มอบฉันทะ',c='#7c3aed'):
+  # ใบมอบฉันทะ บัตรประชาชนคู่ และตราประทับ
+  return (f'<g transform="translate({x} {y})"><rect x="-26" y="-30" width="52" height="60" rx="3" fill="#fff" stroke="{c}" stroke-width="1.5"/>'
+   f'<rect x="-26" y="-30" width="52" height="12" rx="3" fill="{c}"/><text y="-21" text-anchor="middle" font-size="7" font-weight="900" fill="#fff">{t}</text>'
+   '<path d="M-18 -10h36M-18 -3h28M-18 4h32" stroke="#cbd5e1" stroke-width="2"/>'
+   '<rect x="-20" y="12" width="16" height="11" rx="2" fill="#bfdbfe"/><rect x="0" y="12" width="16" height="11" rx="2" fill="#bfdbfe"/><circle cx="-15" cy="17" r="2.5" fill="#64748b"/><circle cx="5" cy="17" r="2.5" fill="#64748b"/>'
+   f'<circle cx="20" cy="22" r="8" fill="none" stroke="#dc2626" stroke-width="2" opacity=".8"/></g>')
 
-# ---- ชุด 332–336 ----
-def CALGRID(x,y,title,marks=None,hol=None,c='#2563eb',w=70):
-  """ปฏิทินเดือนย่อ 5x7 ช่อง marks={วัน:สี} วงวันสำคัญ hol=[วันหยุดสีแดง]"""
-  from fgk import TX; from pk import K
-  marks=marks or {}; hol=hol or []; cw=w/7; ch=8
-  s=f'<g filter="url(#wsh{K})"><rect x="{x}" y="{y}" width="{w}" height="{12+ch*5+4}" rx="4" fill="#fff"/></g><rect x="{x}" y="{y}" width="{w}" height="11" rx="4" fill="{c}"/>'+TX(x+w/2,y+8,title,5,'#fff','middle')
-  for d in range(1,32):
-    i=d-1; cx=x+cw*(i%7)+cw/2; cy=y+18+ch*(i//7)
-    if d in hol: s+=f'<rect x="{cx-cw/2+.5}" y="{cy-5.5}" width="{cw-1}" height="{ch-1}" rx="1.5" fill="#fecaca"/>'
-    if d in marks: s+=f'<circle cx="{cx}" cy="{cy-1.6}" r="3.8" fill="none" stroke="{marks[d]}" stroke-width="1.4"/>'
-    s+=TX(cx,cy,str(d),3.8,'#b91c1c' if d in hol else '#334155','middle')
-  return s
-def THERMO(x,y,val='39°',c='#ef4444'):
-  """ปรอทวัดไข้ มีสเกลและค่าตัวเลข"""
-  from fgk import TX
-  return (f'<g transform="translate({x} {y})"><rect x="-4" y="-34" width="8" height="34" rx="4" fill="#fff" stroke="#94a3b8"/><circle cy="2" r="6" fill="{c}"/><rect x="-2" y="-26" width="4" height="28" rx="2" fill="{c}"/>'
-   +''.join(f'<path d="M4 {-30+i*6}h3" stroke="#94a3b8"/>' for i in range(5))+'</g>'+TX(x+12,y-22,val,6,c))
-def DUCKLING(x,y,s=1):
-  """ลูกเป็ดเหลือง ตาวาว แก้มชมพู ปากส้ม ปีกเล็ก ขนบนหัว"""
-  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="0" rx="13" ry="10" fill="#fde047"/><path d="M-6 -2q-6 4 0 8" fill="#facc15"/><circle cx="8" cy="-12" r="8" fill="#fde047"/>'
-   '<path d="M7 -20q2 -4 4 0q2 -3 3 1" stroke="#facc15" stroke-width="1.6" fill="none"/><path d="M15 -12l6 1.5l-6 2z" fill="#fb923c"/><circle cx="10" cy="-14" r="1.6" fill="#1c1917"/><circle cx="10.5" cy="-14.6" r=".5" fill="#fff"/>'
-   '<ellipse cx="9" cy="-9.6" rx="2" ry="1.2" fill="#fb7185" opacity=".6"/><path d="M-4 10v4M3 10v4" stroke="#fb923c" stroke-width="1.6"/></g>')
+def INBOX(x,y,n=3,c='#0284c7'):
+  # ถาดรับเอกสารศาล ซองอีเมลบินเข้า นาฬิกาเส้นตาย
+  env=''.join(f'<g transform="translate({-30+i*16} {-34-i*6}) rotate({-10+i*8})"><rect x="-8" y="-5" width="16" height="11" rx="1.5" fill="#fff" stroke="{c}"/><path d="M-8 -5l8 6l8 -6" stroke="{c}" fill="none"/></g>' for i in range(n))
+  return (f'<g transform="translate({x} {y})"><path d="M-30 0h60l-6 18h-48z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/><rect x="-24" y="-6" width="44" height="8" rx="1" fill="#fff" stroke="#cbd5e1"/>'+env+
+   '<g transform="translate(36 -18)"><circle r="10" fill="#fff" stroke="#dc2626" stroke-width="2"/><path d="M0 0v-6M0 0l5 2" stroke="#0f172a" stroke-width="1.6"/></g></g>')
 
-# ---- ชุด 392–396 ----
-def TIMELINE(x,y,w,pts,c='#2563eb'):
-  """เส้นเวลาแนวนอน pts=[(สัดส่วน0-1, ป้าย, สี)] หมุดวงกลม + ป้ายใต้หมุด — ใช้เล่าลำดับวันตามมาตรา"""
-  from fgk import TX
-  s=f'<path d="M{x} {y}h{w}" stroke="{c}" stroke-width="2.4" stroke-linecap="round"/><path d="M{x+w} {y}l-5 -3.5v7z" fill="{c}"/>'
-  for f,t,cc in pts:
-    px=x+f*w
-    s+=f'<circle cx="{px}" cy="{y}" r="4.2" fill="#fff" stroke="{cc}" stroke-width="2"/><circle cx="{px}" cy="{y}" r="1.6" fill="{cc}"/>'+TX(px,y+12,t,4.6,cc,'middle')
-  return s
-def ALPACA(x,y,s=1,c='#fef3c7'):
-  """อัลปากาขนฟู คอยาว หูตั้ง ตาวาว แก้มชมพู ผ้าพันคอ"""
-  fluff=''.join(f'<circle cx="{dx}" cy="{dy}" r="5" fill="{c}"/>' for dx,dy in [(-12,0),(-6,-4),(0,-5),(6,-4),(12,0),(-8,6),(0,7),(8,6)])
-  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="22" rx="16" ry="3" fill="#000" opacity=".12"/>'
-   f'<rect x="-11" y="8" width="5" height="14" rx="2.5" fill="#e7d3a8"/><rect x="6" y="8" width="5" height="14" rx="2.5" fill="#e7d3a8"/>{fluff}'
-   f'<rect x="4" y="-26" width="11" height="24" rx="5.5" fill="{c}"/><path d="M3 -8h13" stroke="#f472b6" stroke-width="3.2" stroke-linecap="round"/>'
-   f'<ellipse cx="10" cy="-30" rx="9" ry="8" fill="{c}"/><circle cx="6" cy="-37" r="3.2" fill="{c}"/><circle cx="10" cy="-38" r="3.4" fill="{c}"/><circle cx="14" cy="-37" r="3.2" fill="{c}"/>'
-   '<path d="M4 -36l-2 -7l4 3z" fill="#e7d3a8"/><path d="M16 -36l2 -7l-4 3z" fill="#e7d3a8"/>'
-   '<ellipse cx="12" cy="-26" rx="4.5" ry="3.4" fill="#fff7ed"/><path d="M11 -26.5l1 1l1 -1M12 -25.5v1.2" stroke="#78350f" stroke-width=".7" fill="none"/>'
-   '<circle cx="7" cy="-31" r="1.6" fill="#1c1917"/><circle cx="14" cy="-31" r="1.6" fill="#1c1917"/><circle cx="7.5" cy="-31.5" r=".5" fill="#fff"/><circle cx="14.5" cy="-31.5" r=".5" fill="#fff"/>'
-   '<ellipse cx="4.5" cy="-27.5" rx="1.8" ry="1.1" fill="#fb7185" opacity=".6"/><ellipse cx="17" cy="-27.5" rx="1.8" ry="1.1" fill="#fb7185" opacity=".6"/></g>')
-def HANDOVER(x,y,c='#7c3aed'):
-  """กล่องส่งมอบ: ดวงตรา + สมุดบัญชี + กุญแจ (อำนาจจัดการเปลี่ยนมือ)"""
-  from fgk import TX; from pk import K
-  return (f'<g filter="url(#wsh{K})"><path d="M{x} {y}h56l-6 26h-44z" fill="#e9d5ff" stroke="{c}" stroke-width="1.6"/></g>'
-   f'<rect x="{x+6}" y="{y-16}" width="18" height="22" rx="2" fill="#1e3a8a"/><rect x="{x+9}" y="{y-13}" width="12" height="3" fill="#fde68a"/>'
-   f'<rect x="{x+28}" y="{y-10}" width="8" height="10" rx="1" fill="#b91c1c"/><ellipse cx="{x+32}" cy="{y-11}" rx="6" ry="3" fill="#dc2626"/>'
-   f'<circle cx="{x+46}" cy="{y-8}" r="4" fill="none" stroke="#ca8a04" stroke-width="2"/><path d="M{x+46} {y-4}v8M{x+46} {y+1}h3" stroke="#ca8a04" stroke-width="2"/>'
-   +TX(x+28,y+16,'ส่งมอบ',5.2,c,'middle'))
-
-# ---- ชุด 397–401 ----
-def GAVEL(x,y,s=1,rot=-25):
-  """ค้อนศาลไม้ + แท่นรอง (cm-bob ที่หัวค้อน) — สื่อคำสั่งศาล"""
-  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="8" rx="16" ry="4" fill="#78350f"/><ellipse cx="0" cy="6" rx="16" ry="4" fill="#a16207"/>'
-   f'<g class="cm-bob" transform="rotate({rot})"><rect x="-2" y="-30" width="4" height="30" rx="2" fill="#92400e"/><rect x="-12" y="-38" width="24" height="11" rx="3" fill="#b45309"/><rect x="-14" y="-37" width="3" height="9" rx="1" fill="#fbbf24"/><rect x="11" y="-37" width="3" height="9" rx="1" fill="#fbbf24"/></g></g>')
-def HIPPO(x,y,s=1,c='#c4b5fd'):
-  """ฮิปโปตัวกลม หูเล็ก รูจมูก ตาวาว แก้มชมพู ฟันสองซี่"""
-  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="20" rx="22" ry="3" fill="#000" opacity=".12"/>'
-   f'<ellipse cx="0" cy="6" rx="20" ry="14" fill="{c}"/><rect x="-14" y="12" width="7" height="8" rx="3" fill="{c}"/><rect x="7" y="12" width="7" height="8" rx="3" fill="{c}"/>'
-   f'<ellipse cx="14" cy="-8" rx="13" ry="11" fill="{c}"/><ellipse cx="22" cy="-4" rx="9" ry="7" fill="#ddd6fe"/>'
-   '<circle cx="20" cy="-6" r="1.2" fill="#4c1d95"/><circle cx="25" cy="-6" r="1.2" fill="#4c1d95"/><rect x="19" y="0" width="2.4" height="3" fill="#fff"/><rect x="23" y="0" width="2.4" height="3" fill="#fff"/>'
-   f'<circle cx="7" cy="-18" r="3" fill="{c}"/><circle cx="16" cy="-19" r="3" fill="{c}"/><circle cx="7" cy="-18" r="1.4" fill="#f9a8d4"/><circle cx="16" cy="-19" r="1.4" fill="#f9a8d4"/>'
-   '<circle cx="10" cy="-12" r="1.8" fill="#1c1917"/><circle cx="10.6" cy="-12.6" r=".6" fill="#fff"/><ellipse cx="7" cy="-6" rx="2.4" ry="1.4" fill="#fb7185" opacity=".55"/></g>')
-def MINIBUB(x,y,t,c='#334155',bgc='#fff',w=None):
-  """บับเบิลคำพูดเล็กของตัวประกอบในฉาก (ข้อความ ≤ 12 ตัว) ปลายชี้ลงซ้าย"""
-  from fgk import TX
-  w=w or 8+len(t)*4.4
-  return (f'<g><rect x="{x}" y="{y-9}" width="{w}" height="14" rx="7" fill="{bgc}" stroke="{c}" stroke-width="1"/><path d="M{x+8} {y+5}l-4 6l9 -6" fill="{bgc}" stroke="{c}" stroke-width="1"/>'
-   +TX(x+w/2,y+1.6,t,5,c,'middle')+'</g>')
-
-# ---- ชุด 402–406 ----
-def COMPARE2(x,y,w,h,la,lb,rows,ca='#64748b',cb='#0f766e'):
-  """การ์ดเทียบ 2 คอลัมน์ (เช่น ฟื้นฟูทั่วไป vs SME) rows=[(ซ้าย,ขวา)]"""
-  from fgk import TX; from pk import K
-  s=f'<g filter="url(#wsh{K})"><rect x="{x}" y="{y}" width="{w}" height="{h}" rx="6" fill="#fff"/></g>'
-  s+=f'<rect x="{x}" y="{y}" width="{w/2}" height="12" rx="6" fill="{ca}"/><rect x="{x+w/2}" y="{y}" width="{w/2}" height="12" rx="6" fill="{cb}"/>'
-  s+=TX(x+w/4,y+8.5,la,5,'#fff','middle')+TX(x+w*3/4,y+8.5,lb,5,'#fff','middle')+f'<path d="M{x+w/2} {y+14}v{h-18}" stroke="#e2e8f0"/>'
-  for i,(a,b) in enumerate(rows):
-    yy=y+22+i*9; s+=TX(x+w/4,yy,a,4.6,'#475569','middle')+TX(x+w*3/4,yy,b,4.6,cb,'middle')
-  return s
-def SLOTH(x,y,s=1,c='#c8a27a'):
-  """สลอธห้อยกิ่ง ยิ้มง่วงๆ หน้ากากตา แขนยาวกอดกิ่ง"""
-  return (f'<g transform="translate({x} {y}) scale({s})"><path d="M-30 -22h60" stroke="#78350f" stroke-width="4" stroke-linecap="round"/>'
-   '<path d="M-24 -26q3 -6 6 0" stroke="#4d7c0f" stroke-width="3" fill="#84cc16"/><path d="M20 -26q3 -6 6 0" stroke="#4d7c0f" stroke-width="3" fill="#84cc16"/>'
-   f'<path d="M-12 -22q-2 14 4 20M12 -22q2 14 -4 20" stroke="{c}" stroke-width="6" fill="none" stroke-linecap="round"/>'
-   f'<ellipse cx="0" cy="6" rx="14" ry="16" fill="{c}"/><circle cx="0" cy="-6" r="10" fill="#f5e6d3"/>'
-   '<ellipse cx="-4.5" cy="-7" rx="3.4" ry="2.2" fill="#78350f" transform="rotate(-15 -4.5 -7)"/><ellipse cx="4.5" cy="-7" rx="3.4" ry="2.2" fill="#78350f" transform="rotate(15 4.5 -7)"/>'
-   '<path d="M-6 -7.4q1.4 1 2.6 0M3.4 -7.4q1.4 1 2.6 0" stroke="#fff" stroke-width=".9" fill="none"/><ellipse cx="0" cy="-3.6" rx="1.6" ry="1.1" fill="#3f2a1a"/>'
-   '<path d="M-2.6 -1.4q2.6 2 5.2 0" stroke="#3f2a1a" stroke-width=".9" fill="none"/><ellipse cx="-7" cy="-2.4" rx="1.8" ry="1" fill="#fb7185" opacity=".55"/><ellipse cx="7" cy="-2.4" rx="1.8" ry="1" fill="#fb7185" opacity=".55"/></g>')
-def PIGGY(x,y,s=1,c='#f9a8d4',t=''):
-  """กระปุกหมูออมสิน + ช่องหยอด + เหรียญลอย (ป้ายบนตัวได้)"""
-  from fgk import TX
-  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="16" rx="18" ry="3" fill="#000" opacity=".12"/>'
-   f'<rect x="-12" y="8" width="5" height="8" rx="2" fill="{c}"/><rect x="7" y="8" width="5" height="8" rx="2" fill="{c}"/>'
-   f'<ellipse cx="0" cy="0" rx="18" ry="13" fill="{c}"/><ellipse cx="17" cy="1" rx="5" ry="4.4" fill="#f472b6"/><circle cx="16" cy="0" r=".9" fill="#831843"/><circle cx="18.6" cy="0" r=".9" fill="#831843"/>'
-   f'<path d="M4 -12l3 -6l4 6z" fill="{c}"/><circle cx="9" cy="-4" r="1.5" fill="#1c1917"/><rect x="-6" y="-13" width="10" height="2.4" rx="1.2" fill="#831843"/>'
-   '<circle cx="-1" cy="-22" r="5" fill="#fbbf24" stroke="#d97706"/><path d="M-18 0q-6 -3 -4 -8" stroke="#f472b6" stroke-width="1.6" fill="none"/>'
-   +(TX(-2,5,t,5.4,'#831843','middle') if t else '')+'</g>')
-
-# ---- ชุด 407–411 ----
-def RACCOON(x,y,s=1,c='#9ca3af'):
-  """แรคคูนหน้ากากดำ หางลาย ตาวาว ยิ้ม"""
-  tail=''.join(f'<ellipse cx="{-16-i*4}" cy="{8-i*3}" rx="4" ry="3.4" fill="{"#374151" if i%2 else c}"/>' for i in range(4))
-  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="18" rx="18" ry="3" fill="#000" opacity=".12"/>{tail}'
-   f'<ellipse cx="0" cy="6" rx="14" ry="12" fill="{c}"/><rect x="-10" y="12" width="6" height="7" rx="3" fill="#4b5563"/><rect x="4" y="12" width="6" height="7" rx="3" fill="#4b5563"/>'
-   f'<circle cx="0" cy="-10" r="11" fill="{c}"/><path d="M-9 -18l-3 -8l7 4zM9 -18l3 -8l-7 4z" fill="#4b5563"/>'
-   '<path d="M-10 -11q5 -4 10 0q5 -4 10 0q-2 5 -5 4q-5 0 -5 -1q0 1 -5 1q-3 1 -5 -4z" fill="#1f2937"/>'
-   '<circle cx="-5" cy="-10.5" r="1.8" fill="#fff"/><circle cx="5" cy="-10.5" r="1.8" fill="#fff"/><circle cx="-5" cy="-10.5" r="1" fill="#111"/><circle cx="5" cy="-10.5" r="1" fill="#111"/>'
-   '<ellipse cx="0" cy="-4" rx="5" ry="3.4" fill="#f3f4f6"/><circle cx="0" cy="-5" r="1.2" fill="#111"/><path d="M-2 -3q2 1.6 4 0" stroke="#111" stroke-width=".8" fill="none"/></g>')
-def CASEBOX(x,y,t='ปิดคดี',c='#475569',lid=True):
-  """กล่องเก็บแฟ้มคดี มีแฟ้มโผล่ ป้ายหน้ากล่อง (lid=False = เปิดฝา แฟ้มโผล่ = เปิดคดีใหม่)"""
-  from fgk import TX; from pk import K
-  s=f'<g filter="url(#wsh{K})"><rect x="{x}" y="{y}" width="56" height="34" rx="3" fill="#e7d3a8" stroke="#a16207" stroke-width="1.4"/></g>'
-  s+=''.join(f'<rect x="{x+8+i*13}" y="{y-(10 if not lid else 4)}" width="11" height="14" rx="1.5" fill="{cc}"/>' for i,cc in enumerate(['#93c5fd','#fca5a5','#86efac']))
-  if lid: s+=f'<rect x="{x-3}" y="{y-6}" width="62" height="9" rx="2" fill="#d6b77a" stroke="#a16207" stroke-width="1.2"/>'
-  else: s+=f'<rect x="{x+40}" y="{y-24}" width="9" height="30" rx="2" fill="#d6b77a" stroke="#a16207" transform="rotate(30 {x+44} {y-9})"/>'
-  return s+f'<rect x="{x+12}" y="{y+12}" width="32" height="12" rx="2" fill="#fff"/>'+TX(x+28,y+20.5,t,5,c,'middle')
-def TALLY(x,y,rows,c='#1e293b',w=80):
-  """กระดานตัวเลขสำคัญ rows=[(ตัวเลข,ความหมาย)] ตัวเลขใหญ่ซ้าย คำอธิบายขวา"""
-  from fgk import TX; from pk import K
-  h=10+len(rows)*12
-  s=f'<g filter="url(#wsh{K})"><rect x="{x}" y="{y}" width="{w}" height="{h}" rx="6" fill="{c}"/></g>'
-  for i,(n,t) in enumerate(rows):
-    yy=y+14+i*12; s+=TX(x+8,yy,n,6.4,'#fde047')+TX(x+30,yy,t,4.8,'#e2e8f0')
-  return s
-
-# ---- ชุด 412–416 ----
-def SUITCASE(x,y,s=1,c='#0ea5e9'):
-  """กระเป๋าเดินทางมีล้อ ป้ายห้อย สติกเกอร์เครื่องบิน (สื่อหนีไปต่างประเทศ)"""
-  from fgk import TX
-  return (f'<g transform="translate({x} {y}) scale({s})"><rect x="-4" y="-34" width="8" height="10" rx="2" fill="none" stroke="#475569" stroke-width="2.4"/>'
-   f'<rect x="-16" y="-26" width="32" height="40" rx="5" fill="{c}"/><path d="M-8 -22v32M8 -22v32" stroke="#fff" stroke-width="1.6" opacity=".6"/>'
-   '<circle cx="-10" cy="17" r="3" fill="#1e293b"/><circle cx="10" cy="17" r="3" fill="#1e293b"/>'
-   '<path d="M14 -18l8 4v8" stroke="#a16207" stroke-width="1" fill="none"/><rect x="18" y="-6" width="9" height="6" rx="1" fill="#fde68a"/>'
-   '<path d="M-6 -6l12 -4l-2 3l4 1l-3 1l-1 3l-2 -3z" fill="#fff"/></g>')
-def FLAMINGO(x,y,s=1):
-  """ฟลามิงโกยืนขาเดียว คอโค้ง จะงอยดำปลาย ตาเล็ก"""
-  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="26" rx="10" ry="2.4" fill="#000" opacity=".12"/>'
-   '<path d="M0 0v26M0 12l7 -6" stroke="#f472b6" stroke-width="1.8" fill="none"/>'
-   '<ellipse cx="0" cy="-4" rx="12" ry="8" fill="#f9a8d4"/><path d="M-10 -6q-6 -2 -8 4q6 0 8 -1" fill="#f472b6"/>'
-   '<path d="M8 -8q6 -10 0 -18q-6 -8 2 -12" stroke="#f9a8d4" stroke-width="4" fill="none" stroke-linecap="round"/>'
-   '<circle cx="11" cy="-38" r="5" fill="#f9a8d4"/><path d="M15 -38q6 1 5 6l-3 -2z" fill="#fff"/><path d="M19 -34l1 3l-3 -2z" fill="#1f2937"/>'
-   '<circle cx="12" cy="-39.4" r="1.1" fill="#1f2937"/><ellipse cx="9.5" cy="-36.4" rx="1.4" ry=".8" fill="#fb7185" opacity=".6"/></g>')
-def NAMESWAP(x,y,old,new,c='#7c3aed'):
-  """ป้ายร้านชื่อใหม่แปะทับชื่อเก่า (มุมชื่อเก่าโผล่) — สื่อใช้ชื่ออื่นค้าขาย"""
-  from fgk import TX; from pk import K
-  return (f'<g filter="url(#wsh{K})"><rect x="{x}" y="{y}" width="70" height="22" rx="3" fill="#e5e7eb"/></g>'+TX(x+35,y+14,old,5.6,'#94a3b8','middle')
-   +f'<rect x="{x+6}" y="{y-6}" width="66" height="20" rx="3" fill="{c}" transform="rotate(-5 {x+39} {y+4})"/>'
-   +f'<g transform="rotate(-5 {x+39} {y+4})">'+TX(x+39,y+7.5,new,6,'#fff','middle')+'</g>')
-
-# ---- ชุด 417–421 ----
-def QUOTESLIP(x,y,no='QT-0912',exp='ยืนราคา 7 วัน',c='#0f766e'):
-  """ใบเสนอราคา หัวสี มีเลขที่ แถบวันหมดอายุ และช่องลายเซ็นลูกค้า"""
-  from fgk import TX; from pk import K
-  return (f'<g filter="url(#wsh{K})"><rect x="{x}" y="{y}" width="64" height="76" rx="4" fill="#fff"/></g><rect x="{x}" y="{y}" width="64" height="13" rx="4" fill="{c}"/>'
-   +TX(x+32,y+9.4,'ใบเสนอราคา',5.4,'#fff','middle')+TX(x+6,y+21,no,4.4,'#64748b')
-   +''.join(f'<path d="M{x+6} {y+28+i*7}h52" stroke="#e2e8f0" stroke-width="2"/>' for i in range(4))
-   +f'<rect x="{x+4}" y="{y+56}" width="56" height="8" rx="2" fill="#fef3c7"/>'+TX(x+32,y+62,exp,4.4,'#b45309','middle')
-   +f'<path d="M{x+8} {y+71}h26" stroke="#94a3b8" stroke-dasharray="2 2"/>'+TX(x+44,y+72,'ลงชื่อ',4,'#94a3b8','middle'))
-def SCAFFOLD(x,y,w=70,h=56,c='#f59e0b'):
-  """บ้านกำลังต่อเติม: โครงหลังคา + นั่งร้านเหล็ก + ผนังใหม่สีอ่อน"""
-  s=f'<path d="M{x} {y}l{w/2} -22l{w/2} 22z" fill="#fca5a5" stroke="#b91c1c" stroke-width="1.2"/><rect x="{x+4}" y="{y}" width="{w-8}" height="{h}" fill="#fef3c7" stroke="#d6d3d1"/>'
-  s+=f'<rect x="{x+w/2-7}" y="{y+h-20}" width="14" height="20" fill="#a16207"/>'
-  for i in range(4): s+=f'<path d="M{x-6+i*((w+12)/3)} {y-8}v{h+8}" stroke="{c}" stroke-width="2"/>'
-  for j in range(3): s+=f'<path d="M{x-6} {y+j*h/2.4}h{w+12}" stroke="{c}" stroke-width="2"/>'
-  return s
-def TOUCAN(x,y,s=1):
-  """นกทูแคนปากใหญ่สีส้มเหลือง เกาะกิ่ง"""
-  return (f'<g transform="translate({x} {y}) scale({s})"><path d="M-14 12h28" stroke="#78350f" stroke-width="3" stroke-linecap="round"/>'
-   '<ellipse cx="0" cy="0" rx="9" ry="12" fill="#1f2937"/><ellipse cx="2" cy="-2" rx="5" ry="6" fill="#fef9c3"/>'
-   '<path d="M6 -8q16 -2 18 6q-10 4 -18 0z" fill="#fb923c"/><path d="M6 -8q16 -2 18 6l-18 -3z" fill="#facc15"/><circle cx="23" cy="-2" r="1.4" fill="#dc2626"/>'
-   '<circle cx="3" cy="-7" r="2.6" fill="#38bdf8"/><circle cx="3" cy="-7" r="1.2" fill="#111"/><circle cx="3.5" cy="-7.5" r=".4" fill="#fff"/>'
-   '<path d="M-6 10l-2 6M2 10l1 6" stroke="#38bdf8" stroke-width="1.6"/><path d="M-8 4q-6 6 -4 12" stroke="#111" stroke-width="3" fill="none"/></g>')
-
-# ---- ชุด 422–426 ----
-def RECEIPTSLIP(x,y,amt='12,000',c='#0f766e',stamp='ชำระแล้ว'):
-  """ใบเสร็จขอบหยัก ยอดเงิน ตราประทับ"""
-  from fgk import TX
-  zig=''.join(f'l3 4l3 -4' for _ in range(8))
-  return (f'<path d="M{x} {y}h48v54{zig.replace("l3 4l3 -4","l-3 4l-3 -4")}z" fill="#fff" stroke="#cbd5e1"/>'
-   +TX(x+24,y+9,'ใบเสร็จรับเงิน',4.8,c,'middle')+''.join(f'<path d="M{x+6} {y+16+i*6}h36" stroke="#e2e8f0" stroke-width="2"/>' for i in range(3))
-   +TX(x+24,y+42,amt,6.4,'#1e293b','middle')+f'<g transform="rotate(-12 {x+30} {y+48})"><rect x="{x+12}" y="{y+43}" width="36" height="10" rx="2" fill="none" stroke="{c}" stroke-width="1.4"/>'+TX(x+30,y+50.5,stamp,4.4,c,'middle')+'</g>')
-def TRIO(x,y,cols=('#f59e0b','#3b82f6','#ec4899'),s=1):
-  """หุ้นส่วน 3 คน หัวกลม+ไหล่ ยืนเรียง (ตัวประกอบเล็ก)"""
-  out=f'<g transform="translate({x} {y}) scale({s})">'
-  for i,c in enumerate(cols):
-    dx=i*16; out+=f'<path d="M{dx-8} 18q8 -12 16 0z" fill="{c}"/><circle cx="{dx}" cy="0" r="6" fill="#e8b896"/><path d="M{dx-6} -2q6 -8 12 0" fill="#3f2a1a"/>'
-  return out+'</g>'
-def SNAIL(x,y,s=1,c='#f9a8d4'):
-  """หอยทากเปลือกก้นหอย ตาบนก้าน ยิ้ม (สื่อมาช้า)"""
-  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="10" rx="18" ry="3" fill="#000" opacity=".1"/>'
-   '<path d="M-16 8q0 -4 6 -4h22q6 0 8 4z" fill="#bef264"/><path d="M14 4q4 -10 2 -16M18 4q6 -10 6 -15" stroke="#84cc16" stroke-width="2" fill="none"/>'
-   '<circle cx="16" cy="-12" r="2" fill="#1f2937"/><circle cx="24" cy="-11" r="2" fill="#1f2937"/>'
-   f'<circle cx="-2" cy="-4" r="11" fill="{c}"/><path d="M-2 -4m-7 0a7 7 0 1 0 7 -7a5 5 0 1 1 -5 5a3 3 0 1 0 3 -3" stroke="#be185d" stroke-width="1.6" fill="none"/>'
-   '<path d="M14 2q2 2 4 0" stroke="#3f6212" stroke-width="1" fill="none"/></g>')
+def HAMSTER(x,y,s=1,c='#fdba74'):
+  # แฮมสเตอร์แก้มป่อง หูชมพู ตาวาว ถือเมล็ด
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="22" rx="17" ry="3" fill="#000" opacity=".12"/>'
+   f'<ellipse cx="0" cy="8" rx="16" ry="15" fill="{c}"/><ellipse cx="0" cy="12" rx="10" ry="9" fill="#fff7ed"/>'
+   f'<circle cx="-11" cy="-10" r="5" fill="{c}"/><circle cx="11" cy="-10" r="5" fill="{c}"/><circle cx="-11" cy="-10" r="2.8" fill="#fda4af"/><circle cx="11" cy="-10" r="2.8" fill="#fda4af"/>'
+   f'<ellipse cx="0" cy="-3" rx="14" ry="11" fill="{c}"/><ellipse cx="-9" cy="1" rx="6" ry="5" fill="#fff7ed"/><ellipse cx="9" cy="1" rx="6" ry="5" fill="#fff7ed"/>'
+   '<circle cx="-5" cy="-5" r="2.2" fill="#1c1917"/><circle cx="5" cy="-5" r="2.2" fill="#1c1917"/><circle cx="-4.3" cy="-5.7" r=".8" fill="#fff"/><circle cx="5.7" cy="-5.7" r=".8" fill="#fff"/>'
+   '<ellipse cx="0" cy="-1" rx="1.6" ry="1.1" fill="#f472b6"/><path d="M-2 1q2 2 4 0" stroke="#7c2d12" stroke-width=".8" fill="none"/>'
+   '<ellipse cx="-10" cy="2" rx="2.4" ry="1.4" fill="#fb7185" opacity=".55"/><ellipse cx="10" cy="2" rx="2.4" ry="1.4" fill="#fb7185" opacity=".55"/>'
+   '<ellipse cx="0" cy="10" rx="3" ry="4.5" fill="#a16207"/><circle cx="-3" cy="10" r="2" fill="'+c+'"/><circle cx="3" cy="10" r="2" fill="'+c+'"/></g>')
