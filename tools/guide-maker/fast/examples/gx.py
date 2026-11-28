@@ -190,3 +190,27 @@ def HEDGEHOG(x,y,s=1,c='#8b5e3c'):
    '<path d="M10 -2q12 2 14 9q-6 5-16 3z" fill="#fde7c8"/><circle cx="24" cy="7" r="2" fill="#1c1917"/>'
    '<circle cx="14" cy="2" r="2.2" fill="#1c1917"/><circle cx="14.7" cy="1.3" r=".8" fill="#fff"/><ellipse cx="16" cy="7" rx="2.2" ry="1.3" fill="#fb7185" opacity=".55"/>'
    '<path d="M-10 13v2M-4 13v2M4 13v2M10 13v2" stroke="#5c3a20" stroke-width="2" stroke-linecap="round"/></g>')
+
+def FACESCAN(x,y,c='#2563eb'):
+  # มือถือสแกนใบหน้า กรอบมุม เส้นสแกน ติ๊กถูก
+  return (f'<g transform="translate({x} {y})"><rect x="-18" y="-32" width="36" height="64" rx="7" fill="#1e293b"/><rect x="-15" y="-27" width="30" height="52" rx="4" fill="#e0f2fe"/>'
+   '<circle cx="0" cy="-6" r="8" fill="#fcd9b6"/><path d="M-10 14q10-12 20 0" fill="#fcd9b6"/>'
+   f'<path d="M-12 -20v-4h4M12 -20v-4h-4M-12 8v4h4M12 8v4h-4" stroke="{c}" stroke-width="2" fill="none"/>'
+   f'<path d="M-12 -4h24" stroke="{c}" stroke-width="1.5" opacity=".7"/><circle cx="12" cy="20" r="6" fill="#16a34a"/><path d="M9 20l2 2l4-4" stroke="#fff" stroke-width="1.6" fill="none"/></g>')
+
+def RECALL(x,y,c='#dc2626'):
+  # กล่องสินค้าพร้อมลูกศรวนกลับ ป้าย RECALL
+  return (f'<g transform="translate({x} {y})"><path d="M-20 -8l20-10l20 10v22l-20 10l-20-10z" fill="#fde68a" stroke="#a16207" stroke-width="1.6"/>'
+   '<path d="M-20 -8l20 10l20-10M0 2v22" stroke="#a16207" stroke-width="1.4" fill="none"/>'
+   f'<path d="M-30 -14a30 30 0 0 1 52 -8" stroke="{c}" stroke-width="2.6" fill="none"/><path d="M24 -28l-1 10l-9 -4z" fill="{c}"/>'
+   f'<rect x="-22" y="16" width="44" height="12" rx="3" fill="{c}"/><text y="25" text-anchor="middle" font-size="7.5" font-weight="900" fill="#fff">RECALL</text></g>')
+
+def OTTER(x,y,s=1,c='#92603a'):
+  # นากลอยตัวถือเปลือกหอย หน้าครีม หนวด แก้ม ตาวาว
+  return (f'<g transform="translate({x} {y}) scale({s})"><path d="M-24 12q-8 2-12 -4" stroke="{c}" stroke-width="6" stroke-linecap="round" fill="none"/>'
+   f'<ellipse cx="0" cy="8" rx="22" ry="11" fill="{c}"/><ellipse cx="2" cy="6" rx="12" ry="7" fill="#e7c9a6"/>'
+   f'<circle cx="18" cy="-4" r="10" fill="{c}"/><ellipse cx="21" cy="-1" rx="6.5" ry="5" fill="#f3dcc0"/><circle cx="11" cy="-12" r="2.6" fill="{c}"/><circle cx="25" cy="-12" r="2.6" fill="{c}"/>'
+   '<circle cx="15" cy="-6" r="1.8" fill="#1c1917"/><circle cx="23" cy="-6" r="1.8" fill="#1c1917"/><circle cx="15.6" cy="-6.6" r=".6" fill="#fff"/><circle cx="23.6" cy="-6.6" r=".6" fill="#fff"/>'
+   '<ellipse cx="19" cy="-2" rx="2" ry="1.4" fill="#3f2a1a"/><path d="M13 -1h-6M13 1h-5M25 -1h6M25 1h5" stroke="#3f2a1a" stroke-width=".6"/>'
+   '<ellipse cx="12" cy="0" rx="2" ry="1.2" fill="#fb7185" opacity=".55"/><ellipse cx="26" cy="0" rx="2" ry="1.2" fill="#fb7185" opacity=".55"/>'
+   '<path d="M2 2q6-6 10 0z" fill="#fbcfe8" stroke="#db2777" stroke-width=".8"/><path d="M-6 16q-4 4-8 2M8 17q4 4 8 2" stroke="#3f2a1a" stroke-width="2.5" stroke-linecap="round" fill="none"/></g>')
