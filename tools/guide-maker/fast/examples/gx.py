@@ -487,3 +487,30 @@ def PIGGY(x,y,s=1,c='#f9a8d4',t=''):
    f'<path d="M4 -12l3 -6l4 6z" fill="{c}"/><circle cx="9" cy="-4" r="1.5" fill="#1c1917"/><rect x="-6" y="-13" width="10" height="2.4" rx="1.2" fill="#831843"/>'
    '<circle cx="-1" cy="-22" r="5" fill="#fbbf24" stroke="#d97706"/><path d="M-18 0q-6 -3 -4 -8" stroke="#f472b6" stroke-width="1.6" fill="none"/>'
    +(TX(-2,5,t,5.4,'#831843','middle') if t else '')+'</g>')
+
+# ---- ชุด 407–411 ----
+def RACCOON(x,y,s=1,c='#9ca3af'):
+  """แรคคูนหน้ากากดำ หางลาย ตาวาว ยิ้ม"""
+  tail=''.join(f'<ellipse cx="{-16-i*4}" cy="{8-i*3}" rx="4" ry="3.4" fill="{"#374151" if i%2 else c}"/>' for i in range(4))
+  return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="18" rx="18" ry="3" fill="#000" opacity=".12"/>{tail}'
+   f'<ellipse cx="0" cy="6" rx="14" ry="12" fill="{c}"/><rect x="-10" y="12" width="6" height="7" rx="3" fill="#4b5563"/><rect x="4" y="12" width="6" height="7" rx="3" fill="#4b5563"/>'
+   f'<circle cx="0" cy="-10" r="11" fill="{c}"/><path d="M-9 -18l-3 -8l7 4zM9 -18l3 -8l-7 4z" fill="#4b5563"/>'
+   '<path d="M-10 -11q5 -4 10 0q5 -4 10 0q-2 5 -5 4q-5 0 -5 -1q0 1 -5 1q-3 1 -5 -4z" fill="#1f2937"/>'
+   '<circle cx="-5" cy="-10.5" r="1.8" fill="#fff"/><circle cx="5" cy="-10.5" r="1.8" fill="#fff"/><circle cx="-5" cy="-10.5" r="1" fill="#111"/><circle cx="5" cy="-10.5" r="1" fill="#111"/>'
+   '<ellipse cx="0" cy="-4" rx="5" ry="3.4" fill="#f3f4f6"/><circle cx="0" cy="-5" r="1.2" fill="#111"/><path d="M-2 -3q2 1.6 4 0" stroke="#111" stroke-width=".8" fill="none"/></g>')
+def CASEBOX(x,y,t='ปิดคดี',c='#475569',lid=True):
+  """กล่องเก็บแฟ้มคดี มีแฟ้มโผล่ ป้ายหน้ากล่อง (lid=False = เปิดฝา แฟ้มโผล่ = เปิดคดีใหม่)"""
+  from fgk import TX; from pk import K
+  s=f'<g filter="url(#wsh{K})"><rect x="{x}" y="{y}" width="56" height="34" rx="3" fill="#e7d3a8" stroke="#a16207" stroke-width="1.4"/></g>'
+  s+=''.join(f'<rect x="{x+8+i*13}" y="{y-(10 if not lid else 4)}" width="11" height="14" rx="1.5" fill="{cc}"/>' for i,cc in enumerate(['#93c5fd','#fca5a5','#86efac']))
+  if lid: s+=f'<rect x="{x-3}" y="{y-6}" width="62" height="9" rx="2" fill="#d6b77a" stroke="#a16207" stroke-width="1.2"/>'
+  else: s+=f'<rect x="{x+40}" y="{y-24}" width="9" height="30" rx="2" fill="#d6b77a" stroke="#a16207" transform="rotate(30 {x+44} {y-9})"/>'
+  return s+f'<rect x="{x+12}" y="{y+12}" width="32" height="12" rx="2" fill="#fff"/>'+TX(x+28,y+20.5,t,5,c,'middle')
+def TALLY(x,y,rows,c='#1e293b',w=80):
+  """กระดานตัวเลขสำคัญ rows=[(ตัวเลข,ความหมาย)] ตัวเลขใหญ่ซ้าย คำอธิบายขวา"""
+  from fgk import TX; from pk import K
+  h=10+len(rows)*12
+  s=f'<g filter="url(#wsh{K})"><rect x="{x}" y="{y}" width="{w}" height="{h}" rx="6" fill="{c}"/></g>'
+  for i,(n,t) in enumerate(rows):
+    yy=y+14+i*12; s+=TX(x+8,yy,n,6.4,'#fde047')+TX(x+30,yy,t,4.8,'#e2e8f0')
+  return s
